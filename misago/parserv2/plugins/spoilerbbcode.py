@@ -16,6 +16,7 @@ def spoiler_bbcode_plugin(md: MarkdownIt):
             start=spoiler_bbcode_start,
             end=spoiler_bbcode_end,
         ),
+        {"alt": ["paragraph"]},
     )
 
 
@@ -34,7 +35,7 @@ def spoiler_bbcode_start(
 
     end = src.index("]", 0, maximum - start)
     if end == 8:
-        return src[:9], None, start, end + 1
+        return src[:9], None, start, start + end + 1
 
     if end and src[8] != "=":
         return None

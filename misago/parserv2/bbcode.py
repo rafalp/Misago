@@ -133,9 +133,8 @@ class BBCodeBlockRule:
     ):
         old_parent_type = state.parentType
 
-        line_start = state.bMarks[startLine] + state.tShift[startLine]
-        content_start = line_start + start[3]
-        content_end = line_start + end[1]
+        content_start = start[3]
+        content_end = end[1]
 
         state.parentType = self.name
         self.state_push_open_token(state, startLine, startLine, start)
@@ -176,7 +175,7 @@ class BBCodeBlockRule:
         end = None
         nesting = 1
 
-        while line <= endLine:
+        while line < endLine:
             line += 1
 
             if (

@@ -16,6 +16,7 @@ def quote_bbcode_plugin(md: MarkdownIt):
             start=quote_bbcode_start,
             end=quote_bbcode_end,
         ),
+        {"alt": ["paragraph"]},
     )
 
 
@@ -34,7 +35,7 @@ def quote_bbcode_start(
 
     end = src.index("]", 0, maximum - start)
     if end == 6:
-        return src[:7], None, start, end + 1
+        return src[:7], None, start, start + end + 1
 
     if end and src[6] != "=":
         return None
