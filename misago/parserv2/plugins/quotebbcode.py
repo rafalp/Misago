@@ -32,7 +32,7 @@ def quote_bbcode_start(
     if "]" not in src[6:]:
         return None
 
-    end = src.index("]", start, maximum)
+    end = src.index("]", 0, maximum - start)
     if end == 6:
         return src[:7], None, start, end + 1
 

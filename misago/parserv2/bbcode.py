@@ -110,8 +110,7 @@ class BBCodeBlockRule:
 
         try:
             while state.bMarks[line] >= org_bmark:
-                match = rule(state, line)
-                if match:
+                if match := rule(state, line):
                     if state.src[match[2] : maximum].strip():
                         return None
 

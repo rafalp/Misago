@@ -32,7 +32,7 @@ def spoiler_bbcode_start(
     if "]" not in src[8:]:
         return None
 
-    end = src.index("]", start, maximum)
+    end = src.index("]", 0, maximum - start)
     if end == 8:
         return src[:9], None, start, end + 1
 
