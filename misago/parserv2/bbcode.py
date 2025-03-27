@@ -131,11 +131,29 @@ class BBCodeBlockRule:
         start: BBCodeBlockStart,
         end: BBCodeBlockEnd,
     ):
+        content_start = start[3]
+        content_end = end[1]
+        content = state.src[content_start:content_end].strip()
+
+        if not content:
+            return False
+
         old_parent_type = state.parentType
 
         state.parentType = self.name
         self.state_push_open_token(state, startLine, startLine, start)
-        self.state_push_single_line_content(state, startLine, start, end)
+
+        state.parentType = "paragraph"
+        token = state.push("paragraph_open", "p", 1)
+        token.map = [startLine, startLine]
+
+        token = state.push("inline", "", 0)
+        token.content = state.src[content_start:content_end].strip()
+        token.map = [startLine, state.line]
+        token.children = []
+
+        token = state.push("paragraph_close", "p", -1)
+
         self.state_push_close_token(state, end)
 
         state.parentType = old_parent_type
@@ -222,27 +240,6 @@ class BBCodeBlockRule:
                 token.attrSet(attr_name, attr_value)
 
         return token
-
-    def state_push_single_line_content(
-        self,
-        state: StateBlock,
-        startLine: int,
-        start: BBCodeBlockStart,
-        end: BBCodeBlockEnd,
-    ):
-        content_start = start[3]
-        content_end = end[1]
-
-        state.parentType = "paragraph"
-        token = state.push("paragraph_open", "p", 1)
-        token.map = [startLine, startLine]
-
-        token = state.push("inline", "", 0)
-        token.content = state.src[content_start:content_end].strip()
-        token.map = [startLine, state.line]
-        token.children = []
-
-        token = state.push("paragraph_close", "p", -1)
 
     def state_push_children(self, state: StateBlock, startLine: int, endLine: int):
         if startLine == endLine:
