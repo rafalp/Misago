@@ -9,6 +9,7 @@ from .plugins import (
     formatting_bbcode_plugin,
     link_target_blank_plugin,
     quote_bbcode_plugin,
+    spoiler_bbcode_plugin,
 )
 
 
@@ -23,6 +24,7 @@ def create_parser() -> MarkdownIt:
             formatting_bbcode_plugin,
             link_target_blank_plugin,
             quote_bbcode_plugin,
+            spoiler_bbcode_plugin,
         ],
     )
 
