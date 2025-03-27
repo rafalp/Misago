@@ -51,6 +51,8 @@ def quote_bbcode_parse_args(args_str: str) -> dict | None:
     elif args_str[0] == "'" and args_str[-1] == "'":
         args_str = args_str[1:-1]
 
+    args_str = args_str.strip()
+
     if not args_str:
         return None
 

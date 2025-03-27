@@ -3,6 +3,26 @@ def test_spoiler_bbcode_without_args(parse_to_html):
     assert html == "<misago-spoiler>\n<p>hello world</p>\n</misago-spoiler>"
 
 
+def test_spoiler_bbcode_with_empty_args(parse_to_html):
+    html = parse_to_html("[spoiler=]\nhello world\n[/spoiler]")
+    assert html == "<misago-spoiler>\n<p>hello world</p>\n</misago-spoiler>"
+
+
+def test_spoiler_bbcode_with_blank_args(parse_to_html):
+    html = parse_to_html("[spoiler=   ]\nhello world\n[/spoiler]")
+    assert html == "<misago-spoiler>\n<p>hello world</p>\n</misago-spoiler>"
+
+
+def test_spoiler_bbcode_with_empty_quoted_args(parse_to_html):
+    html = parse_to_html('[spoiler=""]\nhello world\n[/spoiler]')
+    assert html == "<misago-spoiler>\n<p>hello world</p>\n</misago-spoiler>"
+
+
+def test_spoiler_bbcode_with_blank_quoted_args(parse_to_html):
+    html = parse_to_html('[spoiler="   "]\nhello world\n[/spoiler]')
+    assert html == "<misago-spoiler>\n<p>hello world</p>\n</misago-spoiler>"
+
+
 def test_spoiler_bbcode_with_info_arg(parse_to_html):
     html = parse_to_html("[spoiler=test]\nhello world\n[/spoiler]")
     assert html == '<misago-spoiler info="test">\n<p>hello world</p>\n</misago-spoiler>'

@@ -3,6 +3,26 @@ def test_quote_bbcode_without_args(parse_to_html):
     assert html == "<misago-quote>\n<p>hello world</p>\n</misago-quote>"
 
 
+def test_quote_bbcode_with_empty_args(parse_to_html):
+    html = parse_to_html("[quote=]\nhello world\n[/quote]")
+    assert html == "<misago-quote>\n<p>hello world</p>\n</misago-quote>"
+
+
+def test_quote_bbcode_with_blank_args(parse_to_html):
+    html = parse_to_html("[quote=   ]\nhello world\n[/quote]")
+    assert html == "<misago-quote>\n<p>hello world</p>\n</misago-quote>"
+
+
+def test_quote_bbcode_with_empty_quoted_args(parse_to_html):
+    html = parse_to_html('[quote=""]\nhello world\n[/quote]')
+    assert html == "<misago-quote>\n<p>hello world</p>\n</misago-quote>"
+
+
+def test_quote_bbcode_with_blank_quoted_args(parse_to_html):
+    html = parse_to_html('[quote="   "]\nhello world\n[/quote]')
+    assert html == "<misago-quote>\n<p>hello world</p>\n</misago-quote>"
+
+
 def test_quote_bbcode_with_info_arg(parse_to_html):
     html = parse_to_html("[quote=test]\nhello world\n[/quote]")
     assert html == '<misago-quote info="test">\n<p>hello world</p>\n</misago-quote>'
