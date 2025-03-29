@@ -90,7 +90,7 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
             return bool(end)
 
         length = state.sCount[startLine]
-        content = state.getLines(startLine + 1, line - 1, length, True)
+        content = state.getLines(startLine + 1, line - 1, length, False)
 
         if not content.strip():
             return False
