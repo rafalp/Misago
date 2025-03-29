@@ -14,6 +14,7 @@ from ..bbcode import (
     bbcode_block_end_rule,
     bbcode_block_start_rule,
 )
+from ..codeargs import parse_code_args
 
 
 def code_bbcode_plugin(md: MarkdownIt):
@@ -111,7 +112,7 @@ def code_bbcode_start(
     markup, args_str, start, end = start
 
     if args_str:
-        args = {"info": args_str}
+        args = parse_code_args(args_str)
     else:
         args = None
 
