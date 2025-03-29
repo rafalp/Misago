@@ -90,12 +90,8 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
         if silent or not end:
             return bool(end)
 
-        content = self.get_lines(state, startLine + 1, line - 1)
-        if not content:
-            return False
-
         token = self.state_push_void_token(state, startLine, start)
-        token.content = content
+        token.content = self.get_lines(state, startLine + 1, line - 1)
 
         state.line = line + 1
         return True
