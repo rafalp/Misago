@@ -46,9 +46,6 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
         content_end = end[1]
         content = state.src[content_start:content_end].strip()
 
-        if not content:
-            return False
-
         token = self.state_push_void_token(state, startLine, start)
         token.content = content
 

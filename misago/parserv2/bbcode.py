@@ -135,9 +135,6 @@ class BBCodeBlockRule:
         content_end = end[1]
         content = state.src[content_start:content_end].strip()
 
-        if not content:
-            return False
-
         old_parent_type = state.parentType
 
         state.parentType = self.name
@@ -148,7 +145,7 @@ class BBCodeBlockRule:
         token.map = [startLine, startLine]
 
         token = state.push("inline", "", 0)
-        token.content = state.src[content_start:content_end].strip()
+        token.content = content
         token.map = [startLine, state.line]
         token.children = []
 
