@@ -1,3 +1,4 @@
+from textwrap import dedent
 from typing import Sequence
 
 from markdown_it import MarkdownIt
@@ -43,7 +44,7 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
     ):
         content_start = start[3]
         content_end = end[1]
-        content = state.src[content_start:content_end]
+        content = state.src[content_start:content_end].strip()
 
         if not content:
             return False
@@ -89,10 +90,8 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
         if silent or not end:
             return bool(end)
 
-        length = state.sCount[startLine]
-        content = state.getLines(startLine + 1, line - 1, length, False)
-
-        if not content.strip():
+        content = self.get_lines(state, startLine + 1, line - 1)
+        if not content:
             return False
 
         token = self.state_push_void_token(state, startLine, start)
@@ -100,6 +99,17 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
 
         state.line = line + 1
         return True
+
+    def get_lines(self, state: StateBlock, startLine: int, endLine: int):
+        length = state.sCount[startLine]
+        content = state.getLines(startLine, endLine, length, False).rstrip()
+
+        lines: list[str] = []
+        for line in content.splitlines():
+            if line.strip() or lines:
+                lines.append(line)
+
+        return dedent("\n".join(lines))
 
 
 def code_bbcode_start(
