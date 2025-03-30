@@ -12,8 +12,14 @@ MENTION = re.compile(r"^\@[A-Za-z0-9-_]+")
 
 
 def mention_rule(state: StateInline, silent: bool):
+    if state.linkLevel:
+        return False
+
     start = state.pos
-    if state.src[start] != "@" or state.linkLevel:
+    if state.src[start] != "@":
+        return False
+
+    if start and state.src[start - 1].isalnum():
         return False
 
     match = MENTION.match(state.src[start:])
