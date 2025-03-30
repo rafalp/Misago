@@ -8,10 +8,12 @@ from .plugins import (
     attachment_plugin,
     code_bbcode_plugin,
     formatting_bbcode_plugin,
+    img_bbcode_plugin,
     link_target_blank_plugin,
     mention_plugin,
     quote_bbcode_plugin,
     spoiler_bbcode_plugin,
+    url_bbcode_plugin,
 )
 
 
@@ -24,6 +26,8 @@ def create_parser() -> MarkdownIt:
         plugins=[
             attachment_plugin,
             formatting_bbcode_plugin,
+            img_bbcode_plugin,
+            url_bbcode_plugin,
             mention_plugin,
             link_target_blank_plugin,
             code_bbcode_plugin,
