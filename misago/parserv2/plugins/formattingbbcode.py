@@ -23,6 +23,11 @@ def get_formatting_bbcode_rule(name: str, markup: str):
         markup_close = f"[/{name[0]}]"
 
         start = state.pos
+        maximum = state.posMax
+
+        if maximum - start < 7:
+            return False
+
         marker = state.src[start : start + 3]
 
         if silent:
@@ -34,14 +39,15 @@ def get_formatting_bbcode_rule(name: str, markup: str):
         pos = start + 3
         maximum = state.posMax
 
-        while True:
-            if pos >= maximum:
-                return False
+        while pos + 4 <= maximum:
 
             if state.src[pos : pos + 4].lower() == markup_close:
                 break
 
             pos += 1
+
+        if state.src[pos : pos + 4].lower() != markup_close:
+            return False
 
         if not silent:
             state.pos = start + 3
