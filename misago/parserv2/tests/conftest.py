@@ -3,6 +3,8 @@ import textwrap
 import pytest
 
 from ..factory import create_parser
+from ..html import render_tokens_to_html
+from ..tokenizer import tokenize
 
 
 @pytest.fixture
@@ -15,6 +17,7 @@ def parse_to_html():
         if strip:
             markup = markup.strip()
 
-        return parser.render(markup).strip()
+        tokens = tokenize(parser, markup)
+        return render_tokens_to_html(parser, tokens)
 
     return _parser
