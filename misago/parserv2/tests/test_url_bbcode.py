@@ -2,7 +2,7 @@ def test_url_bbcode(parse_to_html):
     html = parse_to_html("[url]example.com[/url]")
     assert html == (
         "<p>"
-        '<a href="example.com" target="_blank" rel="external nofollow noopener">'
+        '<a href="example.com" rel="external nofollow noopener" target="_blank">'
         "example.com"
         "</a>"
         "</p>"
@@ -23,7 +23,7 @@ def test_url_bbcode_with_invalid_url(parse_to_html):
     html = parse_to_html("[url]invalid[/url]")
     assert html == (
         "<p>"
-        '<a href="invalid" target="_blank" rel="external nofollow noopener">'
+        '<a href="invalid" rel="external nofollow noopener" target="_blank">'
         "invalid"
         "</a>"
         "</p>"
@@ -34,7 +34,7 @@ def test_url_bbcode_with_arg(parse_to_html):
     html = parse_to_html("[url=example.com]Hello[/url]")
     assert html == (
         "<p>"
-        '<a href="example.com" target="_blank" rel="external nofollow noopener">'
+        '<a href="example.com" rel="external nofollow noopener" target="_blank">'
         "Hello"
         "</a>"
         "</p>"
@@ -55,7 +55,7 @@ def test_url_bbcode_with_quoted_arg(parse_to_html):
     html = parse_to_html('[url="example.com"]Hello[/url]')
     assert html == (
         "<p>"
-        '<a href="example.com" target="_blank" rel="external nofollow noopener">'
+        '<a href="example.com" rel="external nofollow noopener" target="_blank">'
         "Hello"
         "</a>"
         "</p>"
@@ -66,7 +66,7 @@ def test_url_bbcode_with_invalid_arg(parse_to_html):
     html = parse_to_html("[url=invalid]Hello[/url]")
     assert html == (
         "<p>"
-        '<a href="invalid" target="_blank" rel="external nofollow noopener">'
+        '<a href="invalid" rel="external nofollow noopener" target="_blank">'
         "Hello"
         "</a>"
         "</p>"
@@ -77,7 +77,7 @@ def test_url_bbcode_with_arg_parses_content(parse_to_html):
     html = parse_to_html("[url=example.com]Hello **world**[/url]")
     assert html == (
         "<p>"
-        '<a href="example.com" target="_blank" rel="external nofollow noopener">'
+        '<a href="example.com" rel="external nofollow noopener" target="_blank">'
         "Hello <strong>world</strong>"
         "</a>"
         "</p>"
