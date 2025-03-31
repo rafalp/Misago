@@ -280,11 +280,11 @@ def bbcode_block_start_rule(
         return None
 
     args_str = src[block_bbcode_len + 1 : end]
-    if args_str:
-        if args_str[0] == '"' and args_str[-1] == '"':
-            args_str = args_str[1:-1]
-        elif args_str[0] == "'" and args_str[-1] == "'":
-            args_str = args_str[1:-1]
+    if args_str and (
+        (args_str[0] == '"' and args_str[-1] == '"')
+        or (args_str[0] == "'" and args_str[-1] == "'")
+    ):
+        args_str = args_str[1:-1]
 
     args_str = args_str.strip() or None
 

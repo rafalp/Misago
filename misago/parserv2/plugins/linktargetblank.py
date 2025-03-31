@@ -11,4 +11,5 @@ def set_link_target_blank_rule(
     md: RendererHTML, tokens: list[Token], idx: int, options: dict, env: dict
 ):
     tokens[idx].attrSet("target", "_blank")
+    tokens[idx].attrSet("rel", "external nofollow noopener")
     return md.renderToken(tokens, idx, options, env)

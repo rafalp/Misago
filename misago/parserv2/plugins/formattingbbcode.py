@@ -40,7 +40,6 @@ def get_formatting_bbcode_rule(name: str, markup: str):
         maximum = state.posMax
 
         while pos + 4 <= maximum:
-
             if state.src[pos : pos + 4].lower() == markup_close:
                 break
 

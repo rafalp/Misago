@@ -35,6 +35,11 @@ def url_bbcode_rule(state: StateInline, silent: bool):
         args_end = content_start - 1
 
         args_str = state.src[args_start:args_end].strip() or None
+        if args_str and (
+            (args_str[0] == '"' and args_str[-1] == '"')
+            or (args_str[0] == "'" and args_str[-1] == "'")
+        ):
+            args_str = args_str[1:-1].strip()
     else:
         content_start = start + 5
 
@@ -51,23 +56,18 @@ def url_bbcode_rule(state: StateInline, silent: bool):
     content_end = pos
     end = content_end + 6
 
-    if args_start and args_end and args_start == args_end:
+    content = state.src[content_start:content_end]
+
+    if args_start and args_end and not args_str:
         return False  # Eject if [url=]...[/url]
 
-    if content_start and content_end and content_start == content_end:
+    if not content.strip():
         return False  # Eject if [url][/url]
 
     if args_str:
-        res = state.md.helpers.parseLinkDestination(state.src, args_start, args_end)
+        href = state.md.normalizeLink(args_str)
     else:
-        res = state.md.helpers.parseLinkDestination(
-            state.src, content_start, content_end
-        )
-
-    if not res.ok:
-        return False
-
-    href = state.md.normalizeLink(res.str)
+        href = state.md.normalizeLink(content.strip())
 
     if not state.md.validateLink(href):
         return False
@@ -87,11 +87,7 @@ def url_bbcode_rule(state: StateInline, silent: bool):
             state.linkLevel -= 1
         else:
             token = state.push("text", "", 0)
-            token.content = state.md.normalizeLinkText(
-                state.src[content_start:content_end]
-            )
-
-        state.linkLevel -= 1
+            token.content = state.md.normalizeLinkText(content)
 
         token = state.push("link_close", "a", -1)
         token.markup = "[/url]"
