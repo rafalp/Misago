@@ -85,6 +85,16 @@ def test_attachments_with_softbreak_between(parse_to_html):
     )
 
 
+def test_attachments_with_softbreak_spaces_between(parse_to_html):
+    html = parse_to_html("<attachment=image.png:12>\n   \n<attachment=text.png:13>")
+    assert html == (
+        '<div class="rich-text-attachment-group">'
+        '\n<misago-attachment name="image.png" slug="image-png" id="12">'
+        '\n<misago-attachment name="text.png" slug="text-png" id="13">'
+        "\n</div>"
+    )
+
+
 def test_attachments_with_hardbreak_between(parse_to_html):
     html = parse_to_html("<attachment=image.png:12>\n\n\n<attachment=text.png:13>")
     assert html == (
