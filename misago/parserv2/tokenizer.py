@@ -16,6 +16,8 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
         parser,
         markup,
         [
+            set_links_rel_external_nofollow_noopener,
+            set_links_target_blank,
             extract_attachments,
         ],
     )
@@ -30,6 +32,22 @@ def _tokenize_action(
     for processor in processors:
         tokens = processor(tokens) or tokens
     return tokens
+
+
+def set_links_rel_external_nofollow_noopener(tokens: list[Token]) -> None:
+    for token in tokens:
+        if token.type == "inline":
+            for child in token.children:
+                if child.tag == "a" and child.nesting == 1:
+                    child.attrSet("rel", "external nofollow noopener")
+
+
+def set_links_target_blank(tokens: list[Token]) -> None:
+    for token in tokens:
+        if token.type == "inline":
+            for child in token.children:
+                if child.tag == "a" and child.nesting == 1:
+                    child.attrSet("target", "_blank")
 
 
 def extract_attachments(tokens: list[Token]) -> list[Token] | None:
