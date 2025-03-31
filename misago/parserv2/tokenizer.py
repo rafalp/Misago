@@ -55,7 +55,7 @@ def extract_attachments(tokens: list[Token]) -> list[Token] | None:
     if paragraph:
         new_tokens += _extract_attachments_from_paragraph(paragraph)
 
-    return new_tokens
+    return merge_attachments_groups(new_tokens)
 
 
 def _extract_attachments_from_paragraph(tokens: list[Token]) -> list[Token]:
@@ -70,14 +70,6 @@ def _extract_attachments_from_paragraph(tokens: list[Token]) -> list[Token]:
             if not groups or not groups[-1][0]:
                 groups.append((True, []))
         else:
-            if (
-                groups
-                and groups[-1][0]
-                and child.type == "text"
-                and not child.content.strip()
-            ):
-                continue
-
             if not groups or groups[-1][0]:
                 groups.append((False, []))
 
@@ -108,12 +100,7 @@ def _extract_attachments_from_paragraph(tokens: list[Token]) -> list[Token]:
                 ),
             )
 
-        elif children:
-            if children[0].type == "text":
-                children[0].content = children[0].content.lstrip()
-            if children[-1].type == "text":
-                children[-1].content = children[-1].content.rstrip()
-
+        elif clean_children := clean_inline_slice(children):
             new_tokens.append(p_open)
             new_tokens.append(
                 Token(
@@ -121,7 +108,7 @@ def _extract_attachments_from_paragraph(tokens: list[Token]) -> list[Token]:
                     tag="",
                     nesting=0,
                     level=inline.level,
-                    children=children,
+                    children=clean_children,
                     block=True,
                 )
             )
@@ -136,3 +123,114 @@ def _inline_contains_attachments(token: Token) -> bool:
             return True
 
     return False
+
+
+def merge_attachments_groups(tokens: list[Token]) -> list[Token]:
+    if not tokens:
+        return tokens
+
+    new_tokens: list[Token] = []
+    max_index = len(tokens) - 1
+
+    # Merge attachments groups basically removes </close><open> token pairs
+    for index, token in enumerate(tokens):
+        if (
+            token.type == "attachments_open"
+            and index
+            and tokens[index - 1].type == "attachments_close"
+        ):
+            continue
+
+        if (
+            token.type == "attachments_close"
+            and index < max_index
+            and tokens[index + 1].type == "attachments_open"
+        ):
+            continue
+
+        new_tokens.append(token)
+
+    return new_tokens
+
+
+def clean_inline_slice(tokens: list[Token]) -> list[Token]:
+    if not tokens:
+        return []
+
+    new_tokens: list[Token] = []
+
+    # 1st pass: clear orphaned closing tags
+    stack: list[tuple[int, str]] = []
+    for index, token in enumerate(tokens):
+        if token.nesting == 1:
+            stack.append((index, token.type))
+        if token.nesting == -1:
+            if not stack or stack[-1][1] != token.type:
+                new_tokens.append(
+                    Token(
+                        type="text",
+                        tag="",
+                        nesting=0,
+                        content=token.markup,
+                    )
+                )
+                continue
+            else:
+                stack.pop()
+
+        new_tokens.append(token)
+
+    # 2nd pass: replace orphaned opening tags
+    for index, token in stack:
+        new_tokens[index] = Token(
+            type="text",
+            tag="",
+            nesting=0,
+            content=new_tokens[index].markup,
+        )
+
+    # 3rd pass: merge text nodes
+    new_tokens = merge_text_nodes(new_tokens)
+
+    # 4rd pass: strip whitespace from beginning and end of slice
+    return strip_inline_nodes(new_tokens)
+
+
+def merge_text_nodes(tokens: list[Token]) -> list[Token]:
+    new_tokens: list[Token] = []
+    for token in tokens:
+        if token.type == "text" and new_tokens and new_tokens[-1].type == "text":
+            new_tokens[-1].content += token.content
+        else:
+            new_tokens.append(token)
+    return new_tokens
+
+
+def strip_inline_nodes(tokens: list[Token]) -> list[Token]:
+    new_tokens: list[Token] = tokens[:]
+
+    # lstrip
+    while new_tokens and new_tokens[0].type in ("text", "softbreak"):
+        if new_tokens[0].type == "text":
+            new_tokens[0].content = new_tokens[0].content.lstrip()
+            if not new_tokens[0].content:
+                new_tokens = new_tokens[1:]
+            else:
+                break
+
+        elif new_tokens[0].type == "softbreak":
+            new_tokens = new_tokens[1:]
+
+    # rstrip
+    while new_tokens and new_tokens[-1].type in ("text", "softbreak"):
+        if new_tokens[-1].type == "text":
+            new_tokens[-1].content = new_tokens[-1].content.rstrip()
+            if not new_tokens[-1].content:
+                new_tokens = new_tokens[:-1]
+            else:
+                break
+
+        elif new_tokens[-1].type == "softbreak":
+            new_tokens = new_tokens[:-1]
+
+    return new_tokens
