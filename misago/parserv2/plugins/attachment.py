@@ -1,49 +1,44 @@
 from markdown_it import MarkdownIt
-from markdown_it.rules_block.state_block import StateBlock
-from markdown_it.token import Token
+from markdown_it.rules_inline.state_inline import StateInline
 
 from ...core.utils import slugify
 
 
 def attachment_plugin(md: MarkdownIt):
-    md.block.ruler.before(
-        "paragraph", "attachment", attachment_rule, {"alt": ["paragraph", "blockquote"]}
-    )
+    md.inline.ruler.push("attachment", attachment_rule)
 
 
-def attachment_rule(state: StateBlock, startLine: int, endLine: int, silent: bool):
-    return False
-    start = state.bMarks[startLine] + state.tShift[startLine]
-    maximum = state.eMarks[startLine]
+def attachment_rule(state: StateInline, silent: bool):
+    start = state.pos
+    maximum = state.posMax
 
     args_start = start + 12
     if state.src[start:args_start].lower() != "<attachment=":
         return False
 
     pos = args_start
-    while True:
-        if pos >= maximum:
-            return False
-
+    while pos <= maximum:
         if state.src[pos] == ">":
             break
 
         pos += 1
 
-    args = parse_args(state.src[args_start:pos])
-    if not args:
+    if state.src[pos] != ">":
         return False
 
-    if silent:
-        return True
+    args_end = pos
+    end = args_end + 1
 
-    token = bbcode_parser.push(state, "attachment", "misago-attachment", 0)
-    for attr_name, attr_value in args.items():
-        token.attrSet(attr_name, attr_value)
+    attrs = parse_args(state.src[args_start:args_end])
+    if not attrs:
+        return False
 
-    token.map = [startLine, state.line]
-    token.markup = state.src[start : pos + 1]
+    if not silent:
+        token = state.push("attachment", "misago-attachment", 0)
+        token.markup = state.src[start:end]
+        token.attrs = attrs
 
+    state.pos = end + 1
     return True
 
 
