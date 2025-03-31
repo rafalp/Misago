@@ -207,6 +207,9 @@ def merge_text_nodes(tokens: list[Token]) -> list[Token]:
 
 
 def strip_inline_nodes(tokens: list[Token]) -> list[Token]:
+    if not tokens:
+        return tokens
+
     new_tokens: list[Token] = tokens[:]
 
     # lstrip
