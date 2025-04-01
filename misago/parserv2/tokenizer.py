@@ -18,6 +18,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
         [
             set_links_rel_external_nofollow_noopener,
             set_links_target_blank,
+            set_tables_styles,
             extract_attachments,
         ],
     )
@@ -48,6 +49,12 @@ def set_links_target_blank(tokens: list[Token]) -> None:
             for child in token.children:
                 if child.tag == "a" and child.nesting == 1:
                     child.attrSet("target", "_blank")
+
+
+def set_tables_styles(tokens: list[Token]) -> None:
+    for token in tokens:
+        if token.type == "table_open":
+            token.attrSet("class", "rich-text-table")
 
 
 def extract_attachments(tokens: list[Token]) -> list[Token] | None:
