@@ -21,6 +21,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             set_tables_styles,
             extract_attachments,
             remove_repeated_hrs,
+            replace_blockquotes_with_misago_quotes,
         ],
     )
 
@@ -189,6 +190,14 @@ def remove_repeated_hrs(tokens: list[Token]) -> list[Token]:
             new_tokens.append(token)
 
     return new_tokens
+
+
+def replace_blockquotes_with_misago_quotes(tokens: list[Token]) -> list[Token]:
+    for token in tokens:
+        if token.tag == "blockquote":
+            token.tag = "misago-quote"
+
+    return tokens
 
 
 def clean_inline_slice(tokens: list[Token]) -> list[Token]:

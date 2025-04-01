@@ -108,11 +108,11 @@ def test_attachments_with_hardbreak_between(parse_to_html):
 def test_attachment_in_blockquote(parse_to_html):
     html = parse_to_html("> <attachment=image.png:12>")
     assert html == (
-        "<blockquote>"
+        "<misago-quote>"
         '\n<div class="rich-text-attachment-group">'
         '\n<misago-attachment name="image.png" slug="image-png" id="12">'
         "\n</div>"
-        "\n</blockquote>"
+        "\n</misago-quote>"
     )
 
 
