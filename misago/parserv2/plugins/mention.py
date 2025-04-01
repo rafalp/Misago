@@ -3,6 +3,8 @@ import re
 from markdown_it import MarkdownIt
 from markdown_it.rules_inline.state_inline import StateInline
 
+from ...core.utils import slugify
+
 
 def mention_plugin(md: MarkdownIt):
     md.inline.ruler.push("mention", mention_rule)
@@ -35,6 +37,6 @@ def mention_rule(state: StateInline, silent: bool):
     token = state.push("mention", "misago-mention", 0)
     token.attrSet("username", markup[1:])
     token.markup = markup
-    token.meta = {"username": markup[1:].lower()}
+    token.meta = {"slug": slugify(markup[1:])}
 
     return True

@@ -217,8 +217,8 @@ class BBCodeBlockRule:
         if attrs := start[1]:
             for attr_name, attr_value in attrs.items():
                 token.attrSet(attr_name, attr_value)
-        
-            if meta := self.get_meta(start[1]):
+
+            if meta := self.get_meta(attrs):
                 token.meta = meta
 
         return token
@@ -238,6 +238,9 @@ class BBCodeBlockRule:
         if attrs := start[1]:
             for attr_name, attr_value in attrs.items():
                 token.attrSet(attr_name, attr_value)
+
+            if meta := self.get_meta(attrs):
+                token.meta = meta
 
         return token
 
