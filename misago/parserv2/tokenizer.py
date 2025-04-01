@@ -20,6 +20,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             set_links_target_blank,
             set_tables_styles,
             extract_attachments,
+            remove_repeated_hrs,
         ],
     )
 
@@ -174,6 +175,18 @@ def merge_attachments_groups(tokens: list[Token]) -> list[Token]:
             continue
 
         new_tokens.append(token)
+
+    return new_tokens
+
+
+def remove_repeated_hrs(tokens: list[Token]) -> list[Token]:
+    if not tokens:
+        return []
+
+    new_tokens: list[Token] = []
+    for token in tokens:
+        if not new_tokens or token.tag != "hr" or new_tokens[-1].tag != "hr":
+            new_tokens.append(token)
 
     return new_tokens
 
