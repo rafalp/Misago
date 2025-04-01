@@ -37,6 +37,7 @@ def attachment_rule(state: StateInline, silent: bool):
         token = state.push("attachment", "misago-attachment", 0)
         token.markup = state.src[start:end]
         token.attrs = attrs
+        token.meta = {"attachment": attrs["id"]}
 
     state.pos = end + 1
     return True

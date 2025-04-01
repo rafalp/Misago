@@ -104,6 +104,12 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
 
         return dedent("\n".join(lines))
 
+    def get_meta(self, attrs: dict) -> dict | None:
+        if attrs.get("syntax"):
+            return {"syntax": attrs["syntax"]}
+
+        return None
+
 
 def code_bbcode_start(
     state: StateBlock, line: int

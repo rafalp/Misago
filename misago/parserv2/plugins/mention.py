@@ -35,5 +35,6 @@ def mention_rule(state: StateInline, silent: bool):
     token = state.push("mention", "misago-mention", 0)
     token.attrSet("username", markup[1:])
     token.markup = markup
+    token.meta = {"username": markup[1:].lower()}
 
     return True

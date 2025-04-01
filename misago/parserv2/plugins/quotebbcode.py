@@ -10,7 +10,7 @@ def quote_bbcode_plugin(md: MarkdownIt):
     md.block.ruler.before(
         "paragraph",
         "quote_bbcode",
-        BBCodeBlockRule(
+        QuoteBBCodeBlockRule(
             name="quote_bbcode",
             element="misago-quote",
             start=quote_bbcode_start,
@@ -18,6 +18,14 @@ def quote_bbcode_plugin(md: MarkdownIt):
         ),
         {"alt": ["paragraph"]},
     )
+
+
+class QuoteBBCodeBlockRule(BBCodeBlockRule):
+    def get_meta(self, attrs: dict) -> dict | None:
+        if attrs.get("post"):
+            return {"post": attrs["post"]}
+
+        return None
 
 
 def quote_bbcode_start(

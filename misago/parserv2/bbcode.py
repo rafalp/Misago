@@ -217,6 +217,9 @@ class BBCodeBlockRule:
         if attrs := start[1]:
             for attr_name, attr_value in attrs.items():
                 token.attrSet(attr_name, attr_value)
+        
+            if meta := self.get_meta(start[1]):
+                token.meta = meta
 
         return token
 
@@ -254,6 +257,9 @@ class BBCodeBlockRule:
 
         state.lineMax = old_line_max
         state.parentType = old_parent
+
+    def get_meta(self, attrs: dict) -> dict | None:
+        return None
 
 
 def bbcode_block_start_rule(
