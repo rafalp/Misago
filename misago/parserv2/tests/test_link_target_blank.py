@@ -14,7 +14,7 @@ def test_bbcode_url_has_external_nofollow_noopener_set(parse_to_html):
     assert html == (
         "<p>"
         '<a href="http://example.com" rel="external nofollow noopener" target="_blank">'
-        "http://example.com"
+        "example.com"
         "</a>"
         "</p>"
     )
@@ -25,7 +25,7 @@ def test_autolink_has_external_nofollow_noopener_set(parse_to_html):
     assert html == (
         "<p>"
         '<a href="http://example.com" rel="external nofollow noopener" target="_blank">'
-        "http://example.com"
+        "example.com"
         "</a>"
         "</p>"
     )
@@ -36,7 +36,7 @@ def test_linkified_link_has_external_nofollow_noopener_set(parse_to_html):
     assert html == (
         "<p>"
         '<a href="http://example.com" rel="external nofollow noopener" target="_blank">'
-        "http://example.com"
+        "example.com"
         "</a>"
         "</p>"
     )

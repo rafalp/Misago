@@ -28,7 +28,7 @@ def test_formatting_bbcode_parses_contents(parse_to_html):
     assert html == (
         "<p>Hello <b>"
         '<a href="http://example.com" rel="external nofollow noopener" target="_blank">'
-        "http://example.com"
+        "example.com"
         "</a>"
         "</b>!</p>"
     )
