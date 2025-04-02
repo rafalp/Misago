@@ -3,6 +3,8 @@ from typing import Callable
 from markdown_it.renderer import RendererProtocol
 from markdown_it.token import Token
 
+from .hooks import render_tokens_to_plaintext_hook
+
 
 RendererPlaintextRule = Callable[[list[Token], int], str | None]
 
@@ -42,8 +44,9 @@ class RendererPlaintext(RendererProtocol):
         return result.strip()
 
 
-def render_plaintext(tokens: list[Token]) -> str:
-    return _render_plaintext_action(
+def render_tokens_to_plaintext(tokens: list[Token]) -> str:
+    return render_tokens_to_plaintext_hook(
+        _render_tokens_to_plaintext_action,
         tokens,
         [
             ("attachments_open", render_softbreak),
@@ -73,7 +76,7 @@ def render_plaintext(tokens: list[Token]) -> str:
     # inline code
 
 
-def _render_plaintext_action(
+def _render_tokens_to_plaintext_action(
     tokens: list[Token],
     rules: list[tuple[str, RendererPlaintextRule]],
 ) -> str:

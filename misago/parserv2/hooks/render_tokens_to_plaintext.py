@@ -94,14 +94,14 @@ class TokenizeHook(FilterHook[TokenizeHookAction, TokenizeHookFilter]):
 
     from markdown_it import MarkdownIt
     from markdown_it.tokens import Token
-    from misago.parser.hooks import tokenize_hook
+    from misago.parser.hooks import render_tokens_to_plaintext_hook
 
 
     def custom_tokens_processor(tokens: list[Token]) -> list[Token] | None:
         return tokens  # Return changed `tokens` list or None
 
 
-    @tokenize_hook.append_filter
+    @render_tokens_to_plaintext_hook.append_filter
     def tokenize_with_custom_tokens_processor(
         action,
         parser: MarkdownIt,
@@ -118,11 +118,10 @@ class TokenizeHook(FilterHook[TokenizeHookAction, TokenizeHookFilter]):
     def __call__(
         self,
         action: TokenizeHookAction,
-        parser: MarkdownIt,
-        markup: str,
-        processors: list[Callable[[list[Token]], list[Token] | None]],
+        tokens: list[Token],
+        rules: list[Callable[[list[Token]], list[Token] | None]],
     ) -> list[Token]:
-        return super().__call__(action, parser, markup, processors)
+        return super().__call__(action, tokens, rules)
 
 
-tokenize_hook = TokenizeHook()
+render_tokens_to_plaintext_hook = TokenizeHook()
