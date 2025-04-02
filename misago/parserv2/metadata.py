@@ -13,6 +13,9 @@ def _get_tokens_metadata_action(tokens: list[Token]) -> dict:
     if attachments := get_attachments_metadata(tokens):
         metadata["attachments"] = attachments
 
+    if get_highlight_code_metadata(tokens):
+        metadata["highlight_code"] = True
+
     if posts := get_quoted_posts_metadata(tokens):
         metadata["posts"] = posts
 
@@ -26,6 +29,13 @@ def get_attachments_metadata(tokens: list[Token]) -> list[int]:
     attachments: set[int] = set()
     get_metadata_recursive(tokens, "attachment", "attachment", attachments)
     return sorted(attachments)
+
+
+def get_highlight_code_metadata(tokens: list[Token]) -> list[str]:
+    syntax: set[str] = set()
+    get_metadata_recursive(tokens, "fence", "syntax", syntax)
+    get_metadata_recursive(tokens, "code_bbcode", "syntax", syntax)
+    return sorted(syntax)
 
 
 def get_quoted_posts_metadata(tokens: list[Token]) -> list[int]:
