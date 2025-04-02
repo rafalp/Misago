@@ -7,6 +7,7 @@ from .hooks import create_parser_hook
 from .plugins import (
     attachment_plugin,
     code_bbcode_plugin,
+    fence_plugin,
     formatting_bbcode_plugin,
     hr_bbcode_plugin,
     img_bbcode_plugin,
@@ -32,6 +33,7 @@ def create_parser() -> MarkdownIt:
             url_bbcode_plugin,
             hr_bbcode_plugin,
             mention_plugin,
+            fence_plugin,
             code_bbcode_plugin,
             quote_bbcode_plugin,
             spoiler_bbcode_plugin,
