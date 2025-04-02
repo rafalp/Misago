@@ -5,6 +5,7 @@ from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
 from .hooks import tokenize_hook
+from .shortenurl import shorten_url
 
 
 TokensProcessor = Callable[[list[Token]], list[Token] | None]
@@ -19,6 +20,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             set_links_rel_external_nofollow_noopener,
             set_links_target_blank,
             set_tables_styles,
+            shorten_link_text,
             extract_attachments,
             remove_repeated_hrs,
             replace_blockquotes_with_misago_quotes,
@@ -57,6 +59,31 @@ def set_tables_styles(tokens: list[Token]) -> None:
     for token in tokens:
         if token.type == "table_open":
             token.attrSet("class", "rich-text-table")
+
+
+def shorten_link_text(tokens: list[Token]) -> None:
+    link_tokens: list[Token] = []
+
+    for token in tokens:
+        if token.children:
+            shorten_link_text(token.children)
+
+        if token.type in ("link_open", "link_close") or link_tokens:
+            link_tokens.append(token)
+            if token.type == "link_close":
+                _shorten_link_text_token_content(link_tokens)
+                link_tokens = []
+
+
+def _shorten_link_text_token_content(tokens: list[Token]):
+    if len(tokens) != 3:
+        return
+
+    link_open, text, _ = tokens
+    href = link_open.attrs.get("href")
+
+    if href and text.content == href:
+        text.content = shorten_url(text.content)
 
 
 def extract_attachments(tokens: list[Token]) -> list[Token] | None:
