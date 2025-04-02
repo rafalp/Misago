@@ -27,7 +27,7 @@ def attachment_rule(state: StateInline, silent: bool):
         return False
 
     args_end = pos
-    end = args_end + 1
+    end = args_end
 
     attrs = parse_args(state.src[args_start:args_end])
     if not attrs:

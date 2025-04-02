@@ -15,6 +15,36 @@ def test_render_plaintext_renders_two_paragraphs():
     assert render_plaintext(tokens) == "hello\n\nworld"
 
 
+def test_render_plaintext_renders_code():
+    parser = create_parser()
+    tokens = tokenize(parser, "    hello\n    world")
+    assert render_plaintext(tokens) == "hello\nworld"
+
+
+def test_render_plaintext_renders_fenced_code():
+    parser = create_parser()
+    tokens = tokenize(parser, "```\nhello")
+    assert render_plaintext(tokens) == "hello"
+
+
+def test_render_plaintext_renders_fenced_code_with_info():
+    parser = create_parser()
+    tokens = tokenize(parser, "```info\nhello")
+    assert render_plaintext(tokens) == "info:\n\nhello"
+
+
+def test_render_plaintext_renders_fenced_code_with_syntax():
+    parser = create_parser()
+    tokens = tokenize(parser, "```php\nhello")
+    assert render_plaintext(tokens) == "php:\n\nhello"
+
+
+def test_render_plaintext_renders_fenced_code_with_info_and_syntax():
+    parser = create_parser()
+    tokens = tokenize(parser, "```info, syntax: php\nhello")
+    assert render_plaintext(tokens) == "info, php:\n\nhello"
+
+
 def test_render_plaintext_renders_header_and_paragraph():
     parser = create_parser()
     tokens = tokenize(parser, "# hello\n\nworld")
@@ -63,7 +93,19 @@ def test_render_plaintext_renders_spoiler_bbcode_with_info():
     assert render_plaintext(tokens) == "info:\n\nhello"
 
 
+def test_render_plaintext_renders_attachments():
+    parser = create_parser()
+    tokens = tokenize(parser, "<attachment=image.png:1><attachment=video.mp4:2>")
+    assert render_plaintext(tokens) == "image.png\nvideo.mp4"
+
+
 def test_render_plaintext_renders_soft_linebreak():
     parser = create_parser()
     tokens = tokenize(parser, "hello\nworld")
     assert render_plaintext(tokens) == "hello\nworld"
+
+
+def test_render_plaintext_renders_mention():
+    parser = create_parser()
+    tokens = tokenize(parser, "@Username")
+    assert render_plaintext(tokens) == "@Username"
