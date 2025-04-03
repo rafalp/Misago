@@ -82,6 +82,7 @@ def render_tokens_to_plaintext(tokens: list[Token]) -> str:
             render_attachments,
             render_paragraph,
             render_inline,
+            render_code_inline,
             render_mention,
             render_softbreak,
             render_text,
@@ -318,6 +319,16 @@ def render_inline(state: StatePlaintext) -> bool:
         return False
 
     state.push(state.renderer.render(token.children))
+    state.pos += 1
+    return True
+
+
+def render_code_inline(state: StatePlaintext) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "code_inline":
+        return False
+
+    state.push(token.content)
     state.pos += 1
     return True
 

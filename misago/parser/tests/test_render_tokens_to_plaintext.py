@@ -167,13 +167,19 @@ def test_render_tokens_to_plaintext_renders_attachments():
     assert render_tokens_to_plaintext(tokens) == "image.png\nvideo.mp4"
 
 
-def test_render_tokens_to_plaintext_renders_soft_linebreak():
+def test_render_tokens_to_plaintext_renders_code_inline():
     parser = create_parser()
-    tokens = tokenize(parser, "hello\nworld")
-    assert render_tokens_to_plaintext(tokens) == "hello\nworld"
+    tokens = tokenize(parser, "Hello, `inline`")
+    assert render_tokens_to_plaintext(tokens) == "Hello, inline"
 
 
 def test_render_tokens_to_plaintext_renders_mention():
     parser = create_parser()
     tokens = tokenize(parser, "Hello, @Username")
     assert render_tokens_to_plaintext(tokens) == "Hello, @Username"
+
+
+def test_render_tokens_to_plaintext_renders_soft_linebreak():
+    parser = create_parser()
+    tokens = tokenize(parser, "hello\nworld")
+    assert render_tokens_to_plaintext(tokens) == "hello\nworld"
