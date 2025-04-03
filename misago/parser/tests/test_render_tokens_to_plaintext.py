@@ -161,6 +161,16 @@ def test_render_tokens_to_plaintext_renders_bullet_list_with_nested_bullet_list(
     )
 
 
+def test_render_tokens_to_plaintext_renders_table():
+    parser = create_parser()
+    tokens = tokenize(
+        parser, "| col1 | col2 | col3|\n| - | - | - |\n| cell1 | cell2 | cell3 |"
+    )
+    assert render_tokens_to_plaintext(tokens) == (
+        "col1, col2, col3\ncell1, cell2, cell3"
+    )
+
+
 def test_render_tokens_to_plaintext_renders_attachments():
     parser = create_parser()
     tokens = tokenize(parser, "<attachment=image.png:1><attachment=video.mp4:2>")

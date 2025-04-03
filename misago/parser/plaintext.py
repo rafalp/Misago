@@ -20,8 +20,8 @@ class StatePlaintext:
     list_item_prefix: str
     result: str = ""
 
-    def push(self, text: str, nlnl: bool = False):
-        if nlnl and self.result:
+    def push(self, text: str, hardbreak: bool = False):
+        if hardbreak and self.result:
             self.result += "\n\n"
         self.result += text
 
@@ -79,6 +79,7 @@ def render_tokens_to_plaintext(tokens: list[Token]) -> str:
             render_spoiler_bbcode,
             render_ordered_list,
             render_bullet_list,
+            render_table,
             render_attachments,
             render_paragraph,
             render_inline,
@@ -114,7 +115,7 @@ def render_header(state: StatePlaintext) -> bool:
 
     tokens, pos = match
 
-    state.push(state.renderer.render(tokens[1:-1]), nlnl=True)
+    state.push(state.renderer.render(tokens[1:-1]), hardbreak=True)
     state.pos = pos
 
     return True
@@ -130,11 +131,11 @@ def render_code(state: StatePlaintext) -> bool:
     content = dedent(token.content).strip()
 
     if info and syntax:
-        state.push(f"{info}, {syntax}:\n{content}", nlnl=True)
+        state.push(f"{info}, {syntax}:\n{content}", hardbreak=True)
     elif info or syntax:
-        state.push(f"{info or syntax}:\n{content}", nlnl=True)
+        state.push(f"{info or syntax}:\n{content}", hardbreak=True)
     else:
-        state.push(content, nlnl=True)
+        state.push(content, hardbreak=True)
 
     state.pos += 1
     return True
@@ -163,7 +164,7 @@ def render_quote_bbcode(state: StatePlaintext) -> bool:
     else:
         prefix = ""
 
-    state.push(prefix + state.renderer.render(tokens[1:-1]), nlnl=True)
+    state.push(prefix + state.renderer.render(tokens[1:-1]), hardbreak=True)
     state.pos = pos
 
     return True
@@ -182,7 +183,7 @@ def render_spoiler_bbcode(state: StatePlaintext) -> bool:
     else:
         prefix = ""
 
-    state.push(prefix + state.renderer.render(tokens[1:-1]), nlnl=True)
+    state.push(prefix + state.renderer.render(tokens[1:-1]), hardbreak=True)
     state.pos = pos
 
     return True
@@ -278,6 +279,38 @@ def render_list_content(
     return "\n".join(rendered_items)
 
 
+def render_table(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "table_open", "table_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+
+    table_rows: list[str] = []
+    row_cells: list[str] = []
+    cell_tokens: list[Token] = []
+
+    nesting = 0
+
+    for token in tokens[1:-1]:
+        if token.type == "tr_close":
+            table_rows.append(", ".join(row_cells))
+            row_cells = []
+        elif token.type in ("th_open", "td_open"):
+            nesting += 1
+        elif token.type in ("th_close", "td_close"):
+            nesting -= 1
+            if not nesting:
+                row_cells.append(state.renderer.render(cell_tokens).strip())
+                cell_tokens = []
+        elif nesting:
+            cell_tokens.append(token)
+
+    state.push("\n".join(table_rows), hardbreak=True)
+    state.pos = pos
+    return True
+
+
 def render_attachments(state: StatePlaintext) -> bool:
     match = match_token_pair(state, "attachments_open", "attachments_close")
     if not match:
@@ -293,7 +326,7 @@ def render_attachments(state: StatePlaintext) -> bool:
                 content.append(name)
 
     if content:
-        state.push("\n".join(content), nlnl=True)
+        state.push("\n".join(content), hardbreak=True)
 
     state.pos = pos
 
@@ -307,7 +340,7 @@ def render_paragraph(state: StatePlaintext) -> bool:
 
     tokens, pos = match
 
-    state.push(state.renderer.render(tokens[1:-1]), nlnl=True)
+    state.push(state.renderer.render(tokens[1:-1]), hardbreak=True)
     state.pos = pos
 
     return True
