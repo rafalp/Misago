@@ -1,31 +1,23 @@
-from textwrap import dedent
+import textwrap
 
 import pytest
 
-from ...permissions.proxy import UserPermissionsProxy
-from ..context import create_parser_context
 from ..factory import create_parser
+from ..html import render_tokens_to_html
+from ..tokenizer import tokenize
 
 
 @pytest.fixture
-def parser(parser_context):
-    return create_parser(parser_context)
+def parse_to_html():
+    def _parser(markup: str, dedent=False, strip=False):
+        parser = create_parser()
 
+        if dedent:
+            markup = textwrap.dedent(markup)
+        if strip:
+            markup = markup.strip()
 
-@pytest.fixture
-def parser_context(dynamic_settings, cache_versions, user):
-    dynamic_settings.forum_address = "http://example.org"
+        tokens = tokenize(parser, markup)
+        return render_tokens_to_html(parser, tokens)
 
-    return create_parser_context(
-        user_permissions=UserPermissionsProxy(user, cache_versions),
-        settings=dynamic_settings,
-        cache_versions=cache_versions,
-    )
-
-
-@pytest.fixture
-def parse_markup(parser):
-    def parse_markup_func(markup: str) -> list[dict]:
-        return parser(dedent(markup).strip())
-
-    return parse_markup_func
+    return _parser

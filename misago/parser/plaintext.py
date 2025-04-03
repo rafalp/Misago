@@ -1,261 +1,455 @@
-import re
+from dataclasses import dataclass
+from textwrap import dedent
+from typing import Callable
 
-from ..core.utils import slugify
-from .context import ParserContext
-from .enums import PlainTextFormat
-from .exceptions import AstError
-from .hooks import render_ast_node_to_plaintext_hook
-from .urls import clean_url
+from markdown_it.renderer import RendererProtocol
+from markdown_it.token import Token
 
-
-def render_ast_to_plaintext(
-    context: ParserContext,
-    ast: list[dict],
-    metadata: dict,
-    text_format: str | None = None,
-) -> str:
-    text = render_children_ast_to_plaintext(context, ast, metadata, text_format)
-
-    if text_format in (
-        PlainTextFormat.META_DESCRIPTION,
-        PlainTextFormat.SEARCH_DOCUMENT,
-    ):
-        return re.sub("\s\s+", " ", text)
-
-    return text.replace("\n", "\r\n")
+from .hooks import render_tokens_to_plaintext_hook
 
 
-def render_children_ast_to_plaintext(
-    context: ParserContext,
-    ast: list[dict],
-    metadata: dict,
-    text_format: str | None = None,
-) -> str:
-    plain_text = []
-    for ast_node in ast:
-        node_text = render_ast_node_to_plaintext(
-            context,
-            ast_node,
-            metadata,
-            text_format,
-        ).strip()
-        if node_text:
-            plain_text.append(node_text)
-
-    return (" ".join(plain_text)).strip()
+RendererPlaintextRule = Callable[["StatePlaintext"], bool]
 
 
-def render_inline_ast_to_plaintext(
-    context: ParserContext,
-    ast: list[dict],
-    metadata: dict,
-    text_format: str | None = None,
-) -> str:
-    plain_text = ""
-    for ast_node in ast:
-        plain_text += render_ast_node_to_plaintext(
-            context,
-            ast_node,
-            metadata,
-            text_format,
+@dataclass
+class StatePlaintext:
+    renderer: "RendererPlaintext"
+    tokens: list[Token]
+    pos: int
+    posMax: int
+    list_item_prefix: str
+    result: str = ""
+
+    def push(self, text: str, hardbreak: bool = False):
+        if hardbreak and self.result:
+            self.result += "\n\n"
+        self.result += text
+
+
+class RendererPlaintext(RendererProtocol):
+    __output__ = "text"
+
+    rules: list[RendererPlaintextRule]
+
+    def __init__(self, rules: list[RendererPlaintextRule]):
+        self.rules = rules
+
+    def render(self, tokens: list[Token], list_item_prefix: str | None = None) -> str:
+        state = StatePlaintext(
+            renderer=self,
+            tokens=tokens,
+            pos=0,
+            posMax=len(tokens) - 1,
+            list_item_prefix=list_item_prefix,
         )
-    return plain_text
+
+        while state.pos <= state.posMax:
+            for rule in self.rules:
+                if rule(state):
+                    break
+            else:
+                state.pos += 1
+
+        # Normalize whitespace and linebreaks
+        result = state.result.strip()
+
+        while "\n " in result:
+            result = result.replace("\n ", "\n")
+
+        while " \n" in result:
+            result = result.replace(" \n", "\n")
+
+        while "\n\n\n" in result:
+            result = result.replace("\n\n\n", "\n\n")
+
+        while "  " in result:
+            result = result.replace("  ", " ")
+
+        return result
 
 
-def render_ast_node_to_plaintext(
-    context: ParserContext,
-    ast_node: dict,
-    metadata: dict,
-    text_format: str | None,
-) -> str:
-    return render_ast_node_to_plaintext_hook(
-        _render_ast_node_to_plaintext_action,
-        context,
-        ast_node,
-        metadata,
-        text_format,
+def render_tokens_to_plaintext(tokens: list[Token]) -> str:
+    return render_tokens_to_plaintext_hook(
+        _render_tokens_to_plaintext_action,
+        tokens,
+        [
+            render_header,
+            render_code,
+            render_quote_bbcode,
+            render_spoiler_bbcode,
+            render_ordered_list,
+            render_bullet_list,
+            render_table,
+            render_attachments,
+            render_paragraph,
+            render_inline,
+            render_code_inline,
+            render_link,
+            render_image,
+            render_mention,
+            render_softbreak,
+            render_text,
+        ],
     )
 
 
-AST_INLINE_NODES = (
-    "heading",
-    "heading-setex",
-    "paragraph",
-    "emphasis",
-    "emphasis-underscore",
-    "strong",
-    "strong-underscore",
-    "strikethrough",
-    "strikethrough-bbcode",
-    "bold-bbcode",
-    "italics-bbcode",
-    "underline-bbcode",
-    "superscript-bbcode",
-    "subscript-bbcode",
-)
-
-
-def _render_ast_node_to_plaintext_action(
-    context: ParserContext,
-    ast_node: dict,
-    metadata: dict,
-    text_format: str | None,
+def _render_tokens_to_plaintext_action(
+    tokens: list[Token],
+    rules: list[tuple[str, RendererPlaintextRule]],
 ) -> str:
-    ast_type = ast_node["type"]
+    renderer = RendererPlaintext(rules)
+    return renderer.render(tokens)
 
-    if ast_type in AST_INLINE_NODES:
-        return render_inline_ast_to_plaintext(
-            context, ast_node["children"], metadata, text_format
-        ).strip()
 
-    if ast_type == "list":
-        items: list[str] = []
-        for i, ast_item in enumerate(ast_node["children"]):
-            if children := render_inline_ast_to_plaintext(
-                context, ast_item["children"], metadata, text_format
-            ).strip():
-                item = ""
-                if ast_node["ordered"]:
-                    item += f"{i + 1}."
-                else:
-                    item += ast_node["sign"]
+def render_header(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "heading_open", "heading_close")
+    if not match:
+        return False
 
-                item += " " + children
-                if lists := render_children_ast_to_plaintext(
-                    context, ast_item["lists"], metadata, text_format
-                ):
-                    item += " " + lists
+    tokens, pos = match
 
-                items.append(item)
+    state.push(state.renderer.render(tokens[1:-1]), hardbreak=True)
+    state.pos = pos
 
-        return " ".join(items)
+    return True
 
-    if ast_type == "table":
-        items: list[str] = []
-        for header in ast_node["header"]:
-            if header["children"]:
-                items.append(
-                    render_inline_ast_to_plaintext(
-                        context, header["children"], metadata, text_format
-                    ).strip()
-                )
-        for row in ast_node["children"]:
-            for cell in row["children"]:
-                if cell["children"]:
-                    items.append(
-                        render_inline_ast_to_plaintext(
-                            context, cell["children"], metadata, text_format
-                        ).strip()
-                    )
 
-        return " ".join(items)
+def render_code(state: StatePlaintext) -> bool:
+    token = state.tokens[state.pos]
+    if token.type not in ("code_block", "fence", "code_bbcode"):
+        return False
 
-    if ast_type in ("code", "code-bbcode", "code-indented"):
-        content = []
+    info = token.attrs.get("info")
+    syntax = token.attrs.get("syntax")
+    content = dedent(token.content).strip()
 
-        if ast_node.get("info") and ast_node.get("syntax"):
-            content.append(f"{ast_node['info']} ({ast_node['syntax']}):")
+    if info and syntax:
+        state.push(f"{info}, {syntax}:\n{content}", hardbreak=True)
+    elif info or syntax:
+        state.push(f"{info or syntax}:\n{content}", hardbreak=True)
+    else:
+        state.push(content, hardbreak=True)
+
+    state.pos += 1
+    return True
+
+
+def render_quote_bbcode(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "quote_bbcode_open", "quote_bbcode_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    opening_token = tokens[0]
+
+    info = opening_token.attrs.get("info")
+    user = opening_token.attrs.get("user")
+    post = opening_token.attrs.get("post")
+
+    if user and post:
+        prefix = f"{user}, #{post}:\n"
+    elif user:
+        prefix = f"{user}, #{post}:\n"
+    elif post:
+        prefix = f"#{post}:\n"
+    elif info:
+        prefix = f"{info}:\n"
+    else:
+        prefix = ""
+
+    state.push(prefix + state.renderer.render(tokens[1:-1]), hardbreak=True)
+    state.pos = pos
+
+    return True
+
+
+def render_spoiler_bbcode(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "spoiler_bbcode_open", "spoiler_bbcode_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    opening_token = tokens[0]
+
+    if info := opening_token.attrs.get("info"):
+        prefix = f"{info}:\n"
+    else:
+        prefix = ""
+
+    state.push(prefix + state.renderer.render(tokens[1:-1]), hardbreak=True)
+    state.pos = pos
+
+    return True
+
+
+def render_ordered_list(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "ordered_list_open", "ordered_list_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    content = render_list_content(state, tokens)
+
+    if state.list_item_prefix:
+        content = "\n" + content
+    else:
+        content = "\n\n" + content
+
+    state.push(content)
+    state.pos = pos
+    return True
+
+
+def render_bullet_list(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "bullet_list_open", "bullet_list_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    content = render_list_content(state, tokens)
+
+    if state.list_item_prefix:
+        content = "\n" + content
+    else:
+        content = "\n\n" + content
+
+    state.push(content)
+    state.pos = pos
+    return True
+
+
+def render_list_content(
+    state: StatePlaintext, tokens: list[Token], prefix: str | None = None
+) -> str:
+    prefix = prefix or state.list_item_prefix or ""
+
+    opening_token = tokens[0]
+    is_ordered = opening_token.type == "ordered_list_open"
+
+    if is_ordered:
+        start = opening_token.attrs.get("start") or 1
+    else:
+        delimiter = opening_token.markup
+
+    nesting_item = 0
+    nesting_list = 0
+
+    list_items: list[list[Token]] = []
+    item_tokens: list[Token] = []
+    for token in tokens[1:-1]:
+        if token.type in ("ordered_list_open", "bullet_list_open"):
+            nesting_list += 1
+            item_tokens.append(token)
+        elif token.type in ("ordered_list_close", "bullet_list_close"):
+            nesting_list -= 1
+            item_tokens.append(token)
+        elif token.type == "list_item_open":
+            nesting_item += 1
+            if nesting_list:
+                item_tokens.append(token)
+        elif token.type == "list_item_close":
+            nesting_item -= 1
+            if not nesting_item and not nesting_list:
+                list_items.append(item_tokens)
+                item_tokens = []
+            if nesting_list:
+                item_tokens.append(token)
+        elif nesting_item:
+            item_tokens.append(token)
+
+    rendered_items: list[str] = []
+    for index, item_tokens in enumerate(list_items):
+        if is_ordered:
+            item_prefix = f"{prefix}{start + index}. "
         else:
-            if info := ast_node.get("info"):
-                content.append(f"{info}:")
-            if syntax := ast_node.get("syntax"):
-                content.append(f"{syntax}:")
+            item_prefix = f"{prefix}{delimiter} "
 
-        content += [
-            line.strip() for line in ast_node["code"].splitlines() if line.strip()
-        ]
+        item_str = item_prefix
+        item_str += state.renderer.render(item_tokens, item_prefix).strip()
 
-        return " ".join(content)
+        rendered_items.append(item_str.strip())
 
-    if ast_type == "code-inline":
-        return ast_node["code"]
+    return "\n".join(rendered_items)
 
-    if ast_type in ("quote", "quote-bbcode"):
-        children = render_children_ast_to_plaintext(
-            context, ast_node["children"], metadata, text_format
-        )
 
-        if user := ast_node.get("user"):
-            return f"{user}: {children}"
+def render_table(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "table_open", "table_close")
+    if not match:
+        return False
 
-        if info := ast_node.get("info"):
-            return f"{info}: {children}"
+    tokens, pos = match
 
-        return children
+    table_rows: list[str] = []
+    row_cells: list[str] = []
+    cell_tokens: list[Token] = []
 
-    if ast_type == "spoiler-bbcode":
-        children = render_children_ast_to_plaintext(
-            context, ast_node["children"], metadata, text_format
-        )
+    nesting = 0
 
-        if info := ast_node.get("info"):
-            return f"{info}: {children}"
+    for token in tokens[1:-1]:
+        if token.type == "tr_close":
+            table_rows.append(", ".join(row_cells))
+            row_cells = []
+        elif token.type in ("th_open", "td_open"):
+            nesting += 1
+        elif token.type in ("th_close", "td_close"):
+            nesting -= 1
+            if not nesting:
+                row_cells.append(state.renderer.render(cell_tokens).strip())
+                cell_tokens = []
+        elif nesting:
+            cell_tokens.append(token)
 
-        return children
+    state.push("\n".join(table_rows), hardbreak=True)
+    state.pos = pos
+    return True
 
-    if ast_type in ("image", "image-bbcode"):
-        alt = ast_node["alt"] or ""
-        title = ast_node.get("title") or ""
 
-        if title == alt:
-            title = ""
+def render_attachments(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "attachments_open", "attachments_close")
+    if not match:
+        return False
 
-        if text_format == PlainTextFormat.META_DESCRIPTION:
-            return f"{alt} {title}".strip()
+    tokens, pos = match
+    attachments = tokens[1:-1]
 
-        src = clean_url(ast_node["src"])
-        return " ".join(i for i in (alt, src, title) if i).strip()
+    content: list[str] = []
+    for attachment in attachments:
+        if attachment.type == "attachment":
+            if name := attachment.attrs.get("name"):
+                content.append(name)
 
-    if ast_type in ("url", "url-bbcode"):
-        href = clean_url(ast_node["href"])
-        title = ast_node.get("title") or ""
+    if content:
+        state.push("\n".join(content), hardbreak=True)
 
-        if children := render_inline_ast_to_plaintext(
-            context, ast_node["children"], metadata, text_format
-        ).strip():
-            if text_format == PlainTextFormat.META_DESCRIPTION:
-                if title:
-                    return f"{children} ({title})"
-                return children
-            else:
-                if title:
-                    return f"{children} ({title}) {href}"
-                return f"{children} {href}"
+    state.pos = pos
 
-        if text_format == PlainTextFormat.META_DESCRIPTION:
-            return title
+    return True
 
-        return f"{title} {href}".strip()
 
-    if ast_type == "attachment-group":
-        return render_children_ast_to_plaintext(
-            context, ast_node["children"], metadata, text_format
-        )
+def render_paragraph(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "paragraph_open", "paragraph_close")
+    if not match:
+        return False
 
-    if ast_type == "attachment":
-        return ast_node["name"]
+    tokens, pos = match
 
-    if ast_type in ("auto-link", "auto-url"):
-        if text_format == PlainTextFormat.META_DESCRIPTION:
-            return ""
+    state.push(state.renderer.render(tokens[1:-1]), hardbreak=True)
+    state.pos = pos
 
-        return clean_url(ast_node["href"])
+    return True
 
-    if ast_type == "mention":
-        username = slugify(ast_node["username"])
-        if username not in metadata["users"]:
-            return "@" + ast_node["username"]
 
-        user = metadata["users"][username]
-        return "@" + user.username
+def render_inline(state: StatePlaintext) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "inline":
+        return False
 
-    if ast_type == "escape":
-        return ast_node["character"]
+    state.push(state.renderer.render(token.children))
+    state.pos += 1
+    return True
 
-    if ast_type in ("thematic-break", "thematic-break-bbcode", "line-break"):
-        return " "
 
-    if ast_type == "text":
-        return ast_node["text"]
+def render_code_inline(state: StatePlaintext) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "code_inline":
+        return False
 
-    raise AstError(f"Unknown AST node type: {ast_type}")
+    state.push(token.content)
+    state.pos += 1
+    return True
+
+
+def render_link(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "link_open", "link_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    opening_token = tokens[0]
+
+    shortened_url = opening_token.meta.get("shortened_url")
+    url = opening_token.attrs.get("href")
+
+    state.push(url)
+
+    if not shortened_url:
+        if content := state.renderer.render(tokens[1:-1]).strip():
+            state.push(f" ({content})")
+
+    state.pos = pos
+    return True
+
+
+def render_image(state: StatePlaintext) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "image":
+        return False
+
+    state.push(token.attrs["src"])
+
+    alt = token.content
+    title = token.attrs.get("title")
+
+    if alt and title:
+        state.push(f" ({alt}, {title})")
+    elif alt:
+        state.push(f" ({alt})")
+
+    state.pos += 1
+    return True
+
+
+def render_mention(state: StatePlaintext) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "mention":
+        return False
+
+    state.push(token.markup)
+    state.pos += 1
+    return True
+
+
+def render_softbreak(state: StatePlaintext) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "softbreak":
+        return False
+
+    state.push("\n")
+    state.pos += 1
+    return True
+
+
+def render_text(state: StatePlaintext) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "text":
+        return False
+
+    state.push(token.content)
+    state.pos += 1
+    return True
+
+
+def match_token_pair(
+    state: StatePlaintext, type_open: str, type_close: str
+) -> tuple[list[Token], int] | None:
+    pos = state.pos
+    nesting = 0
+    tokens: list[Token] = []
+
+    if state.tokens[pos].type != type_open:
+        return None
+
+    while pos <= state.posMax:
+        tokens.append(state.tokens[pos])
+        if state.tokens[pos].type == type_open:
+            nesting += 1
+        if state.tokens[pos].type == type_close:
+            nesting -= 1
+            if not nesting:
+                break
+        pos += 1
+
+    if pos > state.posMax:
+        return None
+
+    return tokens, pos

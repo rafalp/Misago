@@ -10,12 +10,11 @@ from ...attachments.delete import delete_attachments
 from ...attachments.models import Attachment
 from ...categories.models import Category
 from ...core.utils import slugify
-from ...parser.context import ParserContext, create_parser_context
-from ...parser.enums import ContentType, PlainTextFormat
 from ...parser.factory import create_parser
-from ...parser.html import render_ast_to_html
-from ...parser.metadata import create_ast_metadata
-from ...parser.plaintext import render_ast_to_plaintext
+from ...parser.html import render_tokens_to_html
+from ...parser.metadata import get_tokens_metadata
+from ...parser.plaintext import render_tokens_to_plaintext
+from ...parser.tokenizer import tokenize
 from ...threads.models import Post, Thread
 from ..tasks import upgrade_post_content
 from ..upgradepost import post_needs_content_upgrade
@@ -35,10 +34,6 @@ class PostingState:
     attachments: list[Attachment]
     delete_attachments: list[Attachment]
 
-    parser_context: ParserContext
-    message_ast: list[dict] | None
-    message_metadata: dict | None
-
     state: dict
     plugin_state: dict
 
@@ -46,10 +41,6 @@ class PostingState:
         self.request = request
         self.timestamp = timezone.now()
         self.user = request.user
-
-        self.parser_context = self.initialize_parser_context()
-        self.message_ast = None
-        self.message_metadata = None
 
         self.state = {}
         self.plugin_state = {}
@@ -119,33 +110,19 @@ class PostingState:
         self.store_object_state(obj)
         return update_fields
 
-    def initialize_parser_context(self) -> ParserContext:
-        return create_parser_context(self.request, content_type=ContentType.POST)
-
     def set_thread_title(self, title: str):
         self.thread.title = title
         self.thread.slug = slugify(title)
 
     def set_post_message(self, message: str):
-        parser = create_parser(self.parser_context)
-        ast = parser(message)
-        metadata = create_ast_metadata(self.parser_context, ast)
+        parser = create_parser()
+        tokens = tokenize(parser, message)
+        metadata = get_tokens_metadata(tokens)
 
         self.post.original = message
-        self.post.parsed = render_ast_to_html(self.parser_context, ast, metadata)
-        self.post.search_document = render_ast_to_plaintext(
-            self.parser_context,
-            ast,
-            metadata,
-            text_format=PlainTextFormat.SEARCH_DOCUMENT,
-        )
-
-        self.post.metadata["attachments"] = list(metadata["attachments"])
-        if metadata.get("highlight_code"):
-            self.post.metadata["highlight_code"] = True
-
-        self.message_ast = ast
-        self.message_metadata = metadata
+        self.post.parsed = render_tokens_to_html(parser, tokens)
+        self.post.search_document = render_tokens_to_plaintext(tokens)
+        self.post.metadata = metadata
 
     def schedule_post_content_upgrade(self):
         if post_needs_content_upgrade(self.post):

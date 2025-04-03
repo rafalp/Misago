@@ -5,8 +5,6 @@ from django.urls import reverse
 from ...attachments.models import Attachment
 from ...html.element import html_element
 from ...permissions.checkutils import PermissionCheckResult
-from ..html import render_ast_to_html
-from ..metadata import create_ast_metadata
 from ..richtext import replace_rich_text_tokens
 
 
@@ -22,11 +20,9 @@ def attachment_html_element(attachment: Attachment) -> str:
 
 
 def test_replace_rich_text_tokens_replaces_default_spoiler_summary(
-    parser_context, parse_markup, snapshot
+    parse_to_html, snapshot
 ):
-    ast = parse_markup("[spoiler]Hello world![/spoiler]")
-    metadata = create_ast_metadata(parser_context, ast)
-    html = render_ast_to_html(parser_context, ast, metadata)
+    html = parse_to_html("[spoiler]Hello world![/spoiler]")
     assert snapshot == replace_rich_text_tokens(html)
 
 
@@ -173,37 +169,27 @@ def test_replace_rich_text_tokens_replaces_not_existing_attachment_with_link():
     assert f'href="{details_url}"' in result
 
 
-def test_replace_rich_text_tokens_replaces_minimal_code_block(
-    parser_context, parse_markup, snapshot
-):
-    ast = parse_markup("[code]Hello world![/code]")
-    metadata = create_ast_metadata(parser_context, ast)
-    html = render_ast_to_html(parser_context, ast, metadata)
+def test_replace_rich_text_tokens_replaces_minimal_code_block(parse_to_html, snapshot):
+    html = parse_to_html("[code]Hello world![/code]")
     assert snapshot == replace_rich_text_tokens(html)
 
 
 def test_replace_rich_text_tokens_replaces_code_block_with_syntax(
-    parser_context, parse_markup, snapshot
+    parse_to_html, snapshot
 ):
-    ast = parse_markup("[code=php]Hello world![/code]")
-    metadata = create_ast_metadata(parser_context, ast)
-    html = render_ast_to_html(parser_context, ast, metadata)
+    html = parse_to_html("[code=php]Hello world![/code]")
     assert snapshot == replace_rich_text_tokens(html)
 
 
 def test_replace_rich_text_tokens_replaces_code_block_with_info(
-    parser_context, parse_markup, snapshot
+    parse_to_html, snapshot
 ):
-    ast = parse_markup("[code=Example string]Hello world![/code]")
-    metadata = create_ast_metadata(parser_context, ast)
-    html = render_ast_to_html(parser_context, ast, metadata)
+    html = parse_to_html("[code=Example string]Hello world![/code]")
     assert snapshot == replace_rich_text_tokens(html)
 
 
 def test_replace_rich_text_tokens_replaces_code_block_with_info_and_syntax(
-    parser_context, parse_markup, snapshot
+    parse_to_html, snapshot
 ):
-    ast = parse_markup("[code=Example string, syntax=php]Hello world![/code]")
-    metadata = create_ast_metadata(parser_context, ast)
-    html = render_ast_to_html(parser_context, ast, metadata)
+    html = parse_to_html("[code=Example string, syntax=php]Hello world![/code]")
     assert snapshot == replace_rich_text_tokens(html)

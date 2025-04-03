@@ -1,238 +1,71 @@
-def test_quote_bbcode(parse_markup):
-    result = parse_markup("[quote]Hello world![/quote]")
-    assert result == [
-        {
-            "type": "quote-bbcode",
-            "user": None,
-            "post": None,
-            "info": None,
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_quote_bbcode_without_args(parse_to_html):
+    html = parse_to_html("[quote]\nhello world\n[/quote]")
+    assert html == "<misago-quote>\n<p>hello world</p>\n</misago-quote>"
 
 
-def test_quote_bbcode_with_empty_info(parse_markup):
-    result = parse_markup("[quote=]Hello world![/quote]")
-    assert result == [
-        {
-            "type": "quote-bbcode",
-            "user": None,
-            "post": None,
-            "info": None,
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_quote_bbcode_with_empty_args(parse_to_html):
+    html = parse_to_html("[quote=]\nhello world\n[/quote]")
+    assert html == "<misago-quote>\n<p>hello world</p>\n</misago-quote>"
 
 
-def test_quote_bbcode_with_info(parse_markup):
-    result = parse_markup("[quote=Dune, part 2]Hello world![/quote]")
-    assert result == [
-        {
-            "type": "quote-bbcode",
-            "user": None,
-            "post": None,
-            "info": "Dune, part 2",
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_quote_bbcode_with_blank_args(parse_to_html):
+    html = parse_to_html("[quote=   ]\nhello world\n[/quote]")
+    assert html == "<misago-quote>\n<p>hello world</p>\n</misago-quote>"
 
 
-def test_quote_bbcode_with_author_and_post(parse_markup):
-    result = parse_markup("[quote=John; post:2137]Hello world![/quote]")
-    assert result == [
-        {
-            "type": "quote-bbcode",
-            "user": "John",
-            "post": 2137,
-            "info": None,
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_quote_bbcode_with_empty_quoted_args(parse_to_html):
+    html = parse_to_html('[quote=""]\nhello world\n[/quote]')
+    assert html == "<misago-quote>\n<p>hello world</p>\n</misago-quote>"
 
 
-def test_quote_bbcode_with_author_and_empty_post(parse_markup):
-    result = parse_markup("[quote=John; post:]Hello world![/quote]")
-    assert result == [
-        {
-            "type": "quote-bbcode",
-            "user": None,
-            "post": None,
-            "info": "John; post:",
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_quote_bbcode_with_blank_quoted_args(parse_to_html):
+    html = parse_to_html('[quote="   "]\nhello world\n[/quote]')
+    assert html == "<misago-quote>\n<p>hello world</p>\n</misago-quote>"
 
 
-def test_quote_bbcode_with_author_and_invalid_post(parse_markup):
-    result = parse_markup("[quote=John; post:dsadsa]Hello world![/quote]")
-    assert result == [
-        {
-            "type": "quote-bbcode",
-            "user": None,
-            "post": None,
-            "info": "John; post:dsadsa",
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_quote_bbcode_with_info_arg(parse_to_html):
+    html = parse_to_html("[quote=test]\nhello world\n[/quote]")
+    assert html == '<misago-quote info="test">\n<p>hello world</p>\n</misago-quote>'
 
 
-def test_quote_bbcode_without_author_and_with_post(parse_markup):
-    result = parse_markup("[quote=post:2137]Hello world![/quote]")
-    assert result == [
-        {
-            "type": "quote-bbcode",
-            "user": None,
-            "post": None,
-            "info": "post:2137",
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_quote_bbcode_with_quoted_info_arg(parse_to_html):
+    html = parse_to_html('[quote="test"]\nhello world\n[/quote]')
+    assert html == '<misago-quote info="test">\n<p>hello world</p>\n</misago-quote>'
 
 
-def test_quote_bbcode_with_extra_post(parse_markup):
-    result = parse_markup("[quote=John; post:1; post:3]Hello world![/quote]")
-    assert result == [
-        {
-            "type": "quote-bbcode",
-            "user": None,
-            "post": None,
-            "info": "John; post:1; post:3",
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_quote_bbcode_with_valid_user_and_post_args(parse_to_html):
+    html = parse_to_html("[quote=John; post:2137]\nhello world\n[/quote]")
+    assert html == (
+        '<misago-quote user="John" post="2137">\n<p>hello world</p>\n</misago-quote>'
+    )
 
 
-def test_quote_bbcode_with_space_around_post(parse_markup):
-    result = parse_markup("[quote=John; post:  3]Hello world![/quote]")
-    assert result == [
-        {
-            "type": "quote-bbcode",
-            "user": "John",
-            "post": 3,
-            "info": None,
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_quote_bbcode_with_quoted_valid_user_and_post_args(parse_to_html):
+    html = parse_to_html('[quote="John; post:2137"]\nhello world\n[/quote]')
+    assert html == (
+        '<misago-quote user="John" post="2137">\n<p>hello world</p>\n</misago-quote>'
+    )
 
 
-def test_quote_bbcode_strips_quotations_and_spaces_from_info(parse_markup):
-    result = parse_markup('[quote="  Dune, part 2 "]Hello world![/quote]')
-    assert result == [
-        {
-            "type": "quote-bbcode",
-            "user": None,
-            "post": None,
-            "info": "Dune, part 2",
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_quote_bbcode_with_valid_user_and_invalid_post_args(parse_to_html):
+    html = parse_to_html("[quote=John; post:invalid]\nhello world\n[/quote]")
+    assert html == (
+        '<misago-quote info="John; post:invalid">\n<p>hello world</p>\n</misago-quote>'
+    )
 
 
-def test_quote_bbcode_unescapes_info(parse_markup):
-    result = parse_markup('[quote="Dune, \\"part 2\\" "]Hello world![/quote]')
-    assert result == [
-        {
-            "type": "quote-bbcode",
-            "user": None,
-            "post": None,
-            "info": 'Dune, "part 2"',
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_quote_bbcode_without_args_single_line(parse_to_html):
+    html = parse_to_html("[quote]hello world[/quote]")
+    assert html == "<misago-quote>\n<p>hello world</p>\n</misago-quote>"
 
 
-def test_empty_quote_bbcode_is_removed_from_result(parse_markup):
-    result = parse_markup("Lorem ipsum.[quote][/quote]")
-    assert result == [
-        {
-            "type": "paragraph",
-            "children": [{"type": "text", "text": "Lorem ipsum."}],
-        },
-    ]
+def test_quote_bbcode_with_info_arg_single_line(parse_to_html):
+    html = parse_to_html("[quote=test]hello world[/quote]")
+    assert html == '<misago-quote info="test">\n<p>hello world</p>\n</misago-quote>'
 
 
-def test_blank_quote_bbcode_is_removed_from_result(parse_markup):
-    result = parse_markup("Lorem ipsum.[quote]     [/quote]")
-    assert result == [
-        {
-            "type": "paragraph",
-            "children": [{"type": "text", "text": "Lorem ipsum."}],
-        },
-    ]
-
-
-def test_quote_bbcode_next_to_paragraph_is_parsed(parse_markup):
-    result = parse_markup("Lorem ipsum.[quote]Dolor met![/quote]")
-    assert result == [
-        {
-            "type": "paragraph",
-            "children": [{"type": "text", "text": "Lorem ipsum."}],
-        },
-        {
-            "type": "quote-bbcode",
-            "user": None,
-            "post": None,
-            "info": None,
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Dolor met!"}],
-                },
-            ],
-        },
-    ]
+def test_quote_bbcode_without_args_single_line_parses_inline(parse_to_html):
+    html = parse_to_html("[quote]hello **world**[/quote]")
+    assert html == (
+        "<misago-quote>\n<p>hello <strong>world</strong></p>\n</misago-quote>"
+    )

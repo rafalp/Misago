@@ -12,6 +12,7 @@ Faker
 freezegun
 html5lib
 markdown
+markdown-it-py[linkify]
 social-auth-app-django
 pyjwt
 pillow

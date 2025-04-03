@@ -1,4 +1,8 @@
 # serializer version: 1
 # name: test_complete_markup_template_tag_replaces_default_spoiler_summary
-  '<spoiler><p>Hello world!</p></spoiler>'
+  '''
+  <misago-spoiler>
+  <p>Hello world!</p>
+  </misago-spoiler>
+  '''
 # ---

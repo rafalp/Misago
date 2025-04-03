@@ -1,270 +1,94 @@
-def test_code_bbcode_can_be_one_liner(parse_markup):
-    result = parse_markup(
-        """
-        [code]alert("hello!")[/code]
-        """
+def test_code_bbcode_without_args(parse_to_html):
+    html = parse_to_html('[code]\nhello("world")\n[/code]')
+    assert html == "<misago-code>hello(&quot;world&quot;)</misago-code>"
+
+
+def test_code_bbcode_with_empty_args(parse_to_html):
+    html = parse_to_html('[code=]\nhello("world")\n[/code]')
+    assert html == "<misago-code>hello(&quot;world&quot;)</misago-code>"
+
+
+def test_code_bbcode_with_blank_args(parse_to_html):
+    html = parse_to_html('[code=   ]\nhello("world")\n[/code]')
+    assert html == "<misago-code>hello(&quot;world&quot;)</misago-code>"
+
+
+def test_code_bbcode_with_empty_quoted_args(parse_to_html):
+    html = parse_to_html('[code=""]\nhello("world")\n[/code]')
+    assert html == "<misago-code>hello(&quot;world&quot;)</misago-code>"
+
+
+def test_code_bbcode_with_blank_quoted_args(parse_to_html):
+    html = parse_to_html('[code="   "]\nhello("world")\n[/code]')
+    assert html == "<misago-code>hello(&quot;world&quot;)</misago-code>"
+
+
+def test_code_bbcode_with_info_arg(parse_to_html):
+    html = parse_to_html('[code=lorem]\nhello("world")\n[/code]')
+    assert html == ('<misago-code info="lorem">hello(&quot;world&quot;)</misago-code>')
+
+
+def test_code_bbcode_with_quoted_info_arg(parse_to_html):
+    html = parse_to_html('[code="lorem"]\nhello("world")\n[/code]')
+    assert html == ('<misago-code info="lorem">hello(&quot;world&quot;)</misago-code>')
+
+
+def test_code_bbcode_with_syntax_arg(parse_to_html):
+    html = parse_to_html('[code=php]\nhello("world")\n[/code]')
+    assert html == ('<misago-code syntax="php">hello(&quot;world&quot;)</misago-code>')
+
+
+def test_code_bbcode_with_quoted_syntax_arg(parse_to_html):
+    html = parse_to_html('[code="php"]\nhello("world")\n[/code]')
+    assert html == ('<misago-code syntax="php">hello(&quot;world&quot;)</misago-code>')
+
+
+def test_code_bbcode_with_info_and_syntax_arg(parse_to_html):
+    html = parse_to_html('[code=lorem; syntax=php]\nhello("world")\n[/code]')
+    assert html == (
+        '<misago-code info="lorem" syntax="php">hello(&quot;world&quot;)'
+        "</misago-code>"
     )
-    assert result == [
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": None,
-            "code": 'alert("hello!")',
-        }
-    ]
 
 
-def test_code_bbcode_can_be_multiline(parse_markup):
-    result = parse_markup(
-        """
-        [code]
-        alert("hello!")
-        alert("world!")
-        [/code]
-        """
+def test_code_bbcode_with_quoted_info_and_syntax_arg(parse_to_html):
+    html = parse_to_html('[code="lorem; syntax=php"]\nhello("world")\n[/code]')
+    assert html == (
+        '<misago-code info="lorem" syntax="php">hello(&quot;world&quot;)'
+        "</misago-code>"
     )
-    assert result == [
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": None,
-            "code": 'alert("hello!")\nalert("world!")',
-        }
-    ]
 
 
-def test_code_bbcode_dedents_content(parse_markup):
-    result = parse_markup(
-        """
-        [code]
-          alert("hello!")
-          alert("world!")
-        [/code]
-        """
-    )
-    assert result == [
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": None,
-            "code": 'alert("hello!")\nalert("world!")',
-        }
-    ]
+def test_code_bbcode_strips_blank_lines(parse_to_html):
+    html = parse_to_html('[code]\n\n\nhello("world")\n\n\n[/code]')
+    assert html == "<misago-code>hello(&quot;world&quot;)</misago-code>"
 
 
-def test_code_bbcode_trims_content(parse_markup):
-    result = parse_markup(
-        """
-        [code]
-
-          alert("hello!")
-          alert("world!")
-
-        [/code]
-        """
-    )
-    assert result == [
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": None,
-            "code": 'alert("hello!")\nalert("world!")',
-        }
-    ]
+def test_code_bbcode_dedents_lines(parse_to_html):
+    html = parse_to_html('[code]\n    hello("world")\n\n\n[/code]')
+    assert html == "<misago-code>hello(&quot;world&quot;)</misago-code>"
 
 
-def test_code_bbcode_supports_syntax(parse_markup):
-    result = parse_markup(
-        """
-        [code=python]
-        alert("hello!")
-        alert("world!")
-        [/code]
-        """
-    )
-    assert result == [
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": "python",
-            "code": 'alert("hello!")\nalert("world!")',
-        }
-    ]
+def test_code_bbcode_without_args_single_line(parse_to_html):
+    html = parse_to_html('[code]hello("world")[/code]')
+    assert html == "<misago-code>hello(&quot;world&quot;)</misago-code>"
 
 
-def test_code_bbcode_trims_syntax(parse_markup):
-    result = parse_markup(
-        """
-        [code=  python   ]
-        alert("hello!")
-        alert("world!")
-        [/code]
-        """
-    )
-    assert result == [
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": "python",
-            "code": 'alert("hello!")\nalert("world!")',
-        }
-    ]
+def test_code_bbcode_with_syntax_arg_single_line(parse_to_html):
+    html = parse_to_html('[code=php]hello("world")[/code]')
+    assert html == '<misago-code syntax="php">hello(&quot;world&quot;)</misago-code>'
 
 
-def test_code_bbcode_trims_syntax_quotes(parse_markup):
-    result = parse_markup(
-        """
-        [code="  python  "]
-        alert("hello!")
-        alert("world!")
-        [/code]
-        """
-    )
-    assert result == [
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": "python",
-            "code": 'alert("hello!")\nalert("world!")',
-        }
-    ]
+def test_code_bbcode_with_info_arg_single_line(parse_to_html):
+    html = parse_to_html('[code=lorem]hello("world")[/code]')
+    assert html == '<misago-code info="lorem">hello(&quot;world&quot;)</misago-code>'
 
 
-def test_code_bbcode_trims_syntax_single_quotes(parse_markup):
-    result = parse_markup(
-        """
-        [code='  python  ']
-        alert("hello!")
-        alert("world!")
-        [/code]
-        """
-    )
-    assert result == [
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": "python",
-            "code": 'alert("hello!")\nalert("world!")',
-        }
-    ]
+def test_code_bbcode_with_quoted_arg_single_line(parse_to_html):
+    html = parse_to_html('[code="lorem"]hello("world")[/code]')
+    assert html == '<misago-code info="lorem">hello(&quot;world&quot;)</misago-code>'
 
 
-def test_code_bbcode_unescapes_info(parse_markup):
-    result = parse_markup(
-        """
-        [code="Failing \"feature\" example"]
-        alert("hello!")
-        alert("world!")
-        [/code]
-        """
-    )
-    assert result == [
-        {
-            "type": "code-bbcode",
-            "info": 'Failing "feature" example',
-            "syntax": None,
-            "code": 'alert("hello!")\nalert("world!")',
-        }
-    ]
-
-
-def test_code_bbcode_preserves_escaping_characters(parse_markup):
-    result = parse_markup(
-        """
-        [code]
-        alert("hel\+lo!")
-        [/code]
-        """
-    )
-    assert result == [
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": None,
-            "code": 'alert("hel\+lo!")',
-        }
-    ]
-
-
-def test_code_bbcode_preserves_inline_code(parse_markup):
-    result = parse_markup(
-        """
-        [code]
-        `text`
-        [/code]
-        """
-    )
-    assert result == [
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": None,
-            "code": "`text`",
-        }
-    ]
-
-
-def test_code_bbcode_can_be_mixed_with_other_blocks(parse_markup):
-    result = parse_markup(
-        """
-        Here is the code:
-
-        [code]
-        1 + 3
-        [/code]
-        It's cool!
-        """
-    )
-    assert result == [
-        {
-            "type": "paragraph",
-            "children": [{"type": "text", "text": "Here is the code:"}],
-        },
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": None,
-            "code": "1 + 3",
-        },
-        {
-            "type": "paragraph",
-            "children": [{"type": "text", "text": "It's cool!"}],
-        },
-    ]
-
-
-def test_code_bbcode_can_be_used_next_to_each_other(parse_markup):
-    result = parse_markup(
-        """
-        Here is the code:
-
-        [code]
-        1 + 3
-        [/code][code]
-        5 x 3
-        [/code]
-        It's cool!
-        """
-    )
-    assert result == [
-        {
-            "type": "paragraph",
-            "children": [{"type": "text", "text": "Here is the code:"}],
-        },
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": None,
-            "code": "1 + 3",
-        },
-        {
-            "type": "code-bbcode",
-            "info": None,
-            "syntax": None,
-            "code": "5 x 3",
-        },
-        {
-            "type": "paragraph",
-            "children": [{"type": "text", "text": "It's cool!"}],
-        },
-    ]
+def test_code_bbcode_single_line_strips_whitespace(parse_to_html):
+    html = parse_to_html('[code="lorem"]   hello("world")   [/code]')
+    assert html == '<misago-code info="lorem">hello(&quot;world&quot;)</misago-code>'

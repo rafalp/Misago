@@ -1,118 +1,50 @@
-def test_spoiler_bbcode(parse_markup):
-    result = parse_markup("[spoiler]Hello world![/spoiler]")
-    assert result == [
-        {
-            "type": "spoiler-bbcode",
-            "info": None,
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_spoiler_bbcode_without_args(parse_to_html):
+    html = parse_to_html("[spoiler]\nhello world\n[/spoiler]")
+    assert html == "<misago-spoiler>\n<p>hello world</p>\n</misago-spoiler>"
 
 
-def test_spoiler_bbcode_with_empty_info(parse_markup):
-    result = parse_markup("[spoiler=]Hello world![/spoiler]")
-    assert result == [
-        {
-            "type": "spoiler-bbcode",
-            "info": None,
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_spoiler_bbcode_with_empty_args(parse_to_html):
+    html = parse_to_html("[spoiler=]\nhello world\n[/spoiler]")
+    assert html == "<misago-spoiler>\n<p>hello world</p>\n</misago-spoiler>"
 
 
-def test_spoiler_bbcode_with_info(parse_markup):
-    result = parse_markup("[spoiler=Dune, part 2]Hello world![/spoiler]")
-    assert result == [
-        {
-            "type": "spoiler-bbcode",
-            "info": "Dune, part 2",
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_spoiler_bbcode_with_blank_args(parse_to_html):
+    html = parse_to_html("[spoiler=   ]\nhello world\n[/spoiler]")
+    assert html == "<misago-spoiler>\n<p>hello world</p>\n</misago-spoiler>"
 
 
-def test_spoiler_bbcode_strips_quotations_and_spaces_from_info(parse_markup):
-    result = parse_markup('[spoiler="  Dune, part 2 "]Hello world![/spoiler]')
-    assert result == [
-        {
-            "type": "spoiler-bbcode",
-            "info": "Dune, part 2",
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_spoiler_bbcode_with_empty_quoted_args(parse_to_html):
+    html = parse_to_html('[spoiler=""]\nhello world\n[/spoiler]')
+    assert html == "<misago-spoiler>\n<p>hello world</p>\n</misago-spoiler>"
 
 
-def test_spoiler_bbcode_unescapes_info(parse_markup):
-    result = parse_markup('[spoiler="Dune, \\"part 2\\""]Hello world![/spoiler]')
-    assert result == [
-        {
-            "type": "spoiler-bbcode",
-            "info": 'Dune, "part 2"',
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Hello world!"}],
-                },
-            ],
-        },
-    ]
+def test_spoiler_bbcode_with_blank_quoted_args(parse_to_html):
+    html = parse_to_html('[spoiler="   "]\nhello world\n[/spoiler]')
+    assert html == "<misago-spoiler>\n<p>hello world</p>\n</misago-spoiler>"
 
 
-def test_empty_spoiler_bbcode_is_removed_from_result(parse_markup):
-    result = parse_markup("Lorem ipsum.[spoiler][/spoiler]")
-    assert result == [
-        {
-            "type": "paragraph",
-            "children": [{"type": "text", "text": "Lorem ipsum."}],
-        },
-    ]
+def test_spoiler_bbcode_with_info_arg(parse_to_html):
+    html = parse_to_html("[spoiler=test]\nhello world\n[/spoiler]")
+    assert html == '<misago-spoiler info="test">\n<p>hello world</p>\n</misago-spoiler>'
 
 
-def test_blank_spoiler_bbcode_is_removed_from_result(parse_markup):
-    result = parse_markup("Lorem ipsum.[spoiler]   [/spoiler]")
-    assert result == [
-        {
-            "type": "paragraph",
-            "children": [{"type": "text", "text": "Lorem ipsum."}],
-        },
-    ]
+def test_spoiler_bbcode_with_quoted_info_arg(parse_to_html):
+    html = parse_to_html('[spoiler="test"]\nhello world\n[/spoiler]')
+    assert html == '<misago-spoiler info="test">\n<p>hello world</p>\n</misago-spoiler>'
 
 
-def test_spoiler_bbcode_next_to_paragraph_is_parsed(parse_markup):
-    result = parse_markup("Lorem ipsum.[spoiler]Dolor met![/spoiler]")
-    assert result == [
-        {
-            "type": "paragraph",
-            "children": [{"type": "text", "text": "Lorem ipsum."}],
-        },
-        {
-            "type": "spoiler-bbcode",
-            "info": None,
-            "children": [
-                {
-                    "type": "paragraph",
-                    "children": [{"type": "text", "text": "Dolor met!"}],
-                },
-            ],
-        },
-    ]
+def test_spoiler_bbcode_without_args_single_line(parse_to_html):
+    html = parse_to_html("[spoiler]hello world[/spoiler]")
+    assert html == "<misago-spoiler>\n<p>hello world</p>\n</misago-spoiler>"
+
+
+def test_spoiler_bbcode_with_info_arg_single_line(parse_to_html):
+    html = parse_to_html("[spoiler=test]hello world[/spoiler]")
+    assert html == '<misago-spoiler info="test">\n<p>hello world</p>\n</misago-spoiler>'
+
+
+def test_spoiler_bbcode_without_args_single_line_parses_inline(parse_to_html):
+    html = parse_to_html("[spoiler]hello **world**[/spoiler]")
+    assert html == (
+        "<misago-spoiler>\n<p>hello <strong>world</strong></p>\n</misago-spoiler>"
+    )

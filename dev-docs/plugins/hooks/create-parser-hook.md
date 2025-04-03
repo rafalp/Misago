@@ -1,6 +1,6 @@
 # `create_parser_hook`
 
-This hook wraps the standard function that Misago uses to create a markup parser instance.
+This hook wraps the standard function that Misago uses to create a configured MarkdownIt instance.
 
 
 ## Location
@@ -17,15 +17,14 @@ from misago.parser.hooks import create_parser_hook
 ```python
 def custom_create_parser_filter(
     action: CreateParserHookAction,
-    context: 'ParserContext',
     *,
-    block_patterns: list[Pattern],
-    inline_patterns: list[Pattern],
-    pre_processors: list[Callable[[Parser, str],
-    str]],
-    post_processors: list[Callable[[Parser, list[dict]],
-    list[dict]]],
-) -> Parser:
+    config: str | PresetType,
+    options_update: Mapping[str, Any] | None=None,
+    enable: str | Iterable[str] | None=None,
+    disable: str | Iterable[str] | None=None,
+    plugins: Iterable[Callable[[MarkdownIt],
+    None]] | None=None,
+) -> MarkdownIt:
     ...
 ```
 
@@ -36,146 +35,120 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CreateParserHookAction`
 
-A standard Misago function used to create a markup parser instance or the next filter function from another plugin.
+A standard Misago function used to create a configured MarkdownIt instance or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
 
-#### `context: ParserContext`
+#### `config: str | PresetType`
 
-An instance of the `ParserContext` data class that contains dependencies used during parsing.
-
-
-#### `block_patterns: list[Pattern]`
-
-A list of `Pattern` instances of block patterns to be used by the parser.
+A `str` with the name of the preset to use, or a `PresetType` instance.
 
 
-#### `inline_patterns: list[Pattern]`
+#### `options_update: Mapping[str, Any] | None = None`
 
-A list of `Pattern` instances of inline patterns to be used by the parser.
-
-
-#### `pre_processors: list[Callable[[Parser, str], str]]`
-
-A list of pre-processor functions called by the parser to prepare markup for parsing.
-
-A pre-processor function should have the following signature:
-
-```python
-def custom_postprocessor(parser: Parser, markup: str) -> str:
-    # Do something with the 'markup'...
-    return markup
-```
+A `Mapping` with preset's options overrides.
 
 
-#### `post_processors: list[Callable[[Parser, list[dict]], list[dict]]]`
+#### `enable: str | Iterable[str] | None = None`
 
-A list of post-processor functions called by the parser to finalize the AST.
+Argument to call the `MarkdownIt.enable(...)` method with. If empty or `None`, `enable()` will not be called.
 
-A post-processor function should have the following signature:
 
-```python
-def custom_postprocessor(parser: Parser, ast: list[dict]) -> list[dict]:
-    # Do something with the 'ast'...
-    return ast
-```
+#### `disable: str | Iterable[str] | None = None`
+
+Argument to call the `MarkdownIt.disable(...)` method with. If empty or `None`, `disable()` will not be called.
+
+
+#### `plugins: Iterable[Callable[[MarkdownIt], None]] | None = None`
+
+A list of `MarkdownIt` plugins. Each plugin must be a callable that accepts a single argument: the `MarkdownIt` instance.
 
 
 ### Return value
 
-An instance of the `Parser` class.
+An instance of the `MarkdownIt` class.
 
 
 ## Action
 
 ```python
 def create_parser_action(
-    context: 'ParserContext',
     *,
-    block_patterns: list[Pattern],
-    inline_patterns: list[Pattern],
-    pre_processors: list[Callable[[Parser, str],
-    str]],
-    post_processors: list[Callable[[Parser, list[dict]],
-    list[dict]]],
-) -> Parser:
+    config: str | PresetType,
+    options_update: Mapping[str, Any] | None=None,
+    enable: str | Iterable[str] | None=None,
+    disable: str | Iterable[str] | None=None,
+    plugins: Iterable[Callable[[MarkdownIt],
+    None]] | None=None,
+) -> MarkdownIt:
     ...
 ```
 
-A standard Misago function used to create a markup parser instance or the next filter function from another plugin.
+A standard Misago function used to create a configured MarkdownIt instance or the next filter function from another plugin.
 
 
 ### Arguments
 
-#### `context: ParserContext`
+#### `config: str | PresetType`
 
-An instance of the `ParserContext` data class that contains dependencies used during parsing.
-
-
-#### `block_patterns: list[Pattern]`
-
-A list of `Pattern` instances of block patterns to be used by the parser.
+A `str` with the name of the preset to use, or a `PresetType` instance.
 
 
-#### `inline_patterns: list[Pattern]`
+#### `options_update: Mapping[str, Any] | None = None`
 
-A list of `Pattern` instances of inline patterns to be used by the parser.
-
-
-#### `pre_processors: list[Callable[[Parser, str], str]]`
-
-A list of pre-processor functions called by the parser to prepare markup for parsing.
-
-A pre-processor function should have the following signature:
-
-```python
-def custom_postprocessor(parser: Parser, markup: str) -> str:
-    # Do something with the 'markup'...
-    return markup
-```
+A `Mapping` with preset's options overrides.
 
 
-#### `post_processors: list[Callable[[Parser, list[dict]], list[dict]]]`
+#### `enable: str | Iterable[str] | None = None`
 
-A list of post-processor functions called by the parser to finalize the AST.
+Argument to call the `MarkdownIt.enable(...)` method with. If empty or `None`, `enable()` will not be called.
 
-A post-processor function should have the following signature:
 
-```python
-def custom_postprocessor(parser: Parser, ast: list[dict]) -> list[dict]:
-    # Do something with the 'ast'...
-    return ast
-```
+#### `disable: str | Iterable[str] | None = None`
+
+Argument to call the `MarkdownIt.disable(...)` method with. If empty or `None`, `disable()` will not be called.
+
+
+#### `plugins: Iterable[Callable[[MarkdownIt], None]] | None = None`
+
+A list of `MarkdownIt` plugins. Each plugin must be a callable that accepts a single argument: the `MarkdownIt` instance.
 
 
 ### Return value
 
-An instance of the `Parser` class.
+An instance of the `MarkdownIt` class.
 
 
 ## Example
 
-The code below implements a custom filter function that adds new block pattern to the parser:
+The code below implements a custom filter function that disables automatic linkification in parsed messages:
 
 ```python
-from misago.parser.context import ParserContext
-from misago.parser.hooks import create_parser_hook
-from misago.parser.parser import Parser
+from typing import Any, Callable, Iterable, Mapping
 
-from .patterns import PluginPattern
+from markdown_it import MarkdownIt
+from markdown_it.utils import PresetType
+from misago.parser.hooks import create_parser_hook
 
 
 @create_parser_hook.append_filter
-def create_parser_with_custom_pattern(
+def create_customized_parser(
     action,
-    context: ParserContext,
     *,
-    block_patterns,
-    **kwargs,
+    config: str | PresetType,
+    options_update: Mapping[str, Any] | None = None,
+    enable: str | Iterable[str] | None = None,
+    disable: str | Iterable[str] | None = None,
+    plugins: Iterable[Callable[[MarkdownIt], None]] | None = None,
 ) -> Parser:
-    block_patterns.append(PluginPattern)
+    options_update["linkify"] = False
 
-    # Call the next function in chain
-    return action(context, block_patterns=block_patterns, **kwargs)
+    return action(
+        config=config,
+        options_update=options_update,
+        enable=enable,
+        disable=disable,
+        plugins=plugins,
+    )
 ```

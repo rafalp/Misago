@@ -1,16 +1,13 @@
 from django.shortcuts import render
 from django.utils.translation import pgettext_lazy
 
-from .context import ParserContext, create_parser_context
-from .enums import ContentType, PlainTextFormat
 from .factory import create_parser
-from .html import render_ast_to_html
-from .metadata import create_ast_metadata
+from .html import render_tokens_to_html
+from .tokenizer import tokenize
 
 
 def formatting_help(request):
-    context = create_parser_context(request)
-    parser = create_parser(context)
+    parser = create_parser()
 
     examples = []
     for name, markup in FORMATS:
@@ -18,14 +15,12 @@ def formatting_help(request):
         if "@username" in markup and request.user.is_authenticated:
             markup = markup.replace("@username", "@" + request.user.username)
 
-        ast = parser(markup)
-        metadata = create_ast_metadata(context, ast)
-
+        tokens = tokenize(parser, markup)
         examples.append(
             {
                 "name": str(name),
                 "markup": markup,
-                "html": render_ast_to_html(context, ast, metadata),
+                "html": render_tokens_to_html(parser, tokens),
             }
         )
 
@@ -176,7 +171,7 @@ FORMATS = [
             "formatting help", "Code block with syntax highlighting (BBCode)"
         ),
         pgettext_lazy(
-            "formatting help", '[code=python]\r\nprint("Hello world!");\r\n[/code]'
+            "formatting help", '[code=javascript]\r\nalert("Hello world!");\r\n[/code]'
         ),
     ),
     (

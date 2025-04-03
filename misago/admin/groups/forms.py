@@ -3,12 +3,11 @@ from django.core.validators import validate_slug
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ...core.validators import validate_color_hex, validate_css_name, validate_sluggable
-from ...parser.context import create_parser_context
-from ...parser.enums import ContentType
 from ...parser.factory import create_parser
-from ...parser.html import render_ast_to_html
-from ...parser.metadata import create_ast_metadata
-from ...parser.plaintext import PlainTextFormat, render_ast_to_plaintext
+from ...parser.html import render_tokens_to_html
+from ...parser.metadata import get_tokens_metadata
+from ...parser.plaintext import render_tokens_to_plaintext
+from ...parser.tokenizer import tokenize
 from ...permissions.enums import CanUploadAttachments
 from ...users.models import Group, GroupDescription
 from ..forms import YesNoSwitch
@@ -345,8 +344,7 @@ class EditGroupDescriptionForm(forms.ModelForm):
     def __init__(self, *args, request, **kwargs):
         self.request = request
 
-        self.context = None
-        self.ast = None
+        self.tokens = None
         self.metadata = None
 
         super().__init__(*args, **kwargs)
@@ -355,22 +353,16 @@ class EditGroupDescriptionForm(forms.ModelForm):
         data = super().clean()
 
         if data.get("markdown"):
-            context = create_parser_context(
-                self.request,
-                content_type=ContentType.GROUP_DESCRIPTION,
-            )
-            parse = create_parser(context)
-            ast = parse(data["markdown"])
-            metadata = create_ast_metadata(context, ast)
-            data["html"] = render_ast_to_html(context, ast, metadata)
+            parser = create_parser()
+            tokens = tokenize(parser, data["markdown"])
+            metadata = get_tokens_metadata(tokens)
+
+            data["html"] = render_tokens_to_html(parser, tokens)
 
             if not data.get("meta"):
-                data["meta"] = render_ast_to_plaintext(
-                    context, ast, metadata, PlainTextFormat.META_DESCRIPTION
-                )
+                data["meta"] = render_tokens_to_plaintext(tokens)
 
-            self.context = context
-            self.ast = ast
+            self.tokens = tokens
             self.metadata = metadata
         else:
             data.update({"markdown": None, "html": None})
