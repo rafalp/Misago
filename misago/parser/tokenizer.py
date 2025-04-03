@@ -263,6 +263,9 @@ def _remove_nested_inline_bbcodes_from_inline_token(token_inline: Token):
             if token.tag not in stack:
                 new_children.append(token)
 
+        elif token.type == "text" and new_children and new_children[-1].type == "text":
+            new_children[-1].content += token.content
+
         else:
             new_children.append(token)
 
