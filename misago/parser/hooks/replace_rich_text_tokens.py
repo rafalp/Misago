@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 
 from ...plugins.hooks import FilterHook
 

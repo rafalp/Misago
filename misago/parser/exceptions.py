@@ -1,2 +1,0 @@
-class AstError(ValueError):
-    pass

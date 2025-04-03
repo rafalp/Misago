@@ -81,7 +81,7 @@ def test_reply_thread_state_updates_existing_post(user, user_request, user_threa
 
     post.refresh_from_db()
     assert post.original == "I am test message\n\nTest reply"
-    assert post.parsed == "<p>I am test message</p><p>Test reply</p>"
+    assert post.parsed == "<p>I am test message</p>\n<p>Test reply</p>"
     assert post.updated_on == state.timestamp
     assert post.edits == 1
     assert post.last_editor == user
@@ -163,7 +163,7 @@ def test_reply_thread_state_schedules_post_upgrade_for_post_with_code_block(
     mock_upgrade_post_content, user_request, other_user_thread
 ):
     state = ReplyThreadState(user_request, other_user_thread)
-    state.set_post_message("Hello world[code=python]add(1, 3)[/code]")
+    state.set_post_message("Hello world\n[code=python]add(1, 3)[/code]")
     state.save()
 
     assert state.post.id

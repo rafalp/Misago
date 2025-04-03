@@ -1,124 +1,61 @@
-from typing import Iterable
+from markdown_it.token import Token
 
-from django.conf import settings
-from django.contrib.auth import get_user_model
-
-from ..core.utils import slugify
-from .context import ParserContext
-from .hooks import (
-    get_ast_metadata_users_queryset_hook,
-    update_ast_metadata_hook,
-    update_ast_metadata_from_node_hook,
-    update_ast_metadata_users_hook,
-)
-
-User = get_user_model()
+from .hooks import get_tokens_metadata_hook
 
 
-def create_ast_metadata(
-    context: ParserContext,
-    ast: list[dict],
-) -> dict:
-    metadata = {
-        "outbound-links": set(),
-        "attachments": set(),
-        "highlight_code": False,
-        "usernames": set(),
-        "users": {},
-        "posts": {
-            "ids": set(),
-            "objs": {},
-        },
-    }
-
-    return update_ast_metadata_hook(_update_ast_metadata_action, context, ast, metadata)
+def get_tokens_metadata(tokens: list[Token]) -> dict:
+    return get_tokens_metadata_hook(_get_tokens_metadata_action, tokens)
 
 
-def _update_ast_metadata_action(
-    context: ParserContext,
-    ast: list[dict],
-    metadata: dict,
-) -> dict:
-    for ast_node in ast:
-        update_ast_metadata_from_node(context, ast_node, metadata)
+def _get_tokens_metadata_action(tokens: list[Token]) -> dict:
+    metadata = {}
 
-    update_ast_metadata_users(context, metadata)
+    if attachments := get_attachments_metadata(tokens):
+        metadata["attachments"] = attachments
+
+    if get_highlight_code_metadata(tokens):
+        metadata["highlight_code"] = True
+
+    if posts := get_quoted_posts_metadata(tokens):
+        metadata["posts"] = posts
+
+    if mentions := get_mentions_metadata(tokens):
+        metadata["mentions"] = mentions
 
     return metadata
 
 
-def update_ast_metadata_from_node(
-    context: ParserContext,
-    ast_node: dict,
-    metadata: dict,
-) -> None:
-    update_ast_metadata_from_node_hook(
-        _update_ast_metadata_from_node_action, context, ast_node, metadata
-    )
+def get_attachments_metadata(tokens: list[Token]) -> list[int]:
+    attachments: set[int] = set()
+    get_metadata_recursive(tokens, "attachment", "attachment", attachments)
+    return sorted(attachments)
 
 
-def _update_ast_metadata_from_node_action(
-    context: ParserContext,
-    ast_node: dict,
-    metadata: dict,
-) -> None:
-    if ast_node["type"] == "mention":
-        metadata["usernames"].add(slugify(ast_node["username"]))
-
-    elif ast_node["type"] == "quote-bbcode":
-        if ast_node["post"]:
-            metadata["posts"]["ids"].add(ast_node["post"])
-
-    if ast_node["type"] in ("code", "code-bbcode") and ast_node["syntax"]:
-        metadata["highlight_code"] = True
-
-    if ast_node["type"] == "attachment":
-        metadata["attachments"].add(ast_node["id"])
-
-    elif ast_node["type"] in ("auto-link", "auto-url", "url", "url-bbcode"):
-        if not context.forum_address.is_inbound_link(ast_node["href"]):
-            metadata["outbound-links"].add(ast_node["href"])
-
-    if ast_node.get("children"):
-        for child_node in ast_node["children"]:
-            update_ast_metadata_from_node(context, child_node, metadata)
-
-    if ast_node.get("items"):
-        for child_node in ast_node["items"]:
-            update_ast_metadata_from_node(context, child_node, metadata)
-
-    if ast_node.get("lists"):
-        for child_node in ast_node["lists"]:
-            update_ast_metadata_from_node(context, child_node, metadata)
+def get_highlight_code_metadata(tokens: list[Token]) -> list[str]:
+    syntax: set[str] = set()
+    get_metadata_recursive(tokens, "fence", "syntax", syntax)
+    get_metadata_recursive(tokens, "code_bbcode", "syntax", syntax)
+    return sorted(syntax)
 
 
-def update_ast_metadata_users(context: ParserContext, metadata: dict) -> None:
-    update_ast_metadata_users_hook(_update_ast_metadata_users_action, context, metadata)
+def get_quoted_posts_metadata(tokens: list[Token]) -> list[int]:
+    posts: set[int] = set()
+    get_metadata_recursive(tokens, "quote_bbcode_open", "post", posts)
+    return sorted(posts)
 
 
-def _update_ast_metadata_users_action(context: ParserContext, metadata: dict) -> None:
-    if not metadata["usernames"]:
-        return
-
-    usernames = sorted(metadata["usernames"])
-    if len(usernames) > settings.MISAGO_PARSER_MAX_USERS:
-        return
-
-    if usernames:
-        queryset = get_ast_metadata_users_queryset(context, usernames)
-        for user in queryset:
-            metadata["users"][user.slug] = user
+def get_mentions_metadata(tokens: list[Token]) -> list[str]:
+    mentions: set[str] = set()
+    get_metadata_recursive(tokens, "mention", "slug", mentions)
+    return sorted(mentions)
 
 
-def get_ast_metadata_users_queryset(
-    context: ParserContext, usernames: list[str]
-) -> Iterable[User]:
-    return get_ast_metadata_users_queryset_hook(
-        _get_ast_metadata_users_queryset_action, context, usernames
-    )
+def get_metadata_recursive(
+    tokens: list[Token], token_type: str, meta: str, data: set
+) -> set:
+    for token in tokens:
+        if token.type == token_type and token.meta and token.meta.get(meta):
+            data.add(token.meta[meta])
 
-
-def _get_ast_metadata_users_queryset_action(
-    context: ParserContext, usernames: list[str]
-) -> Iterable[User]:
-    return User.objects.filter(slug__in=usernames)
+        if token.children:
+            get_metadata_recursive(token.children, token_type, meta, data)

@@ -125,7 +125,7 @@ def test_edit_thread_post_state_schedules_post_upgrade_for_post_with_code_block(
     mock_upgrade_post_content, user_request, other_user_thread
 ):
     state = EditThreadPostState(user_request, other_user_thread.first_post)
-    state.set_post_message("Hello world[code=python]add(1, 3)[/code]")
+    state.set_post_message("Hello world\n[code=python]add(1, 3)[/code]")
     state.save()
 
     assert state.post.id

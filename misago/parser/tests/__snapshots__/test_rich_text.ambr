@@ -52,7 +52,7 @@
     <div class="rich-text-code-header">
       <div class="rich-text-code-info">
         
-          PHP
+          Code
         
       </div>
       
@@ -69,7 +69,11 @@
   '''
 # ---
 # name: test_replace_rich_text_tokens_replaces_default_spoiler_summary
-  '<spoiler><p>Hello world!</p></spoiler>'
+  '''
+  <misago-spoiler>
+  <p>Hello world!</p>
+  </misago-spoiler>
+  '''
 # ---
 # name: test_replace_rich_text_tokens_replaces_minimal_code_block
   '''

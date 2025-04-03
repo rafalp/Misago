@@ -1,261 +1,194 @@
-import re
+from typing import Callable
 
-from ..core.utils import slugify
-from .context import ParserContext
-from .enums import PlainTextFormat
-from .exceptions import AstError
-from .hooks import render_ast_node_to_plaintext_hook
-from .urls import clean_url
+from markdown_it.renderer import RendererProtocol
+from markdown_it.token import Token
+
+from .hooks import render_tokens_to_plaintext_hook
 
 
-def render_ast_to_plaintext(
-    context: ParserContext,
-    ast: list[dict],
-    metadata: dict,
-    text_format: str | None = None,
-) -> str:
-    text = render_children_ast_to_plaintext(context, ast, metadata, text_format)
-
-    if text_format in (
-        PlainTextFormat.META_DESCRIPTION,
-        PlainTextFormat.SEARCH_DOCUMENT,
-    ):
-        return re.sub("\s\s+", " ", text)
-
-    return text.replace("\n", "\r\n")
+RendererPlaintextRule = Callable[[list[Token], int], str | None]
 
 
-def render_children_ast_to_plaintext(
-    context: ParserContext,
-    ast: list[dict],
-    metadata: dict,
-    text_format: str | None = None,
-) -> str:
-    plain_text = []
-    for ast_node in ast:
-        node_text = render_ast_node_to_plaintext(
-            context,
-            ast_node,
-            metadata,
-            text_format,
-        ).strip()
-        if node_text:
-            plain_text.append(node_text)
+class RendererPlaintext(RendererProtocol):
+    __output__ = "text"
 
-    return (" ".join(plain_text)).strip()
+    rules: dict[str, RendererPlaintextRule]
+
+    def __init__(self):
+        self.rules = {}
+
+    def add_rule(self, name: str, rule: RendererPlaintextRule):
+        self.rules[name] = rule
+
+    def render(self, tokens: list[Token]) -> str:
+        result: str = ""
+
+        for idx, token in enumerate(tokens):
+            if rule := self.rules.get(token.type):
+                token_result = rule(self, tokens, idx)
+                if token_result is not None:
+                    result += token_result
+
+        # Normalize whitespace and linebreaks
+        while "\n " in result:
+            result = result.replace("\n ", "\n")
+
+        while " \n" in result:
+            result = result.replace(" \n", "\n")
+
+        while "\n\n\n" in result:
+            result = result.replace("\n\n\n", "\n\n")
+
+        while "  " in result:
+            result = result.replace("  ", " ")
+
+        return result.strip()
 
 
-def render_inline_ast_to_plaintext(
-    context: ParserContext,
-    ast: list[dict],
-    metadata: dict,
-    text_format: str | None = None,
-) -> str:
-    plain_text = ""
-    for ast_node in ast:
-        plain_text += render_ast_node_to_plaintext(
-            context,
-            ast_node,
-            metadata,
-            text_format,
-        )
-    return plain_text
-
-
-def render_ast_node_to_plaintext(
-    context: ParserContext,
-    ast_node: dict,
-    metadata: dict,
-    text_format: str | None,
-) -> str:
-    return render_ast_node_to_plaintext_hook(
-        _render_ast_node_to_plaintext_action,
-        context,
-        ast_node,
-        metadata,
-        text_format,
+def render_tokens_to_plaintext(tokens: list[Token]) -> str:
+    return render_tokens_to_plaintext_hook(
+        _render_tokens_to_plaintext_action,
+        tokens,
+        [
+            ("attachments_open", render_softbreak),
+            ("attachment", render_attachment),
+            ("heading_open", render_block),
+            ("blockquote_open", render_hard_break),
+            ("code_block", render_code),
+            ("fence", render_code),
+            ("code_bbcode", render_code),
+            ("quote_bbcode_open", render_quote_bbcode_open),
+            ("spoiler_bbcode_open", render_spoiler_bbcode_open),
+            ("ordered_list_open", render_ordered_list),
+            ("paragraph_open", render_block),
+            ("softbreak", render_softbreak),
+            ("mention", render_mention),
+            ("text", render_text),
+        ],
     )
 
-
-AST_INLINE_NODES = (
-    "heading",
-    "heading-setex",
-    "paragraph",
-    "emphasis",
-    "emphasis-underscore",
-    "strong",
-    "strong-underscore",
-    "strikethrough",
-    "strikethrough-bbcode",
-    "bold-bbcode",
-    "italics-bbcode",
-    "underline-bbcode",
-    "superscript-bbcode",
-    "subscript-bbcode",
-)
+    # table cell
+    # list item
+    # link
+    # autolink
+    # linkify
+    # image
+    # image bbcode
+    # inline code
 
 
-def _render_ast_node_to_plaintext_action(
-    context: ParserContext,
-    ast_node: dict,
-    metadata: dict,
-    text_format: str | None,
+def _render_tokens_to_plaintext_action(
+    tokens: list[Token],
+    rules: list[tuple[str, RendererPlaintextRule]],
 ) -> str:
-    ast_type = ast_node["type"]
+    renderer = RendererPlaintext()
+    for name, rule in rules:
+        renderer.add_rule(name, rule)
 
-    if ast_type in AST_INLINE_NODES:
-        return render_inline_ast_to_plaintext(
-            context, ast_node["children"], metadata, text_format
-        ).strip()
+    return renderer.render(tokens)
 
-    if ast_type == "list":
-        items: list[str] = []
-        for i, ast_item in enumerate(ast_node["children"]):
-            if children := render_inline_ast_to_plaintext(
-                context, ast_item["children"], metadata, text_format
-            ).strip():
-                item = ""
-                if ast_node["ordered"]:
-                    item += f"{i + 1}."
-                else:
-                    item += ast_node["sign"]
 
-                item += " " + children
-                if lists := render_children_ast_to_plaintext(
-                    context, ast_item["lists"], metadata, text_format
-                ):
-                    item += " " + lists
+def render_attachment(
+    renderer: RendererPlaintext, tokens: list[Token], idx: int
+) -> str:
+    name = tokens[idx].attrs["name"]
+    return f"\n{name}"
 
-                items.append(item)
 
-        return " ".join(items)
+def render_block(
+    renderer: RendererPlaintext, tokens: list[Token], idx: int
+) -> str | None:
+    try:
+        next_token = tokens[idx + 1]
+    except IndexError:
+        return None
 
-    if ast_type == "table":
-        items: list[str] = []
-        for header in ast_node["header"]:
-            if header["children"]:
-                items.append(
-                    render_inline_ast_to_plaintext(
-                        context, header["children"], metadata, text_format
-                    ).strip()
-                )
-        for row in ast_node["children"]:
-            for cell in row["children"]:
-                if cell["children"]:
-                    items.append(
-                        render_inline_ast_to_plaintext(
-                            context, cell["children"], metadata, text_format
-                        ).strip()
-                    )
+    if next_token.type != "inline":
+        return None
 
-        return " ".join(items)
+    content = renderer.render(tokens[idx + 1].children)
 
-    if ast_type in ("code", "code-bbcode", "code-indented"):
-        content = []
+    if idx:
+        return f"\n\n{content}"
 
-        if ast_node.get("info") and ast_node.get("syntax"):
-            content.append(f"{ast_node['info']} ({ast_node['syntax']}):")
-        else:
-            if info := ast_node.get("info"):
-                content.append(f"{info}:")
-            if syntax := ast_node.get("syntax"):
-                content.append(f"{syntax}:")
+    return content
 
-        content += [
-            line.strip() for line in ast_node["code"].splitlines() if line.strip()
-        ]
 
-        return " ".join(content)
+def render_hard_break(
+    renderer: RendererPlaintext, tokens: list[Token], idx: int
+) -> str | None:
+    if idx:
+        return "\n\n"
 
-    if ast_type == "code-inline":
-        return ast_node["code"]
+    return None
 
-    if ast_type in ("quote", "quote-bbcode"):
-        children = render_children_ast_to_plaintext(
-            context, ast_node["children"], metadata, text_format
-        )
 
-        if user := ast_node.get("user"):
-            return f"{user}: {children}"
+def render_code(
+    renderer: RendererPlaintext, tokens: list[Token], idx: int
+) -> str | None:
+    token = tokens[idx]
 
-        if info := ast_node.get("info"):
-            return f"{info}: {children}"
+    info = token.attrs.get("info")
+    syntax = token.attrs.get("syntax")
 
-        return children
+    prefix = "" if idx else "\n\n"
+    content = token.content
 
-    if ast_type == "spoiler-bbcode":
-        children = render_children_ast_to_plaintext(
-            context, ast_node["children"], metadata, text_format
-        )
+    if info and syntax:
+        return f"{prefix}{info}, {syntax}:\n\n{content}"
 
-        if info := ast_node.get("info"):
-            return f"{info}: {children}"
+    if info or syntax:
+        return f"{prefix}{info or syntax}:\n\n{content}"
 
-        return children
+    return f"{prefix}{content}"
 
-    if ast_type in ("image", "image-bbcode"):
-        alt = ast_node["alt"] or ""
-        title = ast_node.get("title") or ""
 
-        if title == alt:
-            title = ""
+def render_quote_bbcode_open(
+    renderer: RendererPlaintext, tokens: list[Token], idx: int
+) -> str | None:
+    info = tokens[idx].attrs.get("info")
+    user = tokens[idx].attrs.get("user")
 
-        if text_format == PlainTextFormat.META_DESCRIPTION:
-            return f"{alt} {title}".strip()
+    if idx and (info or user):
+        return f"\n\n{info or user}:"
+    elif info or user:
+        return f"{info or user}:"
 
-        src = clean_url(ast_node["src"])
-        return " ".join(i for i in (alt, src, title) if i).strip()
+    return None
 
-    if ast_type in ("url", "url-bbcode"):
-        href = clean_url(ast_node["href"])
-        title = ast_node.get("title") or ""
 
-        if children := render_inline_ast_to_plaintext(
-            context, ast_node["children"], metadata, text_format
-        ).strip():
-            if text_format == PlainTextFormat.META_DESCRIPTION:
-                if title:
-                    return f"{children} ({title})"
-                return children
-            else:
-                if title:
-                    return f"{children} ({title}) {href}"
-                return f"{children} {href}"
+def render_spoiler_bbcode_open(
+    renderer: RendererPlaintext, tokens: list[Token], idx: int
+) -> str | None:
+    info = tokens[idx].attrs.get("info")
 
-        if text_format == PlainTextFormat.META_DESCRIPTION:
-            return title
+    if idx and info:
+        return f"\n\n{info}:"
+    elif info:
+        return f"{info}:"
 
-        return f"{title} {href}".strip()
+    return None
 
-    if ast_type == "attachment-group":
-        return render_children_ast_to_plaintext(
-            context, ast_node["children"], metadata, text_format
-        )
 
-    if ast_type == "attachment":
-        return ast_node["name"]
+def render_ordered_list(
+    renderer: RendererPlaintext, tokens: list[Token], idx: int
+) -> str | None:
+    print(tokens[idx])
+    return None
 
-    if ast_type in ("auto-link", "auto-url"):
-        if text_format == PlainTextFormat.META_DESCRIPTION:
-            return ""
 
-        return clean_url(ast_node["href"])
+def render_softbreak(
+    renderer: RendererPlaintext, tokens: list[Token], idx: int
+) -> str | None:
+    if idx:
+        return "\n"
 
-    if ast_type == "mention":
-        username = slugify(ast_node["username"])
-        if username not in metadata["users"]:
-            return "@" + ast_node["username"]
+    return None
 
-        user = metadata["users"][username]
-        return "@" + user.username
 
-    if ast_type == "escape":
-        return ast_node["character"]
+def render_mention(renderer: RendererPlaintext, tokens: list[Token], idx: int) -> str:
+    return tokens[idx].markup
 
-    if ast_type in ("thematic-break", "thematic-break-bbcode", "line-break"):
-        return " "
 
-    if ast_type == "text":
-        return ast_node["text"]
-
-    raise AstError(f"Unknown AST node type: {ast_type}")
+def render_text(renderer: RendererPlaintext, tokens: list[Token], idx: int) -> str:
+    return tokens[idx].content

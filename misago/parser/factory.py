@@ -1,39 +1,65 @@
-from typing import Callable
+from typing import Any, Callable, Iterable, Mapping
 
-from django.contrib.auth import get_user_model
+from markdown_it import MarkdownIt
+from markdown_it.utils import PresetType
 
-from .context import ParserContext
 from .hooks import create_parser_hook
-from .parser import Parser, Pattern
-from .patterns import block_patterns, inline_patterns
-from .postprocessors import post_processors
-from .preprocessors import pre_processors
+from .plugins import (
+    attachment_plugin,
+    code_plugin,
+    code_bbcode_plugin,
+    fence_plugin,
+    formatting_bbcode_plugin,
+    hr_bbcode_plugin,
+    img_bbcode_plugin,
+    link_plugin,
+    mention_plugin,
+    quote_bbcode_plugin,
+    spoiler_bbcode_plugin,
+    url_bbcode_plugin,
+)
 
-User = get_user_model()
 
-
-def create_parser(context: ParserContext) -> Parser:
+def create_parser() -> MarkdownIt:
     return create_parser_hook(
         _create_parser_action,
-        context,
-        block_patterns=block_patterns.copy(),
-        inline_patterns=inline_patterns.copy(),
-        pre_processors=pre_processors.copy(),
-        post_processors=post_processors.copy(),
+        config="js-default",
+        options_update={"typographer": True, "linkify": True},
+        enable=["replacements", "smartquotes"],
+        plugins=[
+            attachment_plugin,
+            formatting_bbcode_plugin,
+            img_bbcode_plugin,
+            link_plugin,
+            url_bbcode_plugin,
+            hr_bbcode_plugin,
+            mention_plugin,
+            fence_plugin,
+            code_plugin,
+            code_bbcode_plugin,
+            quote_bbcode_plugin,
+            spoiler_bbcode_plugin,
+        ],
     )
 
 
 def _create_parser_action(
-    context: ParserContext,
     *,
-    block_patterns: list[Pattern],
-    inline_patterns: list[Pattern],
-    pre_processors: list[Callable[[Parser, str], str]],
-    post_processors: list[Callable[[Parser, list[dict]], list[dict]]],
-) -> Parser:
-    return Parser(
-        block_patterns=block_patterns,
-        inline_patterns=inline_patterns,
-        pre_processors=pre_processors,
-        post_processors=post_processors,
-    )
+    config: str | PresetType,
+    options_update: Mapping[str, Any] | None = None,
+    enable: str | Iterable[str] | None = None,
+    disable: str | Iterable[str] | None = None,
+    plugins: Iterable[Callable[[MarkdownIt], None]] | None = None,
+) -> MarkdownIt:
+    md = MarkdownIt(config, options_update)
+
+    if plugins:
+        for plugin in plugins:
+            plugin(md)
+
+    if enable:
+        md.enable(enable)
+    if disable:
+        md.disable(disable)
+
+    return md

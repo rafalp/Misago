@@ -93,6 +93,18 @@ def test_render_tokens_to_plaintext_renders_spoiler_bbcode_with_info():
     assert render_tokens_to_plaintext(tokens) == "info:\n\nhello"
 
 
+def test_render_tokens_to_plaintext_renders_ordered_list():
+    parser = create_parser()
+    tokens = tokenize(parser, "paragraph\n\n1. lorem\n2. ipsum")
+    assert render_tokens_to_plaintext(tokens) == "paragraph\n\n1. lorem\n2. ipsum"
+
+
+def test_render_tokens_to_plaintext_renders_ordered_list_with_nested_ordered_list():
+    parser = create_parser()
+    tokens = tokenize(parser, "paragraph\n\n1. lorem\n2. ipsum\n  1. nested")
+    assert render_tokens_to_plaintext(tokens) == "paragraph\n\n1. lorem\n2. ipsum"
+
+
 def test_render_tokens_to_plaintext_renders_attachments():
     parser = create_parser()
     tokens = tokenize(parser, "<attachment=image.png:1><attachment=video.mp4:2>")

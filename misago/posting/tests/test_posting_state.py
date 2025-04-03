@@ -84,23 +84,7 @@ def test_posting_state_set_post_message_updates_post_contents(user_request, post
 
     assert post.original == "Hello world"
     assert post.parsed == "<p>Hello world</p>"
-
-    assert state.message_ast == [
-        {
-            "type": "paragraph",
-            "children": [
-                {"type": "text", "text": "Hello world"},
-            ],
-        },
-    ]
-    assert state.message_metadata == {
-        "outbound-links": set(),
-        "posts": {"ids": set(), "objs": {}},
-        "attachments": set(),
-        "highlight_code": False,
-        "usernames": set(),
-        "users": {},
-    }
+    assert post.metadata == {}
 
 
 def test_posting_state_set_post_message_stores_attachments_ids_in_post_metadata(
@@ -113,29 +97,7 @@ def test_posting_state_set_post_message_stores_attachments_ids_in_post_metadata(
     assert post.original == "<attachment=image.png:123>"
     assert post.parsed == (
         '<div class="rich-text-attachment-group">'
-        '<misago-attachment name="image.png" slug="image-png" id="123" />'
-        "</div>"
+        '\n<misago-attachment name="image.png" slug="image-png" id="123">'
+        "\n</div>"
     )
     assert post.metadata == {"attachments": [123]}
-
-    assert state.message_ast == [
-        {
-            "type": "attachment-group",
-            "children": [
-                {
-                    "type": "attachment",
-                    "name": "image.png",
-                    "slug": "image-png",
-                    "id": 123,
-                },
-            ],
-        },
-    ]
-    assert state.message_metadata == {
-        "outbound-links": set(),
-        "posts": {"ids": set(), "objs": {}},
-        "attachments": {123},
-        "highlight_code": False,
-        "usernames": set(),
-        "users": {},
-    }
