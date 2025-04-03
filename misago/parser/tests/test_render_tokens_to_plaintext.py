@@ -183,6 +183,39 @@ def test_render_tokens_to_plaintext_renders_code_inline():
     assert render_tokens_to_plaintext(tokens) == "Hello, inline"
 
 
+def test_render_tokens_to_plaintext_renders_image():
+    parser = create_parser()
+    tokens = tokenize(parser, "Hello, ![Image](https://example.com/image.png)")
+    assert (
+        render_tokens_to_plaintext(tokens)
+        == "Hello, https://example.com/image.png (Image)"
+    )
+
+
+def test_render_tokens_to_plaintext_renders_image_with_title():
+    parser = create_parser()
+    tokens = tokenize(parser, 'Hello, ![Image](https://example.com/image.png "Title")')
+    assert (
+        render_tokens_to_plaintext(tokens)
+        == "Hello, https://example.com/image.png (Image, Title)"
+    )
+
+
+def test_render_tokens_to_plaintext_renders_image_bbcode():
+    parser = create_parser()
+    tokens = tokenize(parser, "Hello, [img]https://example.com/image.png[/img]")
+    assert render_tokens_to_plaintext(tokens) == "Hello, https://example.com/image.png"
+
+
+def test_render_tokens_to_plaintext_renders_image_bbcode_with_alt():
+    parser = create_parser()
+    tokens = tokenize(parser, "Hello, [img=https://example.com/image.png]Image[/img]")
+    assert (
+        render_tokens_to_plaintext(tokens)
+        == "Hello, https://example.com/image.png (Image)"
+    )
+
+
 def test_render_tokens_to_plaintext_renders_mention():
     parser = create_parser()
     tokens = tokenize(parser, "Hello, @Username")

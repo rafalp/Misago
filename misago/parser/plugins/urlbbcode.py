@@ -26,7 +26,7 @@ def url_bbcode_rule(state: StateInline, silent: bool):
     if state.src[start : start + 4].lower() != "[url":
         return False
 
-    if state.src[4] == "=":
+    if state.src[start + 4] == "=":
         if "]" not in state.src[start + 5 : maximum]:
             return False
 

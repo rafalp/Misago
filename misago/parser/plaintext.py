@@ -84,20 +84,12 @@ def render_tokens_to_plaintext(tokens: list[Token]) -> str:
             render_paragraph,
             render_inline,
             render_code_inline,
+            render_image,
             render_mention,
             render_softbreak,
             render_text,
         ],
     )
-
-    # table cell
-    # list item
-    # link
-    # autolink
-    # linkify
-    # image
-    # image bbcode
-    # inline code
 
 
 def _render_tokens_to_plaintext_action(
@@ -362,6 +354,25 @@ def render_code_inline(state: StatePlaintext) -> bool:
         return False
 
     state.push(token.content)
+    state.pos += 1
+    return True
+
+
+def render_image(state: StatePlaintext) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "image":
+        return False
+
+    state.push(token.attrs["src"])
+
+    alt = token.content
+    title = token.attrs.get("title")
+
+    if alt and title:
+        state.push(f" ({alt}, {title})")
+    elif alt:
+        state.push(f" ({alt})")
+
     state.pos += 1
     return True
 

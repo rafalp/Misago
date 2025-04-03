@@ -24,7 +24,7 @@ def img_bbcode_rule(state: StateInline, silent: bool):
     if state.src[start : start + 4].lower() != "[img":
         return False
 
-    if state.src[4] == "=":
+    if state.src[start + 4] == "=":
         if "]" not in state.src[start + 5 : maximum]:
             return False
 
@@ -86,6 +86,7 @@ def img_bbcode_rule(state: StateInline, silent: bool):
                     content=content,
                 )
             ]
+            token.content = content
 
     state.pos = end
     state.posMax = pos_max_org
