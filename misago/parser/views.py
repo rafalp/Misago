@@ -171,7 +171,7 @@ FORMATS = [
             "formatting help", "Code block with syntax highlighting (BBCode)"
         ),
         pgettext_lazy(
-            "formatting help", '[code=python]\r\nprint("Hello world!");\r\n[/code]'
+            "formatting help", '[code=javascript]\r\nalert("Hello world!");\r\n[/code]'
         ),
     ),
     (
