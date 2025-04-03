@@ -129,6 +129,38 @@ def test_render_tokens_to_plaintext_renders_bullet_list():
     assert render_tokens_to_plaintext(tokens) == "- lorem\n- ipsum"
 
 
+def test_render_tokens_to_plaintext_renders_ordered_list_with_nested_ordered_list():
+    parser = create_parser()
+    tokens = tokenize(parser, "2. lorem\n   1. ipsum\n   2. dolor\n3. met")
+    assert render_tokens_to_plaintext(tokens) == (
+        "2. lorem" "\n2. 1. ipsum" "\n2. 2. dolor" "\n3. met"
+    )
+
+
+def test_render_tokens_to_plaintext_renders_ordered_list_with_nested_bullet_list():
+    parser = create_parser()
+    tokens = tokenize(parser, "2. lorem\n   - ipsum\n   - dolor\n3. met")
+    assert render_tokens_to_plaintext(tokens) == (
+        "2. lorem" "\n2. - ipsum" "\n2. - dolor" "\n3. met"
+    )
+
+
+def test_render_tokens_to_plaintext_renders_bullet_list_with_nested_ordered_list():
+    parser = create_parser()
+    tokens = tokenize(parser, "- lorem\n  1. ipsum\n  2. dolor\n- met")
+    assert render_tokens_to_plaintext(tokens) == (
+        "- lorem" "\n- 1. ipsum" "\n- 2. dolor" "\n- met"
+    )
+
+
+def test_render_tokens_to_plaintext_renders_bullet_list_with_nested_bullet_list():
+    parser = create_parser()
+    tokens = tokenize(parser, "- lorem\n  - ipsum\n  - dolor\n- met")
+    assert render_tokens_to_plaintext(tokens) == (
+        "- lorem" "\n- - ipsum" "\n- - dolor" "\n- met"
+    )
+
+
 def test_render_tokens_to_plaintext_renders_attachments():
     parser = create_parser()
     tokens = tokenize(parser, "<attachment=image.png:1><attachment=video.mp4:2>")

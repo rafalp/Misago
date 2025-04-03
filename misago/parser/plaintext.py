@@ -17,6 +17,7 @@ class StatePlaintext:
     tokens: list[Token]
     pos: int
     posMax: int
+    list_item_prefix: str
     result: str = ""
 
     def push(self, text: str, nlnl: bool = False):
@@ -33,12 +34,13 @@ class RendererPlaintext(RendererProtocol):
     def __init__(self, rules: list[RendererPlaintextRule]):
         self.rules = rules
 
-    def render(self, tokens: list[Token]) -> str:
+    def render(self, tokens: list[Token], list_item_prefix: str | None = None) -> str:
         state = StatePlaintext(
             renderer=self,
             tokens=tokens,
             pos=0,
             posMax=len(tokens) - 1,
+            list_item_prefix=list_item_prefix,
         )
 
         while state.pos <= state.posMax:
@@ -193,7 +195,12 @@ def render_ordered_list(state: StatePlaintext) -> bool:
     tokens, pos = match
     content = render_list_content(state, tokens)
 
-    state.push(content, nlnl=True)
+    if state.list_item_prefix:
+        content = "\n" + content
+    else:
+        content = "\n\n" + content
+
+    state.push(content)
     state.pos = pos
     return True
 
@@ -206,7 +213,12 @@ def render_bullet_list(state: StatePlaintext) -> bool:
     tokens, pos = match
     content = render_list_content(state, tokens)
 
-    state.push(content, nlnl=True)
+    if state.list_item_prefix:
+        content = "\n" + content
+    else:
+        content = "\n\n" + content
+
+    state.push(content)
     state.pos = pos
     return True
 
@@ -214,7 +226,7 @@ def render_bullet_list(state: StatePlaintext) -> bool:
 def render_list_content(
     state: StatePlaintext, tokens: list[Token], prefix: str | None = None
 ) -> str:
-    prefix = f"{prefix} " if prefix else ""
+    prefix = prefix or state.list_item_prefix or ""
 
     opening_token = tokens[0]
     is_ordered = opening_token.type == "ordered_list_open"
@@ -228,31 +240,37 @@ def render_list_content(
     nesting_list = 0
 
     list_items: list[list[Token]] = []
-    list_item: list[Token] = []
+    item_tokens: list[Token] = []
     for token in tokens[1:-1]:
         if token.type in ("ordered_list_open", "bullet_list_open"):
             nesting_list += 1
+            item_tokens.append(token)
         elif token.type in ("ordered_list_close", "bullet_list_close"):
             nesting_list -= 1
+            item_tokens.append(token)
         elif token.type == "list_item_open":
             nesting_item += 1
+            if nesting_list:
+                item_tokens.append(token)
         elif token.type == "list_item_close":
             nesting_item -= 1
             if not nesting_item and not nesting_list:
-                list_items.append(list_item)
-                list_item = []
+                list_items.append(item_tokens)
+                item_tokens = []
+            if nesting_list:
+                item_tokens.append(token)
         elif nesting_item:
-            list_item.append(token)
+            item_tokens.append(token)
 
     rendered_items: list[str] = []
     for index, item_tokens in enumerate(list_items):
         if is_ordered:
             item_prefix = f"{prefix}{start + index}. "
         else:
-            item_prefix = f"{prefix} {delimiter} "
+            item_prefix = f"{prefix}{delimiter} "
 
         item_str = item_prefix
-        item_str += state.renderer.render(item_tokens).strip()
+        item_str += state.renderer.render(item_tokens, item_prefix).strip()
 
         rendered_items.append(item_str.strip())
 
@@ -292,95 +310,6 @@ def render_paragraph(state: StatePlaintext) -> bool:
     state.pos = pos
 
     return True
-
-
-# def render_attachment(
-#     renderer: RendererPlaintext, tokens: list[Token], idx: int
-# ) -> str:
-#     name = tokens[idx].attrs["name"]
-#     return f"\n{name}"
-
-
-# def render_block(
-#     renderer: RendererPlaintext, tokens: list[Token], idx: int
-# ) -> str | None:
-#     try:
-#         next_token = tokens[idx + 1]
-#     except IndexError:
-#         return None
-
-#     if next_token.type != "inline":
-#         return None
-
-#     content = renderer.render(tokens[idx + 1].children)
-
-#     if idx:
-#         return f"\n\n{content}"
-
-#     return content
-
-
-# def render_hard_break(
-#     renderer: RendererPlaintext, tokens: list[Token], idx: int
-# ) -> str | None:
-#     if idx:
-#         return "\n\n"
-
-#     return None
-
-
-# def render_code(
-#     renderer: RendererPlaintext, tokens: list[Token], idx: int
-# ) -> str | None:
-#     token = tokens[idx]
-
-#     info = token.attrs.get("info")
-#     syntax = token.attrs.get("syntax")
-
-#     prefix = "" if idx else "\n\n"
-#     content = token.content
-
-#     if info and syntax:
-#         return f"{prefix}{info}, {syntax}:\n\n{content}"
-
-#     if info or syntax:
-#         return f"{prefix}{info or syntax}:\n\n{content}"
-
-#     return f"{prefix}{content}"
-
-
-# def render_quote_bbcode_open(
-#     renderer: RendererPlaintext, tokens: list[Token], idx: int
-# ) -> str | None:
-#     info = tokens[idx].attrs.get("info")
-#     user = tokens[idx].attrs.get("user")
-
-#     if idx and (info or user):
-#         return f"\n\n{info or user}:"
-#     elif info or user:
-#         return f"{info or user}:"
-
-#     return None
-
-
-# def render_spoiler_bbcode_open(
-#     renderer: RendererPlaintext, tokens: list[Token], idx: int
-# ) -> str | None:
-#     info = tokens[idx].attrs.get("info")
-
-#     if idx and info:
-#         return f"\n\n{info}:"
-#     elif info:
-#         return f"{info}:"
-
-#     return None
-
-
-# def render_ordered_list(
-#     renderer: RendererPlaintext, tokens: list[Token], idx: int
-# ) -> str | None:
-#     print(tokens[idx])
-#     return None
 
 
 def render_inline(state: StatePlaintext) -> bool:
