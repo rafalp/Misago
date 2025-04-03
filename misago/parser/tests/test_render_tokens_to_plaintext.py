@@ -183,6 +183,36 @@ def test_render_tokens_to_plaintext_renders_code_inline():
     assert render_tokens_to_plaintext(tokens) == "Hello, inline"
 
 
+def test_render_tokens_to_plaintext_renders_linkified_link():
+    parser = create_parser()
+    tokens = tokenize(parser, "Hello, https://example.com")
+    assert render_tokens_to_plaintext(tokens) == "Hello, https://example.com"
+
+
+def test_render_tokens_to_plaintext_renders_autolink():
+    parser = create_parser()
+    tokens = tokenize(parser, "Hello, <https://example.com>")
+    assert render_tokens_to_plaintext(tokens) == "Hello, https://example.com"
+
+
+def test_render_tokens_to_plaintext_renders_link():
+    parser = create_parser()
+    tokens = tokenize(parser, "Hello, [Link](https://example.com)")
+    assert render_tokens_to_plaintext(tokens) == "Hello, https://example.com (Link)"
+
+
+def test_render_tokens_to_plaintext_renders_url_bbcode():
+    parser = create_parser()
+    tokens = tokenize(parser, "Hello, [url]https://example.com[/url]")
+    assert render_tokens_to_plaintext(tokens) == "Hello, https://example.com"
+
+
+def test_render_tokens_to_plaintext_renders_url_bbcode_with_text():
+    parser = create_parser()
+    tokens = tokenize(parser, "Hello, [url=https://example.com]Link[/url]")
+    assert render_tokens_to_plaintext(tokens) == "Hello, https://example.com (Link)"
+
+
 def test_render_tokens_to_plaintext_renders_image():
     parser = create_parser()
     tokens = tokenize(parser, "Hello, ![Image](https://example.com/image.png)")

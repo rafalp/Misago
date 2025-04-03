@@ -83,6 +83,7 @@ def _shorten_link_text_token_content(tokens: list[Token]):
     href = link_open.attrs.get("href")
 
     if href and text.content == href:
+        link_open.meta["shortened_url"] = True
         text.content = shorten_url(text.content)
 
 

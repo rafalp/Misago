@@ -84,6 +84,7 @@ def render_tokens_to_plaintext(tokens: list[Token]) -> str:
             render_paragraph,
             render_inline,
             render_code_inline,
+            render_link,
             render_image,
             render_mention,
             render_softbreak,
@@ -355,6 +356,27 @@ def render_code_inline(state: StatePlaintext) -> bool:
 
     state.push(token.content)
     state.pos += 1
+    return True
+
+
+def render_link(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "link_open", "link_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    opening_token = tokens[0]
+
+    shortened_url = opening_token.meta.get("shortened_url")
+    url = opening_token.attrs.get("href")
+
+    state.push(url)
+
+    if not shortened_url:
+        if content := state.renderer.render(tokens[1:-1]).strip():
+            state.push(f" ({content})")
+
+    state.pos = pos
     return True
 
 
