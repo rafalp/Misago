@@ -45,8 +45,8 @@ class RendererPlaintext(RendererProtocol):
             for rule in self.rules:
                 if rule(state):
                     break
-
-            state.pos += 1
+            else:
+                state.pos += 1
 
         # Normalize whitespace and linebreaks
         result = state.result.strip()
@@ -74,8 +74,13 @@ def render_tokens_to_plaintext(tokens: list[Token]) -> str:
             render_header,
             render_code,
             render_quote_bbcode,
+            render_spoiler_bbcode,
+            render_ordered_list,
+            render_bullet_list,
+            render_attachments,
             render_paragraph,
             render_inline,
+            render_mention,
             render_softbreak,
             render_text,
         ],
@@ -101,19 +106,6 @@ def _render_tokens_to_plaintext_action(
 
 def render_header(state: StatePlaintext) -> bool:
     match = match_token_pair(state, "heading_open", "heading_close")
-    if not match:
-        return False
-
-    tokens, pos = match
-
-    state.push(state.renderer.render(tokens[1:-1]), nlnl=True)
-    state.pos = pos
-
-    return True
-
-
-def render_paragraph(state: StatePlaintext) -> bool:
-    match = match_token_pair(state, "paragraph_open", "paragraph_close")
     if not match:
         return False
 
@@ -151,11 +143,11 @@ def render_quote_bbcode(state: StatePlaintext) -> bool:
         return False
 
     tokens, pos = match
-    token_open = tokens[0]
+    opening_token = tokens[0]
 
-    info = token_open.attrs.get("info")
-    user = token_open.attrs.get("user")
-    post = token_open.attrs.get("post")
+    info = opening_token.attrs.get("info")
+    user = opening_token.attrs.get("user")
+    post = opening_token.attrs.get("post")
 
     if user and post:
         prefix = f"{user}, #{post}:\n"
@@ -169,6 +161,134 @@ def render_quote_bbcode(state: StatePlaintext) -> bool:
         prefix = ""
 
     state.push(prefix + state.renderer.render(tokens[1:-1]), nlnl=True)
+    state.pos = pos
+
+    return True
+
+
+def render_spoiler_bbcode(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "spoiler_bbcode_open", "spoiler_bbcode_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    opening_token = tokens[0]
+
+    if info := opening_token.attrs.get("info"):
+        prefix = f"{info}:\n"
+    else:
+        prefix = ""
+
+    state.push(prefix + state.renderer.render(tokens[1:-1]), nlnl=True)
+    state.pos = pos
+
+    return True
+
+
+def render_ordered_list(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "ordered_list_open", "ordered_list_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    content = render_list_content(state, tokens)
+
+    state.push(content, nlnl=True)
+    state.pos = pos
+    return True
+
+
+def render_bullet_list(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "bullet_list_open", "bullet_list_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    content = render_list_content(state, tokens)
+
+    state.push(content, nlnl=True)
+    state.pos = pos
+    return True
+
+
+def render_list_content(
+    state: StatePlaintext, tokens: list[Token], prefix: str | None = None
+) -> str:
+    prefix = f"{prefix} " if prefix else ""
+
+    opening_token = tokens[0]
+    is_ordered = opening_token.type == "ordered_list_open"
+
+    if is_ordered:
+        start = opening_token.attrs.get("start") or 1
+    else:
+        delimiter = opening_token.markup
+
+    nesting_item = 0
+    nesting_list = 0
+
+    list_items: list[list[Token]] = []
+    list_item: list[Token] = []
+    for token in tokens[1:-1]:
+        if token.type in ("ordered_list_open", "bullet_list_open"):
+            nesting_list += 1
+        elif token.type in ("ordered_list_close", "bullet_list_close"):
+            nesting_list -= 1
+        elif token.type == "list_item_open":
+            nesting_item += 1
+        elif token.type == "list_item_close":
+            nesting_item -= 1
+            if not nesting_item and not nesting_list:
+                list_items.append(list_item)
+                list_item = []
+        elif nesting_item:
+            list_item.append(token)
+
+    rendered_items: list[str] = []
+    for index, item_tokens in enumerate(list_items):
+        if is_ordered:
+            item_prefix = f"{prefix}{start + index}. "
+        else:
+            item_prefix = f"{prefix} {delimiter} "
+
+        item_str = item_prefix
+        item_str += state.renderer.render(item_tokens).strip()
+
+        rendered_items.append(item_str.strip())
+
+    return "\n".join(rendered_items)
+
+
+def render_attachments(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "attachments_open", "attachments_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    attachments = tokens[1:-1]
+
+    content: list[str] = []
+    for attachment in attachments:
+        if attachment.type == "attachment":
+            if name := attachment.attrs.get("name"):
+                content.append(name)
+
+    if content:
+        state.push("\n".join(content), nlnl=True)
+
+    state.pos = pos
+
+    return True
+
+
+def render_paragraph(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "paragraph_open", "paragraph_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+
+    state.push(state.renderer.render(tokens[1:-1]), nlnl=True)
     state.pos = pos
 
     return True
@@ -263,16 +383,22 @@ def render_quote_bbcode(state: StatePlaintext) -> bool:
 #     return None
 
 
-# def render_mention(renderer: RendererPlaintext, tokens: list[Token], idx: int) -> str:
-#     return tokens[idx].markup
-
-
 def render_inline(state: StatePlaintext) -> bool:
     token = state.tokens[state.pos]
     if token.type != "inline":
         return False
 
     state.push(state.renderer.render(token.children))
+    state.pos += 1
+    return True
+
+
+def render_mention(state: StatePlaintext) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "mention":
+        return False
+
+    state.push(token.markup)
     state.pos += 1
     return True
 

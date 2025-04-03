@@ -105,43 +105,43 @@ def test_render_tokens_to_plaintext_renders_quote_bbcode_with_user():
     assert render_tokens_to_plaintext(tokens) == "User, #123:\nhello"
 
 
-def _test_render_tokens_to_plaintext_renders_spoiler_bbcode():
+def test_render_tokens_to_plaintext_renders_spoiler_bbcode():
     parser = create_parser()
     tokens = tokenize(parser, "[spoiler]hello[/spoiler]")
     assert render_tokens_to_plaintext(tokens) == "hello"
 
 
-def _test_render_tokens_to_plaintext_renders_spoiler_bbcode_with_info():
+def test_render_tokens_to_plaintext_renders_spoiler_bbcode_with_info():
     parser = create_parser()
     tokens = tokenize(parser, "[spoiler=info]hello[/spoiler]")
-    assert render_tokens_to_plaintext(tokens) == "info:\n\nhello"
+    assert render_tokens_to_plaintext(tokens) == "info:\nhello"
 
 
-def _test_render_tokens_to_plaintext_renders_ordered_list():
+def test_render_tokens_to_plaintext_renders_ordered_list():
     parser = create_parser()
-    tokens = tokenize(parser, "paragraph\n\n1. lorem\n2. ipsum")
-    assert render_tokens_to_plaintext(tokens) == "paragraph\n\n1. lorem\n2. ipsum"
+    tokens = tokenize(parser, "2. lorem\n3. ipsum")
+    assert render_tokens_to_plaintext(tokens) == "2. lorem\n3. ipsum"
 
 
-def _test_render_tokens_to_plaintext_renders_ordered_list_with_nested_ordered_list():
+def test_render_tokens_to_plaintext_renders_bullet_list():
     parser = create_parser()
-    tokens = tokenize(parser, "paragraph\n\n1. lorem\n2. ipsum\n  1. nested")
-    assert render_tokens_to_plaintext(tokens) == "paragraph\n\n1. lorem\n2. ipsum"
+    tokens = tokenize(parser, "- lorem\n- ipsum")
+    assert render_tokens_to_plaintext(tokens) == "- lorem\n- ipsum"
 
 
-def _test_render_tokens_to_plaintext_renders_attachments():
+def test_render_tokens_to_plaintext_renders_attachments():
     parser = create_parser()
     tokens = tokenize(parser, "<attachment=image.png:1><attachment=video.mp4:2>")
     assert render_tokens_to_plaintext(tokens) == "image.png\nvideo.mp4"
 
 
-def _test_render_tokens_to_plaintext_renders_soft_linebreak():
+def test_render_tokens_to_plaintext_renders_soft_linebreak():
     parser = create_parser()
     tokens = tokenize(parser, "hello\nworld")
     assert render_tokens_to_plaintext(tokens) == "hello\nworld"
 
 
-def _test_render_tokens_to_plaintext_renders_mention():
+def test_render_tokens_to_plaintext_renders_mention():
     parser = create_parser()
-    tokens = tokenize(parser, "@Username")
-    assert render_tokens_to_plaintext(tokens) == "@Username"
+    tokens = tokenize(parser, "Hello, @Username")
+    assert render_tokens_to_plaintext(tokens) == "Hello, @Username"
