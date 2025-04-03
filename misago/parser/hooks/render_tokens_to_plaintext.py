@@ -6,7 +6,7 @@ from markdown_it.token import Token
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..plaintext import RendererPlaintext
+    from ..plaintext import StatePlaintext
 
 
 class RenderTokensToPlaintextHookAction(Protocol):
@@ -19,21 +19,19 @@ class RenderTokensToPlaintextHookAction(Protocol):
 
     A list of `Token` instances to render as text.
 
-    ## `rules: list[tuple[str, Callable[[RendererPlaintext, list[Token], int], str | None]]]`
+    ## `rules: list[Callable[[StatePlaintext], bool]]`
 
-    A list of `str`-`callable` pairs where `str` is the name of a `Token` type and `callable` implements the rendering logic.
+    A list of `callable`s with rendering rules.
 
     # Return value
 
-    A `str` with rendered text.
+    A `bool` with rendered text.
     """
 
     def __call__(
         self,
         tokens: list[Token],
-        rules: list[
-            tuple[str, Callable[["RendererPlaintext", list[Token], int], str | None]]
-        ],
+        rules: list[Callable[["StatePlaintext"], bool]],
     ) -> str: ...
 
 
@@ -53,9 +51,9 @@ class RenderTokensToPlaintextHookFilter(Protocol):
 
     A list of `Token` instances to render as text.
 
-    ## `rules: list[tuple[str, Callable[[RendererPlaintext, list[Token], int], str | None]]]`
+    ## `rules: list[Callable[[StatePlaintext], bool]]`
 
-    A list of `str`-`callable` pairs where `str` is the name of a `Token` type and `callable` implements the rendering logic.
+    A list of `callable`s with rendering rules.
 
     # Return value
 
@@ -66,9 +64,7 @@ class RenderTokensToPlaintextHookFilter(Protocol):
         self,
         action: RenderTokensToPlaintextHookAction,
         tokens: list[Token],
-        rules: list[
-            tuple[str, Callable[["RendererPlaintext", list[Token], int], str | None]]
-        ],
+        rules: list[Callable[["StatePlaintext"], bool]],
     ) -> str: ...
 
 
@@ -91,20 +87,25 @@ class RenderTokensToPlaintextHook(
 
     from markdown_it.tokens import Token
     from misago.parser.hooks import render_tokens_to_plaintext_hook
-    from misago.parser.plaintext import RendererPlaintext
+    from misago.parser.plaintext import StatePlaintext
 
 
-    def custom_renderer_rule(
-        renderer: RendererPlaintext, tokens: list[Token], idx: int
-    ) -> str | None:
-        return "\n" + tokens[idx].content
+    def custom_renderer_rule(state: StatePlaintext) -> bool:
+        token = state.tokens[state.pos]
+        if token.type != "plugin":
+            return False
+
+        state.push(tokens[idx].content)
+        state.pos += 1
+
+        return True
 
 
     @render_tokens_to_plaintext_hook.append_filter
     def tokenize_with_custom_tokens_processor(
         action,
         tokens: list[Token],
-        rules: list[tuple[str, Callable[[RendererPlaintext, list[Token], int], str | None]]],
+        rules: list[Callable[["StatePlaintext"], bool]],
     ) -> str:
         rules.append(("custom_rule", custom_renderer_rule))
         return action(parser, markup, processors)
@@ -117,9 +118,7 @@ class RenderTokensToPlaintextHook(
         self,
         action: RenderTokensToPlaintextHookAction,
         tokens: list[Token],
-        rules: list[
-            tuple[str, Callable[["RendererPlaintext", list[Token], int], str | None]]
-        ],
+        rules: list[Callable[["StatePlaintext"], bool]],
     ) -> str:
         return super().__call__(action, tokens, rules)
 
