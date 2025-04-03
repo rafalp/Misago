@@ -81,28 +81,28 @@ def test_render_tokens_to_plaintext_renders_code_bbcode_with_info_and_syntax():
     assert render_tokens_to_plaintext(tokens) == "info, php:\nhello"
 
 
-def _test_render_tokens_to_plaintext_renders_blockquote():
+def test_render_tokens_to_plaintext_renders_blockquote():
     parser = create_parser()
     tokens = tokenize(parser, "> hello")
     assert render_tokens_to_plaintext(tokens) == "hello"
 
 
-def _test_render_tokens_to_plaintext_renders_quote_bbcode():
+def test_render_tokens_to_plaintext_renders_quote_bbcode():
     parser = create_parser()
     tokens = tokenize(parser, "[quote]hello[/quote]")
     assert render_tokens_to_plaintext(tokens) == "hello"
 
 
-def _test_render_tokens_to_plaintext_renders_quote_bbcode_with_info():
+def test_render_tokens_to_plaintext_renders_quote_bbcode_with_info():
     parser = create_parser()
     tokens = tokenize(parser, "[quote=info]hello[/quote]")
-    assert render_tokens_to_plaintext(tokens) == "info:\n\nhello"
+    assert render_tokens_to_plaintext(tokens) == "info:\nhello"
 
 
-def _test_render_tokens_to_plaintext_renders_quote_bbcode_with_user():
+def test_render_tokens_to_plaintext_renders_quote_bbcode_with_user():
     parser = create_parser()
     tokens = tokenize(parser, "[quote=User, post: 123]hello[/quote]")
-    assert render_tokens_to_plaintext(tokens) == "User:\n\nhello"
+    assert render_tokens_to_plaintext(tokens) == "User, #123:\nhello"
 
 
 def _test_render_tokens_to_plaintext_renders_spoiler_bbcode():

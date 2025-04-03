@@ -73,6 +73,7 @@ def render_tokens_to_plaintext(tokens: list[Token]) -> str:
         [
             render_header,
             render_code,
+            render_quote_bbcode,
             render_paragraph,
             render_inline,
             render_softbreak,
@@ -141,6 +142,35 @@ def render_code(state: StatePlaintext) -> bool:
         state.push(content, nlnl=True)
 
     state.pos += 1
+    return True
+
+
+def render_quote_bbcode(state: StatePlaintext) -> bool:
+    match = match_token_pair(state, "quote_bbcode_open", "quote_bbcode_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    token_open = tokens[0]
+
+    info = token_open.attrs.get("info")
+    user = token_open.attrs.get("user")
+    post = token_open.attrs.get("post")
+
+    if user and post:
+        prefix = f"{user}, #{post}:\n"
+    elif user:
+        prefix = f"{user}, #{post}:\n"
+    elif post:
+        prefix = f"#{post}:\n"
+    elif info:
+        prefix = f"{info}:\n"
+    else:
+        prefix = ""
+
+    state.push(prefix + state.renderer.render(tokens[1:-1]), nlnl=True)
+    state.pos = pos
+
     return True
 
 
