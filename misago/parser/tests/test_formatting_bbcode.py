@@ -23,6 +23,11 @@ def test_nested_formatting_bbcode(parse_to_html):
     assert html == "<p>Hello <b>wo<u>r</u>ld</b>!</p>"
 
 
+def test_nested_sameformatting_bbcode(parse_to_html):
+    html = parse_to_html("Hello [b]wo[b]r[/b]ld[/b]!")
+    assert html == "<p>Hello <b>world</b>!</p>"
+
+
 def test_formatting_bbcode_parses_contents(parse_to_html):
     html = parse_to_html("Hello [b]<http://example.com>[/b]!")
     assert html == (

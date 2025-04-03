@@ -23,6 +23,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             shorten_link_text,
             extract_attachments,
             remove_repeated_hrs,
+            remove_nested_inline_bbcodes,
             replace_blockquotes_with_misago_quotes,
         ],
     )
@@ -218,6 +219,57 @@ def remove_repeated_hrs(tokens: list[Token]) -> list[Token]:
             new_tokens.append(token)
 
     return new_tokens
+
+
+def remove_nested_inline_bbcodes(tokens: list[Token]) -> list[Token]:
+    if not tokens:
+        return []
+
+    for token in tokens:
+        if token.type == "inline":
+            _remove_nested_inline_bbcodes_from_inline_token(token)
+
+    return tokens
+
+
+INLINE_BBCODE_OPEN_TAGS = (
+    "bold_bbcode_open",
+    "italics_bbcode_open",
+    "underline_bbcode_open",
+    "strikethrough_bbcode_open",
+)
+
+INLINE_BBCODE_CLOSE_TAGS = (
+    "bold_bbcode_close",
+    "italics_bbcode_close",
+    "underline_bbcode_close",
+    "strikethrough_bbcode_close",
+)
+
+
+def _remove_nested_inline_bbcodes_from_inline_token(token_inline: Token):
+    new_children: list[Token] = []
+    stack: list[str] = []
+
+    for token in token_inline.children:
+        if token.type in INLINE_BBCODE_OPEN_TAGS:
+            if token.tag not in stack:
+                new_children.append(token)
+            stack.append(token.tag)
+
+        elif token.type in INLINE_BBCODE_CLOSE_TAGS:
+            if stack and stack[-1] == token.tag:
+                stack.pop(-1)
+            if token.tag not in stack:
+                new_children.append(token)
+
+        elif token.type == "text" and new_children and new_children[-1].type == "text":
+            new_children[-1].content += token.content
+
+        else:
+            new_children.append(token)
+
+    token_inline.children = new_children
 
 
 def replace_blockquotes_with_misago_quotes(tokens: list[Token]) -> list[Token]:
