@@ -51,17 +51,13 @@ Hooks instances are importable from the following Python modules:
 
 `misago.parser.hooks` defines the following hooks:
 
-- [`clean_displayed_url_hook`](./clean-displayed-url-hook.md)
 - [`create_parser_hook`](./create-parser-hook.md)
-- [`get_ast_metadata_users_queryset_hook`](./get-ast-metadata-users-queryset-hook.md)
+- [`get_tokens_metadata_hook`](./get-tokens-metadata-hook.md)
 - [`highlight_syntax_hook`](./highlight-syntax-hook.md)
-- [`render_ast_node_to_html_hook`](./render-ast-node-to-html-hook.md)
-- [`render_ast_node_to_plaintext_hook`](./render-ast-node-to-plaintext-hook.md)
+- [`render_tokens_to_plaintext_hook`](./render-tokens-to-plaintext-hook.md)
 - [`replace_rich_text_tokens_hook`](./replace-rich-text-tokens-hook.md)
-- [`setup_parser_context_hook`](./setup-parser-context-hook.md)
-- [`update_ast_metadata_from_node_hook`](./update-ast-metadata-from-node-hook.md)
-- [`update_ast_metadata_hook`](./update-ast-metadata-hook.md)
-- [`update_ast_metadata_users_hook`](./update-ast-metadata-users-hook.md)
+- [`shorten_url_hook`](./shorten-url-hook.md)
+- [`tokenize_hook`](./tokenize-hook.md)
 
 
 ## `misago.permissions.hooks`
