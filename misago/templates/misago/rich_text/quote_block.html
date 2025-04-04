@@ -1,8 +1,7 @@
 {% load i18n misago_avatars misago_formats %}
 <aside class="rich-text-quote">
   <div class="rich-text-quote-header">
-    {% if post and thread %}
-    {% elif post %}
+    {% if post %}
       {% if poster %}
         <a
           class="rich-text-quote-avatar"
@@ -19,23 +18,48 @@
           <img src="{{ BLANK_AVATAR_URL }}" alt="{{ poster_name }}">
         </span>
       {% endif %}
-      <div class="rich-text-quote-info">
-        {% if poster %}
-          <a href="{{ poster.get_absolute_url }}">{{ poster }}</a>
-        {% else %}
-          {{ poster_name }}
-        {% endif %}
-        <a
-          class="rich-text-quote-timestamp"
-          href="{{ post.get_absolute_url }}"
-          title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
-          misago-timestamp="{{ post.posted_on.isoformat }}"
-        >
-          {{ post.posted_on|date_relative }}
-        </a>
-      </div>
+      {% if post and thread %}
+        <div class="rich-text-quote-info">
+          <div>
+            <a href="{{ thread.get_absolute_url }}">
+              {{ thread }}
+            </a>
+          </div>
+          <div style="font-size:14px">
+            {% if poster %}
+              <a href="{{ poster.get_absolute_url }}">{{ poster }}</a>
+            {% else %}
+              {{ poster_name }}
+            {% endif %}
+            <a
+              class="rich-text-quote-timestamp"
+              href="{{ post.get_absolute_url }}"
+              title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
+              misago-timestamp="{{ post.posted_on.isoformat }}"
+            >
+              {{ post.posted_on|date_relative }}
+            </a>
+          </div>
+        </div>
+      {% else %}
+        <div class="rich-text-quote-info">
+          {% if poster %}
+            <a href="{{ poster.get_absolute_url }}">{{ poster }}</a>
+          {% else %}
+            {{ poster_name }}
+          {% endif %}
+          <a
+            class="rich-text-quote-timestamp"
+            href="{{ post.get_absolute_url }}"
+            title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
+            misago-timestamp="{{ post.posted_on.isoformat }}"
+          >
+            {{ post.posted_on|date_relative }}
+          </a>
+        </div>
+      {% endif %}
       <a href="{{ post.get_absolute_url }}" class="btn rich-text-quote-btn">
-        <span class="material-icon">arrow_upward</span>
+        <span class="material-icon">{% if thread %}arrow_forward{% else %}arrow_upward{% endif %}</span>
       </a>
     {% else %}
       <div class="rich-text-quote-info">

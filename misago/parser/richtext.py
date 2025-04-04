@@ -128,6 +128,16 @@ def replace_rich_text_quote_block(
         if thread and post.thread_id != thread.id:
             post_thread = data["threads"].get(post.thread_id)
 
+    # DELETE ME LATER
+    if post_id and not post:
+        from misago.threads.models import Post
+
+        post = Post.objects.select_related("poster", "thread", "thread__category").get(
+            id=post_id
+        )
+        poster = post.poster
+        post_thread = post.thread
+
     return render_to_string(
         "misago/rich_text/quote_block.html",
         {
