@@ -38,8 +38,8 @@ def test_get_tokens_metadata_returns_quoted_post():
     assert metadata == {"posts": [123]}
 
 
-def test_get_tokens_metadata_returns_mentions():
+def test_get_tokens_metadata_returns_mentions(user):
     parser = create_parser()
-    tokens = tokenize(parser, "lorem @Hello ipsum @Bob")
+    tokens = tokenize(parser, f"lorem @{user.username} ipsum @Bob")
     metadata = get_tokens_metadata(tokens)
-    assert metadata == {"mentions": ["bob", "hello"]}
+    assert metadata == {"mentions": [user.id]}

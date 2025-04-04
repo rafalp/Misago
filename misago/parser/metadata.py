@@ -44,9 +44,9 @@ def get_quoted_posts_metadata(tokens: list[Token]) -> list[int]:
     return sorted(posts)
 
 
-def get_mentions_metadata(tokens: list[Token]) -> list[str]:
-    mentions: set[str] = set()
-    get_metadata_recursive(tokens, "mention", "slug", mentions)
+def get_mentions_metadata(tokens: list[Token]) -> list[int]:
+    mentions: set[int] = set()
+    get_metadata_recursive(tokens, "link_open", "mention", mentions)
     return sorted(mentions)
 
 
