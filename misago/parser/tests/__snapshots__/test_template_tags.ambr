@@ -1,8 +1,20 @@
 # serializer version: 1
 # name: test_complete_markup_template_tag_replaces_default_spoiler_summary
   '''
-  <misago-spoiler>
+  <details class="rich-text-spoiler">
+    <summary class="rich-text-spoiler-header">
+      <div class="rich-text-spoiler-info">
+        Hidden message
+      </div>
+      <div class="rich-text-spoiler-toggle">
+        toggle
+      </div>
+    </summary>
+    <div class="rich-text-spoiler-body">
+      
   <p>Hello world!</p>
-  </misago-spoiler>
+  
+    </div>
+  </details>
   '''
 # ---

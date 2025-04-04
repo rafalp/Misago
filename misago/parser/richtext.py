@@ -25,6 +25,7 @@ def _replace_rich_text_tokens_action(html: str, data) -> str:
         html, data.get("attachments"), data.get("attachment_errors")
     )
     html = replace_html_element(html, "misago-code", replace_rich_text_code_block)
+    html = replace_html_element(html, "misago-spoiler", replace_rich_text_spoiler_block)
 
     return html
 
@@ -95,5 +96,16 @@ def replace_rich_text_code_block(html: str, code: str, args: dict | None) -> str
             "syntax": args.get("syntax") if args else None,
             "language": args.get("language") if args else None,
             "code": code,
+        },
+    )
+
+
+@replace_html_element_func
+def replace_rich_text_spoiler_block(html: str, content: str, args: dict | None) -> str:
+    return render_to_string(
+        "misago/rich_text/spoiler_block.html",
+        {
+            "info": args.get("info") if args else None,
+            "content": content,
         },
     )
