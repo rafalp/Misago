@@ -1,0 +1,11 @@
+{% load i18n %}
+<aside class="rich-text-quote">
+  <div class="rich-text-quote-header">
+    <div class="rich-text-quote-info">
+      {% if info %}{{ info }}{% else %}{% trans "Quote" context "rich text quote" %}{% endif %}
+    </div>
+  </div>
+  <blockquote class="rich-text-quote-body">
+    {{ content|safe }}
+  </blockquote>
+</details>

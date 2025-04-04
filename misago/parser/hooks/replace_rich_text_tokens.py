@@ -23,7 +23,7 @@ class ReplaceRichTextTokensHookAction(Protocol):
     A `str` with HTML that has its tokens replaced.
     """
 
-    def __call__(self, html: str, data: dict) -> str: ...
+    def __call__(self, html: str, data: dict, user, thread) -> str: ...
 
 
 class ReplaceRichTextTokensHookFilter(Protocol):
@@ -57,6 +57,8 @@ class ReplaceRichTextTokensHookFilter(Protocol):
         action: ReplaceRichTextTokensHookAction,
         html: str,
         data: dict,
+        user,
+        thread,
     ) -> str: ...
 
 
@@ -104,8 +106,10 @@ class ReplaceRichTextTokensHook(
         action: ReplaceRichTextTokensHookAction,
         html: str,
         data: dict,
+        user,
+        thread,
     ) -> str:
-        return super().__call__(action, html, data)
+        return super().__call__(action, html, data, user, thread)
 
 
 replace_rich_text_tokens_hook = ReplaceRichTextTokensHook()

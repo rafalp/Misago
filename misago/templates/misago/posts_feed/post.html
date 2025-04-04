@@ -188,7 +188,7 @@
         
         <div class="posts-feed-item-post-body-message">
           <article class="rich-text" misago-lightbox-root>
-            {% rich_text post.parsed rich_text_data %}
+            {% rich_text post.parsed rich_text_data thread=thread user=user %}
           </article>
           {% if attachments %}
             {% include "misago/posts_feed/post_attachments.html" %}
