@@ -1,11 +1,49 @@
-{% load i18n %}
+{% load i18n misago_avatars misago_formats %}
 <aside class="rich-text-quote">
   <div class="rich-text-quote-header">
-    <div class="rich-text-quote-info">
-      {% if info %}{{ info }}{% else %}{% trans "Quote" context "rich text quote" %}{% endif %}
-    </div>
+    {% if post and thread %}
+    {% elif post %}
+      {% if poster %}
+        <a
+          class="rich-text-quote-avatar"
+          href="{{ poster.get_absolute_url }}"
+        >
+          <img
+            srcset="{{ poster|avatar:100 }}"
+            src="{{ poster|avatar:50 }}"
+            alt="{{ poster }}"
+          >
+        </a>
+      {% else %}
+        <span class="rich-text-quote-avatar">
+          <img src="{{ BLANK_AVATAR_URL }}" alt="{{ poster_name }}">
+        </span>
+      {% endif %}
+      <div class="rich-text-quote-info">
+        {% if poster %}
+          <a href="{{ poster.get_absolute_url }}">{{ poster }}</a>
+        {% else %}
+          {{ poster_name }}
+        {% endif %}
+        <a
+          class="rich-text-quote-timestamp"
+          href="{{ post.get_absolute_url }}"
+          title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ post.posted_on.isoformat }}"
+        >
+          {{ post.posted_on|date_relative }}
+        </a>
+      </div>
+      <a href="{{ post.get_absolute_url }}" class="btn rich-text-quote-btn">
+        <span class="material-icon">arrow_upward</span>
+      </a>
+    {% else %}
+      <div class="rich-text-quote-info">
+        {% if info %}{{ info }}{% else %}{% trans "Quote" context "rich text quote" %}{% endif %}
+      </div>
+    {% endif %}
   </div>
   <blockquote class="rich-text-quote-body">
     {{ content|safe }}
   </blockquote>
-</details>
+</aside>

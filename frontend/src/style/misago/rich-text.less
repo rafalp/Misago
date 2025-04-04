@@ -46,6 +46,7 @@
   ol,
   table,
   pre,
+  .rich-text-quote,
   .rich-text-code,
   .rich-text-spoiler {
     margin-bottom: @line-height-computed;
@@ -304,6 +305,70 @@
 
 .rich-text-table-cell-align-right {
   text-align: right;
+}
+
+.rich-text-quote {
+  overflow: hidden;
+
+  border: 1px solid @rich-text-quote-border;
+  border-radius: @border-radius-base;
+}
+
+.rich-text-quote-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: @rich-text-quote-padding;
+
+  background-color: @rich-text-quote-header-bg;
+}
+
+.rich-text-quote-avatar {
+  flex-shrink: 0;
+  display: block;
+  margin-right: @rich-text-quote-padding;
+
+  img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.rich-text-quote-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+  margin-left: @rich-text-quote-padding;
+  
+  color: @rich-text-quote-header-color;
+
+  .material-icon {
+    font-size: 24px;
+    line-height: 24px;
+  }
+}
+
+.rich-text-quote-info {
+  width: 100%;
+  overflow: hidden;
+
+  color: @rich-text-quote-header-color;
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rich-text-quote-body {
+  margin: 0;
+  padding: @rich-text-quote-padding;
+
+  background-color: @rich-text-quote-body-bg;
+  border: none;
 }
 
 .rich-text-code {

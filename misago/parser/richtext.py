@@ -44,7 +44,7 @@ def _replace_rich_text_tokens_action(
     )
 
     replace_rich_text_quote_block_partial = replace_html_element_func(
-        partial(replace_rich_text_quote_block, data, user, thread)
+        partial(replace_rich_text_quote_block, data, thread)
     )
 
     html = replace_html_void_element(
@@ -103,15 +103,38 @@ def replace_rich_text_attachment(
 
 def replace_rich_text_quote_block(
     data: dict,
-    user: User | None,
     thread: Thread | None,
     html: str,
     content: str,
     args: dict | None,
 ) -> str:
+    post_id = None
+    post = None
+    poster = None
+    post_thread = None
+
+    try:
+        if args:
+            post_id = int(args.get("post"))
+    except (TypeError, ValueError):
+        pass
+
+    if post_id:
+        post = data["posts"].get(post_id)
+
+    if post:
+        if post.poster_id:
+            poster = data["users"].get(post.poster_id)
+        if thread and post.thread_id != thread.id:
+            post_thread = data["threads"].get(post.thread_id)
+
     return render_to_string(
         "misago/rich_text/quote_block.html",
         {
+            "thread": post_thread,
+            "post": post,
+            "poster": poster,
+            "poster_name": args.get("user") if args else None,
             "info": args.get("info") if args else None,
             "content": content,
         },
