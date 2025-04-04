@@ -1,26 +1,56 @@
-def test_mention_user(user, parse_to_html, snapshot):
+def test_mention_user(user, parse_to_html):
     html = parse_to_html("@" + user.username)
-    assert html == snapshot
+    assert html == (
+        "<p>"
+        f'<a href="{user.get_absolute_url()}" class="rich-text-mention" rel="external nofollow noopener" target="_blank">'
+        f"@{user.username}"
+        "</a>"
+        "</p>"
+    )
 
 
-def test_mention_user_with_underscore_in_name(other_user, parse_to_html, snapshot):
+def test_mention_user_with_underscore_in_name(other_user, parse_to_html):
     html = parse_to_html("@" + other_user.username)
-    assert html == snapshot
+    assert html == (
+        "<p>"
+        f'<a href="{other_user.get_absolute_url()}" class="rich-text-mention" rel="external nofollow noopener" target="_blank">'
+        f"@{other_user.username}"
+        "</a>"
+        "</p>"
+    )
 
 
-def test_mention_is_syntax_insensitive(other_user, parse_to_html, snapshot):
+def test_mention_is_syntax_insensitive(other_user, parse_to_html):
     html = parse_to_html("@" + other_user.username.lower())
-    assert html == snapshot
+    assert html == (
+        "<p>"
+        f'<a href="{other_user.get_absolute_url()}" class="rich-text-mention" rel="external nofollow noopener" target="_blank">'
+        f"@{other_user.username}"
+        "</a>"
+        "</p>"
+    )
 
 
-def test_mention_user_in_sentence(user, parse_to_html, snapshot):
+def test_mention_user_in_sentence(user, parse_to_html):
     html = parse_to_html(f"lorem @{user.username} ipsum")
-    assert html == snapshot
+    assert html == (
+        "<p>lorem "
+        f'<a href="{user.get_absolute_url()}" class="rich-text-mention" rel="external nofollow noopener" target="_blank">'
+        f"@{user.username}"
+        "</a>"
+        " ipsum</p>"
+    )
 
 
-def test_mention_user_in_parenthesis(user, parse_to_html, snapshot):
+def test_mention_user_in_parenthesis(user, parse_to_html):
     html = parse_to_html(f"(@{user.username})")
-    assert html == snapshot
+    assert html == (
+        "<p>("
+        f'<a href="{user.get_absolute_url()}" class="rich-text-mention" rel="external nofollow noopener" target="_blank">'
+        f"@{user.username}"
+        "</a>"
+        ")</p>"
+    )
 
 
 def test_mention_for_not_found_user(db, parse_to_html, snapshot):
