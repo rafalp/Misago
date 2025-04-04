@@ -19,9 +19,7 @@ def attachment_html_element(attachment: Attachment) -> str:
     )
 
 
-def test_replace_rich_text_tokens_replaces_spoiler(
-    parse_to_html, snapshot
-):
+def test_replace_rich_text_tokens_replaces_spoiler(parse_to_html, snapshot):
     html = parse_to_html("[spoiler]Hello world![/spoiler]")
     assert snapshot == replace_rich_text_tokens(html)
 
