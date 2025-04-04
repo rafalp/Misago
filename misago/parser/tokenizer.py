@@ -5,8 +5,8 @@ from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
 from .hooks import tokenize_hook
+from .mentions import replace_mentions_tokens
 from .shortenurl import shorten_url
-
 
 TokensProcessor = Callable[[list[Token]], list[Token] | None]
 
@@ -17,14 +17,15 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
         parser,
         markup,
         [
-            set_links_rel_external_nofollow_noopener,
-            set_links_target_blank,
             set_tables_styles,
             shorten_link_text,
             extract_attachments,
             remove_repeated_hrs,
             remove_nested_inline_bbcodes,
             replace_blockquotes_with_misago_quotes,
+            replace_mentions_tokens,
+            set_links_rel_external_nofollow_noopener,
+            set_links_target_blank,
         ],
     )
 

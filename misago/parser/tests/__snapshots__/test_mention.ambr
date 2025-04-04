@@ -1,0 +1,22 @@
+# serializer version: 1
+# name: test_mention_for_inactive_user
+  '<p>this <span misago-mention="inactive-user" class="rich-text-mention-not-found">@Inactive_User</span> is inactive</p>'
+# ---
+# name: test_mention_for_not_found_user
+  '<p>this <span misago-mention="user" class="rich-text-mention-not-found">@User</span> doesn’t exist</p>'
+# ---
+# name: test_mention_is_syntax_insensitive
+  '<p><a href="/u/other-user/3/" class="rich-text-mention" rel="external nofollow noopener" target="_blank">@Other_User</a></p>'
+# ---
+# name: test_mention_user
+  '<p><a href="/u/user/1/" class="rich-text-mention" rel="external nofollow noopener" target="_blank">@User</a></p>'
+# ---
+# name: test_mention_user_in_parenthesis
+  '<p>(<a href="/u/user/5/" class="rich-text-mention" rel="external nofollow noopener" target="_blank">@User</a>)</p>'
+# ---
+# name: test_mention_user_in_sentence
+  '<p>lorem <a href="/u/user/4/" class="rich-text-mention" rel="external nofollow noopener" target="_blank">@User</a> ipsum</p>'
+# ---
+# name: test_mention_user_with_underscore_in_name
+  '<p><a href="/u/other-user/2/" class="rich-text-mention" rel="external nofollow noopener" target="_blank">@Other_User</a></p>'
+# ---

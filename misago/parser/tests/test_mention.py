@@ -1,16 +1,36 @@
-def test_mention(parse_to_html):
-    html = parse_to_html("@John123")
-    assert html == '<p><misago-mention username="John123"></p>'
+def test_mention_user(user, parse_to_html, snapshot):
+    html = parse_to_html("@" + user.username)
+    assert html == snapshot
 
 
-def test_mention_is_passed_in_sentence(parse_to_html):
-    html = parse_to_html("lorem @John123 ipsum")
-    assert html == '<p>lorem <misago-mention username="John123"> ipsum</p>'
+def test_mention_user_with_underscore_in_name(other_user, parse_to_html, snapshot):
+    html = parse_to_html("@" + other_user.username)
+    assert html == snapshot
 
 
-def test_mention_is_passed_in_parenthesis(parse_to_html):
-    html = parse_to_html("(@John123)")
-    assert html == '<p>(<misago-mention username="John123">)</p>'
+def test_mention_is_syntax_insensitive(other_user, parse_to_html, snapshot):
+    html = parse_to_html("@" + other_user.username.lower())
+    assert html == snapshot
+
+
+def test_mention_user_in_sentence(user, parse_to_html, snapshot):
+    html = parse_to_html(f"lorem @{user.username} ipsum")
+    assert html == snapshot
+
+
+def test_mention_user_in_parenthesis(user, parse_to_html, snapshot):
+    html = parse_to_html(f"(@{user.username})")
+    assert html == snapshot
+
+
+def test_mention_for_not_found_user(db, parse_to_html, snapshot):
+    html = parse_to_html("this @User doesn't exist")
+    assert html == snapshot
+
+
+def test_mention_for_inactive_user(inactive_user, parse_to_html, snapshot):
+    html = parse_to_html(f"this @{inactive_user.username} is inactive")
+    assert html == snapshot
 
 
 def test_mention_is_not_parsed_in_link(parse_to_html):
