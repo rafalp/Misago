@@ -1,0 +1,14 @@
+{% load i18n %}
+<details class="rich-text-spoiler">
+  <summary class="rich-text-spoiler-header">
+    <div class="rich-text-spoiler-info">
+      {% if info %}{{ info }}{% else %}{% trans "Hidden message" context "rich text spoiler" %}{% endif %}
+    </div>
+    <div class="rich-text-spoiler-toggle">
+      {% trans "toggle" context "rich text spoiler toggle" %}
+    </div>
+  </summary>
+  <div class="rich-text-spoiler-body">
+    {{ content|safe }}
+  </div>
+</details>

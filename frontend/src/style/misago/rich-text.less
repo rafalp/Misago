@@ -46,7 +46,8 @@
   ol,
   table,
   pre,
-  .rich-text-code {
+  .rich-text-code,
+  .rich-text-spoiler {
     margin-bottom: @line-height-computed;
 
     &:last-child {
@@ -367,6 +368,58 @@
     border: 1px solid @rich-text-code-btn-active-border;
     color: @rich-text-code-btn-active-color;
   }
+}
+
+.rich-text-spoiler {
+  overflow: hidden;
+  padding: 2px;
+
+  background-color: @rich-text-spoiler-bg;
+  background: repeating-linear-gradient(45deg, @rich-text-spoiler-bg, @rich-text-spoiler-bg 4px, @rich-text-spoiler-bg-alt 4px, @rich-text-spoiler-bg-alt 8px);
+  background-position: top left;
+  border-radius: @border-radius-base;
+}
+
+.rich-text-spoiler-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: @rich-text-spoiler-padding;
+
+  background-color: @rich-text-spoiler-header-bg;
+  color: @rich-text-spoiler-header-color;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.rich-text-spoiler-info {
+  width: 100%;
+  overflow: hidden;
+
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rich-text-spoiler-toggle {
+  display: block;
+  padding: 2px 5px;
+
+  background: @rich-text-spoiler-toggle-bg;
+  border-radius: @border-radius-small;
+  color: @rich-text-spoiler-toggle-color;
+  font-size: @font-size-small;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.rich-text-spoiler-body {
+  padding: @rich-text-spoiler-padding;
+
+  background-color: @rich-text-spoiler-body-bg;
+  border-top: 1px solid @rich-text-spoiler-body-border;
 }
 
 .rich-text-mention {
