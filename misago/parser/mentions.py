@@ -45,6 +45,7 @@ def get_mentioned_users(slugs: list[str]) -> list[dict]:
     users: dict[str, dict] = {}
     for user_id, user_name, user_slug in queryset:
         users[user_slug] = {
+            "id": user_id,
             "username": user_name,
             "url": reverse(
                 "misago:user",
@@ -74,6 +75,7 @@ def replace_token_inline_mentions(token_inline: Token, users: dict[str, dict]) -
                             "href": user_data["url"],
                             "class": "rich-text-mention",
                         },
+                        meta={"mention": user_data["id"]},
                     ),
                     Token(
                         type="text",
@@ -89,7 +91,6 @@ def replace_token_inline_mentions(token_inline: Token, users: dict[str, dict]) -
                 ]
 
             else:
-                print("HERE")
                 new_children += [
                     Token(
                         type="mention_not_found_open",

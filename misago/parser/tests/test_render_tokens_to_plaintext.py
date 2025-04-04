@@ -246,10 +246,10 @@ def test_render_tokens_to_plaintext_renders_image_bbcode_with_alt():
     )
 
 
-def test_render_tokens_to_plaintext_renders_mention():
+def test_render_tokens_to_plaintext_renders_mention(user):
     parser = create_parser()
-    tokens = tokenize(parser, "Hello, @Username")
-    assert render_tokens_to_plaintext(tokens) == "Hello, @Username"
+    tokens = tokenize(parser, f"Hello, @{user.username}")
+    assert render_tokens_to_plaintext(tokens) == f"Hello, @{user.username}"
 
 
 def test_render_tokens_to_plaintext_renders_soft_linebreak():

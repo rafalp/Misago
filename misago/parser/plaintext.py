@@ -84,9 +84,9 @@ def render_tokens_to_plaintext(tokens: list[Token]) -> str:
             render_paragraph,
             render_inline,
             render_code_inline,
+            render_mention,
             render_link,
             render_image,
-            render_mention,
             render_softbreak,
             render_text,
         ],
@@ -400,12 +400,16 @@ def render_image(state: StatePlaintext) -> bool:
 
 
 def render_mention(state: StatePlaintext) -> bool:
-    token = state.tokens[state.pos]
-    if token.type != "mention":
+    match = match_token_pair(state, "link_open", "link_close")
+    if not match:
         return False
 
-    state.push(token.markup)
-    state.pos += 1
+    tokens, pos = match
+    if not tokens[0].meta.get("mention"):
+        return False
+
+    state.push(state.renderer.render(tokens[1:-1]))
+    state.pos = pos
     return True
 
 
