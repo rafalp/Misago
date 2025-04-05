@@ -21,16 +21,17 @@
       {% if post and thread %}
         <div class="rich-text-quote-info">
           <div>
-            <a href="{{ thread.get_absolute_url }}">
+            <a href="{{ thread.get_absolute_url }}" class="rich-text-quote-thread">
               {{ thread }}
             </a>
           </div>
-          <div style="font-size:14px">
+          <div style="font-size: 13px;">
             {% if poster %}
-              <a href="{{ poster.get_absolute_url }}">{{ poster }}</a>
+              <a href="{{ poster.get_absolute_url }}" class="rich-text-quote-poster">{{ poster }}</a>
             {% else %}
-              {{ poster_name }}
+              <span class="rich-text-quote-poster">{{ poster_name }}</span>
             {% endif %}
+            <span class="rich-text-quote-separator">&bull;</span>
             <a
               class="rich-text-quote-timestamp"
               href="{{ post.get_absolute_url }}"
@@ -44,10 +45,11 @@
       {% else %}
         <div class="rich-text-quote-info">
           {% if poster %}
-            <a href="{{ poster.get_absolute_url }}">{{ poster }}</a>
+            <a href="{{ poster.get_absolute_url }}" class="rich-text-quote-poster">{{ poster }}</a>
           {% else %}
-            {{ poster_name }}
+            <span class="rich-text-quote-poster">{{ poster_name }}</span>
           {% endif %}
+          <span class="rich-text-quote-separator">&bull;</span>
           <a
             class="rich-text-quote-timestamp"
             href="{{ post.get_absolute_url }}"

@@ -1,5 +1,6 @@
 from functools import partial
 
+from django.contrib.auth.models import AnonymousUser
 from django.template.loader import render_to_string
 
 from ..attachments.models import Attachment
@@ -18,7 +19,7 @@ from .hooks import replace_rich_text_tokens_hook
 def replace_rich_text_tokens(
     html: str,
     data: dict | None = None,
-    user: User | None = None,
+    user: AnonymousUser | User | None = None,
     thread: Thread | None = None,
 ) -> str:
     if data is None:
@@ -32,7 +33,7 @@ def replace_rich_text_tokens(
 def _replace_rich_text_tokens_action(
     html: str,
     data: dict,
-    user: User | None = None,
+    user: AnonymousUser | User | None = None,
     thread: Thread | None = None,
 ) -> str:
     replace_rich_text_attachment_partial = replace_html_void_element_func(
