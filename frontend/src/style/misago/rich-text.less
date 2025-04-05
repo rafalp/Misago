@@ -46,6 +46,7 @@
   ol,
   table,
   pre,
+  .rich-text-quote,
   .rich-text-code,
   .rich-text-spoiler {
     margin-bottom: @line-height-computed;
@@ -306,6 +307,119 @@
   text-align: right;
 }
 
+.rich-text-quote {
+  overflow: hidden;
+
+  border: 1px solid @rich-text-quote-border;
+  border-radius: @border-radius-base;
+}
+
+.rich-text-quote-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: @rich-text-quote-padding;
+
+  background-color: @rich-text-quote-header-bg;
+}
+
+.rich-text-quote-avatar {
+  flex-shrink: 0;
+  display: block;
+  margin-right: @rich-text-quote-padding;
+  overflow: hidden;
+
+  border-radius: @border-radius-small;
+
+  img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.rich-text-quote-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+  margin-left: @rich-text-quote-padding;
+
+  color: @rich-text-quote-header-color;
+
+  .material-icon {
+    font-size: 24px;
+    line-height: 24px;
+  }
+}
+
+.rich-text-quote-info {
+  width: 100%;
+  overflow: hidden;
+
+  color: @rich-text-quote-header-color;
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rich-text-quote-thread {
+  font-size: 14px;
+
+  &,
+  &:link,
+  &:visited,
+  &:focus,
+  &:hover,
+  &:active {
+    color: @rich-text-quote-header-thread;
+  }
+}
+
+.rich-text-quote-poster {
+  &,
+  &:link,
+  &:visited,
+  &:focus,
+  &:hover,
+  &:active {
+    color: @rich-text-quote-header-poster;
+  }
+}
+
+.rich-text-quote-timestamp {
+  font-weight: normal;
+
+  &,
+  &:link,
+  &:visited,
+  &:focus {
+    color: @rich-text-quote-header-timestamp;
+  }
+
+  &:hover,
+  &:active {
+    color: @rich-text-quote-header-timestamp-hover;
+  }
+}
+
+.rich-text-quote-separator {
+  padding: 0 2px;
+
+  color: @rich-text-quote-header-separator;
+}
+
+.rich-text-quote-body {
+  margin: 0;
+  padding: @rich-text-quote-padding;
+
+  background-color: @rich-text-quote-body-bg;
+  border: none;
+}
+
 .rich-text-code {
   overflow: hidden;
 
@@ -375,7 +489,13 @@
   padding: 2px;
 
   background-color: @rich-text-spoiler-bg;
-  background: repeating-linear-gradient(45deg, @rich-text-spoiler-bg, @rich-text-spoiler-bg 4px, @rich-text-spoiler-bg-alt 4px, @rich-text-spoiler-bg-alt 8px);
+  background: repeating-linear-gradient(
+    45deg,
+    @rich-text-spoiler-bg,
+    @rich-text-spoiler-bg 4px,
+    @rich-text-spoiler-bg-alt 4px,
+    @rich-text-spoiler-bg-alt 8px
+  );
   background-position: top left;
   border-radius: @border-radius-base;
 }
