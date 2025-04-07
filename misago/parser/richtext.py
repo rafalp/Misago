@@ -113,6 +113,7 @@ def replace_rich_text_quote_block(
     post = None
     poster = None
     post_thread = None
+    post_category = None
 
     try:
         if args:
@@ -120,28 +121,21 @@ def replace_rich_text_quote_block(
     except (TypeError, ValueError):
         pass
 
-    if post_id:
+    if post_id and post_id in data["visible_posts"]:
         post = data["posts"].get(post_id)
 
     if post:
+        post_category = data["categories"].get(post.category_id)
+
         if post.poster_id:
             poster = data["users"].get(post.poster_id)
         if thread and post.thread_id != thread.id:
             post_thread = data["threads"].get(post.thread_id)
 
-    # DELETE ME LATER
-    if post_id and not post:
-        from misago.threads.models import Post
-
-        post = Post.objects.select_related("poster", "thread", "thread__category").get(
-            id=post_id
-        )
-        poster = post.poster
-        post_thread = post.thread
-
     return render_to_string(
         "misago/rich_text/quote_block.html",
         {
+            "category": post_category,
             "thread": post_thread,
             "post": post,
             "poster": poster,
