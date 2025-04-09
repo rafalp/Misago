@@ -311,33 +311,15 @@ def fetch_attachments(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
-    visible_posts: list[int] = []
-    for post in data["posts"].values():
-        with check_permissions() as can_see:
-            check_see_post_permission(
-                permissions,
-                data["categories"][post.category_id],
-                data["threads"][post.thread_id],
-                post,
-            )
+    queryset = Attachment.objects.filter(post_id__in=data["posts"])
 
-        if can_see:
-            # Prepopulate `visible_posts`
-            data["visible_posts"].add(post.id)
-
-    queryset = Attachment.objects
-    if data["visible_posts"]:
-        queryset = queryset.filter(post_id__in=data["visible_posts"])
-    else:
-        queryset = queryset.empty()
-
-    if ids_to_fetch := data["attachment_ids"].difference(data["attachments"]):
-        if settings.additional_embedded_attachments_limit:
-            queryset = queryset.union(
-                Attachment.objects.filter(id__in=ids_to_fetch, post__isnull=False)
-                .exclude(post_id__in=visible_posts)
-                .order_by("-id")[: settings.additional_embedded_attachments_limit]
-            )
+    embedded_attachments = data["attachment_ids"].difference(data["attachments"])
+    if settings.additional_embedded_attachments_limit and embedded_attachments:
+        queryset = queryset.union(
+            Attachment.objects.filter(id__in=embedded_attachments, post__isnull=False)
+            .exclude(post_id__in=data["visible_posts"])
+            .order_by("-id")[: settings.additional_embedded_attachments_limit]
+        )
 
     data["attachments"].update({a.id: a for a in queryset})
 
