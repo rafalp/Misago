@@ -60,7 +60,7 @@
           </a>
         </div>
       {% endif %}
-      <a href="{{ post.get_absolute_url }}" class="btn rich-text-quote-btn">
+      <a href="{{ post.get_absolute_url }}" class="btn rich-text-quote-btn" misago-scroll-to="#post-{{ post.id }}">
         <span class="material-icon">{% if thread %}arrow_forward{% else %}arrow_upward{% endif %}</span>
       </a>
     {% else %}
