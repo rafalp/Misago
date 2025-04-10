@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, Iterable, Protocol
 
+from django.conf import settings as dj_settings
 from django.contrib.auth import get_user_model
 
 from ..attachments.models import Attachment
@@ -282,9 +283,14 @@ def find_post_ids(
     for attachment in data["attachments"].values():
         if attachment.post_id:
             data["post_ids"].add(attachment.post_id)
+
+    quoted_posts: set[int] = set()
     for post in data["posts"].values():
         if related_posts := post.metadata.get("posts"):
-            data["post_ids"].update(related_posts)
+            quoted_posts.update(related_posts)
+
+    if quoted_posts := sorted(quoted_posts)[: dj_settings.MISAGO_QUOTED_POSTS_LIMIT]:
+        data["post_ids"].update(quoted_posts)
 
 
 def fetch_posts(

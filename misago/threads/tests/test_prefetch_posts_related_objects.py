@@ -505,6 +505,29 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_exclude
         assert data["attachment_errors"][user_text_attachment.id].not_found
 
 
+def test_prefetch_posts_related_objects_fetches_posts_metadata_posts(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    anonymous_user,
+    post,
+    user_reply,
+):
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    post.metadata["posts"] = [user_reply.id]
+    post.save()
+
+    with django_assert_num_queries(6):
+        data = prefetch_posts_related_objects(dynamic_settings, permissions, [post])
+        assert data["posts"] == {
+            post.id: post,
+            user_reply.id: user_reply,
+        }
+
+
 def test_prefetch_posts_related_objects_preloads_users(
     django_assert_num_queries,
     dynamic_settings,
@@ -602,6 +625,38 @@ def test_prefetch_posts_related_objects_doesnt_prefetch_anonymous_posts_users(
 
     with django_assert_num_queries(0):
         assert data["users"][user.id].group
+
+
+def test_prefetch_posts_related_objects_sets_visible_posts(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    user,
+    post,
+    user_reply,
+    hidden_reply,
+    private_thread,
+    user_private_thread,
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    post.metadata["posts"] = [
+        private_thread.first_post_id,
+        user_private_thread.first_post_id,
+    ]
+    post.save()
+
+    with django_assert_num_queries(6):
+        data = prefetch_posts_related_objects(
+            dynamic_settings, permissions, [post, user_reply, hidden_reply]
+        )
+        assert data["visible_posts"] == {
+            post.id,
+            user_reply.id,
+            user_private_thread.first_post_id,
+        }
 
 
 def test_prefetch_posts_related_objects_prefetches_objects_in_cascade(
