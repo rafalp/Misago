@@ -1,12 +1,9 @@
-from typing import TYPE_CHECKING, Protocol, Union
+from typing import Protocol
 
-from django.contrib.auth.models import AnonymousUser
+from django.template import Context
 
 from ...plugins.hooks import FilterHook
 from ...threads.models import Thread
-
-if TYPE_CHECKING:
-    from ...users.models import User
 
 
 class ReplaceRichTextTokensHookAction(Protocol):
@@ -20,13 +17,13 @@ class ReplaceRichTextTokensHookAction(Protocol):
 
     An HTML string in which tokens will be replaced.
 
+    ## `context: Context`
+
+    Current template context.
+
     ## `data: dict`
 
     Data that can be embedded in HTML.
-
-    ## `user: AnonymousUser | User | None`
-
-    `AnonymousUser`, authenticated `User` or `None`.
 
     ## `thread: Thread | None`
 
@@ -40,8 +37,8 @@ class ReplaceRichTextTokensHookAction(Protocol):
     def __call__(
         self,
         html: str,
+        context: Context,
         data: dict,
-        user: Union[AnonymousUser, "User", None],
         thread: Thread | None,
     ) -> str: ...
 
@@ -63,13 +60,13 @@ class ReplaceRichTextTokensHookFilter(Protocol):
 
     An HTML string in which tokens will be replaced.
 
+    ## `context: Context`
+
+    Current template context.
+
     ## `data: dict`
 
     Data that can be embedded in HTML.
-
-    ## `user: AnonymousUser | User | None`
-
-    `AnonymousUser`, authenticated `User` or `None`.
 
     ## `thread: Thread | None`
 
@@ -84,8 +81,8 @@ class ReplaceRichTextTokensHookFilter(Protocol):
         self,
         action: ReplaceRichTextTokensHookAction,
         html: str,
+        context: Context,
         data: dict,
-        user: Union[AnonymousUser, "User", None],
         thread: Thread | None,
     ) -> str: ...
 
@@ -106,17 +103,16 @@ class ReplaceRichTextTokensHook(
     pseudo-HTML element with current user's username.
 
     ```python
-    from django.contrib.auth.models import AnonymousUser
+    from django.template import Context
     from misago.parser.hooks import replace_rich_text_tokens_hook
-    from misago.users.models import User
 
 
     @replace_rich_text_tokens_hook.append_filter
     def replace_rich_text_user_name(
         action,
         html: str,
+        context: Context,
         data: dict,
-        user: AnonymousUser | User | None,
         thread: Thread | None,
     ) -> str:
         if "<you>" in html:
@@ -124,7 +120,7 @@ class ReplaceRichTextTokensHook(
             html = html.replace("<you>", username)
 
         # Call the next function in chain
-        return action(html, data, user, thread)
+        return action(html, context, data, thread)
     ```
     """
 
@@ -134,11 +130,11 @@ class ReplaceRichTextTokensHook(
         self,
         action: ReplaceRichTextTokensHookAction,
         html: str,
+        context: Context,
         data: dict,
-        user: Union[AnonymousUser, "User", None],
         thread: Thread | None,
     ) -> str:
-        return super().__call__(action, html, data, user, thread)
+        return super().__call__(action, html, context, data, thread)
 
 
 replace_rich_text_tokens_hook = ReplaceRichTextTokensHook()

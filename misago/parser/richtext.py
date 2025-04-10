@@ -1,6 +1,6 @@
 from functools import partial
 
-from django.contrib.auth.models import AnonymousUser
+from django.template import Context
 from django.template.loader import render_to_string
 
 from ..attachments.models import Attachment
@@ -12,28 +12,27 @@ from ..html.replace import (
 )
 from ..permissions.checkutils import PermissionCheckResult
 from ..threads.models import Thread
-from ..users.models import User
 from .hooks import replace_rich_text_tokens_hook
 
 
 def replace_rich_text_tokens(
     html: str,
+    context: Context,
     data: dict | None = None,
-    user: AnonymousUser | User | None = None,
     thread: Thread | None = None,
 ) -> str:
     if data is None:
         data = {}
 
     return replace_rich_text_tokens_hook(
-        _replace_rich_text_tokens_action, html, data, user, thread
+        _replace_rich_text_tokens_action, html, context, data, thread
     )
 
 
 def _replace_rich_text_tokens_action(
     html: str,
+    context: Context,
     data: dict,
-    user: AnonymousUser | User | None = None,
     thread: Thread | None = None,
 ) -> str:
     replace_rich_text_attachment_partial = replace_html_void_element_func(
@@ -45,7 +44,7 @@ def _replace_rich_text_tokens_action(
     )
 
     replace_rich_text_quote_block_partial = replace_html_element_func(
-        partial(replace_rich_text_quote_block, data, thread)
+        partial(replace_rich_text_quote_block, context, data, thread)
     )
 
     html = replace_html_void_element(
@@ -103,6 +102,7 @@ def replace_rich_text_attachment(
 
 
 def replace_rich_text_quote_block(
+    context: Context,
     data: dict,
     thread: Thread | None,
     html: str,
@@ -132,18 +132,19 @@ def replace_rich_text_quote_block(
         if thread and post.thread_id != thread.id:
             post_thread = data["threads"].get(post.thread_id)
 
-    return render_to_string(
-        "misago/rich_text/quote_block.html",
-        {
-            "category": post_category,
-            "thread": post_thread,
-            "post": post,
-            "poster": poster,
-            "poster_name": args.get("user") if args else None,
-            "info": args.get("info") if args else None,
-            "content": content,
-        },
-    )
+    new_context = {
+        "category": post_category,
+        "thread": post_thread,
+        "post": post,
+        "post_id": post_id,
+        "poster": poster,
+        "poster_name": args.get("user") if args else None,
+        "info": args.get("info") if args else None,
+        "content": content,
+    }
+
+    with context.update(new_context):
+        return render_to_string("misago/rich_text/quote_block.html", context.flatten())
 
 
 @replace_html_element_func

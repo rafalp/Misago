@@ -8,8 +8,8 @@
           href="{{ poster.get_absolute_url }}"
         >
           <img
-            srcset="{{ poster|avatar:100 }}"
-            src="{{ poster|avatar:50 }}"
+            srcset="{{ poster|avatar:48 }}"
+            src="{{ poster|avatar:24 }}"
             alt="{{ poster }}"
           >
         </a>
@@ -18,50 +18,47 @@
           <img src="{{ BLANK_AVATAR_URL }}" alt="{{ poster_name }}">
         </span>
       {% endif %}
-      {% if post and thread %}
-        <div class="rich-text-quote-info">
-          <div>
-            <a href="{{ thread.get_absolute_url }}" class="rich-text-quote-thread">
-              {{ thread }}
-            </a>
-          </div>
-          <div style="font-size: 13px;">
-            {% if poster %}
-              <a href="{{ poster.get_absolute_url }}" class="rich-text-quote-poster">{{ poster }}</a>
-            {% else %}
-              <span class="rich-text-quote-poster">{{ poster_name }}</span>
-            {% endif %}
-            <span class="rich-text-quote-separator">&bull;</span>
-            <a
-              class="rich-text-quote-timestamp"
-              href="{{ post.get_absolute_url }}"
-              title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
-              misago-timestamp="{{ post.posted_on.isoformat }}"
-            >
-              {{ post.posted_on|date_relative }}
-            </a>
-          </div>
-        </div>
-      {% else %}
-        <div class="rich-text-quote-info">
-          {% if poster %}
-            <a href="{{ poster.get_absolute_url }}" class="rich-text-quote-poster">{{ poster }}</a>
-          {% else %}
-            <span class="rich-text-quote-poster">{{ poster_name }}</span>
-          {% endif %}
-          <span class="rich-text-quote-separator">&bull;</span>
-          <a
-            class="rich-text-quote-timestamp"
-            href="{{ post.get_absolute_url }}"
-            title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
-            misago-timestamp="{{ post.posted_on.isoformat }}"
-          >
-            {{ post.posted_on|date_relative }}
-          </a>
-        </div>
-      {% endif %}
-      <a href="{{ post.get_absolute_url }}" class="btn rich-text-quote-btn" misago-scroll-to="#post-{{ post.id }}">
+      <div class="rich-text-quote-info">
+        {% if thread %}
+          <a href="{{ thread.get_absolute_url }}" class="rich-text-quote-header-link">{{ thread }}</a>
+          <span class="rich-text-quote-header-separator">&bull;</span>
+        {% endif %}
+        {% if poster %}
+          <a href="{{ poster.get_absolute_url }}" class="rich-text-quote-header-link{% if thread %}-secondary{% endif %}">{{ poster }}</a>
+        {% else %}
+          <span class="rich-text-quote-header-link{% if thread %}-secondary{% endif %}">{{ poster_name }}</span>
+        {% endif %}
+        <span class="rich-text-quote-header-separator">&bull;</span>
+        <span
+          class="rich-text-quote-header-timestamp rich-text-quote-header-timestamp-long"
+          title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ post.posted_on.isoformat }}"
+        >
+          {{ post.posted_on|date_relative }}
+        </span>
+        <span
+          class="rich-text-quote-header-timestamp rich-text-quote-header-timestamp-short"
+          title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ post.posted_on.isoformat }}"
+          misago-timestamp-format="short"
+        >
+          {{ post.posted_on|date_relative_short }}
+        </span>
+      </div>
+      <a href="{{ post.get_absolute_url }}" class="rich-text-quote-btn" misago-scroll-to="#post-{{ post.id }}">
         <span class="material-icon">{% if thread %}arrow_forward{% else %}arrow_upward{% endif %}</span>
+      </a>
+    {% elif post_id %}
+      <span class="rich-text-quote-avatar">
+        <img src="{{ BLANK_AVATAR_URL }}" alt="{{ poster_name }}">
+      </span>
+      <div class="rich-text-quote-info">
+        <span class="rich-text-quote-header-link">{{ poster_name }}</span>
+        <span class="rich-text-quote-header-separator">&bull;</span>
+        <span class="rich-text-quote-header-timestamp">#{{ post_id }}</span>
+      </div>
+      <a href="{% url 'misago:post' id=post_id %}" class="rich-text-quote-btn">
+        <span class="material-icon">arrow_forward</span>
       </a>
     {% else %}
       <div class="rich-text-quote-info">

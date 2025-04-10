@@ -331,10 +331,11 @@
   overflow: hidden;
 
   border-radius: @border-radius-small;
+  line-height: 0;
 
   img {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -344,11 +345,40 @@
   align-items: center;
   justify-content: center;
 
-  width: 32px;
-  height: 32px;
-  margin-left: @rich-text-quote-padding;
+  width: 28px;
+  height: 28px;
+  margin: -2px 0 -2px @rich-text-quote-padding;
+  padding: 0;
 
-  color: @rich-text-quote-header-color;
+  border-radius: @border-radius-base;
+
+  &:hover,
+  &:focus,
+  &:active {
+    box-shadow: none;
+    text-decoration: none;
+  }
+
+  &,
+  &:link,
+  &:visited
+  &:focus {
+    background-color: @rich-text-quote-header-btn-bg;
+    border: 1px solid @rich-text-quote-header-btn-border;
+    color: @rich-text-quote-header-btn-color;
+  }
+
+  &:hover {
+    background-color: @rich-text-quote-header-btn-hover-bg;
+    border: 1px solid @rich-text-quote-header-btn-hover-border;
+    color: @rich-text-quote-header-btn-hover-color;
+  }
+
+  &:active {
+    background-color: @rich-text-quote-header-btn-active-bg;
+    border: 1px solid @rich-text-quote-header-btn-active-border;
+    color: @rich-text-quote-header-btn-active-color;
+  }
 
   .material-icon {
     font-size: 24px;
@@ -366,47 +396,66 @@
   text-overflow: ellipsis;
 }
 
-.rich-text-quote-thread {
-  font-size: 14px;
-
-  &,
-  &:link,
-  &:visited,
-  &:focus,
-  &:hover,
-  &:active {
-    color: @rich-text-quote-header-thread;
-  }
+.rich-text-quote-header-link {
+  color: @rich-text-quote-header-link;
+  font-weight: bold;
 }
 
-.rich-text-quote-poster {
-  &,
-  &:link,
-  &:visited,
-  &:focus,
-  &:hover,
-  &:active {
-    color: @rich-text-quote-header-poster;
-  }
-}
-
-.rich-text-quote-timestamp {
-  font-weight: normal;
-
+a.rich-text-quote-header-link {
   &,
   &:link,
   &:visited,
   &:focus {
-    color: @rich-text-quote-header-timestamp;
+    color: @rich-text-quote-header-link;
   }
 
   &:hover,
   &:active {
-    color: @rich-text-quote-header-timestamp-hover;
+    color: @rich-text-quote-header-link;
+    text-decoration: underline;
   }
 }
 
-.rich-text-quote-separator {
+.rich-text-quote-header-link-secondary {
+  color: @rich-text-quote-header-link-secondary;
+  font-weight: normal;
+}
+
+a.rich-text-quote-header-link-secondary {
+  &,
+  &:link,
+  &:visited,
+  &:focus {
+    color: @rich-text-quote-header-link-secondary;
+  }
+
+  &:hover,
+  &:active {
+    color: @rich-text-quote-header-link-secondary;
+    text-decoration: underline;
+  }
+}
+
+.rich-text-quote-header-timestamp {
+  color: @rich-text-quote-header-timestamp;
+  font-weight: normal;
+}
+
+.rich-text-quote-header-timestamp-long {
+  display: none;
+}
+
+@media screen and (min-width: @screen-sm-min) {
+  .rich-text-quote-header-timestamp-short {
+    display: none;
+  }
+
+  .rich-text-quote-header-timestamp-long {
+    display: inline-block;
+  }
+}
+
+.rich-text-quote-header-separator {
   padding: 0 2px;
 
   color: @rich-text-quote-header-separator;
