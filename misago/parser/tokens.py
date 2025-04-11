@@ -4,6 +4,25 @@ from typing import Callable
 from markdown_it.token import Token
 
 
+def tokens_contain_tag(tokens: list[Token], tag: str) -> bool:
+    nesting = 0
+    for token in tokens:
+        if token.tag == tag:
+            nesting += token.nesting
+            if nesting == 0:
+                return True
+
+    return False
+
+
+def tokens_contain_inline_tag(tokens: list[Token], tag: str) -> bool:
+    for token in tokens:
+        if token.type == "inline" and tokens_contain_tag(token.children, tag):
+            return True
+
+    return False
+
+
 def replace_tag_tokens(
     tokens: list[Token],
     tag: str,
@@ -60,20 +79,34 @@ def replace_inline_tag_tokens(
     return new_tokens
 
 
-def tokens_contain_tag(tokens: list[Token], tag: str) -> bool:
-    nesting = 0
-    for token in tokens:
-        if token.tag == tag:
-            nesting += token.nesting
-            if nesting == 0:
-                return True
+def inline_token_strip(token: Token) -> Token | None:
+    new_children: list[Token] = token.children[:]
 
-    return False
+    # lstrip
+    while new_children and new_children[0].type in ("text", "softbreak"):
+        if new_children[0].type == "text":
+            new_children[0].content = new_children[0].content.lstrip()
+            if not new_children[0].content:
+                new_children = new_children[1:]
+            else:
+                break
 
+        elif new_children[0].type == "softbreak":
+            new_children = new_children[1:]
 
-def tokens_contain_inline_tag(tokens: list[Token], tag: str) -> bool:
-    for token in tokens:
-        if token.type == "inline" and tokens_contain_tag(token.children, tag):
-            return True
+    # rstrip
+    while new_children and new_children[-1].type in ("text", "softbreak"):
+        if new_children[-1].type == "text":
+            new_children[-1].content = new_children[-1].content.rstrip()
+            if not new_children[-1].content:
+                new_children = new_children[:-1]
+            else:
+                break
 
-    return False
+        elif new_children[-1].type == "softbreak":
+            new_children = new_children[:-1]
+
+    if new_children:
+        return replace(token, children=new_children)
+
+    return None
