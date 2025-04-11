@@ -79,7 +79,7 @@ def replace_inline_tag_tokens(
     return new_tokens
 
 
-def inline_token_split(token: Token, tag: str) -> list[Token]:
+def split_inline_token(token: Token, tag: str) -> list[Token]:
     new_tokens: list[Token] = []
     new_children: list[Token] = []
 
@@ -105,11 +105,11 @@ def inline_token_split(token: Token, tag: str) -> list[Token]:
             if new_token:
                 new_token = inline_token_merge_texts(new_token)
             if new_token:
-                clean_new_tokens.append(clean_new_tokens)
+                clean_new_tokens.append(new_token)
         else:
             clean_new_tokens.append(new_token)
 
-    return new_tokens
+    return clean_new_tokens
 
 
 def inline_token_remove_orphaned_children(token: Token) -> Token | None:
@@ -117,45 +117,48 @@ def inline_token_remove_orphaned_children(token: Token) -> Token | None:
 
     # 1st pass: replace orphaned closing tags
     stack: list[tuple[int, str]] = []
-    for index, token in enumerate(token.children):
-        if token.nesting == 1:
-            stack.append((index, token.type))
-        if token.nesting == -1:
-            if not stack or stack[-1][1] != token.type:
+    for index, child in enumerate(token.children):
+        if child.nesting == 1:
+            stack.append((index, child.type))
+        if child.nesting == -1:
+            if not stack or stack[-1][1] != child.type:
                 new_children.append(
                     Token(
                         type="text",
                         tag="",
                         nesting=0,
-                        content=token.markup,
+                        content=child.markup,
                     )
                 )
                 continue
             else:
                 stack.pop()
 
-        new_children.append(token)
+        new_children.append(child)
 
     # 2nd pass: replace orphaned opening tags
-    for index, token in stack:
+    for index, child in stack:
         new_children[index] = Token(
             type="text",
             tag="",
             nesting=0,
-            content=new_children[index].markup,
+            content=child.markup,
         )
 
     if new_children:
-        return replace(token, children=new_children)
+        return inline_token_merge_texts(replace(token, children=new_children))
 
     return None
+
+
+STRIP_TOKENS = ("text", "softbreak", "hardbreak")
 
 
 def inline_token_strip(token: Token) -> Token | None:
     new_children: list[Token] = token.children[:]
 
     # lstrip
-    while new_children and new_children[0].type in ("text", "softbreak"):
+    while new_children and new_children[0].type in STRIP_TOKENS:
         if new_children[0].type == "text":
             new_children[0].content = new_children[0].content.lstrip()
             if not new_children[0].content:
@@ -163,11 +166,11 @@ def inline_token_strip(token: Token) -> Token | None:
             else:
                 break
 
-        elif new_children[0].type == "softbreak":
+        else:
             new_children = new_children[1:]
 
     # rstrip
-    while new_children and new_children[-1].type in ("text", "softbreak"):
+    while new_children and new_children[-1].type in STRIP_TOKENS:
         if new_children[-1].type == "text":
             new_children[-1].content = new_children[-1].content.rstrip()
             if not new_children[-1].content:
@@ -175,7 +178,7 @@ def inline_token_strip(token: Token) -> Token | None:
             else:
                 break
 
-        elif new_children[-1].type == "softbreak":
+        else:
             new_children = new_children[:-1]
 
     if new_children:
