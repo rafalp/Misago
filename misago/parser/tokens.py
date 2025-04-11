@@ -80,7 +80,75 @@ def replace_inline_tag_tokens(
 
 
 def inline_token_split(token: Token, tag: str) -> list[Token]:
-    pass
+    new_tokens: list[Token] = []
+    new_children: list[Token] = []
+
+    for child in token.children:
+        if child.tag == tag:
+            if new_children:
+                new_tokens.append(replace(token, children=new_children))
+                new_children = []
+
+            new_tokens.append(child)
+        else:
+            new_children.append(child)
+
+    if new_children:
+        new_tokens.append(replace(token, children=new_children))
+
+    clean_new_tokens = []
+    for new_token in new_tokens:
+        if new_token.type == "inline":
+            new_token = inline_token_remove_orphaned_children(new_token)
+            if new_token:
+                new_token = inline_token_strip(new_token)
+            if new_token:
+                new_token = inline_token_merge_texts(new_token)
+            if new_token:
+                clean_new_tokens.append(clean_new_tokens)
+        else:
+            clean_new_tokens.append(new_token)
+
+    return new_tokens
+
+
+def inline_token_remove_orphaned_children(token: Token) -> Token | None:
+    new_children: list[Token] = []
+
+    # 1st pass: replace orphaned closing tags
+    stack: list[tuple[int, str]] = []
+    for index, token in enumerate(token.children):
+        if token.nesting == 1:
+            stack.append((index, token.type))
+        if token.nesting == -1:
+            if not stack or stack[-1][1] != token.type:
+                new_children.append(
+                    Token(
+                        type="text",
+                        tag="",
+                        nesting=0,
+                        content=token.markup,
+                    )
+                )
+                continue
+            else:
+                stack.pop()
+
+        new_children.append(token)
+
+    # 2nd pass: replace orphaned opening tags
+    for index, token in stack:
+        new_children[index] = Token(
+            type="text",
+            tag="",
+            nesting=0,
+            content=new_children[index].markup,
+        )
+
+    if new_children:
+        return replace(token, children=new_children)
+
+    return None
 
 
 def inline_token_strip(token: Token) -> Token | None:

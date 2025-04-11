@@ -19,4 +19,4 @@ def test_tokens_contain_inline_tag_returns_false_if_inline_tag_is_not_found(
     parse_to_raw_tokens,
 ):
     tokens = parse_to_raw_tokens("Lorem ipsum dolor")
-    assert tokens_contain_inline_tag(tokens, "b")
+    assert not tokens_contain_inline_tag(tokens, "b")
