@@ -137,12 +137,12 @@ def inline_token_remove_orphaned_children(token: Token) -> Token | None:
         new_children.append(child)
 
     # 2nd pass: replace orphaned opening tags
-    for index, child in stack:
+    for index, _ in stack:
         new_children[index] = Token(
             type="text",
             tag="",
             nesting=0,
-            content=child.markup,
+            content=new_children[index].markup,
         )
 
     if new_children:

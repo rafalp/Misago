@@ -108,3 +108,18 @@ def test_split_inline_token_strips_hardbreaks(parse_to_raw_tokens):
     assert split_tokens[2].type == "mention"
     assert split_tokens[3].type == "inline"
     assert split_tokens[3].children[0].content == "met"
+
+
+def test_split_inline_token_replaces_split_inline_tags(parse_to_raw_tokens):
+    tokens = parse_to_raw_tokens("lorem   [b] [u]@ipsum  \n  @dolor[/u] [/b]   met")
+    assert tokens[1].type == "inline"
+
+    split_tokens = split_inline_token(tokens[1], "misago-mention")
+    assert len(split_tokens) == 4
+
+    assert split_tokens[0].type == "inline"
+    assert split_tokens[0].children[0].content == "lorem   [b] [u]"
+    assert split_tokens[1].type == "mention"
+    assert split_tokens[2].type == "mention"
+    assert split_tokens[3].type == "inline"
+    assert split_tokens[3].children[0].content == "[/u] [/b]   met"
