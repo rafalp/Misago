@@ -1,20 +1,19 @@
 # serializer version: 1
-# name: test_complete_markup_template_tag_replaces_default_spoiler_summary
+# name: test_complete_markup_template_tag_replaces_intermediate_html
   '''
-  <details class="rich-text-spoiler">
-    <summary class="rich-text-spoiler-header">
-      <div class="rich-text-spoiler-info">
-        Hidden message
-      </div>
-      <div class="rich-text-spoiler-toggle">
-        toggle
-      </div>
-    </summary>
-    <div class="rich-text-spoiler-body">
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        <div class="rich-text-quote-info">
+          Quote
+        </div>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
       
   <p>Hello world!</p>
   
-    </div>
-  </details>
+    </blockquote>
+  </aside>
   '''
 # ---
