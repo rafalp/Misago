@@ -79,6 +79,10 @@ def replace_inline_tag_tokens(
     return new_tokens
 
 
+def inline_token_split(token: Token, tag: str) -> list[Token]:
+    pass
+
+
 def inline_token_strip(token: Token) -> Token | None:
     new_children: list[Token] = token.children[:]
 
@@ -110,3 +114,13 @@ def inline_token_strip(token: Token) -> Token | None:
         return replace(token, children=new_children)
 
     return None
+
+
+def inline_token_merge_texts(token: Token) -> Token | None:
+    new_children: list[Token] = []
+    for child in token.children:
+        if child.type == "text" and new_children and new_children[-1].type == "text":
+            new_children[-1].content += child.content
+        else:
+            new_children.append(child)
+    return replace(token, children=new_children)
