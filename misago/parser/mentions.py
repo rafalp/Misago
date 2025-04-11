@@ -34,7 +34,7 @@ def find_mentioned_users(tokens: list[Token]) -> list[str]:
                 if child_token.type == "mention":
                     mentions.add(child_token.meta["slug"])
 
-    return sorted(mentions)[: settings.MISAGO_PARSER_MAX_MENTIONS]
+    return sorted(mentions)[: settings.MISAGO_POST_MENTIONS_LIMIT]
 
 
 def get_mentioned_users(slugs: list[str]) -> list[dict]:

@@ -1,6 +1,9 @@
 from typing import Protocol
 
+from django.template import Context
+
 from ...plugins.hooks import FilterHook
+from ...threads.models import Thread
 
 
 class ReplaceRichTextTokensHookAction(Protocol):
@@ -14,16 +17,30 @@ class ReplaceRichTextTokensHookAction(Protocol):
 
     An HTML string in which tokens will be replaced.
 
+    ## `context: Context`
+
+    Current template context.
+
     ## `data: dict`
 
     Data that can be embedded in HTML.
+
+    ## `thread: Thread | None`
+
+    Current `Thread` instance of `None`.
 
     # Return value
 
     A `str` with HTML that has its tokens replaced.
     """
 
-    def __call__(self, html: str, data: dict) -> str: ...
+    def __call__(
+        self,
+        html: str,
+        context: Context,
+        data: dict,
+        thread: Thread | None,
+    ) -> str: ...
 
 
 class ReplaceRichTextTokensHookFilter(Protocol):
@@ -43,9 +60,17 @@ class ReplaceRichTextTokensHookFilter(Protocol):
 
     An HTML string in which tokens will be replaced.
 
+    ## `context: Context`
+
+    Current template context.
+
     ## `data: dict`
 
     Data that can be embedded in HTML.
+
+    ## `thread: Thread | None`
+
+    Current `Thread` instance of `None`.
 
     # Return value
 
@@ -56,7 +81,9 @@ class ReplaceRichTextTokensHookFilter(Protocol):
         self,
         action: ReplaceRichTextTokensHookAction,
         html: str,
+        context: Context,
         data: dict,
+        thread: Thread | None,
     ) -> str: ...
 
 
@@ -67,33 +94,33 @@ class ReplaceRichTextTokensHook(
     This hook wraps the standard function that Misago uses to replace rich-text
     tokens in pre-rendered HTML or the next filter from another plugin.
 
-    Tokens are pseudo-HTML elements like `<attachment="..">` that are replaced
+    Tokens are pseudo-HTML elements like `<misago-attachment="..">` that are replaced
     with real HTML markup instead.
 
     # Example
 
-    The code below implements a custom filter function that replaces default spoiler
-    block summary with a custom message:
+    The code below implements a custom filter function that replaces `<you>`
+    pseudo-HTML element with current user's username.
 
     ```python
-    from misago.parser.context import ParserContext
+    from django.template import Context
     from misago.parser.hooks import replace_rich_text_tokens_hook
-    from misago.parser.html import SPOILER_SUMMARY
 
 
     @replace_rich_text_tokens_hook.append_filter
-    def replace_rich_text_spoiler_hoom(
+    def replace_rich_text_user_name(
         action,
         html: str,
+        context: Context,
         data: dict,
+        thread: Thread | None,
     ) -> str:
-        if SPOILER_SUMMARY in html:
-            html = html.replace(
-                SPOILER_SUMMARY, "SPOILER! Click at your own discretion!"
-            )
+        if "<you>" in html:
+            username = user.username if user and user.is_authenticated else "Guest"
+            html = html.replace("<you>", username)
 
         # Call the next function in chain
-        return action(context, html, **kwargs)
+        return action(html, context, data, thread)
     ```
     """
 
@@ -103,9 +130,11 @@ class ReplaceRichTextTokensHook(
         self,
         action: ReplaceRichTextTokensHookAction,
         html: str,
+        context: Context,
         data: dict,
+        thread: Thread | None,
     ) -> str:
-        return super().__call__(action, html, data)
+        return super().__call__(action, html, context, data, thread)
 
 
 replace_rich_text_tokens_hook = ReplaceRichTextTokensHook()

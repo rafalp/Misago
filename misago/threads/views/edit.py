@@ -126,6 +126,8 @@ class EditView(View):
             feed.set_counter_start(counter_start)
 
         post_context = feed.get_feed_data()[0]
+        post_context["thread"] = state.thread
+
         return render(request, self.template_name_inline, context=post_context)
 
     def get_state(self, request: HttpRequest, post: Post) -> EditThreadPostState:

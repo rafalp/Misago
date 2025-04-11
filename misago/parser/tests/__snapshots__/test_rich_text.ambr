@@ -91,6 +91,332 @@
   </div>
   '''
 # ---
+# name: test_replace_rich_text_tokens_replaces_quote
+  '''
+  
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        <div class="rich-text-quote-info">
+          Quote
+        </div>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
+      
+  <p>Hello world!</p>
+  
+    </blockquote>
+  </aside>
+  
+  '''
+# ---
+# name: test_replace_rich_text_tokens_replaces_quote_with_info
+  '''
+  
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        <div class="rich-text-quote-info">
+          Hello world
+        </div>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
+      
+  <p>Hello world!</p>
+  
+    </blockquote>
+  </aside>
+  
+  '''
+# ---
+# name: test_replace_rich_text_tokens_replaces_quote_with_missing_post
+  '''
+  
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        <span class="rich-text-quote-avatar">
+          <img src="blank-avatar.png" alt="Anonymouse">
+        </span>
+        <div class="rich-text-quote-info">
+          <span class="rich-text-quote-header-link">Anonymouse</span>
+          <span class="rich-text-quote-header-separator">&bull;</span>
+          <span class="rich-text-quote-header-timestamp">#1234</span>
+        </div>
+        <a href="/post/1234/" class="rich-text-quote-btn">
+          <span class="material-icon">arrow_forward</span>
+        </a>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
+      
+  <p>Hello world!</p>
+  
+    </blockquote>
+  </aside>
+  
+  '''
+# ---
+# name: test_replace_rich_text_tokens_replaces_quote_with_other_thread_anonymous_user_post
+  '''
+  
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        
+          <a
+            class="rich-text-quote-avatar"
+            href="/u/user/13/"
+          >
+            <img
+              srcset="http://dummyimage.com/100/100"
+              src="http://dummyimage.com/100/100"
+              alt="User"
+            >
+          </a>
+        
+        <div class="rich-text-quote-info">
+          
+          
+            <a href="/u/user/13/" class="rich-text-quote-header-link">User</a>
+          
+          <span class="rich-text-quote-header-separator">&bull;</span>
+          <span
+            class="rich-text-quote-header-timestamp rich-text-quote-header-timestamp-long"
+            title="May 7, 2022, 9:37 p.m."
+            misago-timestamp="2022-05-07T21:37:15+00:00"
+          >
+            May 7, 2022
+          </span>
+          <span
+            class="rich-text-quote-header-timestamp rich-text-quote-header-timestamp-short"
+            title="May 7, 2022, 9:37 p.m."
+            misago-timestamp="2022-05-07T21:37:15+00:00"
+            misago-timestamp-format="short"
+          >
+            May 2022
+          </span>
+        </div>
+        <a href="/post/1234/" class="rich-text-quote-btn" misago-scroll-to="#post-1234">
+          <span class="material-icon">arrow_upward</span>
+        </a>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
+      
+  <p>Hello world!</p>
+  
+    </blockquote>
+  </aside>
+  
+  '''
+# ---
+# name: test_replace_rich_text_tokens_replaces_quote_with_other_thread_invisible_user_post
+  '''
+  
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        <span class="rich-text-quote-avatar">
+          <img src="blank-avatar.png" alt="Anonymouse">
+        </span>
+        <div class="rich-text-quote-info">
+          <span class="rich-text-quote-header-link">Anonymouse</span>
+          <span class="rich-text-quote-header-separator">&bull;</span>
+          <span class="rich-text-quote-header-timestamp">#1234</span>
+        </div>
+        <a href="/post/1234/" class="rich-text-quote-btn">
+          <span class="material-icon">arrow_forward</span>
+        </a>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
+      
+  <p>Hello world!</p>
+  
+    </blockquote>
+  </aside>
+  
+  '''
+# ---
+# name: test_replace_rich_text_tokens_replaces_quote_with_other_thread_user_post
+  '''
+  
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        
+          <span class="rich-text-quote-avatar">
+            <img src="blank-avatar.png" alt="Tester">
+          </span>
+        
+        <div class="rich-text-quote-info">
+          
+          
+            <span class="rich-text-quote-header-link">Tester</span>
+          
+          <span class="rich-text-quote-header-separator">&bull;</span>
+          <span
+            class="rich-text-quote-header-timestamp rich-text-quote-header-timestamp-long"
+            title="May 7, 2022, 9:37 p.m."
+            misago-timestamp="2022-05-07T21:37:15+00:00"
+          >
+            May 7, 2022
+          </span>
+          <span
+            class="rich-text-quote-header-timestamp rich-text-quote-header-timestamp-short"
+            title="May 7, 2022, 9:37 p.m."
+            misago-timestamp="2022-05-07T21:37:15+00:00"
+            misago-timestamp-format="short"
+          >
+            May 2022
+          </span>
+        </div>
+        <a href="/post/1234/" class="rich-text-quote-btn" misago-scroll-to="#post-1234">
+          <span class="material-icon">arrow_upward</span>
+        </a>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
+      
+  <p>Hello world!</p>
+  
+    </blockquote>
+  </aside>
+  
+  '''
+# ---
+# name: test_replace_rich_text_tokens_replaces_quote_with_same_thread_anonymous_user_post
+  '''
+  
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        
+          <span class="rich-text-quote-avatar">
+            <img src="blank-avatar.png" alt="Tester">
+          </span>
+        
+        <div class="rich-text-quote-info">
+          
+          
+            <span class="rich-text-quote-header-link">Tester</span>
+          
+          <span class="rich-text-quote-header-separator">&bull;</span>
+          <span
+            class="rich-text-quote-header-timestamp rich-text-quote-header-timestamp-long"
+            title="May 7, 2022, 9:37 p.m."
+            misago-timestamp="2022-05-07T21:37:15+00:00"
+          >
+            May 7, 2022
+          </span>
+          <span
+            class="rich-text-quote-header-timestamp rich-text-quote-header-timestamp-short"
+            title="May 7, 2022, 9:37 p.m."
+            misago-timestamp="2022-05-07T21:37:15+00:00"
+            misago-timestamp-format="short"
+          >
+            May 2022
+          </span>
+        </div>
+        <a href="/post/1234/" class="rich-text-quote-btn" misago-scroll-to="#post-1234">
+          <span class="material-icon">arrow_upward</span>
+        </a>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
+      
+  <p>Hello world!</p>
+  
+    </blockquote>
+  </aside>
+  
+  '''
+# ---
+# name: test_replace_rich_text_tokens_replaces_quote_with_same_thread_invisible_user_post
+  '''
+  
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        <span class="rich-text-quote-avatar">
+          <img src="blank-avatar.png" alt="Anonymouse">
+        </span>
+        <div class="rich-text-quote-info">
+          <span class="rich-text-quote-header-link">Anonymouse</span>
+          <span class="rich-text-quote-header-separator">&bull;</span>
+          <span class="rich-text-quote-header-timestamp">#1234</span>
+        </div>
+        <a href="/post/1234/" class="rich-text-quote-btn">
+          <span class="material-icon">arrow_forward</span>
+        </a>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
+      
+  <p>Hello world!</p>
+  
+    </blockquote>
+  </aside>
+  
+  '''
+# ---
+# name: test_replace_rich_text_tokens_replaces_quote_with_same_thread_user_post
+  '''
+  
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        
+          <a
+            class="rich-text-quote-avatar"
+            href="/u/user/13/"
+          >
+            <img
+              srcset="http://dummyimage.com/100/100"
+              src="http://dummyimage.com/100/100"
+              alt="User"
+            >
+          </a>
+        
+        <div class="rich-text-quote-info">
+          
+          
+            <a href="/u/user/13/" class="rich-text-quote-header-link">User</a>
+          
+          <span class="rich-text-quote-header-separator">&bull;</span>
+          <span
+            class="rich-text-quote-header-timestamp rich-text-quote-header-timestamp-long"
+            title="May 7, 2022, 9:37 p.m."
+            misago-timestamp="2022-05-07T21:37:15+00:00"
+          >
+            May 7, 2022
+          </span>
+          <span
+            class="rich-text-quote-header-timestamp rich-text-quote-header-timestamp-short"
+            title="May 7, 2022, 9:37 p.m."
+            misago-timestamp="2022-05-07T21:37:15+00:00"
+            misago-timestamp-format="short"
+          >
+            May 2022
+          </span>
+        </div>
+        <a href="/post/1234/" class="rich-text-quote-btn" misago-scroll-to="#post-1234">
+          <span class="material-icon">arrow_upward</span>
+        </a>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
+      
+  <p>Hello world!</p>
+  
+    </blockquote>
+  </aside>
+  
+  '''
+# ---
 # name: test_replace_rich_text_tokens_replaces_spoiler
   '''
   

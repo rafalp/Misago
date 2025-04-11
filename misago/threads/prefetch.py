@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, Iterable, Protocol
 
+from django.conf import settings as dj_settings
 from django.contrib.auth import get_user_model
 
 from ..attachments.models import Attachment
@@ -82,6 +83,7 @@ def _create_prefetch_posts_related_objects_action(
     prefetch.add_operation(find_users_ids)
     prefetch.add_operation(fetch_users)
     prefetch.add_operation(fetch_users_groups)
+    prefetch.add_operation(check_posts_permissions)
     prefetch.add_operation(check_attachments_permissions)
 
     return prefetch
@@ -148,6 +150,7 @@ class PrefetchPostsRelatedObjects:
             "categories": {c.id: c for c in self.categories if c.id},
             "threads": {t.id: t for t in self.threads if t.id},
             "posts": {p.id: p for p in self.posts if p.id},
+            "visible_posts": set(),
             "attachments": {a.id: a for a in self.attachments},
             "attachment_errors": {},
             "users": {u.id: u for u in self.users},
@@ -281,6 +284,14 @@ def find_post_ids(
         if attachment.post_id:
             data["post_ids"].add(attachment.post_id)
 
+    quoted_posts: set[int] = set()
+    for post in data["posts"].values():
+        if related_posts := post.metadata.get("posts"):
+            quoted_posts.update(related_posts)
+
+    if quoted_posts := sorted(quoted_posts)[: dj_settings.MISAGO_QUOTED_POSTS_LIMIT]:
+        data["post_ids"].update(quoted_posts)
+
 
 def fetch_posts(
     data: dict,
@@ -306,30 +317,38 @@ def fetch_attachments(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
-    visible_posts: list[int] = []
+    queryset = Attachment.objects.filter(post_id__in=data["posts"])
+
+    embedded_attachments = data["attachment_ids"].difference(data["attachments"])
+    if settings.additional_embedded_attachments_limit and embedded_attachments:
+        queryset = queryset.union(
+            Attachment.objects.filter(id__in=embedded_attachments, post__isnull=False)
+            .exclude(post_id__in=data["visible_posts"])
+            .order_by("-id")[: settings.additional_embedded_attachments_limit]
+        )
+
+    data["attachments"].update({a.id: a for a in queryset})
+
+
+def check_posts_permissions(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
     for post in data["posts"].values():
+        if post.id in data["visible_posts"]:
+            continue  # Skip previously checked posts
+
         with check_permissions() as can_see:
             check_see_post_permission(
                 permissions,
-                post.category,
-                post.thread,
+                data["categories"][post.category_id],
+                data["threads"][post.thread_id],
                 post,
             )
 
         if can_see:
-            visible_posts.append(post.id)
-
-    queryset = Attachment.objects.filter(post_id__in=visible_posts)
-
-    if ids_to_fetch := data["attachment_ids"].difference(data["attachments"]):
-        if settings.additional_embedded_attachments_limit:
-            queryset = queryset.union(
-                Attachment.objects.filter(id__in=ids_to_fetch, post__isnull=False)
-                .exclude(post_id__in=visible_posts)
-                .order_by("-id")[: settings.additional_embedded_attachments_limit]
-            )
-
-    data["attachments"].update({a.id: a for a in queryset})
+            data["visible_posts"].add(post.id)
 
 
 def check_attachments_permissions(
