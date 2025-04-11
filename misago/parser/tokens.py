@@ -1,3 +1,4 @@
+from dataclasses import replace
 from typing import Callable
 
 from markdown_it.token import Token
@@ -6,7 +7,7 @@ from markdown_it.token import Token
 def replace_tag_tokens(
     tokens: list[Token],
     tag: str,
-    replace: Callable[[list[Token], list[Token]], list[Token]],
+    replace_func: Callable[[list[Token], list[Token]], list[Token]],
 ) -> list[Token]:
     nesting: int = 0
     stack: list[Token] = []
@@ -16,13 +17,13 @@ def replace_tag_tokens(
     for token in tokens:
         if token.tag == tag:
             if token.nesting == 0:
-                new_tokens += replace([token], stack)
+                new_tokens += replace_func([token], stack)
             else:
                 nesting += token.nesting
                 tag_tokens.append(token)
 
                 if not nesting:
-                    new_tokens += replace(tag_tokens, stack)
+                    new_tokens += replace_func(tag_tokens, stack)
                     tag_tokens = []
 
         elif nesting:
@@ -34,6 +35,27 @@ def replace_tag_tokens(
                 stack.append(token)
             if token.nesting == -1:
                 stack.pop()
+
+    return new_tokens
+
+
+def replace_inline_tag_tokens(
+    tokens: list[Token],
+    tag: str,
+    replace_func: Callable[[list[Token], list[Token]], list[Token]],
+) -> list[Token]:
+    new_tokens: list[Token] = []
+
+    for token in tokens:
+        if token.type == "inline":
+            new_tokens.append(
+                replace(
+                    token,
+                    children=replace_tag_tokens(token.children, tag, replace_func),
+                )
+            )
+        else:
+            new_tokens.append(token)
 
     return new_tokens
 
