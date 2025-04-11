@@ -91,6 +91,74 @@
   </div>
   '''
 # ---
+# name: test_replace_rich_text_tokens_replaces_quote
+  '''
+  
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        <div class="rich-text-quote-info">
+          Quote
+        </div>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
+      
+  <p>Hello world!</p>
+  
+    </blockquote>
+  </aside>
+  
+  '''
+# ---
+# name: test_replace_rich_text_tokens_replaces_quote_with_info
+  '''
+  
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        <div class="rich-text-quote-info">
+          Hello world
+        </div>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
+      
+  <p>Hello world!</p>
+  
+    </blockquote>
+  </aside>
+  
+  '''
+# ---
+# name: test_replace_rich_text_tokens_replaces_quote_with_missing_post
+  '''
+  
+  <aside class="rich-text-quote">
+    <div class="rich-text-quote-header">
+      
+        <span class="rich-text-quote-avatar">
+          <img src="/blank-avatar.png" alt="Username">
+        </span>
+        <div class="rich-text-quote-info">
+          <span class="rich-text-quote-header-link">Username</span>
+          <span class="rich-text-quote-header-separator">&bull;</span>
+          <span class="rich-text-quote-header-timestamp">#1234</span>
+        </div>
+        <a href="/post/1234/" class="rich-text-quote-btn">
+          <span class="material-icon">arrow_forward</span>
+        </a>
+      
+    </div>
+    <blockquote class="rich-text-quote-body">
+      
+  <p>Hello world!</p>
+  
+    </blockquote>
+  </aside>
+  
+  '''
+# ---
 # name: test_replace_rich_text_tokens_replaces_spoiler
   '''
   
