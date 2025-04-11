@@ -112,8 +112,12 @@ def replace_rich_text_quote_block(
     post_id = None
     post = None
     poster = None
+    poster_name = None
     post_thread = None
     post_category = None
+
+    if args:
+        poster_name = args.get("user")
 
     try:
         if args:
@@ -129,6 +133,10 @@ def replace_rich_text_quote_block(
 
         if post.poster_id:
             poster = data["users"].get(post.poster_id)
+            poster_name = poster.username
+        else:
+            poster_name = post.poster_name
+
         if thread and post.thread_id != thread.id:
             post_thread = data["threads"].get(post.thread_id)
 
@@ -138,7 +146,7 @@ def replace_rich_text_quote_block(
         "post": post,
         "post_id": post_id,
         "poster": poster,
-        "poster_name": args.get("user") if args else None,
+        "poster_name": poster_name,
         "info": args.get("info") if args else None,
         "content": content,
     }

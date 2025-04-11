@@ -176,11 +176,224 @@ def test_replace_rich_text_tokens_replaces_quote_with_info(parse_to_html, snapsh
 def test_replace_rich_text_tokens_replaces_quote_with_missing_post(
     parse_to_html, snapshot
 ):
-    html = parse_to_html("[quote=Username, post: 1234]Hello world![/quote]")
+    html = parse_to_html("[quote=Anonymouse, post: 1234]Hello world![/quote]")
     assert snapshot == replace_rich_text_tokens(
         html,
-        Context({"BLANK_AVATAR_URL": "/blank-avatar.png"}),
+        Context({"BLANK_AVATAR_URL": "blank-avatar.png"}),
         {"visible_posts": set()},
+    )
+
+
+def test_replace_rich_text_tokens_replaces_quote_with_same_thread_anonymous_user_post(
+    parse_to_html, snapshot, default_category, thread, post
+):
+    default_category.id = 1
+
+    thread.id = 20
+
+    post.id = 1234
+    post.thread_id = thread.id
+    post.category_id = default_category.id
+    post.posted_on = post.posted_on.replace(
+        year=2022,
+        month=5,
+        day=7,
+        hour=21,
+        minute=37,
+        second=15,
+        microsecond=0,
+    )
+
+    html = parse_to_html("[quote=Anonymouse, post: 1234]Hello world![/quote]")
+    assert snapshot == replace_rich_text_tokens(
+        html,
+        Context({"BLANK_AVATAR_URL": "blank-avatar.png", "thread": thread}),
+        {
+            "visible_posts": set([post.id]),
+            "categories": {default_category.id: default_category},
+            "threads": {thread.id: thread},
+            "posts": {post.id: post},
+            "users": {},
+        },
+    )
+
+
+def test_replace_rich_text_tokens_replaces_quote_with_same_thread_user_post(
+    parse_to_html, snapshot, default_category, thread, user_reply, user
+):
+    user.id = 13
+
+    default_category.id = 1
+
+    thread.id = 20
+
+    user_reply.id = 1234
+    user_reply.thread_id = thread.id
+    user_reply.category_id = default_category.id
+    user_reply.poster_id = user.id
+    user_reply.posted_on = user_reply.posted_on.replace(
+        year=2022,
+        month=5,
+        day=7,
+        hour=21,
+        minute=37,
+        second=15,
+        microsecond=0,
+    )
+
+    html = parse_to_html("[quote=Anonymouse, post: 1234]Hello world![/quote]")
+    assert snapshot == replace_rich_text_tokens(
+        html,
+        Context({"BLANK_AVATAR_URL": "blank-avatar.png", "thread": thread}),
+        {
+            "visible_posts": set([user_reply.id]),
+            "categories": {default_category.id: default_category},
+            "threads": {thread.id: thread},
+            "posts": {user_reply.id: user_reply},
+            "users": {user.id: user},
+        },
+    )
+
+
+def test_replace_rich_text_tokens_replaces_quote_with_same_thread_invisible_user_post(
+    parse_to_html, snapshot, default_category, thread, user_reply, user
+):
+    user.id = 13
+
+    default_category.id = 1
+
+    thread.id = 20
+
+    user_reply.id = 1234
+    user_reply.thread_id = thread.id
+    user_reply.category_id = default_category.id
+    user_reply.poster_id = user.id
+    user_reply.posted_on = user_reply.posted_on.replace(
+        year=2022,
+        month=5,
+        day=7,
+        hour=21,
+        minute=37,
+        second=15,
+        microsecond=0,
+    )
+
+    html = parse_to_html("[quote=Anonymouse, post: 1234]Hello world![/quote]")
+    assert snapshot == replace_rich_text_tokens(
+        html,
+        Context({"BLANK_AVATAR_URL": "blank-avatar.png", "thread": thread}),
+        {
+            "visible_posts": set(),
+            "categories": {default_category.id: default_category},
+            "threads": {thread.id: thread},
+            "posts": {user_reply.id: user_reply},
+            "users": {user.id: user},
+        },
+    )
+
+
+def test_replace_rich_text_tokens_replaces_quote_with_other_thread_anonymous_user_post(
+    parse_to_html, snapshot, default_category, thread, user_reply, user, other_thread
+):
+    user.id = 13
+
+    default_category.id = 1
+
+    thread.id = 20
+
+    user_reply.id = 1234
+    user_reply.thread_id = thread.id
+    user_reply.category_id = default_category.id
+    user_reply.poster_id = user.id
+    user_reply.posted_on = user_reply.posted_on.replace(
+        year=2022,
+        month=5,
+        day=7,
+        hour=21,
+        minute=37,
+        second=15,
+        microsecond=0,
+    )
+
+    html = parse_to_html("[quote=Anonymouse, post: 1234]Hello world![/quote]")
+    assert snapshot == replace_rich_text_tokens(
+        html,
+        Context({"BLANK_AVATAR_URL": "blank-avatar.png", "thread": other_thread}),
+        {
+            "visible_posts": set([user_reply.id]),
+            "categories": {default_category.id: default_category},
+            "threads": {thread.id: thread},
+            "posts": {user_reply.id: user_reply},
+            "users": {user.id: user},
+        },
+    )
+
+
+def test_replace_rich_text_tokens_replaces_quote_with_other_thread_user_post(
+    parse_to_html, snapshot, default_category, thread, post, other_thread
+):
+    default_category.id = 1
+
+    thread.id = 20
+
+    post.id = 1234
+    post.thread_id = thread.id
+    post.category_id = default_category.id
+    post.posted_on = post.posted_on.replace(
+        year=2022,
+        month=5,
+        day=7,
+        hour=21,
+        minute=37,
+        second=15,
+        microsecond=0,
+    )
+
+    html = parse_to_html("[quote=Anonymouse, post: 1234]Hello world![/quote]")
+    assert snapshot == replace_rich_text_tokens(
+        html,
+        Context({"BLANK_AVATAR_URL": "blank-avatar.png", "thread": other_thread}),
+        {
+            "visible_posts": set([post.id]),
+            "categories": {default_category.id: default_category},
+            "threads": {thread.id: thread},
+            "posts": {post.id: post},
+            "users": {},
+        },
+    )
+
+
+def test_replace_rich_text_tokens_replaces_quote_with_other_thread_invisible_user_post(
+    parse_to_html, snapshot, default_category, thread, post, other_thread
+):
+    default_category.id = 1
+
+    thread.id = 20
+
+    post.id = 1234
+    post.thread_id = thread.id
+    post.category_id = default_category.id
+    post.posted_on = post.posted_on.replace(
+        year=2022,
+        month=5,
+        day=7,
+        hour=21,
+        minute=37,
+        second=15,
+        microsecond=0,
+    )
+
+    html = parse_to_html("[quote=Anonymouse, post: 1234]Hello world![/quote]")
+    assert snapshot == replace_rich_text_tokens(
+        html,
+        Context({"BLANK_AVATAR_URL": "blank-avatar.png", "thread": other_thread}),
+        {
+            "visible_posts": set(),
+            "categories": {default_category.id: default_category},
+            "threads": {thread.id: thread},
+            "posts": {post.id: post},
+            "users": {},
+        },
     )
 
 
