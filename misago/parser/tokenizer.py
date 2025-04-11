@@ -17,7 +17,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
         parser,
         markup,
         [
-            set_tables_styles,
+            replace_video_links_with_players,
             shorten_link_text,
             extract_attachments,
             remove_repeated_hrs,
@@ -26,6 +26,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             replace_mentions_tokens,
             set_links_rel_external_nofollow_noopener,
             set_links_target_blank,
+            set_tables_styles,
         ],
     )
 
@@ -87,6 +88,16 @@ def _shorten_link_text_token_content(tokens: list[Token]):
     if href and text.content == href:
         link_open.meta["shortened_url"] = True
         text.content = shorten_url(text.content)
+
+
+def replace_video_links_with_players(tokens: list[Token]) -> list[Token] | None:
+    replace_tag(tokens, "p", replace_paragraph_videos)
+
+
+def replace_paragraph_videos(paragraph: list[Token], stack: list[Token]) -> list[Token]:
+    print(paragraph)
+    print(stack)
+    return paragraph
 
 
 def extract_attachments(tokens: list[Token]) -> list[Token] | None:
@@ -279,6 +290,41 @@ def replace_blockquotes_with_misago_quotes(tokens: list[Token]) -> list[Token]:
             token.tag = "misago-quote"
 
     return tokens
+
+
+def replace_tag(
+    tokens: list[Token],
+    tag: str,
+    replace: Callable[[list[Token], list[Token]], list[Token]],
+) -> list[Token]:
+    nesting: int = 0
+    stack: list[Token] = []
+    tag_tokens: list[Token] = []
+    new_tokens: list[Token] = []
+
+    for token in tokens:
+        if token.tag == tag:
+            if token.nesting == 0:
+                new_tokens += replace(tag_tokens, stack)
+            else:
+                nesting += token.nesting
+                tag_tokens.append(token)
+
+                if not nesting:
+                    new_tokens += replace(tag_tokens, stack)
+                    tag_tokens = []
+
+        elif nesting:
+            tag_tokens.append(token)
+
+        else:
+            new_tokens.append(token)
+            if token.nesting == 1:
+                stack.append(token)
+            if token.nesting == -1:
+                stack.pop()
+
+    return new_tokens
 
 
 def clean_inline_slice(tokens: list[Token]) -> list[Token]:
