@@ -87,6 +87,7 @@ def render_tokens_to_plaintext(tokens: list[Token]) -> str:
             render_mention,
             render_link,
             render_image,
+            render_video,
             render_softbreak,
             render_text,
         ],
@@ -395,6 +396,16 @@ def render_image(state: StatePlaintext) -> bool:
     elif alt:
         state.push(f" ({alt})")
 
+    state.pos += 1
+    return True
+
+
+def render_video(state: StatePlaintext) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "video":
+        return False
+
+    state.push(token.attrs["href"])
     state.pos += 1
     return True
 

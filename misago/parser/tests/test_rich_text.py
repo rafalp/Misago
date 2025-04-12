@@ -433,3 +433,8 @@ def test_replace_rich_text_tokens_replaces_code_block_with_info_and_syntax(
 ):
     html = parse_to_html("[code=Example string, syntax=php]Hello world![/code]")
     assert snapshot == replace_rich_text_tokens(html, Context())
+
+
+def test_replace_rich_text_tokens_replaces_youtube_video(parse_to_html, snapshot):
+    html = parse_to_html("https://www.youtube.com/watch?v=QzfXag4r7Vo")
+    assert snapshot == replace_rich_text_tokens(html, Context())

@@ -105,6 +105,7 @@ def replace_video_links_with_players(tokens: list[Token]) -> list[Token] | None:
     if not tokens_contain_inline_tag(tokens_with_video, "misago-video"):
         return tokens
 
+    print(tokens_with_video)
     p_open, inline, p_close = tokens_with_video
 
     new_tokens: list[Token] = []

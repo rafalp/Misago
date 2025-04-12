@@ -246,6 +246,15 @@ def test_render_tokens_to_plaintext_renders_image_bbcode_with_alt():
     )
 
 
+def test_render_tokens_to_plaintext_renders_youtube_video():
+    parser = create_parser()
+    tokens = tokenize(parser, "https://www.youtube.com/watch?v=QzfXag4r7Vo")
+    assert (
+        render_tokens_to_plaintext(tokens)
+        == "https://www.youtube.com/watch?v=QzfXag4r7Vo"
+    )
+
+
 def test_render_tokens_to_plaintext_renders_mention(user):
     parser = create_parser()
     tokens = tokenize(parser, f"Hello, @{user.username}")
