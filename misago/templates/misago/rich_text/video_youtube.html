@@ -2,7 +2,7 @@
 <div class="rich-text-video-iframe">
   <iframe
     loading="lazy"
-    src="https://www.youtube.com/embed/{{ video }}"
+    src="https://www.youtube.com/embed/{{ video }}{% if start %}?t={{ start }}{% endif %}"
     title="{% trans 'YouTube video player' context 'rich text video' %}"
     frameborder="0"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

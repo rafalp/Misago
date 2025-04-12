@@ -179,6 +179,7 @@ def replace_rich_text_spoiler_block(html: str, content: str, args: dict | None) 
         },
     )
 
+
 @replace_html_void_element_func
 def replace_rich_text_video(html: str, args: dict | None) -> str:
     site = None
@@ -187,8 +188,11 @@ def replace_rich_text_video(html: str, args: dict | None) -> str:
     if args:
         site = args.get("site")
         video = args.get("video")
+        start = args.get("start")
 
     if site == "youtube" and video:
-        return render_to_string("misago/rich_text/video_youtube.html", {"video": video})
+        return render_to_string(
+            "misago/rich_text/video_youtube.html", {"video": video, "start": start}
+        )
 
     return "FIX ME"

@@ -13,6 +13,7 @@ from .tokens import (
     split_inline_token,
     tokens_contain_inline_tag,
 )
+from .youtube import parse_youtube_link
 
 TokensProcessor = Callable[[list[Token]], list[Token] | None]
 
@@ -128,12 +129,22 @@ def replace_inline_videos_links(tokens: list[Token], stack: list[Token]) -> list
     if not href:
         return tokens
 
-    if "?v=" in href:
-        video = href[href.index("?v=") + 3:]
-        if "&" in video:
-            video = video[:video.index("&")]
+    attrs = {"href": href}
+    if youtube_video := parse_youtube_link(href):
+        attrs["site"] = "youtube"
+        attrs.update(youtube_video)
+    else:
+        return tokens
 
-    return [Token(type="video", tag="misago-video", attrs={"site": "youtube", "video": video}, nesting=0, block=True)]
+    return [
+        Token(
+            type="video",
+            tag="misago-video",
+            attrs=attrs,
+            nesting=0,
+            block=True,
+        )
+    ]
 
 
 def extract_attachments(tokens: list[Token]) -> list[Token] | None:
