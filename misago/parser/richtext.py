@@ -55,6 +55,7 @@ def _replace_rich_text_tokens_action(
     )
     html = replace_html_element(html, "misago-code", replace_rich_text_code_block)
     html = replace_html_element(html, "misago-spoiler", replace_rich_text_spoiler_block)
+    html = replace_html_void_element(html, "misago-video", replace_rich_text_video)
 
     return html
 
@@ -177,3 +178,17 @@ def replace_rich_text_spoiler_block(html: str, content: str, args: dict | None) 
             "content": content,
         },
     )
+
+@replace_html_void_element_func
+def replace_rich_text_video(html: str, args: dict | None) -> str:
+    site = None
+    video = None
+
+    if args:
+        site = args.get("site")
+        video = args.get("video")
+
+    if site == "youtube" and video:
+        return render_to_string("misago/rich_text/video_youtube.html", {"video": video})
+
+    return "FIX ME"

@@ -48,7 +48,8 @@
   pre,
   .rich-text-quote,
   .rich-text-code,
-  .rich-text-spoiler {
+  .rich-text-spoiler,
+  .rich-text-video-iframe {
     margin-bottom: @line-height-computed;
 
     &:last-child {
@@ -613,5 +614,21 @@ a.rich-text-quote-header-link-secondary {
     border-radius: @border-radius-base;
     color: @link-hover-color;
     text-decoration: none;
+  }
+}
+
+.rich-text-video-iframe {
+  position: relative;
+  padding-top: 56.25%;
+
+  iframe {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
   }
 }

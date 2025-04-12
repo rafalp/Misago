@@ -7,6 +7,12 @@ from markdown_it.token import Token
 from .hooks import tokenize_hook
 from .mentions import replace_mentions_tokens
 from .shortenurl import shorten_url
+from .tokens import (
+    replace_inline_tag_tokens,
+    replace_tag_tokens,
+    split_inline_token,
+    tokens_contain_inline_tag,
+)
 
 TokensProcessor = Callable[[list[Token]], list[Token] | None]
 
@@ -91,106 +97,88 @@ def _shorten_link_text_token_content(tokens: list[Token]):
 
 
 def replace_video_links_with_players(tokens: list[Token]) -> list[Token] | None:
-    replace_tag(tokens, "p", replace_paragraph_videos)
-
-
-def replace_paragraph_videos(paragraph: list[Token], stack: list[Token]) -> list[Token]:
-    print(paragraph)
-    print(stack)
-    return paragraph
-
-
-def extract_attachments(tokens: list[Token]) -> list[Token] | None:
-    nesting: int = 0
-    paragraph: list[Token] = []
-    new_tokens: list[Token] = []
-
-    for token in tokens:
-        if token.tag == "p":
-            nesting += token.nesting
-            paragraph.append(token)
-
-            if not nesting:
-                new_tokens += _extract_attachments_from_paragraph(paragraph)
-                paragraph = []
-
-        elif nesting:
-            paragraph.append(token)
-
-        else:
-            new_tokens.append(token)
-
-    if paragraph:
-        new_tokens += _extract_attachments_from_paragraph(paragraph)
-
-    return merge_attachments_groups(new_tokens)
-
-
-def _extract_attachments_from_paragraph(tokens: list[Token]) -> list[Token]:
-    p_open, inline, p_close = tokens
-
-    if not _inline_contains_attachments(inline):
+    if not tokens_contain_inline_tag(tokens, "a"):
         return tokens
 
-    groups: list[tuple[bool, list[Token]]] = []
-    for child in inline.children:
-        if child.type == "attachment":
-            if not groups or not groups[-1][0]:
-                groups.append((True, []))
-        else:
-            if not groups or groups[-1][0]:
-                groups.append((False, []))
+    tokens_with_video = replace_tag_tokens(tokens, "p", replace_paragraph_videos)
+    if not tokens_contain_inline_tag(tokens_with_video, "misago-video"):
+        return tokens
 
-        groups[-1][1].append(child)
+    p_open, inline, p_close = tokens_with_video
 
     new_tokens: list[Token] = []
-    for attachments, children in groups:
-        if attachments:
-            new_tokens.append(
-                Token(
-                    type="attachments_open",
-                    tag="div",
-                    nesting=1,
-                    attrs={"class": "rich-text-attachment-group"},
-                    block=True,
-                ),
-            )
-
-            for attachment in children:
-                new_tokens.append(replace(attachment, block=True))
-
-            new_tokens.append(
-                Token(
-                    type="attachments_close",
-                    tag="div",
-                    nesting=-1,
-                    block=True,
-                ),
-            )
-
-        elif clean_children := clean_inline_slice(children):
-            new_tokens.append(p_open)
-            new_tokens.append(
-                Token(
-                    type="inline",
-                    tag="",
-                    nesting=0,
-                    level=inline.level,
-                    children=clean_children,
-                    block=True,
-                )
-            )
-            new_tokens.append(p_close)
-
+    for part in split_inline_token(inline, "misago-video"):
+        if part.type == "video":
+            new_tokens.append(part)
+        else:
+            new_tokens += [p_open, part, p_close]
     return new_tokens
 
 
-def _inline_contains_attachments(token: Token) -> bool:
-    for child in token.children:
-        if child.type == "attachment":
-            return True
+def replace_paragraph_videos(tokens: list[Token], stack: list[Token]) -> list[Token]:
+    return replace_inline_tag_tokens(tokens, "a", replace_inline_videos_links)
 
-    return False
+
+def replace_inline_videos_links(tokens: list[Token], stack: list[Token]) -> list[Token]:
+    link_open = tokens[0]
+    if link_open.markup != "linkify":
+        return tokens
+
+    href = link_open.attrs.get("href")
+    if not href:
+        return tokens
+
+    if "?v=" in href:
+        video = href[href.index("?v=") + 3:]
+        if "&" in video:
+            video = video[:video.index("&")]
+
+    return [Token(type="video", tag="misago-video", attrs={"site": "youtube", "video": video}, nesting=0, block=True)]
+
+
+def extract_attachments(tokens: list[Token]) -> list[Token] | None:
+    new_tokens = replace_tag_tokens(tokens, "p", _extract_attachments_from_paragraph)
+    return merge_attachments_groups(new_tokens)
+
+
+def _extract_attachments_from_paragraph(
+    tokens: list[Token], stack: list[Token]
+) -> list[Token]:
+    if not tokens_contain_inline_tag(tokens, "misago-attachment"):
+        return tokens
+
+    p_open, inline, p_close = tokens
+
+    attachments_open = Token(
+        type="attachments_open",
+        tag="div",
+        nesting=1,
+        attrs={"class": "rich-text-attachment-group"},
+        block=True,
+    )
+
+    attachments_close = Token(
+        type="attachments_close",
+        tag="div",
+        nesting=-1,
+        block=True,
+    )
+
+    new_tokens: list[Token] = []
+    for part in split_inline_token(inline, "misago-attachment"):
+        if part.type == "attachment":
+            if not new_tokens or new_tokens[-1].type != "attachment":
+                new_tokens.append(attachments_open)
+            new_tokens.append(replace(part, block=True))
+        else:
+            if new_tokens and new_tokens[-1].type == "attachment":
+                new_tokens.append(attachments_close)
+            new_tokens += [p_open, part, p_close]
+
+    if new_tokens and new_tokens[-1].type == "attachment":
+        new_tokens.append(attachments_close)
+
+    return new_tokens
 
 
 def merge_attachments_groups(tokens: list[Token]) -> list[Token]:
@@ -290,124 +278,3 @@ def replace_blockquotes_with_misago_quotes(tokens: list[Token]) -> list[Token]:
             token.tag = "misago-quote"
 
     return tokens
-
-
-def replace_tag(
-    tokens: list[Token],
-    tag: str,
-    replace: Callable[[list[Token], list[Token]], list[Token]],
-) -> list[Token]:
-    nesting: int = 0
-    stack: list[Token] = []
-    tag_tokens: list[Token] = []
-    new_tokens: list[Token] = []
-
-    for token in tokens:
-        if token.tag == tag:
-            if token.nesting == 0:
-                new_tokens += replace(tag_tokens, stack)
-            else:
-                nesting += token.nesting
-                tag_tokens.append(token)
-
-                if not nesting:
-                    new_tokens += replace(tag_tokens, stack)
-                    tag_tokens = []
-
-        elif nesting:
-            tag_tokens.append(token)
-
-        else:
-            new_tokens.append(token)
-            if token.nesting == 1:
-                stack.append(token)
-            if token.nesting == -1:
-                stack.pop()
-
-    return new_tokens
-
-
-def clean_inline_slice(tokens: list[Token]) -> list[Token]:
-    if not tokens:
-        return []
-
-    new_tokens: list[Token] = []
-
-    # 1st pass: clear orphaned closing tags
-    stack: list[tuple[int, str]] = []
-    for index, token in enumerate(tokens):
-        if token.nesting == 1:
-            stack.append((index, token.type))
-        if token.nesting == -1:
-            if not stack or stack[-1][1] != token.type:
-                new_tokens.append(
-                    Token(
-                        type="text",
-                        tag="",
-                        nesting=0,
-                        content=token.markup,
-                    )
-                )
-                continue
-            else:
-                stack.pop()
-
-        new_tokens.append(token)
-
-    # 2nd pass: replace orphaned opening tags
-    for index, token in stack:
-        new_tokens[index] = Token(
-            type="text",
-            tag="",
-            nesting=0,
-            content=new_tokens[index].markup,
-        )
-
-    # 3rd pass: merge text nodes
-    new_tokens = merge_text_nodes(new_tokens)
-
-    # 4rd pass: strip whitespace from beginning and end of slice
-    return strip_inline_nodes(new_tokens)
-
-
-def merge_text_nodes(tokens: list[Token]) -> list[Token]:
-    new_tokens: list[Token] = []
-    for token in tokens:
-        if token.type == "text" and new_tokens and new_tokens[-1].type == "text":
-            new_tokens[-1].content += token.content
-        else:
-            new_tokens.append(token)
-    return new_tokens
-
-
-def strip_inline_nodes(tokens: list[Token]) -> list[Token]:
-    if not tokens:
-        return tokens
-
-    new_tokens: list[Token] = tokens[:]
-
-    # lstrip
-    while new_tokens and new_tokens[0].type in ("text", "softbreak"):
-        if new_tokens[0].type == "text":
-            new_tokens[0].content = new_tokens[0].content.lstrip()
-            if not new_tokens[0].content:
-                new_tokens = new_tokens[1:]
-            else:
-                break
-
-        elif new_tokens[0].type == "softbreak":
-            new_tokens = new_tokens[1:]
-
-    # rstrip
-    while new_tokens and new_tokens[-1].type in ("text", "softbreak"):
-        if new_tokens[-1].type == "text":
-            new_tokens[-1].content = new_tokens[-1].content.rstrip()
-            if not new_tokens[-1].content:
-                new_tokens = new_tokens[:-1]
-            else:
-                break
-
-        elif new_tokens[-1].type == "softbreak":
-            new_tokens = new_tokens[:-1]
-
-    return new_tokens
