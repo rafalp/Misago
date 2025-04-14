@@ -44,11 +44,11 @@
   p,
   ul,
   ol,
-  table,
   pre,
   .rich-text-quote,
   .rich-text-code,
   .rich-text-spoiler,
+  .rich-text-table-container,
   .rich-text-video-iframe {
     margin-bottom: @line-height-computed;
 
@@ -372,8 +372,7 @@ blockquote {
 
   &,
   &:link,
-  &:visited
-  &:focus {
+  &:visited &:focus {
     background-color: @rich-text-quote-header-btn-bg;
     border: 1px solid @rich-text-quote-header-btn-border;
     color: @rich-text-quote-header-btn-color;

@@ -54,7 +54,13 @@ def replace_tag_tokens(
         return _replace_only_child_tag_tokens(tokens, tag, replace_func)
 
     if strategy == ReplaceTokensStrategy.ONLY_OF_TYPE:
-        return _replace_only_of_type_tokens(tokens, tag, replace_func)
+        return _replace_only_of_type_tag_tokens(tokens, tag, replace_func)
+
+    if strategy == ReplaceTokensStrategy.ONLY_CHILD_IN_LINE:
+        return _replace_only_child_tag_in_line_tokens(tokens, tag, replace_func)
+
+    if strategy == ReplaceTokensStrategy.ONLY_OF_TYPE_IN_LINE:
+        return _replace_only_of_type_tag_in_line_tokens(tokens, tag, replace_func)
 
 
 def _replace_all_tag_tokens(
@@ -124,7 +130,7 @@ def _replace_only_child_tag_tokens(
     return tokens
 
 
-def _replace_only_of_type_tokens(
+def _replace_only_of_type_tag_tokens(
     tokens: list[Token],
     tag: str,
     replace_func: Callable[[list[Token], list[Token]], list[Token]],
@@ -154,6 +160,143 @@ def _replace_only_of_type_tokens(
         return _replace_all_tag_tokens(tokens, tag, replace_func)
 
     return tokens
+
+
+def _replace_only_child_tag_in_line_tokens(
+    tokens: list[Token],
+    tag: str,
+    replace_func: Callable[[list[Token], list[Token]], list[Token]],
+) -> list[Token]:
+    nesting: int = 0
+    lines_occurrences: list[list[bool]] = [[]]
+
+    for token in tokens:
+        if token.type == "text" and not token.content.strip():
+            continue
+
+        elif token.type in ("softbreak", "hardbreak"):
+            lines_occurrences.append([])
+            continue
+
+        elif token.tag == tag:
+            if token.nesting == 0:
+                lines_occurrences[-1].append(True)
+            else:
+                nesting += token.nesting
+                if not nesting:
+                    lines_occurrences[-1].append(True)
+
+        elif not nesting:
+            lines_occurrences[-1].append(False)
+
+    nesting: int = 0
+    line_no: int = 0
+    stack: list[Token] = []
+    tag_tokens: list[Token] = []
+    new_tokens: list[Token] = []
+
+    for token in tokens:
+        if token.tag == tag:
+            if lines_occurrences[line_no] == [True]:
+                if token.nesting == 0:
+                    new_tokens += replace_func([token], stack)
+                else:
+                    nesting += token.nesting
+                    tag_tokens.append(token)
+
+                    if not nesting:
+                        new_tokens += replace_func(tag_tokens, stack)
+                        tag_tokens = []
+            else:
+                if token.nesting == 0:
+                    new_tokens.append(token)
+                else:
+                    nesting += token.nesting
+                    new_tokens += tag_tokens
+                    tag_tokens = []
+
+        elif nesting:
+            tag_tokens.append(token)
+
+        elif token.type in ("softbreak", "hardbreak"):
+            line_no += 1
+
+        else:
+            new_tokens.append(token)
+            if token.nesting == 1:
+                stack.append(token)
+            if token.nesting == -1:
+                stack.pop()
+
+    return new_tokens
+
+
+def _replace_only_of_type_tag_in_line_tokens(
+    tokens: list[Token],
+    tag: str,
+    replace_func: Callable[[list[Token], list[Token]], list[Token]],
+) -> list[Token]:
+    nesting: int = 0
+    lines_occurrences: list[list[bool]] = [[]]
+
+    for token in tokens:
+        if token.type == "text" and not token.content.strip():
+            continue
+
+        elif token.tag == tag:
+            if token.nesting == 0:
+                lines_occurrences[-1].append(True)
+            else:
+                nesting += token.nesting
+                if not nesting:
+                    lines_occurrences[-1].append(True)
+
+        elif not nesting:
+            if token.type in ("softbreak", "hardbreak"):
+                lines_occurrences.append([])
+            else:
+                lines_occurrences[-1].append(False)
+
+    nesting: int = 0
+    line_no: int = 0
+    stack: list[Token] = []
+    tag_tokens: list[Token] = []
+    new_tokens: list[Token] = []
+
+    for token in tokens:
+        if token.tag == tag:
+            if False not in lines_occurrences[line_no]:
+                if token.nesting == 0:
+                    new_tokens += replace_func([token], stack)
+                else:
+                    nesting += token.nesting
+                    tag_tokens.append(token)
+
+                    if not nesting:
+                        new_tokens += replace_func(tag_tokens, stack)
+                        tag_tokens = []
+            else:
+                if token.nesting == 0:
+                    new_tokens.append(token)
+                else:
+                    nesting += token.nesting
+                    new_tokens += tag_tokens
+                    tag_tokens = []
+
+        elif nesting:
+            tag_tokens.append(token)
+
+        elif token.type in ("softbreak", "hardbreak"):
+            line_no += 1
+
+        else:
+            new_tokens.append(token)
+            if token.nesting == 1:
+                stack.append(token)
+            if token.nesting == -1:
+                stack.pop()
+
+    return new_tokens
 
 
 def replace_inline_tag_tokens(
