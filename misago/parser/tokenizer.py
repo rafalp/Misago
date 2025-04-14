@@ -34,6 +34,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             replace_mentions_tokens,
             set_links_rel_external_nofollow_noopener,
             set_links_target_blank,
+            make_tables_responsive,
             set_tables_styles,
         ],
     )
@@ -168,6 +169,29 @@ def replace_inline_videos_links(tokens: list[Token], stack: list[Token]) -> list
             block=True,
         )
     ]
+
+
+def make_tables_responsive(tokens: list[Token]) -> list[Token]:
+    return replace_tag_tokens(tokens, "table", _make_table_responsive)
+
+
+def _make_table_responsive(tokens: list[Token], stack: list[Token]) -> list[Token]:
+    container_open = Token(
+        type="table_container_open",
+        tag="div",
+        attrs={"class": "rich-text-table-container"},
+        nesting=1,
+        block=True,
+    )
+
+    container_close = Token(
+        type="table_container_open",
+        tag="div",
+        nesting=-1,
+        block=True,
+    )
+
+    return [container_open] + tokens + [container_close]
 
 
 def extract_attachments(tokens: list[Token]) -> list[Token] | None:

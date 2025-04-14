@@ -208,7 +208,8 @@ def test_youtube_link_alone_in_table_cell(parse_to_html):
         "\n| image | https://www.youtube.com/watch?v=QzfXag4r7Vo |"
     )
     assert html == (
-        '<table class="rich-text-table">'
+        '<div class="rich-text-table-container">'
+        '\n<table class="rich-text-table">'
         "\n<thead>"
         "\n<tr>"
         "\n<th>file</th>"
@@ -228,6 +229,7 @@ def test_youtube_link_alone_in_table_cell(parse_to_html):
         "\n</tr>"
         "\n</tbody>"
         "\n</table>"
+        "\n</div>"
     )
 
 
@@ -238,7 +240,8 @@ def test_youtube_link_in_table_cell(parse_to_html):
         "\n| image | link: https://www.youtube.com/watch?v=QzfXag4r7Vo |"
     )
     assert html == (
-        '<table class="rich-text-table">'
+        '<div class="rich-text-table-container">'
+        '\n<table class="rich-text-table">'
         "\n<thead>"
         "\n<tr>"
         "\n<th>file</th>"
@@ -257,6 +260,7 @@ def test_youtube_link_in_table_cell(parse_to_html):
         "\n</tr>"
         "\n</tbody>"
         "\n</table>"
+        "\n</div>"
     )
 
 

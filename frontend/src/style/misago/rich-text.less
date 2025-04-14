@@ -291,6 +291,11 @@ blockquote {
   }
 }
 
+.rich-text-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .rich-text-table {
   &,
   td,
@@ -300,6 +305,7 @@ blockquote {
 
   td,
   th {
+    min-width: 60px;
     padding: 4px 8px;
   }
 }
@@ -634,5 +640,9 @@ a.rich-text-quote-header-link-secondary {
 }
 
 td .rich-text-video-iframe {
-  width: 420px;
+  width: 320px;
+
+  @media screen and (min-width: @screen-md-min) {
+    width: 480px;
+  }
 }
