@@ -236,26 +236,9 @@ def test_youtube_link_in_list_item(parse_to_html):
     assert html == (
         "<ol>"
         "\n<li>"
-        "\n<misago-video "
-        'href="https://www.youtube.com/watch?v=QzfXag4r7Vo" '
-        'site="youtube" '
-        'video="QzfXag4r7Vo"'
-        ">"
-        "\n</li>"
-        "\n</ol>"
-    )
-
-
-def test_youtube_link_breaks_list_item(parse_to_html):
-    html = parse_to_html("1. Lorem https://www.youtube.com/watch?v=QzfXag4r7Vo ipsum")
-    assert html == (
-        "<ol>"
-        "\n<li>Lorem"
-        "\n<misago-video "
-        'href="https://www.youtube.com/watch?v=QzfXag4r7Vo" '
-        'site="youtube" '
-        'video="QzfXag4r7Vo"'
-        ">"
-        "\nipsum</li>"
+        '<a href="https://www.youtube.com/watch?v=QzfXag4r7Vo"'
+        ' rel="external nofollow noopener"'
+        ' target="_blank">www.youtube.com/watch?v=QzfXag4r7Vo</a>'
+        "</li>"
         "\n</ol>"
     )

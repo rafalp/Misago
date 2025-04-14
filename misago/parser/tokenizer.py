@@ -8,6 +8,7 @@ from .hooks import tokenize_hook
 from .mentions import replace_mentions_tokens
 from .shortenurl import shorten_url
 from .tokens import (
+    ReplaceTokensStrategy,
     replace_inline_tag_tokens,
     replace_tag_tokens,
     split_inline_token,
@@ -107,6 +108,9 @@ def replace_video_links_with_players(tokens: list[Token]) -> list[Token] | None:
 
 
 def replace_paragraph_videos(tokens: list[Token], stack: list[Token]) -> list[Token]:
+    if "list_item_open" in [t.type for t in stack]:
+        return tokens
+
     tokens_with_video = replace_inline_tag_tokens(
         tokens, "a", replace_inline_videos_links
     )
@@ -126,7 +130,7 @@ def replace_paragraph_videos(tokens: list[Token], stack: list[Token]) -> list[To
 
 def replace_table_videos(tokens: list[Token], stack: list[Token]) -> list[Token]:
     tokens_with_video = replace_inline_tag_tokens(
-        tokens, "a", replace_inline_videos_links
+        tokens, "a", replace_inline_videos_links, ReplaceTokensStrategy.ONLY_CHILD
     )
     if not tokens_contain_inline_tag(tokens_with_video, "misago-video"):
         return tokens
