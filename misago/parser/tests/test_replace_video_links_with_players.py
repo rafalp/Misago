@@ -201,7 +201,7 @@ def test_youtube_link_in_single_line_quote(parse_to_html):
     )
 
 
-def test_youtube_link_in_table_cell(parse_to_html):
+def test_youtube_link_alone_in_table_cell(parse_to_html):
     html = parse_to_html(
         "| file | upload |"
         "\n| - | - |"
@@ -225,6 +225,35 @@ def test_youtube_link_in_table_cell(parse_to_html):
         'video="QzfXag4r7Vo"'
         ">"
         "\n</td>"
+        "\n</tr>"
+        "\n</tbody>"
+        "\n</table>"
+    )
+
+
+def test_youtube_link_in_table_cell(parse_to_html):
+    html = parse_to_html(
+        "| file | upload |"
+        "\n| - | - |"
+        "\n| image | link: https://www.youtube.com/watch?v=QzfXag4r7Vo |"
+    )
+    assert html == (
+        '<table class="rich-text-table">'
+        "\n<thead>"
+        "\n<tr>"
+        "\n<th>file</th>"
+        "\n<th>upload</th>"
+        "\n</tr>"
+        "\n</thead>"
+        "\n<tbody>"
+        "\n<tr>"
+        "\n<td>image</td>"
+        "\n<td>"
+        "link: "
+        '<a href="https://www.youtube.com/watch?v=QzfXag4r7Vo"'
+        ' rel="external nofollow noopener"'
+        ' target="_blank">www.youtube.com/watch?v=QzfXag4r7Vo</a>'
+        "</td>"
         "\n</tr>"
         "\n</tbody>"
         "\n</table>"
