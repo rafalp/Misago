@@ -1,4 +1,5 @@
 from dataclasses import replace
+from enum import IntEnum
 from typing import Callable
 
 from markdown_it.token import Token
@@ -23,7 +24,25 @@ def tokens_contain_inline_tag(tokens: list[Token], tag: str) -> bool:
     return False
 
 
+class ReplaceTokensStrategy(IntEnum):
+    ALL = 0
+    ONLY_CHILD = 1
+
+
 def replace_tag_tokens(
+    tokens: list[Token],
+    tag: str,
+    replace_func: Callable[[list[Token], list[Token]], list[Token]],
+    strategy: ReplaceTokensStrategy = 0,
+) -> list[Token]:
+    if strategy == ReplaceTokensStrategy.ALL:
+        return _replace_all_tag_tokens(tokens, tag, replace_func)
+
+    if strategy == ReplaceTokensStrategy.ONLY_CHILD:
+        return _replace_only_child_tag_tokens(tokens, tag, replace_func)
+
+
+def _replace_all_tag_tokens(
     tokens: list[Token],
     tag: str,
     replace_func: Callable[[list[Token], list[Token]], list[Token]],
@@ -58,10 +77,43 @@ def replace_tag_tokens(
     return new_tokens
 
 
+def _replace_only_child_tag_tokens(
+    tokens: list[Token],
+    tag: str,
+    replace_func: Callable[[list[Token], list[Token]], list[Token]],
+) -> list[Token]:
+    nesting: int = 0
+    occurrences: list[bool] = []
+
+    for token in tokens:
+        if token.type == "text" and not token.content.strip():
+            continue
+
+        elif token.type in ("softbreak", "hardbreak"):
+            continue
+
+        elif token.tag == tag:
+            if token.nesting == 0:
+                occurrences.append(True)
+            else:
+                nesting += token.nesting
+                if not nesting:
+                    occurrences.append(True)
+
+        elif not nesting:
+            occurrences.append(False)
+
+    if occurrences == [True]:
+        return _replace_all_tag_tokens(tokens, tag, replace_func)
+
+    return tokens
+
+
 def replace_inline_tag_tokens(
     tokens: list[Token],
     tag: str,
     replace_func: Callable[[list[Token], list[Token]], list[Token]],
+    strategy: ReplaceTokensStrategy = 0,
 ) -> list[Token]:
     new_tokens: list[Token] = []
 
@@ -70,7 +122,9 @@ def replace_inline_tag_tokens(
             new_tokens.append(
                 replace(
                     token,
-                    children=replace_tag_tokens(token.children, tag, replace_func),
+                    children=replace_tag_tokens(
+                        token.children, tag, replace_func, strategy
+                    ),
                 )
             )
         else:
