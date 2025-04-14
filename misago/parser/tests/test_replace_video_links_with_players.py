@@ -224,7 +224,7 @@ def test_youtube_link_in_table_cell(parse_to_html):
         'site="youtube" '
         'video="QzfXag4r7Vo"'
         ">"
-        "</td>"
+        "\n</td>"
         "\n</tr>"
         "\n</tbody>"
         "\n</table>"

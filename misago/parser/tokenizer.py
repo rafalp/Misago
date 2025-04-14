@@ -101,11 +101,18 @@ def replace_video_links_with_players(tokens: list[Token]) -> list[Token] | None:
     if not tokens_contain_inline_tag(tokens, "a"):
         return tokens
 
-    tokens_with_video = replace_tag_tokens(tokens, "p", replace_paragraph_videos)
+    tokens = replace_tag_tokens(tokens, "p", replace_paragraph_videos)
+    tokens = replace_tag_tokens(tokens, "td", replace_table_videos)
+    return tokens
+
+
+def replace_paragraph_videos(tokens: list[Token], stack: list[Token]) -> list[Token]:
+    tokens_with_video = replace_inline_tag_tokens(
+        tokens, "a", replace_inline_videos_links
+    )
     if not tokens_contain_inline_tag(tokens_with_video, "misago-video"):
         return tokens
 
-    print(tokens_with_video)
     p_open, inline, p_close = tokens_with_video
 
     new_tokens: list[Token] = []
@@ -117,8 +124,19 @@ def replace_video_links_with_players(tokens: list[Token]) -> list[Token] | None:
     return new_tokens
 
 
-def replace_paragraph_videos(tokens: list[Token], stack: list[Token]) -> list[Token]:
-    return replace_inline_tag_tokens(tokens, "a", replace_inline_videos_links)
+def replace_table_videos(tokens: list[Token], stack: list[Token]) -> list[Token]:
+    tokens_with_video = replace_inline_tag_tokens(
+        tokens, "a", replace_inline_videos_links
+    )
+    if not tokens_contain_inline_tag(tokens_with_video, "misago-video"):
+        return tokens
+
+    td_open, inline, td_close = tokens_with_video
+
+    new_tokens: list[Token] = []
+    for part in split_inline_token(inline, "misago-video"):
+        new_tokens += [td_open, part, td_close]
+    return new_tokens
 
 
 def replace_inline_videos_links(tokens: list[Token], stack: list[Token]) -> list[Token]:
