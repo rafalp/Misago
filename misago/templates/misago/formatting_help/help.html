@@ -13,10 +13,8 @@
         </article>
       </div>
     </div>
-
-    {% if not forloop.last %}
-      <hr />
-    {% endif %}
+    <hr />
   {% endfor %}
 
+  {% include "misago/formatting_help/youtube.html" %}
 </div>
