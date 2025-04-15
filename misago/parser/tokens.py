@@ -212,16 +212,18 @@ def _replace_only_child_tag_in_line_tokens(
                     new_tokens.append(token)
                 else:
                     nesting += token.nesting
+                    tag_tokens.append(token)
+
                     new_tokens += tag_tokens
                     tag_tokens = []
 
         elif nesting:
             tag_tokens.append(token)
 
-        elif token.type in ("softbreak", "hardbreak"):
-            line_no += 1
-
         else:
+            if token.type in ("softbreak", "hardbreak"):
+                line_no += 1
+
             new_tokens.append(token)
             if token.nesting == 1:
                 stack.append(token)
