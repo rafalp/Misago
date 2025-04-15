@@ -214,3 +214,173 @@ def test_replace_tag_tokens_only_child_strategy_doesnt_replace_multiple_void_chi
     assert result == tokens
 
     replace_func.assert_not_called()
+
+
+def test_replace_tag_tokens_only_of_type_strategy_replaces_only_child(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("[b]text[/b]")[1].children
+
+    replacement = Token(type="test", tag="t", nesting=0)
+
+    def replace_func(tokens: list[Token], stack: list[Token]) -> list[Token]:
+        assert len(tokens) == 3
+        assert tokens[0].type == "bold_bbcode_open"
+        assert stack == []
+
+        return [replacement]
+
+    result = replace_tag_tokens(
+        tokens, "b", replace_func, strategy=ReplaceTokensStrategy.ONLY_OF_TYPE
+    )
+    assert result == [replacement]
+
+
+def test_replace_tag_tokens_only_of_type_strategy_replaces_child_surrounded_by_spaces(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("t [b]text[/b] t")[1].children
+
+    assert len(tokens) == 5
+    tokens[0].content = "   "
+    tokens[4].content = "   "
+
+    replacement = Token(type="test", tag="t", nesting=0)
+
+    def replace_func(tokens: list[Token], stack: list[Token]) -> list[Token]:
+        assert len(tokens) == 3
+        assert tokens[0].type == "bold_bbcode_open"
+        assert stack == []
+
+        return [replacement]
+
+    result = replace_tag_tokens(
+        tokens, "b", replace_func, strategy=ReplaceTokensStrategy.ONLY_OF_TYPE
+    )
+    assert result == [tokens[0], replacement, tokens[4]]
+
+
+def test_replace_tag_tokens_only_of_type_strategy_doesnt_replace_child_surrounded_by_other_tokens(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("t [b]text[/b] t")[1].children
+
+    replace_func = Mock()
+
+    result = replace_tag_tokens(
+        tokens, "b", replace_func, strategy=ReplaceTokensStrategy.ONLY_OF_TYPE
+    )
+    assert result == tokens
+
+    replace_func.assert_not_called()
+
+
+def test_replace_tag_tokens_only_of_type_strategy_replaces_multiple_children_of_same_type(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("[b]text1[/b] [b]text2[/b]")[1].children
+
+    replacement = Token(type="test", tag="t", nesting=0)
+
+    def replace_func(tokens: list[Token], stack: list[Token]) -> list[Token]:
+        assert len(tokens) == 3
+        assert tokens[0].type == "bold_bbcode_open"
+        assert stack == []
+
+        return [replacement]
+
+    result = replace_tag_tokens(
+        tokens, "b", replace_func, strategy=ReplaceTokensStrategy.ONLY_OF_TYPE
+    )
+    assert result == [replacement, tokens[3], replacement]
+
+
+def test_replace_tag_tokens_only_of_type_strategy_replaces_only_void_child(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("@bob")[1].children
+
+    replacement = Token(type="test", tag="t", nesting=0)
+
+    def replace_func(tokens: list[Token], stack: list[Token]) -> list[Token]:
+        assert len(tokens) == 1
+        assert tokens[0].type == "mention"
+        assert stack == []
+
+        return [replacement]
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_OF_TYPE,
+    )
+    assert result == [replacement]
+
+
+def test_replace_tag_tokens_only_of_type_strategy_replaces_void_child_surrounded_by_spaces(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("t @bob t")[1].children
+
+    assert len(tokens) == 3
+    tokens[0].content = "   "
+    tokens[2].content = "   "
+
+    replacement = Token(type="test", tag="t", nesting=0)
+
+    def replace_func(tokens: list[Token], stack: list[Token]) -> list[Token]:
+        assert len(tokens) == 1
+        assert tokens[0].type == "mention"
+        assert stack == []
+
+        return [replacement]
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_OF_TYPE,
+    )
+    assert result == [tokens[0], replacement, tokens[2]]
+
+
+def test_replace_tag_tokens_only_of_type_strategy_doesnt_replace_void_child_surrounded_by_other_tokens(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("hello @bob!")[1].children
+
+    replace_func = Mock()
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_OF_TYPE,
+    )
+    assert result == tokens
+
+    replace_func.assert_not_called()
+
+
+def test_replace_tag_tokens_only_of_type_strategy_replaces_multiple_void_children_of_same_type(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("@bob @john")[1].children
+
+    replacement = Token(type="test", tag="t", nesting=0)
+
+    def replace_func(tokens: list[Token], stack: list[Token]) -> list[Token]:
+        assert len(tokens) == 1
+        assert tokens[0].type == "mention"
+        assert stack == []
+
+        return [replacement]
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_OF_TYPE,
+    )
+    assert result == [replacement, tokens[1], replacement]

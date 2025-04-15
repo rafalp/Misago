@@ -113,7 +113,10 @@ def replace_paragraph_videos(tokens: list[Token], stack: list[Token]) -> list[To
         return tokens
 
     tokens_with_video = replace_inline_tag_tokens(
-        tokens, "a", replace_inline_videos_links, ReplaceTokensStrategy.ONLY_OF_TYPE_IN_LINE
+        tokens,
+        "a",
+        replace_inline_videos_links,
+        ReplaceTokensStrategy.ONLY_OF_TYPE_IN_LINE,
     )
     if not tokens_contain_inline_tag(tokens_with_video, "misago-video"):
         return tokens
