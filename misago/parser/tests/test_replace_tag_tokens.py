@@ -760,3 +760,251 @@ def test_replace_tag_tokens_only_child_in_line_strategy_doesnt_replace_multiple_
     assert result == tokens
 
     replace_func.assert_not_called()
+
+
+def test_replace_tag_tokens_only_child_in_line_strategy_replaces_only_void_child_in_first_line(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("@bob\nsecond line")[1].children
+
+    replacement = Token(type="test", tag="t", nesting=0)
+
+    def replace_func(tokens: list[Token], stack: list[Token]) -> list[Token]:
+        assert len(tokens) == 1
+        assert tokens[0].type == "mention"
+        assert stack == []
+
+        return [replacement]
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_CHILD_IN_LINE,
+    )
+    assert result == [replacement] + tokens[1:]
+
+
+def test_replace_tag_tokens_only_child_in_line_strategy_replaces_only_void_child_in_middle_line(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("first line\n@bob\nsecond line")[1].children
+
+    replacement = Token(type="test", tag="t", nesting=0)
+
+    def replace_func(tokens: list[Token], stack: list[Token]) -> list[Token]:
+        assert len(tokens) == 1
+        assert tokens[0].type == "mention"
+        assert stack == []
+
+        return [replacement]
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_CHILD_IN_LINE,
+    )
+    assert result == tokens[:2] + [replacement] + tokens[3:]
+
+
+def test_replace_tag_tokens_only_child_in_line_strategy_replaces_void_only_child_in_last_line(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("first line\n@bob")[1].children
+
+    replacement = Token(type="test", tag="t", nesting=0)
+
+    def replace_func(tokens: list[Token], stack: list[Token]) -> list[Token]:
+        assert len(tokens) == 1
+        assert tokens[0].type == "mention"
+        assert stack == []
+
+        return [replacement]
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_CHILD_IN_LINE,
+    )
+    assert result == tokens[:2] + [replacement]
+
+
+def test_replace_tag_tokens_only_child_in_line_strategy_replaces_only_void_child_surrounded_by_spaces_in_first_line(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("@bob    \nsecond line")[1].children
+
+    replacement = Token(type="test", tag="t", nesting=0)
+
+    def replace_func(tokens: list[Token], stack: list[Token]) -> list[Token]:
+        assert len(tokens) == 1
+        assert tokens[0].type == "mention"
+        assert stack == []
+
+        return [replacement]
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_CHILD_IN_LINE,
+    )
+    assert result == [replacement] + tokens[1:]
+
+
+def test_replace_tag_tokens_only_child_in_line_strategy_replaces_only_void_child_surrounded_by_spaces_in_middle_line(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("first line\n   @bob   \nsecond line")[1].children
+
+    replacement = Token(type="test", tag="t", nesting=0)
+
+    def replace_func(tokens: list[Token], stack: list[Token]) -> list[Token]:
+        assert len(tokens) == 1
+        assert tokens[0].type == "mention"
+        assert stack == []
+
+        return [replacement]
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_CHILD_IN_LINE,
+    )
+    assert result == tokens[:2] + [replacement] + tokens[3:]
+
+
+def test_replace_tag_tokens_only_child_in_line_strategy_replaces_only_void_child_surrounded_by_spaces_in_last_line(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("first line\n   @bob")[1].children
+
+    replacement = Token(type="test", tag="t", nesting=0)
+
+    def replace_func(tokens: list[Token], stack: list[Token]) -> list[Token]:
+        assert len(tokens) == 1
+        assert tokens[0].type == "mention"
+        assert stack == []
+
+        return [replacement]
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_CHILD_IN_LINE,
+    )
+    assert result == tokens[:2] + [replacement]
+
+
+def test_replace_tag_tokens_only_child_in_line_strategy_doesnt_replace_only_void_child_surrounded_by_text_in_first_line(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("@bob  text  \nsecond line")[1].children
+
+    replace_func = Mock()
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_CHILD_IN_LINE,
+    )
+    assert result == tokens
+
+    replace_func.assert_not_called()
+
+
+def test_replace_tag_tokens_only_child_in_line_strategy_doesnt_replace_only_void_child_surrounded_by_text_in_middle_line(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("first line\n text  @bob  text \nsecond line")[
+        1
+    ].children
+
+    replace_func = Mock()
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_CHILD_IN_LINE,
+    )
+    assert result == tokens
+
+    replace_func.assert_not_called()
+
+
+def test_replace_tag_tokens_only_child_in_line_strategy_doesnt_replace_only_void_child_surrounded_by_text_in_last_line(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("first line\n text  @bob]")[1].children
+
+    replace_func = Mock()
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_CHILD_IN_LINE,
+    )
+    assert result == tokens
+
+    replace_func.assert_not_called()
+
+
+def test_replace_tag_tokens_only_child_in_line_strategy_doesnt_replace_multiple_void_children_in_first_line(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("@bob @john\nsecond line")[1].children
+
+    replace_func = Mock()
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_CHILD_IN_LINE,
+    )
+    assert result == tokens
+
+    replace_func.assert_not_called()
+
+
+def test_replace_tag_tokens_only_child_in_line_strategy_doesnt_replace_multiple_void_children_in_middle_line(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("first line\n@bob @john\nsecond line")[1].children
+
+    replace_func = Mock()
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_CHILD_IN_LINE,
+    )
+    assert result == tokens
+
+    replace_func.assert_not_called()
+
+
+def test_replace_tag_tokens_only_child_in_line_strategy_doesnt_replace_mutiple_void_children_in_last_line(
+    parse_to_raw_tokens,
+):
+    tokens = parse_to_raw_tokens("first line\n@bob @john")[1].children
+
+    replace_func = Mock()
+
+    result = replace_tag_tokens(
+        tokens,
+        "misago-mention",
+        replace_func,
+        strategy=ReplaceTokensStrategy.ONLY_CHILD_IN_LINE,
+    )
+    assert result == tokens
+
+    replace_func.assert_not_called()
