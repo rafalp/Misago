@@ -6,6 +6,7 @@ from .formattingbbcode import formatting_bbcode_plugin
 from .hrbbcode import hr_bbcode_plugin
 from .imgbbcode import img_bbcode_plugin
 from .link import link_plugin
+from .linkify import linkify_plugin
 from .mention import mention_plugin
 from .quotebbcode import quote_bbcode_plugin
 from .spoilerbbcode import spoiler_bbcode_plugin
@@ -20,6 +21,7 @@ __all__ = (
     "hr_bbcode_plugin",
     "img_bbcode_plugin",
     "link_plugin",
+    "linkify_plugin",
     "mention_plugin",
     "quote_bbcode_plugin",
     "spoiler_bbcode_plugin",
