@@ -459,3 +459,19 @@
   
   '''
 # ---
+# name: test_replace_rich_text_tokens_replaces_youtube_video
+  '''
+  
+  <div class="rich-text-video-iframe rich-text-video-youtube">
+    <iframe
+      loading="lazy"
+      src="https://www.youtube.com/embed/QzfXag4r7Vo"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen
+    ></iframe>
+  </div>
+  '''
+# ---

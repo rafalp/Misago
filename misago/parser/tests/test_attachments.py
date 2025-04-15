@@ -132,7 +132,8 @@ def test_attachment_in_table_cell(parse_to_html):
         "| file | upload |" "\n| - | - |" "\n| image | <attachment=image.png:12> |"
     )
     assert html == (
-        '<table class="rich-text-table">'
+        '<div class="rich-text-table-container">'
+        '\n<table class="rich-text-table">'
         "\n<thead>"
         "\n<tr>"
         "\n<th>file</th>"
@@ -146,6 +147,7 @@ def test_attachment_in_table_cell(parse_to_html):
         "\n</tr>"
         "\n</tbody>"
         "\n</table>"
+        "\n</div>"
     )
 
 

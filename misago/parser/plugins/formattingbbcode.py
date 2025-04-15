@@ -60,7 +60,6 @@ def get_formatting_bbcode_rule(name: str, markup: str):
 
             token = state.push(name + "_bbcode_open", markup, 1)
             token.markup = markup_open
-
             state.md.inline.tokenize(state)
 
             token = state.push(name + "_bbcode_close", markup, -1)

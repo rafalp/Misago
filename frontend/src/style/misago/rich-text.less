@@ -44,11 +44,12 @@
   p,
   ul,
   ol,
-  table,
   pre,
   .rich-text-quote,
   .rich-text-code,
-  .rich-text-spoiler {
+  .rich-text-spoiler,
+  .rich-text-table-container,
+  .rich-text-video-iframe {
     margin-bottom: @line-height-computed;
 
     &:last-child {
@@ -290,6 +291,11 @@ blockquote {
   }
 }
 
+.rich-text-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .rich-text-table {
   &,
   td,
@@ -299,6 +305,7 @@ blockquote {
 
   td,
   th {
+    min-width: 60px;
     padding: 4px 8px;
   }
 }
@@ -365,8 +372,7 @@ blockquote {
 
   &,
   &:link,
-  &:visited
-  &:focus {
+  &:visited &:focus {
     background-color: @rich-text-quote-header-btn-bg;
     border: 1px solid @rich-text-quote-header-btn-border;
     color: @rich-text-quote-header-btn-color;
@@ -613,5 +619,32 @@ a.rich-text-quote-header-link-secondary {
     border-radius: @border-radius-base;
     color: @link-hover-color;
     text-decoration: none;
+  }
+}
+
+.rich-text-video-iframe {
+  position: relative;
+  overflow: hidden;
+  padding-top: 56.25%;
+
+  border-radius: @border-radius-base;
+
+  iframe {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+td .rich-text-video-iframe {
+  width: 320px;
+
+  @media screen and (min-width: @screen-md-min) {
+    width: 480px;
   }
 }

@@ -21,3 +21,18 @@ def parse_to_html():
         return render_tokens_to_html(parser, tokens)
 
     return _parser
+
+
+@pytest.fixture
+def parse_to_raw_tokens():
+    def _parser(markup: str, dedent=False, strip=False):
+        parser = create_parser()
+
+        if dedent:
+            markup = textwrap.dedent(markup)
+        if strip:
+            markup = markup.strip()
+
+        return parser.parse(markup)
+
+    return _parser
