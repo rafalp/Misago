@@ -10,6 +10,7 @@ import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
 import AjaxLoader, { useLoader } from "./AjaxLoader"
 import BulkModeration from "./BulkModeration"
+import { mentions } from "./Mentions"
 import "./focusOn"
 import "./formValidators"
 import "./htmxErrors"
@@ -32,6 +33,7 @@ export class Misago {
     this.loader = loader
     this.editor = editor
     this.lightbox = lightbox
+    this.mentions = mentions
   }
 
   addInitializer(initializer) {
