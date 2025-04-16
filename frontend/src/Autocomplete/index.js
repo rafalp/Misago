@@ -1,4 +1,4 @@
-import Mentions from "./Mentions"
+import Mention from "./Mention"
 import select from "./Select"
 
-export { Mentions, select }
+export { Mention, select }

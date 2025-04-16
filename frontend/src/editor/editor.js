@@ -1,5 +1,5 @@
 import htmx from "htmx.org"
-import { Mentions } from "../Autocomplete"
+import { Mention } from "../Autocomplete"
 import * as animations from "../animations"
 import MarkupEditorUploader from "./uploader"
 import {
@@ -158,7 +158,7 @@ class MarkupEditor {
       this._resizeEditor(element)
 
       const textarea = this.getTextarea(element)
-      this.mentions[textarea.id] = new Mentions(textarea)
+      this.mentions[textarea.id] = new Mention(textarea)
     }
   }
 

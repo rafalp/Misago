@@ -4,7 +4,6 @@ const BEFORE_RE = /(^|[^\p{L}\p{N}])@[a-z0-9_\-]*$/giu
 const AHEAD_RE = /^[\p{L}\p{N}]/giu
 
 const INVALID_KEYS = {
-  "Backspace": true,
   "Delete": true,
   "Space": true,
   "MetaLeft": true,
@@ -15,7 +14,7 @@ const INVALID_KEYS = {
   "ArrowDown": true,
 }
 
-class Mentions {
+class Mention {
   constructor(control) {
     this.control = control
 
@@ -86,4 +85,4 @@ class Mentions {
   }
 }
 
-export default Mentions
+export default Mention
