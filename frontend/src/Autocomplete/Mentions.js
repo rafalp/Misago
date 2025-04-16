@@ -1,7 +1,7 @@
 import select from "./Select"
 
-const BEFORE_RE = /(^|[^\p{L}\p{N}])@[a-z0-9\_\-]*$/gi
-const AHEAD_RE = /^[\p{L}\p{N}]/gi
+const BEFORE_RE = /(^|[^\p{L}\p{N}])@[a-z0-9_\-]*$/giu
+const AHEAD_RE = /^[\p{L}\p{N}]/giu
 
 const INVALID_KEYS = {
   "Backspace": true,
