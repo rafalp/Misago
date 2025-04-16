@@ -1,6 +1,7 @@
 from django.db import models, transaction
 from django.http import HttpRequest
 
+from ...parser.parse import ParsingResult, parse
 from ...threads.checksums import update_post_checksum
 from ...threads.models import Post, Thread
 from ..hooks import (
@@ -30,11 +31,12 @@ class ReplyThreadState(PostingState):
         if self.post.id:
             self.store_object_state(self.post)
 
-    def set_post_message(self, message: str):
+    def set_post_message(self, parsing_result: ParsingResult):
         if self.post.id:
-            message = "\n\n".join([self.post.original, message])
+            markup = "\n\n".join([self.post.original, parsing_result.markup])
+            parsing_result = parse(markup)
 
-        super().set_post_message(message)
+        super().set_post_message(parsing_result)
 
     @transaction.atomic()
     def save(self):

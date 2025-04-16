@@ -1,3 +1,4 @@
+from ...parser.parse import parse
 from ..state import EditThreadPostState
 
 
@@ -18,7 +19,7 @@ def test_edit_thread_post_state_save_updates_post(
     user, user_request, other_user_thread
 ):
     state = EditThreadPostState(user_request, other_user_thread.first_post)
-    state.set_post_message("Edit reply")
+    state.set_post_message(parse("Edit reply"))
     state.save()
 
     post = other_user_thread.first_post
@@ -44,7 +45,7 @@ def test_edit_thread_post_state_save_updates_post_attachments(
     assert not attachment.post
 
     state = EditThreadPostState(user_request, other_user_thread.first_post)
-    state.set_post_message("Edit reply")
+    state.set_post_message(parse("Edit reply"))
     state.set_attachments([attachment])
     state.save()
 
@@ -72,7 +73,7 @@ def test_edit_thread_post_state_save_deletes_post_attachments(
     attachment = attachment_factory(text_file, uploader=user, post=post)
 
     state = EditThreadPostState(user_request, other_user_thread.first_post)
-    state.set_post_message("Edit reply")
+    state.set_post_message(parse("Edit reply"))
     state.set_attachments([attachment, post_attachment])
     state.set_delete_attachments([attachment])
     state.save()
@@ -101,7 +102,7 @@ def test_edit_thread_post_state_save_deletes_unused_attachments(
     unused_attachment = attachment_factory(text_file, uploader=user)
 
     state = EditThreadPostState(user_request, other_user_thread.first_post)
-    state.set_post_message("Edit reply")
+    state.set_post_message(parse("Edit reply"))
     state.set_attachments([unused_attachment, post_attachment])
     state.set_delete_attachments([unused_attachment])
     state.save()
@@ -125,7 +126,7 @@ def test_edit_thread_post_state_schedules_post_upgrade_for_post_with_code_block(
     mock_upgrade_post_content, user_request, other_user_thread
 ):
     state = EditThreadPostState(user_request, other_user_thread.first_post)
-    state.set_post_message("Hello world\n[code=python]add(1, 3)[/code]")
+    state.set_post_message(parse("Hello world\n[code=python]add(1, 3)[/code]"))
     state.save()
 
     assert state.post.id

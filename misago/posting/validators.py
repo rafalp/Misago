@@ -5,6 +5,7 @@ from django.http import HttpRequest
 from django.utils.translation import npgettext, pgettext
 
 from ..core.utils import slugify
+from ..parser.parse import ParsingResult
 from .floodcontrol import flood_control
 from .hooks import (
     validate_post_hook,
@@ -26,7 +27,7 @@ __all__ = [
 
 
 def validate_post(
-    value: str,
+    value: ParsingResult,
     min_length: int,
     max_length: int,
     *,
@@ -42,16 +43,16 @@ def validate_post(
 
 
 def _validate_post_action(
-    value: str,
+    value: ParsingResult,
     min_length: int,
     max_length: int,
     *,
     request: HttpRequest | None = None,
 ):
-    length = len(value)
+    length = len(value.text)
     if not length:
         raise ValidationError(
-            message=pgettext("post validator", "Enter post's content."),
+            message=pgettext("post validator", "Posted message has no content."),
             code="required",
         )
 

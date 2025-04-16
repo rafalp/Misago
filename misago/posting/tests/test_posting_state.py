@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from ...parser.parse import parse
 from ..state.base import PostingState
 
 
@@ -80,7 +81,7 @@ def test_posting_state_set_thread_title_updates_thread_title_and_slug(
 def test_posting_state_set_post_message_updates_post_contents(user_request, post):
     state = PostingState(user_request)
     state.post = post
-    state.set_post_message("Hello world")
+    state.set_post_message(parse("Hello world"))
 
     assert post.original == "Hello world"
     assert post.parsed == "<p>Hello world</p>"
@@ -92,7 +93,7 @@ def test_posting_state_set_post_message_stores_attachments_ids_in_post_metadata(
 ):
     state = PostingState(user_request)
     state.post = post
-    state.set_post_message("<attachment=image.png:123>")
+    state.set_post_message(parse("<attachment=image.png:123>"))
 
     assert post.original == "<attachment=image.png:123>"
     assert post.parsed == (

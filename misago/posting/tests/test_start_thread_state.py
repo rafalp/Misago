@@ -1,3 +1,4 @@
+from ...parser.parse import parse
 from ..state import StartThreadState
 
 
@@ -30,7 +31,7 @@ def test_start_thread_state_stores_category_state(user_request, default_category
 def test_start_thread_state_save_saves_thread_and_post(user_request, default_category):
     state = StartThreadState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message("Hello world")
+    state.set_post_message(parse("Hello world"))
     state.save()
 
     assert state.thread.id
@@ -41,7 +42,7 @@ def test_start_thread_state_save_saves_thread_and_post(user_request, default_cat
 def test_start_thread_state_updates_category(user_request, default_category):
     state = StartThreadState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message("Hello world")
+    state.set_post_message(parse("Hello world"))
     state.save()
 
     default_category.refresh_from_db()
@@ -57,7 +58,7 @@ def test_start_thread_state_updates_category(user_request, default_category):
 def test_start_thread_state_updates_user(user_request, default_category, user):
     state = StartThreadState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message("Hello world")
+    state.set_post_message(parse("Hello world"))
     state.save()
 
     user.refresh_from_db()
@@ -76,7 +77,7 @@ def test_start_thread_state_assigns_attachments_to_category_thread_and_post(
 
     state = StartThreadState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message("Hello world")
+    state.set_post_message(parse("Hello world"))
     state.set_attachments([attachment])
     state.save()
 
@@ -97,7 +98,7 @@ def test_start_thread_state_deletes_unused_attachments(
 
     state = StartThreadState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message("Hello world")
+    state.set_post_message(parse("Hello world"))
     state.set_attachments([attachment])
     state.set_delete_attachments([attachment])
     state.save()
@@ -119,7 +120,7 @@ def test_start_thread_state_delete_attachments_excludes_unknown_attachments(
 
     state = StartThreadState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message("Hello world")
+    state.set_post_message(parse("Hello world"))
     state.set_delete_attachments([attachment])
     state.save()
 
@@ -135,7 +136,7 @@ def test_start_thread_state_schedules_post_upgrade_for_post_with_code_block(
 ):
     state = StartThreadState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message("Hello world\n[code=python]add(1, 3)[/code]")
+    state.set_post_message(parse("Hello world\n[code=python]add(1, 3)[/code]"))
     state.save()
 
     assert state.thread.id

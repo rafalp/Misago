@@ -12,6 +12,7 @@ from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
 from ...attachments.upload import handle_attachments_upload
 from ...attachments.validators import validate_post_attachments_limit
+from ...parser.parse import ParsingResult, parse
 from ..state import PostingState
 from ..validators import validate_post
 from .base import PostingForm
@@ -29,6 +30,8 @@ class PostForm(PostingForm):
 
     request: HttpRequest
 
+    parsing_result: ParsingResult | None
+
     attachments: list[Attachment]
     deleted_attachments: list[Attachment]
     can_upload_attachments: bool
@@ -42,6 +45,8 @@ class PostForm(PostingForm):
 
     def __init__(self, data=None, *args, **kwargs):
         self.request = kwargs.pop("request")
+
+        self.parsing_result = None
 
         self.attachments = kwargs.pop("attachments", None) or []
         self.deleted_attachments = []
@@ -179,12 +184,16 @@ class PostForm(PostingForm):
 
     def clean_post(self):
         data = self.cleaned_data["post"]
+        parsing_result = parse(data)
+
         validate_post(
-            data,
+            parsing_result,
             self.request.settings.post_length_min,
             self.request.settings.post_length_max,
             request=self.request,
         )
+
+        self.parsing_result = parsing_result
         return data
 
     def clean_upload(self):
@@ -226,7 +235,7 @@ class PostForm(PostingForm):
         return cleaned_data
 
     def update_state(self, state: PostingState):
-        state.set_post_message(self.cleaned_data["post"])
+        state.set_post_message(self.parsing_result)
         state.set_attachments(self.attachments)
         state.set_delete_attachments(self.deleted_attachments)
 

@@ -2,6 +2,7 @@ from typing import Protocol
 
 from django.http import HttpRequest
 
+from ...parser.parse import ParsingResult
 from ...plugins.hooks import FilterHook
 
 
@@ -12,7 +13,7 @@ class ValidatePostHookAction(Protocol):
 
     # Arguments
 
-    ## `value: str`
+    ## `value: ParsingResult`
 
     The value to validate.
 
@@ -31,7 +32,7 @@ class ValidatePostHookAction(Protocol):
 
     def __call__(
         self,
-        value: str,
+        value: ParsingResult,
         min_length: int,
         max_length: int,
         *,
@@ -52,7 +53,7 @@ class ValidatePostHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `value: str`
+    ## `value: ParsingResult`
 
     The value to validate.
 
@@ -72,7 +73,7 @@ class ValidatePostHookFilter(Protocol):
     def __call__(
         self,
         action: ValidatePostHookAction,
-        value: str,
+        value: ParsingResult,
         min_length: int,
         max_length: int,
         *,
@@ -90,6 +91,14 @@ class ValidatePostHook(
     This hook wraps a standard function used by Misago to validate post contents.
     Raises `ValidationError` if they are invalid.
 
+    Post contents are represented as a `ParsingResult` object with the following
+    attributes:
+
+    - `markup: str`: The original markup posted by the user.
+    - `tokens: list[Token]`: A token stream returned by the parser.
+    - `html: str`: An HTML representation of the parsed markup.
+    - `text: str`: A plain text representation of the parsed markup.
+
     # Example
 
     The code below implements a custom post validator that raises
@@ -97,13 +106,14 @@ class ValidatePostHook(
 
     ```python
     from django.http import HttpRequest
+    from misago.parser.parse import ParsingResult
     from misago.posting.hooks import validate_post_hook
 
 
     @validate_post_hook.append_filter
     def validate_post_for_new_users(
         action,
-        value: str,
+        value: ParsingResult,
         min_length: int,
         max_length: int,
         *,
@@ -121,7 +131,7 @@ class ValidatePostHook(
     def __call__(
         self,
         action: ValidatePostHookAction,
-        value: str,
+        value: ParsingResult,
         min_length: int,
         max_length: int,
         *,

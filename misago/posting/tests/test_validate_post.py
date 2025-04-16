@@ -1,24 +1,25 @@
 import pytest
 from django.core.exceptions import ValidationError
 
+from ...parser.parse import parse
 from ..validators import validate_post
 
 
 def test_validate_post_passes_valid_value():
-    validate_post("valid value", 1, 100)
+    validate_post(parse("valid value"), 1, 100)
 
 
 def test_validate_post_raises_error_for_empty_value():
     with pytest.raises(ValidationError) as exc_info:
-        validate_post("", 1, 100)
+        validate_post(parse(""), 1, 100)
 
-    assert str(exc_info.value.message) == "Enter post's content."
+    assert str(exc_info.value.message) == "Posted message has no content."
     assert exc_info.value.code == "required"
 
 
 def test_validate_post_raises_error_for_too_short_value():
     with pytest.raises(ValidationError) as exc_info:
-        validate_post("short", 10, 100)
+        validate_post(parse("short"), 10, 100)
 
     assert str(exc_info.value.message) == (
         "Posted message must be at least %(limit_value)s "
@@ -30,7 +31,7 @@ def test_validate_post_raises_error_for_too_short_value():
 
 def test_validate_post_raises_error_for_too_long_value():
     with pytest.raises(ValidationError) as exc_info:
-        validate_post("lorem ipsum dolor met", 1, 10)
+        validate_post(parse("lorem ipsum dolor met"), 1, 10)
 
     assert str(exc_info.value.message) == (
         "Posted message cannot be longer than %(limit_value)s "
@@ -41,4 +42,4 @@ def test_validate_post_raises_error_for_too_long_value():
 
 
 def test_validate_post_disables_max_length_validation():
-    validate_post("lorem ipsum dolor met", 1, 0)
+    validate_post(parse("lorem ipsum dolor met"), 1, 0)
