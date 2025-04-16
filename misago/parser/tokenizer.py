@@ -13,6 +13,7 @@ from .tokens import (
     replace_tag_tokens,
     split_inline_token,
     tokens_contain_inline_tag,
+    tokens_contain_tag,
 )
 from .youtube import parse_youtube_link
 
@@ -36,6 +37,8 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             set_links_target_blank,
             make_tables_responsive,
             set_tables_styles,
+            set_lists_type_metadata,
+            set_lists_styles,
         ],
     )
 
@@ -71,6 +74,70 @@ def set_tables_styles(tokens: list[Token]) -> None:
     for token in tokens:
         if token.type == "table_open":
             token.attrSet("class", "rich-text-table")
+
+
+LIST_OPEN_TYPES = ("bullet_list_open", "ordered_list_open")
+LIST_TAGS = ("ol", "ul")
+
+
+def set_lists_type_metadata(tokens: list[Token]) -> None:
+    if not tokens_contain_tag(tokens, "li"):
+        return tokens
+
+    replace_tag_tokens(tokens, "ol", _set_list_type_metadata)
+    replace_tag_tokens(tokens, "ul", _set_list_type_metadata)
+
+    return tokens
+
+
+def set_list_item_type_metadata(tokens: list[Token], stack: list[Token]) -> list[Token]:
+    item_open, items = tokens[0], tokens[1:-1]
+    item_open.meta["tight"] = True
+
+    replace_tag_tokens(items, "li", set_list_item_type_metadata)
+
+    nesting = 0
+    for child_token in items:
+        if child_token.tag == "li":
+            nesting += child_token.nesting
+
+        if not nesting and child_token.type != "inline" and not child_token.hidden:
+            item_open.meta["tight"] = False
+
+    return tokens
+
+
+def _set_list_type_metadata(tokens: list[Token], stack: list[Token]) -> list[Token]:
+    list_open, items = tokens[0], tokens[1:-1]
+    list_open.meta["tight"] = True
+
+    replace_tag_tokens(items, list_open.tag, _set_list_type_metadata)
+    replace_tag_tokens(tokens, "li", set_list_item_type_metadata)
+
+    nesting = 0
+    for child_token in items:
+        if child_token.tag in LIST_TAGS:
+            nesting += child_token.nesting
+
+        if (
+            not nesting
+            and child_token.tag == "li"
+            and child_token.meta.get("tight") is False
+        ):
+            list_open.meta["tight"] = False
+
+    return tokens
+
+
+def set_lists_styles(tokens: list[Token]) -> None:
+    for token in tokens:
+        if token.type in LIST_OPEN_TYPES:
+            if token.meta.get("tight") is False:
+                class_name = "rich-text-list-loose"
+            else:
+                class_name = "rich-text-list-tight"
+
+            token.attrSet("class", class_name)
 
 
 def shorten_link_text(tokens: list[Token]) -> None:
@@ -239,6 +306,9 @@ def _extract_attachments_from_paragraph(
     if new_tokens and new_tokens[-1].type == "attachment":
         new_tokens.append(attachments_close)
 
+    p_open.hidden = False
+    p_close.hidden = False
+
     return new_tokens
 
 
@@ -293,14 +363,14 @@ def remove_nested_inline_bbcodes(tokens: list[Token]) -> list[Token]:
     return tokens
 
 
-INLINE_BBCODE_OPEN_TAGS = (
+INLINE_BBCODE_OPEN_TYPES = (
     "bold_bbcode_open",
     "italics_bbcode_open",
     "underline_bbcode_open",
     "strikethrough_bbcode_open",
 )
 
-INLINE_BBCODE_CLOSE_TAGS = (
+INLINE_BBCODE_CLOSE_TYPES = (
     "bold_bbcode_close",
     "italics_bbcode_close",
     "underline_bbcode_close",
@@ -313,12 +383,12 @@ def _remove_nested_inline_bbcodes_from_inline_token(token_inline: Token):
     stack: list[str] = []
 
     for token in token_inline.children:
-        if token.type in INLINE_BBCODE_OPEN_TAGS:
+        if token.type in INLINE_BBCODE_OPEN_TYPES:
             if token.tag not in stack:
                 new_children.append(token)
             stack.append(token.tag)
 
-        elif token.type in INLINE_BBCODE_CLOSE_TAGS:
+        elif token.type in INLINE_BBCODE_CLOSE_TYPES:
             if stack and stack[-1] == token.tag:
                 stack.pop(-1)
             if token.tag not in stack:

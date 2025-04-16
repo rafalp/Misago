@@ -154,7 +154,7 @@ def test_attachment_in_table_cell(parse_to_html):
 def test_attachment_in_list_item(parse_to_html):
     html = parse_to_html("1. <attachment=image.png:12>")
     assert html == (
-        "<ol>"
+        '<ol class="rich-text-list-loose">'
         "\n<li>"
         '\n<div class="rich-text-attachment-group">'
         '\n<misago-attachment name="image.png" slug="image-png" id="12">'
@@ -167,11 +167,13 @@ def test_attachment_in_list_item(parse_to_html):
 def test_attachment_breaks_list_item(parse_to_html):
     html = parse_to_html("1. Lorem <attachment=image.png:12> ipsum")
     assert html == (
-        "<ol>"
-        "\n<li>Lorem"
+        '<ol class="rich-text-list-loose">'
+        "\n<li>"
+        "\n<p>Lorem</p>"
         '\n<div class="rich-text-attachment-group">'
         '\n<misago-attachment name="image.png" slug="image-png" id="12">'
         "\n</div>"
-        "\nipsum</li>"
+        "\n<p>ipsum</p>"
+        "\n</li>"
         "\n</ol>"
     )
