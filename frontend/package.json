@@ -12,7 +12,7 @@
   "author": "Rafal Piton",
   "license": "GPL-2.0",
   "dependencies": {
-    "@algolia/autocomplete-core": "^1.18.1",
+    "@floating-ui/dom": "^1.6.13",
     "at.js": "^1.5.3",
     "bootstrap": "^3.3.6",
     "classnames": "^2.3.2",
