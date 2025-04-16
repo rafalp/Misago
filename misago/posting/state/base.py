@@ -10,11 +10,7 @@ from ...attachments.delete import delete_attachments
 from ...attachments.models import Attachment
 from ...categories.models import Category
 from ...core.utils import slugify
-from ...parser.factory import create_parser
-from ...parser.html import render_tokens_to_html
-from ...parser.metadata import get_tokens_metadata
-from ...parser.plaintext import render_tokens_to_plaintext
-from ...parser.tokenizer import tokenize
+from ...parser.parse import ParsingResult
 from ...threads.models import Post, Thread
 from ..tasks import upgrade_post_content
 from ..upgradepost import post_needs_content_upgrade
@@ -31,6 +27,7 @@ class PostingState:
     category: Category
     thread: Thread
     post: Post
+    parsing_result: ParsingResult
     attachments: list[Attachment]
     delete_attachments: list[Attachment]
 
@@ -45,6 +42,7 @@ class PostingState:
         self.state = {}
         self.plugin_state = {}
 
+        self.parsing_result = None
         self.attachments = []
         self.delete_attachments = []
 
@@ -114,15 +112,13 @@ class PostingState:
         self.thread.title = title
         self.thread.slug = slugify(title)
 
-    def set_post_message(self, message: str):
-        parser = create_parser()
-        tokens = tokenize(parser, message)
-        metadata = get_tokens_metadata(tokens)
+    def set_post_message(self, parsing_result: ParsingResult):
+        self.parsing_result = parsing_result
 
-        self.post.original = message
-        self.post.parsed = render_tokens_to_html(parser, tokens)
-        self.post.search_document = render_tokens_to_plaintext(tokens)
-        self.post.metadata = metadata
+        self.post.original = parsing_result.markup
+        self.post.parsed = parsing_result.html
+        self.post.search_document = parsing_result.text
+        self.post.metadata = parsing_result.metadata
 
     def schedule_post_content_upgrade(self):
         if post_needs_content_upgrade(self.post):

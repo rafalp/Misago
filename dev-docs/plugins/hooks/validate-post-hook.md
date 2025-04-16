@@ -2,6 +2,10 @@
 
 This hook wraps a standard function used by Misago to validate post contents. Raises `ValidationError` if they are invalid.
 
+Post contents are represented as a `ParsingResult` object with the following attributes:
+
+- `markup: str`: The original markup posted by the user. - `tokens: list[Token]`: A token stream returned by the parser. - `html: str`: An HTML representation of the parsed markup. - `text: str`: A plain text representation of the parsed markup.
+
 
 ## Location
 
@@ -17,7 +21,7 @@ from misago.posting.hooks import validate_post_hook
 ```python
 def custom_validate_post_filter(
     action: ValidatePostHookAction,
-    value: str,
+    value: ParsingResult,
     min_length: int,
     max_length: int,
     *,
@@ -38,7 +42,7 @@ A standard function used by Misago to validate post contents. Raises `Validation
 See the [action](#action) section for details.
 
 
-#### `value: str`
+#### `value: ParsingResult`
 
 The value to validate.
 
@@ -62,7 +66,7 @@ The request object or `None` if not provided.
 
 ```python
 def validate_post_action(
-    value: str,
+    value: ParsingResult,
     min_length: int,
     max_length: int,
     *,
@@ -76,7 +80,7 @@ A standard function used by Misago to validate post contents. Raises `Validation
 
 ### Arguments
 
-#### `value: str`
+#### `value: ParsingResult`
 
 The value to validate.
 
@@ -102,13 +106,14 @@ The code below implements a custom post validator that raises the minimal requir
 
 ```python
 from django.http import HttpRequest
+from misago.parser.parse import ParsingResult
 from misago.posting.hooks import validate_post_hook
 
 
 @validate_post_hook.append_filter
 def validate_post_for_new_users(
     action,
-    value: str,
+    value: ParsingResult,
     min_length: int,
     max_length: int,
     *,
