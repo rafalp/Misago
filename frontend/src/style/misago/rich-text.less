@@ -66,6 +66,16 @@ blockquote {
   font-size: 16px;
 }
 
+ul,
+ol {
+  padding-inline-start: 32px;
+
+  ul,
+  ol {
+    padding-inline-start: 26px;
+  }
+}
+
 .rich-text-image {
   display: inline-block;
   position: relative;
@@ -592,6 +602,14 @@ a.rich-text-quote-header-link-secondary {
   font-size: @font-size-small;
   font-weight: bold;
   white-space: nowrap;
+}
+
+.rich-text-list-loose > li {
+  margin-bottom: @line-height-computed;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .rich-text-spoiler-body {

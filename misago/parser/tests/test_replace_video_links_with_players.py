@@ -288,7 +288,7 @@ def test_youtube_link_with_text_in_table_cell(parse_to_html):
 def test_youtube_link_in_list_item(parse_to_html):
     html = parse_to_html("1. https://www.youtube.com/watch?v=QzfXag4r7Vo")
     assert html == (
-        "<ol>"
+        '<ol class="rich-text-list-tight">'
         "\n<li>"
         '<a href="https://www.youtube.com/watch?v=QzfXag4r7Vo"'
         ' rel="external nofollow noopener"'
