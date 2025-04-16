@@ -36,3 +36,18 @@ def parse_to_raw_tokens():
         return parser.parse(markup)
 
     return _parser
+
+
+@pytest.fixture
+def parse_to_tokens():
+    def _parser(markup: str, dedent=False, strip=False):
+        parser = create_parser()
+
+        if dedent:
+            markup = textwrap.dedent(markup)
+        if strip:
+            markup = markup.strip()
+
+        return tokenize(parser, markup)
+
+    return _parser

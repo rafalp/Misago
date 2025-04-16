@@ -90,23 +90,6 @@ def set_lists_type_metadata(tokens: list[Token]) -> None:
     return tokens
 
 
-def set_list_item_type_metadata(tokens: list[Token], stack: list[Token]) -> list[Token]:
-    item_open, items = tokens[0], tokens[1:-1]
-    item_open.meta["tight"] = True
-
-    replace_tag_tokens(items, "li", set_list_item_type_metadata)
-
-    nesting = 0
-    for child_token in items:
-        if child_token.tag == "li":
-            nesting += child_token.nesting
-
-        if not nesting and child_token.type != "inline" and not child_token.hidden:
-            item_open.meta["tight"] = False
-
-    return tokens
-
-
 def _set_list_type_metadata(tokens: list[Token], stack: list[Token]) -> list[Token]:
     list_open, items = tokens[0], tokens[1:-1]
     list_open.meta["tight"] = True
@@ -125,6 +108,36 @@ def _set_list_type_metadata(tokens: list[Token], stack: list[Token]) -> list[Tok
             and child_token.meta.get("tight") is False
         ):
             list_open.meta["tight"] = False
+
+    if not list_open.meta["tight"]:
+        unhide_loose_list_paragraphs(items)
+
+    return tokens
+
+
+def unhide_loose_list_paragraphs(tokens: list[Token]):
+    nesting = 0
+    for token in tokens:
+        if token.tag in LIST_TAGS:
+            nesting += token.nesting
+
+        if not nesting and token.tag == "p":
+            token.hidden = False
+
+
+def set_list_item_type_metadata(tokens: list[Token], stack: list[Token]) -> list[Token]:
+    item_open, items = tokens[0], tokens[1:-1]
+    item_open.meta["tight"] = True
+
+    replace_tag_tokens(items, "li", set_list_item_type_metadata)
+
+    nesting = 0
+    for child_token in items:
+        if child_token.tag == "li":
+            nesting += child_token.nesting
+
+        if not nesting and child_token.type != "inline" and not child_token.hidden:
+            item_open.meta["tight"] = False
 
     return tokens
 
