@@ -4,14 +4,14 @@ const BEFORE_RE = /(^|[^\p{L}\p{N}])@[a-z0-9_\-]*$/giu
 const AHEAD_RE = /^[\p{L}\p{N}]/giu
 
 const INVALID_KEYS = {
-  "Delete": true,
-  "Space": true,
-  "MetaLeft": true,
-  "End": true,
-  "ArrowLeft": true,
-  "ArrowUp": true,
-  "ArrowRight": true,
-  "ArrowDown": true,
+  Delete: true,
+  Space: true,
+  MetaLeft: true,
+  End: true,
+  ArrowLeft: true,
+  ArrowUp: true,
+  ArrowRight: true,
+  ArrowDown: true,
 }
 
 class Mention {
