@@ -12,6 +12,6 @@ class Select {
   hide() {}
 }
 
-const selectSingleton = new Select()
+const select = new Select()
 
-export default selectSingleton
+export default select

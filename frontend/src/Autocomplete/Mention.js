@@ -1,4 +1,5 @@
 import select from "./Select"
+import suggestions from "./Suggestions"
 
 const BEFORE_RE = /(^|[^\p{L}\p{N}])@[a-z0-9_\-]*$/giu
 const AHEAD_RE = /^[\p{L}\p{N}]/giu
@@ -14,9 +15,12 @@ const INVALID_KEYS = {
   ArrowDown: true,
 }
 
+const DEBOUNCE = 800
+
 class Mention {
   constructor(control) {
     this.control = control
+    this.debounce = null
 
     control.addEventListener("keyup", this.onKeyUp)
   }
@@ -31,33 +35,9 @@ class Mention {
     const query = this.getSelectionQuery(selection)
 
     if (query) {
-      select.show(event.target, query, ["a", "b", "c"])
+      this.getSuggestions(query)
     } else {
       select.hide()
-    }
-  }
-
-  getSelectionQuery(selection) {
-    const { start, end, closed, before, ahead, value } = selection
-
-    if (!closed) {
-      return null
-    }
-
-    const beforeMatch = before.match(BEFORE_RE)
-    const aheadMatch = ahead.match(AHEAD_RE)
-
-    const prefix = beforeMatch ? beforeMatch[0].trim() : ""
-    const suffix = aheadMatch ? aheadMatch[0].trim() : ""
-
-    if (prefix.length < 3 || suffix) {
-      return null
-    }
-
-    return {
-      start: start - prefix.length,
-      end: end,
-      text: prefix.substring(1),
     }
   }
 
@@ -82,6 +62,42 @@ class Mention {
       before,
       ahead,
     }
+  }
+
+  getSelectionQuery(selection) {
+    const { start, end, closed, before, ahead } = selection
+
+    if (!closed) {
+      return null
+    }
+
+    const beforeMatch = before.match(BEFORE_RE)
+    const aheadMatch = ahead.match(AHEAD_RE)
+
+    const prefix = beforeMatch ? beforeMatch[0].trim() : ""
+    const suffix = aheadMatch ? aheadMatch[0].trim() : ""
+
+    if (prefix.length < 3 || suffix) {
+      return null
+    }
+
+    return {
+      start: start - prefix.length,
+      end: end,
+      text: prefix.substring(1),
+    }
+  }
+
+  getSuggestions(query) {
+    if (!!this.debounce) {
+      window.clearTimeout(this.debounce)
+    }
+
+    this.debounce = window.setTimeout(() => {
+      suggestions.get(query.text).then((results) => {
+        select.show(this.control, query, results)
+      })
+    }, DEBOUNCE)
   }
 }
 
