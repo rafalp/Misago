@@ -9,9 +9,17 @@ const INVALID_KEYS = {
   Space: true,
   MetaLeft: true,
   End: true,
-  ArrowLeft: true,
+  Enter: true,
   ArrowUp: true,
+  ArrowDown: true,
+  ArrowLeft: true,
   ArrowRight: true,
+}
+
+const SELECT_KEYS = {
+  Escape: true,
+  Enter: true,
+  ArrowUp: true,
   ArrowDown: true,
 }
 
@@ -22,22 +30,31 @@ class Mention {
     this.control = control
     this.debounce = null
 
+    control.addEventListener("keydown", this.onKeyDown)
     control.addEventListener("keyup", this.onKeyUp)
   }
 
-  onKeyUp = (event) => {
-    if (INVALID_KEYS[event.code]) {
-      select.hide()
-      return false
+  onKeyDown = (event) => {
+    if (SELECT_KEYS[event.code] && select.visible) {
+      event.preventDefault()
     }
+  }
 
-    const selection = this.getSelection(event.target)
-    const query = this.getSelectionQuery(selection)
-
-    if (query) {
-      this.getSuggestions(query)
-    } else {
+  onKeyUp = (event) => {
+    if (SELECT_KEYS[event.code] && select.visible) {
+      select.handleKey(event.code)
+      event.preventDefault()
+    } else if (INVALID_KEYS[event.code]) {
       select.hide()
+    } else {
+      const selection = this.getSelection(event.target)
+      const query = this.getSelectionQuery(selection)
+
+      if (query) {
+        this.getSuggestions(query)
+      } else {
+        select.hide()
+      }
     }
   }
 

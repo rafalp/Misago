@@ -15,7 +15,11 @@ class Select {
     this.shadow.style.zIndex = -999
     document.body.appendChild(this.shadow)
 
-    this.target = null
+    this.choice = 0
+    this.choices = []
+    this.maxChoice = 0
+    this.callback = null
+
     this.visible = false
 
     document.body.addEventListener("click", (event) => {
@@ -87,12 +91,34 @@ class Select {
       y: targetRect.y + markerRect.y - shadowRect.y,
     }
 
+    # TODO: verify this works for textarea with scrolling, remove console logs, add keys
     console.log(rect)
 
     return {
       getBoundingClientRect() {
         return rect
       },
+    }
+  }
+
+  handleKey = (keyCode) => {
+    if (keyCode === "Enter") {
+      this.callback(this.choices[this.choice])
+      this.hide()
+    } else if (keyCode === "ArrowUp") {
+      if (this.choice < this.maxChoice) {
+        this.choice++
+      } else {
+        this.choice = 0
+      }
+    } else if (keyCode === "ArrowDown") {
+      if (this.choice > 0) {
+        this.choice--
+      } else {
+        this.choice = this.maxChoice
+      }
+    } else if (keyCode === "Escape") {
+      this.hide()
     }
   }
 
@@ -115,7 +141,11 @@ class Select {
         })
       })
 
-      this.target = target
+      this.choices = choices.map(({ username }) => username)
+      this.choice = 0
+      this.maxChoice = choices.length - 1
+      this.callback = callback
+
       this.visible = true
     }
   }
