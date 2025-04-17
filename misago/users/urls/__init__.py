@@ -9,6 +9,7 @@ from ..views import (
     forgottenpassword,
     lists,
     profile,
+    suggest,
 )
 
 urlpatterns = [
@@ -34,6 +35,7 @@ urlpatterns = [
         forgottenpassword.reset_password_form,
         name="forgotten-password-change-form",
     ),
+    path("users/suggest/", suggest.suggest_users, name="suggest-users"),
 ]
 
 urlpatterns += [
