@@ -362,14 +362,19 @@
 
 @thread-paginator-input-text-size: 16px;
 
-//== Quote control
+//== Quote toolbar
+//
 
-@quote-control-bg: fadeOut(@gray, 25);
-@quote-control-radius: @border-radius-large;
-@quote-control-padding: @padding-base-vertical;
+@quote-toolbar-bg: transparent;
 
-@quote-control-btn-bg: #fff;
-@quote-control-btn-color: @text-color;
+@quote-toolbar-btn-bg: fadeOut(#333, 10);
+@quote-toolbar-btn-color: #fff;
+
+@quote-toolbar-btn-hover-bg: #555;
+@quote-toolbar-btn-hover-color: #fff;
+
+@quote-toolbar-btn-active-bg: #111;
+@quote-toolbar-btn-active-color: #fff;
 
 //== Posting dialog
 //
@@ -524,13 +529,14 @@
 @zindex-dropdown: 1000;
 @zindex-popover: 1060;
 @zindex-tooltip: 1070;
+@zindex-quote-toolbar: 1020;
 @zindex-navbar-fixed: 1030;
 @zindex-overlay: 1035;
 @zindex-modal-background: 1040;
 @zindex-modal: 1050;
-@zindex-autocomplete-popoup: 1070;
-@zindex-auth-message: 1070;
-@zindex-ajax-loader: 1080;
+@zindex-autocomplete-popup: 1070;
+@zindex-auth-message: 1080;
+@zindex-ajax-loader: 1090;
 
 //== Grid system
 //
