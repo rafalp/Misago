@@ -110,5 +110,5 @@ def serialize_user(user) -> dict:
     return {
         "username": user.username,
         "slug": user.slug,
-        # "avatar": user.avatars,
+        "avatar": user.avatars,
     }
