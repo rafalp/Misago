@@ -6,19 +6,19 @@ view_url = reverse("misago:suggest-users")
 
 
 def test_suggest_users_view_returns_empty_suggestions_for_anonymous_user(client, user):
-    response = client.get(view_url + "?q=bob")
+    response = client.get(view_url + "?query=bob")
     assert response.status_code == 200
     assert not json.loads(response.content)["results"]
 
 
 def test_suggest_users_view_returns_suggestions_for_anonymous_user(client, user):
-    response = client.get(view_url + "?q=use")
+    response = client.get(view_url + "?query=use")
     assert response.status_code == 200
     assert json.loads(response.content)["results"]
 
 
 def test_suggest_users_view_returns_exact_suggestion_for_anonymous_user(client, user):
-    response = client.get(view_url + "?q=user")
+    response = client.get(view_url + "?query=user")
     assert response.status_code == 200
     assert json.loads(response.content)["results"]
 
@@ -26,7 +26,7 @@ def test_suggest_users_view_returns_exact_suggestion_for_anonymous_user(client, 
 def test_suggest_users_view_returns_suggestions_for_authenticated_user(
     user_client, other_user
 ):
-    response = user_client.get(view_url + f"?q=other")
+    response = user_client.get(view_url + f"?query=other")
     assert response.status_code == 200
     assert json.loads(response.content)["results"]
 
@@ -34,7 +34,7 @@ def test_suggest_users_view_returns_suggestions_for_authenticated_user(
 def test_suggest_users_view_returns_empty_suggestions_for_authenticated_user(
     user_client,
 ):
-    response = user_client.get(view_url + f"?q=bob")
+    response = user_client.get(view_url + f"?query=bob")
     assert response.status_code == 200
     assert not json.loads(response.content)["results"]
 
@@ -42,7 +42,7 @@ def test_suggest_users_view_returns_empty_suggestions_for_authenticated_user(
 def test_suggest_users_view_returns_exact_suggestion_for_authenticated_user(
     user_client, other_user
 ):
-    response = user_client.get(view_url + "?q=other_user")
+    response = user_client.get(view_url + "?query=other_user")
     assert response.status_code == 200
     assert json.loads(response.content)["results"]
 
@@ -50,6 +50,6 @@ def test_suggest_users_view_returns_exact_suggestion_for_authenticated_user(
 def test_suggest_users_view_returns_exact_self_suggestion_for_authenticated_user(
     user_client,
 ):
-    response = user_client.get(view_url + "?q=user")
+    response = user_client.get(view_url + "?query=user")
     assert response.status_code == 200
     assert json.loads(response.content)["results"]

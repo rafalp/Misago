@@ -9,7 +9,7 @@ class Suggestions {
       return Promise.resolve(this.cache[query])
     }
 
-    return fetch(this.url + "?q=" + encodeURIComponent(query)).then(
+    return fetch(this.url + "?query=" + encodeURIComponent(query)).then(
       async (response) => {
         if (!response.ok) {
           return []
