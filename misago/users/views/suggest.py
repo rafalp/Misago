@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.postgres.search import TrigramWordSimilarity
 from django.http import HttpRequest, JsonResponse
 
+from ...core.utils import slugify
+
 User = get_user_model()
 
 
@@ -17,6 +19,7 @@ def suggest_users(request: HttpRequest) -> JsonResponse:
 def find_users_suggestions(request: HttpRequest, query: str) -> list:
     results: list = []
 
+    query_lower = query.lower()
     queryset = (
         User.objects.annotate(
             similarity=TrigramWordSimilarity(query, "username"),
@@ -25,16 +28,19 @@ def find_users_suggestions(request: HttpRequest, query: str) -> list:
         .order_by("-similarity")
     )
 
-    query_lower = query.lower()
-    if request.user.is_authenticated and request.user.slug == query_lower:
+    if request.user.is_authenticated and request.user.username == query_lower:
         results.append(request.user)
         queryset = queryset.exclude(id=request.user.id)
 
-    elif exact_match := User.objects.filter(slug=query_lower).first():
+    elif exact_match := User.objects.filter(username=query).first():
         results.append(exact_match)
         queryset = queryset.exclude(id=exact_match.id).order_by()
 
-    results += list(queryset[:5])
+    # Note: we can't do this filtering in queryset because it breaks similarity
+    for result in queryset[:6]:
+        if result.username.lower().startswith(query_lower):
+            results.append(result)
+
     return results
 
 

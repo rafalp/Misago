@@ -106,7 +106,7 @@ class Select {
       y: targetRect.y + markerRect.y - shadowRect.y,
     }
 
-    // # TODO: verify this works for textarea with scrolling, remove console logs, add keys
+    // # TODO: verify this works for textarea with scrolling, remove console logs
     console.log(rect)
 
     return {
