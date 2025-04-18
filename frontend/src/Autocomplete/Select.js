@@ -29,11 +29,15 @@ class Select {
     })
   }
 
-  update(target, query, choices, callback) {
-    const children = choices.map((choice) => {
+  updateChoices(target, query, choices, callback) {
+    const children = choices.map((choice, index) => {
       const element = document.createElement("button")
       element.setAttribute("type", "button")
       element.classList.add("autocomplete-user-popup-choice")
+
+      if (index === 0) {
+        element.classList.add("active")
+      }
 
       const avatars = choice.avatar.filter(({ size }) => size >= 24)
       const avatarsHd = choice.avatar.filter(({ size }) => size >= 48)
@@ -59,6 +63,17 @@ class Select {
     })
 
     this.element.replaceChildren(...children)
+  }
+
+  updateActiveChoice() {
+    for (let index = 0; index < this.element.children.length; index++) {
+      const choice = this.element.children[index]
+      if (index === this.choice) {
+        choice.classList.add("active")
+      } else {
+        choice.classList.remove("active")
+      }
+    }
   }
 
   getTextPosition = (target, query) => {
@@ -91,7 +106,7 @@ class Select {
       y: targetRect.y + markerRect.y - shadowRect.y,
     }
 
-    # TODO: verify this works for textarea with scrolling, remove console logs, add keys
+    // # TODO: verify this works for textarea with scrolling, remove console logs, add keys
     console.log(rect)
 
     return {
@@ -106,17 +121,19 @@ class Select {
       this.callback(this.choices[this.choice])
       this.hide()
     } else if (keyCode === "ArrowUp") {
-      if (this.choice < this.maxChoice) {
-        this.choice++
-      } else {
-        this.choice = 0
-      }
-    } else if (keyCode === "ArrowDown") {
       if (this.choice > 0) {
         this.choice--
       } else {
         this.choice = this.maxChoice
       }
+      this.updateActiveChoice()
+    } else if (keyCode === "ArrowDown") {
+      if (this.choice < this.maxChoice) {
+        this.choice++
+      } else {
+        this.choice = 0
+      }
+      this.updateActiveChoice()
     } else if (keyCode === "Escape") {
       this.hide()
     }
@@ -126,14 +143,14 @@ class Select {
     if (choices.length === 0) {
       this.hide()
     } else {
-      this.update(target, query, choices, callback)
+      this.updateChoices(target, query, choices, callback)
       this.element.classList.add("show")
 
       const textPosition = this.getTextPosition(target, query)
 
       computePosition(textPosition, this.element, {
         placement: "top",
-        middleware: [offset(8), flip(), shift({ padding: 8 })],
+        middleware: [offset(6), flip(), shift({ padding: 8 })],
       }).then(({ x, y }) => {
         Object.assign(this.element.style, {
           left: `${x}px`,

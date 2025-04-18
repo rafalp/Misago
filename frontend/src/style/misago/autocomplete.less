@@ -2,7 +2,7 @@
   position: absolute;
   display: none;
 
-  background-color: #fff;
+  background-color: @autocomplete-user-popup-bg;
 
   &.show {
     display: block;
@@ -15,9 +15,26 @@
   justify-content: start;
   width: 100%;
 
-  background-color: transparent;
-  border: none;
+  background-color: @autocomplete-user-popup-choice-bg;
+  border: 0;
   border-radius: 0;
+  color: @autocomplete-user-popup-choice-color;
+
+  &:hover {
+    background-color: @autocomplete-user-popup-choice-hover-bg;
+    color: @autocomplete-user-popup-choice-hover-color;
+  }
+
+  &:active,
+  &.active {
+    &,
+    &:focus,
+    &:hover,
+    &:active {
+      background-color: @autocomplete-user-popup-choice-active-bg;
+      color: @autocomplete-user-popup-choice-active-color;
+    }
+  }
 }
 
 .autocomplete-user-popup-choice-avatar {
