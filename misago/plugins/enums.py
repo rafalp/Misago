@@ -14,6 +14,12 @@ class PluginOutlet(Enum):
     )
     ADMIN_DASHBOARD_END = "On the Admin dashboard page, below all other content."
 
+    HEAD_END = "At the end of the head section on all pages."
+
+    BODY_START = "At the start of the body section on all pages."
+    BODY_AFTER_SCRIPTS = "In the body section, after Misago's scripts, on all pages."
+    BODY_END = "At the end of the body section on all pages."
+
     ATTACHMENT_PAGE_START = "On the attachment details page, above the preview."
     ATTACHMENT_PAGE_AFTER_PREVIEW = "On the attachment details page, under the preview."
     ATTACHMENT_PAGE_END = "On the attachment details page, under the details block."

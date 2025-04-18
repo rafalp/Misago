@@ -23,6 +23,26 @@ On the Admin dashboard page, below the Analytics card.
 On the Admin dashboard page, below all other content.
 
 
+## `HEAD_END`
+
+At the end of the head section on all pages.
+
+
+## `BODY_START`
+
+At the start of the body section on all pages.
+
+
+## `BODY_AFTER_SCRIPTS`
+
+In the body section, after Misago's scripts, on all pages.
+
+
+## `BODY_END`
+
+At the end of the body section on all pages.
+
+
 ## `ATTACHMENT_PAGE_START`
 
 On the attachment details page, above the preview.
