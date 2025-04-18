@@ -1,4 +1,4 @@
-{% load i18n static misago_absoluteurl misago_json %}
+{% load i18n static misago_absoluteurl misago_json misago_plugins %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE_SHORT }}">
   <head>
@@ -53,14 +53,17 @@
       window.misago_csrf = {{ CSRF_COOKIE_NAME|safe }}
       window.misago_suggest_users = "{% url 'misago:suggest-users' %}"
     </script>
+    {% pluginoutlet HEAD_END %}
   </head>
   <body class="misago-{% if user.is_authenticated %}authenticated{% else %}anonymous{% endif %}{% if misago_agreement %} agreement-overlay-visible{% endif %}">
     <script type="text/javascript">
       document.body.classList.add("misago-javascript")
     </script>
     {% if settings.google_tracking_id %}
-      {% include "misago/analytics.html" %}
+    {% include "misago/analytics.html" %}
     {% endif %}
+
+    {% pluginoutlet BODY_START %}
 
     <div id="auth-message-mount"></div>
     <div id="snackbar-mount"></div>
@@ -98,12 +101,15 @@
     <script src="{% url 'django-i18n' %}?l={{ LANGUAGE_CODE }}&v={{ I18N_VERSION_SIGNATURE }}"></script>
     <script src="{% static 'misago/js/vendor.js' %}"></script>
     <script src="{% static 'misago/js/misago.js' %}"></script>
-    {% include "misago/scripts.html" %}
+    {% pluginoutlet BODY_AFTER_SCRIPTS %}
+
     <script type="text/javascript">
       misago.init({{ frontend_context|as_json }});
     </script>
+  
     {% block modals %}{% endblock modals %}
     {% block javascript %}{% endblock javascript %}
 
+    {% pluginoutlet BODY_END %}
   </body>
 </html>
