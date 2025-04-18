@@ -1,12 +1,14 @@
 from hashlib import md5
 from typing import Optional, Union
 
-from django.contrib.auth.models import AbstractBaseUser
-from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
-from django.contrib.auth.models import PermissionsMixin
-from django.contrib.auth.models import UserManager as BaseUserManager
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    AnonymousUser as DjangoAnonymousUser,
+    PermissionsMixin,
+    UserManager as BaseUserManager,
+)
 from django.contrib.postgres.fields import ArrayField, HStoreField
-from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.indexes import GinIndex, GistIndex
 from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Q
@@ -349,6 +351,10 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
             GinIndex(
                 name="misago_user_groups_ids",
                 fields=["groups_ids"],
+            ),
+            GistIndex(
+                name="misago_user_username_trgrm",
+                fields=["username"],
             ),
         ]
 

@@ -497,7 +497,20 @@
 @rich-text-spoiler-body-bg: #fff;
 @rich-text-spoiler-body-border: #e3e8f0;
 
-// Dropdown height offset used in calc()
+//== User autocomplete popup
+
+@autocomplete-user-popup-bg: #fff;
+
+@autocomplete-user-popup-choice-bg: #fff;
+@autocomplete-user-popup-choice-color: @text-color;
+
+@autocomplete-user-popup-choice-hover-bg: @gray-lighter;
+@autocomplete-user-popup-choice-hover-color: @text-color;
+
+@autocomplete-user-popup-choice-active-bg: @brand-primary;
+@autocomplete-user-popup-choice-active-color: #fff;
+
+//== Dropdown height offset used in calc()
 @dropdown-height-offset: @navbar-height + @line-height-computed;
 
 //-- Z-index master list
@@ -515,6 +528,7 @@
 @zindex-overlay: 1035;
 @zindex-modal-background: 1040;
 @zindex-modal: 1050;
+@zindex-autocomplete-popoup: 1070;
 @zindex-auth-message: 1070;
 @zindex-ajax-loader: 1080;
 

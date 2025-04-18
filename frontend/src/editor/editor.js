@@ -1,4 +1,5 @@
 import htmx from "htmx.org"
+import { Mention } from "../Autocomplete"
 import * as animations from "../animations"
 import MarkupEditorUploader from "./uploader"
 import {
@@ -16,6 +17,8 @@ class MarkupEditor {
     this.linkModal = new MarkupEditorLinkModal()
     this.imageModal = new MarkupEditorImageModal()
     this.quoteModal = new MarkupEditorQuoteModal()
+
+    this.mentions = {}
 
     this.resizeDebounce = null
 
@@ -153,6 +156,9 @@ class MarkupEditor {
       this._setEditorPasteUpload(element)
       this._setEditorDropUpload(element)
       this._resizeEditor(element)
+
+      const textarea = this.getTextarea(element)
+      this.mentions[textarea.id] = new Mention(textarea)
     }
   }
 

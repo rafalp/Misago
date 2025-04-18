@@ -10,6 +10,7 @@ import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
 import AjaxLoader, { useLoader } from "./AjaxLoader"
 import BulkModeration from "./BulkModeration"
+import { Mention } from "./Autocomplete"
 import "./focusOn"
 import "./formValidators"
 import "./htmxErrors"
@@ -103,6 +104,10 @@ export class Misago {
 
   hideMarkAsReadModal = () => {
     $("#mark-as-read").modal("hide")
+  }
+
+  mention = (control) => {
+    return new Mention(control)
   }
 }
 
