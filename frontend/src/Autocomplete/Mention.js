@@ -32,6 +32,7 @@ class Mention {
 
     control.addEventListener("keydown", this.onKeyDown)
     control.addEventListener("keyup", this.onKeyUp)
+    control.addEventListener("blur", select.hide)
   }
 
   onKeyDown = (event) => {

@@ -91,23 +91,20 @@ class Select {
     const shadowRect = this.shadow.getBoundingClientRect()
     const markerRect = marker.getBoundingClientRect()
 
-    console.log(targetRect)
-    console.log(shadowRect)
-    console.log(markerRect)
-
     const rect = {
-      bottom: targetRect.bottom - markerRect.bottom - shadowRect.bottom,
+      bottom:
+        targetRect.bottom -
+        markerRect.bottom -
+        shadowRect.bottom +
+        target.scrollTop,
       height: markerRect.height,
       left: targetRect.left + markerRect.left - shadowRect.left,
       right: targetRect.right - markerRect.right - shadowRect.right,
-      top: targetRect.top + markerRect.top - shadowRect.top,
+      top: targetRect.top + markerRect.top - shadowRect.top - target.scrollTop,
       width: markerRect.width,
       x: targetRect.x + markerRect.x - shadowRect.x,
       y: targetRect.y + markerRect.y - shadowRect.y,
     }
-
-    // # TODO: verify this works for textarea with scrolling, remove console logs
-    console.log(rect)
 
     return {
       getBoundingClientRect() {
