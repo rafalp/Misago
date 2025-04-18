@@ -1,0 +1,32 @@
+.quote-toolbar {
+  position: absolute;
+  display: none;
+
+  background-color: @quote-toolbar-bg;
+
+  z-index: @zindex-quote-toolbar;
+
+  &.show {
+    display: block;
+  }
+}
+
+.quote-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+
+  background-color: @quote-toolbar-btn-bg;
+  border: none;
+  border-radius: 0;
+  color: @quote-toolbar-btn-color;
+
+  &:hover {
+    background-color: @quote-toolbar-btn-hover-bg;
+    color: @quote-toolbar-btn-hover-color;
+  }
+
+  &:active {
+    background-color: @quote-toolbar-btn-active-bg;
+    color: @quote-toolbar-btn-active-color;
+  }
+}
