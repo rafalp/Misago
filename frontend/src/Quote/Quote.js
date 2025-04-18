@@ -3,8 +3,6 @@ import * as snackbar from "../snackbars"
 
 class Quote {
   constructor() {
-    this.matchers = {}
-
     this.options = null
     this.toolbar = null
 
@@ -13,7 +11,10 @@ class Quote {
   }
 
   activate = (options) => {
-    if ((options.reply || options.quote) && typeof window.getSelection !== "undefined") {
+    if (
+      (options.reply || options.quote) &&
+      typeof window.getSelection !== "undefined"
+    ) {
       document.addEventListener("mouseup", this.onSelect)
       document.addEventListener("touchend", this.onSelect)
 
@@ -35,13 +36,17 @@ class Quote {
     this.root = null
 
     const selection = window.getSelection()
-    if (!selection || selection.type !== "Range" || selection.rangeCount !== 1) {
+    if (
+      !selection ||
+      selection.type !== "Range" ||
+      selection.rangeCount !== 1
+    ) {
       return false
     }
 
     const range = selection.getRangeAt(0)
     const root = this.getRangeRoot(range)
-    
+
     if (!root) {
       return false
     }
@@ -84,14 +89,18 @@ class Quote {
 
     if (this.options.reply) {
       const reply = this.createToolbarButton(
-        pgettext("quote toolbar", "Reply"), "reply", this.reply
+        pgettext("quote toolbar", "Reply"),
+        "reply",
+        this.reply
       )
       toolbar.appendChild(reply)
     }
 
     if (this.options.quote) {
       const quote = this.createToolbarButton(
-        pgettext("quote toolbar", "Copy quote"), "content_copy", this.copyQuote
+        pgettext("quote toolbar", "Copy quote"),
+        "content_copy",
+        this.copyQuote
       )
       toolbar.appendChild(quote)
     }
@@ -154,13 +163,13 @@ class Quote {
 
   copyQuote = async () => {
     const text = this.getQuoteText()
-    
+
     if (text) {
       try {
-        await navigator.clipboard.writeText(text);
+        await navigator.clipboard.writeText(text)
         snackbar.info(pgettext("quote toolbar", "Quote copied to clipboard"))
       } catch (error) {
-        console.error(error.message);
+        console.error(error.message)
       }
     }
 
@@ -168,21 +177,36 @@ class Quote {
   }
 
   getQuoteText() {
-    const selection = this.getSelectionText()
-    if (!selection) {
+    const markup = this.getSelectionMarkup()
+    if (!markup) {
       return ""
     }
 
     let text = "\n[quote=" + this.root.args + "]"
-    text += "\n" + selection
+    text += "\n" + markup
     text += "\n[/quote]\n"
 
     return text
   }
 
-  getSelectionText() {
-    console.log(this.range)
-    return ""
+  getSelectionMarkup() {
+    const nodes = this.range.cloneContents().childNodes
+
+    let markup = ""
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i]
+      if (node.nodeType === Node.TEXT_NODE) {
+        markup += node.textContent || ""
+      } else if (node.nodeName === "A") {
+        markup +=
+          "[url=" +
+          node.getAttribute("href") +
+          "]" +
+          node.textContent +
+          "[/url]"
+      }
+    }
+    return markup
   }
 }
 
