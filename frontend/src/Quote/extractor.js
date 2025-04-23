@@ -51,6 +51,70 @@ function link(selection, node, { document, stack }) {
   return true
 }
 
+function bold_text(selection, node, { document, stack }) {
+  if (node.nodeName !== "B") {
+    return false
+  }
+
+  document.push({
+    type: "bold",
+    children: selection.extractNodes(
+      node.childNodes,
+      stack.concat(["bold_text"])
+    ),
+  })
+
+  return true
+}
+
+function italic_text(selection, node, { document, stack }) {
+  if (node.nodeName !== "I") {
+    return false
+  }
+
+  document.push({
+    type: "italic",
+    children: selection.extractNodes(
+      node.childNodes,
+      stack.concat(["italic_text"])
+    ),
+  })
+
+  return true
+}
+
+function underline_text(selection, node, { document, stack }) {
+  if (node.nodeName !== "U") {
+    return false
+  }
+
+  document.push({
+    type: "underline",
+    children: selection.extractNodes(
+      node.childNodes,
+      stack.concat(["underline_text"])
+    ),
+  })
+
+  return true
+}
+
+function strikethrough_text(selection, node, { document, stack }) {
+  if (node.nodeName !== "DEL") {
+    return false
+  }
+
+  document.push({
+    type: "strikethrough",
+    children: selection.extractNodes(
+      node.childNodes,
+      stack.concat(["strikethrough_text"])
+    ),
+  })
+
+  return true
+}
+
 function text(selection, node, { document }) {
   if (node.nodeType !== Node.TEXT_NODE) {
     return false
@@ -72,5 +136,9 @@ export default [
   { name: "paragraph", func: paragraph },
   { name: "mention", func: mention },
   { name: "link", func: link },
+  { name: "bold_text", func: bold_text },
+  { name: "italic_text", func: italic_text },
+  { name: "underline_text", func: underline_text },
+  { name: "strikethrough_text", func: strikethrough_text },
   { name: "text", func: text },
 ]
