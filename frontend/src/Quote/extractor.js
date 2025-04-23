@@ -1,3 +1,28 @@
+function header(selection, node, { document, stack }) {
+  if (["H1", "H2", "H3", "H4", "H5", "H6"].indexOf(node.nodeName) === -1) {
+    return false
+  }
+
+  const children = selection.extractNodes(
+    node.childNodes,
+    stack.concat(["header"])
+  )
+
+  if (!children.length) {
+    return true
+  }
+
+  const level = parseInt(node.nodeName.substring(1))
+
+  document.push({
+    type: "header",
+    level,
+    children,
+  })
+
+  return true
+}
+
 function paragraph(selection, node, { document, stack }) {
   if (node.nodeName !== "P") {
     return false
@@ -46,6 +71,38 @@ function link(selection, node, { document, stack }) {
     type: "link",
     href: node.getAttribute("href"),
     children: selection.extractNodes(node.childNodes, stack.concat(["link"])),
+  })
+
+  return true
+}
+
+function strong_text(selection, node, { document, stack }) {
+  if (node.nodeName !== "STRONG") {
+    return false
+  }
+
+  document.push({
+    type: "strong",
+    children: selection.extractNodes(
+      node.childNodes,
+      stack.concat(["strong_text"])
+    ),
+  })
+
+  return true
+}
+
+function emphasis_text(selection, node, { document, stack }) {
+  if (node.nodeName !== "EM") {
+    return false
+  }
+
+  document.push({
+    type: "emphasis",
+    children: selection.extractNodes(
+      node.childNodes,
+      stack.concat(["emphasis_text"])
+    ),
   })
 
   return true
@@ -133,9 +190,12 @@ function text(selection, node, { document }) {
 }
 
 export default [
+  { name: "header", func: header },
   { name: "paragraph", func: paragraph },
   { name: "mention", func: mention },
   { name: "link", func: link },
+  { name: "strong_text", func: strong_text },
+  { name: "emphasis_text", func: emphasis_text },
   { name: "bold_text", func: bold_text },
   { name: "italic_text", func: italic_text },
   { name: "underline_text", func: underline_text },

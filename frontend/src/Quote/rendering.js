@@ -1,3 +1,19 @@
+function header(selection, node, state) {
+  if (node.type !== "header") {
+    return false
+  }
+
+  const text = selection.renderNodes(node.children).trim()
+  if (!text) {
+    return false
+  }
+
+  const prefix = "#".repeat(node.level)
+  state.text += "\n" + prefix + " " + text + "\n"
+
+  return true
+}
+
 function paragraph(selection, node, state) {
   if (node.type !== "paragraph") {
     return false
@@ -9,6 +25,39 @@ function paragraph(selection, node, state) {
   }
 
   state.text += "\n" + text + "\n"
+
+  return true
+}
+
+function strong_text(selection, node, state) {
+  if (node.type !== "strong") {
+    return false
+  }
+
+  const text = selection.renderNodes(node.children)
+  if (!text) {
+    return false
+  }
+
+  const delimiter = text.indexOf("*") === -1 ? "**" : "__"
+  state.text += delimiter + text + delimiter
+
+  return true
+}
+
+function emphasis_text(selection, node, state) {
+  if (node.type !== "emphasis") {
+    return false
+  }
+
+  const text = selection.renderNodes(node.children)
+  if (!text) {
+    return false
+  }
+
+  const delimiter = text.indexOf("*") === -1 ? "*" : "_"
+  state.text += delimiter + text + delimiter
+
   return true
 }
 
@@ -78,11 +127,15 @@ function text(selection, node, state) {
   }
 
   state.text += node.content
+
   return true
 }
 
 export default [
+  { name: "header", func: header },
   { name: "paragraph", func: paragraph },
+  { name: "strong_text", func: strong_text },
+  { name: "emphasis_text", func: emphasis_text },
   { name: "bold_text", func: bold_text },
   { name: "italic_text", func: italic_text },
   { name: "underline_text", func: underline_text },
