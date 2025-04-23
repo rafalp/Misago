@@ -8,8 +8,12 @@ function header(selection, node, state) {
     return false
   }
 
+  if (state.text) {
+    state.text += "\n\n\n"
+  }
+
   const prefix = "#".repeat(node.level)
-  state.text += "\n\n" + prefix + " " + text + "\n\n"
+  state.text += prefix + " " + text
 
   return true
 }
@@ -19,7 +23,11 @@ function youtube(selection, node, state) {
     return false
   }
 
-  state.text += "\n\n" + node.url + "\n\n"
+  if (state.text) {
+    state.text += "\n\n"
+  }
+
+  state.text += node.url
 
   return true
 }
@@ -34,7 +42,11 @@ function paragraph(selection, node, state) {
     return false
   }
 
-  state.text += "\n\n" + text + "\n\n"
+  if (state.text) {
+    state.text += "\n\n"
+  }
+
+  state.text += text
 
   return true
 }
@@ -131,6 +143,21 @@ function strikethrough_text(selection, node, state) {
   return true
 }
 
+function inline_code(selection, node, state) {
+  if (node.type !== "inline_code") {
+    return false
+  }
+
+  const { content } = node
+  if (!content) {
+    return false
+  }
+
+  state.text += "`" + content.replace("\\", "\\\\").replace("`", "\\`") + "`"
+
+  return true
+}
+
 function text(selection, node, state) {
   if (node.type !== "text") {
     return false
@@ -151,5 +178,6 @@ export default [
   { name: "italic_text", func: italic_text },
   { name: "underline_text", func: underline_text },
   { name: "strikethrough_text", func: strikethrough_text },
+  { name: "inline_code", func: inline_code },
   { name: "text", func: text },
 ]

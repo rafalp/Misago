@@ -190,6 +190,19 @@ function strikethrough_text(selection, node, { document, stack }) {
   return true
 }
 
+function inline_code(selection, node, { document, stack }) {
+  if (node.nodeName !== "CODE") {
+    return false
+  }
+
+  document.push({
+    type: "inline_code",
+    content: node.textContent,
+  })
+
+  return true
+}
+
 function text(selection, node, { document }) {
   if (node.nodeType !== Node.TEXT_NODE) {
     return false
@@ -219,5 +232,6 @@ export default [
   { name: "italic_text", func: italic_text },
   { name: "underline_text", func: underline_text },
   { name: "strikethrough_text", func: strikethrough_text },
+  { name: "inline_code", func: inline_code },
   { name: "text", func: text },
 ]
