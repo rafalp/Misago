@@ -1,13 +1,21 @@
 import { computePosition, flip, offset, shift } from "@floating-ui/dom"
 import * as snackbar from "../snackbars"
+import QuoteSelection from "./QuoteSelection"
+import Ruleset from "./Ruleset"
+import extractorRules from "./extractor"
+import renderingRules from "./rendering"
 
 class Quote {
   constructor() {
+    this.extractor = new Ruleset(extractorRules)
+    this.renderer = new Ruleset(renderingRules)
+
     this.options = null
     this.toolbar = null
 
     this.range = null
     this.root = null
+    this.quote = null
   }
 
   activate = (options) => {
@@ -34,6 +42,7 @@ class Quote {
   updateState() {
     this.range = null
     this.root = null
+    this.quote = null
 
     const selection = window.getSelection()
     if (
@@ -53,8 +62,9 @@ class Quote {
 
     this.range = range
     this.root = root
+    this.quote = this.getSelectionQuote(root, range) || null
 
-    return this.range && this.root
+    return this.range && this.root && this.quote
   }
 
   getRangeRoot(range) {
@@ -81,6 +91,11 @@ class Quote {
       return ancestor.parentNode
     }
     return ancestor
+  }
+
+  getSelectionQuote(root, range) {
+    const selection = new QuoteSelection(this.extractor, this.renderer)
+    return selection.getQuote(root, range.cloneContents().childNodes)
   }
 
   createToolbar() {
@@ -132,7 +147,7 @@ class Quote {
     this.toolbar.classList.add("show")
 
     computePosition(this.range, this.toolbar, {
-      placement: "top",
+      placement: "bottom",
       middleware: [offset(6), flip(), shift({ padding: 8 })],
     }).then(({ x, y }) => {
       Object.assign(this.toolbar.style, {
@@ -148,12 +163,11 @@ class Quote {
 
   reply = () => {
     const form = document.getElementById("misago-htmx-quick-reply")
-    const text = this.getQuoteText()
 
-    if (form && text) {
+    if (form && this.quote) {
       const textarea = form.querySelector(".markup-editor-textarea")
       if (textarea) {
-        textarea.value += text
+        textarea.value += this.quote
         snackbar.info(pgettext("quote toolbar", "Quote added to reply"))
       }
     }
@@ -162,11 +176,9 @@ class Quote {
   }
 
   copyQuote = async () => {
-    const text = this.getQuoteText()
-
-    if (text) {
+    if (this.quote) {
       try {
-        await navigator.clipboard.writeText(text)
+        await navigator.clipboard.writeText(this.quote)
         snackbar.info(pgettext("quote toolbar", "Quote copied to clipboard"))
       } catch (error) {
         console.error(error.message)
@@ -187,26 +199,6 @@ class Quote {
     text += "\n[/quote]\n"
 
     return text
-  }
-
-  getSelectionMarkup() {
-    const nodes = this.range.cloneContents().childNodes
-
-    let markup = ""
-    for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i]
-      if (node.nodeType === Node.TEXT_NODE) {
-        markup += node.textContent || ""
-      } else if (node.nodeName === "A") {
-        markup +=
-          "[url=" +
-          node.getAttribute("href") +
-          "]" +
-          node.textContent +
-          "[/url]"
-      }
-    }
-    return markup
   }
 }
 
