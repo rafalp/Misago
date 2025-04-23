@@ -23,6 +23,24 @@ function header(selection, node, { document, stack }) {
   return true
 }
 
+function youtube(selection, node, { document, stack }) {
+  if (node.nodeName !== "IFRAME") {
+    return false
+  }
+
+  const url = node.getAttribute("misago-youtube")
+  if (!url) {
+    return false
+  }
+
+  document.push({
+    type: "youtube",
+    url,
+  })
+
+  return true
+}
+
 function paragraph(selection, node, { document, stack }) {
   if (node.nodeName !== "P") {
     return false
@@ -191,6 +209,7 @@ function text(selection, node, { document }) {
 
 export default [
   { name: "header", func: header },
+  { name: "youtube", func: youtube },
   { name: "paragraph", func: paragraph },
   { name: "mention", func: mention },
   { name: "link", func: link },

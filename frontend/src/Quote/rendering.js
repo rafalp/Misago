@@ -9,7 +9,17 @@ function header(selection, node, state) {
   }
 
   const prefix = "#".repeat(node.level)
-  state.text += "\n" + prefix + " " + text + "\n"
+  state.text += "\n\n" + prefix + " " + text + "\n\n"
+
+  return true
+}
+
+function youtube(selection, node, state) {
+  if (node.type !== "youtube") {
+    return false
+  }
+
+  state.text += "\n\n" + node.url + "\n\n"
 
   return true
 }
@@ -24,7 +34,7 @@ function paragraph(selection, node, state) {
     return false
   }
 
-  state.text += "\n" + text + "\n"
+  state.text += "\n\n" + text + "\n\n"
 
   return true
 }
@@ -133,6 +143,7 @@ function text(selection, node, state) {
 
 export default [
   { name: "header", func: header },
+  { name: "youtube", func: youtube },
   { name: "paragraph", func: paragraph },
   { name: "strong_text", func: strong_text },
   { name: "emphasis_text", func: emphasis_text },
