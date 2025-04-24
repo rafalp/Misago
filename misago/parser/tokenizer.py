@@ -35,6 +35,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             replace_mentions_tokens,
             set_links_rel_external_nofollow_noopener,
             set_links_target_blank,
+            set_autolinks_attr,
             make_tables_responsive,
             set_tables_styles,
             set_lists_type_metadata,
@@ -68,6 +69,15 @@ def set_links_target_blank(tokens: list[Token]) -> None:
             for child in token.children:
                 if child.tag == "a" and child.nesting == 1:
                     child.attrSet("target", "_blank")
+
+
+def set_autolinks_attr(tokens: list[Token]) -> None:
+    for token in tokens:
+        if token.type == "inline":
+            for child in token.children:
+                if child.tag == "a" and child.nesting == 1:
+                    if child.info == "auto":
+                        child.attrSet("misago-autolink", "true")
 
 
 def set_tables_styles(tokens: list[Token]) -> None:
@@ -154,29 +164,21 @@ def set_lists_styles(tokens: list[Token]) -> None:
 
 
 def shorten_link_text(tokens: list[Token]) -> None:
-    link_tokens: list[Token] = []
-
-    for token in tokens:
-        if token.children:
-            shorten_link_text(token.children)
-
-        if token.type in ("link_open", "link_close") or link_tokens:
-            link_tokens.append(token)
-            if token.type == "link_close":
-                _shorten_link_text_token_content(link_tokens)
-                link_tokens = []
+    return replace_inline_tag_tokens(tokens, "a", shorten_link_text_contents)
 
 
-def _shorten_link_text_token_content(tokens: list[Token]):
+def shorten_link_text_contents(tokens: list[Token], stack: list[Token]) -> list[Token]:
     if len(tokens) != 3:
-        return
+        return tokens
 
     link_open, text, _ = tokens
-    href = link_open.attrs.get("href")
+    if link_open.info != "auto":
+        return tokens
 
-    if href and text.content == href:
-        link_open.meta["shortened_url"] = True
-        text.content = shorten_url(text.content)
+    link_open.meta["shortened_url"] = True
+    text.content = shorten_url(text.content)
+
+    return tokens
 
 
 def replace_video_links_with_players(tokens: list[Token]) -> list[Token] | None:

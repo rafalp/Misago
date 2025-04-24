@@ -97,7 +97,11 @@ def test_mention_is_not_parsed_in_link(parse_to_html):
     html = parse_to_html("[@John123](http://example.com)")
     assert html == (
         "<p>"
-        '<a href="http://example.com" rel="external nofollow noopener" target="_blank">'
+        "<a "
+        'href="http://example.com" '
+        'rel="external nofollow noopener" '
+        'target="_blank"'
+        ">"
         "@John123"
         "</a>"
         "</p>"
@@ -108,7 +112,11 @@ def test_mention_is_not_parsed_in_bbcode_url(parse_to_html):
     html = parse_to_html("[url=http://example.com]@John123[/url]")
     assert html == (
         "<p>"
-        '<a href="http://example.com" rel="external nofollow noopener" target="_blank">'
+        "<a "
+        'href="http://example.com" '
+        'rel="external nofollow noopener" '
+        'target="_blank"'
+        ">"
         "@John123"
         "</a>"
         "</p>"
@@ -119,7 +127,12 @@ def test_mention_is_not_parsed_in_email(parse_to_html):
     html = parse_to_html("contact@example.com")
     assert html == (
         "<p>"
-        '<a href="mailto:contact@example.com" rel="external nofollow noopener" target="_blank">'
+        "<a "
+        'href="mailto:contact@example.com" '
+        'rel="external nofollow noopener" '
+        'target="_blank" '
+        'misago-autolink="true"'
+        ">"
         "contact@example.com"
         "</a>"
         "</p>"

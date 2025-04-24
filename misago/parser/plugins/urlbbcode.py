@@ -79,6 +79,9 @@ def url_bbcode_rule(state: StateInline, silent: bool):
         token.markup = state.src[start:content_start]
         token.attrs = {"href": href}
 
+        if not args_str:
+            token.info = "auto"
+
         if args_str:
             state.pos = content_start
             state.posMax = content_end
@@ -91,6 +94,9 @@ def url_bbcode_rule(state: StateInline, silent: bool):
 
         token = state.push("link_close", "a", -1)
         token.markup = "[/url]"
+
+        if not args_str:
+            token.info = "auto"
 
     state.pos = end
     state.posMax = pos_max_org

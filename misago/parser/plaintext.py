@@ -368,12 +368,11 @@ def render_link(state: StatePlaintext) -> bool:
     tokens, pos = match
     opening_token = tokens[0]
 
-    shortened_url = opening_token.meta.get("shortened_url")
     url = opening_token.attrs.get("href")
 
     state.push(url)
 
-    if not shortened_url:
+    if opening_token.info != "auto":
         if content := state.renderer.render(tokens[1:-1]).strip():
             state.push(f" ({content})")
 
