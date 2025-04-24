@@ -1,4 +1,6 @@
-function header(selection, node, state) {
+function header(selection, state) {
+  const { node } = state
+
   if (node.type !== "header") {
     return false
   }
@@ -14,11 +16,14 @@ function header(selection, node, state) {
 
   const prefix = "#".repeat(node.level)
   state.text += prefix + " " + text
+  state.pos += 1
 
   return true
 }
 
-function youtube(selection, node, state) {
+function youtube(selection, state) {
+  const { node } = state
+
   if (node.type !== "youtube") {
     return false
   }
@@ -28,11 +33,14 @@ function youtube(selection, node, state) {
   }
 
   state.text += node.url
+  state.pos += 1
 
   return true
 }
 
-function paragraph(selection, node, state) {
+function paragraph(selection, state) {
+  const { node } = state
+
   if (node.type !== "paragraph") {
     return false
   }
@@ -47,11 +55,14 @@ function paragraph(selection, node, state) {
   }
 
   state.text += text
+  state.pos += 1
 
   return true
 }
 
-function strong_text(selection, node, state) {
+function strong_text(selection, state) {
+  const { node } = state
+
   if (node.type !== "strong") {
     return false
   }
@@ -63,11 +74,14 @@ function strong_text(selection, node, state) {
 
   const delimiter = text.indexOf("*") === -1 ? "**" : "__"
   state.text += delimiter + text + delimiter
+  state.pos += 1
 
   return true
 }
 
-function emphasis_text(selection, node, state) {
+function emphasis_text(selection, state) {
+  const { node } = state
+
   if (node.type !== "emphasis") {
     return false
   }
@@ -79,11 +93,14 @@ function emphasis_text(selection, node, state) {
 
   const delimiter = text.indexOf("*") === -1 ? "*" : "_"
   state.text += delimiter + text + delimiter
+  state.pos += 1
 
   return true
 }
 
-function bold_text(selection, node, state) {
+function bold_text(selection, state) {
+  const { node } = state
+
   if (node.type !== "bold") {
     return false
   }
@@ -94,11 +111,14 @@ function bold_text(selection, node, state) {
   }
 
   state.text += "[b]" + text + "[/b]"
+  state.pos += 1
 
   return true
 }
 
-function italic_text(selection, node, state) {
+function italic_text(selection, state) {
+  const { node } = state
+
   if (node.type !== "italic") {
     return false
   }
@@ -109,11 +129,14 @@ function italic_text(selection, node, state) {
   }
 
   state.text += "[i]" + text + "[/i]"
+  state.pos += 1
 
   return true
 }
 
-function underline_text(selection, node, state) {
+function underline_text(selection, state) {
+  const { node } = state
+
   if (node.type !== "underline") {
     return false
   }
@@ -124,11 +147,14 @@ function underline_text(selection, node, state) {
   }
 
   state.text += "[u]" + text + "[/u]"
+  state.pos += 1
 
   return true
 }
 
-function strikethrough_text(selection, node, state) {
+function strikethrough_text(selection, state) {
+  const { node } = state
+
   if (node.type !== "strikethrough") {
     return false
   }
@@ -139,11 +165,14 @@ function strikethrough_text(selection, node, state) {
   }
 
   state.text += "[s]" + text + "[/s]"
+  state.pos += 1
 
   return true
 }
 
-function inline_code(selection, node, state) {
+function inline_code(selection, state) {
+  const { node } = state
+
   if (node.type !== "inline_code") {
     return false
   }
@@ -154,25 +183,32 @@ function inline_code(selection, node, state) {
   }
 
   state.text += "`" + content.replace("\\", "\\\\").replace("`", "\\`") + "`"
+  state.pos += 1
 
   return true
 }
 
-function softbreak(selection, node, state) {
+function softbreak(selection, state) {
+  const { node } = state
+
   if (node.type !== "softbreak") {
     return false
   }
 
   // Softbreak render is noop
+  state.pos += 1
   return true
 }
 
-function text(selection, node, state) {
+function text(selection, state) {
+  const { node } = state
+
   if (node.type !== "text") {
     return false
   }
 
   state.text += node.content
+  state.pos += 1
 
   return true
 }

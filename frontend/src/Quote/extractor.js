@@ -1,4 +1,6 @@
-function header(selection, node, { document, stack }) {
+function header(selection, state) {
+  const { document, node, stack } = state
+
   if (["H1", "H2", "H3", "H4", "H5", "H6"].indexOf(node.nodeName) === -1) {
     return false
   }
@@ -9,6 +11,7 @@ function header(selection, node, { document, stack }) {
   )
 
   if (!children.length) {
+    state.pos += 1
     return true
   }
 
@@ -20,10 +23,13 @@ function header(selection, node, { document, stack }) {
     children,
   })
 
+  state.pos += 1
   return true
 }
 
-function youtube(selection, node, { document, stack }) {
+function youtube(selection, state) {
+  const { document, node } = state
+
   if (node.nodeName !== "IFRAME") {
     return false
   }
@@ -38,10 +44,13 @@ function youtube(selection, node, { document, stack }) {
     url,
   })
 
+  state.pos += 1
   return true
 }
 
-function paragraph(selection, node, { document, stack }) {
+function paragraph(selection, state) {
+  const { document, node, stack } = state
+
   if (node.nodeName !== "P") {
     return false
   }
@@ -52,6 +61,7 @@ function paragraph(selection, node, { document, stack }) {
   )
 
   if (!children.length) {
+    state.pos += 1
     return true
   }
 
@@ -60,10 +70,13 @@ function paragraph(selection, node, { document, stack }) {
     children,
   })
 
+  state.pos += 1
   return true
 }
 
-function mention(selection, node, { document }) {
+function mention(selection, state) {
+  const { document, node } = state
+
   if (!(node.nodeName === "A" || node.nodeName === "SPAN")) {
     return false
   }
@@ -77,10 +90,13 @@ function mention(selection, node, { document }) {
     content: node.textContent,
   })
 
+  state.pos += 1
   return true
 }
 
-function link(selection, node, { document, stack }) {
+function link(selection, state) {
+  const { document, node, stack } = state
+
   if (node.nodeName !== "A") {
     return false
   }
@@ -91,10 +107,13 @@ function link(selection, node, { document, stack }) {
     children: selection.extractNodes(node.childNodes, stack.concat(["link"])),
   })
 
+  state.pos += 1
   return true
 }
 
-function strong_text(selection, node, { document, stack }) {
+function strong_text(selection, state) {
+  const { document, node, stack } = state
+
   if (node.nodeName !== "STRONG") {
     return false
   }
@@ -107,10 +126,13 @@ function strong_text(selection, node, { document, stack }) {
     ),
   })
 
+  state.pos += 1
   return true
 }
 
-function emphasis_text(selection, node, { document, stack }) {
+function emphasis_text(selection, state) {
+  const { document, node, stack } = state
+
   if (node.nodeName !== "EM") {
     return false
   }
@@ -123,10 +145,13 @@ function emphasis_text(selection, node, { document, stack }) {
     ),
   })
 
+  state.pos += 1
   return true
 }
 
-function bold_text(selection, node, { document, stack }) {
+function bold_text(selection, state) {
+  const { document, node, stack } = state
+
   if (node.nodeName !== "B") {
     return false
   }
@@ -139,10 +164,13 @@ function bold_text(selection, node, { document, stack }) {
     ),
   })
 
+  state.pos += 1
   return true
 }
 
-function italic_text(selection, node, { document, stack }) {
+function italic_text(selection, state) {
+  const { document, node, stack } = state
+
   if (node.nodeName !== "I") {
     return false
   }
@@ -155,10 +183,13 @@ function italic_text(selection, node, { document, stack }) {
     ),
   })
 
+  state.pos += 1
   return true
 }
 
-function underline_text(selection, node, { document, stack }) {
+function underline_text(selection, state) {
+  const { document, node, stack } = state
+
   if (node.nodeName !== "U") {
     return false
   }
@@ -171,10 +202,13 @@ function underline_text(selection, node, { document, stack }) {
     ),
   })
 
+  state.pos += 1
   return true
 }
 
-function strikethrough_text(selection, node, { document, stack }) {
+function strikethrough_text(selection, state) {
+  const { document, node, stack } = state
+
   if (node.nodeName !== "DEL") {
     return false
   }
@@ -187,10 +221,13 @@ function strikethrough_text(selection, node, { document, stack }) {
     ),
   })
 
+  state.pos += 1
   return true
 }
 
-function inline_code(selection, node, { document, stack }) {
+function inline_code(selection, state) {
+  const { document, node, stack } = state
+
   if (node.nodeName !== "CODE") {
     return false
   }
@@ -200,10 +237,13 @@ function inline_code(selection, node, { document, stack }) {
     content: node.textContent,
   })
 
+  state.pos += 1
   return true
 }
 
-function softbreak(selection, node, { document }) {
+function softbreak(selection, state) {
+  const { document, node, stack } = state
+
   if (node.nodeName !== "BR") {
     return false
   }
@@ -212,15 +252,19 @@ function softbreak(selection, node, { document }) {
     type: "softbreak",
   })
 
+  state.pos += 1
   return true
 }
 
-function text(selection, node, { document }) {
+function text(selection, state) {
+  const { document, node, stack } = state
+
   if (node.nodeType !== Node.TEXT_NODE) {
     return false
   }
 
   if (node.textContent === "\n") {
+    state.pos += 1
     return true
   }
 
@@ -229,6 +273,7 @@ function text(selection, node, { document }) {
     content: node.textContent,
   })
 
+  state.pos += 1
   return true
 }
 

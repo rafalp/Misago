@@ -15,23 +15,29 @@ class QuoteSelection {
   extractNodes(nodes, stack) {
     const { rules } = this.extractor
     const state = {
+      nodes,
+      node: null,
       document: [],
       stack: stack || [],
       pos: 0,
       posMax: nodes.length,
-      nodes,
     }
 
-    for (let pos = 0; pos < nodes.length; pos++) {
-      state.pos = pos
-      const node = nodes[pos]
+    while (state.pos < state.posMax) {
+      let match = false
+
+      const node = nodes[state.pos]
+      state.node = node
 
       for (let r = 0; r < rules.length; r++) {
         const rule = rules[r].func
-        if (rule(this, node, state)) {
+        if (rule(this, state)) {
+          match = true
           break
         }
       }
+
+      state.pos += match ? 0 : 1
     }
 
     return state.document
@@ -43,16 +49,29 @@ class QuoteSelection {
 
   renderNodes(document) {
     const { rules } = this.renderer
-    const state = { text: "" }
+    const state = {
+      document,
+      node: null,
+      text: "",
+      pos: 0,
+      posMax: document.length,
+    }
 
-    for (let i = 0; i < document.length; i++) {
-      const node = document[i]
+    while (state.pos < state.posMax) {
+      let match = false
+
+      const node = document[state.pos]
+      state.node = node
+
       for (let r = 0; r < rules.length; r++) {
         const rule = rules[r].func
-        if (rule(this, node, state)) {
+        if (rule(this, state)) {
+          match = true
           break
         }
       }
+
+      state.pos += match ? 0 : 1
     }
 
     return state.text
