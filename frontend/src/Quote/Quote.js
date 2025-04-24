@@ -102,7 +102,7 @@ class Quote {
     const toolbar = document.createElement("div")
     toolbar.className = "quote-toolbar"
 
-    if (this.options.reply) {
+    if (this.options.reply && false) {
       const reply = this.createToolbarButton(
         pgettext("quote toolbar", "Reply"),
         "reply",
