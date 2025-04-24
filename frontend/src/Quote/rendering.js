@@ -1,3 +1,13 @@
+import {
+  escapeAutolink,
+  escapeBBCodeArg,
+  escapeBBCodeContents,
+  escapeInlineCode,
+  escapeMarkdownLink,
+  escapeMarkdownLinkText,
+  escapeMarkdownLinkTitle,
+} from "./escape"
+
 function header(selection, state) {
   const { node } = state
 
@@ -60,6 +70,34 @@ function paragraph(selection, state) {
   return true
 }
 
+function image(selection, state) {
+  const { node } = state
+
+  if (node.type !== "image") {
+    return false
+  }
+
+  const { url, alt, title } = node
+
+  if (alt || title) {
+    state.text += "!"
+    if (alt) {
+      state.text += "[" + escapeMarkdownLinkText(alt) + "]"
+    }
+    state.text += "(" + escapeMarkdownLink(url)
+    if (title) {
+      state.text += ' "' + escapeMarkdownLinkTitle(title) + '"'
+    }
+    state.text += ")"
+  } else {
+    state.text += "[img]" + escapeBBCodeContents(url) + "[/img]"
+  }
+
+  state.pos += 1
+
+  return true
+}
+
 function link(selection, state) {
   const { node } = state
 
@@ -73,20 +111,12 @@ function link(selection, state) {
   if (auto) {
     state.text += "<" + escapeAutolink(href) + ">"
   } else {
-    state.text += "[url=" + escapeLinkHref(href) + "]" + text + "[/url]"
+    state.text += "[url=" + escapeBBCodeArg(href) + "]" + text + "[/url]"
   }
 
   state.pos += 1
 
   return true
-}
-
-function escapeLinkHref(href) {
-  return href.replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]")
-}
-
-function escapeAutolink(href) {
-  return href.replace("\\", "\\\\").replace("<", "\\<").replace(">", "\\>")
 }
 
 function strong_text(selection, state) {
@@ -211,7 +241,7 @@ function inline_code(selection, state) {
     return false
   }
 
-  state.text += "`" + content.replace("\\", "\\\\").replace("`", "\\`") + "`"
+  state.text += "`" + escapeInlineCode(content) + "`"
   state.pos += 1
 
   return true
@@ -224,7 +254,13 @@ function softbreak(selection, state) {
     return false
   }
 
-  // Softbreak render is noop
+  if (state.pos < state.posMax) {
+    const nextNode = state.document[state.pos + 1]
+    if (nextNode.type !== "text") {
+      state.text += "\n"
+    }
+  }
+
   state.pos += 1
   return true
 }
@@ -246,6 +282,7 @@ export default [
   { name: "header", func: header },
   { name: "youtube", func: youtube },
   { name: "paragraph", func: paragraph },
+  { name: "image", func: image },
   { name: "link", func: link },
   { name: "strong_text", func: strong_text },
   { name: "emphasis_text", func: emphasis_text },

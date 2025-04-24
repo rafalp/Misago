@@ -20,10 +20,10 @@ class QuoteSelection {
       document: [],
       stack: stack || [],
       pos: 0,
-      posMax: nodes.length,
+      posMax: nodes.length - 1,
     }
 
-    while (state.pos < state.posMax) {
+    while (state.pos <= state.posMax) {
       let match = false
 
       const node = nodes[state.pos]
@@ -54,10 +54,10 @@ class QuoteSelection {
       node: null,
       text: "",
       pos: 0,
-      posMax: document.length,
+      posMax: document.length - 1,
     }
 
-    while (state.pos < state.posMax) {
+    while (state.pos <= state.posMax) {
       let match = false
 
       const node = document[state.pos]

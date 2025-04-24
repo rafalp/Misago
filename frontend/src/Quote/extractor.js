@@ -74,6 +74,32 @@ function paragraph(selection, state) {
   return true
 }
 
+function image(selection, state) {
+  const { document, node } = state
+
+  if (node.nodeName !== "IMG") {
+    return false
+  }
+
+  const url = (node.getAttribute("src") || "").trim()
+  const alt = (node.getAttribute("alt") || "").trim() || null
+  const title = (node.getAttribute("title") || "").trim() || null
+
+  if (!url) {
+    return false
+  }
+
+  document.push({
+    type: "image",
+    url,
+    alt,
+    title,
+  })
+
+  state.pos += 1
+  return true
+}
+
 function mention(selection, state) {
   const { document, node } = state
 
@@ -282,6 +308,7 @@ export default [
   { name: "header", func: header },
   { name: "youtube", func: youtube },
   { name: "paragraph", func: paragraph },
+  { name: "image", func: image },
   { name: "mention", func: mention },
   { name: "link", func: link },
   { name: "strong_text", func: strong_text },
