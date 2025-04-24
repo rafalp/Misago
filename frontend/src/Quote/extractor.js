@@ -203,6 +203,18 @@ function inline_code(selection, node, { document, stack }) {
   return true
 }
 
+function softbreak(selection, node, { document }) {
+  if (node.nodeName !== "BR") {
+    return false
+  }
+
+  document.push({
+    type: "softbreak",
+  })
+
+  return true
+}
+
 function text(selection, node, { document }) {
   if (node.nodeType !== Node.TEXT_NODE) {
     return false
@@ -233,5 +245,6 @@ export default [
   { name: "underline_text", func: underline_text },
   { name: "strikethrough_text", func: strikethrough_text },
   { name: "inline_code", func: inline_code },
+  { name: "softbreak", func: softbreak },
   { name: "text", func: text },
 ]

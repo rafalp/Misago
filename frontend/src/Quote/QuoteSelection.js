@@ -14,11 +14,18 @@ class QuoteSelection {
 
   extractNodes(nodes, stack) {
     const { rules } = this.extractor
-    const state = { document: [], stack: stack || [] }
+    const state = {
+      document: [],
+      stack: stack || [],
+      pos: 0,
+      posMax: nodes.length,
+      nodes,
+    }
 
-    for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i]
-      console.log(node)
+    for (let pos = 0; pos < nodes.length; pos++) {
+      state.pos = pos
+      const node = nodes[pos]
+
       for (let r = 0; r < rules.length; r++) {
         const rule = rules[r].func
         if (rule(this, node, state)) {

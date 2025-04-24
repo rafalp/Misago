@@ -158,6 +158,15 @@ function inline_code(selection, node, state) {
   return true
 }
 
+function softbreak(selection, node, state) {
+  if (node.type !== "softbreak") {
+    return false
+  }
+
+  // Softbreak render is noop
+  return true
+}
+
 function text(selection, node, state) {
   if (node.type !== "text") {
     return false
@@ -179,5 +188,6 @@ export default [
   { name: "underline_text", func: underline_text },
   { name: "strikethrough_text", func: strikethrough_text },
   { name: "inline_code", func: inline_code },
+  { name: "softbreak", func: softbreak },
   { name: "text", func: text },
 ]
