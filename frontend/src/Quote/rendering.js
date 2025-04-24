@@ -60,6 +60,35 @@ function paragraph(selection, state) {
   return true
 }
 
+function link(selection, state) {
+  const { node } = state
+
+  if (node.type !== "link") {
+    return false
+  }
+
+  const { auto, children, href } = node
+  const text = selection.renderNodes(children)
+
+  if (auto) {
+    state.text += "<" + escapeAutolink(href) + ">"
+  } else {
+    state.text += "[url=" + escapeLinkHref(href) + "]" + text + "[/url]"
+  }
+
+  state.pos += 1
+
+  return true
+}
+
+function escapeLinkHref(href) {
+  return href.replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]")
+}
+
+function escapeAutolink(href) {
+  return href.replace("\\", "\\\\").replace("<", "\\<").replace(">", "\\>")
+}
+
 function strong_text(selection, state) {
   const { node } = state
 
@@ -217,6 +246,7 @@ export default [
   { name: "header", func: header },
   { name: "youtube", func: youtube },
   { name: "paragraph", func: paragraph },
+  { name: "link", func: link },
   { name: "strong_text", func: strong_text },
   { name: "emphasis_text", func: emphasis_text },
   { name: "bold_text", func: bold_text },

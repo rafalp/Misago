@@ -104,6 +104,7 @@ function link(selection, state) {
   document.push({
     type: "link",
     href: node.getAttribute("href"),
+    auto: (node.getAttribute("misago-autolink") || "").toLowerCase() == "true",
     children: selection.extractNodes(node.childNodes, stack.concat(["link"])),
   })
 
