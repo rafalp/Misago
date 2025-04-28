@@ -95,14 +95,14 @@
   '''
   
   <aside class="rich-text-quote">
-    <div class="rich-text-quote-header">
+    <div class="rich-text-quote-header" misago-quote-disable>
       
         <div class="rich-text-quote-info">
           Quote
         </div>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-quote="None">
       
   <p>Hello world!</p>
   
@@ -115,14 +115,14 @@
   '''
   
   <aside class="rich-text-quote">
-    <div class="rich-text-quote-header">
+    <div class="rich-text-quote-header" misago-quote-disable>
       
         <div class="rich-text-quote-info">
           Hello world
         </div>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-quote="Hello world">
       
   <p>Hello world!</p>
   
@@ -135,7 +135,7 @@
   '''
   
   <aside class="rich-text-quote">
-    <div class="rich-text-quote-header">
+    <div class="rich-text-quote-header" misago-quote-disable>
       
         <span class="rich-text-quote-avatar">
           <img src="blank-avatar.png" alt="Anonymouse">
@@ -150,7 +150,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-quote="Anonymouse, post: 1234">
       
   <p>Hello world!</p>
   
@@ -163,7 +163,7 @@
   '''
   
   <aside class="rich-text-quote">
-    <div class="rich-text-quote-header">
+    <div class="rich-text-quote-header" misago-quote-disable>
       
         
           <a
@@ -204,7 +204,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-quote="User, post: 1234">
       
   <p>Hello world!</p>
   
@@ -217,7 +217,7 @@
   '''
   
   <aside class="rich-text-quote">
-    <div class="rich-text-quote-header">
+    <div class="rich-text-quote-header" misago-quote-disable>
       
         <span class="rich-text-quote-avatar">
           <img src="blank-avatar.png" alt="Anonymouse">
@@ -232,7 +232,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-quote="Anonymouse, post: 1234">
       
   <p>Hello world!</p>
   
@@ -245,7 +245,7 @@
   '''
   
   <aside class="rich-text-quote">
-    <div class="rich-text-quote-header">
+    <div class="rich-text-quote-header" misago-quote-disable>
       
         
           <span class="rich-text-quote-avatar">
@@ -279,7 +279,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-quote="Tester, post: 1234">
       
   <p>Hello world!</p>
   
@@ -292,7 +292,7 @@
   '''
   
   <aside class="rich-text-quote">
-    <div class="rich-text-quote-header">
+    <div class="rich-text-quote-header" misago-quote-disable>
       
         
           <span class="rich-text-quote-avatar">
@@ -326,7 +326,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-quote="Tester, post: 1234">
       
   <p>Hello world!</p>
   
@@ -339,7 +339,7 @@
   '''
   
   <aside class="rich-text-quote">
-    <div class="rich-text-quote-header">
+    <div class="rich-text-quote-header" misago-quote-disable>
       
         <span class="rich-text-quote-avatar">
           <img src="blank-avatar.png" alt="Anonymouse">
@@ -354,7 +354,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-quote="Anonymouse, post: 1234">
       
   <p>Hello world!</p>
   
@@ -367,7 +367,7 @@
   '''
   
   <aside class="rich-text-quote">
-    <div class="rich-text-quote-header">
+    <div class="rich-text-quote-header" misago-quote-disable>
       
         
           <a
@@ -408,7 +408,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-quote="User, post: 1234">
       
   <p>Hello world!</p>
   

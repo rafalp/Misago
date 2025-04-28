@@ -8,6 +8,23 @@ import {
   escapeMarkdownLinkTitle,
 } from "./escape"
 
+function youtube(selection, state) {
+  const { node } = state
+
+  if (node.type !== "youtube") {
+    return false
+  }
+
+  if (state.text) {
+    state.text += "\n\n"
+  }
+
+  state.text += node.url
+  state.pos += 1
+
+  return true
+}
+
 function header(selection, state) {
   const { node } = state
 
@@ -21,7 +38,7 @@ function header(selection, state) {
   }
 
   if (state.text) {
-    state.text += "\n\n\n"
+    state.text += "\n\n"
   }
 
   const prefix = "#".repeat(node.level)
@@ -31,10 +48,15 @@ function header(selection, state) {
   return true
 }
 
-function youtube(selection, state) {
+function quote(selection, state) {
   const { node } = state
 
-  if (node.type !== "youtube") {
+  if (node.type !== "quote") {
+    return false
+  }
+
+  const text = selection.renderNodes(node.children).trim()
+  if (!text) {
     return false
   }
 
@@ -42,7 +64,11 @@ function youtube(selection, state) {
     state.text += "\n\n"
   }
 
-  state.text += node.url
+  const { info } = node
+
+  state.text += "[quote" + (info ? "=" + escapeBBCodeArg(info) : "") + "]\n"
+  state.text += text
+  state.text += "\n[/quote]"
   state.pos += 1
 
   return true
@@ -275,8 +301,9 @@ function text(selection, state) {
 }
 
 export default [
-  { name: "header", func: header },
   { name: "youtube", func: youtube },
+  { name: "header", func: header },
+  { name: "quote", func: quote },
   { name: "paragraph", func: paragraph },
   { name: "image", func: image },
   { name: "link", func: link },

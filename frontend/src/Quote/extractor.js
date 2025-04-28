@@ -1,3 +1,24 @@
+function youtube(selection, state) {
+  const { document, node } = state
+
+  if (node.nodeName !== "IFRAME") {
+    return false
+  }
+
+  const url = node.getAttribute("misago-youtube")
+  if (!url) {
+    return false
+  }
+
+  document.push({
+    type: "youtube",
+    url,
+  })
+
+  state.pos += 1
+  return true
+}
+
 function header(selection, state) {
   const { document, node, stack } = state
 
@@ -27,21 +48,34 @@ function header(selection, state) {
   return true
 }
 
-function youtube(selection, state) {
-  const { document, node } = state
+function quote(selection, state) {
+  const { document, node, stack } = state
 
-  if (node.nodeName !== "IFRAME") {
+  if (node.nodeName !== "ASIDE") {
     return false
   }
 
-  const url = node.getAttribute("misago-youtube")
-  if (!url) {
+  const blockquote = node.querySelector("blockquote[misago-quote]")
+  if (!blockquote) {
     return false
+  }
+
+  const info = blockquote.getAttribute("misago-quote")
+
+  const children = selection.extractNodes(
+    blockquote.childNodes,
+    stack.concat(["quote"])
+  )
+
+  if (!children.length) {
+    state.pos += 1
+    return true
   }
 
   document.push({
-    type: "youtube",
-    url,
+    type: "quote",
+    info,
+    children,
   })
 
   state.pos += 1
@@ -305,8 +339,9 @@ function text(selection, state) {
 }
 
 export default [
-  { name: "header", func: header },
   { name: "youtube", func: youtube },
+  { name: "header", func: header },
+  { name: "quote", func: quote },
   { name: "paragraph", func: paragraph },
   { name: "image", func: image },
   { name: "mention", func: mention },
