@@ -44,7 +44,17 @@ class QuoteSelection {
   }
 
   wrapDocument(root, nodes, document) {
-    return document
+    if (document.length === 1 && document[0].type === "quote") {
+      return document
+    }
+
+    return [
+      {
+        type: "quote",
+        info: root.info,
+        children: document,
+      },
+    ]
   }
 
   renderNodes(document) {

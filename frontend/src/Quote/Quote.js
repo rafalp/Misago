@@ -77,7 +77,7 @@ class Quote {
     if (root) {
       return {
         element: root,
-        args: root.getAttribute("misago-quote-root"),
+        info: root.getAttribute("misago-quote-root"),
       }
     }
     return null
