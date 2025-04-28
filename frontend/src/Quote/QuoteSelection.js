@@ -6,7 +6,7 @@ class QuoteSelection {
 
   getQuote(root, nodes) {
     let document = this.extractNodes(nodes)
-    document = this.wrapDocument(root, nodes, document)
+    document = this.wrapDocument(root, document)
     console.log(document)
     console.log(this.renderNodes(document).trim())
     return this.renderNodes(document).trim()
@@ -43,11 +43,33 @@ class QuoteSelection {
     return state.document
   }
 
-  wrapDocument(root, nodes, document) {
+  wrapDocument(root, document) {
     if (document.length === 1 && document[0].type === "quote") {
       return document
     }
 
+    let wrapping = document
+
+    if (root.ancestor.nodeName === "OL" || root.ancestor.nodeName === "UL") {
+      wrapping = this.wrapDocumentInList(root.ancestor, wrapping)
+    }
+
+    wrapping = this.wrapDocumentInQuote(root, wrapping)
+
+    return wrapping
+  }
+
+  wrapDocumentInList(list, document) {
+    return [
+      {
+        type: "list",
+        ordered: list.nodeName === "OL",
+        children: document,
+      },
+    ]
+  }
+
+  wrapDocumentInQuote(root, document) {
     return [
       {
         type: "quote",

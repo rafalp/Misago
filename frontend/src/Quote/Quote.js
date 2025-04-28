@@ -78,6 +78,7 @@ class Quote {
       return {
         element: root,
         info: root.getAttribute("misago-quote-root"),
+        ancestor,
       }
     }
     return null

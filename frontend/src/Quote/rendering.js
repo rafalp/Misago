@@ -122,6 +122,36 @@ function paragraph(selection, state) {
   return true
 }
 
+function list(selection, state) {
+  const { node } = state
+
+  if (node.type !== "list") {
+    return false
+  }
+
+  if (state.text) {
+    state.text += "\n\n"
+  }
+
+  const items = node.children.map((item, index) => {
+    const prefix = node.ordered ? index + 1 + ". " : "* "
+    const text = selection.renderNodes(item.children).trim()
+    const lines = text.split(/\r?\n|\r|\n/g).map((line, lineIndex) => {
+      if (lineIndex === 0) {
+        return prefix + line.trim()
+      } else {
+        return " ".repeat(prefix.length) + line.trim()
+      }
+    })
+    return lines.join("\n")
+  })
+
+  state.text += items.join("\n")
+  state.pos += 1
+
+  return true
+}
+
 function hr(selection, state) {
   const { node } = state
 
@@ -348,6 +378,7 @@ export default [
   { name: "quote", func: quote },
   { name: "spoiler", func: spoiler },
   { name: "paragraph", func: paragraph },
+  { name: "list", func: list },
   { name: "hr", func: hr },
   { name: "image", func: image },
   { name: "link", func: link },
