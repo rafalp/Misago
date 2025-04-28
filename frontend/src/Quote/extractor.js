@@ -82,6 +82,40 @@ function quote(selection, state) {
   return true
 }
 
+function spoiler(selection, state) {
+  const { document, node, stack } = state
+
+  if (node.nodeName !== "DETAILS") {
+    return false
+  }
+
+  const body = node.querySelector("div[misago-spoiler]")
+  if (!body) {
+    return false
+  }
+
+  const info = body.getAttribute("misago-spoiler")
+
+  const children = selection.extractNodes(
+    body.childNodes,
+    stack.concat(["quote"])
+  )
+
+  if (!children.length) {
+    state.pos += 1
+    return true
+  }
+
+  document.push({
+    type: "spoiler",
+    info,
+    children,
+  })
+
+  state.pos += 1
+  return true
+}
+
 function paragraph(selection, state) {
   const { document, node, stack } = state
 
@@ -342,6 +376,7 @@ export default [
   { name: "youtube", func: youtube },
   { name: "header", func: header },
   { name: "quote", func: quote },
+  { name: "spoiler", func: spoiler },
   { name: "paragraph", func: paragraph },
   { name: "image", func: image },
   { name: "mention", func: mention },

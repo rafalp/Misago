@@ -74,6 +74,32 @@ function quote(selection, state) {
   return true
 }
 
+function spoiler(selection, state) {
+  const { node } = state
+
+  if (node.type !== "spoiler") {
+    return false
+  }
+
+  const text = selection.renderNodes(node.children).trim()
+  if (!text) {
+    return false
+  }
+
+  if (state.text) {
+    state.text += "\n\n"
+  }
+
+  const { info } = node
+
+  state.text += "[spoiler" + (info ? "=" + escapeBBCodeArg(info) : "") + "]\n"
+  state.text += text
+  state.text += "\n[/spoiler]"
+  state.pos += 1
+
+  return true
+}
+
 function paragraph(selection, state) {
   const { node } = state
 
@@ -304,6 +330,7 @@ export default [
   { name: "youtube", func: youtube },
   { name: "header", func: header },
   { name: "quote", func: quote },
+  { name: "spoiler", func: spoiler },
   { name: "paragraph", func: paragraph },
   { name: "image", func: image },
   { name: "link", func: link },

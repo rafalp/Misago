@@ -2,7 +2,7 @@
 # name: test_replace_rich_text_tokens_replaces_code_block_with_info
   '''
   
-  <div class="rich-text-code" misago-rich-text-code>
+  <div class="rich-text-code">
     <div class="rich-text-code-header">
       <div class="rich-text-code-info">
         
@@ -18,14 +18,14 @@
         </button>
       
     </div>
-    <pre><code>Hello world!</code></pre>
+    <pre><code misago-code="Example string">Hello world!</code></pre>
   </div>
   '''
 # ---
 # name: test_replace_rich_text_tokens_replaces_code_block_with_info_and_syntax
   '''
   
-  <div class="rich-text-code" misago-rich-text-code>
+  <div class="rich-text-code">
     <div class="rich-text-code-header">
       <div class="rich-text-code-info">
         
@@ -41,14 +41,14 @@
         </button>
       
     </div>
-    <pre><code>Hello world!</code></pre>
+    <pre><code misago-code="Example string">Hello world!</code></pre>
   </div>
   '''
 # ---
 # name: test_replace_rich_text_tokens_replaces_code_block_with_syntax
   '''
   
-  <div class="rich-text-code" misago-rich-text-code>
+  <div class="rich-text-code">
     <div class="rich-text-code-header">
       <div class="rich-text-code-info">
         
@@ -64,14 +64,14 @@
         </button>
       
     </div>
-    <pre><code>Hello world!</code></pre>
+    <pre><code misago-code="">Hello world!</code></pre>
   </div>
   '''
 # ---
 # name: test_replace_rich_text_tokens_replaces_minimal_code_block
   '''
   
-  <div class="rich-text-code" misago-rich-text-code>
+  <div class="rich-text-code">
     <div class="rich-text-code-header">
       <div class="rich-text-code-info">
         
@@ -87,7 +87,7 @@
         </button>
       
     </div>
-    <pre><code>Hello world!</code></pre>
+    <pre><code misago-code="">Hello world!</code></pre>
   </div>
   '''
 # ---
@@ -102,7 +102,7 @@
         </div>
       
     </div>
-    <blockquote class="rich-text-quote-body" misago-quote="None">
+    <blockquote class="rich-text-quote-body" misago-quote="">
       
   <p>Hello world!</p>
   
@@ -429,7 +429,7 @@
         toggle
       </div>
     </summary>
-    <div class="rich-text-spoiler-body">
+    <div class="rich-text-spoiler-body" misago-spoiler="">
       
   <p>Hello world!</p>
   
@@ -450,7 +450,7 @@
         toggle
       </div>
     </summary>
-    <div class="rich-text-spoiler-body">
+    <div class="rich-text-spoiler-body" misago-spoiler="Lorem ipsum">
       
   <p>Hello world!</p>
   
