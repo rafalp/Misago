@@ -131,7 +131,7 @@ function strong_text(selection, state) {
     return false
   }
 
-  const delimiter = text.indexOf("*") === -1 ? "**" : "__"
+  const delimiter = text.indexOf("_") === -1 ? "__" : "**"
   state.text += delimiter + text + delimiter
   state.pos += 1
 
@@ -150,7 +150,7 @@ function emphasis_text(selection, state) {
     return false
   }
 
-  const delimiter = text.indexOf("*") === -1 ? "*" : "_"
+  const delimiter = text.indexOf("_") === -1 ? "_" : "**"
   state.text += delimiter + text + delimiter
   state.pos += 1
 
@@ -254,12 +254,7 @@ function softbreak(selection, state) {
     return false
   }
 
-  if (state.pos < state.posMax) {
-    const nextNode = state.document[state.pos + 1]
-    if (nextNode.type !== "text") {
-      state.text += "\n"
-    }
-  }
+  state.text += "\n"
 
   state.pos += 1
   return true
@@ -272,7 +267,8 @@ function text(selection, state) {
     return false
   }
 
-  state.text += node.content
+  // We rely on 'softbreak' rule for explicit line breaks
+  state.text += node.content.replaceAll("\n", "")
   state.pos += 1
 
   return true
