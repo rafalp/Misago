@@ -122,6 +122,22 @@ function paragraph(selection, state) {
   return true
 }
 
+function hr(selection, state) {
+  const { node } = state
+
+  if (node.type !== "hr") {
+    return false
+  }
+
+  if (state.text) {
+    state.text += "\n\n"
+  }
+
+  state.text += "- - -"
+  state.pos += 1
+
+  return true
+}
 function image(selection, state) {
   const { node } = state
 
@@ -332,6 +348,7 @@ export default [
   { name: "quote", func: quote },
   { name: "spoiler", func: spoiler },
   { name: "paragraph", func: paragraph },
+  { name: "hr", func: hr },
   { name: "image", func: image },
   { name: "link", func: link },
   { name: "strong_text", func: strong_text },

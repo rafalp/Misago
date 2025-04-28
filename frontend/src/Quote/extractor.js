@@ -142,6 +142,21 @@ function paragraph(selection, state) {
   return true
 }
 
+function hr(selection, state) {
+  const { document, node, stack } = state
+
+  if (node.nodeName !== "HR") {
+    return false
+  }
+
+  document.push({
+    type: "hr",
+  })
+
+  state.pos += 1
+  return true
+}
+
 function image(selection, state) {
   const { document, node } = state
 
@@ -378,6 +393,7 @@ export default [
   { name: "quote", func: quote },
   { name: "spoiler", func: spoiler },
   { name: "paragraph", func: paragraph },
+  { name: "hr", func: hr },
   { name: "image", func: image },
   { name: "mention", func: mention },
   { name: "link", func: link },
