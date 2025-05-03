@@ -19,5 +19,5 @@
       </button>
     {% endif %}
   </div>
-  <pre><code misago-code="{% if info and language %}{{ info }}, syntax: {{ language }}{% elif info %}{{ info }}{% elif language %}{{ language }}{% endif %}">{{ code|safe }}</code></pre>
+  <pre><code misago-code="{% if info and syntax %}{{ info }}, syntax: {{ syntax }}{% elif info %}{{ info }}{% elif syntax %}{{ syntax }}{% endif %}">{{ code|safe }}</code></pre>
 </div>

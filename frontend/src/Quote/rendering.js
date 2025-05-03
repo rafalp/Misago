@@ -8,6 +8,27 @@ import {
   escapeMarkdownLinkTitle,
 } from "./escape"
 
+function attachment(selection, state) {
+  const { node } = state
+
+  if (node.type !== "attachment") {
+    return false
+  }
+
+  if (state.text) {
+    if (state.document[state.pos - 1].type === "attachment") {
+      state.text += "\n"
+    } else {
+      state.text += "\n\n"
+    }
+  }
+
+  state.text += "<attachment=" + node.args + ">"
+  state.pos += 1
+
+  return true
+}
+
 function youtube(selection, state) {
   const { node } = state
 
@@ -69,6 +90,27 @@ function quote(selection, state) {
   state.text += "[quote" + (info ? "=" + escapeBBCodeArg(info) : "") + "]\n"
   state.text += text
   state.text += "\n[/quote]"
+  state.pos += 1
+
+  return true
+}
+
+function code(selection, state) {
+  const { node } = state
+
+  if (node.type !== "code") {
+    return false
+  }
+
+  if (state.text) {
+    state.text += "\n\n"
+  }
+
+  const { info, content } = node
+
+  state.text += "[code" + (info ? "=" + escapeBBCodeArg(info) : "") + "]\n"
+  state.text += content
+  state.text += "\n[/code]"
   state.pos += 1
 
   return true
@@ -168,6 +210,7 @@ function hr(selection, state) {
 
   return true
 }
+
 function image(selection, state) {
   const { node } = state
 
@@ -373,9 +416,11 @@ function text(selection, state) {
 }
 
 export default [
+  { name: "attachment", func: attachment },
   { name: "youtube", func: youtube },
   { name: "header", func: header },
   { name: "quote", func: quote },
+  { name: "code", func: code },
   { name: "spoiler", func: spoiler },
   { name: "paragraph", func: paragraph },
   { name: "list", func: list },

@@ -1,3 +1,67 @@
+function attachments_group(selection, state) {
+  const { document, node } = state
+
+  if (node.nodeName !== "DIV") {
+    return false
+  }
+  const attachments = node.querySelectorAll("[misago-attachment]")
+  if (!attachments) {
+    return false
+  }
+
+  for (let i = 0; i < attachments.length; i++) {
+    document.push({
+      type: "attachment",
+      args: attachments[i].getAttribute("misago-attachment"),
+    })
+  }
+
+  state.pos += 1
+  return true
+}
+
+function attachment_image(selection, state) {
+  const { document, node } = state
+
+  if (node.nodeName !== "IMG") {
+    return false
+  }
+
+  const attachment = node.getAttribute("misago-attachment")
+  if (!attachment) {
+    return false
+  }
+
+  document.push({
+    type: "attachment",
+    args: attachment,
+  })
+
+  state.pos += 1
+  return true
+}
+
+function attachment_file(selection, state) {
+  const { document, node } = state
+
+  if (node.nodeName !== "Am") {
+    return false
+  }
+
+  const attachment = node.getAttribute("misago-attachment")
+  if (!attachment) {
+    return false
+  }
+
+  document.push({
+    type: "attachment",
+    args: attachment,
+  })
+
+  state.pos += 1
+  return true
+}
+
 function youtube(selection, state) {
   const { document, node } = state
 
@@ -76,6 +140,36 @@ function quote(selection, state) {
     type: "quote",
     info,
     children,
+  })
+
+  state.pos += 1
+  return true
+}
+
+function code(selection, state) {
+  const { document, node, stack } = state
+
+  if (node.nodeName !== "PRE") {
+    return false
+  }
+
+  const code = node.querySelector("code[misago-code]")
+  if (!code) {
+    return false
+  }
+
+  const info = code.getAttribute("misago-code")
+  const content = code.textContent
+
+  if (!content.trim().length) {
+    state.pos += 1
+    return true
+  }
+
+  document.push({
+    type: "code",
+    info,
+    content,
   })
 
   state.pos += 1
@@ -446,11 +540,15 @@ export default [
   { name: "youtube", func: youtube },
   { name: "header", func: header },
   { name: "quote", func: quote },
+  { name: "code", func: code },
   { name: "spoiler", func: spoiler },
   { name: "paragraph", func: paragraph },
   { name: "list", func: list },
   { name: "list_item", func: list_item },
   { name: "hr", func: hr },
+  { name: "attachments_group", func: attachments_group },
+  { name: "attachment_image", func: attachment_image },
+  { name: "attachment_file", func: attachment_file },
   { name: "image", func: image },
   { name: "mention", func: mention },
   { name: "link", func: link },

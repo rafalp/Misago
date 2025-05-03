@@ -78,7 +78,7 @@ ol {
 
 .rich-text-image {
   display: inline-block;
-  position: relative;
+  // position: relative;
   overflow: hidden;
   max-width: 100%;
 
@@ -132,6 +132,8 @@ ol {
   height: 32px;
 
   border-radius: @border-radius-base;
+
+  user-select: none;
 
   &,
   &:link,
@@ -282,11 +284,11 @@ ol {
   .rich-text-image,
   .rich-text-file,
   .rich-text-attachment-error {
-    float: left;
+    // float: left;
   }
 
   .rich-text-video {
-    clear: both;
+    // clear: both;
   }
 
   .rich-text-image,
@@ -354,6 +356,8 @@ ol {
   border-radius: @border-radius-small;
   line-height: 0;
 
+  user-select: none;
+
   img {
     width: 24px;
     height: 24px;
@@ -372,6 +376,8 @@ ol {
   padding: 0;
 
   border-radius: @border-radius-base;
+
+  user-select: none;
 
   &:hover,
   &:focus,
@@ -533,6 +539,8 @@ a.rich-text-quote-header-link-secondary {
   font-weight: bold;
   white-space: nowrap;
 
+  user-select: none;
+
   & {
     background-color: @rich-text-code-btn-bg;
     border: 1px solid @rich-text-code-btn-border;
@@ -602,6 +610,15 @@ a.rich-text-quote-header-link-secondary {
   font-size: @font-size-small;
   font-weight: bold;
   white-space: nowrap;
+
+  user-select: none;
+}
+
+.rich-text-spoiler-body {
+  padding: @rich-text-spoiler-padding;
+
+  background-color: @rich-text-spoiler-body-bg;
+  border-top: 1px solid @rich-text-spoiler-body-border;
 }
 
 .rich-text-list-loose > li {
@@ -610,13 +627,6 @@ a.rich-text-quote-header-link-secondary {
   &:last-child {
     margin-bottom: 0;
   }
-}
-
-.rich-text-spoiler-body {
-  padding: @rich-text-spoiler-padding;
-
-  background-color: @rich-text-spoiler-body-bg;
-  border-top: 1px solid @rich-text-spoiler-body-border;
 }
 
 .rich-text-mention {

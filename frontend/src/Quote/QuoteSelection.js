@@ -1,3 +1,5 @@
+import getCodeTextContent from "./getCodeTextContent"
+
 class QuoteSelection {
   constructor(extractor, renderer) {
     this.extractor = extractor
@@ -5,6 +7,7 @@ class QuoteSelection {
   }
 
   getQuote(root, nodes) {
+    console.log("nodes", nodes)
     let document = this.extractNodes(nodes)
     document = this.wrapDocument(root, document)
     console.log(document)
@@ -50,7 +53,13 @@ class QuoteSelection {
 
     let wrapping = document
 
-    if (root.ancestor.nodeName === "OL" || root.ancestor.nodeName === "UL") {
+    const code = root.ancestor.closest("[misago-code]")
+    if (code) {
+      wrapping = this.wrapDocumentInCode(code, wrapping)
+    } else if (
+      root.ancestor.nodeName === "OL" ||
+      root.ancestor.nodeName === "UL"
+    ) {
       wrapping = this.wrapDocumentInList(root.ancestor, wrapping)
     }
 
@@ -65,6 +74,16 @@ class QuoteSelection {
         type: "list",
         ordered: list.nodeName === "OL",
         children: document,
+      },
+    ]
+  }
+
+  wrapDocumentInCode(code, document) {
+    return [
+      {
+        type: "code",
+        info: code.getAttribute("misago-code"),
+        content: getCodeTextContent(code),
       },
     ]
   }
