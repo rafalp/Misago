@@ -9,6 +9,7 @@ class QuoteSelection {
     console.log(root.childNodes)
     let result = this.extractNodes(root.childNodes)
     result = this.postprocessNodes(root, result)
+    console.log(result)
     console.log(this.renderNodes(result).trim())
     return this.renderNodes(result).trim()
   }

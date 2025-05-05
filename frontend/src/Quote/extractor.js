@@ -233,6 +233,164 @@ function paragraph(selection, state) {
   return true
 }
 
+function table(selection, state) {
+  const { result, node, stack } = state
+
+  if (node.nodeName !== "DIV") {
+    return false
+  }
+
+  const table = node.childNodes[0]
+
+  const children = selection.extractNodes(
+    table.childNodes,
+    stack.concat(["table"])
+  )
+
+  if (!children.length) {
+    state.pos += 1
+    return true
+  }
+
+  result.push({
+    type: "table",
+    children,
+  })
+
+  state.pos += 1
+  return true
+}
+
+function table_head(selection, state) {
+  const { result, node, stack } = state
+
+  if (node.nodeName !== "THEAD") {
+    return false
+  }
+
+  const children = selection.extractNodes(
+    node.childNodes,
+    stack.concat(["table_head"])
+  )
+
+  if (!children.length) {
+    state.pos += 1
+    return true
+  }
+
+  result.push({
+    type: "table_head",
+    children,
+  })
+
+  state.pos += 1
+  return true
+}
+
+function table_body(selection, state) {
+  const { result, node, stack } = state
+
+  if (node.nodeName !== "TBODY") {
+    return false
+  }
+
+  const children = selection.extractNodes(
+    node.childNodes,
+    stack.concat(["table_body"])
+  )
+
+  if (!children.length) {
+    state.pos += 1
+    return true
+  }
+
+  result.push({
+    type: "table_body",
+    children,
+  })
+
+  state.pos += 1
+  return true
+}
+
+function table_row(selection, state) {
+  const { result, node, stack } = state
+
+  if (node.nodeName !== "TR") {
+    return false
+  }
+
+  const children = selection.extractNodes(
+    node.childNodes,
+    stack.concat(["table_row"])
+  )
+
+  if (!children.length) {
+    state.pos += 1
+    return true
+  }
+
+  result.push({
+    type: "table_row",
+    children,
+  })
+
+  state.pos += 1
+  return true
+}
+
+function table_th(selection, state) {
+  const { result, node, stack } = state
+
+  if (node.nodeName !== "TH") {
+    return false
+  }
+
+  const children = selection.extractNodes(
+    node.childNodes,
+    stack.concat(["table_th"])
+  )
+
+  if (!children.length) {
+    state.pos += 1
+    return true
+  }
+
+  result.push({
+    type: "table_th",
+    children,
+  })
+
+  state.pos += 1
+  return true
+}
+
+function table_td(selection, state) {
+  const { result, node, stack } = state
+
+  if (node.nodeName !== "TD") {
+    return false
+  }
+
+  const children = selection.extractNodes(
+    node.childNodes,
+    stack.concat(["table_td"])
+  )
+
+  if (!children.length) {
+    state.pos += 1
+    return true
+  }
+
+  result.push({
+    type: "table_td",
+    children,
+  })
+
+  state.pos += 1
+  return true
+}
+
 function list(selection, state) {
   const { result, node, stack } = state
 
@@ -540,6 +698,12 @@ export default [
   { name: "spoiler", func: spoiler },
   { name: "code", func: code },
   { name: "paragraph", func: paragraph },
+  { name: "table", func: table },
+  { name: "table_head", func: table_head },
+  { name: "table_body", func: table_body },
+  { name: "table_row", func: table_row },
+  { name: "table_th", func: table_th },
+  { name: "table_td", func: table_td },
   { name: "list", func: list },
   { name: "list_item", func: list_item },
   { name: "hr", func: hr },
