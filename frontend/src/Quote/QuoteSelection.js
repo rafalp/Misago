@@ -1,30 +1,29 @@
-import getCodeTextContent from "./getQuotedCode"
-
 class QuoteSelection {
-  constructor(extractor, renderer) {
+  constructor(extractor, renderer, postprocess) {
     this.extractor = extractor
     this.renderer = renderer
+    this.postprocess = postprocess
   }
 
-  getQuote(root, nodes) {
-    let document = this.extractNodes(nodes)
-    document = this.wrapDocument(root, document)
-    console.log(document)
-    console.log(this.renderNodes(document).trim())
-    return this.renderNodes(document).trim()
+  getQuote(root) {
+    console.log(root.childNodes)
+    let result = this.extractNodes(root.childNodes)
+    result = this.postprocessNodes(root, result)
+    console.log(this.renderNodes(result).trim())
+    return this.renderNodes(result).trim()
   }
 
   extractNodes(nodes, stack) {
-    const { rules } = this.extractor
     const state = {
       nodes,
       node: null,
-      document: [],
+      result: [],
       stack: stack || [],
       pos: 0,
       posMax: nodes.length - 1,
     }
 
+    const { rules } = this.extractor
     while (state.pos <= state.posMax) {
       let match = false
 
@@ -42,75 +41,34 @@ class QuoteSelection {
       state.pos += match ? 0 : 1
     }
 
-    return state.document
+    return state.result
   }
 
-  wrapDocument(root, document) {
-    if (document.length === 1 && document[0].type === "quote") {
-      return document
+  postprocessNodes(root, nodes) {
+    let result = nodes
+
+    const { rules } = this.postprocess
+    for (let i = 0; i < rules.length; i++) {
+      result = rules[i].func(this, root, result)
     }
 
-    let wrapping = document
-
-    const code = root.ancestor.closest("[misago-code]")
-    if (code) {
-      wrapping = this.wrapDocumentInCode(code, wrapping)
-    } else if (
-      root.ancestor.nodeName === "OL" ||
-      root.ancestor.nodeName === "UL"
-    ) {
-      wrapping = this.wrapDocumentInList(root.ancestor, wrapping)
-    }
-
-    wrapping = this.wrapDocumentInQuote(root, wrapping)
-
-    return wrapping
+    return result
   }
 
-  wrapDocumentInList(list, document) {
-    return [
-      {
-        type: "list",
-        ordered: list.nodeName === "OL",
-        children: document,
-      },
-    ]
-  }
-
-  wrapDocumentInCode(code, document) {
-    return [
-      {
-        type: "code",
-        info: code.getAttribute("misago-code"),
-        content: document[0].content,
-      },
-    ]
-  }
-
-  wrapDocumentInQuote(root, document) {
-    return [
-      {
-        type: "quote",
-        info: root.info,
-        children: document,
-      },
-    ]
-  }
-
-  renderNodes(document) {
-    const { rules } = this.renderer
+  renderNodes(nodes) {
     const state = {
-      document,
+      nodes,
       node: null,
       text: "",
       pos: 0,
-      posMax: document.length - 1,
+      posMax: nodes.length - 1,
     }
 
+    const { rules } = this.renderer
     while (state.pos <= state.posMax) {
       let match = false
 
-      const node = document[state.pos]
+      const node = nodes[state.pos]
       state.node = node
 
       for (let r = 0; r < rules.length; r++) {

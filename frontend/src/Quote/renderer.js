@@ -16,7 +16,7 @@ function attachment(selection, state) {
   }
 
   if (state.text) {
-    if (state.document[state.pos - 1].type === "attachment") {
+    if (state.nodes[state.pos - 1].type === "attachment") {
       state.text += "\n"
     } else {
       state.text += "\n\n"
@@ -102,11 +102,15 @@ function code(selection, state) {
     return false
   }
 
+  const { info, content } = node
+
+  if (!node.content) {
+    return false
+  }
+
   if (state.text) {
     state.text += "\n\n"
   }
-
-  const { info, content } = node
 
   state.text += "[code" + (info ? "=" + escapeBBCodeArg(info) : "") + "]\n"
   state.text += content

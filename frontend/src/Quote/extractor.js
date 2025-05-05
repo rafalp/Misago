@@ -1,7 +1,7 @@
 import getQuotedCode from "./getQuotedCode"
 
 function attachments_group(selection, state) {
-  const { document, node } = state
+  const { result, node } = state
 
   if (node.nodeName !== "DIV") {
     return false
@@ -12,7 +12,7 @@ function attachments_group(selection, state) {
   }
 
   for (let i = 0; i < attachments.length; i++) {
-    document.push({
+    result.push({
       type: "attachment",
       args: attachments[i].getAttribute("misago-attachment"),
     })
@@ -23,7 +23,7 @@ function attachments_group(selection, state) {
 }
 
 function attachment_image(selection, state) {
-  const { document, node } = state
+  const { result, node } = state
 
   if (node.nodeName !== "IMG") {
     return false
@@ -34,7 +34,7 @@ function attachment_image(selection, state) {
     return false
   }
 
-  document.push({
+  result.push({
     type: "attachment",
     args: attachment,
   })
@@ -44,7 +44,7 @@ function attachment_image(selection, state) {
 }
 
 function attachment_file(selection, state) {
-  const { document, node } = state
+  const { result, node } = state
 
   if (node.nodeName !== "Am") {
     return false
@@ -55,7 +55,7 @@ function attachment_file(selection, state) {
     return false
   }
 
-  document.push({
+  result.push({
     type: "attachment",
     args: attachment,
   })
@@ -65,7 +65,7 @@ function attachment_file(selection, state) {
 }
 
 function youtube(selection, state) {
-  const { document, node } = state
+  const { result, node } = state
 
   if (node.nodeName !== "IFRAME") {
     return false
@@ -76,7 +76,7 @@ function youtube(selection, state) {
     return false
   }
 
-  document.push({
+  result.push({
     type: "youtube",
     url,
   })
@@ -86,7 +86,7 @@ function youtube(selection, state) {
 }
 
 function header(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (["H1", "H2", "H3", "H4", "H5", "H6"].indexOf(node.nodeName) === -1) {
     return false
@@ -104,7 +104,7 @@ function header(selection, state) {
 
   const level = parseInt(node.nodeName.substring(1))
 
-  document.push({
+  result.push({
     type: "header",
     level,
     children,
@@ -115,7 +115,7 @@ function header(selection, state) {
 }
 
 function quote(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "ASIDE") {
     return false
@@ -138,7 +138,7 @@ function quote(selection, state) {
     return true
   }
 
-  document.push({
+  result.push({
     type: "quote",
     info,
     children,
@@ -148,33 +148,8 @@ function quote(selection, state) {
   return true
 }
 
-function code(selection, state) {
-  const { document, node, stack } = state
-
-  if (!(node.nodeName === "DIV" || node.nodeName === "PRE")) {
-    return false
-  }
-
-  const code = node.querySelector("code[misago-code]")
-  if (!code) {
-    return false
-  }
-
-  const info = code.getAttribute("misago-code")
-  const content = getQuotedCode(code)
-
-  document.push({
-    type: "code",
-    info,
-    content,
-  })
-
-  state.pos += 1
-  return true
-}
-
 function spoiler(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "DETAILS") {
     return false
@@ -197,7 +172,7 @@ function spoiler(selection, state) {
     return true
   }
 
-  document.push({
+  result.push({
     type: "spoiler",
     info,
     children,
@@ -207,8 +182,33 @@ function spoiler(selection, state) {
   return true
 }
 
+function code(selection, state) {
+  const { result, node, stack } = state
+
+  if (!(node.nodeName === "DIV" || node.nodeName === "PRE")) {
+    return false
+  }
+
+  const code = node.querySelector("code[misago-code]")
+  if (!code) {
+    return false
+  }
+
+  const info = code.getAttribute("misago-code")
+  const content = getQuotedCode(code)
+
+  result.push({
+    type: "code",
+    info,
+    content,
+  })
+
+  state.pos += 1
+  return true
+}
+
 function paragraph(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "P") {
     return false
@@ -224,7 +224,7 @@ function paragraph(selection, state) {
     return true
   }
 
-  document.push({
+  result.push({
     type: "paragraph",
     children,
   })
@@ -234,7 +234,7 @@ function paragraph(selection, state) {
 }
 
 function list(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "OL" && node.nodeName !== "UL") {
     return false
@@ -252,7 +252,7 @@ function list(selection, state) {
     return true
   }
 
-  document.push({
+  result.push({
     type: "list",
     ordered,
     children,
@@ -263,7 +263,7 @@ function list(selection, state) {
 }
 
 function list_item(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "LI") {
     return false
@@ -279,7 +279,7 @@ function list_item(selection, state) {
     return true
   }
 
-  document.push({
+  result.push({
     type: "list_item",
     children,
   })
@@ -289,13 +289,13 @@ function list_item(selection, state) {
 }
 
 function hr(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "HR") {
     return false
   }
 
-  document.push({
+  result.push({
     type: "hr",
   })
 
@@ -304,7 +304,7 @@ function hr(selection, state) {
 }
 
 function image(selection, state) {
-  const { document, node } = state
+  const { result, node } = state
 
   if (node.nodeName !== "IMG") {
     return false
@@ -318,7 +318,7 @@ function image(selection, state) {
     return false
   }
 
-  document.push({
+  result.push({
     type: "image",
     url,
     alt,
@@ -330,7 +330,7 @@ function image(selection, state) {
 }
 
 function mention(selection, state) {
-  const { document, node } = state
+  const { result, node } = state
 
   if (!(node.nodeName === "A" || node.nodeName === "SPAN")) {
     return false
@@ -340,7 +340,7 @@ function mention(selection, state) {
     return false
   }
 
-  document.push({
+  result.push({
     type: "text",
     content: node.textContent,
   })
@@ -350,13 +350,13 @@ function mention(selection, state) {
 }
 
 function link(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "A") {
     return false
   }
 
-  document.push({
+  result.push({
     type: "link",
     href: node.getAttribute("href"),
     auto: (node.getAttribute("misago-autolink") || "").toLowerCase() == "true",
@@ -368,13 +368,13 @@ function link(selection, state) {
 }
 
 function strong_text(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "STRONG") {
     return false
   }
 
-  document.push({
+  result.push({
     type: "strong",
     children: selection.extractNodes(
       node.childNodes,
@@ -387,13 +387,13 @@ function strong_text(selection, state) {
 }
 
 function emphasis_text(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "EM") {
     return false
   }
 
-  document.push({
+  result.push({
     type: "emphasis",
     children: selection.extractNodes(
       node.childNodes,
@@ -406,13 +406,13 @@ function emphasis_text(selection, state) {
 }
 
 function bold_text(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "B") {
     return false
   }
 
-  document.push({
+  result.push({
     type: "bold",
     children: selection.extractNodes(
       node.childNodes,
@@ -425,13 +425,13 @@ function bold_text(selection, state) {
 }
 
 function italic_text(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "I") {
     return false
   }
 
-  document.push({
+  result.push({
     type: "italic",
     children: selection.extractNodes(
       node.childNodes,
@@ -444,13 +444,13 @@ function italic_text(selection, state) {
 }
 
 function underline_text(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "U") {
     return false
   }
 
-  document.push({
+  result.push({
     type: "underline",
     children: selection.extractNodes(
       node.childNodes,
@@ -463,13 +463,13 @@ function underline_text(selection, state) {
 }
 
 function strikethrough_text(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "DEL") {
     return false
   }
 
-  document.push({
+  result.push({
     type: "strikethrough",
     children: selection.extractNodes(
       node.childNodes,
@@ -482,13 +482,13 @@ function strikethrough_text(selection, state) {
 }
 
 function inline_code(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "CODE") {
     return false
   }
 
-  document.push({
+  result.push({
     type: "inline_code",
     content: node.textContent,
   })
@@ -498,13 +498,13 @@ function inline_code(selection, state) {
 }
 
 function softbreak(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeName !== "BR") {
     return false
   }
 
-  document.push({
+  result.push({
     type: "softbreak",
   })
 
@@ -513,7 +513,7 @@ function softbreak(selection, state) {
 }
 
 function text(selection, state) {
-  const { document, node, stack } = state
+  const { result, node, stack } = state
 
   if (node.nodeType !== Node.TEXT_NODE) {
     return false
@@ -524,7 +524,7 @@ function text(selection, state) {
     return true
   }
 
-  document.push({
+  result.push({
     type: "text",
     content: node.textContent,
   })
@@ -537,8 +537,8 @@ export default [
   { name: "youtube", func: youtube },
   { name: "header", func: header },
   { name: "quote", func: quote },
-  { name: "code", func: code },
   { name: "spoiler", func: spoiler },
+  { name: "code", func: code },
   { name: "paragraph", func: paragraph },
   { name: "list", func: list },
   { name: "list_item", func: list_item },

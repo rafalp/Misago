@@ -3,12 +3,14 @@ import * as snackbar from "../snackbars"
 import QuoteSelection from "./QuoteSelection"
 import Ruleset from "./Ruleset"
 import extractorRules from "./extractor"
-import renderingRules from "./rendering"
+import postprocessRules from "./postprocess"
+import rendererRules from "./renderer"
 
 class Quote {
   constructor() {
     this.extractor = new Ruleset(extractorRules)
-    this.renderer = new Ruleset(renderingRules)
+    this.postprocess = new Ruleset(postprocessRules)
+    this.renderer = new Ruleset(rendererRules)
 
     this.options = null
     this.toolbar = null
@@ -79,6 +81,7 @@ class Quote {
         element: root,
         info: root.getAttribute("misago-quote-root"),
         ancestor,
+        childNodes: range.cloneContents().childNodes,
       }
     }
     return null
@@ -95,8 +98,12 @@ class Quote {
   }
 
   getSelectionQuote(root, range) {
-    const selection = new QuoteSelection(this.extractor, this.renderer)
-    return selection.getQuote(root, range.cloneContents().childNodes)
+    const selection = new QuoteSelection(
+      this.extractor,
+      this.renderer,
+      this.postprocess
+    )
+    return selection.getQuote(root)
   }
 
   createToolbar() {
