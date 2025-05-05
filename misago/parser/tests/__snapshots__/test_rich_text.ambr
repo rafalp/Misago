@@ -41,7 +41,7 @@
         </button>
       
     </div>
-    <pre><code misago-code="Example string">Hello world!</code></pre>
+    <pre><code misago-code="Example string, syntax: php">Hello world!</code></pre>
   </div>
   '''
 # ---
@@ -64,7 +64,7 @@
         </button>
       
     </div>
-    <pre><code misago-code="">Hello world!</code></pre>
+    <pre><code misago-code="php">Hello world!</code></pre>
   </div>
   '''
 # ---
