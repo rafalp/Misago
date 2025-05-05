@@ -71,6 +71,66 @@ def test_bbcode_block_rule_parses_single_line_block_in_multiline_block(parse_to_
     )
 
 
+def test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block(
+    parse_to_html,
+):
+    html = parse_to_html("[quote]\n[quote]\nnested\n[/quote]\n[/quote]")
+    assert html == (
+        "<misago-quote>"
+        "\n<misago-quote>"
+        "\n<p>nested</p>"
+        "\n</misago-quote>"
+        "\n</misago-quote>"
+    )
+
+
+def test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_of_other_type(
+    parse_to_html,
+):
+    html = parse_to_html("[quote]\n[spoiler]\nnested\n[/spoiler]\n[/quote]")
+    assert html == (
+        "<misago-quote>"
+        "\n<misago-spoiler>"
+        "\n<p>nested</p>"
+        "\n</misago-spoiler>"
+        "\n</misago-quote>"
+    )
+
+
+def test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_between_paragraphs(
+    parse_to_html,
+):
+    html = parse_to_html(
+        "[quote]\nparagraph1\n[quote]\nnested\n[/quote]\nparagraph2\n[/quote]"
+    )
+    assert html == (
+        "<misago-quote>"
+        "\n<p>paragraph1</p>"
+        "\n<misago-quote>"
+        "\n<p>nested</p>"
+        "\n</misago-quote>"
+        "\n<p>paragraph2</p>"
+        "\n</misago-quote>"
+    )
+
+
+def test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_of_other_type_between_paragraphs(
+    parse_to_html,
+):
+    html = parse_to_html(
+        "[quote]\nparagraph1\n[spoiler]\nnested\n[/spoiler]\nparagraph2\n[/quote]"
+    )
+    assert html == (
+        "<misago-quote>"
+        "\n<p>paragraph1</p>"
+        "\n<misago-spoiler>"
+        "\n<p>nested</p>"
+        "\n</misago-spoiler>"
+        "\n<p>paragraph2</p>"
+        "\n</misago-quote>"
+    )
+
+
 def test_bbcode_block_rule_matches_closest_multiline_block_open_close_pair(
     parse_to_html,
 ):

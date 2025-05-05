@@ -251,7 +251,7 @@ class BBCodeBlockRule:
         old_line_max = state.lineMax
         old_parent = state.parentType
 
-        state.lineMax = startLine
+        state.lineMax = endLine
         state.parentType = self.name
 
         state.level += 1
