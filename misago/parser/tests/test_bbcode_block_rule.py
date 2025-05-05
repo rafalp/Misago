@@ -87,9 +87,7 @@ def test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block(
 def test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_of_other_type(
     parse_to_html,
 ):
-    html = parse_to_html(
-        "[quote]\n[spoiler]\nnested\n[/spoiler]\n[/quote]"
-    )
+    html = parse_to_html("[quote]\n[spoiler]\nnested\n[/spoiler]\n[/quote]")
     assert html == (
         "<misago-quote>"
         "\n<misago-spoiler>"
