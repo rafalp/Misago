@@ -1,4 +1,4 @@
-import getCodeTextContent from "./getCodeTextContent"
+import getCodeTextContent from "./getQuotedCode"
 
 class QuoteSelection {
   constructor(extractor, renderer) {
@@ -7,7 +7,6 @@ class QuoteSelection {
   }
 
   getQuote(root, nodes) {
-    console.log("nodes", nodes)
     let document = this.extractNodes(nodes)
     document = this.wrapDocument(root, document)
     console.log(document)
@@ -83,7 +82,7 @@ class QuoteSelection {
       {
         type: "code",
         info: code.getAttribute("misago-code"),
-        content: getCodeTextContent(code),
+        content: document[0].content,
       },
     ]
   }

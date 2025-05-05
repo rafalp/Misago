@@ -20,9 +20,9 @@ export function escapeMarkdownLinkTitle(arg) {
 
 export function escapeMarkdownImageTitle(arg) {
   let escaped = escapeBackslash(arg)
-  escaped = escaped.replace("(", "\\(")
-  escaped = escaped.replace(")", "\\)")
-  return escaped.replace('"', '\\"')
+  escaped = escaped.replaceAll("(", "\\(")
+  escaped = escaped.replaceAll(")", "\\)")
+  return escaped.replaceAll('"', '\\"')
 }
 
 export function escapeAutolink(arg) {
@@ -46,5 +46,5 @@ export function escapeParentheses(text) {
 }
 
 export function escapeQuotes(text) {
-  return text.replace('"', '\\"').replace("'", "\\'")
+  return text.replaceAll('"', '\\"').replaceAll("'", "\\'")
 }

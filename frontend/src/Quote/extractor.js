@@ -1,3 +1,5 @@
+import getQuotedCode from "./getQuotedCode"
+
 function attachments_group(selection, state) {
   const { document, node } = state
 
@@ -149,7 +151,7 @@ function quote(selection, state) {
 function code(selection, state) {
   const { document, node, stack } = state
 
-  if (node.nodeName !== "PRE") {
+  if (!(node.nodeName === "DIV" || node.nodeName === "PRE")) {
     return false
   }
 
@@ -159,12 +161,7 @@ function code(selection, state) {
   }
 
   const info = code.getAttribute("misago-code")
-  const content = code.textContent
-
-  if (!content.trim().length) {
-    state.pos += 1
-    return true
-  }
+  const content = getQuotedCode(code)
 
   document.push({
     type: "code",
