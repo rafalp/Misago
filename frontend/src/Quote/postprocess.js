@@ -54,7 +54,7 @@ function spoiler(selection, root, nodes) {
 }
 
 function quote(selection, root, nodes) {
-  if (nodes.length === 1 && nodes[0].type === "quote") {
+  if (!wrapInNodesQuote(nodes)) {
     return nodes
   }
 
@@ -65,6 +65,18 @@ function quote(selection, root, nodes) {
       children: nodes,
     },
   ]
+}
+
+function wrapInNodesQuote(nodes) {
+  if (nodes.length === 1 && nodes[0].type === "quote") {
+    return false
+  }
+
+  if (nodes.length === 1 && nodes[0].type === "spoiler") {
+    return wrapInNodesQuote(nodes[0].children)
+  }
+
+  return true
 }
 
 export default [
