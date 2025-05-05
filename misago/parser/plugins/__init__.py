@@ -9,6 +9,7 @@ from .link import link_plugin
 from .linkify import linkify_plugin
 from .mention import mention_plugin
 from .quotebbcode import quote_bbcode_plugin
+from .shortimage import short_image_plugin
 from .spoilerbbcode import spoiler_bbcode_plugin
 from .urlbbcode import url_bbcode_plugin
 
@@ -24,6 +25,7 @@ __all__ = (
     "linkify_plugin",
     "mention_plugin",
     "quote_bbcode_plugin",
+    "short_image_plugin",
     "spoiler_bbcode_plugin",
     "url_bbcode_plugin",
 )
