@@ -33,6 +33,10 @@ export function escapeInlineCode(arg) {
   return escapeBackslash(arg).replaceAll("`", "\\`").replaceAll("`", "\\`")
 }
 
+export function escapeTableCell(arg) {
+  return escapeBackslash(arg).replaceAll("|", "\\|")
+}
+
 export function escapeBackslash(text) {
   return text.replaceAll("\\", "\\\\")
 }

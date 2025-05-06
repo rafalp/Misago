@@ -38,6 +38,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             set_autolinks_attr,
             make_tables_responsive,
             set_tables_styles,
+            set_tables_cells_cols,
             set_lists_type_metadata,
             set_lists_styles,
         ],
@@ -84,6 +85,33 @@ def set_tables_styles(tokens: list[Token]) -> None:
     for token in tokens:
         if token.type == "table_open":
             token.attrSet("class", "rich-text-table")
+
+
+TABLE_CELL_OPEN_TYPES = ("th_open", "td_open")
+
+
+def set_tables_cells_cols(tokens: list[Token]) -> None:
+    index = 0
+
+    for token in tokens:
+        if token.type == "tr_open":
+            index = 0
+        
+        if token.type in TABLE_CELL_OPEN_TYPES:
+            align = get_table_cell_alignment(token)
+
+            token.attrSet("misago-table-col", f"{index}:{align}")
+            index += 1
+
+
+def get_table_cell_alignment(token: Token):
+    if token.attrs:
+        if "left" in token.attrs.get("style"):
+            return "l"
+        elif "right" in token.attrs.get("style"):
+            return "r"
+    
+    return "c"
 
 
 LIST_OPEN_TYPES = ("bullet_list_open", "ordered_list_open")

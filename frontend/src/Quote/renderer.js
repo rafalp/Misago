@@ -6,6 +6,7 @@ import {
   escapeMarkdownLink,
   escapeMarkdownLinkText,
   escapeMarkdownLinkTitle,
+  escapeTableCell,
 } from "./escape"
 
 function attachment(selection, state) {
@@ -166,6 +167,75 @@ function paragraph(selection, state) {
   state.pos += 1
 
   return true
+}
+
+function table(selection, state) {
+  const { node } = state
+
+  if (node.type !== "table") {
+    return false
+  }
+
+  if (state.text) {
+    state.text += "\n\n"
+  }
+
+  const alignment = []
+  const lengths = []
+  const rows = []
+
+  // thead.tr.th
+  node.children.forEach(function (tbody) {
+    if (tbody.type === "table_head") {
+      const row = tbody.children[0].children.map(function (cell) {
+        const text = getTableCellText(selection, cell)
+        alignment.push(cell.alignment)
+        lengths.push(Math.max(text.length, 3))
+        return text
+      })
+      rows.push(row)
+    } else if (tbody.type === "table_body") {
+      tbody.children.forEach(function (table_row) {
+        const row = table_row.children.map(function (cell) {
+          const text = getTableCellText(selection, cell)
+          lengths[cell.index] = Math.max(text.length, lengths[cell.index], 3)
+          return text
+        })
+        rows.push(row)
+      })
+    }
+  })
+
+  const table = []
+  rows.forEach(function (cols, index) {
+    const row = cols.map(function (text, col) {
+      return text + " ".repeat(lengths[col] - text.length)
+    })
+
+    table.push("| " + row.join(" | ") + " | ")
+
+    if (index === 0) {
+      const header = cols.map(function (_, col) {
+        if (alignment[col] === "l") {
+          return "-".repeat(lengths[col])
+        } else if (alignment[col] === "r") {
+          return "-".repeat(lengths[col] - 1) + ":"
+        } else if (alignment[col] === "c") {
+          return ":" + "-".repeat(lengths[col] - 2) + ":"
+        }
+      })
+      table.push("| " + header.join(" | ") + " | ")
+    }
+  })
+
+  state.text += table.join("\n")
+  state.pos += 1
+
+  return true
+}
+
+function getTableCellText(selection, node) {
+  return escapeTableCell(selection.renderNodes(node.children).trim())
 }
 
 function list(selection, state) {
@@ -427,6 +497,7 @@ export default [
   { name: "code", func: code },
   { name: "spoiler", func: spoiler },
   { name: "paragraph", func: paragraph },
+  { name: "table", func: table },
   { name: "list", func: list },
   { name: "hr", func: hr },
   { name: "image", func: image },

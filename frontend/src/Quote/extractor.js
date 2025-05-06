@@ -236,7 +236,7 @@ function paragraph(selection, state) {
 function table(selection, state) {
   const { result, node, stack } = state
 
-  if (node.nodeName !== "DIV") {
+  if (node.nodeName !== "TABLE") {
     return false
   }
 
@@ -356,8 +356,12 @@ function table_th(selection, state) {
     return true
   }
 
+  const { index, alignment } = getTableCellMeta(node)
+
   result.push({
     type: "table_th",
+    index,
+    alignment,
     children,
   })
 
@@ -382,13 +386,27 @@ function table_td(selection, state) {
     return true
   }
 
+  const { index, alignment } = getTableCellMeta(node)
+
   result.push({
     type: "table_td",
+    index,
+    alignment,
     children,
   })
 
   state.pos += 1
   return true
+}
+
+function getTableCellMeta(node) {
+  const meta = node.getAttribute("misago-table-col")
+  if (!meta) {
+    return { index: null, alignment: "c" }
+  }
+
+  const values = meta.split(":")
+  return { index: parseInt(values[0] || "0"), alignment: values[1] || "c" }
 }
 
 function list(selection, state) {
