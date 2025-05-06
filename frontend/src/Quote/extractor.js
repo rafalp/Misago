@@ -236,11 +236,19 @@ function paragraph(selection, state) {
 function table(selection, state) {
   const { result, node, stack } = state
 
-  if (node.nodeName !== "TABLE") {
+  if (node.nodeName !== "DIV") {
     return false
   }
 
-  const table = node.childNodes[0]
+  const tables = Array.from(node.childNodes).filter(function (node) {
+    return node.nodeName === "TABLE"
+  })
+
+  if (tables.length !== 1) {
+    return false
+  }
+
+  const table = tables[0]
 
   const children = selection.extractNodes(
     table.childNodes,
