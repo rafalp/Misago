@@ -74,6 +74,7 @@ def replace_token_inline_mentions(token_inline: Token, users: dict[str, dict]) -
                         attrs={
                             "href": user_data["url"],
                             "class": "rich-text-mention",
+                            "misago-mention": user_data["username"],
                         },
                         meta={"mention": user_data["id"]},
                     ),

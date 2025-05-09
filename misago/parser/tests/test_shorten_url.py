@@ -56,14 +56,38 @@ def test_shorten_url_works_with_long_relative_urls():
     assert result == "/thread/posts/lorem/ipsum/"
 
 
-def test_link_text_is_shortened_if_its_same_as_href(parse_to_html):
+def test_linkified_text_is_shortened(parse_to_html):
     html = parse_to_html(
         "https://en.wikipedia.org"
         "/wiki/Principles_of_user_interface_design_in_common_consumer_electronics"
     )
     assert html == (
         "<p>"
-        '<a href="https://en.wikipedia.org/wiki/Principles_of_user_interface_design_in_common_consumer_electronics" rel="external nofollow noopener" target="_blank">'
+        "<a "
+        'href="https://en.wikipedia.org/wiki/Principles_of_user_interface_design_in_common_consumer_electronics" '
+        'rel="external nofollow noopener" '
+        'target="_blank" '
+        'misago-autolink="true"'
+        ">"
+        "en.wikipedia.org/wiki/Principles_of...ce_design_in_common_consumer_electronics"
+        "</a>"
+        "</p>"
+    )
+
+
+def test_autolink_text_is_shortened(parse_to_html):
+    html = parse_to_html(
+        "<https://en.wikipedia.org"
+        "/wiki/Principles_of_user_interface_design_in_common_consumer_electronics>"
+    )
+    assert html == (
+        "<p>"
+        "<a "
+        'href="https://en.wikipedia.org/wiki/Principles_of_user_interface_design_in_common_consumer_electronics" '
+        'rel="external nofollow noopener" '
+        'target="_blank" '
+        'misago-autolink="true"'
+        ">"
         "en.wikipedia.org/wiki/Principles_of...ce_design_in_common_consumer_electronics"
         "</a>"
         "</p>"

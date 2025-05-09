@@ -1,6 +1,7 @@
 from dataclasses import replace
 from typing import Callable
 
+from django.utils.crypto import get_random_string
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
@@ -35,8 +36,11 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             replace_mentions_tokens,
             set_links_rel_external_nofollow_noopener,
             set_links_target_blank,
+            set_autolinks_attr,
             make_tables_responsive,
             set_tables_styles,
+            set_tables_rows_ids,
+            set_tables_cells_cols,
             set_lists_type_metadata,
             set_lists_styles,
         ],
@@ -70,10 +74,52 @@ def set_links_target_blank(tokens: list[Token]) -> None:
                     child.attrSet("target", "_blank")
 
 
+def set_autolinks_attr(tokens: list[Token]) -> None:
+    for token in tokens:
+        if token.type == "inline":
+            for child in token.children:
+                if child.tag == "a" and child.nesting == 1:
+                    if child.info == "auto":
+                        child.attrSet("misago-autolink", "true")
+
+
 def set_tables_styles(tokens: list[Token]) -> None:
     for token in tokens:
         if token.type == "table_open":
             token.attrSet("class", "rich-text-table")
+
+
+def set_tables_rows_ids(tokens: list[Token]) -> None:
+    for token in tokens:
+        if token.type == "tr_open":
+            token.attrSet("id", "misago-table-tr-" + get_random_string(12))
+
+
+TABLE_CELL_OPEN_TYPES = ("th_open", "td_open")
+
+
+def set_tables_cells_cols(tokens: list[Token]) -> None:
+    index = 0
+
+    for token in tokens:
+        if token.type == "tr_open":
+            index = 0
+
+        if token.type in TABLE_CELL_OPEN_TYPES:
+            align = get_table_cell_alignment(token)
+
+            token.attrSet("misago-table-col", f"{index}:{align}")
+            index += 1
+
+
+def get_table_cell_alignment(token: Token):
+    if token.attrs:
+        if "left" in token.attrs.get("style"):
+            return "l"
+        elif "right" in token.attrs.get("style"):
+            return "r"
+
+    return "c"
 
 
 LIST_OPEN_TYPES = ("bullet_list_open", "ordered_list_open")
@@ -154,29 +200,21 @@ def set_lists_styles(tokens: list[Token]) -> None:
 
 
 def shorten_link_text(tokens: list[Token]) -> None:
-    link_tokens: list[Token] = []
-
-    for token in tokens:
-        if token.children:
-            shorten_link_text(token.children)
-
-        if token.type in ("link_open", "link_close") or link_tokens:
-            link_tokens.append(token)
-            if token.type == "link_close":
-                _shorten_link_text_token_content(link_tokens)
-                link_tokens = []
+    return replace_inline_tag_tokens(tokens, "a", shorten_link_text_contents)
 
 
-def _shorten_link_text_token_content(tokens: list[Token]):
+def shorten_link_text_contents(tokens: list[Token], stack: list[Token]) -> list[Token]:
     if len(tokens) != 3:
-        return
+        return tokens
 
     link_open, text, _ = tokens
-    href = link_open.attrs.get("href")
+    if link_open.info != "auto":
+        return tokens
 
-    if href and text.content == href:
-        link_open.meta["shortened_url"] = True
-        text.content = shorten_url(text.content)
+    link_open.meta["shortened_url"] = True
+    text.content = shorten_url(text.content)
+
+    return tokens
 
 
 def replace_video_links_with_players(tokens: list[Token]) -> list[Token] | None:

@@ -17,6 +17,7 @@ import "./htmxErrors"
 import Lightbox from "./lightbox"
 import editor, { activateEditors } from "./editor"
 import "./pagination"
+import quote from "./Quote"
 import "./richtext"
 import * as snackbars from "./snackbars"
 import "./scrollTo"
@@ -33,6 +34,7 @@ export class Misago {
     this.loader = loader
     this.editor = editor
     this.lightbox = lightbox
+    this.quote = quote
   }
 
   addInitializer(initializer) {
