@@ -203,7 +203,6 @@ export class MarkupEditorCodeModal extends MarkupEditorModal {
     let delimiter = args.startsWith("`") ? "~" : "`"
     while (delimiter.length < 3 || code.indexOf(delimiter) !== -1) {
       delimiter += delimiter[0]
-      console.log(delimiter)
     }
     return delimiter
   }

@@ -20,27 +20,82 @@ function code(selection, root, nodes) {
   ]
 }
 
-function table_thead(selection, root, nodes) {
-  if (nodes[0].type !== "table_thead") {
-    return nodes
+function table(selection, root, nodes) {
+  return nodes.map((node) => {
+    if (node.type === "table") {
+      return fixTable(selection, node)
+    } else {
+      return node
+    }
+  })
+}
+
+function fixTable(selection, table) {
+  let result = fixTableHeader(selection, table)
+  return fixTableColumns(selection, result)
+}
+
+function fixTableHeader(selection, table) {
+  if (table.children[0].type === "table_head") {
+    return table
   }
 
   const thead = {
     type: "table_head",
-    children: [{ type: "table_row", children: nodes }],
+    children: [{ type: "table_row", children: [] }],
   }
 
-  const tbody = {
-    type: "table_body",
-    children: [],
+  table.children = [thead, table.children[0]]
+
+  return table
+}
+
+function fixTableColumns(selection, table) {
+  const element = document
+    .getElementById(table.children[1].children[0].id)
+    .closest("table")
+
+  const head = table.children[0]
+  const body = table.children[1]
+
+  const cols = {}
+  head.children.forEach(function (row) {
+    row.children.forEach(function (cell) {
+      cols[cell.index] = true
+    })
+  })
+
+  body.children.forEach(function (row) {
+    row.children.forEach(function (cell) {
+      cols[cell.index] = true
+    })
+  })
+
+  const length = Object.keys(cols).length
+
+  head.children[0].children = selection.extractNodes(
+    Array.from(element.querySelector("thead tr").childNodes)
+      .filter((node) => node.nodeName === "TH")
+      .filter((_, index) => cols[index])
+  )
+
+  body.children.forEach((row) => {
+    row.children = selection.extractNodes(
+      Array.from(document.getElementById(row.id).childNodes)
+        .filter((node) => node.nodeName === "TD")
+        .filter((_, index) => cols[index])
+    )
+  })
+
+  return table
+}
+
+function table_head(selection, root, nodes) {
+  if (nodes[0].type !== "table_head") {
+    return nodes
   }
 
-  return [
-    {
-      type: "table",
-      children: [thead, tbody],
-    },
-  ]
+  return [{ type: "table", children: nodes }]
 }
 
 function table_row(selection, root, nodes) {
@@ -84,7 +139,7 @@ function table_row(selection, root, nodes) {
     type: "table_td",
     index: null,
     alignment: null,
-    children: [{ type: "text", content: "" }],
+    children: [],
   }
 
   nodes.forEach(function (rowNode) {
@@ -128,25 +183,10 @@ function table_th(selection, root, nodes) {
     children: [{ type: "table_row", children: nodes }],
   }
 
-  const tbody = {
-    type: "table_body",
-    children: [
-      {
-        type: "table_row",
-        children: nodes.map(function () {
-          return {
-            type: "table_td",
-            children: [{ type: "text", content: "" }],
-          }
-        }),
-      },
-    ],
-  }
-
   return [
     {
       type: "table",
-      children: [thead, tbody],
+      children: [thead],
     },
   ]
 }
@@ -246,7 +286,8 @@ function wrapNodesInQuote(nodes) {
 
 export default [
   { name: "code", func: code },
-  { name: "table_thead", func: table_thead },
+  { name: "table", func: table },
+  { name: "table_head", func: table_head },
   { name: "table_row", func: table_row },
   { name: "table_th", func: table_th },
   { name: "table_td", func: table_td },

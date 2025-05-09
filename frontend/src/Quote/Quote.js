@@ -103,7 +103,7 @@ class Quote {
       this.renderer,
       this.postprocess
     )
-    return selection.getQuote(root)
+    return "\n" + selection.getQuote(root) + "\n"
   }
 
   createToolbar() {
@@ -194,19 +194,6 @@ class Quote {
     }
 
     this.hideToolbar()
-  }
-
-  getQuoteText() {
-    const markup = this.getSelectionMarkup()
-    if (!markup) {
-      return ""
-    }
-
-    let text = "\n[quote=" + this.root.args + "]"
-    text += "\n" + markup
-    text += "\n[/quote]\n"
-
-    return text
   }
 }
 

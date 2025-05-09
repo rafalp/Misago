@@ -340,6 +340,7 @@ function table_row(selection, state) {
 
   result.push({
     type: "table_row",
+    id: node.id,
     children,
   })
 

@@ -247,13 +247,13 @@ def test_youtube_link_alone_in_table_cell(parse_to_html):
         '<div class="rich-text-table-container">'
         '\n<table class="rich-text-table">'
         "\n<thead>"
-        "\n<tr>"
+        '\n<tr id="misago-table-tr-random1">'
         '\n<th misago-table-col="0:c">file</th>'
         '\n<th misago-table-col="1:c">upload</th>'
         "\n</tr>"
         "\n</thead>"
         "\n<tbody>"
-        "\n<tr>"
+        '\n<tr id="misago-table-tr-random2">'
         '\n<td misago-table-col="0:c">image</td>'
         '\n<td misago-table-col="1:c">'
         "\n<misago-video "
@@ -279,13 +279,13 @@ def test_youtube_link_with_text_in_table_cell(parse_to_html):
         '<div class="rich-text-table-container">'
         '\n<table class="rich-text-table">'
         "\n<thead>"
-        "\n<tr>"
+        '\n<tr id="misago-table-tr-random1">'
         '\n<th misago-table-col="0:c">file</th>'
         '\n<th misago-table-col="1:c">upload</th>'
         "\n</tr>"
         "\n</thead>"
         "\n<tbody>"
-        "\n<tr>"
+        '\n<tr id="misago-table-tr-random2">'
         '\n<td misago-table-col="0:c">image</td>'
         '\n<td misago-table-col="1:c">'
         "link: "

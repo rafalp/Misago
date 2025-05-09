@@ -1,6 +1,7 @@
 from dataclasses import replace
 from typing import Callable
 
+from django.utils.crypto import get_random_string
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
@@ -38,6 +39,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             set_autolinks_attr,
             make_tables_responsive,
             set_tables_styles,
+            set_tables_rows_ids,
             set_tables_cells_cols,
             set_lists_type_metadata,
             set_lists_styles,
@@ -87,6 +89,12 @@ def set_tables_styles(tokens: list[Token]) -> None:
             token.attrSet("class", "rich-text-table")
 
 
+def set_tables_rows_ids(tokens: list[Token]) -> None:
+    for token in tokens:
+        if token.type == "tr_open":
+            token.attrSet("id", "misago-table-tr-" + get_random_string(12))
+
+
 TABLE_CELL_OPEN_TYPES = ("th_open", "td_open")
 
 
@@ -96,7 +104,7 @@ def set_tables_cells_cols(tokens: list[Token]) -> None:
     for token in tokens:
         if token.type == "tr_open":
             index = 0
-        
+
         if token.type in TABLE_CELL_OPEN_TYPES:
             align = get_table_cell_alignment(token)
 
@@ -110,7 +118,7 @@ def get_table_cell_alignment(token: Token):
             return "l"
         elif "right" in token.attrs.get("style"):
             return "r"
-    
+
     return "c"
 
 
