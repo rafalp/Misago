@@ -1,5 +1,6 @@
 import { computePosition, flip, offset, shift } from "@floating-ui/dom"
 import * as snackbar from "../snackbars"
+import QuoteCursorPosition from "./QuoteCursorPosition"
 import QuoteSelection from "./QuoteSelection"
 import Ruleset from "./Ruleset"
 import extractorRules from "./extractor"
@@ -14,6 +15,7 @@ class Quote {
 
     this.options = null
     this.toolbar = null
+    this.cursor = null
 
     this.range = null
     this.root = null
@@ -30,6 +32,7 @@ class Quote {
 
       this.options = options
       this.toolbar = this.createToolbar()
+      this.cursor = new QuoteCursorPosition()
     }
   }
 
@@ -103,7 +106,7 @@ class Quote {
       this.renderer,
       this.postprocess
     )
-    return "\n" + selection.getQuote(root) + "\n"
+    return "\n\n" + selection.getQuote(root) + "\n\n"
   }
 
   createToolbar() {
@@ -152,9 +155,11 @@ class Quote {
   }
 
   showToolbar() {
+    const position = this.cursor.getPosition(this.root.element, this.range)
+
     this.toolbar.classList.add("show")
 
-    computePosition(this.range, this.toolbar, {
+    computePosition(position, this.toolbar, {
       placement: "bottom",
       middleware: [offset(6), flip(), shift({ padding: 8 })],
     }).then(({ x, y }) => {
@@ -175,7 +180,11 @@ class Quote {
     if (form && this.quote) {
       const textarea = form.querySelector(".markup-editor-textarea")
       if (textarea) {
-        textarea.value += this.quote
+        if (textarea.value.trim()) {
+          textarea.value += this.quote
+        } else {
+          textarea.value = this.quote.trimStart()
+        }
         snackbar.info(pgettext("quote toolbar", "Quote added to reply"))
       }
     }

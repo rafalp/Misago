@@ -10,7 +10,7 @@ class Select {
     this.shadow.ariaHidden = true
     this.shadow.style.position = "absolute"
     this.shadow.style.top = 0
-    this.shadow.style.left = -9999
+    this.shadow.style.left = "-9999px"
     this.shadow.style.opacity = 0
     this.shadow.style.zIndex = -999
     document.body.appendChild(this.shadow)
