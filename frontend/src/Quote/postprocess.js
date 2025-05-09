@@ -327,26 +327,45 @@ function list(selection, root, nodes) {
   return nodes
 }
 
-function spoiler(selection, root, nodes) {
-  const { ancestor } = root
-  const container = ancestor.closest("[misago-spoiler]")
+function blocks(selection, root, nodes) {
+  let spoiler = false
+  let quote = false
 
-  if (!container) {
-    return nodes
+  let result = nodes
+
+  let parent = root.ancestor
+  while (!parent.hasAttribute("misago-quote-root")) {
+    if (parent.hasAttribute("misago-spoiler")) {
+      spoiler = true
+      result = [
+        {
+          type: "spoiler",
+          info: parent.getAttribute("misago-spoiler"),
+          children: result,
+        },
+      ]
+    } else if (parent.hasAttribute("misago-quote")) {
+      quote = true
+      result = [
+        {
+          type: "quote",
+          info: parent.getAttribute("misago-quote"),
+          children: result,
+        },
+      ]
+    }
+
+    if (spoiler && quote) {
+      return result
+    }
+
+    parent = parent.parentNode
   }
 
-  const info = container.getAttribute("misago-spoiler")
-
-  return [
-    {
-      type: "spoiler",
-      info,
-      children: nodes,
-    },
-  ]
+  return result
 }
 
-function quote(selection, root, nodes) {
+function quote_wrapper(selection, root, nodes) {
   if (!wrapNodesInQuote(nodes)) {
     return nodes
   }
@@ -361,11 +380,15 @@ function quote(selection, root, nodes) {
 }
 
 function wrapNodesInQuote(nodes) {
-  if (nodes.length === 1 && nodes[0].type === "quote") {
+  if (nodes.length !== 1) {
+    return true
+  }
+
+  if (nodes[0].type === "quote" && nodes[0].info) {
     return false
   }
 
-  if (nodes.length === 1 && nodes[0].type === "spoiler") {
+  if (nodes[0].type === "spoiler") {
     return wrapNodesInQuote(nodes[0].children)
   }
 
@@ -381,6 +404,6 @@ export default [
   { name: "table_td", func: table_td },
   { name: "table_content", func: table_content },
   { name: "list", func: list },
-  { name: "spoiler", func: spoiler },
-  { name: "quote", func: quote },
+  { name: "blocks", func: blocks },
+  { name: "quote_wrapper", func: quote_wrapper },
 ]
