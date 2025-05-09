@@ -266,6 +266,53 @@ function table_td(selection, root, nodes) {
   ]
 }
 
+function table_content(selection, root, nodes) {
+  const td = root.ancestor.closest("td")
+
+  if (!td) {
+    return nodes
+  }
+
+  const table = root.ancestor.closest("table")
+  const header = Array.from(table.querySelector("thead tr").childNodes).filter(
+    (node) => node.nodeName === "TH"
+  )
+
+  const meta = td.getAttribute("misago-table-col")
+  const index = parseInt(meta.split(":")[0])
+
+  return [
+    {
+      type: "table",
+      children: [
+        {
+          type: "table_head",
+          children: [
+            {
+              type: "table_row",
+              children: selection.extractNodes([header[index]]),
+            },
+          ],
+        },
+        {
+          type: "table_body",
+          children: [
+            {
+              type: "table_row",
+              children: [
+                {
+                  type: "table_td",
+                  children: nodes,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ]
+}
+
 function list(selection, root, nodes) {
   if (root.ancestor.nodeName === "OL" || root.ancestor.nodeName === "UL") {
     return [
@@ -332,6 +379,7 @@ export default [
   { name: "table_row", func: table_row },
   { name: "table_th", func: table_th },
   { name: "table_td", func: table_td },
+  { name: "table_content", func: table_content },
   { name: "list", func: list },
   { name: "spoiler", func: spoiler },
   { name: "quote", func: quote },
