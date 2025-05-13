@@ -37,11 +37,13 @@ class Quote {
   }
 
   onSelect = () => {
-    if (this.updateState()) {
-      this.showToolbar()
-    } else {
-      this.hideToolbar()
-    }
+    window.setTimeout(() => {
+      if (this.updateState()) {
+        this.showToolbar()
+      } else {
+        this.hideToolbar()
+      }
+    }, 0)
   }
 
   updateState() {
@@ -52,12 +54,13 @@ class Quote {
     const selection = window.getSelection()
     if (
       !selection ||
+      selection.isCollapsed ||
       selection.type !== "Range" ||
       selection.rangeCount !== 1
     ) {
       return false
     }
-
+    console.log("selection", selection)
     const range = selection.getRangeAt(0)
     const root = this.getRangeRoot(range)
 
