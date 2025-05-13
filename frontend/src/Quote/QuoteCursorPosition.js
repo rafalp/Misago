@@ -34,7 +34,6 @@ class QuoteCursorPosition {
     const marketTarget = this.findMarkerTargetNode(rangeChildNodes)
 
     if (marketTarget) {
-      console.log("target", marketTarget)
       marketTarget.appendChild(marker)
       this.shadow.replaceChildren(...rangeChildNodes)
     } else {
@@ -67,7 +66,6 @@ class QuoteCursorPosition {
   }
 
   findMarkerTargetNode(nodes) {
-    console.log(nodes)
     const node = nodes[nodes.length - 1]
     if (node.nodeType === Node.TEXT_NODE) {
       return null

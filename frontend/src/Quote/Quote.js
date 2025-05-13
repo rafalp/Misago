@@ -60,7 +60,7 @@ class Quote {
     ) {
       return false
     }
-    console.log("selection", selection)
+
     const range = selection.getRangeAt(0)
     const root = this.getRangeRoot(range)
 
