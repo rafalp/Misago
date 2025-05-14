@@ -27,8 +27,7 @@ class Quote {
       (options.reply || options.quote) &&
       typeof window.getSelection !== "undefined"
     ) {
-      document.addEventListener("mouseup", this.onSelect)
-      document.addEventListener("touchend", this.onSelect)
+      document.addEventListener("selectionchange", this.onSelect)
 
       this.options = options
       this.toolbar = this.createToolbar()
@@ -37,13 +36,11 @@ class Quote {
   }
 
   onSelect = () => {
-    window.setTimeout(() => {
-      if (this.updateState()) {
-        this.showToolbar()
-      } else {
-        this.hideToolbar()
-      }
-    }, 0)
+    if (this.updateState()) {
+      this.showToolbar()
+    } else {
+      this.hideToolbar()
+    }
   }
 
   updateState() {
