@@ -64,10 +64,8 @@
   .rich-text-attachment-group {
     margin-top: @line-height-computed * -1;
 
-    word-spacing: 10px;
-
-    & > * {
-      word-spacing: normal;
+    &:first-child {
+      margin-top: 0;
     }
   }
 
@@ -92,8 +90,10 @@ ol {
 
 .rich-text-image {
   display: inline-block;
-  // position: relative;
+  position: relative;
   overflow: hidden;
+
+  margin-top: @line-height-computed;
   max-width: 100%;
 
   border-radius: @border-radius-base;
@@ -109,12 +109,12 @@ ol {
 }
 
 .rich-text-video {
-  position: relative;
-
   display: block;
+  position: relative;
   overflow: hidden;
 
   height: 0;
+  margin-top: @line-height-computed;
   padding: 0 0 56.25% 0;
 
   background-color: #1e1e1e;
@@ -175,6 +175,7 @@ ol {
   position: relative;
 
   margin-top: @line-height-computed;
+  margin-right: floor(@grid-gutter-width / 5);
 
   .rich-text-info-hover-btn {
     top: 3px;
@@ -230,6 +231,8 @@ ol {
 
     font-size: 24px;
     line-height: 24px;
+
+    user-select: none;
   }
 
   .rich-text-file-name {
@@ -249,22 +252,15 @@ ol {
 
 .rich-text-attachment-error {
   display: inline-block;
+  position: relative;
 
-  &:last-child {
-    margin-bottom: 0;
-  }
+  margin-top: @line-height-computed;
+  margin-right: floor(@grid-gutter-width / 5);
+  padding: 8px 12px 8px 42px;
 
-  .rich-text-attachment-error-body {
-    display: inline-block;
-    position: relative;
-
-    display: inline-block;
-    padding: 8px 12px 8px 42px;
-
-    background: lighten(@gray-lighter, 5);
-    border-radius: @border-radius-base;
-    color: @gray-light;
-  }
+  background: lighten(@gray-lighter, 5);
+  border-radius: @border-radius-base;
+  color: @gray-light;
 
   .material-icon {
     position: absolute;
@@ -274,6 +270,8 @@ ol {
     color: @gray-light;
     font-size: 24px;
     line-height: 24px;
+
+    user-select: none;
   }
 
   .rich-text-attachment-error-name {
