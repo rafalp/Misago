@@ -36,7 +36,11 @@
   .rich-text-code,
   .rich-text-spoiler,
   .rich-text-table-container,
-  .rich-text-video-iframe {
+  .rich-text-video,
+  .rich-text-video-iframe,
+  .rich-text-image,
+  .rich-text-file,
+  .rich-text-attachment-error {
     margin: @line-height-computed 0;
 
     &:first-child {
@@ -55,14 +59,6 @@
   h5,
   h6 {
     margin-top: @line-height-computed * 2;
-
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-
-  .rich-text-attachment-group {
-    margin-top: @line-height-computed * -1;
 
     &:first-child {
       margin-top: 0;
@@ -89,11 +85,9 @@ ol {
 }
 
 .rich-text-image {
-  display: inline-block;
   position: relative;
   overflow: hidden;
 
-  margin-top: @line-height-computed;
   max-width: 100%;
 
   border-radius: @border-radius-base;
@@ -109,12 +103,10 @@ ol {
 }
 
 .rich-text-video {
-  display: block;
   position: relative;
   overflow: hidden;
 
   height: 0;
-  margin-top: @line-height-computed;
   padding: 0 0 56.25% 0;
 
   background-color: #1e1e1e;
@@ -171,11 +163,7 @@ ol {
 }
 
 .rich-text-file {
-  display: inline-block;
   position: relative;
-
-  margin-top: @line-height-computed;
-  margin-right: floor(@grid-gutter-width / 5);
 
   .rich-text-info-hover-btn {
     top: 3px;
