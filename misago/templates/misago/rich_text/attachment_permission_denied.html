@@ -1,10 +1,9 @@
 {% load i18n %}
-<div
+<span
   class="rich-text-attachment-error"
+  title="{{ error }}"
   misago-attachment="{{ attachment.name }}:{{ attachment.id }}"
 >
-  <div class="rich-text-attachment-error-body" title="{{ error }}">
-    <span class="material-icon">lock_outline</span>
-    <span class="rich-text-attachment-error-name">{{ name }}</span>
-  </div>
-</div>
+  <span class="material-icon">lock_outline</span>
+  <span class="rich-text-attachment-error-name">{{ attachment.name }}</span>
+</span>

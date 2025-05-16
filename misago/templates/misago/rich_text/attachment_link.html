@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="rich-text-file" misago-attachment="{{ attachment.name }}:{{ attachment.id }}">
+<span class="rich-text-file" misago-attachment="{{ attachment.name }}:{{ attachment.id }}">
   <a href="{% url 'misago:attachment-download' slug=attachment.slug id=attachment.id %}" target="_blank" class="rich-text-file-link">
     <span class="material-icon">open_in_new</span>
     <span class="rich-text-file-name">{{ attachment.name }}</span>
@@ -12,4 +12,4 @@
   >
     <span class="material-icon">info</span>
   </a>
-</div>
+</span>

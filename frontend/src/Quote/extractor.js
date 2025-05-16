@@ -1,31 +1,9 @@
 import getQuotedCode from "./getQuotedCode"
 
-function attachments_group(selection, state) {
+function attachment(selection, state) {
   const { result, node } = state
 
-  if (node.nodeName !== "DIV") {
-    return false
-  }
-  const attachments = node.querySelectorAll("[misago-attachment]")
-  if (!attachments) {
-    return false
-  }
-
-  for (let i = 0; i < attachments.length; i++) {
-    result.push({
-      type: "attachment",
-      args: attachments[i].getAttribute("misago-attachment"),
-    })
-  }
-
-  state.pos += 1
-  return true
-}
-
-function attachment_image(selection, state) {
-  const { result, node } = state
-
-  if (node.nodeName !== "IMG") {
+  if (node.nodeName !== "DIV" && node.nodeName !== "SPAN") {
     return false
   }
 
@@ -34,24 +12,7 @@ function attachment_image(selection, state) {
     return false
   }
 
-  result.push({
-    type: "attachment",
-    args: attachment,
-  })
-
-  state.pos += 1
-  return true
-}
-
-function attachment_file(selection, state) {
-  const { result, node } = state
-
-  if (node.nodeName !== "Am") {
-    return false
-  }
-
-  const attachment = node.getAttribute("misago-attachment")
-  if (!attachment) {
+  if (!node.childNodes.length) {
     return false
   }
 
@@ -734,9 +695,7 @@ export default [
   { name: "list", func: list },
   { name: "list_item", func: list_item },
   { name: "hr", func: hr },
-  { name: "attachments_group", func: attachments_group },
-  { name: "attachment_image", func: attachment_image },
-  { name: "attachment_file", func: attachment_file },
+  { name: "attachment", func: attachment },
   { name: "image", func: image },
   { name: "mention", func: mention },
   { name: "link", func: link },

@@ -36,18 +36,16 @@
   .rich-text-code,
   .rich-text-spoiler,
   .rich-text-table-container,
-  .rich-text-video,
-  .rich-text-video-iframe,
-  .rich-text-image,
-  .rich-text-file,
-  .rich-text-attachment-error {
+  .rich-text-video-iframe {
     margin: @line-height-computed 0;
 
-    &:first-child {
+    &:first-child,
+    &.rich-text-after-selection-spacer {
       margin-top: 0;
     }
 
-    &:last-child {
+    &:last-child,
+    &.rich-text-before-selection-spacer {
       margin-bottom: 0;
     }
   }
@@ -62,6 +60,10 @@
 
     &:first-child {
       margin-top: 0;
+    }
+
+    &.rich-text-after-selection-spacer {
+      margin-top: @line-height-computed;
     }
   }
 
@@ -84,16 +86,23 @@ ol {
   }
 }
 
+.rich-text-selection-spacer {
+  height: @line-height-computed;
+}
+
 .rich-text-image {
+  display: inline-block;
   position: relative;
-  overflow: hidden;
-
   max-width: 100%;
-
-  border-radius: @border-radius-base;
 
   .rich-text-image-link {
     display: inline-block;
+  }
+
+  img {
+    display: inline-block;
+
+    border-radius: @border-radius-base;
   }
 }
 
@@ -140,6 +149,7 @@ ol {
   border-radius: @border-radius-base;
 
   user-select: none;
+  -webkit-user-select: none;
 
   &,
   &:link,
@@ -163,6 +173,7 @@ ol {
 }
 
 .rich-text-file {
+  display: inline-block;
   position: relative;
 
   .rich-text-info-hover-btn {
@@ -221,6 +232,7 @@ ol {
     line-height: 24px;
 
     user-select: none;
+    -webkit-user-select: none;
   }
 
   .rich-text-file-name {
@@ -242,8 +254,6 @@ ol {
   display: inline-block;
   position: relative;
 
-  margin-top: @line-height-computed;
-  margin-right: floor(@grid-gutter-width / 5);
   padding: 8px 12px 8px 42px;
 
   background: lighten(@gray-lighter, 5);
@@ -260,6 +270,7 @@ ol {
     line-height: 24px;
 
     user-select: none;
+    -webkit-user-select: none;
   }
 
   .rich-text-attachment-error-name {
@@ -321,6 +332,7 @@ ol {
   line-height: 0;
 
   user-select: none;
+  -webkit-user-select: none;
 
   img {
     width: 24px;
@@ -342,6 +354,7 @@ ol {
   border-radius: @border-radius-base;
 
   user-select: none;
+  -webkit-user-select: none;
 
   &:hover,
   &:focus,
@@ -504,6 +517,7 @@ a.rich-text-quote-header-link-secondary {
   white-space: nowrap;
 
   user-select: none;
+  -webkit-user-select: none;
 
   & {
     background-color: @rich-text-code-btn-bg;
@@ -576,6 +590,7 @@ a.rich-text-quote-header-link-secondary {
   white-space: nowrap;
 
   user-select: none;
+  -webkit-user-select: none;
 }
 
 .rich-text-spoiler-body {

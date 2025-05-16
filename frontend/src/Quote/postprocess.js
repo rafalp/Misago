@@ -1,5 +1,23 @@
 import getQuotedCode from "./getQuotedCode"
 
+function attachment(selection, root, nodes) {
+  const { ancestor } = root
+  const container = ancestor.closest("[misago-attachment]")
+
+  if (!container) {
+    return nodes
+  }
+
+  const args = container.getAttribute("misago-attachment")
+
+  return [
+    {
+      type: "attachment",
+      args,
+    },
+  ]
+}
+
 function code(selection, root, nodes) {
   const { ancestor } = root
   const container = ancestor.closest("[misago-code]")
@@ -396,6 +414,7 @@ function wrapNodesInQuote(nodes) {
 }
 
 export default [
+  { name: "attachment", func: attachment },
   { name: "code", func: code },
   { name: "table", func: table },
   { name: "table_head", func: table_head },

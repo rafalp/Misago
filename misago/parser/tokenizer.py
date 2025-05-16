@@ -30,6 +30,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             replace_video_links_with_players,
             shorten_link_text,
             extract_attachments,
+            insert_attachments_selection_spacers,
             remove_repeated_hrs,
             remove_nested_inline_bbcodes,
             replace_blockquotes_with_misago_quotes,
@@ -316,8 +317,7 @@ def _make_table_responsive(tokens: list[Token], stack: list[Token]) -> list[Toke
 
 
 def extract_attachments(tokens: list[Token]) -> list[Token] | None:
-    new_tokens = replace_tag_tokens(tokens, "p", _extract_attachments_from_paragraph)
-    return merge_attachments_groups(new_tokens)
+    return replace_tag_tokens(tokens, "p", _extract_attachments_from_paragraph)
 
 
 def _extract_attachments_from_paragraph(
@@ -328,34 +328,12 @@ def _extract_attachments_from_paragraph(
 
     p_open, inline, p_close = tokens
 
-    attachments_open = Token(
-        type="attachments_open",
-        tag="div",
-        nesting=1,
-        attrs={"class": "rich-text-attachment-group"},
-        block=True,
-    )
-
-    attachments_close = Token(
-        type="attachments_close",
-        tag="div",
-        nesting=-1,
-        block=True,
-    )
-
     new_tokens: list[Token] = []
     for part in split_inline_token(inline, "misago-attachment"):
         if part.type == "attachment":
-            if not new_tokens or new_tokens[-1].type != "attachment":
-                new_tokens.append(attachments_open)
             new_tokens.append(replace(part, block=True))
         else:
-            if new_tokens and new_tokens[-1].type == "attachment":
-                new_tokens.append(attachments_close)
             new_tokens += [p_open, part, p_close]
-
-    if new_tokens and new_tokens[-1].type == "attachment":
-        new_tokens.append(attachments_close)
 
     p_open.hidden = False
     p_close.hidden = False
@@ -363,32 +341,77 @@ def _extract_attachments_from_paragraph(
     return new_tokens
 
 
-def merge_attachments_groups(tokens: list[Token]) -> list[Token]:
+def insert_attachments_selection_spacers(tokens: list[Token]) -> list[Token] | None:
     if not tokens:
-        return tokens
+        return []
 
-    new_tokens: list[Token] = []
+    previous_token: Token | None = None
+    stack: list[Token] = []
     max_index = len(tokens) - 1
 
-    # Merge attachments groups basically removes </close><open> token pairs
+    new_tokens: list[Token] = []
     for index, token in enumerate(tokens):
-        if (
-            token.type == "attachments_open"
-            and index
-            and tokens[index - 1].type == "attachments_close"
-        ):
-            continue
+        if token.type == "attachment":
+            if (
+                index
+                and tokens[index - 1].type != "attachment"
+                and tokens[index - 1].nesting < 1
+            ):
+                if previous_token:
+                    update_token_before_selection_spacer(previous_token)
 
-        if (
-            token.type == "attachments_close"
-            and index < max_index
-            and tokens[index + 1].type == "attachments_open"
-        ):
-            continue
+                insert_selection_spacer(new_tokens)
 
-        new_tokens.append(token)
+            new_tokens.append(token)
+
+            if index < max_index and tokens[index + 1].nesting >= 0:
+                insert_selection_spacer(new_tokens)
+
+                if tokens[index + 1].type != "attachment":
+                    update_token_after_selection_spacer(tokens[index + 1])
+
+        else:
+            if token.nesting == 1:
+                stack.append(token)
+                previous_token = None
+            elif token.nesting == -1:
+                previous_token = stack.pop()
+            elif token.nesting == 0:
+                previous_token = previous_token
+
+            new_tokens.append(token)
 
     return new_tokens
+
+
+def insert_selection_spacer(tokens: list[Token]):
+    tokens.append(
+        Token(
+            "selection_spacer_open",
+            "div",
+            1,
+            block=True,
+            attrs={
+                "class": "rich-text-selection-spacer",
+                "misago-selection-spacer": "true",
+            },
+        )
+    )
+    tokens.append(Token("selection_spacer_close", "div", -1, block=True))
+
+
+def update_token_before_selection_spacer(token: Token):
+    if token.attrs.get("class"):
+        token.attrs["class"] += " rich-text-before-selection-spacer"
+    else:
+        token.attrs["class"] = "rich-text-before-selection-spacer"
+
+
+def update_token_after_selection_spacer(token: Token):
+    if token.attrs.get("class"):
+        token.attrs["class"] += " rich-text-after-selection-spacer"
+    else:
+        token.attrs["class"] = "rich-text-after-selection-spacer"
 
 
 def remove_repeated_hrs(tokens: list[Token]) -> list[Token]:

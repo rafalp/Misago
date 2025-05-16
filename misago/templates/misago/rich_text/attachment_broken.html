@@ -1,13 +1,9 @@
 {% load i18n %}
-<div
+<span
   class="rich-text-attachment-error"
+  title="{% translate 'This attachment is unavailable due to an error' context 'rich text attachment broken' %}"
   misago-attachment="{{ attachment.name }}:{{ attachment.id }}"
 >
-  <div
-    class="rich-text-attachment-error-body"
-    title="{% translate 'This attachment is unavailable due to an error' context 'rich text attachment broken' %}"
-  >
-    <span class="material-icon">broken_image</span>
-    <span class="rich-text-attachment-error-name">{{ attachment.name }}</span>
-  </div>
-</div>
+  <span class="material-icon">broken_image</span>
+  <span class="rich-text-attachment-error-name">{{ attachment.name }}</span>
+</span>

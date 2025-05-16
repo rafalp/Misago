@@ -53,7 +53,7 @@ class Quote {
       !selection ||
       selection.isCollapsed ||
       selection.type !== "Range" ||
-      selection.rangeCount !== 1
+      selection.rangeCount === 0
     ) {
       return false
     }
