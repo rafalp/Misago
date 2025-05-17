@@ -62,6 +62,9 @@
 
   img {
     max-width: 100%;
+    height: auto;
+
+    border-radius: @border-radius-small;
   }
 }
 
@@ -127,22 +130,14 @@ ol,
 .rich-text-image {
   display: inline-block;
   position: relative;
-  max-width: 100%;
 
   .rich-text-image-link {
     display: inline-block;
   }
 
   img {
-    display: inline-block;
-
-    border-radius: @border-radius-base;
+    margin: 0;
   }
-}
-
-.rich-text-image-responsive img {
-  width: 100%;
-  height: auto;
 }
 
 .rich-text-video {
