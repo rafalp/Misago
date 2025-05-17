@@ -3,7 +3,7 @@ from markdown_it.rules_inline.state_inline import StateInline
 
 FORMATTING_BBCODE = {
     "bold": "b",
-    "italics": "i",
+    "italic": "i",
     "underline": "u",
     "strikethrough": "del",
 }

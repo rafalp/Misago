@@ -97,8 +97,6 @@ def test_posting_state_set_post_message_stores_attachments_ids_in_post_metadata(
 
     assert post.original == "<attachment=image.png:123>"
     assert post.parsed == (
-        '<div class="rich-text-attachment-group">'
-        '\n<misago-attachment name="image.png" slug="image-png" id="123">'
-        "\n</div>"
+        '<misago-attachment name="image.png" slug="image-png" id="123">'
     )
     assert post.metadata == {"attachments": [123]}

@@ -26,7 +26,11 @@ def create_parser() -> MarkdownIt:
     return create_parser_hook(
         _create_parser_action,
         config="js-default",
-        options_update={"typographer": True, "linkify": True},
+        options_update={
+            "breaks": True,
+            "typographer": True,
+            "linkify": True,
+        },
         enable=["replacements", "smartquotes"],
         plugins=[
             attachment_plugin,

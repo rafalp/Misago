@@ -1,0 +1,28 @@
+.quote-toolbar {
+  .shadow-4dp();
+}
+
+.quote-toolbar-btn {
+  padding: 6px 8px;
+
+  font-weight: 500;
+
+  &:first-child {
+    border-radius: @border-radius-small 0 0 @border-radius-small;
+  }
+
+  &:last-child {
+    border-radius: 0 @border-radius-small @border-radius-small 0;
+  }
+
+  &:only-child {
+    border-radius: @border-radius-small;
+  }
+
+  .material-icon {
+    margin-right: 4px;
+
+    font-size: 18px;
+    line-height: 18px;
+  }
+}

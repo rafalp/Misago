@@ -76,7 +76,11 @@ def replace_rich_text_attachment(
             "misago/rich_text/attachment_permission_denied.html",
             {
                 "error": error.error,
-                "name": name,
+                "attachment": {
+                    "name": name,
+                    "slug": slug,
+                    "id": id,
+                },
             },
         )
 
@@ -95,9 +99,11 @@ def replace_rich_text_attachment(
     return render_to_string(
         "misago/rich_text/attachment_link.html",
         {
-            "name": name,
-            "slug": slug,
-            "id": id,
+            "attachment": {
+                "name": name,
+                "slug": slug,
+                "id": id,
+            },
         },
     )
 
