@@ -333,10 +333,11 @@ def _extract_attachments_from_paragraph(
         if part.type == "attachment":
             new_tokens.append(replace(part, block=True))
         else:
-            new_tokens += [p_open, part, p_close]
-
-    p_open.hidden = False
-    p_close.hidden = False
+            new_tokens += [
+                replace(p_open, hidden=False),
+                part,
+                replace(p_close, hidden=False),
+            ]
 
     return new_tokens
 
@@ -352,15 +353,10 @@ def insert_attachments_selection_spacers(tokens: list[Token]) -> list[Token] | N
     new_tokens: list[Token] = []
     for index, token in enumerate(tokens):
         if token.type == "attachment":
-            if (
-                index
-                and tokens[index - 1].type != "attachment"
-                and tokens[index - 1].nesting < 1
-            ):
-                if previous_token:
-                    update_token_before_selection_spacer(previous_token)
-
+            if previous_token:
+                update_token_before_selection_spacer(previous_token)
                 insert_selection_spacer(new_tokens)
+                previous_token = None
 
             new_tokens.append(token)
 

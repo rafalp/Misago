@@ -174,7 +174,7 @@ def test_render_tokens_to_plaintext_renders_table():
 def test_render_tokens_to_plaintext_renders_attachments():
     parser = create_parser()
     tokens = tokenize(parser, "<attachment=image.png:1><attachment=video.mp4:2>")
-    assert render_tokens_to_plaintext(tokens) == "image.png\nvideo.mp4"
+    assert render_tokens_to_plaintext(tokens) == "image.png\n\nvideo.mp4"
 
 
 def test_render_tokens_to_plaintext_renders_code_inline():
