@@ -30,7 +30,7 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             replace_video_links_with_players,
             shorten_link_text,
             extract_attachments,
-            insert_attachments_selection_spacers,
+            insert_attachments_selection_boundaries,
             remove_repeated_hrs,
             remove_nested_inline_bbcodes,
             replace_blockquotes_with_misago_quotes,
@@ -342,72 +342,47 @@ def _extract_attachments_from_paragraph(
     return new_tokens
 
 
-def insert_attachments_selection_spacers(tokens: list[Token]) -> list[Token] | None:
+def insert_attachments_selection_boundaries(tokens: list[Token]) -> list[Token] | None:
     if not tokens:
         return []
 
-    previous_token: Token | None = None
-    stack: list[Token] = []
     max_index = len(tokens) - 1
 
     new_tokens: list[Token] = []
     for index, token in enumerate(tokens):
         if token.type == "attachment":
-            if previous_token:
-                update_token_before_selection_spacer(previous_token)
-                insert_selection_spacer(new_tokens)
-                previous_token = None
+            if (
+                index
+                and tokens[index - 1].type != "attachment"
+                and tokens[index - 1].nesting < 1
+            ):
+                insert_selection_boundary(new_tokens)
 
             new_tokens.append(token)
 
             if index < max_index and tokens[index + 1].nesting >= 0:
-                insert_selection_spacer(new_tokens)
-
-                if tokens[index + 1].type != "attachment":
-                    update_token_after_selection_spacer(tokens[index + 1])
+                insert_selection_boundary(new_tokens)
 
         else:
-            if token.nesting == 1:
-                stack.append(token)
-                previous_token = None
-            elif token.nesting == -1:
-                previous_token = stack.pop()
-            elif token.nesting == 0:
-                previous_token = previous_token
-
             new_tokens.append(token)
 
     return new_tokens
 
 
-def insert_selection_spacer(tokens: list[Token]):
+def insert_selection_boundary(tokens: list[Token]):
     tokens.append(
         Token(
-            "selection_spacer_open",
+            "selection_boundary_open",
             "div",
             1,
             block=True,
             attrs={
-                "class": "rich-text-selection-spacer",
-                "misago-selection-spacer": "true",
+                "class": "rich-text-selection-boundary",
+                "misago-selection-boundary": "true",
             },
         )
     )
-    tokens.append(Token("selection_spacer_close", "div", -1, block=True))
-
-
-def update_token_before_selection_spacer(token: Token):
-    if token.attrs.get("class"):
-        token.attrs["class"] += " rich-text-before-selection-spacer"
-    else:
-        token.attrs["class"] = "rich-text-before-selection-spacer"
-
-
-def update_token_after_selection_spacer(token: Token):
-    if token.attrs.get("class"):
-        token.attrs["class"] += " rich-text-after-selection-spacer"
-    else:
-        token.attrs["class"] = "rich-text-after-selection-spacer"
+    tokens.append(Token("selection_boundary_close", "div", -1, block=True))
 
 
 def remove_repeated_hrs(tokens: list[Token]) -> list[Token]:
