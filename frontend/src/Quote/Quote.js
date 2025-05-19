@@ -58,6 +58,16 @@ class Quote {
       return false
     }
 
+    if (selection.rangeCount === 1) {
+      return this.updateStateWithSingleRange(selection)
+    }
+
+    // Separate logic for FireFox
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=753718
+    return this.updateStateWithMultipleRanges(selection)
+  }
+
+  updateStateWithSingleRange(selection) {
     const range = selection.getRangeAt(0)
     const root = this.getRangeRoot(range)
 
@@ -67,7 +77,34 @@ class Quote {
 
     this.range = range
     this.root = root
-    this.quote = this.getSelectionQuote(root, range) || null
+    this.quote = this.getSelectionQuote(root) || null
+
+    return this.range && this.root && this.quote
+  }
+
+  updateStateWithMultipleRanges(selection) {
+    const ranges = []
+
+    for (let i = 0; i < selection.rangeCount; i++) {
+      ranges.push(selection.getRangeAt(i))
+    }
+
+    const startRange = ranges[0]
+    const endRange = ranges[ranges.length - 1]
+    const range = new Range()
+
+    range.setStart(startRange.startContainer, startRange.startOffset)
+    range.setEnd(endRange.endContainer, endRange.endOffset)
+
+    const root = this.getRangeRoot(range)
+
+    if (!root) {
+      return false
+    }
+
+    this.range = range
+    this.root = root
+    this.quote = this.getSelectionQuote(root) || null
 
     return this.range && this.root && this.quote
   }
@@ -100,7 +137,7 @@ class Quote {
     return ancestor
   }
 
-  getSelectionQuote(root, range) {
+  getSelectionQuote(root) {
     const selection = new QuoteSelection(
       this.extractor,
       this.renderer,
