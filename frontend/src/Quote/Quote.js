@@ -84,7 +84,6 @@ class Quote {
 
   updateStateWithMultipleRanges(selection) {
     const ranges = []
-
     for (let i = 0; i < selection.rangeCount; i++) {
       ranges.push(selection.getRangeAt(i))
     }
