@@ -53,7 +53,7 @@ class Quote {
 
   onSelectChange = () => {
     if (this.selecting) {
-      return false
+      return
     }
 
     if (this.debounce) {
@@ -65,7 +65,7 @@ class Quote {
 
   updateSelection = () => {
     if (this.selecting) {
-      return false
+      return
     }
 
     if (this.updateState()) {
@@ -218,12 +218,15 @@ class Quote {
 
   showToolbar() {
     const position = this.cursor.getPosition(this.root.element, this.range)
+    if (!position) {
+      return
+    }
 
     this.toolbar.classList.add("show")
 
     computePosition(position, this.toolbar, {
       placement: "bottom",
-      middleware: [offset(6), flip(), shift({ padding: 8 })],
+      middleware: [offset(4), flip(), shift({ padding: 8 })],
     }).then(({ x, y }) => {
       Object.assign(this.toolbar.style, {
         left: `${x}px`,

@@ -3,8 +3,7 @@ class QuoteCursorPosition {
     this.tether = tether
 
     this.shadow = this.createShadow()
-
-    this.offsetY = null
+    this.padding = null
   }
 
   createShadow() {
@@ -21,50 +20,43 @@ class QuoteCursorPosition {
     return shadow
   }
 
-  getPosition(target, orgRange) {
-    this.shadow.replaceChildren()
+  getPosition(target, range) {
     this.shadow.setAttribute("class", target.getAttribute("class"))
 
-    const orgRangeRect = orgRange.getBoundingClientRect()
-    this.shadow.style.width = `${orgRangeRect.width}px`
+    const rangeRect = range.getBoundingClientRect()
+    this.shadow.style.width = `${rangeRect.width}px`
 
-    if (this.offsetY === null) {
+    if (this.padding === null) {
       const padding = window
         .getComputedStyle(target)
         .getPropertyValue("padding-top")
-      this.offsetY = parseFloat(padding.substring(0, padding.length - 2))
+      this.padding = parseFloat(padding.substring(0, padding.length - 2))
     }
 
-    const range = orgRange.cloneRange()
-    range.setStart(target.childNodes[0], 0)
-    const rangeChildNodes = range.cloneContents().childNodes
+    const clone = range.cloneContents()
+    this.shadow.replaceChildren(...clone.childNodes)
 
-    const marker = document.createElement("span")
-    const marketTarget = this.findMarkerTargetNode(rangeChildNodes)
-
-    if (marketTarget) {
-      marketTarget.appendChild(marker)
-      this.shadow.replaceChildren(...rangeChildNodes)
-    } else {
-      this.shadow.replaceChildren(...rangeChildNodes)
-      this.shadow.appendChild(marker)
+    const tether = this.findTether(this.shadow.childNodes)
+    if (!tether) {
+      return null
     }
 
-    const targetRect = target.getBoundingClientRect()
-    const rangeRect = range.getBoundingClientRect()
     const shadowRect = this.shadow.getBoundingClientRect()
-    const markerRect = marker.getBoundingClientRect()
-    const markerX = markerRect.x - shadowRect.x
+    const tetherRect = tether.getBoundingClientRect()
+    const tetherOffset = {
+      x: tetherRect.x - shadowRect.x + tetherRect.width,
+      y: tetherRect.y - shadowRect.y + tetherRect.height - this.padding,
+    }
 
     const rect = {
-      bottom: targetRect.top + rangeRect.height + this.offsetY,
-      height: rangeRect.height,
-      left: targetRect.left + markerX - 1,
-      right: targetRect.left + markerX + 1,
-      top: targetRect.top + this.offsetY,
-      width: 2,
-      x: targetRect.x + markerX - 1,
-      y: targetRect.y,
+      top: rangeRect.y + tetherOffset.y,
+      bottom: rangeRect.y + tetherOffset.y + 1,
+      left: rangeRect.x + tetherOffset.x,
+      right: rangeRect.x + tetherOffset.x + 1,
+      height: 1,
+      width: 1,
+      x: rangeRect.x + tetherOffset.x,
+      y: rangeRect.y + tetherOffset.y,
     }
 
     return {
@@ -74,14 +66,17 @@ class QuoteCursorPosition {
     }
   }
 
-  findMarkerTargetNode(nodes) {
-    const node = nodes[nodes.length - 1]
-    if (node.nodeType === Node.TEXT_NODE) {
-      return null
-    } else if (node.childNodes && node.childNodes.length) {
-      return this.findMarkerTargetNode(node.childNodes) || node
+  findTether(nodes) {
+    const { rules } = this.tether
+    for (let i = 0; i < rules.length; i++) {
+      const { func } = rules[i]
+      const target = func(nodes)
+      if (target) {
+        return target
+      }
     }
-    return node
+
+    return null
   }
 }
 
