@@ -13,6 +13,9 @@ class Quote {
     this.postprocess = new Ruleset(postprocessRules)
     this.renderer = new Ruleset(rendererRules)
 
+    this.selecting = false
+    this.debounce = null
+
     this.options = null
     this.toolbar = null
     this.cursor = null
@@ -27,7 +30,9 @@ class Quote {
       (options.reply || options.quote) &&
       typeof window.getSelection !== "undefined"
     ) {
-      document.addEventListener("selectionchange", this.onSelect)
+      document.addEventListener("mousedown", this.onSelectStart)
+      document.addEventListener("mouseup", this.onSelectEnd)
+      document.addEventListener("selectionchange", this.onSelectChange)
 
       this.options = options
       this.toolbar = this.createToolbar()
@@ -35,7 +40,32 @@ class Quote {
     }
   }
 
-  onSelect = () => {
+  onSelectStart = () => {
+    this.selecting = true
+  }
+
+  onSelectEnd = () => {
+    this.selecting = false
+    this.updateSelection()
+  }
+
+  onSelectChange = () => {
+    if (this.selecting) {
+      return false
+    }
+
+    if (this.debounce) {
+      window.clearTimeout(this.debounce)
+    }
+
+    this.debounce = window.setTimeout(this.updateSelection, 300)
+  }
+
+  updateSelection = () => {
+    if (this.selecting) {
+      return false
+    }
+
     if (this.updateState()) {
       this.showToolbar()
     } else {
@@ -46,7 +76,6 @@ class Quote {
   updateState() {
     this.range = null
     this.root = null
-    this.quote = null
 
     const selection = window.getSelection()
     if (
@@ -70,6 +99,20 @@ class Quote {
     this.quote = this.getSelectionQuote(root)
 
     return this.range && this.root && this.quote
+  }
+
+  clearState() {
+    this.selecting = true
+
+    this.range = null
+    this.root = null
+    this.quote = null
+
+    this.hideToolbar()
+
+    window.setTimeout(() => {
+      this.selecting = false
+    }, 300)
   }
 
   getRange(selection) {
@@ -206,7 +249,7 @@ class Quote {
       }
     }
 
-    this.hideToolbar()
+    this.clearState()
   }
 
   copyQuote = async () => {
@@ -219,7 +262,7 @@ class Quote {
       }
     }
 
-    this.hideToolbar()
+    this.clearState()
   }
 }
 
