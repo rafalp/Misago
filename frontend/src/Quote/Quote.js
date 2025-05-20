@@ -6,12 +6,14 @@ import Ruleset from "./Ruleset"
 import extractorRules from "./extractor"
 import postprocessRules from "./postprocess"
 import rendererRules from "./renderer"
+import tetherRules from "./tether"
 
 class Quote {
   constructor() {
     this.extractor = new Ruleset(extractorRules)
     this.postprocess = new Ruleset(postprocessRules)
     this.renderer = new Ruleset(rendererRules)
+    this.tether = new Ruleset(tetherRules)
 
     this.selecting = false
     this.debounce = null
@@ -36,7 +38,7 @@ class Quote {
 
       this.options = options
       this.toolbar = this.createToolbar()
-      this.cursor = new QuoteCursorPosition()
+      this.cursor = new QuoteCursorPosition(this.tether)
     }
   }
 

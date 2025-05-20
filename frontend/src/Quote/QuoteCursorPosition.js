@@ -1,15 +1,24 @@
 class QuoteCursorPosition {
-  constructor() {
-    this.shadow = document.createElement("div")
-    this.shadow.ariaHidden = true
-    this.shadow.style.position = "absolute"
-    this.shadow.style.top = 0
-    this.shadow.style.left = "-9999px"
-    this.shadow.style.opacity = 0
-    this.shadow.style.zIndex = -999
-    document.body.appendChild(this.shadow)
+  constructor(tether) {
+    this.tether = tether
+
+    this.shadow = this.createShadow()
 
     this.offsetY = null
+  }
+
+  createShadow() {
+    const shadow = document.createElement("div")
+    shadow.ariaHidden = true
+    shadow.style.position = "absolute"
+    shadow.style.top = 0
+    shadow.style.left = "-9999px"
+    shadow.style.opacity = 0
+    shadow.style.zIndex = -999
+
+    document.body.appendChild(shadow)
+
+    return shadow
   }
 
   getPosition(target, orgRange) {
