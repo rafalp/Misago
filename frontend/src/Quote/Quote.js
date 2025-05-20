@@ -58,55 +58,35 @@ class Quote {
       return false
     }
 
+    const range = this.getRange(selection)
+    const root = this.getRangeRoot(range)
+
+    if (!root) {
+      return false
+    }
+
+    this.range = range
+    this.root = root
+    this.quote = this.getSelectionQuote(root)
+
+    return this.range && this.root && this.quote
+  }
+
+  getRange(selection) {
     if (selection.rangeCount === 1) {
-      return this.updateStateWithSingleRange(selection)
+      return selection.getRangeAt(0)
     }
 
     // Separate logic for FireFox
     // https://bugzilla.mozilla.org/show_bug.cgi?id=753718
-    return this.updateStateWithMultipleRanges(selection)
-  }
+    const start = selection.getRangeAt(0)
+    const end = selection.getRangeAt(selection.rangeCount - 1)
 
-  updateStateWithSingleRange(selection) {
-    const range = selection.getRangeAt(0)
-    const root = this.getRangeRoot(range)
-
-    if (!root) {
-      return false
-    }
-
-    this.range = range
-    this.root = root
-    this.quote = this.getSelectionQuote(root) || null
-
-    return this.range && this.root && this.quote
-  }
-
-  updateStateWithMultipleRanges(selection) {
-    const ranges = []
-
-    for (let i = 0; i < selection.rangeCount; i++) {
-      ranges.push(selection.getRangeAt(i))
-    }
-
-    const startRange = ranges[0]
-    const endRange = ranges[ranges.length - 1]
     const range = new Range()
+    range.setStart(start.startContainer, start.startOffset)
+    range.setEnd(end.endContainer, end.endOffset)
 
-    range.setStart(startRange.startContainer, startRange.startOffset)
-    range.setEnd(endRange.endContainer, endRange.endOffset)
-
-    const root = this.getRangeRoot(range)
-
-    if (!root) {
-      return false
-    }
-
-    this.range = range
-    this.root = root
-    this.quote = this.getSelectionQuote(root) || null
-
-    return this.range && this.root && this.quote
+    return range
   }
 
   getRangeRoot(range) {
