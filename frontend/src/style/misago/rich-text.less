@@ -105,6 +105,12 @@ ol {
   & + .rich-text-video-iframe {
     margin-top: 0;
   }
+
+  // Fix for DOM clones where visible boundaries break position calculation
+  &:first-child,
+  &:last-child {
+    display: none;
+  }
 }
 
 h1,
