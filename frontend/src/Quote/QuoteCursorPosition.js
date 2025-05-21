@@ -46,20 +46,17 @@ class QuoteCursorPosition {
 
     const shadowRect = this.shadow.getBoundingClientRect()
     const tetherRect = tether.getBoundingClientRect()
-    const tetherOffset = {
-      x: tetherRect.x - shadowRect.x + tetherRect.width,
-      y: tetherRect.y - shadowRect.y + tetherRect.height - this.padding,
-    }
+    const tetherOffset = tetherRect.x - shadowRect.x + tetherRect.width
 
     const rect = {
-      top: rangeRect.y + tetherOffset.y,
-      bottom: rangeRect.y + tetherOffset.y + 1,
-      left: rangeRect.x + tetherOffset.x,
-      right: rangeRect.x + tetherOffset.x + 1,
+      top: rangeRect.bottom,
+      bottom: rangeRect.bottom + 1,
+      left: rangeRect.x + tetherOffset,
+      right: rangeRect.x + tetherOffset + 1,
       height: 1,
       width: 1,
       x: rangeRect.x + tetherOffset.x,
-      y: rangeRect.y + tetherOffset.y,
+      y: rangeRect.bottom,
     }
 
     this.shadow.replaceChildren()
