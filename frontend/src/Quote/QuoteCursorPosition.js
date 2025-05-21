@@ -25,7 +25,10 @@ class QuoteCursorPosition {
 
     this.shadow.setAttribute("class", element.getAttribute("class"))
 
-    const rangeRect = range.getBoundingClientRect()
+    const rangeClone = range.cloneRange()
+    rangeClone.setStart(element.childNodes[0], 0)
+
+    const rangeRect = rangeClone.getBoundingClientRect()
     this.shadow.style.width = `${rangeRect.width}px`
 
     if (this.padding === null) {
@@ -35,8 +38,7 @@ class QuoteCursorPosition {
       this.padding = parseFloat(padding.substring(0, padding.length - 2))
     }
 
-    const clone = range.cloneContents()
-    this.shadow.replaceChildren(...clone.childNodes)
+    this.shadow.replaceChildren(...rangeClone.cloneContents().childNodes)
 
     const tether = this.findTether(this.shadow.childNodes)
     if (!tether) {

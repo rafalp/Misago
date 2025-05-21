@@ -90,7 +90,63 @@ function image(cursor, node) {
   return node
 }
 
-function text(_, node) {
+function strong_text(cursor, node) {
+  if (node.nodeName !== "STRONG") {
+    return null
+  }
+
+  return cursor.findTether(node.childNodes)
+}
+
+function emphasis_text(cursor, node) {
+  if (node.nodeName !== "EM") {
+    return null
+  }
+
+  return cursor.findTether(node.childNodes)
+}
+
+function bold_text(cursor, node) {
+  if (node.nodeName !== "B") {
+    return null
+  }
+
+  return cursor.findTether(node.childNodes)
+}
+
+function italic_text(cursor, node) {
+  if (node.nodeName !== "I") {
+    return null
+  }
+
+  return cursor.findTether(node.childNodes)
+}
+
+function underline_text(cursor, node) {
+  if (node.nodeName !== "U") {
+    return null
+  }
+
+  return cursor.findTether(node.childNodes)
+}
+
+function strikethrough_text(cursor, node) {
+  if (node.nodeName !== "DEL") {
+    return null
+  }
+
+  return cursor.findTether(node.childNodes)
+}
+
+function inline_code(cursor, node) {
+  if (node.nodeName !== "CODE") {
+    return null
+  }
+
+  return cursor.findTether(node.childNodes)
+}
+
+function text(cursor, node) {
   if (node.nodeType !== Node.TEXT_NODE) {
     return null
   }
@@ -117,5 +173,12 @@ export default [
   { name: "code", func: code },
   { name: "paragraph", func: paragraph },
   { name: "image", func: image },
+  { name: "strong_text", func: strong_text },
+  { name: "emphasis_text", func: emphasis_text },
+  { name: "bold_text", func: bold_text },
+  { name: "italic_text", func: italic_text },
+  { name: "underline_text", func: underline_text },
+  { name: "strikethrough_text", func: strikethrough_text },
+  { name: "inline_code", func: inline_code },
   { name: "text", func: text },
 ]
