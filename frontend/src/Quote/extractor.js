@@ -28,7 +28,7 @@ function attachment(selection, state) {
 function youtube(selection, state) {
   const { result, node } = state
 
-  if (node.nodeName !== "IFRAME") {
+  if (node.nodeName !== "DIV") {
     return false
   }
 
@@ -680,6 +680,7 @@ function text(selection, state) {
 }
 
 export default [
+  { name: "attachment", func: attachment },
   { name: "youtube", func: youtube },
   { name: "header", func: header },
   { name: "quote", func: quote },
@@ -695,7 +696,6 @@ export default [
   { name: "list", func: list },
   { name: "list_item", func: list_item },
   { name: "hr", func: hr },
-  { name: "attachment", func: attachment },
   { name: "image", func: image },
   { name: "mention", func: mention },
   { name: "link", func: link },

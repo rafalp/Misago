@@ -20,15 +20,17 @@ class QuoteCursorPosition {
     return shadow
   }
 
-  getPosition(target, range) {
-    this.shadow.setAttribute("class", target.getAttribute("class"))
+  getPosition(root, range) {
+    const { element, ancestor } = root
+
+    this.shadow.setAttribute("class", element.getAttribute("class"))
 
     const rangeRect = range.getBoundingClientRect()
     this.shadow.style.width = `${rangeRect.width}px`
 
     if (this.padding === null) {
       const padding = window
-        .getComputedStyle(target)
+        .getComputedStyle(element)
         .getPropertyValue("padding-top")
       this.padding = parseFloat(padding.substring(0, padding.length - 2))
     }
@@ -38,6 +40,7 @@ class QuoteCursorPosition {
 
     const tether = this.findTether(this.shadow.childNodes)
     if (!tether) {
+      this.shadow.replaceChildren()
       return null
     }
 
@@ -59,6 +62,8 @@ class QuoteCursorPosition {
       y: rangeRect.y + tetherOffset.y,
     }
 
+    this.shadow.replaceChildren()
+
     return {
       getBoundingClientRect() {
         return rect
@@ -67,16 +72,19 @@ class QuoteCursorPosition {
   }
 
   findTether(nodes) {
+    let result = null
+
     const { rules } = this.tether
-    for (let i = 0; i < rules.length; i++) {
-      const { func } = rules[i]
-      const target = func(nodes)
-      if (target) {
-        return target
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i]
+
+      for (let i = 0; i < rules.length; i++) {
+        const { func } = rules[i]
+        result = func(this, node) || result
       }
     }
 
-    return null
+    return result
   }
 }
 

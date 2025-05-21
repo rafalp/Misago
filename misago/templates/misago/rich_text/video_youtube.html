@@ -1,5 +1,8 @@
 {% load i18n %}
-<div class="rich-text-video-iframe rich-text-video-youtube">
+<div
+  class="rich-text-video-iframe rich-text-video-youtube"
+  misago-youtube="https://www.youtube.com/watch?v{{ video }}{% if start %}&t={{ start }}{% endif %}"
+>
   <iframe
     loading="lazy"
     src="https://www.youtube.com/embed/{{ video }}{% if start %}?t={{ start }}{% endif %}"
@@ -7,7 +10,6 @@
     frameborder="0"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     referrerpolicy="strict-origin-when-cross-origin"
-    misago-youtube="https://www.youtube.com/watch?v{{ video }}{% if start %}&t={{ start }}{% endif %}"
     allowfullscreen
   ></iframe>
 </div>

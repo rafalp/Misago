@@ -217,7 +217,7 @@ class Quote {
   }
 
   showToolbar() {
-    const position = this.cursor.getPosition(this.root.element, this.range)
+    const position = this.cursor.getPosition(this.root, this.range)
     if (!position) {
       return
     }
