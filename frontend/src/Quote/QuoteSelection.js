@@ -7,11 +7,10 @@ class QuoteSelection {
 
   getQuote(root) {
     let result = this.extractNodes(root.childNodes)
+    result = this.postprocessNodes(root, result)
     if (result.length === 0) {
       return ""
     }
-
-    result = this.postprocessNodes(root, result)
     return this.renderNodes(result).trim()
   }
 

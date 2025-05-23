@@ -168,7 +168,13 @@ class Quote {
       this.renderer,
       this.postprocess
     )
-    return "\n\n" + selection.getQuote(root) + "\n\n"
+    const quote = selection.getQuote(root)
+
+    if (quote) {
+      return "\n\n" + selection.getQuote(root) + "\n\n"
+    }
+
+    return ""
   }
 
   createToolbar() {

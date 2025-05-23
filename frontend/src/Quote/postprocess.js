@@ -18,6 +18,27 @@ function attachment(selection, root, nodes) {
   ]
 }
 
+function youtube(selection, root, nodes) {
+  const { ancestor } = root
+  const container = ancestor.closest("[misago-youtube]")
+
+  if (!container) {
+    return nodes
+  }
+
+  const url = container.getAttribute("misago-youtube")
+  if (!url) {
+    return nodes
+  }
+
+  return [
+    {
+      type: "youtube",
+      url,
+    },
+  ]
+}
+
 function code(selection, root, nodes) {
   const { ancestor } = root
   const container = ancestor.closest("[misago-code]")
@@ -107,7 +128,7 @@ function fixTableColumns(selection, table) {
 }
 
 function table_head(selection, root, nodes) {
-  if (nodes[0].type !== "table_head") {
+  if (!nodes || nodes[0].type !== "table_head") {
     return nodes
   }
 
@@ -157,7 +178,7 @@ function table_head(selection, root, nodes) {
 }
 
 function table_row(selection, root, nodes) {
-  if (nodes[0].type !== "table_row") {
+  if (!nodes || nodes[0].type !== "table_row") {
     return nodes
   }
 
@@ -205,7 +226,7 @@ function table_row(selection, root, nodes) {
 }
 
 function table_th(selection, root, nodes) {
-  if (nodes[0].type !== "table_th") {
+  if (!nodes || nodes[0].type !== "table_th") {
     return nodes
   }
 
@@ -237,7 +258,7 @@ function table_th(selection, root, nodes) {
 }
 
 function table_td(selection, root, nodes) {
-  if (nodes[0].type !== "table_td") {
+  if (!nodes || nodes[0].type !== "table_td") {
     return nodes
   }
 
@@ -384,6 +405,10 @@ function blocks(selection, root, nodes) {
 }
 
 function quote_wrapper(selection, root, nodes) {
+  if (!nodes) {
+    return false
+  }
+
   if (!wrapNodesInQuote(nodes)) {
     return nodes
   }
@@ -415,6 +440,7 @@ function wrapNodesInQuote(nodes) {
 
 export default [
   { name: "attachment", func: attachment },
+  { name: "youtube", func: youtube },
   { name: "code", func: code },
   { name: "table", func: table },
   { name: "table_head", func: table_head },
