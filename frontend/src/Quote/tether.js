@@ -82,12 +82,59 @@ function paragraph(cursor, node) {
   return cursor.findTether(node.childNodes)
 }
 
+const TABLE_NODES = {
+  TABLE: true,
+  THEAD: true,
+  TBODY: true,
+  TR: true,
+  TH: true,
+  TD: true,
+}
+
+function table(cursor, node) {
+  if (!node.nodeName || !TABLE_NODES[node.nodeName]) {
+    return null
+  }
+
+  return cursor.findTether(node.childNodes)
+}
+
+const LIST_NODES = {
+  OL: true,
+  UL: true,
+  LI: true,
+}
+
+function list(cursor, node) {
+  if (!node.nodeName || !LIST_NODES[node.nodeName]) {
+    return null
+  }
+
+  return cursor.findTether(node.childNodes)
+}
+
+function hr(cursor, node) {
+  if (node.nodeName !== "HR") {
+    return null
+  }
+
+  return node
+}
+
 function image(cursor, node) {
   if (node.nodeName !== "IMG") {
     return null
   }
 
   return node
+}
+
+function link(cursor, node) {
+  if (node.nodeName !== "A") {
+    return null
+  }
+
+  return cursor.findTether(node.childNodes)
 }
 
 function strong_text(cursor, node) {
@@ -172,7 +219,11 @@ export default [
   { name: "spoiler", func: spoiler },
   { name: "code", func: code },
   { name: "paragraph", func: paragraph },
+  { name: "table", func: table },
+  { name: "list", func: list },
+  { name: "hr", func: hr },
   { name: "image", func: image },
+  { name: "link", func: link },
   { name: "strong_text", func: strong_text },
   { name: "emphasis_text", func: emphasis_text },
   { name: "bold_text", func: bold_text },
