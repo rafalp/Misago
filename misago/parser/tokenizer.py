@@ -81,7 +81,7 @@ def set_autolinks_attr(tokens: list[Token]) -> None:
             for child in token.children:
                 if child.tag == "a" and child.nesting == 1:
                     if child.info == "auto":
-                        child.attrSet("misago-autolink", "true")
+                        child.attrSet("misago-rich-text", "autolink")
 
 
 def set_tables_styles(tokens: list[Token]) -> None:
@@ -109,7 +109,7 @@ def set_tables_cells_cols(tokens: list[Token]) -> None:
         if token.type in TABLE_CELL_OPEN_TYPES:
             align = get_table_cell_alignment(token)
 
-            token.attrSet("misago-table-col", f"{index}:{align}")
+            token.attrSet("misago-rich-text-col", f"{index}:{align}")
             index += 1
 
 

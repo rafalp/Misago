@@ -121,14 +121,14 @@ def test_attachment_in_table_cell(parse_to_html):
         '\n<table class="rich-text-table">'
         "\n<thead>"
         '\n<tr id="misago-table-tr-random1">'
-        '\n<th misago-table-col="0:c">file</th>'
-        '\n<th misago-table-col="1:c">upload</th>'
+        '\n<th misago-rich-text-col="0:c">file</th>'
+        '\n<th misago-rich-text-col="1:c">upload</th>'
         "\n</tr>"
         "\n</thead>"
         "\n<tbody>"
         '\n<tr id="misago-table-tr-random2">'
-        '\n<td misago-table-col="0:c">image</td>'
-        '\n<td misago-table-col="1:c">'
+        '\n<td misago-rich-text-col="0:c">image</td>'
+        '\n<td misago-rich-text-col="1:c">'
         '<misago-attachment name="image.png" slug="image-png" id="12">'
         "</td>"
         "\n</tr>"

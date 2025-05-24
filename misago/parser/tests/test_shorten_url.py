@@ -67,7 +67,7 @@ def test_linkified_text_is_shortened(parse_to_html):
         'href="https://en.wikipedia.org/wiki/Principles_of_user_interface_design_in_common_consumer_electronics" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "en.wikipedia.org/wiki/Principles_of...ce_design_in_common_consumer_electronics"
         "</a>"
@@ -86,7 +86,7 @@ def test_autolink_text_is_shortened(parse_to_html):
         'href="https://en.wikipedia.org/wiki/Principles_of_user_interface_design_in_common_consumer_electronics" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "en.wikipedia.org/wiki/Principles_of...ce_design_in_common_consumer_electronics"
         "</a>"

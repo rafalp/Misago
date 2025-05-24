@@ -39,7 +39,7 @@ def test_youtube_link_doesnt_break_paragraph(parse_to_html):
         'href="https://www.youtube.com/watch?v=QzfXag4r7Vo" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "www.youtube.com/watch?v=QzfXag4r7Vo"
         "</a>"
@@ -58,7 +58,7 @@ def test_youtube_link_doesnt_break_inline_markdown(parse_to_html):
         'href="https://www.youtube.com/watch?v=QzfXag4r7Vo" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "www.youtube.com/watch?v=QzfXag4r7Vo"
         "</a>"
@@ -78,7 +78,7 @@ def test_youtube_link_doesnt_break_inline_bbcode(parse_to_html):
         'href="https://www.youtube.com/watch?v=QzfXag4r7Vo" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "www.youtube.com/watch?v=QzfXag4r7Vo"
         "</a>"
@@ -114,7 +114,7 @@ def test_youtube_links_with_paragraph_text_between(parse_to_html):
         'href="https://www.youtube.com/watch?v=QzfXag4r7Vo" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "www.youtube.com/watch?v=QzfXag4r7Vo"
         "</a>"
@@ -123,7 +123,7 @@ def test_youtube_links_with_paragraph_text_between(parse_to_html):
         'href="https://www.youtube.com/watch?v=4YEbVHtofys" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "www.youtube.com/watch?v=4YEbVHtofys"
         "</a>"
@@ -248,14 +248,14 @@ def test_youtube_link_alone_in_table_cell(parse_to_html):
         '\n<table class="rich-text-table">'
         "\n<thead>"
         '\n<tr id="misago-table-tr-random1">'
-        '\n<th misago-table-col="0:c">file</th>'
-        '\n<th misago-table-col="1:c">upload</th>'
+        '\n<th misago-rich-text-col="0:c">file</th>'
+        '\n<th misago-rich-text-col="1:c">upload</th>'
         "\n</tr>"
         "\n</thead>"
         "\n<tbody>"
         '\n<tr id="misago-table-tr-random2">'
-        '\n<td misago-table-col="0:c">image</td>'
-        '\n<td misago-table-col="1:c">'
+        '\n<td misago-rich-text-col="0:c">image</td>'
+        '\n<td misago-rich-text-col="1:c">'
         "\n<misago-video "
         'href="https://www.youtube.com/watch?v=QzfXag4r7Vo" '
         'site="youtube" '
@@ -280,20 +280,20 @@ def test_youtube_link_with_text_in_table_cell(parse_to_html):
         '\n<table class="rich-text-table">'
         "\n<thead>"
         '\n<tr id="misago-table-tr-random1">'
-        '\n<th misago-table-col="0:c">file</th>'
-        '\n<th misago-table-col="1:c">upload</th>'
+        '\n<th misago-rich-text-col="0:c">file</th>'
+        '\n<th misago-rich-text-col="1:c">upload</th>'
         "\n</tr>"
         "\n</thead>"
         "\n<tbody>"
         '\n<tr id="misago-table-tr-random2">'
-        '\n<td misago-table-col="0:c">image</td>'
-        '\n<td misago-table-col="1:c">'
+        '\n<td misago-rich-text-col="0:c">image</td>'
+        '\n<td misago-rich-text-col="1:c">'
         "link: "
         "<a "
         'href="https://www.youtube.com/watch?v=QzfXag4r7Vo" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">www.youtube.com/watch?v=QzfXag4r7Vo</a>"
         "</td>"
         "\n</tr>"
@@ -312,7 +312,7 @@ def test_youtube_link_in_list_item(parse_to_html):
         'href="https://www.youtube.com/watch?v=QzfXag4r7Vo" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "www.youtube.com/watch?v=QzfXag4r7Vo</a>"
         "</li>"

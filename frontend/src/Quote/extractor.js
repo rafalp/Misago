@@ -382,7 +382,7 @@ function table_td(selection, state) {
 }
 
 function getTableCellMeta(node) {
-  const meta = node.getAttribute("misago-table-col")
+  const meta = node.getAttribute("misago-rich-text-col")
   if (!meta) {
     return { index: null, alignment: "c" }
   }
@@ -517,7 +517,7 @@ function link(selection, state) {
   result.push({
     type: "link",
     href: node.getAttribute("href"),
-    auto: (node.getAttribute("misago-autolink") || "").toLowerCase() == "true",
+    auto: node.getAttribute("misago-rich-text") === "autolink",
     children: selection.extractNodes(node.childNodes, stack.concat(["link"])),
   })
 

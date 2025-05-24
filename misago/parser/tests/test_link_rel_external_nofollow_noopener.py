@@ -17,7 +17,7 @@ def test_bbcode_url_has_target_blank_set(parse_to_html):
         'href="http://example.com" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "example.com"
         "</a>"
@@ -33,7 +33,7 @@ def test_autolink_has_target_blank_set(parse_to_html):
         'href="http://example.com" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "example.com"
         "</a>"
@@ -49,7 +49,7 @@ def test_linkified_link_has_target_blank_set(parse_to_html):
         'href="http://example.com" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "example.com"
         "</a>"

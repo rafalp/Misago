@@ -6,7 +6,7 @@ def test_url_bbcode(parse_to_html):
         'href="example.com" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "example.com"
         "</a>"
@@ -32,7 +32,7 @@ def test_url_bbcode_with_invalid_url(parse_to_html):
         'href="invalid" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "invalid"
         "</a>"

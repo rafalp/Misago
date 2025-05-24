@@ -36,7 +36,7 @@ def test_formatting_bbcode_parses_contents(parse_to_html):
         'href="http://example.com" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "example.com"
         "</a>"

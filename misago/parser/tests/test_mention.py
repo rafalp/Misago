@@ -131,7 +131,7 @@ def test_mention_is_not_parsed_in_email(parse_to_html):
         'href="mailto:contact@example.com" '
         'rel="external nofollow noopener" '
         'target="_blank" '
-        'misago-autolink="true"'
+        'misago-rich-text="autolink"'
         ">"
         "contact@example.com"
         "</a>"
