@@ -208,6 +208,50 @@ def test_prefetch_posts_related_objects_preloads_posts(
         }
 
 
+def test_prefetch_posts_related_objects_prefetches_quoted_posts(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    anonymous_user,
+    post,
+    user_reply,
+):
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    post.metadata["posts"] = [user_reply.id]
+
+    with django_assert_num_queries(6):
+        data = prefetch_posts_related_objects(dynamic_settings, permissions, [post])
+        assert data["posts"] == {
+            post.id: post,
+            user_reply.id: user_reply,
+        }
+
+
+def test_prefetch_posts_related_objects_prefetches_quoted_posts_for_unsaved_post(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    anonymous_user,
+    post,
+    user_reply,
+):
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    post.id = None
+    post.metadata["posts"] = [user_reply.id]
+
+    with django_assert_num_queries(5):
+        data = prefetch_posts_related_objects(dynamic_settings, permissions, [post])
+        assert data["posts"] == {
+            user_reply.id: user_reply,
+        }
+
+
 def test_prefetch_posts_related_objects_prefetches_attachments_posts(
     django_assert_num_queries,
     dynamic_settings,
