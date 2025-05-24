@@ -155,7 +155,11 @@ class PrefetchPostsRelatedObjects:
             "attachment_errors": {},
             "users": {u.id: u for u in self.users},
             "extra_kwargs": self.extra_kwargs,
+            "metadata": {},
         }
+
+        if self.posts and not self.posts[0].id:
+            data["metadata"] = self.posts[0].metadata
 
         for op in self.ops:
             op(data, self.settings, self.permissions)
@@ -289,6 +293,9 @@ def find_post_ids(
         if related_posts := post.metadata.get("posts"):
             quoted_posts.update(related_posts)
 
+    if extra_posts := data["metadata"].get("posts"):
+        quoted_posts.update(extra_posts)
+
     if quoted_posts := sorted(quoted_posts)[: dj_settings.MISAGO_QUOTED_POSTS_LIMIT]:
         data["post_ids"].update(quoted_posts)
 
@@ -310,6 +317,9 @@ def find_attachment_ids(
 ):
     for post in data["posts"].values():
         data["attachment_ids"].update(post.metadata.get("attachments", []))
+
+    if extra_attachments := data["metadata"].get("attachments"):
+        data["attachment_ids"].update(extra_attachments)
 
 
 def fetch_attachments(
