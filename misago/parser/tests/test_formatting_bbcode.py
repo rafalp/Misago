@@ -32,7 +32,12 @@ def test_formatting_bbcode_parses_contents(parse_to_html):
     html = parse_to_html("Hello [b]<http://example.com>[/b]!")
     assert html == (
         "<p>Hello <b>"
-        '<a href="http://example.com" rel="external nofollow noopener" target="_blank">'
+        "<a "
+        'href="http://example.com" '
+        'rel="external nofollow noopener" '
+        'target="_blank" '
+        'misago-rich-text="autolink"'
+        ">"
         "example.com"
         "</a>"
         "</b>!</p>"

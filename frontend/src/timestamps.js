@@ -20,7 +20,6 @@ export function updateTimestamp(element) {
   if (format === "short") {
     element.textContent = dateRelativeShort(cache[timestamp])
   } else if (format === "full") {
-    console.log(format)
     element.textContent = fullDateTime.format(cache[timestamp])
   } else {
     element.textContent = dateRelative(cache[timestamp])

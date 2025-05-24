@@ -8,7 +8,7 @@
       {% trans "toggle" context "rich text spoiler toggle" %}
     </div>
   </summary>
-  <div class="rich-text-spoiler-body">
+  <div class="rich-text-spoiler-body" misago-rich-text-spoiler="{{ info|default:'' }}">
     {{ content|safe }}
   </div>
 </details>

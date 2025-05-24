@@ -7,8 +7,24 @@ from ..html import render_tokens_to_html
 from ..tokenizer import tokenize
 
 
+class MockGetRandomString:
+    def __init__(self):
+        self.calls = 0
+
+    def __call__(self, *args):
+        self.calls += 1
+        return f"random{self.calls}"
+
+
 @pytest.fixture
-def parse_to_html():
+def mock_get_random_string(mocker):
+    get_random_string = MockGetRandomString()
+    mocker.patch("misago.parser.tokenizer.get_random_string", get_random_string)
+    return get_random_string
+
+
+@pytest.fixture
+def parse_to_html(mock_get_random_string):
     def _parser(markup: str, dedent=False, strip=False):
         parser = create_parser()
 
@@ -24,7 +40,7 @@ def parse_to_html():
 
 
 @pytest.fixture
-def parse_to_raw_tokens():
+def parse_to_raw_tokens(mock_get_random_string):
     def _parser(markup: str, dedent=False, strip=False):
         parser = create_parser()
 
@@ -39,7 +55,7 @@ def parse_to_raw_tokens():
 
 
 @pytest.fixture
-def parse_to_tokens():
+def parse_to_tokens(mock_get_random_string):
     def _parser(markup: str, dedent=False, strip=False):
         parser = create_parser()
 

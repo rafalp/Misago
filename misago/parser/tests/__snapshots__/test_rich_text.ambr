@@ -2,7 +2,7 @@
 # name: test_replace_rich_text_tokens_replaces_code_block_with_info
   '''
   
-  <div class="rich-text-code" misago-rich-text-code>
+  <div class="rich-text-code">
     <div class="rich-text-code-header">
       <div class="rich-text-code-info">
         
@@ -18,14 +18,14 @@
         </button>
       
     </div>
-    <pre><code>Hello world!</code></pre>
+    <pre><code misago-rich-text-code="Example string">Hello world!</code></pre>
   </div>
   '''
 # ---
 # name: test_replace_rich_text_tokens_replaces_code_block_with_info_and_syntax
   '''
   
-  <div class="rich-text-code" misago-rich-text-code>
+  <div class="rich-text-code">
     <div class="rich-text-code-header">
       <div class="rich-text-code-info">
         
@@ -41,14 +41,14 @@
         </button>
       
     </div>
-    <pre><code>Hello world!</code></pre>
+    <pre><code misago-rich-text-code="Example string, syntax: php">Hello world!</code></pre>
   </div>
   '''
 # ---
 # name: test_replace_rich_text_tokens_replaces_code_block_with_syntax
   '''
   
-  <div class="rich-text-code" misago-rich-text-code>
+  <div class="rich-text-code">
     <div class="rich-text-code-header">
       <div class="rich-text-code-info">
         
@@ -64,14 +64,14 @@
         </button>
       
     </div>
-    <pre><code>Hello world!</code></pre>
+    <pre><code misago-rich-text-code="php">Hello world!</code></pre>
   </div>
   '''
 # ---
 # name: test_replace_rich_text_tokens_replaces_minimal_code_block
   '''
   
-  <div class="rich-text-code" misago-rich-text-code>
+  <div class="rich-text-code">
     <div class="rich-text-code-header">
       <div class="rich-text-code-info">
         
@@ -87,7 +87,7 @@
         </button>
       
     </div>
-    <pre><code>Hello world!</code></pre>
+    <pre><code misago-rich-text-code="">Hello world!</code></pre>
   </div>
   '''
 # ---
@@ -102,7 +102,7 @@
         </div>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-rich-text-quote="">
       
   <p>Hello world!</p>
   
@@ -122,7 +122,7 @@
         </div>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-rich-text-quote="Hello world">
       
   <p>Hello world!</p>
   
@@ -150,7 +150,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-rich-text-quote="Anonymouse, post: 1234">
       
   <p>Hello world!</p>
   
@@ -204,7 +204,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-rich-text-quote="User, post: 1234">
       
   <p>Hello world!</p>
   
@@ -232,7 +232,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-rich-text-quote="Anonymouse, post: 1234">
       
   <p>Hello world!</p>
   
@@ -279,7 +279,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-rich-text-quote="Tester, post: 1234">
       
   <p>Hello world!</p>
   
@@ -326,7 +326,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-rich-text-quote="Tester, post: 1234">
       
   <p>Hello world!</p>
   
@@ -354,7 +354,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-rich-text-quote="Anonymouse, post: 1234">
       
   <p>Hello world!</p>
   
@@ -408,7 +408,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body">
+    <blockquote class="rich-text-quote-body" misago-rich-text-quote="User, post: 1234">
       
   <p>Hello world!</p>
   
@@ -429,7 +429,7 @@
         toggle
       </div>
     </summary>
-    <div class="rich-text-spoiler-body">
+    <div class="rich-text-spoiler-body" misago-rich-text-spoiler="">
       
   <p>Hello world!</p>
   
@@ -450,7 +450,7 @@
         toggle
       </div>
     </summary>
-    <div class="rich-text-spoiler-body">
+    <div class="rich-text-spoiler-body" misago-rich-text-spoiler="Lorem ipsum">
       
   <p>Hello world!</p>
   
@@ -462,7 +462,10 @@
 # name: test_replace_rich_text_tokens_replaces_youtube_video
   '''
   
-  <div class="rich-text-video-iframe rich-text-video-youtube">
+  <div
+    class="rich-text-video-iframe rich-text-video-youtube"
+    misago-rich-text-youtube="https://www.youtube.com/watch?vQzfXag4r7Vo"
+  >
     <iframe
       loading="lazy"
       src="https://www.youtube.com/embed/QzfXag4r7Vo"

@@ -1,6 +1,6 @@
 .rich-text {
   font-size: 16px;
-  word-break: break-all;
+  word-break: break-word;
 
   h1 {
     font-size: 36px;
@@ -26,11 +26,24 @@
   h3,
   h4,
   h5,
-  h6 {
-    margin-top: @line-height-computed * 2;
+  h6,
+  hr,
+  p,
+  ul,
+  ol,
+  .rich-text-quote,
+  .rich-text-code,
+  .rich-text-spoiler,
+  .rich-text-table-container,
+  .rich-text-video-iframe {
+    margin: @line-height-computed 0;
 
     &:first-child {
       margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 
@@ -39,26 +52,19 @@
   h3,
   h4,
   h5,
-  h6,
-  hr,
-  p,
-  ul,
-  ol,
-  pre,
-  .rich-text-quote,
-  .rich-text-code,
-  .rich-text-spoiler,
-  .rich-text-table-container,
-  .rich-text-video-iframe {
-    margin-bottom: @line-height-computed;
+  h6 {
+    margin-top: @line-height-computed * 2;
 
-    &:last-child {
-      margin-bottom: 0;
+    &:first-child {
+      margin-top: 0;
     }
   }
 
   img {
     max-width: 100%;
+    height: auto;
+
+    border-radius: @border-radius-small;
   }
 }
 
@@ -76,28 +82,72 @@ ol {
   }
 }
 
+.rich-text-selection-boundary {
+  height: @line-height-computed;
+
+  & + h1,
+  & + h2,
+  & + h3,
+  & + h4,
+  & + h5,
+  & + h6 {
+    margin-top: @line-height-computed;
+  }
+
+  & + hr,
+  & + p,
+  & + ul,
+  & + ol,
+  & + .rich-text-quote,
+  & + .rich-text-code,
+  & + .rich-text-spoiler,
+  & + .rich-text-table-container,
+  & + .rich-text-video-iframe {
+    margin-top: 0;
+  }
+
+  // Fix for DOM clones where visible boundaries break position calculation
+  &:first-child,
+  &:last-child {
+    display: none;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+ul,
+ol,
+.rich-text-quote,
+.rich-text-code,
+.rich-text-spoiler,
+.rich-text-table-container,
+.rich-text-video-iframe {
+  & + .rich-text-selection-boundary {
+    margin-top: @line-height-computed * -1;
+  }
+}
+
 .rich-text-image {
   display: inline-block;
   position: relative;
-  overflow: hidden;
-  max-width: 100%;
-
-  border-radius: @border-radius-base;
 
   .rich-text-image-link {
     display: inline-block;
   }
-}
 
-.rich-text-image-responsive img {
-  width: 100%;
-  height: auto;
+  img {
+    margin: 0;
+  }
 }
 
 .rich-text-video {
   position: relative;
-
-  display: block;
   overflow: hidden;
 
   height: 0;
@@ -133,6 +183,9 @@ ol {
 
   border-radius: @border-radius-base;
 
+  user-select: none;
+  -webkit-user-select: none;
+
   &,
   &:link,
   &:visited {
@@ -155,10 +208,6 @@ ol {
 }
 
 .rich-text-file {
-  display: inline-block;
-}
-
-.rich-text-file-body {
   display: inline-block;
   position: relative;
 
@@ -216,6 +265,9 @@ ol {
 
     font-size: 24px;
     line-height: 24px;
+
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .rich-text-file-name {
@@ -235,22 +287,13 @@ ol {
 
 .rich-text-attachment-error {
   display: inline-block;
+  position: relative;
 
-  &:last-child {
-    margin-bottom: 0;
-  }
+  padding: 8px 12px 8px 42px;
 
-  .rich-text-attachment-error-body {
-    display: inline-block;
-    position: relative;
-
-    display: inline-block;
-    padding: 8px 12px 8px 42px;
-
-    background: lighten(@gray-lighter, 5);
-    border-radius: @border-radius-base;
-    color: @gray-light;
-  }
+  background: lighten(@gray-lighter, 5);
+  border-radius: @border-radius-base;
+  color: @gray-light;
 
   .material-icon {
     position: absolute;
@@ -260,44 +303,13 @@ ol {
     color: @gray-light;
     font-size: 24px;
     line-height: 24px;
+
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .rich-text-attachment-error-name {
     word-break: break-all;
-  }
-}
-
-.rich-text-image + .rich-text-file,
-.rich-text-image + .rich-text-attachment-error,
-.rich-text-file + .rich-text-image,
-.rich-text-attachment-error + .rich-text-image {
-  clear: left;
-}
-
-.rich-text-attachment-group {
-  overflow: auto;
-
-  margin: 0 -6px;
-
-  .rich-text-image,
-  .rich-text-file,
-  .rich-text-attachment-error {
-    float: left;
-  }
-
-  .rich-text-video {
-    clear: both;
-  }
-
-  .rich-text-image,
-  .rich-text-video,
-  .rich-text-file,
-  .rich-text-attachment-error {
-    margin: 0 6px @line-height-computed 6px;
-  }
-
-  &:last-child {
-    margin-bottom: @line-height-computed * -1;
   }
 }
 
@@ -354,6 +366,9 @@ ol {
   border-radius: @border-radius-small;
   line-height: 0;
 
+  user-select: none;
+  -webkit-user-select: none;
+
   img {
     width: 24px;
     height: 24px;
@@ -372,6 +387,9 @@ ol {
   padding: 0;
 
   border-radius: @border-radius-base;
+
+  user-select: none;
+  -webkit-user-select: none;
 
   &:hover,
   &:focus,
@@ -533,6 +551,9 @@ a.rich-text-quote-header-link-secondary {
   font-weight: bold;
   white-space: nowrap;
 
+  user-select: none;
+  -webkit-user-select: none;
+
   & {
     background-color: @rich-text-code-btn-bg;
     border: 1px solid @rich-text-code-btn-border;
@@ -602,6 +623,16 @@ a.rich-text-quote-header-link-secondary {
   font-size: @font-size-small;
   font-weight: bold;
   white-space: nowrap;
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.rich-text-spoiler-body {
+  padding: @rich-text-spoiler-padding;
+
+  background-color: @rich-text-spoiler-body-bg;
+  border-top: 1px solid @rich-text-spoiler-body-border;
 }
 
 .rich-text-list-loose > li {
@@ -610,13 +641,6 @@ a.rich-text-quote-header-link-secondary {
   &:last-child {
     margin-bottom: 0;
   }
-}
-
-.rich-text-spoiler-body {
-  padding: @rich-text-spoiler-padding;
-
-  background-color: @rich-text-spoiler-body-bg;
-  border-top: 1px solid @rich-text-spoiler-body-border;
 }
 
 .rich-text-mention {

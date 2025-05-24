@@ -36,3 +36,13 @@
   {% endif %}
   {% include "misago/lightbox/index.html" %}
 {% endblock modals %}
+
+
+{% block javascript %}
+<script type="text/javascript">
+  misago.quote.activate({
+    reply: {% if reply.url %}!!document.getElementById("misago-htmx-quick-reply"){% else %}false{% endif %},
+    quote: {% if user.is_authenticated %}true{% else %}false{% endif %},
+  })
+</script>
+{% endblock javascript %}

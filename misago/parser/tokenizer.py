@@ -1,6 +1,7 @@
 from dataclasses import replace
 from typing import Callable
 
+from django.utils.crypto import get_random_string
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
@@ -29,14 +30,18 @@ def tokenize(parser: MarkdownIt, markup: str) -> list[Token]:
             replace_video_links_with_players,
             shorten_link_text,
             extract_attachments,
+            insert_attachments_selection_boundaries,
             remove_repeated_hrs,
             remove_nested_inline_bbcodes,
             replace_blockquotes_with_misago_quotes,
             replace_mentions_tokens,
             set_links_rel_external_nofollow_noopener,
             set_links_target_blank,
+            set_autolinks_attr,
             make_tables_responsive,
             set_tables_styles,
+            set_tables_rows_ids,
+            set_tables_cells_cols,
             set_lists_type_metadata,
             set_lists_styles,
         ],
@@ -70,10 +75,52 @@ def set_links_target_blank(tokens: list[Token]) -> None:
                     child.attrSet("target", "_blank")
 
 
+def set_autolinks_attr(tokens: list[Token]) -> None:
+    for token in tokens:
+        if token.type == "inline":
+            for child in token.children:
+                if child.tag == "a" and child.nesting == 1:
+                    if child.info == "auto":
+                        child.attrSet("misago-rich-text", "autolink")
+
+
 def set_tables_styles(tokens: list[Token]) -> None:
     for token in tokens:
         if token.type == "table_open":
             token.attrSet("class", "rich-text-table")
+
+
+def set_tables_rows_ids(tokens: list[Token]) -> None:
+    for token in tokens:
+        if token.type == "tr_open":
+            token.attrSet("id", "misago-table-tr-" + get_random_string(12))
+
+
+TABLE_CELL_OPEN_TYPES = ("th_open", "td_open")
+
+
+def set_tables_cells_cols(tokens: list[Token]) -> None:
+    index = 0
+
+    for token in tokens:
+        if token.type == "tr_open":
+            index = 0
+
+        if token.type in TABLE_CELL_OPEN_TYPES:
+            align = get_table_cell_alignment(token)
+
+            token.attrSet("misago-rich-text-col", f"{index}:{align}")
+            index += 1
+
+
+def get_table_cell_alignment(token: Token):
+    if token.attrs:
+        if "left" in token.attrs.get("style"):
+            return "l"
+        elif "right" in token.attrs.get("style"):
+            return "r"
+
+    return "c"
 
 
 LIST_OPEN_TYPES = ("bullet_list_open", "ordered_list_open")
@@ -154,29 +201,21 @@ def set_lists_styles(tokens: list[Token]) -> None:
 
 
 def shorten_link_text(tokens: list[Token]) -> None:
-    link_tokens: list[Token] = []
-
-    for token in tokens:
-        if token.children:
-            shorten_link_text(token.children)
-
-        if token.type in ("link_open", "link_close") or link_tokens:
-            link_tokens.append(token)
-            if token.type == "link_close":
-                _shorten_link_text_token_content(link_tokens)
-                link_tokens = []
+    return replace_inline_tag_tokens(tokens, "a", shorten_link_text_contents)
 
 
-def _shorten_link_text_token_content(tokens: list[Token]):
+def shorten_link_text_contents(tokens: list[Token], stack: list[Token]) -> list[Token]:
     if len(tokens) != 3:
-        return
+        return tokens
 
     link_open, text, _ = tokens
-    href = link_open.attrs.get("href")
+    if link_open.info != "auto":
+        return tokens
 
-    if href and text.content == href:
-        link_open.meta["shortened_url"] = True
-        text.content = shorten_url(text.content)
+    link_open.meta["shortened_url"] = True
+    text.content = shorten_url(text.content)
+
+    return tokens
 
 
 def replace_video_links_with_players(tokens: list[Token]) -> list[Token] | None:
@@ -262,7 +301,10 @@ def _make_table_responsive(tokens: list[Token], stack: list[Token]) -> list[Toke
     container_open = Token(
         type="table_container_open",
         tag="div",
-        attrs={"class": "rich-text-table-container"},
+        attrs={
+            "class": "rich-text-table-container",
+            "misago-rich-text": "table-container",
+        },
         nesting=1,
         block=True,
     )
@@ -278,8 +320,7 @@ def _make_table_responsive(tokens: list[Token], stack: list[Token]) -> list[Toke
 
 
 def extract_attachments(tokens: list[Token]) -> list[Token] | None:
-    new_tokens = replace_tag_tokens(tokens, "p", _extract_attachments_from_paragraph)
-    return merge_attachments_groups(new_tokens)
+    return replace_tag_tokens(tokens, "p", _extract_attachments_from_paragraph)
 
 
 def _extract_attachments_from_paragraph(
@@ -290,67 +331,61 @@ def _extract_attachments_from_paragraph(
 
     p_open, inline, p_close = tokens
 
-    attachments_open = Token(
-        type="attachments_open",
-        tag="div",
-        nesting=1,
-        attrs={"class": "rich-text-attachment-group"},
-        block=True,
-    )
-
-    attachments_close = Token(
-        type="attachments_close",
-        tag="div",
-        nesting=-1,
-        block=True,
-    )
-
     new_tokens: list[Token] = []
     for part in split_inline_token(inline, "misago-attachment"):
         if part.type == "attachment":
-            if not new_tokens or new_tokens[-1].type != "attachment":
-                new_tokens.append(attachments_open)
             new_tokens.append(replace(part, block=True))
         else:
-            if new_tokens and new_tokens[-1].type == "attachment":
-                new_tokens.append(attachments_close)
-            new_tokens += [p_open, part, p_close]
-
-    if new_tokens and new_tokens[-1].type == "attachment":
-        new_tokens.append(attachments_close)
-
-    p_open.hidden = False
-    p_close.hidden = False
+            new_tokens += [
+                replace(p_open, hidden=False),
+                part,
+                replace(p_close, hidden=False),
+            ]
 
     return new_tokens
 
 
-def merge_attachments_groups(tokens: list[Token]) -> list[Token]:
+def insert_attachments_selection_boundaries(tokens: list[Token]) -> list[Token] | None:
     if not tokens:
-        return tokens
+        return []
 
-    new_tokens: list[Token] = []
     max_index = len(tokens) - 1
 
-    # Merge attachments groups basically removes </close><open> token pairs
+    new_tokens: list[Token] = []
     for index, token in enumerate(tokens):
-        if (
-            token.type == "attachments_open"
-            and index
-            and tokens[index - 1].type == "attachments_close"
-        ):
-            continue
+        if token.type == "attachment":
+            if (
+                index
+                and tokens[index - 1].type != "attachment"
+                and tokens[index - 1].nesting < 1
+            ):
+                insert_selection_boundary(new_tokens)
 
-        if (
-            token.type == "attachments_close"
-            and index < max_index
-            and tokens[index + 1].type == "attachments_open"
-        ):
-            continue
+            new_tokens.append(token)
 
-        new_tokens.append(token)
+            if index < max_index and tokens[index + 1].nesting >= 0:
+                insert_selection_boundary(new_tokens)
+
+        else:
+            new_tokens.append(token)
 
     return new_tokens
+
+
+def insert_selection_boundary(tokens: list[Token]):
+    tokens.append(
+        Token(
+            "selection_boundary_open",
+            "div",
+            1,
+            block=True,
+            attrs={
+                "class": "rich-text-selection-boundary",
+                "misago-selection-boundary": "true",
+            },
+        )
+    )
+    tokens.append(Token("selection_boundary_close", "div", -1, block=True))
 
 
 def remove_repeated_hrs(tokens: list[Token]) -> list[Token]:

@@ -1,7 +1,7 @@
 # serializer version: 1
 # name: test_mention_for_inactive_user
-  '<p>this <span misago-mention="inactive-user" class="rich-text-mention-not-found">@Inactive_User</span> is inactive</p>'
+  '<p>this <span class="rich-text-mention-not-found" misago-rich-text-mention="inactive-user">@Inactive_User</span> is inactive</p>'
 # ---
 # name: test_mention_for_not_found_user
-  '<p>this <span misago-mention="user" class="rich-text-mention-not-found">@User</span> doesn’t exist</p>'
+  '<p>this <span class="rich-text-mention-not-found" misago-rich-text-mention="user">@User</span> doesn’t exist</p>'
 # ---

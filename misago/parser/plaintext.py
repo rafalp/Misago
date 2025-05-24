@@ -80,7 +80,7 @@ def render_tokens_to_plaintext(tokens: list[Token]) -> str:
             render_ordered_list,
             render_bullet_list,
             render_table,
-            render_attachments,
+            render_attachment,
             render_paragraph,
             render_inline,
             render_code_inline,
@@ -305,25 +305,15 @@ def render_table(state: StatePlaintext) -> bool:
     return True
 
 
-def render_attachments(state: StatePlaintext) -> bool:
-    match = match_token_pair(state, "attachments_open", "attachments_close")
-    if not match:
+def render_attachment(state: StatePlaintext) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "attachment":
         return False
 
-    tokens, pos = match
-    attachments = tokens[1:-1]
+    if name := token.attrs.get("name"):
+        state.push(name, hardbreak=True)
 
-    content: list[str] = []
-    for attachment in attachments:
-        if attachment.type == "attachment":
-            if name := attachment.attrs.get("name"):
-                content.append(name)
-
-    if content:
-        state.push("\n".join(content), hardbreak=True)
-
-    state.pos = pos
-
+    state.pos += 1
     return True
 
 
@@ -368,12 +358,11 @@ def render_link(state: StatePlaintext) -> bool:
     tokens, pos = match
     opening_token = tokens[0]
 
-    shortened_url = opening_token.meta.get("shortened_url")
     url = opening_token.attrs.get("href")
 
     state.push(url)
 
-    if not shortened_url:
+    if opening_token.info != "auto":
         if content := state.renderer.render(tokens[1:-1]).strip():
             state.push(f" ({content})")
 

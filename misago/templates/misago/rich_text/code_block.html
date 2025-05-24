@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="rich-text-code" misago-rich-text-code>
+<div class="rich-text-code">
   <div class="rich-text-code-header">
     <div class="rich-text-code-info">
       {% if info %}
@@ -19,5 +19,5 @@
       </button>
     {% endif %}
   </div>
-  <pre><code>{{ code|safe }}</code></pre>
+  <pre><code misago-rich-text-code="{% if info and syntax %}{{ info }}, syntax: {{ syntax }}{% elif info %}{{ info }}{% elif syntax %}{{ syntax }}{% endif %}">{{ code|safe }}</code></pre>
 </div>

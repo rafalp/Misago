@@ -5,8 +5,12 @@
   misago-lightbox-url="{{ attachment.get_absolute_url }}"
   misago-lightbox-details="{{ attachment.get_details_url }}"
   misago-lightbox-download="{{ attachment.name }}"
+  misago-rich-text-attachment="{{ attachment.name }}:{{ attachment.id }}"
 >
-  <video controls misago-lightbox-media="{{ attachment.get_absolute_url }}">
+  <video
+    misago-lightbox-media="{{ attachment.get_absolute_url }}"
+    controls
+  >
     <source src="{{ attachment.get_absolute_url }}#t=0.001" type="{{ attachment.content_type }}">
     {% translate "Your browser does not support video tag." context "attachment video player" %}
   </video>

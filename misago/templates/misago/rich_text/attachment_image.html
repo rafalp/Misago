@@ -1,16 +1,16 @@
 {% load i18n %}
-<div
+<span
   class="rich-text-image{% if attachment.dimensions %} rich-text-image-responsive{% endif %}"
   misago-lightbox-context
   misago-lightbox-url="{{ attachment.get_absolute_url }}"
   misago-lightbox-details="{{ attachment.get_details_url }}"
-  misago-lightbox-download="{{ attachment.name }}"
+  misago-rich-text-attachment="{{ attachment.name }}:{{ attachment.id }}"
 >
   <a class="rich-text-image-link" href="{{ attachment.get_absolute_url }}" target="_blank">
     {% if attachment.thumbnail %}
       <img src="{{ attachment.get_thumbnail_url }}" alt="{{ attachment.name }}" title="{{ attachment.name }}" {% if attachment.thumbnail_dimensions %}width="{{ attachment.thumbnail_width }}" height="{{ attachment.thumbnail_height }}" {% endif %}loading="lazy" misago-lightbox-media>
     {% else %}
-      <img src="{{ attachment.get_absolute_url }}" alt="{{ attachment.name }}" title="{{ attachment.name }}" {% if attachment.dimensions %}width="{{ attachment.width }}" height="{{ attachment.height }}" {% endif %} loading="lazy" misago-lightbox-media>
+      <img src="{{ attachment.get_absolute_url }}" alt="{{ attachment.name }}" title="{{ attachment.name }}" {% if attachment.dimensions %}width="{{ attachment.width }}" height="{{ attachment.height }}" {% endif %}loading="lazy" misago-lightbox-media>
     {% endif %}
   </a>
   <a
@@ -23,4 +23,4 @@
     <span class="material-icon">info</span>
   </a>
   {% include "misago/rich_text/attachment_caption.html" %}
-</div>
+</span>

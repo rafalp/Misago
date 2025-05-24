@@ -294,7 +294,6 @@ export default class Lightbox {
   }
 
   shortenLongString(value) {
-    console.log(value, value.length)
     if (value.length <= 80) {
       return value
     }
