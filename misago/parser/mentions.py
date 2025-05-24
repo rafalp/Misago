@@ -74,7 +74,7 @@ def replace_token_inline_mentions(token_inline: Token, users: dict[str, dict]) -
                         attrs={
                             "href": user_data["url"],
                             "class": "rich-text-mention",
-                            "misago-mention": user_data["username"],
+                            "misago-rich-text-mention": user_data["username"],
                         },
                         meta={"mention": user_data["id"]},
                     ),
@@ -98,8 +98,8 @@ def replace_token_inline_mentions(token_inline: Token, users: dict[str, dict]) -
                         tag="span",
                         nesting=1,
                         attrs={
-                            "misago-mention": token.meta["slug"],
                             "class": "rich-text-mention-not-found",
+                            "misago-rich-text-mention": token.meta["slug"],
                         },
                     ),
                     Token(

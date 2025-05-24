@@ -5,7 +5,7 @@ def test_mention_user(user, parse_to_html):
         "<a "
         f'href="{user.get_absolute_url()}" '
         'class="rich-text-mention" '
-        'misago-mention="User" '
+        'misago-rich-text-mention="User" '
         'rel="external nofollow noopener" '
         'target="_blank"'
         ">"
@@ -22,7 +22,7 @@ def test_mention_user_with_underscore_in_name(other_user, parse_to_html):
         "<a "
         f'href="{other_user.get_absolute_url()}" '
         'class="rich-text-mention" '
-        'misago-mention="Other_User" '
+        'misago-rich-text-mention="Other_User" '
         'rel="external nofollow noopener" '
         'target="_blank"'
         ">"
@@ -39,7 +39,7 @@ def test_mention_is_case_insensitive(other_user, parse_to_html):
         "<a "
         f'href="{other_user.get_absolute_url()}" '
         'class="rich-text-mention" '
-        'misago-mention="Other_User" '
+        'misago-rich-text-mention="Other_User" '
         'rel="external nofollow noopener" '
         'target="_blank"'
         ">"
@@ -56,7 +56,7 @@ def test_mention_user_in_sentence(user, parse_to_html):
         "<a "
         f'href="{user.get_absolute_url()}" '
         'class="rich-text-mention" '
-        'misago-mention="User" '
+        'misago-rich-text-mention="User" '
         'rel="external nofollow noopener" '
         'target="_blank"'
         ">"
@@ -73,7 +73,7 @@ def test_mention_user_in_parenthesis(user, parse_to_html):
         "<a "
         f'href="{user.get_absolute_url()}" '
         'class="rich-text-mention" '
-        'misago-mention="User" '
+        'misago-rich-text-mention="User" '
         'rel="external nofollow noopener" '
         'target="_blank"'
         ">"

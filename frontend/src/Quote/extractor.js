@@ -494,7 +494,7 @@ function mention(selection, state) {
     return false
   }
 
-  if (!node.getAttribute("misago-mention")) {
+  if (!node.getAttribute("misago-rich-text-mention")) {
     return false
   }
 
