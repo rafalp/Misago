@@ -7,7 +7,7 @@ function attachment(selection, state) {
     return false
   }
 
-  const attachment = node.getAttribute("misago-attachment")
+  const attachment = node.getAttribute("misago-rich-text-attachment")
   if (!attachment) {
     return false
   }
@@ -32,7 +32,7 @@ function youtube(selection, state) {
     return false
   }
 
-  const url = node.getAttribute("misago-youtube")
+  const url = node.getAttribute("misago-rich-text-youtube")
   if (!url) {
     return false
   }

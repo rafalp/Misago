@@ -2,13 +2,13 @@ import getQuotedCode from "./getQuotedCode"
 
 function attachment(selection, root, nodes) {
   const { ancestor } = root
-  const container = ancestor.closest("[misago-attachment]")
+  const container = ancestor.closest("[misago-rich-text-attachment]")
 
   if (!container) {
     return nodes
   }
 
-  const args = container.getAttribute("misago-attachment")
+  const args = container.getAttribute("misago-rich-text-attachment")
 
   return [
     {
@@ -20,13 +20,13 @@ function attachment(selection, root, nodes) {
 
 function youtube(selection, root, nodes) {
   const { ancestor } = root
-  const container = ancestor.closest("[misago-youtube]")
+  const container = ancestor.closest("[misago-rich-text-youtube]")
 
   if (!container) {
     return nodes
   }
 
-  const url = container.getAttribute("misago-youtube")
+  const url = container.getAttribute("misago-rich-text-youtube")
   if (!url) {
     return nodes
   }

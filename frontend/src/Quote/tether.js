@@ -3,7 +3,7 @@ function attachment(cursor, node) {
     return null
   }
 
-  if (!node.hasAttribute("misago-attachment")) {
+  if (!node.hasAttribute("misago-rich-text-attachment")) {
     return null
   }
 
@@ -15,7 +15,7 @@ function youtube(cursor, node) {
     return null
   }
 
-  if (!node.hasAttribute("misago-youtube")) {
+  if (!node.hasAttribute("misago-rich-text-youtube")) {
     return null
   }
 

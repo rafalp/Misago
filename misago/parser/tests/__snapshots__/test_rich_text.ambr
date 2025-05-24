@@ -464,7 +464,7 @@
   
   <div
     class="rich-text-video-iframe rich-text-video-youtube"
-    misago-youtube="https://www.youtube.com/watch?vQzfXag4r7Vo"
+    misago-rich-text-youtube="https://www.youtube.com/watch?vQzfXag4r7Vo"
   >
     <iframe
       loading="lazy"
