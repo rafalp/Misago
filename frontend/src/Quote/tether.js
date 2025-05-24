@@ -92,6 +92,10 @@ const TABLE_NODES = {
 }
 
 function table(cursor, node) {
+  if (node.nodeName === "DIV" && node.hasAttribute("misago-table-container")) {
+    return cursor.findTether(node.childNodes)
+  }
+
   if (!node.nodeName || !TABLE_NODES[node.nodeName]) {
     return null
   }

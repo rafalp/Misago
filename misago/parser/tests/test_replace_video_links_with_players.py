@@ -244,7 +244,7 @@ def test_youtube_link_alone_in_table_cell(parse_to_html):
         "\n| image | https://www.youtube.com/watch?v=QzfXag4r7Vo |"
     )
     assert html == (
-        '<div class="rich-text-table-container">'
+        '<div class="rich-text-table-container" misago-table-container="true">'
         '\n<table class="rich-text-table">'
         "\n<thead>"
         '\n<tr id="misago-table-tr-random1">'
@@ -276,7 +276,7 @@ def test_youtube_link_with_text_in_table_cell(parse_to_html):
         "\n| image | link: https://www.youtube.com/watch?v=QzfXag4r7Vo |"
     )
     assert html == (
-        '<div class="rich-text-table-container">'
+        '<div class="rich-text-table-container" misago-table-container="true">'
         '\n<table class="rich-text-table">'
         "\n<thead>"
         '\n<tr id="misago-table-tr-random1">'

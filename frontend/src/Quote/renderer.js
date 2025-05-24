@@ -196,9 +196,9 @@ function table(selection, state) {
       rows.push(row)
     } else if (tbody.type === "table_body") {
       tbody.children.forEach(function (table_row) {
-        const row = table_row.children.map(function (cell) {
+        const row = table_row.children.map(function (cell, index) {
           const text = getTableCellText(selection, cell)
-          lengths[cell.index] = Math.max(text.length, lengths[cell.index], 3)
+          lengths[index] = Math.max(text.length, lengths[index] || 0, 3)
           return text
         })
         rows.push(row)

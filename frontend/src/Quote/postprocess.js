@@ -317,8 +317,9 @@ function table_content(selection, root, nodes) {
     (node) => node.nodeName === "TH"
   )
 
-  const meta = td.getAttribute("misago-table-col")
-  const index = parseInt(meta.split(":")[0])
+  const node = Object.assign(selection.extractNodes([td])[0], {
+    children: nodes,
+  })
 
   return [
     {
@@ -329,7 +330,7 @@ function table_content(selection, root, nodes) {
           children: [
             {
               type: "table_row",
-              children: selection.extractNodes([header[index]]),
+              children: selection.extractNodes([header[node.index]]),
             },
           ],
         },
@@ -338,12 +339,7 @@ function table_content(selection, root, nodes) {
           children: [
             {
               type: "table_row",
-              children: [
-                {
-                  type: "table_td",
-                  children: nodes,
-                },
-              ],
+              children: [node],
             },
           ],
         },

@@ -117,7 +117,7 @@ def test_attachment_in_table_cell(parse_to_html):
         "| file | upload |" "\n| - | - |" "\n| image | <attachment=image.png:12> |"
     )
     assert html == (
-        '<div class="rich-text-table-container">'
+        '<div class="rich-text-table-container" misago-table-container="true">'
         '\n<table class="rich-text-table">'
         "\n<thead>"
         '\n<tr id="misago-table-tr-random1">'

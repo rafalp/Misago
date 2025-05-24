@@ -301,7 +301,10 @@ def _make_table_responsive(tokens: list[Token], stack: list[Token]) -> list[Toke
     container_open = Token(
         type="table_container_open",
         tag="div",
-        attrs={"class": "rich-text-table-container"},
+        attrs={
+            "class": "rich-text-table-container",
+            "misago-table-container": "true",
+        },
         nesting=1,
         block=True,
     )
