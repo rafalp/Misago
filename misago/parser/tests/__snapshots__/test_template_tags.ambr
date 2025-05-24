@@ -2,14 +2,14 @@
 # name: test_complete_markup_template_tag_replaces_intermediate_html
   '''
   <aside class="rich-text-quote">
-    <div class="rich-text-quote-header" misago-quote-disable>
+    <div class="rich-text-quote-header">
       
         <div class="rich-text-quote-info">
           Quote
         </div>
       
     </div>
-    <blockquote class="rich-text-quote-body" misago-quote="">
+    <blockquote class="rich-text-quote-body" misago-rich-text-quote="">
       
   <p>Hello world!</p>
   

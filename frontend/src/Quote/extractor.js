@@ -46,10 +46,19 @@ function youtube(selection, state) {
   return true
 }
 
+const HEADER_NODES = {
+  H1: true,
+  H2: true,
+  H3: true,
+  H4: true,
+  H5: true,
+  H6: true,
+}
+
 function header(selection, state) {
   const { result, node, stack } = state
 
-  if (["H1", "H2", "H3", "H4", "H5", "H6"].indexOf(node.nodeName) === -1) {
+  if (!HEADER_NODES[node.nodeName]) {
     return false
   }
 
@@ -82,12 +91,12 @@ function quote(selection, state) {
     return false
   }
 
-  const blockquote = node.querySelector("blockquote[misago-quote]")
+  const blockquote = node.querySelector("blockquote[misago-rich-text-quote]")
   if (!blockquote) {
     return false
   }
 
-  const info = blockquote.getAttribute("misago-quote")
+  const info = blockquote.getAttribute("misago-rich-text-quote")
 
   const children = selection.extractNodes(
     blockquote.childNodes,
@@ -116,12 +125,12 @@ function spoiler(selection, state) {
     return false
   }
 
-  const body = node.querySelector("div[misago-spoiler]")
+  const body = node.querySelector("div[misago-rich-text-spoiler]")
   if (!body) {
     return false
   }
 
-  const info = body.getAttribute("misago-spoiler")
+  const info = body.getAttribute("misago-rich-text-spoiler")
 
   const children = selection.extractNodes(
     body.childNodes,
@@ -150,12 +159,12 @@ function code(selection, state) {
     return false
   }
 
-  const code = node.querySelector("code[misago-code]")
+  const code = node.querySelector("code[misago-rich-text-code]")
   if (!code) {
     return false
   }
 
-  const info = code.getAttribute("misago-code")
+  const info = code.getAttribute("misago-rich-text-code")
   const content = getQuotedCode(code)
 
   result.push({
@@ -197,7 +206,10 @@ function paragraph(selection, state) {
 function table(selection, state) {
   const { result, node, stack } = state
 
-  if (node.nodeName !== "DIV") {
+  if (
+    node.nodeName !== "DIV" ||
+    node.getAttribute("misago-rich-text") !== "table-container"
+  ) {
     return false
   }
 

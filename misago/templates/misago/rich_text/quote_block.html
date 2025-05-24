@@ -1,6 +1,6 @@
 {% load i18n misago_avatars misago_formats %}
 <aside class="rich-text-quote">
-  <div class="rich-text-quote-header" misago-quote-disable>
+  <div class="rich-text-quote-header">
     {% if post %}
       {% if poster %}
         <a
@@ -66,7 +66,7 @@
       </div>
     {% endif %}
   </div>
-  <blockquote class="rich-text-quote-body" misago-quote="{% if poster_name and post_id %}{{ poster_name }}, post: {{ post_id }}{% elif info %}{{ info }}{% endif %}">
+  <blockquote class="rich-text-quote-body" misago-rich-text-quote="{% if poster_name and post_id %}{{ poster_name }}, post: {{ post_id }}{% elif info %}{{ info }}{% endif %}">
     {{ content|safe }}
   </blockquote>
 </aside>

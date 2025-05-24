@@ -22,8 +22,17 @@ function youtube(cursor, node) {
   return node
 }
 
+const HEADER_NODES = {
+  H1: true,
+  H2: true,
+  H3: true,
+  H4: true,
+  H5: true,
+  H6: true,
+}
+
 function header(cursor, node) {
-  if (["H1", "H2", "H3", "H4", "H5", "H6"].indexOf(node.nodeName) === -1) {
+  if (!HEADER_NODES[node.nodeName]) {
     return null
   }
 
@@ -35,7 +44,7 @@ function quote(cursor, node) {
     return null
   }
 
-  const blockquote = node.querySelector("blockquote[misago-quote]")
+  const blockquote = node.querySelector("blockquote[misago-rich-text-quote]")
   if (!blockquote) {
     return null
   }
@@ -48,7 +57,7 @@ function spoiler(cursor, node) {
     return null
   }
 
-  const body = node.querySelector("div[misago-spoiler]")
+  const body = node.querySelector("div[misago-rich-text-spoiler]")
   if (!body) {
     return null
   }
@@ -61,7 +70,7 @@ function code(cursor, node) {
     return null
   }
 
-  const code = node.querySelector("code[misago-code]")
+  const code = node.querySelector("code[misago-rich-text-code]")
   if (!code) {
     return null
   }
@@ -92,7 +101,10 @@ const TABLE_NODES = {
 }
 
 function table(cursor, node) {
-  if (node.nodeName === "DIV" && node.hasAttribute("misago-table-container")) {
+  if (
+    node.nodeName === "DIV" &&
+    node.getAttribute("misago-rich-text") === "table-container"
+  ) {
     return cursor.findTether(node.childNodes)
   }
 

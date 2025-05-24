@@ -41,13 +41,13 @@ function youtube(selection, root, nodes) {
 
 function code(selection, root, nodes) {
   const { ancestor } = root
-  const container = ancestor.closest("[misago-code]")
+  const container = ancestor.closest("[misago-rich-text-code]")
 
   if (!container) {
     return nodes
   }
 
-  const info = container.getAttribute("misago-code")
+  const info = container.getAttribute("misago-rich-text-code")
   const content = getQuotedCode(root)
 
   return [
@@ -370,21 +370,21 @@ function blocks(selection, root, nodes) {
 
   let parent = root.ancestor
   while (!parent.hasAttribute("misago-quote-root")) {
-    if (parent.hasAttribute("misago-spoiler")) {
+    if (parent.hasAttribute("misago-rich-text-spoiler")) {
       spoiler = true
       result = [
         {
           type: "spoiler",
-          info: parent.getAttribute("misago-spoiler"),
+          info: parent.getAttribute("misago-rich-text-spoiler"),
           children: result,
         },
       ]
-    } else if (parent.hasAttribute("misago-quote")) {
+    } else if (parent.hasAttribute("misago-rich-text-quote")) {
       quote = true
       result = [
         {
           type: "quote",
-          info: parent.getAttribute("misago-quote"),
+          info: parent.getAttribute("misago-rich-text-quote"),
           children: result,
         },
       ]

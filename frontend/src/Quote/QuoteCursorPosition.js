@@ -21,7 +21,7 @@ class QuoteCursorPosition {
   }
 
   getPosition(root, range) {
-    const { element, ancestor } = root
+    const { element } = root
 
     this.shadow.setAttribute("class", element.getAttribute("class"))
 
