@@ -30,24 +30,24 @@ def test_render_tokens_to_markup_renders_code(parse_to_tokens):
 
 def test_render_tokens_to_markup_renders_fenced_code(parse_to_tokens):
     tokens = parse_to_tokens("```\nhello")
-    assert render_tokens_to_markup(tokens) == "hello"
+    assert render_tokens_to_markup(tokens) == "```\nhello\n```"
 
 
 def test_render_tokens_to_markup_renders_fenced_code_with_info(parse_to_tokens):
     tokens = parse_to_tokens("```info\nhello")
-    assert render_tokens_to_markup(tokens) == "info:\nhello"
+    assert render_tokens_to_markup(tokens) == "```info\nhello\n```"
 
 
 def test_render_tokens_to_markup_renders_fenced_code_with_syntax(parse_to_tokens):
     tokens = parse_to_tokens("```php\nhello")
-    assert render_tokens_to_markup(tokens) == "php:\nhello"
+    assert render_tokens_to_markup(tokens) == "```php\nhello\n```"
 
 
 def test_render_tokens_to_markup_renders_fenced_code_with_info_and_syntax(
     parse_to_tokens,
 ):
     tokens = parse_to_tokens("```info, syntax: php\nhello")
-    assert render_tokens_to_markup(tokens) == "info, php:\nhello"
+    assert render_tokens_to_markup(tokens) == "```info, syntax: php\nhello\n```"
 
 
 @pytest.mark.parametrize(

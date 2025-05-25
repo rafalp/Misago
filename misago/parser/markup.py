@@ -131,7 +131,26 @@ def render_code_fence(state: StateMarkup) -> bool:
     if token.type != "fence":
         return False
 
-    raise NotImplementedError()
+    info = token.attrs.get("info")
+    syntax = token.attrs.get("syntax")
+    content = dedent(token.content).rstrip()
+
+    args = None
+    if info and syntax:
+        args = f"{escape(info)}, syntax: {escape(syntax)}"
+    elif info or syntax:
+        args = escape(info or syntax)
+
+    if args:
+        state.push(f"{token.markup}{args}", hardbreak=True)
+    else:
+        state.push(token.markup, hardbreak=True)
+
+    state.push(content, softbreak=True)
+    state.push(token.markup, softbreak=True)
+
+    state.pos += 1
+    return True
 
 
 def render_code_bbcode(state: StateMarkup) -> bool:
