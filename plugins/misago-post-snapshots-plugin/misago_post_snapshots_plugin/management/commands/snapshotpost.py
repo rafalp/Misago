@@ -1,11 +1,11 @@
 from django.core.management.base import BaseCommand, CommandError
 from misago.threads.models import Post
 
-from ...snapshot import create_post_snapshot
+from ...snapshots import create_post_snapshot
 
 
 class Command(BaseCommand):
-    help = "Creates snapshots for posts"
+    help = "Creates post snapshots"
 
     def add_arguments(self, parser):
         parser.add_argument("post_ids", nargs="+", type=int)
@@ -23,5 +23,5 @@ class Command(BaseCommand):
         create_post_snapshot(post)
 
         self.stdout.write(
-            self.style.SUCCESS(f"Created new snapshot for post {post.id}")
+            self.style.SUCCESS(f"Created new snapshot for post '{post.id}'")
         )

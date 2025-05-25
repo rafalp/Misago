@@ -2,8 +2,8 @@ from misago import MisagoPlugin
 
 
 manifest = MisagoPlugin(
-    name="Posts Snapshots",
-    description="Creates snapshots of posts contents.",
+    name="Post Snapshots",
+    description="Creates post snapshots.",
     license="GNU GPL v2",
     icon="fas fa-clone",
     color="#b5179e",
