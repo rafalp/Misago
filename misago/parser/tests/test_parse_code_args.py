@@ -1,4 +1,4 @@
-from ..codeargs import parse_code_args
+from ..args import parse_code_args
 
 
 def test_parse_code_args_returns_none_for_empty_str():

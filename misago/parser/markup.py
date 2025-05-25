@@ -350,8 +350,11 @@ def render_attachment(state: StateMarkup) -> bool:
     if token.type != "attachment":
         return False
 
-    if name := token.attrs.get("name"):
-        state.push(name, hardbreak=True)
+    name = token.attrs.get("name")
+    id = token.attrs.get("id")
+
+    if name and id:
+        state.push(f"<attachment={name}:{id}>", hardbreak=True)
 
     state.pos += 1
     return True

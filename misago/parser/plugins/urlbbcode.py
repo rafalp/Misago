@@ -1,6 +1,8 @@
 from markdown_it import MarkdownIt
 from markdown_it.rules_inline.state_inline import StateInline
 
+from ..args import parse_inline_bbcode_args
+
 
 def url_bbcode_plugin(md: MarkdownIt):
     md.inline.ruler.before("link", "url_bbcode", url_bbcode_rule)
@@ -26,20 +28,13 @@ def url_bbcode_rule(state: StateInline, silent: bool):
     if state.src[start : start + 4].lower() != "[url":
         return False
 
-    if state.src[start + 4] == "=":
-        if "]" not in state.src[start + 5 : maximum]:
-            return False
-
+    parsed_args = parse_inline_bbcode_args(state, start + 4)
+    if parsed_args:
         args_start = start + 5
-        content_start = state.src.index("]", args_start) + 1
-        args_end = content_start - 1
-
-        args_str = state.src[args_start:args_end].strip() or None
-        if args_str and (
-            (args_str[0] == '"' and args_str[-1] == '"')
-            or (args_str[0] == "'" and args_str[-1] == "'")
-        ):
-            args_str = args_str[1:-1].strip()
+        args_str, args_end = parsed_args
+        content_start = args_end + 1
+    elif parsed_args is False:
+        return False
     else:
         content_start = start + 5
 

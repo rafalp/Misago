@@ -8,6 +8,7 @@ from markdown_it.rules_block.state_block import StateBlock
 from markdown_it.token import Token
 from markdown_it.utils import EnvType, OptionsDict
 
+from ..args import parse_code_args
 from ..bbcode import (
     BBCodeBlockEnd,
     BBCodeBlockRule,
@@ -15,7 +16,6 @@ from ..bbcode import (
     bbcode_block_end_rule,
     bbcode_block_start_rule,
 )
-from ..codeargs import parse_code_args
 
 
 def code_bbcode_plugin(md: MarkdownIt):

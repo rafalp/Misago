@@ -30,7 +30,7 @@ from markdown_it.rules_block.state_block import StateBlock
 from markdown_it.token import Token
 from markdown_it.utils import EnvType, OptionsDict
 
-from ..codeargs import parse_code_args
+from ..args import parse_code_args
 
 
 def fence_plugin(md: MarkdownIt):
