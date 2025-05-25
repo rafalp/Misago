@@ -194,6 +194,7 @@ def reverse_attachment_url(attachment_type, matchobj):
 
 
 class Migration(migrations.Migration):
+    atomic = False
 
     dependencies = [
         ("misago_attachments", "0005_attachment_clean_names_populate_slugs"),

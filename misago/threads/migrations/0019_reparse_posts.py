@@ -20,6 +20,7 @@ def reparse_posts(apps, _):
 
 
 class Migration(migrations.Migration):
+    atomic = False
 
     dependencies = [
         ("misago_threads", "0018_update_attachments_markup"),
