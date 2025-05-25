@@ -24,8 +24,8 @@ def test_render_tokens_to_markup_renders_setex_header_and_paragraph(parse_to_tok
 
 
 def test_render_tokens_to_markup_renders_code(parse_to_tokens):
-    tokens = parse_to_tokens("    hello\n    world")
-    assert render_tokens_to_markup(tokens) == "    hello\n    world"
+    tokens = parse_to_tokens("wop\n\n    hello\n    world")
+    assert render_tokens_to_markup(tokens) == "wop\n\n    hello\n    world"
 
 
 def test_render_tokens_to_markup_renders_fenced_code(parse_to_tokens):
@@ -169,7 +169,9 @@ def test_render_tokens_to_markup_renders_table(parse_to_tokens):
 
 def test_render_tokens_to_markup_renders_attachments(parse_to_tokens):
     tokens = parse_to_tokens("<attachment=image.png:1><attachment=video.mp4:2>")
-    assert render_tokens_to_markup(tokens) == "image.png\n\nvideo.mp4"
+    assert render_tokens_to_markup(tokens) == (
+        "<attachment=image.png:1>\n<attachment=video.mp4:2>"
+    )
 
 
 def test_render_tokens_to_markup_renders_code_inline(parse_to_tokens):

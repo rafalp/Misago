@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from textwrap import dedent
+from textwrap import dedent, indent
 from typing import Callable
 
 from markdown_it.renderer import RendererProtocol
@@ -55,22 +55,7 @@ class RendererMarkup(RendererProtocol):
             else:
                 state.pos += 1
 
-        # Normalize whitespace and linebreaks
-        result = state.result.strip()
-
-        while "\n " in result:
-            result = result.replace("\n ", "\n")
-
-        while " \n" in result:
-            result = result.replace(" \n", "\n")
-
-        while "\n\n\n" in result:
-            result = result.replace("\n\n\n", "\n\n")
-
-        while "  " in result:
-            result = result.replace("  ", " ")
-
-        return result
+        return state.result.strip()
 
 
 def render_tokens_to_markup(tokens: list[Token]) -> str:
@@ -79,7 +64,8 @@ def render_tokens_to_markup(tokens: list[Token]) -> str:
         tokens,
         [
             render_header,
-            render_code,
+            render_code_block,
+            render_code_fence,
             render_code_bbcode,
             render_quote_bbcode,
             render_spoiler_bbcode,
@@ -128,24 +114,24 @@ def render_header(state: StateMarkup) -> bool:
     return True
 
 
-def render_code(state: StateMarkup) -> bool:
+def render_code_block(state: StateMarkup) -> bool:
     token = state.tokens[state.pos]
-    if token.type not in ("code_block", "fence"):
+    if token.type != "code_block":
         return False
 
-    info = token.attrs.get("info")
-    syntax = token.attrs.get("syntax")
-    content = dedent(token.content).strip()
-
-    if info and syntax:
-        state.push(f"{info}, {syntax}:\n{content}", hardbreak=True)
-    elif info or syntax:
-        state.push(f"{info or syntax}:\n{content}", hardbreak=True)
-    else:
-        state.push(content, hardbreak=True)
+    content = dedent(token.content).rstrip()
+    state.push(indent(content, "    "), hardbreak=True)
 
     state.pos += 1
     return True
+
+
+def render_code_fence(state: StateMarkup) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "fence":
+        return False
+
+    raise NotImplementedError()
 
 
 def render_code_bbcode(state: StateMarkup) -> bool:
@@ -350,11 +336,29 @@ def render_attachment(state: StateMarkup) -> bool:
     if token.type != "attachment":
         return False
 
+    use_hardbreak = True
+    if state.pos:
+        cursor = 0
+        while cursor < state.pos:
+            if state.tokens[cursor].type == "selection_boundary_close":
+                cursor += 1
+            else:
+                if state.tokens[cursor].type == "attachment":
+                    use_hardbreak = False
+                elif state.tokens[cursor].nesting != 1:
+                    use_hardbreak = True
+
+                cursor += 1
+
     name = token.attrs.get("name")
     id = token.attrs.get("id")
 
     if name and id:
-        state.push(f"<attachment={name}:{id}>", hardbreak=True)
+        state.push(
+            f"<attachment={name}:{id}>",
+            hardbreak=use_hardbreak,
+            softbreak=not use_hardbreak,
+        )
 
     state.pos += 1
     return True
