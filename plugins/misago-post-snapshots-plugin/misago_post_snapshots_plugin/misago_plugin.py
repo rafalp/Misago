@@ -3,7 +3,7 @@ from misago import MisagoPlugin
 
 manifest = MisagoPlugin(
     name="Post Snapshots",
-    description="Creates post snapshots.",
+    description="Creates snapshots for post contents.",
     license="GNU GPL v2",
     icon="fas fa-clone",
     color="#b5179e",
