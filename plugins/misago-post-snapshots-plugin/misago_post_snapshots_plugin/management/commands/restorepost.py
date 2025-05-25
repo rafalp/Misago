@@ -19,18 +19,18 @@ class Command(BaseCommand):
         try:
             post = Post.objects.get(pk=post_id)
         except Post.DoesNotExist:
-            raise CommandError(f"Post '{post_id}' does not exist")
+            raise CommandError(f"Post {post_id} does not exist")
 
         snapshots = list(PostSnapshot.objects.filter(post_id=post.id).order_by("-id"))
         if not snapshots:
-            raise CommandError(f"Post '{post_id}' has no snapshots")
+            raise CommandError(f"Post {post_id} has no snapshots")
         elif len(snapshots) == 1:
             restore_post_from_snapshot(post, snapshots[0])
             self.stdout.write(
-                self.style.SUCCESS(f"Restored post '{post.id}' from snapshot #1")
+                self.style.SUCCESS(f"Restored post {post.id} from snapshot #1")
             )
         else:
-            self.stdout.write(f"Select snapshot to restore the post '{post.id}':")
+            self.stdout.write(f"Select snapshot to restore the post {post.id}:")
             self.stdout.write()
 
             for i, snapshot in enumerate(snapshots):
@@ -47,5 +47,5 @@ class Command(BaseCommand):
 
             restore_post_from_snapshot(post, snapshots[choice - 1])
             self.stdout.write(
-                self.style.SUCCESS(f"Restored post '{post.id}' from snapshot #{choice}")
+                self.style.SUCCESS(f"Restored post {post.id} from snapshot #{choice}")
             )

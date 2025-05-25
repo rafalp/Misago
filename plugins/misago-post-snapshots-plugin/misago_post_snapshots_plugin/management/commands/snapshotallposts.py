@@ -11,5 +11,5 @@ class Command(BaseCommand):
         for post in Post.objects.order_by("-id").iterator():
             create_post_snapshot(post)
             self.stdout.write(
-                self.style.SUCCESS(f"Created new snapshot for post '{post.id}'")
+                self.style.SUCCESS(f"Created new snapshot for post {post.id}")
             )

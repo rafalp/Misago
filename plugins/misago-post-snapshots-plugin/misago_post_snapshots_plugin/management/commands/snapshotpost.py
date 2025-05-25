@@ -18,10 +18,10 @@ class Command(BaseCommand):
         try:
             post = Post.objects.get(pk=post_id)
         except Post.DoesNotExist:
-            raise CommandError(f"Post '{post_id}' does not exist")
+            raise CommandError(f"Post {post_id} does not exist")
 
         create_post_snapshot(post)
 
         self.stdout.write(
-            self.style.SUCCESS(f"Created new snapshot for post '{post.id}'")
+            self.style.SUCCESS(f"Created new snapshot for post {post.id}")
         )
