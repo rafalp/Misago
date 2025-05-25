@@ -3,6 +3,8 @@ from typing import Callable
 from markdown_it.rules_block.state_block import StateBlock
 from markdown_it.token import Token
 
+from .escape import escape, unescape
+
 BBCodeBlockStart = tuple[str, dict | None, int, int]
 BBCodeBlockEnd = tuple[str, int, int]
 BBCodeBlockStartRule = Callable[[StateBlock, int], BBCodeBlockStart | None]
@@ -281,23 +283,43 @@ def bbcode_block_start_rule(
     if "]" not in src[block_bbcode_len:]:
         return None
 
-    end = src.index("]", 0, maximum - start)
+    pos = block_bbcode_len
+    src_maximum = len(src)
+    level = 1
+    end = 0
+
+    while pos < src_maximum:
+        if src[pos] == "\\":
+            pos += 2
+        else:
+            if src[pos] == "]":
+                level -= 1
+                if not level:
+                    end = pos
+                    break
+            elif src[pos] == "[":
+                level += 1
+
+            pos += 1
+    else:
+        return None
+
     if end == block_bbcode_len:
         return src[: block_bbcode_len + 1], None, start, start + end + 1
 
     if src[block_bbcode_len] != "=" or not args:
         return None
 
-    args_str = src[block_bbcode_len + 1 : end]
+    args_str = src[block_bbcode_len + 1 : end].strip()
     if args_str and (
         (args_str[0] == '"' and args_str[-1] == '"')
         or (args_str[0] == "'" and args_str[-1] == "'")
     ):
-        args_str = args_str[1:-1]
+        args_str = args_str[1:-1].strip()
 
-    args_str = args_str.strip() or None
+    args_str = unescape(args_str)
 
-    return src[: end + 1], args_str, start, end + 1
+    return src[: end + 1], args_str or None, start, end + 1
 
 
 def bbcode_block_end_rule(

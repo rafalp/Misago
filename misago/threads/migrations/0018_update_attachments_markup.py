@@ -7,6 +7,8 @@ from django.db import migrations
 from django.db.models import Q
 from django.urls import reverse
 
+from ...parser.updates.attachments_0_40 import update_attachments_markup_to_0_40
+
 
 # TODO: move this to separate file, write tests for it
 RE_IMG_LINK = re.compile(
@@ -40,6 +42,7 @@ def update_attachments_markup(apps, _):
     # Replace attachments urls with markdown
     queryset = Post.objects.filter(original__contains="/a/").order_by("-id")
     for post in queryset.iterator(chunk_size=20):
+        new_original = update_attachments_markup_to_0_40(Attachment, post.original)
         new_original = RE_IMG_LINK_WITH_THUMB.sub(
             update_img_with_thumb_markdown_syntax_partial, post.original
         )

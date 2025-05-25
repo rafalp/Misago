@@ -136,3 +136,13 @@ def test_bbcode_block_rule_matches_closest_multiline_block_open_close_pair(
 ):
     html = parse_to_html("[quote]\n[quote]\ntext\n[/quote]")
     assert html == ("<p>[quote]</p>\n<misago-quote>\n<p>text</p>\n</misago-quote>")
+
+
+def test_bbcode_block_rule_pairs_braces_in_argument_parsing(parse_to_html):
+    html = parse_to_html("[quote=hello[world]]\ntext\n[/quote]")
+    assert html == '<misago-quote info="hello[world]">\n<p>text</p>\n</misago-quote>'
+
+
+def test_bbcode_block_rule_escapes_braces_in_argument_parsing(parse_to_html):
+    html = parse_to_html("[quote=hello\\[world\\]]\ntext\n[/quote]")
+    assert html == '<misago-quote info="hello[world]">\n<p>text</p>\n</misago-quote>'

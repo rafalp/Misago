@@ -5,44 +5,44 @@ from markdown_it.token import Token
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..plaintext import StatePlaintext
+    from ..markup import StateMarkup
 
 
-class RenderTokensToPlaintextHookAction(Protocol):
+class RenderTokensToMarkupHookAction(Protocol):
     """
-    A standard Misago function used to convert a token stream into plain text.
+    A standard Misago function used to convert a token stream into markup.
 
     # Arguments
 
     ## `tokens: list[Token]`
 
-    A list of `Token` instances to render as text.
+    A list of `Token` instances to render as markup.
 
-    ## `rules: list[Callable[[StatePlaintext], bool]]`
+    ## `rules: list[Callable[[StateMarkup], bool]]`
 
     A list of `callable`s with rendering rules.
 
     # Return value
 
-    A `str` with rendered text.
+    A `str` with rendered markup.
     """
 
     def __call__(
         self,
         tokens: list[Token],
-        rules: list[Callable[["StatePlaintext"], bool]],
+        rules: list[Callable[["StateMarkup"], bool]],
     ) -> str: ...
 
 
-class RenderTokensToPlaintextHookFilter(Protocol):
+class RenderTokensToMarkupHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: RenderTokensToPlaintextHookAction`
+    ## `action: RenderTokensToMarkupHookAction`
 
-    A standard Misago function used to convert a token stream into plain text.
+    A standard Misago function used to convert a token stream into markup.
 
     See the [action](#action) section for details.
 
@@ -50,7 +50,7 @@ class RenderTokensToPlaintextHookFilter(Protocol):
 
     A list of `Token` instances to render as text.
 
-    ## `rules: list[Callable[[StatePlaintext], bool]]`
+    ## `rules: list[Callable[[StateMarkup], bool]]`
 
     A list of `callable`s with rendering rules.
 
@@ -61,18 +61,18 @@ class RenderTokensToPlaintextHookFilter(Protocol):
 
     def __call__(
         self,
-        action: RenderTokensToPlaintextHookAction,
+        action: RenderTokensToMarkupHookAction,
         tokens: list[Token],
-        rules: list[Callable[["StatePlaintext"], bool]],
+        rules: list[Callable[["StateMarkup"], bool]],
     ) -> str: ...
 
 
-class RenderTokensToPlaintextHook(
-    FilterHook[RenderTokensToPlaintextHookAction, RenderTokensToPlaintextHookFilter]
+class RenderTokensToMarkupHook(
+    FilterHook[RenderTokensToMarkupHookAction, RenderTokensToMarkupHookFilter]
 ):
     """
     This hook wraps the standard function Misago uses to convert a token stream
-    into plain text.
+    into markup.
 
     Token stream is a list of the `Token` instances from `markdown_it.tokens` module.
 
@@ -85,11 +85,11 @@ class RenderTokensToPlaintextHook(
     from typing import Callable
 
     from markdown_it.tokens import Token
-    from misago.parser.hooks import render_tokens_to_plaintext_hook
-    from misago.parser.plaintext import StatePlaintext
+    from misago.parser.hooks import render_tokens_to_markup_hook
+    from misago.parser.markup import StateMarkup
 
 
-    def custom_renderer_rule(state: StatePlaintext) -> bool:
+    def custom_renderer_rule(state: StateMarkup) -> bool:
         token = state.tokens[state.pos]
         if token.type != "plugin":
             return False
@@ -100,11 +100,11 @@ class RenderTokensToPlaintextHook(
         return True
 
 
-    @render_tokens_to_plaintext_hook.append_filter
+    @render_tokens_to_markup_hook.append_filter
     def tokenize_with_custom_tokens_processor(
         action,
         tokens: list[Token],
-        rules: list[Callable[["StatePlaintext"], bool]],
+        rules: list[Callable[["StateMarkup"], bool]],
     ) -> str:
         rules.append(("custom_rule", custom_renderer_rule))
         return action(parser, markup, processors)
@@ -115,11 +115,11 @@ class RenderTokensToPlaintextHook(
 
     def __call__(
         self,
-        action: RenderTokensToPlaintextHookAction,
+        action: RenderTokensToMarkupHookAction,
         tokens: list[Token],
-        rules: list[Callable[["StatePlaintext"], bool]],
+        rules: list[Callable[["StateMarkup"], bool]],
     ) -> str:
         return super().__call__(action, tokens, rules)
 
 
-render_tokens_to_plaintext_hook = RenderTokensToPlaintextHook()
+render_tokens_to_markup_hook = RenderTokensToMarkupHook()
