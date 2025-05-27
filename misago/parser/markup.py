@@ -82,7 +82,7 @@ def render_tokens_to_markup(tokens: list[Token]) -> str:
             render_code_block,
             render_code_fence,
             render_code_bbcode,
-            # render_quote_bbcode,
+            render_quote_bbcode,
             # render_spoiler_bbcode,
             # render_ordered_list,
             # render_bullet_list,
@@ -211,27 +211,22 @@ def render_quote_bbcode(state: StateMarkup) -> bool:
     user = opening_token.attrs.get("user")
     post = opening_token.attrs.get("post")
 
+    args = None
     if user and post:
-        args = f"{user}, #{post}:\n"
-    elif user:
-        args = f"{user}, #{post}:\n"
-    elif post:
-        args = f"#{post}:\n"
+        args = f"{user}, post: {post}"
     elif info:
-        args = escape(info, "[]")
-    else:
-        args = ""
+        args = info
 
     if args:
         if '"' in args:
-            args = f'"{args}"'
+            args = f'"{escape(args, '[]')}"'
 
-        state.push(f"[quote={args}]", hardbreak=True)
+        state.push_block(f"[quote={args}]", nesting=1)
     else:
-        state.push("[quote]", hardbreak=True)
+        state.push_block("[quote]", nesting=1)
 
-    state.push(state.renderer.render(tokens[1:-1]), softbreak=True)
-    state.push("[/quote]", softbreak=True)
+    state.push_block(state.renderer.render(tokens[1:-1]))
+    state.push_block("[/quote]", nesting=-1)
     state.pos = pos
 
     return True

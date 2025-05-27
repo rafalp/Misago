@@ -150,7 +150,7 @@ def render_quote_bbcode(state: StatePlaintext) -> bool:
     if user and post:
         prefix = f"{user}, #{post}:\n"
     elif user:
-        prefix = f"{user}, #{post}:\n"
+        prefix = f"{user}:\n"
     elif post:
         prefix = f"#{post}:\n"
     elif info:
