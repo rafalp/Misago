@@ -35,10 +35,12 @@ ESCAPED_CHARACTERS = {
 }
 
 
-def escape(value: str) -> str:
+def escape(value: str, characters: str | None = None) -> str:
+    escaped_characters = "\\" + characters if characters else ESCAPED_CHARACTERS
+
     result = ""
     for c in value:
-        if c in ESCAPED_CHARACTERS:
+        if c in escaped_characters:
             result += "\\"
         result += c
     return result

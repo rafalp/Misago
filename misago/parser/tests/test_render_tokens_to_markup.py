@@ -89,9 +89,26 @@ def test_render_tokens_to_markup_renders_blockquote(parse_to_tokens):
     assert render_tokens_to_markup(tokens) == "hello"
 
 
-def test_render_tokens_to_markup_renders_quote_bbcode(parse_to_tokens):
-    tokens = parse_to_tokens("[quote]hello[/quote]")
-    assert render_tokens_to_markup(tokens) == "hello"
+@pytest.mark.parametrize(
+    "markup,result",
+    (
+        (
+            "[quote]\nhello\n[/quote]",
+            "[quote]\nhello\n[/quote]",
+        ),
+        (
+            "[quote=info]\nhello\n[/quote]",
+            "[quote=info]\nhello\n[/quote]",
+        ),
+        (
+            "[quote=John, post: 123]\nhello\n[/quote]",
+            "[quote=John, post: 123]\nhello\n[/quote]",
+        ),
+    ),
+)
+def test_render_tokens_to_markup_renders_quote_bbcode(parse_to_tokens, markup, result):
+    tokens = parse_to_tokens(markup)
+    assert render_tokens_to_markup(tokens) == result
 
 
 def test_render_tokens_to_markup_renders_quote_bbcode_with_info(parse_to_tokens):

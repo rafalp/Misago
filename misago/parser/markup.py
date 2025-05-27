@@ -19,16 +19,31 @@ class StateMarkup:
     pos: int
     posMax: int
     list_item_prefix: str
+    nesting: int | None = None
     result: str = ""
 
-    def push(self, text: str, hardbreak: bool = False, softbreak: bool = False):
-        if self.result:
-            if hardbreak:
-                self.result += "\n\n"
-            if softbreak:
+    def push_block(self, text: str, nesting: int = 0):
+        if self.result and self.nesting is not None:
+            if nesting >= 0:
+                if self.nesting == 1:
+                    self.result += "\n"
+                else:
+                    self.result += "\n\n"
+            else:
                 self.result += "\n"
 
         self.result += text
+        self.nesting = nesting
+
+    def push(self, text: str, softbreak: bool = False):
+        if self.result and softbreak:
+            self.result += "\n"
+
+        self.result += text
+
+    def push_softbreak(self):
+        if self.result:
+            self.result += "\n"
 
 
 class RendererMarkup(RendererProtocol):
@@ -67,19 +82,19 @@ def render_tokens_to_markup(tokens: list[Token]) -> str:
             render_code_block,
             render_code_fence,
             render_code_bbcode,
-            render_quote_bbcode,
-            render_spoiler_bbcode,
-            render_ordered_list,
-            render_bullet_list,
-            render_table,
-            render_attachment,
+            # render_quote_bbcode,
+            # render_spoiler_bbcode,
+            # render_ordered_list,
+            # render_bullet_list,
+            # render_table,
+            # render_attachment,
             render_paragraph,
             render_inline,
-            render_code_inline,
-            render_mention,
-            render_link,
-            render_image,
-            render_video,
+            # render_code_inline,
+            # render_mention,
+            # render_link,
+            # render_image,
+            # render_video,
             render_softbreak,
             render_text,
         ],
@@ -103,11 +118,12 @@ def render_header(state: StateMarkup) -> bool:
     heading_open = tokens[0]
 
     if heading_open.markup[0] == "#":
-        state.push(f"{heading_open.markup} ", hardbreak=True)
+        state.push_block(f"{heading_open.markup} ")
         state.push(state.renderer.render(tokens[1:-1]))
     else:
-        state.push(state.renderer.render(tokens[1:-1]), hardbreak=True)
-        state.push(heading_open.markup * 5, softbreak=True)
+        state.push_block(state.renderer.render(tokens[1:-1]))
+        state.push_softbreak()
+        state.push(heading_open.markup * 5)
 
     state.pos = pos
 
@@ -120,7 +136,7 @@ def render_code_block(state: StateMarkup) -> bool:
         return False
 
     content = dedent(token.content).rstrip()
-    state.push(indent(content, "    "), hardbreak=True)
+    state.push_block(indent(content, "    "))
 
     state.pos += 1
     return True
@@ -142,12 +158,12 @@ def render_code_fence(state: StateMarkup) -> bool:
         args = escape(info or syntax)
 
     if args:
-        state.push(f"{token.markup}{args}", hardbreak=True)
+        state.push_block(f"{token.markup}{args}", nesting=1)
     else:
-        state.push(token.markup, hardbreak=True)
+        state.push_block(token.markup, nesting=1)
 
-    state.push(content, softbreak=True)
-    state.push(token.markup, softbreak=True)
+    state.push_block(content)
+    state.push_block(token.markup, nesting=-1)
 
     state.pos += 1
     return True
@@ -164,17 +180,20 @@ def render_code_bbcode(state: StateMarkup) -> bool:
 
     args = None
     if info and syntax:
-        args = f"{escape(info)}, syntax: {escape(syntax)}"
+        args = f"{escape(info, '[]')}, syntax: {escape(syntax, '[]')}"
     elif info or syntax:
-        args = escape(info or syntax)
+        args = escape(info or syntax, "[]")
 
     if args:
-        state.push(f"[code={args}]", hardbreak=True)
-    else:
-        state.push("[code]", hardbreak=True)
+        if '"' in args:
+            args = f'"{args}"'
 
-    state.push(content, softbreak=True)
-    state.push("[/code]", softbreak=True)
+        state.push_block(f"[code={args}]", nesting=1)
+    else:
+        state.push_block("[code]", nesting=1)
+
+    state.push_block(content)
+    state.push_block("[/code]", nesting=-1)
 
     state.pos += 1
     return True
@@ -193,17 +212,26 @@ def render_quote_bbcode(state: StateMarkup) -> bool:
     post = opening_token.attrs.get("post")
 
     if user and post:
-        prefix = f"{user}, #{post}:\n"
+        args = f"{user}, #{post}:\n"
     elif user:
-        prefix = f"{user}, #{post}:\n"
+        args = f"{user}, #{post}:\n"
     elif post:
-        prefix = f"#{post}:\n"
+        args = f"#{post}:\n"
     elif info:
-        prefix = f"{info}:\n"
+        args = escape(info, "[]")
     else:
-        prefix = ""
+        args = ""
 
-    state.push(prefix + state.renderer.render(tokens[1:-1]), hardbreak=True)
+    if args:
+        if '"' in args:
+            args = f'"{args}"'
+
+        state.push(f"[quote={args}]", hardbreak=True)
+    else:
+        state.push("[quote]", hardbreak=True)
+
+    state.push(state.renderer.render(tokens[1:-1]), softbreak=True)
+    state.push("[/quote]", softbreak=True)
     state.pos = pos
 
     return True
@@ -390,7 +418,7 @@ def render_paragraph(state: StateMarkup) -> bool:
 
     tokens, pos = match
 
-    state.push(state.renderer.render(tokens[1:-1]), hardbreak=True)
+    state.push_block(state.renderer.render(tokens[1:-1]), nesting=0)
     state.pos = pos
 
     return True
