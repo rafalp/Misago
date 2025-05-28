@@ -83,7 +83,7 @@ def render_tokens_to_markup(tokens: list[Token]) -> str:
             render_code_fence,
             render_code_bbcode,
             render_quote_bbcode,
-            # render_spoiler_bbcode,
+            render_spoiler_bbcode,
             # render_ordered_list,
             # render_bullet_list,
             # render_table,
@@ -219,9 +219,9 @@ def render_quote_bbcode(state: StateMarkup) -> bool:
 
     if args:
         if '"' in args:
-            args = f'"{escape(args, '[]')}"'
+            args = f'"{args}"'
 
-        state.push_block(f"[quote={args}]", nesting=1)
+        state.push_block(f"[quote={escape(args, '[]')}]", nesting=1)
     else:
         state.push_block("[quote]", nesting=1)
 
@@ -240,12 +240,15 @@ def render_spoiler_bbcode(state: StateMarkup) -> bool:
     tokens, pos = match
     opening_token = tokens[0]
 
-    if info := opening_token.attrs.get("info"):
-        prefix = f"{info}:\n"
+    if args := opening_token.attrs.get("info"):
+        if '"' in args:
+            args = f'"{args}"'
+        state.push_block(f"[spoiler={escape(args, '[]')}]", nesting=1)
     else:
-        prefix = ""
+        state.push_block("[spoiler]", nesting=1)
 
-    state.push(prefix + state.renderer.render(tokens[1:-1]), hardbreak=True)
+    state.push_block(state.renderer.render(tokens[1:-1]))
+    state.push_block("[/spoiler]", nesting=-1)
     state.pos = pos
 
     return True

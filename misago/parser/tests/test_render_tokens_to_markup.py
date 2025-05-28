@@ -113,8 +113,16 @@ def _test_render_tokens_to_markup_renders_blockquote(parse_to_tokens):
             "[quote=quoted info]\nhello\n[/quote]",
         ),
         (
+            "[quote=John,   post:   123]\nhello\n[/quote]",
             "[quote=John, post: 123]\nhello\n[/quote]",
-            "[quote=John, post: 123]\nhello\n[/quote]",
+        ),
+        (
+            "[quote=info [nested]]\nhello\n[/quote]",
+            "[quote=info \\[nested\\]]\nhello\n[/quote]",
+        ),
+        (
+            "[quote=info \\[escaped\\]]\nhello\n[/quote]",
+            "[quote=info \\[escaped\\]]\nhello\n[/quote]",
         ),
     ),
 )
@@ -123,24 +131,36 @@ def test_render_tokens_to_markup_renders_quote_bbcode(parse_to_tokens, markup, r
     assert render_tokens_to_markup(tokens) == result
 
 
-def _test_render_tokens_to_markup_renders_quote_bbcode_with_info(parse_to_tokens):
-    tokens = parse_to_tokens("[quote=info]hello[/quote]")
-    assert render_tokens_to_markup(tokens) == "info:\nhello"
-
-
-def _test_render_tokens_to_markup_renders_quote_bbcode_with_user(parse_to_tokens):
-    tokens = parse_to_tokens("[quote=User, post: 123]hello[/quote]")
-    assert render_tokens_to_markup(tokens) == "User, #123:\nhello"
-
-
-def _test_render_tokens_to_markup_renders_spoiler_bbcode(parse_to_tokens):
-    tokens = parse_to_tokens("[spoiler]hello[/spoiler]")
-    assert render_tokens_to_markup(tokens) == "hello"
-
-
-def _test_render_tokens_to_markup_renders_spoiler_bbcode_with_info(parse_to_tokens):
-    tokens = parse_to_tokens("[spoiler=info]hello[/spoiler]")
-    assert render_tokens_to_markup(tokens) == "info:\nhello"
+@pytest.mark.parametrize(
+    "markup,result",
+    (
+        (
+            "[spoiler]\nhello\n[/spoiler]",
+            "[spoiler]\nhello\n[/spoiler]",
+        ),
+        (
+            "[spoiler=info]\nhello\n[/spoiler]",
+            "[spoiler=info]\nhello\n[/spoiler]",
+        ),
+        (
+            '[spoiler="quoted info"]\nhello\n[/spoiler]',
+            "[spoiler=quoted info]\nhello\n[/spoiler]",
+        ),
+        (
+            "[spoiler=info [nested]]\nhello\n[/spoiler]",
+            "[spoiler=info \\[nested\\]]\nhello\n[/spoiler]",
+        ),
+        (
+            "[spoiler=info \\[escaped\\]]\nhello\n[/spoiler]",
+            "[spoiler=info \\[escaped\\]]\nhello\n[/spoiler]",
+        ),
+    ),
+)
+def test_render_tokens_to_markup_renders_spoiler_bbcode(
+    parse_to_tokens, markup, result
+):
+    tokens = parse_to_tokens(markup)
+    assert render_tokens_to_markup(tokens) == result
 
 
 def _test_render_tokens_to_markup_renders_ordered_list(parse_to_tokens):
