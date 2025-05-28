@@ -176,6 +176,33 @@ def test_render_tokens_to_markup_renders_spoiler_bbcode(
     assert render_tokens_to_markup(tokens) == result
 
 
+@pytest.mark.parametrize(
+    "markup,result",
+    (
+        (
+            "Hello\n- - -\nWorld",
+            "Hello\n\n- - -\n\nWorld",
+        ),
+        (
+            "Hello\n\n---\nWorld",
+            "Hello\n\n- - -\n\nWorld",
+        ),
+        (
+            "Hello\n** * * *\nWorld",
+            "Hello\n\n* * *\n\nWorld",
+        ),
+    ),
+)
+def test_render_tokens_to_markup_renders_hr_markdown(parse_to_tokens, markup, result):
+    tokens = parse_to_tokens(markup)
+    assert render_tokens_to_markup(tokens) == result
+
+
+def test_render_tokens_to_markup_renders_hr_bbcode(parse_to_tokens):
+    tokens = parse_to_tokens("Hello\n[hr]\nWorld")
+    assert render_tokens_to_markup(tokens) == "Hello\n\n[hr]\n\nWorld"
+
+
 def _test_render_tokens_to_markup_renders_ordered_list(parse_to_tokens):
     tokens = parse_to_tokens("2. lorem\n3. ipsum")
     assert render_tokens_to_markup(tokens) == "2. lorem\n3. ipsum"

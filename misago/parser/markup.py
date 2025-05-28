@@ -89,6 +89,8 @@ def render_tokens_to_markup(tokens: list[Token]) -> str:
             # render_bullet_list,
             # render_table,
             # render_attachment,
+            render_hr_markdown,
+            render_hr_bbcode,
             render_paragraph,
             render_inline,
             # render_code_inline,
@@ -425,6 +427,30 @@ def render_attachment(state: StateMarkup) -> bool:
     return True
 
 
+def render_hr_markdown(state: StateMarkup) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "hr":
+        return False
+
+    sign = token.markup[0]
+    print((f"{sign} " * 3).strip())
+    state.push_block((f"{sign} " * 3).strip())
+
+    state.pos += 1
+    return True
+
+
+def render_hr_bbcode(state: StateMarkup) -> bool:
+    token = state.tokens[state.pos]
+    if token.type != "hr_bbcode":
+        return False
+
+    state.push_block("[hr]")
+
+    state.pos += 1
+    return True
+
+
 def render_paragraph(state: StateMarkup) -> bool:
     match = match_token_pair(state, "paragraph_open", "paragraph_close")
     if not match:
@@ -435,6 +461,24 @@ def render_paragraph(state: StateMarkup) -> bool:
     state.push_block(state.renderer.render(tokens[1:-1]), nesting=0)
     state.pos = pos
 
+    return True
+
+
+def render_ordered_list(state: StateMarkup) -> bool:
+    match = match_token_pair(state, "ordered_list_open", "ordered_list_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    content = render_list_content(state, tokens)
+
+    if state.list_item_prefix:
+        content = "\n" + content
+    else:
+        content = "\n\n" + content
+
+    state.push(content)
+    state.pos = pos
     return True
 
 
