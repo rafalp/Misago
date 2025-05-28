@@ -92,9 +92,22 @@ def test_render_tokens_to_markup_renders_code_bbcode(parse_to_tokens, markup, re
     assert render_tokens_to_markup(tokens) == result
 
 
-def _test_render_tokens_to_markup_renders_blockquote(parse_to_tokens):
-    tokens = parse_to_tokens("> hello")
-    assert render_tokens_to_markup(tokens) == "hello"
+@pytest.mark.parametrize(
+    "markup,result",
+    (
+        (
+            "> Hello world",
+            "> Hello world",
+        ),
+        (
+            "> Hello\n> World",
+            "> Hello\n> World",
+        ),
+    ),
+)
+def test_render_tokens_to_markup_renders_blockquote(parse_to_tokens, markup, result):
+    tokens = parse_to_tokens(markup)
+    assert render_tokens_to_markup(tokens) == result
 
 
 @pytest.mark.parametrize(

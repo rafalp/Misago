@@ -82,6 +82,7 @@ def render_tokens_to_markup(tokens: list[Token]) -> str:
             render_code_block,
             render_code_fence,
             render_code_bbcode,
+            render_blockquote,
             render_quote_bbcode,
             render_spoiler_bbcode,
             # render_ordered_list,
@@ -199,6 +200,21 @@ def render_code_bbcode(state: StateMarkup) -> bool:
     return True
 
 
+def render_blockquote(state: StateMarkup) -> bool:
+    match = match_token_pair(state, "blockquote_open", "blockquote_close")
+    if not match:
+        return False
+
+    tokens, pos = match
+    content = indent(state.renderer.render(tokens[1:-1]), "> ")
+
+    state.push_block(content, nesting=1)
+    state.nesting = -1
+
+    state.pos = pos
+    return True
+
+
 def render_quote_bbcode(state: StateMarkup) -> bool:
     match = match_token_pair(state, "quote_bbcode_open", "quote_bbcode_close")
     if not match:
@@ -227,8 +243,8 @@ def render_quote_bbcode(state: StateMarkup) -> bool:
 
     state.push_block(state.renderer.render(tokens[1:-1]))
     state.push_block("[/quote]", nesting=-1)
-    state.pos = pos
 
+    state.pos = pos
     return True
 
 
@@ -249,8 +265,8 @@ def render_spoiler_bbcode(state: StateMarkup) -> bool:
 
     state.push_block(state.renderer.render(tokens[1:-1]))
     state.push_block("[/spoiler]", nesting=-1)
-    state.pos = pos
 
+    state.pos = pos
     return True
 
 
