@@ -8,7 +8,19 @@ from django.db.models import Q
 from django.urls import reverse
 
 
-# TODO: move this to separate file, write tests for it
+def update_posts_attachments_markup(apps, _):
+    Attachment = apps.get_model("misago_attachments", "Attachment")
+    Post = apps.get_model("misago_threads", "Post")
+
+    queryset = Post.objects.filter(
+        Q(original__contains="/a/")
+        | Q(original__contains=settings.MEDIA_URL + "attachments/")
+    ).order_by("-id")
+
+    for post in queryset.iterator(chunk_size=20):
+        update_post_attachments_markup(Attachment, post)
+
+
 RE_IMG_LINK = re.compile(
     r"\[!\[.+?\]\(/a/(?P<secret>[A-Za-z0-9]+)/(?P<id>[1-9][0-9]*)/(\?shva=1)?\)\]\(/a/[A-Za-z0-9]+/[1-9][0-9]*/(\?shva=1)?\)"
 )
@@ -27,47 +39,29 @@ RE_MEDIA_URL = re.compile(
 )
 
 
-def update_attachments_markup(apps, _):
-    Attachment = apps.get_model("misago_attachments", "Attachment")
-    Post = apps.get_model("misago_threads", "Post")
-
+def update_post_attachments_markup(attachment_type, post):
     update_img_with_thumb_markdown_syntax_partial = partial(
-        update_img_with_thumb_markdown_syntax, Attachment
+        update_img_with_thumb_markdown_syntax, attachment_type
     )
-    update_attachment_url_partial = partial(update_attachment_url, Attachment)
-    update_media_url_partial = partial(update_media_url, Attachment)
+    update_attachment_url_partial = partial(update_attachment_url, attachment_type)
+    update_media_url_partial = partial(update_media_url, attachment_type)
 
-    # Replace attachments urls with markdown
-    queryset = Post.objects.filter(original__contains="/a/").order_by("-id")
-    for post in queryset.iterator(chunk_size=20):
-        new_original = RE_IMG_LINK_WITH_THUMB.sub(
-            update_img_with_thumb_markdown_syntax_partial, post.original
-        )
-        new_original = RE_IMG_LINK.sub(
-            update_img_with_thumb_markdown_syntax_partial, new_original
-        )
-        new_original = RE_IMG.sub(
-            update_img_with_thumb_markdown_syntax_partial, new_original
-        )
-        new_original = RE_ATTACHMENT_URL.sub(
-            update_attachment_url_partial, new_original
-        )
+    original = RE_IMG_LINK_WITH_THUMB.sub(
+        update_img_with_thumb_markdown_syntax_partial, post.original
+    )
+    original = RE_IMG_LINK.sub(update_img_with_thumb_markdown_syntax_partial, original)
+    original = RE_IMG.sub(update_img_with_thumb_markdown_syntax_partial, original)
+    original = RE_ATTACHMENT_URL.sub(update_attachment_url_partial, original)
 
-        if new_original != post.original:
-            post.original = new_original
-            post.save(update_fields=["original"])
+    original = RE_MEDIA_URL.sub(update_media_url_partial, original)
 
-    # Replace links pointing directly to MEDIA_URL with ones to attachment view
-    queryset = Post.objects.filter(
-        original__contains=settings.MEDIA_URL + "attachments/"
-    ).order_by("-id")
+    if original == post.original:
+        return False
 
-    for post in queryset.iterator(chunk_size=20):
-        new_original = RE_MEDIA_URL.sub(update_media_url_partial, post.original)
+    post.original = original
+    post.save(update_fields=["original"])
 
-        if new_original != post.original:
-            post.original = new_original
-            post.save(update_fields=["original"])
+    return True
 
 
 def update_img_with_thumb_markdown_syntax(attachment_type, matchobj):
@@ -140,57 +134,9 @@ def update_media_url(attachment_type, matchobj):
     )
 
 
-def downgrade_attachments_markup(apps, _):
-    Attachment = apps.get_model("misago_attachments", "Attachment")
-    Post = apps.get_model("misago_threads", "Post")
-
-    reverse_attachment_url = partial(update_media_url, Attachment)
-
-    # Replace attachments urls with markdown
-    queryset = Post.objects.filter(original__contains="/a/").order_by("-id")
-    for post in queryset.iterator(chunk_size=20):
-        new_original = RE_IMG_LINK_WITH_THUMB.sub(
-            update_img_with_thumb_markdown_syntax_partial, post.original
-        )
-        new_original = RE_IMG_LINK.sub(
-            update_img_with_thumb_markdown_syntax_partial, new_original
-        )
-        new_original = RE_IMG.sub(
-            update_img_with_thumb_markdown_syntax_partial, new_original
-        )
-        new_original = RE_ATTACHMENT_URL.sub(
-            update_attachment_url_partial, new_original
-        )
-
-        if new_original != post.original:
-            post.original = new_original
-            post.save(update_fields=["original"])
-
-
-def reverse_attachment_url(attachment_type, matchobj):
-    full_match = matchobj.group(0)
-    file_path = full_match[len(settings.MEDIA_URL) :]
-
-    attachment = attachment_type.objects.filter(
-        Q(upload=file_path) | Q(thumbnail=file_path)
-    ).first()
-
-    if not attachment:
-        return full_match
-
-    if attachment.thumbnail and attachment.thumbnail.name == full_match:
-        return reverse(
-            "misago:attachment-thumbnail",
-            kwargs={"id": attachment.id, "slug": attachment.slug},
-        )
-
-    return reverse(
-        "misago:attachment-download",
-        kwargs={"id": attachment.id, "slug": attachment.slug},
-    )
-
-
 class Migration(migrations.Migration):
+
+    atomic = False
 
     dependencies = [
         ("misago_attachments", "0005_attachment_clean_names_populate_slugs"),
@@ -199,7 +145,7 @@ class Migration(migrations.Migration):
 
     operations = [
         # migrations.RunPython(
-        #     update_attachments_markup,
-        #     downgrade_attachments_markup,
+        #     update_posts_attachments_markup,
+        #     migrations.RunPython.noop,
         # ),
     ]
