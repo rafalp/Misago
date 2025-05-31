@@ -676,3 +676,173 @@ def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_
     assert (
         f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
     ) in post.original
+
+
+def test_update_post_attachments_markup_skips_autolink(post):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        "This is link: <https://example.com/image.png>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert not migration(Attachment, post)
+
+
+def test_update_post_attachments_markup_updates_image_autolink(post, image_attachment):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        f"This is link: </a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert (
+        f"<attachment={image_attachment.name}:{image_attachment.id}>"
+    ) in post.original
+
+
+def test_update_post_attachments_markup_updates_image_thumb_autolink(
+    post, image_attachment
+):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        f"This is link: </a/thumb/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert (
+        f"<attachment={image_attachment.name}:{image_attachment.id}>"
+    ) in post.original
+
+
+def test_update_post_attachments_markup_updates_attachment_media_path_autolink(
+    post, image_thumbnail_attachment
+):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <{image_thumbnail_attachment.upload.url}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert (
+        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+    ) in post.original
+
+
+def test_update_post_attachments_markup_updates_attachment_thumb_media_path_autolink(
+    post, image_thumbnail_attachment
+):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <{image_thumbnail_attachment.thumbnail.url}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert (
+        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+    ) in post.original
+
+
+def test_update_post_attachments_markup_updates_attachment_absolute_media_path_autolink(
+    post, image_thumbnail_attachment
+):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <https://example.com{image_thumbnail_attachment.upload.url}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert (
+        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+    ) in post.original
+
+
+def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_path_autolink(
+    post, image_thumbnail_attachment
+):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <https://example.com{image_thumbnail_attachment.thumbnail.url}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert (
+        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+    ) in post.original
+
+
+def test_update_post_attachments_markup_skips_link(post):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        "This is link: [Link](https://example.com/image.png)"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert not migration(Attachment, post)
+
+
+def test_update_post_attachments_markup_skips_link_bbcode(post):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        "This is link: [url]https://example.com/image.png[/url]"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert not migration(Attachment, post)
+
+
+def test_update_post_attachments_markup_skips_link_bbcode_with_text(post):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        "This is link: [url=https://example.com/image.png]Link[/url]"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert not migration(Attachment, post)

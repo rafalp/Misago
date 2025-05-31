@@ -147,6 +147,27 @@ def update_image_bbcode(state: ParsingState) -> bool:
     return True
 
 
+def update_autolink(state: ParsingState) -> bool:
+    pos = state.pos
+    if state.source[pos] != "<":
+        return False
+
+    url = find_delimiters(state, pos, "<>")
+    if not url:
+        return False
+
+    end = url[1]
+
+    attachment = parse_attachment_url(state, state.source[url[0] + 1 : url[1] - 1])
+    if not attachment:
+        return None
+
+    state.push_attachment(attachment)
+    state.pos = end
+
+    return True
+
+
 def find_delimiters(
     state: ParsingState, start: int, delimiters: str | tuple[str, str]
 ) -> tuple[int, int] | None:
@@ -202,10 +223,11 @@ def store_character(state: ParsingState) -> bool:
 
 
 RULES = (
-    escape_character,
     update_image,
     update_short_image,
     update_image_bbcode,
+    update_autolink,
+    escape_character,
     store_character,
 )
 
