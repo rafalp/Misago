@@ -29,6 +29,11 @@ def test_nested_same_formatting_bbcode(parse_to_html):
 
 
 def test_formatting_bbcode_with_escaped_closing_tag(parse_to_html):
+    html = parse_to_html("Hello [b]world\\[/b]")
+    assert html == "<p>Hello [b]world[/b]</p>"
+
+
+def test_formatting_bbcode_with_nested_escaped_closing_tag(parse_to_html):
     html = parse_to_html("Hello [b]wor\[/b]ld[/b]!")
     assert html == "<p>Hello <b>wor[/b]ld</b>!</p>"
 

@@ -96,3 +96,19 @@ def test_url_bbcode_with_arg_parses_content(parse_to_html):
         "</a>"
         "</p>"
     )
+
+
+def test_url_bbcode_with_escaped_closing_tag(parse_to_html):
+    html = parse_to_html("[url=example.com]Hello\\[/url]")
+    assert html == (
+        "<p>"
+        "["
+        "<a "
+        'href="http://url=example.com" '
+        'rel="external nofollow noopener" '
+        'target="_blank" '
+        'misago-rich-text="autolink"'
+        ">"
+        "url=example.com</a>]Hello[/url]"
+        "</p>"
+    )

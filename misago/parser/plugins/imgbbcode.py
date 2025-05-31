@@ -42,13 +42,14 @@ def img_bbcode_rule(state: StateInline, silent: bool):
         content_start = start + 5
 
     pos = content_start
-    while pos + 6 <= maximum:
-        if state.src[pos : pos + 6].lower() == "[/img]":
+    while pos < maximum:
+        if state.src[pos] == "\\":
+            pos += 2
+        elif state.src[pos : pos + 6].lower() == "[/img]":
             break
-
-        pos += 1
-
-    if state.src[pos : pos + 6].lower() != "[/img]":
+        else:
+            pos += 1
+    else:
         return False
 
     content_end = pos
