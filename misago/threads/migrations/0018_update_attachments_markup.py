@@ -9,7 +9,7 @@ from django.urls import reverse
 
 
 def update_posts_attachments_markup(apps, _):
-    Attachment = apps.get_model("misago_attachments", "Attachment")
+    Attachment = apps.get_model("misago_threads", "Attachment")
     Post = apps.get_model("misago_threads", "Post")
 
     queryset = Post.objects.filter(
@@ -21,40 +21,8 @@ def update_posts_attachments_markup(apps, _):
         update_post_attachments_markup(Attachment, post)
 
 
-RE_IMG_LINK = re.compile(
-    r"\[!\[.+?\]\(/a/(?P<secret>[A-Za-z0-9]+)/(?P<id>[1-9][0-9]*)/(\?shva=1)?\)\]\(/a/[A-Za-z0-9]+/[1-9][0-9]*/(\?shva=1)?\)"
-)
-RE_IMG_LINK_WITH_THUMB = re.compile(
-    r"\[!\[.+?\]\(/a/thumb/(?P<secret>[A-Za-z0-9]+)/(?P<id>[1-9][0-9]*)/(\?shva=1)?\)\]\(/a/[A-Za-z0-9]+/[1-9][0-9]*/(\?shva=1)?\)"
-)
-RE_IMG = re.compile(
-    r"!\[.+?\]\(/a/(thumb/)?(?P<secret>[A-Za-z0-9]+)/(?P<id>[1-9][0-9]*)/(\?shva=1)?\)"
-)
-RE_ATTACHMENT_URL = re.compile(
-    r"/a/(?P<thumbnail>thumb/)?(?P<secret>[A-Za-z0-9]+)/(?P<id>[1-9][0-9]*)/(\?shva=1)?"
-)
-RE_MEDIA_URL = re.compile(
-    re.escape(settings.MEDIA_URL)
-    + r"attachments/[A-Za-z0-9]{2}/[A-Za-z0-9]{2}/[A-Za-z0-9]+/.+(\.[A-Za-z]+)?\.([A-Za-z]+)"
-)
-
-
 def update_post_attachments_markup(attachment_type, post):
-    update_img_with_thumb_markdown_syntax_partial = partial(
-        update_img_with_thumb_markdown_syntax, attachment_type
-    )
-    update_attachment_url_partial = partial(update_attachment_url, attachment_type)
-    update_media_url_partial = partial(update_media_url, attachment_type)
-
-    original = RE_IMG_LINK_WITH_THUMB.sub(
-        update_img_with_thumb_markdown_syntax_partial, post.original
-    )
-    original = RE_IMG_LINK.sub(update_img_with_thumb_markdown_syntax_partial, original)
-    original = RE_IMG.sub(update_img_with_thumb_markdown_syntax_partial, original)
-    original = RE_ATTACHMENT_URL.sub(update_attachment_url_partial, original)
-
-    original = RE_MEDIA_URL.sub(update_media_url_partial, original)
-
+    original = parse(attachment_type, post.original)
     if original == post.original:
         return False
 
@@ -64,74 +32,214 @@ def update_post_attachments_markup(attachment_type, post):
     return True
 
 
-def update_img_with_thumb_markdown_syntax(attachment_type, matchobj):
-    full_match = matchobj.group(0)
+def parse(attachment_type, source: str) -> str:
+    state = ParsingState(attachment_type, source)
+
+    while state.pos < state.maximum:
+        for rule in RULES:
+            if rule(state):
+                break
+
+    return state.result
+
+
+class ParsingState:
+    source: str
+    maximum: str
+    pos: str
+    result: str
+
+    def __init__(self, attachment_type, source: str):
+        self.attachment_type = attachment_type
+        self.attachments: dict = {}
+
+        self.source = source
+        self.maximum = len(source)
+        self.pos = 0
+
+        self.result = ""
+
+    def get_attachment(self, id: int):
+        if id not in self.attachments:
+            self.attachments[id] = self.attachment_type.objects.filter(id=id).first()
+
+        return self.attachments[id]
+
+    def push_attachment(self, attachment):
+        self.result += f"<attachment={attachment.name}:{attachment.id}>"
+
+
+def update_image(state: ParsingState) -> bool:
+    pos = state.pos
+    if state.source[pos : pos + 2] != "![":
+        return False
+
+    label = find_delimiters(state, pos + 1, "[]")
+    if not label:
+        return False
+
+    url = find_delimiters(state, label[1], "()")
+    if not url:
+        return False
+
+    end = url[1]
+
+    attachment = parse_attachment_url(state, state.source[url[0] + 1 : url[1] - 1])
+    if not attachment:
+        return None
+
+    state.push_attachment(attachment)
+    state.pos = end
+
+    return True
+
+
+def update_short_image(state: ParsingState) -> bool:
+    pos = state.pos
+    if state.source[pos : pos + 2] != "!(":
+        return False
+
+    url = find_delimiters(state, pos + 1, "()")
+    if not url:
+        return False
+
+    end = url[1]
+
+    attachment = parse_attachment_url(state, state.source[url[0] + 1 : url[1] - 1])
+    if not attachment:
+        return None
+
+    state.push_attachment(attachment)
+    state.pos = end
+
+    return True
+
+
+def update_image_bbcode(state: ParsingState) -> bool:
+    pos = state.pos
+    if state.source[pos : pos + 5].lower() != "[img]":
+        return False
+
+    url = find_delimiters(state, pos, ("[img]", "[/img]"))
+    if not url:
+        return False
+
+    end = url[1]
+
+    attachment = parse_attachment_url(state, state.source[url[0] + 5 : url[1] - 6])
+    if not attachment:
+        return None
+
+    state.push_attachment(attachment)
+    state.pos = end
+
+    return True
+
+
+def find_delimiters(
+    state: ParsingState, start: int, delimiters: str | tuple[str, str]
+) -> tuple[int, int] | None:
+    source = state.source.lower()
+
+    start_delimiter = delimiters[0]
+    start_delimiter_len = len(start_delimiter)
+    end_delimiter = delimiters[1]
+    end_delimiter_len = len(end_delimiter)
+
+    result = [0, 0]
+
+    pos = start
+    level = 0
+    while pos < state.maximum:
+        if source[pos] == "\\":
+            pos += 2
+
+        elif source[pos : pos + start_delimiter_len] == start_delimiter:
+            if level == 0:
+                result[0] = pos
+
+            level += 1
+            pos += 1
+        elif source[pos : pos + end_delimiter_len] == end_delimiter:
+            level -= 1
+            if level == 0:
+                result[1] = pos + end_delimiter_len
+                return tuple(result)
+
+            pos += 1
+
+        else:
+            pos += 1
+
+    else:
+        return None
+
+
+def escape_character(state: ParsingState) -> bool:
+    if state.source[state.pos] != "\\":
+        return False
+
+    state.result += state.source[state.pos : state.pos + 2]
+    state.pos += 2
+    return True
+
+
+def store_character(state: ParsingState) -> bool:
+    state.result += state.source[state.pos]
+    state.pos += 1
+    return True
+
+
+RULES = (
+    escape_character,
+    update_image,
+    update_short_image,
+    update_image_bbcode,
+    store_character,
+)
+
+
+def parse_attachment_url(state: ParsingState, attachment_url: str):
+    clean_url = attachment_url.strip()
+    if not clean_url:
+        return None
+
+    if f"{settings.MEDIA_URL}attachments/" in clean_url:
+        return parse_attachment_media_url(state, clean_url)
+
+    if clean_url.startswith("/a/thumb/"):
+        clean_url = clean_url[9:]
+    elif clean_url.startswith("/a/"):
+        clean_url = clean_url[3:]
+    else:
+        return None
+
+    if "/" in clean_url:
+        clean_url = clean_url[clean_url.index("/") + 1 :]
+    if "/" in clean_url:
+        clean_url = clean_url[: clean_url.index("/")]
 
     try:
-        id = int(matchobj.group("id"))
-    except (TypeError, ValueError):
-        return full_match
+        attachment_id = int(clean_url)
+    except (ValueError, TypeError):
+        return None
 
-    secret = matchobj.group("secret")
-    if not id or not secret:
-        return full_match
-
-    attachment = attachment_type.objects.filter(id=id, secret=secret).first()
-    if not attachment:
-        return full_match
-
-    return f"<attachment={attachment.name}:{attachment.id}>"
+    return state.get_attachment(attachment_id)
 
 
-def update_attachment_url(attachment_type, matchobj):
-    full_match = matchobj.group(0)
+def parse_attachment_media_url(state: ParsingState, attachment_url: str):
+    attachments_media_url = f"{settings.MEDIA_URL}attachments/"
+    clean_url = clean_url[
+        clean_url.index(attachments_media_url) + len(settings.MEDIA_URL)
+    ]
+    if not clean_url:
+        return None
 
-    try:
-        id = int(matchobj.group("id"))
-    except (TypeError, ValueError):
-        return full_match
+    # attachment = attachment_type.objects.filter(
+    #     Q(upload=file_path) | Q(thumbnail=file_path)
+    # ).first()
 
-    secret = matchobj.group("secret")
-    if not id or not secret:
-        return full_match
-
-    attachment = attachment_type.objects.filter(id=id, secret=secret).first()
-    if not attachment:
-        return full_match
-
-    if full_match.startswith("/a/thumb/") and attachment.thumbnail:
-        return reverse(
-            "misago:attachment-thumbnail",
-            kwargs={"id": attachment.id, "slug": attachment.slug},
-        )
-
-    return reverse(
-        "misago:attachment-download",
-        kwargs={"id": attachment.id, "slug": attachment.slug},
-    )
-
-
-def update_media_url(attachment_type, matchobj):
-    full_match = matchobj.group(0)
-    file_path = full_match[len(settings.MEDIA_URL) :]
-
-    attachment = attachment_type.objects.filter(
-        Q(upload=file_path) | Q(thumbnail=file_path)
-    ).first()
-
-    if not attachment:
-        return full_match
-
-    if attachment.thumbnail and attachment.thumbnail.name == full_match:
-        return reverse(
-            "misago:attachment-thumbnail",
-            kwargs={"id": attachment.id, "slug": attachment.slug},
-        )
-
-    return reverse(
-        "misago:attachment-download",
-        kwargs={"id": attachment.id, "slug": attachment.slug},
-    )
+    return None
 
 
 class Migration(migrations.Migration):
@@ -144,8 +252,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        # migrations.RunPython(
-        #     update_posts_attachments_markup,
-        #     migrations.RunPython.noop,
-        # ),
+        migrations.RunPython(
+            update_posts_attachments_markup,
+            migrations.RunPython.noop,
+        ),
     ]
