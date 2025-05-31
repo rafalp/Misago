@@ -191,7 +191,6 @@ def update_link(state: ParsingState) -> bool:
         state.attachment_type, state.source[label[0] + 1 : label[1] - 1], state
     )
     label_attachments = search_attachments(label_markup)
-    label_attachments_ids = set([attachment[0] for attachment in label_attachments])
 
     url = find_delimiters(state, label[1], "()")
     if not url:
@@ -202,7 +201,7 @@ def update_link(state: ParsingState) -> bool:
 
     if label_attachments and url_attachment:
         state.result += label_markup
-        if url_attachment.id not in label_attachments_ids:
+        if url_attachment.id not in label_attachments:
             state.result += " "
             state.push_attachment(url_attachment)
 
@@ -211,8 +210,7 @@ def update_link(state: ParsingState) -> bool:
         state.result += f" <{state.source[url[0] + 1:url[1] - 1]}>"
 
     elif url_attachment:
-        state.result += label_markup
-        state.result += " "
+        state.result += f"{label_markup} "
         state.push_attachment(url_attachment)
 
     else:
@@ -256,19 +254,16 @@ def update_url_bbcode(state: ParsingState) -> bool:
     if args and content:
         content_markup = parse(state.attachment_type, content, state)
         content_attachments = search_attachments(content_markup)
-        content_attachments_ids = set(
-            [attachment[0] for attachment in content_attachments]
-        )
         arg_attachment = parse_attachment_url(state, args)
-        if arg_attachment and content_attachments_ids:
+        if arg_attachment and content_attachments:
             state.result += content_markup
-            if arg_attachment.id not in content_attachments_ids:
+            if arg_attachment.id not in content_attachments:
                 state.result += " "
                 state.push_attachment(arg_attachment)
         elif arg_attachment:
             state.result += f"{content} "
             state.push_attachment(arg_attachment)
-        elif content_attachments_ids:
+        elif content_attachments:
             state.result += f"<{args}> {content_markup}"
         else:
             return False
@@ -362,8 +357,8 @@ def parse_attachment_url(state: ParsingState, attachment_url: str):
 
     if "/a/" not in clean_url:
         return None
-    
-    clean_url = clean_url[clean_url.index("/a/") + 3:]
+
+    clean_url = clean_url[clean_url.index("/a/") + 3 :]
     if clean_url.startswith("thumb/"):
         clean_url = clean_url[6:]
 
@@ -396,11 +391,11 @@ def parse_attachment_media_url(state: ParsingState, attachment_url: str):
 
 
 ATTACHMENT_ARGS_RE = re.compile(
-    r"([a-z0-9]|-|_|\.)+? *: *(?P<id>([1-9][0-9]*))", re.IGNORECASE
+    r"([a-z0-9]|-|_|\.| )+? *: *(?P<id>([1-9][0-9]*))", re.IGNORECASE
 )
 
 
-def search_attachments(source: str) -> list[tuple[int, int, int]]:
+def search_attachments(source: str) -> list[int]:
     results = []
 
     pos = 0
@@ -420,7 +415,7 @@ def search_attachments(source: str) -> list[tuple[int, int, int]]:
                     if args_match := ATTACHMENT_ARGS_RE.match(args_str):
                         try:
                             attachment_id = int(args_match.group("id"))
-                            results.append((attachment_id, start, pos + 1))
+                            results.append(attachment_id)
                         except (ValueError, TypeError):
                             pass
                     pos += 1

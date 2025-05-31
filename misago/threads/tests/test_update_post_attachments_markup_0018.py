@@ -65,7 +65,7 @@ def test_update_post_attachments_markup_skips_short_image_with_title(post):
     assert not migration(Attachment, post)
 
 
-def test_update_post_attachments_markup_skips_image_bbcode(post):
+def test_update_post_attachments_markup_skips_img_bbcode(post):
     post.original = (
         "Hello world!"
         "\n\n"
@@ -174,7 +174,7 @@ def test_update_post_attachments_markup_replaces_attachment_short_image_with_tit
     )
 
 
-def test_update_post_attachments_markup_replaces_attachment_image_bbcode(
+def test_update_post_attachments_markup_replaces_attachment_img_bbcode(
     post, image_attachment
 ):
     post.original = (
@@ -294,7 +294,7 @@ def test_update_post_attachments_markup_replaces_attachment_thumb_short_image_wi
     )
 
 
-def test_update_post_attachments_markup_replaces_attachment_thumb_image_bbcode(
+def test_update_post_attachments_markup_replaces_attachment_thumb_img_bbcode(
     post, image_attachment
 ):
     post.original = (
@@ -414,7 +414,7 @@ def test_update_post_attachments_markup_replaces_attachment_media_path_short_ima
     )
 
 
-def test_update_post_attachments_markup_replaces_attachment_media_path_image_bbcode(
+def test_update_post_attachments_markup_replaces_attachment_media_path_img_bbcode(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -534,7 +534,7 @@ def test_update_post_attachments_markup_replaces_attachment_thumb_media_path_sho
     )
 
 
-def test_update_post_attachments_markup_replaces_attachment_thumb_media_path_image_bbcode(
+def test_update_post_attachments_markup_replaces_attachment_thumb_media_path_img_bbcode(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -654,7 +654,7 @@ def test_update_post_attachments_markup_replaces_attachment_absolute_media_path_
     )
 
 
-def test_update_post_attachments_markup_replaces_attachment_absolute_media_path_image_bbcode(
+def test_update_post_attachments_markup_replaces_attachment_absolute_media_path_img_bbcode(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -774,7 +774,7 @@ def test_update_post_attachments_markup_replaces_attachment_thumb_absolute_media
     )
 
 
-def test_update_post_attachments_markup_replaces_attachment_thumb_absolute_media_path_image_bbcode(
+def test_update_post_attachments_markup_replaces_attachment_thumb_absolute_media_path_img_bbcode(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -1062,7 +1062,7 @@ def test_update_post_attachments_markup_updates_attachment_link_with_attachment_
     post.original = (
         "Hello world!"
         "\n\n"
-        f"This is link: [![attachment](/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)](/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)"
+        f"This is link: [![attachment](/a/thumb/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)](/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)"
         "\n\n"
         "I hope you've liked it!"
     )
@@ -1243,6 +1243,61 @@ def test_update_post_attachments_markup_updates_attachment_url_bbcode_with_short
         "Hello world!"
         "\n\n"
         f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+
+
+def test_update_post_attachments_markup_updates_attachment_link_followed_by_other_attachment_link(
+    post, image_attachment, image_thumbnail_attachment
+):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        f"[![Zrzut ekranu 2025-01-5 o 13.30.00.png](/a/thumb/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)](/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)"
+        "\n\n"
+        f"[![Zrzut ekranu 2025-01-5 o 13.32.06.png](/a/thumb/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_thumbnail_attachment.id}/?shva=1)](/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_thumbnail_attachment.id}/?shva=1)"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"<attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+
+
+def test_update_post_attachments_markup_updates_attachment_link_with_attachment_having_space_in_name(
+    post, image_attachment
+):
+    image_attachment.name = "Zrzut ekranu 2025-01-5 o 13.30.00.png"
+    image_attachment.save()
+
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        f"[![Zrzut ekranu 2025-01-5 o 13.30.00.png](/a/thumb/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)](/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"<attachment={image_attachment.name}:{image_attachment.id}>"
         "\n\n"
         "I hope you've liked it!"
     )
