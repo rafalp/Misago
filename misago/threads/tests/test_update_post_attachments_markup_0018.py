@@ -1008,6 +1008,30 @@ def test_update_post_attachments_markup_updates_link_with_attachment_label(
     )
 
 
+def test_update_post_attachments_markup_updates_attachment_link_with_label(
+    post, image_attachment
+):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        f"This is link: [some attachment](/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: some attachment <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+
+
 def test_update_post_attachments_markup_updates_attachment_link_with_attachment_label(
     post, image_attachment
 ):

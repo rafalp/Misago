@@ -192,6 +192,7 @@ def update_link(state: ParsingState) -> bool:
         state.attachment_type, state.source[label[0] + 1 : label[1] - 1], state
     )
     label_attachments = search_attachments(label_markup)
+    label_attachments_ids = set([attachment[0] for attachment in label_attachments])
 
     url = find_delimiters(state, label[1], "()")
     if not url:
@@ -201,15 +202,17 @@ def update_link(state: ParsingState) -> bool:
     url_attachment = parse_attachment_url(state, state.source[url[0] + 1 : url[1] - 1])
 
     if label_attachments and url_attachment:
-        state.result += state.source[label[0] + 1 : label[1] - 1]
-        state.result += " "
-        state.push_attachment(url_attachment)
+        state.result += label_markup
+        if url_attachment.id not in label_attachments_ids:
+            state.result += " "
+            state.push_attachment(url_attachment)
 
     elif label_attachments:
-        state.result += state.source[label[0] + 1 : label[1] - 1]
+        state.result += label_markup
+        state.result += f" <{state.source[url[0] + 1:url[1] - 1]}>"
 
     elif url_attachment:
-        state.result += state.source[label[0] + 1 : label[1] - 1]
+        state.result += label_markup
         state.result += " "
         state.push_attachment(url_attachment)
 
@@ -356,15 +359,40 @@ def parse_attachment_media_url(state: ParsingState, attachment_url: str):
     return state.get_attachment(path=file_path)
 
 
-ATTACHMENT_RE = re.compile(
-    r"<attachment= *([a-z0-9]|-|_|\.)+? *: *[1-9][0-9]* *>", re.IGNORECASE
+ATTACHMENT_ARGS_RE = re.compile(
+    r"([a-z0-9]|-|_|\.)+? *: *(?P<id>([1-9][0-9]*))", re.IGNORECASE
 )
 
 
-def search_attachments(source: str) -> list[tuple[int, int]]:
+def search_attachments(source: str) -> list[tuple[int, int, int]]:
     results = []
-    for match in ATTACHMENT_RE.finditer(source):
-        results.append(match.span(0))
+
+    pos = 0
+    maximum = len(source)
+    while pos < maximum:
+        if source[pos] == "\\":
+            pos += 2
+
+        elif source[pos : pos + 12].lower() == "<attachment=":
+            start = pos
+            pos += 13
+            while pos < maximum:
+                if source[pos] == "\\":
+                    pos += 2
+                elif source[pos] == ">":
+                    args_str = source[start + 12 : pos].strip()
+                    if args_match := ATTACHMENT_ARGS_RE.match(args_str):
+                        try:
+                            attachment_id = int(args_match.group("id"))
+                            results.append((attachment_id, start, pos + 1))
+                        except (ValueError, TypeError):
+                            pass
+                    pos += 1
+                else:
+                    pos += 1
+        else:
+            pos += 1
+
     return results
 
 
