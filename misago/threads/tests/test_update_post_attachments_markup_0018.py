@@ -990,6 +990,30 @@ def test_update_post_attachments_markup_updates_link_with_attachment_label(
     post.original = (
         "Hello world!"
         "\n\n"
+        f"This is link: [![attachment](/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)](https://example.com/image.png)"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}> <https://example.com/image.png>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+
+
+def test_update_post_attachments_markup_updates_link_with_short_attachment_label(
+    post, image_attachment
+):
+    post.original = (
+        "Hello world!"
+        "\n\n"
         f"This is link: [!(/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)](https://example.com/image.png)"
         "\n\n"
         "I hope you've liked it!"
@@ -1033,6 +1057,30 @@ def test_update_post_attachments_markup_updates_attachment_link_with_label(
 
 
 def test_update_post_attachments_markup_updates_attachment_link_with_attachment_label(
+    post, image_attachment
+):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        f"This is link: [![attachment](/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)](/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+
+
+def test_update_post_attachments_markup_updates_attachment_link_with_short_attachment_label(
     post, image_attachment
 ):
     post.original = (
