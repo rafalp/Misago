@@ -223,30 +223,67 @@ def update_link(state: ParsingState) -> bool:
     return True
 
 
-def update_link_bbcode(state: ParsingState) -> bool:
-    return False
-
+def update_url_bbcode(state: ParsingState) -> bool:
     pos = state.pos
-    if state.source[pos : pos + 4] != "[url":
+    if state.source[pos : pos + 4].lower() != "[url":
         return False
 
     opening = find_delimiters(state, pos, "[]")
     if not opening:
         return False
 
-    url = find_delimiters(state, label[1], "()")
-    if not url:
+    args = state.source[state.pos + 4 : opening[1] - 1]
+    if args and args[0] == "=":
+        args = args[1:]
+
+    args = args or None
+
+    pos = opening[1]
+    maximum = state.maximum
+    while pos < maximum:
+        if pos == "\\":
+            pos += 2
+        elif state.source[pos : pos + 6].lower() == "[/url]":
+            break
+        else:
+            pos += 1
+    else:
         return False
 
-    end = url[1]
+    content = state.source[opening[1] : pos] or None
+    if not content:
+        return False
 
-    attachment = parse_attachment_url(state, state.source[url[0] + 1 : url[1] - 1])
-    if not attachment:
-        return None
+    if args and content:
+        content_markup = parse(state.attachment_type, content, state)
+        content_attachments = search_attachments(content_markup)
+        content_attachments_ids = set(
+            [attachment[0] for attachment in content_attachments]
+        )
+        arg_attachment = parse_attachment_url(state, args)
+        if arg_attachment and content_attachments_ids:
+            state.result += content_markup
+            if arg_attachment.id not in content_attachments_ids:
+                state.result += " "
+                state.push_attachment(arg_attachment)
+        elif arg_attachment:
+            state.result += f"{content} "
+            state.push_attachment(arg_attachment)
+        elif content_attachments_ids:
+            state.result += f"<{args}> {content_markup}"
+        else:
+            return False
 
-    state.push_attachment(attachment)
-    state.pos = end
+    elif content:
+        if content_attachment := parse_attachment_url(state, content):
+            state.push_attachment(content_attachment)
+        else:
+            return False
 
+    else:
+        return False
+
+    state.pos = pos + 6
     return True
 
 
@@ -309,8 +346,8 @@ RULES = (
     update_short_image,
     update_image_bbcode,
     update_autolink,
+    update_url_bbcode,
     update_link,
-    update_link_bbcode,
     escape_character,
     store_character,
 )
