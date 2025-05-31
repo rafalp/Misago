@@ -61,12 +61,18 @@ class ParsingState:
             raise ValueError("'id' and 'path' options can't be used together")
 
         if id:
-            return self.attachment_type.objects.filter(id=id).first()
+            if id not in self.attachments_ids:
+                attachment = self.attachment_type.objects.filter(id=id).first()
+                self.attachments_ids[id] = attachment
+            return self.attachments_ids[id]
 
         if path:
-            return self.attachment_type.objects.filter(
-                Q(upload=path) | Q(thumbnail=path)
-            ).first()
+            if path not in self.attachments_paths:
+                attachment = self.attachment_type.objects.filter(
+                    Q(upload=path) | Q(thumbnail=path)
+                ).first()
+                self.attachments_paths[path] = attachment
+            return self.attachments_paths[path]
 
         return None
 
