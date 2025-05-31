@@ -12,8 +12,7 @@ def update_posts_attachments_markup(apps, _):
     Post = apps.get_model("misago_threads", "Post")
 
     queryset = Post.objects.filter(
-        Q(original__contains="/a/")
-        | Q(original__contains=settings.MEDIA_URL + "attachments/")
+        Q(original__contains="/a/") | Q(original__contains="/attachments/")
     ).order_by("-id")
 
     for post in queryset.iterator(chunk_size=20):
@@ -361,12 +360,12 @@ def parse_attachment_url(state: ParsingState, attachment_url: str):
     if f"{settings.MEDIA_URL}attachments/" in clean_url:
         return parse_attachment_media_url(state, clean_url)
 
-    if clean_url.startswith("/a/thumb/"):
-        clean_url = clean_url[9:]
-    elif clean_url.startswith("/a/"):
-        clean_url = clean_url[3:]
-    else:
+    if "/a/" not in clean_url:
         return None
+    
+    clean_url = clean_url[clean_url.index("/a/") + 3:]
+    if clean_url.startswith("thumb/"):
+        clean_url = clean_url[6:]
 
     if "/" in clean_url:
         clean_url = clean_url[clean_url.index("/") + 1 :]
