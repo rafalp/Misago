@@ -8,7 +8,7 @@ from ...models import Post
 
 
 class Command(BaseCommand):
-    help = "Parses posts, updating their HTML, metadata and search"
+    help = "Parses posts, update their HTML, metadata and search documents"
 
     def handle(self, *args, **options):
         posts_to_parse = Post.objects.filter(is_event=False).count()

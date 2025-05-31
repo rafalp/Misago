@@ -78,7 +78,7 @@ def test_update_post_attachments_markup_skips_image_bbcode(post):
     assert not migration(Attachment, post)
 
 
-def test_update_post_attachments_markup_updates_attachment_image(
+def test_update_post_attachments_markup_replaces_attachment_image(
     post, image_attachment
 ):
     post.original = (
@@ -93,12 +93,16 @@ def test_update_post_attachments_markup_updates_attachment_image(
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_attachment.name}:{image_attachment.id}>" in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
     )
 
 
-def test_update_post_attachments_markup_updates_attachment_image_with_title(
+def test_update_post_attachments_markup_replaces_attachment_image_with_title(
     post, image_attachment
 ):
     post.original = (
@@ -113,12 +117,16 @@ def test_update_post_attachments_markup_updates_attachment_image_with_title(
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_attachment.name}:{image_attachment.id}>" in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
     )
 
 
-def test_update_post_attachments_markup_updates_attachment_short_image(
+def test_update_post_attachments_markup_replaces_attachment_short_image(
     post, image_attachment
 ):
     post.original = (
@@ -133,12 +141,16 @@ def test_update_post_attachments_markup_updates_attachment_short_image(
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_attachment.name}:{image_attachment.id}>" in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
     )
 
 
-def test_update_post_attachments_markup_updates_attachment_short_image_with_title(
+def test_update_post_attachments_markup_replaces_attachment_short_image_with_title(
     post, image_attachment
 ):
     post.original = (
@@ -153,12 +165,16 @@ def test_update_post_attachments_markup_updates_attachment_short_image_with_titl
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_attachment.name}:{image_attachment.id}>" in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
     )
 
 
-def test_update_post_attachments_markup_updates_attachment_image_bbcode(
+def test_update_post_attachments_markup_replaces_attachment_image_bbcode(
     post, image_attachment
 ):
     post.original = (
@@ -173,12 +189,16 @@ def test_update_post_attachments_markup_updates_attachment_image_bbcode(
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_attachment.name}:{image_attachment.id}>" in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
     )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_image(
+def test_update_post_attachments_markup_replaces_attachment_thumb_image(
     post, image_attachment
 ):
     post.original = (
@@ -193,12 +213,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_image(
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_attachment.name}:{image_attachment.id}>" in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
     )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_image_with_title(
+def test_update_post_attachments_markup_replaces_attachment_thumb_image_with_title(
     post, image_attachment
 ):
     post.original = (
@@ -213,12 +237,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_image_with_titl
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_attachment.name}:{image_attachment.id}>" in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
     )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_short_image(
+def test_update_post_attachments_markup_replaces_attachment_thumb_short_image(
     post, image_attachment
 ):
     post.original = (
@@ -233,12 +261,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_short_image(
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_attachment.name}:{image_attachment.id}>" in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
     )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_short_image_with_title(
+def test_update_post_attachments_markup_replaces_attachment_thumb_short_image_with_title(
     post, image_attachment
 ):
     post.original = (
@@ -253,12 +285,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_short_image_wit
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_attachment.name}:{image_attachment.id}>" in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
     )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_image_bbcode(
+def test_update_post_attachments_markup_replaces_attachment_thumb_image_bbcode(
     post, image_attachment
 ):
     post.original = (
@@ -273,12 +309,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_image_bbcode(
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_attachment.name}:{image_attachment.id}>" in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
     )
 
 
-def test_update_post_attachments_markup_updates_attachment_media_path_image(
+def test_update_post_attachments_markup_replaces_attachment_media_path_image(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -293,12 +333,16 @@ def test_update_post_attachments_markup_updates_attachment_media_path_image(
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_media_path_image_with_title(
+def test_update_post_attachments_markup_replaces_attachment_media_path_image_with_title(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -313,12 +357,16 @@ def test_update_post_attachments_markup_updates_attachment_media_path_image_with
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_media_path_short_image(
+def test_update_post_attachments_markup_replaces_attachment_media_path_short_image(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -333,12 +381,16 @@ def test_update_post_attachments_markup_updates_attachment_media_path_short_imag
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_media_path_short_image_with_title(
+def test_update_post_attachments_markup_replaces_attachment_media_path_short_image_with_title(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -353,12 +405,16 @@ def test_update_post_attachments_markup_updates_attachment_media_path_short_imag
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_media_path_image_bbcode(
+def test_update_post_attachments_markup_replaces_attachment_media_path_image_bbcode(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -373,12 +429,16 @@ def test_update_post_attachments_markup_updates_attachment_media_path_image_bbco
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_media_path_image(
+def test_update_post_attachments_markup_replaces_attachment_thumb_media_path_image(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -393,12 +453,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_media_path_imag
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_media_path_image_with_title(
+def test_update_post_attachments_markup_replaces_attachment_thumb_media_path_image_with_title(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -413,12 +477,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_media_path_imag
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_media_path_short_image(
+def test_update_post_attachments_markup_replaces_attachment_thumb_media_path_short_image(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -433,12 +501,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_media_path_shor
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_media_path_short_image_with_title(
+def test_update_post_attachments_markup_replaces_attachment_thumb_media_path_short_image_with_title(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -453,12 +525,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_media_path_shor
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_media_path_image_bbcode(
+def test_update_post_attachments_markup_replaces_attachment_thumb_media_path_image_bbcode(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -473,12 +549,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_media_path_imag
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_absolute_media_path_image(
+def test_update_post_attachments_markup_replaces_attachment_absolute_media_path_image(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -493,12 +573,16 @@ def test_update_post_attachments_markup_updates_attachment_absolute_media_path_i
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_absolute_media_path_image_with_title(
+def test_update_post_attachments_markup_replaces_attachment_absolute_media_path_image_with_title(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -513,12 +597,16 @@ def test_update_post_attachments_markup_updates_attachment_absolute_media_path_i
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_absolute_media_path_short_image(
+def test_update_post_attachments_markup_replaces_attachment_absolute_media_path_short_image(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -533,12 +621,16 @@ def test_update_post_attachments_markup_updates_attachment_absolute_media_path_s
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_absolute_media_path_short_image_with_title(
+def test_update_post_attachments_markup_replaces_attachment_absolute_media_path_short_image_with_title(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -553,12 +645,16 @@ def test_update_post_attachments_markup_updates_attachment_absolute_media_path_s
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_absolute_media_path_image_bbcode(
+def test_update_post_attachments_markup_replaces_attachment_absolute_media_path_image_bbcode(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -573,12 +669,16 @@ def test_update_post_attachments_markup_updates_attachment_absolute_media_path_i
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_path_image(
+def test_update_post_attachments_markup_replaces_attachment_thumb_absolute_media_path_image(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -593,12 +693,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_path_image_with_title(
+def test_update_post_attachments_markup_replaces_attachment_thumb_absolute_media_path_image_with_title(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -613,12 +717,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_path_short_image(
+def test_update_post_attachments_markup_replaces_attachment_thumb_absolute_media_path_short_image(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -633,12 +741,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_path_short_image_with_title(
+def test_update_post_attachments_markup_replaces_attachment_thumb_absolute_media_path_short_image_with_title(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -653,12 +765,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_path_image_bbcode(
+def test_update_post_attachments_markup_replaces_attachment_thumb_absolute_media_path_image_bbcode(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -673,9 +789,13 @@ def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
 def test_update_post_attachments_markup_skips_autolink(post):
@@ -691,7 +811,7 @@ def test_update_post_attachments_markup_skips_autolink(post):
     assert not migration(Attachment, post)
 
 
-def test_update_post_attachments_markup_updates_image_autolink(post, image_attachment):
+def test_update_post_attachments_markup_replaces_image_autolink(post, image_attachment):
     post.original = (
         "Hello world!"
         "\n\n"
@@ -709,7 +829,7 @@ def test_update_post_attachments_markup_updates_image_autolink(post, image_attac
     ) in post.original
 
 
-def test_update_post_attachments_markup_updates_image_thumb_autolink(
+def test_update_post_attachments_markup_replaces_image_thumb_autolink(
     post, image_attachment
 ):
     post.original = (
@@ -729,7 +849,7 @@ def test_update_post_attachments_markup_updates_image_thumb_autolink(
     ) in post.original
 
 
-def test_update_post_attachments_markup_updates_attachment_media_path_autolink(
+def test_update_post_attachments_markup_replaces_attachment_media_path_autolink(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -744,12 +864,16 @@ def test_update_post_attachments_markup_updates_attachment_media_path_autolink(
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_media_path_autolink(
+def test_update_post_attachments_markup_replaces_attachment_thumb_media_path_autolink(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -764,12 +888,16 @@ def test_update_post_attachments_markup_updates_attachment_thumb_media_path_auto
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_absolute_media_path_autolink(
+def test_update_post_attachments_markup_replaces_attachment_absolute_media_path_autolink(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -784,12 +912,16 @@ def test_update_post_attachments_markup_updates_attachment_absolute_media_path_a
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
-def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_path_autolink(
+def test_update_post_attachments_markup_replaces_attachment_thumb_absolute_media_path_autolink(
     post, image_thumbnail_attachment
 ):
     post.original = (
@@ -804,9 +936,13 @@ def test_update_post_attachments_markup_updates_attachment_thumb_absolute_media_
     assert migration(Attachment, post)
 
     post.refresh_from_db()
-    assert (
-        f"<attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
-    ) in post.original
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_thumbnail_attachment.name}:{image_thumbnail_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
 
 
 def test_update_post_attachments_markup_skips_link(post):
@@ -846,3 +982,51 @@ def test_update_post_attachments_markup_skips_link_bbcode_with_text(post):
     post.save()
 
     assert not migration(Attachment, post)
+
+
+def test_update_post_attachments_markup_updates_link_with_attachment_label(
+    post, image_attachment
+):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        f"This is link: [!(/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)](https://example.com/image.png)"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}> <https://example.com/image.png>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+
+
+def test_update_post_attachments_markup_updates_attachment_link_with_attachment_label(
+    post, image_attachment
+):
+    post.original = (
+        "Hello world!"
+        "\n\n"
+        f"This is link: [!(/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)](/a/sx3otAV3pIuLwIeUJmRLe4oOCUeH62K2kwbupiwqm8H4KMzN5WqjqkvwHUToxlQp/{image_attachment.id}/?shva=1)"
+        "\n\n"
+        "I hope you've liked it!"
+    )
+    post.save()
+
+    assert migration(Attachment, post)
+
+    post.refresh_from_db()
+    assert post.original == (
+        "Hello world!"
+        "\n\n"
+        f"This is link: <attachment={image_attachment.name}:{image_attachment.id}>"
+        "\n\n"
+        "I hope you've liked it!"
+    )
