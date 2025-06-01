@@ -7,7 +7,7 @@ CODE_ARGS = re.compile(r"^(?P<info>.+)[;,] *syntax[:=] *(?P<syntax>.+) *$")
 
 
 def parse_code_args(args_str: str) -> dict | None:
-    if args_str.startswith("syntax:") or args_str.startswith("syntax="):
+    if args_str.lower().startswith("syntax:") or args_str.lower().startswith("syntax="):
         syntax = args_str[7:].strip()
         if not syntax:
             return None

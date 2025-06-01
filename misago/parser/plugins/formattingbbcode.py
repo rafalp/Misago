@@ -40,16 +40,22 @@ def get_formatting_bbcode_rule(name: str, markup: str):
         maximum = state.posMax
         nesting = 1
 
-        while pos + 4 <= maximum:
-            if state.src[pos : pos + 3].lower() == markup_open:
-                nesting += 1
+        while pos < maximum:
+            if state.src[pos] == "\\":
+                pos += 2
 
-            if state.src[pos : pos + 4].lower() == markup_close:
+            elif state.src[pos : pos + 3].lower() == markup_open:
+                nesting += 1
+                pos += 1
+
+            elif state.src[pos : pos + 4].lower() == markup_close:
                 nesting -= 1
                 if nesting == 0:
                     break
+                pos += 1
 
-            pos += 1
+            else:
+                pos += 1
 
         if state.src[pos : pos + 4].lower() != markup_close:
             return False

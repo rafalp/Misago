@@ -41,3 +41,19 @@ def test_img_bbcode_with_quoted_arg(parse_to_html):
 def test_img_bbcode_with_invalid_arg(parse_to_html):
     html = parse_to_html("[img=invalid]Hello[/img]")
     assert html == '<p><img src="invalid" alt="Hello"></p>'
+
+
+def test_img_bbcode_with_escaped_closing_tag(parse_to_html):
+    html = parse_to_html("[img=example.com/kitten.png]Hello\\[/img]")
+    assert html == (
+        "<p>"
+        "["
+        "<a "
+        'href="http://img=example.com/kitten.png" '
+        'rel="external nofollow noopener" '
+        'target="_blank" '
+        'misago-rich-text="autolink"'
+        ">"
+        "img=example.com/kitten.png</a>]Hello[/img]"
+        "</p>"
+    )

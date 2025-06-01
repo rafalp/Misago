@@ -1,32 +1,46 @@
+from dataclasses import dataclass
 from typing import Callable
 
 from markdown_it.rules_block.state_block import StateBlock
 from markdown_it.token import Token
 
-BBCodeBlockStart = tuple[str, dict | None, int, int]
-BBCodeBlockEnd = tuple[str, int, int]
-BBCodeBlockStartRule = Callable[[StateBlock, int], BBCodeBlockStart | None]
-BBCodeBlockEndRule = Callable[[StateBlock, int], BBCodeBlockEnd | None]
+BBCodeArgsParser = Callable[[str], dict | None]
+
+
+@dataclass(frozen=True)
+class BBCodeBlockStart:
+    start: int
+    end: int
+    markup: str
+    attrs: dict | None
+
+
+@dataclass(frozen=True)
+class BBCodeBlockEnd:
+    start: int
+    end: int
+    markup: str
 
 
 class BBCodeBlockRule:
     name: str
+    bbcode: str
+    bbcode_len: int
     element: str
-    start: BBCodeBlockStartRule
-    end: BBCodeBlockEndRule
+    args_parser: BBCodeArgsParser | None
 
     def __init__(
         self,
         name: str,
+        bbcode: str,
         element: str,
-        start: BBCodeBlockStartRule,
-        end: BBCodeBlockEndRule,
+        args_parser: BBCodeArgsParser,
     ):
         self.name = name
+        self.bbcode = bbcode
+        self.bbcode_len = len(bbcode)
         self.element = element
-
-        self.start = start
-        self.end = end
+        self.args_parser = args_parser
 
     def __call__(
         self, state: StateBlock, startLine: int, endLine: int, silent: bool
@@ -34,129 +48,153 @@ class BBCodeBlockRule:
         if state.is_code_block(startLine):
             return False
 
-        start, end = self.scan_full_line(state, startLine)
-        if start and end:
-            if silent:
-                return True
+        if self.parse_single_line(state, startLine, silent):
+            return True
 
-            return self.parse_single_line(state, startLine, start, end)
-
-        if not start:
-            return False
-
-        return self.parse_multiple_lines(state, startLine, endLine, silent, start)
-
-    def scan_full_line(
-        self, state: StateBlock, line: int
-    ) -> tuple[BBCodeBlockStart | None, BBCodeBlockEnd | None]:
-        start = self.scan_line_for_start(state, line)
-
-        if start:
-            end = self.scan_line_for_end(state, line, True)
-            if end and end[1] > start[3]:
-                return start, end
-
-        return start, None
-
-    def scan_line_for_start(
-        self, state: StateBlock, line: int
-    ) -> BBCodeBlockStart | None:
-        return self._scan_line_from_start(state, line, self.start)
-
-    def scan_line_for_end(
-        self, state: StateBlock, line: int, closing: bool = False
-    ) -> BBCodeBlockEnd | None:
-        if closing:
-            return self._scan_line_from_end(state, line, self.end)
-
-        return self._scan_line_from_start(state, line, self.end)
-
-    def _scan_line_from_start(
-        self,
-        state: StateBlock,
-        line: int,
-        rule: BBCodeBlockStartRule | BBCodeBlockEndRule,
-    ) -> BBCodeBlockStart | BBCodeBlockEnd | None:
-        org_bmark = state.bMarks[line]
-        maximum = state.eMarks[line]
-        steps = 0
-
-        try:
-            while (state.bMarks[line] + state.tShift[line]) < maximum and steps < 3:
-                if match := rule(state, line):
-                    return match
-
-                if state.src[state.bMarks[line] + state.tShift[line]]:
-                    return None
-
-                state.bMarks[line] += 1
-                steps += 1
-
-            return None
-        except Exception:
-            raise
-        finally:
-            state.bMarks[line] = org_bmark
-
-    def _scan_line_from_end(
-        self,
-        state: StateBlock,
-        line: int,
-        rule: BBCodeBlockEndRule,
-    ) -> BBCodeBlockEnd | None:
-        org_bmark = state.bMarks[line]
-        state.bMarks[line] = state.eMarks[line]
-        maximum = state.eMarks[line]
-
-        try:
-            while state.bMarks[line] >= org_bmark:
-                if match := rule(state, line):
-                    if state.src[match[2] : maximum].strip():
-                        return None
-
-                    return match
-
-                state.bMarks[line] -= 1
-
-            return None
-        except Exception:
-            raise
-        finally:
-            state.bMarks[line] = org_bmark
+        return self.parse_multiple_lines(state, startLine, endLine, silent)
 
     def parse_single_line(
         self,
         state: StateBlock,
-        startLine: int,
-        start: BBCodeBlockStart,
-        end: BBCodeBlockEnd,
-    ):
-        content_start = start[3]
-        content_end = end[1]
-        content = state.src[content_start:content_end].strip()
+        line: int,
+        silent: bool,
+    ) -> bool:
+        start = self.find_single_line_bbcode_block_start(state, line)
+        if not start:
+            return False
+
+        end = self.find_single_line_bbcode_block_end(state, line, start.end)
+        if not end:
+            return False
+
+        if silent:
+            return True
 
         old_parent_type = state.parentType
 
         state.parentType = self.name
-        self.state_push_open_token(state, startLine, startLine, start)
+        self.state_push_open_token(state, line, line, start.markup, start.attrs)
 
         state.parentType = "paragraph"
         token = state.push("paragraph_open", "p", 1)
-        token.map = [startLine, startLine]
+        token.map = [line, line]
 
         token = state.push("inline", "", 0)
-        token.content = content
-        token.map = [startLine, state.line]
+        token.content = state.src[start.end : end.start].strip()
+        token.map = [line, line]
         token.children = []
 
         token = state.push("paragraph_close", "p", -1)
 
-        self.state_push_close_token(state, end)
+        self.state_push_close_token(state, end.markup)
 
         state.parentType = old_parent_type
         state.line += 1
 
         return True
+
+    def find_single_line_bbcode_block_start(
+        self, state: StateBlock, line: int
+    ) -> BBCodeBlockStart | None:
+        pos = state.bMarks[line] + state.tShift[line]
+        maximum = state.eMarks[line]
+
+        while pos < maximum:
+            if state.src[pos] == "[":
+                break
+            elif state.src[pos] == " ":
+                pos += 1
+            else:
+                return None
+        else:
+            return None
+
+        start = pos
+
+        pos += 1
+        if state.src[pos : pos + self.bbcode_len].lower() != self.bbcode:
+            return None
+
+        pos += self.bbcode_len
+        if state.src[pos] == "]":
+            end = pos + 1
+
+            return BBCodeBlockStart(
+                start=start,
+                end=end,
+                markup=state.src[start:end],
+                attrs=None,
+            )
+
+        if state.src[pos] != "=" or not self.args_parser:
+            return None
+
+        pos += 1
+
+        level = 1
+        args_start = pos
+
+        while pos < maximum:
+            if state.src[pos] == "\\":
+                pos += 2
+
+            elif state.src[pos] == "[":
+                level += 1
+                pos += 1
+
+            elif state.src[pos] == "]":
+                level -= 1
+                if not level:
+                    attrs = None
+                    if args_str := state.src[args_start:pos].strip():
+                        attrs = self.parse_args(args_str)
+
+                    end = pos + 1
+                    return BBCodeBlockStart(
+                        start=start,
+                        end=end,
+                        markup=state.src[start:end],
+                        attrs=attrs,
+                    )
+
+                pos += 1
+
+            else:
+                pos += 1
+
+        else:
+            return None
+
+    def find_single_line_bbcode_block_end(
+        self, state: StateBlock, line: int, minimum: int
+    ) -> BBCodeBlockEnd | None:
+        maximum = state.eMarks[line]
+
+        start = None
+        end = None
+
+        pos = minimum
+        while pos < maximum:
+            if state.src[pos] == "\\":
+                pos += 2
+            else:
+                bbcode_end = pos + self.bbcode_len + 3
+                if state.src[pos:bbcode_end].lower() == f"[/{self.bbcode}]":
+                    start = pos
+                    end = bbcode_end
+                pos += 1
+        else:
+            if start is None:
+                return None
+
+        if state.src[end:maximum].strip():
+            return None
+
+        return BBCodeBlockEnd(
+            start=start,
+            end=end,
+            markup=state.src[start:end],
+        )
 
     def parse_multiple_lines(
         self,
@@ -164,13 +202,11 @@ class BBCodeBlockRule:
         startLine: int,
         endLine: int,
         silent: bool,
-        start: BBCodeBlockStart,
     ) -> bool:
         line = startLine
-        pos = state.bMarks[line] + state.tShift[line] + start[3]
-        maximum = state.eMarks[line]
 
-        if state.src[pos:maximum].strip():
+        start = self.find_multi_line_bbcode_block_start(state, line)
+        if not start:
             return False
 
         end = None
@@ -182,15 +218,15 @@ class BBCodeBlockRule:
             if (
                 state.isEmpty(line)
                 or state.is_code_block(line)
-                or all(self.scan_full_line(state, line))
+                or self.parse_single_line(state, line, True)
                 or line > state.lineMax
             ):
                 continue
 
-            if self.scan_line_for_start(state, line):
+            if self.find_multi_line_bbcode_block_start(state, line):
                 nesting += 1
 
-            elif match := self.scan_line_for_end(state, line):
+            elif match := self.find_multi_line_bbcode_block_end(state, line):
                 nesting -= 1
 
                 if nesting == 0:
@@ -200,21 +236,157 @@ class BBCodeBlockRule:
         if silent or not end:
             return nesting == 0
 
-        self.state_push_open_token(state, startLine, line, start)
+        self.state_push_open_token(state, startLine, line, start.markup, start.attrs)
         self.state_push_children(state, startLine + 1, line)
-        self.state_push_close_token(state, end)
+        self.state_push_close_token(state, end.markup)
 
         state.line = line + 1
         return True
 
+    def find_multi_line_bbcode_block_start(
+        self, state: StateBlock, line: int
+    ) -> BBCodeBlockStart | None:
+        pos = state.bMarks[line] + state.tShift[line]
+        maximum = state.eMarks[line]
+
+        while pos < maximum:
+            if state.src[pos] == "[":
+                break
+            elif state.src[pos] == " ":
+                pos += 1
+            else:
+                return None
+        else:
+            return None
+
+        start = pos
+
+        pos += 1
+        if state.src[pos : pos + self.bbcode_len].lower() != self.bbcode:
+            return None
+
+        pos += self.bbcode_len
+        if state.src[pos] == "]":
+            end = pos + 1
+
+            if state.src[end:maximum].strip():
+                return None
+
+            return BBCodeBlockStart(
+                start=start,
+                end=end,
+                markup=state.src[start:end],
+                attrs=None,
+            )
+
+        if state.src[pos] != "=":
+            return None
+
+        if not self.args_parser:
+            return None
+
+        pos += 1
+
+        level = 1
+        args_start = pos
+
+        while pos < maximum:
+            if state.src[pos] == "\\":
+                pos += 2
+
+            elif state.src[pos] == "[":
+                level += 1
+                pos += 1
+
+            elif state.src[pos] == "]":
+                level -= 1
+                if not level:
+                    attrs = None
+                    if args_str := state.src[args_start:pos].strip():
+                        attrs = self.parse_args(args_str)
+
+                    end = pos + 1
+                    if state.src[end:maximum].strip():
+                        return None
+
+                    return BBCodeBlockStart(
+                        start=start,
+                        end=pos,
+                        markup=state.src[start:pos],
+                        attrs=attrs,
+                    )
+
+                pos += 1
+
+            else:
+                pos += 1
+
+        else:
+            return None
+
+    def find_multi_line_bbcode_block_end(
+        self, state: StateBlock, line: int
+    ) -> BBCodeBlockEnd | None:
+        pos = state.bMarks[line] + state.tShift[line]
+        maximum = state.eMarks[line]
+
+        while pos < maximum:
+            if state.src[pos] == "[":
+                start = pos
+                break
+            elif state.src[pos] == " ":
+                pos += 1
+            else:
+                return None
+
+        pos += 1
+        if state.src[pos] != "/":
+            return None
+
+        pos += 1
+        if state.src[pos : pos + self.bbcode_len].lower() != self.bbcode:
+            return None
+
+        pos += self.bbcode_len
+        if state.src[pos] != "]":
+            return None
+
+        end = pos + 1
+        if state.src[end:maximum].strip():
+            return None
+
+        return BBCodeBlockEnd(
+            start=start,
+            end=end,
+            markup=state.src[start:end],
+        )
+
+    def parse_args(self, args_str: str) -> dict | None:
+        if args_str and (
+            (args_str[0] == '"' and args_str[-1] == '"')
+            or (args_str[0] == "'" and args_str[-1] == "'")
+        ):
+            args_str = args_str[1:-1]
+
+        args_str = args_str.strip() or None
+        if args_str:
+            return self.args_parser(args_str)
+
+        return None
+
     def state_push_open_token(
-        self, state: StateBlock, startLine: int, endLine: int, start: BBCodeBlockStart
+        self,
+        state: StateBlock,
+        startLine: int,
+        endLine: int,
+        markup: str,
+        attrs: dict | None = None,
     ) -> Token:
         token = state.push(f"{self.name}_open", self.element, 1)
-        token.markup = start[0]
+        token.markup = markup
         token.map = [startLine, endLine]
 
-        if attrs := start[1]:
+        if attrs:
             for attr_name, attr_value in attrs.items():
                 token.attrSet(attr_name, attr_value)
 
@@ -223,19 +395,19 @@ class BBCodeBlockRule:
 
         return token
 
-    def state_push_close_token(self, state: StateBlock, end: BBCodeBlockEnd) -> Token:
+    def state_push_close_token(self, state: StateBlock, markup: str) -> Token:
         token = state.push(f"{self.name}_close", self.element, -1)
-        token.markup = end[0]
+        token.markup = markup
         return token
 
     def state_push_void_token(
-        self, state: StateBlock, startLine: int, start: BBCodeBlockStart
+        self, state: StateBlock, line: int, markup: str, attrs: dict | None
     ) -> Token:
-        token = state.push(f"{self.name}", self.element, 0)
-        token.markup = start[0]
-        token.map = [startLine, startLine]
+        token = state.push(self.name, self.element, 0)
+        token.markup = markup
+        token.map = [line, line]
 
-        if attrs := start[1]:
+        if attrs:
             for attr_name, attr_value in attrs.items():
                 token.attrSet(attr_name, attr_value)
 
@@ -263,54 +435,3 @@ class BBCodeBlockRule:
 
     def get_meta(self, attrs: dict) -> dict | None:
         return None
-
-
-def bbcode_block_start_rule(
-    bbcode: str, state: StateBlock, line: int, args: bool = False
-) -> tuple[str, str | None, int, int] | None:
-    start = state.bMarks[line] + state.tShift[line]
-    maximum = state.eMarks[line]
-    src = state.src[start:maximum]
-
-    block_bbcode = f"[{bbcode}".lower()
-    block_bbcode_len = len(block_bbcode)
-
-    if src.lower()[:block_bbcode_len] != block_bbcode:
-        return None
-
-    if "]" not in src[block_bbcode_len:]:
-        return None
-
-    end = src.index("]", 0, maximum - start)
-    if end == block_bbcode_len:
-        return src[: block_bbcode_len + 1], None, start, start + end + 1
-
-    if src[block_bbcode_len] != "=" or not args:
-        return None
-
-    args_str = src[block_bbcode_len + 1 : end]
-    if args_str and (
-        (args_str[0] == '"' and args_str[-1] == '"')
-        or (args_str[0] == "'" and args_str[-1] == "'")
-    ):
-        args_str = args_str[1:-1]
-
-    args_str = args_str.strip() or None
-
-    return src[: end + 1], args_str, start, end + 1
-
-
-def bbcode_block_end_rule(
-    bbcode: str, state: StateBlock, line: int
-) -> tuple[str, int, int] | None:
-    start = state.bMarks[line] + state.tShift[line]
-    maximum = state.eMarks[line]
-    src = state.src[start:maximum]
-
-    block_bbcode = f"[/{bbcode}]".lower()
-    block_bbcode_len = len(block_bbcode)
-
-    if src[:block_bbcode_len].lower() == block_bbcode:
-        return src[:block_bbcode_len], start, start + block_bbcode_len
-
-    return None

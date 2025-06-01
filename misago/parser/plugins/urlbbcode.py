@@ -44,13 +44,14 @@ def url_bbcode_rule(state: StateInline, silent: bool):
         content_start = start + 5
 
     pos = content_start
-    while pos + 6 <= maximum:
-        if state.src[pos : pos + 6].lower() == "[/url]":
+    while pos < maximum:
+        if state.src[pos] == "\\":
+            pos += 2
+        elif state.src[pos : pos + 6].lower() == "[/url]":
             break
-
-        pos += 1
-
-    if state.src[pos : pos + 6].lower() != "[/url]":
+        else:
+            pos += 1
+    else:
         return False
 
     content_end = pos

@@ -8,13 +8,7 @@ from markdown_it.rules_block.state_block import StateBlock
 from markdown_it.token import Token
 from markdown_it.utils import EnvType, OptionsDict
 
-from ..bbcode import (
-    BBCodeBlockEnd,
-    BBCodeBlockRule,
-    BBCodeBlockStart,
-    bbcode_block_end_rule,
-    bbcode_block_start_rule,
-)
+from ..bbcode import BBCodeBlockRule
 from ..codeargs import parse_code_args
 
 
@@ -24,9 +18,9 @@ def code_bbcode_plugin(md: MarkdownIt):
         "code_bbcode",
         CodeBBCodeBlockRule(
             name="code_bbcode",
+            bbcode="code",
             element="code",
-            start=code_bbcode_start,
-            end=code_bbcode_end,
+            args_parser=parse_code_args,
         ),
         {"alt": ["paragraph"]},
     )
@@ -38,19 +32,24 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
     def parse_single_line(
         self,
         state: StateBlock,
-        startLine: int,
-        start: BBCodeBlockStart,
-        end: BBCodeBlockEnd,
+        line: int,
+        silent: bool,
     ):
-        content_start = start[3]
-        content_end = end[1]
-        content = state.src[content_start:content_end].strip()
+        start = self.find_single_line_bbcode_block_start(state, line)
+        if not start:
+            return False
 
-        token = self.state_push_void_token(state, startLine, start)
-        token.content = content
+        end = self.find_single_line_bbcode_block_end(state, line, start.end)
+        if not end:
+            return False
+
+        if silent:
+            return True
+
+        token = self.state_push_void_token(state, line, start.markup, start.attrs)
+        token.content = state.src[start.end : end.start].strip()
 
         state.line += 1
-
         return True
 
     def parse_multiple_lines(
@@ -59,36 +58,27 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
         startLine: int,
         endLine: int,
         silent: bool,
-        start: BBCodeBlockStart,
     ) -> bool:
         line = startLine
-        pos = state.bMarks[line] + state.tShift[line] + start[3]
-        maximum = state.eMarks[line]
 
-        if state.src[pos:maximum].strip():
+        start = self.find_multi_line_bbcode_block_start(state, line)
+        if not start:
             return False
 
-        end = None
-
+        line += 1
         while line < endLine:
+            if self.find_multi_line_bbcode_block_end(state, line):
+                break
+
             line += 1
+        else:
+            return False
 
-            if (
-                state.isEmpty(line)
-                or state.is_code_block(line)
-                or all(self.scan_full_line(state, line))
-                or line > state.lineMax
-            ):
-                continue
+        if silent:
+            return True
 
-            if match := self.scan_line_for_end(state, line):
-                end = match
-
-        if silent or not end:
-            return bool(end)
-
-        token = self.state_push_void_token(state, startLine, start)
-        token.content = self.get_lines(state, startLine + 1, line - 1)
+        token = self.state_push_void_token(state, startLine, start.markup, start.attrs)
+        token.content = self.get_lines(state, startLine + 1, line)
 
         state.line = line + 1
         return True
@@ -109,27 +99,6 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
             return {"syntax": attrs["syntax"]}
 
         return None
-
-
-def code_bbcode_start(
-    state: StateBlock, line: int
-) -> tuple[str, dict | None, int, int] | None:
-    start = bbcode_block_start_rule("code", state, line, args=True)
-    if not start:
-        return None
-
-    markup, args_str, start, end = start
-
-    if args_str:
-        args = parse_code_args(args_str)
-    else:
-        args = None
-
-    return markup, args, start, end
-
-
-def code_bbcode_end(state: StateBlock, line: int) -> tuple[str, int, int] | None:
-    return bbcode_block_end_rule("code", state, line)
 
 
 def code_bbcode_renderer(
