@@ -86,29 +86,29 @@ def test_bbcode_block_rule_dosenst_parse_single_line_block_with_escaped_closing(
     assert html == "<p>[quote]text[/quote]</p>"
 
 
-def _test_bbcode_block_rule_parses_multiline_block(parse_to_html):
+def test_bbcode_block_rule_parses_multiline_block(parse_to_html):
     html = parse_to_html("[quote]\ntext\n[/quote]")
     assert html == "<misago-quote>\n<p>text</p>\n</misago-quote>"
 
 
-def _test_bbcode_block_rule_parses_multiline_block_contents(parse_to_html):
+def test_bbcode_block_rule_parses_multiline_block_contents(parse_to_html):
     html = parse_to_html("[quote]\nlorem **ipsum** dolor\n[/quote]")
     assert html == (
         "<misago-quote>\n<p>lorem <strong>ipsum</strong> dolor</p>\n</misago-quote>"
     )
 
 
-def _test_bbcode_block_rule_parses_multiline_block_after_paragraph(parse_to_html):
+def test_bbcode_block_rule_parses_multiline_block_after_paragraph(parse_to_html):
     html = parse_to_html("paragraph\n[quote]\ntext\n[/quote]")
     assert html == "<p>paragraph</p>\n<misago-quote>\n<p>text</p>\n</misago-quote>"
 
 
-def _test_bbcode_block_rule_parses_multiline_block_before_paragraph(parse_to_html):
+def test_bbcode_block_rule_parses_multiline_block_before_paragraph(parse_to_html):
     html = parse_to_html("[quote]\ntext\n[/quote]\nparagraph")
     assert html == "<misago-quote>\n<p>text</p>\n</misago-quote>\n<p>paragraph</p>"
 
 
-def _test_bbcode_block_rule_parses_multiline_block_between_paragraphs(parse_to_html):
+def test_bbcode_block_rule_parses_multiline_block_between_paragraphs(parse_to_html):
     html = parse_to_html("paragraph1\n[quote]\ntext\n[/quote]\nparagraph2")
     assert html == (
         "<p>paragraph1</p>"
@@ -117,7 +117,7 @@ def _test_bbcode_block_rule_parses_multiline_block_between_paragraphs(parse_to_h
     )
 
 
-def _test_bbcode_block_rule_parses_single_line_block_in_multiline_block(parse_to_html):
+def test_bbcode_block_rule_parses_single_line_block_in_multiline_block(parse_to_html):
     html = parse_to_html("[quote]\n[quote]nested[/quote]\n[/quote]")
     assert html == (
         "<misago-quote>"
@@ -128,7 +128,7 @@ def _test_bbcode_block_rule_parses_single_line_block_in_multiline_block(parse_to
     )
 
 
-def _test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block(
+def test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block(
     parse_to_html,
 ):
     html = parse_to_html("[quote]\n[quote]\nnested\n[/quote]\n[/quote]")
@@ -141,7 +141,7 @@ def _test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block(
     )
 
 
-def _test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_of_other_type(
+def test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_of_other_type(
     parse_to_html,
 ):
     html = parse_to_html("[quote]\n[spoiler]\nnested\n[/spoiler]\n[/quote]")
@@ -154,7 +154,7 @@ def _test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_o
     )
 
 
-def _test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_between_paragraphs(
+def test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_between_paragraphs(
     parse_to_html,
 ):
     html = parse_to_html(
@@ -171,7 +171,7 @@ def _test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_b
     )
 
 
-def _test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_of_other_type_between_paragraphs(
+def test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_of_other_type_between_paragraphs(
     parse_to_html,
 ):
     html = parse_to_html(
@@ -188,7 +188,7 @@ def _test_bbcode_block_rule_parses_multiline_block_with_nested_multiline_block_o
     )
 
 
-def _test_bbcode_block_rule_matches_closest_multiline_block_open_close_pair(
+def test_bbcode_block_rule_matches_closest_multiline_block_open_close_pair(
     parse_to_html,
 ):
     html = parse_to_html("[quote]\n[quote]\ntext\n[/quote]")

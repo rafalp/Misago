@@ -204,73 +204,11 @@ class BBCodeBlockRule:
         endLine: int,
         silent: bool,
     ) -> bool:
-        return False
-
         line = startLine
-        start = state.bMarks[line] + state.tShift[line]
-        maximum = state.eMarks[line]
 
-        args = None
-
-        pos = start
-        while pos < maximum:
-            if state.src[pos] == "\\":
-                pos += 2
-            elif state.src[pos] == "[":
-                pos += 1
-                bbcode = state.src[pos : pos + self.bbcode_len].lower()
-                if bbcode != self.bbcode:
-                    return False
-
-                if state.src[pos + self.bbcode_len] == "]":
-                    pos = content_start = pos + self.bbcode_len + 1
-                    break
-
-                elif state.src[pos + self.bbcode_len] == "=":
-                    if not self.args_parser:
-                        return False
-
-                    level = 1
-                    pos = args_start = pos + self.bbcode_len + 1
-                    while pos < maximum:
-                        if state.src[pos] == "\\":
-                            pos += 2
-                        elif state.src[pos] == "[":
-                            level += 1
-                            pos += 1
-                        elif state.src[pos] == "]":
-                            level -= 1
-                            if not level:
-                                args_str = state.src[args_start:pos]
-                                if args_str:
-                                    args = self.parse_args(args_str)
-                                pos = content_start = pos + 1
-                                break
-
-                            pos += 1
-
-                        else:
-                            pos += 1
-
-                    else:
-                        return False
-
-                    break
-
-                else:
-                    return False
-
-            elif state.src[pos] == "]":
-                break
-
-            else:
-                pos += 1
-        else:
+        start = self.find_multi_line_bbcode_block_start(state, line)
+        if not start:
             return False
-
-        state.src[pos]
-
-        return False
 
         end = None
         nesting = 1
@@ -281,15 +219,15 @@ class BBCodeBlockRule:
             if (
                 state.isEmpty(line)
                 or state.is_code_block(line)
-                or all(self.scan_single_line(state, line))
+                or self.parse_single_line(state, line, True)
                 or line > state.lineMax
             ):
                 continue
 
-            if self.scan_line_for_start(state, line):
+            if self.find_multi_line_bbcode_block_start(state, line):
                 nesting += 1
 
-            elif match := self.scan_line_for_end(state, line):
+            elif match := self.find_multi_line_bbcode_block_end(state, line):
                 nesting -= 1
 
                 if nesting == 0:
@@ -299,9 +237,9 @@ class BBCodeBlockRule:
         if silent or not end:
             return nesting == 0
 
-        self.state_push_open_token(state, startLine, line, start)
+        self.state_push_open_token(state, startLine, line, start.markup, start.args)
         self.state_push_children(state, startLine + 1, line)
-        self.state_push_close_token(state, end)
+        self.state_push_close_token(state, end.markup)
 
         state.line = line + 1
         return True
@@ -387,22 +325,7 @@ class BBCodeBlockRule:
         else:
             return None
 
-    def find_bbcode_end(
-        self, state: StateBlock, line: int, start: int, single_line: bool
-    ) -> BBCodeBlockEnd | None:
-        if single_line:
-            return self.find_single_line_bbcode_end(state, line, start)
-
-        return self.find_multi_line_bbcode_end(state, line, start)
-
-    def find_single_line_bbcode_end(
-        self, state: StateBlock, line: int, start: int
-    ) -> BBCodeBlockEnd | None:
-        maximum = state.eMarks[line]
-
-        raise NotImplementedError()
-
-    def find_multi_line_bbcode_end(
+    def find_multi_line_bbcode_block_end(
         self, state: StateBlock, line: int
     ) -> BBCodeBlockEnd | None:
         pos = state.bMarks[line] + state.tShift[line]
@@ -513,54 +436,3 @@ class BBCodeBlockRule:
 
     def get_meta(self, attrs: dict) -> dict | None:
         return None
-
-
-def bbcode_block_start_rule(
-    bbcode: str, state: StateBlock, line: int, args: bool = False
-) -> tuple[str, str | None, int, int] | None:
-    start = state.bMarks[line] + state.tShift[line]
-    maximum = state.eMarks[line]
-    src = state.src[start:maximum]
-
-    block_bbcode = f"[{bbcode}".lower()
-    block_bbcode_len = len(block_bbcode)
-
-    if src.lower()[:block_bbcode_len] != block_bbcode:
-        return None
-
-    if "]" not in src[block_bbcode_len:]:
-        return None
-
-    end = src.index("]", 0, maximum - start)
-    if end == block_bbcode_len:
-        return src[: block_bbcode_len + 1], None, start, start + end + 1
-
-    if src[block_bbcode_len] != "=" or not args:
-        return None
-
-    args_str = src[block_bbcode_len + 1 : end]
-    if args_str and (
-        (args_str[0] == '"' and args_str[-1] == '"')
-        or (args_str[0] == "'" and args_str[-1] == "'")
-    ):
-        args_str = args_str[1:-1]
-
-    args_str = args_str.strip() or None
-
-    return src[: end + 1], args_str, start, end + 1
-
-
-def bbcode_block_end_rule(
-    bbcode: str, state: StateBlock, line: int
-) -> tuple[str, int, int] | None:
-    start = state.bMarks[line] + state.tShift[line]
-    maximum = state.eMarks[line]
-    src = state.src[start:maximum]
-
-    block_bbcode = f"[/{bbcode}]".lower()
-    block_bbcode_len = len(block_bbcode)
-
-    if src[:block_bbcode_len].lower() == block_bbcode:
-        return src[:block_bbcode_len], start, start + block_bbcode_len
-
-    return None
