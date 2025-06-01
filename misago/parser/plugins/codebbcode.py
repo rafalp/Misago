@@ -8,13 +8,7 @@ from markdown_it.rules_block.state_block import StateBlock
 from markdown_it.token import Token
 from markdown_it.utils import EnvType, OptionsDict
 
-from ..bbcode import (
-    BBCodeBlockEnd,
-    BBCodeBlockRule,
-    BBCodeBlockStart,
-    bbcode_block_end_rule,
-    bbcode_block_start_rule,
-)
+from ..bbcode import BBCodeBlockRule
 from ..codeargs import parse_code_args
 
 
@@ -24,9 +18,9 @@ def code_bbcode_plugin(md: MarkdownIt):
         "code_bbcode",
         CodeBBCodeBlockRule(
             name="code_bbcode",
+            bbcode="code",
             element="code",
-            start=code_bbcode_start,
-            end=code_bbcode_end,
+            args_parser=parse_code_args,
         ),
         {"alt": ["paragraph"]},
     )
@@ -35,12 +29,14 @@ def code_bbcode_plugin(md: MarkdownIt):
 
 
 class CodeBBCodeBlockRule(BBCodeBlockRule):
+    def __call__(self, *args):
+        return False
+
     def parse_single_line(
         self,
         state: StateBlock,
         startLine: int,
-        start: BBCodeBlockStart,
-        end: BBCodeBlockEnd,
+        silent: bool,
     ):
         content_start = start[3]
         content_end = end[1]
@@ -59,7 +55,6 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
         startLine: int,
         endLine: int,
         silent: bool,
-        start: BBCodeBlockStart,
     ) -> bool:
         line = startLine
         pos = state.bMarks[line] + state.tShift[line] + start[3]
@@ -109,27 +104,6 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
             return {"syntax": attrs["syntax"]}
 
         return None
-
-
-def code_bbcode_start(
-    state: StateBlock, line: int
-) -> tuple[str, dict | None, int, int] | None:
-    start = bbcode_block_start_rule("code", state, line, args=True)
-    if not start:
-        return None
-
-    markup, args_str, start, end = start
-
-    if args_str:
-        args = parse_code_args(args_str)
-    else:
-        args = None
-
-    return markup, args, start, end
-
-
-def code_bbcode_end(state: StateBlock, line: int) -> tuple[str, int, int] | None:
-    return bbcode_block_end_rule("code", state, line)
 
 
 def code_bbcode_renderer(
