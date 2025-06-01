@@ -29,9 +29,6 @@ class QuoteBBCodeBlockRule(BBCodeBlockRule):
 
 
 def quote_bbcode_parse_args(args_str: str) -> dict | None:
-    if not args_str:
-        return None
-
     if args := parse_user_post_args(args_str):
         return args
 

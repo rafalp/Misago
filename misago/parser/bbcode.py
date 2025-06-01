@@ -12,7 +12,7 @@ class BBCodeBlockStart:
     start: int
     end: int
     markup: str
-    args: dict | None
+    attrs: dict | None
 
 
 @dataclass(frozen=True)
@@ -73,7 +73,7 @@ class BBCodeBlockRule:
         old_parent_type = state.parentType
 
         state.parentType = self.name
-        self.state_push_open_token(state, line, line, start.markup, start.args)
+        self.state_push_open_token(state, line, line, start.markup, start.attrs)
 
         state.parentType = "paragraph"
         token = state.push("paragraph_open", "p", 1)
@@ -123,7 +123,7 @@ class BBCodeBlockRule:
                 start=start,
                 end=end,
                 markup=state.src[start:end],
-                args=None,
+                attrs=None,
             )
 
         if state.src[pos] != "=" or not self.args_parser:
@@ -145,17 +145,16 @@ class BBCodeBlockRule:
             elif state.src[pos] == "]":
                 level -= 1
                 if not level:
-                    args_str = state.src[args_start:pos]
-                    if args_str:
-                        args = self.parse_args(args_str)
+                    attrs = None
+                    if args_str := state.src[args_start:pos].strip():
+                        attrs = self.parse_args(args_str)
 
                     end = pos + 1
-
                     return BBCodeBlockStart(
                         start=start,
                         end=end,
                         markup=state.src[start:end],
-                        args=args,
+                        attrs=attrs,
                     )
 
                 pos += 1
@@ -237,7 +236,7 @@ class BBCodeBlockRule:
         if silent or not end:
             return nesting == 0
 
-        self.state_push_open_token(state, startLine, line, start.markup, start.args)
+        self.state_push_open_token(state, startLine, line, start.markup, start.attrs)
         self.state_push_children(state, startLine + 1, line)
         self.state_push_close_token(state, end.markup)
 
@@ -277,7 +276,7 @@ class BBCodeBlockRule:
                 start=start,
                 end=end,
                 markup=state.src[start:end],
-                args=None,
+                attrs=None,
             )
 
         if state.src[pos] != "=":
@@ -302,9 +301,9 @@ class BBCodeBlockRule:
             elif state.src[pos] == "]":
                 level -= 1
                 if not level:
-                    args_str = state.src[args_start:pos]
-                    if args_str:
-                        args = self.parse_args(args_str)
+                    attrs = None
+                    if args_str := state.src[args_start:pos].strip():
+                        attrs = self.parse_args(args_str)
 
                     end = pos + 1
                     if state.src[end:maximum].strip():
@@ -314,7 +313,7 @@ class BBCodeBlockRule:
                         start=start,
                         end=pos,
                         markup=state.src[start:pos],
-                        args=args,
+                        attrs=attrs,
                     )
 
                 pos += 1
@@ -402,13 +401,13 @@ class BBCodeBlockRule:
         return token
 
     def state_push_void_token(
-        self, state: StateBlock, startLine: int, start: BBCodeBlockStart
+        self, state: StateBlock, line: int, markup: str, attrs: dict | None
     ) -> Token:
-        token = state.push(f"{self.name}", self.element, 0)
-        token.markup = start[0]
-        token.map = [startLine, startLine]
+        token = state.push(self.name, self.element, 0)
+        token.markup = markup
+        token.map = [line, line]
 
-        if attrs := start[1]:
+        if attrs:
             for attr_name, attr_value in attrs.items():
                 token.attrSet(attr_name, attr_value)
 

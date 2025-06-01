@@ -29,24 +29,27 @@ def code_bbcode_plugin(md: MarkdownIt):
 
 
 class CodeBBCodeBlockRule(BBCodeBlockRule):
-    def __call__(self, *args):
-        return False
-
     def parse_single_line(
         self,
         state: StateBlock,
-        startLine: int,
+        line: int,
         silent: bool,
     ):
-        content_start = start[3]
-        content_end = end[1]
-        content = state.src[content_start:content_end].strip()
+        start = self.find_single_line_bbcode_block_start(state, line)
+        if not start:
+            return False
 
-        token = self.state_push_void_token(state, startLine, start)
-        token.content = content
+        end = self.find_single_line_bbcode_block_end(state, line, start.end)
+        if not end:
+            return False
+
+        if silent:
+            return True
+
+        token = self.state_push_void_token(state, line, start.markup, start.attrs)
+        token.content = state.src[start.end : end.start].strip()
 
         state.line += 1
-
         return True
 
     def parse_multiple_lines(
@@ -57,33 +60,25 @@ class CodeBBCodeBlockRule(BBCodeBlockRule):
         silent: bool,
     ) -> bool:
         line = startLine
-        pos = state.bMarks[line] + state.tShift[line] + start[3]
-        maximum = state.eMarks[line]
 
-        if state.src[pos:maximum].strip():
+        start = self.find_multi_line_bbcode_block_start(state, line)
+        if not start:
             return False
 
-        end = None
-
+        line += 1
         while line < endLine:
+            if self.find_multi_line_bbcode_block_end(state, line):
+                break
+
             line += 1
+        else:
+            return False
 
-            if (
-                state.isEmpty(line)
-                or state.is_code_block(line)
-                or all(self.scan_full_line(state, line))
-                or line > state.lineMax
-            ):
-                continue
+        if silent:
+            return True
 
-            if match := self.scan_line_for_end(state, line):
-                end = match
-
-        if silent or not end:
-            return bool(end)
-
-        token = self.state_push_void_token(state, startLine, start)
-        token.content = self.get_lines(state, startLine + 1, line - 1)
+        token = self.state_push_void_token(state, startLine, start.markup, start.attrs)
+        token.content = self.get_lines(state, startLine + 1, line)
 
         state.line = line + 1
         return True

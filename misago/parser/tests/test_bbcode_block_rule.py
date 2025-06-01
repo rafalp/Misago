@@ -193,3 +193,17 @@ def test_bbcode_block_rule_matches_closest_multiline_block_open_close_pair(
 ):
     html = parse_to_html("[quote]\n[quote]\ntext\n[/quote]")
     assert html == ("<p>[quote]</p>\n<misago-quote>\n<p>text</p>\n</misago-quote>")
+
+
+def test_bbcode_block_rule_dosenst_parse_multiline_block_with_escaped_opening(
+    parse_to_html,
+):
+    html = parse_to_html("\\[quote]\ntext\n[/quote]")
+    assert html == "<p>[quote]<br>\ntext<br>\n[/quote]</p>"
+
+
+def test_bbcode_block_rule_dosenst_parse_multiline_block_with_escaped_closing(
+    parse_to_html,
+):
+    html = parse_to_html("[quote]\ntext\n\\[/quote]")
+    assert html == "<p>[quote]<br>\ntext<br>\n[/quote]</p>"
