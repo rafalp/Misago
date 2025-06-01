@@ -367,9 +367,9 @@ def inline_token_remove_orphaned_children(token: Token) -> Token | None:
     stack: list[tuple[int, str]] = []
     for index, child in enumerate(token.children):
         if child.nesting == 1:
-            stack.append((index, child.type))
+            stack.append((index, child.tag))
         if child.nesting == -1:
-            if not stack or stack[-1][1] != child.type:
+            if not stack or stack[-1][1] != child.tag:
                 new_children.append(
                     Token(
                         type="text",

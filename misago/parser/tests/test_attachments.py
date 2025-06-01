@@ -162,3 +162,14 @@ def test_attachment_breaks_list_item(parse_to_html):
         "\n</li>"
         "\n</ol>"
     )
+
+
+def test_attachment_doesnt_break_siblings_parsing(parse_to_html):
+    html = parse_to_html("Lorem **ipsum**<attachment=image.png:12>__dolor__ met.")
+    assert html == (
+        "<p>Lorem <strong>ipsum</strong></p>"
+        '\n<div class="rich-text-selection-boundary" misago-selection-boundary="true"></div>'
+        '\n<misago-attachment name="image.png" slug="image-png" id="12">'
+        '\n<div class="rich-text-selection-boundary" misago-selection-boundary="true"></div>'
+        "\n<p><strong>dolor</strong> met.</p>"
+    )
