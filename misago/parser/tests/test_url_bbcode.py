@@ -76,6 +76,17 @@ def test_url_bbcode_with_quoted_arg(parse_to_html):
     )
 
 
+def test_url_bbcode_with_escaped_arg(parse_to_html):
+    html = parse_to_html('[url="example\\.com"]Hello[/url]')
+    assert html == (
+        "<p>"
+        '<a href="example.com" rel="external nofollow noopener" target="_blank">'
+        "Hello"
+        "</a>"
+        "</p>"
+    )
+
+
 def test_url_bbcode_with_invalid_arg(parse_to_html):
     html = parse_to_html("[url=invalid]Hello[/url]")
     assert html == (

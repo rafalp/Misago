@@ -1,5 +1,6 @@
 from markdown_it import MarkdownIt
 from markdown_it.rules_inline.state_inline import StateInline
+from markdown_it.common.utils import unescapeAll
 
 
 def url_bbcode_plugin(md: MarkdownIt):
@@ -39,7 +40,7 @@ def url_bbcode_rule(state: StateInline, silent: bool):
             (args_str[0] == '"' and args_str[-1] == '"')
             or (args_str[0] == "'" and args_str[-1] == "'")
         ):
-            args_str = args_str[1:-1].strip()
+            args_str = unescapeAll(args_str[1:-1].strip())
     else:
         content_start = start + 5
 
