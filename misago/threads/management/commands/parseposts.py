@@ -33,9 +33,7 @@ class Command(BaseCommand):
             post.metadata = parsing_result.metadata
 
             if post.id == post.thread.first_post_id:
-                post.search_document = "\n\n".join(
-                    (post.thread.title, parsing_result.text)
-                )
+                post.search_document = f"{post.thread.title} {parsing_result.text}"
             else:
                 post.search_document = parsing_result.text
 
