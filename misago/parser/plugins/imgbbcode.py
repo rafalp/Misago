@@ -62,7 +62,7 @@ def img_bbcode_rule(state: StateInline, silent: bool):
     content = state.src[content_start:content_end].strip()
     if not content:
         return False  # Eject if [img][/img]
-    
+
     content = unescapeAll(content)
 
     if args_str:

@@ -1,5 +1,4 @@
 from markdown_it import MarkdownIt
-from markdown_it.rules_block.state_block import StateBlock
 from markdown_it.common.utils import unescapeAll
 
 from ..bbcode import BBCodeBlockRule
@@ -20,4 +19,4 @@ def spoiler_bbcode_plugin(md: MarkdownIt):
 
 
 def spoiler_bbcode_parse_args(args_str: str) -> dict:
-    return {"info": unescapeAll(args_str).strip()}
+    return {"info": unescapeAll(args_str)}

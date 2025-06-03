@@ -1,7 +1,7 @@
 import re
 
 from markdown_it import MarkdownIt
-from markdown_it.rules_block.state_block import StateBlock
+from markdown_it.common.utils import unescapeAll
 
 from ..bbcode import BBCodeBlockRule
 
@@ -32,7 +32,7 @@ def quote_bbcode_parse_args(args_str: str) -> dict | None:
     if args := parse_user_post_args(args_str):
         return args
 
-    return {"info": args_str}
+    return {"info": unescapeAll(args_str)}
 
 
 USER_POST = re.compile(r"^(?P<user>[a-zA-Z0-9]+) *[;,] *post: *(?P<post>[0-9]+) *$")
