@@ -40,6 +40,22 @@ def test_url_bbcode_with_invalid_url(parse_to_html):
     )
 
 
+def test_url_bbcode_with_escaped_content(parse_to_html):
+    html = parse_to_html("[url]example\\.com[/url]")
+    assert html == (
+        "<p>"
+        "<a "
+        'href="example.com" '
+        'rel="external nofollow noopener" '
+        'target="_blank" '
+        'misago-rich-text="autolink"'
+        ">"
+        "example.com"
+        "</a>"
+        "</p>"
+    )
+
+
 def test_url_bbcode_with_arg(parse_to_html):
     html = parse_to_html("[url=example.com]Hello[/url]")
     assert html == (

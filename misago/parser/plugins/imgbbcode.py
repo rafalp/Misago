@@ -53,21 +53,22 @@ def img_bbcode_rule(state: StateInline, silent: bool):
     else:
         return False
 
+    if args_start and args_end and not args_str:
+        return False  # Eject if [img=]...[/img]
+
     content_end = pos
     end = content_end + 6
 
     content = state.src[content_start:content_end].strip()
-
-    if args_start and args_end and not args_str:
-        return False  # Eject if [img=]...[/img]
-
     if not content:
         return False  # Eject if [img][/img]
+    
+    content = unescapeAll(content)
 
     if args_str:
         href = state.md.normalizeLink(args_str)
     else:
-        href = state.md.normalizeLink(content.strip())
+        href = state.md.normalizeLink(content)
 
     if not state.md.validateLink(href):
         return False

@@ -18,6 +18,11 @@ def test_img_bbcode_with_invalid_img(parse_to_html):
     assert html == '<p><img src="invalid" alt=""></p>'
 
 
+def test_img_bbcode_with_escaped_content(parse_to_html):
+    html = parse_to_html("[img]example\\.com[/img]")
+    assert html == '<p><img src="example.com" alt=""></p>'
+
+
 def test_img_bbcode_with_arg(parse_to_html):
     html = parse_to_html("[img=example.com]Hello[/img]")
     assert html == '<p><img src="example.com" alt="Hello"></p>'
