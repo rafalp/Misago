@@ -54,6 +54,13 @@ def test_quote_bbcode_with_quoted_valid_user_and_post_args(parse_to_html):
     )
 
 
+def test_quote_bbcode_with_escaped_valid_user_and_post_args(parse_to_html):
+    html = parse_to_html("[quote=John\\; post:2137]\nhello world\n[/quote]")
+    assert html == (
+        '<misago-quote info="John; post:2137">\n<p>hello world</p>\n</misago-quote>'
+    )
+
+
 def test_quote_bbcode_with_valid_user_and_invalid_post_args(parse_to_html):
     html = parse_to_html("[quote=John; post:invalid]\nhello world\n[/quote]")
     assert html == (
