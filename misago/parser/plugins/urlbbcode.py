@@ -1,5 +1,6 @@
 from markdown_it import MarkdownIt
 from markdown_it.rules_inline.state_inline import StateInline
+from markdown_it.common.utils import unescapeAll
 
 
 def url_bbcode_plugin(md: MarkdownIt):
@@ -39,7 +40,7 @@ def url_bbcode_rule(state: StateInline, silent: bool):
             (args_str[0] == '"' and args_str[-1] == '"')
             or (args_str[0] == "'" and args_str[-1] == "'")
         ):
-            args_str = args_str[1:-1].strip()
+            args_str = unescapeAll(args_str[1:-1].strip())
     else:
         content_start = start + 5
 
@@ -54,13 +55,13 @@ def url_bbcode_rule(state: StateInline, silent: bool):
     else:
         return False
 
+    if args_start and args_end and not args_str:
+        return False  # Eject if [url=]...[/url]
+
     content_end = pos
     end = content_end + 6
 
     content = state.src[content_start:content_end]
-
-    if args_start and args_end and not args_str:
-        return False  # Eject if [url=]...[/url]
 
     if not content.strip():
         return False  # Eject if [url][/url]
@@ -68,6 +69,7 @@ def url_bbcode_rule(state: StateInline, silent: bool):
     if args_str:
         href = state.md.normalizeLink(args_str)
     else:
+        content = unescapeAll(content.strip())
         href = state.md.normalizeLink(content.strip())
 
     if not state.md.validateLink(href):
