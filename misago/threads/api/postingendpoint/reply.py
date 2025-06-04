@@ -28,15 +28,12 @@ class ReplyMiddleware(PostingMiddleware):
         else:
             self.new_post(serializer.validated_data, parsing_result)
 
-        if self.mode == PostingEndpoint.START:
-            self.post.set_search_document(self.thread.title)
-        else:
-            self.post.set_search_document()
+        self.post.set_search_document(self.thread, "FIXME")
 
         self.post.updated_on = self.datetime
         self.post.save()
 
-        self.post.update_search_vector()
+        self.post.set_search_vector()
         update_post_checksum(self.post)
 
         self.post.update_fields += ["checksum", "search_vector"]

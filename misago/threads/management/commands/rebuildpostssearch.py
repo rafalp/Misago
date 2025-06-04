@@ -36,7 +36,7 @@ class Command(BaseCommand):
 
             post.save(update_fields=["search_document"])
 
-            post.update_search_vector()
+            post.set_search_vector()
             post.save(update_fields=["search_vector"])
 
             rebuild_count += 1

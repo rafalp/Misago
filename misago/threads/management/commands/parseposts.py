@@ -31,15 +31,10 @@ class Command(BaseCommand):
 
             post.parsed = parsing_result.html
             post.metadata = parsing_result.metadata
-
-            if post.id == post.thread.first_post_id:
-                post.search_document = f"{post.thread.title} {parsing_result.text}"
-            else:
-                post.search_document = parsing_result.text
-
+            post.set_search_document(post.thread, parsing_result.text)
             post.save(update_fields=["parsed", "metadata", "search_document"])
 
-            post.update_search_vector()
+            post.set_search_vector()
             post.save(update_fields=["search_vector"])
 
             rebuild_count += 1

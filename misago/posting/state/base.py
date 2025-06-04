@@ -117,7 +117,6 @@ class PostingState:
 
         self.post.original = parsing_result.markup
         self.post.parsed = parsing_result.html
-        self.post.search_document = parsing_result.text
         self.post.metadata = parsing_result.metadata
 
     def schedule_post_content_upgrade(self):

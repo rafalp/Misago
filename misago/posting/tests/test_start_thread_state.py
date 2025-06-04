@@ -39,6 +39,17 @@ def test_start_thread_state_save_saves_thread_and_post(user_request, default_cat
     assert state.post.thread == state.thread
 
 
+def test_start_thread_state_save_saves_post_search_document(
+    user_request, default_category
+):
+    state = StartThreadState(user_request, default_category)
+    state.set_thread_title("Test thread")
+    state.set_post_message(parse("Hello world"))
+    state.save()
+
+    assert state.post.search_document == "Test thread\n\nHello world"
+
+
 def test_start_thread_state_updates_category(user_request, default_category):
     state = StartThreadState(user_request, default_category)
     state.set_thread_title("Test thread")

@@ -1,5 +1,6 @@
 import copy
 import hashlib
+from typing import TYPE_CHECKING
 
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
@@ -13,7 +14,9 @@ from ...core.utils import parse_iso8601_string
 from ...markup import finalize_markup
 from ...plugins.models import PluginDataModel
 from ..checksums import is_post_valid, update_post_checksum
-from ..filtersearch import filter_search
+
+if TYPE_CHECKING:
+    from .thread import Thread
 
 
 class Post(PluginDataModel):
@@ -203,15 +206,13 @@ class Post(PluginDataModel):
     def get_edits_api_url(self):
         return self.thread_type.get_post_edits_api_url(self)
 
-    def set_search_document(self, thread_title=None):
-        if thread_title:
-            self.search_document = filter_search(
-                "\n\n".join([thread_title, self.original])
-            )
+    def set_search_document(self, thread: "Thread", search_document: str):
+        if self.id == thread.first_post_id:
+            self.search_document = f"{thread.title}\n\n{search_document}"
         else:
-            self.search_document = filter_search(self.original)
+            self.search_document = search_document
 
-    def update_search_vector(self):
+    def set_search_vector(self):
         self.search_vector = SearchVector(
             "search_document", config=settings.MISAGO_SEARCH_CONFIG
         )

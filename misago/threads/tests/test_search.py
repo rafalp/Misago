@@ -1,3 +1,5 @@
+from unittest import SkipTest
+
 from django.urls import reverse
 
 from .. import test
@@ -6,13 +8,10 @@ from ...users.test import AuthenticatedUserTestCase
 
 
 def index_post(post):
-    if post.id == post.thread.first_post_id:
-        post.set_search_document(post.thread.title)
-    else:
-        post.set_search_document()
+    post.set_search_document(post.thread, post.original)
     post.save(update_fields=["search_document"])
 
-    post.update_search_vector()
+    post.set_search_vector()
     post.save(update_fields=["search_vector"])
 
 
@@ -172,6 +171,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_filtered_query(self):
         """search filters are used by search system"""
+        raise SkipTest("deprecated in v0.40")
         thread = test.post_thread(self.category)
         post = test.reply_thread(
             thread, message="You just do MMM in 4th minute and its pwnt"
