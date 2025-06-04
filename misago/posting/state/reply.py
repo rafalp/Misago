@@ -52,6 +52,8 @@ class ReplyThreadState(PostingState):
         self.save_user()
 
     def save_post(self):
+        self.post.set_search_document(self.thread, self.parsing_result.text)
+
         if self.post.id:
             self.post.updated_on = self.timestamp
             self.post.edits = models.F("edits") + 1
@@ -63,7 +65,7 @@ class ReplyThreadState(PostingState):
             self.post.save()
 
         update_post_checksum(self.post)
-        self.post.update_search_vector()
+        self.post.set_search_vector()
         self.post.save()
 
         self.schedule_post_content_upgrade()

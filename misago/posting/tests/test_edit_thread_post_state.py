@@ -26,6 +26,7 @@ def test_edit_thread_post_state_save_updates_post(
     post.refresh_from_db()
 
     assert post.original == "Edit reply"
+    assert post.search_document == "Test thread\n\nEdit reply"
     assert post.updated_on == state.timestamp
     assert post.edits == 1
     assert post.last_editor == user

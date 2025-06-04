@@ -48,6 +48,7 @@ class EditThreadPostState(PostingState):
         self.save_attachments()
 
     def save_post(self):
+        self.post.set_search_document(self.thread, self.parsing_result.text)
         self.post.updated_on = self.timestamp
         self.post.edits = models.F("edits") + 1
         self.post.last_editor = self.user
@@ -56,7 +57,7 @@ class EditThreadPostState(PostingState):
         self.update_object(self.post)
 
         update_post_checksum(self.post)
-        self.post.update_search_vector()
+        self.post.set_search_vector()
         self.update_object(self.post)
 
         self.schedule_post_content_upgrade()

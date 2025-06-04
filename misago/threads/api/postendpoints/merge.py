@@ -36,14 +36,10 @@ def posts_merge_endpoint(request, thread):
         post.merge(first_post)
         post.delete()
 
-    if first_post.pk == thread.first_post_id:
-        first_post.set_search_document(thread.title)
-    else:
-        first_post.set_search_document()
-
+    first_post.set_search_document(thread, "fixme")
     first_post.save()
 
-    first_post.update_search_vector()
+    first_post.set_search_vector()
     first_post.save(update_fields=["search_vector"])
 
     thread.synchronize()
