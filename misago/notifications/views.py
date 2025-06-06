@@ -2,19 +2,19 @@ from django.db.models import F
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from ..permissions.notifications import check_notifications_permission
 from .exceptions import NotificationVerbError
 from .models import Notification, WatchedThread
-from .permissions import allow_use_notifications
 from .registry import registry
 
 
 def notifications(request: HttpRequest) -> HttpResponse:
-    allow_use_notifications(request.user)
+    check_notifications_permission(request.user_permissions)
     return render(request, "misago/notifications.html")
 
 
 def notification(request: HttpRequest, notification_id: int) -> HttpResponse:
-    allow_use_notifications(request.user)
+    check_notifications_permission(request.user_permissions)
 
     user = request.user
     notification = get_object_or_404(
