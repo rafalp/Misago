@@ -1,9 +1,8 @@
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Dict, Iterable, Optional
 
-from django.db.models import IntegerChoices
 from django.urls import reverse
-from django.utils.translation import pgettext, pgettext_lazy
+from django.utils.translation import pgettext
 
 from ..conf.dynamicsettings import DynamicSettings
 from ..core.mail import build_mail
@@ -16,20 +15,13 @@ from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.privatethreads import check_see_private_thread_permission
 from ..threads.models import Post, Thread
 from ..threads.threadurl import get_thread_url
-from .verbs import NotificationVerb
+from .enums import ThreadNotifications
 from .models import Notification, WatchedThread
 from .users import notify_user
+from .verbs import NotificationVerb
 
 if TYPE_CHECKING:
     from ..users.models import User
-
-
-class ThreadNotifications(IntegerChoices):
-    NONE = 0, pgettext_lazy("notification type", "Don't notify")
-    SITE_ONLY = 1, pgettext_lazy("notification type", "Notify on site only")
-    SITE_AND_EMAIL = 2, pgettext_lazy(
-        "notification type", "Notify on site and with e-mail"
-    )
 
 
 def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:
@@ -174,7 +166,7 @@ def user_has_other_unread_posts(
     ).exclude(poster=watched_thread.user)
 
     posts_queryset = filter_any_thread_posts_queryset(
-        user_permissions, post.category, posts_queryset
+        user_permissions, post.category, post.thread, posts_queryset
     )
 
     return posts_queryset.exists()

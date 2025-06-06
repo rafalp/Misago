@@ -19,7 +19,7 @@ from django.utils.translation import pgettext, pgettext_lazy
 from ...acl.models import Role
 from ...conf import settings
 from ...core.utils import slugify
-from ...notifications.threads import ThreadNotifications
+from ...notifications.enums import ThreadNotifications
 from ...permissions.permissionsid import get_permissions_id
 from ...plugins.models import PluginDataModel
 from ..avatars import store as avatars_store, delete_avatar

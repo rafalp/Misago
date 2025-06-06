@@ -374,7 +374,7 @@ def test_check_see_private_thread_post_permission_always_passes(
     thread.participants.add(user)
 
     permissions = UserPermissionsProxy(user, cache_versions)
-    check_see_private_thread_post_permission(permissions, post)
+    check_see_private_thread_post_permission(permissions, thread, post)
 
 
 def test_filter_private_threads_queryset_returns_nothing_for_anonymous_user(
