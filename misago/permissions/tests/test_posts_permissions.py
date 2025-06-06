@@ -2,7 +2,7 @@ import pytest
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
-from ..posts import check_see_post_permission
+from ..posts import check_see_post_permission, filter_any_thread_posts_queryset
 from ..enums import CategoryPermission
 from ..models import CategoryGroupPermission, Moderator
 from ..proxy import UserPermissionsProxy
@@ -577,3 +577,7 @@ def test_check_see_post_permission_fails_user_without_private_thread_membership(
             private_thread,
             private_thread.first_post,
         )
+
+
+def test_filter_any_thread_posts_queryset():
+    pass
