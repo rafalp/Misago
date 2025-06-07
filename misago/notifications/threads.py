@@ -1,39 +1,27 @@
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Dict, Iterable, Optional
 
-from django.db.models import IntegerChoices
 from django.urls import reverse
-from django.utils.translation import pgettext, pgettext_lazy
+from django.utils.translation import pgettext
 
-from ..acl.useracl import get_user_acl
-from ..categories.enums import CategoryTree
 from ..conf.dynamicsettings import DynamicSettings
 from ..core.mail import build_mail
-from ..threads.models import Post, Thread, ThreadParticipant
-from ..threads.permissions.privatethreads import (
-    can_see_private_thread,
-    can_use_private_threads,
+from ..permissions.checkutils import check_permissions
+from ..permissions.posts import (
+    check_see_post_permission,
+    filter_any_thread_posts_queryset,
 )
-from ..threads.permissions.threads import (
-    can_see_post,
-    can_see_thread,
-    exclude_invisible_posts,
-)
+from ..permissions.proxy import UserPermissionsProxy
+from ..permissions.privatethreads import check_see_private_thread_permission
+from ..threads.models import Post, Thread
 from ..threads.threadurl import get_thread_url
-from .verbs import NotificationVerb
+from .enums import ThreadNotifications
 from .models import Notification, WatchedThread
 from .users import notify_user
+from .verbs import NotificationVerb
 
 if TYPE_CHECKING:
     from ..users.models import User
-
-
-class ThreadNotifications(IntegerChoices):
-    NONE = 0, pgettext_lazy("notification type", "Don't notify")
-    SITE_ONLY = 1, pgettext_lazy("notification type", "Notify on site only")
-    SITE_AND_EMAIL = 2, pgettext_lazy(
-        "notification type", "Notify on site and with e-mail"
-    )
 
 
 def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:
@@ -113,13 +101,15 @@ def notify_watcher_on_new_thread_reply(
     cache_versions: Dict[str, str],
     settings: DynamicSettings,
 ):
-    is_private = post.category.tree_id == CategoryTree.PRIVATE_THREADS
-    user_acl = get_user_acl(watched_thread.user, cache_versions)
+    user_permissions = UserPermissionsProxy(watched_thread.user, cache_versions)
 
-    if not user_can_see_post(watched_thread.user, user_acl, post, is_private):
+    with check_permissions() as can_see_post:
+        check_see_post_permission(user_permissions, post.category, post.thread, post)
+
+    if not can_see_post:
         return  # Skip this watcher because they can't see the post
 
-    if user_has_other_unread_posts(watched_thread, user_acl, post, is_private):
+    if user_has_other_unread_posts(user_permissions, watched_thread, post):
         return  # We only notify on first unread post
 
     notify_user(
@@ -165,10 +155,9 @@ def email_watcher_on_new_thread_reply(
 
 
 def user_has_other_unread_posts(
+    user_permissions: UserPermissionsProxy,
     watched_thread: WatchedThread,
-    user_acl: dict,
     post: Post,
-    is_private: bool,
 ) -> bool:
     posts_queryset = Post.objects.filter(
         id__lt=post.id,
@@ -176,39 +165,11 @@ def user_has_other_unread_posts(
         posted_on__gt=watched_thread.read_time,
     ).exclude(poster=watched_thread.user)
 
-    if not is_private:
-        posts_queryset = exclude_invisible_posts(
-            user_acl, post.category, posts_queryset
-        )
+    posts_queryset = filter_any_thread_posts_queryset(
+        user_permissions, post.category, post.thread, posts_queryset
+    )
 
     return posts_queryset.exists()
-
-
-def user_can_see_post(
-    user: "User",
-    user_acl: dict,
-    post: Post,
-    is_private: bool,
-) -> bool:
-    if is_private:
-        return user_can_see_post_in_private_thread(user, user_acl, post)
-
-    return can_see_thread(user_acl, post.thread) and can_see_post(user_acl, post)
-
-
-def user_can_see_post_in_private_thread(
-    user: "User", user_acl: dict, post: Post
-) -> bool:
-    if not can_use_private_threads(user_acl):
-        return False
-
-    is_participant = ThreadParticipant.objects.filter(
-        thread=post.thread, user=user
-    ).exists()
-    if not can_see_private_thread(user_acl, post.thread, is_participant):
-        return False
-
-    return True
 
 
 def notify_participant_on_new_private_thread(
@@ -218,9 +179,12 @@ def notify_participant_on_new_private_thread(
     cache_versions: dict[str, str],
     settings: DynamicSettings,
 ):
-    user_acl = get_user_acl(user, cache_versions)
+    user_permissions = UserPermissionsProxy(user, cache_versions)
 
-    if not user_can_see_private_thread(user, user_acl, thread):
+    with check_permissions() as can_see_private_thread:
+        check_see_private_thread_permission(user_permissions, thread)
+
+    if not can_see_private_thread:
         return False  # User can't see private thread
 
     actor_is_followed = user.is_following(actor)
@@ -320,14 +284,3 @@ def watch_new_private_thread(
         send_emails=send_emails,
         read_time=read_time,
     )
-
-
-def user_can_see_private_thread(user: "User", user_acl: dict, thread: Thread) -> bool:
-    if not can_use_private_threads(user_acl):
-        return False
-
-    is_participant = ThreadParticipant.objects.filter(thread=thread, user=user).exists()
-    if not can_see_private_thread(user_acl, thread, is_participant):
-        return False
-
-    return True

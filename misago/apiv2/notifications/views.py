@@ -5,14 +5,14 @@ from rest_framework.decorators import api_view
 
 from ...conf import settings
 from ...notifications.models import Notification
-from ...notifications.permissions import allow_use_notifications
+from ...permissions.notifications import check_notifications_permission
 from ..pagination import paginate_queryset
 from .serializers import NotificationSerializer
 
 
 @api_view(["GET"])
 def notifications(request: HttpRequest) -> JsonResponse:
-    allow_use_notifications(request.user)
+    check_notifications_permission(request.user_permissions)
 
     queryset = (
         Notification.objects.filter(user=request.user)
@@ -99,7 +99,7 @@ def unread_items_exist(filter_by: str, items: List[Notification]) -> bool:
 
 @api_view(["POST"])
 def notifications_read_all(request: HttpRequest) -> HttpResponse:
-    allow_use_notifications(request.user)
+    check_notifications_permission(request.user_permissions)
 
     Notification.objects.filter(
         user=request.user,

@@ -368,6 +368,15 @@ def test_check_see_private_thread_permission_fails_if_user_is_not_thread_partici
         check_see_private_thread_permission(permissions, thread)
 
 
+def test_check_see_private_thread_post_permission_always_passes(
+    user, cache_versions, thread, post
+):
+    thread.participants.add(user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_see_private_thread_post_permission(permissions, thread, post)
+
+
 def test_filter_private_threads_queryset_returns_nothing_for_anonymous_user(
     private_threads_category, anonymous_user, cache_versions
 ):

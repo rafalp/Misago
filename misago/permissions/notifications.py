@@ -1,17 +1,14 @@
-from typing import TYPE_CHECKING
-
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext
 
-if TYPE_CHECKING:
-    from misago.users.models import User
+from .proxy import UserPermissionsProxy
 
 
-def allow_use_notifications(user: "User"):
-    if user.is_anonymous:
+def check_notifications_permission(permissions: UserPermissionsProxy):
+    if permissions.user.is_anonymous:
         raise PermissionDenied(
             pgettext(
-                "notifications permission",
+                "notifications permission error",
                 "You must be signed in to access your notifications.",
             )
         )

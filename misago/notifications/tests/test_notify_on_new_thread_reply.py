@@ -3,6 +3,8 @@ from datetime import timedelta
 import pytest
 from django.utils import timezone
 
+from ...permissions.enums import CategoryPermission
+from ...permissions.models import CategoryGroupPermission
 from ...threads.models import ThreadParticipant
 from ...users.bans import ban_user
 from ..models import Notification
@@ -87,12 +89,12 @@ def test_notify_on_new_thread_reply_notifies_user_with_email_about_thread_reply(
     assert len(mailoutbox) == 1
 
 
-def test_notify_on_new_thread_reply_checks_user_thread_permissions(
-    mocker, watched_thread_factory, other_user, thread, user_reply, mailoutbox
+def test_notify_on_new_thread_reply_checks_user_category_permissions(
+    watched_thread_factory, other_user, default_category, thread, user_reply, mailoutbox
 ):
-    can_see_thread_mock = mocker.patch(
-        "misago.notifications.threads.can_see_thread", return_value=False
-    )
+    CategoryGroupPermission.objects.filter(
+        category=default_category, permission=CategoryPermission.SEE
+    ).delete()
 
     watched_thread_factory(other_user, thread, send_emails=True)
     notify_on_new_thread_reply(user_reply.id)
@@ -103,7 +105,37 @@ def test_notify_on_new_thread_reply_checks_user_thread_permissions(
     assert not Notification.objects.exists()
     assert len(mailoutbox) == 0
 
-    can_see_thread_mock.assert_called_once()
+
+def test_notify_on_new_thread_reply_checks_user_thread_permissions(
+    watched_thread_factory, other_user, thread, user_reply, mailoutbox
+):
+    thread.is_unapproved = True
+    thread.save()
+
+    watched_thread_factory(other_user, thread, send_emails=True)
+    notify_on_new_thread_reply(user_reply.id)
+
+    other_user.refresh_from_db()
+    assert other_user.unread_notifications == 0
+
+    assert not Notification.objects.exists()
+    assert len(mailoutbox) == 0
+
+
+def test_notify_on_new_thread_reply_checks_user_post_permissions(
+    watched_thread_factory, other_user, thread, user_reply, mailoutbox
+):
+    user_reply.is_unapproved = True
+    user_reply.save()
+
+    watched_thread_factory(other_user, thread, send_emails=True)
+    notify_on_new_thread_reply(user_reply.id)
+
+    other_user.refresh_from_db()
+    assert other_user.unread_notifications == 0
+
+    assert not Notification.objects.exists()
+    assert len(mailoutbox) == 0
 
 
 def test_notify_on_new_thread_reply_checks_user_has_no_older_unread_posts(
@@ -164,6 +196,30 @@ def test_notify_on_new_thread_reply_notifies_user_with_email_about_private_threa
 
     Notification.objects.get(user=other_user, actor=user)
     assert len(mailoutbox) == 1
+
+
+def test_notify_on_new_thread_reply_checks_if_user_has_private_threads_permission(
+    watched_thread_factory,
+    other_user,
+    private_thread,
+    user,
+    members_group,
+    private_thread_user_reply,
+    mailoutbox,
+):
+    ThreadParticipant.objects.create(thread=private_thread, user=other_user)
+
+    members_group.can_use_private_threads = False
+    members_group.save()
+
+    watched_thread_factory(other_user, private_thread, send_emails=True)
+    notify_on_new_thread_reply(private_thread_user_reply.id)
+
+    other_user.refresh_from_db()
+    assert other_user.unread_notifications == 0
+
+    assert not Notification.objects.exists()
+    assert len(mailoutbox) == 0
 
 
 def test_notify_on_new_thread_reply_checks_if_user_is_private_thread_participant(
