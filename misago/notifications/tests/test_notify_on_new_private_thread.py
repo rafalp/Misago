@@ -251,7 +251,7 @@ def test_notify_on_new_private_thread_notifies_participant_if_old_notification_i
 
 
 def test_notify_on_new_private_thread_skips_participant_if_they_have_no_permission(
-    mocker, user, other_user, user_private_thread, mailoutbox
+    user, other_user, members_group, user_private_thread, mailoutbox
 ):
     other_user.notify_new_private_threads_by_followed = ThreadNotifications.NONE
     other_user.notify_new_private_threads_by_other_users = (
@@ -261,10 +261,8 @@ def test_notify_on_new_private_thread_skips_participant_if_they_have_no_permissi
 
     ThreadParticipant.objects.create(user=other_user, thread=user_private_thread)
 
-    can_use_private_threads_mock = mocker.patch(
-        "misago.notifications.threads.can_use_private_threads",
-        return_value=False,
-    )
+    members_group.can_use_private_threads = False
+    members_group.save()
 
     notify_on_new_private_thread(user.id, user_private_thread.id, [other_user.id])
 
@@ -273,8 +271,6 @@ def test_notify_on_new_private_thread_skips_participant_if_they_have_no_permissi
 
     assert not Notification.objects.exists()
     assert len(mailoutbox) == 0
-
-    can_use_private_threads_mock.assert_called_once()
 
 
 def test_notify_on_new_private_thread_skips_user_not_participating(
