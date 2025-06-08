@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.conf import settings
 from django.db import models
 
@@ -48,3 +49,14 @@ class ThreadUpdate(PluginDataModel):
                 condition=models.Q(context_id__isnull=False),
             ),
         ]
+
+    @property
+    def context_model(self) -> type[models.Model] | None:
+        if not self.context_type:
+            return None
+
+        try:
+            app_label, model_name = self.context_type.split(".")
+            return apps.get_model(app_label, model_name)
+        except LookupError:
+            return None
