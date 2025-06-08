@@ -1,0 +1,21 @@
+{% load i18n misago_avatars misago_formats %}
+<div
+  id="posts-feed-item-thread-update-{{ thread_update.id }}"
+  class="posts-feed-item{% if animate %} posts-feed-item-animate{% endif %}"
+  {% if htmx_swap %}
+    hx-swap-oob="true"
+  {% endif %}
+>
+  {% if thread_update.action == "edited_title" %}
+    {{thread_update.actor_name }} changed title from "{{ thread_update.context }}"
+  {% else %}
+    {{ thread_update.action }}
+  {% endif %}
+  <span>&mdash;</span>
+  <span
+    title="{{ thread_update.created_at|date:'DATETIME_FORMAT' }}"
+    misago-timestamp="{{ thread_update.created_at.isoformat }}"
+  >
+    {{ thread_update.created_at|date_relative }}
+  </span>
+</div>
