@@ -4,6 +4,7 @@ from django.db.models import Model
 from django.http import HttpRequest
 from django.utils import timezone
 
+from .hooks import create_thread_update_hook
 from .models import Thread, ThreadUpdate
 
 if TYPE_CHECKING:
@@ -20,7 +21,8 @@ def create_thread_update(
     context_object: Model | None = None,
     is_hidden: bool = False,
 ):
-    return _create_thread_update_action(
+    return create_thread_update_hook(
+        _create_thread_update_action,
         thread,
         action,
         actor,

@@ -13,7 +13,7 @@ from ..permissions.threads import (
 from .hooks import (
     set_posts_feed_related_objects_hook,
 )
-from .models import Post, Thread
+from .models import Post, Thread, ThreadUpdate
 from .prefetch import prefetch_posts_related_objects
 
 
@@ -24,6 +24,7 @@ class PostsFeed:
     request: HttpRequest
     thread: Thread
     posts: list[Post]
+    updates: list[ThreadUpdate]
 
     animate: set[int]
     unread: set[int]
@@ -33,11 +34,16 @@ class PostsFeed:
     counter_start: int
 
     def __init__(
-        self, request: HttpRequest, thread: Thread, posts: list[Post] | None = None
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        posts: list[Post] | None = None,
+        updates: list[ThreadUpdate] | None = None,
     ):
         self.request = request
         self.thread = thread
         self.posts = posts or []
+        self.updates = updates or []
 
         self.animate = set()
         self.unread = set()

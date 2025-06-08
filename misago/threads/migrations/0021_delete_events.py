@@ -10,6 +10,8 @@ def delete_events(apps, _):
 
 class Migration(migrations.Migration):
 
+    atomic = False
+
     dependencies = [
         ("misago_threads", "0020_convert_events_to_thread_updates"),
     ]
@@ -17,6 +19,18 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunPython(
             delete_events,
+            migrations.RunPython.noop,
+        ),
+        migrations.RunSQL(
+            """
+            UPDATE misago_threads_thread as t
+            SET last_post_id = (
+                SELECT p.id from misago_threads_post as p
+                WHERE p.thread_id = t.id
+                ORDER BY p.id DESC
+                LIMIT 1
+            )
+            """,
             migrations.RunPython.noop,
         ),
     ]

@@ -102,7 +102,7 @@ class GetThreadRepliesPagePostsQuerysetHook(
         action: GetThreadRepliesPagePostsQuerysetHookAction,
         request: HttpRequest,
         thread: Thread,
-    ) -> dict:
+    ) -> QuerySet:
         return super().__call__(action, request, thread)
 
 
