@@ -20,7 +20,7 @@ from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,
 )
-from ..models import Post, Thread
+from ..models import Post, Thread, ThreadUpdate
 from ..paginator import ThreadRepliesPaginator
 from ..postsfeed import PostsFeed, PrivateThreadPostsFeed, ThreadPostsFeed
 
@@ -84,7 +84,11 @@ class GenericView(View):
         )
 
     def get_posts_feed(
-        self, request: HttpRequest, thread: Thread, posts: list[Post]
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        posts: list[Post],
+        thread_updates: list[ThreadUpdate],
     ) -> PostsFeed:
         raise NotImplementedError()
 
@@ -117,9 +121,13 @@ class ThreadView(GenericView):
         return filter_thread_posts_queryset(request.user_permissions, thread, queryset)
 
     def get_posts_feed(
-        self, request: HttpRequest, thread: Thread, posts: list[Post]
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        posts: list[Post],
+        thread_updates: list[ThreadUpdate],
     ) -> PostsFeed:
-        return ThreadPostsFeed(request, thread, posts)
+        return ThreadPostsFeed(request, thread, posts, thread_updates)
 
 
 class PrivateThreadView(GenericView):
@@ -139,6 +147,10 @@ class PrivateThreadView(GenericView):
         )
 
     def get_posts_feed(
-        self, request: HttpRequest, thread: Thread, posts: list[Post]
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        posts: list[Post],
+        thread_updates: list[ThreadUpdate],
     ) -> PostsFeed:
-        return PrivateThreadPostsFeed(request, thread, posts)
+        return PrivateThreadPostsFeed(request, thread, posts, thread_updates)

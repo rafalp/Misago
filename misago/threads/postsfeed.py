@@ -20,6 +20,7 @@ from .prefetch import prefetch_posts_related_objects
 class PostsFeed:
     template_name: str = "misago/posts_feed/index.html"
     post_template_name: str = "misago/posts_feed/post.html"
+    thread_update_template_name: str = "misago/posts_feed/thread_update.html"
 
     request: HttpRequest
     thread: Thread
@@ -38,12 +39,12 @@ class PostsFeed:
         request: HttpRequest,
         thread: Thread,
         posts: list[Post] | None = None,
-        updates: list[ThreadUpdate] | None = None,
+        thread_updates: list[ThreadUpdate] | None = None,
     ):
         self.request = request
         self.thread = thread
         self.posts = posts or []
-        self.updates = updates or []
+        self.thread_updates = thread_updates or []
 
         self.animate = set()
         self.unread = set()
@@ -79,6 +80,10 @@ class PostsFeed:
         feed: list[dict] = []
         for i, post in enumerate(self.posts):
             feed.append(self.get_post_data(post, i + self.counter_start + 1))
+        for update in self.thread_updates:
+            feed.append(self.get_thread_update_data(update))
+
+        feed.sort(key=lambda item: item["ordering"])
 
         related_objects = prefetch_posts_related_objects(
             self.request.settings,
@@ -106,6 +111,7 @@ class PostsFeed:
             "template_name": self.post_template_name,
             "animate": post.id in self.animate,
             "type": "post",
+            "ordering": post.posted_on,
             "post": post,
             "counter": counter,
             "poster": None,
@@ -125,6 +131,15 @@ class PostsFeed:
 
     def get_edit_post_url(self, post: Post) -> str | None:
         return None
+
+    def get_thread_update_data(self, update: ThreadUpdate) -> dict:
+        return {
+            "template_name": self.thread_update_template_name,
+            "animate": False,
+            "ordering": update.created_at,
+            "type": "thread_update",
+            "thread_update": update,
+        }
 
     def set_feed_related_objects(self, feed: list[dict], related_objects: dict) -> None:
         for item in feed:

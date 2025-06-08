@@ -27,7 +27,7 @@ def convert_events_to_thread_updates(apps, _):
         if parsed_context := get_update_context_data(apps, post.event_context):
             context, context_type, context_id = parsed_context
 
-        ThreadUpdate.objects.create(
+        update = ThreadUpdate.objects.create(
             category_id=post.category_id,
             thread_id=post.thread_id,
             actor_id=post.poster_id,
@@ -36,9 +36,10 @@ def convert_events_to_thread_updates(apps, _):
             context=context,
             context_type=context_type,
             context_id=context_id,
-            created_at=post.posted_on,
             is_hidden=post.is_hidden,
         )
+
+        ThreadUpdate.objects.filter(id=update.id).update(created_at=post.posted_on)
 
 
 def get_update_context_data(
