@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Union
 
 from django.db.models import Model
+from django.http import HttpRequest
 from django.utils import timezone
 
 from .models import Thread, ThreadUpdate
@@ -14,9 +15,33 @@ def create_thread_update(
     action: str,
     actor: Union["User", None, str] = None,
     *,
+    request: HttpRequest | None = None,
     context: str | None = None,
     context_object: Model | None = None,
     is_hidden: bool = False,
+):
+    return _create_thread_update_action(
+        thread,
+        action,
+        actor,
+        request=request,
+        context=context,
+        context_object=context_object,
+        is_hidden=is_hidden,
+        plugin_data={},
+    )
+
+
+def _create_thread_update_action(
+    thread: Thread,
+    action: str,
+    actor: Union["User", None, str] = None,
+    *,
+    request: HttpRequest | None = None,
+    context: str | None = None,
+    context_object: Model | None = None,
+    is_hidden: bool = False,
+    plugin_data: dict,
 ):
     actor_id = None
     actor_name = None
@@ -49,4 +74,5 @@ def create_thread_update(
         context_id=context_id,
         created_at=timezone.now(),
         is_hidden=is_hidden,
+        plugin_data=plugin_data,
     )
