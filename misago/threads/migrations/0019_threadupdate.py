@@ -31,14 +31,14 @@ class Migration(migrations.Migration):
                 ("actor_name", models.CharField(blank=True, max_length=255, null=True)),
                 ("action", models.CharField(max_length=32)),
                 (
+                    "context",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                (
                     "context_type",
                     models.CharField(blank=True, max_length=255, null=True),
                 ),
                 ("context_id", models.CharField(blank=True, max_length=255, null=True)),
-                (
-                    "context_name",
-                    models.CharField(blank=True, max_length=255, null=True),
-                ),
                 ("is_hidden", models.BooleanField(default=False)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 (

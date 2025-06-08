@@ -28,9 +28,9 @@ class ThreadUpdate(PluginDataModel):
 
     action = models.CharField(max_length=32)
 
+    context = models.CharField(max_length=255, blank=True, null=True)
     context_type = models.CharField(max_length=255, blank=True, null=True)
     context_id = models.CharField(max_length=255, blank=True, null=True)
-    context_name = models.CharField(max_length=255, blank=True, null=True)
 
     is_hidden = models.BooleanField(default=False)
 

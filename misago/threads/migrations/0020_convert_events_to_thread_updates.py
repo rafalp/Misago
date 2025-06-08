@@ -20,12 +20,12 @@ def convert_events_to_thread_updates(apps, _):
     ThreadUpdate = apps.get_model("misago_threads", "ThreadUpdate")
 
     for post in Post.objects.filter(is_event=True).order_by("id"):
+        context = None
         context_type = None
         context_id = None
-        context_name = None
 
         if parsed_context := get_update_context_data(apps, post.event_context):
-            context_type, context_id, context_name = parsed_context
+            context, context_type, context_id = parsed_context
 
         ThreadUpdate.objects.create(
             category_id=post.category_id,
@@ -33,9 +33,9 @@ def convert_events_to_thread_updates(apps, _):
             actor_id=post.poster_id,
             actor_name=post.poster_name,
             action=EVENT_TYPES.get(post.event_type, post.event_type),
+            context=context,
             context_type=context_type,
             context_id=context_id,
-            context_name=context_name,
             created_at=post.posted_on,
             is_hidden=post.is_hidden,
         )
@@ -48,24 +48,24 @@ def get_update_context_data(
         return None
 
     if from_category := event_context.get("from_category"):
+        context = from_category["name"]
         context_type = "misago_categories.Category"
         context_id = get_context_id_from_url(from_category["url"])
-        context_name = from_category["name"]
-        return context_type, context_id, context_name
+        return context, context_type, context_id
 
     if user := event_context.get("user"):
+        context = user["username"]
         context_type = "misago_users.User"
         context_id = user.get("id") or get_context_id_from_url(user["url"])
-        context_name = user["username"]
-        return context_type, context_id, context_name
+        return context, context_type, context_id
 
     if old_title := event_context.get("old_title"):
-        context_name = old_title
-        return None, None, context_name
+        context = old_title
+        return context, None, None
 
     if merged_thread := event_context.get("merged_thread"):
-        context_name = merged_thread
-        return None, None, context_name
+        context = merged_thread
+        return context, None, None
 
     return None
 
