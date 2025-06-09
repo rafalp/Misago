@@ -32,7 +32,7 @@ class ThreadRepliesPaginator(Paginator):
     def page(self, number) -> "ThreadRepliesPage":
         number = self.validate_number(number)
 
-        next_page_head = None
+        next_page_first_item = None
         bottom = (number - 1) * self.per_page
         top = bottom + self.per_page
         if top + self.orphans >= self.count:
@@ -42,14 +42,14 @@ class ThreadRepliesPaginator(Paginator):
             object_list = self.object_list[bottom:top]
         else:
             object_list = list(self.object_list[bottom : top + 1])
-            object_list, next_page_head = object_list[:-1], object_list[-1]
+            object_list, next_page_first_item = object_list[:-1], object_list[-1]
 
-        return ThreadRepliesPage(object_list, next_page_head, number, self)
+        return ThreadRepliesPage(object_list, next_page_first_item, number, self)
 
 
 class ThreadRepliesPage(Page):
-    def __init__(self, object_list, next_page_head, number, paginator):
+    def __init__(self, object_list, next_page_first_item, number, paginator):
         self.object_list = object_list
-        self.next_page_head = next_page_head
+        self.tail = next_page_first_item
         self.number = number
         self.paginator = paginator

@@ -151,8 +151,8 @@ class RepliesView(View):
         updates = ThreadUpdate.objects.filter(thread=thread).order_by("-id")
         if page.number > 1:
             updates = updates.filter(created_at__gt=posts[0].posted_on)
-        if page.next_page_head:
-            updates = updates.filter(created_at__lt=page.next_page_head.posted_on)
+        if page.next_page_first_item:
+            updates = updates.filter(created_at__lt=page.next_page_first_item.posted_on)
         return list(reversed(updates[:30]))
 
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:

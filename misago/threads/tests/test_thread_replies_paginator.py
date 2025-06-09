@@ -104,101 +104,101 @@ def test_thread_replies_paginator_counts_pages_with_orphans(thread):
     assert paginator.num_pages == 3
 
 
-def test_thread_replies_paginator_without_orphans_returns_next_page_head(thread):
+def test_thread_replies_paginator_without_orphans_returns_next_page_first_item(thread):
     queryset = Post.objects.filter(thread=thread).order_by("id")
 
     # First item page
     paginator = ThreadRepliesPaginator(queryset, 5, 0)
-    assert paginator.page(1).next_page_head is None
+    assert paginator.page(1).next_page_first_item is None
 
     # First page
     for _ in range(4):
         reply_thread(thread)
         paginator = ThreadRepliesPaginator(queryset, 5, 0)
-        assert paginator.page(1).next_page_head is None
+        assert paginator.page(1).next_page_first_item is None
 
     # Second page items
     for _ in range(5):
         reply_thread(thread)
         paginator = ThreadRepliesPaginator(queryset, 5, 0)
-        assert paginator.page(1).next_page_head == queryset[5:].first()
-        assert paginator.page(2).next_page_head is None
+        assert paginator.page(1).next_page_first_item == queryset[5:].first()
+        assert paginator.page(2).next_page_first_item is None
 
     # Third page items
     for _ in range(5):
         reply_thread(thread)
         paginator = ThreadRepliesPaginator(queryset, 5, 0)
-        assert paginator.page(1).next_page_head == queryset[5:].first()
-        assert paginator.page(2).next_page_head == queryset[10:].first()
-        assert paginator.page(3).next_page_head is None
+        assert paginator.page(1).next_page_first_item == queryset[5:].first()
+        assert paginator.page(2).next_page_first_item == queryset[10:].first()
+        assert paginator.page(3).next_page_first_item is None
 
 
-def test_thread_replies_paginator_with_orphans_returns_next_page_head(thread):
+def test_thread_replies_paginator_with_orphans_returns_next_page_first_item(thread):
     queryset = Post.objects.filter(thread=thread).order_by("id")
 
     # First item page
     paginator = ThreadRepliesPaginator(queryset, 5, 2)
-    assert paginator.page(1).next_page_head is None
+    assert paginator.page(1).next_page_first_item is None
 
     # First page items
     for _ in range(4):
         reply_thread(thread)
         paginator = ThreadRepliesPaginator(queryset, 5, 2)
-        assert paginator.page(1).next_page_head is None
+        assert paginator.page(1).next_page_first_item is None
 
     # Add orphans
     for _ in range(2):
         reply_thread(thread)
         paginator = ThreadRepliesPaginator(queryset, 5, 2)
-        assert paginator.page(1).next_page_head is None
+        assert paginator.page(1).next_page_first_item is None
 
     # Orphans + 1 produces second page
     reply_thread(thread)
     paginator = ThreadRepliesPaginator(queryset, 5, 2)
-    assert paginator.page(1).next_page_head == queryset[5:].first()
+    assert paginator.page(1).next_page_first_item == queryset[5:].first()
 
     # Fill in second page items
     for i in range(2):
         reply_thread(thread)
         paginator = ThreadRepliesPaginator(queryset, 5, 2)
-        assert paginator.page(1).next_page_head == queryset[5:].first()
-        assert paginator.page(2).next_page_head is None
+        assert paginator.page(1).next_page_first_item == queryset[5:].first()
+        assert paginator.page(2).next_page_first_item is None
 
     # Add orphans to second page
     for i in range(2):
         reply_thread(thread)
         paginator = ThreadRepliesPaginator(queryset, 5, 2)
-        assert paginator.page(1).next_page_head == queryset[5:].first()
-        assert paginator.page(2).next_page_head is None
+        assert paginator.page(1).next_page_first_item == queryset[5:].first()
+        assert paginator.page(2).next_page_first_item is None
 
     # Orphans + 1 produces third page
     reply_thread(thread)
     paginator = ThreadRepliesPaginator(queryset, 5, 2)
-    assert paginator.page(1).next_page_head == queryset[5:].first()
-    assert paginator.page(2).next_page_head == queryset[10:].first()
+    assert paginator.page(1).next_page_first_item == queryset[5:].first()
+    assert paginator.page(2).next_page_first_item == queryset[10:].first()
 
     # Fill in third page
     for i in range(2):
         reply_thread(thread)
         paginator = ThreadRepliesPaginator(queryset, 5, 2)
-        assert paginator.page(1).next_page_head == queryset[5:].first()
-        assert paginator.page(2).next_page_head == queryset[10:].first()
-        assert paginator.page(3).next_page_head is None
+        assert paginator.page(1).next_page_first_item == queryset[5:].first()
+        assert paginator.page(2).next_page_first_item == queryset[10:].first()
+        assert paginator.page(3).next_page_first_item is None
 
     # Add orphans to third page
     for i in range(2):
         reply_thread(thread)
         paginator = ThreadRepliesPaginator(queryset, 5, 2)
-        assert paginator.page(1).next_page_head == queryset[5:].first()
-        assert paginator.page(2).next_page_head == queryset[10:].first()
-        assert paginator.page(3).next_page_head is None
+        assert paginator.page(1).next_page_first_item == queryset[5:].first()
+        assert paginator.page(2).next_page_first_item == queryset[10:].first()
+        assert paginator.page(3).next_page_first_item is None
 
     # Orphans + 1 produces four page
     reply_thread(thread)
     paginator = ThreadRepliesPaginator(queryset, 5, 2)
-    assert paginator.page(1).next_page_head == queryset[5:].first()
-    assert paginator.page(2).next_page_head == queryset[10:].first()
-    assert paginator.page(3).next_page_head == queryset[15:].first()
+    assert paginator.page(1).next_page_first_item == queryset[5:].first()
+    assert paginator.page(2).next_page_first_item == queryset[10:].first()
+    assert paginator.page(3).next_page_first_item == queryset[15:].first()
 
 
 def test_thread_replies_paginator_without_orphans_calculates_item_page(thread):
