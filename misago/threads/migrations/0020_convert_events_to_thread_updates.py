@@ -50,13 +50,13 @@ def get_update_context_data(
 
     if from_category := event_context.get("from_category"):
         context = from_category["name"]
-        context_type = "misago_categories.Category"
+        context_type = "misago_categories.category"
         context_id = get_context_id_from_url(from_category["url"])
         return context, context_type, context_id
 
     if user := event_context.get("user"):
         context = user["username"]
-        context_type = "misago_users.User"
+        context_type = "misago_users.user"
         context_id = user.get("id") or get_context_id_from_url(user["url"])
         return context, context_type, context_id
 

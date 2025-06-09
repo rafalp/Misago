@@ -147,7 +147,7 @@ class RepliesView(View):
         thread: Thread,
         page: ThreadRepliesPage,
         posts: list[Post],
-    ):
+    ) -> list[ThreadUpdate]:
         updates = ThreadUpdate.objects.filter(thread=thread).order_by("-id")
         if page.number > 1:
             updates = updates.filter(created_at__gt=posts[0].posted_on)
