@@ -50,6 +50,6 @@ class ThreadRepliesPaginator(Paginator):
 class ThreadRepliesPage(Page):
     def __init__(self, object_list, next_page_first_item, number, paginator):
         self.object_list = object_list
-        self.tail = next_page_first_item
+        self.next_page_first_item = next_page_first_item
         self.number = number
         self.paginator = paginator

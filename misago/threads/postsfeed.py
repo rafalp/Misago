@@ -91,6 +91,7 @@ class PostsFeed:
             self.posts,
             categories=[self.thread.category],
             threads=[self.thread],
+            thread_updates=self.thread_updates,
         )
         set_posts_feed_related_objects_hook(
             self.set_feed_related_objects, feed, related_objects

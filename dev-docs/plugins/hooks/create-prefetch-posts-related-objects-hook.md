@@ -29,6 +29,7 @@ def custom_create_prefetch_posts_related_objects_filter(
     *,
     categories: Iterable[Category] | None=None,
     threads: Iterable[Thread] | None=None,
+    thread_updates: Iterable[ThreadUpdate] | None=None,
     attachments: Iterable[Attachment] | None=None,
     users: Iterable['User'] | None=None,
 ) -> 'PrefetchPostsRelatedObjects':
@@ -72,6 +73,11 @@ Iterable of categories that were already loaded. Defaults to `None` if not provi
 Iterable of threads that were already loaded. Defaults to `None` if not provided.
 
 
+#### `thread_updates: Iterable[ThreadUpdate] | None = None,`
+
+Iterable of `ThreadUpdate` instances to prefetch related objects for. Defaults to `None` if not provided.
+
+
 #### `attachments: Iterable[Attachment] | None = None`
 
 Iterable of attachments that were already loaded. Defaults to `None` if not provided.
@@ -97,6 +103,7 @@ def create_prefetch_posts_related_objects_action(
     *,
     categories: Iterable[Category] | None=None,
     threads: Iterable[Thread] | None=None,
+    thread_updates: Iterable[ThreadUpdate] | None=None,
     attachments: Iterable[Attachment] | None=None,
     users: Iterable['User'] | None=None,
 ) -> 'PrefetchPostsRelatedObjects':
@@ -133,6 +140,11 @@ Iterable of categories that were already loaded. Defaults to `None` if not provi
 Iterable of threads that were already loaded. Defaults to `None` if not provided.
 
 
+#### `thread_updates: Iterable[ThreadUpdate] | None = None,`
+
+Iterable of `ThreadUpdate` instances to prefetch related objects for. Defaults to `None` if not provided.
+
+
 #### `attachments: Iterable[Attachment] | None = None`
 
 Iterable of attachments that were already loaded. Defaults to `None` if not provided.
@@ -160,7 +172,7 @@ from misago.categories.models import Category
 from misago.conf.dynamicsettings import DynamicSettings
 from misago.permissions.proxy import UserPermissionsProxy
 from misago.plugins.hooks import FilterHook
-from misago.threads.models import Post, Thread
+from misago.threads.models import Post, Thread, ThreadUpdate
 from misago.threads.prefetch import PrefetchPostsRelatedObjects
 from misago.users.models import User
 
@@ -192,6 +204,7 @@ def include_custom_filter(
     *,
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
+    thread_updates: Iterable[ThreadUpdate] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> PrefetchPostsRelatedObjects:
@@ -201,6 +214,7 @@ def include_custom_filter(
         posts,
         categories=categories,
         threads=threads,
+        thread_updates=thread_updates,
         attachments=attachments,
         users=users,
     )

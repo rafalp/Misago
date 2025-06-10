@@ -5,7 +5,7 @@ from ...categories.models import Category
 from ...conf.dynamicsettings import DynamicSettings
 from ...permissions.proxy import UserPermissionsProxy
 from ...plugins.hooks import FilterHook
-from ..models import Post, Thread
+from ..models import Post, Thread, ThreadUpdate
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -41,6 +41,11 @@ class CreatePrefetchPostsRelatedObjectsHookAction(Protocol):
 
     Iterable of threads that were already loaded. Defaults to `None` if not provided.
 
+    ## `thread_updates: Iterable[ThreadUpdate] | None = None,`
+
+    Iterable of `ThreadUpdate` instances to prefetch related objects for.
+    Defaults to `None` if not provided.
+
     ## `attachments: Iterable[Attachment] | None = None`
 
     Iterable of attachments that were already loaded. Defaults to `None` if not
@@ -63,6 +68,7 @@ class CreatePrefetchPostsRelatedObjectsHookAction(Protocol):
         *,
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
+        thread_updates: Iterable[ThreadUpdate] | None = None,
         attachments: Iterable[Attachment] | None = None,
         users: Iterable["User"] | None = None,
     ) -> "PrefetchPostsRelatedObjects": ...
@@ -103,6 +109,11 @@ class CreatePrefetchPostsRelatedObjectsHookFilter(Protocol):
 
     Iterable of threads that were already loaded. Defaults to `None` if not provided.
 
+    ## `thread_updates: Iterable[ThreadUpdate] | None = None,`
+
+    Iterable of `ThreadUpdate` instances to prefetch related objects for.
+    Defaults to `None` if not provided.
+
     ## `attachments: Iterable[Attachment] | None = None`
 
     Iterable of attachments that were already loaded. Defaults to `None` if not
@@ -126,6 +137,7 @@ class CreatePrefetchPostsRelatedObjectsHookFilter(Protocol):
         *,
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
+        thread_updates: Iterable[ThreadUpdate] | None = None,
         attachments: Iterable[Attachment] | None = None,
         users: Iterable["User"] | None = None,
     ) -> "PrefetchPostsRelatedObjects": ...
@@ -165,7 +177,7 @@ class CreatePrefetchPostsRelatedObjectsHook(
     from misago.conf.dynamicsettings import DynamicSettings
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.plugins.hooks import FilterHook
-    from misago.threads.models import Post, Thread
+    from misago.threads.models import Post, Thread, ThreadUpdate
     from misago.threads.prefetch import PrefetchPostsRelatedObjects
     from misago.users.models import User
 
@@ -197,6 +209,7 @@ class CreatePrefetchPostsRelatedObjectsHook(
         *,
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
+        thread_updates: Iterable[ThreadUpdate] | None = None,
         attachments: Iterable[Attachment] | None = None,
         users: Iterable["User"] | None = None,
     ) -> PrefetchPostsRelatedObjects:
@@ -206,6 +219,7 @@ class CreatePrefetchPostsRelatedObjectsHook(
             posts,
             categories=categories,
             threads=threads,
+            thread_updates=thread_updates,
             attachments=attachments,
             users=users,
         )
@@ -227,6 +241,7 @@ class CreatePrefetchPostsRelatedObjectsHook(
         *,
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
+        thread_updates: Iterable[ThreadUpdate] | None = None,
         attachments: Iterable[Attachment] | None = None,
         users: Iterable["User"] | None = None,
     ) -> "PrefetchPostsRelatedObjects":
@@ -237,6 +252,7 @@ class CreatePrefetchPostsRelatedObjectsHook(
             posts,
             categories=categories,
             threads=threads,
+            thread_updates=thread_updates,
             attachments=attachments,
             users=users,
         )

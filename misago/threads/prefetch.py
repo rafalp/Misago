@@ -13,7 +13,7 @@ from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.checkutils import check_permissions
 from ..users.models import Group
 from .hooks import create_prefetch_posts_related_objects_hook
-from .models import Post, Thread
+from .models import Post, Thread, ThreadUpdate
 from .privatethreads import prefetch_private_thread_member_ids
 
 if TYPE_CHECKING:
@@ -35,6 +35,7 @@ def prefetch_posts_related_objects(
     *,
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
+    thread_updates: Iterable[ThreadUpdate] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> dict:
@@ -45,6 +46,7 @@ def prefetch_posts_related_objects(
         posts,
         categories=categories,
         threads=threads,
+        thread_updates=thread_updates,
         attachments=attachments,
         users=users,
     )
@@ -58,15 +60,17 @@ def _create_prefetch_posts_related_objects_action(
     *,
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
+    thread_updates: Iterable[ThreadUpdate] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> "PrefetchPostsRelatedObjects":
     prefetch = PrefetchPostsRelatedObjects(
         settings,
         permissions,
-        posts=posts,
         categories=categories,
         threads=threads,
+        posts=posts,
+        thread_updates=thread_updates,
         attachments=attachments,
         users=users,
     )
@@ -108,6 +112,7 @@ class PrefetchPostsRelatedObjects:
     categories: list[Category]
     threads: list[Thread]
     posts: list[Post]
+    thread_updates: list[ThreadUpdate]
     attachments: list[Attachment]
     users: list[User]
     extra_kwargs: dict
@@ -120,6 +125,7 @@ class PrefetchPostsRelatedObjects:
         posts: Iterable[Post],
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
+        thread_updates: Iterable[ThreadUpdate] | None = None,
         attachments: Iterable[Attachment] | None = None,
         users: Iterable["User"] | None = None,
         **kwargs,
@@ -132,6 +138,7 @@ class PrefetchPostsRelatedObjects:
         self.categories = categories or []
         self.threads = threads or []
         self.posts = list(posts)
+        self.thread_updates = thread_updates or []
         self.attachments = attachments or []
         self.users = users or []
 
@@ -151,6 +158,7 @@ class PrefetchPostsRelatedObjects:
             "threads": {t.id: t for t in self.threads if t.id},
             "posts": {p.id: p for p in self.posts if p.id},
             "visible_posts": set(),
+            "thread_updates": {u.id: u for u in self.thread_updates},
             "attachments": {a.id: a for a in self.attachments},
             "attachment_errors": {},
             "users": {u.id: u for u in self.users},

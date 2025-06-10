@@ -148,7 +148,7 @@ class RepliesView(View):
         page: ThreadRepliesPage,
         posts: list[Post],
     ) -> list[ThreadUpdate]:
-        queryset = self.get_thread_updates_queryset(request, thread, page, posts)
+        queryset = self.get_thread_updates_queryset(request, thread)
         if page.number > 1:
             queryset = queryset.filter(created_at__gt=posts[0].posted_on)
         if page.next_page_first_item:
@@ -274,16 +274,6 @@ class ThreadRepliesView(RepliesView, ThreadView):
             super().get_thread_posts_queryset, request, thread
         )
 
-    def get_thread_updates_queryset(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        page: ThreadRepliesPage,
-        posts: list[Post],
-    ):
-        queryset = super().get_thread_updates_queryset(request, thread, page, posts)
-        return queryset
-
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
         if request.user.is_anonymous:
             return False
@@ -352,16 +342,6 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         return get_private_thread_replies_page_posts_queryset_hook(
             super().get_thread_posts_queryset, request, thread
         )
-
-    def get_thread_updates_queryset(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        page: ThreadRepliesPage,
-        posts: list[Post],
-    ):
-        queryset = super().get_thread_updates_queryset(request, thread, page, posts)
-        return queryset
 
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
         if request.user.is_anonymous:
