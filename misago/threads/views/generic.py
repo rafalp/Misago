@@ -91,7 +91,7 @@ class GenericView(View):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadUpdate],
+        thread_updates: list[ThreadUpdate] | None = None,
     ) -> PostsFeed:
         raise NotImplementedError()
 
@@ -166,7 +166,7 @@ class ThreadView(GenericView):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadUpdate],
+        thread_updates: list[ThreadUpdate] | None = None,
     ) -> PostsFeed:
         return ThreadPostsFeed(request, thread, posts, thread_updates)
 
@@ -202,6 +202,6 @@ class PrivateThreadView(GenericView):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadUpdate],
+        thread_updates: list[ThreadUpdate] | None = None,
     ) -> PostsFeed:
         return PrivateThreadPostsFeed(request, thread, posts, thread_updates)

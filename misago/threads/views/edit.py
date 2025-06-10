@@ -38,7 +38,7 @@ from ..hooks import (
     get_edit_thread_post_page_context_data_hook,
 )
 from ..models import Post, Thread
-from ..prefetch import prefetch_posts_related_objects
+from ..prefetch import prefetch_posts_feed_related_objects
 from .redirect import private_thread_post_redirect, thread_post_redirect
 from .generic import PrivateThreadView, ThreadView
 
@@ -149,7 +149,7 @@ class EditView(View):
         context = self.get_context_data(request, post, formset)
 
         if preview:
-            related_objects = prefetch_posts_related_objects(
+            related_objects = prefetch_posts_feed_related_objects(
                 request.settings,
                 request.user_permissions,
                 [preview.post],

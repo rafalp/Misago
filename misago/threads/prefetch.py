@@ -104,7 +104,7 @@ class PrefetchPostsFeedRelationsOperation(Protocol):
 
 
 class PrefetchPostsFeedRelatedObjects:
-    ops: list[PrefetchPostsFeedRelationsOperation]
+    operations: list[PrefetchPostsFeedRelationsOperation]
 
     settings: DynamicSettings
     permissions: User
@@ -130,7 +130,7 @@ class PrefetchPostsFeedRelatedObjects:
         users: Iterable["User"] | None = None,
         **kwargs,
     ):
-        self.ops = []
+        self.operations = []
 
         self.settings = settings
         self.permissions = permissions
@@ -169,31 +169,34 @@ class PrefetchPostsFeedRelatedObjects:
         if self.posts and not self.posts[0].id:
             data["metadata"] = self.posts[0].metadata
 
-        for op in self.ops:
+        for op in self.operations:
             op(data, self.settings, self.permissions)
 
         return data
 
+    def __contains__(self, op: PrefetchPostsFeedRelationsOperation) -> bool:
+        return op in self.operations
+
     def add(self, op: PrefetchPostsFeedRelationsOperation):
-        self.ops.append(op)
+        self.operations.append(op)
 
     def add_before(
         self,
         before: PrefetchPostsFeedRelationsOperation,
         op: PrefetchPostsFeedRelationsOperation,
     ):
-        prepended = False
-        new_ops: list[PrefetchPostsFeedRelationsOperation] = []
+        success = False
+        new_operations: list[PrefetchPostsFeedRelationsOperation] = []
 
-        for existing_step in self.ops:
+        for existing_step in self.operations:
             if existing_step == before:
-                new_ops.append(op)
-                prepended = True
-            new_ops.append(existing_step)
+                new_operations.append(op)
+                success = True
+            new_operations.append(existing_step)
 
-        self.ops = new_ops
+        self.operations = new_operations
 
-        if not prepended:
+        if not success:
             raise ValueError(
                 f"Operation '{before}' doesn't exist in this loader instance"
             )
@@ -203,18 +206,18 @@ class PrefetchPostsFeedRelatedObjects:
         after: PrefetchPostsFeedRelationsOperation,
         op: PrefetchPostsFeedRelationsOperation,
     ):
-        inserted = False
-        new_ops: list[PrefetchPostsFeedRelationsOperation] = []
+        success = False
+        new_operations: list[PrefetchPostsFeedRelationsOperation] = []
 
-        for existing_step in self.ops:
-            new_ops.append(existing_step)
+        for existing_step in self.operations:
+            new_operations.append(existing_step)
             if existing_step == after:
-                new_ops.append(op)
-                inserted = True
+                new_operations.append(op)
+                success = True
 
-        self.ops = new_ops
+        self.operations = new_operations
 
-        if not inserted:
+        if not success:
             raise ValueError(
                 f"Operation '{after}' doesn't exist in this loader instance"
             )

@@ -14,7 +14,7 @@ from .hooks import (
     set_posts_feed_related_objects_hook,
 )
 from .models import Post, Thread, ThreadUpdate
-from .prefetch import prefetch_posts_related_objects
+from .prefetch import prefetch_posts_feed_related_objects
 
 
 class PostsFeed:
@@ -85,7 +85,7 @@ class PostsFeed:
 
         feed.sort(key=lambda item: item["ordering"])
 
-        related_objects = prefetch_posts_related_objects(
+        related_objects = prefetch_posts_feed_related_objects(
             self.request.settings,
             self.request.user_permissions,
             self.posts,

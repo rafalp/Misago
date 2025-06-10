@@ -1,9 +1,96 @@
+import pytest
+
 from ...conf.test import override_dynamic_settings
 from ...permissions.proxy import UserPermissionsProxy
-from ..prefetch import prefetch_posts_related_objects
+from ..prefetch import (
+    PrefetchPostsFeedRelatedObjects,
+    prefetch_posts_feed_related_objects,
+)
 
 
-def test_prefetch_posts_related_objects_preloads_categories(
+def apple(*args):
+    pass
+
+
+def orange(*args):
+    pass
+
+
+def tomato(*args):
+    pass
+
+
+def test_prefetch_posts_feed_related_objects_add_appends_operation(
+    dynamic_settings, cache_versions, user
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    prefetch = PrefetchPostsFeedRelatedObjects(dynamic_settings, permissions, posts=[])
+
+    prefetch.add(apple)
+    assert prefetch.operations == [apple]
+
+
+def test_prefetch_posts_feed_related_objects_add_before_inserts_operation(
+    dynamic_settings, cache_versions, user
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    prefetch = PrefetchPostsFeedRelatedObjects(dynamic_settings, permissions, posts=[])
+
+    prefetch.add(apple)
+    prefetch.add(tomato)
+
+    prefetch.add_before(tomato, orange)
+
+
+def test_prefetch_posts_feed_related_objects_add_before_raises_for_not_found_item(
+    dynamic_settings, cache_versions, user
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    prefetch = PrefetchPostsFeedRelatedObjects(dynamic_settings, permissions, posts=[])
+
+    prefetch.add(apple)
+
+    with pytest.raises(ValueError):
+        prefetch.add_before(tomato, orange)
+
+
+def test_prefetch_posts_feed_related_objects_add_after_inserts_operation(
+    dynamic_settings, cache_versions, user
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    prefetch = PrefetchPostsFeedRelatedObjects(dynamic_settings, permissions, posts=[])
+
+    prefetch.add(apple)
+    prefetch.add(tomato)
+
+    prefetch.add_after(apple, orange)
+    assert prefetch.operations == [apple, orange, tomato]
+
+
+def test_prefetch_posts_feed_related_objects_add_after_raises_for_not_found_item(
+    dynamic_settings, cache_versions, user
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    prefetch = PrefetchPostsFeedRelatedObjects(dynamic_settings, permissions, posts=[])
+
+    prefetch.add(apple)
+
+    with pytest.raises(ValueError):
+        prefetch.add_after(tomato, orange)
+
+
+def test_prefetch_posts_feed_related_objects_supports_membership_test(
+    dynamic_settings, cache_versions, user
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    prefetch = PrefetchPostsFeedRelatedObjects(dynamic_settings, permissions, posts=[])
+
+    prefetch.add(apple)
+    assert apple in prefetch
+    assert orange not in prefetch
+
+
+def test_prefetch_posts_feed_related_objects_preloads_categories(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -16,7 +103,7 @@ def test_prefetch_posts_related_objects_preloads_categories(
     permissions.is_global_moderator
 
     with django_assert_num_queries(0):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings,
             permissions,
             [],
@@ -29,7 +116,7 @@ def test_prefetch_posts_related_objects_preloads_categories(
         }
 
 
-def test_prefetch_posts_related_objects_prefetches_threads_categories(
+def test_prefetch_posts_feed_related_objects_prefetches_threads_categories(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -43,13 +130,13 @@ def test_prefetch_posts_related_objects_prefetches_threads_categories(
     permissions.is_global_moderator
 
     with django_assert_num_queries(1):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [], threads=[thread, user_thread]
         )
         assert data["categories"] == {default_category.id: default_category}
 
 
-def test_prefetch_posts_related_objects_prefetches_posts_categories(
+def test_prefetch_posts_feed_related_objects_prefetches_posts_categories(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -64,13 +151,13 @@ def test_prefetch_posts_related_objects_prefetches_posts_categories(
     permissions.is_global_moderator
 
     with django_assert_num_queries(5):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [post, user_reply, other_user_reply]
         )
         assert data["categories"] == {default_category.id: default_category}
 
 
-def test_prefetch_posts_related_objects_prefetches_attachments_categories(
+def test_prefetch_posts_feed_related_objects_prefetches_attachments_categories(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -91,7 +178,7 @@ def test_prefetch_posts_related_objects_prefetches_attachments_categories(
     permissions.is_global_moderator
 
     with django_assert_num_queries(3):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings,
             permissions,
             [],
@@ -100,7 +187,7 @@ def test_prefetch_posts_related_objects_prefetches_attachments_categories(
         assert data["categories"] == {default_category.id: default_category}
 
 
-def test_prefetch_posts_related_objects_preloads_threads(
+def test_prefetch_posts_feed_related_objects_preloads_threads(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -113,7 +200,7 @@ def test_prefetch_posts_related_objects_preloads_threads(
     permissions.is_global_moderator
 
     with django_assert_num_queries(1):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [], threads=[thread, user_thread]
         )
         assert data["threads"] == {
@@ -122,7 +209,7 @@ def test_prefetch_posts_related_objects_preloads_threads(
         }
 
 
-def test_prefetch_posts_related_objects_prefetches_posts_threads(
+def test_prefetch_posts_feed_related_objects_prefetches_posts_threads(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -137,13 +224,13 @@ def test_prefetch_posts_related_objects_prefetches_posts_threads(
     permissions.is_global_moderator
 
     with django_assert_num_queries(5):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [post, user_reply, other_user_reply]
         )
         assert data["threads"] == {thread.id: thread}
 
 
-def test_prefetch_posts_related_objects_prefetches_attachments_threads(
+def test_prefetch_posts_feed_related_objects_prefetches_attachments_threads(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -160,13 +247,13 @@ def test_prefetch_posts_related_objects_prefetches_attachments_threads(
     permissions.is_global_moderator
 
     with django_assert_num_queries(3):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [], attachments=[text_attachment]
         )
         assert data["threads"] == {thread.id: thread}
 
 
-def test_prefetch_posts_related_objects_prefetches_private_threads_members(
+def test_prefetch_posts_feed_related_objects_prefetches_private_threads_members(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -178,7 +265,7 @@ def test_prefetch_posts_related_objects_prefetches_private_threads_members(
     permissions.is_global_moderator
 
     with django_assert_num_queries(2):
-        prefetch_posts_related_objects(
+        prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [], threads=[user_private_thread]
         )
 
@@ -186,7 +273,7 @@ def test_prefetch_posts_related_objects_prefetches_private_threads_members(
         user_private_thread.private_thread_member_ids
 
 
-def test_prefetch_posts_related_objects_preloads_posts(
+def test_prefetch_posts_feed_related_objects_preloads_posts(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -199,7 +286,7 @@ def test_prefetch_posts_related_objects_preloads_posts(
     permissions.is_global_moderator
 
     with django_assert_num_queries(5):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [post, user_reply]
         )
         assert data["posts"] == {
@@ -208,7 +295,7 @@ def test_prefetch_posts_related_objects_preloads_posts(
         }
 
 
-def test_prefetch_posts_related_objects_prefetches_quoted_posts(
+def test_prefetch_posts_feed_related_objects_prefetches_quoted_posts(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -223,14 +310,16 @@ def test_prefetch_posts_related_objects_prefetches_quoted_posts(
     post.metadata["posts"] = [user_reply.id]
 
     with django_assert_num_queries(6):
-        data = prefetch_posts_related_objects(dynamic_settings, permissions, [post])
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings, permissions, [post]
+        )
         assert data["posts"] == {
             post.id: post,
             user_reply.id: user_reply,
         }
 
 
-def test_prefetch_posts_related_objects_prefetches_quoted_posts_for_unsaved_post(
+def test_prefetch_posts_feed_related_objects_prefetches_quoted_posts_for_unsaved_post(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -246,13 +335,15 @@ def test_prefetch_posts_related_objects_prefetches_quoted_posts_for_unsaved_post
     post.metadata["posts"] = [user_reply.id]
 
     with django_assert_num_queries(5):
-        data = prefetch_posts_related_objects(dynamic_settings, permissions, [post])
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings, permissions, [post]
+        )
         assert data["posts"] == {
             user_reply.id: user_reply,
         }
 
 
-def test_prefetch_posts_related_objects_prefetches_attachments_posts(
+def test_prefetch_posts_feed_related_objects_prefetches_attachments_posts(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -273,7 +364,7 @@ def test_prefetch_posts_related_objects_prefetches_attachments_posts(
     permissions.is_global_moderator
 
     with django_assert_num_queries(5):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings,
             permissions,
             [],
@@ -285,7 +376,7 @@ def test_prefetch_posts_related_objects_prefetches_attachments_posts(
         }
 
 
-def test_prefetch_posts_related_objects_preloads_attachments(
+def test_prefetch_posts_feed_related_objects_preloads_attachments(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -305,7 +396,7 @@ def test_prefetch_posts_related_objects_preloads_attachments(
     permissions.is_global_moderator
 
     with django_assert_num_queries(3):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings,
             permissions,
             [],
@@ -317,7 +408,7 @@ def test_prefetch_posts_related_objects_preloads_attachments(
         }
 
 
-def test_prefetch_posts_related_objects_removes_preloaded_attachments_without_permission(
+def test_prefetch_posts_feed_related_objects_removes_preloaded_attachments_without_permission(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -330,7 +421,7 @@ def test_prefetch_posts_related_objects_removes_preloaded_attachments_without_pe
     permissions.is_global_moderator
 
     with django_assert_num_queries(1):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings,
             permissions,
             [],
@@ -341,7 +432,7 @@ def test_prefetch_posts_related_objects_removes_preloaded_attachments_without_pe
         }
 
 
-def test_prefetch_posts_related_objects_fetches_posts_attachments(
+def test_prefetch_posts_feed_related_objects_fetches_posts_attachments(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -362,7 +453,7 @@ def test_prefetch_posts_related_objects_fetches_posts_attachments(
     permissions.is_global_moderator
 
     with django_assert_num_queries(5):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [post, user_reply]
         )
         assert data["attachments"] == {
@@ -371,7 +462,7 @@ def test_prefetch_posts_related_objects_fetches_posts_attachments(
         }
 
 
-def test_prefetch_posts_related_objects_fetches_posts_metadata_attachments(
+def test_prefetch_posts_feed_related_objects_fetches_posts_metadata_attachments(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -399,7 +490,7 @@ def test_prefetch_posts_related_objects_fetches_posts_metadata_attachments(
     permissions.is_global_moderator
 
     with django_assert_num_queries(6):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [post, user_reply]
         )
         assert data["attachments"] == {
@@ -409,7 +500,7 @@ def test_prefetch_posts_related_objects_fetches_posts_metadata_attachments(
 
 
 @override_dynamic_settings(additional_embedded_attachments_limit=0)
-def test_prefetch_posts_related_objects_doesnt_fetch_posts_metadata_attachments_if_its_disabled(
+def test_prefetch_posts_feed_related_objects_doesnt_fetch_posts_metadata_attachments_if_its_disabled(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -437,14 +528,14 @@ def test_prefetch_posts_related_objects_doesnt_fetch_posts_metadata_attachments_
     permissions.is_global_moderator
 
     with django_assert_num_queries(5):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [post, user_reply]
         )
         assert data["attachments"] == {}
 
 
 @override_dynamic_settings(additional_embedded_attachments_limit=1)
-def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_is_limited(
+def test_prefetch_posts_feed_related_objects_fetch_posts_metadata_attachments_is_limited(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -472,13 +563,13 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_is_limi
     permissions.is_global_moderator
 
     with django_assert_num_queries(6):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [post, user_reply]
         )
         assert data["attachments"] == {user_text_attachment.id: user_text_attachment}
 
 
-def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_excludes_unused_attachments(
+def test_prefetch_posts_feed_related_objects_fetch_posts_metadata_attachments_excludes_unused_attachments(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -503,7 +594,7 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_exclude
     permissions.is_global_moderator
 
     with django_assert_num_queries(6):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [post, user_reply]
         )
         assert data["attachments"] == {
@@ -511,7 +602,7 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_exclude
         }
 
 
-def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_excludes_inaccessible_attachments(
+def test_prefetch_posts_feed_related_objects_fetch_posts_metadata_attachments_excludes_inaccessible_attachments(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -540,7 +631,7 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_exclude
     permissions.is_global_moderator
 
     with django_assert_num_queries(7):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [post, user_reply]
         )
         assert data["attachments"] == {
@@ -549,7 +640,7 @@ def test_prefetch_posts_related_objects_fetch_posts_metadata_attachments_exclude
         assert data["attachment_errors"][user_text_attachment.id].not_found
 
 
-def test_prefetch_posts_related_objects_fetches_posts_metadata_posts(
+def test_prefetch_posts_feed_related_objects_fetches_posts_metadata_posts(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -565,14 +656,16 @@ def test_prefetch_posts_related_objects_fetches_posts_metadata_posts(
     post.save()
 
     with django_assert_num_queries(6):
-        data = prefetch_posts_related_objects(dynamic_settings, permissions, [post])
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings, permissions, [post]
+        )
         assert data["posts"] == {
             post.id: post,
             user_reply.id: user_reply,
         }
 
 
-def test_prefetch_posts_related_objects_preloads_users(
+def test_prefetch_posts_feed_related_objects_preloads_users(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -585,7 +678,7 @@ def test_prefetch_posts_related_objects_preloads_users(
     permissions.is_global_moderator
 
     with django_assert_num_queries(1):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [], users=[user, other_user]
         )
         assert data["users"] == {
@@ -594,7 +687,7 @@ def test_prefetch_posts_related_objects_preloads_users(
         }
 
 
-def test_prefetch_posts_related_objects_preloads_user_from_permissions(
+def test_prefetch_posts_feed_related_objects_preloads_user_from_permissions(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -605,14 +698,14 @@ def test_prefetch_posts_related_objects_preloads_user_from_permissions(
     permissions.is_global_moderator
 
     with django_assert_num_queries(1):
-        data = prefetch_posts_related_objects(dynamic_settings, permissions, [])
+        data = prefetch_posts_feed_related_objects(dynamic_settings, permissions, [])
         assert data["users"] == {user.id: user}
 
     with django_assert_num_queries(0):
         assert data["users"][user.id].group
 
 
-def test_prefetch_posts_related_objects_doesnt_preload_anonymous_user_from_permissions(
+def test_prefetch_posts_feed_related_objects_doesnt_preload_anonymous_user_from_permissions(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -624,11 +717,13 @@ def test_prefetch_posts_related_objects_doesnt_preload_anonymous_user_from_permi
     permissions.is_global_moderator
 
     with django_assert_num_queries(3):
-        data = prefetch_posts_related_objects(dynamic_settings, permissions, [post])
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings, permissions, [post]
+        )
         assert data["users"] == {}
 
 
-def test_prefetch_posts_related_objects_prefetches_posts_users(
+def test_prefetch_posts_feed_related_objects_prefetches_posts_users(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -642,7 +737,7 @@ def test_prefetch_posts_related_objects_prefetches_posts_users(
     permissions.is_global_moderator
 
     with django_assert_num_queries(5):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [user_reply, other_user_reply]
         )
         assert data["users"] == {user.id: user, other_user.id: other_user}
@@ -652,7 +747,7 @@ def test_prefetch_posts_related_objects_prefetches_posts_users(
         assert data["users"][other_user.id].group
 
 
-def test_prefetch_posts_related_objects_doesnt_prefetch_anonymous_posts_users(
+def test_prefetch_posts_feed_related_objects_doesnt_prefetch_anonymous_posts_users(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -664,14 +759,16 @@ def test_prefetch_posts_related_objects_doesnt_prefetch_anonymous_posts_users(
     permissions.is_global_moderator
 
     with django_assert_num_queries(4):
-        data = prefetch_posts_related_objects(dynamic_settings, permissions, [post])
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings, permissions, [post]
+        )
         assert data["users"] == {user.id: user}
 
     with django_assert_num_queries(0):
         assert data["users"][user.id].group
 
 
-def test_prefetch_posts_related_objects_sets_visible_posts(
+def test_prefetch_posts_feed_related_objects_sets_visible_posts(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -693,7 +790,7 @@ def test_prefetch_posts_related_objects_sets_visible_posts(
     post.save()
 
     with django_assert_num_queries(6):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [post, user_reply, hidden_reply]
         )
         assert data["visible_posts"] == {
@@ -703,7 +800,7 @@ def test_prefetch_posts_related_objects_sets_visible_posts(
         }
 
 
-def test_prefetch_posts_related_objects_prefetches_objects_in_cascade(
+def test_prefetch_posts_feed_related_objects_prefetches_objects_in_cascade(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -737,7 +834,7 @@ def test_prefetch_posts_related_objects_prefetches_objects_in_cascade(
     user_reply.save()
 
     with django_assert_num_queries(7):
-        data = prefetch_posts_related_objects(
+        data = prefetch_posts_feed_related_objects(
             dynamic_settings,
             permissions,
             [post, user_reply, other_user_reply],
