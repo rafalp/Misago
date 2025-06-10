@@ -11,10 +11,12 @@ from django.views import View
 from ...permissions.privatethreads import (
     check_see_private_thread_permission,
     filter_private_thread_posts_queryset,
+    filter_private_thread_updates_queryset,
 )
 from ...permissions.threads import (
     check_see_thread_permission,
     filter_thread_posts_queryset,
+    filter_thread_updates_queryset,
 )
 from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
@@ -30,6 +32,7 @@ class GenericView(View):
     thread_annotate_read_time: bool = False
     thread_url_name: str
     post_select_related: Iterable[str] | True | None = None
+    thread_update_select_related: Iterable[str] | True | None = None
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         queryset = self.get_thread_queryset(request)
@@ -104,6 +107,34 @@ class GenericView(View):
             kwargs={"id": thread.id, "slug": thread.slug},
         )
 
+    def get_thread_updates_queryset(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+    ) -> QuerySet:
+        return ThreadUpdate.objects.filter(thread=thread).order_by("-id")
+
+    def get_thread_update(
+        self, request: HttpRequest, thread: Thread, thread_update_id: int
+    ) -> ThreadUpdate:
+        queryset = self.get_thread_updates_queryset(request, thread)
+        if self.thread_update_select_related is True:
+            queryset = queryset.select_related()
+        elif self.thread_update_select_related:
+            queryset = queryset.select_related(*self.thread_update_select_related)
+
+        thread_update = get_object_or_404(queryset, id=thread_update_id)
+
+        if self.thread_select_related and (
+            self.thread_select_related is True
+            or "category" in self.thread_select_related
+        ):
+            thread_update.category = thread.category
+
+        thread_update.thread = thread
+
+        return thread_update
+
 
 class ThreadView(GenericView):
     thread_select_related: Iterable[str] | True | None = ("category",)
@@ -119,6 +150,16 @@ class ThreadView(GenericView):
     ) -> QuerySet:
         queryset = super().get_thread_posts_queryset(request, thread)
         return filter_thread_posts_queryset(request.user_permissions, thread, queryset)
+
+    def get_thread_updates_queryset(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+    ) -> QuerySet:
+        queryset = super().get_thread_updates_queryset(request, thread)
+        return filter_thread_updates_queryset(
+            request.user_permissions, thread, queryset
+        )
 
     def get_posts_feed(
         self,
@@ -143,6 +184,16 @@ class PrivateThreadView(GenericView):
     ) -> QuerySet:
         queryset = super().get_thread_posts_queryset(request, thread)
         return filter_private_thread_posts_queryset(
+            request.user_permissions, thread, queryset
+        )
+
+    def get_thread_updates_queryset(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+    ) -> QuerySet:
+        queryset = super().get_thread_updates_queryset(request, thread)
+        return filter_private_thread_updates_queryset(
             request.user_permissions, thread, queryset
         )
 

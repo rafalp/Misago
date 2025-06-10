@@ -16,6 +16,7 @@ from .hooks import (
     check_see_private_thread_post_permission_hook,
     check_start_private_threads_permission_hook,
     filter_private_thread_posts_queryset_hook,
+    filter_private_thread_updates_queryset_hook,
     filter_private_threads_queryset_hook,
 )
 from .proxy import UserPermissionsProxy
@@ -246,3 +247,24 @@ def _filter_private_thread_posts_queryset_action(
     queryset: QuerySet,
 ) -> QuerySet:
     return queryset
+
+
+def filter_private_thread_updates_queryset(
+    permissions: UserPermissionsProxy,
+    thread: Thread,
+    queryset: QuerySet,
+) -> QuerySet:
+    return filter_private_thread_updates_queryset_hook(
+        _filter_private_thread_posts_queryset_action, permissions, thread, queryset
+    )
+
+
+def _filter_private_thread_updates_queryset_action(
+    permissions: UserPermissionsProxy,
+    thread: Thread,
+    queryset: QuerySet,
+) -> QuerySet:
+    if permissions.is_private_threads_moderator:
+        return queryset
+
+    return queryset.filter(is_hidden=False)

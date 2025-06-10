@@ -91,8 +91,10 @@ Hooks instances are importable from the following Python modules:
 - [`copy_group_permissions_hook`](./copy-group-permissions-hook.md)
 - [`filter_any_thread_posts_queryset_hook`](./filter-any-thread-posts-queryset-hook.md)
 - [`filter_private_thread_posts_queryset_hook`](./filter-private-thread-posts-queryset-hook.md)
+- [`filter_private_thread_updates_queryset_hook`](./filter-private-thread-updates-queryset-hook.md)
 - [`filter_private_threads_queryset_hook`](./filter-private-threads-queryset-hook.md)
 - [`filter_thread_posts_queryset_hook`](./filter-thread-posts-queryset-hook.md)
+- [`filter_thread_updates_queryset_hook`](./filter-thread-updates-queryset-hook.md)
 - [`get_admin_category_permissions_hook`](./get-admin-category-permissions-hook.md)
 - [`get_category_threads_category_query_hook`](./get-category-threads-category-query-hook.md)
 - [`get_category_threads_pinned_category_query_hook`](./get-category-threads-pinned-category-query-hook.md)
@@ -140,6 +142,7 @@ Hooks instances are importable from the following Python modules:
 `misago.threads.hooks` defines the following hooks:
 
 - [`create_prefetch_posts_related_objects_hook`](./create-prefetch-posts-related-objects-hook.md)
+- [`create_thread_update_hook`](./create-thread-update-hook.md)
 - [`get_category_threads_page_context_data_hook`](./get-category-threads-page-context-data-hook.md)
 - [`get_category_threads_page_filters_hook`](./get-category-threads-page-filters-hook.md)
 - [`get_category_threads_page_moderation_actions_hook`](./get-category-threads-page-moderation-actions-hook.md)

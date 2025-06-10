@@ -148,12 +148,24 @@ class RepliesView(View):
         page: ThreadRepliesPage,
         posts: list[Post],
     ) -> list[ThreadUpdate]:
-        updates = ThreadUpdate.objects.filter(thread=thread).order_by("-id")
+        queryset = self.get_thread_updates_queryset(request, thread, page, posts)
+        return list(reversed(queryset[: request.settings.thread_updates_per_page]))
+
+    def get_thread_updates_queryset(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: ThreadRepliesPage,
+        posts: list[Post],
+    ):
+        queryset = ThreadUpdate.objects.filter(thread=thread).order_by("-id")
         if page.number > 1:
-            updates = updates.filter(created_at__gt=posts[0].posted_on)
+            queryset = queryset.filter(created_at__gt=posts[0].posted_on)
         if page.next_page_first_item:
-            updates = updates.filter(created_at__lt=page.next_page_first_item.posted_on)
-        return list(reversed(updates[: request.settings.thread_updates_per_page]))
+            queryset = queryset.filter(
+                created_at__lt=page.next_page_first_item.posted_on
+            )
+        return queryset
 
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
         return False
@@ -272,6 +284,16 @@ class ThreadRepliesView(RepliesView, ThreadView):
             super().get_thread_posts_queryset, request, thread
         )
 
+    def get_thread_updates_queryset(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: ThreadRepliesPage,
+        posts: list[Post],
+    ):
+        queryset = super().get_thread_updates_queryset(request, thread, page, posts)
+        return queryset
+
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
         if request.user.is_anonymous:
             return False
@@ -340,6 +362,16 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         return get_private_thread_replies_page_posts_queryset_hook(
             super().get_thread_posts_queryset, request, thread
         )
+
+    def get_thread_updates_queryset(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: ThreadRepliesPage,
+        posts: list[Post],
+    ):
+        queryset = super().get_thread_updates_queryset(request, thread, page, posts)
+        return queryset
 
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
         if request.user.is_anonymous:

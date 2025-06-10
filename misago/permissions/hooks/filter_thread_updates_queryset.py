@@ -9,10 +9,10 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class FilterThreadPostsQuerysetHookAction(Protocol):
+class FilterThreadUpdatesQuerysetHookAction(Protocol):
     """
     A standard Misago function used to set filters on a queryset used to retrieve
-    specified thread's posts that user can see.
+    specified thread's updates that user can see.
 
     # Arguments
 
@@ -22,15 +22,15 @@ class FilterThreadPostsQuerysetHookAction(Protocol):
 
     ## `thread: Thread`
 
-    A thread instance which's posts are retrieved.
+    A thread instance which's updates are retrieved.
 
     ## `queryset: Queryset`
 
-    A queryset returning thread's posts.
+    A queryset returning thread's updates.
 
     ## Return value
 
-    A `queryset` filtered to show only thread posts that the user can see.
+    A `queryset` filtered to show only thread updates that the user can see.
     """
 
     def __call__(
@@ -41,16 +41,16 @@ class FilterThreadPostsQuerysetHookAction(Protocol):
     ) -> QuerySet: ...
 
 
-class FilterThreadPostsQuerysetHookFilter(Protocol):
+class FilterThreadUpdatesQuerysetHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: FilterThreadPostsQuerysetHookAction`
+    ## `action: FilterThreadUpdatesQuerysetHookAction`
 
     A standard Misago function used to set filters on a queryset used to retrieve
-    specified thread's posts that user can see.
+    specified thread's updates that user can see.
 
     See the [action](#action) section for details.
 
@@ -60,47 +60,47 @@ class FilterThreadPostsQuerysetHookFilter(Protocol):
 
     ## `thread: Thread`
 
-    A thread instance which's posts are retrieved.
+    A thread instance which's updates are retrieved.
 
     ## `queryset: Queryset`
 
-    A queryset returning thread's posts.
+    A queryset returning thread's updates.
 
     ## Return value
 
-    A `queryset` filtered to show only thread posts that the user can see.
+    A `queryset` filtered to show only thread updates that the user can see.
     """
 
     def __call__(
         self,
-        action: FilterThreadPostsQuerysetHookAction,
+        action: FilterThreadUpdatesQuerysetHookAction,
         permissions: "UserPermissionsProxy",
         thread: Thread,
         queryset: QuerySet,
     ) -> QuerySet: ...
 
 
-class FilterThreadPostsQuerysetHook(
+class FilterThreadUpdatesQuerysetHook(
     FilterHook[
-        FilterThreadPostsQuerysetHookAction,
-        FilterThreadPostsQuerysetHookFilter,
+        FilterThreadUpdatesQuerysetHookAction,
+        FilterThreadUpdatesQuerysetHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses set filters on
-    thread's posts queryset to limit it only to posts that the user can see.
+    thread's updates queryset to limit it only to updates that the user can see.
 
     # Example
 
-    The code below implements a custom filter function hides deleted posts from
+    The code below implements a custom filter function hides all updates from
     anonymous user.
 
     ```python
-    from misago.permissions.hooks import filter_thread_posts_queryset_hook
+    from misago.permissions.hooks import filter_thread_updates_queryset_hook
     from misago.permissions.proxy import UserPermissionsProxy
 
-    @filter_thread_posts_queryset_hook.append_filter
-    def exclude_hidden_posts(
+    @filter_thread_updates_queryset_hook.append_filter
+    def exclude_old_private_threads_queryset_hook(
         action,
         permissions: UserPermissionsProxy,
         thread,
@@ -109,7 +109,7 @@ class FilterThreadPostsQuerysetHook(
         queryset = action(permissions, thread, queryset)
 
         if permissions.user.is_anonymous:
-            return queryset.filter(is_hidden=False)
+            return queryset.none()
 
         return queryset
     ```
@@ -119,7 +119,7 @@ class FilterThreadPostsQuerysetHook(
 
     def __call__(
         self,
-        action: FilterThreadPostsQuerysetHookAction,
+        action: FilterThreadUpdatesQuerysetHookAction,
         permissions: "UserPermissionsProxy",
         thread: Thread,
         queryset: QuerySet,
@@ -127,4 +127,4 @@ class FilterThreadPostsQuerysetHook(
         return super().__call__(action, permissions, thread, queryset)
 
 
-filter_thread_posts_queryset_hook = FilterThreadPostsQuerysetHook()
+filter_thread_updates_queryset_hook = FilterThreadUpdatesQuerysetHook()
