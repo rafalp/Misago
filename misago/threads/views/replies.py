@@ -149,23 +149,13 @@ class RepliesView(View):
         posts: list[Post],
     ) -> list[ThreadUpdate]:
         queryset = self.get_thread_updates_queryset(request, thread, page, posts)
-        return list(reversed(queryset[: request.settings.thread_updates_per_page]))
-
-    def get_thread_updates_queryset(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        page: ThreadRepliesPage,
-        posts: list[Post],
-    ):
-        queryset = ThreadUpdate.objects.filter(thread=thread).order_by("-id")
         if page.number > 1:
             queryset = queryset.filter(created_at__gt=posts[0].posted_on)
         if page.next_page_first_item:
             queryset = queryset.filter(
                 created_at__lt=page.next_page_first_item.posted_on
             )
-        return queryset
+        return list(reversed(queryset[: request.settings.thread_updates_per_page]))
 
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
         return False
