@@ -12,7 +12,7 @@ from ..permissions.posts import check_see_post_permission
 from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.checkutils import check_permissions
 from ..users.models import Group
-from .hooks import create_prefetch_posts_related_objects_hook
+from .hooks import create_prefetch_posts_feed_related_objects_hook
 from .models import Post, Thread, ThreadUpdate
 from .privatethreads import prefetch_private_thread_member_ids
 
@@ -22,13 +22,13 @@ else:
     User = get_user_model()
 
 __all__ = [
-    "PrefetchPostsRelatedObjects",
-    "PrefetchPostsRelationsOperation",
-    "prefetch_posts_related_objects",
+    "PrefetchPostsFeedRelatedObjects",
+    "PrefetchPostsFeedRelationsOperation",
+    "prefetch_posts_feed_related_objects",
 ]
 
 
-def prefetch_posts_related_objects(
+def prefetch_posts_feed_related_objects(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
     posts: Iterable[Post],
@@ -39,8 +39,8 @@ def prefetch_posts_related_objects(
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> dict:
-    prefetch = create_prefetch_posts_related_objects_hook(
-        _create_prefetch_posts_related_objects_action,
+    prefetch = create_prefetch_posts_feed_related_objects_hook(
+        _create_prefetch_posts_feed_related_objects_action,
         settings,
         permissions,
         posts,
@@ -53,7 +53,7 @@ def prefetch_posts_related_objects(
     return prefetch()
 
 
-def _create_prefetch_posts_related_objects_action(
+def _create_prefetch_posts_feed_related_objects_action(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
     posts: Iterable[Post],
@@ -63,8 +63,8 @@ def _create_prefetch_posts_related_objects_action(
     thread_updates: Iterable[ThreadUpdate] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
-) -> "PrefetchPostsRelatedObjects":
-    prefetch = PrefetchPostsRelatedObjects(
+) -> "PrefetchPostsFeedRelatedObjects":
+    prefetch = PrefetchPostsFeedRelatedObjects(
         settings,
         permissions,
         categories=categories,
@@ -75,25 +75,25 @@ def _create_prefetch_posts_related_objects_action(
         users=users,
     )
 
-    prefetch.add_operation(find_attachment_ids)
-    prefetch.add_operation(fetch_attachments)
-    prefetch.add_operation(find_post_ids)
-    prefetch.add_operation(fetch_posts)
-    prefetch.add_operation(find_thread_ids)
-    prefetch.add_operation(fetch_threads)
-    prefetch.add_operation(find_category_ids)
-    prefetch.add_operation(fetch_categories)
-    prefetch.add_operation(fetch_private_threads_members)
-    prefetch.add_operation(find_users_ids)
-    prefetch.add_operation(fetch_users)
-    prefetch.add_operation(fetch_users_groups)
-    prefetch.add_operation(check_posts_permissions)
-    prefetch.add_operation(check_attachments_permissions)
+    prefetch.add(find_attachment_ids)
+    prefetch.add(fetch_attachments)
+    prefetch.add(find_post_ids)
+    prefetch.add(fetch_posts)
+    prefetch.add(find_thread_ids)
+    prefetch.add(fetch_threads)
+    prefetch.add(find_category_ids)
+    prefetch.add(fetch_categories)
+    prefetch.add(fetch_private_threads_members)
+    prefetch.add(find_users_ids)
+    prefetch.add(fetch_users)
+    prefetch.add(fetch_users_groups)
+    prefetch.add(check_posts_permissions)
+    prefetch.add(check_attachments_permissions)
 
     return prefetch
 
 
-class PrefetchPostsRelationsOperation(Protocol):
+class PrefetchPostsFeedRelationsOperation(Protocol):
     def __call__(
         self,
         data: dict,
@@ -103,8 +103,8 @@ class PrefetchPostsRelationsOperation(Protocol):
         pass
 
 
-class PrefetchPostsRelatedObjects:
-    ops: list[PrefetchPostsRelationsOperation]
+class PrefetchPostsFeedRelatedObjects:
+    ops: list[PrefetchPostsFeedRelationsOperation]
 
     settings: DynamicSettings
     permissions: User
@@ -174,50 +174,50 @@ class PrefetchPostsRelatedObjects:
 
         return data
 
-    def add_operation(
+    def add(self, op: PrefetchPostsFeedRelationsOperation):
+        self.ops.append(op)
+
+    def add_before(
         self,
-        op: PrefetchPostsRelationsOperation,
-        *,
-        after: PrefetchPostsRelationsOperation | None = None,
-        before: PrefetchPostsRelationsOperation | None = None,
+        before: PrefetchPostsFeedRelationsOperation,
+        op: PrefetchPostsFeedRelationsOperation,
     ):
-        if after and before:
-            raise ValueError("'after' and 'before' option's can't be used together")
+        prepended = False
+        new_ops: list[PrefetchPostsFeedRelationsOperation] = []
 
-        if after:
-            inserted = False
-            new_ops: list[PrefetchPostsRelationsOperation] = []
+        for existing_step in self.ops:
+            if existing_step == before:
+                new_ops.append(op)
+                prepended = True
+            new_ops.append(existing_step)
 
-            for existing_step in self.ops:
-                new_ops.append(existing_step)
-                if existing_step == after:
-                    new_ops.append(op)
-                    inserted = True
-            self.ops = new_ops
+        self.ops = new_ops
 
-            if not inserted:
-                raise ValueError(
-                    f"Operation '{after}' doesn't exist in this loader instance"
-                )
+        if not prepended:
+            raise ValueError(
+                f"Operation '{before}' doesn't exist in this loader instance"
+            )
 
-        elif before:
-            prepended = False
-            new_ops: list[PrefetchPostsRelationsOperation] = []
+    def add_after(
+        self,
+        after: PrefetchPostsFeedRelationsOperation,
+        op: PrefetchPostsFeedRelationsOperation,
+    ):
+        inserted = False
+        new_ops: list[PrefetchPostsFeedRelationsOperation] = []
 
-            for existing_step in self.ops:
-                if existing_step == before:
-                    new_ops.append(op)
-                    prepended = True
-                new_ops.append(existing_step)
-            self.ops = new_ops
+        for existing_step in self.ops:
+            new_ops.append(existing_step)
+            if existing_step == after:
+                new_ops.append(op)
+                inserted = True
 
-            if not prepended:
-                raise ValueError(
-                    f"Operation '{after}' doesn't exist in this loader instance"
-                )
+        self.ops = new_ops
 
-        else:
-            self.ops.append(op)
+        if not inserted:
+            raise ValueError(
+                f"Operation '{after}' doesn't exist in this loader instance"
+            )
 
 
 def find_category_ids(
