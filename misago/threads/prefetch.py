@@ -233,6 +233,10 @@ def find_category_ids(
         if thread.category_id:
             data["category_ids"].add(thread.category_id)
 
+    for thread_update in data["thread_updates"].values():
+        if context_id := thread_update.get_context_id("misago_categories.category"):
+            data["category_ids"].add(context_id)
+
     for attachment in data["attachments"].values():
         if attachment.category_id:
             data["category_ids"].add(attachment.category_id)
@@ -256,6 +260,10 @@ def find_thread_ids(
     for post in data["posts"].values():
         if post.thread_id:
             data["thread_ids"].add(post.thread_id)
+
+    for thread_update in data["thread_updates"].values():
+        if context_id := thread_update.get_context_id("misago_threads.thread"):
+            data["thread_ids"].add(context_id)
 
     for attachment in data["attachments"].values():
         if attachment.thread_id:
@@ -292,6 +300,10 @@ def find_post_ids(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
+    for thread_update in data["thread_updates"].values():
+        if context_id := thread_update.get_context_id("misago_threads.post"):
+            data["post_ids"].add(context_id)
+
     for attachment in data["attachments"].values():
         if attachment.post_id:
             data["post_ids"].add(attachment.post_id)
@@ -325,6 +337,10 @@ def find_attachment_ids(
 ):
     for post in data["posts"].values():
         data["attachment_ids"].update(post.metadata.get("attachments", []))
+
+    for thread_update in data["thread_updates"].values():
+        if context_id := thread_update.get_context_id("misago_attachments.attachment"):
+            data["attachment_ids"].add(context_id)
 
     if extra_attachments := data["metadata"].get("attachments"):
         data["attachment_ids"].update(extra_attachments)
@@ -411,6 +427,12 @@ def find_users_ids(
 ):
     for post in data["posts"].values():
         data["user_ids"].add(post.poster_id)
+
+    for thread_update in data["thread_updates"].values():
+        if thread_update.actor_id:
+            data["user_ids"].add(thread_update.actor_id)
+        if context_id := thread_update.get_context_id("misago_users.user"):
+            data["user_ids"].add(context_id)
 
 
 def fetch_users(

@@ -133,25 +133,35 @@ class PostsFeed:
     def get_edit_post_url(self, post: Post) -> str | None:
         return None
 
-    def get_thread_update_data(self, update: ThreadUpdate) -> dict:
+    def get_thread_update_data(self, thread_update: ThreadUpdate) -> dict:
         return {
             "template_name": self.thread_update_template_name,
             "animate": False,
-            "ordering": update.created_at,
+            "ordering": thread_update.created_at,
             "type": "thread_update",
-            "thread_update": update,
+            "thread_update": thread_update,
+            "icon": "edit",
+            "actor": None,
+            "actor_name": thread_update.actor_name,
+            "context_object": None,
         }
 
     def set_feed_related_objects(self, feed: list[dict], related_objects: dict) -> None:
         for item in feed:
             if item["type"] == "post":
                 self.set_post_related_objects(item, item["post"], related_objects)
+            if item["type"] == "thread_update":
+                self.set_thread_update_related_objects(
+                    item, item["thread_update"], related_objects
+                )
 
     def set_post_related_objects(
         self, item: dict, post: Post, related_objects: dict
     ) -> None:
-        item["poster"] = related_objects["users"].get(post.poster_id)
         item["rich_text_data"] = related_objects
+
+        if post.poster_id:
+            item["poster"] = related_objects["users"].get(post.poster_id)
 
         embedded_attachments = post.metadata.get("attachments", [])
         for attachment in related_objects["attachments"].values():
@@ -163,6 +173,30 @@ class PostsFeed:
 
         if item["attachments"]:
             item["attachments"].sort(reverse=True, key=lambda a: a.id)
+
+    def set_thread_update_related_objects(
+        self, item: dict, thread_update: ThreadUpdate, related_objects: dict
+    ) -> None:
+        if thread_update.actor_id:
+            item["actor"] = related_objects["users"].get(thread_update.actor_id)
+
+        if thread_update.context_type and thread_update.context_id:
+            relation_name = None
+            if thread_update.context_type == "misago_attachments.attachment":
+                relation_name = "attachment"
+            if thread_update.context_type == "misago_categories.category":
+                relation_name = "categories"
+            if thread_update.context_type == "misago_threads.thread":
+                relation_name = "threads"
+            if thread_update.context_type == "misago_threads.post":
+                relation_name = "posts"
+            if thread_update.context_type == "misago_users.user":
+                relation_name = "users"
+
+            if relation_name:
+                item["context_object"] = related_objects[relation_name].get(
+                    thread_update.context_id
+                )
 
 
 class ThreadPostsFeed(PostsFeed):

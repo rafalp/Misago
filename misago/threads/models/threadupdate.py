@@ -60,3 +60,9 @@ class ThreadUpdate(PluginDataModel):
             return apps.get_model(app_label, model_name)
         except LookupError:
             return None
+
+    def get_context_id(self, context_type: str) -> int | None:
+        if self.context_type == context_type:
+            return self.context_id
+
+        return None

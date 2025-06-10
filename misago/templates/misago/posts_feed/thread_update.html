@@ -6,8 +6,16 @@
     hx-swap-oob="true"
   {% endif %}
 >
+  <span class="material-icon">{{ icon }}</span>
+
+  {% if actor %}
+    <a href="{{ actor.get_absolute_url }}">{{ actor }}</a>
+  {% elif actor_name %}
+    {{ actor_name }}
+  {% endif %}
+
   {% if thread_update.action == "edited_title" %}
-    {{thread_update.actor_name }} changed title from "{{ thread_update.context }}"
+    Changed title from "{{ thread_update.context }}"
   {% else %}
     {{ thread_update.action }}
   {% endif %}
