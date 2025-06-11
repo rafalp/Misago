@@ -42,7 +42,7 @@ class UpgradePostContentHook(
     FilterHook[UpgradePostContentHookAction, UpgradePostContentHookFilter]
 ):
     """
-    This hook wraps the standard Misago function used to upgrade post content
+    This hook wraps a standard Misago function used to upgrade post content
     after it has been posted.
 
     The upgrade process runs in a Celery task scheduled after the post is created,

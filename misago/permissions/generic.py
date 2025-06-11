@@ -6,6 +6,9 @@ from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..threads.models import Post, Thread
 from .categories import check_see_category_permission
+from .hooks import (
+    check_access_category_permission_hook,
+)
 from .privatethreads import (
     check_private_threads_permission,
     check_see_private_thread_permission,
@@ -23,7 +26,9 @@ from .threads import (
 def check_access_category_permission(
     permissions: UserPermissionsProxy, category: Category
 ):
-    pass
+    check_access_category_permission_hook(
+        _check_access_category_permission_action, permissions, category
+    )
 
 
 def _check_access_category_permission_action(
