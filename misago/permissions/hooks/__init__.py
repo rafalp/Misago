@@ -50,7 +50,7 @@ from .check_start_thread_permission import (
 )
 from .copy_category_permissions import copy_category_permissions_hook
 from .copy_group_permissions import copy_group_permissions_hook
-from .filter_any_thread_posts_queryset import filter_any_thread_posts_queryset_hook
+from .filter_accessible_thread_posts import filter_accessible_thread_posts_hook
 from .filter_private_thread_posts_queryset import (
     filter_private_thread_posts_queryset_hook,
 )
@@ -102,7 +102,7 @@ __all__ = [
     "check_start_thread_permission_hook",
     "copy_category_permissions_hook",
     "copy_group_permissions_hook",
-    "filter_any_thread_posts_queryset_hook",
+    "filter_accessible_thread_posts_hook",
     "filter_private_thread_posts_queryset_hook",
     "filter_private_thread_updates_queryset_hook",
     "filter_private_threads_queryset_hook",

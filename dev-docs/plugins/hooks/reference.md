@@ -92,7 +92,7 @@ Hooks instances are importable from the following Python modules:
 - [`check_start_thread_permission_hook`](./check-start-thread-permission-hook.md)
 - [`copy_category_permissions_hook`](./copy-category-permissions-hook.md)
 - [`copy_group_permissions_hook`](./copy-group-permissions-hook.md)
-- [`filter_any_thread_posts_queryset_hook`](./filter-any-thread-posts-queryset-hook.md)
+- [`filter_accessible_thread_posts_hook`](./filter-accessible-thread-posts-hook.md)
 - [`filter_private_thread_posts_queryset_hook`](./filter-private-thread-posts-queryset-hook.md)
 - [`filter_private_thread_updates_queryset_hook`](./filter-private-thread-updates-queryset-hook.md)
 - [`filter_private_threads_queryset_hook`](./filter-private-threads-queryset-hook.md)

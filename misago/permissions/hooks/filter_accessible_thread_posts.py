@@ -10,11 +10,11 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class FilterAnyThreadPostsQuerysetHookAction(Protocol):
+class FilterAccessibleThreadPostsHookAction(Protocol):
     """
-    A standard Misago function used to set filters on a queryset with posts from
-    a thread of any type (regular, private, or plugin-specified) to limit it only
-    to posts that the user can see.
+    A standard Misago function used to set filters on a queryset of posts from
+    a thread of any type (regular, private, or plugin-specified), limiting it
+    to only the posts that the user can see.
 
     # Arguments
 
@@ -24,19 +24,19 @@ class FilterAnyThreadPostsQuerysetHookAction(Protocol):
 
     ## `category: Category`
 
-    A category instance which's posts are retrieved.
+    A category instance whose posts are being retrieved.
 
     ## `thread: Thread`
 
-    A thread instance which's posts are retrieved.
+    A thread instance whose posts are being retrieved.
 
     ## `queryset: Queryset`
 
-    A queryset returning thread's posts.
+    A queryset returning the thread's posts.
 
     ## Return value
 
-    A `queryset` filtered to show only thread posts that the user can see.
+    A `QuerySet` filtered to return only the posts that the user can see.
     """
 
     def __call__(
@@ -48,19 +48,17 @@ class FilterAnyThreadPostsQuerysetHookAction(Protocol):
     ) -> QuerySet: ...
 
 
-class FilterAnyThreadPostsQuerysetHookFilter(Protocol):
+class FilterAccessibleThreadPostsHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: FilterAnyThreadPostsQuerysetHookAction`
+    ## `action: FilterAccessibleThreadPostsHookAction`
 
-    A standard Misago function used to set filters on a queryset with posts from
-    a thread of any type (regular, private, or plugin-specified) to limit it only
-    to posts that the user can see.
-
-    See the [action](#action) section for details.
+    A standard Misago function used to set filters on a queryset of posts from
+    a thread of any type (regular, private, or plugin-specified), limiting it
+    to only the posts that the user can see.
 
     ## `user_permissions: UserPermissionsProxy`
 
@@ -68,24 +66,24 @@ class FilterAnyThreadPostsQuerysetHookFilter(Protocol):
 
     ## `category: Category`
 
-    A category instance which's posts are retrieved.
+    A category instance whose posts are being retrieved.
 
     ## `thread: Thread`
 
-    A thread instance which's posts are retrieved.
+    A thread instance whose posts are being retrieved.
 
     ## `queryset: Queryset`
 
-    A queryset returning thread's posts.
+    A queryset returning the thread's posts.
 
     ## Return value
 
-    A `queryset` filtered to show only thread posts that the user can see.
+    A `QuerySet` filtered to return only the posts that the user can see.
     """
 
     def __call__(
         self,
-        action: FilterAnyThreadPostsQuerysetHookAction,
+        action: FilterAccessibleThreadPostsHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
@@ -93,27 +91,27 @@ class FilterAnyThreadPostsQuerysetHookFilter(Protocol):
     ) -> QuerySet: ...
 
 
-class FilterAnyThreadPostsQuerysetHook(
+class FilterAccessibleThreadPostsHook(
     FilterHook[
-        FilterAnyThreadPostsQuerysetHookAction,
-        FilterAnyThreadPostsQuerysetHookFilter,
+        FilterAccessibleThreadPostsHookAction,
+        FilterAccessibleThreadPostsHookFilter,
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to set filters on a
-    queryset with posts from a thread of any type (regular, private, or
-    plugin-specified) to limit it only to posts that the user can see.
+    This hook wraps a standard Misago function used to set filters on a queryset
+    of posts from   a thread of any type (regular, private, or plugin-specified),
+    limiting it to only the posts that the user can see.
 
     # Example
 
-    The code below implements a custom filter function hides deleted posts from
+    The code below implements a custom filter function removes hidden posts for
     anonymous user.
 
     ```python
-    from misago.permissions.hooks import filter_any_thread_posts_queryset_hook
+    from misago.permissions.hooks import filter_accessible_thread_posts_hook
     from misago.permissions.proxy import UserPermissionsProxy
 
-    @filter_any_thread_posts_queryset_hook.append_filter
+    @filter_accessible_thread_posts_hook.append_filter
     def exclude_old_private_threads_queryset_hook(
         action,
         permissions: UserPermissionsProxy,
@@ -133,7 +131,7 @@ class FilterAnyThreadPostsQuerysetHook(
 
     def __call__(
         self,
-        action: FilterAnyThreadPostsQuerysetHookAction,
+        action: FilterAccessibleThreadPostsHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
@@ -142,4 +140,4 @@ class FilterAnyThreadPostsQuerysetHook(
         return super().__call__(action, permissions, category, thread, queryset)
 
 
-filter_any_thread_posts_queryset_hook = FilterAnyThreadPostsQuerysetHook()
+filter_accessible_thread_posts_hook = FilterAccessibleThreadPostsHook()

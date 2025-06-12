@@ -17,7 +17,7 @@ from ..permissions.attachments import (
 )
 from ..permissions.checkutils import check_permissions
 from ..permissions.enums import CanUploadAttachments
-from ..permissions.posts import check_access_post_permission
+from ..permissions.generic import check_access_post_permission
 from .enums import AllowedAttachments
 from .hooks import get_attachment_details_page_context_data_hook
 from .models import Attachment

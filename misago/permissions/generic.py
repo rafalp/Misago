@@ -10,6 +10,7 @@ from .hooks import (
     check_access_category_permission_hook,
     check_access_post_permission_hook,
     check_access_thread_permission_hook,
+    filter_accessible_thread_posts_hook,
 )
 from .privatethreads import (
     check_private_threads_permission,
@@ -111,3 +112,34 @@ def _check_access_post_permission_action(
 
     else:
         raise Http404()
+
+
+def filter_accessible_thread_posts(
+    permissions: UserPermissionsProxy,
+    category: Category,
+    thread: Thread,
+    queryset: QuerySet,
+) -> QuerySet:
+    return filter_accessible_thread_posts_hook(
+        _filter_accessible_thread_posts_action,
+        permissions,
+        category,
+        thread,
+        queryset,
+    )
+
+
+def _filter_accessible_thread_posts_action(
+    permissions: UserPermissionsProxy,
+    category: Category,
+    thread: Thread,
+    queryset: QuerySet,
+) -> QuerySet:
+    if category.tree_id == CategoryTree.THREADS:
+        return filter_thread_posts_queryset(permissions, thread, queryset)
+
+    elif category.tree_id == CategoryTree.PRIVATE_THREADS:
+        return filter_private_thread_posts_queryset(permissions, thread, queryset)
+
+    else:
+        return queryset.empty()
