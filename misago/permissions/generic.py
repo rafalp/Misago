@@ -8,6 +8,8 @@ from ..threads.models import Post, Thread
 from .categories import check_see_category_permission
 from .hooks import (
     check_access_category_permission_hook,
+    check_access_post_permission_hook,
+    check_access_thread_permission_hook,
 )
 from .privatethreads import (
     check_private_threads_permission,
@@ -50,7 +52,9 @@ def _check_access_category_permission_action(
 def check_access_thread_permission(
     permissions: UserPermissionsProxy, category: Category, thread: Thread
 ):
-    pass
+    check_access_thread_permission_hook(
+        _check_access_thread_permission_action, permissions, category, thread
+    )
 
 
 def _check_access_thread_permission_action(
@@ -77,7 +81,9 @@ def _check_access_thread_permission_action(
 def check_access_post_permission(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, post: Post
 ):
-    pass
+    check_access_post_permission_hook(
+        _check_access_post_permission_action, permissions, category, thread, post
+    )
 
 
 def _check_access_post_permission_action(

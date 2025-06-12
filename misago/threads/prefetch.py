@@ -8,7 +8,7 @@ from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..conf.dynamicsettings import DynamicSettings
 from ..permissions.attachments import check_download_attachment_permission
-from ..permissions.posts import check_see_post_permission
+from ..permissions.posts import check_access_post_permission
 from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.checkutils import check_permissions
 from ..users.models import Group
@@ -377,7 +377,7 @@ def check_posts_permissions(
             continue  # Skip previously checked posts
 
         with check_permissions() as can_see:
-            check_see_post_permission(
+            check_access_post_permission(
                 permissions,
                 data["categories"][post.category_id],
                 data["threads"][post.thread_id],

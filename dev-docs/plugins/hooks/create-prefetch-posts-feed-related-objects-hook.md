@@ -1,6 +1,6 @@
 # `create_prefetch_posts_feed_related_objects_hook`
 
-This hook wraps the standard function Misago uses to create a  `PrefetchPostsFeedRelatedObjects` object, which is used to prefetch related objects for items displayed in a posts feed.
+This hook wraps the standard function Misago uses to create a `PrefetchPostsFeedRelatedObjects` object, which is used to prefetch related objects for items displayed in a posts feed.
 
 The object itself does not implement prefetch logic but instead maintains a list of prefetch operations to be executed in order to fetch the objects from the database.
 
