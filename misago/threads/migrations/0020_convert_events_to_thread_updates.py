@@ -10,7 +10,6 @@ EVENT_TYPES = {
     "owner_left": "left",
     "participant_left": "left",
     "removed_owner": "removed_participant",
-    "changed_title": "edited_title",
     "pinned_locally": "pinned_in_category",
 }
 

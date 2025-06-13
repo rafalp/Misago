@@ -1,0 +1,69 @@
+import pytest
+
+from ..threads.enums import ThreadUpdateAction
+from ..threads.models import ThreadUpdate
+
+
+@pytest.fixture
+def thread_update(user, thread):
+    return ThreadUpdate.objects.create(
+        category=thread.category,
+        thread=thread,
+        actor=user,
+        actor_name=user.username,
+        action=ThreadUpdateAction.OPENED,
+    )
+
+
+@pytest.fixture
+def thread_update_context(user, thread):
+    return ThreadUpdate.objects.create(
+        category=thread.category,
+        thread=thread,
+        actor=user,
+        actor_name=user.username,
+        action=ThreadUpdateAction.MERGED,
+        context="Other thread",
+    )
+
+
+@pytest.fixture
+def thread_update_category_context(user, thread, sibling_category):
+    return ThreadUpdate.objects.create(
+        category=thread.category,
+        thread=thread,
+        actor=user,
+        actor_name=user.username,
+        action=ThreadUpdateAction.MOVED,
+        context=sibling_category.name,
+        context_type="misago_categories.category",
+        context_id=sibling_category.id,
+    )
+
+
+@pytest.fixture
+def thread_update_thread_context(user, thread, other_thread):
+    return ThreadUpdate.objects.create(
+        category=thread.category,
+        thread=thread,
+        actor=user,
+        actor_name=user.username,
+        action=ThreadUpdateAction.SPLIT,
+        context=other_thread.title,
+        context_type="misago_threads.thread",
+        context_id=other_thread.id,
+    )
+
+
+@pytest.fixture
+def thread_update_user_context(user, thread, other_user):
+    return ThreadUpdate.objects.create(
+        category=thread.category,
+        thread=thread,
+        actor=user,
+        actor_name=user.username,
+        action=ThreadUpdateAction.LEFT,
+        context=other_user.username,
+        context_type="misago_users.user",
+        context_id=other_user.id,
+    )

@@ -159,6 +159,38 @@ def test_prefetch_posts_feed_related_objects_prefetches_posts_categories(
         assert data["categories"] == {default_category.id: default_category}
 
 
+def test_prefetch_posts_feed_related_objects_prefetches_thread_update_context_categories(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    anonymous_user,
+    guests_group,
+    sibling_category,
+    thread_update_category_context,
+):
+    CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=guests_group,
+        permission=CategoryPermission.SEE,
+    )
+
+    thread_update_category_context.context_id = sibling_category.id
+    thread_update_category_context.save()
+
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    with django_assert_num_queries(3):
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings,
+            permissions,
+            [],
+            thread_updates=[thread_update_category_context],
+        )
+        assert data["categories"] == {sibling_category.id: sibling_category}
+
+
 def test_prefetch_posts_feed_related_objects_prefetches_attachments_categories(
     django_assert_num_queries,
     dynamic_settings,
@@ -254,6 +286,28 @@ def test_prefetch_posts_feed_related_objects_prefetches_posts_threads(
             dynamic_settings, permissions, [post, user_reply, other_user_reply]
         )
         assert data["threads"] == {thread.id: thread}
+
+
+def test_prefetch_posts_feed_related_objects_prefetches_thread_update_context_threads(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    anonymous_user,
+    other_thread,
+    thread_update_thread_context,
+):
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    with django_assert_num_queries(4):
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings,
+            permissions,
+            [],
+            thread_updates=[thread_update_thread_context],
+        )
+        assert data["threads"] == {other_thread.id: other_thread}
 
 
 def test_prefetch_posts_feed_related_objects_prefetches_attachments_threads(
@@ -875,6 +929,54 @@ def test_prefetch_posts_feed_related_objects_prefetches_posts_users(
     with django_assert_num_queries(5):
         data = prefetch_posts_feed_related_objects(
             dynamic_settings, permissions, [user_reply, other_user_reply]
+        )
+        assert data["users"] == {user.id: user, other_user.id: other_user}
+
+    with django_assert_num_queries(0):
+        assert data["users"][user.id].group
+        assert data["users"][other_user.id].group
+
+
+def test_prefetch_posts_feed_related_objects_prefetches_thread_update_users(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    anonymous_user,
+    user,
+    thread_update,
+):
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    with django_assert_num_queries(2):
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings, permissions, [], thread_updates=[thread_update]
+        )
+        assert data["users"] == {user.id: user}
+
+    with django_assert_num_queries(0):
+        assert data["users"][user.id].group
+
+
+def test_prefetch_posts_feed_related_objects_prefetches_thread_update_context_users(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    user,
+    other_user,
+    thread_update_user_context,
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    with django_assert_num_queries(2):
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings,
+            permissions,
+            [],
+            thread_updates=[thread_update_user_context],
         )
         assert data["users"] == {user.id: user, other_user.id: other_user}
 
