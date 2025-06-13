@@ -1,4 +1,4 @@
-from ..updates import create_thread_update
+from ..threadupdates import create_thread_update
 
 
 def test_create_thread_update_creates_thread_update(default_category, thread, user):
