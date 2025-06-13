@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
 from django.http import Http404
@@ -83,7 +81,7 @@ def check_reply_private_thread_permission(
     permissions: UserPermissionsProxy, thread: Thread
 ):
     check_reply_private_thread_permission_hook(
-        _check_see_private_thread_permission_action, permissions, thread
+        _check_reply_private_thread_permission_action, permissions, thread
     )
 
 
@@ -255,7 +253,7 @@ def filter_private_thread_updates_queryset(
     queryset: QuerySet,
 ) -> QuerySet:
     return filter_private_thread_updates_queryset_hook(
-        _filter_private_thread_posts_queryset_action, permissions, thread, queryset
+        _filter_private_thread_updates_queryset_action, permissions, thread, queryset
     )
 
 

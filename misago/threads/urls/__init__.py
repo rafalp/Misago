@@ -23,6 +23,12 @@ from ..views.replies import private_thread_replies, thread_replies
 from ..views.reply import reply_private_thread, reply_thread
 from ..views.selectcategory import SelectCategoryView
 from ..views.start import start_private_thread, start_thread
+from ..views.threadupdate import (
+    hide_private_thread_update_view,
+    hide_thread_update_view,
+    unhide_private_thread_update_view,
+    unhide_thread_update_view,
+)
 
 
 urlpatterns = [
@@ -156,6 +162,26 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/edit/<int:post>/",
         edit_private_thread_post,
         name="edit-private-thread",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/hide-update/<int:thread_update_id>/",
+        hide_thread_update_view,
+        name="hide-thread-update",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/hide-update/<int:thread_update_id>/",
+        hide_private_thread_update_view,
+        name="hide-private-thread-update",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/unhide-update/<int:thread_update_id>/",
+        unhide_thread_update_view,
+        name="unhide-thread-update",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/unhide-update/<int:thread_update_id>/",
+        unhide_private_thread_update_view,
+        name="unhide-private-thread-update",
     ),
     path(
         "post/<int:id>/",

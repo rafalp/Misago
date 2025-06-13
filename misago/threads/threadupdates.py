@@ -4,7 +4,11 @@ from django.db.models import Model
 from django.http import HttpRequest
 from django.utils import timezone
 
-from .hooks import create_thread_update_hook
+from .hooks import (
+    create_thread_update_hook,
+    hide_thread_update_hook,
+    unhide_thread_update_hook,
+)
 from .models import Thread, ThreadUpdate
 
 if TYPE_CHECKING:
@@ -20,7 +24,7 @@ def create_thread_update(
     context: str | None = None,
     context_object: Model | None = None,
     is_hidden: bool = False,
-):
+) -> ThreadUpdate:
     return create_thread_update_hook(
         _create_thread_update_action,
         thread,
@@ -44,7 +48,7 @@ def _create_thread_update_action(
     context_object: Model | None = None,
     is_hidden: bool = False,
     plugin_data: dict,
-):
+) -> ThreadUpdate:
     actor_id = None
     actor_name = None
     context_type = None
@@ -78,3 +82,58 @@ def _create_thread_update_action(
         is_hidden=is_hidden,
         plugin_data=plugin_data,
     )
+
+
+def hide_thread_update(
+    thread_update: ThreadUpdate, request: HttpRequest | None = None
+) -> bool:
+    return hide_thread_update_hook(
+        _hide_thread_update_action, thread_update, {"is_hidden"}, request
+    )
+
+
+def _hide_thread_update_action(
+    thread_update: ThreadUpdate,
+    update_fields: set[str],
+    request: HttpRequest | None = None,
+) -> bool:
+    if thread_update.is_hidden:
+        return False
+
+    thread_update.is_hidden = True
+    thread_update.save(update_fields=update_fields)
+    return True
+
+
+def unhide_thread_update(
+    thread_update: ThreadUpdate, request: HttpRequest | None = None
+) -> bool:
+    return unhide_thread_update_hook(
+        _unhide_thread_update_action, thread_update, {"is_hidden"}, request
+    )
+
+
+def _unhide_thread_update_action(
+    thread_update: ThreadUpdate,
+    update_fields: set[str],
+    request: HttpRequest | None = None,
+) -> bool:
+    if not thread_update.is_hidden:
+        return False
+
+    thread_update.is_hidden = False
+    thread_update.save(update_fields=update_fields)
+    return True
+
+
+def delete_thread_update(
+    thread_update: ThreadUpdate, request: HttpRequest | None = None
+) -> bool:
+    pass
+
+
+def _delete_thread_update_action(
+    thread_update: ThreadUpdate, request: HttpRequest | None = None
+) -> bool:
+    thread_update.delete()
+    return True

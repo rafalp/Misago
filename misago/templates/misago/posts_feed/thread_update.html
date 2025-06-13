@@ -6,24 +6,60 @@
     hx-swap-oob="true"
   {% endif %}
 >
-  <span class="material-icon">{{ icon }}</span>
+  <div>
+    <a id="update-{{ thread_update.id }}" class="scroll-target"></a>
+    <span class="material-icon">{{ icon }}</span>
 
-  {% if actor %}
-    <a href="{{ actor.get_absolute_url }}">{{ actor }}</a>
-  {% elif actor_name %}
-    {{ actor_name }}
-  {% endif %}
+    {% if actor %}
+      <a href="{{ actor.get_absolute_url }}">{{ actor }}</a>
+    {% elif actor_name %}
+      {{ actor_name }}
+    {% endif %}
 
-  {% if thread_update.action == "edited_title" %}
-    Changed title from "{{ thread_update.context }}"
-  {% else %}
-    {{ thread_update.action }}
+    {% if thread_update.action == "edited_title" %}
+      Changed title from "{{ thread_update.context }}"
+    {% else %}
+      {{ thread_update.action }}
+    {% endif %}
+    <span>&mdash;</span>
+    <span
+      title="{{ thread_update.created_at|date:'DATETIME_FORMAT' }}"
+      misago-timestamp="{{ thread_update.created_at.isoformat }}"
+    >
+      {{ thread_update.created_at|date_relative }}
+    </span>
+    {% if thread_update.is_hidden %}
+      <em>HIDDEN</em>
+    {% endif %}
+  </div>
+  {% if moderation %}
+    <div>
+      {% if hide_url %}
+        <form action="{{ hide_url }}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ full_path }}#update-{{ thread_update.id }}" />
+          <button type="submit" class="btn btn-default btn-sm">
+            HIDE
+          </button>
+        </form>
+      {% endif %}
+      {% if unhide_url %}
+        <form action="{{ unhide_url }}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ full_path }}#update-{{ thread_update.id }}" />
+          <button type="submit" class="btn btn-default btn-sm">
+            UNHIDE
+          </button>
+        </form>
+      {% endif %}
+      {% if delete_url %}
+        <form action="{{ delete_url }}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-default btn-sm">
+            DELETE
+          </button>
+        </form>
+      {% endif %}
+    </div>
   {% endif %}
-  <span>&mdash;</span>
-  <span
-    title="{{ thread_update.created_at|date:'DATETIME_FORMAT' }}"
-    misago-timestamp="{{ thread_update.created_at.isoformat }}"
-  >
-    {{ thread_update.created_at|date_relative }}
-  </span>
 </div>

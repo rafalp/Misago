@@ -50,7 +50,7 @@ class PostsFeed:
         self.unread = set()
 
         self.allow_edit_thread = False
-        self.is_moderator = False
+        self.is_moderator = self.get_moderator_status()
         self.counter_start = 0
 
     def set_animated_posts(self, ids: Iterable[int]):
@@ -61,6 +61,9 @@ class PostsFeed:
 
     def set_counter_start(self, counter_start: int):
         self.counter_start = counter_start
+
+    def get_moderator_status(self) -> bool:
+        return False
 
     def set_allow_edit_thread(self, allow_edit_thread: bool):
         self.allow_edit_thread = allow_edit_thread
@@ -118,10 +121,10 @@ class PostsFeed:
             "poster": None,
             "poster_name": post.poster_name,
             "unread": post.id in self.unread,
-            "edit_url": edit_url,
-            "moderation": False,
-            "attachments": [],
             "rich_text_data": None,
+            "attachments": [],
+            "edit_url": edit_url,
+            "moderation": self.is_moderator,
         }
 
     def allow_edit_post(self, post: Post) -> bool:
@@ -134,6 +137,18 @@ class PostsFeed:
         return None
 
     def get_thread_update_data(self, thread_update: ThreadUpdate) -> dict:
+        hide_url: str | None = None
+        unhide_url: str | None = None
+        delete_url: str | None = None
+
+        if self.is_moderator:
+            if thread_update.is_hidden:
+                unhide_url = self.get_unhide_thread_update_url(thread_update)
+            else:
+                hide_url = self.get_hide_thread_update_url(thread_update)
+
+            delete_url = self.get_delete_thread_update_url(thread_update)
+
         return {
             "template_name": self.thread_update_template_name,
             "animate": False,
@@ -144,7 +159,20 @@ class PostsFeed:
             "actor": None,
             "actor_name": thread_update.actor_name,
             "context_object": None,
+            "hide_url": hide_url,
+            "unhide_url": unhide_url,
+            "delete_url": delete_url,
+            "moderation": self.is_moderator,
         }
+
+    def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+        return None
+
+    def get_unhide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+        return None
+
+    def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+        return None
 
     def set_feed_related_objects(self, feed: list[dict], related_objects: dict) -> None:
         for item in feed:
@@ -200,6 +228,11 @@ class PostsFeed:
 
 
 class ThreadPostsFeed(PostsFeed):
+    def get_moderator_status(self) -> bool:
+        return self.request.user_permissions.is_category_moderator(
+            self.thread.category_id
+        )
+
     def allow_edit_post(self, post: Post) -> bool:
         if self.request.user.is_anonymous:
             return False
@@ -223,8 +256,34 @@ class ThreadPostsFeed(PostsFeed):
             kwargs={"id": self.thread.id, "slug": self.thread.slug, "post": post.id},
         )
 
+    def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+        return reverse(
+            "misago:hide-thread-update",
+            kwargs={
+                "id": self.thread.id,
+                "slug": self.thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        )
+
+    def get_unhide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+        return reverse(
+            "misago:unhide-thread-update",
+            kwargs={
+                "id": self.thread.id,
+                "slug": self.thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        )
+
+    def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+        return None
+
 
 class PrivateThreadPostsFeed(PostsFeed):
+    def get_moderator_status(self) -> bool:
+        return self.request.user_permissions.is_private_threads_moderator
+
     def allow_edit_post(self, post: Post) -> bool:
         with check_permissions() as can_edit_post:
             check_edit_private_thread_post_permission(
@@ -244,3 +303,26 @@ class PrivateThreadPostsFeed(PostsFeed):
             "misago:edit-private-thread",
             kwargs={"id": self.thread.id, "slug": self.thread.slug, "post": post.id},
         )
+
+    def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+        return reverse(
+            "misago:hide-private-thread-update",
+            kwargs={
+                "id": self.thread.id,
+                "slug": self.thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        )
+
+    def get_unhide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+        return reverse(
+            "misago:unhide-private-thread-update",
+            kwargs={
+                "id": self.thread.id,
+                "slug": self.thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        )
+
+    def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+        return None

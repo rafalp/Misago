@@ -107,6 +107,12 @@ class GenericView(View):
             kwargs={"id": thread.id, "slug": thread.slug},
         )
 
+    def clean_thread_url(self, thread: Thread, url_to_clean: str | None = None) -> str:
+        thread_url = self.get_thread_url(thread)
+        if url_to_clean and url_to_clean.startswith(thread_url):
+            return url_to_clean
+        return thread_url
+
     def get_thread_updates_queryset(
         self,
         request: HttpRequest,
