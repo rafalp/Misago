@@ -178,7 +178,9 @@ Hooks instances are importable from the following Python modules:
 - [`get_threads_page_queryset_hook`](./get-threads-page-queryset-hook.md)
 - [`get_threads_page_subcategories_hook`](./get-threads-page-subcategories-hook.md)
 - [`get_threads_page_threads_hook`](./get-threads-page-threads-hook.md)
+- [`hide_thread_update_hook`](./hide-thread-update-hook.md)
 - [`set_posts_feed_related_objects_hook`](./set-posts-feed-related-objects-hook.md)
+- [`unhide_thread_update_hook`](./unhide-thread-update-hook.md)
 
 
 ## `misago.users.hooks`

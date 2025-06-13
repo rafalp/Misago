@@ -1,4 +1,8 @@
-from ..threadupdates import create_thread_update
+from ..threadupdates import (
+    create_thread_update,
+    hide_thread_update,
+    unhide_thread_update,
+)
 
 
 def test_create_thread_update_creates_thread_update(default_category, thread, user):
@@ -59,3 +63,43 @@ def test_create_thread_update_creates_thread_update_with_full_context(
         thread_update.context_model.objects.get(id=thread_update.context_id)
         == sibling_category
     )
+
+
+def test_hide_thread_update_hides_thread_update(thread_update):
+    assert hide_thread_update(thread_update)
+
+    thread_update.refresh_from_db()
+    assert thread_update.is_hidden
+
+
+def test_hide_thread_update_returns_false_if_thread_update_is_hidden(
+    django_assert_num_queries, thread_update
+):
+    thread_update.is_hidden = True
+    thread_update.save()
+
+    with django_assert_num_queries(0):
+        assert not hide_thread_update(thread_update)
+
+    thread_update.refresh_from_db()
+    assert thread_update.is_hidden
+
+
+def test_unhide_thread_update_unhides_thread_update(thread_update):
+    thread_update.is_hidden = True
+    thread_update.save()
+
+    assert unhide_thread_update(thread_update)
+
+    thread_update.refresh_from_db()
+    assert not thread_update.is_hidden
+
+
+def test_unhide_thread_update_returns_false_if_thread_update_is_not_hidden(
+    django_assert_num_queries, thread_update
+):
+    with django_assert_num_queries(0):
+        assert not unhide_thread_update(thread_update)
+
+    thread_update.refresh_from_db()
+    assert not thread_update.is_hidden
