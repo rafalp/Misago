@@ -146,6 +146,7 @@ Hooks instances are importable from the following Python modules:
 
 - [`create_prefetch_posts_feed_related_objects_hook`](./create-prefetch-posts-feed-related-objects-hook.md)
 - [`create_thread_update_hook`](./create-thread-update-hook.md)
+- [`delete_thread_update_hook`](./delete-thread-update-hook.md)
 - [`get_category_threads_page_context_data_hook`](./get-category-threads-page-context-data-hook.md)
 - [`get_category_threads_page_filters_hook`](./get-category-threads-page-filters-hook.md)
 - [`get_category_threads_page_moderation_actions_hook`](./get-category-threads-page-moderation-actions-hook.md)

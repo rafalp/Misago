@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from .hooks import (
     create_thread_update_hook,
+    delete_thread_update_hook,
     hide_thread_update_hook,
     unhide_thread_update_hook,
 )
@@ -13,6 +14,13 @@ from .models import Thread, ThreadUpdate
 
 if TYPE_CHECKING:
     from ..users.models import User
+
+__all__ = [
+    "create_thread_update",
+    "delete_thread_update",
+    "hide_thread_update",
+    "unhide_thread_update",
+]
 
 
 def create_thread_update(
@@ -128,12 +136,12 @@ def _unhide_thread_update_action(
 
 def delete_thread_update(
     thread_update: ThreadUpdate, request: HttpRequest | None = None
-) -> bool:
-    pass
+):
+    delete_thread_update_hook(_delete_thread_update_action, thread_update, request)
 
 
 def _delete_thread_update_action(
     thread_update: ThreadUpdate, request: HttpRequest | None = None
-) -> bool:
+):
     thread_update.delete()
     return True

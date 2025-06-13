@@ -1,5 +1,9 @@
+import pytest
+
+from ..models import ThreadUpdate
 from ..threadupdates import (
     create_thread_update,
+    delete_thread_update,
     hide_thread_update,
     unhide_thread_update,
 )
@@ -103,3 +107,12 @@ def test_unhide_thread_update_returns_false_if_thread_update_is_not_hidden(
 
     thread_update.refresh_from_db()
     assert not thread_update.is_hidden
+
+
+def test_delete_thread_deletes_thread_update(thread_update):
+    delete_thread_update(thread_update)
+
+    with pytest.raises(ThreadUpdate.DoesNotExist):
+        thread_update.refresh_from_db()
+
+    assert not ThreadUpdate.objects.exists()

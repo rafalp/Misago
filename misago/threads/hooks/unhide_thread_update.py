@@ -97,14 +97,14 @@ class UnhideThreadUpdateHook(
 
 
     @unhide_thread_update_hook.append_filter
-    def save_client_ip_on_thread_update(
+    def save_client_ip_on_thread_update_unhide(
         action,
         thread_update: ThreadUpdate,
         update_fields: set[str],
         request: HttpRequest | None = None,
     ) -> bool:
         if not request:
-            return action(thread_update, update_fields, request)
+            return action(thread_update, update_fields)
 
         thread_update.plugin_data["last_ip"] = request.client_ip
         update_fields.add("plugin_data")
