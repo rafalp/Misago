@@ -1,6 +1,8 @@
 import pytest
 
 from ...conf.test import override_dynamic_settings
+from ...permissions.enums import CategoryPermission
+from ...permissions.models import CategoryGroupPermission
 from ...permissions.proxy import UserPermissionsProxy
 from ..prefetch import (
     PrefetchPostsFeedRelatedObjects,
@@ -637,7 +639,63 @@ def test_prefetch_posts_feed_related_objects_fetch_posts_metadata_attachments_ex
         assert data["attachments"] == {
             text_attachment.id: text_attachment,
         }
-        assert data["attachment_errors"][user_text_attachment.id].not_found
+
+
+def test_prefetch_posts_feed_related_objects_fetch_posts_metadata_attachments_excludes_attachments_with_permission_denied(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    anonymous_user,
+    guests_group,
+    text_attachment,
+    user_text_attachment,
+    sibling_category,
+    post,
+    user_reply,
+    other_thread,
+):
+    CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=guests_group,
+        permission=CategoryPermission.SEE,
+    )
+    CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=guests_group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+    other_thread.category = sibling_category
+    other_thread.save()
+
+    other_thread.first_post.category = sibling_category
+    other_thread.first_post.save()
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    user_text_attachment.associate_with_post(other_thread.first_post)
+    user_text_attachment.save()
+
+    post.metadata["attachments"] = [text_attachment.id]
+    post.save()
+
+    user_reply.metadata["attachments"] = [user_text_attachment.id]
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    with django_assert_num_queries(6):
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings, permissions, [post, user_reply]
+        )
+        assert data["attachments"] == {
+            text_attachment.id: text_attachment,
+        }
+        assert tuple(data["attachment_errors"]) == (user_text_attachment.id,)
+        assert data["attachment_errors"][user_text_attachment.id].permission_denied
 
 
 def test_prefetch_posts_feed_related_objects_fetches_posts_metadata_posts(
@@ -768,14 +826,13 @@ def test_prefetch_posts_feed_related_objects_doesnt_prefetch_anonymous_posts_use
         assert data["users"][user.id].group
 
 
-def test_prefetch_posts_feed_related_objects_sets_visible_posts(
+def test_prefetch_posts_feed_related_objects_excludes_inaccessible_posts(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
     user,
     post,
     user_reply,
-    hidden_reply,
     private_thread,
     user_private_thread,
 ):
@@ -791,12 +848,12 @@ def test_prefetch_posts_feed_related_objects_sets_visible_posts(
 
     with django_assert_num_queries(6):
         data = prefetch_posts_feed_related_objects(
-            dynamic_settings, permissions, [post, user_reply, hidden_reply]
+            dynamic_settings, permissions, [post, user_reply]
         )
-        assert data["visible_posts"] == {
-            post.id,
-            user_reply.id,
-            user_private_thread.first_post_id,
+        assert data["posts"] == {
+            post.id: post,
+            user_reply.id: user_reply,
+            user_private_thread.first_post_id: user_private_thread.first_post,
         }
 
 

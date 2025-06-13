@@ -1,14 +1,20 @@
 from typing import TYPE_CHECKING, Iterable, Protocol
 
 from django.conf import settings as dj_settings
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
+from django.http import Http404
 
 from ..attachments.models import Attachment
 from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..conf.dynamicsettings import DynamicSettings
 from ..permissions.attachments import check_download_attachment_permission
-from ..permissions.generic import check_access_post_permission
+from ..permissions.generic import (
+    check_access_category_permission,
+    check_access_post_permission,
+    check_access_thread_permission,
+)
 from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.checkutils import check_permissions
 from ..users.models import Group
@@ -87,6 +93,8 @@ def _create_prefetch_posts_feed_related_objects_action(
     prefetch.add(find_users_ids)
     prefetch.add(fetch_users)
     prefetch.add(fetch_users_groups)
+    prefetch.add(check_categories_permissions)
+    prefetch.add(check_threads_permissions)
     prefetch.add(check_posts_permissions)
     prefetch.add(check_attachments_permissions)
 
@@ -155,10 +163,13 @@ class PrefetchPostsFeedRelatedObjects:
             "attachment_ids": set(),
             "user_ids": set(),
             "categories": {c.id: c for c in self.categories if c.id},
+            "visible_categories": {c.id for c in self.categories if c.id},
             "threads": {t.id: t for t in self.threads if t.id},
+            "visible_threads": {t.id for t in self.threads if t.id},
             "posts": {p.id: p for p in self.posts if p.id},
-            "visible_posts": set(),
+            "visible_posts": {p.id for p in self.posts if p.id},
             "thread_updates": {u.id: u for u in self.thread_updates},
+            "visible_thread_updates": {u for u in self.thread_updates},
             "attachments": {a.id: a for a in self.attachments},
             "attachment_errors": {},
             "users": {u.id: u for u in self.users},
@@ -360,11 +371,52 @@ def fetch_attachments(
     if settings.additional_embedded_attachments_limit and embedded_attachments:
         queryset = queryset.union(
             Attachment.objects.filter(id__in=embedded_attachments, post__isnull=False)
-            .exclude(post_id__in=data["visible_posts"])
+            .exclude(post_id__in=data["posts"])
             .order_by("-id")[: settings.additional_embedded_attachments_limit]
         )
 
     data["attachments"].update({a.id: a for a in queryset})
+
+
+def check_categories_permissions(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    for category in tuple(data["categories"].values()):
+        if category.id in data["visible_categories"]:
+            continue  # Skip previously checked categories
+
+        try:
+            check_access_category_permission(permissions, category)
+        except (Http404, PermissionDenied):
+            data["categories"].pop(category.id)
+
+    data.pop("visible_categories")
+
+
+def check_threads_permissions(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    for thread in tuple(data["threads"].values()):
+        if thread.id in data["visible_threads"]:
+            continue  # Skip previously checked threads
+
+        try:
+            if thread.category_id not in data["categories"]:
+                raise Http404()
+
+            check_access_thread_permission(
+                permissions,
+                data["categories"][thread.category_id],
+                thread,
+            )
+        except (Http404, PermissionDenied):
+            data["threads"].pop(thread.id)
+
+    data.pop("visible_threads")
 
 
 def check_posts_permissions(
@@ -372,20 +424,26 @@ def check_posts_permissions(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
-    for post in data["posts"].values():
+    for post in tuple(data["posts"].values()):
         if post.id in data["visible_posts"]:
             continue  # Skip previously checked posts
 
-        with check_permissions() as can_see:
+        try:
+            if post.category_id not in data["categories"]:
+                raise Http404()
+            if post.thread_id not in data["threads"]:
+                raise Http404()
+
             check_access_post_permission(
                 permissions,
                 data["categories"][post.category_id],
                 data["threads"][post.thread_id],
                 post,
             )
+        except (Http404, PermissionDenied):
+            data["posts"].pop(post.id)
 
-        if can_see:
-            data["visible_posts"].add(post.id)
+    data.pop("visible_posts")
 
 
 def check_attachments_permissions(
@@ -399,12 +457,15 @@ def check_attachments_permissions(
 
     accessible_attachments: dict[int, Attachment] = {}
     for attachment in attachments_list:
-        if attachment.category_id:
-            attachment.category = data["categories"][attachment.category_id]
-        if attachment.thread_id:
-            attachment.thread = data["threads"][attachment.thread_id]
-        if attachment.post_id:
-            attachment.post = data["posts"][attachment.post_id]
+        try:
+            if attachment.category_id:
+                attachment.category = data["categories"][attachment.category_id]
+            if attachment.thread_id:
+                attachment.thread = data["threads"][attachment.thread_id]
+            if attachment.post_id:
+                attachment.post = data["posts"][attachment.post_id]
+        except KeyError:
+            continue
 
         with check_permissions() as can_download:
             check_download_attachment_permission(
