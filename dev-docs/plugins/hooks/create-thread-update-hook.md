@@ -52,7 +52,7 @@ A `str` with the name of the action that updated the thread.
 
 #### `actor: Union["User", None, str] = None`
 
-The actor who performed the action: a `User` instance, a `str` with a name, or `None` if not available.
+A `str` with context, e.g., a previous thread title or the name of `context_object`. `None` if not available or not used for this `action_name`.
 
 
 #### `request: HttpRequest | None = None`
