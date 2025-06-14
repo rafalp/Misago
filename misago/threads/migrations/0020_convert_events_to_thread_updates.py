@@ -32,11 +32,14 @@ def convert_events_to_thread_updates(apps, _):
             thread_id=post.thread_id,
             actor_id=post.poster_id,
             actor_name=post.poster_name,
+            hidden_by_id=post.hidden_by_id,
+            hidden_by_name=post.hidden_by_name,
             action=EVENT_TYPES.get(post.event_type, post.event_type),
             context=context,
             context_type=context_type,
             context_id=context_id,
             is_hidden=post.is_hidden,
+            hidden_at=post.hidden_on,
         )
 
         ThreadUpdate.objects.filter(id=update.id).update(created_at=post.posted_on)
