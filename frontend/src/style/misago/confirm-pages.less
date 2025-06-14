@@ -1,0 +1,68 @@
+.page-confirm-container {
+  padding: @line-height-computed * 2 floor(@grid-gutter-width / 2);
+  margin-bottom: @line-height-computed * -2;
+}
+
+.panel-confirm-form {
+  max-width: @confirm-form-width;
+  margin: @line-height-computed auto;
+
+  border: 1px solid @confirm-form-border;
+  border-radius: @border-radius-base;
+}
+
+.panel-confirm-form-body {
+  padding: @confirm-form-padding;
+}
+
+.panel-confirm-form-header {
+  margin: 0;
+  margin-bottom: @confirm-form-padding;
+
+  font-size: ceil(@font-size-base * 1.5);
+  font-weight: normal;
+  text-align: center;
+}
+
+.panel-confirm-form-error {
+  margin-top: floor(@line-height-computed * -0.5);
+  margin-bottom: @line-height-computed;
+
+  color: @brand-danger;
+  font-weight: bold;
+  text-align: center;
+}
+
+.panel-confirm-form-copy {
+  text-align: center;
+}
+
+.panel-confirm-form-footer {
+  display: grid;
+  margin-top: @confirm-form-padding;
+  grid-template-columns: 1fr 1fr;
+  gap: floor(@grid-gutter-width / 2);
+
+  .btn {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: @screen-sm-max) {
+  .page-confirm-container {
+    padding: @line-height-computed floor(@grid-gutter-width / 2);
+  }
+
+  .panel-confirm-form-body {
+    padding: @confirm-form-padding-sm;
+  }
+
+  .panel-confirm-form-header {
+    margin-bottom: @confirm-form-padding-sm;
+  }
+
+  .panel-confirm-form-error {
+    margin-top: 0;
+    margin-bottom: floor(@line-height-computed / 2);
+  }
+}

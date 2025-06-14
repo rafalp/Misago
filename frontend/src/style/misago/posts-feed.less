@@ -8,8 +8,6 @@
 }
 
 .posts-feed-item {
-  padding: @line-height-computed floor(@grid-gutter-width / 2);
-
   border-bottom: 1px solid @gray-lighter;
 }
 
@@ -17,7 +15,7 @@
   border-bottom: 0;
 }
 
-// Animate in new or updated threads
+// Animate in new or updated items
 @keyframes misago-posts-feed-item-animate {
   0% {
     background-color: @posts-feed-item-animation-color;
@@ -33,9 +31,37 @@
   animation-iteration-count: 1;
 }
 
+// Animate out removed items
+@keyframes misago-posts-feed-item-remove {
+  0% {
+    opacity: 1;
+    top: 0;
+  }
+
+  100% {
+    opacity: 0;
+    top: -100px;
+  }
+}
+
+.posts-feed-item-remove {
+  overflow: hidden;
+  position: relative;
+
+  .posts-feed-item-post,
+  .posts-feed-item-thread-update {
+    position: absolute;
+
+    animation-name: misago-posts-feed-item-remove;
+    animation-duration: 1.5s;
+    animation-iteration-count: 1;
+  }
+}
+
 // Post
 .posts-feed-item-post {
   display: flex;
+  padding: @line-height-computed floor(@grid-gutter-width / 2);
 }
 
 .posts-feed-item-post-bit-side {
@@ -313,14 +339,24 @@
   }
 }
 
+// Thread update
+.posts-feed-item-thread-update {
+  padding: @line-height-computed floor(@grid-gutter-width / 2);
+}
+
+// Responsiveness
 @media screen and (min-width: 500px) {
   .posts-feed {
     margin-left: 0;
     margin-right: 0;
   }
 
-  .posts-feed-item {
+  .posts-feed-item-post {
     padding: @line-height-computed 0;
+  }
+
+  .posts-feed-item-thread-update {
+    padding: floor(@line-height-computed / 2) 0;
   }
 
   .posts-feed-item-post-bit-side,

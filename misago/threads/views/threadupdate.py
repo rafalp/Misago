@@ -109,6 +109,11 @@ class UnhidePrivateThreadUpdateView(
 
 
 class DeleteUpdateView:
+    thread_select_related = True
+    thread_update_select_related = True
+
+    template_name: str = "misago/thread_update/delete.html"
+    confirm_template_name: str = "misago/thread_update/confirm_delete.html"
     success_message = pgettext_lazy("thread update deleted", "Thread update deleted")
 
     def post(
@@ -123,14 +128,23 @@ class DeleteUpdateView:
         if not self.check_permission(request, thread):
             self.raise_permission_error()
 
-        delete_thread_update(thread_update_obj, request)
-        messages.success(request, self.success_message)
-
         if request.is_htmx:
-            feed = self.get_posts_feed(request, thread, [], [thread_update_obj])
-            return render(request, self.template_name, {"feed": feed})
+            self.execute_action(request, thread_update_obj)
+            return render(request, self.template_name)
 
-        return redirect(self.clean_thread_url(thread, request.POST.get("next")))
+        if request.POST.get("confirm"):
+            self.execute_action(request, thread_update_obj)
+            return redirect(self.clean_thread_url(thread, request.POST.get("next")))
+
+        return render(
+            request,
+            self.confirm_template_name,
+            {
+                "thread": thread,
+                "thread_update": thread_update,
+                "next_url": self.clean_thread_url(thread, request.POST.get("next")),
+            },
+        )
 
     def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
         return False
@@ -142,6 +156,10 @@ class DeleteUpdateView:
                 "Only a moderator can delete thread updates.",
             )
         )
+
+    def execute_action(self, request: HttpRequest, thread_update: ThreadUpdate):
+        delete_thread_update(thread_update, request)
+        messages.success(request, self.success_message)
 
 
 class DeleteThreadUpdateView(DeleteUpdateView, ThreadView):
