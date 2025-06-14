@@ -1,9 +1,11 @@
-from typing import Protocol, Type
+from typing import TYPE_CHECKING, Protocol, Type
 
 from django.http import HttpRequest
 
-from ...moderation.threads import ThreadsBulkModerationAction
 from ...plugins.hooks import FilterHook
+
+if TYPE_CHECKING:
+    from ...moderation.threads import ThreadsBulkModerationAction
 
 
 class GetThreadsPageModerationActionsHookAction(Protocol):
@@ -24,7 +26,7 @@ class GetThreadsPageModerationActionsHookAction(Protocol):
 
     def __call__(
         self, request: HttpRequest
-    ) -> list[Type[ThreadsBulkModerationAction]]: ...
+    ) -> list[Type["ThreadsBulkModerationAction"]]: ...
 
 
 class GetThreadsPageModerationActionsHookFilter(Protocol):
@@ -53,7 +55,7 @@ class GetThreadsPageModerationActionsHookFilter(Protocol):
         self,
         action: GetThreadsPageModerationActionsHookAction,
         request: HttpRequest,
-    ) -> list[Type[ThreadsBulkModerationAction]]: ...
+    ) -> list[Type["ThreadsBulkModerationAction"]]: ...
 
 
 class GetThreadsPageModerationActionsHook(
@@ -105,7 +107,7 @@ class GetThreadsPageModerationActionsHook(
         self,
         action: GetThreadsPageModerationActionsHookAction,
         request: HttpRequest,
-    ) -> list[Type[ThreadsBulkModerationAction]]:
+    ) -> list[Type["ThreadsBulkModerationAction"]]:
         return super().__call__(action, request)
 
 

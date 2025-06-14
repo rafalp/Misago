@@ -19,7 +19,7 @@ def custom_get_category_threads_page_moderation_actions_filter(
     action: GetCategoryThreadsPageModerationActionsHookAction,
     request: HttpRequest,
     category: Category,
-) -> list[Type[ThreadsBulkModerationAction]]:
+) -> list[Type['ThreadsBulkModerationAction']]:
     ...
 ```
 
@@ -53,7 +53,7 @@ A Python `list` with `ThreadsBulkModerationAction` types.
 ## Action
 
 ```python
-def get_category_threads_page_moderation_actions_action(request: HttpRequest, category: Category) -> list[Type[ThreadsBulkModerationAction]]:
+def get_category_threads_page_moderation_actions_action(request: HttpRequest, category: Category) -> list[Type['ThreadsBulkModerationAction']]:
     ...
 ```
 

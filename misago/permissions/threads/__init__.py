@@ -13,6 +13,7 @@ from .querysets import (
     ThreadsQuerysetFilter,
     filter_category_threads_queryset,
     filter_thread_posts_queryset,
+    filter_thread_updates_queryset,
 )
 
 __all__ = [
@@ -29,4 +30,5 @@ __all__ = [
     "check_start_thread_permission",
     "filter_category_threads_queryset",
     "filter_thread_posts_queryset",
+    "filter_thread_updates_queryset",
 ]

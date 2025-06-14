@@ -64,7 +64,7 @@ class CanUploadPrivateThreadsAttachmentsHook(
     ]
 ):
     """
-    This hook wraps the standard Misago function that checks whether a user has
+    This hook wraps a standard Misago function that checks whether a user has
     permission to upload attachments in private threads.
 
     # Example

@@ -42,7 +42,7 @@ class UpgradePostCodeBlocksHook(
     FilterHook[UpgradePostCodeBlocksHookAction, UpgradePostCodeBlocksHookFilter]
 ):
     """
-    This hook wraps the standard Misago function used to upgrade a post's
+    This hook wraps a standard Misago function used to upgrade a post's
     code blocks after it has been posted.
 
     The standard code highlighting feature runs in a Celery task because Pygments

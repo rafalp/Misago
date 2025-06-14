@@ -4,7 +4,9 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.models import Category
+from ..threads.enums import ThreadUpdateAction
 from ..threads.models import Thread
+from ..threads.threadupdates import create_thread_update
 from .forms import MoveThreads
 from .results import ModerationResult, ModerationBulkResult, ModerationTemplateResult
 
@@ -78,27 +80,6 @@ class MoveThreadsBulkModerationAction(ThreadsBulkModerationAction):
         return self.create_bulk_result(updated)
 
 
-class OpenThreadsBulkModerationAction(ThreadsBulkModerationAction):
-    id: str = "open"
-    name: str = pgettext_lazy("threads bulk moderation action", "Open")
-
-    def __call__(
-        self, request: HttpRequest, threads: list[Thread]
-    ) -> ModerationBulkResult:
-        closed_threads = [thread for thread in threads if thread.is_closed]
-        updated = Thread.objects.filter(
-            id__in=[thread.id for thread in closed_threads]
-        ).update(is_closed=False)
-
-        if updated:
-            messages.success(
-                request,
-                pgettext("threads bulk open", "Threads opened"),
-            )
-
-        return self.create_bulk_result(closed_threads)
-
-
 class CloseThreadsBulkModerationAction(ThreadsBulkModerationAction):
     id: str = "close"
     name: str = pgettext_lazy("threads bulk moderation action", "Close")
@@ -112,9 +93,40 @@ class CloseThreadsBulkModerationAction(ThreadsBulkModerationAction):
         ).update(is_closed=True)
 
         if updated:
+            for thread in open_threads:
+                create_thread_update(
+                    thread, ThreadUpdateAction.LOCKED, request.user, request=request
+                )
+
             messages.success(
                 request,
                 pgettext("threads bulk open", "Threads closed"),
             )
 
         return self.create_bulk_result(open_threads)
+
+
+class OpenThreadsBulkModerationAction(ThreadsBulkModerationAction):
+    id: str = "open"
+    name: str = pgettext_lazy("threads bulk moderation action", "Open")
+
+    def __call__(
+        self, request: HttpRequest, threads: list[Thread]
+    ) -> ModerationBulkResult:
+        closed_threads = [thread for thread in threads if thread.is_closed]
+        updated = Thread.objects.filter(
+            id__in=[thread.id for thread in closed_threads]
+        ).update(is_closed=False)
+
+        if updated:
+            for thread in closed_threads:
+                create_thread_update(
+                    thread, ThreadUpdateAction.OPENED, request.user, request=request
+                )
+
+            messages.success(
+                request,
+                pgettext("threads bulk open", "Threads opened"),
+            )
+
+        return self.create_bulk_result(closed_threads)

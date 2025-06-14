@@ -11,6 +11,7 @@ import "misago/style/index.less"
 import AjaxLoader, { useLoader } from "./AjaxLoader"
 import BulkModeration from "./BulkModeration"
 import { Mention } from "./Autocomplete"
+import { deleteElement, slideUpElement } from "./animations"
 import "./focusOn"
 import "./formValidators"
 import "./htmxErrors"
@@ -35,6 +36,9 @@ export class Misago {
     this.editor = editor
     this.lightbox = lightbox
     this.quote = quote
+
+    this.deleteElement = deleteElement
+    this.slideUpElement = slideUpElement
   }
 
   addInitializer(initializer) {

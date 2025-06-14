@@ -33,7 +33,7 @@ from ..hooks import (
     get_start_thread_page_context_data_hook,
 )
 from ..models import Thread
-from ..prefetch import prefetch_posts_related_objects
+from ..prefetch import prefetch_posts_feed_related_objects
 
 
 class StartThreadView(View):
@@ -92,7 +92,7 @@ class StartThreadView(View):
 
         context = self.get_context_data(request, category, formset)
 
-        related_objects = prefetch_posts_related_objects(
+        related_objects = prefetch_posts_feed_related_objects(
             request.settings,
             request.user_permissions,
             [state.post],

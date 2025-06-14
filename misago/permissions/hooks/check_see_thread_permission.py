@@ -80,7 +80,7 @@ class CheckSeeThreadPermissionHook(
     ]
 ):
     """
-    This hook wraps the standard Misago function used to check if the user has
+    This hook wraps a standard Misago function used to check if the user has
     a permission to see a thread. Raises Django's `Http404` if they can't see
     it or `PermissionDenied` with an error message if they can't browse it.
 

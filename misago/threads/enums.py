@@ -35,3 +35,31 @@ class ThreadsListsPolling(IntEnum):
                 pgettext_lazy("category lists polling choice", "Disable"),
             ),
         )
+
+
+class ThreadUpdateAction(StrEnum):
+    APPROVED = "approved"
+
+    PINNED_GLOBALLY = "pinned_globally"
+    PINNED_IN_CATEGORY = "pinned_in_category"
+    UNPINNED = "unpinned"
+
+    OPENED = "opened"
+    LOCKED = "locked"
+
+    MOVED = "moved"
+
+    MERGED = "merged"
+    SPLIT = "split"
+
+    HID = "hid"
+    UNHID = "unhid"
+
+    CHANGED_TITLE = "changed_title"
+
+    TOOK_OWNERSHIP = "took_ownership"
+    JOINED = "joined"
+    INVITED = "invited"
+    LEFT = "left"
+    REMOVED_PARTICIPANT = "removed_participant"
+    CHANGED_OWNER = "changed_owner"

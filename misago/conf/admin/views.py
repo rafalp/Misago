@@ -52,7 +52,7 @@ class SettingsView(AdminView):
 
         if len(settings) != len(form_settings):
             not_found_settings = list(
-                set(settings.keys()).symmetric_difference(set(form_settings))
+                set(settings.keys()).symmetric_difference(form_settings)
             )
             raise ValueError(
                 "Some of settings defined in form could not be found: %s"

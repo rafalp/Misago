@@ -1,6 +1,6 @@
 # `upgrade_post_code_blocks_hook`
 
-This hook wraps the standard Misago function used to upgrade a post's code blocks after it has been posted.
+This hook wraps a standard Misago function used to upgrade a post's code blocks after it has been posted.
 
 The standard code highlighting feature runs in a Celery task because Pygments can get stuck in an infinite loop due to unknown bugs or malicious input.
 
