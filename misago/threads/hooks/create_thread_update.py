@@ -26,7 +26,8 @@ class CreateThreadUpdateHookAction(Protocol):
 
     ## `actor: Union["User", None, str] = None`
 
-    The actor who performed the action: a `User` instance, a `str` with a name, or `None` if not available.
+    The actor who performed the action: a `User` instance, a `str` with a name,
+    or `None` if not available.
 
     ## `request: HttpRequest | None = None`
 
@@ -34,7 +35,8 @@ class CreateThreadUpdateHookAction(Protocol):
 
     ## `context: str | None = None`
 
-    A `str` with context, e.g., a previous thread title or the name of `context_object`. `None` if not available or not used for this `action_name`.
+    A `str` with context, e.g., a previous thread title or the name of
+    `context_object`. `None` if not available or not used for this `action_name`.
 
     ## `context_object: Model | None = None`
 
@@ -42,7 +44,9 @@ class CreateThreadUpdateHookAction(Protocol):
 
     ## `is_hidden: bool = False`
 
-    Controls whether the newly created update should be hidden. Hidden updates are only visible to moderators but can be made visible to all users. Defaults to `False`.
+    Controls whether the newly created update should be hidden. Hidden updates
+    are only visible to moderators but can be made visible to all users.
+    Defaults to `False`.
 
     ## `plugin_data: dict`
 
@@ -87,7 +91,8 @@ class CreateThreadUpdateHookFilter(Protocol):
 
     ## `actor: Union["User", None, str] = None`
 
-    The actor who performed the action: a `User` instance, a `str` with a name, or `None` if not available.
+    A `str` with context, e.g., a previous thread title or the name of
+    `context_object`. `None` if not available or not used for this `action_name`.
 
     ## `request: HttpRequest | None = None`
 
@@ -95,7 +100,8 @@ class CreateThreadUpdateHookFilter(Protocol):
 
     ## `context: str | None = None`
 
-    A `str` with context, e.g., a previous thread title or the name of `context_object`. `None` if not available or not used for this `action_name`.
+    A `str` with context, e.g., a previous thread title or the name of
+    `context_object`. `None` if not available or not used for this `action_name`.
 
     ## `context_object: Model | None = None`
 
@@ -103,7 +109,9 @@ class CreateThreadUpdateHookFilter(Protocol):
 
     ## `is_hidden: bool = False`
 
-    Controls whether the newly created update should be hidden. Hidden updates are only visible to moderators but can be made visible to all users. Defaults to `False`.
+    Controls whether the newly created update should be hidden. Hidden updates
+    are only visible to moderators but can be made visible to all users.
+    Defaults to `False`.
 
     ## `plugin_data: dict`
 

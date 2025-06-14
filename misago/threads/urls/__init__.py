@@ -24,6 +24,8 @@ from ..views.reply import reply_private_thread, reply_thread
 from ..views.selectcategory import SelectCategoryView
 from ..views.start import start_private_thread, start_thread
 from ..views.threadupdate import (
+    delete_thread_update_view,
+    delete_private_thread_update_view,
     hide_private_thread_update_view,
     hide_thread_update_view,
     unhide_private_thread_update_view,
@@ -182,6 +184,16 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/unhide-update/<int:thread_update_id>/",
         unhide_private_thread_update_view,
         name="unhide-private-thread-update",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/delete-update/<int:thread_update_id>/",
+        delete_thread_update_view,
+        name="delete-thread-update",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/delete-update/<int:thread_update_id>/",
+        delete_private_thread_update_view,
+        name="delete-private-thread-update",
     ),
     path(
         "post/<int:id>/",

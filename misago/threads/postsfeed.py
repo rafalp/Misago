@@ -27,8 +27,10 @@ class PostsFeed:
     posts: list[Post]
     updates: list[ThreadUpdate]
 
-    animate: set[int]
-    unread: set[int]
+    animate_posts: set[int]
+    animate_thread_updates: set[int]
+
+    unread_posts: set[int]
 
     allow_edit_thread: bool
     is_moderator: bool
@@ -46,18 +48,23 @@ class PostsFeed:
         self.posts = posts or []
         self.thread_updates = thread_updates or []
 
-        self.animate = set()
-        self.unread = set()
+        self.animate_posts = set()
+        self.animate_thread_updates = set()
+
+        self.unread_posts = set()
 
         self.allow_edit_thread = False
         self.is_moderator = self.get_moderator_status()
         self.counter_start = 0
 
     def set_animated_posts(self, ids: Iterable[int]):
-        self.animate = set(ids)
+        self.animate_posts = set(ids)
+
+    def set_animated_thread_updates(self, ids: Iterable[int]):
+        self.animate_thread_updates = set(ids)
 
     def set_unread_posts(self, ids: Iterable[int]):
-        self.unread = set(ids)
+        self.unread_posts = set(ids)
 
     def set_counter_start(self, counter_start: int):
         self.counter_start = counter_start
@@ -88,6 +95,14 @@ class PostsFeed:
 
         feed.sort(key=lambda item: item["ordering"])
 
+        previous_item = None
+        for item in feed:
+            item["previous_item"] = previous_item
+            if item["type"] == "post":
+                previous_item = f"post-{item['post'].id}"
+            elif item["type"] == "thread_update":
+                previous_item = f"update-{item['thread_update'].id}"
+
         related_objects = prefetch_posts_feed_related_objects(
             self.request.settings,
             self.request.user_permissions,
@@ -113,14 +128,14 @@ class PostsFeed:
 
         return {
             "template_name": self.post_template_name,
-            "animate": post.id in self.animate,
+            "animate": post.id in self.animate_posts,
             "type": "post",
             "ordering": post.posted_on,
             "post": post,
             "counter": counter,
             "poster": None,
             "poster_name": post.poster_name,
-            "unread": post.id in self.unread,
+            "unread": post.id in self.unread_posts,
             "rich_text_data": None,
             "attachments": [],
             "edit_url": edit_url,
@@ -151,7 +166,7 @@ class PostsFeed:
 
         return {
             "template_name": self.thread_update_template_name,
-            "animate": False,
+            "animate": thread_update.id in self.animate_thread_updates,
             "ordering": thread_update.created_at,
             "type": "thread_update",
             "thread_update": thread_update,
@@ -277,7 +292,14 @@ class ThreadPostsFeed(PostsFeed):
         )
 
     def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
-        return None
+        return reverse(
+            "misago:delete-thread-update",
+            kwargs={
+                "id": self.thread.id,
+                "slug": self.thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        )
 
 
 class PrivateThreadPostsFeed(PostsFeed):
@@ -325,4 +347,11 @@ class PrivateThreadPostsFeed(PostsFeed):
         )
 
     def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
-        return None
+        return reverse(
+            "misago:delete-private-thread-update",
+            kwargs={
+                "id": self.thread.id,
+                "slug": self.thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        )
