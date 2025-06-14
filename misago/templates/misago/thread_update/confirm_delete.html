@@ -11,7 +11,7 @@
     
     <form action="{{ full_patch }}" method="post">
       {% csrf_token %}
-      <input type="hidden" name="confirm" value="1">
+      <input type="hidden" name="confirm" value="true">
       <input type="hidden" name="next" value="{{ next_url }}">
 
       <div class="panel-confirm-form panel-confirm-form-delete">
@@ -21,9 +21,9 @@
           </h1>
 
           <div class="panel-confirm-form-copy">
-            {% translate 'Are you sure you want to delete this thread update?' context 'thread update delete confirmation' %}
+            {% translate "Are you sure you want to delete this thread update?" context "thread update delete confirmation" %}
             <br />
-            {% translate 'This action cannot be undone.' context 'thread update delete confirmation' %}
+            {% translate "This action cannot be undone." context "thread update delete confirmation" %}
           </div>
 
           <div class="panel-confirm-form-footer">

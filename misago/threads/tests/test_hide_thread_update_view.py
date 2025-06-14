@@ -264,7 +264,7 @@ def test_hide_thread_update_view_returns_redirect_to_thread_for_invalid_next_url
     )
 
 
-def test_hide_thread_update_view_returns_404_error_for_not_found_thread_in_html(
+def test_hide_thread_update_view_returns_404_error_for_not_found_thread_in_htmx(
     user_client,
 ):
     response = user_client.post(

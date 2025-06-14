@@ -1,14 +1,16 @@
+import pytest
 from django.urls import reverse
 
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains
+from ..models import ThreadUpdate
 
 
-def test_unhide_thread_update_view_returns_404_error_for_not_found_thread(user_client):
+def test_delete_thread_update_view_returns_404_error_for_not_found_thread(user_client):
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": 100,
                 "slug": "not-found",
@@ -20,12 +22,12 @@ def test_unhide_thread_update_view_returns_404_error_for_not_found_thread(user_c
     assert response.status_code == 404
 
 
-def test_unhide_thread_update_view_returns_404_error_for_not_found_update(
+def test_delete_thread_update_view_returns_404_error_for_not_found_update(
     user_client, thread
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
@@ -37,44 +39,46 @@ def test_unhide_thread_update_view_returns_404_error_for_not_found_update(
     assert response.status_code == 404
 
 
-def test_unhide_thread_update_view_returns_403_error_for_anonymous_user(
-    client, thread, hidden_thread_update
+def test_delete_thread_update_view_returns_403_error_for_anonymous_user(
+    client, thread, thread_update
 ):
     response = client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update": thread_update.id,
             },
         )
     )
 
     assert_contains(
-        response, "Only a moderator can unhide thread updates.", status_code=403
+        response, "Only a moderator can delete thread updates.", status_code=403
     )
 
 
-def test_unhide_thread_update_view_returns_404_error_for_user(
-    user_client, thread, hidden_thread_update
+def test_delete_thread_update_view_returns_403_error_for_user(
+    user_client, thread, thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update": thread_update.id,
             },
         )
     )
 
-    assert response.status_code == 404
+    assert_contains(
+        response, "Only a moderator can delete thread updates.", status_code=403
+    )
 
 
-def test_unhide_thread_update_view_checks_category_permission(
-    user_client, thread, hidden_thread_update
+def test_delete_thread_update_view_checks_category_permission(
+    user_client, thread, thread_update
 ):
     CategoryGroupPermission.objects.filter(
         permission=CategoryPermission.BROWSE
@@ -82,11 +86,11 @@ def test_unhide_thread_update_view_checks_category_permission(
 
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update": thread_update.id,
             },
         )
     )
@@ -94,15 +98,32 @@ def test_unhide_thread_update_view_checks_category_permission(
     assert response.status_code == 404
 
 
-def test_unhide_thread_update_view_checks_thread_permission(
-    user_client, thread, hidden_thread_update
+def test_delete_thread_update_view_checks_thread_permission(
+    user_client, thread, thread_update
 ):
     thread.is_hidden = True
     thread.save()
 
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+                "thread_update": thread_update.id,
+            },
+        )
+    )
+
+    assert response.status_code == 404
+
+
+def test_delete_thread_update_view_checks_thread_update_permission(
+    user_client, thread, hidden_thread_update
+):
+    response = user_client.post(
+        reverse(
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
@@ -114,8 +135,8 @@ def test_unhide_thread_update_view_checks_thread_permission(
     assert response.status_code == 404
 
 
-def test_unhide_thread_update_view_unhides_update_for_category_moderator(
-    user_client, user, default_category, thread, hidden_thread_update
+def test_delete_thread_update_view_shows_confirm_delete_form_for_category_moderator(
+    user_client, user, default_category, thread, thread_update
 ):
     Moderator.objects.create(
         categories=[default_category.id],
@@ -125,73 +146,96 @@ def test_unhide_thread_update_view_unhides_update_for_category_moderator(
 
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
-            kwargs={
-                "id": thread.id,
-                "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
-            },
-        )
-    )
-
-    assert response.status_code == 302
-
-    hidden_thread_update.refresh_from_db()
-    assert not hidden_thread_update.is_hidden
-
-
-def test_unhide_thread_update_view_unhides_update_for_global_moderator(
-    moderator_client, thread, hidden_thread_update
-):
-    response = moderator_client.post(
-        reverse(
-            "misago:unhide-thread-update",
-            kwargs={
-                "id": thread.id,
-                "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
-            },
-        )
-    )
-
-    assert response.status_code == 302
-
-    hidden_thread_update.refresh_from_db()
-    assert not hidden_thread_update.is_hidden
-
-
-def test_unhide_thread_update_view_doesnt_update_already_unhidden_update(
-    moderator_client, thread, thread_update
-):
-    response = moderator_client.post(
-        reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
                 "thread_update": thread_update.id,
             },
-        )
+        ),
+    )
+
+    assert_contains(response, "Are you sure you want to delete this thread update?")
+
+
+def test_delete_thread_update_view_deletes_update_for_category_moderator(
+    user_client, user, default_category, thread, thread_update
+):
+    Moderator.objects.create(
+        categories=[default_category.id],
+        user=user,
+        is_global=False,
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:delete-thread-update",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+                "thread_update": thread_update.id,
+            },
+        ),
+        {"confirm": "true"},
     )
 
     assert response.status_code == 302
 
-    thread_update.refresh_from_db()
-    assert not thread_update.is_hidden
+    with pytest.raises(ThreadUpdate.DoesNotExist):
+        thread_update.refresh_from_db()
 
 
-def test_unhide_thread_update_view_returns_redirect_to_thread(
-    moderator_client, thread, hidden_thread_update
+def test_delete_thread_update_view_shows_confirm_delete_form_for_global_moderator(
+    moderator_client, thread, thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update": thread_update.id,
             },
-        )
+        ),
+    )
+
+    assert_contains(response, "Are you sure you want to delete this thread update?")
+
+
+def test_delete_thread_update_view_deletes_update_for_global_moderator(
+    moderator_client, thread, thread_update
+):
+    response = moderator_client.post(
+        reverse(
+            "misago:delete-thread-update",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+                "thread_update": thread_update.id,
+            },
+        ),
+        {"confirm": "true"},
+    )
+
+    assert response.status_code == 302
+
+    with pytest.raises(ThreadUpdate.DoesNotExist):
+        thread_update.refresh_from_db()
+
+
+def test_delete_thread_update_view_returns_redirect_to_thread(
+    moderator_client, thread, thread_update
+):
+    response = moderator_client.post(
+        reverse(
+            "misago:delete-thread-update",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+                "thread_update": thread_update.id,
+            },
+        ),
+        {"confirm": "true"},
     )
 
     assert response.status_code == 302
@@ -200,8 +244,8 @@ def test_unhide_thread_update_view_returns_redirect_to_thread(
     )
 
 
-def test_unhide_thread_update_view_returns_redirect_to_next_url(
-    moderator_client, thread, hidden_thread_update
+def test_delete_thread_update_view_returns_redirect_to_next_url(
+    moderator_client, thread, thread_update
 ):
     next_url = reverse(
         "misago:thread", kwargs={"id": thread.id, "slug": thread.slug, "page": 2}
@@ -210,33 +254,39 @@ def test_unhide_thread_update_view_returns_redirect_to_next_url(
 
     response = moderator_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update": thread_update.id,
             },
         ),
-        {"next": next_url},
+        {
+            "confirm": "true",
+            "next": next_url,
+        },
     )
 
     assert response.status_code == 302
     assert response["location"] == next_url
 
 
-def test_unhide_thread_update_view_returns_redirect_to_thread_for_invalid_next_url(
-    moderator_client, thread, hidden_thread_update
+def test_delete_thread_update_view_returns_redirect_to_thread_for_invalid_next_url(
+    moderator_client, thread, thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update": thread_update.id,
             },
         ),
-        {"next": "/invalid/url/"},
+        {
+            "confirm": "true",
+            "next": "/invalid/url/",
+        },
     )
 
     assert response.status_code == 302
@@ -245,12 +295,12 @@ def test_unhide_thread_update_view_returns_redirect_to_thread_for_invalid_next_u
     )
 
 
-def test_unhide_thread_update_view_returns_404_error_for_not_found_thread_in_htmx(
+def test_delete_thread_update_view_returns_404_error_for_not_found_thread_in_htmx(
     user_client,
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": 100,
                 "slug": "not-found",
@@ -263,12 +313,12 @@ def test_unhide_thread_update_view_returns_404_error_for_not_found_thread_in_htm
     assert response.status_code == 404
 
 
-def test_unhide_thread_update_view_returns_404_error_for_not_found_update_in_htmx(
+def test_delete_thread_update_view_returns_404_error_for_not_found_update_in_htmx(
     user_client, thread
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
@@ -281,12 +331,12 @@ def test_unhide_thread_update_view_returns_404_error_for_not_found_update_in_htm
     assert response.status_code == 404
 
 
-def test_unhide_thread_update_view_returns_403_error_for_anonymous_user_in_htmx(
+def test_delete_thread_update_view_returns_403_error_for_anonymous_user_in_htmx(
     client, thread, thread_update
 ):
     response = client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
@@ -297,30 +347,32 @@ def test_unhide_thread_update_view_returns_403_error_for_anonymous_user_in_htmx(
     )
 
     assert_contains(
-        response, "Only a moderator can unhide thread updates.", status_code=403
+        response, "Only a moderator can delete thread updates.", status_code=403
     )
 
 
-def test_unhide_thread_update_view_returns_404_error_for_user_in_htmx(
-    user_client, thread, hidden_thread_update
+def test_delete_thread_update_view_returns_403_error_for_user_in_htmx(
+    user_client, thread, thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
     )
 
-    assert response.status_code == 404
+    assert_contains(
+        response, "Only a moderator can delete thread updates.", status_code=403
+    )
 
 
-def test_unhide_thread_update_view_checks_category_permission_in_htmx(
-    user_client, thread, hidden_thread_update
+def test_delete_thread_update_view_checks_category_permission_in_htmx(
+    user_client, thread, thread_update
 ):
     CategoryGroupPermission.objects.filter(
         permission=CategoryPermission.BROWSE
@@ -328,11 +380,11 @@ def test_unhide_thread_update_view_checks_category_permission_in_htmx(
 
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -341,19 +393,19 @@ def test_unhide_thread_update_view_checks_category_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_unhide_thread_update_view_checks_thread_permission_in_htmx(
-    user_client, thread, hidden_thread_update
+def test_delete_thread_update_view_checks_thread_permission_in_htmx(
+    user_client, thread, thread_update
 ):
     thread.is_hidden = True
     thread.save()
 
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -362,12 +414,12 @@ def test_unhide_thread_update_view_checks_thread_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_unhide_thread_update_view_checks_thread_update_permission_in_htmx(
+def test_delete_thread_update_view_checks_thread_update_permission_in_htmx(
     user_client, thread, hidden_thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
@@ -380,8 +432,8 @@ def test_unhide_thread_update_view_checks_thread_update_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_unhide_thread_update_view_unhides_update_for_category_moderator_in_htmx(
-    user_client, user, default_category, thread, hidden_thread_update
+def test_delete_thread_update_view_deletes_update_for_category_moderator_in_htmx(
+    user_client, user, default_category, thread, thread_update
 ):
     Moderator.objects.create(
         categories=[default_category.id],
@@ -391,11 +443,11 @@ def test_unhide_thread_update_view_unhides_update_for_category_moderator_in_htmx
 
     response = user_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -403,20 +455,20 @@ def test_unhide_thread_update_view_unhides_update_for_category_moderator_in_htmx
 
     assert response.status_code == 200
 
-    hidden_thread_update.refresh_from_db()
-    assert not hidden_thread_update.is_hidden
+    with pytest.raises(ThreadUpdate.DoesNotExist):
+        thread_update.refresh_from_db()
 
 
-def test_unhide_thread_update_view_unhides_update_for_global_moderator_in_htmx(
-    moderator_client, thread, hidden_thread_update
+def test_delete_thread_update_view_deletes_update_for_global_moderator_in_htmx(
+    moderator_client, thread, thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:unhide-thread-update",
+            "misago:delete-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -424,27 +476,5 @@ def test_unhide_thread_update_view_unhides_update_for_global_moderator_in_htmx(
 
     assert response.status_code == 200
 
-    hidden_thread_update.refresh_from_db()
-    assert not hidden_thread_update.is_hidden
-
-
-def test_unhide_thread_update_view_doesnt_update_already_unhidden_update_in_htmx(
-    moderator_client, thread, hidden_thread_update
-):
-
-    response = moderator_client.post(
-        reverse(
-            "misago:unhide-thread-update",
-            kwargs={
-                "id": thread.id,
-                "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
-            },
-        ),
-        headers={"hx-request": "true"},
-    )
-
-    assert response.status_code == 200
-
-    hidden_thread_update.refresh_from_db()
-    assert not hidden_thread_update.is_hidden
+    with pytest.raises(ThreadUpdate.DoesNotExist):
+        thread_update.refresh_from_db()
