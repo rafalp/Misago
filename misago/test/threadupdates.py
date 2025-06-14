@@ -1,4 +1,5 @@
 import pytest
+from django.utils import timezone
 
 from ..threads.enums import ThreadUpdateAction
 from ..threads.models import ThreadUpdate
@@ -70,7 +71,7 @@ def thread_update_user_context(user, thread, other_user):
 
 
 @pytest.fixture
-def hidden_thread_update(user, thread):
+def hidden_thread_update(user, moderator, thread):
     return ThreadUpdate.objects.create(
         category=thread.category,
         thread=thread,
@@ -78,6 +79,9 @@ def hidden_thread_update(user, thread):
         actor_name=user.username,
         action=ThreadUpdateAction.OPENED,
         is_hidden=True,
+        hidden_by=moderator,
+        hidden_by_name=moderator.username,
+        hidden_at=timezone.now(),
     )
 
 
@@ -104,7 +108,7 @@ def user_private_thread_update(user, user_private_thread):
 
 
 @pytest.fixture
-def hidden_private_thread_update(user, private_thread):
+def hidden_private_thread_update(user, moderator, private_thread):
     return ThreadUpdate.objects.create(
         category=private_thread.category,
         thread=private_thread,
@@ -112,11 +116,14 @@ def hidden_private_thread_update(user, private_thread):
         actor_name=user.username,
         action=ThreadUpdateAction.JOINED,
         is_hidden=True,
+        hidden_by=moderator,
+        hidden_by_name=moderator.username,
+        hidden_at=timezone.now(),
     )
 
 
 @pytest.fixture
-def hidden_user_private_thread_update(user, user_private_thread):
+def hidden_user_private_thread_update(user, moderator, user_private_thread):
     return ThreadUpdate.objects.create(
         category=user_private_thread.category,
         thread=user_private_thread,
@@ -124,4 +131,7 @@ def hidden_user_private_thread_update(user, user_private_thread):
         actor_name=user.username,
         action=ThreadUpdateAction.JOINED,
         is_hidden=True,
+        hidden_by=moderator,
+        hidden_by_name=moderator.username,
+        hidden_at=timezone.now(),
     )
