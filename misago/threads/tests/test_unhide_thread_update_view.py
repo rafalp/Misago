@@ -5,6 +5,21 @@ from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains
 
 
+def test_unhide_thread_update_view_returns_404_error_for_not_found_thread(user_client):
+    response = user_client.post(
+        reverse(
+            "misago:unhide-thread-update",
+            kwargs={
+                "id": 100,
+                "slug": "not-found",
+                "thread_update": 100,
+            },
+        )
+    )
+
+    assert response.status_code == 404
+
+
 def test_unhide_thread_update_view_returns_404_error_for_not_found_update(
     user_client, thread
 ):
@@ -228,6 +243,24 @@ def test_unhide_thread_update_view_returns_redirect_to_thread_for_invalid_next_u
     assert response["location"] == reverse(
         "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
+
+
+def test_unhide_thread_update_view_returns_404_error_for_not_found_thread_in_html(
+    user_client,
+):
+    response = user_client.post(
+        reverse(
+            "misago:unhide-thread-update",
+            kwargs={
+                "id": 100,
+                "slug": "not-found",
+                "thread_update": 100,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert response.status_code == 404
 
 
 def test_unhide_thread_update_view_returns_404_error_for_not_found_update_in_htmx(

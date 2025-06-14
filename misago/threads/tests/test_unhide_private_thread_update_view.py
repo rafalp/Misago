@@ -1,8 +1,24 @@
 from django.urls import reverse
 
-from ...permissions.enums import CategoryPermission
-from ...permissions.models import CategoryGroupPermission, Moderator
+from ...permissions.models import Moderator
 from ...test import assert_contains
+
+
+def test_unhide_private_thread_update_view_returns_404_error_for_not_found_thread(
+    user_client,
+):
+    response = user_client.post(
+        reverse(
+            "misago:unhide-private-thread-update",
+            kwargs={
+                "id": 100,
+                "slug": "not-found",
+                "thread_update": 100,
+            },
+        )
+    )
+
+    assert response.status_code == 404
 
 
 def test_unhide_private_thread_update_view_returns_404_error_for_not_found_update(
@@ -245,6 +261,24 @@ def test_unhide_private_thread_update_view_returns_404_error_for_not_found_updat
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
+                "thread_update": 100,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert response.status_code == 404
+
+
+def test_unhide_private_thread_update_view_returns_404_error_for_not_found_thread_in_htmx(
+    user_client,
+):
+    response = user_client.post(
+        reverse(
+            "misago:unhide-private-thread-update",
+            kwargs={
+                "id": 100,
+                "slug": "not-found",
                 "thread_update": 100,
             },
         ),

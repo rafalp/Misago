@@ -5,6 +5,21 @@ from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains
 
 
+def test_hide_thread_update_view_returns_404_error_for_not_found_thread(user_client):
+    response = user_client.post(
+        reverse(
+            "misago:hide-thread-update",
+            kwargs={
+                "id": 100,
+                "slug": "not-found",
+                "thread_update": 100,
+            },
+        )
+    )
+
+    assert response.status_code == 404
+
+
 def test_hide_thread_update_view_returns_404_error_for_not_found_update(
     user_client, thread
 ):
@@ -102,18 +117,15 @@ def test_hide_thread_update_view_checks_thread_permission(
 
 
 def test_hide_thread_update_view_checks_thread_update_permission(
-    user_client, thread, thread_update
+    user_client, thread, hidden_thread_update
 ):
-    thread_update.is_hidden = True
-    thread_update.save()
-
     response = user_client.post(
         reverse(
             "misago:hide-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update": hidden_thread_update.id,
             },
         )
     )
@@ -168,26 +180,23 @@ def test_hide_thread_update_view_hides_update_for_global_moderator(
 
 
 def test_hide_thread_update_view_doesnt_update_already_hidden_update(
-    moderator_client, thread, thread_update
+    moderator_client, thread, hidden_thread_update
 ):
-    thread_update.is_hidden = True
-    thread_update.save()
-
     response = moderator_client.post(
         reverse(
             "misago:hide-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update": hidden_thread_update.id,
             },
         )
     )
 
     assert response.status_code == 302
 
-    thread_update.refresh_from_db()
-    assert thread_update.is_hidden
+    hidden_thread_update.refresh_from_db()
+    assert hidden_thread_update.is_hidden
 
 
 def test_hide_thread_update_view_returns_redirect_to_thread(
@@ -253,6 +262,24 @@ def test_hide_thread_update_view_returns_redirect_to_thread_for_invalid_next_url
     assert response["location"] == reverse(
         "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
+
+
+def test_hide_thread_update_view_returns_404_error_for_not_found_thread_in_html(
+    user_client,
+):
+    response = user_client.post(
+        reverse(
+            "misago:hide-thread-update",
+            kwargs={
+                "id": 100,
+                "slug": "not-found",
+                "thread_update": 100,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert response.status_code == 404
 
 
 def test_hide_thread_update_view_returns_404_error_for_not_found_update_in_htmx(
@@ -357,18 +384,15 @@ def test_hide_thread_update_view_checks_thread_permission_in_htmx(
 
 
 def test_hide_thread_update_view_checks_thread_update_permission_in_htmx(
-    user_client, thread, thread_update
+    user_client, thread, hidden_thread_update
 ):
-    thread_update.is_hidden = True
-    thread_update.save()
-
     response = user_client.post(
         reverse(
             "misago:hide-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update": hidden_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -426,18 +450,15 @@ def test_hide_thread_update_view_hides_update_for_global_moderator_in_htmx(
 
 
 def test_hide_thread_update_view_doesnt_update_already_hidden_update_in_htmx(
-    moderator_client, thread, thread_update
+    moderator_client, thread, hidden_thread_update
 ):
-    thread_update.is_hidden = True
-    thread_update.save()
-
     response = moderator_client.post(
         reverse(
             "misago:hide-thread-update",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update": hidden_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -445,5 +466,5 @@ def test_hide_thread_update_view_doesnt_update_already_hidden_update_in_htmx(
 
     assert response.status_code == 200
 
-    thread_update.refresh_from_db()
-    assert thread_update.is_hidden
+    hidden_thread_update.refresh_from_db()
+    assert hidden_thread_update.is_hidden
