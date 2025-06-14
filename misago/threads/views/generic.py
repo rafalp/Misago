@@ -5,7 +5,7 @@ from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
+from django.urls import Resolver404, resolve, reverse
 from django.views import View
 
 from ...permissions.privatethreads import (
@@ -109,8 +109,21 @@ class GenericView(View):
 
     def clean_thread_url(self, thread: Thread, url_to_clean: str | None = None) -> str:
         thread_url = self.get_thread_url(thread)
-        if url_to_clean and url_to_clean.startswith(thread_url):
-            return url_to_clean
+
+        if url_to_clean:
+            try:
+                url_path = url_to_clean
+                if "#" in url_path:
+                    url_path = url_path[: url_path.index("#")]
+                if "?" in url_path:
+                    url_path = url_path[: url_path.index("?")]
+
+                reverse_match = resolve(url_path)
+                if reverse_match.view_name == self.thread_url_name:
+                    return url_to_clean
+            except Resolver404:
+                pass
+
         return thread_url
 
     def get_thread_updates_queryset(

@@ -18,23 +18,26 @@ class BaseUpdateView:
     success_message: str
 
     def post(
-        self, request: HttpRequest, id: int, slug: str, thread_update_id: id
+        self, request: HttpRequest, id: int, slug: str, thread_update: int
     ) -> HttpResponse:
+        if request.user.is_anonymous:
+            self.raise_permission_error()
+
         thread = self.get_thread(request, id)
-        thread_update = self.get_thread_update(request, thread, thread_update_id)
+        thread_update_obj = self.get_thread_update(request, thread, thread_update)
 
         if not self.check_permission(request, thread):
             self.raise_permission_error()
 
-        if self.execute_action(request, thread_update):
+        if self.execute_action(request, thread_update_obj):
             messages.success(request, self.success_message)
 
         if not request.is_htmx:
             return redirect(self.clean_thread_url(thread, request.POST.get("next")))
 
-        thread_update.refresh_from_db()
-        feed = self.get_posts_feed(request, thread, [], [thread_update])
-        feed.set_animated_thread_updates([thread_update.id])
+        thread_update_obj.refresh_from_db()
+        feed = self.get_posts_feed(request, thread, [], [thread_update_obj])
+        feed.set_animated_thread_updates([thread_update_obj.id])
 
         return render(
             request,
@@ -109,19 +112,22 @@ class DeleteUpdateView:
     success_message = pgettext_lazy("thread update deleted", "Thread update deleted")
 
     def post(
-        self, request: HttpRequest, id: int, slug: str, thread_update_id: id
+        self, request: HttpRequest, id: int, slug: str, thread_update: int
     ) -> HttpResponse:
+        if request.user.is_anonymous:
+            self.raise_permission_error()
+
         thread = self.get_thread(request, id)
-        thread_update = self.get_thread_update(request, thread, thread_update_id)
+        thread_update_obj = self.get_thread_update(request, thread, thread_update)
 
         if not self.check_permission(request, thread):
             self.raise_permission_error()
 
-        delete_thread_update(thread_update, request)
+        delete_thread_update(thread_update_obj, request)
         messages.success(request, self.success_message)
 
         if request.is_htmx:
-            feed = self.get_posts_feed(request, thread, [], [thread_update])
+            feed = self.get_posts_feed(request, thread, [], [thread_update_obj])
             return render(request, self.template_name, {"feed": feed})
 
         return redirect(self.clean_thread_url(thread, request.POST.get("next")))

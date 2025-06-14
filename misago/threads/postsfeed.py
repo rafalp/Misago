@@ -277,7 +277,7 @@ class ThreadPostsFeed(PostsFeed):
             kwargs={
                 "id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_update": thread_update.id,
             },
         )
 
@@ -287,7 +287,7 @@ class ThreadPostsFeed(PostsFeed):
             kwargs={
                 "id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_update": thread_update.id,
             },
         )
 
@@ -297,7 +297,7 @@ class ThreadPostsFeed(PostsFeed):
             kwargs={
                 "id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_update": thread_update.id,
             },
         )
 
@@ -332,7 +332,7 @@ class PrivateThreadPostsFeed(PostsFeed):
             kwargs={
                 "id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_update": thread_update.id,
             },
         )
 
@@ -342,7 +342,7 @@ class PrivateThreadPostsFeed(PostsFeed):
             kwargs={
                 "id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_update": thread_update.id,
             },
         )
 
@@ -352,6 +352,6 @@ class PrivateThreadPostsFeed(PostsFeed):
             kwargs={
                 "id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_update": thread_update.id,
             },
         )

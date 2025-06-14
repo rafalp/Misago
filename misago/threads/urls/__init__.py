@@ -166,32 +166,32 @@ urlpatterns = [
         name="edit-private-thread",
     ),
     path(
-        "t/<slug:slug>/<int:id>/hide-update/<int:thread_update_id>/",
+        "t/<slug:slug>/<int:id>/hide-update/<int:thread_update>/",
         hide_thread_update_view,
         name="hide-thread-update",
     ),
     path(
-        "p/<slug:slug>/<int:id>/hide-update/<int:thread_update_id>/",
+        "p/<slug:slug>/<int:id>/hide-update/<int:thread_update>/",
         hide_private_thread_update_view,
         name="hide-private-thread-update",
     ),
     path(
-        "t/<slug:slug>/<int:id>/unhide-update/<int:thread_update_id>/",
+        "t/<slug:slug>/<int:id>/unhide-update/<int:thread_update>/",
         unhide_thread_update_view,
         name="unhide-thread-update",
     ),
     path(
-        "p/<slug:slug>/<int:id>/unhide-update/<int:thread_update_id>/",
+        "p/<slug:slug>/<int:id>/unhide-update/<int:thread_update>/",
         unhide_private_thread_update_view,
         name="unhide-private-thread-update",
     ),
     path(
-        "t/<slug:slug>/<int:id>/delete-update/<int:thread_update_id>/",
+        "t/<slug:slug>/<int:id>/delete-update/<int:thread_update>/",
         delete_thread_update_view,
         name="delete-thread-update",
     ),
     path(
-        "p/<slug:slug>/<int:id>/delete-update/<int:thread_update_id>/",
+        "p/<slug:slug>/<int:id>/delete-update/<int:thread_update>/",
         delete_private_thread_update_view,
         name="delete-private-thread-update",
     ),

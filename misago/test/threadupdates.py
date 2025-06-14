@@ -67,3 +67,61 @@ def thread_update_user_context(user, thread, other_user):
         context_type="misago_users.user",
         context_id=other_user.id,
     )
+
+
+@pytest.fixture
+def hidden_thread_update(user, thread):
+    return ThreadUpdate.objects.create(
+        category=thread.category,
+        thread=thread,
+        actor=user,
+        actor_name=user.username,
+        action=ThreadUpdateAction.OPENED,
+        is_hidden=True,
+    )
+
+
+@pytest.fixture
+def private_thread_update(user, private_thread):
+    return ThreadUpdate.objects.create(
+        category=private_thread.category,
+        thread=private_thread,
+        actor=user,
+        actor_name=user.username,
+        action=ThreadUpdateAction.JOINED,
+    )
+
+
+@pytest.fixture
+def user_private_thread_update(user, user_private_thread):
+    return ThreadUpdate.objects.create(
+        category=user_private_thread.category,
+        thread=user_private_thread,
+        actor=user,
+        actor_name=user.username,
+        action=ThreadUpdateAction.JOINED,
+    )
+
+
+@pytest.fixture
+def hidden_private_thread_update(user, private_thread):
+    return ThreadUpdate.objects.create(
+        category=private_thread.category,
+        thread=private_thread,
+        actor=user,
+        actor_name=user.username,
+        action=ThreadUpdateAction.JOINED,
+        is_hidden=True,
+    )
+
+
+@pytest.fixture
+def hidden_user_private_thread_update(user, user_private_thread):
+    return ThreadUpdate.objects.create(
+        category=user_private_thread.category,
+        thread=user_private_thread,
+        actor=user,
+        actor_name=user.username,
+        action=ThreadUpdateAction.JOINED,
+        is_hidden=True,
+    )
