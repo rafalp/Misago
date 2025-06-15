@@ -76,3 +76,7 @@ class ThreadUpdate(PluginDataModel):
             return self.context_id
 
         return None
+
+    def clear_context_object(self):
+        self.context_type = None
+        self.context_id = None
