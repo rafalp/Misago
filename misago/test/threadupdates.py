@@ -1,7 +1,7 @@
 import pytest
 from django.utils import timezone
 
-from ..threads.enums import ThreadUpdateAction
+from ..threads.enums import ThreadUpdateActionName
 from ..threads.models import ThreadUpdate
 
 
@@ -12,7 +12,7 @@ def thread_update(user, thread):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateAction.OPENED,
+        action=ThreadUpdateActionName.OPENED,
     )
 
 
@@ -23,7 +23,7 @@ def thread_update_context(user, thread):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateAction.MERGED,
+        action=ThreadUpdateActionName.MERGED,
         context="Other thread",
     )
 
@@ -35,7 +35,7 @@ def thread_update_category_context(user, thread, sibling_category):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateAction.MOVED,
+        action=ThreadUpdateActionName.MOVED,
         context=sibling_category.name,
         context_type="misago_categories.category",
         context_id=sibling_category.id,
@@ -49,7 +49,7 @@ def thread_update_thread_context(user, thread, other_thread):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateAction.SPLIT,
+        action=ThreadUpdateActionName.SPLIT,
         context=other_thread.title,
         context_type="misago_threads.thread",
         context_id=other_thread.id,
@@ -63,7 +63,7 @@ def thread_update_user_context(user, thread, other_user):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateAction.LEFT,
+        action=ThreadUpdateActionName.LEFT,
         context=other_user.username,
         context_type="misago_users.user",
         context_id=other_user.id,
@@ -77,7 +77,7 @@ def hidden_thread_update(user, moderator, thread):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateAction.OPENED,
+        action=ThreadUpdateActionName.OPENED,
         is_hidden=True,
         hidden_by=moderator,
         hidden_by_name=moderator.username,
@@ -92,7 +92,7 @@ def private_thread_update(user, private_thread):
         thread=private_thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateAction.JOINED,
+        action=ThreadUpdateActionName.JOINED,
     )
 
 
@@ -103,7 +103,7 @@ def user_private_thread_update(user, user_private_thread):
         thread=user_private_thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateAction.JOINED,
+        action=ThreadUpdateActionName.JOINED,
     )
 
 
@@ -114,7 +114,7 @@ def hidden_private_thread_update(user, moderator, private_thread):
         thread=private_thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateAction.JOINED,
+        action=ThreadUpdateActionName.JOINED,
         is_hidden=True,
         hidden_by=moderator,
         hidden_by_name=moderator.username,
@@ -129,7 +129,7 @@ def hidden_user_private_thread_update(user, moderator, user_private_thread):
         thread=user_private_thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateAction.JOINED,
+        action=ThreadUpdateActionName.JOINED,
         is_hidden=True,
         hidden_by=moderator,
         hidden_by_name=moderator.username,
