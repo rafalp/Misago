@@ -1,6 +1,6 @@
 # `post_needs_content_upgrade_hook`
 
-This hook wraps the standard Misago function used to check if post content needs an upgrade.
+This hook wraps a standard Misago function used to check if post content needs an upgrade.
 
 If `True` is returned, a Celery task will be scheduled to upgrade the post content.
 

@@ -49,7 +49,7 @@ class ViewModel:
             if list_page.has_next():
                 last_post = posts[-1]
 
-            events_limit = request.settings.events_per_page
+            events_limit = 20
             posts += self.get_events_queryset(
                 request, thread_model, events_limit, first_post, last_post
             )

@@ -5,7 +5,13 @@ from django.http import Http404
 from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..threads.models import Post, Thread
-from .hooks import check_see_post_permission_hook, filter_any_thread_posts_queryset_hook
+from .categories import check_see_category_permission
+from .hooks import (
+    check_access_category_permission_hook,
+    check_access_post_permission_hook,
+    check_access_thread_permission_hook,
+    filter_accessible_thread_posts_hook,
+)
 from .privatethreads import (
     check_private_threads_permission,
     check_see_private_thread_permission,
@@ -20,19 +26,72 @@ from .threads import (
 )
 
 
-def check_see_post_permission(
-    permissions: UserPermissionsProxy, category: Category, thread: Thread, post: Post
+def check_access_category_permission(
+    permissions: UserPermissionsProxy, category: Category
 ):
-    check_see_post_permission_hook(
-        _check_see_post_permission_action, permissions, category, thread, post
+    check_access_category_permission_hook(
+        _check_access_category_permission_action, permissions, category
     )
 
 
-def _check_see_post_permission_action(
+def _check_access_category_permission_action(
+    permissions: UserPermissionsProxy, category: Category
+):
+    if not category:
+        raise Http404()
+
+    if category.tree_id == CategoryTree.THREADS:
+        check_see_category_permission(permissions, category)
+
+    elif category.tree_id == CategoryTree.PRIVATE_THREADS:
+        check_private_threads_permission(permissions)
+
+    else:
+        raise Http404()
+
+
+def check_access_thread_permission(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread
+):
+    check_access_thread_permission_hook(
+        _check_access_thread_permission_action, permissions, category, thread
+    )
+
+
+def _check_access_thread_permission_action(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread
+):
+    if not (category and thread):
+        raise Http404()
+
+    if category.tree_id == CategoryTree.THREADS:
+        check_see_thread_permission(permissions, category, thread)
+
+    elif category.tree_id == CategoryTree.PRIVATE_THREADS:
+        try:
+            check_private_threads_permission(permissions)
+        except PermissionDenied:
+            raise Http404()
+
+        check_see_private_thread_permission(permissions, thread)
+
+    else:
+        raise Http404()
+
+
+def check_access_post_permission(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread, post: Post
+):
+    check_access_post_permission_hook(
+        _check_access_post_permission_action, permissions, category, thread, post
+    )
+
+
+def _check_access_post_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, post: Post
 ):
     if not (category and thread and post):
-        raise Http404()  # Skip remaining permission checks
+        raise Http404()
 
     if category.tree_id == CategoryTree.THREADS:
         try:
@@ -55,14 +114,14 @@ def _check_see_post_permission_action(
         raise Http404()
 
 
-def filter_any_thread_posts_queryset(
+def filter_accessible_thread_posts(
     permissions: UserPermissionsProxy,
     category: Category,
     thread: Thread,
     queryset: QuerySet,
 ) -> QuerySet:
-    return filter_any_thread_posts_queryset_hook(
-        _filter_any_thread_posts_queryset_action,
+    return filter_accessible_thread_posts_hook(
+        _filter_accessible_thread_posts_action,
         permissions,
         category,
         thread,
@@ -70,7 +129,7 @@ def filter_any_thread_posts_queryset(
     )
 
 
-def _filter_any_thread_posts_queryset_action(
+def _filter_accessible_thread_posts_action(
     permissions: UserPermissionsProxy,
     category: Category,
     thread: Thread,

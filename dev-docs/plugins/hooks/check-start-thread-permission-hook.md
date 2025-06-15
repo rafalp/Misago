@@ -1,6 +1,6 @@
 # `check_start_thread_permission_hook`
 
-This hook wraps the standard Misago function used to check if the user has permission to start a new thread in a category. It raises Django's `PermissionDenied` with an error message if they can't start thread in a category.
+This hook wraps a standard Misago function used to check if the user has permission to start a new thread in a category. It raises Django's `PermissionDenied` with an error message if they can't start thread in a category.
 
 
 ## Location

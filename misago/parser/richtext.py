@@ -132,7 +132,7 @@ def replace_rich_text_quote_block(
     except (TypeError, ValueError):
         pass
 
-    if post_id and post_id in data["visible_posts"]:
+    if post_id:
         post = data["posts"].get(post_id)
 
     if post:

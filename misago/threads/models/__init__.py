@@ -5,6 +5,7 @@ from .postedit import PostEdit
 from .postlike import PostLike
 from .thread import Thread
 from .threadparticipant import ThreadParticipant
+from .threadupdate import ThreadUpdate
 from .poll import Poll
 from .pollvote import PollVote
 
@@ -16,6 +17,7 @@ __all__ = [
     "PostLike",
     "Thread",
     "ThreadParticipant",
+    "ThreadUpdate",
     "Poll",
     "PollVote",
 ]

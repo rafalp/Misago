@@ -7,9 +7,9 @@ from django.utils.translation import pgettext
 from ..conf.dynamicsettings import DynamicSettings
 from ..core.mail import build_mail
 from ..permissions.checkutils import check_permissions
-from ..permissions.posts import (
-    check_see_post_permission,
-    filter_any_thread_posts_queryset,
+from ..permissions.generic import (
+    check_access_post_permission,
+    filter_accessible_thread_posts,
 )
 from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.privatethreads import check_see_private_thread_permission
@@ -104,7 +104,7 @@ def notify_watcher_on_new_thread_reply(
     user_permissions = UserPermissionsProxy(watched_thread.user, cache_versions)
 
     with check_permissions() as can_see_post:
-        check_see_post_permission(user_permissions, post.category, post.thread, post)
+        check_access_post_permission(user_permissions, post.category, post.thread, post)
 
     if not can_see_post:
         return  # Skip this watcher because they can't see the post
@@ -165,7 +165,7 @@ def user_has_other_unread_posts(
         posted_on__gt=watched_thread.read_time,
     ).exclude(poster=watched_thread.user)
 
-    posts_queryset = filter_any_thread_posts_queryset(
+    posts_queryset = filter_accessible_thread_posts(
         user_permissions, post.category, post.thread, posts_queryset
     )
 

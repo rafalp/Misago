@@ -1,0 +1,44 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Delete thread update" context "confirm delete thread update" %} | {{ thread.title }} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="page page-confirm page-confirm-delete">
+  <div class="container page-container page-confirm-form-container">
+    
+    <form action="{{ full_patch }}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="confirm" value="true">
+      <input type="hidden" name="next" value="{{ next_url }}">
+
+      <div class="panel-confirm-form panel-confirm-form-delete">
+        <div class="panel-confirm-form-body">
+          <h1 class="panel-confirm-form-header">
+            {% translate "Delete thread update" context "confirm delete thread update" %}
+          </h1>
+
+          <div class="panel-confirm-form-copy">
+            {% translate "Are you sure you want to delete this thread update?" context "thread update delete confirmation" %}
+            <br />
+            {% translate "This action cannot be undone." context "thread update delete confirmation" %}
+          </div>
+
+          <div class="panel-confirm-form-footer">
+            <a href="{{ next_url }}" class="btn btn-default btn-block">
+              {% translate "Cancel" context "confirm delete thread update btn" %}
+            </a>
+            <button type="submit" class="btn btn-danger btn-block">
+              {% translate "Delete" context "confirm delete thread update btn" %}
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+{% endblock content %}

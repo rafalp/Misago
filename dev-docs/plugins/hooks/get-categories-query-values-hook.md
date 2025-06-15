@@ -1,6 +1,6 @@
 # `get_categories_query_values_hook`
 
-This hook wraps the standard Misago function used to retrieve a set of arguments for the `values` call on the categories queryset.
+This hook wraps a standard Misago function used to retrieve a set of arguments for the `values` call on the categories queryset.
 
 
 ## Location

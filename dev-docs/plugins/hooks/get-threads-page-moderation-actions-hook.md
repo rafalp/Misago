@@ -18,7 +18,7 @@ from misago.threads.hooks import get_threads_page_moderation_actions_hook
 def custom_get_threads_page_moderation_actions_filter(
     action: GetThreadsPageModerationActionsHookAction,
     request: HttpRequest,
-) -> list[Type[ThreadsBulkModerationAction]]:
+) -> list[Type['ThreadsBulkModerationAction']]:
     ...
 ```
 
@@ -47,7 +47,7 @@ A Python `list` with `ThreadsBulkModerationAction` types.
 ## Action
 
 ```python
-def get_threads_page_moderation_actions_action(request: HttpRequest) -> list[Type[ThreadsBulkModerationAction]]:
+def get_threads_page_moderation_actions_action(request: HttpRequest) -> list[Type['ThreadsBulkModerationAction']]:
     ...
 ```
 

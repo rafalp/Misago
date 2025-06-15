@@ -1,6 +1,6 @@
 # `check_see_private_thread_permission_hook`
 
-This hook wraps the standard Misago function used to check if the user has a permission to see a private thread. Raises Django's `Http404` if they can't.
+This hook wraps a standard Misago function used to check if the user has a permission to see a private thread. Raises Django's `Http404` if they can't.
 
 
 ## Location

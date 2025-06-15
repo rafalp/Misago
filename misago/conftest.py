@@ -26,6 +26,7 @@ from .test import (
     MisagoClient,
     teardown_attachments,
 )
+from .test.threadupdates import *
 from .themes import THEME_CACHE
 from .threads.models import Thread, ThreadParticipant
 from .threads.test import post_thread, reply_thread

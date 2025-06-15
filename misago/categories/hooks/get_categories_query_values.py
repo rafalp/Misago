@@ -32,7 +32,7 @@ class GetCategoriesQueryValuesHook(
     FilterHook[GetCategoriesQueryValuesHookAction, GetCategoriesQueryValuesHookFilter]
 ):
     """
-    This hook wraps the standard Misago function used to retrieve a set of arguments for
+    This hook wraps a standard Misago function used to retrieve a set of arguments for
     the `values` call on the categories queryset.
 
     # Example

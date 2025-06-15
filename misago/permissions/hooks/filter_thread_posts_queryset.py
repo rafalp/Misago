@@ -100,7 +100,7 @@ class FilterThreadPostsQuerysetHook(
     from misago.permissions.proxy import UserPermissionsProxy
 
     @filter_thread_posts_queryset_hook.append_filter
-    def exclude_old_private_threads_queryset_hook(
+    def exclude_hidden_posts(
         action,
         permissions: UserPermissionsProxy,
         thread,

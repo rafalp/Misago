@@ -180,7 +180,7 @@ def test_replace_rich_text_tokens_replaces_quote_with_missing_post(
     assert snapshot == replace_rich_text_tokens(
         html,
         Context({"BLANK_AVATAR_URL": "blank-avatar.png"}),
-        {"visible_posts": set()},
+        {"posts": {}},
     )
 
 
@@ -209,7 +209,6 @@ def test_replace_rich_text_tokens_replaces_quote_with_same_thread_anonymous_user
         html,
         Context({"BLANK_AVATAR_URL": "blank-avatar.png", "thread": thread}),
         {
-            "visible_posts": set([post.id]),
             "categories": {default_category.id: default_category},
             "threads": {thread.id: thread},
             "posts": {post.id: post},
@@ -246,7 +245,6 @@ def test_replace_rich_text_tokens_replaces_quote_with_same_thread_user_post(
         html,
         Context({"BLANK_AVATAR_URL": "blank-avatar.png", "thread": thread}),
         {
-            "visible_posts": set([user_reply.id]),
             "categories": {default_category.id: default_category},
             "threads": {thread.id: thread},
             "posts": {user_reply.id: user_reply},
@@ -283,10 +281,9 @@ def test_replace_rich_text_tokens_replaces_quote_with_same_thread_invisible_user
         html,
         Context({"BLANK_AVATAR_URL": "blank-avatar.png", "thread": thread}),
         {
-            "visible_posts": set(),
             "categories": {default_category.id: default_category},
             "threads": {thread.id: thread},
-            "posts": {user_reply.id: user_reply},
+            "posts": {},
             "users": {user.id: user},
         },
     )
@@ -320,7 +317,6 @@ def test_replace_rich_text_tokens_replaces_quote_with_other_thread_anonymous_use
         html,
         Context({"BLANK_AVATAR_URL": "blank-avatar.png", "thread": other_thread}),
         {
-            "visible_posts": set([user_reply.id]),
             "categories": {default_category.id: default_category},
             "threads": {thread.id: thread},
             "posts": {user_reply.id: user_reply},
@@ -354,7 +350,6 @@ def test_replace_rich_text_tokens_replaces_quote_with_other_thread_user_post(
         html,
         Context({"BLANK_AVATAR_URL": "blank-avatar.png", "thread": other_thread}),
         {
-            "visible_posts": set([post.id]),
             "categories": {default_category.id: default_category},
             "threads": {thread.id: thread},
             "posts": {post.id: post},
@@ -388,10 +383,9 @@ def test_replace_rich_text_tokens_replaces_quote_with_other_thread_invisible_use
         html,
         Context({"BLANK_AVATAR_URL": "blank-avatar.png", "thread": other_thread}),
         {
-            "visible_posts": set(),
             "categories": {default_category.id: default_category},
             "threads": {thread.id: thread},
-            "posts": {post.id: post},
+            "posts": {},
             "users": {},
         },
     )
