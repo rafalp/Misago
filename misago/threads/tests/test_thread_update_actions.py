@@ -171,3 +171,91 @@ def test_changed_owner_thread_update_without_context_object(
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, "Changed thread owner")
+
+
+def test_took_ownership_thread_update(client, thread, user):
+    create_took_ownership_thread_update(thread, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Took thread ownership")
+
+
+def test_joined_thread_update(client, thread, user):
+    create_joined_thread_update(thread, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Joined thread")
+
+
+def test_invited_thread_update(client, thread, user, other_user):
+    create_invited_thread_update(thread, other_user, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Invited")
+
+
+def test_invited_thread_update_without_context_object(client, thread, user, other_user):
+    thread_update = create_invited_thread_update(thread, other_user, user)
+
+    thread_update.clear_context_object()
+    thread_update.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Invited")
+
+
+def test_left_thread_update(client, thread, user):
+    create_left_thread_update(thread, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Left thread")
+
+
+def test_removed_participants_thread_update(client, thread, user, other_user):
+    create_removed_participants_thread_update(thread, other_user, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Removed")
+
+
+def test_removed_participants_thread_update_without_context_object(
+    client, thread, user, other_user
+):
+    thread_update = create_removed_participants_thread_update(thread, other_user, user)
+
+    thread_update.clear_context_object()
+    thread_update.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Removed")
+
+
+def test_changed_owner_thread_update(client, thread, user, other_user):
+    create_changed_owner_thread_update(thread, other_user, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Changed thread owner to")
+
+
+def test_changed_owner_thread_update_without_context_object(
+    client, thread, user, other_user
+):
+    thread_update = create_changed_owner_thread_update(thread, other_user, user)
+
+    thread_update.clear_context_object()
+    thread_update.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Changed thread owner to")

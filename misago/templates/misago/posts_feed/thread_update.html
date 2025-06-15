@@ -20,6 +20,7 @@
             <a
               class="posts-feed-item-thread-update-actor-avatar-link"
               href="{{ actor.get_absolute_url }}"
+              title="{{ actor.username }}"
             >
               <img
                 class="user-avatar"
@@ -27,11 +28,11 @@
                 src="{{ actor|avatar:24 }}"
                 width="24"
                 height="24"
-                alt="{{ actor }}"
+                alt="{{ actor.username }}"
               >
             </a>
           {% else %}
-            <span class="posts-feed-item-thread-update-actor-avatar-link">
+            <span class="posts-feed-item-thread-update-actor-avatar-link" title="{{ actor_name }}">
               <img src="{{ BLANK_AVATAR_URL }}" width="24" height="24" alt="{{ actor_name }}">
             </span>
           {% endif %}
