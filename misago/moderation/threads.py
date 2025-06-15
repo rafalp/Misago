@@ -1,12 +1,13 @@
 from django.contrib import messages
-from django.forms import ValidationError
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.models import Category
-from ..threads.enums import ThreadUpdateActionName
 from ..threads.models import Thread
-from ..threads.threadupdates import create_thread_update
+from ..threads.threadupdates import (
+    create_locked_thread_update,
+    create_opened_thread_update,
+)
 from .forms import MoveThreads
 from .results import ModerationResult, ModerationBulkResult, ModerationTemplateResult
 
@@ -94,9 +95,7 @@ class CloseThreadsBulkModerationAction(ThreadsBulkModerationAction):
 
         if updated:
             for thread in open_threads:
-                create_thread_update(
-                    thread, ThreadUpdateActionName.LOCKED, request.user, request=request
-                )
+                create_locked_thread_update(thread, request.user, request=request)
 
             messages.success(
                 request,
@@ -120,9 +119,7 @@ class OpenThreadsBulkModerationAction(ThreadsBulkModerationAction):
 
         if updated:
             for thread in closed_threads:
-                create_thread_update(
-                    thread, ThreadUpdateActionName.OPENED, request.user, request=request
-                )
+                create_opened_thread_update(thread, request.user, request=request)
 
             messages.success(
                 request,
