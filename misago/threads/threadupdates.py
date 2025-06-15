@@ -329,7 +329,7 @@ class MergedThreadUpdateAction(ThreadContextThreadUpdateAction):
     action = ThreadUpdateActionName.MERGED
     icon = "call_merge"
     description = pgettext_lazy(
-        "thread update action description", "Merged %(context)s thread with this thread"
+        "thread update action description", "Merged %(context)s with this thread"
     )
 
 
