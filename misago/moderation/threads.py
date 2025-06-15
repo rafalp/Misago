@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.models import Category
-from ..threads.enums import ThreadUpdateAction
+from ..threads.enums import ThreadUpdateActionName
 from ..threads.models import Thread
 from ..threads.threadupdates import create_thread_update
 from .forms import MoveThreads
@@ -95,7 +95,7 @@ class CloseThreadsBulkModerationAction(ThreadsBulkModerationAction):
         if updated:
             for thread in open_threads:
                 create_thread_update(
-                    thread, ThreadUpdateAction.LOCKED, request.user, request=request
+                    thread, ThreadUpdateActionName.LOCKED, request.user, request=request
                 )
 
             messages.success(
@@ -121,7 +121,7 @@ class OpenThreadsBulkModerationAction(ThreadsBulkModerationAction):
         if updated:
             for thread in closed_threads:
                 create_thread_update(
-                    thread, ThreadUpdateAction.OPENED, request.user, request=request
+                    thread, ThreadUpdateActionName.OPENED, request.user, request=request
                 )
 
             messages.success(

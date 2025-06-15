@@ -1,3 +1,4 @@
+from html import escape
 from typing import Iterable
 
 from django.http import HttpRequest
@@ -15,6 +16,7 @@ from .hooks import (
 )
 from .models import Post, Thread, ThreadUpdate
 from .prefetch import prefetch_posts_feed_related_objects
+from .threadupdates import thread_updates_renderer
 
 
 class PostsFeed:
@@ -111,6 +113,7 @@ class PostsFeed:
             threads=[self.thread],
             thread_updates=self.thread_updates,
         )
+
         set_posts_feed_related_objects_hook(
             self.set_feed_related_objects, feed, related_objects
         )
@@ -170,7 +173,8 @@ class PostsFeed:
             "ordering": thread_update.created_at,
             "type": "thread_update",
             "thread_update": thread_update,
-            "icon": "edit",
+            "icon": "",
+            "description": "",
             "actor": None,
             "actor_name": thread_update.actor_name,
             "context_object": None,
@@ -240,6 +244,15 @@ class PostsFeed:
                 item["context_object"] = related_objects[relation_name].get(
                     thread_update.context_id
                 )
+
+        if thread_update_data := thread_updates_renderer.render_thread_update(
+            thread_update, related_objects
+        ):
+            item.update(thread_update_data)
+        else:
+            item.update(
+                {"icon": "broken_image", "description": escape(thread_update.action)}
+            )
 
 
 class ThreadPostsFeed(PostsFeed):

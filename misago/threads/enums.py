@@ -37,15 +37,15 @@ class ThreadsListsPolling(IntEnum):
         )
 
 
-class ThreadUpdateAction(StrEnum):
+class ThreadUpdateActionName(StrEnum):
     APPROVED = "approved"
 
     PINNED_GLOBALLY = "pinned_globally"
     PINNED_IN_CATEGORY = "pinned_in_category"
     UNPINNED = "unpinned"
 
-    OPENED = "opened"
     LOCKED = "locked"
+    OPENED = "opened"
 
     MOVED = "moved"
 
