@@ -93,6 +93,64 @@ def test_moved_thread_update_without_context_object(
     assert_contains(response, "Moved thread from")
 
 
+def test_merged_thread_update(client, thread, user_thread, user):
+    create_merged_thread_update(thread, user_thread, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Merged")
+    assert_contains(response, "with this thread")
+
+
+def test_merged_thread_update_without_context_object(client, thread, user_thread, user):
+    thread_update = create_merged_thread_update(thread, user_thread, user)
+
+    thread_update.clear_context_object()
+    thread_update.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Merged")
+    assert_contains(response, "with this thread")
+
+
+def test_split_thread_update(client, thread, user_thread, user):
+    create_split_thread_update(thread, user_thread, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Split this thread from")
+
+
+def test_split_thread_update_without_context_object(client, thread, user_thread, user):
+    thread_update = create_split_thread_update(thread, user_thread, user)
+
+    thread_update.clear_context_object()
+    thread_update.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Split this thread from")
+
+
+def test_hid_thread_update(client, thread, user):
+    create_hid_thread_update(thread, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Hid thread")
+
+
+def test_unhid_thread_update(client, thread, user):
+    create_unhid_thread_update(thread, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Unhid thread")
+
+
 def test_changed_owner_thread_update(client, thread, user, other_user):
     create_changed_owner_thread_update(thread, other_user, user)
     response = client.get(
