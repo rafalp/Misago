@@ -77,6 +77,7 @@ def test_moved_thread_update(client, thread, user, default_category):
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, "Moved thread from")
+    assert_contains(response, default_category.name)
 
 
 def test_moved_thread_update_without_context_object(
@@ -91,6 +92,7 @@ def test_moved_thread_update_without_context_object(
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, "Moved thread from")
+    assert_contains(response, default_category.name)
 
 
 def test_merged_thread_update(client, thread, user_thread, user):
@@ -100,6 +102,7 @@ def test_merged_thread_update(client, thread, user_thread, user):
     )
     assert_contains(response, "Merged")
     assert_contains(response, "with this thread")
+    assert_contains(response, user_thread.title)
 
 
 def test_merged_thread_update_without_context_object(client, thread, user_thread, user):
@@ -113,6 +116,7 @@ def test_merged_thread_update_without_context_object(client, thread, user_thread
     )
     assert_contains(response, "Merged")
     assert_contains(response, "with this thread")
+    assert_contains(response, user_thread.title)
 
 
 def test_split_thread_update(client, thread, user_thread, user):
@@ -121,6 +125,7 @@ def test_split_thread_update(client, thread, user_thread, user):
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, "Split this thread from")
+    assert_contains(response, user_thread.title)
 
 
 def test_split_thread_update_without_context_object(client, thread, user_thread, user):
@@ -133,6 +138,7 @@ def test_split_thread_update_without_context_object(client, thread, user_thread,
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, "Split this thread from")
+    assert_contains(response, user_thread.title)
 
 
 def test_hid_thread_update(client, thread, user):
@@ -151,26 +157,13 @@ def test_unhid_thread_update(client, thread, user):
     assert_contains(response, "Unhid thread")
 
 
-def test_changed_owner_thread_update(client, thread, user, other_user):
-    create_changed_owner_thread_update(thread, other_user, user)
+def test_changed_owner_thread_update(client, thread, user):
+    create_changed_title_thread_update(thread, "Old title", user)
     response = client.get(
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Changed thread owner")
-
-
-def test_changed_owner_thread_update_without_context_object(
-    client, thread, user, other_user
-):
-    thread_update = create_changed_owner_thread_update(thread, other_user, user)
-
-    thread_update.clear_context_object()
-    thread_update.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, "Changed thread owner")
+    assert_contains(response, "Changed thread title from")
+    assert_contains(response, "Old title")
 
 
 def test_took_ownership_thread_update(client, thread, user):
@@ -195,6 +188,7 @@ def test_invited_thread_update(client, thread, user, other_user):
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, "Invited")
+    assert_contains(response, other_user.username)
 
 
 def test_invited_thread_update_without_context_object(client, thread, user, other_user):
@@ -207,6 +201,7 @@ def test_invited_thread_update_without_context_object(client, thread, user, othe
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, "Invited")
+    assert_contains(response, other_user.username)
 
 
 def test_left_thread_update(client, thread, user):
@@ -223,6 +218,7 @@ def test_removed_participants_thread_update(client, thread, user, other_user):
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, "Removed")
+    assert_contains(response, other_user.username)
 
 
 def test_removed_participants_thread_update_without_context_object(
@@ -237,6 +233,7 @@ def test_removed_participants_thread_update_without_context_object(
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, "Removed")
+    assert_contains(response, other_user.username)
 
 
 def test_changed_owner_thread_update(client, thread, user, other_user):
@@ -245,6 +242,7 @@ def test_changed_owner_thread_update(client, thread, user, other_user):
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, "Changed thread owner to")
+    assert_contains(response, other_user.username)
 
 
 def test_changed_owner_thread_update_without_context_object(
@@ -259,3 +257,4 @@ def test_changed_owner_thread_update_without_context_object(
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, "Changed thread owner to")
+    assert_contains(response, other_user.username)
