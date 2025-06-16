@@ -25,6 +25,14 @@ from ..create import (
 
 
 def test_create_test_thread_update(client, thread, user):
+    thread_update = create_test_thread_update(thread, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
+
+
+def test_create_test_thread_update_with_context(client, thread, user):
     thread_update = create_test_thread_update(thread, user, "LOREM IPSUM DOLOR")
     response = client.get(
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
