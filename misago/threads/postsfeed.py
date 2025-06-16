@@ -11,12 +11,13 @@ from ..permissions.privatethreads import (
 from ..permissions.threads import (
     check_edit_thread_post_permission,
 )
+from ..threadupdates.models import ThreadUpdate
+from ..threadupdates.actions import thread_updates_renderer
 from .hooks import (
     set_posts_feed_related_objects_hook,
 )
-from .models import Post, Thread, ThreadUpdate
+from .models import Post, Thread
 from .prefetch import prefetch_posts_feed_related_objects
-from .threadupdates import thread_updates_renderer
 
 
 class PostsFeed:

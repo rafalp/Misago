@@ -1,10 +1,9 @@
 import pytest
 from django.urls import reverse
 
-from ...permissions.enums import CategoryPermission
-from ...permissions.models import CategoryGroupPermission, Moderator
+from ...permissions.models import Moderator
 from ...test import assert_contains
-from ..models import ThreadUpdate
+from ...threadupdates.models import ThreadUpdate
 
 
 def test_delete_private_thread_update_view_returns_404_error_for_not_found_thread(

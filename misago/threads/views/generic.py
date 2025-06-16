@@ -22,7 +22,8 @@ from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,
 )
-from ..models import Post, Thread, ThreadUpdate
+from ...threadupdates.models import ThreadUpdate
+from ..models import Post, Thread
 from ..paginator import ThreadRepliesPaginator
 from ..postsfeed import PostsFeed, PrivateThreadPostsFeed, ThreadPostsFeed
 

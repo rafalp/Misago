@@ -4,7 +4,7 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.models import Category
 from ..threads.models import Thread
-from ..threads.threadupdates import (
+from ..threadupdates.create import (
     create_locked_thread_update,
     create_opened_thread_update,
 )

@@ -4,12 +4,10 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ..models import Thread, ThreadUpdate
-from ..threadupdates import (
-    delete_thread_update,
-    hide_thread_update,
-    unhide_thread_update,
-)
+from ...threadupdates.delete import delete_thread_update
+from ...threadupdates.hide import hide_thread_update, unhide_thread_update
+from ...threadupdates.models import ThreadUpdate
+from ..models import Thread
 from .generic import PrivateThreadView, ThreadView
 
 

@@ -1,8 +1,8 @@
 import pytest
 from django.utils import timezone
 
-from ..threads.enums import ThreadUpdateActionName
-from ..threads.models import ThreadUpdate
+from ..threadupdates.enums import ThreadUpdateActionName
+from ..threadupdates.models import ThreadUpdate
 
 
 @pytest.fixture

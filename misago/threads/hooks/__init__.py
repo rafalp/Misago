@@ -1,8 +1,6 @@
 from .create_prefetch_posts_feed_related_objects import (
     create_prefetch_posts_feed_related_objects_hook,
 )
-from .create_thread_update import create_thread_update_hook
-from .delete_thread_update import delete_thread_update_hook
 from .get_category_threads_page_context_data import (
     get_category_threads_page_context_data_hook,
 )
@@ -69,14 +67,10 @@ from .get_threads_page_moderation_actions import (
 from .get_threads_page_queryset import get_threads_page_queryset_hook
 from .get_threads_page_subcategories import get_threads_page_subcategories_hook
 from .get_threads_page_threads import get_threads_page_threads_hook
-from .hide_thread_update import hide_thread_update_hook
 from .set_posts_feed_related_objects import set_posts_feed_related_objects_hook
-from .unhide_thread_update import unhide_thread_update_hook
 
 __all__ = [
     "create_prefetch_posts_feed_related_objects_hook",
-    "create_thread_update_hook",
-    "delete_thread_update_hook",
     "get_category_threads_page_context_data_hook",
     "get_category_threads_page_filters_hook",
     "get_category_threads_page_moderation_actions_hook",
@@ -109,7 +103,5 @@ __all__ = [
     "get_threads_page_queryset_hook",
     "get_threads_page_subcategories_hook",
     "get_threads_page_threads_hook",
-    "hide_thread_update_hook",
     "set_posts_feed_related_objects_hook",
-    "unhide_thread_update_hook",
 ]

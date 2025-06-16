@@ -2,8 +2,7 @@ from django.apps import apps
 from django.conf import settings
 from django.db import models
 
-from ...plugins.models import PluginDataModel
-from .thread import Thread
+from ..plugins.models import PluginDataModel
 
 
 class ThreadUpdate(PluginDataModel):
@@ -12,7 +11,7 @@ class ThreadUpdate(PluginDataModel):
         on_delete=models.DO_NOTHING,
     )
     thread = models.ForeignKey(
-        Thread,
+        "misago_threads.Thread",
         on_delete=models.DO_NOTHING,
         related_name="updates",
     )

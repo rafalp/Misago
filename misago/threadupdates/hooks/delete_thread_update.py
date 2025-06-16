@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING, Protocol
 
-from django.db.models import Model
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook

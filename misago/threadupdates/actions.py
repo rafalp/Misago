@@ -3,36 +3,10 @@ from html import escape
 from django.db.models import Model
 from django.utils.translation import pgettext_lazy
 
-from ..enums import ThreadUpdateActionName
-from ..models import ThreadUpdate
-from ..threadurl import get_thread_url
-
-
-class ThreadUpdatesRenderer:
-    actions: dict[str, "ThreadUpdateAction"]
-
-    def __init__(self):
-        self.actions = {}
-
-    def register_action(self, action: type["ThreadUpdateAction"]):
-        action_obj = action()
-        self.actions[action_obj.action] = action_obj
-        return action
-
-    def render_thread_update(
-        self, thread_update: ThreadUpdate, data: dict
-    ) -> dict | None:
-        action = self.actions.get(thread_update.action)
-        if not action:
-            return
-
-        return {
-            "icon": action.icon,
-            "description": action.get_description(thread_update, data),
-        }
-
-
-thread_updates_renderer = ThreadUpdatesRenderer()
+from ..threads.threadurl import get_thread_url
+from .enums import ThreadUpdateActionName
+from .models import ThreadUpdate
+from .renderer import thread_updates_renderer
 
 
 class ThreadUpdateAction:
@@ -111,6 +85,15 @@ class UserContextThreadUpdateAction(ThreadUpdateAction):
             replacements = {"context": self.get_context_text(update.context)}
 
         return escape(self.description) % replacements
+
+
+@thread_updates_renderer.register_action
+class TestThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.TEST
+    icon = "verified_user"
+
+    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+        return escape(update.context) if update.context else "Test update"
 
 
 @thread_updates_renderer.register_action

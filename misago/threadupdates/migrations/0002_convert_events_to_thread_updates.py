@@ -17,7 +17,7 @@ EVENT_TYPES = {
 
 def convert_events_to_thread_updates(apps, _):
     Post = apps.get_model("misago_threads", "Post")
-    ThreadUpdate = apps.get_model("misago_threads", "ThreadUpdate")
+    ThreadUpdate = apps.get_model("misago_threadupdates", "ThreadUpdate")
 
     for post in Post.objects.filter(is_event=True).order_by("id"):
         context = None
@@ -83,7 +83,7 @@ class Migration(migrations.Migration):
     atomic = False
 
     dependencies = [
-        ("misago_threads", "0019_threadupdate"),
+        ("misago_threadupdates", "0001_threadupdate"),
     ]
 
     operations = [

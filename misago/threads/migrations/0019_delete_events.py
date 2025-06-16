@@ -13,7 +13,8 @@ class Migration(migrations.Migration):
     atomic = False
 
     dependencies = [
-        ("misago_threads", "0020_convert_events_to_thread_updates"),
+        ("misago_threads", "0018_update_attachments_markup"),
+        ("misago_threadupdates", "0002_convert_events_to_thread_updates"),
     ]
 
     operations = [

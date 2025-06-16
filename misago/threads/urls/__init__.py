@@ -23,7 +23,7 @@ from ..views.replies import private_thread_replies, thread_replies
 from ..views.reply import reply_private_thread, reply_thread
 from ..views.selectcategory import SelectCategoryView
 from ..views.start import start_private_thread, start_thread
-from ..views.threadupdate import (
+from ..views.threadupdates import (
     delete_thread_update_view,
     delete_private_thread_update_view,
     hide_private_thread_update_view,

@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING, Protocol
 
-from django.db.models import Model
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
@@ -9,15 +8,15 @@ if TYPE_CHECKING:
     from ..models import ThreadUpdate
 
 
-class UnhideThreadUpdateHookAction(Protocol):
+class HideThreadUpdateHookAction(Protocol):
     """
-    A standard Misago function used to unhide a `ThreadUpdate` object.
+    A standard Misago function used to hide a `ThreadUpdate` object.
 
     # Arguments
 
     ## `thread_update: ThreadUpdate`
 
-    A `ThreadUpdate` instance to unhide.
+    A `ThreadUpdate` instance to hide.
 
     ## `update_fields: set[str]`
 
@@ -29,7 +28,7 @@ class UnhideThreadUpdateHookAction(Protocol):
 
     # Return value
 
-    `True` if the thread update was unhidden, `False` otherwise.
+    `True` if the thread update was hidden, `False` otherwise.
     """
 
     def __call__(
@@ -40,19 +39,19 @@ class UnhideThreadUpdateHookAction(Protocol):
     ) -> bool: ...
 
 
-class UnhideThreadUpdateHookFilter(Protocol):
+class HideThreadUpdateHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: UnhideThreadUpdateHookAction`
+    ## `action: HideThreadUpdateHookAction`
 
-    A standard Misago function used to unhide a `ThreadUpdate` object.
+    A standard Misago function used to hide a `ThreadUpdate` object.
 
     ## `thread_update: ThreadUpdate`
 
-    A `ThreadUpdate` instance to unhide.
+    A `ThreadUpdate` instance to hide.
 
     ## `update_fields: set[str]`
 
@@ -64,40 +63,40 @@ class UnhideThreadUpdateHookFilter(Protocol):
 
     # Return value
 
-    `True` if the thread update was unhidden, `False` otherwise.
+    `True` if the thread update was hidden, `False` otherwise.
     """
 
     def __call__(
         self,
-        action: UnhideThreadUpdateHookAction,
+        action: HideThreadUpdateHookAction,
         thread_update: "ThreadUpdate",
         update_fields: set[str],
         request: HttpRequest | None = None,
     ) -> bool: ...
 
 
-class UnhideThreadUpdateHook(
+class HideThreadUpdateHook(
     FilterHook[
-        UnhideThreadUpdateHookAction,
-        UnhideThreadUpdateHookFilter,
+        HideThreadUpdateHookAction,
+        HideThreadUpdateHookFilter,
     ]
 ):
     """
-    This hook wraps a standard Misago function used to unhide a `ThreadUpdate` object.
+    This hook wraps a standard Misago function used to hide a `ThreadUpdate` object.
 
     # Example
 
     The code below implements a custom filter function that stores the client's
-    IP address when a thread update is unhidden:
+    IP address when a thread update is hidden:
 
     ```python
     from django.http import HttpRequest
-    from misago.threads.hooks import unhide_thread_update_hook
+    from misago.threads.hooks import hide_thread_update_hook
     from misago.threads.models import ThreadUpdate
 
 
-    @unhide_thread_update_hook.append_filter
-    def save_client_ip_on_thread_update_unhide(
+    @hide_thread_update_hook.append_filter
+    def save_client_ip_on_thread_update_hide(
         action,
         thread_update: ThreadUpdate,
         update_fields: set[str],
@@ -117,7 +116,7 @@ class UnhideThreadUpdateHook(
 
     def __call__(
         self,
-        action: UnhideThreadUpdateHookAction,
+        action: HideThreadUpdateHookAction,
         thread_update: "ThreadUpdate",
         update_fields: set[str],
         request: HttpRequest | None = None,
@@ -130,4 +129,4 @@ class UnhideThreadUpdateHook(
         )
 
 
-unhide_thread_update_hook = UnhideThreadUpdateHook()
+hide_thread_update_hook = HideThreadUpdateHook()

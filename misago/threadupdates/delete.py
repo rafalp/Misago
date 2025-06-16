@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 
-from ..hooks import delete_thread_update_hook
-from ..models import ThreadUpdate
+from .hooks import delete_thread_update_hook
+from .models import ThreadUpdate
 
 
 def delete_thread_update(

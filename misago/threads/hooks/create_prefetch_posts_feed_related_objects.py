@@ -5,7 +5,8 @@ from ...categories.models import Category
 from ...conf.dynamicsettings import DynamicSettings
 from ...permissions.proxy import UserPermissionsProxy
 from ...plugins.hooks import FilterHook
-from ..models import Post, Thread, ThreadUpdate
+from ...threadupdates.models import ThreadUpdate
+from ..models import Post, Thread
 
 if TYPE_CHECKING:
     from ...users.models import User

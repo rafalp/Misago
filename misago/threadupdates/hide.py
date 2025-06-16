@@ -1,8 +1,8 @@
 from django.http import HttpRequest
 from django.utils import timezone
 
-from ..hooks import hide_thread_update_hook, unhide_thread_update_hook
-from ..models import ThreadUpdate
+from .hooks import hide_thread_update_hook, unhide_thread_update_hook
+from .models import ThreadUpdate
 
 
 def hide_thread_update(

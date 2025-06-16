@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 from ...test import assert_contains
-from ..threadupdates import (
+from ..create import (
     create_approved_thread_update,
     create_changed_owner_thread_update,
     create_changed_title_thread_update,

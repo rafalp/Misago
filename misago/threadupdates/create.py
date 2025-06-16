@@ -4,13 +4,14 @@ from django.db.models import Model
 from django.http import HttpRequest
 from django.utils import timezone
 
-from ...categories.models import Category
-from ..enums import ThreadUpdateActionName
-from ..hooks import create_thread_update_hook
-from ..models import Thread, ThreadUpdate
+from ..categories.models import Category
+from ..threads.models import Thread
+from .enums import ThreadUpdateActionName
+from .hooks import create_thread_update_hook
+from .models import ThreadUpdate
 
 if TYPE_CHECKING:
-    from ...users.models import User
+    from ..users.models import User
 
 
 def create_thread_update(

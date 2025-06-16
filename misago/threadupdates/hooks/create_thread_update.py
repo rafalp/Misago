@@ -6,8 +6,9 @@ from django.http import HttpRequest
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
+    from ...threads.models import Thread
     from ...users.models import User
-    from ..models import Thread, ThreadUpdate
+    from ..models import ThreadUpdate
 
 
 class CreateThreadUpdateHookAction(Protocol):

@@ -1,12 +1,12 @@
-from ..threadupdates import (
+from ...threads.threadurl import get_thread_url
+from ..create import (
     create_approved_thread_update,
     create_changed_title_thread_update,
     create_invited_participant_thread_update,
     create_moved_thread_update,
     create_split_thread_update,
-    thread_updates_renderer,
 )
-from ..threadurl import get_thread_url
+from ..renderer import thread_updates_renderer
 
 
 def test_thread_updates_renderer_renders_simple_action(thread, user):
