@@ -317,7 +317,7 @@ def create_joined_thread_update(
     )
 
 
-def create_invited_thread_update(
+def create_invited_participant_thread_update(
     thread: Thread,
     invited_user: "User",
     actor: Union["User", str, None] = None,
@@ -327,7 +327,7 @@ def create_invited_thread_update(
 ) -> ThreadUpdate:
     return create_thread_update(
         thread,
-        ThreadUpdateActionName.INVITED,
+        ThreadUpdateActionName.INVITED_PARTICIPANT,
         actor,
         request=request,
         context=invited_user.username,

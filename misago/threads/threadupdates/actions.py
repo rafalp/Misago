@@ -219,19 +219,19 @@ class TookOwnershipThreadUpdateAction(ThreadUpdateAction):
 
 
 @thread_updates_renderer.register_action
+class ChangedOwnerThreadUpdateAction(UserContextThreadUpdateAction):
+    action = ThreadUpdateActionName.CHANGED_OWNER
+    icon = "people"
+    description = pgettext_lazy(
+        "thread update action description", "Changed thread owner to %(context)s"
+    )
+
+
+@thread_updates_renderer.register_action
 class JoinedThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.JOINED
     icon = "person_add"
     description = pgettext_lazy("thread update action description", "Joined thread")
-
-
-@thread_updates_renderer.register_action
-class InvitedThreadUpdateAction(UserContextThreadUpdateAction):
-    action = ThreadUpdateActionName.INVITED
-    icon = "person_add"
-    description = pgettext_lazy(
-        "thread update action description", "Invited %(context)s"
-    )
 
 
 @thread_updates_renderer.register_action
@@ -242,18 +242,18 @@ class LeftThreadUpdateAction(ThreadUpdateAction):
 
 
 @thread_updates_renderer.register_action
+class InvitedParticipantThreadUpdateAction(UserContextThreadUpdateAction):
+    action = ThreadUpdateActionName.INVITED_PARTICIPANT
+    icon = "person_add"
+    description = pgettext_lazy(
+        "thread update action description", "Invited %(context)s"
+    )
+
+
+@thread_updates_renderer.register_action
 class RemovedParticipantThreadUpdateAction(UserContextThreadUpdateAction):
     action = ThreadUpdateActionName.REMOVED_PARTICIPANT
     icon = "block"
     description = pgettext_lazy(
         "thread update action description", "Removed %(context)s"
-    )
-
-
-@thread_updates_renderer.register_action
-class ChangedOwnerThreadUpdateAction(UserContextThreadUpdateAction):
-    action = ThreadUpdateActionName.CHANGED_OWNER
-    icon = "people"
-    description = pgettext_lazy(
-        "thread update action description", "Changed thread owner to %(context)s"
     )

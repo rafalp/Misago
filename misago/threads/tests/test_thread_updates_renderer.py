@@ -1,7 +1,7 @@
 from ..threadupdates import (
     create_approved_thread_update,
     create_changed_title_thread_update,
-    create_invited_thread_update,
+    create_invited_participant_thread_update,
     create_moved_thread_update,
     create_split_thread_update,
     thread_updates_renderer,
@@ -127,7 +127,7 @@ def test_thread_updates_renderer_renders_action_with_not_found_thread_context(
 def test_thread_updates_renderer_renders_action_with_user_context(
     thread, user, other_user
 ):
-    thread_update = create_invited_thread_update(thread, other_user, user)
+    thread_update = create_invited_participant_thread_update(thread, other_user, user)
     data = thread_updates_renderer.render_thread_update(
         thread_update, {"users": {other_user.id: other_user}}
     )
@@ -142,7 +142,7 @@ def test_thread_updates_renderer_renders_action_with_user_context(
 def test_thread_updates_renderer_renders_action_with_deleted_user_context(
     thread, user, other_user
 ):
-    thread_update = create_invited_thread_update(thread, other_user, user)
+    thread_update = create_invited_participant_thread_update(thread, other_user, user)
     thread_update.clear_context_object()
     thread_update.save()
 
@@ -153,7 +153,7 @@ def test_thread_updates_renderer_renders_action_with_deleted_user_context(
 def test_thread_updates_renderer_renders_action_with_not_found_user_context(
     thread, user, other_user
 ):
-    thread_update = create_invited_thread_update(thread, other_user, user)
+    thread_update = create_invited_participant_thread_update(thread, other_user, user)
     data = thread_updates_renderer.render_thread_update(thread_update, {"users": {}})
     assert data == {"description": "Invited <em>Other_User</em>", "icon": "person_add"}
 

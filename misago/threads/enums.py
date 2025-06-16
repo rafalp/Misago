@@ -58,8 +58,10 @@ class ThreadUpdateActionName(StrEnum):
     CHANGED_TITLE = "changed_title"
 
     TOOK_OWNERSHIP = "took_ownership"
-    JOINED = "joined"
-    INVITED = "invited"
-    LEFT = "left"
-    REMOVED_PARTICIPANT = "removed_participant"
     CHANGED_OWNER = "changed_owner"
+
+    JOINED = "joined"
+    LEFT = "left"
+
+    INVITED_PARTICIPANT = "invited_participant"
+    REMOVED_PARTICIPANT = "removed_participant"
