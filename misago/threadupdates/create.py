@@ -83,6 +83,24 @@ def _create_thread_update_action(
     )
 
 
+def create_test_thread_update(
+    thread: Thread,
+    actor: Union["User", str, None] = None,
+    context: str | None = None,
+    *,
+    request: HttpRequest | None = None,
+    is_hidden: bool = False,
+) -> ThreadUpdate:
+    return create_thread_update(
+        thread,
+        ThreadUpdateActionName.TEST,
+        actor,
+        context=context,
+        request=request,
+        is_hidden=is_hidden,
+    )
+
+
 def create_approved_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,

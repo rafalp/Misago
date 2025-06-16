@@ -17,10 +17,20 @@ from ..create import (
     create_pinned_in_category_thread_update,
     create_removed_participants_thread_update,
     create_split_thread_update,
+    create_test_thread_update,
     create_took_ownership_thread_update,
     create_unhid_thread_update,
     create_unpinned_thread_update,
 )
+
+
+def test_create_test_thread_update(client, thread, user):
+    thread_update = create_test_thread_update(thread, user, "LOREM IPSUM DOLOR")
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, "LOREM IPSUM DOLOR")
 
 
 def test_approved_thread_update(client, thread, user):

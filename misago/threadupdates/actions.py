@@ -90,10 +90,13 @@ class UserContextThreadUpdateAction(ThreadUpdateAction):
 @thread_updates_renderer.register_action
 class TestThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.TEST
-    icon = "verified_user"
+    icon = "bug_report"
 
-    def get_description(self, update: ThreadUpdate, data: dict) -> str:
-        return escape(update.context) if update.context else "Test update"
+    def get_description(self, update: ThreadUpdate, data: dict | None = None) -> str:
+        if update.context:
+            return f"UPDATE [{update.id}] - {escape(update.context)}"
+
+        return f"UPDATE [{update.id}]"
 
 
 @thread_updates_renderer.register_action
