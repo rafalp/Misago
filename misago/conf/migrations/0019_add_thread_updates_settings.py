@@ -16,9 +16,4 @@ class Migration(migrations.Migration):
             python_type="int",
             dry_value=30,
         ),
-        CreateSetting(
-            setting="thread_updates_together",
-            python_type="int",
-            dry_value=0,
-        ),
     ]

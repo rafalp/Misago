@@ -39,7 +39,6 @@ class ThreadsSettingsForm(SettingsForm):
         "posts_per_page",
         "posts_per_page_orphans",
         "thread_updates_per_page",
-        "thread_updates_together",
     ]
 
     flood_control = forms.IntegerField(
@@ -182,17 +181,6 @@ class ThreadsSettingsForm(SettingsForm):
             "If the number of updates to show exceeds this value, only the most recent ones will be displayed.",
         ),
         min_value=5,
-    )
-    thread_updates_together = forms.IntegerField(
-        label=pgettext_lazy(
-            "admin threads settings form",
-            "Maximum number of thread updates shown together",
-        ),
-        help_text=pgettext_lazy(
-            "admin threads settings form",
-            "If the number of updates to show between posts exceeds this value, only the most recent ones will be displayed. Set this value to zero to disable the limit.",
-        ),
-        min_value=0,
     )
 
     allowed_attachment_types = forms.CharField(

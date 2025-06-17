@@ -1,7 +1,9 @@
 from django.urls import reverse
 
 from ...html.element import html_element
+from ...permissions.models import Moderator
 from ...test import assert_contains, assert_not_contains
+from ...threadupdates.create import create_test_thread_update
 from ..models import ThreadParticipant
 
 
@@ -323,6 +325,71 @@ def test_private_thread_replies_view_shows_post_with_embed_attachments(
     assert_contains(response, image_thumbnail_attachment.get_absolute_url())
     assert_contains(response, video_attachment.get_absolute_url())
     assert_contains(response, text_attachment.get_absolute_url())
+
+
+def test_private_thread_replies_view_filters_thread_updates_using_user_permissions(
+    user_client, user, user_private_thread
+):
+    visible_thread_update = create_test_thread_update(user_private_thread, user)
+    hidden_thread_update = create_test_thread_update(
+        user_private_thread, user, is_hidden=True
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        )
+    )
+    assert_contains(response, user_private_thread.title)
+    assert_contains(response, f"[{visible_thread_update.id}]")
+    assert_not_contains(response, f"[{hidden_thread_update.id}]")
+
+
+def test_private_thread_replies_view_shows_hidden_thread_updates_to_private_threads_moderator(
+    user_client, user, user_private_thread
+):
+    Moderator.objects.create(
+        private_threads=True,
+        user=user,
+        is_global=False,
+    )
+
+    visible_thread_update = create_test_thread_update(user_private_thread, user)
+    hidden_thread_update = create_test_thread_update(
+        user_private_thread, user, is_hidden=True
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        )
+    )
+    assert_contains(response, user_private_thread.title)
+    assert_contains(response, f"[{visible_thread_update.id}]")
+    assert_contains(response, f"[{hidden_thread_update.id}]")
+
+
+def test_private_thread_replies_view_shows_hidden_thread_updates_to_global_moderator(
+    moderator_client, user, moderator, user_private_thread
+):
+    ThreadParticipant.objects.create(thread=user_private_thread, user=moderator)
+
+    visible_thread_update = create_test_thread_update(user_private_thread, user)
+    hidden_thread_update = create_test_thread_update(
+        user_private_thread, user, is_hidden=True
+    )
+
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        )
+    )
+    assert_contains(response, user_private_thread.title)
+    assert_contains(response, f"[{visible_thread_update.id}]")
+    assert_contains(response, f"[{hidden_thread_update.id}]")
 
 
 def test_private_thread_replies_view_shows_error_if_regular_thread_is_accessed(
