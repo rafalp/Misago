@@ -1,9 +1,12 @@
 from django.urls import reverse
+from django.utils import timezone
 
+from ...conf.test import override_dynamic_settings
 from ...html.element import html_element
 from ...permissions.models import Moderator, CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
 from ...threadupdates.create import create_test_thread_update
+from ..test import reply_thread
 
 
 def test_thread_replies_view_shows_error_on_missing_permission(
@@ -377,6 +380,94 @@ def test_thread_replies_view_shows_hidden_thread_updates_to_global_moderator(
     assert_contains(response, thread.title)
     assert_contains(response, f"[{visible_thread_update.id}]")
     assert_contains(response, f"[{hidden_thread_update.id}]")
+
+
+@override_dynamic_settings(thread_updates_per_page=4)
+def test_thread_replies_view_limits_thread_updates(client, user, thread):
+    thread_updates = []
+    for _ in range(5):
+        thread_updates.append(create_test_thread_update(thread, user))
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_not_contains(response, f"[{thread_updates[0].id}]")
+    assert_contains(response, f"[{thread_updates[1].id}]")
+    assert_contains(response, f"[{thread_updates[-1].id}]")
+
+
+@override_dynamic_settings(
+    thread_updates_per_page=4, posts_per_page=5, posts_per_page_orphans=1
+)
+def test_thread_replies_view_shows_thread_updates_on_first_page(client, user, thread):
+    first_page_thread_update = create_test_thread_update(thread, user)
+
+    for _ in range(6):
+        reply_thread(thread, posted_on=timezone.now())
+
+    last_page_thread_update = create_test_thread_update(thread, user)
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, f"[{first_page_thread_update.id}]")
+    assert_not_contains(response, f"[{last_page_thread_update.id}]")
+
+
+@override_dynamic_settings(
+    thread_updates_per_page=4, posts_per_page=5, posts_per_page_orphans=1
+)
+def test_thread_replies_view_shows_thread_updates_on_second_page(client, user, thread):
+    for _ in range(4):
+        reply_thread(thread, posted_on=timezone.now())
+
+    first_page_thread_update = create_test_thread_update(thread, user)
+
+    for _ in range(5):
+        reply_thread(thread, posted_on=timezone.now())
+
+    second_page_thread_update = create_test_thread_update(thread, user)
+
+    for _ in range(2):
+        reply_thread(thread, posted_on=timezone.now())
+
+    last_page_thread_update = create_test_thread_update(thread, user)
+
+    response = client.get(
+        reverse(
+            "misago:thread", kwargs={"id": thread.id, "slug": thread.slug, "page": 2}
+        )
+    )
+    assert_contains(response, thread.title)
+    assert_not_contains(response, f"[{first_page_thread_update.id}]")
+    assert_contains(response, f"[{second_page_thread_update.id}]")
+    assert_not_contains(response, f"[{last_page_thread_update.id}]")
+
+
+@override_dynamic_settings(
+    thread_updates_per_page=4, posts_per_page=5, posts_per_page_orphans=1
+)
+def test_thread_replies_view_shows_thread_updates_on_last_page(client, user, thread):
+    for _ in range(4):
+        reply_thread(thread, posted_on=timezone.now())
+
+    first_page_thread_update = create_test_thread_update(thread, user)
+
+    for _ in range(2):
+        reply_thread(thread, posted_on=timezone.now())
+
+    last_page_thread_update = create_test_thread_update(thread, user)
+
+    response = client.get(
+        reverse(
+            "misago:thread", kwargs={"id": thread.id, "slug": thread.slug, "page": 2}
+        )
+    )
+    assert_contains(response, thread.title)
+    assert_not_contains(response, f"[{first_page_thread_update.id}]")
+    assert_contains(response, f"[{last_page_thread_update.id}]")
 
 
 def test_thread_replies_view_shows_error_if_private_thread_is_accessed(

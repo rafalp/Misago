@@ -180,7 +180,7 @@ class ThreadsSettingsForm(SettingsForm):
             "admin threads settings form",
             "If the number of updates to show exceeds this value, only the most recent ones will be displayed.",
         ),
-        min_value=5,
+        min_value=1,
     )
 
     allowed_attachment_types = forms.CharField(
