@@ -62,6 +62,26 @@ def test_posts_feed_sets_rich_text_data_in_post_data(
     assert post_data["rich_text_data"]["attachments"] == {
         text_attachment.id: text_attachment
     }
+    assert post_data["attachments"] == []
+
+
+def test_posts_feed_sets_extra_post_attachments(
+    request_factory, user, thread, other_user_reply, text_attachment
+):
+    text_attachment.associate_with_post(other_user_reply)
+    text_attachment.save()
+
+    request = request_factory(user)
+
+    posts_feed = PostsFeed(request, thread, [other_user_reply])
+    feed_data = posts_feed.get_context_data()
+
+    post_data = feed_data["items"][0]
+    assert post_data["rich_text_data"]["attachment_errors"] == {}
+    assert post_data["rich_text_data"]["attachments"] == {
+        text_attachment.id: text_attachment,
+    }
+    assert post_data["attachments"] == [text_attachment]
 
 
 def test_posts_feed_marks_post_as_animated(request_factory, user, thread, post, reply):
