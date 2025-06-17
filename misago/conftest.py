@@ -443,6 +443,11 @@ def private_thread(private_threads_category):
 
 
 @pytest.fixture
+def private_thread_post(private_thread):
+    return private_thread.first_post
+
+
+@pytest.fixture
 def private_thread_reply(private_thread):
     return reply_thread(private_thread, poster="Ghost", posted_on=timezone.now())
 
