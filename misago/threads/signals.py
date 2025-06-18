@@ -94,6 +94,8 @@ def delete_user_threads(sender, **kwargs):
     ).delete()
 
     ThreadUpdate.objects.filter(actor=sender).delete()
+    ThreadUpdate.objects.context_object(sender).clear_context_objects()
+
     WatchedThread.objects.filter(thread__starter=sender).delete()
 
     for post in sender.liked_post_set.iterator(chunk_size=50):
