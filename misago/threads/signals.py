@@ -210,6 +210,13 @@ def archive_user_polls(sender, archive=None, **kwargs):
 
 
 @receiver(anonymize_user_data)
+def anonymize_user_in_thread_updates(sender, **kwargs):
+    ThreadUpdate.objects.filter(actor=sender).update(actor_name=sender.username)
+    ThreadUpdate.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
+    ThreadUpdate.objects.context_object(sender).update(context=sender.username)
+
+
+@receiver(anonymize_user_data)
 def anonymize_user_in_events(sender, **kwargs):
     queryset = Post.objects.filter(
         is_event=True,
