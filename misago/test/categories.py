@@ -17,6 +17,8 @@ from ..threads.models import (
     Thread,
 )
 from ..threads.test import post_poll, post_thread, reply_thread
+from ..threadupdates.create import create_test_thread_update
+from ..threadupdates.models import ThreadUpdate
 from ..users.models import User, Group
 
 __all__ = ["CategoryRelationsFactory"]
@@ -43,6 +45,7 @@ class CategoryRelationsFactory:
     thread: Thread
     thread_first_post: Post
     thread_reply: Post
+    thread_update: ThreadUpdate
     watched_thread: WatchedThread
 
     def __init__(
@@ -65,6 +68,7 @@ class CategoryRelationsFactory:
         self.thread = self.create_thread()
         self.thread_first_post = self.thread.first_post
         self.thread_reply = self.create_thread_reply()
+        self.thread_update = self.create_thread_update()
 
         self.attachment = self.create_attachment()
         self.category_group_permission = self.create_category_group_permission()
@@ -177,6 +181,9 @@ class CategoryRelationsFactory:
     def create_thread_reply(self) -> Post:
         return reply_thread(self.thread, poster=self.other_user)
 
+    def create_thread_update(self) -> ThreadUpdate:
+        return create_test_thread_update(self.thread, self.other_user)
+
     def create_watched_thread(self) -> WatchedThread:
         return WatchedThread.objects.create(
             user=self.user,
@@ -247,6 +254,10 @@ class CategoryRelationsFactory:
         with pytest.raises(Post.DoesNotExist):
             """Thread reply should be deleted when category is deleted"""
             self.thread_reply.refresh_from_db()
+
+        with pytest.raises(ThreadUpdate.DoesNotExist):
+            """Thread update should be deleted when category is deleted"""
+            self.thread_update.refresh_from_db()
 
         with pytest.raises(WatchedThread.DoesNotExist):
             """WatchedThread should be deleted when category is deleted"""
@@ -320,6 +331,11 @@ class CategoryRelationsFactory:
         assert (
             self.thread_reply.category_id == new_category.id
         ), "Thread reply's category relation was not updated"
+
+        self.thread_update.refresh_from_db()
+        assert (
+            self.thread_update.category_id == new_category.id
+        ), "ThreadUpdate category relation was not updated"
 
         self.watched_thread.refresh_from_db()
         assert (
