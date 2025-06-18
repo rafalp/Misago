@@ -71,6 +71,11 @@ def _delete_categories_action(
     delete_all(CategoryGroupPermission, category_id=categories)
     delete_all(ReadCategory, category_id=categories)
 
+    ThreadUpdate.objects.filter(
+        context_type="misago_categories.category",
+        context_id__in=[c.id for c in categories],
+    ).update(context_type=None, context_id=None)
+
     Category.objects.filter(archive_pruned_in__in=categories).update(
         archive_pruned_in=None, last_thread=None
     )
