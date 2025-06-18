@@ -87,6 +87,7 @@ def create_test_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
     context: str | None = None,
+    context_object: Model | None = None,
     *,
     request: HttpRequest | None = None,
     is_hidden: bool = False,
@@ -96,6 +97,7 @@ def create_test_thread_update(
         ThreadUpdateActionName.TEST,
         actor,
         context=context,
+        context_object=context_object,
         request=request,
         is_hidden=is_hidden,
     )

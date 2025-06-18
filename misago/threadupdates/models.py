@@ -5,6 +5,18 @@ from django.db import models
 from ..plugins.models import PluginDataModel
 
 
+class ThreadUpdateQuerySet(models.QuerySet):
+    def context_object(self, obj: models.Model):
+        return self.filter(
+            context_type=f"{obj._meta.app_label}.{obj._meta.model_name}",
+            context_id=obj.pk,
+        )
+
+    def context_type(self, obj: models.Model | type[models.Model]):
+        context_type = f"{obj._meta.app_label}.{obj._meta.model_name}"
+        return self.filter(context_type=context_type)
+
+
 class ThreadUpdate(PluginDataModel):
     category = models.ForeignKey(
         "misago_categories.Category",
@@ -44,6 +56,8 @@ class ThreadUpdate(PluginDataModel):
 
     created_at = models.DateTimeField(auto_now_add=True)
     hidden_at = models.DateTimeField(blank=True, null=True)
+
+    objects = ThreadUpdateQuerySet.as_manager()
 
     class Meta:
         indexes = [
