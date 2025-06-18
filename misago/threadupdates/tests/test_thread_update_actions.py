@@ -41,6 +41,18 @@ def test_create_test_thread_update_with_context(client, thread, user):
     assert_contains(response, "LOREM IPSUM DOLOR")
 
 
+def test_create_test_thread_update_with_context_object(
+    client, thread, user, default_category
+):
+    thread_update = create_test_thread_update(
+        thread, user, context_object=default_category
+    )
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
+
+
 def test_approved_thread_update(client, thread, user):
     create_approved_thread_update(thread, user)
     response = client.get(
