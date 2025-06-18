@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Q
@@ -9,6 +10,7 @@ from ..attachments.delete import delete_users_attachments
 from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..notifications.models import Notification, WatchedThread
+from ..threadupdates.models import ThreadUpdate
 from ..users.signals import (
     anonymize_user_data,
     archive_user_data,
@@ -237,6 +239,13 @@ def update_usernames(sender, **kwargs):
         best_answer_marked_by_name=sender.username,
         best_answer_marked_by_slug=sender.slug,
     )
+
+    ThreadUpdate.objects.filter(actor=sender).update(sender_name=sender.username)
+    ThreadUpdate.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
+    ThreadUpdate.objects.filter(
+        context_type=settings.AUTH_USER_MODEL.lower(),
+        context_id=sender.id,
+    ).update(context=sender.username)
 
     Post.objects.filter(poster=sender).update(poster_name=sender.username)
 
