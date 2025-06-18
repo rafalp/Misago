@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Q
@@ -94,6 +93,7 @@ def delete_user_threads(sender, **kwargs):
         Q(thread__starter=sender) | Q(post__poster=sender)
     ).delete()
 
+    ThreadUpdate.objects.filter(actor=sender).delete()
     WatchedThread.objects.filter(thread__starter=sender).delete()
 
     for post in sender.liked_post_set.iterator(chunk_size=50):
@@ -242,10 +242,7 @@ def update_usernames(sender, **kwargs):
 
     ThreadUpdate.objects.filter(actor=sender).update(sender_name=sender.username)
     ThreadUpdate.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
-    ThreadUpdate.objects.filter(
-        context_type=settings.AUTH_USER_MODEL.lower(),
-        context_id=sender.id,
-    ).update(context=sender.username)
+    ThreadUpdate.objects.context_object(sender).update(context=sender.username)
 
     Post.objects.filter(poster=sender).update(poster_name=sender.username)
 
