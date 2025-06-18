@@ -16,6 +16,9 @@ class ThreadUpdateQuerySet(models.QuerySet):
         context_type = f"{obj._meta.app_label}.{obj._meta.model_name}"
         return self.filter(context_type=context_type)
 
+    def clear_context_objects(self) -> int:
+        return self.update(context_type=None, context_id=None)
+
 
 class ThreadUpdate(PluginDataModel):
     category = models.ForeignKey(
