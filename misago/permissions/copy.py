@@ -58,7 +58,6 @@ COPY_GROUP_PERMISSIONS = (
     "can_always_delete_own_attachments",
     "can_start_polls",
     "can_edit_own_polls",
-    "can_delete_own_polls",
     "own_polls_edit_time_limit",
     "can_close_own_polls",
     "own_polls_close_time_limit",

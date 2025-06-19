@@ -221,9 +221,6 @@ class EditGroupForm(forms.ModelForm):
     can_edit_own_polls = YesNoSwitch(
         label=pgettext_lazy("admin group permissions form", "Can edit own polls"),
     )
-    can_delete_own_polls = YesNoSwitch(
-        label=pgettext_lazy("admin group permissions form", "Can delete own polls"),
-    )
     own_polls_edit_time_limit = forms.IntegerField(
         label=pgettext_lazy(
             "admin group permissions form", "Time limit for editing own polls"
@@ -316,6 +313,12 @@ class EditGroupForm(forms.ModelForm):
             "unused_attachments_storage_limit",
             "attachment_size_limit",
             "can_always_delete_own_attachments",
+            "can_start_polls",
+            "can_edit_own_polls",
+            "own_polls_edit_time_limit",
+            "can_close_own_polls",
+            "own_polls_close_time_limit",
+            "can_vote_in_polls",
             "can_change_username",
             "username_changes_limit",
             "username_changes_expire",

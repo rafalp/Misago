@@ -106,6 +106,19 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
+    <legend>{% translate "Polls" context "admin group permissions form" %}</legend>
+
+    {% form_row form.group.can_start_polls %}
+    {% form_row form.group.can_edit_own_polls %}
+    {% form_row form.group.own_polls_edit_time_limit %}
+    {% form_row form.group.can_close_own_polls %}
+    {% form_row form.group.own_polls_close_time_limit %}
+    {% form_row form.group.can_vote_in_polls %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
     <legend>{% translate "Usernames" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_change_username %}

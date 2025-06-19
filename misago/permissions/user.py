@@ -84,7 +84,6 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "can_always_delete_own_attachments": False,
         "can_start_polls": False,
         "can_edit_own_polls": False,
-        "can_delete_own_polls": False,
         "own_polls_edit_time_limit": 0,
         "can_close_own_polls": False,
         "own_polls_close_time_limit": 0,
@@ -172,11 +171,6 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
             permissions,
             "can_edit_own_polls",
             group.can_edit_own_polls,
-        )
-        if_true(
-            permissions,
-            "can_delete_own_polls",
-            group.can_delete_own_polls,
         )
         if_zero_or_greater(
             permissions,
