@@ -34,4 +34,12 @@ class Migration(migrations.Migration):
             """,
             migrations.RunPython.noop,
         ),
+        migrations.RemoveIndex(
+            model_name="post",
+            name="misago_post_is_event_part",
+        ),
+        migrations.RemoveIndex(
+            model_name="post",
+            name="misago_thre_is_even_d29c90_idx",
+        ),
     ]

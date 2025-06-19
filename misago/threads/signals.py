@@ -16,7 +16,7 @@ from ..users.signals import (
     delete_user_content,
     username_changed,
 )
-from .anonymize import ANONYMIZABLE_EVENTS, anonymize_event, anonymize_post_last_likes
+from .anonymize import anonymize_post_last_likes
 from .models import (
     Attachment as LegacyAttachment,
     Poll,
@@ -246,18 +246,6 @@ def anonymize_user_in_thread_updates(sender, **kwargs):
     ThreadUpdate.objects.filter(actor=sender).update(actor_name=sender.username)
     ThreadUpdate.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
     ThreadUpdate.objects.context_object(sender).update(context=sender.username)
-
-
-@receiver(anonymize_user_data)
-def anonymize_user_in_events(sender, **kwargs):
-    queryset = Post.objects.filter(
-        is_event=True,
-        event_type__in=ANONYMIZABLE_EVENTS,
-        event_context__user__id=sender.id,
-    )
-
-    for event in queryset.iterator(chunk_size=50):
-        anonymize_event(sender, event)
 
 
 @receiver([anonymize_user_data])

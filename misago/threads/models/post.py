@@ -93,15 +93,9 @@ class Post(PluginDataModel):
                 fields=["is_hidden"],
                 condition=Q(is_hidden=False),
             ),
-            models.Index(
-                name="misago_post_is_event_part",
-                fields=["is_event", "event_type"],
-                condition=Q(is_event=True),
-            ),
             GinIndex(fields=["search_vector"]),
             # Speed up threadview for team members
             models.Index(fields=["thread", "id"]),
-            models.Index(fields=["is_event", "is_hidden"]),
             models.Index(fields=["poster", "posted_on"]),
         ]
 

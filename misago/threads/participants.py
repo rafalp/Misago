@@ -1,7 +1,14 @@
 from django.contrib.auth import get_user_model
 
 from ..notifications.tasks import notify_on_new_private_thread
-from .events import record_event
+from ..threadupdates.create import (
+    create_changed_owner_thread_update,
+    create_invited_participant_thread_update,
+    create_joined_thread_update,
+    create_left_thread_update,
+    create_removed_participant_thread_update,
+    create_took_ownership_thread_update,
+)
 from .models import Thread, ThreadParticipant
 
 User = get_user_model()
@@ -75,20 +82,11 @@ def change_owner(request, thread, new_owner):
     )
 
     if thread.participant and thread.participant.is_owner:
-        record_event(
-            request,
-            thread,
-            "changed_owner",
-            {
-                "user": {
-                    "id": new_owner.id,
-                    "username": new_owner.username,
-                    "url": new_owner.get_absolute_url(),
-                }
-            },
+        create_changed_owner_thread_update(
+            thread, new_owner, request.user, request=request
         )
     else:
-        record_event(request, thread, "tookover")
+        create_took_ownership_thread_update(thread, request.user, request=request)
 
 
 def add_participant(request, thread, new_participant):
@@ -96,19 +94,10 @@ def add_participant(request, thread, new_participant):
     add_participants(request.user, thread, [new_participant])
 
     if request.user == new_participant:
-        record_event(request, thread, "entered_thread")
+        create_joined_thread_update(thread, request.user, request=request)
     else:
-        record_event(
-            request,
-            thread,
-            "added_participant",
-            {
-                "user": {
-                    "id": new_participant.id,
-                    "username": new_participant.username,
-                    "url": new_participant.get_absolute_url(),
-                }
-            },
+        create_invited_participant_thread_update(
+            thread, new_participant, request.user, request=request
         )
 
 
@@ -160,25 +149,9 @@ def remove_participant(request, thread, user):
         if removed_owner:
             thread.is_closed = True  # flag thread to close
 
-            if request.user == user:
-                event_type = "owner_left"
-            else:
-                event_type = "removed_owner"
+        if request.user == user:
+            create_left_thread_update(thread, request.user, request=request)
         else:
-            if request.user == user:
-                event_type = "participant_left"
-            else:
-                event_type = "removed_participant"
-
-        record_event(
-            request,
-            thread,
-            event_type,
-            {
-                "user": {
-                    "id": user.id,
-                    "username": user.username,
-                    "url": user.get_absolute_url(),
-                }
-            },
-        )
+            create_removed_participant_thread_update(
+                thread, user, request.user, request=request
+            )

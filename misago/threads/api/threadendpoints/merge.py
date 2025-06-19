@@ -3,7 +3,6 @@ from rest_framework.response import Response
 
 from ....acl.objectacl import add_acl_to_obj
 from ....notifications.tasks import delete_duplicate_watched_threads
-from ...events import record_event
 from ...mergeconflict import MergeConflict
 from ...models import Thread
 from ...moderation import threads as moderation
@@ -171,10 +170,6 @@ def merge_threads(request, validated_data, threads, merge_conflict):
         categories.append(thread.category)
         new_thread.merge(thread)
         thread.delete()
-
-        record_event(
-            request, new_thread, "merged", {"merged_thread": thread.title}, commit=False
-        )
 
     new_thread.synchronize()
     new_thread.save()

@@ -373,7 +373,7 @@ def create_left_thread_update(
     )
 
 
-def create_removed_participants_thread_update(
+def create_removed_participant_thread_update(
     thread: Thread,
     removed_participant: "User",
     actor: Union["User", str, None] = None,

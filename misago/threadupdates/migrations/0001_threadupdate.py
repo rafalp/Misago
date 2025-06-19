@@ -85,7 +85,7 @@ class Migration(migrations.Migration):
             options={
                 "indexes": [
                     django.contrib.postgres.indexes.GinIndex(
-                        fields=["plugin_data"], name="misago_thre_plugin__35f87f_gin"
+                        fields=["plugin_data"], name="misago_thre_plugin__a3a1a5_gin"
                     ),
                     models.Index(
                         fields=["thread", "created_at"],

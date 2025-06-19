@@ -15,7 +15,7 @@ from ..create import (
     create_opened_thread_update,
     create_pinned_globally_thread_update,
     create_pinned_in_category_thread_update,
-    create_removed_participants_thread_update,
+    create_removed_participant_thread_update,
     create_split_thread_update,
     create_test_thread_update,
     create_took_ownership_thread_update,
@@ -267,7 +267,7 @@ def test_invited_thread_update_without_context_object(client, thread, user, othe
 
 
 def test_removed_participants_thread_update(client, thread, user, other_user):
-    create_removed_participants_thread_update(thread, other_user, user)
+    create_removed_participant_thread_update(thread, other_user, user)
     response = client.get(
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
@@ -278,7 +278,7 @@ def test_removed_participants_thread_update(client, thread, user, other_user):
 def test_removed_participants_thread_update_without_context_object(
     client, thread, user, other_user
 ):
-    thread_update = create_removed_participants_thread_update(thread, other_user, user)
+    thread_update = create_removed_participant_thread_update(thread, other_user, user)
 
     thread_update.clear_context_object()
     thread_update.save()

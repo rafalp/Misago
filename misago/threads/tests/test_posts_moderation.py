@@ -12,12 +12,6 @@ class PostsModerationTests(AuthenticatedUserTestCase):
         self.thread = test.post_thread(self.category)
         self.post = test.reply_thread(self.thread)
 
-    def reload_thread(self):
-        self.thread = Thread.objects.get(pk=self.thread.pk)
-
-    def reload_post(self):
-        self.post = Post.objects.get(pk=self.post.pk)
-
     def test_hide_original_post(self):
         """hide_post fails for first post in thread"""
         with self.assertRaises(moderation.ModerationError):
@@ -28,7 +22,7 @@ class PostsModerationTests(AuthenticatedUserTestCase):
         self.assertFalse(self.post.is_protected)
         self.assertTrue(moderation.protect_post(self.user, self.post))
 
-        self.reload_post()
+        self.post.refresh_from_db()
         self.assertTrue(self.post.is_protected)
 
     def test_protect_protected_post(self):
@@ -41,7 +35,7 @@ class PostsModerationTests(AuthenticatedUserTestCase):
         self.post.is_protected = True
         self.assertTrue(moderation.unprotect_post(self.user, self.post))
 
-        self.reload_post()
+        self.post.refresh_from_db()
         self.assertFalse(self.post.is_protected)
 
     def test_unprotect_protected_post(self):
@@ -53,7 +47,7 @@ class PostsModerationTests(AuthenticatedUserTestCase):
         self.assertFalse(self.post.is_hidden)
         self.assertTrue(moderation.hide_post(self.user, self.post))
 
-        self.reload_post()
+        self.post.refresh_from_db()
         self.assertTrue(self.post.is_hidden)
         self.assertEqual(self.post.hidden_by, self.user)
         self.assertEqual(self.post.hidden_by_name, self.user.username)
@@ -77,7 +71,7 @@ class PostsModerationTests(AuthenticatedUserTestCase):
         self.assertTrue(self.post.is_hidden)
         self.assertTrue(moderation.unhide_post(self.user, self.post))
 
-        self.reload_post()
+        self.post.refresh_from_db()
         self.assertFalse(self.post.is_hidden)
 
     def test_unhide_visible_post(self):
@@ -93,7 +87,7 @@ class PostsModerationTests(AuthenticatedUserTestCase):
         """delete_post deletes thread post"""
         self.assertTrue(moderation.delete_post(self.user, self.post))
         with self.assertRaises(Post.DoesNotExist):
-            self.reload_post()
+            self.post.refresh_from_db()
 
         self.thread.synchronize()
         self.assertEqual(self.thread.replies, 0)
