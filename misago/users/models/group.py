@@ -36,6 +36,14 @@ class Group(PluginDataModel):
     attachment_size_limit = models.PositiveIntegerField(default=1000)
     can_always_delete_own_attachments = models.BooleanField(default=False)
 
+    can_start_polls = models.BooleanField(default=False)
+    can_edit_own_polls = models.BooleanField(default=False)
+    can_delete_own_polls = models.BooleanField(default=False)
+    own_polls_edit_time_limit = models.PositiveIntegerField(default=0)
+    can_close_own_polls = models.BooleanField(default=False)
+    own_polls_close_time_limit = models.PositiveIntegerField(default=0)
+    can_vote_in_polls = models.BooleanField(default=False)
+
     can_change_username = models.BooleanField(default=False)
     username_changes_limit = models.PositiveIntegerField(default=0)
     username_changes_expire = models.PositiveIntegerField(default=0)

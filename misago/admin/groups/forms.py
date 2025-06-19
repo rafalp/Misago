@@ -215,6 +215,45 @@ class EditGroupForm(forms.ModelForm):
         ),
     )
 
+    can_start_polls = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can start polls"),
+    )
+    can_edit_own_polls = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can edit own polls"),
+    )
+    can_delete_own_polls = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can delete own polls"),
+    )
+    own_polls_edit_time_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Time limit for editing own polls"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of minutes after a user starts a poll during which they can still edit it. Enter zero to remove this time limit.",
+        ),
+        min_value=0,
+    )
+    can_close_own_polls = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can close own polls"),
+    )
+    own_polls_close_time_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Time limit for closing own polls"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of minutes after a user starts a poll during which they can still edit it. Enter zero to remove this time limit.",
+        ),
+        min_value=0,
+    )
+    can_vote_in_polls = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can vote in polls"),
+        help_text=pgettext_lazy(
+            "admin group permissions form", "Users can always vote in their own polls."
+        ),
+    )
+
     can_change_username = YesNoSwitch(
         label=pgettext_lazy("admin group permissions form", "Can change username"),
     )
