@@ -147,7 +147,8 @@ def remove_participant(request, thread, user):
         thread.watchedthread_set.filter(user=user).delete()
 
         if removed_owner:
-            thread.is_closed = True  # flag thread to close
+            thread.is_closed = True
+            thread.save(update_fields=["is_closed"])
 
         if request.user == user:
             create_left_thread_update(thread, request.user, request=request)

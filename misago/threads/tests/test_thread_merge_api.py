@@ -223,8 +223,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             },
         )
 
-        # other thread has two posts and an event now
-        self.assertEqual(other_thread.post_set.count(), 3)
+        # other thread has two posts
+        self.assertEqual(other_thread.post_set.count(), 2)
 
         # first thread is gone
         with self.assertRaises(Thread.DoesNotExist):
@@ -255,8 +255,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             },
         )
 
-        # other thread has three posts and an event now
-        self.assertEqual(other_thread.post_set.count(), 4)
+        # other thread has three posts
+        self.assertEqual(other_thread.post_set.count(), 3)
 
         # first thread is gone
         with self.assertRaises(Thread.DoesNotExist):
@@ -292,8 +292,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             },
         )
 
-        # other thread has three posts and an event now
-        self.assertEqual(other_thread.post_set.count(), 4)
+        # other thread has three posts
+        self.assertEqual(other_thread.post_set.count(), 3)
 
         # first thread is gone
         with self.assertRaises(Thread.DoesNotExist):
@@ -404,8 +404,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             },
         )
 
-        # other thread has four posts and an event now
-        self.assertEqual(other_thread.post_set.count(), 5)
+        # other thread has four posts
+        self.assertEqual(other_thread.post_set.count(), 4)
 
         # first thread is gone
         with self.assertRaises(Thread.DoesNotExist):
@@ -447,8 +447,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             },
         )
 
-        # other thread has four posts and an event now
-        self.assertEqual(other_thread.post_set.count(), 5)
+        # other thread has four posts
+        self.assertEqual(other_thread.post_set.count(), 4)
 
         # first thread is gone
         with self.assertRaises(Thread.DoesNotExist):
@@ -492,8 +492,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             },
         )
 
-        # other thread has four posts and an event now
-        self.assertEqual(other_thread.post_set.count(), 5)
+        # other thread has four posts
+        self.assertEqual(other_thread.post_set.count(), 4)
 
         # first thread is gone
         with self.assertRaises(Thread.DoesNotExist):
@@ -525,8 +525,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             },
         )
 
-        # other thread has two posts and an event now
-        self.assertEqual(other_thread.post_set.count(), 3)
+        # other thread has two posts
+        self.assertEqual(other_thread.post_set.count(), 2)
 
         # first thread is gone
         with self.assertRaises(Thread.DoesNotExist):
@@ -561,8 +561,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             },
         )
 
-        # other thread has two posts and an event now
-        self.assertEqual(other_thread.post_set.count(), 3)
+        # other thread has two posts
+        self.assertEqual(other_thread.post_set.count(), 2)
 
         # first thread is gone
         with self.assertRaises(Thread.DoesNotExist):
@@ -653,8 +653,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             },
         )
 
-        # other thread has two posts and an event now
-        self.assertEqual(other_thread.post_set.count(), 3)
+        # other thread has two posts
+        self.assertEqual(other_thread.post_set.count(), 2)
 
         # first thread is gone
         with self.assertRaises(Thread.DoesNotExist):
@@ -689,8 +689,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             },
         )
 
-        # other thread has two posts and an event now
-        self.assertEqual(other_thread.post_set.count(), 3)
+        # other thread has two posts
+        self.assertEqual(other_thread.post_set.count(), 2)
 
         # first thread is gone
         with self.assertRaises(Thread.DoesNotExist):
@@ -732,8 +732,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             },
         )
 
-        # other thread has two posts and an event now
-        self.assertEqual(other_thread.post_set.count(), 3)
+        # other thread has two posts
+        self.assertEqual(other_thread.post_set.count(), 2)
 
         # first thread is gone
         with self.assertRaises(Thread.DoesNotExist):
