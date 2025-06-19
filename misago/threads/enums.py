@@ -1,4 +1,4 @@
-from enum import IntEnum, StrEnum
+from enum import IntEnum
 
 from django.utils.translation import pgettext_lazy
 

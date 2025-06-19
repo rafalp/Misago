@@ -1,6 +1,4 @@
 .posts-feed {
-  margin-left: floor(@grid-gutter-width / -2);
-  margin-right: ceil(@grid-gutter-width / -2);
   margin-bottom: @line-height-computed;
 
   border-top: 1px solid @gray-lighter;
@@ -8,8 +6,6 @@
 }
 
 .posts-feed-item {
-  padding: @line-height-computed floor(@grid-gutter-width / 2);
-
   border-bottom: 1px solid @gray-lighter;
 }
 
@@ -17,7 +13,7 @@
   border-bottom: 0;
 }
 
-// Animate in new or updated threads
+// Animate in new or updated items
 @keyframes misago-posts-feed-item-animate {
   0% {
     background-color: @posts-feed-item-animation-color;
@@ -36,6 +32,7 @@
 // Post
 .posts-feed-item-post {
   display: flex;
+  padding: @line-height-computed 0;
 }
 
 .posts-feed-item-post-bit-side {
@@ -313,16 +310,139 @@
   }
 }
 
+// Thread update
+.posts-feed-item-thread-update {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: ceil(@grid-gutter-width / 2);
+
+  padding: @line-height-computed 0;
+}
+
+.posts-feed-item-thread-update-post-bit {
+  display: grid;
+  grid-template-columns: 24px 24px;
+  gap: ceil(@grid-gutter-width / 2);
+  justify-content: end;
+}
+
+.posts-feed-item-thread-update-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 24px;
+
+  background-color: @thread-update-icon-bg;
+  border-radius: @border-radius-small;
+
+  color: @thread-update-icon-color;
+  font-size: 16px;
+}
+
+.posts-feed-item-thread-update-actor-avatar-link {
+  display: block;
+  overflow: hidden;
+
+  width: 24px;
+  height: 24px;
+
+  border-radius: @border-radius-small;
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.posts-feed-item-thread-update-details-top {
+  padding-top: 2px;
+}
+
+.posts-feed-item-thread-update-description {
+  color: @thread-update-description-color;
+
+  a:link,
+  a:active,
+  a:visited,
+  a:hover,
+  a:focus,
+  em {
+    color: @thread-update-context-color;
+    font-style: normal;
+    font-weight: bold;
+  }
+
+  a:hover,
+  a:active {
+    text-decoration: underline;
+  }
+}
+
+.posts-feed-item-thread-update-separator {
+  display: inline-block;
+  padding: 0 4px;
+
+  color: @thread-update-separator-color;
+}
+
+.posts-feed-item-thread-update-timestamp {
+  color: @thread-update-timestamp-color;
+}
+
+.posts-feed-item-thread-update-timestamp-full {
+  display: none;
+}
+
+.posts-feed-item-thread-update-hidden-label {
+  display: inline-block;
+  padding: 1px 5px;
+
+  background-color: @thread-update-hidden-label-bg;
+  border-radius: @border-radius-small;
+
+  color: @thread-update-hidden-label-color;
+  font-size: @font-size-small;
+}
+
+.posts-feed-item-thread-update-details-bottom {
+  display: flex;
+  gap: ceil(@grid-gutter-width / 2);
+  margin-top: ceil(@line-height-computed / 2);
+}
+
+.posts-feed-item-thread-update-btn {
+  &,
+  &:active,
+  &:hover,
+  &:focus {
+    padding: 0;
+
+    background-color: transparent;
+    border: none;
+
+    font-size: @font-size-base;
+    line-height: @line-height-computed;
+  }
+
+  & {
+    color: @thread-update-btn-color;
+  }
+
+  &:hover {
+    color: @thread-update-btn-hover-color;
+    text-decoration: underline;
+  }
+
+  &:active {
+    color: @thread-update-btn-active-color;
+    text-decoration: underline;
+  }
+}
+
+// Responsiveness
 @media screen and (min-width: 500px) {
-  .posts-feed {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .posts-feed-item {
-    padding: @line-height-computed 0;
-  }
-
   .posts-feed-item-post-bit-side,
   .posts-feed-item-post-bit-side-avatar-sm {
     display: block;
@@ -334,6 +454,34 @@
 }
 
 @media screen and (min-width: @screen-md-min) {
+  .posts-feed-item-thread-update {
+    grid-template-columns: @post-side-width 1fr;
+    align-items: center;
+  }
+
+  .posts-feed-item-thread-update-details {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: ceil(@grid-gutter-width / 2);
+    align-items: center;
+  }
+
+  .posts-feed-item-thread-update-details-top {
+    padding-top: 0;
+  }
+
+  .posts-feed-item-thread-update-timestamp-short {
+    display: none;
+  }
+
+  .posts-feed-item-thread-update-timestamp-full {
+    display: inline;
+  }
+
+  .posts-feed-item-thread-update-details-bottom {
+    margin-top: 0;
+  }
+
   .posts-feed-item-post-bit-side {
     display: flex;
     padding-left: 0;

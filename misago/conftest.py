@@ -26,6 +26,7 @@ from .test import (
     MisagoClient,
     teardown_attachments,
 )
+from .test.threadupdates import *
 from .themes import THEME_CACHE
 from .threads.models import Thread, ThreadParticipant
 from .threads.test import post_thread, reply_thread
@@ -439,6 +440,11 @@ def other_user_unapproved_thread(default_category, other_user):
 @pytest.fixture
 def private_thread(private_threads_category):
     return post_thread(private_threads_category)
+
+
+@pytest.fixture
+def private_thread_post(private_thread):
+    return private_thread.first_post
 
 
 @pytest.fixture

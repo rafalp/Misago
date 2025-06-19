@@ -38,7 +38,7 @@ class ThreadsSettingsForm(SettingsForm):
         "threads_lists_polling",
         "posts_per_page",
         "posts_per_page_orphans",
-        "events_per_page",
+        "thread_updates_per_page",
     ]
 
     flood_control = forms.IntegerField(
@@ -104,7 +104,7 @@ class ThreadsSettingsForm(SettingsForm):
     threads_per_page = forms.IntegerField(
         label=pgettext_lazy(
             "admin threads settings form",
-            "Number of threads displayed on a single page",
+            "Number of threads shown on a single page",
         ),
         min_value=10,
     )
@@ -114,7 +114,7 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Select UI for displaying threads categories on threads lists.",
+            "Select a UI component to display the list of categories on threads lists.",
         ),
         widget=forms.RadioSelect(
             choices=(
@@ -138,7 +138,7 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Enabling polling will make threads lists call the server every minute for the number of new or updated threads. If there are new threads, a button will be displayed for the user that will let them refresh the list without having to refresh the entire page.",
+            "Enabling polling will make threads lists call the server every minute for the number of new or updated threads. If there are new threads, a button will be shown for the user that will let them refresh the list without having to refresh the entire page.",
         ),
         widget=forms.RadioSelect(
             choices=ThreadsListsPolling.get_choices(),
@@ -149,7 +149,7 @@ class ThreadsSettingsForm(SettingsForm):
         label=pgettext_lazy("admin threads settings form", "Categories UI component"),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Select UI component to use for displaying list of categories on the threads page.",
+            "Select a UI component to display the list of categories on the threads page.",
         ),
         widget=forms.RadioSelect(
             choices=CategoryChildrenComponent.get_threads_choices(),
@@ -158,7 +158,7 @@ class ThreadsSettingsForm(SettingsForm):
 
     posts_per_page = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form", "Number of posts displayed on a single page"
+            "admin threads settings form", "Number of posts shown on a single page"
         ),
         min_value=5,
     )
@@ -166,16 +166,21 @@ class ThreadsSettingsForm(SettingsForm):
         label=pgettext_lazy("admin threads settings form", "Maximum orphans"),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "This setting prevents situations when the last page of a thread contains very few items. If number of posts to be displayed on the last page is less or equal to number specified in this setting, those posts will instead be appended to the previous page, reducing number of thread's pages.",
+            "This setting prevents situations when the last page of a thread contains very few items. If number of posts to be shown on the last page is less or equal to number specified in this setting, those posts will instead be appended to the previous page, reducing number of thread's pages.",
         ),
         min_value=0,
     )
-    events_per_page = forms.IntegerField(
+
+    thread_updates_per_page = forms.IntegerField(
         label=pgettext_lazy(
             "admin threads settings form",
-            "Maximum number of events displayed on a single page",
+            "Maximum number of thread updates shown on a single page",
         ),
-        min_value=5,
+        help_text=pgettext_lazy(
+            "admin threads settings form",
+            "If the number of updates to show exceeds this value, only the most recent ones will be displayed.",
+        ),
+        min_value=1,
     )
 
     allowed_attachment_types = forms.CharField(
@@ -226,7 +231,7 @@ class ThreadsSettingsForm(SettingsForm):
         ),
         help_text=pgettext_lazy(
             "admin threads settings form",
-            "Additional embedded attachments are attachments embedded in post content but not associated with the displayed posts. Loading a large number of these attachments can increase the site's memory usage. Set this value to zero to disable loading these attachments. Users will still see links to them.",
+            "Additional embedded attachments are attachments embedded in post content but not associated with the shown posts. Loading a large number of these attachments can increase the site's memory usage. Set this value to zero to disable loading these attachments. Users will still see links to them.",
         ),
         min_value=0,
     )

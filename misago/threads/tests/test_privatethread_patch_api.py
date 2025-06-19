@@ -179,11 +179,6 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
             [{"op": "add", "path": "participants", "value": self.other_user.username}],
         )
 
-        # event was set on thread
-        event = self.thread.post_set.order_by("id").last()
-        self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, "added_participant")
-
         # notification about new private thread was triggered
         notify_on_new_private_thread_mock.delay.assert_called_once_with(
             self.user.id, self.thread.id, [self.other_user.id]
@@ -205,11 +200,6 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
             [{"op": "add", "path": "participants", "value": self.user.username}],
         )
 
-        # event was set on thread
-        event = self.thread.post_set.order_by("id").last()
-        self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, "entered_thread")
-
         # notification about new private thread was triggered
         notify_on_new_private_thread_mock.delay.assert_not_called()
 
@@ -226,11 +216,6 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
             self.api_link,
             [{"op": "add", "path": "participants", "value": self.other_user.username}],
         )
-
-        # event was set on thread
-        event = self.thread.post_set.order_by("id").last()
-        self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, "added_participant")
 
         # notification about new private thread was triggered
         notify_on_new_private_thread_mock.delay.assert_called_once_with(
@@ -338,11 +323,6 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         # thread still exists
         self.assertTrue(Thread.objects.get(pk=self.thread.pk))
 
-        # leave event has valid type
-        event = self.thread.post_set.order_by("id").last()
-        self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, "participant_left")
-
         # valid users were flagged for sync
         self.user.refresh_from_db()
         self.assertTrue(self.user.sync_unread_private_threads)
@@ -372,11 +352,6 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
 
         # thread still exists
         self.assertTrue(Thread.objects.get(pk=self.thread.pk))
-
-        # leave event has valid type
-        event = self.thread.post_set.order_by("id").last()
-        self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, "participant_left")
 
         # valid users were flagged for sync
         self.user.refresh_from_db()
@@ -410,11 +385,6 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         # thread still exists
         self.assertTrue(Thread.objects.get(pk=self.thread.pk))
 
-        # leave event has valid type
-        event = self.thread.post_set.order_by("id").last()
-        self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, "participant_removed")
-
         # valid users were flagged for sync
         self.user.refresh_from_db()
         self.assertTrue(self.user.sync_unread_private_threads)
@@ -445,11 +415,6 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         # thread still exists
         self.assertTrue(Thread.objects.get(pk=self.thread.pk))
 
-        # leave event has valid type
-        event = self.thread.post_set.order_by("id").last()
-        self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, "participant_removed")
-
         # valid users were flagged for sync
         self.user.refresh_from_db()
         self.assertTrue(self.user.sync_unread_private_threads)
@@ -478,11 +443,6 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
 
         # thread still exists and is closed
         self.assertTrue(Thread.objects.get(pk=self.thread.pk).is_closed)
-
-        # leave event has valid type
-        event = self.thread.post_set.order_by("id").last()
-        self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, "owner_left")
 
         # valid users were flagged for sync
         self.user.refresh_from_db()
@@ -637,11 +597,6 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(ThreadParticipant.objects.get(user=self.other_user).is_owner)
         self.assertFalse(ThreadParticipant.objects.get(user=self.user).is_owner)
 
-        # change was recorded in event
-        event = self.thread.post_set.order_by("id").last()
-        self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, "changed_owner")
-
     @patch_user_acl({"can_moderate_private_threads": True})
     def test_moderator_change_owner(self):
         """moderator can change thread owner to other user"""
@@ -672,11 +627,6 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertFalse(ThreadParticipant.objects.get(user=self.user).is_owner)
         self.assertFalse(ThreadParticipant.objects.get(user=self.other_user).is_owner)
 
-        # change was recorded in event
-        event = self.thread.post_set.order_by("id").last()
-        self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, "changed_owner")
-
     @patch_user_acl({"can_moderate_private_threads": True})
     def test_moderator_takeover(self):
         """moderator can takeover the thread"""
@@ -700,11 +650,6 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertEqual(self.thread.participants.count(), 2)
         self.assertTrue(ThreadParticipant.objects.get(user=self.user).is_owner)
         self.assertFalse(ThreadParticipant.objects.get(user=self.other_user).is_owner)
-
-        # change was recorded in event
-        event = self.thread.post_set.order_by("id").last()
-        self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, "tookover")
 
     @patch_user_acl({"can_moderate_private_threads": True})
     def test_moderator_closed_thread_takeover(self):
@@ -732,8 +677,3 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertEqual(self.thread.participants.count(), 2)
         self.assertTrue(ThreadParticipant.objects.get(user=self.user).is_owner)
         self.assertFalse(ThreadParticipant.objects.get(user=self.other_user).is_owner)
-
-        # change was recorded in event
-        event = self.thread.post_set.order_by("id").last()
-        self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, "tookover")

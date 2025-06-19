@@ -2,7 +2,6 @@ from django.db import transaction
 from django.utils import timezone
 
 from ...notifications.tasks import delete_duplicate_watched_threads
-from ..events import record_event
 
 __all__ = [
     "change_thread_title",
@@ -25,7 +24,6 @@ def change_thread_title(request, thread, new_title):
     if thread.title == new_title:
         return False
 
-    old_title = thread.title
     thread.set_title(new_title)
     thread.save(update_fields=["title", "slug"])
 
@@ -35,7 +33,6 @@ def change_thread_title(request, thread, new_title):
     thread.first_post.set_search_vector()
     thread.first_post.save(update_fields=["search_vector"])
 
-    record_event(request, thread, "changed_title", {"old_title": old_title})
     return True
 
 
@@ -45,7 +42,8 @@ def pin_thread_globally(request, thread):
         return False
 
     thread.weight = 2
-    record_event(request, thread, "pinned_globally")
+    thread.save(update_fields=["weight"])
+
     return True
 
 
@@ -55,7 +53,8 @@ def pin_thread_locally(request, thread):
         return False
 
     thread.weight = 1
-    record_event(request, thread, "pinned_locally")
+    thread.save(update_fields=["weight"])
+
     return True
 
 
@@ -65,7 +64,8 @@ def unpin_thread(request, thread):
         return False
 
     thread.weight = 0
-    record_event(request, thread, "unpinned")
+    thread.save(update_fields=["weight"])
+
     return True
 
 
@@ -74,20 +74,9 @@ def move_thread(request, thread, new_category):
     if thread.category_id == new_category.pk:
         return False
 
-    from_category = thread.category
     thread.move(new_category)
+    thread.save()
 
-    record_event(
-        request,
-        thread,
-        "moved",
-        {
-            "from_category": {
-                "name": from_category.name,
-                "url": from_category.get_absolute_url(),
-            }
-        },
-    )
     return True
 
 
@@ -97,8 +86,6 @@ def merge_thread(request, thread, other_thread):
     other_thread.delete()
 
     delete_duplicate_watched_threads.delay(thread.id)
-
-    record_event(request, thread, "merged", {"merged_thread": other_thread.title})
     return True
 
 
@@ -114,8 +101,8 @@ def approve_thread(request, thread):
 
     unapproved_post_qs = thread.post_set.filter(is_unapproved=True)
     thread.has_unapproved_posts = unapproved_post_qs.exists()
+    thread.save(update_fields=["is_unapproved", "has_unapproved_posts"])
 
-    record_event(request, thread, "approved")
     return True
 
 
@@ -125,7 +112,8 @@ def open_thread(request, thread):
         return False
 
     thread.is_closed = False
-    record_event(request, thread, "opened")
+    thread.save(update_fields=["is_closed"])
+
     return True
 
 
@@ -135,7 +123,8 @@ def close_thread(request, thread):
         return False
 
     thread.is_closed = True
-    record_event(request, thread, "closed")
+    thread.save(update_fields=["is_closed"])
+
     return True
 
 
@@ -147,8 +136,7 @@ def unhide_thread(request, thread):
     thread.first_post.is_hidden = False
     thread.first_post.save(update_fields=["is_hidden"])
     thread.is_hidden = False
-
-    record_event(request, thread, "unhid")
+    thread.save(update_fields=["is_hidden"])
 
     if thread.pk == thread.category.last_thread_id:
         thread.category.synchronize()
@@ -177,8 +165,7 @@ def hide_thread(request, thread):
         ]
     )
     thread.is_hidden = True
-
-    record_event(request, thread, "hid")
+    thread.save(update_fields=["is_hidden"])
 
     if thread.pk == thread.category.last_thread_id:
         thread.category.synchronize()

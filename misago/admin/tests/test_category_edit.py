@@ -3,8 +3,8 @@ from django.urls import reverse
 from ...cache.enums import CacheName
 from ...cache.test import assert_invalidates_cache
 from ...categories.models import Category
-from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_has_error_message
+from ...threadupdates.create import create_test_thread_update
 from .categories_tree import assert_valid_categories_tree
 
 category_new = reverse("misago:admin:categories:new")
@@ -66,6 +66,33 @@ def form_data(category: Category, new_data: dict | None = None) -> dict:
         data.update(new_data)
 
     return data
+
+
+def test_edit_category_form_updates_context_on_thread_updates(
+    default_category, sibling_category, admin_client, thread
+):
+    thread_update = create_test_thread_update(
+        thread,
+        context=default_category.name,
+        context_object=default_category,
+    )
+    other_thread_update = create_test_thread_update(
+        thread,
+        context=sibling_category.name,
+        context_object=sibling_category,
+    )
+
+    response = admin_client.post(
+        reverse("misago:admin:categories:edit", kwargs={"pk": default_category.pk}),
+        form_data(default_category, {"name": "Updated"}),
+    )
+    assert response.status_code == 302
+
+    thread_update.refresh_from_db()
+    assert thread_update.context == "Updated"
+
+    other_thread_update.refresh_from_db()
+    assert other_thread_update.context == sibling_category.name
 
 
 def test_edit_category_form_moves_category_under_other_category(

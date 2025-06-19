@@ -77,11 +77,18 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% translate "Thread pages" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Thread posts" context "admin threads settings form" %}</legend>
     
     {% form_row form.posts_per_page %}
     {% form_row form.posts_per_page_orphans %}
-    {% form_row form.events_per_page %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Thread updates" context "admin threads settings form" %}</legend>
+    
+    {% form_row form.thread_updates_per_page %}
 
   </fieldset>
 </div>

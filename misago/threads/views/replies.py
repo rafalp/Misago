@@ -34,6 +34,7 @@ from ...readtracker.tracker import (
 )
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
+from ...threadupdates.models import ThreadUpdate
 from ..hooks import (
     get_private_thread_replies_page_context_data_hook,
     get_private_thread_replies_page_posts_queryset_hook,
@@ -43,6 +44,7 @@ from ..hooks import (
     get_thread_replies_page_thread_queryset_hook,
 )
 from ..models import Post, Thread
+from ..paginator import ThreadRepliesPage
 from .generic import PrivateThreadView, ThreadView
 
 if TYPE_CHECKING:
@@ -121,8 +123,9 @@ class RepliesView(View):
 
         page_obj = paginator.get_page(page)
         posts = list(page_obj.object_list)
+        thread_updates = self.get_thread_updates(request, thread, page_obj, posts)
 
-        feed = self.get_posts_feed(request, thread, posts)
+        feed = self.get_posts_feed(request, thread, posts, thread_updates)
         feed.set_counter_start(page_obj.start_index() - 1)
 
         unread = get_unread_posts(request, thread, posts)
@@ -138,6 +141,22 @@ class RepliesView(View):
             self.read_user_notifications(request.user, posts)
 
         return feed.get_context_data({"paginator": page_obj})
+
+    def get_thread_updates(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: ThreadRepliesPage,
+        posts: list[Post],
+    ) -> list[ThreadUpdate]:
+        queryset = self.get_thread_updates_queryset(request, thread)
+        if page.number > 1:
+            queryset = queryset.filter(created_at__gt=posts[0].posted_on)
+        if page.next_page_first_item:
+            queryset = queryset.filter(
+                created_at__lt=page.next_page_first_item.posted_on
+            )
+        return list(reversed(queryset[: request.settings.thread_updates_per_page]))
 
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
         return False

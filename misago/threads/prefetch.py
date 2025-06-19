@@ -1,18 +1,25 @@
 from typing import TYPE_CHECKING, Iterable, Protocol
 
 from django.conf import settings as dj_settings
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
+from django.http import Http404
 
 from ..attachments.models import Attachment
 from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..conf.dynamicsettings import DynamicSettings
 from ..permissions.attachments import check_download_attachment_permission
-from ..permissions.posts import check_see_post_permission
+from ..permissions.generic import (
+    check_access_category_permission,
+    check_access_post_permission,
+    check_access_thread_permission,
+)
 from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.checkutils import check_permissions
+from ..threadupdates.models import ThreadUpdate
 from ..users.models import Group
-from .hooks import create_prefetch_posts_related_objects_hook
+from .hooks import create_prefetch_posts_feed_related_objects_hook
 from .models import Post, Thread
 from .privatethreads import prefetch_private_thread_member_ids
 
@@ -22,74 +29,80 @@ else:
     User = get_user_model()
 
 __all__ = [
-    "PrefetchPostsRelatedObjects",
-    "PrefetchPostsRelationsOperation",
-    "prefetch_posts_related_objects",
+    "PrefetchPostsFeedRelatedObjects",
+    "PrefetchPostsFeedRelationsOperation",
+    "prefetch_posts_feed_related_objects",
 ]
 
 
-def prefetch_posts_related_objects(
+def prefetch_posts_feed_related_objects(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
     posts: Iterable[Post],
     *,
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
+    thread_updates: Iterable[ThreadUpdate] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> dict:
-    prefetch = create_prefetch_posts_related_objects_hook(
-        _create_prefetch_posts_related_objects_action,
+    prefetch = create_prefetch_posts_feed_related_objects_hook(
+        _create_prefetch_posts_feed_related_objects_action,
         settings,
         permissions,
         posts,
         categories=categories,
         threads=threads,
+        thread_updates=thread_updates,
         attachments=attachments,
         users=users,
     )
     return prefetch()
 
 
-def _create_prefetch_posts_related_objects_action(
+def _create_prefetch_posts_feed_related_objects_action(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
     posts: Iterable[Post],
     *,
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
+    thread_updates: Iterable[ThreadUpdate] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
-) -> "PrefetchPostsRelatedObjects":
-    prefetch = PrefetchPostsRelatedObjects(
+) -> "PrefetchPostsFeedRelatedObjects":
+    prefetch = PrefetchPostsFeedRelatedObjects(
         settings,
         permissions,
-        posts=posts,
         categories=categories,
         threads=threads,
+        posts=posts,
+        thread_updates=thread_updates,
         attachments=attachments,
         users=users,
     )
 
-    prefetch.add_operation(find_attachment_ids)
-    prefetch.add_operation(fetch_attachments)
-    prefetch.add_operation(find_post_ids)
-    prefetch.add_operation(fetch_posts)
-    prefetch.add_operation(find_thread_ids)
-    prefetch.add_operation(fetch_threads)
-    prefetch.add_operation(find_category_ids)
-    prefetch.add_operation(fetch_categories)
-    prefetch.add_operation(fetch_private_threads_members)
-    prefetch.add_operation(find_users_ids)
-    prefetch.add_operation(fetch_users)
-    prefetch.add_operation(fetch_users_groups)
-    prefetch.add_operation(check_posts_permissions)
-    prefetch.add_operation(check_attachments_permissions)
+    prefetch.add(find_attachment_ids)
+    prefetch.add(fetch_attachments)
+    prefetch.add(find_post_ids)
+    prefetch.add(fetch_posts)
+    prefetch.add(find_thread_ids)
+    prefetch.add(fetch_threads)
+    prefetch.add(find_category_ids)
+    prefetch.add(fetch_categories)
+    prefetch.add(fetch_private_threads_members)
+    prefetch.add(find_users_ids)
+    prefetch.add(fetch_users)
+    prefetch.add(fetch_users_groups)
+    prefetch.add(check_categories_permissions)
+    prefetch.add(check_threads_permissions)
+    prefetch.add(check_posts_permissions)
+    prefetch.add(check_attachments_permissions)
 
     return prefetch
 
 
-class PrefetchPostsRelationsOperation(Protocol):
+class PrefetchPostsFeedRelationsOperation(Protocol):
     def __call__(
         self,
         data: dict,
@@ -99,8 +112,8 @@ class PrefetchPostsRelationsOperation(Protocol):
         pass
 
 
-class PrefetchPostsRelatedObjects:
-    ops: list[PrefetchPostsRelationsOperation]
+class PrefetchPostsFeedRelatedObjects:
+    operations: list[PrefetchPostsFeedRelationsOperation]
 
     settings: DynamicSettings
     permissions: User
@@ -108,6 +121,7 @@ class PrefetchPostsRelatedObjects:
     categories: list[Category]
     threads: list[Thread]
     posts: list[Post]
+    thread_updates: list[ThreadUpdate]
     attachments: list[Attachment]
     users: list[User]
     extra_kwargs: dict
@@ -120,11 +134,12 @@ class PrefetchPostsRelatedObjects:
         posts: Iterable[Post],
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
+        thread_updates: Iterable[ThreadUpdate] | None = None,
         attachments: Iterable[Attachment] | None = None,
         users: Iterable["User"] | None = None,
         **kwargs,
     ):
-        self.ops = []
+        self.operations = []
 
         self.settings = settings
         self.permissions = permissions
@@ -132,6 +147,7 @@ class PrefetchPostsRelatedObjects:
         self.categories = categories or []
         self.threads = threads or []
         self.posts = list(posts)
+        self.thread_updates = thread_updates or []
         self.attachments = attachments or []
         self.users = users or []
 
@@ -148,9 +164,13 @@ class PrefetchPostsRelatedObjects:
             "attachment_ids": set(),
             "user_ids": set(),
             "categories": {c.id: c for c in self.categories if c.id},
+            "visible_categories": {c.id for c in self.categories if c.id},
             "threads": {t.id: t for t in self.threads if t.id},
+            "visible_threads": {t.id for t in self.threads if t.id},
             "posts": {p.id: p for p in self.posts if p.id},
-            "visible_posts": set(),
+            "visible_posts": {p.id for p in self.posts if p.id},
+            "thread_updates": {u.id: u for u in self.thread_updates},
+            "visible_thread_updates": {u for u in self.thread_updates},
             "attachments": {a.id: a for a in self.attachments},
             "attachment_errors": {},
             "users": {u.id: u for u in self.users},
@@ -161,55 +181,58 @@ class PrefetchPostsRelatedObjects:
         if self.posts and not self.posts[0].id:
             data["metadata"] = self.posts[0].metadata
 
-        for op in self.ops:
+        for op in self.operations:
             op(data, self.settings, self.permissions)
 
         return data
 
-    def add_operation(
+    def __contains__(self, op: PrefetchPostsFeedRelationsOperation) -> bool:
+        return op in self.operations
+
+    def add(self, op: PrefetchPostsFeedRelationsOperation):
+        self.operations.append(op)
+
+    def add_before(
         self,
-        op: PrefetchPostsRelationsOperation,
-        *,
-        after: PrefetchPostsRelationsOperation | None = None,
-        before: PrefetchPostsRelationsOperation | None = None,
+        before: PrefetchPostsFeedRelationsOperation,
+        op: PrefetchPostsFeedRelationsOperation,
     ):
-        if after and before:
-            raise ValueError("'after' and 'before' option's can't be used together")
+        success = False
+        new_operations: list[PrefetchPostsFeedRelationsOperation] = []
 
-        if after:
-            inserted = False
-            new_ops: list[PrefetchPostsRelationsOperation] = []
+        for existing_step in self.operations:
+            if existing_step == before:
+                new_operations.append(op)
+                success = True
+            new_operations.append(existing_step)
 
-            for existing_step in self.ops:
-                new_ops.append(existing_step)
-                if existing_step == after:
-                    new_ops.append(op)
-                    inserted = True
-            self.ops = new_ops
+        self.operations = new_operations
 
-            if not inserted:
-                raise ValueError(
-                    f"Operation '{after}' doesn't exist in this loader instance"
-                )
+        if not success:
+            raise ValueError(
+                f"Operation '{before}' doesn't exist in this loader instance"
+            )
 
-        elif before:
-            prepended = False
-            new_ops: list[PrefetchPostsRelationsOperation] = []
+    def add_after(
+        self,
+        after: PrefetchPostsFeedRelationsOperation,
+        op: PrefetchPostsFeedRelationsOperation,
+    ):
+        success = False
+        new_operations: list[PrefetchPostsFeedRelationsOperation] = []
 
-            for existing_step in self.ops:
-                if existing_step == before:
-                    new_ops.append(op)
-                    prepended = True
-                new_ops.append(existing_step)
-            self.ops = new_ops
+        for existing_step in self.operations:
+            new_operations.append(existing_step)
+            if existing_step == after:
+                new_operations.append(op)
+                success = True
 
-            if not prepended:
-                raise ValueError(
-                    f"Operation '{after}' doesn't exist in this loader instance"
-                )
+        self.operations = new_operations
 
-        else:
-            self.ops.append(op)
+        if not success:
+            raise ValueError(
+                f"Operation '{after}' doesn't exist in this loader instance"
+            )
 
 
 def find_category_ids(
@@ -224,6 +247,10 @@ def find_category_ids(
     for thread in data["threads"].values():
         if thread.category_id:
             data["category_ids"].add(thread.category_id)
+
+    for thread_update in data["thread_updates"].values():
+        if context_id := thread_update.get_context_id("misago_categories.category"):
+            data["category_ids"].add(context_id)
 
     for attachment in data["attachments"].values():
         if attachment.category_id:
@@ -248,6 +275,10 @@ def find_thread_ids(
     for post in data["posts"].values():
         if post.thread_id:
             data["thread_ids"].add(post.thread_id)
+
+    for thread_update in data["thread_updates"].values():
+        if context_id := thread_update.get_context_id("misago_threads.thread"):
+            data["thread_ids"].add(context_id)
 
     for attachment in data["attachments"].values():
         if attachment.thread_id:
@@ -284,6 +315,10 @@ def find_post_ids(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
+    for thread_update in data["thread_updates"].values():
+        if context_id := thread_update.get_context_id("misago_threads.post"):
+            data["post_ids"].add(context_id)
+
     for attachment in data["attachments"].values():
         if attachment.post_id:
             data["post_ids"].add(attachment.post_id)
@@ -318,6 +353,10 @@ def find_attachment_ids(
     for post in data["posts"].values():
         data["attachment_ids"].update(post.metadata.get("attachments", []))
 
+    for thread_update in data["thread_updates"].values():
+        if context_id := thread_update.get_context_id("misago_attachments.attachment"):
+            data["attachment_ids"].add(context_id)
+
     if extra_attachments := data["metadata"].get("attachments"):
         data["attachment_ids"].update(extra_attachments)
 
@@ -333,11 +372,52 @@ def fetch_attachments(
     if settings.additional_embedded_attachments_limit and embedded_attachments:
         queryset = queryset.union(
             Attachment.objects.filter(id__in=embedded_attachments, post__isnull=False)
-            .exclude(post_id__in=data["visible_posts"])
+            .exclude(post_id__in=data["posts"])
             .order_by("-id")[: settings.additional_embedded_attachments_limit]
         )
 
     data["attachments"].update({a.id: a for a in queryset})
+
+
+def check_categories_permissions(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    for category in tuple(data["categories"].values()):
+        if category.id in data["visible_categories"]:
+            continue  # Skip previously checked categories
+
+        try:
+            check_access_category_permission(permissions, category)
+        except (Http404, PermissionDenied):
+            data["categories"].pop(category.id)
+
+    data.pop("visible_categories")
+
+
+def check_threads_permissions(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    for thread in tuple(data["threads"].values()):
+        if thread.id in data["visible_threads"]:
+            continue  # Skip previously checked threads
+
+        try:
+            if thread.category_id not in data["categories"]:
+                raise Http404()
+
+            check_access_thread_permission(
+                permissions,
+                data["categories"][thread.category_id],
+                thread,
+            )
+        except (Http404, PermissionDenied):
+            data["threads"].pop(thread.id)
+
+    data.pop("visible_threads")
 
 
 def check_posts_permissions(
@@ -345,20 +425,26 @@ def check_posts_permissions(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
-    for post in data["posts"].values():
+    for post in tuple(data["posts"].values()):
         if post.id in data["visible_posts"]:
             continue  # Skip previously checked posts
 
-        with check_permissions() as can_see:
-            check_see_post_permission(
+        try:
+            if post.category_id not in data["categories"]:
+                raise Http404()
+            if post.thread_id not in data["threads"]:
+                raise Http404()
+
+            check_access_post_permission(
                 permissions,
                 data["categories"][post.category_id],
                 data["threads"][post.thread_id],
                 post,
             )
+        except (Http404, PermissionDenied):
+            data["posts"].pop(post.id)
 
-        if can_see:
-            data["visible_posts"].add(post.id)
+    data.pop("visible_posts")
 
 
 def check_attachments_permissions(
@@ -372,12 +458,15 @@ def check_attachments_permissions(
 
     accessible_attachments: dict[int, Attachment] = {}
     for attachment in attachments_list:
-        if attachment.category_id:
-            attachment.category = data["categories"][attachment.category_id]
-        if attachment.thread_id:
-            attachment.thread = data["threads"][attachment.thread_id]
-        if attachment.post_id:
-            attachment.post = data["posts"][attachment.post_id]
+        try:
+            if attachment.category_id:
+                attachment.category = data["categories"][attachment.category_id]
+            if attachment.thread_id:
+                attachment.thread = data["threads"][attachment.thread_id]
+            if attachment.post_id:
+                attachment.post = data["posts"][attachment.post_id]
+        except KeyError:
+            continue
 
         with check_permissions() as can_download:
             check_download_attachment_permission(
@@ -403,6 +492,12 @@ def find_users_ids(
 ):
     for post in data["posts"].values():
         data["user_ids"].add(post.poster_id)
+
+    for thread_update in data["thread_updates"].values():
+        if thread_update.actor_id:
+            data["user_ids"].add(thread_update.actor_id)
+        if context_id := thread_update.get_context_id("misago_users.user"):
+            data["user_ids"].add(context_id)
 
 
 def fetch_users(

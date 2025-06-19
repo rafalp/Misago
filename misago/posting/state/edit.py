@@ -3,6 +3,8 @@ from django.http import HttpRequest
 
 from ...threads.checksums import update_post_checksum
 from ...threads.models import Post
+from ...threadupdates.create import create_changed_title_thread_update
+from ...threadupdates.models import ThreadUpdate
 from ..hooks import (
     get_edit_private_thread_post_state_hook,
     get_edit_thread_post_state_hook,
@@ -44,6 +46,14 @@ class EditThreadPostState(PostingState):
 
             if self.category.last_thread_id == self.thread.id:
                 self.save_category()
+
+            create_changed_title_thread_update(
+                self.thread, self.thread_title, request.user, request=request
+            )
+
+            ThreadUpdate.objects.context_object(self.thread).update(
+                context=self.thread.title
+            )
 
         self.save_attachments()
 

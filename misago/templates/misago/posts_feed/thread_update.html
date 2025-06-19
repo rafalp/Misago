@@ -1,0 +1,119 @@
+{% load i18n misago_avatars misago_formats %}
+<div
+  id="posts-feed-item-thread-update-{{ thread_update.id }}"
+  class="posts-feed-item{% if animate %} posts-feed-item-animate{% endif %}"
+  {% if htmx_swap %}
+    hx-swap-oob="true"
+  {% endif %}
+>
+  <a id="update-{{ thread_update.id }}" class="scroll-target"></a>
+  <div class="posts-feed-item-thread-update{% if thread_update.hidden %} posts-feed-item-thread-update-hidden{% endif %}">
+    <div class="posts-feed-item-thread-update-post-bit">
+      <div>
+        <div class="posts-feed-item-thread-update-icon">
+          <span class="material-icon">{{ icon }}</span>
+        </div>
+      </div>
+      <div>
+        <div class="posts-feed-item-thread-update-actor-avatar">
+          {% if actor %}
+            <a
+              class="posts-feed-item-thread-update-actor-avatar-link"
+              href="{{ actor.get_absolute_url }}"
+              title="{{ actor.username }}"
+            >
+              <img
+                class="user-avatar"
+                srcset="{{ actor|avatar:48 }}"
+                src="{{ actor|avatar:24 }}"
+                width="24"
+                height="24"
+                alt="{{ actor.username }}"
+              >
+            </a>
+          {% else %}
+            <span class="posts-feed-item-thread-update-actor-avatar-link" title="{{ actor_name }}">
+              <img src="{{ BLANK_AVATAR_URL }}" width="24" height="24" alt="{{ actor_name }}">
+            </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="posts-feed-item-thread-update-details">
+      <div class="posts-feed-item-thread-update-details-top">
+        <span class="posts-feed-item-thread-update-description">{{ description|safe }}</span>
+        <span class="posts-feed-item-thread-update-separator">&bull;</span>
+        <span
+          class="posts-feed-item-thread-update-timestamp posts-feed-item-thread-update-timestamp-full"
+          title="{{ thread_update.created_at|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ thread_update.created_at.isoformat }}"
+        >
+          {{ thread_update.created_at|date_relative }}
+        </span>
+        <span
+          class="posts-feed-item-thread-update-timestamp posts-feed-item-thread-update-timestamp-short"
+          title="{{ thread_update.created_at|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ thread_update.created_at.isoformat }}"
+          misago-timestamp-format="short"
+        >
+          {{ thread_update.created_at|date_relative_short }}
+        </span>
+        {% if thread_update.is_hidden %}
+          <span class="posts-feed-item-thread-update-hidden-label" title="{% translate 'This thread update is hidden. Only moderators can see it.' context 'thread update hidden label' %}">
+            {% translate "Hidden" context "thread update hidden label" %}
+          </span>
+        {% endif %}
+      </div>
+      {% if moderation %}
+        <div class="posts-feed-item-thread-update-details-bottom">
+          {% if hide_url %}
+            <form
+              action="{{ hide_url }}"
+              method="post"
+              hx-post="{{ hide_url }}"
+              hx-swap="none"
+            >
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ full_path }}#update-{{ thread_update.id }}" />
+              <button type="submit" class="posts-feed-item-thread-update-btn">
+                {% translate "Hide" context "thread update btn" %}
+              </button>
+            </form>
+          {% endif %}
+          {% if unhide_url %}
+            <form
+              action="{{ unhide_url }}"
+              method="post"
+              hx-post="{{ unhide_url }}"
+              hx-swap="none"
+            >
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ full_path }}#update-{{ thread_update.id }}" />
+              <button type="submit" class="posts-feed-item-thread-update-btn">
+                {% translate "Unhide" context "thread update btn" %}
+              </button>
+            </form>
+          {% endif %}
+          {% if delete_url %}
+            <form
+              action="{{ delete_url }}"
+              method="post"
+              hx-confirm="{% translate 'Are you sure you want to delete this thread update? This action cannot be undone.' context 'thread update delete confirmation' %}"
+              hx-on:htmx:after-settle="misago.slideUpElement(event.target.closest('.posts-feed-item'))"
+              hx-post="{{ delete_url }}"
+              hx-swap="none"
+            >
+              {% csrf_token %}
+              {% if previous_item %}
+                <input type="hidden" name="next" value="{{ full_path }}#{{ previous_item }}" />
+              {% endif %}
+              <button type="submit" class="posts-feed-item-thread-update-btn">
+                {% translate "Delete" context "thread update btn" %}
+              </button>
+            </form>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
