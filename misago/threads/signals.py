@@ -209,6 +209,22 @@ def archive_user_polls(sender, archive=None, **kwargs):
         )
 
 
+@receiver(archive_user_data)
+def archive_user_thread_updates(sender, archive=None, **kwargs):
+    queryset = ThreadUpdate.objects.context_object(sender).order_by("id")
+
+    for thread_update in queryset.iterator(chunk_size=50):
+        item_name = thread_update.created_at.strftime("%H%M%S-thread-update")
+        archive.add_dict(
+            item_name,
+            {
+                pgettext("archived thread update", "Action"): thread_update.action,
+                pgettext("archived thread update", "Context"): thread_update.context,
+            },
+            date=thread_update.created_at,
+        )
+
+
 @receiver(anonymize_user_data)
 def anonymize_user_in_thread_updates(sender, **kwargs):
     ThreadUpdate.objects.filter(actor=sender).update(actor_name=sender.username)
@@ -249,7 +265,7 @@ def update_usernames(sender, **kwargs):
         best_answer_marked_by_slug=sender.slug,
     )
 
-    ThreadUpdate.objects.filter(actor=sender).update(sender_name=sender.username)
+    ThreadUpdate.objects.filter(actor=sender).update(actor_name=sender.username)
     ThreadUpdate.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
     ThreadUpdate.objects.context_object(sender).update(context=sender.username)
 
