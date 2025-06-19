@@ -211,6 +211,22 @@ def archive_user_polls(sender, archive=None, **kwargs):
 
 @receiver(archive_user_data)
 def archive_user_thread_updates(sender, archive=None, **kwargs):
+    queryset = ThreadUpdate.objects.filter(actor=sender).order_by("id")
+
+    for thread_update in queryset.iterator(chunk_size=50):
+        item_name = thread_update.created_at.strftime("%H%M%S-thread-update")
+        archive.add_dict(
+            item_name,
+            {
+                pgettext("archived thread update", "Action"): thread_update.action,
+                pgettext("archived thread update", "Context"): thread_update.context,
+            },
+            date=thread_update.created_at,
+        )
+
+
+@receiver(archive_user_data)
+def archive_user_context_thread_updates(sender, archive=None, **kwargs):
     queryset = ThreadUpdate.objects.context_object(sender).order_by("id")
 
     for thread_update in queryset.iterator(chunk_size=50):
