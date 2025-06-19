@@ -42,12 +42,14 @@ from .check_see_private_thread_post_permission import (
 )
 from .check_see_thread_permission import check_see_thread_permission_hook
 from .check_see_thread_post_permission import check_see_thread_post_permission_hook
+from .check_start_poll_permission import check_start_poll_permission_hook
 from .check_start_private_threads_permission import (
     check_start_private_threads_permission_hook,
 )
 from .check_start_thread_permission import (
     check_start_thread_permission_hook,
 )
+from .check_start_thread_poll_permission import check_start_thread_poll_permission_hook
 from .copy_category_permissions import copy_category_permissions_hook
 from .copy_group_permissions import copy_group_permissions_hook
 from .filter_accessible_thread_posts import filter_accessible_thread_posts_hook
@@ -98,8 +100,10 @@ __all__ = [
     "check_see_private_thread_post_permission_hook",
     "check_see_thread_permission_hook",
     "check_see_thread_post_permission_hook",
+    "check_start_poll_permission_hook",
     "check_start_private_threads_permission_hook",
     "check_start_thread_permission_hook",
+    "check_start_thread_poll_permission_hook",
     "copy_category_permissions_hook",
     "copy_group_permissions_hook",
     "filter_accessible_thread_posts_hook",

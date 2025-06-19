@@ -1,38 +1,27 @@
-from ..categories.models import Category
-from ..polls.models import Poll
-from ..threads.models import Thread
+from django.core.exceptions import PermissionDenied
+from django.utils.translation import pgettext
+
+from .hooks import check_start_poll_permission_hook
 from .proxy import UserPermissionsProxy
 
 
-def check_create_poll_permission(permissions: UserPermissionsProxy):
-    pass
+def check_start_poll_permission(permissions: UserPermissionsProxy):
+    check_start_poll_permission_hook(_check_start_poll_permission_action, permissions)
 
 
-def check_create_poll_in_thread_permission(
-    permissions: UserPermissionsProxy, category: Category, thread: Thread
-):
-    pass
+def _check_start_poll_permission_action(permissions: UserPermissionsProxy):
+    if permissions.user.is_anonymous:
+        raise PermissionDenied(
+            pgettext(
+                "polls permission error",
+                "You must be signed in to use private threads.",
+            )
+        )
 
-
-def check_edit_poll_permission(
-    permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
-):
-    pass
-
-
-def check_delete_poll_permission(
-    permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
-):
-    pass
-
-
-def check_close_poll_permission(
-    permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
-):
-    pass
-
-
-def check_vote_in_poll_permission(
-    permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
-):
-    pass
+    if not permissions.can_start_polls:
+        raise PermissionDenied(
+            pgettext(
+                "polls permission error",
+                "You can't start polls.",
+            )
+        )

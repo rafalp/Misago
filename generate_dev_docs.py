@@ -13,6 +13,7 @@ HOOKS_MODULES = (
     "misago.oauth2.hooks",
     "misago.parser.hooks",
     "misago.permissions.hooks",
+    "misago.polls.hooks",
     "misago.posting.hooks",
     "misago.threads.hooks",
     "misago.threadupdates.hooks",

@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
 
 from ...categories.models import Category
+from ...polls.models import Poll
 from ...threads.models import Post, Thread
 from ..categories import check_see_category_permission
 from ..enums import CategoryPermission
@@ -16,7 +17,9 @@ from ..hooks import (
     check_see_thread_permission_hook,
     check_see_thread_post_permission_hook,
     check_start_thread_permission_hook,
+    check_start_thread_poll_permission_hook,
 )
+from ..polls import check_start_poll_permission
 from ..proxy import UserPermissionsProxy
 
 
@@ -324,3 +327,59 @@ def _check_edit_thread_post_permission_action(
                 permissions.own_posts_edit_time_limit,
             )
         )
+
+
+def check_start_thread_poll_permission(
+    permissions: UserPermissionsProxy,
+    category: Category,
+    thread: Thread,
+):
+    check_start_thread_poll_permission_hook(
+        _check_start_thread_poll_permission_action, permissions, category, thread
+    )
+
+
+def _check_start_thread_poll_permission_action(
+    permissions: UserPermissionsProxy,
+    category: Category,
+    thread: Thread,
+):
+    check_start_poll_permission(permissions)
+    check_post_in_closed_category_permission(permissions, category)
+    check_post_in_closed_thread_permission(permissions, thread)
+
+    if permissions.is_category_moderator(thread.category_id):
+        return
+
+    user_id = permissions.user.id
+    if not (user_id and thread.starter_id and thread.starter_id == user_id):
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't start polls in other users threads.",
+            )
+        )
+
+
+def check_edit_thread_poll_permission(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
+):
+    pass
+
+
+def check_delete_thread_poll_permission(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
+):
+    pass
+
+
+def check_close_thread_poll_permission(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
+):
+    pass
+
+
+def check_vote_in_thread_poll_permission(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
+):
+    pass

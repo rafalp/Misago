@@ -14,6 +14,7 @@ from ..threads import (
     check_see_thread_post_permission,
     check_see_thread_permission,
     check_start_thread_permission,
+    check_start_thread_poll_permission,
 )
 
 
@@ -1425,3 +1426,136 @@ def test_check_start_thread_permission_fails_for_anonymous_if_category_is_closed
 
     with pytest.raises(PermissionDenied):
         check_start_thread_permission(permissions, default_category)
+
+
+def test_check_start_thread_poll_permission_passes_if_user_has_permission(
+    user, cache_versions, default_category, user_thread
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_start_thread_poll_permission(permissions, default_category, user_thread)
+
+
+def test_check_start_thread_poll_permission_fails_if_user_is_anonymous(
+    anonymous_user, cache_versions, default_category, user_thread
+):
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_start_thread_poll_permission(permissions, default_category, user_thread)
+
+
+def test_check_start_thread_poll_permission_fails_if_user_has_no_permission(
+    user, members_group, cache_versions, default_category, user_thread
+):
+    members_group.can_start_polls = False
+    members_group.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_start_thread_poll_permission(permissions, default_category, user_thread)
+
+
+def test_check_start_thread_poll_permission_fails_if_user_is_not_thread_starter(
+    user, cache_versions, default_category, thread
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_start_thread_poll_permission(permissions, default_category, thread)
+
+
+def test_check_start_thread_poll_permission_passes_if_user_is_category_moderator(
+    user, cache_versions, default_category, thread
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_start_thread_poll_permission(permissions, default_category, thread)
+
+
+def test_check_start_thread_poll_permission_passes_if_user_is_global_moderator(
+    moderator, cache_versions, default_category, user_thread
+):
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_start_thread_poll_permission(permissions, default_category, user_thread)
+
+
+def test_check_start_thread_poll_permission_fails_for_user_if_category_is_closed(
+    user, cache_versions, default_category, user_thread
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_start_thread_poll_permission(permissions, default_category, user_thread)
+
+
+def test_check_start_thread_poll_permission_passes_for_category_moderator_if_category_is_closed(
+    user, cache_versions, default_category, user_thread
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    default_category.is_closed = True
+    default_category.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_start_thread_poll_permission(permissions, default_category, user_thread)
+
+
+def test_check_start_thread_poll_permission_passes_for_global_moderator_if_category_is_closed(
+    moderator, cache_versions, default_category, user_thread
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_start_thread_poll_permission(permissions, default_category, user_thread)
+
+
+def test_check_start_thread_poll_permission_fails_for_user_if_thread_is_closed(
+    user, cache_versions, default_category, user_thread
+):
+    user_thread.is_closed = True
+    user_thread.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_start_thread_poll_permission(permissions, default_category, user_thread)
+
+
+def test_check_start_thread_poll_permission_passes_for_category_moderator_if_thread_is_closed(
+    user, cache_versions, default_category, user_thread
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    user_thread.is_closed = True
+    user_thread.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_start_thread_poll_permission(permissions, default_category, user_thread)
+
+
+def test_check_start_thread_poll_permission_passes_for_global_moderator_if_thread_is_closed(
+    moderator, cache_versions, default_category, user_thread
+):
+    user_thread.is_closed = True
+    user_thread.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_start_thread_poll_permission(permissions, default_category, user_thread)
