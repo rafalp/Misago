@@ -1,4 +1,7 @@
 from ...parser.parse import parse
+from ...threadupdates.create import create_split_thread_update
+from ...threadupdates.enums import ThreadUpdateActionName
+from ...threadupdates.models import ThreadUpdate
 from ..state import EditThreadPostState
 
 
@@ -136,3 +139,39 @@ def test_edit_thread_post_state_schedules_post_upgrade_for_post_with_code_block(
     mock_upgrade_post_content.delay.assert_called_once_with(
         state.post.id, state.post.sha256_checksum
     )
+
+
+def test_edit_thread_post_state_save_creates_thread_update_object_for_changed_title(
+    user_request, user, other_user_thread
+):
+    assert not ThreadUpdate.objects.exists()
+
+    state = EditThreadPostState(user_request, other_user_thread.first_post)
+    state.set_thread_title("Updated title")
+    state.save()
+
+    assert ThreadUpdate.objects.count() == 1
+
+    thread_update = ThreadUpdate.objects.first()
+    assert thread_update.actor == user
+    assert thread_update.action == ThreadUpdateActionName.CHANGED_TITLE
+    assert thread_update.context == "Test thread"
+    assert not thread_update.context_id
+    assert not thread_update.context_type
+
+
+def test_edit_thread_post_state_save_updates_context_in_existing_thread_updates(
+    user_request,
+    user,
+    thread,
+    other_user_thread,
+):
+    thread_update = create_split_thread_update(thread, other_user_thread, user)
+
+    state = EditThreadPostState(user_request, other_user_thread.first_post)
+    state.set_thread_title("Updated title")
+    state.save()
+
+    thread_update.refresh_from_db()
+    assert thread_update.context == "Updated title"
+    assert thread_update.get_context_id("misago_threads.thread") == other_user_thread.id
