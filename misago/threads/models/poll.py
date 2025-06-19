@@ -9,10 +9,18 @@ from ...plugins.models import PluginDataModel
 
 
 class Poll(PluginDataModel):
-    category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
-    thread = models.OneToOneField("misago_threads.Thread", on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        "misago_categories.Category", on_delete=models.CASCADE, related_name="+"
+    )
+    thread = models.OneToOneField(
+        "misago_threads.Thread", on_delete=models.CASCADE, related_name="+"
+    )
     poster = models.ForeignKey(
-        settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
     )
     poster_name = models.CharField(max_length=255)
     poster_slug = models.CharField(max_length=255)

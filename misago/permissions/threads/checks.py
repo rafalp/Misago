@@ -364,7 +364,20 @@ def _check_start_thread_poll_permission_action(
 def check_edit_thread_poll_permission(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
 ):
-    pass
+    check_post_in_closed_category_permission(permissions, category)
+    check_post_in_closed_thread_permission(permissions, thread)
+
+    if permissions.is_category_moderator(thread.category_id):
+        return
+
+    user_id = permissions.user.id
+    if not (user_id and thread.starter_id and thread.starter_id == user_id):
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit polls in other users threads.",
+            )
+        )
 
 
 def check_delete_thread_poll_permission(
