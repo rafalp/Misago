@@ -40,12 +40,14 @@ class Poll(models.Model):
     closed_by_name = models.CharField(max_length=255, null=True, blank=True)
     closed_by_slug = models.CharField(max_length=255, null=True, blank=True)
 
+    @property
     def ends_at(self) -> datetime | None:
         if not self.length:
             return None
 
-        return timezone.now() + timedelta(days=self.length)
+        return self.started_at + timedelta(days=self.length)
 
+    @property
     def has_ended(self) -> bool:
         if self.length:
             return timezone.now() >= self.ends_at

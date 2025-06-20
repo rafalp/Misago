@@ -26,7 +26,10 @@ from .test import (
     MisagoClient,
     teardown_attachments,
 )
+from .test.time import *
+from .test.polls import *
 from .test.threadupdates import *
+from .test.userpermissions import *
 from .themes import THEME_CACHE
 from .threads.models import Thread, ThreadParticipant
 from .threads.test import post_thread, reply_thread
