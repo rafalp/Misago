@@ -610,17 +610,19 @@ def check_vote_in_thread_poll_permission(
 def _check_vote_in_thread_poll_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
 ):
-    check_post_in_closed_category_permission(permissions, category)
-    check_post_in_closed_thread_permission(permissions, thread)
-
-    if permissions.is_category_moderator(thread.category_id):
-        return
-
-    if not permissions.can_vote_in_polls:
+    if category.is_closed:
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't vote in polls.",
+                "This category is closed.",
+            )
+        )
+
+    if thread.is_closed:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "This thread is closed.",
             )
         )
 
@@ -628,7 +630,7 @@ def _check_vote_in_thread_poll_permission_action(
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't vote in polls that have ended.",
+                "This poll has ended.",
             )
         )
 
@@ -636,6 +638,14 @@ def _check_vote_in_thread_poll_permission_action(
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't vote in polls that are closed.",
+                "This poll is closed.",
+            )
+        )
+
+    if not permissions.can_vote_in_polls:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't vote in polls.",
             )
         )

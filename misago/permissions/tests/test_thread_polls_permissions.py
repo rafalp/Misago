@@ -5,6 +5,7 @@ from ..threads import (
     check_close_thread_poll_permission,
     check_edit_thread_poll_permission,
     check_start_thread_poll_permission,
+    check_vote_in_thread_poll_permission,
 )
 
 
@@ -767,3 +768,87 @@ def test_check_close_thread_poll_permission_passes_for_global_moderator_if_poll_
     permissions = user_permissions_factory(moderator)
 
     check_close_thread_poll_permission(permissions, default_category, user_thread, poll)
+
+
+def test_check_vote_in_thread_poll_permission_passes_if_user_has_permission(
+    user_permissions,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    check_vote_in_thread_poll_permission(
+        user_permissions, default_category, user_thread, user_poll
+    )
+
+
+def test_check_vote_in_thread_poll_permission_fails_if_user_has_no_permission(
+    user,
+    user_permissions_factory,
+    members_group,
+    default_category,
+    thread,
+    poll,
+):
+    members_group.can_vote_in_polls = False
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_vote_in_thread_poll_permission(
+            permissions, default_category, thread, poll
+        )
+
+
+def test_check_vote_in_thread_poll_permission_fails_if_category_is_closed(
+    user_permissions,
+    default_category,
+    thread,
+    poll,
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    with pytest.raises(PermissionDenied):
+        check_vote_in_thread_poll_permission(
+            user_permissions, default_category, thread, poll
+        )
+
+
+def test_check_vote_in_thread_poll_permission_fails_if_thread_is_closed(
+    user_permissions,
+    default_category,
+    thread,
+    poll,
+):
+    thread.is_closed = True
+    thread.save()
+
+    with pytest.raises(PermissionDenied):
+        check_vote_in_thread_poll_permission(
+            user_permissions, default_category, thread, poll
+        )
+
+
+def test_check_vote_in_thread_poll_permission_fails_if_poll_has_ended(
+    user_permissions,
+    default_category,
+    thread,
+    ended_poll,
+):
+    with pytest.raises(PermissionDenied):
+        check_vote_in_thread_poll_permission(
+            user_permissions, default_category, thread, ended_poll
+        )
+
+
+def test_check_vote_in_thread_poll_permission_fails_if_poll_is_closed(
+    user_permissions,
+    default_category,
+    thread,
+    closed_poll,
+):
+    with pytest.raises(PermissionDenied):
+        check_vote_in_thread_poll_permission(
+            user_permissions, default_category, thread, closed_poll
+        )
