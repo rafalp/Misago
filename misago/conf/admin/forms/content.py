@@ -11,7 +11,7 @@ from ....threads.enums import ThreadsListsPolling
 from .base import SettingsForm
 
 
-class ThreadsSettingsForm(SettingsForm):
+class ContentSettingsForm(SettingsForm):
     settings = [
         "allowed_attachment_types",
         "allow_private_threads_attachments",

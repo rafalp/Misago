@@ -7,7 +7,7 @@ from .views import (
     GeneralSettingsView,
     NotificationsSettingsView,
     OAuth2SettingsView,
-    ThreadsSettingsView,
+    ContentSettingsView,
     UsersSettingsView,
     index,
 )
@@ -41,7 +41,7 @@ class MisagoAdminExtension:
             "oauth2/", "oauth2", "settings", OAuth2SettingsView.as_view()
         )
         urlpatterns.single_pattern(
-            "threads/", "threads", "settings", ThreadsSettingsView.as_view()
+            "content/", "content", "settings", ContentSettingsView.as_view()
         )
         urlpatterns.single_pattern(
             "users/", "users", "settings", UsersSettingsView.as_view()
@@ -84,12 +84,12 @@ class MisagoAdminExtension:
             after="users:index",
         )
         site.add_node(
-            name=pgettext_lazy("admin node", "Threads"),
+            name=pgettext_lazy("admin node", "Content"),
             description=pgettext_lazy(
                 "admin node", "Threads, posts, polls and attachments options."
             ),
             parent="settings",
-            namespace="threads",
+            namespace="content",
             after="captcha:index",
         )
         site.add_node(
@@ -100,7 +100,7 @@ class MisagoAdminExtension:
             ),
             parent="settings",
             namespace="notifications",
-            after="threads:index",
+            after="content:index",
         )
         site.add_node(
             name=pgettext_lazy("admin node", "OAuth2"),
