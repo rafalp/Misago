@@ -101,7 +101,7 @@ def create_default_groups(apps, schema_editor):
                 can_always_delete_own_attachments=True,
                 can_start_polls=True,
                 can_edit_own_polls=True,
-                can_close_own_polls=True,
+                can_close_own_polls=False,
                 own_polls_edit_time_limit=0,
                 can_vote_in_polls=True,
                 can_change_username=True,

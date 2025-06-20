@@ -1,3 +1,5 @@
+from math import ceil
+
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
 from django.http import Http404
@@ -124,13 +126,39 @@ def _check_edit_private_thread_permission_action(
     time_limit = permissions.own_threads_edit_time_limit * 60
 
     if time_limit and (timezone.now() - thread.started_on).total_seconds() > time_limit:
+        if time_limit >= 86400:
+            days = ceil(time_limit / 86400)
+            raise PermissionDenied(
+                npgettext(
+                    "threads permission error",
+                    "You can't edit threads older than %(days)s day.",
+                    "You can't edit threads older than %(days)s days.",
+                    days,
+                )
+                % {"days": days}
+            )
+
+        if time_limit >= 90 * 60:
+            hours = ceil(time_limit / 3600)
+            raise PermissionDenied(
+                npgettext(
+                    "threads permission error",
+                    "You can't edit threads older than %(hours)s hour.",
+                    "You can't edit threads older than %(hours)s hours.",
+                    hours,
+                )
+                % {"hours": hours}
+            )
+
+        minutes = ceil(time_limit / 60)
         raise PermissionDenied(
             npgettext(
                 "threads permission error",
                 "You can't edit threads older than %(minutes)s minute.",
                 "You can't edit threads older than %(minutes)s minutes.",
-                permissions.own_threads_edit_time_limit,
+                minutes,
             )
+            % {"minutes": minutes}
         )
 
 
@@ -200,13 +228,39 @@ def _check_edit_private_thread_post_permission_action(
     time_limit = permissions.own_posts_edit_time_limit * 60
 
     if time_limit and (timezone.now() - post.posted_on).total_seconds() > time_limit:
+        if time_limit >= 86400:
+            days = ceil(time_limit / 86400)
+            raise PermissionDenied(
+                npgettext(
+                    "threads permission error",
+                    "You can't edit posts older than %(days)s day.",
+                    "You can't edit posts older than %(days)s days.",
+                    days,
+                )
+                % {"days": days}
+            )
+
+        if time_limit >= 90 * 60:
+            hours = ceil(time_limit / 3600)
+            raise PermissionDenied(
+                npgettext(
+                    "threads permission error",
+                    "You can't edit posts older than %(hours)s hour.",
+                    "You can't edit posts older than %(hours)s hours.",
+                    hours,
+                )
+                % {"hours": hours}
+            )
+
+        minutes = ceil(time_limit / 60)
         raise PermissionDenied(
             npgettext(
                 "threads permission error",
                 "You can't edit posts older than %(minutes)s minute.",
                 "You can't edit posts older than %(minutes)s minutes.",
-                permissions.own_posts_edit_time_limit,
+                minutes,
             )
+            % {"minutes": minutes}
         )
 
 

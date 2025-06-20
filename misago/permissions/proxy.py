@@ -33,6 +33,12 @@ class UserPermissionsProxy:
     can_upload_attachments: int
     attachment_size_limit: int
     can_always_delete_own_attachments: bool
+    can_start_polls: bool
+    can_edit_own_polls: bool
+    own_polls_edit_time_limit: int
+    can_close_own_polls: bool
+    own_polls_close_time_limit: int
+    can_vote_in_polls: bool
     can_change_username: bool
     username_changes_limit: int
     username_changes_expire: int
