@@ -285,7 +285,7 @@ class EditGroupForm(forms.ModelForm):
 
     can_see_user_profiles = YesNoSwitch(
         label=pgettext_lazy(
-            "admin group permissions form", "Can see other users profiles"
+            "admin group permissions form", "Can see other users' profiles"
         ),
     )
 

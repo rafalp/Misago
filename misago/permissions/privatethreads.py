@@ -109,7 +109,7 @@ def _check_edit_private_thread_permission_action(
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't edit other users threads.",
+                "You can't edit other users' threads.",
             )
         )
 
@@ -169,7 +169,7 @@ def _check_edit_private_thread_post_permission_action(
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't edit other users posts.",
+                "You can't edit other users' posts.",
             )
         )
 

@@ -9,7 +9,9 @@ from ...threads.models import Post, Thread
 from ..categories import check_see_category_permission
 from ..enums import CategoryPermission
 from ..hooks import (
+    check_close_thread_poll_permission_hook,
     check_edit_thread_permission_hook,
+    check_edit_thread_poll_permission_hook,
     check_edit_thread_post_permission_hook,
     check_post_in_closed_category_permission_hook,
     check_post_in_closed_thread_permission_hook,
@@ -18,6 +20,7 @@ from ..hooks import (
     check_see_thread_post_permission_hook,
     check_start_thread_permission_hook,
     check_start_thread_poll_permission_hook,
+    check_vote_in_thread_poll_permission_hook,
 )
 from ..polls import check_start_poll_permission
 from ..proxy import UserPermissionsProxy
@@ -197,7 +200,7 @@ def _check_edit_thread_permission_action(
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't edit other users threads.",
+                "You can't edit other users' threads.",
             )
         )
 
@@ -288,7 +291,7 @@ def _check_edit_thread_post_permission_action(
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't edit other users posts.",
+                "You can't edit other users' posts.",
             )
         )
 
@@ -356,12 +359,20 @@ def _check_start_thread_poll_permission_action(
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't start polls in other users threads.",
+                "You can't start polls in other users' threads.",
             )
         )
 
 
 def check_edit_thread_poll_permission(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
+):
+    check_edit_thread_poll_permission_hook(
+        _check_edit_thread_poll_permission_action, permissions, category, thread, poll
+    )
+
+
+def _check_edit_thread_poll_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
 ):
     check_post_in_closed_category_permission(permissions, category)
@@ -375,24 +386,165 @@ def check_edit_thread_poll_permission(
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't edit polls in other users threads.",
+                "You can't edit polls in other users' threads.",
             )
         )
 
+    if not (user_id and poll.starter_id and poll.starter_id == user_id):
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit other users' polls.",
+            )
+        )
 
-def check_delete_thread_poll_permission(
-    permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
-):
-    pass
+    if not permissions.can_edit_own_polls:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit polls.",
+            )
+        )
+
+    if poll.has_ended:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit polls that have ended.",
+            )
+        )
+
+    if poll.is_closed:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't edit polls that are closed.",
+            )
+        )
+
+    time_limit = permissions.own_polls_edit_time_limit * 60
+    if time_limit and (timezone.now() - poll.created_at).total_seconds() > time_limit:
+        raise PermissionDenied(
+            npgettext(
+                "threads permission error",
+                "You can't edit polls older than %(minutes)s minute.",
+                "You can't edit polls older than %(minutes)s minutes.",
+                permissions.own_polls_edit_time_limit,
+            )
+        )
 
 
 def check_close_thread_poll_permission(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
 ):
-    pass
+    check_close_thread_poll_permission_hook(
+        _check_close_thread_poll_permission_action, permissions, category, thread, poll
+    )
+
+
+def _check_close_thread_poll_permission_action(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
+):
+    check_post_in_closed_category_permission(permissions, category)
+    check_post_in_closed_thread_permission(permissions, thread)
+
+    if permissions.is_category_moderator(thread.category_id):
+        return
+
+    user_id = permissions.user.id
+    if not (user_id and thread.starter_id and thread.starter_id == user_id):
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't close polls in other users' threads.",
+            )
+        )
+
+    if not (user_id and poll.starter_id and poll.starter_id == user_id):
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't close other users' polls.",
+            )
+        )
+
+    if not permissions.can_close_own_polls:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't close polls.",
+            )
+        )
+
+    if poll.has_ended:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't close polls that have ended.",
+            )
+        )
+
+    if poll.is_closed:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't close polls that are already closed.",
+            )
+        )
+
+    time_limit = permissions.own_polls_close_time_limit * 60
+    if time_limit and (timezone.now() - poll.created_at).total_seconds() > time_limit:
+        raise PermissionDenied(
+            npgettext(
+                "threads permission error",
+                "You can't close polls older than %(minutes)s minute.",
+                "You can't close polls older than %(minutes)s minutes.",
+                permissions.own_polls_close_time_limit,
+            )
+        )
 
 
 def check_vote_in_thread_poll_permission(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
 ):
-    pass
+    check_vote_in_thread_poll_permission_hook(
+        _check_vote_in_thread_poll_permission_action,
+        permissions,
+        category,
+        thread,
+        poll,
+    )
+
+
+def _check_vote_in_thread_poll_permission_action(
+    permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
+):
+    check_post_in_closed_category_permission(permissions, category)
+    check_post_in_closed_thread_permission(permissions, thread)
+
+    if permissions.is_category_moderator(thread.category_id):
+        return
+
+    if not permissions.can_vote_in_polls:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't vote in polls.",
+            )
+        )
+
+    if poll.has_ended:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't vote in polls that have ended.",
+            )
+        )
+
+    if poll.is_closed:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't vote in polls that are closed.",
+            )
+        )

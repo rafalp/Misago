@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -37,6 +39,18 @@ class Poll(models.Model):
     )
     closed_by_name = models.CharField(max_length=255, null=True, blank=True)
     closed_by_slug = models.CharField(max_length=255, null=True, blank=True)
+
+    def ends_at(self) -> datetime | None:
+        if not self.length:
+            return None
+
+        return timezone.now() + timedelta(days=self.length)
+
+    def has_ended(self) -> bool:
+        if self.length:
+            return timezone.now() >= self.ends_at
+
+        return False
 
 
 class PollVote(models.Model):
