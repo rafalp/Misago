@@ -8,6 +8,7 @@ from .check_access_category_permission import check_access_category_permission_h
 from .check_access_post_permission import check_access_post_permission_hook
 from .check_access_thread_permission import check_access_thread_permission_hook
 from .check_browse_category_permission import check_browse_category_permission_hook
+from .check_close_thread_poll_permission import check_close_thread_poll_permission_hook
 from .check_delete_attachment_permission import (
     check_delete_attachment_permission_hook,
 )
@@ -21,6 +22,7 @@ from .check_edit_private_thread_post_permission import (
     check_edit_private_thread_post_permission_hook,
 )
 from .check_edit_thread_permission import check_edit_thread_permission_hook
+from .check_edit_thread_poll_permission import check_edit_thread_poll_permission_hook
 from .check_edit_thread_post_permission import check_edit_thread_post_permission_hook
 from .check_post_in_closed_category_permission import (
     check_post_in_closed_category_permission_hook,
@@ -50,6 +52,9 @@ from .check_start_thread_permission import (
     check_start_thread_permission_hook,
 )
 from .check_start_thread_poll_permission import check_start_thread_poll_permission_hook
+from .check_vote_in_thread_poll_permission import (
+    check_vote_in_thread_poll_permission_hook,
+)
 from .copy_category_permissions import copy_category_permissions_hook
 from .copy_group_permissions import copy_group_permissions_hook
 from .filter_accessible_thread_posts import filter_accessible_thread_posts_hook
@@ -84,11 +89,13 @@ __all__ = [
     "check_access_post_permission_hook",
     "check_access_thread_permission_hook",
     "check_browse_category_permission_hook",
+    "check_close_thread_poll_permission_hook",
     "check_delete_attachment_permission_hook",
     "check_download_attachment_permission_hook",
     "check_edit_private_thread_permission_hook",
     "check_edit_private_thread_post_permission_hook",
     "check_edit_thread_permission_hook",
+    "check_edit_thread_poll_permission_hook",
     "check_edit_thread_post_permission_hook",
     "check_post_in_closed_category_permission_hook",
     "check_post_in_closed_thread_permission_hook",
@@ -104,6 +111,7 @@ __all__ = [
     "check_start_private_threads_permission_hook",
     "check_start_thread_permission_hook",
     "check_start_thread_poll_permission_hook",
+    "check_vote_in_thread_poll_permission_hook",
     "copy_category_permissions_hook",
     "copy_group_permissions_hook",
     "filter_accessible_thread_posts_hook",

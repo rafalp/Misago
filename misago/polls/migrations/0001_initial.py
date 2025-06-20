@@ -40,6 +40,7 @@ class Migration(migrations.Migration):
                 ("can_change_vote", models.BooleanField(default=False)),
                 ("is_public", models.BooleanField(default=False)),
                 ("is_closed", models.BooleanField(default=False)),
+                ("votes", models.PositiveIntegerField(default=0)),
                 (
                     "closed_by_name",
                     models.CharField(blank=True, max_length=255, null=True),

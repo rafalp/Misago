@@ -26,6 +26,8 @@ class Poll(models.Model):
     is_public = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
 
+    votes = models.PositiveIntegerField(default=0)
+
     closed_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,
