@@ -7,6 +7,7 @@ from ....admin.forms import YesNoSwitch
 from ....attachments.enums import AllowedAttachments, AttachmentTypeRestriction
 from ....attachments.storage import get_total_unused_attachments_size
 from ....categories.enums import CategoryChildrenComponent
+from ....polls.enums import AllowedPublicPolls
 from ....threads.enums import ThreadsListsPolling
 from .base import SettingsForm
 
@@ -15,6 +16,7 @@ class ContentSettingsForm(SettingsForm):
     settings = [
         "allowed_attachment_types",
         "allow_private_threads_attachments",
+        "allow_public_polls",
         "restrict_attachments_extensions",
         "restrict_attachments_extensions_type",
         "unused_attachments_storage_limit",
@@ -43,11 +45,11 @@ class ContentSettingsForm(SettingsForm):
 
     flood_control = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Flood control",
         ),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Number of seconds that must pass after a user posts before they can post again. Edits and concurrent posts are excluded from this limit. Enter zero to disable this feature.",
         ),
         min_value=0,
@@ -55,26 +57,26 @@ class ContentSettingsForm(SettingsForm):
 
     post_length_max = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form", "Maximum allowed post length"
+            "admin content settings form", "Maximum allowed post length"
         ),
         min_value=0,
     )
     post_length_min = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form", "Minimum required post length"
+            "admin content settings form", "Minimum required post length"
         ),
         min_value=1,
     )
     thread_title_length_max = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form", "Maximum allowed thread title length"
+            "admin content settings form", "Maximum allowed thread title length"
         ),
         min_value=2,
         max_value=255,
     )
     thread_title_length_min = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form", "Minimum required thread title length"
+            "admin content settings form", "Minimum required thread title length"
         ),
         min_value=2,
         max_value=255,
@@ -82,20 +84,20 @@ class ContentSettingsForm(SettingsForm):
 
     merge_concurrent_posts = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Automatically merge concurrent posts made within specified time",
         ),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Time (in minutes) during which user's newly posted reply to a thread will be appended to their last post. The last post must be editable by the user. Enter zero to disable this feature.",
         ),
         min_value=0,
     )
 
     readtracker_cutoff = forms.IntegerField(
-        label=pgettext_lazy("admin threads settings form", "Read-tracker cutoff"),
+        label=pgettext_lazy("admin content settings form", "Read-tracker cutoff"),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Controls amount of data used by read-tracking system. All content older than number of days specified in this setting is considered old and read, even if the opposite is true for the user. Active forums can try lowering this value while less active ones may wish to increase it instead.",
         ),
         min_value=1,
@@ -103,17 +105,17 @@ class ContentSettingsForm(SettingsForm):
 
     threads_per_page = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Number of threads shown on a single page",
         ),
         min_value=10,
     )
     threads_list_item_categories_component = forms.CharField(
         label=pgettext_lazy(
-            "admin threads settings form", "Thread's categories appearance"
+            "admin content settings form", "Thread's categories appearance"
         ),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Select a UI component to display the list of categories on threads lists.",
         ),
         widget=forms.RadioSelect(
@@ -133,11 +135,11 @@ class ContentSettingsForm(SettingsForm):
     )
     threads_lists_polling = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Enable polling for new or updated threads",
         ),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Enabling polling will make threads lists call the server every minute for the number of new or updated threads. If there are new threads, a button will be shown for the user that will let them refresh the list without having to refresh the entire page.",
         ),
         widget=forms.RadioSelect(
@@ -146,9 +148,9 @@ class ContentSettingsForm(SettingsForm):
     )
 
     threads_list_categories_component = forms.CharField(
-        label=pgettext_lazy("admin threads settings form", "Categories UI component"),
+        label=pgettext_lazy("admin content settings form", "Categories UI component"),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Select a UI component to display the list of categories on the threads page.",
         ),
         widget=forms.RadioSelect(
@@ -158,14 +160,14 @@ class ContentSettingsForm(SettingsForm):
 
     posts_per_page = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form", "Number of posts shown on a single page"
+            "admin content settings form", "Number of posts shown on a single page"
         ),
         min_value=5,
     )
     posts_per_page_orphans = forms.IntegerField(
-        label=pgettext_lazy("admin threads settings form", "Maximum orphans"),
+        label=pgettext_lazy("admin content settings form", "Maximum orphans"),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "This setting prevents situations when the last page of a thread contains very few items. If number of posts to be shown on the last page is less or equal to number specified in this setting, those posts will instead be appended to the previous page, reducing number of thread's pages.",
         ),
         min_value=0,
@@ -173,20 +175,20 @@ class ContentSettingsForm(SettingsForm):
 
     thread_updates_per_page = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Maximum number of thread updates shown on a single page",
         ),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "If the number of updates to show exceeds this value, only the most recent ones will be displayed.",
         ),
         min_value=1,
     )
 
     allowed_attachment_types = forms.CharField(
-        label=pgettext_lazy("admin threads settings form", "Allowed attachment types"),
+        label=pgettext_lazy("admin content settings form", "Allowed attachment types"),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             'This setting controls which files can be uploaded as attachments. Select the "Disable" option to disable new attachment uploads.',
         ),
         widget=forms.RadioSelect(
@@ -196,10 +198,10 @@ class ContentSettingsForm(SettingsForm):
 
     restrict_attachments_extensions = forms.CharField(
         label=pgettext_lazy(
-            "admin threads settings form", "Restrict uploaded file extensions"
+            "admin content settings form", "Restrict uploaded file extensions"
         ),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "You can further restrict the types of uploaded files by entering their extensions in the text field above. Leave it empty to impose no additional restrictions. Items can be separated using spaces and line breaks.",
         ),
         max_length=1024,
@@ -220,17 +222,17 @@ class ContentSettingsForm(SettingsForm):
 
     post_attachments_limit = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form", "Maximum number of attachments per post"
+            "admin content settings form", "Maximum number of attachments per post"
         ),
         min_value=1,
         max_value=dj_settings.MISAGO_POST_ATTACHMENTS_LIMIT,
     )
     additional_embedded_attachments_limit = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form", "Additional embedded attachments limit"
+            "admin content settings form", "Additional embedded attachments limit"
         ),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Additional embedded attachments are attachments embedded in post content but not associated with the shown posts. Loading a large number of these attachments can increase the site's memory usage. Set this value to zero to disable loading these attachments. Users will still see links to them.",
         ),
         min_value=0,
@@ -238,25 +240,25 @@ class ContentSettingsForm(SettingsForm):
 
     unused_attachments_storage_limit = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form", "Unused attachments storage limit"
+            "admin content settings form", "Unused attachments storage limit"
         ),
         min_value=0,
     )
     unused_attachments_lifetime = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form", "Unused attachments lifetime"
+            "admin content settings form", "Unused attachments lifetime"
         ),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Time (in hours) after which user-uploaded files that weren't attached to any post are deleted.",
         ),
         min_value=1,
     )
 
     attachment_image_max_width = forms.IntegerField(
-        label=pgettext_lazy("admin threads settings form", "Maximum image dimensions"),
+        label=pgettext_lazy("admin content settings form", "Maximum image dimensions"),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "This setting controls the maximum dimensions of uploaded images, in pixels. Images exceeding these dimensions will be scaled down.",
         ),
         min_value=100,
@@ -265,15 +267,26 @@ class ContentSettingsForm(SettingsForm):
 
     attachment_thumbnail_width = forms.IntegerField(
         label=pgettext_lazy(
-            "admin threads settings form", "Image thumbnail dimensions"
+            "admin content settings form", "Image thumbnail dimensions"
         ),
         help_text=pgettext_lazy(
-            "admin threads settings form",
+            "admin content settings form",
             "Dimensions, in pixels, of the thumbnail image to be generated if the uploaded image exceeds the specified size.",
         ),
         min_value=100,
     )
     attachment_thumbnail_height = forms.IntegerField(min_value=100)
+
+    allow_public_polls = forms.CharField(
+        label=pgettext_lazy("admin content settings form", "Allow public polls"),
+        help_text=pgettext_lazy(
+            "admin content settings form",
+            "Public polls allow users to see which choices other users voted for. Forbidding all public polls will disable this option for both new and existing polls.",
+        ),
+        widget=forms.RadioSelect(
+            choices=AllowedPublicPolls.get_choices(),
+        ),
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -281,7 +294,7 @@ class ContentSettingsForm(SettingsForm):
         unused_attachments_size = get_total_unused_attachments_size()
 
         self.fields["unused_attachments_storage_limit"].help_text = pgettext(
-            "admin threads settings form",
+            "admin content settings form",
             "Maximum total storage space, in megabytes, for all attachments that have been uploaded but are not associated with any posts. Enter zero to remove this limit. Current usage: %(usage)s",
         ) % {"usage": filesizeformat(unused_attachments_size)}
 
@@ -310,7 +323,7 @@ class ContentSettingsForm(SettingsForm):
             self.add_error(
                 "posts_per_page_orphans",
                 pgettext_lazy(
-                    "admin threads settings form",
+                    "admin content settings form",
                     "This value must be lower than number of posts per page.",
                 ),
             )
@@ -326,7 +339,7 @@ class ContentSettingsForm(SettingsForm):
             self.add_error(
                 "attachment_thumbnail_width",
                 pgettext_lazy(
-                    "admin threads settings form",
+                    "admin content settings form",
                     "This value must be lower than the image width limit.",
                 ),
             )
@@ -342,7 +355,7 @@ class ContentSettingsForm(SettingsForm):
             self.add_error(
                 "attachment_thumbnail_height",
                 pgettext_lazy(
-                    "admin threads settings form",
+                    "admin content settings form",
                     "This value must be lower than the image height limit.",
                 ),
             )

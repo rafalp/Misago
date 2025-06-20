@@ -5,7 +5,7 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% translate "Posting" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Posting" context "admin content settings form" %}</legend>
 
     {% form_row form.thread_title_length_min %}
     {% form_row form.thread_title_length_max %}
@@ -20,7 +20,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% translate "Attachments" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Attachments" context "admin content settings form" %}</legend>
     
     {% form_row form.allowed_attachment_types %}
 
@@ -59,7 +59,15 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% translate "Threads lists" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Polls" context "admin content settings form" %}</legend>
+    
+    {% form_row form.allow_public_polls %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Threads lists" context "admin content settings form" %}</legend>
     
     {% form_row form.threads_list_item_categories_component %}
     {% form_row form.threads_per_page %}
@@ -69,7 +77,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% translate "Main threads page" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Main threads page" context "admin content settings form" %}</legend>
 
     {% form_row form.threads_list_categories_component %}
 
@@ -77,7 +85,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% translate "Thread posts" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Thread posts" context "admin content settings form" %}</legend>
     
     {% form_row form.posts_per_page %}
     {% form_row form.posts_per_page_orphans %}
@@ -86,7 +94,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% translate "Thread updates" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Thread updates" context "admin content settings form" %}</legend>
     
     {% form_row form.thread_updates_per_page %}
 
@@ -94,7 +102,7 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% translate "Read-tracker" context "admin threads settings form" %}</legend>
+    <legend>{% translate "Read-tracker" context "admin content settings form" %}</legend>
     
     {% form_row form.readtracker_cutoff %}
 
