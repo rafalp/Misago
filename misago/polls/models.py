@@ -4,8 +4,10 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+from ..plugins.models import PluginDataModel
 
-class Poll(models.Model):
+
+class Poll(PluginDataModel):
     category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
     thread = models.OneToOneField("misago_threads.Thread", on_delete=models.CASCADE)
 
@@ -59,6 +61,7 @@ class PollVote(models.Model):
     category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
     thread = models.ForeignKey("misago_threads.Thread", on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    choice_id = models.CharField(max_length=12, db_index=True)
 
     voter = models.ForeignKey(
         settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL
@@ -67,9 +70,9 @@ class PollVote(models.Model):
     voter_slug = models.CharField(max_length=255)
 
     voted_at = models.DateTimeField(default=timezone.now)
-    choice = models.CharField(max_length=12, db_index=True)
 
     class Meta:
         indexes = [
+            models.Index(fields=["poll", "choice_id"]),
             models.Index(fields=["poll", "voter_name"]),
         ]
