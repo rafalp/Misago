@@ -19,12 +19,9 @@ def factory_timestamp_arg(
         return timezone.now() - timestamp
 
     if isinstance(timestamp, int):
-        if timestamp > 0:
+        if timestamp != 0:
             return timezone.now() + timedelta(seconds=timestamp)
-        elif timestamp < 0:
-            return timezone.now() - timedelta(seconds=timestamp)
-        else:
-            return timezone.now()
+        return timezone.now()
 
     if default is True:
         return timezone.now()

@@ -16,6 +16,7 @@ from .conf.staticsettings import StaticSettings
 from .core.utils import slugify
 from .menus import MENU_ITEMS_CACHE
 from .notifications.models import WatchedThread
+from .permissions.models import Moderator
 from .socialauth import SOCIALAUTH_CACHE
 from .socialauth.models import SocialAuthProvider
 from .test import (
@@ -102,6 +103,19 @@ def other_user(db, user_password):
 @pytest.fixture
 def other_user_acl(other_user, cache_versions):
     return useracl.get_user_acl(other_user, cache_versions)
+
+
+@pytest.fixture
+def category_moderator(db, user_password, default_category):
+    user = create_test_user("Moderator", "moderator@example.com", user_password)
+
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    return user
 
 
 @pytest.fixture

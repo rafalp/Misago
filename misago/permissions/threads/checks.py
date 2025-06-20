@@ -423,7 +423,8 @@ def _check_edit_thread_poll_permission_action(
         )
 
     time_limit = permissions.own_polls_edit_time_limit * 60
-    if time_limit and (timezone.now() - poll.created_at).total_seconds() > time_limit:
+    print((timezone.now() - poll.started_at).total_seconds(), time_limit)
+    if time_limit and (timezone.now() - poll.started_at).total_seconds() > time_limit:
         raise PermissionDenied(
             npgettext(
                 "threads permission error",
@@ -493,7 +494,7 @@ def _check_close_thread_poll_permission_action(
         )
 
     time_limit = permissions.own_polls_close_time_limit * 60
-    if time_limit and (timezone.now() - poll.created_at).total_seconds() > time_limit:
+    if time_limit and (timezone.now() - poll.started_at).total_seconds() > time_limit:
         raise PermissionDenied(
             npgettext(
                 "threads permission error",

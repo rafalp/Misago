@@ -19,5 +19,15 @@ def user_permissions(user, user_permissions_factory):
 
 
 @pytest.fixture
+def category_moderator_permissions(category_moderator, user_permissions_factory):
+    return user_permissions_factory(category_moderator)
+
+
+@pytest.fixture
+def moderator_permissions(moderator, user_permissions_factory):
+    return user_permissions_factory(moderator)
+
+
+@pytest.fixture
 def anonymous_user_permissions(anonymous_user, user_permissions_factory):
     return user_permissions_factory(anonymous_user)

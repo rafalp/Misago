@@ -1,7 +1,6 @@
 import pytest
 from django.core.exceptions import PermissionDenied
 
-from ..models import Moderator
 from ..threads import (
     check_close_thread_poll_permission,
     check_edit_thread_poll_permission,
@@ -47,16 +46,11 @@ def test_check_start_thread_poll_permission_fails_if_user_is_not_thread_starter(
 
 
 def test_check_start_thread_poll_permission_passes_if_user_is_category_moderator(
-    user, user_permissions_factory, default_category, thread
+    category_moderator_permissions, default_category, thread
 ):
-    Moderator.objects.create(
-        user=user,
-        is_global=False,
-        categories=[default_category.id],
+    check_start_thread_poll_permission(
+        category_moderator_permissions, default_category, thread
     )
-
-    permissions = user_permissions_factory(user)
-    check_start_thread_poll_permission(permissions, default_category, thread)
 
 
 def test_check_start_thread_poll_permission_passes_if_user_is_global_moderator(
@@ -79,19 +73,14 @@ def test_check_start_thread_poll_permission_fails_for_user_if_category_is_closed
 
 
 def test_check_start_thread_poll_permission_passes_for_category_moderator_if_category_is_closed(
-    user, user_permissions_factory, default_category, user_thread
+    category_moderator_permissions, default_category, user_thread
 ):
-    Moderator.objects.create(
-        user=user,
-        is_global=False,
-        categories=[default_category.id],
-    )
-
     default_category.is_closed = True
     default_category.save()
 
-    permissions = user_permissions_factory(user)
-    check_start_thread_poll_permission(permissions, default_category, user_thread)
+    check_start_thread_poll_permission(
+        category_moderator_permissions, default_category, user_thread
+    )
 
 
 def test_check_start_thread_poll_permission_passes_for_global_moderator_if_category_is_closed(
@@ -117,19 +106,14 @@ def test_check_start_thread_poll_permission_fails_for_user_if_thread_is_closed(
 
 
 def test_check_start_thread_poll_permission_passes_for_category_moderator_if_thread_is_closed(
-    user, user_permissions_factory, default_category, user_thread
+    category_moderator_permissions, default_category, user_thread
 ):
-    Moderator.objects.create(
-        user=user,
-        is_global=False,
-        categories=[default_category.id],
-    )
-
     user_thread.is_closed = True
     user_thread.save()
 
-    permissions = user_permissions_factory(user)
-    check_start_thread_poll_permission(permissions, default_category, user_thread)
+    check_start_thread_poll_permission(
+        category_moderator_permissions, default_category, user_thread
+    )
 
 
 def test_check_start_thread_poll_permission_passes_for_global_moderator_if_thread_is_closed(
@@ -159,10 +143,303 @@ def test_check_edit_thread_poll_permission_fails_if_user_has_no_permission(
     user_thread,
     user_poll,
 ):
-    members_group.can_edit_polls = False
+    members_group.can_edit_own_polls = False
     members_group.save()
 
     permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_poll_permission(
+            permissions, default_category, user_thread, user_poll
+        )
+
+
+def test_check_edit_thread_poll_permission_passes_category_moderator(
+    category_moderator_permissions,
+    members_group,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    members_group.can_edit_own_polls = False
+    members_group.save()
+
     check_edit_thread_poll_permission(
-        permissions, default_category, user_thread, user_poll
+        category_moderator_permissions, default_category, user_thread, user_poll
     )
+
+
+def test_check_edit_thread_poll_permission_passes_global_moderator(
+    moderator_permissions,
+    moderators_group,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    moderators_group.can_edit_own_polls = False
+    moderators_group.save()
+
+    check_edit_thread_poll_permission(
+        moderator_permissions, default_category, user_thread, user_poll
+    )
+
+
+def test_check_edit_thread_poll_permission_fails_if_user_is_anonymous(
+    anonymous_user_permissions,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_poll_permission(
+            anonymous_user_permissions, default_category, user_thread, user_poll
+        )
+
+
+def test_check_edit_thread_poll_permission_fails_if_user_is_not_thread_starter(
+    user,
+    user_permissions_factory,
+    default_category,
+    other_user_thread,
+    poll_factory,
+):
+    poll = poll_factory(other_user_thread, starter=user)
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_poll_permission(
+            permissions, default_category, other_user_thread, poll
+        )
+
+
+def test_check_edit_thread_poll_permission_fails_if_user_is_not_poll_starter(
+    user,
+    other_user,
+    user_permissions_factory,
+    default_category,
+    user_thread,
+    poll_factory,
+):
+    poll = poll_factory(user_thread, starter=other_user)
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_poll_permission(
+            permissions, default_category, user_thread, poll
+        )
+
+
+def test_check_edit_thread_poll_permission_fails_if_category_is_closed(
+    user_permissions,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_poll_permission(
+            user_permissions, default_category, user_thread, user_poll
+        )
+
+
+def test_check_edit_thread_poll_permission_passes_if_category_is_closed_for_category_moderator(
+    category_moderator_permissions,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    check_edit_thread_poll_permission(
+        category_moderator_permissions, default_category, user_thread, user_poll
+    )
+
+
+def test_check_edit_thread_poll_permission_passes_if_category_is_closed_for_global_moderator(
+    moderator_permissions,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    check_edit_thread_poll_permission(
+        moderator_permissions, default_category, user_thread, user_poll
+    )
+
+
+def test_check_edit_thread_poll_permission_fails_if_thread_is_closed(
+    user_permissions,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    user_thread.is_closed = True
+    user_thread.save()
+
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_poll_permission(
+            user_permissions, default_category, user_thread, user_poll
+        )
+
+
+def test_check_edit_thread_poll_permission_passes_if_thread_is_closed_for_category_moderator(
+    category_moderator_permissions,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    user_thread.is_closed = True
+    user_thread.save()
+
+    check_edit_thread_poll_permission(
+        category_moderator_permissions, default_category, user_thread, user_poll
+    )
+
+
+def test_check_edit_thread_poll_permission_passes_if_thread_is_closed_for_global_moderator(
+    moderator_permissions,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    user_thread.is_closed = True
+    user_thread.save()
+
+    check_edit_thread_poll_permission(
+        moderator_permissions, default_category, user_thread, user_poll
+    )
+
+
+def test_check_edit_thread_poll_permission_fails_if_poll_has_ended(
+    user_permissions,
+    default_category,
+    user_thread,
+    ended_user_poll,
+):
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_poll_permission(
+            user_permissions, default_category, user_thread, ended_user_poll
+        )
+
+
+def test_check_edit_thread_poll_permission_passes_if_poll_has_ended_for_category_moderator(
+    category_moderator_permissions,
+    default_category,
+    user_thread,
+    ended_user_poll,
+):
+    check_edit_thread_poll_permission(
+        category_moderator_permissions, default_category, user_thread, ended_user_poll
+    )
+
+
+def test_check_edit_thread_poll_permission_passes_if_poll_has_ended_for_global_moderator(
+    moderator_permissions,
+    default_category,
+    user_thread,
+    ended_user_poll,
+):
+    check_edit_thread_poll_permission(
+        moderator_permissions, default_category, user_thread, ended_user_poll
+    )
+
+
+def test_check_edit_thread_poll_permission_fails_if_poll_is_closed(
+    user_permissions,
+    default_category,
+    user_thread,
+    closed_user_poll,
+):
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_poll_permission(
+            user_permissions, default_category, user_thread, closed_user_poll
+        )
+
+
+def test_check_edit_thread_poll_permission_passes_if_poll_is_closed_for_category_moderator(
+    category_moderator_permissions,
+    default_category,
+    user_thread,
+    closed_user_poll,
+):
+    check_edit_thread_poll_permission(
+        category_moderator_permissions, default_category, user_thread, closed_user_poll
+    )
+
+
+def test_check_edit_thread_poll_permission_passes_if_poll_is_closed_for_global_moderator(
+    moderator_permissions,
+    default_category,
+    user_thread,
+    closed_user_poll,
+):
+    check_edit_thread_poll_permission(
+        moderator_permissions, default_category, user_thread, closed_user_poll
+    )
+
+
+def test_check_edit_thread_poll_permission_fails_if_poll_edit_time_has_expired(
+    user,
+    user_permissions_factory,
+    members_group,
+    default_category,
+    user_thread,
+    poll_factory,
+    day_seconds,
+):
+    poll = poll_factory(user_thread, starter=user, started_at=day_seconds * -2)
+
+    members_group.own_polls_edit_time_limit = 60 * 24
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_poll_permission(
+            permissions, default_category, user_thread, poll
+        )
+
+
+def test_check_edit_thread_poll_permission_passes_if_poll_edit_time_has_expired_for_category_moderator(
+    category_moderator,
+    user_permissions_factory,
+    members_group,
+    default_category,
+    user_thread,
+    poll_factory,
+    day_seconds,
+):
+    poll = poll_factory(
+        user_thread, starter=category_moderator, started_at=day_seconds * -2
+    )
+
+    members_group.own_polls_edit_time_limit = 60 * 24
+    members_group.save()
+
+    permissions = user_permissions_factory(category_moderator)
+
+    check_edit_thread_poll_permission(permissions, default_category, user_thread, poll)
+
+
+def test_check_edit_thread_poll_permission_passes_if_poll_edit_time_has_expired_for_global_moderator(
+    moderator,
+    user_permissions_factory,
+    moderators_group,
+    default_category,
+    user_thread,
+    poll_factory,
+    day_seconds,
+):
+    poll = poll_factory(user_thread, starter=moderator, started_at=day_seconds * -2)
+
+    moderators_group.own_polls_edit_time_limit = 60 * 24
+    moderators_group.save()
+
+    permissions = user_permissions_factory(moderator)
+
+    check_edit_thread_poll_permission(permissions, default_category, user_thread, poll)
