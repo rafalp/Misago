@@ -8,7 +8,7 @@ from .edit import (
     get_edit_thread_formset,
     get_edit_thread_post_formset,
 )
-from .formset import PostingFormset
+from .formset import PostingFormset, TabbedPostingFormset
 from .reply import (
     ReplyPrivateThreadFormset,
     ReplyThreadFormset,
@@ -32,6 +32,7 @@ __all__ = [
     "ReplyThreadFormset",
     "StartPrivateThreadFormset",
     "StartThreadFormset",
+    "TabbedPostingFormset",
     "get_edit_private_thread_formset",
     "get_edit_private_thread_post_formset",
     "get_edit_thread_formset",

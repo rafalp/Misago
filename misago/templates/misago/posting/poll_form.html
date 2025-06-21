@@ -1,0 +1,25 @@
+{% load i18n misago_forms %}
+
+{% with field=form.question %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Question:" context "posting poll form" %}
+    </label>
+    <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" />
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endwith %}
+{% with field=form.choices %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Choices:" context "posting poll form" %}
+    </label>
+    <textarea type="text" class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" rows="4">{{ field.value|default:'' }}</textarea>
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+    <p class="help-block">{% translate "Enter every choice in a new line." context "posting poll form" %}</p>
+  </div>
+{% endwith %}

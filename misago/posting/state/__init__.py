@@ -12,6 +12,7 @@ from .reply import (
     get_reply_thread_state,
 )
 from .start import (
+    StartPostingState,
     StartPrivateThreadState,
     StartThreadState,
     get_start_private_thread_state,
@@ -24,6 +25,7 @@ __all__ = [
     "PostingState",
     "ReplyPrivateThreadState",
     "ReplyThreadState",
+    "StartPostingState",
     "StartPrivateThreadState",
     "StartThreadState",
     "get_edit_private_thread_post_state",
