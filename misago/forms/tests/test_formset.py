@@ -50,49 +50,42 @@ def test_formset_add_form_raises_value_error_if_form_with_prefix_already_exists(
     assert "is already a part of this formset" in str(exc_info.value)
 
 
-def test_formset_add_form_inserts_form_after_other():
+def test_formset_add_form_after_inserts_form_after_other():
     formset = Formset()
     formset.add_form(UserForm(prefix="user"))
-    formset.add_form(AgeForm(prefix="age"), after="user")
+    formset.add_form_after(AgeForm(prefix="age"), "user")
 
     prefixes = [form.prefix for form in formset.get_forms()]
     assert prefixes == ["user", "age"]
 
 
-def test_formset_add_form_inserts_form_before_other():
+def test_formset_add_form_before_inserts_form_before_other():
     formset = Formset()
     formset.add_form(UserForm(prefix="user"))
-    formset.add_form(AgeForm(prefix="age"), before="user")
+    formset.add_form_before(AgeForm(prefix="age"), "user")
 
     prefixes = [form.prefix for form in formset.get_forms()]
     assert prefixes == ["age", "user"]
 
 
-def test_formset_add_form_raises_value_error_if_both_after_and_before_are_used():
+def test_formset_add_form_after_raises_value_error_if_after_value_is_invalid():
+    formset = Formset()
+    formset.add_form(UserForm(prefix="user"))
+
     with pytest.raises(ValueError) as exc_info:
-        formset = Formset()
-        formset.add_form(UserForm(prefix="user"))
-        formset.add_form(AgeForm(prefix="age"), after="user", before="user")
-
-    assert "'after' and 'before' arguments can't be combined." in str(exc_info.value)
-
-
-def test_formset_add_form_raises_value_error_if_after_value_is_invalid():
-    with pytest.raises(ValueError) as exc_info:
-        formset = Formset()
-        formset.add_form(UserForm(prefix="user"))
-        formset.add_form(AgeForm(prefix="age"), after="invalid")
+        formset.add_form_after(AgeForm(prefix="age"), "invalid")
 
     assert "Form with prefix 'invalid' doesn't exist in this formset." in str(
         exc_info.value
     )
 
 
-def test_formset_add_form_raises_value_error_if_before_value_is_invalid():
+def test_formset_add_form_before_raises_value_error_if_before_value_is_invalid():
+    formset = Formset()
+    formset.add_form(UserForm(prefix="user"))
+
     with pytest.raises(ValueError) as exc_info:
-        formset = Formset()
-        formset.add_form(UserForm(prefix="user"))
-        formset.add_form(AgeForm(prefix="age"), after="invalid")
+        formset.add_form_before(AgeForm(prefix="age"), "invalid")
 
     assert "Form with prefix 'invalid' doesn't exist in this formset." in str(
         exc_info.value

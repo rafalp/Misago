@@ -1,6 +1,6 @@
-from functools import cached_property
-
 from django.forms import Form
+
+from ..collections.dicts import set_after_key, set_before_key
 
 
 class Formset:
@@ -9,6 +9,8 @@ class Formset:
     Used by views and templates that display multiple forms that should be validated
     together.
     """
+
+    forms: dict[str, Form]
 
     def __init__(self):
         self.forms: dict[str, Form] = {}
@@ -28,43 +30,38 @@ class Formset:
     def get_forms(self) -> list[Form]:
         return list(self.forms.values())
 
-    def add_form(
-        self, form: Form, *, after: str | None = None, before: str | None = None
-    ):
+    def add_form(self, form: Form):
+        self._validate_new_form(form)
+        self.forms[form.prefix] = form
+
+    def add_form_after(self, form: Form, after: str):
+        self._validate_new_form(form)
+
+        if after not in self.forms:
+            raise ValueError(
+                f"Form with prefix '{after}' doesn't exist in this formset."
+            )
+
+        self.forms = set_after_key(self.forms, after, form.prefix, form)
+
+    def add_form_before(self, form: Form, before: str):
+        self._validate_new_form(form)
+
+        if before not in self.forms:
+            raise ValueError(
+                f"Form with prefix '{before}' doesn't exist in this formset."
+            )
+
+        self.forms = set_before_key(self.forms, before, form.prefix, form)
+
+    def _validate_new_form(self, form: Form):
         if not form.prefix:
             raise ValueError("Forms added to 'Formset' must have a prefix.")
+
         if form.prefix in self.forms:
             raise ValueError(
                 f"Form with prefix '{form.prefix}' is already a part of this formset."
             )
-
-        if after and before:
-            raise ValueError("'after' and 'before' arguments can't be combined.")
-
-        if after or before:
-            self._add_form_at_position(form, after=after, before=before)
-        else:
-            self.forms[form.prefix] = form
-
-    def _add_form_at_position(
-        self, form: Form, *, after: str | None = None, before: str | None = None
-    ):
-        if (after or before) not in self.forms:
-            raise ValueError(
-                f"Form with prefix '{after or before}' doesn't exist in this formset."
-            )
-
-        new_forms: dict[str, Form] = {}
-        for form_id, form_obj in self.forms.items():
-            if form_id == before:
-                new_forms[form.prefix] = form
-
-            new_forms[form_id] = form_obj
-
-            if form_id == after:
-                new_forms[form.prefix] = form
-
-        self.forms = new_forms
 
     @property
     def is_bound(self) -> bool:

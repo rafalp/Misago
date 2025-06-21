@@ -25,7 +25,9 @@ class TitleForm(PostingForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
+
         super().__init__(*args, **kwargs)
+
         self.fields["title"].max_length = self.request.settings.thread_title_length_max
 
     def clean_title(self):

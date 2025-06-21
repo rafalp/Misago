@@ -4,7 +4,7 @@ from django.db import models, transaction
 from django.http import HttpRequest
 
 from ...categories.models import Category
-from ...core.utils import slugify
+from ...polls.models import Poll
 from ...threads.checksums import update_post_checksum
 from ...threads.models import ThreadParticipant
 from ..hooks import (
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from ...users.models import User
 
 
-class StartThreadState(PostingState):
+class StartPostingState(PostingState):
     def __init__(self, request: HttpRequest, category: Category):
         super().__init__(request)
 
@@ -36,7 +36,7 @@ class StartThreadState(PostingState):
 
         save_start_thread_state_hook(self.save_action, self.request, self)
 
-    def save_action(self, request: HttpRequest, state: "StartThreadState"):
+    def save_action(self, request: HttpRequest, state: "StartPostingState"):
         self.save_thread()
         self.save_post()
         self.save_attachments()
@@ -72,7 +72,31 @@ class StartThreadState(PostingState):
         self.update_object(self.user)
 
 
-class StartPrivateThreadState(StartThreadState):
+class StartThreadState(StartPostingState):
+    poll: Poll | None
+
+    def __init__(self, request: HttpRequest, category: Category):
+        super().__init__(request, category)
+
+        self.poll = None
+
+    def set_poll(self, poll: Poll):
+        self.poll = poll
+
+    def save_action(self, request: HttpRequest, state: "StartPrivateThreadState"):
+        if self.poll:
+            self.thread.has_poll = True
+
+        super().save_action(request, state)
+
+        if self.poll:
+            self.save_poll()
+
+    def save_poll(self):
+        self.poll.save()
+
+
+class StartPrivateThreadState(StartPostingState):
     invite_users: list["User"]
 
     def __init__(self, request: HttpRequest, category: Category):
