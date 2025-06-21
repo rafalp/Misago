@@ -47,13 +47,15 @@ def test_formset_add_form_raises_value_error_if_form_with_prefix_already_exists(
         formset.add_form(UserForm(prefix="user"))
         formset.add_form(AgeForm(prefix="user"))
 
-    assert "is already a part of this formset" in str(exc_info.value)
+    assert str(exc_info.value) == (
+        "Form with prefix 'user' is already part of this formset."
+    )
 
 
 def test_formset_add_form_after_inserts_form_after_other():
     formset = Formset()
     formset.add_form(UserForm(prefix="user"))
-    formset.add_form_after(AgeForm(prefix="age"), "user")
+    formset.add_form_after("user", AgeForm(prefix="age"))
 
     prefixes = [form.prefix for form in formset.get_forms()]
     assert prefixes == ["user", "age"]
@@ -62,7 +64,7 @@ def test_formset_add_form_after_inserts_form_after_other():
 def test_formset_add_form_before_inserts_form_before_other():
     formset = Formset()
     formset.add_form(UserForm(prefix="user"))
-    formset.add_form_before(AgeForm(prefix="age"), "user")
+    formset.add_form_before("user", AgeForm(prefix="age"))
 
     prefixes = [form.prefix for form in formset.get_forms()]
     assert prefixes == ["age", "user"]
@@ -73,10 +75,10 @@ def test_formset_add_form_after_raises_value_error_if_after_value_is_invalid():
     formset.add_form(UserForm(prefix="user"))
 
     with pytest.raises(ValueError) as exc_info:
-        formset.add_form_after(AgeForm(prefix="age"), "invalid")
+        formset.add_form_after("invalid", AgeForm(prefix="age"))
 
-    assert "Form with prefix 'invalid' doesn't exist in this formset." in str(
-        exc_info.value
+    assert str(exc_info.value) == (
+        "Formset does not contain a form with prefix 'invalid'."
     )
 
 
@@ -85,10 +87,10 @@ def test_formset_add_form_before_raises_value_error_if_before_value_is_invalid()
     formset.add_form(UserForm(prefix="user"))
 
     with pytest.raises(ValueError) as exc_info:
-        formset.add_form_before(AgeForm(prefix="age"), "invalid")
+        formset.add_form_before("invalid", AgeForm(prefix="age"))
 
-    assert "Form with prefix 'invalid' doesn't exist in this formset." in str(
-        exc_info.value
+    assert str(exc_info.value) == (
+        "Formset does not contain a form with prefix 'invalid'."
     )
 
 

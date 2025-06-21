@@ -1,7 +1,7 @@
 from typing import Any
 
 
-def set_before_key(src: dict, before: Any, key: Any, value: Any) -> dict:
+def set_key_before(src: dict, before: Any, key: Any, value: Any) -> dict:
     if before not in src:
         raise KeyError(before)
 
@@ -14,7 +14,7 @@ def set_before_key(src: dict, before: Any, key: Any, value: Any) -> dict:
     return new_dict
 
 
-def set_after_key(src: dict, after: Any, key: Any, value: Any) -> dict:
+def set_key_after(src: dict, after: Any, key: Any, value: Any) -> dict:
     if after not in src:
         raise KeyError(after)
 

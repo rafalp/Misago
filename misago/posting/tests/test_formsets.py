@@ -1,5 +1,6 @@
 from unittest.mock import Mock
 
+import pytest
 from django.http import HttpRequest
 
 from ...attachments.enums import AllowedAttachments
@@ -9,6 +10,7 @@ from ...permissions.proxy import UserPermissionsProxy
 from ..forms import PostForm, PostingForm
 from ..formsets import (
     PostingFormset,
+    TabbedPostingFormset,
     get_edit_private_thread_formset,
     get_edit_private_thread_post_formset,
     get_edit_thread_formset,
@@ -71,6 +73,160 @@ def test_posting_formset_is_request_upload_method_returns_true_for_post_request_
     request = rf.post("/", {PostForm.upload_action: "1"})
     formset = PostingFormset()
     formset.add_form(UploadForm(prefix="test"))
+
+    assert formset.is_request_upload(request)
+
+
+def test_tabbed_posting_formset_add_tab_adds_new_tab():
+    formset = TabbedPostingFormset()
+    tab = formset.add_tab("test", "Test tab")
+    assert formset.get_tabs() == [tab]
+
+
+def test_tabbed_posting_formset_add_tab_after_adds_new_tab_after_other_one():
+    formset = TabbedPostingFormset()
+    tab1 = formset.add_tab("apple", "Apple")
+    tab2 = formset.add_tab("orange", "Orange")
+    tab3 = formset.add_tab_after("apple", "watermelon", "Watermelon")
+    assert formset.get_tabs() == [tab1, tab3, tab2]
+
+
+def test_tabbed_posting_formset_add_tab_after_raises_value_error_if_tab_doesnt_exist():
+    formset = TabbedPostingFormset()
+
+    with pytest.raises(ValueError) as exc_info:
+        formset.add_tab_after("apple", "watermelon", "Watermelon")
+
+    assert str(exc_info.value) == "Formset does not contain a tab with ID 'apple'."
+
+
+def test_tabbed_posting_formset_add_tab_before_adds_new_tab_before_other_one():
+    formset = TabbedPostingFormset()
+    tab1 = formset.add_tab("apple", "Apple")
+    tab2 = formset.add_tab("orange", "Orange")
+    tab3 = formset.add_tab_before("orange", "watermelon", "Watermelon")
+    assert formset.get_tabs() == [tab1, tab3, tab2]
+
+
+def test_tabbed_posting_formset_add_tab_before_raises_value_error_if_tab_doesnt_exist():
+    formset = TabbedPostingFormset()
+
+    with pytest.raises(ValueError) as exc_info:
+        formset.add_tab_before("orange", "watermelon", "Watermelon")
+
+    assert str(exc_info.value) == "Formset does not contain a tab with ID 'orange'."
+
+
+def test_tabbed_posting_formset_add_form_adds_form_to_a_tab():
+    formset = TabbedPostingFormset()
+    tab = formset.add_tab("test", "Test")
+    form = formset.add_form("test", UploadForm(prefix="upload"))
+    assert formset.get_tabs() == [tab]
+    assert tab.get_forms() == [form]
+
+
+def test_tabbed_posting_formset_add_form_raises_value_error_if_tab_is_invalid():
+    formset = TabbedPostingFormset()
+
+    with pytest.raises(ValueError) as exc_info:
+        formset.add_form("invalid", UploadForm(prefix="upload"))
+
+    assert str(exc_info.value) == "Formset does not contain a tab with ID 'invalid'."
+
+
+def test_tabbed_posting_formset_add_form_after_adds_form_after_other_one():
+    formset = TabbedPostingFormset()
+    tab = formset.add_tab("test", "Test")
+    form1 = formset.add_form("test", UploadForm(prefix="apple"))
+    form2 = formset.add_form("test", UploadForm(prefix="orange"))
+    form3 = formset.add_form_after("test", "apple", UploadForm(prefix="watermelon"))
+    assert formset.get_tabs() == [tab]
+    assert tab.get_forms() == [form1, form3, form2]
+
+
+def test_tabbed_posting_formset_add_form_after_raises_value_error_if_tab_doesnt_exist():
+    formset = TabbedPostingFormset()
+
+    with pytest.raises(ValueError) as exc_info:
+        formset.add_form_after("invalid", "apple", UploadForm(prefix="watermelon"))
+
+    assert str(exc_info.value) == "Formset does not contain a tab with ID 'invalid'."
+
+
+def test_tabbed_posting_formset_add_form_before_adds_form_before_other_one():
+    formset = TabbedPostingFormset()
+    tab = formset.add_tab("test", "Test")
+    form1 = formset.add_form("test", UploadForm(prefix="apple"))
+    form2 = formset.add_form("test", UploadForm(prefix="orange"))
+    form3 = formset.add_form_before("test", "orange", UploadForm(prefix="watermelon"))
+    assert formset.get_tabs() == [tab]
+    assert tab.get_forms() == [form1, form3, form2]
+
+
+def test_tabbed_posting_formset_add_form_before_raises_value_error_if_tab_doesnt_exist():
+    formset = TabbedPostingFormset()
+
+    with pytest.raises(ValueError) as exc_info:
+        formset.add_form_before("invalid", "apple", UploadForm(prefix="watermelon"))
+
+    assert str(exc_info.value) == "Formset does not contain a tab with ID 'invalid'."
+
+
+def test_tabbed_posting_formset_is_request_preview_method_returns_false_for_not_post_request(
+    rf,
+):
+    request = rf.get("/")
+    formset = TabbedPostingFormset()
+    assert not formset.is_request_preview(request)
+
+
+def test_tabbed_posting_formset_is_request_preview_method_returns_false_for_post_request_without_preview(
+    rf,
+):
+    request = rf.post("/")
+    formset = TabbedPostingFormset()
+    assert not formset.is_request_preview(request)
+
+
+def test_tabbed_posting_formset_is_request_preview_method_returns_true_for_post_request(
+    rf,
+):
+    request = rf.post("/", {TabbedPostingFormset.preview_action: "1"})
+    formset = TabbedPostingFormset()
+    assert formset.is_request_preview(request)
+
+
+def test_tabbed_posting_formset_is_request_upload_method_returns_false_for_not_post_request(
+    rf,
+):
+    request = rf.get("/")
+    formset = TabbedPostingFormset()
+    assert not formset.is_request_upload(request)
+
+
+class UploadForm(PostingForm):
+    def is_request_upload(self, request: HttpRequest) -> bool:
+        return PostForm.is_request_upload(request)
+
+
+def test_tabbed_posting_formset_is_request_upload_method_returns_false_for_post_request_without_upload(
+    rf,
+):
+    request = rf.post("/")
+    formset = TabbedPostingFormset()
+    formset.add_tab("test", "Test")
+    formset.add_form("test", UploadForm(prefix="test"))
+
+    assert not formset.is_request_upload(request)
+
+
+def test_tabbed_posting_formset_is_request_upload_method_returns_true_for_post_request_with_upload(
+    rf,
+):
+    request = rf.post("/", {PostForm.upload_action: "1"})
+    formset = TabbedPostingFormset()
+    formset.add_tab("test", "Test")
+    formset.add_form("test", UploadForm(prefix="test"))
 
     assert formset.is_request_upload(request)
 

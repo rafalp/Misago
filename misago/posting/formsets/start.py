@@ -16,14 +16,14 @@ from ..forms import (
     create_title_form,
 )
 from ..hooks import get_start_private_thread_formset_hook, get_start_thread_formset_hook
-from .formset import TabbedPostingFormset
+from .formset import PostingFormset, TabbedPostingFormset
 
 
 class StartThreadFormset(TabbedPostingFormset):
     pass
 
 
-class StartPrivateThreadFormset(TabbedPostingFormset):
+class StartPrivateThreadFormset(PostingFormset):
     pass
 
 
@@ -43,15 +43,18 @@ def _get_start_thread_formset_action(
         StartThreadFormsetTabs.CONTENT, pgettext("start thread tab", "Content")
     )
 
-    formset.add_form(create_title_form(request), StartThreadFormsetTabs.CONTENT)
     formset.add_form(
+        StartThreadFormsetTabs.CONTENT,
+        create_title_form(request),
+    )
+    formset.add_form(
+        StartThreadFormsetTabs.CONTENT,
         create_post_form(
             request,
             can_upload_attachments=can_upload_threads_attachments(
                 request.user_permissions, category
             ),
         ),
-        StartThreadFormsetTabs.CONTENT,
     )
 
     with check_permissions() as can_start_poll:
@@ -61,7 +64,10 @@ def _get_start_thread_formset_action(
         formset.add_tab(
             StartThreadFormsetTabs.POLL, pgettext("start thread tab", "Poll")
         )
-        formset.add_form(create_poll_form(request), StartThreadFormsetTabs.POLL)
+        formset.add_form(
+            StartThreadFormsetTabs.POLL,
+            create_poll_form(request),
+        )
 
     return formset
 

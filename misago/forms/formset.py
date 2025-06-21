@@ -1,6 +1,6 @@
 from django.forms import Form
 
-from ..collections.dicts import set_after_key, set_before_key
+from ..collections.dicts import set_key_after, set_key_before
 
 
 class Formset:
@@ -30,37 +30,36 @@ class Formset:
     def get_forms(self) -> list[Form]:
         return list(self.forms.values())
 
-    def add_form(self, form: Form):
-        self._validate_new_form(form)
+    def add_form(self, form: Form) -> Form:
+        self.validate_new_form(form)
         self.forms[form.prefix] = form
+        return form
 
-    def add_form_after(self, form: Form, after: str):
-        self._validate_new_form(form)
+    def add_form_after(self, after: str, form: Form) -> Form:
+        self.validate_new_form(form)
 
         if after not in self.forms:
-            raise ValueError(
-                f"Form with prefix '{after}' doesn't exist in this formset."
-            )
+            raise ValueError(f"Formset does not contain a form with prefix '{after}'.")
 
-        self.forms = set_after_key(self.forms, after, form.prefix, form)
+        self.forms = set_key_after(self.forms, after, form.prefix, form)
+        return form
 
-    def add_form_before(self, form: Form, before: str):
-        self._validate_new_form(form)
+    def add_form_before(self, before: str, form: Form) -> Form:
+        self.validate_new_form(form)
 
         if before not in self.forms:
-            raise ValueError(
-                f"Form with prefix '{before}' doesn't exist in this formset."
-            )
+            raise ValueError(f"Formset does not contain a form with prefix '{before}'.")
 
-        self.forms = set_before_key(self.forms, before, form.prefix, form)
+        self.forms = set_key_before(self.forms, before, form.prefix, form)
+        return form
 
-    def _validate_new_form(self, form: Form):
+    def validate_new_form(self, form: Form):
         if not form.prefix:
             raise ValueError("Forms added to 'Formset' must have a prefix.")
 
         if form.prefix in self.forms:
             raise ValueError(
-                f"Form with prefix '{form.prefix}' is already a part of this formset."
+                f"Form with prefix '{form.prefix}' is already part of this formset."
             )
 
     @property
