@@ -28,24 +28,33 @@
           </h3>
         </div>
         {% if formset.has_multiple_tabs %}
-          <div class="panel-body">
+          <div class="panel-body tab-group">
             {% include "misago/posting/errors.html" %}
-            <div>
-              {% for tab in formset.get_tabs %}
-                <a href="#{{ tab.html_id }}" class="btn btn-primary">
-                  {{ tab }}
-                </a>
-              {% endfor %}
+            <div class="tab-group-nav">
+              <div class="tab-group-nav-scroll">
+                {% for tab in formset.get_tabs %}
+                  <a
+                    href="#{{ tab.id }}"
+                    class="tab-group-nav-item{% if formset.is_bound and not tab.is_valid %} tab-group-nav-item-error{% endif %}{% if forloop.first %} active{% endif %}"
+                    title="{% if formset.is_bound and not tab.is_valid %}{% translate 'Has errors' context 'posting form' %}{% endif %}"
+                  >
+                    {% if formset.is_bound and not tab.is_valid %}
+                      <span class="tab-group-nav-bullet-danger"></span>
+                    {% endif %}
+                    {{ tab }}
+                  </a>
+                {% endfor %}
+              </div>
             </div>
+            {% for tab in formset.get_tabs %}
+              <div class="tab-group-tab{% if forloop.first %} visible{% endif %}" misago-tab-group-tab="{{ tab.id }}">
+                <h4 class="tab-group-tab-header">{{ tab }}</h4>
+                {% for form in tab.get_forms %}
+                  {% include form.template_name with form=form post_control_large=True %}
+                {% endfor %}
+              </div>
+            {% endfor %}
           </div>
-          {% for tab in formset.get_tabs %}
-            <div class="panel-body" id="{{ tab.html_id }}" misago-form-tab>
-              <h4>{{ tab }}</h4>
-              {% for form in tab.get_forms %}
-                {% include form.template_name with form=form post_control_large=True %}
-              {% endfor %}
-            </div>
-          {% endfor %}
         {% else %}
           <div class="panel-body">
             {% include "misago/posting/errors.html" %}
@@ -74,25 +83,3 @@
 {% include "misago/posting/attachment_templates.html" %}
 {% include "misago/lightbox/index.html" %}
 {% endblock modals %}
-
-
-{% block javascript %}
-<script type="text/javascript">
-  document.querySelectorAll("[misago-form-tab]").forEach(function(element, key) {
-    if (key) {
-      element.classList.add("d-none")
-    }
-  })
-
-  window.onhashchange = function() {
-    const newTabID = location.hash.substring(1)
-    document.querySelectorAll("[misago-form-tab]").forEach(function(element) {
-      if (element.id === newTabID) {
-        element.classList.remove("d-none")
-      } else {
-        element.classList.add("d-none")
-      }
-    })
-  }
-</script>
-{% endblock javascript %}

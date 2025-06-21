@@ -21,6 +21,7 @@ import "./pagination"
 import quote from "./Quote"
 import "./richtext"
 import * as snackbars from "./snackbars"
+import { updateTabGroups } from "./TabGroups"
 import "./scrollTo"
 import "./timestamps"
 
@@ -32,6 +33,8 @@ export class Misago {
     this._initializers = []
     this._context = {}
 
+    this.htmx = htmx
+
     this.loader = loader
     this.editor = editor
     this.lightbox = lightbox
@@ -39,6 +42,8 @@ export class Misago {
 
     this.deleteElement = deleteElement
     this.slideUpElement = slideUpElement
+
+    this.updateTabGroups = updateTabGroups
   }
 
   addInitializer(initializer) {

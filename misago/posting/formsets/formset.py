@@ -163,4 +163,4 @@ class PostingFormsetTab(Formset):
 
     @property
     def html_id(self):
-        return f"formset_tab_{self.id}"
+        return f"tab-{self.id}"

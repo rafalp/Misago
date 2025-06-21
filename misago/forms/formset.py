@@ -1,3 +1,5 @@
+from functools import cached_property
+
 from django.forms import Form
 
 from ..collections.dicts import set_key_after, set_key_before
@@ -62,13 +64,15 @@ class Formset:
                 f"Form with prefix '{form.prefix}' is already part of this formset."
             )
 
-    @property
+    @cached_property
     def is_bound(self) -> bool:
         return all([form.is_bound for form in self.forms.values()])
 
+    @cached_property
     def is_valid(self) -> bool:
         return all([form.is_valid() for form in self.forms.values()])
 
+    @cached_property
     def non_field_errors(self):
         errors = []
         for form in self.forms.values():
