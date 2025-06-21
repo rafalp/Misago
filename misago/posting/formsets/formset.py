@@ -66,7 +66,7 @@ class TabbedPostingFormset(PostingFormset):
         super().__init__()
         self.tabs = {}
 
-    def get_tabs(self) -> list[Form]:
+    def get_tabs(self) -> list["PostingFormsetTab"]:
         return list(self.tabs.values())
 
     def add_tab(self, tab_id: str, name: str) -> "PostingFormsetTab":

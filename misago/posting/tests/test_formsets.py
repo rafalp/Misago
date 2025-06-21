@@ -153,6 +153,21 @@ def test_tabbed_posting_formset_add_form_after_raises_value_error_if_tab_doesnt_
     assert str(exc_info.value) == "Formset does not contain a tab with ID 'invalid'."
 
 
+def test_tabbed_posting_formset_add_form_after_raises_value_error_if_form_doesnt_exist_in_tab():
+    formset = TabbedPostingFormset()
+    formset.add_tab("first", "Test1")
+    formset.add_tab("second", "Test2")
+    formset.add_form("first", UploadForm(prefix="apple"))
+
+    with pytest.raises(ValueError) as exc_info:
+        formset.add_form_after("second", "apple", UploadForm(prefix="watermelon"))
+
+    assert (
+        str(exc_info.value)
+        == "Tab 'second' does not contain a form with prefix 'apple'."
+    )
+
+
 def test_tabbed_posting_formset_add_form_before_adds_form_before_other_one():
     formset = TabbedPostingFormset()
     tab = formset.add_tab("test", "Test")
@@ -170,6 +185,21 @@ def test_tabbed_posting_formset_add_form_before_raises_value_error_if_tab_doesnt
         formset.add_form_before("invalid", "apple", UploadForm(prefix="watermelon"))
 
     assert str(exc_info.value) == "Formset does not contain a tab with ID 'invalid'."
+
+
+def test_tabbed_posting_formset_add_form_before_raises_value_error_if_form_doesnt_exist_in_tab():
+    formset = TabbedPostingFormset()
+    formset.add_tab("first", "Test1")
+    formset.add_tab("second", "Test2")
+    formset.add_form("first", UploadForm(prefix="apple"))
+
+    with pytest.raises(ValueError) as exc_info:
+        formset.add_form_before("second", "apple", UploadForm(prefix="watermelon"))
+
+    assert (
+        str(exc_info.value)
+        == "Tab 'second' does not contain a form with prefix 'apple'."
+    )
 
 
 def test_tabbed_posting_formset_is_request_preview_method_returns_false_for_not_post_request(
