@@ -69,7 +69,7 @@ def check_edit_thread_poll_permission_action(
     ...
 ```
 
-A standard Misago function used to check if the user has permission to edit   a thread poll. Raises Django's `PermissionDenied` exception with an error message if the user lacks permission.
+A standard Misago function used to check if the user has permission to edit a thread poll. Raises Django's `PermissionDenied` exception with an error message if the user lacks permission.
 
 
 ### Arguments

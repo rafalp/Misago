@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from django.utils import timezone
 
+from ..core.utils import slugify
 from ..users.models import User
 
 
@@ -33,7 +34,7 @@ def unpack_factory_user_arg(
     user: FactoryUserArg, default: str = "User"
 ) -> tuple[User, str, str | None]:
     if isinstance(user, str):
-        return None, user, None
+        return None, user, slugify(user)
 
     if isinstance(user, User):
         return user, user.username, user.slug

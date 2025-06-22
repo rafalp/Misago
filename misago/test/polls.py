@@ -61,7 +61,7 @@ def poll_factory():
             thread.has_poll = True
             thread.save(update_fields=["has_poll"])
 
-        return Poll(
+        return Poll.objects.create(
             category_id=thread.category_id,
             thread=thread,
             starter=starter_obj,

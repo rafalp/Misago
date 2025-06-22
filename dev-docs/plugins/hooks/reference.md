@@ -119,6 +119,7 @@ Hooks instances are importable from the following Python modules:
 
 `misago.polls.hooks` defines the following hooks:
 
+- [`delete_poll_hook`](./delete-poll-hook.md)
 
 
 ## `misago.posting.hooks`
