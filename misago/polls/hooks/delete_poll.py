@@ -18,7 +18,7 @@ class DeletePollHookAction(Protocol):
 
     ## `request: HttpRequest | None`
 
-    The request object or `None` if it was not provided.
+    The request object, or None if not provided.
     """
 
     def __call__(self, poll: Poll, request: HttpRequest | None) -> None: ...
@@ -36,8 +36,6 @@ class DeletePollHookFilter(Protocol):
     Misago's standard one.
 
     See the [action](#action) section for details.
-
-    ## `user_permissions: UserPermissionsProxy`
 
     ## `poll: Poll`
 

@@ -1,8 +1,9 @@
 from django import forms
 from django.http import HttpRequest
 from django.utils.crypto import get_random_string
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import pgettext
 
+from ...polls.choices import PollChoices
 from ...polls.models import Poll
 from ..state import StartThreadState
 from .base import PostingForm
@@ -14,35 +15,46 @@ class PollForm(PostingForm):
 
     request: HttpRequest
 
-    question = forms.CharField(max_length=255, required=False)
+    question = forms.CharField(min_length=5, max_length=255, required=False)
     choices = forms.CharField(max_length=255, required=False)
-    # length = models.PositiveIntegerField(default=0)
-    # max_choices = models.PositiveIntegerField(default=1)
-    # can_change_vote = models.BooleanField(default=False)
-    # is_public = models.BooleanField(default=False)
+    length = forms.IntegerField(initial=0, min_value=0, max_value=1825, required=False)
+    max_choices = forms.IntegerField(initial=1, min_value=1, required=False)
+    can_change_vote = forms.BooleanField(required=False)
+    is_public = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
 
         super().__init__(*args, **kwargs)
 
+    def clean(self):
+        cleaned_data = super().clean()
+
+        question = cleaned_data.get("question")
+        choices = cleaned_data.get("choices")
+
+        if not cleaned_data["question"] and not cleaned_data["choices"]:
+            return cleaned_data
+
+        if not question:
+            self.add_error(
+                "question", pgettext("form validation", "This field is required.")
+            )
+
+        if not choices:
+            self.add_error(
+                "choices", pgettext("form validation", "This field is required.")
+            )
+
+        return cleaned_data
+
     def update_state(self, state: StartThreadState):
-        if not self.cleaned_data["question"] or not self.cleaned_data["choices"]:
+        if not self.cleaned_data["question"] and not self.cleaned_data["choices"]:
             return
 
-        choices_list = []
-        for choice in self.cleaned_data["choices"].splitlines():
-            choice = choice.strip()
-            if not choice:
-                continue
-
-            choices_list.append(
-                {
-                    "id": get_random_string(8),
-                    "name": choice,
-                    "votes": 0,
-                }
-            )
+        choices_json = PollChoices.from_sequence(
+            self.cleaned_data["choices"].splitlines()
+        ).to_json()
 
         poll = Poll(
             category=state.category,
@@ -51,7 +63,11 @@ class PollForm(PostingForm):
             starter_name=state.user.username,
             starter_slug=state.user.slug,
             question=self.cleaned_data["question"],
-            choices=choices_list,
+            choices=choices_json,
+            length=self.cleaned_data.get("length", 0),
+            max_choices=self.cleaned_data.get("max_choices", 1),
+            can_change_vote=self.cleaned_data.get("can_change_vote") or False,
+            is_public=self.cleaned_data.get("is_public") or False,
         )
 
         state.set_poll(poll)

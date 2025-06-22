@@ -31,10 +31,7 @@ class StartPostingState(PostingState):
 
     @transaction.atomic()
     def save(self):
-        self.thread.save()
-        self.post.save()
-
-        save_start_thread_state_hook(self.save_action, self.request, self)
+        raise NotImplementedError()
 
     def save_action(self, request: HttpRequest, state: "StartPostingState"):
         self.save_thread()
@@ -82,11 +79,16 @@ class StartThreadState(StartPostingState):
 
     def set_poll(self, poll: Poll):
         self.poll = poll
+        self.thread.has_poll = True
+
+    @transaction.atomic()
+    def save(self):
+        self.thread.save()
+        self.post.save()
+
+        save_start_thread_state_hook(self.save_action, self.request, self)
 
     def save_action(self, request: HttpRequest, state: "StartPrivateThreadState"):
-        if self.poll:
-            self.thread.has_poll = True
-
         super().save_action(request, state)
 
         if self.poll:
@@ -101,6 +103,7 @@ class StartPrivateThreadState(StartPostingState):
 
     def __init__(self, request: HttpRequest, category: Category):
         super().__init__(request, category)
+
         self.invite_users: list["User"] = []
 
     def set_invite_users(self, users: list["User"]):
