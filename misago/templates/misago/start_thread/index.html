@@ -36,7 +36,7 @@
                   <a
                     href="#{{ tab.id }}"
                     class="tab-group-nav-item{% if formset.is_bound and not tab.is_valid %} tab-group-nav-item-error{% endif %}{% if forloop.first %} active{% endif %}"
-                    title="{% if formset.is_bound and not tab.is_valid %}{% translate 'Has errors' context 'posting form' %}{% endif %}"
+                    {% if formset.is_bound and not tab.is_valid %}title="{% translate 'Contains validation errors' context 'posting form' %}"{% endif %}
                   >
                     {% if formset.is_bound and not tab.is_valid %}
                       <span class="tab-group-nav-bullet-danger"></span>
