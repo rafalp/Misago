@@ -17,7 +17,9 @@ class PollForm(PostingForm):
 
     question = forms.CharField(min_length=5, max_length=255, required=False)
     choices = forms.CharField(max_length=255, required=False)
-    length = forms.IntegerField(initial=0, min_value=0, max_value=1825, required=False)
+    duration = forms.IntegerField(
+        initial=0, min_value=0, max_value=1825, required=False
+    )
     max_choices = forms.IntegerField(initial=1, min_value=1, required=False)
     can_change_vote = forms.BooleanField(required=False)
     is_public = forms.BooleanField(required=False)
@@ -64,7 +66,7 @@ class PollForm(PostingForm):
             starter_slug=state.user.slug,
             question=self.cleaned_data["question"],
             choices=choices_json,
-            length=self.cleaned_data.get("length", 0),
+            length=self.cleaned_data.get("duration", 0),
             max_choices=self.cleaned_data.get("max_choices", 1),
             can_change_vote=self.cleaned_data.get("can_change_vote") or False,
             is_public=self.cleaned_data.get("is_public") or False,

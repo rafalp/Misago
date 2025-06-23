@@ -14,6 +14,21 @@ class Migration(migrations.Migration):
 
     operations = [
         CreateSetting(
+            setting="poll_question_min_length",
+            python_type="int",
+            dry_value=8,
+        ),
+        CreateSetting(
+            setting="poll_max_choices",
+            python_type="int",
+            dry_value=10,
+        ),
+        CreateSetting(
+            setting="poll_choice_max_length",
+            python_type="int",
+            dry_value=80,
+        ),
+        CreateSetting(
             setting="allow_public_polls",
             dry_value=AllowedPublicPolls.ALLOWED.value,
         ),

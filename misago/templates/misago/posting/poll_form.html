@@ -22,29 +22,36 @@
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}
-    <p class="help-block">{% translate "Type each poll choice on a separate line." context "posting poll form" %}</p>
+    <p class="help-block">
+      {% translate "Enter one choice per line. Blank lines and duplicates are ignored." context "posting poll form" %}
+    </p>
   </div>
 {% endwith %}
-{% with field=form.length %}
+{% with field=form.duration %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label class="control-label" for="{{ field.id_for_label }}">
-      {% translate "Length:" context "posting poll form" %}
+      {% translate "Duration:" context "posting poll form" %}
     </label>
-    <input type="number" class="form-control" min="{{ field.field.min_value }}" max="{{ field.field.max_value }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" />
+    <div class="input-group" style="max-width: 160px;">
+      <input type="number" class="form-control" min="{{ field.field.min_value }}" max="{{ field.field.max_value }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" />
+      <div class="input-group-addon">{% translate "days" context "posting poll form duration" %}</div>
+    </div>
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}
+    <p class="help-block">{% translate "Enter 0 or leave empty to keep the poll open indefinitely." context "posting poll form" %}</p>
   </div>
 {% endwith %}
 {% with field=form.max_choices %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label class="control-label" for="{{ field.id_for_label }}">
-      {% translate "Max choices:" context "posting poll form" %}
+      {% translate "Maximum choices per vote:" context "posting poll form" %}
     </label>
-    <input type="number" class="form-control" min="{{ field.field.min_value }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'1' }}" />
+    <input type="number" class="form-control" min="{{ field.field.min_value }}" id="{{ field.id_for_label }}" style="width: 80px;" name="{{ field.html_name }}" value="{{ field.value|default:'1' }}" />
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}
+    <p class="help-block">{% translate "Set how many choices each voter is allowed to pick." context "posting poll form" %}</p>
   </div>
 {% endwith %}
 <div class="form-group">

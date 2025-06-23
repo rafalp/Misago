@@ -22,7 +22,7 @@ class Poll(PluginDataModel):
 
     question = models.CharField(max_length=255)
     choices = models.JSONField()
-    length = models.PositiveIntegerField(default=0)
+    duration = models.PositiveIntegerField(default=0)
 
     max_choices = models.PositiveIntegerField(default=1)
     can_change_vote = models.BooleanField(default=False)

@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 started_at,
                 question,
                 choices,
-                length,
+                duration,
                 max_choices,
                 can_change_vote,
                 is_public,
