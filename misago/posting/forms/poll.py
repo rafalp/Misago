@@ -6,7 +6,7 @@ from ...polls.choices import PollChoices
 from ...polls.enums import AllowedPublicPolls
 from ...polls.models import Poll
 from ..state import StartThreadState
-from ..validators import validate_poll_choices
+from ..validators import validate_poll_choices, validate_poll_question
 from .base import PostingForm
 
 
@@ -16,7 +16,7 @@ class PollForm(PostingForm):
 
     request: HttpRequest
 
-    question = forms.CharField(min_length=5, max_length=255, required=False)
+    question = forms.CharField(max_length=255, required=False)
     choices = forms.CharField(max_length=255, required=False)
     duration = forms.IntegerField(
         initial=0, min_value=0, max_value=1825, required=False
@@ -35,10 +35,18 @@ class PollForm(PostingForm):
         self.setup_form_fields(self.request.settings)
 
     def setup_form_fields(self, settings):
-        self.fields["question"].min_length = settings.poll_question_min_length
-
         if settings.allow_public_polls != AllowedPublicPolls.ALLOWED:
             del self.fields["is_public"]
+
+    def clean_question(self):
+        data = self.cleaned_data["question"]
+        validate_poll_question(
+            data,
+            self.request.settings.poll_question_min_length,
+            self.request.settings.poll_question_max_length,
+            self.request,
+        )
+        return data
 
     def clean_choices(self):
         data = self.cleaned_data["choices"]

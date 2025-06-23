@@ -31,6 +31,7 @@ class ContentSettingsForm(SettingsForm):
         "poll_choice_max_length",
         "poll_choice_min_length",
         "poll_max_choices",
+        "poll_question_max_length",
         "poll_question_min_length",
         "post_length_max",
         "post_length_min",
@@ -284,6 +285,12 @@ class ContentSettingsForm(SettingsForm):
     poll_question_min_length = forms.IntegerField(
         label=pgettext_lazy(
             "admin content settings form", "Minimum poll question length"
+        ),
+        min_value=1,
+    )
+    poll_question_max_length = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin content settings form", "Maximum poll question length"
         ),
         min_value=1,
     )

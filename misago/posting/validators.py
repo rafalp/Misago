@@ -157,6 +157,15 @@ def _validate_thread_title_action(
         )
 
 
+def validate_poll_question(
+    value: str,
+    min_length: int,
+    max_length: int,
+    request: HttpRequest | None = None,
+):
+    raise NotImplementedError("TODO")
+
+
 def validate_poll_choices(
     choices: PollChoices,
     max_choices: int,
