@@ -44,14 +44,14 @@ class Poll(PluginDataModel):
 
     @property
     def ends_at(self) -> datetime | None:
-        if not self.length:
+        if not self.duration:
             return None
 
-        return self.started_at + timedelta(days=self.length)
+        return self.started_at + timedelta(days=self.duration)
 
     @property
     def has_ended(self) -> bool:
-        if self.length:
+        if self.duration:
             return timezone.now() >= self.ends_at
 
         return False

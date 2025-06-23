@@ -33,8 +33,6 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `user_permissions: UserPermissionsProxy`
-
 #### `poll: Poll`
 
 The poll to delete.
@@ -64,7 +62,7 @@ The poll to delete.
 
 #### `request: HttpRequest | None`
 
-The request object or `None` if it was not provided.
+The request object, or None if not provided.
 
 
 ## Example

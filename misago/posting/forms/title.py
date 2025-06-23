@@ -36,7 +36,7 @@ class TitleForm(PostingForm):
             data,
             self.request.settings.thread_title_length_min,
             self.request.settings.thread_title_length_max,
-            request=self.request,
+            self.request,
         )
         return data
 

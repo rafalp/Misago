@@ -6,8 +6,10 @@ from django.utils.translation import npgettext, pgettext
 
 from ..core.utils import slugify
 from ..parser.parse import ParsingResult
+from ..polls.choices import PollChoices
 from .floodcontrol import flood_control
 from .hooks import (
+    validate_poll_choices_hook,
     validate_post_hook,
     validate_posted_contents_hook,
     validate_thread_title_hook,
@@ -30,7 +32,6 @@ def validate_post(
     value: ParsingResult,
     min_length: int,
     max_length: int,
-    *,
     request: HttpRequest | None = None,
 ):
     validate_post_hook(
@@ -38,7 +39,7 @@ def validate_post(
         value,
         min_length,
         max_length,
-        request=request,
+        request,
     )
 
 
@@ -46,7 +47,6 @@ def _validate_post_action(
     value: ParsingResult,
     min_length: int,
     max_length: int,
-    *,
     request: HttpRequest | None = None,
 ):
     length = len(value.text)
@@ -91,7 +91,6 @@ def validate_thread_title(
     value: str,
     min_length: int,
     max_length: int,
-    *,
     request: HttpRequest | None = None,
 ):
     validate_thread_title_hook(
@@ -107,7 +106,6 @@ def _validate_thread_title_action(
     value: str,
     min_length: int,
     max_length: int,
-    *,
     request: HttpRequest | None = None,
 ):
     length = len(value)
@@ -157,6 +155,89 @@ def _validate_thread_title_action(
                 "show_value": length,
             },
         )
+
+
+def validate_poll_choices(
+    choices: PollChoices,
+    max_choices: int,
+    choice_min_length: int,
+    choice_max_length: int,
+    request: HttpRequest | None = None,
+):
+    validate_poll_choices_hook(
+        _validate_poll_choices_action,
+        choices,
+        max_choices,
+        choice_min_length,
+        choice_max_length,
+        request,
+    )
+
+
+def _validate_poll_choices_action(
+    choices: PollChoices,
+    max_choices: int,
+    choice_min_length: int,
+    choice_max_length: int,
+    request: HttpRequest,
+):
+    choices_num = len(choices)
+    if choices_num < 2:
+        raise ValidationError(
+            message=pgettext(
+                "poll choices validator",
+                "Poll must have at least two choices.",
+            ),
+            code="invalid",
+        )
+
+    if choices_num > max_choices:
+        raise ValidationError(
+            message=npgettext(
+                "poll choices validator",
+                "Poll cannot have more than %(limit_value)s choice (it currently has %(show_value)s).",
+                "Poll cannot have more than %(limit_value)s choices (it currently has %(show_value)s).",
+                max_choices,
+            ),
+            code="max_choices",
+            params={
+                "limit_value": max_choices,
+                "show_value": choices_num,
+            },
+        )
+
+    for name in choices.get_names():
+        name_length = len(name)
+
+        if name_length < choice_min_length:
+            raise ValidationError(
+                message=npgettext(
+                    "poll choices validator",
+                    "Poll choice should be at least %(limit_value)s character long (it has %(show_value)s).",
+                    "Poll choice should be at least %(limit_value)s characters long (it has %(show_value)s).",
+                    choice_min_length,
+                ),
+                code="min_length",
+                params={
+                    "limit_value": choice_min_length,
+                    "show_value": name_length,
+                },
+            )
+
+        if name_length > choice_max_length:
+            raise ValidationError(
+                message=npgettext(
+                    "poll choices validator",
+                    "Poll choice cannot exceed %(limit_value)s character (it currently has %(show_value)s).",
+                    "Poll choice cannot exceed %(limit_value)s characters (it currently has %(show_value)s).",
+                    choice_max_length,
+                ),
+                code="max_length",
+                params={
+                    "limit_value": choice_max_length,
+                    "show_value": name_length,
+                },
+            )
 
 
 def validate_posted_contents(formset: "PostingFormset", state: "PostingState") -> bool:

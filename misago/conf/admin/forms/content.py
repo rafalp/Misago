@@ -29,6 +29,7 @@ class ContentSettingsForm(SettingsForm):
         "flood_control",
         "merge_concurrent_posts",
         "poll_choice_max_length",
+        "poll_choice_min_length",
         "poll_max_choices",
         "poll_question_min_length",
         "post_length_max",
@@ -291,12 +292,19 @@ class ContentSettingsForm(SettingsForm):
         min_value=2,
         max_value=30,
     )
+    poll_choice_min_length = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin content settings form", "Minimum poll choice length"
+        ),
+        min_value=1,
+        max_value=255,
+    )
     poll_choice_max_length = forms.IntegerField(
         label=pgettext_lazy(
             "admin content settings form", "Maximum poll choice length"
         ),
         min_value=2,
-        max_value=30,
+        max_value=255,
     )
     allow_public_polls = forms.CharField(
         label=pgettext_lazy("admin content settings form", "Allow public polls"),

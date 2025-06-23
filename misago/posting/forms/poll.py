@@ -1,11 +1,12 @@
 from django import forms
 from django.http import HttpRequest
-from django.utils.crypto import get_random_string
 from django.utils.translation import pgettext
 
 from ...polls.choices import PollChoices
+from ...polls.enums import AllowedPublicPolls
 from ...polls.models import Poll
 from ..state import StartThreadState
+from ..validators import validate_poll_choices
 from .base import PostingForm
 
 
@@ -24,10 +25,33 @@ class PollForm(PostingForm):
     can_change_vote = forms.BooleanField(required=False)
     is_public = forms.BooleanField(required=False)
 
+    choices_obj: PollChoices | None
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
 
         super().__init__(*args, **kwargs)
+
+        self.setup_form_fields(self.request.settings)
+
+    def setup_form_fields(self, settings):
+        self.fields["question"].min_length = settings.poll_question_min_length
+
+        if settings.allow_public_polls != AllowedPublicPolls.ALLOWED:
+            del self.fields["is_public"]
+
+    def clean_choices(self):
+        data = self.cleaned_data["choices"]
+        self.choices_obj = PollChoices.from_str(data)
+
+        validate_poll_choices(
+            self.choices_obj,
+            self.request.settings.poll_max_choices,
+            self.request.settings.poll_choice_max_length,
+            self.request,
+        )
+
+        return self.choices_obj.get_str()
 
     def clean(self):
         cleaned_data = super().clean()
@@ -35,15 +59,15 @@ class PollForm(PostingForm):
         question = cleaned_data.get("question")
         choices = cleaned_data.get("choices")
 
-        if not cleaned_data["question"] and not cleaned_data["choices"]:
+        if not question and not choices:
             return cleaned_data
 
-        if not question:
+        if not question and not self.errors.get("question"):
             self.add_error(
                 "question", pgettext("form validation", "This field is required.")
             )
 
-        if not choices:
+        if not choices and not self.errors.get("choices"):
             self.add_error(
                 "choices", pgettext("form validation", "This field is required.")
             )
@@ -51,12 +75,8 @@ class PollForm(PostingForm):
         return cleaned_data
 
     def update_state(self, state: StartThreadState):
-        if not self.cleaned_data["question"] and not self.cleaned_data["choices"]:
+        if not self.cleaned_data["question"] and not self.choices_obj:
             return
-
-        choices_json = PollChoices.from_sequence(
-            self.cleaned_data["choices"].splitlines()
-        ).to_json()
 
         poll = Poll(
             category=state.category,
@@ -65,8 +85,8 @@ class PollForm(PostingForm):
             starter_name=state.user.username,
             starter_slug=state.user.slug,
             question=self.cleaned_data["question"],
-            choices=choices_json,
-            length=self.cleaned_data.get("duration", 0),
+            choices=self.choices_obj.get_json(),
+            duration=self.cleaned_data.get("duration", 0),
             max_choices=self.cleaned_data.get("max_choices", 1),
             can_change_vote=self.cleaned_data.get("can_change_vote") or False,
             is_public=self.cleaned_data.get("is_public") or False,

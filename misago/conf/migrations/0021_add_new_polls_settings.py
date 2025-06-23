@@ -24,6 +24,11 @@ class Migration(migrations.Migration):
             dry_value=10,
         ),
         CreateSetting(
+            setting="poll_choice_min_length",
+            python_type="int",
+            dry_value=3,
+        ),
+        CreateSetting(
             setting="poll_choice_max_length",
             python_type="int",
             dry_value=80,
