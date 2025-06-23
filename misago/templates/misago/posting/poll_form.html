@@ -60,21 +60,21 @@
   </label>
   <div>
     {% with field=form.can_change_vote %}
-      <span class="checkbox" style="display: inline-flex; align-items: center; margin-right: 12px;">
+      <div class="form-control-checkbox-inline">
         <label>
           <input type="checkbox" name="{{ field.html_name }}" value="1"{% if field.value %} checked{% endif %}>
           {% translate "Allow vote change" context "posting poll form" %}
         </label>
-      </span>
+      </div>
     {% endwith %}
     {% if form.is_public %}
       {% with field=form.is_public %}
-        <span class="checkbox" style="display: inline-flex; align-items: center; margin-right: 12px;">
+        <div class="form-control-checkbox-inline">
           <label>
             <input type="checkbox" name="{{ field.html_name }}" value="1"{% if field.value %} checked{% endif %}>
             {% translate "Make votes visible to others" context "posting poll form" %}
           </label>
-        </span>
+        </div>
       {% endwith %}
     {% endif %}
   </div>
