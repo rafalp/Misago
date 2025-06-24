@@ -18,7 +18,7 @@
     <label class="control-label" for="{{ field.id_for_label }}">
       {% translate "Choices:" context "posting poll form" %}
     </label>
-    <textarea type="text" class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" rows="4">{{ field.value|default:'' }}</textarea>
+    <textarea class="form-control field-sizing-content" id="{{ field.id_for_label }}" name="{{ field.html_name }}" rows="4">{{ field.value|default:'' }}</textarea>
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}
