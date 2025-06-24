@@ -18,6 +18,7 @@ import "./htmxErrors"
 import Lightbox from "./lightbox"
 import editor, { activateEditors } from "./editor"
 import "./pagination"
+import activatePollChoicesControl from "./PollChoicesControl"
 import quote from "./Quote"
 import "./richtext"
 import * as snackbars from "./snackbars"
@@ -43,7 +44,8 @@ export class Misago {
     this.deleteElement = deleteElement
     this.slideUpElement = slideUpElement
 
-    this.updateTabGroups = updateTabGroups
+    this.tabGroups = updateTabGroups
+    this.activatePollChoicesControl = activatePollChoicesControl
   }
 
   addInitializer(initializer) {

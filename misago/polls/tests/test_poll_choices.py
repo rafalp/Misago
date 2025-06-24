@@ -166,9 +166,9 @@ def test_poll_choices_get_str_returns_str_for_textarea_value():
     assert poll_choices.get_str() == "lorem\nipsum\ndolor"
 
 
-def test_poll_choices_get_json_returns_json_for_model_json_field():
+def test_poll_choices_get_list_returns_json_for_model_json_field():
     poll_choices = PollChoices.from_str("lorem   \n\n   ipsum  \n\n   dolor")
-    assert poll_choices.get_json() == [
+    assert poll_choices.get_list() == [
         {
             "id": ANY,
             "name": "lorem",

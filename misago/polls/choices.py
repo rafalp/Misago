@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import TypedDict
 
 from django.utils.crypto import get_random_string
@@ -24,6 +25,19 @@ class PollChoices:
     def __len__(self) -> int:
         return len(self.choices)
 
+    def __getitem__(self, key) -> PollChoice:
+        return self.choices[key]
+
+    def __delitem__(self, key):
+        del self.choices[key]
+
+    def __contains__(self, key) -> bool:
+        return key in self.choices
+
+    @classmethod
+    def get_random_choice_id(self) -> str:
+        return get_random_string(12)
+
     @classmethod
     def from_str(cls, choices: str) -> "PollChoices":
         ids: set[str] = set()
@@ -35,9 +49,8 @@ class PollChoices:
             if not name or name in names:
                 continue
 
-            choice_id = get_random_string(12)
-            while choice_id in ids:
-                choice_id = get_random_string(12)
+            while not choice_id or choice_id in ids:
+                choice_id = cls.get_random_choice_id()
 
             new_choices.append(
                 {
@@ -52,11 +65,35 @@ class PollChoices:
 
         return cls(new_choices)
 
+    def add_new_choice(self, name: str):
+        choice_id = self.get_random_choice_id()
+        while choice_id in self.choices:
+            choice_id = self.get_random_choice_id()
+
+        self.choices[f"_{choice_id}"] = {
+            "id": "",
+            "name": name,
+            "votes": 0,
+        }
+
     def get_names(self) -> list[str]:
         return [choice["name"] for choice in self.choices.values()]
 
     def get_str(self) -> str:
         return "\n".join(self.get_names())
 
-    def get_json(self) -> list[PollChoice]:
+    def get_list(self) -> list[PollChoice]:
         return list(self.choices.values())
+
+    def get_json(self) -> list[PollChoice]:
+        json: list[PollChoice] = []
+        for choice in self.choices.values():
+            json.append(
+                {
+                    "id": choice.get("id") or self.get_random_choice_id(),
+                    "name": choice["name"],
+                    "votes": choice.get("votes") or 0,
+                }
+            )
+
+        return json
