@@ -19,7 +19,8 @@ def custom_validate_poll_choices_filter(
     action: ValidatePollChoicesHookAction,
     choices: PollChoices,
     max_choices: int,
-    poll_choice_max_length: int,
+    choice_min_length: int,
+    choice_max_length: int,
     request: HttpRequest | None=None,
 ) -> None:
     ...
@@ -47,7 +48,12 @@ The `PollChoices` instance to validate
 The maximum number of allowed choices.
 
 
-#### `poll_choice_max_length: int`
+#### `choice_min_length: int`
+
+The minimum allowed length for each poll choice.
+
+
+#### `choice_max_length: int`
 
 The maximum allowed length for each poll choice.
 
@@ -63,7 +69,8 @@ The request object or `None` if not provided.
 def validate_poll_choices_action(
     choices: PollChoices,
     max_choices: int,
-    poll_choice_max_length: int,
+    choice_min_length: int,
+    choice_max_length: int,
     request: HttpRequest | None=None,
 ) -> None:
     ...
@@ -84,7 +91,12 @@ The `PollChoices` instance to validate
 The maximum number of allowed choices.
 
 
-#### `poll_choice_max_length: int`
+#### `choice_min_length: int`
+
+The minimum allowed length for each poll choice.
+
+
+#### `choice_max_length: int`
 
 The maximum allowed length for each poll choice.
 
@@ -112,7 +124,8 @@ def validate_poll_choices_bad_words(
     action,
     choices: PollChoices,
     max_choices: int,
-    poll_choice_max_length: int,
+    choice_min_length: int,
+    choice_max_length: int,
     request: HttpRequest | None = None,
 ) -> None:
     for choice, name in enumerate(choices.get_names(), start=1):
@@ -128,5 +141,11 @@ def validate_poll_choices_bad_words(
                     params={"choice": choice},
                 )
 
-    action(value, min_length, max_length, request)
+    action(
+        choices,
+        max_choices,
+        choice_min_length,
+        choice_max_length,
+        request,
+    )
 ```

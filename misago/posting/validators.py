@@ -10,6 +10,7 @@ from ..polls.choices import PollChoices
 from .floodcontrol import flood_control
 from .hooks import (
     validate_poll_choices_hook,
+    validate_poll_question_hook,
     validate_post_hook,
     validate_posted_contents_hook,
     validate_thread_title_hook,
@@ -163,7 +164,52 @@ def validate_poll_question(
     max_length: int,
     request: HttpRequest | None = None,
 ):
-    raise NotImplementedError("TODO")
+    validate_poll_question_hook(
+        _validate_poll_question_action,
+        value,
+        min_length,
+        max_length,
+        request,
+    )
+
+
+def _validate_poll_question_action(
+    value: str,
+    min_length: int,
+    max_length: int,
+    request: HttpRequest | None = None,
+):
+    length = len(value)
+
+    if length < min_length:
+        raise ValidationError(
+            message=npgettext(
+                "poll question validator",
+                "Poll question should be at least %(limit_value)s character long (it has %(show_value)s).",
+                "Poll question should be at least %(limit_value)s characters long (it has %(show_value)s).",
+                min_length,
+            ),
+            code="min_length",
+            params={
+                "limit_value": min_length,
+                "show_value": length,
+            },
+        )
+
+    if length > max_length:
+        raise ValidationError(
+            message=npgettext(
+                "poll question validator",
+                "Poll question cannot exceed %(limit_value)s character (it currently has %(show_value)s).",
+                "Poll question cannot exceed %(limit_value)s characters (it currently has %(show_value)s).",
+                max_length,
+            ),
+            code="max_length",
+            params={
+                "limit_value": max_length,
+                "show_value": length,
+            },
+        )
 
 
 def validate_poll_choices(

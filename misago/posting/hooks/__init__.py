@@ -44,6 +44,7 @@ from .save_start_thread_state import save_start_thread_state_hook
 from .upgrade_post_code_blocks import upgrade_post_code_blocks_hook
 from .upgrade_post_content import upgrade_post_content_hook
 from .validate_poll_choices import validate_poll_choices_hook
+from .validate_poll_question import validate_poll_question_hook
 from .validate_post import validate_post_hook
 from .validate_posted_contents import validate_posted_contents_hook
 from .validate_thread_title import validate_thread_title_hook
@@ -74,6 +75,7 @@ __all__ = [
     "upgrade_post_code_blocks_hook",
     "upgrade_post_content_hook",
     "validate_poll_choices_hook",
+    "validate_poll_question_hook",
     "validate_post_hook",
     "validate_posted_contents_hook",
     "validate_thread_title_hook",
