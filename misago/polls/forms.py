@@ -6,10 +6,7 @@ from .choices import PollChoice, PollChoices
 class PollChoicesWidget(Widget):
     def value_from_datadict(self, data, files, name):
         name_length = len(name)
-
         ids: set[str] = set()
-        choices: set[str] = set()
-
         value = []
 
         for key in data:
@@ -31,18 +28,20 @@ class PollChoicesWidget(Widget):
             if not choice_id:
                 continue
 
+            if choice_id in ids:
+                continue
+
             if choice := data.get(key, "").strip():
                 ids.add(choice_id)
-                choices.add(choice)
                 value.append({"id": choice_id, "name": choice})
 
-        for choice in data.getlist(f"{name}[]"):
-            choice = choice.strip()
-            if choice and choice not in choices:
-                choices.add(choice)
-                value.append({"id": PollChoices.get_random_choice_id(), "name": choice})
+        obj = PollChoices(value)
 
-        return PollChoices(value)
+        for choice in data.getlist(f"{name}[]"):
+            if choice := choice.strip():
+                obj.add(choice)
+
+        return obj
 
     def check_data_value_name(self, name: str, data_name: str) -> bool:
         if data_name == f"{name}[]":

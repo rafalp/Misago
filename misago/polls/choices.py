@@ -1,5 +1,4 @@
-from copy import deepcopy
-from typing import TypedDict
+from typing import TypedDict, Iterable
 
 from django.utils.crypto import get_random_string
 
@@ -35,40 +34,28 @@ class PollChoices:
         return key in self.choices
 
     @classmethod
-    def get_random_choice_id(self) -> str:
+    def get_unique_choice_id(cls, ids: Iterable[str]) -> str:
+        choice_id = cls.get_random_choice_id()
+        while choice_id in ids:
+            choice_id = cls.get_random_choice_id()
+        return choice_id
+
+    @classmethod
+    def get_random_choice_id(cls) -> str:
         return get_random_string(12)
 
     @classmethod
     def from_str(cls, choices: str) -> "PollChoices":
-        ids: set[str] = set()
-        names: set[str] = set()
+        obj = cls()
 
-        new_choices: list[PollChoice] = []
         for name in choices.splitlines():
-            name = name.strip()
-            if not name or name in names:
-                continue
+            if name := name.strip():
+                obj.add(name)
 
-            while not choice_id or choice_id in ids:
-                choice_id = cls.get_random_choice_id()
+        return obj
 
-            new_choices.append(
-                {
-                    "id": choice_id,
-                    "name": name,
-                    "votes": 0,
-                }
-            )
-
-            ids.add(choice_id)
-            names.add(name)
-
-        return cls(new_choices)
-
-    def add_new_choice(self, name: str):
-        choice_id = self.get_random_choice_id()
-        while choice_id in self.choices:
-            choice_id = self.get_random_choice_id()
+    def add(self, name: str):
+        choice_id = self.get_unique_choice_id(self.choices)
 
         self.choices[f"_{choice_id}"] = {
             "id": "",
@@ -76,21 +63,30 @@ class PollChoices:
             "votes": 0,
         }
 
-    def get_names(self) -> list[str]:
+    def ids(self) -> list[str]:
+        return [choice["id"] for choice in self.choices.values() if choice["id"]]
+
+    def names(self) -> list[str]:
         return [choice["name"] for choice in self.choices.values()]
 
-    def get_str(self) -> str:
-        return "\n".join(self.get_names())
-
-    def get_list(self) -> list[PollChoice]:
+    def values(self) -> list[PollChoice]:
         return list(self.choices.values())
 
-    def get_json(self) -> list[PollChoice]:
+    def inputvalue(self) -> str:
+        return "\n".join(self.names())
+
+    def json(self) -> list[PollChoice]:
+        ids: set[str] = set(self.ids())
+
         json: list[PollChoice] = []
         for choice in self.choices.values():
+            choice_id = choice.get("id")
+            if not choice_id:
+                choice_id = self.get_unique_choice_id(ids)
+
             json.append(
                 {
-                    "id": choice.get("id") or self.get_random_choice_id(),
+                    "id": choice_id,
                     "name": choice["name"],
                     "votes": choice.get("votes") or 0,
                 }
