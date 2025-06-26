@@ -23,6 +23,8 @@ if TYPE_CHECKING:
 
 __all__ = [
     "validate_flood_control",
+    "validate_poll_choices",
+    "validate_poll_question",
     "validate_post",
     "validate_posted_contents",
     "validate_thread_title",
@@ -261,7 +263,7 @@ def _validate_poll_choices_action(
             },
         )
 
-    for name in choices.get_names():
+    for name in choices.names():
         name_length = len(name)
 
         if name_length < choice_min_length:

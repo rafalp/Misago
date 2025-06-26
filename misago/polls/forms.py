@@ -64,18 +64,18 @@ class PollChoicesField(Field):
         initial_choices: PollChoice = []
 
         if self.initial:
-            for choice in self.initial.get_list():
+            for choice in self.initial.values():
                 if choice["id"]:
                     initial_ids.add(choice["id"])
                     initial_choices.append(choice)
 
         choices = PollChoices(initial_choices)
         for choice in value.get_list():
-            if self.initial and choice["id"] in initial_ids:
+            if choice["id"] in initial_ids:
                 choices[choice["id"]]["name"] = choice["name"]
                 initial_ids.remove(choice["id"])
             else:
-                choices.add_new_choice(choice["name"])
+                choices.add(choice["name"])
 
         for removed_choice in initial_ids:
             del choices[removed_choice]
