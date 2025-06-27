@@ -244,7 +244,7 @@ def test_poll_choices_ids_returns_ids_list():
 
 
 def test_poll_choices_add_new_choice():
-    poll_choices = PollChoices.from_str("lorem\n\nipsum\n\nlorem\ndolor\n\n")
+    poll_choices = PollChoices.from_str("lorem\n\nipsum\ndolor\n\n")
     poll_choices.add("met")
     poll_choices.add("elit")
 
