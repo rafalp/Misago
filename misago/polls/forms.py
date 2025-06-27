@@ -52,13 +52,7 @@ class PollChoicesWidget(Widget):
 class PollChoicesField(Field):
     widget = PollChoicesWidget
 
-    max_choices: int | None
-
-    def __init__(self, max_choices: int | None = None, **kwargs):
-        self.max_choices = max_choices
-        super().__init__(**kwargs)
-
-    def clean(self, value) -> PollChoices:
+    def clean(self, value: PollChoices) -> PollChoices:
         initial_ids: set[str] = set()
         initial_choices: PollChoice = []
 
@@ -69,7 +63,7 @@ class PollChoicesField(Field):
                     initial_choices.append(choice)
 
         choices = PollChoices(initial_choices)
-        for choice in value.get_list():
+        for choice in value.values():
             if choice["id"] in initial_ids:
                 choices[choice["id"]]["name"] = choice["name"]
                 initial_ids.remove(choice["id"])
