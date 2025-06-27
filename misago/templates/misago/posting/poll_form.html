@@ -40,18 +40,7 @@
     <label class="control-label">
       {% translate "Choices:" context "poll form" %}
     </label>
-    <ol class="form-control-poll-choices" max-choices="{{ settings.poll_max_choices }}" misago-poll-choices-control>
-      {% for choice in field.value.get_list %}
-        <li>
-          <input type="text" class="form-control" name="{{ field.html_name }}[{{ choice.id }}]" placeholder="{% translate 'Poll choice...' context 'poll choices control' %}" value="{{ choice.name }}" />
-        </li>
-      {% endfor %}
-      {% if field.value|length < settings.poll_max_choices %}
-        <li>
-          <input type="text" class="form-control" name="{{ field.html_name }}[]" placeholder="{% translate 'Poll choice...' context 'poll choices control' %}" value="" />
-        </li>
-      {% endif %}
-    </ol>
+    {% include "misago/posting/poll_choices.html" %}
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}

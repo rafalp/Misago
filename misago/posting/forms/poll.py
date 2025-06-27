@@ -129,7 +129,7 @@ class PollForm(PostingForm):
             starter_name=state.user.username,
             starter_slug=state.user.slug,
             question=self.cleaned_data["question"],
-            choices=self.choices_obj.get_json(),
+            choices=self.choices_obj.json(),
             duration=self.cleaned_data.get("duration") or 0,
             max_choices=self.cleaned_data.get("max_choices", 1),
             can_change_vote=self.cleaned_data.get("can_change_vote") or False,
