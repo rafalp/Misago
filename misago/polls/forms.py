@@ -31,9 +31,8 @@ class PollChoicesWidget(Widget):
             if choice_id in ids:
                 continue
 
-            if choice := data.get(key, "").strip():
-                ids.add(choice_id)
-                value.append({"id": choice_id, "name": choice})
+            ids.add(choice_id)
+            value.append({"id": choice_id, "name": data.get(key, "").strip()})
 
         obj = PollChoices(value)
 
