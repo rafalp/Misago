@@ -38,9 +38,9 @@
 {% include "misago/admin/themes/assets/upload-media.html" %}
 {% endblock content %}
 
-{% block javascripts %}
+{% block javascript %}
 {{ block.super }}
 <script type="text/javascript">
   window.misago.initMassDelete("{% translate 'Are you sure you want to delete selected items?' context 'admin theme assets' %}")
 </script>
-{% endblock javascripts %}
+{% endblock javascript %}

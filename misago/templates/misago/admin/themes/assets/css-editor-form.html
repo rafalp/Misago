@@ -71,7 +71,7 @@
 {% endblock %}
 
 
-{% block javascripts %}
+{% block javascript %}
 <script src="{% static 'misago/admin/ace-editor/ace.js' %}" type="text/javascript" charset="utf-8"></script>
 <script>
   var editor = ace.edit("css-editor");
@@ -84,4 +84,4 @@
     input.value = editor.getValue();
   });
 </script>
-{% endblock javascripts %}
+{% endblock javascript %}

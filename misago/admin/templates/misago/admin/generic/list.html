@@ -117,10 +117,10 @@
 {% endblock content %}
 
 
-{% block javascripts %}
+{% block javascript %}
 {% if mass_actions %}
   <script type="text/javascript">
     window.misago.initMassActions("{{ empty_selection_label }}", "{{ selection_label }}")
   </script>
 {% endif %}
-{% endblock javascripts %}
+{% endblock javascript %}
