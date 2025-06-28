@@ -5,18 +5,17 @@ from ..attachments.models import Attachment
 from ..categories.models import Category, CategoryRole, RoleCategoryACL
 from ..notifications.models import Notification, WatchedThread
 from ..permissions.models import CategoryGroupPermission
+from ..polls.models import Poll, PollVote
 from ..readtracker.models import ReadCategory, ReadThread
 from ..threads.models import (
     Attachment as LegacyAttachment,
     AttachmentType,
-    Poll,
-    PollVote,
     Post,
     PostEdit,
     PostLike,
     Thread,
 )
-from ..threads.test import post_poll, post_thread, reply_thread
+from ..threads.test import post_thread, reply_thread
 from ..threadupdates.create import create_test_thread_update
 from ..threadupdates.models import ThreadUpdate
 from ..users.models import User, Group
@@ -128,9 +127,26 @@ class CategoryRelationsFactory:
         )
 
     def create_poll(self) -> Poll:
-        return post_poll(self.thread, self.user)
+        return Poll.objects.create(
+            category=self.category,
+            thread=self.thread,
+            starter=self.user,
+            starter_name=self.user.username,
+            starter_slug=self.user.slug,
+            question="...",
+            choices=[],
+        )
 
     def create_poll_vote(self) -> PollVote:
+        return PollVote.objects.create(
+            category=self.category,
+            thread=self.thread,
+            poll=self.poll,
+            choice_id="aaaa",
+            voter=self.user,
+            voter_name=self.user.username,
+            voter_slug=self.user.slug,
+        )
         return self.poll.pollvote_set.order_by("id").first()
 
     def create_post_edit(self) -> PostEdit:

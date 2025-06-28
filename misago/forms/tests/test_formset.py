@@ -117,21 +117,21 @@ def test_formset_is_bound_is_true_if_all_forms_are_bound():
     formset = Formset()
     formset.add_form(UserForm({"user-name": "Alice"}, prefix="user"))
     formset.add_form(AgeForm({"age-age": 12}, prefix="age"))
-    assert formset.is_bound
+    assert formset.is_bound()
 
 
 def test_formset_is_bound_is_false_if_some_forms_are_bound():
     formset = Formset()
     formset.add_form(UserForm({"user-name": "Alice"}, prefix="user"))
     formset.add_form(AgeForm(prefix="age"))
-    assert not formset.is_bound
+    assert not formset.is_bound()
 
 
 def test_formset_is_bound_is_false_if_no_forms_are_bound():
     formset = Formset()
     formset.add_form(UserForm(prefix="user"))
     formset.add_form(AgeForm(prefix="age"))
-    assert not formset.is_bound
+    assert not formset.is_bound()
 
 
 def test_formset_is_valid_is_true_if_all_forms_are_valid():

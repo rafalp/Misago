@@ -58,14 +58,7 @@ class ViewModel(BaseViewModel):
 
         self._model = model
 
-        try:
-            self._poll = model.poll
-            add_acl_to_obj(request.user_acl, self._poll)
-
-            if poll_votes_aware:
-                self._poll.make_choices_votes_aware(request.user)
-        except Poll.DoesNotExist:
-            self._poll = None
+        self._poll = None  # Removed old polls in #1954
 
     @property
     def watched_thread(self) -> WatchedThread | None:
@@ -73,7 +66,7 @@ class ViewModel(BaseViewModel):
 
     @property
     def poll(self):
-        return self._poll
+        return None
 
     def get_thread(self, request, pk, slug=None):
         raise NotImplementedError(

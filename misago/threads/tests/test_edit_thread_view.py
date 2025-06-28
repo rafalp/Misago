@@ -175,7 +175,7 @@ def test_edit_thread_view_displays_error_page_to_user_trying_to_edit_other_user_
 
     assert_contains(
         response,
-        "You can&#x27;t edit other users threads.",
+        "You can&#x27;t edit other users&#x27; threads.",
         status_code=403,
     )
 

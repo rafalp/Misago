@@ -9,6 +9,7 @@ from ..attachments.delete import delete_users_attachments
 from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..notifications.models import Notification, WatchedThread
+from ..polls.models import Poll, PollVote
 from ..threadupdates.models import ThreadUpdate
 from ..users.signals import (
     anonymize_user_data,
@@ -19,8 +20,6 @@ from ..users.signals import (
 from .anonymize import anonymize_post_last_likes
 from .models import (
     Attachment as LegacyAttachment,
-    Poll,
-    PollVote,
     Post,
     PostEdit,
     PostLike,
@@ -73,8 +72,6 @@ def move_thread_content(sender, **kwargs):
     sender.pollvote_set.update(category=sender.category)
     sender.notification_set.update(category=sender.category)
     sender.watchedthread_set.update(category=sender.category)
-
-    Poll.objects.filter(thread=sender).update(category=sender.category)
 
 
 @receiver(update_thread_title)
