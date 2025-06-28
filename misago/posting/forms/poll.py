@@ -18,7 +18,7 @@ class PollForm(PostingForm):
     request: HttpRequest
 
     question = forms.CharField(max_length=255, required=False)
-    choices_text = forms.CharField(max_length=255, required=False)
+    choices_text = forms.CharField(max_length=1000, required=False)
     choices_list = PollChoicesField(required=False)
     duration = forms.IntegerField(
         initial=0, min_value=0, max_value=1825, required=False
@@ -31,6 +31,7 @@ class PollForm(PostingForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
+        self.choices_obj = None
 
         super().__init__(*args, **kwargs)
 
@@ -38,19 +39,19 @@ class PollForm(PostingForm):
 
     def setup_form_fields(self, settings):
         self.fields["question"].max_length = settings.poll_question_max_length
-        self.fields["choices_list"].max_choices = settings.poll_max_choices
 
         if settings.allow_public_polls != AllowedPublicPolls.ALLOWED:
             del self.fields["is_public"]
 
     def clean_question(self):
         data = self.cleaned_data["question"]
-        validate_poll_question(
-            data,
-            self.request.settings.poll_question_min_length,
-            self.request.settings.poll_question_max_length,
-            self.request,
-        )
+        if data:
+            validate_poll_question(
+                data,
+                self.request.settings.poll_question_min_length,
+                self.request.settings.poll_question_max_length,
+                self.request,
+            )
         return data
 
     def clean_choices_text(self):
@@ -68,7 +69,7 @@ class PollForm(PostingForm):
             self.request,
         )
 
-        return self.choices_obj.get_str()
+        return self.choices_obj.inputvalue()
 
     def clean_choices_list(self):
         self.choices_obj = self.cleaned_data["choices_list"]
