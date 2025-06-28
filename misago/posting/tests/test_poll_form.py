@@ -2,7 +2,6 @@ from unittest.mock import ANY
 
 from ...conf.test import override_dynamic_settings
 from ...polls.enums import AllowedPublicPolls
-from ...polls.choices import PollChoices
 from ..forms import PollForm
 
 
