@@ -9,7 +9,7 @@ from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
-from ...polls.enums import AllowedPublicPolls
+from ...polls.enums import PublicPollsAvailability
 from ...polls.models import Poll
 from ...posting.forms import PostForm
 from ...posting.formsets import PostingFormset
@@ -689,7 +689,7 @@ def test_start_thread_view_hides_poll_form_for_user_without_permission(
     assert_not_contains(response, "misago-poll-choices-control")
 
 
-@override_dynamic_settings(allow_public_polls=AllowedPublicPolls.ALLOWED)
+@override_dynamic_settings(enable_public_polls=PublicPollsAvailability.ENABLED)
 def test_start_thread_view_displays_public_poll_option(user_client, default_category):
     response = user_client.get(
         reverse(
@@ -701,7 +701,7 @@ def test_start_thread_view_displays_public_poll_option(user_client, default_cate
     assert_contains(response, "is_public")
 
 
-@override_dynamic_settings(allow_public_polls=AllowedPublicPolls.FORBIDDEN)
+@override_dynamic_settings(enable_public_polls=PublicPollsAvailability.DISABLED)
 def test_start_thread_view_hides_public_poll_option(user_client, default_category):
     response = user_client.get(
         reverse(

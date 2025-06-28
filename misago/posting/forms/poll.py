@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext
 
 from ...polls.choices import PollChoices
-from ...polls.enums import AllowedPublicPolls
+from ...polls.enums import PublicPollsAvailability
 from ...polls.forms import PollChoicesField
 from ...polls.models import Poll
 from ..state import StartThreadState
@@ -40,7 +40,7 @@ class PollForm(PostingForm):
     def setup_form_fields(self, settings):
         self.fields["question"].max_length = settings.poll_question_max_length
 
-        if settings.allow_public_polls != AllowedPublicPolls.ALLOWED:
+        if settings.enable_public_polls != PublicPollsAvailability.ENABLED:
             del self.fields["is_public"]
 
     def clean_question(self):

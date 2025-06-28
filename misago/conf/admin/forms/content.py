@@ -7,7 +7,7 @@ from ....admin.forms import YesNoSwitch
 from ....attachments.enums import AllowedAttachments, AttachmentTypeRestriction
 from ....attachments.storage import get_total_unused_attachments_size
 from ....categories.enums import CategoryChildrenComponent
-from ....polls.enums import AllowedPublicPolls
+from ....polls.enums import PublicPollsAvailability
 from ....threads.enums import ThreadsListsPolling
 from .base import SettingsForm
 
@@ -16,7 +16,7 @@ class ContentSettingsForm(SettingsForm):
     settings = [
         "allowed_attachment_types",
         "allow_private_threads_attachments",
-        "allow_public_polls",
+        "enable_public_polls",
         "restrict_attachments_extensions",
         "restrict_attachments_extensions_type",
         "unused_attachments_storage_limit",
@@ -313,14 +313,14 @@ class ContentSettingsForm(SettingsForm):
         min_value=2,
         max_value=255,
     )
-    allow_public_polls = forms.CharField(
-        label=pgettext_lazy("admin content settings form", "Allow public polls"),
+    enable_public_polls = forms.CharField(
+        label=pgettext_lazy("admin content settings form", "Enable public polls"),
         help_text=pgettext_lazy(
             "admin content settings form",
-            "Public polls allow users to see which choices other users voted for. Forbidding all public polls will disable this option for both new and existing polls.",
+            "Public polls allow users to see which choices other users voted for. Disabling all public polls will disable this option for both new and existing polls.",
         ),
         widget=forms.RadioSelect(
-            choices=AllowedPublicPolls.get_choices(),
+            choices=PublicPollsAvailability.get_choices(),
         ),
     )
 

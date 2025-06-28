@@ -291,8 +291,8 @@ def update_usernames(sender, **kwargs):
         uploader_name=sender.username, uploader_slug=sender.slug
     )
 
-    Poll.objects.filter(poster=sender).update(
-        poster_name=sender.username, poster_slug=sender.slug
+    Poll.objects.filter(starter=sender).update(
+        starter_name=sender.username, starter_slug=sender.slug
     )
 
     PollVote.objects.filter(voter=sender).update(

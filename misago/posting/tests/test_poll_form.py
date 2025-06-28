@@ -1,7 +1,7 @@
 from unittest.mock import ANY
 
 from ...conf.test import override_dynamic_settings
-from ...polls.enums import AllowedPublicPolls
+from ...polls.enums import PublicPollsAvailability
 from ..forms import PollForm
 
 
@@ -30,7 +30,7 @@ def test_poll_form_sets_question_max_length_from_setting(rf, dynamic_settings):
     assert form.fields["question"].max_length == 42
 
 
-@override_dynamic_settings(allow_public_polls=AllowedPublicPolls.ALLOWED)
+@override_dynamic_settings(enable_public_polls=PublicPollsAvailability.ENABLED)
 def test_poll_form_includes_public_voting_option_if_its_enabled(rf, dynamic_settings):
     request = rf.get("/")
     request.settings = dynamic_settings
@@ -39,7 +39,7 @@ def test_poll_form_includes_public_voting_option_if_its_enabled(rf, dynamic_sett
     assert "is_public" in form.fields
 
 
-@override_dynamic_settings(allow_public_polls=AllowedPublicPolls.FORBIDDEN)
+@override_dynamic_settings(enable_public_polls=PublicPollsAvailability.DISABLED)
 def test_poll_form_removes_public_voting_option_if_they_are_forbidden(
     rf, dynamic_settings
 ):
@@ -50,7 +50,7 @@ def test_poll_form_removes_public_voting_option_if_they_are_forbidden(
     assert "is_public" not in form.fields
 
 
-@override_dynamic_settings(allow_public_polls=AllowedPublicPolls.FORBIDDEN_NEW)
+@override_dynamic_settings(enable_public_polls=PublicPollsAvailability.DISABLED_NEW)
 def test_poll_form_removes_public_voting_option_if_new_are_forbidden(
     rf, dynamic_settings
 ):

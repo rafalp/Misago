@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-from ...polls.enums import AllowedPublicPolls
+from ...polls.enums import PublicPollsAvailability
 from ..operations import CreateSetting
 
 
@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
             dry_value=80,
         ),
         CreateSetting(
-            setting="allow_public_polls",
-            dry_value=AllowedPublicPolls.ALLOWED.value,
+            setting="enable_public_polls",
+            dry_value=PublicPollsAvailability.ENABLED.value,
         ),
     ]

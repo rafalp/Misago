@@ -3,28 +3,28 @@ from enum import StrEnum
 from django.utils.translation import pgettext_lazy
 
 
-class AllowedPublicPolls(StrEnum):
-    ALLOWED = "allowed"
-    FORBIDDEN_NEW = "forbidden_new"
-    FORBIDDEN = "forbidden"
+class PublicPollsAvailability(StrEnum):
+    ENABLED = "enabled"
+    DISABLED_NEW = "disabled_new"
+    DISABLED = "disabled"
 
     @classmethod
     def get_choices(cls):
         return (
             (
-                cls.ALLOWED.value,
+                cls.ENABLED.value,
                 pgettext_lazy(
-                    "allowed public polls type", "Allow creation of public polls"
+                    "allowed public polls type", "Enable creation of public polls"
                 ),
             ),
             (
-                cls.FORBIDDEN_NEW.value,
+                cls.DISABLED_NEW.value,
                 pgettext_lazy(
-                    "allowed public polls", "Forbid creation of new public polls"
+                    "allowed public polls", "Disable creation of new public polls"
                 ),
             ),
             (
-                cls.FORBIDDEN.value,
-                pgettext_lazy("allowed public polls", "Forbid all public polls"),
+                cls.DISABLED.value,
+                pgettext_lazy("allowed public polls", "Disable all public polls"),
             ),
         )
