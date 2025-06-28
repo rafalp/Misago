@@ -35,7 +35,6 @@ class PollChoicesWidget(Widget):
             value.append({"id": choice_id, "name": data.get(key, "").strip()})
 
         obj = PollChoices(value)
-
         for choice in data.getlist(f"{name}[]"):
             if choice := choice.strip():
                 obj.add(choice)
@@ -51,6 +50,12 @@ class PollChoicesWidget(Widget):
 
 class PollChoicesField(Field):
     widget = PollChoicesWidget
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not self.initial:
+            self.initial = PollChoices()
 
     def clean(self, value: PollChoices) -> PollChoices:
         initial_ids: set[str] = set()

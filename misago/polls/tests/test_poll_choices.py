@@ -161,19 +161,16 @@ def test_poll_choices_from_str_initializes_choices_instance_from_str():
     poll_choices = PollChoices.from_str("lorem\nipsum\ndolor")
     assert poll_choices.values() == [
         {
-            "id": "",
+            "id": None,
             "name": "lorem",
-            "votes": 0,
         },
         {
-            "id": "",
+            "id": None,
             "name": "ipsum",
-            "votes": 0,
         },
         {
-            "id": "",
+            "id": None,
             "name": "dolor",
-            "votes": 0,
         },
     ]
 
@@ -182,19 +179,16 @@ def test_poll_choices_from_str_excludes_empty_lines():
     poll_choices = PollChoices.from_str("lorem\n\nipsum\n\n\ndolor\n\n")
     assert poll_choices.values() == [
         {
-            "id": "",
+            "id": None,
             "name": "lorem",
-            "votes": 0,
         },
         {
-            "id": "",
+            "id": None,
             "name": "ipsum",
-            "votes": 0,
         },
         {
-            "id": "",
+            "id": None,
             "name": "dolor",
-            "votes": 0,
         },
     ]
 
@@ -203,19 +197,16 @@ def test_poll_choices_from_str_strips_items_whitespaces():
     poll_choices = PollChoices.from_str("lorem   \n\n   ipsum  \n\n   dolor")
     assert poll_choices.values() == [
         {
-            "id": "",
+            "id": None,
             "name": "lorem",
-            "votes": 0,
         },
         {
-            "id": "",
+            "id": None,
             "name": "ipsum",
-            "votes": 0,
         },
         {
-            "id": "",
+            "id": None,
             "name": "dolor",
-            "votes": 0,
         },
     ]
 
@@ -250,29 +241,24 @@ def test_poll_choices_add_new_choice():
 
     assert poll_choices.values() == [
         {
-            "id": "",
+            "id": None,
             "name": "lorem",
-            "votes": 0,
         },
         {
-            "id": "",
+            "id": None,
             "name": "ipsum",
-            "votes": 0,
         },
         {
-            "id": "",
+            "id": None,
             "name": "dolor",
-            "votes": 0,
         },
         {
-            "id": "",
+            "id": None,
             "name": "met",
-            "votes": 0,
         },
         {
-            "id": "",
+            "id": None,
             "name": "elit",
-            "votes": 0,
         },
     ]
 

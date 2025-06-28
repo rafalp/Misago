@@ -58,9 +58,8 @@ class PollChoices:
         choice_id = self.get_unique_choice_id(self.choices)
 
         self.choices[f"_{choice_id}"] = {
-            "id": "",
+            "id": None,
             "name": name,
-            "votes": 0,
         }
 
     def ids(self) -> list[str]:

@@ -106,12 +106,13 @@ class PollForm(PostingForm):
             )
 
         if not choices:
-            if not self.errors.get("choices_text"):
+            if not self.errors.get("choices_text") and not self.errors.get(
+                "choices_list"
+            ):
                 self.add_error(
                     "choices_text",
                     pgettext("form validation", "This field is required."),
                 )
-            if not self.errors.get("choices_list"):
                 self.add_error(
                     "choices_list",
                     pgettext("form validation", "This field is required."),
