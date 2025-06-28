@@ -787,3 +787,27 @@ def test_start_thread_view_starts_thread_with_poll(user_client, user, default_ca
 
     choices_ids = [len(choice["id"]) for choice in poll.choices]
     assert choices_ids == [12, 12, 12, 12]
+
+
+def test_start_thread_view_starts_thread_with_poll_form_disabled(
+    user_client, members_group, default_category
+):
+    members_group.can_start_polls = False
+    members_group.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"id": thread.pk, "slug": thread.slug}
+    )
