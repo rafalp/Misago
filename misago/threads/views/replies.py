@@ -21,6 +21,7 @@ from ...permissions.threads import (
     check_edit_thread_permission,
     check_reply_thread_permission,
 )
+from ...polls.models import Poll
 from ...posting.formsets import (
     ReplyPrivateThreadFormset,
     ReplyThreadFormset,
@@ -46,6 +47,7 @@ from ..hooks import (
 from ..models import Post, Thread
 from ..paginator import ThreadRepliesPage
 from .generic import PrivateThreadView, ThreadView
+from .poll import PollView
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -239,9 +241,10 @@ class RepliesView(View):
         raise NotImplementedError
 
 
-class ThreadRepliesView(RepliesView, ThreadView):
+class ThreadRepliesView(RepliesView, PollView, ThreadView):
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
+    poll_template_name: str = "misago/thread/poll.html"
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
         return get_thread_replies_page_thread_queryset_hook(
@@ -260,13 +263,22 @@ class ThreadRepliesView(RepliesView, ThreadView):
     ) -> dict:
         context = super().get_context_data_action(request, thread, page)
 
-        context.update(
-            {
-                "category": thread.category,
-            }
-        )
+        context["category"] = thread.category
+
+        if poll_data := self.get_thread_poll_context_data(request, thread):
+            context["poll"] = poll_data
 
         return context
+    
+    def get_thread_poll_context_data(self, request: HttpRequest, thread: Thread) -> dict | None:
+        if not thread.has_poll:
+            return None
+
+        poll = self.get_poll(request, thread)
+        if not poll:
+            return None
+
+        return self.get_poll_context_data(request, thread, poll)
 
     def get_thread_posts_queryset(
         self, request: HttpRequest, thread: Thread

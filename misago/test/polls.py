@@ -4,9 +4,9 @@ from typing import Sequence
 import pytest
 from django.utils import timezone
 
+from ..polls.choices import PollChoices
 from ..polls.models import Poll, PollVote
 from ..threads.models import Thread
-from ..users.models import User
 from .utils import (
     FactoryTimestampArg,
     FactoryUserArg,
@@ -131,3 +131,36 @@ def closed_user_poll(user, user_thread, poll_factory):
         is_closed=True,
         closed_by="Closer",
     )
+
+
+@pytest.fixture
+def poll_vote_factory():
+    def _poll_vote_factory(
+        poll: Poll,
+        voter: FactoryUserArg,
+        choice_id: str,
+        voted_at: FactoryTimestampArg = True,
+    ):
+        voter_obj, voter_name, voter_slug = unpack_factory_user_arg(voter)
+
+        poll_vote = PollVote.objects.create(
+            category=poll.category,
+            thread=poll.thread,
+            poll=poll,
+            choice_id=choice_id,
+            voter=voter_obj,
+            voter_name=voter_name,
+            voter_slug=voter_slug,
+            voted_at=factory_timestamp_arg(voted_at),
+        )
+        
+        choices = PollChoices(poll.choices)
+        choices[choice_id]["votes"] += 1
+
+        poll.choices = choices.json()
+        poll.votes += 1
+        poll.save()
+
+        return poll_vote
+
+    return _poll_vote_factory

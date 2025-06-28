@@ -1,0 +1,37 @@
+{% load i18n %}
+<form
+  method="post"
+  action="{{ poll_vote_url }}"
+  hx-post="{{ poll_vote_url }}"
+  hx-target="#misago-htmx-poll-partial"
+  hx-swap="innerHTML"
+>
+  {% csrf_token %}
+  <div class="poll-vote-form">
+    <p class="poll-vote-form-instruction">
+      {% if poll.max_choices > 1 %}
+        {% blocktrans trimmed context "thread poll voting instruction" %}
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed context "thread poll voting instruction" %}
+          Chose option to vote on:
+        {% endblocktrans %}
+      {% endif %}
+    </p>
+    <ul class="poll-vote-form-choices">
+      {% for choice in poll.choices %}
+        <li>
+          <label class="{% if poll.max_choices > 1 %}checkbox{% else %}radio{% endif %}">
+            <input type="{% if poll.max_choices > 1 %}checkbox{% else %}radio{% endif %}" name="poll_choice" value="{{ choice.id }}" required>
+            {{ choice.name }}
+          </label>
+        </li>
+      {% endfor %}
+    </ul>
+    <ul class="poll-vote-form-footer">
+      <button class="btn btn-primary">
+        {% translate "Submit vote" context "thread poll voting submit btn" %}
+      </button>
+    </ul>
+  </div>
+</form>

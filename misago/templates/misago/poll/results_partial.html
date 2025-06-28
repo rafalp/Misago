@@ -1,0 +1,19 @@
+<div class="poll-results">
+  <ul class="poll-something">
+    {% for choice in poll.choices %}
+      <li>
+        {{ choice.name }}: {{ choice.votes}}{% if choice.id in user_poll_votes %} [X]{% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+  <p>Votes: {{ poll.votes }}</p>
+  <button
+    class="btn btn-secondary"
+    type="button"
+    hx-get="{{ poll_vote_url }}"
+    hx-target="#misago-htmx-poll-partial"
+    hx-swap="innerHTML"
+  >
+    Re-vote
+  </button>
+</div>

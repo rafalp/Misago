@@ -168,13 +168,3 @@ class DeleteThreadUpdateView(DeleteUpdateView, ThreadView):
 class DeletePrivateThreadView(DeleteUpdateView, PrivateThreadView):
     def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_private_threads_moderator
-
-
-hide_thread_update_view = HideThreadUpdateView.as_view()
-hide_private_thread_update_view = HidePrivateThreadView.as_view()
-
-unhide_thread_update_view = UnhideThreadUpdateView.as_view()
-unhide_private_thread_update_view = UnhidePrivateThreadUpdateView.as_view()
-
-delete_thread_update_view = DeleteThreadUpdateView.as_view()
-delete_private_thread_update_view = DeletePrivateThreadView.as_view()
