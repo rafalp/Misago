@@ -369,7 +369,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
         if user_poll_votes and not poll.can_change_vote:
             raise PermissionDenied("can't change vote")
 
-        if request.method == "post":
+        if request.method == "POST":
             return self.handle_poll_vote_submit(request, thread, poll, user_poll_votes)
 
         context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
@@ -382,28 +382,32 @@ class ThreadRepliesView(RepliesView, ThreadView):
         poll: Poll,
         user_poll_votes: set[str],
     ) -> HttpResponse:
-
         poll_choices = PollChoices(poll.choices)
 
         user_choices = request.POST.getlist("poll_choice")
         valid_choices = set(poll_choices.ids()).intersection(user_choices)
 
         if not valid_choices:
-            raise PermissionError("select valid choice")
+            raise PermissionDenied("select valid choice")
 
         if len(valid_choices) > poll.max_choices:
-            raise PermissionError("cant select this many choices")
+            raise PermissionDenied("cant select this many choices")
 
-        if user_poll_votes:
-            delete_user_poll_votes(request.user, poll, user_poll_votes)
+        if valid_choices != user_poll_votes:
+            if user_poll_votes:
+                delete_user_poll_votes(request.user, poll, user_poll_votes)
+            save_user_poll_vote(request.user, poll, valid_choices)
 
-        save_user_poll_vote(request.user, poll, valid_choices)
+            if user_poll_votes:
+                print("vote changed")
+            else:
+                print("vote saved")
 
         if not request.is_htmx:
             return redirect(request.path)
 
         context = self.get_poll_context_data(request, thread, poll, valid_choices)
-        return render(request, self.poll_vote_template_name, context)
+        return render(request, self.poll_results_template_name, context)
 
     def get_poll(
         self, request: HttpRequest, thread: Thread, raise_404: bool = True
