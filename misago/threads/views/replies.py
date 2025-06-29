@@ -58,7 +58,6 @@ from ..hooks import (
 from ..models import Post, Thread
 from ..paginator import ThreadRepliesPage
 from .generic import PrivateThreadView, ThreadView
-from .poll import PollView
 
 if TYPE_CHECKING:
     from ...users.models import User

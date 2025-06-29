@@ -165,22 +165,22 @@ urlpatterns = [
     ),
     path(
         "t/<slug:slug>/<int:id>/hide-update/<int:thread_update>/",
-        UnhideThreadUpdateView.as_view(),
+        HideThreadUpdateView.as_view(),
         name="hide-thread-update",
     ),
     path(
         "p/<slug:slug>/<int:id>/hide-update/<int:thread_update>/",
-        UnhidePrivateThreadUpdateView.as_view(),
+        HidePrivateThreadView.as_view(),
         name="hide-private-thread-update",
     ),
     path(
         "t/<slug:slug>/<int:id>/unhide-update/<int:thread_update>/",
-        HideThreadUpdateView.as_view(),
+        UnhideThreadUpdateView.as_view(),
         name="unhide-thread-update",
     ),
     path(
         "p/<slug:slug>/<int:id>/unhide-update/<int:thread_update>/",
-        HidePrivateThreadView.as_view(),
+        UnhidePrivateThreadUpdateView.as_view(),
         name="unhide-private-thread-update",
     ),
     path(

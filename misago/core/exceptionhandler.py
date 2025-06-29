@@ -105,13 +105,11 @@ def handle_misago_exception(request, exception):
 
 
 def handle_htmx_exception(exception: Http404 | PermissionDenied) -> HttpResponse:
-    if isinstance(exception, Http404):
-        return JsonResponse({"error": "Not found"}, status=404)
-
+    status = status = 404 if isinstance(exception, Http404) else 403
     if not exception.args:
-        return HttpResponse(status=403)
+        return HttpResponse(status=status)
 
-    return JsonResponse({"error": str(exception.args[0])}, status=403)
+    return JsonResponse({"error": str(exception.args[0])}, status=status)
 
 
 def handle_api_exception(exception, context):
