@@ -3,7 +3,9 @@ from ..models import PollVote
 from ..votes import get_user_poll_votes
 
 
-def test_get_user_poll_votes_returns_set_with_user_poll_vote(user, poll, poll_vote_factory):
+def test_get_user_poll_votes_returns_set_with_user_poll_vote(
+    user, poll, poll_vote_factory
+):
     choices = PollChoices(poll.choices)
     choice_id = choices.ids()[0]
 
@@ -12,7 +14,9 @@ def test_get_user_poll_votes_returns_set_with_user_poll_vote(user, poll, poll_vo
     assert get_user_poll_votes(user, poll) == {choice_id}
 
 
-def test_get_user_poll_votes_returns_set_with_user_poll_votes(user, poll, poll_vote_factory):
+def test_get_user_poll_votes_returns_set_with_user_poll_votes(
+    user, poll, poll_vote_factory
+):
     choices = PollChoices(poll.choices)
 
     choice_id1 = choices.ids()[0]
@@ -24,5 +28,7 @@ def test_get_user_poll_votes_returns_set_with_user_poll_votes(user, poll, poll_v
     assert get_user_poll_votes(user, poll) == {choice_id1, choice_id2}
 
 
-def test_get_user_poll_votes_returns_empty_set_if_user_didnt_vote(user, poll, poll_vote_factory):
+def test_get_user_poll_votes_returns_empty_set_if_user_didnt_vote(
+    user, poll, poll_vote_factory
+):
     assert get_user_poll_votes(user, poll) == set()

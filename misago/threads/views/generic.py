@@ -18,7 +18,6 @@ from ...permissions.threads import (
     filter_thread_posts_queryset,
     filter_thread_updates_queryset,
 )
-from ...polls.models import Poll
 from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,
@@ -160,7 +159,6 @@ class GenericView(View):
 class ThreadView(GenericView):
     thread_select_related: Iterable[str] | True | None = ("category",)
     thread_url_name: str = "misago:thread"
-    poll_select_related: Iterable[str] | True | None = None
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
@@ -191,14 +189,6 @@ class ThreadView(GenericView):
         thread_updates: list[ThreadUpdate] | None = None,
     ) -> PostsFeed:
         return ThreadPostsFeed(request, thread, posts, thread_updates)
-
-    def get_poll(self, request: HttpRequest, thread: Thread) -> Poll | None:
-        queryset = Poll.objects.filter(thread=thread)
-        if self.poll_select_related is True:
-            return queryset.select_related()
-        elif self.poll_select_related:
-            return queryset.select_related(*self.poll_select_related)
-        return queryset.first()
 
 
 class PrivateThreadView(GenericView):

@@ -9,7 +9,11 @@
     <div class="thread-poll-header">
       <h3 class="thread-poll-question">{{ poll.question }}</h3>
     </div>
-    <div id="misago-htmx-poll-partial">
+    <div
+      id="misago-htmx-poll-partial"
+      hx-target="#misago-htmx-poll-partial"
+      hx-swap="innerHTML  show:none"
+    >
       {% includecomponent poll %}
     </div>
   </div>

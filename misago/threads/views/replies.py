@@ -2,9 +2,13 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth import get_user_model
 from django.db.models import QuerySet
-from django.http import HttpRequest, HttpResponse
+from django.http import (
+    Http404,
+    HttpRequest,
+    HttpResponse,
+    HttpResponseNotAllowed,
+)
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
@@ -20,8 +24,15 @@ from ...permissions.privatethreads import (
 from ...permissions.threads import (
     check_edit_thread_permission,
     check_reply_thread_permission,
+    check_vote_in_thread_poll_permission,
 )
+from ...polls.choices import PollChoices
 from ...polls.models import Poll
+from ...polls.votes import (
+    delete_user_poll_votes,
+    get_user_poll_votes,
+    save_user_poll_vote,
+)
 from ...posting.formsets import (
     ReplyPrivateThreadFormset,
     ReplyThreadFormset,
@@ -51,8 +62,6 @@ from .poll import PollView
 
 if TYPE_CHECKING:
     from ...users.models import User
-else:
-    User = get_user_model()
 
 
 class PageOutOfRangeError(Exception):
@@ -93,6 +102,11 @@ class RepliesView(View):
             template_name = self.template_name
 
         return render(request, template_name, context)
+
+    def post(
+        self, request: HttpRequest, id: int, slug: str, page: int | None = None
+    ) -> HttpResponse:
+        return HttpResponseNotAllowed()
 
     def get_context_data(
         self, request: HttpRequest, thread: Thread, page: int | None = None
@@ -241,10 +255,31 @@ class RepliesView(View):
         raise NotImplementedError
 
 
-class ThreadRepliesView(RepliesView, PollView, ThreadView):
+class ThreadRepliesView(RepliesView, ThreadView):
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
     poll_template_name: str = "misago/thread/poll.html"
+    poll_results_template_name: str = "misago/thread/poll_results.html"
+    poll_vote_template_name: str = "misago/thread/poll_vote.html"
+
+    def get(
+        self, request: HttpRequest, id: int, slug: str, page: int | None = None
+    ) -> HttpResponse:
+        if request.is_htmx:
+            if request.GET.get("poll") == "results":
+                return self.handle_poll_results(request, id)
+            if request.GET.get("poll") == "vote":
+                return self.handle_poll_vote(request, id)
+
+        return super().get(request, id, slug, page)
+
+    def post(
+        self, request: HttpRequest, id: int, slug: str, page: int | None = None
+    ) -> HttpResponse:
+        if request.GET.get("poll") == "vote":
+            return self.handle_poll_vote(request, id)
+
+        return super().post(request, id, slug, page)
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
         return get_thread_replies_page_thread_queryset_hook(
@@ -265,20 +300,13 @@ class ThreadRepliesView(RepliesView, PollView, ThreadView):
 
         context["category"] = thread.category
 
-        if poll_data := self.get_thread_poll_context_data(request, thread):
-            context["poll"] = poll_data
+        if poll := self.get_poll(request, thread, raise_404=False):
+            user_poll_votes = self.get_user_poll_votes(request, poll)
+            context["poll"] = self.get_poll_context_data(
+                request, thread, poll, user_poll_votes
+            )
 
         return context
-    
-    def get_thread_poll_context_data(self, request: HttpRequest, thread: Thread) -> dict | None:
-        if not thread.has_poll:
-            return None
-
-        poll = self.get_poll(request, thread)
-        if not poll:
-            return None
-
-        return self.get_poll_context_data(request, thread, poll)
 
     def get_thread_posts_queryset(
         self, request: HttpRequest, thread: Thread
@@ -318,6 +346,120 @@ class ThreadRepliesView(RepliesView, PollView, ThreadView):
         self, request: HttpRequest, thread: Thread
     ) -> ReplyThreadFormset:
         return get_reply_thread_formset(request, thread)
+
+    def handle_poll_results(self, request: HttpRequest, id: int) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        poll = self.get_poll(request, thread)
+
+        user_poll_votes = self.get_user_poll_votes(request, poll)
+        context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
+        return render(request, self.poll_results_template_name, context)
+
+    def handle_poll_vote(self, request: HttpRequest, id: int) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        poll = self.get_poll(request, thread)
+
+        if not poll:
+            raise Http404()
+
+        if not request.user.is_authenticated:
+            raise PermissionDenied("sign in to vote")
+
+        check_vote_in_thread_poll_permission(
+            request.user_permissions, thread.category, thread, poll
+        )
+
+        user_poll_votes = self.get_user_poll_votes(request, poll)
+        if user_poll_votes and not poll.can_change_vote:
+            raise PermissionDenied("can't change vote")
+
+        if request.method == "post":
+            return self.handle_poll_vote_submit(request, thread, poll, user_poll_votes)
+
+        context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
+        return render(request, self.poll_vote_template_name, context)
+
+    def handle_poll_vote_submit(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        poll: Poll,
+        user_poll_votes: set[str],
+    ) -> HttpResponse:
+
+        poll_choices = PollChoices(poll.choices)
+
+        user_choices = request.POST.getlist("poll_choice")
+        valid_choices = set(poll_choices.ids()).intersection(user_choices)
+
+        if not valid_choices:
+            raise PermissionError("select valid choice")
+
+        if len(valid_choices) > poll.max_choices:
+            raise PermissionError("cant select this many choices")
+
+        if user_poll_votes:
+            delete_user_poll_votes(request.user, poll, user_poll_votes)
+
+        save_user_poll_vote(request.user, poll, valid_choices)
+
+        if not request.is_htmx:
+            return redirect(request.path)
+
+        context = self.get_poll_context_data(request, thread, poll, valid_choices)
+        return render(request, self.poll_vote_template_name, context)
+
+    def get_poll(
+        self, request: HttpRequest, thread: Thread, raise_404: bool = True
+    ) -> Poll | None:
+        if thread.has_poll:
+            poll = Poll.objects.filter(thread=thread).first()
+        else:
+            poll = None
+
+        if not poll and raise_404:
+            raise Http404()
+
+        return poll
+
+    def get_user_poll_votes(self, request: HttpRequest, poll: Poll) -> set[str]:
+        if request.user.is_authenticated:
+            return get_user_poll_votes(request.user, poll)
+        return set()
+
+    def get_poll_context_data(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        poll: Poll,
+        user_poll_votes: set[str],
+    ) -> dict:
+        with check_permissions() as allow_vote:
+            check_vote_in_thread_poll_permission(
+                request.user_permissions, thread.category, thread, poll
+            )
+
+        template_name = self.poll_results_template_name
+        if (
+            request.user.is_authenticated
+            and request.GET.get("poll") != "results"
+            and allow_vote
+            and (
+                not user_poll_votes
+                or (request.GET.get("poll") == "vote" and poll.can_change_vote)
+            )
+        ):
+            template_name = self.poll_vote_template_name
+
+        return {
+            "poll": poll,
+            "template_name": template_name,
+            "user_poll_votes": user_poll_votes,
+            "question": poll.question,
+            "allow_poll_vote": allow_vote,
+            "poll_results_url": f"{request.path}?poll=results",
+            "poll_vote_url": f"{request.path}?poll=vote",
+        }
 
 
 class PrivateThreadRepliesView(RepliesView, PrivateThreadView):

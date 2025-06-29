@@ -1,7 +1,5 @@
 from django.urls import path
 
-from ...conf import settings
-
 from ..views.edit import (
     edit_private_thread,
     edit_private_thread_post,
@@ -9,7 +7,6 @@ from ..views.edit import (
     edit_thread_post,
 )
 from ..views.list import category_threads, private_threads, threads
-from ..views.poll import ThreadPollResultsView, ThreadPollVoteView
 from ..views.redirect import (
     PostRedirectView,
     PrivateThreadLastPostRedirectView,
@@ -195,16 +192,6 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/delete-update/<int:thread_update>/",
         DeletePrivateThreadView.as_view(),
         name="delete-private-thread-update",
-    ),
-    path(
-        "t/<slug:slug>/<int:id>/results/",
-        ThreadPollResultsView.as_view(),
-        name="thread-poll-results",
-    ),
-    path(
-        "t/<slug:slug>/<int:id>/vote/",
-        ThreadPollVoteView.as_view(),
-        name="thread-poll-vote",
     ),
     path(
         "post/<int:id>/",

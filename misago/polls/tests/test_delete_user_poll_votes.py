@@ -1,8 +1,11 @@
 from ..choices import PollChoices
-from ..votes import (delete_user_poll_votes, save_user_poll_vote,)
+from ..votes import (
+    delete_user_poll_votes,
+    save_user_poll_vote,
+)
 
 
-def test_delete_user_poll_votes_deletes_user_poll_votes(user, poll):                       
+def test_delete_user_poll_votes_deletes_user_poll_votes(user, poll):
     poll_choices = PollChoices(poll.choices)
     choice_id1 = poll_choices.ids()[0]
     choice_id2 = poll_choices.ids()[-1]

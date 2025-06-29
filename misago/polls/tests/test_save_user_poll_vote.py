@@ -10,7 +10,7 @@ def test_save_user_poll_vote_saves_user_vote(user, poll):
     save_user_poll_vote(user, poll, [choice_id])
 
     vote = PollVote.objects.get()
-    
+
     assert vote.category == poll.category
     assert vote.thread == poll.thread
     assert vote.poll == poll

@@ -7,13 +7,13 @@
     {% endfor %}
   </ul>
   <p>Votes: {{ poll.votes }}</p>
-  <button
-    class="btn btn-secondary"
-    type="button"
-    hx-get="{{ poll_vote_url }}"
-    hx-target="#misago-htmx-poll-partial"
-    hx-swap="innerHTML"
-  >
-    Re-vote
-  </button>
+  {% if allow_poll_vote %}
+    <a href="{{ poll_vote_url }}"
+      class="btn btn-secondary"
+      type="button"
+      hx-boost="true"
+    >
+      Re-vote
+    </a>
+  {% endif %}
 </div>

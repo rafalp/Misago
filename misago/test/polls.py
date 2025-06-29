@@ -153,7 +153,7 @@ def poll_vote_factory():
             voter_slug=voter_slug,
             voted_at=factory_timestamp_arg(voted_at),
         )
-        
+
         choices = PollChoices(poll.choices)
         choices[choice_id]["votes"] += 1
 
