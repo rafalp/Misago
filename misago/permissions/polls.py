@@ -14,7 +14,7 @@ def _check_start_poll_permission_action(permissions: UserPermissionsProxy):
         raise PermissionDenied(
             pgettext(
                 "polls permission error",
-                "You must be signed in to use private threads.",
+                "You must be signed in to start polls.",
             )
         )
 

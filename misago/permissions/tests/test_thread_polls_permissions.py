@@ -781,6 +781,18 @@ def test_check_vote_in_thread_poll_permission_passes_if_user_has_permission(
     )
 
 
+def test_check_vote_in_thread_poll_permission_fails_if_user_is_anonymous(
+    anonymous_user_permissions,
+    default_category,
+    thread,
+    poll,
+):
+    with pytest.raises(PermissionDenied):
+        check_vote_in_thread_poll_permission(
+            anonymous_user_permissions, default_category, thread, poll
+        )
+
+
 def test_check_vote_in_thread_poll_permission_fails_if_user_has_no_permission(
     user,
     user_permissions_factory,

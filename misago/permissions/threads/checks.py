@@ -610,6 +610,14 @@ def check_vote_in_thread_poll_permission(
 def _check_vote_in_thread_poll_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
 ):
+    if permissions.user.is_anonymous:
+        raise PermissionDenied(
+            pgettext(
+                "polls permission error",
+                "You must be signed in to vote in polls.",
+            )
+        )
+
     if category.is_closed:
         raise PermissionDenied(
             pgettext(

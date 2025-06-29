@@ -361,9 +361,6 @@ class ThreadRepliesView(RepliesView, ThreadView):
         if not poll:
             raise Http404()
 
-        if not request.user.is_authenticated:
-            raise PermissionDenied("sign in to vote")
-
         check_vote_in_thread_poll_permission(
             request.user_permissions, thread.category, thread, poll
         )
@@ -440,8 +437,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
         template_name = self.poll_results_template_name
         if (
-            request.user.is_authenticated
-            and request.GET.get("poll") != "results"
+            request.GET.get("poll") != "results"
             and allow_vote
             and (
                 not user_poll_votes
