@@ -65,13 +65,7 @@ class PollMergeHandler(MergeConflictHandler):
     data_name = "poll"
 
     def populate_from_threads(self, threads):
-        for thread in threads:
-            try:
-                self.items.append(thread.poll)
-                self.choices[thread.poll.id] = thread.poll
-            except Poll.DoesNotExist:
-                pass
-        self.items.sort(key=lambda poll: poll.question)
+        pass
 
     def get_available_resolutions(self):
         resolutions = [[0, pgettext("merge conflict poll", "Delete all polls")]]

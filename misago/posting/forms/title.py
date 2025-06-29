@@ -2,7 +2,7 @@ from django import forms
 from django.http import HttpRequest
 from django.utils.translation import pgettext_lazy
 
-from ..state import StartPrivateThreadState, StartThreadState
+from ..state import StartPostingState
 from ..validators import validate_thread_title
 from .base import PostingForm
 
@@ -25,7 +25,9 @@ class TitleForm(PostingForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
+
         super().__init__(*args, **kwargs)
+
         self.fields["title"].max_length = self.request.settings.thread_title_length_max
 
     def clean_title(self):
@@ -34,11 +36,11 @@ class TitleForm(PostingForm):
             data,
             self.request.settings.thread_title_length_min,
             self.request.settings.thread_title_length_max,
-            request=self.request,
+            self.request,
         )
         return data
 
-    def update_state(self, state: StartPrivateThreadState | StartThreadState):
+    def update_state(self, state: StartPostingState):
         state.set_thread_title(self.cleaned_data["title"])
 
 

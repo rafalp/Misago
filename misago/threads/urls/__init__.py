@@ -1,7 +1,5 @@
 from django.urls import path
 
-from ...conf import settings
-
 from ..views.edit import (
     edit_private_thread,
     edit_private_thread_post,
@@ -24,12 +22,12 @@ from ..views.reply import reply_private_thread, reply_thread
 from ..views.selectcategory import SelectCategoryView
 from ..views.start import start_private_thread, start_thread
 from ..views.threadupdates import (
-    delete_thread_update_view,
-    delete_private_thread_update_view,
-    hide_private_thread_update_view,
-    hide_thread_update_view,
-    unhide_private_thread_update_view,
-    unhide_thread_update_view,
+    DeletePrivateThreadView,
+    DeleteThreadUpdateView,
+    HidePrivateThreadView,
+    HideThreadUpdateView,
+    UnhidePrivateThreadUpdateView,
+    UnhideThreadUpdateView,
 )
 
 
@@ -167,32 +165,32 @@ urlpatterns = [
     ),
     path(
         "t/<slug:slug>/<int:id>/hide-update/<int:thread_update>/",
-        hide_thread_update_view,
+        HideThreadUpdateView.as_view(),
         name="hide-thread-update",
     ),
     path(
         "p/<slug:slug>/<int:id>/hide-update/<int:thread_update>/",
-        hide_private_thread_update_view,
+        HidePrivateThreadView.as_view(),
         name="hide-private-thread-update",
     ),
     path(
         "t/<slug:slug>/<int:id>/unhide-update/<int:thread_update>/",
-        unhide_thread_update_view,
+        UnhideThreadUpdateView.as_view(),
         name="unhide-thread-update",
     ),
     path(
         "p/<slug:slug>/<int:id>/unhide-update/<int:thread_update>/",
-        unhide_private_thread_update_view,
+        UnhidePrivateThreadUpdateView.as_view(),
         name="unhide-private-thread-update",
     ),
     path(
         "t/<slug:slug>/<int:id>/delete-update/<int:thread_update>/",
-        delete_thread_update_view,
+        DeleteThreadUpdateView.as_view(),
         name="delete-thread-update",
     ),
     path(
         "p/<slug:slug>/<int:id>/delete-update/<int:thread_update>/",
-        delete_private_thread_update_view,
+        DeletePrivateThreadView.as_view(),
         name="delete-private-thread-update",
     ),
     path(

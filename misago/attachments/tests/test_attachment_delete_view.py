@@ -131,6 +131,6 @@ def test_attachment_delete_view_checks_delete_attachment_permissions(
 
     assert_contains(
         response,
-        "You can&#x27;t delete other users attachments.",
+        "You can&#x27;t delete other users&#x27; attachments.",
         status_code=403,
     )

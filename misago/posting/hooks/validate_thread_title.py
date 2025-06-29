@@ -7,7 +7,7 @@ from ...plugins.hooks import FilterHook
 
 class ValidateThreadTitleHookAction(Protocol):
     """
-    A standard function used by Misago to validate thread titles.
+    Standard Misago function for validating a thread title.
     Raises `ValidationError` if the thread title is invalid.
 
     # Arguments
@@ -34,7 +34,6 @@ class ValidateThreadTitleHookAction(Protocol):
         value: str,
         min_length: int,
         max_length: int,
-        *,
         request: HttpRequest | None = None,
     ) -> None: ...
 
@@ -47,8 +46,8 @@ class ValidateThreadTitleHookFilter(Protocol):
 
     ## `action: ValidateThreadTitleHookAction`
 
-    A standard function used by Misago to validate thread titles.
-    Raises `ValidationError` if the thread title is invalid.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 
@@ -75,7 +74,6 @@ class ValidateThreadTitleHookFilter(Protocol):
         value: str,
         min_length: int,
         max_length: int,
-        *,
         request: HttpRequest | None = None,
     ) -> None: ...
 
@@ -87,32 +85,42 @@ class ValidateThreadTitleHook(
     ]
 ):
     """
-    This hook wraps a standard function used by Misago to validate thread titles.
-    Raises `ValidationError` if the thread title is invalid.
+    This hook allows plugins to replace or extend the standard logic used to
+    validate thread titles.
 
     # Example
 
-    The code below implements a custom thread title validator that raises
-    the minimal required length of a thread's title for new users.
+    Forbid selected words in thread titles:
 
     ```python
+    from django.core.exceptions import ValidationError
     from django.http import HttpRequest
+    from django.utils.translation import pgettext
     from misago.posting.hooks import validate_thread_title_hook
 
+    BAD_WORDS = ("casino", "win", "spam")
 
     @validate_thread_title_hook.append_filter
-    def validate_thread_title_for_new_users(
+    def validate_thread_title_bad_words(
         action,
         value: str,
         min_length: int,
         max_length: int,
-        *,
         request: HttpRequest | None = None,
     ) -> None:
-        if request and request.user.is_authenticated and request.user.posts < 5:
-            min_length = min(min_length + 10)
+        if value:
+            value_lowercase = value.lower()
+            for bad_word in BAD_WORDS:
+                if bad_word in value_lowercase:
+                    raise ValidationError(
+                        message=pgettext(
+                            "thread validator",
+                            "This title is not allowed.",
+                        ),
+                        code="invalid",
+                    )
 
-        action(value, min_length, max_length, request=request)
+        action(value, min_length, max_length, request)
     ```
     """
 
@@ -124,10 +132,9 @@ class ValidateThreadTitleHook(
         value: str,
         min_length: int,
         max_length: int,
-        *,
         request: HttpRequest | None = None,
     ) -> None:
-        return super().__call__(action, value, min_length, max_length, request=request)
+        return super().__call__(action, value, min_length, max_length, request)
 
 
 validate_thread_title_hook = ValidateThreadTitleHook()

@@ -2,46 +2,14 @@
 // Inputs
 // --------------------------------------------------
 
-// Button-based inputs
-.btn.btn-yes-no,
-.btn.btn-select {
-  background: transparent;
-  border: 1px solid darken(@gray-lighter, 10%);
-
-  .material-icon {
-    margin: -4px 0px;
-    margin-right: 8px;
-
-    position: relative;
-    bottom: 1px;
-
-    width: 20px;
-    height: 20px;
-
-    font-size: 20px;
-    line-height: 20px;
-  }
+// Textarea
+textarea.form-control {
+  resize: vertical;
 }
 
-@media screen and (max-width: @screen-xs-max) {
-  .btn.btn-yes-no {
-    width: 100%;
-    overflow: auto;
-
-    .material-icon {
-      float: left;
-      margin-top: 1px;
-    }
-
-    .btn-text {
-      display: block;
-
-      margin-left: 30px;
-
-      text-align: left;
-      white-space: normal;
-    }
-  }
+.field-sizing-content {
+  field-sizing: content;
+  min-height: @line-height-computed * 5;
 }
 
 // Hidden file input
@@ -72,6 +40,47 @@ input.hidden-file-upload {
   }
 }
 
+.form-control-checkbox,
+.form-control-checkbox-inline {
+  label {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+
+    margin-bottom: 0;
+    padding-left: 20px;
+
+    font-weight: normal;
+    vertical-align: middle;
+
+    cursor: pointer;
+  }
+
+  input {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.form-control-checkbox + .form-control-checkbox,
+.form-control-checkbox-inline + .form-control-checkbox-inline {
+  margin-top: 4px;
+}
+
+@media screen and (min-width: 800px) {
+  .form-control-checkbox {
+    margin-top: 0;
+  }
+
+  .form-control-checkbox-inline {
+    display: inline-block;
+    margin-top: 0;
+    margin-right: ceil(@grid-gutter-width / 2);
+  }
+}
+
 // Reply thread field
 .form-control-post {
   resize: none;
@@ -88,4 +97,12 @@ input.hidden-file-upload {
   .form-control-post.form-control-post-lg {
     min-height: 400px;
   }
+}
+
+// Poll choices
+.form-control-poll-choices {
+  display: flex;
+  flex-direction: column;
+  gap: ceil(@grid-gutter-width / 2);
+  padding-left: 24px;
 }
