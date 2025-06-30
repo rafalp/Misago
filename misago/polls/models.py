@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from math import floor
 
 from django.conf import settings
 from django.db import models
@@ -55,6 +56,30 @@ class Poll(PluginDataModel):
             return timezone.now() >= self.ends_at
 
         return False
+
+    @property
+    def choices_with_shares(self) -> list[dict]:
+        remainder = 100
+        voted_choices = 0
+
+        data = []
+        for choice in self.choices:
+            if choice["votes"]:
+                share = floor(float(choice["votes"]) * 100 / self.votes)
+                remainder -= share
+                voted_choices += 1
+            else:
+                share = 0
+
+            data.append(dict(share=share, **choice))
+
+        if remainder:
+            for choice in sorted(data, key=lambda c: c["votes"]):
+                if remainder:
+                    choice["share"] += 1
+                    remainder -= 1
+
+        return data
 
 
 class PollVote(models.Model):

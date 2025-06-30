@@ -21,7 +21,7 @@ def delete_user_poll_votes(user: "User", poll: Poll, choices: Iterable[str]):
         if choice["id"] in choices:
             choice["votes"] = min(0, choice["votes"] - 1)
 
-    poll.votes = min(poll.votes - len(choices), 0)
+    poll.votes = sum(choice["votes"] for choice in poll.choices)
 
     PollVote.objects.filter(poll=poll, voter=user, choice_id__in=choices).delete()
 
@@ -47,5 +47,5 @@ def save_user_poll_vote(user: "User", poll: Poll, choices: Iterable[str]):
         if choice["id"] in choices:
             choice["votes"] += 1
 
-    poll.votes += len(choices)
+    poll.votes = sum(choice["votes"] for choice in poll.choices)
     poll.save(update_fields=["choices", "votes"])

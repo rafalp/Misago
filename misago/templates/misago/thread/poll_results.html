@@ -6,9 +6,9 @@
 
 <div class="poll-results">
   <ul class="poll-something">
-    {% for choice in poll.choices %}
+    {% for choice in poll.choices_with_shares %}
       <li>
-        {{ choice.name }}: {{ choice.votes}}{% if choice.id in user_poll_votes %} [X]{% endif %}
+        {{ choice.name }}: {{ choice.votes}} ({{ choice.share }}){% if choice.id in user_poll_votes %} [X]{% endif %}
       </li>
     {% endfor %}
   </ul>
