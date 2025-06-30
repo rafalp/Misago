@@ -372,8 +372,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
         poll = self.get_poll(request, thread, raise_404=True)
 
         user_poll_votes = self.get_user_poll_votes(request, poll)
-        context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
-        return render(request, self.poll_results_template_name, context)
+        return self.render_poll_results_partial(request, thread, poll, user_poll_votes)
 
     def handle_poll_vote(self, request: HttpRequest, id: int) -> HttpResponse:
         thread = self.get_thread(request, id)
@@ -399,15 +398,15 @@ class ThreadRepliesView(RepliesView, ThreadView):
             if not request.is_htmx:
                 return redirect(f"{request.path}?poll=results")
 
-            context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
-            return render(request, self.poll_results_template_name, context)
+            return self.render_poll_results_partial(
+                request, thread, poll, user_poll_votes
+            )
         except ValidationError as error:
             messages.error(request, error.messages[0])
             if not request.is_htmx:
                 return redirect(f"{request.path}?poll=vote")
 
-        context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
-        return render(request, self.poll_vote_template_name, context)
+        return self.render_poll_vote_partial(request, thread, poll, user_poll_votes)
 
     def handle_poll_vote_post(
         self,
@@ -431,19 +430,27 @@ class ThreadRepliesView(RepliesView, ThreadView):
         if not request.is_htmx:
             return redirect(request.path)
 
-        context = self.get_poll_context_data(request, thread, poll, valid_choices)
-        return render(request, self.poll_results_template_name, context)
+        return self.render_poll_results_partial(request, thread, poll, valid_choices)
 
-    def render_poll_template(
+    def render_poll_results_partial(
         self,
         request: HttpRequest,
-        template_name: str,
         thread: Thread,
         poll: Poll,
         user_poll_votes: set[str],
     ) -> HttpResponse:
         context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
-        return render(request, template_name, context)
+        return render(request, self.poll_results_template_name, context)
+
+    def render_poll_vote_partial(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        poll: Poll,
+        user_poll_votes: set[str],
+    ) -> HttpResponse:
+        context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
+        return render(request, self.poll_vote_template_name, context)
 
     def get_poll_context_data(
         self,

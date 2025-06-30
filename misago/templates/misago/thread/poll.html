@@ -1,10 +1,5 @@
 {% load i18n misago_component %}
 <div class="panel panel-default panel-poll">
-  <div class="panel-heading">
-    <h3 class="panel-title">
-      {% translate "Poll" context "thread poll panel title" %}
-    </h3>
-  </div>
   <div class="panel-body panel-poll-body">
     <div class="thread-poll-header">
       <h3 class="thread-poll-question">{{ poll.question }}</h3>
@@ -12,7 +7,7 @@
     <div
       id="misago-htmx-poll-partial"
       hx-target="#misago-htmx-poll-partial"
-      hx-swap="innerHTML  show:none"
+      hx-swap="innerHTML show:none"
     >
       {% includecomponent poll %}
     </div>
