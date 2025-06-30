@@ -1,7 +1,9 @@
 {% load i18n misago_capture misago_formats misago_forms %}
+
 {% if is_request_htmx %}
   {% include "misago/snackbars.html" %}
 {% endif %}
+
 <div id="misago-htmx-root">
   <form
     action="{% url 'misago:account-username' %}"

@@ -1,7 +1,8 @@
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from django.core.exceptions import PermissionDenied
+from django.contrib import messages
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import QuerySet
 from django.http import (
     Http404,
@@ -10,6 +11,7 @@ from django.http import (
     HttpResponseNotAllowed,
 )
 from django.shortcuts import redirect, render
+from django.utils.translation import pgettext
 from django.urls import reverse
 from django.views import View
 
@@ -28,6 +30,7 @@ from ...permissions.threads import (
 )
 from ...polls.choices import PollChoices
 from ...polls.models import Poll
+from ...polls.validators import validate_poll_vote
 from ...polls.votes import (
     delete_user_poll_votes,
     get_user_poll_votes,
@@ -346,69 +349,6 @@ class ThreadRepliesView(RepliesView, ThreadView):
     ) -> ReplyThreadFormset:
         return get_reply_thread_formset(request, thread)
 
-    def handle_poll_results(self, request: HttpRequest, id: int) -> HttpResponse:
-        thread = self.get_thread(request, id)
-        poll = self.get_poll(request, thread)
-
-        user_poll_votes = self.get_user_poll_votes(request, poll)
-        context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
-        return render(request, self.poll_results_template_name, context)
-
-    def handle_poll_vote(self, request: HttpRequest, id: int) -> HttpResponse:
-        thread = self.get_thread(request, id)
-        poll = self.get_poll(request, thread)
-
-        if not poll:
-            raise Http404()
-
-        check_vote_in_thread_poll_permission(
-            request.user_permissions, thread.category, thread, poll
-        )
-
-        user_poll_votes = self.get_user_poll_votes(request, poll)
-        if user_poll_votes and not poll.can_change_vote:
-            raise PermissionDenied("can't change vote")
-
-        if request.method == "POST":
-            return self.handle_poll_vote_submit(request, thread, poll, user_poll_votes)
-
-        context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
-        return render(request, self.poll_vote_template_name, context)
-
-    def handle_poll_vote_submit(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        poll: Poll,
-        user_poll_votes: set[str],
-    ) -> HttpResponse:
-        poll_choices = PollChoices(poll.choices)
-
-        user_choices = request.POST.getlist("poll_choice")
-        valid_choices = set(poll_choices.ids()).intersection(user_choices)
-
-        if not valid_choices:
-            raise PermissionDenied("select valid choice")
-
-        if len(valid_choices) > poll.max_choices:
-            raise PermissionDenied("cant select this many choices")
-
-        if valid_choices != user_poll_votes:
-            if user_poll_votes:
-                delete_user_poll_votes(request.user, poll, user_poll_votes)
-            save_user_poll_vote(request.user, poll, valid_choices)
-
-            if user_poll_votes:
-                print("vote changed")
-            else:
-                print("vote saved")
-
-        if not request.is_htmx:
-            return redirect(request.path)
-
-        context = self.get_poll_context_data(request, thread, poll, valid_choices)
-        return render(request, self.poll_results_template_name, context)
-
     def get_poll(
         self, request: HttpRequest, thread: Thread, raise_404: bool = True
     ) -> Poll | None:
@@ -426,6 +366,84 @@ class ThreadRepliesView(RepliesView, ThreadView):
         if request.user.is_authenticated:
             return get_user_poll_votes(request.user, poll)
         return set()
+
+    def handle_poll_results(self, request: HttpRequest, id: int) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        poll = self.get_poll(request, thread, raise_404=True)
+
+        user_poll_votes = self.get_user_poll_votes(request, poll)
+        context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
+        return render(request, self.poll_results_template_name, context)
+
+    def handle_poll_vote(self, request: HttpRequest, id: int) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        poll = self.get_poll(request, thread, raise_404=True)
+        user_poll_votes = self.get_user_poll_votes(request, poll)
+
+        try:
+            check_vote_in_thread_poll_permission(
+                request.user_permissions, thread.category, thread, poll
+            )
+
+            if user_poll_votes and not poll.can_change_vote:
+                raise PermissionDenied(
+                    pgettext("poll vote", "This poll doesn’t allow vote changes.")
+                )
+
+            if request.method == "POST":
+                return self.handle_poll_vote_post(
+                    request, thread, poll, user_poll_votes
+                )
+        except PermissionDenied as error:
+            messages.error(request, str(error))
+            if not request.is_htmx:
+                return redirect(f"{request.path}?poll=results")
+
+            context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
+            return render(request, self.poll_results_template_name, context)
+        except ValidationError as error:
+            messages.error(request, error.messages[0])
+            if not request.is_htmx:
+                return redirect(f"{request.path}?poll=vote")
+
+        context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
+        return render(request, self.poll_vote_template_name, context)
+
+    def handle_poll_vote_post(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        poll: Poll,
+        user_poll_votes: set[str],
+    ) -> HttpResponse:
+        poll_choices = PollChoices(poll.choices)
+        user_choices = request.POST.getlist("poll_choice")
+
+        valid_choices = validate_poll_vote(user_choices, poll_choices, poll.max_choices)
+
+        if valid_choices != user_poll_votes:
+            if user_poll_votes:
+                delete_user_poll_votes(request.user, poll, user_poll_votes)
+
+            save_user_poll_vote(request.user, poll, valid_choices)
+            messages.success(request, pgettext("poll vote", "Vote saved"))
+
+        if not request.is_htmx:
+            return redirect(request.path)
+
+        context = self.get_poll_context_data(request, thread, poll, valid_choices)
+        return render(request, self.poll_results_template_name, context)
+
+    def render_poll_template(
+        self,
+        request: HttpRequest,
+        template_name: str,
+        thread: Thread,
+        poll: Poll,
+        user_poll_votes: set[str],
+    ) -> HttpResponse:
+        context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
+        return render(request, template_name, context)
 
     def get_poll_context_data(
         self,

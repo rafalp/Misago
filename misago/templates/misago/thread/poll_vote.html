@@ -1,4 +1,9 @@
 {% load i18n %}
+
+{% if is_request_htmx %}
+  {% include "misago/snackbars.html" %}
+{% endif %}
+
 <form
   method="post"
   action="{{ poll_vote_url }}"

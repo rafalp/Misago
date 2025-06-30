@@ -1,3 +1,9 @@
+{% load i18n %}
+
+{% if is_request_htmx %}
+  {% include "misago/snackbars.html" %}
+{% endif %}
+
 <div class="poll-results">
   <ul class="poll-something">
     {% for choice in poll.choices %}
