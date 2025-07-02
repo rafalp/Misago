@@ -1,25 +1,77 @@
-{% load i18n %}
+{% load i18n misago_capture misago_formats %}
 
 {% if is_request_htmx %}
   {% include "misago/snackbars.html" %}
 {% endif %}
 
 <div class="poll-results">
-  <ul class="poll-something">
+  <ul class="poll-results-choices">
     {% for choice in poll.choices_with_shares %}
-      <li>
-        {{ choice.name }}: {{ choice.votes}} ({{ choice.share }}){% if choice.id in user_poll_votes %} [X]{% endif %}
+      <li class="poll-results-choice">
+        <div class="poll-results-choice-name">
+          {{ choice.name }}
+        </div>
+        <div class="poll-results-choice-bar">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{ choice.share }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ choice.share }}%;">
+            </div>
+          </div>
+        </div>
+        <div class="poll-results-choice-stats">
+          {% blocktrans trimmed count votes=choice.votes context "poll results" %}
+            {{ votes }} vote
+          {% plural %}
+            {{ votes }} votes
+          {% endblocktrans %}
+          <span class="poll-results-choice-stats-separator">&bull;</span>
+          {{ choice.share }}%
+          {% if choice.id in user_poll_votes %}<span class="poll-results-choice-stats-bullet"></span>{% endif %}
+        </div>
       </li>
     {% endfor %}
   </ul>
-  <p>Votes: {{ poll.votes }}</p>
+  <div class="poll-details">
+    {% blocktrans trimmed count votes=poll.votes context "poll details" %}
+      {{ votes }} vote in total.
+    {% plural %}
+      {{ votes }} votes in total.
+    {% endblocktrans %}
+    {% if poll.has_ended %}
+      {% blocktrans trimmed context "poll details" %}
+        Poll has ended.
+      {% endblocktrans %}
+    {% elif poll.is_closed %}
+      {% blocktrans trimmed context "poll details" %}
+        Poll is closed.
+      {% endblocktrans %}
+    {% elif poll.duration %}
+      {% capture trimmed as poll_end %}
+        <span
+          title="{{ poll.ends_at|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ poll.ends_at.isoformat }}"
+        >
+        {{ poll.ends_at|date_relative }}
+        </span>
+      {% endcapture %}
+      {% blocktrans trimmed with timestamp=poll_end|safe context "poll details" %}
+        Voting ends on {{ timestamp }}.
+      {% endblocktrans %}
+    {% endif %}
+    {% if poll.is_public %}
+      {% blocktrans trimmed context "poll details" %}
+        Votes are public.
+      {% endblocktrans %}
+    {% endif %}
+  </div>
   {% if allow_poll_vote %}
-    <a href="{{ poll_vote_url }}"
-      class="btn btn-secondary"
-      type="button"
-      hx-boost="true"
-    >
-      Change vote
-    </a>
+    <div class="poll-footer">
+      <a href="{{ poll_vote_url }}"
+        class="btn btn-default"
+        type="button"
+        hx-boost="true"
+      >
+        {% translate "Change vote" context "poll results btn" %}
+      </a>
+    </div>
   {% endif %}
 </div>

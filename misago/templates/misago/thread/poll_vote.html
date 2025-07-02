@@ -31,13 +31,13 @@
         </li>
       {% endfor %}
     </ul>
-    <ul class="poll-vote-form-footer">
+    <div class="poll-footer">
+      <a href="{{ poll_results_url }}" class="btn btn-default" hx-boost="true">
+        {% translate "View results" context "thread poll voting submit btn" %}
+      </a>
       <button class="btn btn-primary">
         {% translate "Submit vote" context "thread poll voting submit btn" %}
       </button>
-      <a href="{{ poll_results_url }}" hx-boost="true">
-        {% translate "View results" context "thread poll voting submit btn" %}
-      </a>
-    </ul>
+    </div>
   </div>
 </form>
