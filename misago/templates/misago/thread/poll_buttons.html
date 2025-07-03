@@ -1,0 +1,36 @@
+{% load i18n %}
+{% if allow_edit or moderator %}
+  <a href="{{ vote_url }}"
+    class="btn btn-link"
+    type="button"
+    hx-boost="true"
+  >
+    {% translate "Edit" context "poll footer btn" %}
+  </a>
+{% endif %}
+{% if allow_close or moderator %}
+  <a href="{{ vote_url }}"
+    class="btn btn-link"
+    type="button"
+    hx-boost="true"
+  >
+    {% translate "Close" context "poll footer btn" %}
+  </a>
+{% elif poll.is_closed and moderator %}
+  <a href="{{ vote_url }}"
+    class="btn btn-link"
+    type="button"
+    hx-boost="true"
+  >
+    {% translate "Open" context "poll footer btn" %}
+  </a>
+{% endif %}
+{% if moderator %}
+  <a href="{{ vote_url }}"
+    class="btn btn-link"
+    type="button"
+    hx-boost="true"
+  >
+    {% translate "Delete" context "poll footer btn" %}
+  </a>
+{% endif %}

@@ -50,6 +50,7 @@
         </div>
       {% endif %}
       <div>
+        {% include "misago/thread/poll_buttons.html" %}
         <a href="{{ results_url }}" class="btn btn-default" hx-boost="true">
           {% translate "View results" context "poll footer btn" %}
         </a>

@@ -91,24 +91,7 @@
     </div>
     {% if poll.is_public or allow_vote or allow_edit or allow_close or moderator %}
       <div class="poll-buttons">
-        {% if allow_edit or moderator %}
-          <a href="{{ vote_url }}"
-            class="btn btn-link"
-            type="button"
-            hx-boost="true"
-          >
-            {% translate "Edit" context "poll footer btn" %}
-          </a>
-        {% endif %}
-        {% if allow_close or moderator %}
-          <a href="{{ vote_url }}"
-            class="btn btn-link"
-            type="button"
-            hx-boost="true"
-          >
-            {% translate "Close" context "poll footer btn" %}
-          </a>
-        {% endif %}
+        {% include "misago/thread/poll_buttons.html" %}
         {% if poll.is_public and not show_voters %}
           <a href="{{ voters_url }}"
             class="btn btn-default"

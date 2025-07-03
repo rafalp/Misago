@@ -496,9 +496,11 @@ class ThreadRepliesView(RepliesView, ThreadView):
             "show_voters": show_voters,
             "moderator": self.get_moderator_status(request, thread),
             "allow_edit": allow_edit,
-            "allow_close": not poll.is_closed and allow_close,
+            "allow_close": allow_close and not poll.is_closed,
             "allow_vote": allow_vote,
-            "results_url": f"{request.path}?poll=results",
+            "close_url": f"{request.path}?poll=close",
+            "open_url": f"{request.path}?poll=open",
+            "edit_url": f"{request.path}?poll=edit",
             "voters_url": f"{request.path}?poll=voters",
             "vote_url": f"{request.path}?poll=vote",
         }
