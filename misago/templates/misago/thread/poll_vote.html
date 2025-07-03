@@ -11,17 +11,7 @@
 >
   {% csrf_token %}
   <div class="poll-vote-form">
-    <p class="poll-vote-form-instruction">
-      {% if poll.max_choices > 1 %}
-        {% blocktrans trimmed context "thread poll voting instruction" %}
-        {% endblocktrans %}
-      {% else %}
-        {% blocktrans trimmed context "thread poll voting instruction" %}
-          Chose option to vote on:
-        {% endblocktrans %}
-      {% endif %}
-    </p>
-    <ul class="poll-vote-form-choices">
+    <ul class="poll-vote-choices">
       {% for choice in poll.choices %}
         <li>
           <label class="{% if poll.max_choices > 1 %}checkbox{% else %}radio{% endif %}">

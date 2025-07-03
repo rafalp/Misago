@@ -13,6 +13,16 @@
           {% if choice.id in user_poll_votes %}
             <span class="poll-results-choice-bullet" title="{% translate 'Your vote' context 'poll results' %}"></span>
           {% endif %}
+          <span class="poll-results-choice-stats-sm">
+            <span class="poll-results-choice-stats-separator">&bull;</span>
+            {% blocktrans trimmed count votes=choice.votes context "poll results" %}
+              {{ votes }} vote
+            {% plural %}
+              {{ votes }} votes
+            {% endblocktrans %}
+            <span class="poll-results-choice-stats-separator">&bull;</span>
+            {{ choice.share }}%
+          </span>
         </div>
         <div class="poll-results-choice-bar">
           <div class="progress">
