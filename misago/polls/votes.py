@@ -17,7 +17,7 @@ def get_user_poll_votes(user: "User", poll: Poll) -> set[str]:
     )
 
 
-def get_poll_results(poll: Poll, fetch_voters: bool = False) -> list[dict]:
+def get_poll_results_data(poll: Poll, fetch_voters: bool = False) -> list[dict]:
     remainder = 100
     voted_choices = 0
 
