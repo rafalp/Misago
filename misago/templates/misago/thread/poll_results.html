@@ -6,7 +6,7 @@
 
 <div class="poll-results">
   <ul class="poll-results-choices">
-    {% for choice in poll.choices_with_shares %}
+    {% for choice in poll_results %}
       <li class="poll-results-choice">
         <div class="poll-results-choice-name">
           {{ choice.name }}
@@ -40,6 +40,21 @@
           {{ choice.share }}%
         </div>
       </li>
+      {% if show_poll_voters %}
+        <li class="poll-results-choice-voters">
+          {% for voter in choice.voters %}
+            {% if voter.id %}
+              <a href="{% url 'misago:user' pk=voter.id slug=voter.slug %}" class="poll-voter">{{ voter.username }}</a>{% if not forloop.last %}, {% endif %}
+            {% else %}
+              <span class="poll-voter">{{ voter.username }}</span>{% if not forloop.last %}, {% endif %}
+            {% endif %}
+          {% empty %}
+            <span class="poll-results-choice-voters-empty">
+              {% translate "No one voted for this choice" context "poll results" %}
+            </span>
+          {% endfor %}
+        </li>
+      {% endif %}
     {% endfor %}
   </ul>
   {% if allow_poll_vote %}
@@ -76,12 +91,29 @@
         {% endif %}
       </div>
       <div class="poll-buttons">
+        {% if poll.is_public and not show_poll_voters %}
+          <a href="{{ poll_voters_url }}"
+            class="btn btn-default"
+            type="button"
+            hx-boost="true"
+          >
+            {% translate "View voters" context "poll footer btn" %}
+          </a>
+        {% elif show_poll_voters %}
+          <a href="{{ poll_results_url }}"
+            class="btn btn-default"
+            type="button"
+            hx-boost="true"
+          >
+            {% translate "Hide voters" context "poll footer btn" %}
+          </a>
+        {% endif %}
         <a href="{{ poll_vote_url }}"
           class="btn btn-default"
           type="button"
           hx-boost="true"
         >
-          {% translate "Change vote" context "poll results btn" %}
+          {% translate "Change vote" context "poll footer btn" %}
         </a>
       </div>
     </div>

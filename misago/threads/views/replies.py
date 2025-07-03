@@ -33,6 +33,7 @@ from ...polls.models import Poll
 from ...polls.validators import validate_poll_vote
 from ...polls.votes import (
     delete_user_poll_votes,
+    get_poll_results,
     get_user_poll_votes,
     save_user_poll_vote,
 )
@@ -263,12 +264,13 @@ class ThreadRepliesView(RepliesView, ThreadView):
     poll_template_name: str = "misago/thread/poll.html"
     poll_results_template_name: str = "misago/thread/poll_results.html"
     poll_vote_template_name: str = "misago/thread/poll_vote.html"
+    poll_results_option: set[str] = {"results", "voters"}
 
     def get(
         self, request: HttpRequest, id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
         if request.is_htmx:
-            if request.GET.get("poll") == "results":
+            if request.GET.get("poll") in self.poll_results_option:
                 return self.handle_poll_results(request, id)
             if request.GET.get("poll") == "vote":
                 return self.handle_poll_vote(request, id)
@@ -466,7 +468,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
         template_name = self.poll_results_template_name
         if (
-            request.GET.get("poll") != "results"
+            request.GET.get("poll") not in self.poll_results_option
             and allow_vote
             and (
                 not user_poll_votes
@@ -475,13 +477,19 @@ class ThreadRepliesView(RepliesView, ThreadView):
         ):
             template_name = self.poll_vote_template_name
 
+        fetch_voters = poll.is_public and request.GET.get("poll") == "voters"
+        poll_results = get_poll_results(poll, fetch_voters)
+
         return {
             "poll": poll,
             "template_name": template_name,
             "user_poll_votes": user_poll_votes,
             "question": poll.question,
+            "poll_results": poll_results,
+            "show_poll_voters": fetch_voters,
             "allow_poll_vote": allow_vote,
             "poll_results_url": f"{request.path}?poll=results",
+            "poll_voters_url": f"{request.path}?poll=voters",
             "poll_vote_url": f"{request.path}?poll=vote",
         }
 
