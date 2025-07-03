@@ -24,7 +24,9 @@ from ...permissions.privatethreads import (
     check_reply_private_thread_permission,
 )
 from ...permissions.threads import (
+    check_close_thread_poll_permission,
     check_edit_thread_permission,
+    check_edit_thread_poll_permission,
     check_reply_thread_permission,
     check_vote_in_thread_poll_permission,
 )
@@ -264,13 +266,13 @@ class ThreadRepliesView(RepliesView, ThreadView):
     poll_template_name: str = "misago/thread/poll.html"
     poll_results_template_name: str = "misago/thread/poll_results.html"
     poll_vote_template_name: str = "misago/thread/poll_vote.html"
-    poll_results_option: set[str] = {"results", "voters"}
+    poll_results_options: set[str] = {"results", "voters"}
 
     def get(
         self, request: HttpRequest, id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
         if request.is_htmx:
-            if request.GET.get("poll") in self.poll_results_option:
+            if request.GET.get("poll") in self.poll_results_options:
                 return self.handle_poll_results(request, id)
             if request.GET.get("poll") == "vote":
                 return self.handle_poll_vote(request, id)
@@ -466,31 +468,39 @@ class ThreadRepliesView(RepliesView, ThreadView):
                 request.user_permissions, thread.category, thread, poll
             )
 
+        allow_vote = allow_vote and (not user_poll_votes or poll.can_change_vote)
+
         template_name = self.poll_results_template_name
-        if (
-            request.GET.get("poll") not in self.poll_results_option
-            and allow_vote
-            and (
-                not user_poll_votes
-                or (request.GET.get("poll") == "vote" and poll.can_change_vote)
-            )
-        ):
+        if allow_vote and (request.GET.get("poll") == "vote" or not user_poll_votes):
             template_name = self.poll_vote_template_name
 
-        fetch_voters = poll.is_public and request.GET.get("poll") == "voters"
-        poll_results = get_poll_results_data(poll, fetch_voters)
+        show_voters = poll.is_public and request.GET.get("poll") == "voters"
+        poll_results = get_poll_results_data(poll, show_voters)
+
+        with check_permissions() as allow_edit:
+            check_edit_thread_poll_permission(
+                request.user_permissions, thread.category, thread, poll
+            )
+
+        with check_permissions() as allow_close:
+            check_close_thread_poll_permission(
+                request.user_permissions, thread.category, thread, poll
+            )
 
         return {
             "poll": poll,
             "template_name": template_name,
-            "user_poll_votes": user_poll_votes,
+            "user_votes": user_poll_votes,
             "question": poll.question,
-            "poll_results": poll_results,
-            "show_poll_voters": fetch_voters,
-            "allow_poll_vote": allow_vote,
-            "poll_results_url": f"{request.path}?poll=results",
-            "poll_voters_url": f"{request.path}?poll=voters",
-            "poll_vote_url": f"{request.path}?poll=vote",
+            "results": poll_results,
+            "show_voters": show_voters,
+            "moderator": self.get_moderator_status(request, thread),
+            "allow_edit": allow_edit,
+            "allow_close": not poll.is_closed and allow_close,
+            "allow_vote": allow_vote,
+            "results_url": f"{request.path}?poll=results",
+            "voters_url": f"{request.path}?poll=voters",
+            "vote_url": f"{request.path}?poll=vote",
         }
 
 

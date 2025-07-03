@@ -6,11 +6,11 @@
 
 <div class="poll-results">
   <ul class="poll-results-choices">
-    {% for choice in poll_results %}
+    {% for choice in results %}
       <li class="poll-results-choice">
         <div class="poll-results-choice-name">
           {{ choice.name }}
-          {% if choice.id in user_poll_votes %}
+          {% if choice.id in user_votes %}
             <span class="poll-results-choice-bullet" title="{% translate 'Your vote' context 'poll results' %}"></span>
           {% endif %}
           <span class="poll-results-choice-stats-sm">
@@ -40,7 +40,7 @@
           {{ choice.share }}%
         </div>
       </li>
-      {% if show_poll_voters %}
+      {% if show_voters %}
         <li class="poll-results-choice-voters">
           {% for voter in choice.voters %}
             {% if voter.id %}
@@ -57,50 +57,68 @@
       {% endif %}
     {% endfor %}
   </ul>
-  {% if allow_poll_vote %}
-    <div class="poll-footer">
-      <div class="poll-info">
-        {% if poll.votes %}
-          {% blocktrans trimmed count votes=poll.votes context "poll info" %}
-            {{ votes }} vote in total.
-          {% plural %}
-            {{ votes }} votes in total.
-          {% endblocktrans %}
-        {% else %}
-          {% translate "Nobody has voted yet." context "poll info" %}
-        {% endif %}
-        {% if poll.has_ended %}
-          {% translate "Poll has ended." context "poll info" %}
-        {% elif poll.is_closed %}
-          {% translate "Poll is closed." context "poll info" %}
-        {% elif poll.duration %}
-          {% capture trimmed as poll_end %}
-            <span
-              title="{{ poll.ends_at|date:'DATETIME_FORMAT' }}"
-              misago-timestamp="{{ poll.ends_at.isoformat }}"
-            >
-            {{ poll.ends_at|date_relative }}
-            </span>
-          {% endcapture %}
-          {% blocktrans trimmed with timestamp=poll_end|safe context "poll info" %}
-            Voting ends on {{ timestamp }}.
-          {% endblocktrans %}
-        {% endif %}
-        {% if poll.is_public %}
-          {% translate "Votes are public." context "poll info" %}
-        {% endif %}
-      </div>
+  <div class="poll-footer">
+    <div class="poll-info">
+      {% if poll.votes %}
+        {% blocktrans trimmed count votes=poll.votes context "poll info" %}
+          {{ votes }} vote in total.
+        {% plural %}
+          {{ votes }} votes in total.
+        {% endblocktrans %}
+      {% else %}
+        {% translate "Nobody has voted yet." context "poll info" %}
+      {% endif %}
+      {% if poll.has_ended %}
+        {% translate "Poll has ended." context "poll info" %}
+      {% elif poll.is_closed %}
+        {% translate "Poll is closed." context "poll info" %}
+      {% elif poll.duration %}
+        {% capture trimmed as poll_end %}
+          <span
+            title="{{ poll.ends_at|date:'DATETIME_FORMAT' }}"
+            misago-timestamp="{{ poll.ends_at.isoformat }}"
+          >
+          {{ poll.ends_at|date_relative }}
+          </span>
+        {% endcapture %}
+        {% blocktrans trimmed with timestamp=poll_end|safe context "poll info" %}
+          Voting ends on {{ timestamp }}.
+        {% endblocktrans %}
+      {% endif %}
+      {% if poll.is_public %}
+        {% translate "Votes are public." context "poll info" %}
+      {% endif %}
+    </div>
+    {% if poll.is_public or allow_vote or allow_edit or allow_close or moderator %}
       <div class="poll-buttons">
-        {% if poll.is_public and not show_poll_voters %}
-          <a href="{{ poll_voters_url }}"
+        {% if allow_edit or moderator %}
+          <a href="{{ vote_url }}"
+            class="btn btn-link"
+            type="button"
+            hx-boost="true"
+          >
+            {% translate "Edit" context "poll footer btn" %}
+          </a>
+        {% endif %}
+        {% if allow_close or moderator %}
+          <a href="{{ vote_url }}"
+            class="btn btn-link"
+            type="button"
+            hx-boost="true"
+          >
+            {% translate "Close" context "poll footer btn" %}
+          </a>
+        {% endif %}
+        {% if poll.is_public and not show_voters %}
+          <a href="{{ voters_url }}"
             class="btn btn-default"
             type="button"
             hx-boost="true"
           >
             {% translate "View voters" context "poll footer btn" %}
           </a>
-        {% elif show_poll_voters %}
-          <a href="{{ poll_results_url }}"
+        {% elif show_voters %}
+          <a href="{{ results_url }}"
             class="btn btn-default"
             type="button"
             hx-boost="true"
@@ -108,14 +126,16 @@
             {% translate "Hide voters" context "poll footer btn" %}
           </a>
         {% endif %}
-        <a href="{{ poll_vote_url }}"
-          class="btn btn-default"
-          type="button"
-          hx-boost="true"
-        >
-          {% translate "Change vote" context "poll footer btn" %}
-        </a>
+        {% if allow_vote %}
+          <a href="{{ vote_url }}"
+            class="btn btn-default"
+            type="button"
+            hx-boost="true"
+          >
+            {% translate "Change vote" context "poll footer btn" %}
+          </a>
+        {% endif %}
       </div>
-    </div>
-  {% endif %}
+    {% endif %}
+  </div>
 </div>

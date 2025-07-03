@@ -6,7 +6,7 @@
 
 <form
   method="post"
-  action="{{ poll_vote_url }}"
+  action="{{ vote_url }}"
   hx-boost="true"
 >
   {% csrf_token %}
@@ -50,7 +50,7 @@
         </div>
       {% endif %}
       <div>
-        <a href="{{ poll_results_url }}" class="btn btn-default" hx-boost="true">
+        <a href="{{ results_url }}" class="btn btn-default" hx-boost="true">
           {% translate "View results" context "poll footer btn" %}
         </a>
         <button class="btn btn-primary">

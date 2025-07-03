@@ -155,6 +155,9 @@ class GenericView(View):
 
         return thread_update
 
+    def get_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
+        return False
+
 
 class ThreadView(GenericView):
     thread_select_related: Iterable[str] | True | None = ("category",)
@@ -189,6 +192,9 @@ class ThreadView(GenericView):
         thread_updates: list[ThreadUpdate] | None = None,
     ) -> PostsFeed:
         return ThreadPostsFeed(request, thread, posts, thread_updates)
+
+    def get_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
+        return request.user_permissions.is_category_moderator(thread.category_id)
 
 
 class PrivateThreadView(GenericView):
@@ -225,3 +231,6 @@ class PrivateThreadView(GenericView):
         thread_updates: list[ThreadUpdate] | None = None,
     ) -> PostsFeed:
         return PrivateThreadPostsFeed(request, thread, posts, thread_updates)
+
+    def get_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
+        return request.user_permissions.is_private_threads_moderator
