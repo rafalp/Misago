@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n misago_capture misago_formats %}
 
 {% if is_request_htmx %}
   {% include "misago/snackbars.html" %}
@@ -32,12 +32,41 @@
       {% endfor %}
     </ul>
     <div class="poll-footer">
-      <a href="{{ poll_results_url }}" class="btn btn-default" hx-boost="true">
-        {% translate "View results" context "thread poll voting submit btn" %}
-      </a>
-      <button class="btn btn-primary">
-        {% translate "Submit vote" context "thread poll voting submit btn" %}
-      </button>
+      {% if poll.max_choices > 1 or poll.duration or poll.is_public %}
+        <div class="poll-info">
+          {% if poll.max_choices > 1 %}
+            {% blocktrans trimmed count choices=poll.max_choices context "poll info" %}
+              Pick up to {{ choices }} choice.
+            {% plural %}
+              Pick up to {{ choices }} choices.
+            {% endblocktrans %}
+          {% endif %}
+          {% if poll.duration %}
+            {% capture trimmed as poll_end %}
+              <span
+                title="{{ poll.ends_at|date:'DATETIME_FORMAT' }}"
+                misago-timestamp="{{ poll.ends_at.isoformat }}"
+              >
+              {{ poll.ends_at|date_relative }}
+              </span>
+            {% endcapture %}
+            {% blocktrans trimmed with timestamp=poll_end|safe context "poll info" %}
+              Voting ends on {{ timestamp }}.
+            {% endblocktrans %}
+          {% endif %}
+          {% if poll.is_public %}
+            {% translate "Votes are public." context "poll info" %}
+          {% endif %}
+        </div>
+      {% endif %}
+      <div>
+        <a href="{{ poll_results_url }}" class="btn btn-default" hx-boost="true">
+          {% translate "View results" context "thread poll voting submit btn" %}
+        </a>
+        <button class="btn btn-primary">
+          {% translate "Submit vote" context "thread poll voting submit btn" %}
+        </button>
+      </div>
     </div>
   </div>
 </form>
