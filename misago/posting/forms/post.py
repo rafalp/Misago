@@ -190,7 +190,7 @@ class PostForm(PostingForm):
             parsing_result,
             self.request.settings.post_length_min,
             self.request.settings.post_length_max,
-            request=self.request,
+            self.request,
         )
 
         self.parsing_result = parsing_result

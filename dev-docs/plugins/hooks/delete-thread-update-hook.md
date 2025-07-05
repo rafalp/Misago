@@ -5,10 +5,10 @@ This hook wraps a standard Misago function used to delete a `ThreadUpdate` objec
 
 ## Location
 
-This hook can be imported from `misago.threads.hooks`:
+This hook can be imported from `misago.threadupdates.hooks`:
 
 ```python
-from misago.threads.hooks import delete_thread_update_hook
+from misago.threadupdates.hooks import delete_thread_update_hook
 ```
 
 

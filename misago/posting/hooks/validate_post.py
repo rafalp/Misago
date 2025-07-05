@@ -8,8 +8,8 @@ from ...plugins.hooks import FilterHook
 
 class ValidatePostHookAction(Protocol):
     """
-    A standard function used by Misago to validate post contents.
-    Raises `ValidationError` if they are invalid.
+    Standard Misago function for validating the contents of a post.
+    Raises `ValidationError` if the post contents are invalid.
 
     # Arguments
 
@@ -35,7 +35,6 @@ class ValidatePostHookAction(Protocol):
         value: ParsingResult,
         min_length: int,
         max_length: int,
-        *,
         request: HttpRequest | None = None,
     ) -> None: ...
 
@@ -48,8 +47,8 @@ class ValidatePostHookFilter(Protocol):
 
     ## `action: ValidatePostHookAction`
 
-    A standard function used by Misago to validate post contents.
-    Raises `ValidationError` if they are invalid.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 
@@ -76,7 +75,6 @@ class ValidatePostHookFilter(Protocol):
         value: ParsingResult,
         min_length: int,
         max_length: int,
-        *,
         request: HttpRequest | None = None,
     ) -> None: ...
 
@@ -88,8 +86,8 @@ class ValidatePostHook(
     ]
 ):
     """
-    This hook wraps a standard function used by Misago to validate post contents.
-    Raises `ValidationError` if they are invalid.
+    This hook allows plugins to replace or extend the standard logic used to
+    validate post contents.
 
     Post contents are represented as a `ParsingResult` object with the following
     attributes:
@@ -101,8 +99,7 @@ class ValidatePostHook(
 
     # Example
 
-    The code below implements a custom post validator that raises
-    the minimal required length of a post for new users.
+    Raises the minimal required length of a post for new users.
 
     ```python
     from django.http import HttpRequest
@@ -116,13 +113,12 @@ class ValidatePostHook(
         value: ParsingResult,
         min_length: int,
         max_length: int,
-        *,
         request: HttpRequest | None = None,
     ) -> None:
         if request and request.user.is_authenticated and request.user.posts < 5:
             min_length = min(min_length + 50)
 
-        action(value, min_length, max_length, request=request)
+        action(value, min_length, max_length, request)
     ```
     """
 
@@ -134,10 +130,9 @@ class ValidatePostHook(
         value: ParsingResult,
         min_length: int,
         max_length: int,
-        *,
         request: HttpRequest | None = None,
     ) -> None:
-        return super().__call__(action, value, min_length, max_length, request=request)
+        return super().__call__(action, value, min_length, max_length, request)
 
 
 validate_post_hook = ValidatePostHook()
