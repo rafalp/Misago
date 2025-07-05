@@ -1,7 +1,7 @@
 import pytest
 from django.core.exceptions import ValidationError
 
-from ...polls.choices import PollChoices
+from ..choices import PollChoices
 from ..validators import validate_poll_choices
 
 

@@ -32,6 +32,7 @@ class PublicPollsAvailability(StrEnum):
 
 class PollTemplate(StrEnum):
     EDIT = "misago/poll/edit.html"
+    FORM = "misago/poll/form.html"
     RESULTS = "misago/poll/results.html"
     START = "misago/poll/start.html"
     VOTE = "misago/poll/vote.html"

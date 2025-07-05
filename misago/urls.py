@@ -17,6 +17,7 @@ urlpatterns = [
     path("account/", include("misago.account.urls")),
     path("", include("misago.attachments.urls")),
     path("", include("misago.categories.urls")),
+    path("", include("misago.polls.urls")),
     path("", include("misago.threads.urls")),
     path("", include("misago.notifications.urls")),
     path("", include("misago.search.urls")),

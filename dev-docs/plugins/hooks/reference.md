@@ -120,6 +120,8 @@ Hooks instances are importable from the following Python modules:
 `misago.polls.hooks` defines the following hooks:
 
 - [`delete_poll_hook`](./delete-poll-hook.md)
+- [`validate_poll_choices_hook`](./validate-poll-choices-hook.md)
+- [`validate_poll_question_hook`](./validate-poll-question-hook.md)
 
 
 ## `misago.posting.hooks`
@@ -149,8 +151,6 @@ Hooks instances are importable from the following Python modules:
 - [`save_start_thread_state_hook`](./save-start-thread-state-hook.md)
 - [`upgrade_post_code_blocks_hook`](./upgrade-post-code-blocks-hook.md)
 - [`upgrade_post_content_hook`](./upgrade-post-content-hook.md)
-- [`validate_poll_choices_hook`](./validate-poll-choices-hook.md)
-- [`validate_poll_question_hook`](./validate-poll-question-hook.md)
 - [`validate_post_hook`](./validate-post-hook.md)
 - [`validate_posted_contents_hook`](./validate-posted-contents-hook.md)
 - [`validate_thread_title_hook`](./validate-thread-title-hook.md)

@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.translation import pgettext
 from django.views import View
 
@@ -17,6 +18,7 @@ from ..polls.models import Poll
 from .choices import PollChoices
 from .delete import delete_poll
 from .enums import PollTemplate
+from .forms import StartPollForm
 from .validators import validate_poll_vote
 from .votes import (
     delete_user_poll_votes,
@@ -39,14 +41,16 @@ def dispatch_poll_view(request: HttpRequest, thread_id: int) -> HttpResponse | N
         if view == "open":
             raise NotImplementedError()
         if view == "delete":
-            return poll_delete_view(request, thread_id)
+            return poll_delete(request, thread_id)
         if view == "vote":
-            return poll_vote_view(request, thread_id)
+            return poll_vote(request, thread_id)
     elif request.is_htmx:
+        if view == "start":
+            return poll_vote(request, thread_id)
         if view in ("results", "voters"):
-            return poll_results_view(request, thread_id, view == "voters")
+            return poll_results(request, thread_id, view == "voters")
         if view == "vote":
-            return poll_vote_view(request, thread_id)
+            return poll_vote(request, thread_id)
 
     return None
 
@@ -69,8 +73,43 @@ class PollView(View):
         return poll
 
 
+class PollStartView(PollView):
+    template_name = "misago/poll/start.html"
+
+    def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        if thread.has_poll:
+            pass
+
+        form = StartPollForm(request=request)
+        return self.render(request, thread, form)
+
+    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        if thread.has_poll:
+            pass
+
+        form = StartPollForm(request.POST, request=request)
+        if form.is_valid():
+            form.save(thread.category, thread, request.user)
+            thread.has_poll = True
+            thread.save(update_fields=["has_poll"])
+
+            messages.success(request, pgettext("start poll", "Poll started"))
+            return redirect(reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}))
+
+        return self.render(request, thread, form)
+
+    def render(self, request: HttpRequest, thread: Thread, form: StartPollForm) -> HttpResponse:
+        return render(request, self.template_name, {
+            "category": thread.category,
+            "thread": thread,
+            "form": form,
+        })
+
+
 class PollResultsView(PollView):
-    def get(self, request: HttpRequest, thread_id: int, show_voters: bool = False):
+    def get(self, request: HttpRequest, thread_id: int, show_voters: bool = False) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
         user_poll_votes = get_user_poll_votes(request.user, poll)
@@ -82,7 +121,7 @@ class PollResultsView(PollView):
 
 
 class PollVoteView(PollView):
-    def get(self, request: HttpRequest, thread_id: int):
+    def get(self, request: HttpRequest, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
         user_poll_votes = get_user_poll_votes(request.user, poll)
@@ -94,7 +133,7 @@ class PollVoteView(PollView):
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
         return render(request, PollTemplate.VOTE, context)
 
-    def post(self, request: HttpRequest, thread_id: int):
+    def post(self, request: HttpRequest, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
         user_poll_votes = get_user_poll_votes(request.user, poll)
@@ -130,7 +169,7 @@ class PollVoteView(PollView):
 
 
 class PollDeleteView(PollView):
-    def post(self, request: HttpRequest, thread_id: int):
+    def post(self, request: HttpRequest, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
 
@@ -143,9 +182,10 @@ class PollDeleteView(PollView):
         return redirect(request.path)
 
 
-poll_results_view = PollResultsView.as_view()
-poll_vote_view = PollVoteView.as_view()
-poll_delete_view = PollDeleteView.as_view()
+poll_start = PollStartView.as_view()
+poll_results = PollResultsView.as_view()
+poll_vote = PollVoteView.as_view()
+poll_delete = PollDeleteView.as_view()
 
 
 def get_poll_context_data(

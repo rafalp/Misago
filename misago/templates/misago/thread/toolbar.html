@@ -17,15 +17,10 @@
       {% if allow_start_poll and top_toolbar %}
         <div class="toolbar-item">
           <a
-            href="..."
+            href="{% url 'misago:start-thread-poll' id=thread.id slug=thread.slug %}"
             class="btn btn-default btn-block"
-            misago-scroll-to="#misago-poll-scroll-target"
           >
-            {% if thread.is_closed or category.is_closed %}
-              <span class="text-danger">{% translate "Start poll" context "thread replies toolbar" %}</span>
-            {% else %}
-              {% translate "Start poll" context "thread replies toolbar" %}
-            {% endif %}
+            {% translate "Start poll" context "thread replies toolbar" %}
           </a>
         </div>
       {% endif %}

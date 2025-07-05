@@ -5,10 +5,10 @@ This hook allows plugins to replace or extend the standard logic used to validat
 
 ## Location
 
-This hook can be imported from `misago.posting.hooks`:
+This hook can be imported from `misago.polls.hooks`:
 
 ```python
-from misago.posting.hooks import validate_poll_choices_hook
+from misago.polls.hooks import validate_poll_choices_hook
 ```
 
 
