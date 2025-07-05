@@ -3,7 +3,7 @@ from typing import Iterable
 from django.core.paginator import Paginator
 from django.db.models import QuerySet
 from django.http import HttpRequest
-from django.http.response import HttpResponse as HttpResponse
+from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import Resolver404, resolve, reverse
 from django.views import View

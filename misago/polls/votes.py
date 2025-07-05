@@ -1,6 +1,7 @@
 from math import floor
-from typing import TYPE_CHECKING, Iterable
+from typing import TYPE_CHECKING, Iterable, Union
 
+from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 
 from .models import Poll, PollVote
@@ -9,7 +10,10 @@ if TYPE_CHECKING:
     from ..users.models import User
 
 
-def get_user_poll_votes(user: "User", poll: Poll) -> set[str]:
+def get_user_poll_votes(user: Union["User", AnonymousUser], poll: Poll) -> set[str]:
+    if user.is_anonymous:
+        return set()
+
     return set(
         PollVote.objects.filter(poll=poll, voter=user).values_list(
             "choice_id", flat=True

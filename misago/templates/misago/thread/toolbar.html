@@ -12,26 +12,43 @@
   {% pluginoutlet THREAD_REPLIES_PAGE_TOOLBAR_BEFORE_SPACER %}
   <div class="toolbar-spacer"></div>
   {% pluginoutlet THREAD_REPLIES_PAGE_TOOLBAR_AFTER_SPACER %}
-  {% if reply.url and top_toolbar %}
-    <div class="toolbar-section">
-      <div class="toolbar-item">
-        <a
-          href="{{ reply.url }}"
-          {% if thread.is_closed or category.is_closed %}
+  {% if top_toolbar %}
+    <div class="toolbar-section flex-order-last-xs">
+      {% if allow_start_poll and top_toolbar %}
+        <div class="toolbar-item">
+          <a
+            href="..."
             class="btn btn-default btn-block"
-          {% else %}
-            class="btn btn-primary btn-block"
-          {% endif %}
-          misago-scroll-to="#misago-quick-reply-scroll-target"
-          misago-focus-on="#misago-htmx-quick-reply textarea"
-        >
-          {% if thread.is_closed or category.is_closed %}
-            <span class="text-danger">{% translate "Reply in locked" context "thread replies toolbar" %}</span>
-          {% else %}
-            {% translate "Post reply" context "thread replies toolbar" %}
-          {% endif %}
-        </a>
-      </div>
+            misago-scroll-to="#misago-poll-scroll-target"
+          >
+            {% if thread.is_closed or category.is_closed %}
+              <span class="text-danger">{% translate "Start poll" context "thread replies toolbar" %}</span>
+            {% else %}
+              {% translate "Start poll" context "thread replies toolbar" %}
+            {% endif %}
+          </a>
+        </div>
+      {% endif %}
+      {% if reply.url and top_toolbar %}
+        <div class="toolbar-item">
+          <a
+            href="{{ reply.url }}"
+            {% if thread.is_closed or category.is_closed %}
+              class="btn btn-default btn-block"
+            {% else %}
+              class="btn btn-primary btn-block"
+            {% endif %}
+            misago-scroll-to="#misago-quick-reply-scroll-target"
+            misago-focus-on="#misago-htmx-quick-reply textarea"
+          >
+            {% if thread.is_closed or category.is_closed %}
+              <span class="text-danger">{% translate "Reply in locked" context "thread replies toolbar" %}</span>
+            {% else %}
+              {% translate "Post reply" context "thread replies toolbar" %}
+            {% endif %}
+          </a>
+        </div>
+      {% endif %}
     </div>
   {% endif %}
   {% pluginoutlet THREAD_REPLIES_PAGE_TOOLBAR_END %}

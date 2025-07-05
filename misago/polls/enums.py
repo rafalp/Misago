@@ -28,3 +28,10 @@ class PublicPollsAvailability(StrEnum):
                 pgettext_lazy("allowed public polls", "Disable all public polls"),
             ),
         )
+
+
+class PollTemplate(StrEnum):
+    EDIT = "misago/poll/edit.html"
+    RESULTS = "misago/poll/results.html"
+    START = "misago/poll/start.html"
+    VOTE = "misago/poll/vote.html"

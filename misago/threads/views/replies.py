@@ -1,8 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from django.contrib import messages
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
 from django.http import (
     Http404,
@@ -11,7 +10,6 @@ from django.http import (
     HttpResponseNotAllowed,
 )
 from django.shortcuts import redirect, render
-from django.utils.translation import pgettext
 from django.urls import reverse
 from django.views import View
 
@@ -24,21 +22,14 @@ from ...permissions.privatethreads import (
     check_reply_private_thread_permission,
 )
 from ...permissions.threads import (
-    check_close_thread_poll_permission,
     check_edit_thread_permission,
-    check_edit_thread_poll_permission,
     check_reply_thread_permission,
-    check_vote_in_thread_poll_permission,
+    check_start_thread_poll_permission,
 )
-from ...polls.choices import PollChoices
+from ...polls.enums import PollTemplate
 from ...polls.models import Poll
-from ...polls.validators import validate_poll_vote
-from ...polls.votes import (
-    delete_user_poll_votes,
-    get_poll_results_data,
-    get_user_poll_votes,
-    save_user_poll_vote,
-)
+from ...polls.views import dispatch_poll_view, get_poll_context_data
+from ...polls.votes import get_user_poll_votes
 from ...posting.formsets import (
     ReplyPrivateThreadFormset,
     ReplyThreadFormset,
@@ -264,26 +255,22 @@ class ThreadRepliesView(RepliesView, ThreadView):
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
     poll_template_name: str = "misago/thread/poll.html"
-    poll_results_template_name: str = "misago/thread/poll_results.html"
-    poll_vote_template_name: str = "misago/thread/poll_vote.html"
-    poll_results_options: set[str] = {"results", "voters"}
 
     def get(
         self, request: HttpRequest, id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
         if request.is_htmx:
-            if request.GET.get("poll") in self.poll_results_options:
-                return self.handle_poll_results(request, id)
-            if request.GET.get("poll") == "vote":
-                return self.handle_poll_vote(request, id)
+            if poll_response := dispatch_poll_view(request, id):
+                return poll_response
 
         return super().get(request, id, slug, page)
 
     def post(
         self, request: HttpRequest, id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
-        if request.GET.get("poll") == "vote":
-            return self.handle_poll_vote(request, id)
+        if request.GET.get("poll"):
+            if poll_response := dispatch_poll_view(request, id):
+                return poll_response
 
         return super().post(request, id, slug, page)
 
@@ -306,11 +293,17 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
         context["category"] = thread.category
 
-        if poll := self.get_poll(request, thread, raise_404=False):
-            user_poll_votes = self.get_user_poll_votes(request, poll)
-            context["poll"] = self.get_poll_context_data(
-                request, thread, poll, user_poll_votes
-            )
+        poll = self.get_poll(request, thread)
+        if poll:
+            context["poll"] = self.get_poll_context_data(request, thread, poll)
+            context["allow_start_poll"] = False
+        else:
+            with check_permissions() as allow_start_poll:
+                check_start_thread_poll_permission(
+                    request.user_permissions, thread.category, thread
+                )
+
+            context["allow_start_poll"] = allow_start_poll
 
         return context
 
@@ -353,157 +346,35 @@ class ThreadRepliesView(RepliesView, ThreadView):
     ) -> ReplyThreadFormset:
         return get_reply_thread_formset(request, thread)
 
-    def get_poll(
-        self, request: HttpRequest, thread: Thread, raise_404: bool = True
-    ) -> Poll | None:
+    def get_poll(self, request: HttpRequest, thread: Thread) -> Poll | None:
         if thread.has_poll:
-            poll = Poll.objects.filter(thread=thread).first()
-        else:
-            poll = None
+            return Poll.objects.filter(thread=thread).first()
 
-        if not poll and raise_404:
-            raise Http404()
-
-        return poll
-
-    def get_user_poll_votes(self, request: HttpRequest, poll: Poll) -> set[str]:
-        if request.user.is_authenticated:
-            return get_user_poll_votes(request.user, poll)
-        return set()
-
-    def handle_poll_results(self, request: HttpRequest, id: int) -> HttpResponse:
-        thread = self.get_thread(request, id)
-        poll = self.get_poll(request, thread, raise_404=True)
-
-        user_poll_votes = self.get_user_poll_votes(request, poll)
-        return self.render_poll_results_partial(request, thread, poll, user_poll_votes)
-
-    def handle_poll_vote(self, request: HttpRequest, id: int) -> HttpResponse:
-        thread = self.get_thread(request, id)
-        poll = self.get_poll(request, thread, raise_404=True)
-        user_poll_votes = self.get_user_poll_votes(request, poll)
-
-        try:
-            check_vote_in_thread_poll_permission(
-                request.user_permissions, thread.category, thread, poll
-            )
-
-            if user_poll_votes and not poll.can_change_vote:
-                raise PermissionDenied(
-                    pgettext("poll vote", "This poll doesn’t allow vote changes.")
-                )
-
-            if request.method == "POST":
-                return self.handle_poll_vote_post(
-                    request, thread, poll, user_poll_votes
-                )
-        except PermissionDenied as error:
-            messages.error(request, str(error))
-            if not request.is_htmx:
-                return redirect(f"{request.path}?poll=results")
-
-            return self.render_poll_results_partial(
-                request, thread, poll, user_poll_votes
-            )
-        except ValidationError as error:
-            messages.error(request, error.messages[0])
-            if not request.is_htmx:
-                return redirect(f"{request.path}?poll=vote")
-
-        return self.render_poll_vote_partial(request, thread, poll, user_poll_votes)
-
-    def handle_poll_vote_post(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        poll: Poll,
-        user_poll_votes: set[str],
-    ) -> HttpResponse:
-        poll_choices = PollChoices(poll.choices)
-        user_choices = request.POST.getlist("poll_choice")
-
-        valid_choices = validate_poll_vote(user_choices, poll_choices, poll.max_choices)
-
-        if valid_choices != user_poll_votes:
-            if user_poll_votes:
-                delete_user_poll_votes(request.user, poll, user_poll_votes)
-
-            save_user_poll_vote(request.user, poll, valid_choices)
-            messages.success(request, pgettext("poll vote", "Vote saved"))
-
-        if not request.is_htmx:
-            return redirect(request.path)
-
-        return self.render_poll_results_partial(request, thread, poll, valid_choices)
-
-    def render_poll_results_partial(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        poll: Poll,
-        user_poll_votes: set[str],
-    ) -> HttpResponse:
-        context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
-        return render(request, self.poll_results_template_name, context)
-
-    def render_poll_vote_partial(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        poll: Poll,
-        user_poll_votes: set[str],
-    ) -> HttpResponse:
-        context = self.get_poll_context_data(request, thread, poll, user_poll_votes)
-        return render(request, self.poll_vote_template_name, context)
+        return None
 
     def get_poll_context_data(
         self,
         request: HttpRequest,
         thread: Thread,
         poll: Poll,
-        user_poll_votes: set[str],
     ) -> dict:
-        with check_permissions() as allow_vote:
-            check_vote_in_thread_poll_permission(
-                request.user_permissions, thread.category, thread, poll
-            )
+        user_poll_votes = get_user_poll_votes(request.user, poll)
+        context = get_poll_context_data(
+            request,
+            thread,
+            poll,
+            user_poll_votes,
+            fetch_voters=request.GET.get("poll") == "voters",
+        )
 
-        allow_vote = allow_vote and (not user_poll_votes or poll.can_change_vote)
+        template_name = PollTemplate.RESULTS
+        if context["allow_vote"] and (
+            request.GET.get("poll") == "vote" or not user_poll_votes
+        ):
+            template_name = PollTemplate.VOTE
 
-        template_name = self.poll_results_template_name
-        if allow_vote and (request.GET.get("poll") == "vote" or not user_poll_votes):
-            template_name = self.poll_vote_template_name
-
-        show_voters = poll.is_public and request.GET.get("poll") == "voters"
-        poll_results = get_poll_results_data(poll, show_voters)
-
-        with check_permissions() as allow_edit:
-            check_edit_thread_poll_permission(
-                request.user_permissions, thread.category, thread, poll
-            )
-
-        with check_permissions() as allow_close:
-            check_close_thread_poll_permission(
-                request.user_permissions, thread.category, thread, poll
-            )
-
-        return {
-            "poll": poll,
-            "template_name": template_name,
-            "user_votes": user_poll_votes,
-            "question": poll.question,
-            "results": poll_results,
-            "show_voters": show_voters,
-            "moderator": self.get_moderator_status(request, thread),
-            "allow_edit": allow_edit,
-            "allow_close": allow_close and not poll.is_closed,
-            "allow_vote": allow_vote,
-            "close_url": f"{request.path}?poll=close",
-            "open_url": f"{request.path}?poll=open",
-            "edit_url": f"{request.path}?poll=edit",
-            "voters_url": f"{request.path}?poll=voters",
-            "vote_url": f"{request.path}?poll=vote",
-        }
+        context["template_name"] = template_name
+        return context
 
 
 class PrivateThreadRepliesView(RepliesView, PrivateThreadView):

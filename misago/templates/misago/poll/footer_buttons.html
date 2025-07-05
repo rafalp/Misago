@@ -1,36 +1,34 @@
 {% load i18n %}
 {% if allow_edit or moderator %}
-  <a href="{{ vote_url }}"
+  <a href="{{ edit_url }}"
     class="btn btn-link"
-    type="button"
     hx-boost="true"
   >
     {% translate "Edit" context "poll footer btn" %}
   </a>
 {% endif %}
 {% if allow_close or moderator %}
-  <a href="{{ vote_url }}"
+  <button
     class="btn btn-link"
     type="button"
-    hx-boost="true"
+    hx-post="{{ close_url }}"
   >
     {% translate "Close" context "poll footer btn" %}
-  </a>
+  </button>
 {% elif poll.is_closed and moderator %}
-  <a href="{{ vote_url }}"
+  <button
     class="btn btn-link"
     type="button"
-    hx-boost="true"
+    hx-post="{{ open_url }}"
   >
     {% translate "Open" context "poll footer btn" %}
-  </a>
+  </button>
 {% endif %}
 {% if moderator %}
-  <a href="{{ vote_url }}"
-    class="btn btn-link"
-    type="button"
-    hx-boost="true"
-  >
-    {% translate "Delete" context "poll footer btn" %}
-  </a>
+  <form action="{{ delete_url }}" method="POST" hx-confirm="{% translate 'Delete this poll?' context 'poll delete confirmation' %}" hx-disable>
+    {% csrf_token %}
+    <button class="btn btn-link">
+      {% translate "Delete" context "poll footer btn" %}
+    </button>
+  </form>
 {% endif %}

@@ -1,5 +1,4 @@
 from ..choices import PollChoices
-from ..models import PollVote
 from ..votes import get_user_poll_votes
 
 
@@ -28,7 +27,11 @@ def test_get_user_poll_votes_returns_set_with_user_poll_votes(
     assert get_user_poll_votes(user, poll) == {choice_id1, choice_id2}
 
 
-def test_get_user_poll_votes_returns_empty_set_if_user_didnt_vote(
-    user, poll, poll_vote_factory
-):
+def test_get_user_poll_votes_returns_empty_set_if_user_didnt_vote(user, poll):
     assert get_user_poll_votes(user, poll) == set()
+
+
+def test_get_user_poll_votes_returns_empty_set_if_user_is_anonymous(
+    anonymous_user, poll
+):
+    assert get_user_poll_votes(anonymous_user, poll) == set()

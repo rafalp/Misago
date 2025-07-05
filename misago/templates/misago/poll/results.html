@@ -1,6 +1,6 @@
 {% load i18n misago_capture misago_formats %}
 
-{% if is_request_htmx %}
+{% if is_request_htmx and show_poll_snackbars %}
   {% include "misago/snackbars.html" %}
 {% endif %}
 
@@ -91,30 +91,18 @@
     </div>
     {% if poll.is_public or allow_vote or allow_edit or allow_close or moderator %}
       <div class="poll-buttons">
-        {% include "misago/thread/poll_buttons.html" %}
+        {% include "misago/poll/footer_buttons.html" %}
         {% if poll.is_public and not show_voters %}
-          <a href="{{ voters_url }}"
-            class="btn btn-default"
-            type="button"
-            hx-boost="true"
-          >
+          <a href="{{ voters_url }}" class="btn btn-default" hx-boost="true">
             {% translate "View voters" context "poll footer btn" %}
           </a>
         {% elif show_voters %}
-          <a href="{{ results_url }}"
-            class="btn btn-default"
-            type="button"
-            hx-boost="true"
-          >
+          <a href="{{ results_url }}" class="btn btn-default" hx-boost="true">
             {% translate "Hide voters" context "poll footer btn" %}
           </a>
         {% endif %}
         {% if allow_vote %}
-          <a href="{{ vote_url }}"
-            class="btn btn-default"
-            type="button"
-            hx-boost="true"
-          >
+          <a href="{{ vote_url }}" class="btn btn-default" hx-boost="true">
             {% translate "Change vote" context "poll footer btn" %}
           </a>
         {% endif %}
