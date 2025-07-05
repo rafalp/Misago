@@ -13,14 +13,6 @@ def test_poll_form_sets_request(rf, dynamic_settings):
     assert form.request is request
 
 
-def test_poll_form_sets_empty_choices_obj(rf, dynamic_settings):
-    request = rf.get("/")
-    request.settings = dynamic_settings
-
-    form = PollForm(request=request)
-    assert form.choices_obj is None
-
-
 @override_dynamic_settings(poll_question_max_length=42)
 def test_poll_form_sets_question_max_length_from_setting(rf, dynamic_settings):
     request = rf.get("/")
@@ -166,6 +158,7 @@ def test_poll_form_validation_parses_choices_text(rf, dynamic_settings):
         "question": "Lorem ipsum",
         "choices_text": "Lorem\nIpsum",
         "choices_list": ANY,
+        "choices": ANY,
         "duration": None,
         "max_choices": None,
         "can_change_vote": False,
@@ -193,6 +186,7 @@ def test_poll_form_validation_parses_choices_list(rf, dynamic_settings):
         "question": "Lorem ipsum",
         "choices_text": "",
         "choices_list": ANY,
+        "choices": ANY,
         "duration": None,
         "max_choices": None,
         "can_change_vote": False,

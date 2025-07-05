@@ -10,6 +10,9 @@ class PollForm(StartPollForm, PostingForm):
     form_prefix = "posting-poll"
     template_name = "misago/posting/poll_form.html"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs, required=False)
+
     def clean(self):
         cleaned_data = super().clean()
 
@@ -40,16 +43,17 @@ class PollForm(StartPollForm, PostingForm):
         return cleaned_data
 
     def update_state(self, state: StartThreadState):
-        if not self.cleaned_data["question"] and not self.cleaned_data["choices"]:
+        if not self.cleaned_data.get("question") and not self.cleaned_data.get(
+            "choices"
+        ):
             return
 
-        state.set_poll(self.create_poll(state.category, state.thread, state.user))
+        state.set_poll(self.get_poll_instance(state.category, state.thread, state.user))
 
 
 def create_poll_form(request: HttpRequest) -> PollForm:
     kwargs = {
         "request": request,
-        "required": False,
         "prefix": PollForm.form_prefix,
     }
 

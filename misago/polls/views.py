@@ -96,20 +96,30 @@ class PollStartView(PollView):
             thread.save(update_fields=["has_poll"])
 
             messages.success(request, pgettext("start poll", "Poll started"))
-            return redirect(reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}))
+            return redirect(
+                reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+            )
 
         return self.render(request, thread, form)
 
-    def render(self, request: HttpRequest, thread: Thread, form: StartPollForm) -> HttpResponse:
-        return render(request, self.template_name, {
-            "category": thread.category,
-            "thread": thread,
-            "form": form,
-        })
+    def render(
+        self, request: HttpRequest, thread: Thread, form: StartPollForm
+    ) -> HttpResponse:
+        return render(
+            request,
+            self.template_name,
+            {
+                "category": thread.category,
+                "thread": thread,
+                "form": form,
+            },
+        )
 
 
 class PollResultsView(PollView):
-    def get(self, request: HttpRequest, thread_id: int, show_voters: bool = False) -> HttpResponse:
+    def get(
+        self, request: HttpRequest, thread_id: int, show_voters: bool = False
+    ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
         user_poll_votes = get_user_poll_votes(request.user, poll)

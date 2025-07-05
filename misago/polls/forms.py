@@ -108,7 +108,6 @@ class PollForm(forms.Form):
     can_change_vote = forms.BooleanField(required=False)
     is_public = forms.BooleanField(required=False)
 
-
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         self.required = kwargs.pop("required", True)
@@ -122,7 +121,7 @@ class PollForm(forms.Form):
         self.fields["question"].required = self.required
 
     def clean_question(self):
-        if data:= self.cleaned_data["question"]:
+        if data := self.cleaned_data["question"]:
             validate_poll_question(
                 data,
                 self.request.settings.poll_question_min_length,
@@ -165,8 +164,10 @@ class PollForm(forms.Form):
             except ValidationError as error:
                 self.add_error("choices_text", error)
 
-        if self.required and not self.errors.get("choices_text") and not self.errors.get(
-            "choices_list"
+        if (
+            self.required
+            and not self.errors.get("choices_text")
+            and not self.errors.get("choices_list")
         ):
             self.add_error(
                 "choices_text",
@@ -195,8 +196,10 @@ class StartPollForm(PollForm):
 
         return cleaned_data
 
-    def create_poll(self, category: Category, thread: Thread, user: "User") -> Poll:
-        return Poll(
+    def get_poll_instance(
+        self, category: Category, thread: Thread, user: "User", save: bool = False
+    ) -> Poll:
+        poll = Poll(
             category=category,
             thread=thread,
             starter=user,
@@ -209,8 +212,9 @@ class StartPollForm(PollForm):
             can_change_vote=self.cleaned_data.get("can_change_vote") or False,
             is_public=self.cleaned_data.get("is_public") or False,
         )
-    
-    def save(self, category: Category, thread: Thread, user: "User") -> Poll:
-        poll = self.create_poll(category, thread, user)
-        poll.save()
+        if save:
+            poll.save()
         return poll
+
+    def save(self, category: Category, thread: Thread, user: "User") -> Poll:
+        return self.get_poll_instance(category, thread, user, save=True)
