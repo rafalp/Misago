@@ -196,6 +196,38 @@ class ChangedTitleThreadUpdateAction(TextContextThreadUpdateAction):
 
 
 @thread_updates_renderer.register_action
+class StartedPollThreadUpdateAction(TextContextThreadUpdateAction):
+    action = ThreadUpdateActionName.STARTED_POLL
+    icon = "poll"
+    description = pgettext_lazy(
+        "thread update action description", "Started poll: %(context)s"
+    )
+
+
+@thread_updates_renderer.register_action
+class ClosedPollThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.CLOSED_POLL
+    icon = "poll"
+    description = pgettext_lazy("thread update action description", "Closed poll")
+
+
+@thread_updates_renderer.register_action
+class ReopenedPollThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.REOPENED_POLL
+    icon = "poll"
+    description = pgettext_lazy("thread update action description", "Reopened poll")
+
+
+@thread_updates_renderer.register_action
+class DeletedPollThreadUpdateAction(TextContextThreadUpdateAction):
+    action = ThreadUpdateActionName.DELETED_POLL
+    icon = "poll"
+    description = pgettext_lazy(
+        "thread update action description", "Deleted poll: %(context)s"
+    )
+
+
+@thread_updates_renderer.register_action
 class TookOwnershipThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.TOOK_OWNERSHIP
     icon = "people"

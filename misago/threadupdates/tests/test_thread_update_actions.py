@@ -5,6 +5,8 @@ from ..create import (
     create_approved_thread_update,
     create_changed_owner_thread_update,
     create_changed_title_thread_update,
+    create_closed_poll_thread_update,
+    create_deleted_poll_thread_update,
     create_hid_thread_update,
     create_invited_participant_thread_update,
     create_joined_thread_update,
@@ -16,7 +18,9 @@ from ..create import (
     create_pinned_globally_thread_update,
     create_pinned_in_category_thread_update,
     create_removed_participant_thread_update,
+    create_reopened_poll_thread_update,
     create_split_thread_update,
+    create_started_poll_thread_update,
     create_test_thread_update,
     create_took_ownership_thread_update,
     create_unhid_thread_update,
@@ -194,6 +198,40 @@ def test_changed_title_thread_update(client, thread, user):
     )
     assert_contains(response, "Changed thread title from")
     assert_contains(response, "Old title")
+
+
+def test_create_started_poll_thread_update(client, thread, poll, user):
+    create_started_poll_thread_update(thread, poll, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Started poll")
+    assert_contains(response, poll.question)
+
+
+def test_create_closed_poll_thread_update(client, thread, user):
+    create_closed_poll_thread_update(thread, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Closed poll")
+
+
+def test_create_reopened_poll_thread_update(client, thread, user):
+    create_reopened_poll_thread_update(thread, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Reopened poll")
+
+
+def test_create_deleted_poll_thread_update(client, thread, poll, user):
+    create_deleted_poll_thread_update(thread, poll, user)
+    response = client.get(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Deleted poll")
+    assert_contains(response, poll.question)
 
 
 def test_changed_owner_thread_update(client, thread, user, other_user):

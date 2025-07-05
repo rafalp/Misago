@@ -82,11 +82,9 @@ def change_owner(request, thread, new_owner):
     )
 
     if thread.participant and thread.participant.is_owner:
-        create_changed_owner_thread_update(
-            thread, new_owner, request.user, request=request
-        )
+        create_changed_owner_thread_update(thread, new_owner, request.user, request)
     else:
-        create_took_ownership_thread_update(thread, request.user, request=request)
+        create_took_ownership_thread_update(thread, request.user, request)
 
 
 def add_participant(request, thread, new_participant):
@@ -94,10 +92,10 @@ def add_participant(request, thread, new_participant):
     add_participants(request.user, thread, [new_participant])
 
     if request.user == new_participant:
-        create_joined_thread_update(thread, request.user, request=request)
+        create_joined_thread_update(thread, request.user, request)
     else:
         create_invited_participant_thread_update(
-            thread, new_participant, request.user, request=request
+            thread, new_participant, request.user, request
         )
 
 
@@ -151,8 +149,8 @@ def remove_participant(request, thread, user):
             thread.save(update_fields=["is_closed"])
 
         if request.user == user:
-            create_left_thread_update(thread, request.user, request=request)
+            create_left_thread_update(thread, request.user, request)
         else:
             create_removed_participant_thread_update(
-                thread, user, request.user, request=request
+                thread, user, request.user, request
             )

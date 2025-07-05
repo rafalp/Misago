@@ -14,6 +14,12 @@ from ..permissions.threads import (
     check_vote_in_thread_poll_permission,
 )
 from ..threads.models import Thread
+from ..threadupdates.create import (
+    create_closed_poll_thread_update,
+    create_deleted_poll_thread_update,
+    create_reopened_poll_thread_update,
+    create_started_poll_thread_update,
+)
 from ..polls.models import Poll
 from .choices import PollChoices
 from .delete import delete_poll
@@ -91,9 +97,11 @@ class PollStartView(PollView):
 
         form = StartPollForm(request.POST, request=request)
         if form.is_valid():
-            form.save(thread.category, thread, request.user)
+            poll = form.save(thread.category, thread, request.user)
             thread.has_poll = True
             thread.save(update_fields=["has_poll"])
+
+            create_started_poll_thread_update(thread, poll, request.user, request)
 
             messages.success(request, pgettext("start poll", "Poll started"))
             return redirect(
@@ -187,7 +195,9 @@ class PollDeleteView(PollView):
         thread.has_poll = False
         thread.save(update_fields=["has_poll"])
 
-        messages.success(request, pgettext("poll vote", "Poll has been deleted"))
+        create_deleted_poll_thread_update(thread, poll, request.user, request)
+
+        messages.success(request, pgettext("poll vote", "Deleted poll"))
 
         return redirect(request.path)
 
@@ -239,6 +249,7 @@ def get_poll_context_data(
         "close_url": f"{request.path}?poll=close",
         "open_url": f"{request.path}?poll=open",
         "delete_url": f"{request.path}?poll=delete",
+        "results_url": f"{request.path}?poll=results",
         "voters_url": f"{request.path}?poll=voters",
         "vote_url": f"{request.path}?poll=vote",
     }
