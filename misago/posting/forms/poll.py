@@ -43,9 +43,7 @@ class PollForm(StartPollForm, PostingForm):
         return cleaned_data
 
     def update_state(self, state: StartThreadState):
-        if not self.cleaned_data.get("question") and not self.cleaned_data.get(
-            "choices"
-        ):
+        if not (self.cleaned_data.get("question") and self.cleaned_data.get("choices")):
             return
 
         state.set_poll(self.get_poll_instance(state.category, state.thread, state.user))
