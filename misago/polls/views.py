@@ -48,8 +48,6 @@ def dispatch_poll_view(request: HttpRequest, thread_id: int) -> HttpResponse | N
             return poll_close(request, thread_id)
         if view == "open":
             return poll_reopen(request, thread_id)
-        if view == "delete":
-            return poll_delete(request, thread_id)
         if view == "vote":
             return poll_vote(request, thread_id)
     elif request.is_htmx:
@@ -77,6 +75,16 @@ class PollView(View):
         poll.thread = thread
 
         return poll
+
+    def get_thread_url(self, thread: Thread) -> str:
+        return reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+
+    def get_next_url(self, request: HttpRequest, thread: Thread) -> str:
+        thread_url = self.get_thread_url(thread)
+        next_url = request.POST.get("next")
+        if next_url and next_url.startswith(thread_url):
+            return next_url
+        return thread_url
 
 
 class PollStartView(PollView):
@@ -207,9 +215,7 @@ class PollEditView(PollView):
         )
 
     def get_return_url(self, request: HttpRequest, thread: Thread, poll: Poll) -> str:
-        thread_url = reverse(
-            "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
-        )
+        thread_url = self.get_thread_url()
 
         if not request.is_htmx:
             return thread_url
@@ -321,8 +327,8 @@ class PollReopenView(PollView):
 
 
 class PollDeleteView(PollView):
-    def post(self, request: HttpRequest, thread_id: int) -> HttpResponse:
-        thread = self.get_thread(request, thread_id)
+    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, id)
         poll = self.get_poll(request, thread)
 
         check_delete_thread_poll_permission(
@@ -336,14 +342,13 @@ class PollDeleteView(PollView):
         create_deleted_poll_thread_update(thread, poll, request.user, request)
         messages.success(request, pgettext("poll vote", "Poll deleted"))
 
-        return redirect(request.path)
+        return redirect(self.get_next_url(request, thread))
 
 
 poll_results = PollResultsView.as_view()
 poll_vote = PollVoteView.as_view()
 poll_close = PollCloseView.as_view()
 poll_reopen = PollReopenView.as_view()
-poll_delete = PollDeleteView.as_view()
 
 
 def get_poll_context_data(
@@ -399,7 +404,9 @@ def get_poll_context_data(
         ),
         "close_url": f"{request.path}?poll=close",
         "open_url": f"{request.path}?poll=open",
-        "delete_url": f"{request.path}?poll=delete",
+        "delete_url": reverse(
+            "misago:delete-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
+        ),
         "results_url": f"{request.path}?poll=results",
         "voters_url": f"{request.path}?poll=voters",
         "vote_url": f"{request.path}?poll=vote",
