@@ -218,3 +218,32 @@ class StartPollForm(PollForm):
 
     def save(self, category: Category, thread: Thread, user: "User") -> Poll:
         return self.get_poll_instance(category, thread, user, save=True)
+
+
+class EditPollForm(PollForm):
+    instance: Poll
+
+    def __init__(self, *args, **kwargs):
+        self.instance = instance = kwargs.pop("instance")
+
+        choices = PollChoices(instance.choices)
+
+        kwargs["initial"] = {
+            "question": instance.question,
+            "duration": instance.duration,
+            "max_choices": instance.max_choices,
+            "can_change_vote": instance.can_change_vote
+        }
+
+        super().__init__(*args, **kwargs)
+
+    def setup_form_fields(self, settings):
+        super().setup_form_fields(settings)
+        del self.fields["is_public"]
+
+    def save(self):
+        self.instance.question = self.cleaned_data["question"]
+        self.instance.duration = self.cleaned_data["duration"] or 0
+        self.instance.max_choices = self.cleaned_data["max_choices"]
+        self.instance.can_change_vote = self.cleaned_data["can_change_vote"]
+        self.instance.save()

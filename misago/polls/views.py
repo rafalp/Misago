@@ -9,7 +9,10 @@ from django.views import View
 from ..permissions.checkutils import check_permissions
 from ..permissions.polls import (
     check_close_thread_poll_permission,
+    check_delete_thread_poll_permission,
     check_edit_thread_poll_permission,
+    check_reopen_thread_poll_permission,
+    check_start_thread_poll_permission,
     check_vote_in_thread_poll_permission,
 )
 from ..permissions.threads import check_see_thread_permission
@@ -22,9 +25,10 @@ from ..threadupdates.create import (
 )
 from ..polls.models import Poll
 from .choices import PollChoices
+from .close import close_poll, open_poll
 from .delete import delete_poll
 from .enums import PollTemplate
-from .forms import StartPollForm
+from .forms import EditPollForm, StartPollForm
 from .validators import validate_poll_vote
 from .votes import (
     delete_user_poll_votes,
@@ -40,19 +44,15 @@ def dispatch_poll_view(request: HttpRequest, thread_id: int) -> HttpResponse | N
         return None
 
     if request.method == "POST":
-        if view == "edit":
-            raise NotImplementedError()
         if view == "close":
-            raise NotImplementedError()
+            return poll_close(request, thread_id)
         if view == "open":
-            raise NotImplementedError()
+            return poll_reopen(request, thread_id)
         if view == "delete":
             return poll_delete(request, thread_id)
         if view == "vote":
             return poll_vote(request, thread_id)
     elif request.is_htmx:
-        if view == "start":
-            return poll_vote(request, thread_id)
         if view in ("results", "voters"):
             return poll_results(request, thread_id, view == "voters")
         if view == "vote":
@@ -87,6 +87,10 @@ class PollStartView(PollView):
         if thread.has_poll:
             pass
 
+        check_start_thread_poll_permission(
+            request.user_permissions, thread.category, thread
+        )
+
         form = StartPollForm(request=request)
         return self.render(request, thread, form)
 
@@ -94,6 +98,10 @@ class PollStartView(PollView):
         thread = self.get_thread(request, id)
         if thread.has_poll:
             pass
+
+        check_start_thread_poll_permission(
+            request.user_permissions, thread.category, thread
+        )
 
         form = StartPollForm(request.POST, request=request)
         if form.is_valid():
@@ -111,7 +119,7 @@ class PollStartView(PollView):
         return self.render(request, thread, form)
 
     def render(
-        self, request: HttpRequest, thread: Thread, form: StartPollForm
+        self, request: HttpRequest, thread: Thread, form: EditPollForm
     ) -> HttpResponse:
         return render(
             request,
@@ -122,6 +130,96 @@ class PollStartView(PollView):
                 "form": form,
             },
         )
+
+
+class PollEditView(PollView):
+    template_name = "misago/poll/edit.html"
+    template_name_htmx = "misago/poll/edit_partial.html"
+
+    def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        poll = self.get_poll(request, thread)
+
+        check_edit_thread_poll_permission(
+            request.user_permissions, thread.category, thread, poll
+        )
+
+        form = EditPollForm(instance=poll, request=request)
+        return self.render(request, thread, poll, form)
+
+    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        poll = self.get_poll(request, thread)
+
+        check_edit_thread_poll_permission(
+            request.user_permissions, thread.category, thread, poll
+        )
+
+        form = EditPollForm(request.POST, instance=poll, request=request)
+        if form.is_valid():
+            return self.handle_form(request, thread, poll, form)
+
+        return self.render(request, thread, poll, form)
+
+    def handle_form(self, request: HttpRequest, thread: Thread, poll: Poll, form: EditPollForm) -> HttpResponse:
+        form.save()
+
+        messages.success(request, pgettext("edit poll", "Poll edited"))
+
+        if not request.is_htmx:
+            return redirect(self.get_return_url(request, thread, poll))
+        
+        user_poll_votes = get_user_poll_votes(request.user, poll)
+        context = get_poll_context_data(request, thread, poll, user_poll_votes)
+        context["show_poll_snackbars"] = True
+
+        with check_permissions() as allow_vote:
+            check_vote_in_thread_poll_permission(
+                request.user_permissions, thread.category, thread, poll
+            )
+
+        if allow_vote and not user_poll_votes:
+            template_name = PollTemplate.VOTE
+        else:
+            template_name = PollTemplate.RESULTS
+
+        return render(request, template_name, context)
+        
+    def render(
+        self, request: HttpRequest, thread: Thread, poll: Poll, form: EditPollForm
+    ) -> HttpResponse:
+        if request.is_htmx:
+            template_name = self.template_name_htmx
+        else:
+            template_name = self.template_name
+
+        return render(
+            request,
+            template_name,
+            {
+                "category": thread.category,
+                "thread": thread,
+                "form": form,
+                "return_url": self.get_return_url(request, thread, poll),
+            },
+        )
+    
+    def get_return_url(self, request: HttpRequest, thread: Thread, poll: Poll) -> str:
+        thread_url = reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+
+        if not request.is_htmx:
+            return thread_url
+        
+        with check_permissions() as allow_vote:
+            check_vote_in_thread_poll_permission(
+                request.user_permissions, thread.category, thread, poll
+            )
+
+        user_poll_votes = get_user_poll_votes(request.user, poll)
+        if allow_vote and not user_poll_votes:
+            return f"{thread_url}?poll=vote"
+
+        return f"{thread_url}?poll=results"
 
 
 class PollResultsView(PollView):
@@ -186,25 +284,61 @@ class PollVoteView(PollView):
         return render(request, PollTemplate.RESULTS, context)
 
 
+class PollCloseView(PollView):
+    def post(self, request: HttpRequest, thread_id: int) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+        poll = self.get_poll(request, thread)
+
+        check_close_thread_poll_permission(
+            request.user_permissions, thread.category, thread, poll
+        )
+
+        if close_poll(poll, request.user, request):
+            create_closed_poll_thread_update(thread, request.user, request)
+            messages.success(request, pgettext("poll vote", "Closed poll"))
+
+        return redirect(request.path)
+
+
+class PollReopenView(PollView):
+    def post(self, request: HttpRequest, thread_id: int) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+        poll = self.get_poll(request, thread)
+
+        check_reopen_thread_poll_permission(
+            request.user_permissions, thread.category, thread, poll
+        )
+
+        if open_poll(poll, request.user, request):
+            create_reopened_poll_thread_update(thread, request.user, request)
+            messages.success(request, pgettext("poll vote", "Reopened poll"))
+
+        return redirect(request.path)
+
+
 class PollDeleteView(PollView):
     def post(self, request: HttpRequest, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
+
+        check_delete_thread_poll_permission(
+            request.user_permissions, thread.category, thread, poll
+        )
 
         delete_poll(poll, request)
         thread.has_poll = False
         thread.save(update_fields=["has_poll"])
 
         create_deleted_poll_thread_update(thread, poll, request.user, request)
-
         messages.success(request, pgettext("poll vote", "Deleted poll"))
 
         return redirect(request.path)
 
 
-poll_start = PollStartView.as_view()
 poll_results = PollResultsView.as_view()
 poll_vote = PollVoteView.as_view()
+poll_close = PollCloseView.as_view()
+poll_reopen = PollReopenView.as_view()
 poll_delete = PollDeleteView.as_view()
 
 
@@ -235,17 +369,30 @@ def get_poll_context_data(
             request.user_permissions, thread.category, thread, poll
         )
 
+    with check_permissions() as allow_reopen:
+        check_reopen_thread_poll_permission(
+            request.user_permissions, thread.category, thread, poll
+        )
+
+    with check_permissions() as allow_delete:
+        check_delete_thread_poll_permission(
+            request.user_permissions, thread.category, thread, poll
+        )
+
     return {
         "poll": poll,
         "user_votes": user_poll_votes,
         "question": poll.question,
         "results": poll_results,
         "show_voters": show_voters,
-        "moderator": request.user_permissions.is_category_moderator(poll.category_id),
         "allow_edit": allow_edit,
         "allow_close": allow_close and not poll.is_closed,
+        "allow_reopen": allow_reopen and poll.is_closed,
+        "allow_delete": allow_delete,
         "allow_vote": allow_vote,
-        "edit_url": f"{request.path}?poll=edit",
+        "edit_url": reverse(
+            "misago:edit-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
+        ),
         "close_url": f"{request.path}?poll=close",
         "open_url": f"{request.path}?poll=open",
         "delete_url": f"{request.path}?poll=delete",

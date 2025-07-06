@@ -101,7 +101,7 @@ class RepliesView(View):
     def post(
         self, request: HttpRequest, id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
-        return HttpResponseNotAllowed()
+        return HttpResponseNotAllowed(["GET", "POST"])
 
     def get_context_data(
         self, request: HttpRequest, thread: Thread, page: int | None = None

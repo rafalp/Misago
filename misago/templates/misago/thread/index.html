@@ -17,9 +17,7 @@
     <a id="misago-page-scroll-target" class="scroll-target"></a>
 
     <div id="misago-poll-scroll-target" class="scroll-target"></div>
-    <div id="misago-htmx-poll">
-      {% if poll %}{% include "misago/thread/poll.html" %}{% endif %}
-    </div>
+    {% if poll %}{% includecomponent poll %}{% endif %}
 
     {% include "misago/thread/partial.html" %}
 

@@ -1,5 +1,5 @@
 {% load i18n %}
-{% if allow_edit or moderator %}
+{% if allow_edit %}
   <a href="{{ edit_url }}"
     class="btn btn-link"
     hx-boost="true"
@@ -7,24 +7,22 @@
     {% translate "Edit" context "poll footer btn" %}
   </a>
 {% endif %}
-{% if allow_close or moderator %}
-  <button
-    class="btn btn-link"
-    type="button"
-    hx-post="{{ close_url }}"
-  >
-    {% translate "Close" context "poll footer btn" %}
-  </button>
-{% elif poll.is_closed and moderator %}
-  <button
-    class="btn btn-link"
-    type="button"
-    hx-post="{{ open_url }}"
-  >
-    {% translate "Open" context "poll footer btn" %}
-  </button>
+{% if allow_close %}
+  <form action="{{ close_url }}" method="POST">
+    {% csrf_token %}
+    <button class="btn btn-link">
+      {% translate "Close" context "poll footer btn" %}
+    </button>
+  </form>
+{% elif allow_reopen %}
+  <form action="{{ open_url }}" method="POST">
+    {% csrf_token %}
+    <button class="btn btn-link">
+      {% translate "Open" context "poll footer btn" %}
+    </button>
+  </form>
 {% endif %}
-{% if moderator %}
+{% if allow_delete %}
   <form action="{{ delete_url }}" method="POST" misago-confirm="{% translate 'Delete this poll?' context 'poll delete confirmation' %}">
     {% csrf_token %}
     <button class="btn btn-link">
