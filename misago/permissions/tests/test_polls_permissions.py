@@ -5,6 +5,7 @@ from ..polls import (
     check_close_thread_poll_permission,
     check_delete_thread_poll_permission,
     check_edit_thread_poll_permission,
+    check_reopen_thread_poll_permission,
     check_start_poll_permission,
     check_start_thread_poll_permission,
     check_vote_in_thread_poll_permission,
@@ -797,6 +798,63 @@ def test_check_close_thread_poll_permission_passes_for_global_moderator_if_poll_
     permissions = user_permissions_factory(moderator)
 
     check_close_thread_poll_permission(permissions, default_category, user_thread, poll)
+
+
+def test_check_reopen_thread_poll_permission_passes_category_moderator(
+    category_moderator,
+    user_permissions_factory,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    permissions = user_permissions_factory(category_moderator)
+
+    check_reopen_thread_poll_permission(
+        permissions, default_category, user_thread, user_poll
+    )
+
+
+def test_check_reopen_thread_poll_permission_passes_global_moderator(
+    moderator,
+    user_permissions_factory,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    permissions = user_permissions_factory(moderator)
+
+    check_reopen_thread_poll_permission(
+        permissions, default_category, user_thread, user_poll
+    )
+
+
+def test_check_reopen_thread_poll_permission_fails_if_user_is_anonymous(
+    anonymous_user,
+    user_permissions_factory,
+    default_category,
+    thread,
+    poll,
+):
+    permissions = user_permissions_factory(anonymous_user)
+
+    with pytest.raises(PermissionDenied):
+        check_reopen_thread_poll_permission(permissions, default_category, thread, poll)
+
+
+def test_check_reopen_thread_poll_permission_fails_if_user_is_not_moderator(
+    user,
+    user_permissions_factory,
+    default_category,
+    other_user_thread,
+    poll_factory,
+):
+    poll = poll_factory(other_user_thread, starter=user)
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_reopen_thread_poll_permission(
+            permissions, default_category, other_user_thread, poll
+        )
 
 
 def test_check_delete_thread_poll_permission_passes_category_moderator(
