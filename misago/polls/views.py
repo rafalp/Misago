@@ -215,7 +215,7 @@ class PollEditView(PollView):
         )
 
     def get_return_url(self, request: HttpRequest, thread: Thread, poll: Poll) -> str:
-        thread_url = self.get_thread_url()
+        thread_url = self.get_thread_url(thread)
 
         if not request.is_htmx:
             return thread_url
