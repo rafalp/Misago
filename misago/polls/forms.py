@@ -232,7 +232,7 @@ class EditPollForm(PollForm):
             "question": instance.question,
             "duration": instance.duration,
             "max_choices": instance.max_choices,
-            "can_change_vote": instance.can_change_vote
+            "can_change_vote": instance.can_change_vote,
         }
 
         super().__init__(*args, **kwargs)

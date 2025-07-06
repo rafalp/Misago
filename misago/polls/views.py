@@ -161,14 +161,16 @@ class PollEditView(PollView):
 
         return self.render(request, thread, poll, form)
 
-    def handle_form(self, request: HttpRequest, thread: Thread, poll: Poll, form: EditPollForm) -> HttpResponse:
+    def handle_form(
+        self, request: HttpRequest, thread: Thread, poll: Poll, form: EditPollForm
+    ) -> HttpResponse:
         form.save()
 
         messages.success(request, pgettext("edit poll", "Edited poll"))
 
         if not request.is_htmx:
             return redirect(self.get_return_url(request, thread, poll))
-        
+
         user_poll_votes = get_user_poll_votes(request.user, poll)
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
         context["show_poll_snackbars"] = True
@@ -184,7 +186,7 @@ class PollEditView(PollView):
             template_name = PollTemplate.RESULTS
 
         return render(request, template_name, context)
-        
+
     def render(
         self, request: HttpRequest, thread: Thread, poll: Poll, form: EditPollForm
     ) -> HttpResponse:
@@ -203,13 +205,15 @@ class PollEditView(PollView):
                 "return_url": self.get_return_url(request, thread, poll),
             },
         )
-    
+
     def get_return_url(self, request: HttpRequest, thread: Thread, poll: Poll) -> str:
-        thread_url = reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        thread_url = reverse(
+            "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        )
 
         if not request.is_htmx:
             return thread_url
-        
+
         with check_permissions() as allow_vote:
             check_vote_in_thread_poll_permission(
                 request.user_permissions, thread.category, thread, poll
