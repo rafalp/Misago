@@ -26,7 +26,7 @@ from ..threadupdates.create import (
 from ..polls.models import Poll
 from .choices import PollChoices
 from .close import close_poll, open_poll
-from .delete import delete_poll
+from .delete import delete_thread_poll
 from .enums import PollTemplate
 from .forms import EditPollForm, StartPollForm
 from .validators import validate_poll_vote
@@ -335,11 +335,8 @@ class PollDeleteView(PollView):
             request.user_permissions, thread.category, thread, poll
         )
 
-        delete_poll(poll, request)
-        thread.has_poll = False
-        thread.save(update_fields=["has_poll"])
+        delete_thread_poll(thread, poll, request.user, request)
 
-        create_deleted_poll_thread_update(thread, poll, request.user, request)
         messages.success(request, pgettext("poll vote", "Poll deleted"))
 
         return redirect(self.get_next_url(request, thread))

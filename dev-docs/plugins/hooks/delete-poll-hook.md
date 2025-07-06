@@ -62,7 +62,7 @@ The poll to delete.
 
 #### `request: HttpRequest | None`
 
-The request object, or None if not provided.
+The request object, or `None` if not provided.
 
 
 ## Example
@@ -78,10 +78,10 @@ from .models import PluginModel
 
 @delete_poll_hook.append_filter
 def delete_plugin_relations(
-    action,  poll: Poll, request: HttpRequest | None
+    action, poll: Poll, request: HttpRequest | None
 ) -> None:
     PluginModel.objects.filter(poll=poll).delete()
 
     # Run standard deletion logic
-    action(permissions)
+    action(poll, request)
 ```

@@ -51,7 +51,7 @@ A `str` to tokenize.
 
 #### `processors: Iterable[Callable[[list[Token]], list[Token] | None]]`
 
-A list of callables that each accept a single argument (a list of tokens) and return either a updated list of tokens or None if no changes were made.
+A list of callables that each accept a single argument (a list of tokens) and return either a updated list of tokens or `None` if no changes were made.
 
 
 ### Return value
@@ -88,7 +88,7 @@ A `str` to tokenize.
 
 #### `processors: Iterable[Callable[[list[Token]], list[Token] | None]]`
 
-A list of callables that each accept a single argument (a list of tokens) and return either a updated list of tokens or None if no changes were made.
+A list of callables that each accept a single argument (a list of tokens) and return either a updated list of tokens or `None` if no changes were made.
 
 
 ### Return value

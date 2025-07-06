@@ -122,6 +122,7 @@ Hooks instances are importable from the following Python modules:
 `misago.polls.hooks` defines the following hooks:
 
 - [`delete_poll_hook`](./delete-poll-hook.md)
+- [`delete_thread_poll_hook`](./delete-thread-poll-hook.md)
 - [`validate_poll_choices_hook`](./validate-poll-choices-hook.md)
 - [`validate_poll_question_hook`](./validate-poll-question-hook.md)
 
