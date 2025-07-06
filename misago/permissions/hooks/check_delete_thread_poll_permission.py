@@ -2,16 +2,17 @@ from typing import TYPE_CHECKING, Protocol
 
 from ...categories.models import Category
 from ...plugins.hooks import FilterHook
+from ...polls.models import Poll
 from ...threads.models import Thread
 
 if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckStartThreadPollPermissionHookAction(Protocol):
+class CheckDeleteThreadPollPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if the user has permission to start
-    a poll in a thread. Raises Django's `PermissionDenied` exception with an error
+    A standard Misago function used to check if the user has permission to delete
+    a thread poll. Raises Django's `PermissionDenied` exception with an error
     message if the user lacks permission.
 
     # Arguments
@@ -27,6 +28,10 @@ class CheckStartThreadPollPermissionHookAction(Protocol):
     ## `thread: Thread`
 
     A thread to check permissions for.
+
+    ## `poll: Poll`
+
+    A poll to check permissions for.
     """
 
     def __call__(
@@ -34,16 +39,17 @@ class CheckStartThreadPollPermissionHookAction(Protocol):
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
+        poll: Poll,
     ) -> None: ...
 
 
-class CheckStartThreadPollPermissionHookFilter(Protocol):
+class CheckDeleteThreadPollPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckStartThreadPollPermissionHookAction`
+    ## `action: CheckDeleteThreadPollPermissionHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -61,57 +67,77 @@ class CheckStartThreadPollPermissionHookFilter(Protocol):
     ## `thread: Thread`
 
     A thread to check permissions for.
+
+    ## `poll: Poll`
+
+    A poll to check permissions for.
     """
 
     def __call__(
         self,
-        action: CheckStartThreadPollPermissionHookAction,
+        action: CheckDeleteThreadPollPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
+        poll: Poll,
     ) -> None: ...
 
 
-class CheckStartThreadPollPermissionHook(
+class CheckDeleteThreadPollPermissionHook(
     FilterHook[
-        CheckStartThreadPollPermissionHookAction,
-        CheckStartThreadPollPermissionHookFilter,
+        CheckDeleteThreadPollPermissionHookAction,
+        CheckDeleteThreadPollPermissionHookFilter,
     ]
 ):
     """
     This hook allows plugins to replace or extend the permission check for the
-    "can start poll in thread" permission.
+    "can delete thread poll" permission.
 
     # Example
 
-    Prevents a user from starting a poll in a thread if it is older than 15 days.
+    Allows user to delete their own poll in a thread if it has no votes.
 
     ```python
-    from datetime import timedelta
-
     from django.core.exceptions import PermissionDenied
-    from django.utils import timezone
     from django.utils.translation import pgettext
     from misago.categories.models import Category
+    from misago.polls.models import Poll
     from misago.threads.models import Thread
-    from misago.permissions.hooks import check_start_thread_poll_permission_hook
+    from misago.permissions.checkutils import check_permissions
+    from misago.permissions.hooks import check_delete_thread_poll_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
 
-    @check_start_thread_poll_permission_hook.append_filter
-    def check_user_can_start_poll(
+    @check_delete_thread_poll_permission_hook.append_filter
+    def check_user_can_delete_poll(
         action,
         permissions: UserPermissionsProxy,
         category: Category,
         thread: Thread,
+        poll: Poll,
     ) -> None:
-        # Run standard permission checks
-        action(permissions, category, thread)
+        with check_permissions() as can_delete_poll:
+            action(permissions, category, thread, poll)
 
-        if thread.started_on < timezone.now() - timedelta(days=15):
+        if can_delete_poll:
+            return
+
+        if (
+            not permissions.user.id
+            or not poll.starter_id
+            or permissions.user.id != poll.starter_id
+        ):
             raise PermissionDenied(
                 pgettext(
                     "poll permission error",
-                    "You can't start polls in threads that are older than 15 days."
+                    "You can't delete other users polls."
+                )
+            )
+
+        if poll.votes:
+            raise PermissionDenied(
+                pgettext(
+                    "poll permission error",
+                    "You can't delete polls that somebody has voted in."
                 )
             )
     ```
@@ -121,12 +147,13 @@ class CheckStartThreadPollPermissionHook(
 
     def __call__(
         self,
-        action: CheckStartThreadPollPermissionHookAction,
+        action: CheckDeleteThreadPollPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
+        poll: Poll,
     ) -> None:
-        return super().__call__(action, permissions, category, thread)
+        return super().__call__(action, permissions, category, thread, poll)
 
 
-check_start_thread_poll_permission_hook = CheckStartThreadPollPermissionHook()
+check_delete_thread_poll_permission_hook = CheckDeleteThreadPollPermissionHook()

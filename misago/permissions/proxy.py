@@ -113,6 +113,9 @@ class UserPermissionsProxy:
         return browsed_categories.intersection(self.moderator.categories_ids)
 
     def is_category_moderator(self, category_id: int) -> bool:
+        if self.user.is_anonymous:
+            return False
+
         if self.is_global_moderator:
             return True
 

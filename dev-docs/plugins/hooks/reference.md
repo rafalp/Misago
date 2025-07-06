@@ -76,6 +76,7 @@ Hooks instances are importable from the following Python modules:
 - [`check_browse_category_permission_hook`](./check-browse-category-permission-hook.md)
 - [`check_close_thread_poll_permission_hook`](./check-close-thread-poll-permission-hook.md)
 - [`check_delete_attachment_permission_hook`](./check-delete-attachment-permission-hook.md)
+- [`check_delete_thread_poll_permission_hook`](./check-delete-thread-poll-permission-hook.md)
 - [`check_download_attachment_permission_hook`](./check-download-attachment-permission-hook.md)
 - [`check_edit_private_thread_permission_hook`](./check-edit-private-thread-permission-hook.md)
 - [`check_edit_private_thread_post_permission_hook`](./check-edit-private-thread-post-permission-hook.md)

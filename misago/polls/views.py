@@ -7,12 +7,12 @@ from django.utils.translation import pgettext
 from django.views import View
 
 from ..permissions.checkutils import check_permissions
-from ..permissions.threads import (
+from ..permissions.polls import (
     check_close_thread_poll_permission,
     check_edit_thread_poll_permission,
-    check_see_thread_permission,
     check_vote_in_thread_poll_permission,
 )
+from ..permissions.threads import check_see_thread_permission
 from ..threads.models import Thread
 from ..threadupdates.create import (
     create_closed_poll_thread_update,

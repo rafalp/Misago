@@ -12,6 +12,9 @@ from .check_close_thread_poll_permission import check_close_thread_poll_permissi
 from .check_delete_attachment_permission import (
     check_delete_attachment_permission_hook,
 )
+from .check_delete_thread_poll_permission import (
+    check_delete_thread_poll_permission_hook,
+)
 from .check_download_attachment_permission import (
     check_download_attachment_permission_hook,
 )
@@ -91,6 +94,7 @@ __all__ = [
     "check_browse_category_permission_hook",
     "check_close_thread_poll_permission_hook",
     "check_delete_attachment_permission_hook",
+    "check_delete_thread_poll_permission_hook",
     "check_download_attachment_permission_hook",
     "check_edit_private_thread_permission_hook",
     "check_edit_private_thread_post_permission_hook",

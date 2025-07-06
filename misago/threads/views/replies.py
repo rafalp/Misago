@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING, Any
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
 from django.http import (
-    Http404,
     HttpRequest,
     HttpResponse,
     HttpResponseNotAllowed,
@@ -17,6 +16,7 @@ from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
 from ...notifications.threads import update_watched_thread_read_time
 from ...permissions.checkutils import check_permissions
+from ...permissions.polls import check_start_thread_poll_permission
 from ...permissions.privatethreads import (
     check_edit_private_thread_permission,
     check_reply_private_thread_permission,
@@ -24,7 +24,6 @@ from ...permissions.privatethreads import (
 from ...permissions.threads import (
     check_edit_thread_permission,
     check_reply_thread_permission,
-    check_start_thread_poll_permission,
 )
 from ...polls.enums import PollTemplate
 from ...polls.models import Poll

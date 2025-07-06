@@ -1,6 +1,4 @@
 from .checks import (
-    check_close_thread_poll_permission,
-    check_edit_thread_poll_permission,
     check_edit_thread_post_permission,
     check_edit_thread_permission,
     check_post_in_closed_category_permission,
@@ -9,8 +7,6 @@ from .checks import (
     check_see_thread_permission,
     check_see_thread_post_permission,
     check_start_thread_permission,
-    check_start_thread_poll_permission,
-    check_vote_in_thread_poll_permission,
 )
 from .querysets import (
     CategoryThreadsQuerysetFilter,
@@ -24,8 +20,6 @@ __all__ = [
     "CategoryThreadsQuerysetFilter",
     "ThreadsQuerysetFilter",
     "can_upload_thread_attachments",
-    "check_close_thread_poll_permission",
-    "check_edit_thread_poll_permission",
     "check_edit_thread_post_permission",
     "check_edit_thread_permission",
     "check_post_in_closed_category_permission",
@@ -34,8 +28,6 @@ __all__ = [
     "check_see_thread_permission",
     "check_see_thread_post_permission",
     "check_start_thread_permission",
-    "check_start_thread_poll_permission",
-    "check_vote_in_thread_poll_permission",
     "filter_category_threads_queryset",
     "filter_thread_posts_queryset",
     "filter_thread_updates_queryset",

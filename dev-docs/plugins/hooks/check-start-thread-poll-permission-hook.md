@@ -111,7 +111,7 @@ def check_user_can_start_poll(
         raise PermissionDenied(
             pgettext(
                 "poll permission error",
-                "You cannot start polls in threads that are older than 15 days."
+                "You can't start polls in threads that are older than 15 days."
             )
         )
 ```
