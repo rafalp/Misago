@@ -164,7 +164,7 @@ class PollEditView(PollView):
     def handle_form(self, request: HttpRequest, thread: Thread, poll: Poll, form: EditPollForm) -> HttpResponse:
         form.save()
 
-        messages.success(request, pgettext("edit poll", "Poll edited"))
+        messages.success(request, pgettext("edit poll", "Edited poll"))
 
         if not request.is_htmx:
             return redirect(self.get_return_url(request, thread, poll))
@@ -295,7 +295,7 @@ class PollCloseView(PollView):
 
         if close_poll(poll, request.user, request):
             create_closed_poll_thread_update(thread, request.user, request)
-            messages.success(request, pgettext("poll vote", "Closed poll"))
+            messages.success(request, pgettext("poll vote", "Poll closed"))
 
         return redirect(request.path)
 
@@ -311,7 +311,7 @@ class PollReopenView(PollView):
 
         if open_poll(poll, request.user, request):
             create_reopened_poll_thread_update(thread, request.user, request)
-            messages.success(request, pgettext("poll vote", "Reopened poll"))
+            messages.success(request, pgettext("poll vote", "Poll reopened"))
 
         return redirect(request.path)
 
@@ -330,7 +330,7 @@ class PollDeleteView(PollView):
         thread.save(update_fields=["has_poll"])
 
         create_deleted_poll_thread_update(thread, poll, request.user, request)
-        messages.success(request, pgettext("poll vote", "Deleted poll"))
+        messages.success(request, pgettext("poll vote", "Poll deleted"))
 
         return redirect(request.path)
 
