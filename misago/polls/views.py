@@ -360,7 +360,7 @@ class PollOpenView(PollUpdateView):
         return render(request, PollTemplate.RESULTS_HTMX, context)
 
     def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
-        check_close_thread_poll_permission(
+        check_open_thread_poll_permission(
             request.user_permissions, thread.category, thread, poll
         )
 
@@ -408,7 +408,7 @@ def get_poll_context_data(
             request.user_permissions, thread.category, thread, poll
         )
 
-    with check_permissions() as allow_reopen:
+    with check_permissions() as allow_open:
         check_open_thread_poll_permission(
             request.user_permissions, thread.category, thread, poll
         )
@@ -426,7 +426,7 @@ def get_poll_context_data(
         "show_voters": show_voters,
         "allow_edit": allow_edit,
         "allow_close": allow_close and not poll.is_closed,
-        "allow_reopen": allow_reopen and poll.is_closed,
+        "allow_open": allow_open and poll.is_closed,
         "allow_delete": allow_delete,
         "allow_vote": allow_vote,
         "edit_url": reverse(

@@ -14,7 +14,7 @@
       {% translate "Close" context "poll footer btn" %}
     </button>
   </form>
-{% elif allow_reopen %}
+{% elif allow_open %}
   <form action="{{ open_url }}" method="POST" hx-boost="true">
     {% csrf_token %}
     <button class="btn btn-link">
