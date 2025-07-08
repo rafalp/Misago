@@ -8,7 +8,7 @@ from ...plugins.hooks import FilterHook
 
 class TokenizeHookAction(Protocol):
     """
-    A standard Misago function used to create a token stream from markup.
+    Misago function used to create a token stream from markup.
 
     # Arguments
 
@@ -46,7 +46,7 @@ class TokenizeHookFilter(Protocol):
 
     ## `action: TokenizeHookAction`
 
-    A standard Misago function used to create a token stream from markup.
+    Misago function used to create a token stream from markup.
 
     See the [action](#action) section for details.
 

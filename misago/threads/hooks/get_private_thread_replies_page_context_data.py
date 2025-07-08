@@ -8,7 +8,7 @@ from ..models import Thread
 
 class GetPrivateThreadRepliesPageContextDataHookAction(Protocol):
     """
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the private thread replies page.
 
     # Arguments
@@ -47,7 +47,7 @@ class GetPrivateThreadRepliesPageContextDataHookFilter(Protocol):
 
     ## `action: GetPrivateThreadRepliesPageContextDataHookAction`
 
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the private thread replies page.
 
     See the [action](#action) section for details.

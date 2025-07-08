@@ -8,7 +8,7 @@ from ...users.models import Group
 
 class CopyGroupPermissionsHookAction(Protocol):
     """
-    A standard Misago function used to copy permissions from one user group to another
+    Misago function used to copy permissions from one user group to another
     or the next filter function from another plugin.
 
     # Arguments
@@ -42,7 +42,7 @@ class CopyGroupPermissionsHookFilter(Protocol):
 
     ## `action: CopyGroupPermissionsHookAction`
 
-    A standard Misago function used to copy permissions from one user group to another
+    Misago function used to copy permissions from one user group to another
     or the next filter function from another plugin.
 
     See the [action](#action) section for details.

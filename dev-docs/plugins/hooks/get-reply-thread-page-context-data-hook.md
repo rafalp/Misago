@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetReplyThreadPageContextDataHookAction`
 
-A standard Misago function used to get the template context data for the reply to thread page.
+Misago function used to get the template context data for the reply to thread page.
 
 See the [action](#action) section for details.
 
@@ -65,7 +65,7 @@ def get_reply_thread_page_context_data_action(
     ...
 ```
 
-A standard Misago function used to get the template context data for the reply to thread page.
+Misago function used to get the template context data for the reply to thread page.
 
 
 ### Arguments

@@ -62,7 +62,7 @@ def check_start_thread_poll_permission_action(
     ...
 ```
 
-A standard Misago function used to check if the user has permission to start a poll in a thread. Raises Django's `PermissionDenied` exception with an error message if the user lacks permission.
+Misago function used to check if the user has permission to start a poll in a thread. Raises Django's `PermissionDenied` exception with an error message if the user lacks permission.
 
 
 ### Arguments

@@ -8,7 +8,7 @@ from ..metatag import MetaTag
 
 class GetForumIndexMetatagsHookAction(Protocol):
     """
-    A standard Misago function used to get metatags for the forum index page.
+    Misago function used to get metatags for the forum index page.
 
     # Arguments
 
@@ -32,7 +32,7 @@ class GetForumIndexMetatagsHookFilter(Protocol):
 
     ## `action: GetForumIndexMetatagsHookAction`
 
-    A standard Misago function used to get metatags for the forum index page.
+    Misago function used to get metatags for the forum index page.
 
     See the [action](#action) section for details.
 

@@ -8,7 +8,7 @@ from ...plugins.hooks import FilterHook
 
 class GetCategoryThreadsPageSubcategoriesHookAction(Protocol):
     """
-    A standard Misago function used to build a `dict` with data for
+    Misago function used to build a `dict` with data for
     the categories list component, used to display the list of subcategories on
     the category threads page.
 
@@ -49,7 +49,7 @@ class GetCategoryThreadsPageSubcategoriesHookFilter(Protocol):
 
     ## `action: GetCategoryThreadsPageSubcategoriesHookAction`
 
-    A standard Misago function used to build a `dict` with data for
+    Misago function used to build a `dict` with data for
     the categories list component, used to display the list of subcategories on
     the category threads page.
 

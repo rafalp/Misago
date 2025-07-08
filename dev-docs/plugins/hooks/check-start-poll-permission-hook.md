@@ -46,7 +46,7 @@ def check_start_poll_permission_action(permissions: 'UserPermissionsProxy') -> N
     ...
 ```
 
-A standard Misago function used to check if the user has permission to start polls. Raises Django's `PermissionDenied` with an error message if they can't.
+Misago function used to check if the user has permission to start polls. Raises Django's `PermissionDenied` with an error message if they can't.
 
 
 ### Arguments

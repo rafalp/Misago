@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetStartPrivateThreadPageContextDataHookAction`
 
-A standard Misago function used to get the template context data for the start private thread page.
+Misago function used to get the template context data for the start private thread page.
 
 See the [action](#action) section for details.
 
@@ -67,7 +67,7 @@ def get_start_private_thread_page_context_data_action(
     ...
 ```
 
-A standard Misago function used to get the template context data for the start private thread page.
+Misago function used to get the template context data for the start private thread page.
 
 
 ### Arguments

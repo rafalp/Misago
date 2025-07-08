@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 class SetPostsFeedRelatedObjectsHookAction(Protocol):
     """
-    A standard Misago function used to set related objects on dicts containing
+    Misago function used to set related objects on dicts containing
     posts feed data.
 
     # Arguments
@@ -34,7 +34,7 @@ class SetPostsFeedRelatedObjectsHookFilter(Protocol):
 
     ## `action: SetPostsFeedRelatedObjectsHookAction`
 
-    A standard Misago function used to set related objects on dicts containing
+    Misago function used to set related objects on dicts containing
     posts feed data.
 
     See the [action](#action) section for details.

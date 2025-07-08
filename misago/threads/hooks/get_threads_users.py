@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class GetThreadsUsersHookAction(Protocol):
     """
-    A standard Misago function used to get `User` objects to display on threads list.
+    Misago function used to get `User` objects to display on threads list.
 
     # Arguments
 
@@ -41,7 +41,7 @@ class GetThreadsUsersHookFilter(Protocol):
 
     ## `action: GetThreadsUsersHookAction`
 
-    A standard Misago function used to get `User` objects to display on threads list.
+    Misago function used to get `User` objects to display on threads list.
 
     See the [action](#action) section for details.
 

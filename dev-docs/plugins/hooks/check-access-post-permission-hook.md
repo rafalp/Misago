@@ -32,7 +32,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CheckAccessPostPermissionHookAction`
 
-A standard Misago function used to check if a user has permission to access a post of unknown type (threads, private threads, or plugin-defined). Raises Django’s `Http404` or `PermissionDenied` if they can't.
+Misago function used to check if a user has permission to access a post of unknown type (threads, private threads, or plugin-defined). Raises Django’s `Http404` or `PermissionDenied` if they can't.
 
 See the [action](#action) section for details.
 
@@ -69,7 +69,7 @@ def check_access_post_permission_action(
     ...
 ```
 
-A standard Misago function used to check if a user has permission to access a post of unknown type (threads, private threads, or plugin-defined). Raises Django’s `Http404` or `PermissionDenied` if they can't.
+Misago function used to check if a user has permission to access a post of unknown type (threads, private threads, or plugin-defined). Raises Django’s `Http404` or `PermissionDenied` if they can't.
 
 
 ### Arguments

@@ -34,7 +34,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: DeleteGroupHookAction`
 
-A standard Misago function used for deleting the user group, or the next filter function from another plugin.
+Misago function used for deleting the user group, or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -56,7 +56,7 @@ def delete_group_action(group: Group, request: HttpRequest | None=None) -> None:
     ...
 ```
 
-A standard Misago function used for deleting the user group, or the next filter function from another plugin.
+Misago function used for deleting the user group, or the next filter function from another plugin.
 
 
 ### Arguments

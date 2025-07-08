@@ -326,7 +326,7 @@ def create_closed_poll_thread_update(
     )
 
 
-def create_reopened_poll_thread_update(
+def create_opened_poll_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
     request: HttpRequest | None = None,
@@ -334,7 +334,7 @@ def create_reopened_poll_thread_update(
 ) -> ThreadUpdate:
     return create_thread_update(
         thread,
-        ThreadUpdateActionName.REOPENED_POLL,
+        ThreadUpdateActionName.OPENED_POLL,
         actor,
         request=request,
         is_hidden=is_hidden,

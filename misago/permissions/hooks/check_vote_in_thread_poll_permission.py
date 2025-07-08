@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class CheckVoteInThreadPollPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if the user has permission to vote
+    Misago function used to check if the user has permission to vote
     in a thread poll. Raises Django's `PermissionDenied` exception with an error
     message if the user lacks permission.
 

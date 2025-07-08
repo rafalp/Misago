@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: SetPostsFeedRelatedObjectsHookAction`
 
-A standard Misago function used to set related objects on dicts containing posts feed data.
+Misago function used to set related objects on dicts containing posts feed data.
 
 See the [action](#action) section for details.
 
@@ -52,7 +52,7 @@ def set_posts_feed_related_objects_action(feed: list[dict], related_objects: dic
     ...
 ```
 
-A standard Misago function used to set related objects on dicts containing posts feed data.
+Misago function used to set related objects on dicts containing posts feed data.
 
 
 ### Arguments

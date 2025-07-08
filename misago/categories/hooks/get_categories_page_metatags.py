@@ -8,7 +8,7 @@ from ...plugins.hooks import FilterHook
 
 class GetCategoriesPageMetatagsHookAction(Protocol):
     """
-    A standard Misago function used to get metatags for the categories page.
+    Misago function used to get metatags for the categories page.
 
     # Arguments
 
@@ -36,7 +36,7 @@ class GetCategoriesPageMetatagsHookFilter(Protocol):
 
     ## `action: GetCategoriesPageMetatagsHookAction`
 
-    A standard Misago function used to get metatags for the categories page.
+    Misago function used to get metatags for the categories page.
 
     See the [action](#action) section for details.
 

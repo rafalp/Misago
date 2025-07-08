@@ -11,7 +11,7 @@ from .hooks import (
     check_close_thread_poll_permission_hook,
     check_delete_thread_poll_permission_hook,
     check_edit_thread_poll_permission_hook,
-    check_reopen_thread_poll_permission_hook,
+    check_open_thread_poll_permission_hook,
     check_start_poll_permission_hook,
     check_start_thread_poll_permission_hook,
     check_vote_in_thread_poll_permission_hook,
@@ -254,15 +254,15 @@ def _check_close_thread_poll_permission_action(
         )
 
 
-def check_reopen_thread_poll_permission(
+def check_open_thread_poll_permission(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
 ):
-    check_reopen_thread_poll_permission_hook(
-        _check_reopen_thread_poll_permission_action, permissions, category, thread, poll
+    check_open_thread_poll_permission_hook(
+        _check_open_thread_poll_permission_action, permissions, category, thread, poll
     )
 
 
-def _check_reopen_thread_poll_permission_action(
+def _check_open_thread_poll_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
 ):
     if permissions.is_category_moderator(thread.category_id):
@@ -271,7 +271,7 @@ def _check_reopen_thread_poll_permission_action(
     raise PermissionDenied(
         pgettext(
             "threads permission error",
-            "You can't reopen closed polls.",
+            "You can't open closed polls.",
         )
     )
 

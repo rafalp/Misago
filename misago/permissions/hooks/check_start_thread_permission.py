@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class CheckStartThreadInCategoryPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if the user has permission to
+    Misago function used to check if the user has permission to
     start a new thread in a category. It raises Django's `PermissionDenied` with
     an error message if they can't start thread in a category.
 
@@ -39,7 +39,7 @@ class CheckStartThreadInCategoryPermissionHookFilter(Protocol):
 
     ## `action: CheckStartThreadInCategoryPermissionHookAction`
 
-    A standard Misago function used to check if the user has permission to
+    Misago function used to check if the user has permission to
     start a new thread in a category. It raises Django's `PermissionDenied` with
     an error message if they can't start thread in a category.
 

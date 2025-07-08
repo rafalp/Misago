@@ -8,7 +8,7 @@ from ..models import Thread
 
 class GetThreadRepliesPageContextDataHookAction(Protocol):
     """
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the thread replies page.
 
     # Arguments
@@ -46,7 +46,7 @@ class GetThreadRepliesPageContextDataHookFilter(Protocol):
 
     ## `action: GetThreadRepliesPageContextDataHookAction`
 
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the thread replies page.
 
     See the [action](#action) section for details.

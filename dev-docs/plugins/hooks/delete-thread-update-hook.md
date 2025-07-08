@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: DeleteThreadUpdateHookAction`
 
-A standard Misago function used to delete a `ThreadUpdate` object.
+Misago function used to delete a `ThreadUpdate` object.
 
 
 #### `thread_update: ThreadUpdate`
@@ -52,7 +52,7 @@ def delete_thread_update_action(
     ...
 ```
 
-A standard Misago function used to delete a `ThreadUpdate` object.
+Misago function used to delete a `ThreadUpdate` object.
 
 
 ### Arguments

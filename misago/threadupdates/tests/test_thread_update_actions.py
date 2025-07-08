@@ -14,11 +14,11 @@ from ..create import (
     create_locked_thread_update,
     create_merged_thread_update,
     create_moved_thread_update,
+    create_opened_poll_thread_update,
     create_opened_thread_update,
     create_pinned_globally_thread_update,
     create_pinned_in_category_thread_update,
     create_removed_participant_thread_update,
-    create_reopened_poll_thread_update,
     create_split_thread_update,
     create_started_poll_thread_update,
     create_test_thread_update,
@@ -217,12 +217,12 @@ def test_create_closed_poll_thread_update(client, thread, user):
     assert_contains(response, "Closed poll")
 
 
-def test_create_reopened_poll_thread_update(client, thread, user):
-    create_reopened_poll_thread_update(thread, user)
+def test_create_opened_poll_thread_update(client, thread, user):
+    create_opened_poll_thread_update(thread, user)
     response = client.get(
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Reopened poll")
+    assert_contains(response, "Opened poll")
 
 
 def test_create_deleted_poll_thread_update(client, thread, poll, user):

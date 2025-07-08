@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CopyCategoryPermissionsHookAction`
 
-A standard Misago function used to copy permissions from one category to another or the next filter function from another plugin.
+Misago function used to copy permissions from one category to another or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -60,7 +60,7 @@ def copy_category_permissions_action(
     ...
 ```
 
-A standard Misago function used to copy permissions from one category to another or the next filter function from another plugin.
+Misago function used to copy permissions from one category to another or the next filter function from another plugin.
 
 
 ### Arguments

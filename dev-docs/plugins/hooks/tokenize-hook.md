@@ -34,7 +34,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: TokenizeHookAction`
 
-A standard Misago function used to create a token stream from markup.
+Misago function used to create a token stream from markup.
 
 See the [action](#action) section for details.
 
@@ -71,7 +71,7 @@ def tokenize_action(
     ...
 ```
 
-A standard Misago function used to create a token stream from markup.
+Misago function used to create a token stream from markup.
 
 
 ### Arguments

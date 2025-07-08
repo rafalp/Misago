@@ -29,7 +29,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CheckPrivateThreadsPermissionHookAction`
 
-A standard Misago function used to check if the user has a permission to access private threads feature. Raises Django's `PermissionDenied` with an error message if they don't.
+Misago function used to check if the user has a permission to access private threads feature. Raises Django's `PermissionDenied` with an error message if they don't.
 
 See the [action](#action) section for details.
 
@@ -46,7 +46,7 @@ def check_private_threads_permission_action(permissions: 'UserPermissionsProxy')
     ...
 ```
 
-A standard Misago function used to check if the user has a permission to access private threads feature. Raises Django's `PermissionDenied` with an error message if they don't.
+Misago function used to check if the user has a permission to access private threads feature. Raises Django's `PermissionDenied` with an error message if they don't.
 
 
 ### Arguments

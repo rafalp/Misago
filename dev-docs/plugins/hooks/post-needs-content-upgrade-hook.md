@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-A standard Misago function used to check if post content needs an upgrade or the next filter function from another plugin.
+Misago function used to check if post content needs an upgrade or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -50,7 +50,7 @@ def post_needs_content_upgrade_action(post: Post) -> bool:
     ...
 ```
 
-A standard Misago function used to check if post content needs an upgrade.
+Misago function used to check if post content needs an upgrade.
 
 
 ### Arguments

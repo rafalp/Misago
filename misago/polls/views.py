@@ -11,7 +11,7 @@ from ..permissions.polls import (
     check_close_thread_poll_permission,
     check_delete_thread_poll_permission,
     check_edit_thread_poll_permission,
-    check_reopen_thread_poll_permission,
+    check_open_thread_poll_permission,
     check_start_thread_poll_permission,
     check_vote_in_thread_poll_permission,
 )
@@ -172,7 +172,6 @@ class PollEditView(PollView):
 
         user_poll_votes = get_user_poll_votes(request.user, poll)
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
-        context["show_poll_snackbars"] = True
 
         with check_permissions() as allow_vote:
             check_vote_in_thread_poll_permission(
@@ -180,9 +179,9 @@ class PollEditView(PollView):
             )
 
         if allow_vote and not user_poll_votes:
-            template_name = PollTemplate.VOTE
+            template_name = PollTemplate.VOTE_HTMX
         else:
-            template_name = PollTemplate.RESULTS
+            template_name = PollTemplate.RESULTS_HTMX
 
         return render(request, template_name, context)
 
@@ -234,7 +233,8 @@ class PollResultsView(PollView):
         context = get_poll_context_data(
             request, thread, poll, user_poll_votes, show_voters
         )
-        return render(request, PollTemplate.RESULTS, context)
+
+        return render(request, PollTemplate.RESULTS_HTMX, context)
 
 
 class PollVoteView(PollView):
@@ -248,7 +248,7 @@ class PollVoteView(PollView):
         )
 
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
-        return render(request, PollTemplate.VOTE, context)
+        return render(request, PollTemplate.VOTE_HTMX, context)
 
     def post(self, request: HttpRequest, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
@@ -280,18 +280,40 @@ class PollVoteView(PollView):
             return redirect(self.get_next_url(request, thread))
 
         context = get_poll_context_data(request, thread, poll, valid_choices)
-        context["show_poll_snackbars"] = True
 
-        return render(request, PollTemplate.RESULTS, context)
+        return render(request, PollTemplate.RESULTS_HTMX, context)
 
 
 poll_results = PollResultsView.as_view()
 poll_vote = PollVoteView.as_view()
 
 
-class PollCloseView(PollView):
-    def post(self, request: HttpRequest, thread_id: int) -> HttpResponse:
-        thread = self.get_thread(request, thread_id)
+class PollUpdateView(PollView):
+    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        poll = self.get_poll(request, thread)
+
+        self.check_permission(request, thread, poll)
+
+        thread_update = close_thread_poll(thread, poll, request.user, request)
+        if thread_update:
+            messages.success(request, pgettext("poll vote", "Poll closed"))
+
+        if not request.is_htmx:
+            return redirect(self.get_next_url(request, thread))
+
+        user_poll_votes = get_user_poll_votes(request.user, poll)
+        context = get_poll_context_data(request, thread, poll, user_poll_votes)
+
+        return render(request, PollTemplate.RESULTS_HTMX, context)
+
+    def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
+        raise NotImplementedError()
+
+
+class PollCloseView(PollUpdateView):
+    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, id)
         poll = self.get_poll(request, thread)
 
         check_close_thread_poll_permission(
@@ -307,17 +329,21 @@ class PollCloseView(PollView):
 
         user_poll_votes = get_user_poll_votes(request.user, poll)
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
-        context["show_poll_snackbars"] = True
 
-        return render(request, PollTemplate.RESULTS, context)
+        return render(request, PollTemplate.RESULTS_HTMX, context)
+
+    def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
+        check_close_thread_poll_permission(
+            request.user_permissions, thread.category, thread, poll
+        )
 
 
-class PollOpenView(PollView):
-    def post(self, request: HttpRequest, thread_id: int) -> HttpResponse:
-        thread = self.get_thread(request, thread_id)
+class PollOpenView(PollUpdateView):
+    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, id)
         poll = self.get_poll(request, thread)
 
-        check_reopen_thread_poll_permission(
+        check_open_thread_poll_permission(
             request.user_permissions, thread.category, thread, poll
         )
 
@@ -330,9 +356,13 @@ class PollOpenView(PollView):
 
         user_poll_votes = get_user_poll_votes(request.user, poll)
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
-        context["show_poll_snackbars"] = True
 
-        return render(request, PollTemplate.RESULTS, context)
+        return render(request, PollTemplate.RESULTS_HTMX, context)
+
+    def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
+        check_close_thread_poll_permission(
+            request.user_permissions, thread.category, thread, poll
+        )
 
 
 class PollDeleteView(PollView):
@@ -379,7 +409,7 @@ def get_poll_context_data(
         )
 
     with check_permissions() as allow_reopen:
-        check_reopen_thread_poll_permission(
+        check_open_thread_poll_permission(
             request.user_permissions, thread.category, thread, poll
         )
 

@@ -6,7 +6,7 @@ from ..models import Group
 
 class UpdateGroupHookAction(Protocol):
     """
-    A standard Misago function used to update an existing user group or the next filter
+    Misago function used to update an existing user group or the next filter
     function from another plugin.
 
     # Arguments
@@ -48,7 +48,7 @@ class UpdateGroupHookFilter(Protocol):
 
     ## `action: UpdateGroupHookAction`
 
-    A standard Misago function used to update an existing user group or the next filter
+    Misago function used to update an existing user group or the next filter
     function from another plugin.
 
     See the [action](#action) section for details.

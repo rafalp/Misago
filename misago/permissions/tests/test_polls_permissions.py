@@ -5,7 +5,7 @@ from ..polls import (
     check_close_thread_poll_permission,
     check_delete_thread_poll_permission,
     check_edit_thread_poll_permission,
-    check_reopen_thread_poll_permission,
+    check_open_thread_poll_permission,
     check_start_poll_permission,
     check_start_thread_poll_permission,
     check_vote_in_thread_poll_permission,
@@ -800,7 +800,7 @@ def test_check_close_thread_poll_permission_passes_for_global_moderator_if_poll_
     check_close_thread_poll_permission(permissions, default_category, user_thread, poll)
 
 
-def test_check_reopen_thread_poll_permission_passes_category_moderator(
+def test_check_open_thread_poll_permission_passes_category_moderator(
     category_moderator,
     user_permissions_factory,
     default_category,
@@ -809,12 +809,12 @@ def test_check_reopen_thread_poll_permission_passes_category_moderator(
 ):
     permissions = user_permissions_factory(category_moderator)
 
-    check_reopen_thread_poll_permission(
+    check_open_thread_poll_permission(
         permissions, default_category, user_thread, user_poll
     )
 
 
-def test_check_reopen_thread_poll_permission_passes_global_moderator(
+def test_check_open_thread_poll_permission_passes_global_moderator(
     moderator,
     user_permissions_factory,
     default_category,
@@ -823,12 +823,12 @@ def test_check_reopen_thread_poll_permission_passes_global_moderator(
 ):
     permissions = user_permissions_factory(moderator)
 
-    check_reopen_thread_poll_permission(
+    check_open_thread_poll_permission(
         permissions, default_category, user_thread, user_poll
     )
 
 
-def test_check_reopen_thread_poll_permission_fails_if_user_is_anonymous(
+def test_check_open_thread_poll_permission_fails_if_user_is_anonymous(
     anonymous_user,
     user_permissions_factory,
     default_category,
@@ -838,10 +838,10 @@ def test_check_reopen_thread_poll_permission_fails_if_user_is_anonymous(
     permissions = user_permissions_factory(anonymous_user)
 
     with pytest.raises(PermissionDenied):
-        check_reopen_thread_poll_permission(permissions, default_category, thread, poll)
+        check_open_thread_poll_permission(permissions, default_category, thread, poll)
 
 
-def test_check_reopen_thread_poll_permission_fails_if_user_is_not_moderator(
+def test_check_open_thread_poll_permission_fails_if_user_is_not_moderator(
     user,
     user_permissions_factory,
     default_category,
@@ -852,7 +852,7 @@ def test_check_reopen_thread_poll_permission_fails_if_user_is_not_moderator(
     permissions = user_permissions_factory(user)
 
     with pytest.raises(PermissionDenied):
-        check_reopen_thread_poll_permission(
+        check_open_thread_poll_permission(
             permissions, default_category, other_user_thread, poll
         )
 

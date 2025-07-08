@@ -37,7 +37,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CreateThreadUpdateHookAction`
 
-A standard Misago function used to create a `ThreadUpdate` object.
+Misago function used to create a `ThreadUpdate` object.
 
 
 #### `thread: Thread`
@@ -102,7 +102,7 @@ def create_thread_update_action(
     ...
 ```
 
-A standard Misago function used to create a `ThreadUpdate` object.
+Misago function used to create a `ThreadUpdate` object.
 
 
 ### Arguments

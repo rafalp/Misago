@@ -25,7 +25,7 @@ class ThreadUpdateActionName(StrEnum):
 
     STARTED_POLL = "started_poll"
     CLOSED_POLL = "closed_poll"
-    REOPENED_POLL = "reopened_poll"
+    OPENED_POLL = "opened_poll"
     DELETED_POLL = "deleted_poll"
 
     TOOK_OWNERSHIP = "took_ownership"

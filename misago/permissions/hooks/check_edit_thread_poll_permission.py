@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class CheckEditThreadPollPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if the user has permission to edit
+    Misago function used to check if the user has permission to edit
     a thread poll. Raises Django's `PermissionDenied` exception with an error
     message if the user lacks permission.
 

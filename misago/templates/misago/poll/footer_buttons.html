@@ -8,14 +8,14 @@
   </a>
 {% endif %}
 {% if allow_close %}
-  <form action="{{ close_url }}" method="POST">
+  <form action="{{ close_url }}" method="POST" hx-boost="true">
     {% csrf_token %}
     <button class="btn btn-link">
       {% translate "Close" context "poll footer btn" %}
     </button>
   </form>
 {% elif allow_reopen %}
-  <form action="{{ open_url }}" method="POST">
+  <form action="{{ open_url }}" method="POST" hx-boost="true">
     {% csrf_token %}
     <button class="btn btn-link">
       {% translate "Open" context "poll footer btn" %}

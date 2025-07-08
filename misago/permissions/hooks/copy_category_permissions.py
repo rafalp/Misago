@@ -8,7 +8,7 @@ from ...plugins.hooks import FilterHook
 
 class CopyCategoryPermissionsHookAction(Protocol):
     """
-    A standard Misago function used to copy permissions from one category to another
+    Misago function used to copy permissions from one category to another
     or the next filter function from another plugin.
 
     # Arguments
@@ -42,7 +42,7 @@ class CopyCategoryPermissionsHookFilter(Protocol):
 
     ## `action: CopyCategoryPermissionsHookAction`
 
-    A standard Misago function used to copy permissions from one category to another
+    Misago function used to copy permissions from one category to another
     or the next filter function from another plugin.
 
     See the [action](#action) section for details.

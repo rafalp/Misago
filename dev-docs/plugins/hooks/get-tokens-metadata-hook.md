@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetTokensMetadataHookAction`
 
-A standard Misago function used to extract metadata from a token stream.
+Misago function used to extract metadata from a token stream.
 
 See the [action](#action) section for details.
 
@@ -52,7 +52,7 @@ def get_tokens_metadata_action(tokens: list[Token]) -> dict:
     ...
 ```
 
-A standard Misago function used to extract metadata from a token stream.
+Misago function used to extract metadata from a token stream.
 
 
 ### Arguments

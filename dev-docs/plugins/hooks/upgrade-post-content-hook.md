@@ -26,7 +26,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-A standard Misago function used to upgrade post content or the next filter function from another plugin.
+Misago function used to upgrade post content or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -43,7 +43,7 @@ def upgrade_post_content_action(post: Post):
     ...
 ```
 
-A standard Misago function used to upgrade post content or the next filter function from another plugin.
+Misago function used to upgrade post content or the next filter function from another plugin.
 
 
 ### Arguments

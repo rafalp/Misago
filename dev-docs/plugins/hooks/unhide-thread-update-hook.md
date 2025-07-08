@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: UnhideThreadUpdateHookAction`
 
-A standard Misago function used to unhide a `ThreadUpdate` object.
+Misago function used to unhide a `ThreadUpdate` object.
 
 
 #### `thread_update: ThreadUpdate`
@@ -65,7 +65,7 @@ def unhide_thread_update_action(
     ...
 ```
 
-A standard Misago function used to unhide a `ThreadUpdate` object.
+Misago function used to unhide a `ThreadUpdate` object.
 
 
 ### Arguments

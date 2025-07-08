@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class CheckStartThreadPollPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if the user has permission to start
+    Misago function used to check if the user has permission to start
     a poll in a thread. Raises Django's `PermissionDenied` exception with an error
     message if the user lacks permission.
 

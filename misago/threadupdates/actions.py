@@ -212,10 +212,10 @@ class ClosedPollThreadUpdateAction(ThreadUpdateAction):
 
 
 @thread_updates_renderer.register_action
-class ReopenedPollThreadUpdateAction(ThreadUpdateAction):
-    action = ThreadUpdateActionName.REOPENED_POLL
+class OpenedPollThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.OPENED_POLL
     icon = "poll"
-    description = pgettext_lazy("thread update action description", "Reopened poll")
+    description = pgettext_lazy("thread update action description", "Opened poll")
 
 
 @thread_updates_renderer.register_action

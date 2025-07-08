@@ -7,7 +7,7 @@ from ..threads.models import Thread
 from ..threadupdates.models import ThreadUpdate
 from ..threadupdates.create import (
     create_closed_poll_thread_update,
-    create_opened_thread_update,
+    create_opened_poll_thread_update,
 )
 from .hooks import (
     close_poll_hook,
@@ -50,7 +50,7 @@ def _open_thread_poll_action(
     if not open_poll(poll, user, request):
         return None
 
-    return create_opened_thread_update(thread, user, request)
+    return create_opened_poll_thread_update(thread, user, request)
 
 
 def close_poll(poll: Poll, user: "User", request: HttpRequest | None = None) -> bool:

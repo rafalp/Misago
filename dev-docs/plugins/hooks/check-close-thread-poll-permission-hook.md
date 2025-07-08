@@ -69,7 +69,7 @@ def check_close_thread_poll_permission_action(
     ...
 ```
 
-A standard Misago function used to check if the user has permission to close a thread poll. Raises Django's `PermissionDenied` exception with an error message if the user lacks permission.
+Misago function used to check if the user has permission to close a thread poll. Raises Django's `PermissionDenied` exception with an error message if the user lacks permission.
 
 
 ### Arguments

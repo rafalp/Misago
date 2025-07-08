@@ -33,7 +33,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: RenderTokensToPlaintextHookAction`
 
-A standard Misago function used to convert a token stream into plain text.
+Misago function used to convert a token stream into plain text.
 
 See the [action](#action) section for details.
 
@@ -62,7 +62,7 @@ def render_tokens_to_plaintext_action(
     ...
 ```
 
-A standard Misago function used to convert a token stream into plain text.
+Misago function used to convert a token stream into plain text.
 
 
 ### Arguments

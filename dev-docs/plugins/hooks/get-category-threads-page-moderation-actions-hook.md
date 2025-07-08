@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetCategoryThreadsPageModerationActionsHookAction`
 
-A standard Misago function used to get available filters for a category's threads list.
+Misago function used to get available filters for a category's threads list.
 
 See the [action](#action) section for details.
 
@@ -57,7 +57,7 @@ def get_category_threads_page_moderation_actions_action(request: HttpRequest, ca
     ...
 ```
 
-A standard Misago function used to get available moderation actions for a category's threads list.
+Misago function used to get available moderation actions for a category's threads list.
 
 
 ### Arguments

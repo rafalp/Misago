@@ -9,7 +9,7 @@ from ..models import Thread
 
 class GetPrivateThreadRepliesPagePostsQuerysetHookAction(Protocol):
     """
-    A standard Misago function used to get a queryset used to get posts displayed
+    Misago function used to get a queryset used to get posts displayed
     on the private thread replies page.
 
     # Arguments
@@ -39,7 +39,7 @@ class GetPrivateThreadRepliesPagePostsQuerysetHookFilter(Protocol):
 
     ## `action: GetPrivateThreadRepliesPagePostsQuerysetHookAction`
 
-    A standard Misago function used to get a queryset used to get posts displayed
+    Misago function used to get a queryset used to get posts displayed
     on the ptivate thread replies page.
 
     See the [action](#action) section for details.

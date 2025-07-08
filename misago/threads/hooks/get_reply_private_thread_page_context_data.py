@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class GetReplyPrivateThreadPageContextDataHookAction(Protocol):
     """
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the reply to private thread page.
 
     # Arguments
@@ -50,7 +50,7 @@ class GetReplyPrivateThreadPageContextDataHookFilter(Protocol):
 
     ## `action: GetReplyPrivateThreadPageContextDataHookAction`
 
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the reply to private thread page.
 
     See the [action](#action) section for details.

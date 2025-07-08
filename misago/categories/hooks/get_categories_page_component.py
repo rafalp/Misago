@@ -7,7 +7,7 @@ from ...plugins.hooks import FilterHook
 
 class GetCategoriesPageComponentHookAction(Protocol):
     """
-    A standard Misago function used to build a `dict` with data for
+    Misago function used to build a `dict` with data for
     the categories list component, used to display the list of categories on
     the categories page.
 
@@ -42,7 +42,7 @@ class GetCategoriesPageComponentHookFilter(Protocol):
 
     ## `action: GetCategoriesPageComponentHookAction`
 
-    A standard Misago function used to build a `dict` with data for
+    Misago function used to build a `dict` with data for
     the categories list component, used to display the list of categories on
     the categories page.
 

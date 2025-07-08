@@ -8,7 +8,7 @@ from ..models import Group
 
 class CreateGroupHookAction(Protocol):
     """
-    A standard Misago function used for creating a new user group or the next filter
+    Misago function used for creating a new user group or the next filter
     function from another plugin.
 
     # Arguments
@@ -50,7 +50,7 @@ class CreateGroupHookFilter(Protocol):
 
     ## `action: CreateGroupHookAction`
 
-    A standard Misago function used for creating a new user group or the next filter
+    Misago function used for creating a new user group or the next filter
     function from another plugin.
 
     See the [action](#action) section for details.
