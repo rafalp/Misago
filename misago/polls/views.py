@@ -16,8 +16,10 @@ from ..permissions.polls import (
     check_vote_in_thread_poll_permission,
 )
 from ..permissions.threads import check_see_thread_permission
+from ..threads.postsfeed import ThreadPostsFeed
 from ..threads.models import Thread
 from ..threadupdates.create import create_started_poll_thread_update
+from ..threadupdates.models import ThreadUpdate
 from ..polls.models import Poll
 from .choices import PollChoices
 from .close import close_thread_poll, open_thread_poll
@@ -295,74 +297,60 @@ class PollUpdateView(PollView):
 
         self.check_permission(request, thread, poll)
 
-        thread_update = close_thread_poll(thread, poll, request.user, request)
-        if thread_update:
-            messages.success(request, pgettext("poll vote", "Poll closed"))
+        thread_update = self.update(request, thread, poll)
 
         if not request.is_htmx:
             return redirect(self.get_next_url(request, thread))
 
         user_poll_votes = get_user_poll_votes(request.user, poll)
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
+
+        if thread_update:
+            posts_feed = ThreadPostsFeed(request, thread, [], [thread_update])
+            posts_feed.set_animated_thread_updates([thread_update.id])
+            context["feed"] = posts_feed.get_context_data()
 
         return render(request, PollTemplate.RESULTS_HTMX, context)
 
     def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
         raise NotImplementedError()
 
+    def update(
+        self, request: HttpRequest, thread: Thread, poll: Poll
+    ) -> ThreadUpdate | None:
+        raise NotADirectoryError()
+
 
 class PollCloseView(PollUpdateView):
-    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
-        poll = self.get_poll(request, thread)
-
+    def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
         check_close_thread_poll_permission(
             request.user_permissions, thread.category, thread, poll
         )
 
+    def update(
+        self, request: HttpRequest, thread: Thread, poll: Poll
+    ) -> ThreadUpdate | None:
         thread_update = close_thread_poll(thread, poll, request.user, request)
         if thread_update:
             messages.success(request, pgettext("poll vote", "Poll closed"))
 
-        if not request.is_htmx:
-            return redirect(self.get_next_url(request, thread))
-
-        user_poll_votes = get_user_poll_votes(request.user, poll)
-        context = get_poll_context_data(request, thread, poll, user_poll_votes)
-
-        return render(request, PollTemplate.RESULTS_HTMX, context)
-
-    def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
-        check_close_thread_poll_permission(
-            request.user_permissions, thread.category, thread, poll
-        )
+        return thread_update
 
 
 class PollOpenView(PollUpdateView):
-    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
-        poll = self.get_poll(request, thread)
-
+    def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
         check_open_thread_poll_permission(
             request.user_permissions, thread.category, thread, poll
         )
 
+    def update(
+        self, request: HttpRequest, thread: Thread, poll: Poll
+    ) -> ThreadUpdate | None:
         thread_update = open_thread_poll(thread, poll, request.user, request)
         if thread_update:
             messages.success(request, pgettext("poll vote", "Poll opened"))
 
-        if not request.is_htmx:
-            return redirect(self.get_next_url(request, thread))
-
-        user_poll_votes = get_user_poll_votes(request.user, poll)
-        context = get_poll_context_data(request, thread, poll, user_poll_votes)
-
-        return render(request, PollTemplate.RESULTS_HTMX, context)
-
-    def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
-        check_open_thread_poll_permission(
-            request.user_permissions, thread.category, thread, poll
-        )
+        return thread_update
 
 
 class PollDeleteView(PollView):
