@@ -69,7 +69,7 @@ def validate_poll_question_action(
     ...
 ```
 
-Standard Misago function for validating poll questions. Raises `ValidationError` if the poll question is invalid.
+Misago function for validating poll questions. Raises `ValidationError` if the poll question is invalid.
 
 
 ### Arguments

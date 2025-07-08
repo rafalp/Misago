@@ -99,12 +99,12 @@ def ended_poll(user_thread, poll_factory, day_seconds):
 
 
 @pytest.fixture
-def closed_poll(user_thread, poll_factory):
+def closed_poll(other_user, user_thread, poll_factory):
     return poll_factory(
         user_thread,
         closed_at=True,
         is_closed=True,
-        closed_by="Closer",
+        closed_by=other_user,
     )
 
 
@@ -123,13 +123,13 @@ def ended_user_poll(user, user_thread, poll_factory, day_seconds):
 
 
 @pytest.fixture
-def closed_user_poll(user, user_thread, poll_factory):
+def closed_user_poll(user, other_user, user_thread, poll_factory):
     return poll_factory(
         user_thread,
         starter=user,
         closed_at=True,
         is_closed=True,
-        closed_by="Closer",
+        closed_by=other_user,
     )
 
 

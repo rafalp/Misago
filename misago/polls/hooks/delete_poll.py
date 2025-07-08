@@ -8,7 +8,7 @@ from ..models import Poll
 
 class DeletePollHookAction(Protocol):
     """
-    Standard Misago function for deleting a poll along with its related data.
+    Misago function for deleting a poll along with its related data.
 
     # Arguments
 

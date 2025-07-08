@@ -69,7 +69,7 @@ def validate_thread_title_action(
     ...
 ```
 
-Standard Misago function for validating a thread title. Raises `ValidationError` if the thread title is invalid.
+Misago function for validating a thread title. Raises `ValidationError` if the thread title is invalid.
 
 
 ### Arguments

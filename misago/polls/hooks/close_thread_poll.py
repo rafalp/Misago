@@ -11,24 +11,24 @@ if TYPE_CHECKING:
     from ...users.models import User
 
 
-class DeleteThreadPollHookAction(Protocol):
+class CloseThreadPollHookAction(Protocol):
     """
-    Misago function that deletes a thread's poll, updates the thread instance,
+    Misago function that closes a thread's poll, updates the thread instance,
     and creates a new thread update object.
 
     # Arguments
 
     ## `thread: Thread`
 
-    The thread to update.
+    The thread to which the poll belongs.
 
     ## `poll: Poll`
 
-    The poll to delete.
+    The poll to close.
 
     ## `user: User`
 
-    The user who deleted the poll, recorded as the actor of the thread update.
+    The user who closed the poll, recorded as the actor of the thread update.
 
     ## `request: HttpRequest | None`
 
@@ -36,7 +36,7 @@ class DeleteThreadPollHookAction(Protocol):
 
     # Return value
 
-    A `ThreadUpdate` instance.
+    A `ThreadUpdate` instance if the poll was closed, `None` if it wasn't.
     """
 
     def __call__(
@@ -45,16 +45,16 @@ class DeleteThreadPollHookAction(Protocol):
         poll: Poll,
         user: "User",
         request: HttpRequest | None,
-    ) -> ThreadUpdate: ...
+    ) -> ThreadUpdate | None: ...
 
 
-class DeleteThreadPollHookFilter(Protocol):
+class CloseThreadPollHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: DeleteThreadPollHookAction`
+    ## `action: CloseThreadPollHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -63,15 +63,15 @@ class DeleteThreadPollHookFilter(Protocol):
 
     ## `thread: Thread`
 
-    The thread to update.
+    The thread to which the poll belongs.
 
     ## `poll: Poll`
 
-    The poll to delete.
+    The poll to close.
 
     ## `user: User`
 
-    The user who deleted the poll, recorded as the actor of the thread update.
+    The user who closed the poll, recorded as the actor of the thread update.
 
     ## `request: HttpRequest | None`
 
@@ -79,57 +79,53 @@ class DeleteThreadPollHookFilter(Protocol):
 
     # Return value
 
-    A `ThreadUpdate` instance.
+    A `ThreadUpdate` instance if the poll was closed, `None` if it wasn't.
     """
 
     def __call__(
         self,
-        action: DeleteThreadPollHookAction,
+        action: CloseThreadPollHookAction,
         thread: Thread,
         poll: Poll,
         user: "User",
         request: HttpRequest | None,
-    ) -> ThreadUpdate: ...
+    ) -> ThreadUpdate | None: ...
 
 
-class DeleteThreadPollHook(
+class CloseThreadPollHook(
     FilterHook[
-        DeleteThreadPollHookAction,
-        DeleteThreadPollHookFilter,
+        CloseThreadPollHookAction,
+        CloseThreadPollHookFilter,
     ]
 ):
     """
     This hook allows plugins to replace or extend the standard logic for
-    deleting a thread poll.
+    closing a thread poll.
 
     # Example
 
-    This plugin automatically hides newly created thread update if deleted poll
-    existed for less than 15 minutes.
+    This plugin automatically hides newly created thread update.
 
     ```python
     from django.http import HttpRequest
-    from django.utils import timezone
-    from misago.polls.hooks import delete_thread_poll_hook
+    from misago.polls.hooks import close_thread_poll_hook
     from misago.polls.models import Poll
     from misago.threads.models import Thread
     from misago.threadupdates.hide import hide_thread_update
     from misago.threadupdates.models import ThreadUpdate
     from misago.users.models import User
 
-    @delete_thread_poll_hook.append_filter
-    def delete_plugin_relations(
+    @close_thread_poll_hook.append_filter
+    def hide_closed_poll_update(
         action,
         thread: Thread,
         poll: Poll,
         user: User,
         request: HttpRequest | None,
-    ) -> ThreadUpdate:
-        # Run standard deletion logic
+    ) -> ThreadUpdate | None:
         thread_update = action(thread, poll, user, request)
 
-        poll_age = timezone.now() - poll.started_at
-        if poll_age.total_seconds() < 900:
+        if thread_update:
             hide_thread_update(thread_update, request)
 
         return thread_update
@@ -140,13 +136,13 @@ class DeleteThreadPollHook(
 
     def __call__(
         self,
-        action: DeleteThreadPollHookAction,
+        action: CloseThreadPollHookAction,
         thread: Thread,
         poll: Poll,
         user: "User",
         request: HttpRequest | None,
-    ) -> ThreadUpdate:
+    ) -> ThreadUpdate | None:
         return super().__call__(action, thread, poll, user, request)
 
 
-delete_thread_poll_hook = DeleteThreadPollHook()
+close_thread_poll_hook = CloseThreadPollHook()

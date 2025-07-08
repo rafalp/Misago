@@ -50,7 +50,7 @@ def delete_poll_action(poll: Poll, request: HttpRequest | None) -> None:
     ...
 ```
 
-Standard Misago function for deleting a poll along with its related data.
+Misago function for deleting a poll along with its related data.
 
 
 ### Arguments

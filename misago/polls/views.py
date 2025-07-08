@@ -17,15 +17,10 @@ from ..permissions.polls import (
 )
 from ..permissions.threads import check_see_thread_permission
 from ..threads.models import Thread
-from ..threadupdates.create import (
-    create_closed_poll_thread_update,
-    create_deleted_poll_thread_update,
-    create_reopened_poll_thread_update,
-    create_started_poll_thread_update,
-)
+from ..threadupdates.create import create_started_poll_thread_update
 from ..polls.models import Poll
 from .choices import PollChoices
-from .close import close_poll, open_poll
+from .close import close_thread_poll, open_thread_poll
 from .delete import delete_thread_poll
 from .enums import PollTemplate
 from .forms import EditPollForm, StartPollForm
@@ -44,10 +39,6 @@ def dispatch_poll_view(request: HttpRequest, thread_id: int) -> HttpResponse | N
         return None
 
     if request.method == "POST":
-        if view == "close":
-            return poll_close(request, thread_id)
-        if view == "open":
-            return poll_reopen(request, thread_id)
         if view == "vote":
             return poll_vote(request, thread_id)
     elif request.is_htmx:
@@ -286,12 +277,16 @@ class PollVoteView(PollView):
             messages.success(request, pgettext("poll vote", "Vote saved"))
 
         if not request.is_htmx:
-            return redirect(request.path)
+            return redirect(self.get_next_url(request, thread))
 
         context = get_poll_context_data(request, thread, poll, valid_choices)
         context["show_poll_snackbars"] = True
 
         return render(request, PollTemplate.RESULTS, context)
+
+
+poll_results = PollResultsView.as_view()
+poll_vote = PollVoteView.as_view()
 
 
 class PollCloseView(PollView):
@@ -303,14 +298,21 @@ class PollCloseView(PollView):
             request.user_permissions, thread.category, thread, poll
         )
 
-        if close_poll(poll, request.user, request):
-            create_closed_poll_thread_update(thread, request.user, request)
+        thread_update = close_thread_poll(thread, poll, request.user, request)
+        if thread_update:
             messages.success(request, pgettext("poll vote", "Poll closed"))
 
-        return redirect(request.path)
+        if not request.is_htmx:
+            return redirect(self.get_next_url(request, thread))
+
+        user_poll_votes = get_user_poll_votes(request.user, poll)
+        context = get_poll_context_data(request, thread, poll, user_poll_votes)
+        context["show_poll_snackbars"] = True
+
+        return render(request, PollTemplate.RESULTS, context)
 
 
-class PollReopenView(PollView):
+class PollOpenView(PollView):
     def post(self, request: HttpRequest, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
@@ -319,11 +321,18 @@ class PollReopenView(PollView):
             request.user_permissions, thread.category, thread, poll
         )
 
-        if open_poll(poll, request.user, request):
-            create_reopened_poll_thread_update(thread, request.user, request)
-            messages.success(request, pgettext("poll vote", "Poll reopened"))
+        thread_update = open_thread_poll(thread, poll, request.user, request)
+        if thread_update:
+            messages.success(request, pgettext("poll vote", "Poll opened"))
 
-        return redirect(request.path)
+        if not request.is_htmx:
+            return redirect(self.get_next_url(request, thread))
+
+        user_poll_votes = get_user_poll_votes(request.user, poll)
+        context = get_poll_context_data(request, thread, poll, user_poll_votes)
+        context["show_poll_snackbars"] = True
+
+        return render(request, PollTemplate.RESULTS, context)
 
 
 class PollDeleteView(PollView):
@@ -340,12 +349,6 @@ class PollDeleteView(PollView):
         messages.success(request, pgettext("poll vote", "Poll deleted"))
 
         return redirect(self.get_next_url(request, thread))
-
-
-poll_results = PollResultsView.as_view()
-poll_vote = PollVoteView.as_view()
-poll_close = PollCloseView.as_view()
-poll_reopen = PollReopenView.as_view()
 
 
 def get_poll_context_data(
@@ -399,8 +402,12 @@ def get_poll_context_data(
         "edit_url": reverse(
             "misago:edit-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
         ),
-        "close_url": f"{request.path}?poll=close",
-        "open_url": f"{request.path}?poll=open",
+        "close_url": reverse(
+            "misago:close-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
+        ),
+        "open_url": reverse(
+            "misago:open-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
+        ),
         "delete_url": reverse(
             "misago:delete-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
         ),

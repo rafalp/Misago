@@ -8,7 +8,7 @@ from ...plugins.hooks import FilterHook
 
 class ValidatePostHookAction(Protocol):
     """
-    Standard Misago function for validating the contents of a post.
+    Misago function for validating the contents of a post.
     Raises `ValidationError` if the post contents are invalid.
 
     # Arguments

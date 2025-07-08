@@ -1,6 +1,12 @@
 from django.urls import path
 
-from .views import PollDeleteView, PollEditView, PollStartView
+from .views import (
+    PollCloseView,
+    PollDeleteView,
+    PollEditView,
+    PollOpenView,
+    PollStartView,
+)
 
 urlpatterns = [
     path(
@@ -12,6 +18,16 @@ urlpatterns = [
         "t/<slug:slug>/<int:id>/poll/edit/",
         PollEditView.as_view(),
         name="edit-thread-poll",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/poll/close/",
+        PollCloseView.as_view(),
+        name="close-thread-poll",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/poll/open/",
+        PollOpenView.as_view(),
+        name="open-thread-poll",
     ),
     path(
         "t/<slug:slug>/<int:id>/poll/delete/",

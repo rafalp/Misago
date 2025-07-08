@@ -7,7 +7,7 @@ from ...plugins.hooks import FilterHook
 
 class ValidateThreadTitleHookAction(Protocol):
     """
-    Standard Misago function for validating a thread title.
+    Misago function for validating a thread title.
     Raises `ValidationError` if the thread title is invalid.
 
     # Arguments

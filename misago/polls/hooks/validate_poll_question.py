@@ -7,7 +7,7 @@ from ...plugins.hooks import FilterHook
 
 class ValidatePollQuestionHookAction(Protocol):
     """
-    Standard Misago function for validating poll questions.
+    Misago function for validating poll questions.
     Raises `ValidationError` if the poll question is invalid.
 
     # Arguments

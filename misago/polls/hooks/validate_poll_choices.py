@@ -8,7 +8,7 @@ from ...polls.choices import PollChoices
 
 class ValidatePollChoicesHookAction(Protocol):
     """
-    Standard Misago function for validating poll choices.
+    Misago function for validating poll choices.
     Raises `ValidationError` if one or more poll choices are invalid.
 
     # Arguments

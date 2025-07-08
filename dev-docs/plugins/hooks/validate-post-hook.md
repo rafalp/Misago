@@ -73,7 +73,7 @@ def validate_post_action(
     ...
 ```
 
-Standard Misago function for validating the contents of a post. Raises `ValidationError` if the post contents are invalid.
+Misago function for validating the contents of a post. Raises `ValidationError` if the post contents are invalid.
 
 
 ### Arguments

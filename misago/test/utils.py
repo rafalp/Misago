@@ -11,7 +11,7 @@ FactoryUserArg = User | str | None
 
 
 def factory_timestamp_arg(
-    timestamp: FactoryTimestampArg, default: bool | None = True
+    timestamp: FactoryTimestampArg,
 ) -> tuple[User, str, str | None]:
     if isinstance(timestamp, datetime):
         return timestamp
@@ -24,19 +24,17 @@ def factory_timestamp_arg(
             return timezone.now() + timedelta(seconds=timestamp)
         return timezone.now()
 
-    if default is True:
+    if timestamp is True:
         return timezone.now()
 
     return None
 
 
-def unpack_factory_user_arg(
-    user: FactoryUserArg, default: str = "User"
-) -> tuple[User, str, str | None]:
+def unpack_factory_user_arg(user: FactoryUserArg) -> tuple[User, str, str | None]:
     if isinstance(user, str):
         return None, user, slugify(user)
 
     if isinstance(user, User):
         return user, user.username, user.slug
 
-    return None, default, None
+    return None, None, None

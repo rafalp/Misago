@@ -34,5 +34,7 @@ class PollTemplate(StrEnum):
     EDIT = "misago/poll/edit.html"
     FORM = "misago/poll/form.html"
     RESULTS = "misago/poll/results.html"
+    RESULTS_HTMX = "misago/poll/results_htmx.html"
     START = "misago/poll/start.html"
     VOTE = "misago/poll/vote.html"
+    VOTE_HTMX = "misago/poll/vote_htmx.html"
