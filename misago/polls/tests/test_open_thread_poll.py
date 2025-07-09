@@ -1,4 +1,5 @@
 from ...threadupdates.enums import ThreadUpdateActionName
+from ...threadupdates.models import ThreadUpdate
 from ..close import open_thread_poll
 
 
@@ -25,3 +26,4 @@ def test_open_thread_poll_doesnt_create_thread_update_if_poll_is_already_open(
     thread, poll, user
 ):
     assert not open_thread_poll(thread, poll, user)
+    assert not ThreadUpdate.objects.exists()
