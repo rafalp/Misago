@@ -310,7 +310,12 @@ class PollUpdateView(PollView):
             posts_feed.set_animated_thread_updates([thread_update.id])
             context["feed"] = posts_feed.get_context_data()
 
-        return render(request, PollTemplate.RESULTS_HTMX, context)
+        if context["allow_vote"]:
+            template_name = PollTemplate.VOTE_HTMX
+        else:
+            template_name = PollTemplate.RESULTS_HTMX
+
+        return render(request, template_name, context)
 
     def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
         raise NotImplementedError()
