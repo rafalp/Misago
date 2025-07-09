@@ -1,4 +1,5 @@
 from ...threadupdates.enums import ThreadUpdateActionName
+from ...threadupdates.models import ThreadUpdate
 from ..close import close_thread_poll
 
 
