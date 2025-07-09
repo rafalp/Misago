@@ -1,9 +1,8 @@
 import pytest
 
 from ...threadupdates.enums import ThreadUpdateActionName
-from ...threadupdates.models import ThreadUpdate
 from ..delete import delete_thread_poll
-from ..models import Poll, PollVote
+from ..models import Poll
 
 
 def test_delete_thread_poll_deletes_poll(thread, poll, user):
@@ -23,10 +22,9 @@ def test_delete_thread_poll_updates_thread(thread, poll, user):
 
 
 def test_delete_thread_poll_creates_thread_update(thread, poll, user):
-    delete_thread_poll(thread, poll, user)
+    thread_update = delete_thread_poll(thread, poll, user)
 
-    ThreadUpdate.objects.get(
-        thread=thread,
-        actor=user,
-        action=ThreadUpdateActionName.DELETED_POLL,
-    )
+    assert thread_update
+    assert thread_update.action == ThreadUpdateActionName.DELETED_POLL
+    assert thread_update.thread == thread
+    assert thread_update.actor == user

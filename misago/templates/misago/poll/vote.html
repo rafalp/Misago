@@ -13,11 +13,12 @@
       hx-boost="true"
     >
       {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next_url }}">
       <ul class="poll-vote-choices">
         {% for choice in poll.choices %}
           <li>
             <label class="{% if poll.max_choices > 1 %}checkbox{% else %}radio{% endif %}">
-              <input type="{% if poll.max_choices > 1 %}checkbox{% else %}radio{% endif %}" name="poll_choice" value="{{ choice.id }}"{% if poll.max_choices == 1 %} required{% endif %}>
+              <input type="{% if poll.max_choices > 1 %}checkbox{% else %}radio{% endif %}" name="poll_choice" value="{{ choice.id }}"{% if choice.id in user_votes %} checked{% endif %}{% if poll.max_choices == 1 %} required{% endif %}>
               {{ choice.name }}
             </label>
           </li>

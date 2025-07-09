@@ -99,9 +99,9 @@ def ended_poll(user_thread, poll_factory, day_seconds):
 
 
 @pytest.fixture
-def closed_poll(other_user, user_thread, poll_factory):
+def closed_poll(other_user, thread, poll_factory):
     return poll_factory(
-        user_thread,
+        thread,
         closed_at=True,
         is_closed=True,
         closed_by=other_user,

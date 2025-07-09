@@ -1,10 +1,9 @@
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import pgettext
-from django.views import View
 
 from ..permissions.checkutils import check_permissions
 from ..permissions.polls import (
@@ -15,9 +14,9 @@ from ..permissions.polls import (
     check_start_thread_poll_permission,
     check_vote_in_thread_poll_permission,
 )
-from ..permissions.threads import check_see_thread_permission
 from ..threads.postsfeed import ThreadPostsFeed
 from ..threads.models import Thread
+from ..threads.views.generic import ThreadView
 from ..threadupdates.create import create_started_poll_thread_update
 from ..threadupdates.models import ThreadUpdate
 from ..polls.models import Poll
@@ -26,6 +25,7 @@ from .close import close_thread_poll, open_thread_poll
 from .delete import delete_thread_poll
 from .enums import PollTemplate
 from .forms import EditPollForm, StartPollForm
+from .nexturl import get_next_url
 from .validators import validate_poll_vote
 from .votes import (
     delete_user_poll_votes,
@@ -40,25 +40,15 @@ def dispatch_poll_view(request: HttpRequest, thread_id: int) -> HttpResponse | N
     if not view:
         return None
 
-    if request.method == "POST":
-        if view == "vote":
-            return poll_vote(request, thread_id)
-    elif request.is_htmx:
-        if view in ("results", "voters"):
-            return poll_results(request, thread_id, view == "voters")
-        if view == "vote":
-            return poll_vote(request, thread_id)
+    if view == "vote":
+        return poll_vote(request, thread_id)
+    if view in ("results", "voters"):
+        return poll_results(request, thread_id, view == "voters")
 
     return None
 
 
-class PollView(View):
-    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
-        queryset = Thread.objects.select_related("category")
-        thread = get_object_or_404(queryset, id=thread_id)
-        check_see_thread_permission(request.user_permissions, thread.category, thread)
-        return thread
-
+class PollView(ThreadView):
     def get_poll(self, request: HttpRequest, thread: Thread) -> Poll | None:
         poll = Poll.objects.filter(thread=thread).first()
         if not poll:
@@ -68,16 +58,6 @@ class PollView(View):
         poll.thread = thread
 
         return poll
-
-    def get_thread_url(self, thread: Thread) -> str:
-        return reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
-
-    def get_next_url(self, request: HttpRequest, thread: Thread) -> str:
-        thread_url = self.get_thread_url(thread)
-        next_url = request.POST.get("next")
-        if next_url and next_url.startswith(thread_url):
-            return next_url
-        return thread_url
 
 
 class PollStartView(PollView):
@@ -170,7 +150,7 @@ class PollEditView(PollView):
         messages.success(request, pgettext("edit poll", "Edited poll"))
 
         if not request.is_htmx:
-            return redirect(self.get_return_url(request, thread, poll))
+            return redirect(self.get_next_url(request, thread, poll))
 
         user_poll_votes = get_user_poll_votes(request.user, poll)
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
@@ -202,15 +182,15 @@ class PollEditView(PollView):
                 "category": thread.category,
                 "thread": thread,
                 "form": form,
-                "return_url": self.get_return_url(request, thread, poll),
+                "next_url": self.get_next_url(request, thread, poll),
             },
         )
 
-    def get_return_url(self, request: HttpRequest, thread: Thread, poll: Poll) -> str:
-        thread_url = self.get_thread_url(thread)
+    def get_next_url(self, request: HttpRequest, thread: Thread, poll: Poll) -> str:
+        next_url = get_next_url(request, thread)
 
         if not request.is_htmx:
-            return thread_url
+            return next_url
 
         with check_permissions() as allow_vote:
             check_vote_in_thread_poll_permission(
@@ -219,9 +199,9 @@ class PollEditView(PollView):
 
         user_poll_votes = get_user_poll_votes(request.user, poll)
         if allow_vote and not user_poll_votes:
-            return f"{thread_url}?poll=vote"
+            return f"{next_url}?poll=vote"
 
-        return f"{thread_url}?poll=results"
+        return f"{next_url}?poll=results"
 
 
 class PollResultsView(PollView):
@@ -279,7 +259,7 @@ class PollVoteView(PollView):
             messages.success(request, pgettext("poll vote", "Vote saved"))
 
         if not request.is_htmx:
-            return redirect(self.get_next_url(request, thread))
+            return redirect(get_next_url(request, thread))
 
         context = get_poll_context_data(request, thread, poll, valid_choices)
 
@@ -300,7 +280,7 @@ class PollUpdateView(PollView):
         thread_update = self.update(request, thread, poll)
 
         if not request.is_htmx:
-            return redirect(self.get_next_url(request, thread))
+            return redirect(get_next_url(request, thread))
 
         user_poll_votes = get_user_poll_votes(request.user, poll)
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
@@ -310,7 +290,7 @@ class PollUpdateView(PollView):
             posts_feed.set_animated_thread_updates([thread_update.id])
             context["feed"] = posts_feed.get_context_data()
 
-        if context["allow_vote"]:
+        if context["allow_vote"] and not user_poll_votes:
             template_name = PollTemplate.VOTE_HTMX
         else:
             template_name = PollTemplate.RESULTS_HTMX
@@ -371,7 +351,7 @@ class PollDeleteView(PollView):
 
         messages.success(request, pgettext("poll vote", "Poll deleted"))
 
-        return redirect(self.get_next_url(request, thread))
+        return redirect(get_next_url(request, thread))
 
 
 def get_poll_context_data(
@@ -411,6 +391,8 @@ def get_poll_context_data(
             request.user_permissions, thread.category, thread, poll
         )
 
+    thread_url = get_next_url(request, thread)
+
     return {
         "poll": poll,
         "user_votes": user_poll_votes,
@@ -434,7 +416,8 @@ def get_poll_context_data(
         "delete_url": reverse(
             "misago:delete-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
         ),
-        "results_url": f"{request.path}?poll=results",
-        "voters_url": f"{request.path}?poll=voters",
-        "vote_url": f"{request.path}?poll=vote",
+        "next_url": thread_url,
+        "results_url": f"{thread_url}?poll=results",
+        "voters_url": f"{thread_url}?poll=voters",
+        "vote_url": f"{thread_url}?poll=vote",
     }
