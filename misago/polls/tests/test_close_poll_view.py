@@ -24,23 +24,25 @@ def test_close_thread_poll_view_closes_poll(moderator_client, thread, poll):
     assert poll.is_closed
 
 
-def test_close_thread_poll_view_returns_redirect_to_custom_thread_url(
+def test_close_thread_poll_view_returns_redirect_to_next_thread_url(
     moderator_client, thread, poll
 ):
-    thread_url = reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    thread_url = reverse(
+        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug, "page": 12}
+    )
 
     response = moderator_client.post(
         reverse(
             "misago:close-thread-poll",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
-        {"next": f"{thread_url}12/"},
+        {"next": thread_url},
     )
     assert response.status_code == 302
-    assert response["location"] == f"{thread_url}12/"
+    assert response["location"] == thread_url
 
 
-def test_close_thread_poll_view_returns_redirect_to_standard_thread_url_if_next_url_is_invalid(
+def test_close_thread_poll_view_returns_redirect_to_default_thread_url_if_next_url_is_invalid(
     moderator_client, thread, poll
 ):
     response = moderator_client.post(
@@ -56,7 +58,7 @@ def test_close_thread_poll_view_returns_redirect_to_standard_thread_url_if_next_
     )
 
 
-def test_close_thread_poll_view_in_htmx_returns_partial(moderator_client, thread, poll):
+def test_close_thread_poll_view_returns_partial_in_htmx(moderator_client, thread, poll):
     thread_url = reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
 
     response = moderator_client.post(
@@ -69,6 +71,16 @@ def test_close_thread_poll_view_in_htmx_returns_partial(moderator_client, thread
     )
     assert_contains(response, "Closed poll")
     assert_contains(response, poll.question)
+
+
+def test_close_thread_poll_view_returns_404_if_thread_doesnt_exist(moderator_client):
+    response = moderator_client.post(
+        reverse(
+            "misago:close-thread-poll",
+            kwargs={"id": 1, "slug": "invalid"},
+        )
+    )
+    assert response.status_code == 404
 
 
 def test_close_thread_poll_view_returns_404_if_thread_has_no_poll(
@@ -85,19 +97,7 @@ def test_close_thread_poll_view_returns_404_if_thread_has_no_poll(
     assert response.status_code == 404
 
 
-def test_close_thread_poll_view_returns_404_if_thread_doesnt_exist(moderator_client):
-    response = moderator_client.post(
-        reverse(
-            "misago:close-thread-poll",
-            kwargs={"id": 1, "slug": "invalid"},
-        )
-    )
-    assert response.status_code == 404
-
-
-def test_close_thread_poll_view_returns_404_if_user_has_no_category_permission(
-    user_client, thread, poll
-):
+def test_close_thread_poll_view_checks_category_permission(user_client, thread, poll):
     CategoryGroupPermission.objects.filter(category=thread.category).delete()
 
     assert thread.has_poll
@@ -117,9 +117,7 @@ def test_close_thread_poll_view_returns_404_if_user_has_no_category_permission(
     assert not poll.is_closed
 
 
-def test_close_thread_poll_view_returns_404_if_user_has_no_thread_permission(
-    user_client, thread, poll
-):
+def test_close_thread_poll_view_checks_thread_permission(user_client, thread, poll):
     thread.is_hidden = True
     thread.save()
 
@@ -140,9 +138,7 @@ def test_close_thread_poll_view_returns_404_if_user_has_no_thread_permission(
     assert not poll.is_closed
 
 
-def test_close_thread_poll_view_returns_403_if_user_has_no_close_permission(
-    user_client, thread, poll
-):
+def test_close_thread_poll_view_checks_close_poll_permission(user_client, thread, poll):
     assert thread.has_poll
 
     response = user_client.post(
