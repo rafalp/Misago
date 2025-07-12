@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     "misago.socialauth",
     "misago.threads",
     "misago.threadupdates",
+    "misago.polls",
     "misago.faker",
     "misago.graphql",
     "misago.apiv2",

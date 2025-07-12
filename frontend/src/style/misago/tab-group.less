@@ -1,0 +1,114 @@
+// Tabs nav
+.tab-group-nav {
+  height: @tab-group-nav-height;
+  margin-bottom: @line-height-computed;
+
+  box-shadow: inset 20px 0 20px -20px #fff, inset -20px 0 20px -20px #fff;
+
+  overflow-y: visible;
+
+  border-bottom: 1px solid @tab-group-nav-border;
+}
+
+.tab-group-nav-scroll {
+  display: flex;
+  align-items: start;
+
+  gap: @tab-group-nav-gap;
+  padding: 0 @tab-group-nav-gap;
+
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+
+  text-wrap: nowrap;
+}
+
+.tab-group-nav-item {
+  display: flex;
+  align-items: center;
+
+  flex: 0 0 auto;
+
+  scroll-snap-align: start end;
+
+  height: @tab-group-nav-height;
+  padding: 0 @tab-group-nav-item-padding-horizontal;
+
+  border: 1px solid transparent;
+  font-weight: bold;
+
+  &,
+  &:link,
+  &:visited {
+    color: @tab-group-nav-item-color;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: @tab-group-nav-item-hover;
+    text-decoration: none;
+  }
+
+  &.active {
+    &,
+    &:link,
+    &:visited,
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: @panel-bg;
+      border: 1px solid @tab-group-nav-border;
+      border-bottom-color: @panel-bg;
+      border-radius: @border-radius-small @border-radius-small 0 0;
+      color: @tab-group-nav-item-active;
+      text-decoration: none;
+    }
+  }
+}
+
+.tab-group-nav-bullet-danger {
+  display: block;
+  width: @tab-group-nav-item-bullet;
+  height: @tab-group-nav-item-bullet;
+
+  margin-right: ceil(@tab-group-nav-item-padding-horizontal * 0.66);
+
+  background-color: @brand-danger;
+  border-radius: ceil(@tab-group-nav-item-bullet / 2);
+}
+
+// Tab header is used for visual distinction between tabs for noscript clients
+.tab-group-tab-header {
+  padding-bottom: ceil(@line-height-computed / 2);
+
+  border-bottom: 1px solid @gray-lighter;
+}
+
+.tab-group-tab + .tab-group-tab .tab-group-tab-header {
+  margin-top: @line-height-computed;
+}
+
+// Hide nav if JS is disabled
+.tab-group-nav {
+  display: none;
+}
+
+.misago-javascript {
+  .tab-group-nav {
+    display: block;
+  }
+}
+
+// Hide all tabs if client has JS
+.misago-javascript {
+  .tab-group-tab,
+  .tab-group-tab-header {
+    display: none;
+  }
+}
+
+// Show active tab
+.misago-javascript .tab-group-tab.visible {
+  display: block;
+}

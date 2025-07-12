@@ -8,7 +8,7 @@ from ..models import Attachment
 
 class GetAttachmentDetailsPageContextDataHookAction(Protocol):
     """
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the attachment details page.
 
     # Arguments
@@ -37,7 +37,7 @@ class GetAttachmentDetailsPageContextDataHookFilter(Protocol):
 
     ## `action: GetAttachmentDetailsPageContextDataHookAction`
 
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the attachment details page.
 
     See the [action](#action) section for details.

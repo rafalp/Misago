@@ -5,10 +5,10 @@ This hook wraps a standard Misago function used to hide a `ThreadUpdate` object.
 
 ## Location
 
-This hook can be imported from `misago.threads.hooks`:
+This hook can be imported from `misago.threadupdates.hooks`:
 
 ```python
-from misago.threads.hooks import hide_thread_update_hook
+from misago.threadupdates.hooks import hide_thread_update_hook
 ```
 
 
@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: HideThreadUpdateHookAction`
 
-A standard Misago function used to hide a `ThreadUpdate` object.
+Misago function used to hide a `ThreadUpdate` object.
 
 
 #### `thread_update: ThreadUpdate`
@@ -65,7 +65,7 @@ def hide_thread_update_action(
     ...
 ```
 
-A standard Misago function used to hide a `ThreadUpdate` object.
+Misago function used to hide a `ThreadUpdate` object.
 
 
 ### Arguments

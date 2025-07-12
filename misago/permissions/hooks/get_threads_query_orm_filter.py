@@ -8,7 +8,7 @@ from ..enums import CategoryThreadsQuery
 
 class GetThreadsQueryORMFilterHookAction(Protocol):
     """
-    A standard Misago function used to get Django's `Q` object instance to
+    Misago function used to get Django's `Q` object instance to
     retrieve threads using a specified query.
 
     # Arguments
@@ -47,7 +47,7 @@ class GetThreadsQueryORMFilterHookFilter(Protocol):
 
     ## `action: GetThreadsQueryORMFilterHookAction`
 
-    A standard Misago function used to get Django's `Q` object instance to
+    Misago function used to get Django's `Q` object instance to
     retrieve threads using a specified query.
 
     See the [action](#action) section for details.

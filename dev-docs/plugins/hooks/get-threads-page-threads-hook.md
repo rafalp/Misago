@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetThreadsPageThreadsHookAction`
 
-A standard Misago function used to get the complete threads data for the threads page. Returns a `dict` that is included in the template context under the `threads` key.
+Misago function used to get the complete threads data for the threads page. Returns a `dict` that is included in the template context under the `threads` key.
 
 See the [action](#action) section for details.
 
@@ -57,7 +57,7 @@ def get_threads_page_threads_action(request: HttpRequest, kwargs: dict) -> dict:
     ...
 ```
 
-A standard Misago function used to get the complete threads data for the threads page. Returns a `dict` that is included in the template context under the `threads` key.
+Misago function used to get the complete threads data for the threads page. Returns a `dict` that is included in the template context under the `threads` key.
 
 
 ### Arguments

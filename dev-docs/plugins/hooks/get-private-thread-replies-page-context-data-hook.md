@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetPrivateThreadRepliesPageContextDataHookAction`
 
-A standard Misago function used to get the template context data for the private thread replies page.
+Misago function used to get the template context data for the private thread replies page.
 
 See the [action](#action) section for details.
 
@@ -65,7 +65,7 @@ def get_private_thread_replies_page_context_data_action(
     ...
 ```
 
-A standard Misago function used to get the template context data for the private thread replies page.
+Misago function used to get the template context data for the private thread replies page.
 
 
 ### Arguments

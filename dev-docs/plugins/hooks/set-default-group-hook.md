@@ -32,7 +32,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: SetDefaultGroupHookAction`
 
-A standard Misago function used to set the default user group, or the next filter function from another plugin.
+Misago function used to set the default user group, or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -54,7 +54,7 @@ def set_default_group_action(group: Group, request: HttpRequest | None=None) -> 
     ...
 ```
 
-A standard Misago function used to set the default user group, or the next filter function from another plugin.
+Misago function used to set the default user group, or the next filter function from another plugin.
 
 
 ### Arguments

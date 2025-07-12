@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 class CheckStartPrivateThreadsPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if the user has a permission to
+    Misago function used to check if the user has a permission to
     start new private threads. Raises Django's `PermissionDenied` with an error
     message if they don't.
 
@@ -33,7 +33,7 @@ class CheckStartPrivateThreadsPermissionHookFilter(Protocol):
 
     ## `action: CheckStartPrivateThreadsPermissionHookAction`
 
-    A standard Misago function used to check if the user has a permission to
+    Misago function used to check if the user has a permission to
     start new private threads. Raises Django's `PermissionDenied` with an error
     message if they don't.
 

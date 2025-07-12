@@ -1,6 +1,6 @@
 # `validate_post_hook`
 
-This hook wraps a standard function used by Misago to validate post contents. Raises `ValidationError` if they are invalid.
+This hook allows plugins to replace or extend the standard logic used to validate post contents.
 
 Post contents are represented as a `ParsingResult` object with the following attributes:
 
@@ -24,7 +24,6 @@ def custom_validate_post_filter(
     value: ParsingResult,
     min_length: int,
     max_length: int,
-    *,
     request: HttpRequest | None=None,
 ) -> None:
     ...
@@ -37,7 +36,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: ValidatePostHookAction`
 
-A standard function used by Misago to validate post contents. Raises `ValidationError` if they are invalid.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
@@ -69,13 +68,12 @@ def validate_post_action(
     value: ParsingResult,
     min_length: int,
     max_length: int,
-    *,
     request: HttpRequest | None=None,
 ) -> None:
     ...
 ```
 
-A standard function used by Misago to validate post contents. Raises `ValidationError` if they are invalid.
+Misago function for validating the contents of a post. Raises `ValidationError` if the post contents are invalid.
 
 
 ### Arguments
@@ -102,7 +100,7 @@ The request object or `None` if not provided.
 
 ## Example
 
-The code below implements a custom post validator that raises the minimal required length of a post for new users.
+Raises the minimal required length of a post for new users.
 
 ```python
 from django.http import HttpRequest
@@ -116,11 +114,10 @@ def validate_post_for_new_users(
     value: ParsingResult,
     min_length: int,
     max_length: int,
-    *,
     request: HttpRequest | None = None,
 ) -> None:
     if request and request.user.is_authenticated and request.user.posts < 5:
         min_length = min(min_length + 50)
 
-    action(value, min_length, max_length, request=request)
+    action(value, min_length, max_length, request)
 ```

@@ -8,12 +8,11 @@ from ..attachments.models import Attachment
 from ..categories.models import RoleCategoryACL
 from ..notifications.models import Notification, WatchedThread
 from ..permissions.models import CategoryGroupPermission
+from ..polls.models import Poll, PollVote
 from ..postgres.delete import delete_all
 from ..readtracker.models import ReadCategory, ReadThread
 from ..threads.models import (
     Attachment as LegacyAttachment,
-    Poll,
-    PollVote,
     Post,
     PostEdit,
     PostLike,

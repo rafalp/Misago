@@ -9,6 +9,7 @@ from django.utils.translation import pgettext_lazy
 from ...conf import settings
 from ...core.utils import slugify
 from ...plugins.models import PluginDataModel
+from ...polls.models import Poll
 
 
 class Thread(PluginDataModel):
@@ -177,10 +178,7 @@ class Thread(PluginDataModel):
         move_thread.send(sender=self)
 
     def synchronize(self):
-        try:
-            self.has_poll = bool(self.poll)
-        except ObjectDoesNotExist:
-            self.has_poll = False
+        self.has_poll = Poll.objects.filter(thread=self).exists()
 
         self.replies = self.post_set.filter(is_event=False, is_unapproved=False).count()
 

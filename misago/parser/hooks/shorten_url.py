@@ -5,7 +5,7 @@ from ...plugins.hooks import FilterHook
 
 class ShortenURLHookAction(Protocol):
     """
-    A standard Misago function used to shorten URLs in text or the next filter
+    Misago function used to shorten URLs in text or the next filter
     function from another plugin.
 
     # Arguments
@@ -30,7 +30,7 @@ class ShortenURLHookFilter(Protocol):
 
     ## `action: ShortenURLHookAction`
 
-    A standard Misago function used to shorten URLs in text or the next filter
+    Misago function used to shorten URLs in text or the next filter
     function from another plugin.
 
     See the [action](#action) section for details.

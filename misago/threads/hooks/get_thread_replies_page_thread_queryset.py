@@ -8,7 +8,7 @@ from ...plugins.hooks import FilterHook
 
 class GetThreadRepliesPageThreadQuerysetHookAction(Protocol):
     """
-    A standard Misago function used to get a queryset used to get a thread for
+    Misago function used to get a queryset used to get a thread for
     the thread replies page.
 
     # Arguments
@@ -33,7 +33,7 @@ class GetThreadRepliesPageThreadQuerysetHookFilter(Protocol):
 
     ## `action: GetThreadRepliesPageThreadQuerysetHookAction`
 
-    A standard Misago function used to get a queryset used to get a thread for
+    Misago function used to get a queryset used to get a thread for
     the thread replies page.
 
     See the [action](#action) section for details.

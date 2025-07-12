@@ -38,6 +38,12 @@ def get_form_data(group: Group) -> dict:
         "group-can_always_delete_own_attachments": (
             "1" if group.can_always_delete_own_attachments else ""
         ),
+        "group-can_start_polls": "1" if group.can_start_polls else "",
+        "group-can_edit_own_polls": "1" if group.can_edit_own_polls else "",
+        "group-own_polls_edit_time_limit": str(group.own_polls_edit_time_limit),
+        "group-can_close_own_polls": "1" if group.can_close_own_polls else "",
+        "group-own_polls_close_time_limit": str(group.own_polls_close_time_limit),
+        "group-can_vote_in_polls": "1" if group.can_vote_in_polls else "",
         "group-can_change_username": "1" if group.can_change_username else "",
         "group-username_changes_limit": str(group.username_changes_limit),
         "group-username_changes_expire": str(group.username_changes_expire),

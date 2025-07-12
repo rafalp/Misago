@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: HighlightSyntaxHookAction`
 
-A standard Misago function used to return HTML with highlighted code.
+Misago function used to return HTML with highlighted code.
 
 See the [action](#action) section for details.
 
@@ -55,7 +55,7 @@ def highlight_syntax_action(syntax: str, code: str) -> str:
     ...
 ```
 
-A standard Misago function used to return HTML with highlighted code.
+Misago function used to return HTML with highlighted code.
 
 
 ### Arguments

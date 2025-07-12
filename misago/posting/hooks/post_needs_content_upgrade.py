@@ -6,7 +6,7 @@ from ...threads.models import Post
 
 class PostNeedsContentUpgradeHookAction(Protocol):
     """
-    A standard Misago function used to check if post content needs an upgrade.
+    Misago function used to check if post content needs an upgrade.
 
     # Arguments
 
@@ -28,7 +28,7 @@ class PostNeedsContentUpgradeHookFilter(Protocol):
 
     # Arguments
 
-    A standard Misago function used to check if post content needs an upgrade
+    Misago function used to check if post content needs an upgrade
     or the next filter function from another plugin.
 
     See the [action](#action) section for details.

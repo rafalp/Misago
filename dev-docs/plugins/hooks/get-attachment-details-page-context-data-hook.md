@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetAttachmentDetailsPageContextDataHookAction`
 
-A standard Misago function used to get the template context data for the attachment details page.
+Misago function used to get the template context data for the attachment details page.
 
 See the [action](#action) section for details.
 
@@ -57,7 +57,7 @@ def get_attachment_details_page_context_data_action(request: HttpRequest, attach
     ...
 ```
 
-A standard Misago function used to get the template context data for the attachment details page.
+Misago function used to get the template context data for the attachment details page.
 
 
 ### Arguments

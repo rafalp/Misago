@@ -8,7 +8,7 @@ from ..models import Group
 
 class SetDefaultGroupHookAction(Protocol):
     """
-    A standard Misago function used to set the default user group, or the next
+    Misago function used to set the default user group, or the next
     filter function from another plugin.
 
     # Arguments
@@ -37,7 +37,7 @@ class SetDefaultGroupHookFilter(Protocol):
 
     ## `action: SetDefaultGroupHookAction`
 
-    A standard Misago function used to set the default user group, or the next
+    Misago function used to set the default user group, or the next
     filter function from another plugin.
 
     See the [action](#action) section for details.

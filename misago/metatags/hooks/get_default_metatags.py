@@ -8,7 +8,7 @@ from ..metatag import MetaTag
 
 class GetDefaultMetatagsHookAction(Protocol):
     """
-    A standard Misago function used to get default metatags for all pages.
+    Misago function used to get default metatags for all pages.
 
     # Arguments
 
@@ -32,7 +32,7 @@ class GetDefaultMetatagsHookFilter(Protocol):
 
     ## `action: GetDefaultMetatagsHookAction`
 
-    A standard Misago function used to get default metatags for all pages.
+    Misago function used to get default metatags for all pages.
 
     See the [action](#action) section for details.
 

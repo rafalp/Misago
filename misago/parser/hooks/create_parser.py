@@ -8,7 +8,7 @@ from ...plugins.hooks import FilterHook
 
 class CreateParserHookAction(Protocol):
     """
-    A standard Misago function used to create a configured MarkdownIt instance
+    Misago function used to create a configured MarkdownIt instance
     or the next filter function from another plugin.
 
     # Arguments
@@ -60,7 +60,7 @@ class CreateParserHookFilter(Protocol):
 
     ## `action: CreateParserHookAction`
 
-    A standard Misago function used to create a configured MarkdownIt instance
+    Misago function used to create a configured MarkdownIt instance
     or the next filter function from another plugin.
 
     See the [action](#action) section for details.

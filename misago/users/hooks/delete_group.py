@@ -8,7 +8,7 @@ from ..models import Group
 
 class DeleteGroupHookAction(Protocol):
     """
-    A standard Misago function used for deleting the user group, or the next
+    Misago function used for deleting the user group, or the next
     filter function from another plugin.
 
     # Arguments
@@ -37,7 +37,7 @@ class DeleteGroupHookFilter(Protocol):
 
     ## `action: DeleteGroupHookAction`
 
-    A standard Misago function used for deleting the user group, or the next
+    Misago function used for deleting the user group, or the next
     filter function from another plugin.
 
     See the [action](#action) section for details.

@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class HideThreadUpdateHookAction(Protocol):
     """
-    A standard Misago function used to hide a `ThreadUpdate` object.
+    Misago function used to hide a `ThreadUpdate` object.
 
     # Arguments
 
@@ -47,7 +47,7 @@ class HideThreadUpdateHookFilter(Protocol):
 
     ## `action: HideThreadUpdateHookAction`
 
-    A standard Misago function used to hide a `ThreadUpdate` object.
+    Misago function used to hide a `ThreadUpdate` object.
 
     ## `thread_update: ThreadUpdate`
 

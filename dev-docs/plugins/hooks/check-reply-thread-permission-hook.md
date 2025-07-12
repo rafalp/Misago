@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CheckReplyThreadPermissionHookAction`
 
-A standard Misago function used to check if the user has permission to reply to a thread. It raises Django's `PermissionDenied` with an error message if they can't reply to it.
+Misago function used to check if the user has permission to reply to a thread. It raises Django's `PermissionDenied` with an error message if they can't reply to it.
 
 See the [action](#action) section for details.
 
@@ -62,7 +62,7 @@ def check_reply_thread_permission_action(
     ...
 ```
 
-A standard Misago function used to check if the user has permission to reply to a thread. It raises Django's `PermissionDenied` with an error message if they can't reply to it.
+Misago function used to check if the user has permission to reply to a thread. It raises Django's `PermissionDenied` with an error message if they can't reply to it.
 
 
 ### Arguments

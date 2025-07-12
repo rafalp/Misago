@@ -5,8 +5,9 @@ from django.utils import timezone
 
 from .. import test
 from ...categories.models import Category
+from ...polls.models import Poll
 from ...users.test import create_test_user
-from ..models import Poll, Post, Thread, ThreadParticipant
+from ..models import Post, Thread, ThreadParticipant
 
 
 class ThreadModelTests(TestCase):
@@ -211,10 +212,11 @@ class ThreadModelTests(TestCase):
         self.assertFalse(self.thread.has_poll)
 
         Poll.objects.create(
-            thread=self.thread,
             category=self.category,
-            poster_name="test",
-            poster_slug="test",
+            thread=self.thread,
+            starter_name="test",
+            starter_slug="test",
+            question="...",
             choices=[],
         )
 

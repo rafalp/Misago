@@ -6,7 +6,7 @@ from ...users.models import Group
 
 class BuildUserPermissionsHookAction(Protocol):
     """
-    A standard Misago function used to build user permissions from their groups.
+    Misago function used to build user permissions from their groups.
 
     # Arguments
 
@@ -30,7 +30,7 @@ class BuildUserPermissionsHookFilter(Protocol):
 
     ## `action: BuildUserPermissionsHookAction`
 
-    A standard Misago function used to build user permissions from their groups
+    Misago function used to build user permissions from their groups
     or the next filter function from another plugin.
 
     See the [action](#action) section for details.

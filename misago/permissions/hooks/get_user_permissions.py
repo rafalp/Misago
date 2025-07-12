@@ -10,7 +10,7 @@ User = get_user_model()
 
 class GetUserPermissionsHookAction(Protocol):
     """
-    A standard Misago function used to get user permissions.
+    Misago function used to get user permissions.
 
     Retrieves permissions data from cache or builds new ones.
 
@@ -40,7 +40,7 @@ class GetUserPermissionsHookFilter(Protocol):
 
     ## `action: GetUserPermissionsHookAction`
 
-    A standard Misago function used to get user permissions or the next filter
+    Misago function used to get user permissions or the next filter
     function from another plugin.
 
     See the [action](#action) section for details.

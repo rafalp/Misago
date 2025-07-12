@@ -34,7 +34,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetUserPermissionsHookAction`
 
-A standard Misago function used to get user permissions or the next filter function from another plugin.
+Misago function used to get user permissions or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -61,7 +61,7 @@ def get_user_permissions_action(user: User | AnonymousUser, cache_versions: dict
     ...
 ```
 
-A standard Misago function used to get user permissions.
+Misago function used to get user permissions.
 
 Retrieves permissions data from cache or builds new ones.
 

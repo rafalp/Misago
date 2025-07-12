@@ -48,7 +48,7 @@ class EditThreadPostState(PostingState):
                 self.save_category()
 
             create_changed_title_thread_update(
-                self.thread, self.thread_title, request.user, request=request
+                self.thread, self.thread_title, request.user, request
             )
 
             ThreadUpdate.objects.context_object(self.thread).update(

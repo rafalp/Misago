@@ -9,7 +9,7 @@ from ..filters import ThreadsFilter
 
 class GetCategoryThreadsPageFiltersHookAction(Protocol):
     """
-    A standard Misago function used to get available filters for
+    Misago function used to get available filters for
     a category's threads list.
 
     # Arguments
@@ -42,7 +42,7 @@ class GetCategoryThreadsPageFiltersHookFilter(Protocol):
 
     ## `action: GetCategoryThreadsPageFiltersHookAction`
 
-    A standard Misago function used to get available filters for
+    Misago function used to get available filters for
     a category's threads list.
 
     See the [action](#action) section for details.

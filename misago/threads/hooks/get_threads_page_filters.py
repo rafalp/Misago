@@ -8,7 +8,7 @@ from ..filters import ThreadsFilter
 
 class GetThreadsPageFiltersHookAction(Protocol):
     """
-    A standard Misago function used to get available filters for the threads list.
+    Misago function used to get available filters for the threads list.
 
     # Arguments
 
@@ -32,7 +32,7 @@ class GetThreadsPageFiltersHookFilter(Protocol):
 
     ## `action: GetThreadsPageFiltersHookAction`
 
-    A standard Misago function used to get available filters for the threads list.
+    Misago function used to get available filters for the threads list.
 
     See the [action](#action) section for details.
 

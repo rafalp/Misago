@@ -26,7 +26,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: ShortenURLHookAction`
 
-A standard Misago function used to shorten URLs in text or the next filter function from another plugin.
+Misago function used to shorten URLs in text or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -48,7 +48,7 @@ def shorten_url_action(url: str) -> str:
     ...
 ```
 
-A standard Misago function used to shorten URLs in text or the next filter function from another plugin.
+Misago function used to shorten URLs in text or the next filter function from another plugin.
 
 
 ### Arguments

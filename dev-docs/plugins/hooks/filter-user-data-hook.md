@@ -37,7 +37,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: FilterUserDataHookAction`
 
-A standard Misago function used for filtering the user data, or the next filter function from another plugin.
+Misago function used for filtering the user data, or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -87,7 +87,7 @@ def filter_user_data_action(
     ...
 ```
 
-A standard Misago function used for filtering the user data, or the next filter function from another plugin.
+Misago function used for filtering the user data, or the next filter function from another plugin.
 
 
 ### Arguments

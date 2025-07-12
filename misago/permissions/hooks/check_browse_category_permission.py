@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class CheckBrowseCategoryPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if the user has permission to
+    Misago function used to check if the user has permission to
     browse a category. It also checks if the user can see the category.
     It raises Django's `Http404` if they can't see it or `PermissionDenied`
     with an error message if they can't browse it.
@@ -48,7 +48,7 @@ class CheckBrowseCategoryPermissionHookFilter(Protocol):
 
     ## `action: CheckBrowseCategoryPermissionHookAction`
 
-    A standard Misago function used to check if the user has permission to
+    Misago function used to check if the user has permission to
     browse a category. It also checks if the user can see the category.
     It raises Django's `Http404` if they can't see it or `PermissionDenied`
     with an error message if they can't browse it.

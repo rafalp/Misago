@@ -32,7 +32,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CheckSeeThreadPostPermissionHookAction`
 
-A standard Misago function used to check if the user has a permission to see a post in a thread. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't see it's contents.
+Misago function used to check if the user has a permission to see a post in a thread. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't see it's contents.
 
 See the [action](#action) section for details.
 
@@ -69,7 +69,7 @@ def check_see_thread_post_permission_action(
     ...
 ```
 
-A standard Misago function used to check if the user has a permission to see a post in a thread. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't see it's contents.
+Misago function used to check if the user has a permission to see a post in a thread. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't see it's contents.
 
 
 ### Arguments

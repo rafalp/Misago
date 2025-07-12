@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetPrivateThreadsPageThreadsHookAction`
 
-A standard Misago function used to get the complete threads data for the private threads page. Returns a `dict` that is included in the template context under the `threads` key.
+Misago function used to get the complete threads data for the private threads page. Returns a `dict` that is included in the template context under the `threads` key.
 
 See the [action](#action) section for details.
 
@@ -65,7 +65,7 @@ def get_private_threads_page_threads_action(
     ...
 ```
 
-A standard Misago function used to get the complete threads data for the private threads page. Returns a `dict` that is included in the template context under the `threads` key.
+Misago function used to get the complete threads data for the private threads page. Returns a `dict` that is included in the template context under the `threads` key.
 
 
 ### Arguments

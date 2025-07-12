@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetPrivateThreadsPageQuerysetHookAction`
 
-A standard Misago function used to get the base threads queryset for the private threads page.
+Misago function used to get the base threads queryset for the private threads page.
 
 See the [action](#action) section for details.
 
@@ -57,7 +57,7 @@ def get_private_threads_page_queryset_action(request: HttpRequest, category: Cat
     ...
 ```
 
-A standard Misago function used to get the base threads queryset for the private threads page.
+Misago function used to get the base threads queryset for the private threads page.
 
 
 ### Arguments

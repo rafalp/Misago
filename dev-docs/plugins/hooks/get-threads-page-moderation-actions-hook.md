@@ -29,7 +29,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetThreadsPageModerationActionsHookAction`
 
-A standard Misago function used to get available filters for the threads list.
+Misago function used to get available filters for the threads list.
 
 See the [action](#action) section for details.
 
@@ -51,7 +51,7 @@ def get_threads_page_moderation_actions_action(request: HttpRequest) -> list[Typ
     ...
 ```
 
-A standard Misago function used to get available moderation actions for the threads list.
+Misago function used to get available moderation actions for the threads list.
 
 
 ### Arguments

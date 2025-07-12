@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: BuildUserPermissionsHookAction`
 
-A standard Misago function used to build user permissions from their groups or the next filter function from another plugin.
+Misago function used to build user permissions from their groups or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -50,7 +50,7 @@ def build_user_permissions_action(groups: list[Group]) -> dict:
     ...
 ```
 
-A standard Misago function used to build user permissions from their groups.
+Misago function used to build user permissions from their groups.
 
 
 ### Arguments
