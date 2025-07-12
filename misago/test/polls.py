@@ -54,8 +54,8 @@ def poll_factory():
             choices_list = choices
 
         choices_json = []
-        for i, choice in enumerate(choices_list):
-            choices_json.append({"id": f"choice{i + 1}", "name": choice, "votes": 0})
+        for i, choice in enumerate(choices_list, 1):
+            choices_json.append({"id": f"choice{i}", "name": choice, "votes": 0})
 
         if update_thread:
             thread.has_poll = True
