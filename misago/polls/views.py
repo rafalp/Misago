@@ -65,8 +65,6 @@ class PollStartView(ThreadView):
 
     def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
-        if thread.has_poll:
-            pass
 
         check_start_thread_poll_permission(
             request.user_permissions, thread.category, thread
@@ -77,8 +75,6 @@ class PollStartView(ThreadView):
 
     def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
-        if thread.has_poll:
-            pass
 
         check_start_thread_poll_permission(
             request.user_permissions, thread.category, thread

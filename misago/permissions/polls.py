@@ -60,9 +60,18 @@ def _check_start_thread_poll_permission_action(
     category: Category,
     thread: Thread,
 ):
-    check_start_poll_permission(permissions)
     check_post_in_closed_category_permission(permissions, category)
     check_post_in_closed_thread_permission(permissions, thread)
+
+    if thread.has_poll:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "This thread already has a poll.",
+            )
+        )
+
+    check_start_poll_permission(permissions)
 
     if permissions.is_category_moderator(thread.category_id):
         return
