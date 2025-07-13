@@ -93,18 +93,24 @@
       {% if poll.is_public or allow_vote or allow_edit or allow_close or moderator %}
         <div class="poll-buttons">
           {% include "misago/poll/footer_buttons.html" %}
-          {% if poll.is_public and not show_voters %}
-            <a href="{{ voters_url }}" class="btn btn-default" hx-boost="true">
-              {% translate "View voters" context "poll footer btn" %}
-            </a>
-          {% elif show_voters %}
-            <a href="{{ results_url }}" class="btn btn-default" hx-boost="true">
-              {% translate "Hide voters" context "poll footer btn" %}
-            </a>
+          {% if poll.is_public %}
+            {% if not show_voters %}
+              <a href="{{ voters_url }}" class="btn btn-default" hx-boost="true">
+                {% translate "View voters" context "poll footer btn" %}
+              </a>
+            {% elif show_voters %}
+              <a href="{{ results_url }}" class="btn btn-default" hx-boost="true">
+                {% translate "Hide voters" context "poll footer btn" %}
+              </a>
+            {% endif %}
           {% endif %}
           {% if allow_vote %}
             <a href="{{ vote_url }}" class="btn btn-default" hx-boost="true">
-              {% translate "Change vote" context "poll footer btn" %}
+              {% if user_votes %}
+                {% translate "Change vote" context "poll footer btn" %}
+              {% else %}
+                {% translate "Vote" context "poll footer btn" %}
+              {% endif %}
             </a>
           {% endif %}
         </div>

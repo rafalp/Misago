@@ -367,8 +367,10 @@ class ThreadRepliesView(RepliesView, ThreadView):
         )
 
         template_name = PollTemplate.RESULTS
-        if context["allow_vote"] and (
-            request.GET.get("poll") == "vote" or not user_poll_votes
+        if (
+            context["allow_vote"]
+            and request.GET.get("poll") not in ("results", "voters")
+            and (request.GET.get("poll") == "vote" or not user_poll_votes)
         ):
             template_name = PollTemplate.VOTE
 
