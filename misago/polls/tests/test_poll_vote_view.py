@@ -255,6 +255,49 @@ def test_poll_vote_view_post_vote_saves_user_vote_and_redirects_them_to_thread(
         {"poll_choice": ["choice1"]},
     )
     assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+    )
+
+    poll.refresh_from_db()
+    assert poll.votes == 1
+
+    assert get_user_poll_votes(user, poll) == {"choice1"}
+
+
+def test_poll_vote_view_post_vote_saves_user_vote_and_redirects_them_to_next_url(
+    user_client, user, thread, poll
+):
+    next_url = reverse(
+        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug, "page": 2}
+    )
+
+    response = user_client.post(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        + "?poll=vote",
+        {"poll_choice": ["choice1"], "next": next_url},
+    )
+    assert response.status_code == 302
+    assert response["location"] == next_url
+
+    poll.refresh_from_db()
+    assert poll.votes == 1
+
+    assert get_user_poll_votes(user, poll) == {"choice1"}
+
+
+def test_poll_vote_view_post_vote_saves_user_vote_and_redirects_them_to_thread_if_next_url_is_invalid(
+    user_client, user, thread, poll
+):
+    response = user_client.post(
+        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        + "?poll=vote",
+        {"poll_choice": ["choice1"], "next": "invalid"},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+    )
 
     poll.refresh_from_db()
     assert poll.votes == 1
