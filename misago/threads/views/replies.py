@@ -27,7 +27,7 @@ from ...permissions.threads import (
 )
 from ...polls.enums import PollTemplate
 from ...polls.models import Poll
-from ...polls.views import dispatch_poll_view, get_poll_context_data
+from ...polls.views import dispatch_thread_poll_view, get_poll_context_data
 from ...polls.votes import get_user_poll_votes
 from ...posting.formsets import (
     ReplyPrivateThreadFormset,
@@ -259,7 +259,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
         self, request: HttpRequest, id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
         if request.is_htmx:
-            if poll_response := dispatch_poll_view(request, id):
+            if poll_response := dispatch_thread_poll_view(request, id):
                 return poll_response
 
         return super().get(request, id, slug, page)
@@ -268,7 +268,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
         self, request: HttpRequest, id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
         if request.GET.get("poll"):
-            if poll_response := dispatch_poll_view(request, id):
+            if poll_response := dispatch_thread_poll_view(request, id):
                 return poll_response
 
         return super().post(request, id, slug, page)

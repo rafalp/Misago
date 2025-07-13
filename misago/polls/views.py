@@ -35,20 +35,7 @@ from .votes import (
 )
 
 
-def dispatch_poll_view(request: HttpRequest, thread_id: int) -> HttpResponse | None:
-    view = request.GET.get("poll")
-    if not view:
-        return None
-
-    if view == "vote":
-        return poll_vote(request, thread_id)
-    if view in ("results", "voters"):
-        return poll_results(request, thread_id, view == "voters")
-
-    return None
-
-
-class PollThreadView(ThreadView):
+class ThreadPollView(ThreadView):
     def get_poll(self, request: HttpRequest, thread: Thread) -> Poll | None:
         poll = Poll.objects.filter(thread=thread).first()
         if not poll:
@@ -109,7 +96,7 @@ class StartThreadPollView(ThreadView):
         )
 
 
-class EditThreadPollView(PollThreadView):
+class EditThreadPollView(ThreadPollView):
     template_name = "misago/poll/edit.html"
     template_name_htmx = "misago/poll/edit_partial.html"
 
@@ -200,22 +187,7 @@ class EditThreadPollView(PollThreadView):
         return f"{next_url}?poll=results"
 
 
-class PollResultsView(PollThreadView):
-    def get(
-        self, request: HttpRequest, thread_id: int, show_voters: bool = False
-    ) -> HttpResponse:
-        thread = self.get_thread(request, thread_id)
-        poll = self.get_poll(request, thread)
-        user_poll_votes = get_user_poll_votes(request.user, poll)
-
-        context = get_poll_context_data(
-            request, thread, poll, user_poll_votes, show_voters
-        )
-
-        return render(request, PollTemplate.RESULTS_HTMX, context)
-
-
-class PollVoteView(PollThreadView):
+class ThreadPollVoteView(ThreadPollView):
     def get(self, request: HttpRequest, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
@@ -284,11 +256,41 @@ class PollVoteView(PollThreadView):
         return render(request, PollTemplate.VOTE_HTMX, context)
 
 
-poll_results = PollResultsView.as_view()
-poll_vote = PollVoteView.as_view()
+class ThreadPollResultsView(ThreadPollView):
+    def get(
+        self, request: HttpRequest, thread_id: int, show_voters: bool = False
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+        poll = self.get_poll(request, thread)
+        user_poll_votes = get_user_poll_votes(request.user, poll)
+
+        context = get_poll_context_data(
+            request, thread, poll, user_poll_votes, show_voters
+        )
+
+        return render(request, PollTemplate.RESULTS_HTMX, context)
 
 
-class UpdateThreadPollView(PollThreadView):
+thread_poll_results = ThreadPollResultsView.as_view()
+thread_poll_vote = ThreadPollVoteView.as_view()
+
+
+def dispatch_thread_poll_view(
+    request: HttpRequest, thread_id: int
+) -> HttpResponse | None:
+    view = request.GET.get("poll")
+    if not view:
+        return None
+
+    if view in ("results", "voters"):
+        return thread_poll_results(request, thread_id, view == "voters")
+    if view == "vote":
+        return thread_poll_vote(request, thread_id)
+
+    return None
+
+
+class UpdateThreadPollView(ThreadPollView):
     def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
         poll = self.get_poll(request, thread)
@@ -356,7 +358,7 @@ class OpenThreadPollView(UpdateThreadPollView):
         return thread_update
 
 
-class DeleteThreadPollView(PollThreadView):
+class DeleteThreadPollView(ThreadPollView):
     def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
         poll = self.get_poll(request, thread)

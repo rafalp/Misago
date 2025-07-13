@@ -72,7 +72,9 @@ def test_start_thread_poll_view_shows_error_for_guests(client, thread):
     assert_contains(response, "You must be signed in to start polls.", 403)
 
 
-def test_start_thread_poll_view_shows_error_for_user_without_permission(user_client, thread):
+def test_start_thread_poll_view_shows_error_for_user_without_permission(
+    user_client, thread
+):
     response = user_client.get(
         reverse(
             "misago:start-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
