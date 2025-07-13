@@ -16,82 +16,20 @@ if TYPE_CHECKING:
     from ..users.models import User
 
 
-class PollChoicesWidget(forms.Widget):
+class NewPollChoicesWidget(forms.Widget):
     def value_from_datadict(self, data, files, name):
-        name_length = len(name)
-        ids: set[str] = set()
-        value = []
-
-        for key in data:
-            key_length = len(key)
-
-            if name_length >= key_length:
-                continue
-
-            if key[:name_length] != name:
-                continue
-
-            if key[name_length] != "[":
-                continue
-
-            if key[key_length - 1] != "]":
-                continue
-
-            choice_id = key[name_length + 1 : key_length - 1].strip()
-            if not choice_id:
-                continue
-
-            if choice_id in ids:
-                continue
-
-            ids.add(choice_id)
-            value.append({"id": choice_id, "name": data.get(key, "").strip()})
-
-        obj = PollChoices(value)
-        for choice in data.getlist(f"{name}[]"):
-            if choice := choice.strip():
-                obj.add(choice)
-
+        obj = PollChoices()
+        for choice in data.getlist(name):
+            if name := choice.strip():
+                obj.add(name)
         return obj
 
-    def check_data_value_name(self, name: str, data_name: str) -> bool:
-        if data_name == f"{name}[]":
-            return True
 
-        return False
-
-
-class PollChoicesField(forms.Field):
-    widget = PollChoicesWidget
+class NewPollChoicesField(forms.Field):
+    widget = NewPollChoicesWidget
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        if not self.initial:
-            self.initial = PollChoices()
-
-    def clean(self, value: PollChoices) -> PollChoices:
-        initial_ids: set[str] = set()
-        initial_choices: PollChoice = []
-
-        if self.initial:
-            for choice in self.initial.values():
-                if choice["id"]:
-                    initial_ids.add(choice["id"])
-                    initial_choices.append(choice)
-
-        choices = PollChoices(initial_choices)
-        for choice in value.values():
-            if choice["id"] in initial_ids:
-                choices[choice["id"]]["name"] = choice["name"]
-                initial_ids.remove(choice["id"])
-            else:
-                choices.add(choice["name"])
-
-        for removed_choice in initial_ids:
-            del choices[removed_choice]
-
-        return choices
 
 
 class PollForm(forms.Form):
@@ -100,7 +38,7 @@ class PollForm(forms.Form):
 
     question = forms.CharField(max_length=255, required=False)
     choices_text = forms.CharField(max_length=1000, required=False)
-    choices_list = PollChoicesField(required=False)
+    choices_list = NewPollChoicesField(required=False)
     duration = forms.IntegerField(
         initial=0, min_value=0, max_value=1825, required=False
     )
@@ -218,6 +156,15 @@ class StartPollForm(PollForm):
 
     def save(self, category: Category, thread: Thread, user: "User") -> Poll:
         return self.get_poll_instance(category, thread, user, save=True)
+
+
+class EditPollChoicesWidget(forms.Widget):
+    def value_from_datadict(self, data, files, name):
+        obj = PollChoices()
+        for choice in data.getlist(name):
+            if name := choice.strip():
+                obj.add(name)
+        return obj
 
 
 class EditPollForm(PollForm):

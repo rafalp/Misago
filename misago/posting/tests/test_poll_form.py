@@ -67,7 +67,7 @@ def test_poll_form_validation_with_empty_data_passes(rf, dynamic_settings):
         {
             "question": "",
             "choices_text": "",
-            "choices_list[]": [""],
+            "choices_list": [""],
             "duration": "",
             "max_choices": "",
         },
@@ -84,7 +84,7 @@ def test_poll_form_validation_requires_choices_if_question_is_set(rf, dynamic_se
         {
             "question": "Lorem ipsum",
             "choices_text": "",
-            "choices_list[]": [""],
+            "choices_list": [""],
             "duration": "",
             "max_choices": "",
         },
@@ -107,7 +107,7 @@ def test_poll_form_validation_requires_question_if_choices_text_is_set(
         {
             "question": "",
             "choices_text": "Lorem\nIpsum",
-            "choices_list[]": [""],
+            "choices_list": [""],
             "duration": "",
             "max_choices": "",
         },
@@ -127,7 +127,7 @@ def test_poll_form_validation_requires_question_if_choices_list_is_set(
         {
             "question": "",
             "choices_text": "",
-            "choices_list[]": ["Lorem", "Ipsum"],
+            "choices_list": ["Lorem", "Ipsum"],
             "duration": "",
             "max_choices": "",
         },
@@ -145,7 +145,7 @@ def test_poll_form_validation_parses_choices_text(rf, dynamic_settings):
         {
             "question": "Lorem ipsum",
             "choices_text": "  \n  Lorem  \n  Ipsum  \n  ",
-            "choices_list[]": [""],
+            "choices_list": [""],
             "duration": "",
             "max_choices": "",
         },
@@ -173,7 +173,7 @@ def test_poll_form_validation_parses_choices_list(rf, dynamic_settings):
         "/",
         {
             "question": "Lorem ipsum",
-            "choices_list[]": ["Lorem", "", "Ipsum"],
+            "choices_list": ["Lorem", "", "Ipsum"],
             "duration": "",
             "max_choices": "",
         },
@@ -205,7 +205,7 @@ def test_poll_form_validation_validates_question(rf, dynamic_settings):
         {
             "question": "I",
             "choices_text": "  \n  Lorem  \n  Ipsum  \n  ",
-            "choices_list[]": [""],
+            "choices_list": [""],
             "duration": "",
             "max_choices": "",
         },
@@ -227,7 +227,7 @@ def test_poll_form_validation_validates_choices_text(rf, dynamic_settings):
         {
             "question": "Lorem ipsum",
             "choices_text": "  \n  Lorem  \n    \n  ",
-            "choices_list[]": [""],
+            "choices_list": [""],
             "duration": "",
             "max_choices": "",
         },
@@ -245,7 +245,7 @@ def test_poll_form_validation_validates_choices_list(rf, dynamic_settings):
         {
             "question": "Lorem ipsum",
             "choices_text": "",
-            "choices_list[]": ["Lorem"],
+            "choices_list": ["Lorem"],
             "duration": "",
             "max_choices": "",
         },

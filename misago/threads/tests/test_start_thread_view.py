@@ -723,7 +723,7 @@ def test_start_thread_view_starts_thread_with_poll(user_client, user, default_ca
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
             "posting-poll-question": "What's your mood?",
-            "posting-poll-choices_list[]": [
+            "posting-poll-choices_list": [
                 "Great",
                 "Okay",
                 "About average",

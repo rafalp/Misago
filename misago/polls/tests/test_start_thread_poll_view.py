@@ -139,7 +139,7 @@ def test_start_thread_poll_view_starts_thread_with_poll(user_client, user, user_
         ),
         {
             "question": "What's your mood?",
-            "choices_list[]": [
+            "choices_list": [
                 "Great",
                 "Okay",
                 "About average",

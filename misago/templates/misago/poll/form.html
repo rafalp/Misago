@@ -19,12 +19,12 @@
     <ol class="form-control-poll-choices" max-choices="{{ settings.poll_max_choices }}" misago-poll-choices-control>
       {% for choice in field.value.values %}
         <li class="form-control-poll-choices-item">
-          <input type="text" class="form-control" name="{{ field.html_name }}[{{ choice.id }}]" placeholder="{% translate 'Poll choice...' context 'poll choices control' %}" value="{{ choice.name }}" />
+          <input type="text" class="form-control" name="{{ field.html_name }}" placeholder="{% translate 'Poll choice...' context 'poll choices control' %}" value="{{ choice.name }}" />
         </li>
       {% endfor %}
       {% if field.value|length < settings.poll_max_choices %}
         <li class="form-control-poll-choices-item">
-          <input type="text" class="form-control" name="{{ field.html_name }}[]" placeholder="{% translate 'Poll choice...' context 'poll choices control' %}" value="" />
+          <input type="text" class="form-control" name="{{ field.html_name }}" placeholder="{% translate 'Poll choice...' context 'poll choices control' %}" value="" />
         </li>
       {% endif %}
     </ol>
