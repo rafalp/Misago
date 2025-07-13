@@ -1,5 +1,3 @@
-from typing import Any
-
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 

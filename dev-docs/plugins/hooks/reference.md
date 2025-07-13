@@ -127,6 +127,7 @@ Hooks instances are importable from the following Python modules:
 - [`delete_thread_poll_hook`](./delete-thread-poll-hook.md)
 - [`open_poll_hook`](./open-poll-hook.md)
 - [`open_thread_poll_hook`](./open-thread-poll-hook.md)
+- [`save_thread_poll_hook`](./save-thread-poll-hook.md)
 - [`validate_poll_choices_hook`](./validate-poll-choices-hook.md)
 - [`validate_poll_question_hook`](./validate-poll-question-hook.md)
 
