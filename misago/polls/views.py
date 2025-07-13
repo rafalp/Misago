@@ -48,7 +48,7 @@ def dispatch_poll_view(request: HttpRequest, thread_id: int) -> HttpResponse | N
     return None
 
 
-class PollView(ThreadView):
+class PollThreadView(ThreadView):
     def get_poll(self, request: HttpRequest, thread: Thread) -> Poll | None:
         poll = Poll.objects.filter(thread=thread).first()
         if not poll:
@@ -60,7 +60,7 @@ class PollView(ThreadView):
         return poll
 
 
-class PollStartView(ThreadView):
+class StartThreadPollView(ThreadView):
     template_name = "misago/poll/start.html"
 
     def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
@@ -109,7 +109,7 @@ class PollStartView(ThreadView):
         )
 
 
-class PollEditView(PollView):
+class EditThreadPollView(PollThreadView):
     template_name = "misago/poll/edit.html"
     template_name_htmx = "misago/poll/edit_partial.html"
 
@@ -200,7 +200,7 @@ class PollEditView(PollView):
         return f"{next_url}?poll=results"
 
 
-class PollResultsView(PollView):
+class PollResultsView(PollThreadView):
     def get(
         self, request: HttpRequest, thread_id: int, show_voters: bool = False
     ) -> HttpResponse:
@@ -215,7 +215,7 @@ class PollResultsView(PollView):
         return render(request, PollTemplate.RESULTS_HTMX, context)
 
 
-class PollVoteView(PollView):
+class PollVoteView(PollThreadView):
     def get(self, request: HttpRequest, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
@@ -288,7 +288,7 @@ poll_results = PollResultsView.as_view()
 poll_vote = PollVoteView.as_view()
 
 
-class PollUpdateView(PollView):
+class UpdateThreadPollView(PollThreadView):
     def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
         poll = self.get_poll(request, thread)
@@ -324,7 +324,7 @@ class PollUpdateView(PollView):
         raise NotADirectoryError()
 
 
-class PollCloseView(PollUpdateView):
+class CloseThreadPollView(UpdateThreadPollView):
     def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
         check_close_thread_poll_permission(
             request.user_permissions, thread.category, thread, poll
@@ -340,7 +340,7 @@ class PollCloseView(PollUpdateView):
         return thread_update
 
 
-class PollOpenView(PollUpdateView):
+class OpenThreadPollView(UpdateThreadPollView):
     def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
         check_open_thread_poll_permission(
             request.user_permissions, thread.category, thread, poll
@@ -356,7 +356,7 @@ class PollOpenView(PollUpdateView):
         return thread_update
 
 
-class PollDeleteView(PollView):
+class DeleteThreadPollView(PollThreadView):
     def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
         poll = self.get_poll(request, thread)

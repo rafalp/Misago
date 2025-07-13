@@ -1,37 +1,37 @@
 from django.urls import path
 
 from .views import (
-    PollCloseView,
-    PollDeleteView,
-    PollEditView,
-    PollOpenView,
-    PollStartView,
+    CloseThreadPollView,
+    DeleteThreadPollView,
+    EditThreadPollView,
+    OpenThreadPollView,
+    StartThreadPollView,
 )
 
 urlpatterns = [
     path(
         "t/<slug:slug>/<int:id>/poll/start/",
-        PollStartView.as_view(),
+        StartThreadPollView.as_view(),
         name="start-thread-poll",
     ),
     path(
         "t/<slug:slug>/<int:id>/poll/edit/",
-        PollEditView.as_view(),
+        EditThreadPollView.as_view(),
         name="edit-thread-poll",
     ),
     path(
         "t/<slug:slug>/<int:id>/poll/close/",
-        PollCloseView.as_view(),
+        CloseThreadPollView.as_view(),
         name="close-thread-poll",
     ),
     path(
         "t/<slug:slug>/<int:id>/poll/open/",
-        PollOpenView.as_view(),
+        OpenThreadPollView.as_view(),
         name="open-thread-poll",
     ),
     path(
         "t/<slug:slug>/<int:id>/poll/delete/",
-        PollDeleteView.as_view(),
+        DeleteThreadPollView.as_view(),
         name="delete-thread-poll",
     ),
 ]

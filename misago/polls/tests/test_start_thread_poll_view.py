@@ -9,7 +9,7 @@ from ..enums import PublicPollsAvailability
 from ..models import Poll
 
 
-def test_poll_start_view_shows_error_if_guest_has_no_category_permission(
+def test_start_thread_poll_view_shows_error_if_guest_has_no_category_permission(
     client, guests_group, thread
 ):
     CategoryGroupPermission.objects.filter(group=guests_group).delete()
@@ -22,7 +22,7 @@ def test_poll_start_view_shows_error_if_guest_has_no_category_permission(
     assert response.status_code == 404
 
 
-def test_poll_start_view_shows_error_if_user_has_no_category_permission(
+def test_start_thread_poll_view_shows_error_if_user_has_no_category_permission(
     user_client, members_group, thread
 ):
     CategoryGroupPermission.objects.filter(group=members_group).delete()
@@ -35,8 +35,8 @@ def test_poll_start_view_shows_error_if_user_has_no_category_permission(
     assert response.status_code == 404
 
 
-def test_poll_start_view_shows_error_if_guest_has_no_thread_permission(
-    client, guests_group, thread
+def test_start_thread_poll_view_shows_error_if_guest_has_no_thread_permission(
+    client, thread
 ):
     thread.is_unapproved = True
     thread.save()
@@ -49,8 +49,8 @@ def test_poll_start_view_shows_error_if_guest_has_no_thread_permission(
     assert response.status_code == 404
 
 
-def test_poll_start_view_shows_error_if_user_has_no_thread_permission(
-    user_client, members_group, thread
+def test_start_thread_poll_view_shows_error_if_user_has_no_thread_permission(
+    user_client, thread
 ):
     thread.is_unapproved = True
     thread.save()
@@ -63,7 +63,7 @@ def test_poll_start_view_shows_error_if_user_has_no_thread_permission(
     assert response.status_code == 404
 
 
-def test_poll_start_view_shows_error_for_guests(client, thread):
+def test_start_thread_poll_view_shows_error_for_guests(client, thread):
     response = client.get(
         reverse(
             "misago:start-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
@@ -72,7 +72,7 @@ def test_poll_start_view_shows_error_for_guests(client, thread):
     assert_contains(response, "You must be signed in to start polls.", 403)
 
 
-def test_poll_start_view_shows_error_for_user_without_permission(user_client, thread):
+def test_start_thread_poll_view_shows_error_for_user_without_permission(user_client, thread):
     response = user_client.get(
         reverse(
             "misago:start-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
@@ -83,7 +83,7 @@ def test_poll_start_view_shows_error_for_user_without_permission(user_client, th
     )
 
 
-def test_poll_start_view_shows_error_for_user_with_permission_if_thread_has_poll(
+def test_start_thread_poll_view_shows_error_for_user_with_permission_if_thread_has_poll(
     user_client, user_thread, user_poll
 ):
     response = user_client.get(
@@ -95,7 +95,7 @@ def test_poll_start_view_shows_error_for_user_with_permission_if_thread_has_poll
     assert_contains(response, "This thread already has a poll.", 403)
 
 
-def test_poll_start_view_shows_form(user_client, user_thread):
+def test_start_thread_poll_view_shows_form(user_client, user_thread):
     response = user_client.get(
         reverse(
             "misago:start-thread-poll",
@@ -106,7 +106,7 @@ def test_poll_start_view_shows_form(user_client, user_thread):
 
 
 @override_dynamic_settings(enable_public_polls=PublicPollsAvailability.ENABLED)
-def test_poll_start_view_displays_public_poll_option(user_client, user_thread):
+def test_start_thread_poll_view_displays_public_poll_option(user_client, user_thread):
     response = user_client.get(
         reverse(
             "misago:start-thread-poll",
@@ -118,7 +118,7 @@ def test_poll_start_view_displays_public_poll_option(user_client, user_thread):
 
 
 @override_dynamic_settings(enable_public_polls=PublicPollsAvailability.DISABLED)
-def test_poll_start_view_hides_public_poll_option(user_client, user_thread):
+def test_start_thread_poll_view_hides_public_poll_option(user_client, user_thread):
     response = user_client.get(
         reverse(
             "misago:start-thread-poll",
@@ -129,7 +129,7 @@ def test_poll_start_view_hides_public_poll_option(user_client, user_thread):
     assert_not_contains(response, "is_public")
 
 
-def test_poll_start_view_starts_thread_with_poll(user_client, user, user_thread):
+def test_start_thread_poll_view_starts_thread_with_poll(user_client, user, user_thread):
     response = user_client.post(
         reverse(
             "misago:start-thread-poll",
