@@ -108,7 +108,6 @@ class OpenThreadPollHook(
 
     ```python
     from django.http import HttpRequest
-    from django.utils import timezone
     from misago.polls.hooks import open_thread_poll_hook
     from misago.polls.models import Poll
     from misago.threads.models import Thread
