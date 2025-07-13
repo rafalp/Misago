@@ -86,14 +86,14 @@
             Voting ends on {{ timestamp }}.
           {% endblocktrans %}
         {% endif %}
-        {% if poll.is_public %}
+        {% if is_public %}
           {% translate "Votes are public." context "poll info" %}
         {% endif %}
       </div>
-      {% if poll.is_public or allow_vote or allow_edit or allow_close or moderator %}
+      {% if is_public or allow_vote or allow_edit or allow_close or moderator %}
         <div class="poll-buttons">
           {% include "misago/poll/footer_buttons.html" %}
-          {% if poll.is_public %}
+          {% if is_public %}
             {% if not show_voters %}
               <a href="{{ voters_url }}" class="btn btn-default" hx-boost="true">
                 {% translate "View voters" context "poll footer btn" %}

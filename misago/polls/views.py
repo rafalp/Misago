@@ -23,7 +23,7 @@ from ..polls.models import Poll
 from .choices import PollChoices
 from .close import close_thread_poll, open_thread_poll
 from .delete import delete_thread_poll
-from .enums import PollTemplate
+from .enums import PollTemplate, PublicPollsAvailability
 from .forms import EditPollForm, StartPollForm
 from .nexturl import get_next_url
 from .validators import validate_poll_vote
@@ -389,8 +389,11 @@ def get_poll_context_data(
         )
 
     allow_vote = allow_vote and (not user_poll_votes or poll.can_change_vote)
+    enable_public_polls = (
+        request.settings.enable_public_polls != PublicPollsAvailability.DISABLED
+    )
 
-    show_voters = poll.is_public and fetch_voters
+    show_voters = poll.is_public and fetch_voters and enable_public_polls
     poll_results = get_poll_results_data(poll, show_voters)
 
     with check_permissions() as allow_edit:
@@ -417,6 +420,7 @@ def get_poll_context_data(
 
     return {
         "poll": poll,
+        "is_public": poll.is_public and enable_public_polls,
         "user_votes": user_poll_votes,
         "question": poll.question,
         "results": poll_results,
