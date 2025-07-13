@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 
 from django.http import HttpRequest
 
-from ..plugins.updatedobjectwrapper import UpdatedObjectWrapper
 from ..threads.models import Thread
 from ..threadupdates.create import create_started_poll_thread_update
 from ..threadupdates.models import ThreadUpdate
@@ -16,13 +15,7 @@ if TYPE_CHECKING:
 def save_thread_poll(
     thread: Thread, poll: Poll, user: "User", request: HttpRequest | None = None
 ) -> ThreadUpdate:
-    return save_thread_poll_hook(
-        _save_thread_poll_action,
-        UpdatedObjectWrapper(thread, ("plugin_data",)),
-        poll,
-        UpdatedObjectWrapper(user, ("plugin_data",)),
-        request,
-    )
+    return save_thread_poll_hook(_save_thread_poll_action, thread, poll, user, request)
 
 
 def _save_thread_poll_action(
@@ -32,7 +25,5 @@ def _save_thread_poll_action(
 
     thread.has_poll = True
     thread.save()
-
-    user.save()
 
     return create_started_poll_thread_update(thread, poll, user, request)

@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 
 class SaveThreadPollHookAction(Protocol):
     """
-    Misago function that saves a new poll, updates the thread instance,  
-    and creates a new thread update object. Used only when the poll is started  
+    Misago function that saves a new poll, updates the thread instance,
+    and creates a new thread update object. Used only when the poll is started
     after the thread has already been started.
 
     # Arguments
