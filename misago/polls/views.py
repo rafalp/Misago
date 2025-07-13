@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -60,7 +60,7 @@ class PollView(ThreadView):
         return poll
 
 
-class PollStartView(PollView):
+class PollStartView(ThreadView):
     template_name = "misago/poll/start.html"
 
     def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
@@ -249,7 +249,12 @@ class PollVoteView(PollView):
         poll_choices = PollChoices(poll.choices)
         user_choices = request.POST.getlist("poll_choice")
 
-        valid_choices = validate_poll_vote(user_choices, poll_choices, poll.max_choices)
+        try:
+            valid_choices = validate_poll_vote(
+                user_choices, poll_choices, poll.max_choices
+            )
+        except ValidationError as error:
+            return self.get_error_response(request, thread, poll, user_choices, error)
 
         if valid_choices != user_poll_votes:
             if user_poll_votes:
@@ -262,8 +267,25 @@ class PollVoteView(PollView):
             return redirect(get_next_url(request, thread))
 
         context = get_poll_context_data(request, thread, poll, valid_choices)
-
         return render(request, PollTemplate.RESULTS_HTMX, context)
+
+    def get_error_response(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        poll: Poll,
+        user_poll_votes: set[str],
+        error: ValidationError,
+    ) -> HttpResponse:
+        error_message = error.messages[0]
+
+        if not request.is_htmx:
+            messages.error(request, error_message)
+            return redirect(get_next_url(request, thread))
+
+        context = get_poll_context_data(request, thread, poll, user_poll_votes)
+        context["poll_error_message"] = error_message
+        return render(request, PollTemplate.VOTE_HTMX, context)
 
 
 poll_results = PollResultsView.as_view()

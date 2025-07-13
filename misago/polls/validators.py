@@ -155,7 +155,7 @@ def validate_poll_vote(
 ) -> set[str]:
     if not user_choices:
         raise ValidationError(
-            message=pgettext("poll vote validator", "Select a choice"),
+            message=pgettext("poll vote validator", "Select a choice."),
             code="required",
         )
 
@@ -163,7 +163,7 @@ def validate_poll_vote(
 
     if not valid_choices:
         raise ValidationError(
-            message=pgettext("poll vote validator", "Invalid choice"),
+            message=pgettext("poll vote validator", "Invalid choice."),
             code="invalid",
         )
 
@@ -171,8 +171,8 @@ def validate_poll_vote(
         raise ValidationError(
             npgettext(
                 "poll vote validator",
-                "Select no more than %(choices)s choice",
-                "Select no more than %(choices)s choices",
+                "Select no more than %(choices)s choice.",
+                "Select no more than %(choices)s choices.",
                 max_choices,
             ),
             code="max_choices",

@@ -28,7 +28,7 @@ def test_validate_poll_vote_fails_for_empty_choices():
     with pytest.raises(ValidationError) as exc_info:
         validate_poll_vote([], poll_choices, 2)
 
-    assert exc_info.value.messages == ["Select a choice"]
+    assert exc_info.value.messages == ["Select a choice."]
     assert exc_info.value.code == "required"
 
 
@@ -36,7 +36,7 @@ def test_validate_poll_vote_fails_for_invalid_choices():
     with pytest.raises(ValidationError) as exc_info:
         validate_poll_vote(["ee"], poll_choices, 2)
 
-    assert exc_info.value.messages == ["Invalid choice"]
+    assert exc_info.value.messages == ["Invalid choice."]
     assert exc_info.value.code == "invalid"
 
 
@@ -44,5 +44,5 @@ def test_validate_poll_vote_fails_for_too_many_choices():
     with pytest.raises(ValidationError) as exc_info:
         validate_poll_vote(["aa", "bb", "cc"], poll_choices, 2)
 
-    assert exc_info.value.messages == ["Select no more than 2 choices"]
+    assert exc_info.value.messages == ["Select no more than 2 choices."]
     assert exc_info.value.code == "max_choices"
