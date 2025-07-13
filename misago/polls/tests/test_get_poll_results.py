@@ -16,7 +16,7 @@ def test_get_poll_results_data_calculates_shares():
     assert sum(choice["share"] for choice in get_poll_results_data(poll)) == 100
 
 
-def test_get_poll_results_data_users_hamilton_remainders_method():
+def test_get_poll_results_data_uses_hamilton_remainders_method():
     poll = Poll(
         choices=[
             {"id": "a", "votes": 1},
@@ -26,6 +26,18 @@ def test_get_poll_results_data_users_hamilton_remainders_method():
         votes=3,
     )
     assert sum(choice["share"] for choice in get_poll_results_data(poll)) == 100
+
+
+def test_get_poll_results_data_handles_poll_without_votes():
+    poll = Poll(
+        choices=[
+            {"id": "a", "votes": 0},
+            {"id": "b", "votes": 0},
+            {"id": "c", "votes": 0},
+        ],
+        votes=0,
+    )
+    assert sum(choice["share"] for choice in get_poll_results_data(poll)) == 0
 
 
 def test_get_poll_results_data_includes_votes(user_poll, poll_vote_factory):

@@ -41,7 +41,7 @@ def get_poll_results_data(poll: Poll, fetch_voters: bool = False) -> list[dict]:
 
     if remainder:
         for choice in sorted(data, key=lambda c: c["votes"]):
-            if remainder:
+            if remainder and choice["votes"]:
                 choice["share"] += 1
                 remainder -= 1
 
