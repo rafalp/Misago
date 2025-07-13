@@ -71,7 +71,7 @@ def save_thread_poll_action(
     ...
 ```
 
-Misago function that saves a new poll, updates the thread instance,   and creates a new thread update object. Used only when the poll is started   after the thread has already been started.
+Misago function that saves a new poll, updates the thread instance, and creates a new thread update object. Used only when the poll is started after the thread has already been started.
 
 
 ### Arguments

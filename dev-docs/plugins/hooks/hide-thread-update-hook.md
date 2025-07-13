@@ -18,7 +18,6 @@ from misago.threadupdates.hooks import hide_thread_update_hook
 def custom_hide_thread_update_filter(
     action: HideThreadUpdateHookAction,
     thread_update: 'ThreadUpdate',
-    update_fields: set[str],
     request: HttpRequest | None=None,
 ) -> bool:
     ...
@@ -39,11 +38,6 @@ Misago function used to hide a `ThreadUpdate` object.
 A `ThreadUpdate` instance to hide.
 
 
-#### `update_fields: set[str]`
-
-A `set` of `str` containing the names of fields to pass to the `update(update_fields=...)` option.
-
-
 #### `request: HttpRequest | None = None`
 
 The request object or `None` if not available.
@@ -58,9 +52,7 @@ The request object or `None` if not available.
 
 ```python
 def hide_thread_update_action(
-    thread_update: 'ThreadUpdate',
-    update_fields: set[str],
-    request: HttpRequest | None=None,
+    thread_update: 'ThreadUpdate', request: HttpRequest | None=None
 ) -> bool:
     ...
 ```
@@ -73,11 +65,6 @@ Misago function used to hide a `ThreadUpdate` object.
 #### `thread_update: ThreadUpdate`
 
 A `ThreadUpdate` instance to hide.
-
-
-#### `update_fields: set[str]`
-
-A `set` of `str` containing the names of fields to pass to the `update(update_fields=...)` option.
 
 
 #### `request: HttpRequest | None = None`
@@ -104,14 +91,12 @@ from misago.threads.models import ThreadUpdate
 def save_client_ip_on_thread_update_hide(
     action,
     thread_update: ThreadUpdate,
-    update_fields: set[str],
     request: HttpRequest | None = None,
 ) -> bool:
     if not request:
-        return action(thread_update, update_fields)
+        return action(thread_update)
 
     thread_update.plugin_data["last_ip"] = request.client_ip
-    update_fields.add("plugin_data")
 
-    return action(thread_update, update_fields, request)
+    return action(thread_update, request)
 ```
