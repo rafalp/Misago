@@ -1,6 +1,6 @@
 from django.forms import Field, ValidationError
 
-from .widgets import ListTextarea
+from .widgets import DictInput, ListTextarea
 
 
 class ListField(Field):
