@@ -119,4 +119,12 @@ class ListField(Field):
 
 
 class DictField(Field):
-    pass
+    def __init__(
+        self,
+        *,
+        key_field: Field | None = None,
+        value_field: Field | None = None,
+        **kwargs,
+    ):
+        self.key_field = key_field
+        self.value_field = value_field
