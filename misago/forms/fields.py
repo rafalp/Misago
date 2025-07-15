@@ -1,4 +1,4 @@
-from django.forms import Field
+from django.forms import Field, ValidationError
 
 from .widgets import ListTextarea
 
@@ -11,6 +11,7 @@ class ListField(Field):
     lowercase: bool
     uppercase: bool
     case_insensitive: bool
+    field: Field | None
 
     def __init__(
         self,
@@ -20,6 +21,7 @@ class ListField(Field):
         lowercase: bool = False,
         uppercase: bool = False,
         case_insensitive: bool = False,
+        field: Field | None = None,
         **kwargs,
     ):
         if lowercase and uppercase:
@@ -46,6 +48,8 @@ class ListField(Field):
         self.lowercase = lowercase
         self.uppercase = uppercase
         self.case_insensitive = case_insensitive
+
+        self.field = field
 
         super().__init__(**kwargs)
 
@@ -87,3 +91,32 @@ class ListField(Field):
                 clean_value.append(item)
                 unique_values.add(item_ci)
         return clean_value
+
+    def clean(self, value: list[str]) -> list:
+        if not self.field:
+            return value
+
+        clean_data = []
+        errors: list[ValidationError | str] = []
+
+        for item in value:
+            try:
+                item = self.field.to_python(item)
+                if item is not None:
+                    clean_item = self.field.clean(item)
+                    if clean_item is not None:
+                        clean_data.append(clean_item)
+            except ValidationError as e:
+                errors.extend(m for m in e.error_list if m not in errors)
+
+        if errors:
+            raise ValidationError(errors)
+
+        return clean_data
+
+    def validate(self, value: list):
+        pass
+
+
+class DictField(Field):
+    pass

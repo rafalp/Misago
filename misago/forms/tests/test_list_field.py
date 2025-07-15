@@ -1,4 +1,5 @@
 import pytest
+from django.forms import IntegerField, ValidationError
 
 from ..fields import ListField
 
@@ -77,3 +78,17 @@ def test_list_field_raises_error_if_case_insensitive_is_set_with_uppercase():
     assert str(exc_info.value) == (
         "'case_insensitive' and 'uppercase' options cannot both be enabled."
     )
+
+
+def test_list_field_clean_uses_field_arg_for_item_cleaning():
+    field = ListField(field=IntegerField())
+    assert field.clean(["1", "2", "3", "5"]) == [1, 2, 3, 5]
+
+
+def test_list_field_clean_uses_field_arg_for_item_validation():
+    field = ListField(field=IntegerField(max_value=3))
+
+    with pytest.raises(ValidationError) as exc_info:
+        field.clean(["1", "2", "3", "5"])
+
+    assert exc_info.value.messages == ["Ensure this value is less than or equal to 3."]
