@@ -129,7 +129,7 @@ class EditThreadPollView(ThreadPollView):
     ) -> HttpResponse:
         form.save()
 
-        messages.success(request, pgettext("edit poll", "Edited poll"))
+        messages.success(request, pgettext("edit poll", "Poll edited"))
 
         if not request.is_htmx:
             return redirect(self.get_next_url(request, thread, poll))
