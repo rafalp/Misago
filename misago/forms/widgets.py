@@ -2,6 +2,8 @@ from django.forms import Textarea, Widget
 
 
 class DictInput(Widget):
+    template_name = None
+
     def value_from_datadict(self, data, files, name) -> dict[str, str]:
         value = {}
         for data_key, data_value in data.items():
@@ -19,11 +21,21 @@ class DictInput(Widget):
 
 
 class ListInput(Widget):
+    template_name = None
+
     def value_from_datadict(self, data, files, name):
-        return data.getlist(name)
+        return [item for item in data.getlist(name) if item.strip()]
+
+    def format_value(self, value):
+        if not value:
+            return []
+
+        return value
 
 
 class ListTextarea(Textarea):
+    template_name = None
+
     unique: bool
 
     def __init__(
@@ -41,4 +53,4 @@ class ListTextarea(Textarea):
         return "\n".join(value)
 
     def value_from_datadict(self, data, files, name):
-        return data.get(name, "").splitlines()
+        return [line for line in data.get(name, "").splitlines() if line.strip()]

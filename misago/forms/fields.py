@@ -1,6 +1,187 @@
+import copy
+from typing import Any, Callable, Iterable
+
 from django.forms import Field, ValidationError
+from django.utils.translation import pgettext_lazy as _
 
 from .widgets import DictInput, ListTextarea
+
+
+class DictField(Field):
+    widget = DictInput
+    default_error_messages = {
+        "invalid_choice": _(
+            "dict field error",
+            "Select a valid choice. %(value)s is not one of the available choices.",
+        ),
+        "invalid_dict": _("dict field error", "Enter a dict."),
+        "invalid_key": _("dict field error", "Key ."),
+    }
+
+    coerce: Callable
+    strip: bool
+    key_field: Field | None
+    value_field: Field | None
+
+    def __init__(
+        self,
+        *,
+        choices: Iterable | None = None,
+        coerce=lambda val: val,
+        strip: bool = True,
+        key_field: Field | None = None,
+        value_field: Field | None = None,
+        **kwargs,
+    ):
+        self.choices = choices
+        self.coerce = coerce
+        self.strip = strip
+        self.key_field = key_field
+        self.value_field = value_field
+
+        super().__init__(**kwargs)
+
+    def __deepcopy__(self, memo):
+        result = super().__deepcopy__(memo)
+        result._choices = copy.deepcopy(self._choices, memo)
+        return result
+
+    def _get_choices(self):
+        return self._choices
+
+    def _set_choices(self, value: Iterable | None):
+        self._choices = set(value) if value else None
+
+    choices: set[Any] | None = property(_get_choices, _set_choices)
+
+    def to_python(self, data: dict | None) -> dict[str, str]:
+        if not data:
+            return {}
+        elif not isinstance(data, dict):
+            raise ValidationError(
+                self.error_messages["invalid_dict"], code="invalid_dict"
+            )
+
+        cleaned_value = {}
+        for key, value in data.items():
+            key = key.strip()
+            if not key:
+                continue
+
+            if self.strip:
+                value = value.strip()
+
+            cleaned_value[key] = value
+
+        return cleaned_value
+
+    def clean(self, data: dict[str, str]) -> dict:
+        data = self.to_python(data)
+
+        if self.coerce:
+            data = self.coerce_keys(data)
+
+        if self.key_field:
+            data = self.clean_keys_with_field(data)
+
+        if self.value_field:
+            data = self.clean_values_with_field(data)
+
+        self.validate(data)
+        self.run_validators(data)
+
+        return data
+
+    def coerce_keys(self, data: dict) -> dict:
+        cleaned_value = {}
+        for key, value in data.items():
+            try:
+                key = self.coerce(key)
+            except (ValueError, TypeError, ValidationError):
+                raise ValidationError(
+                    self.error_messages["invalid_choice"],
+                    code="invalid_choice",
+                    params={"value": key},
+                )
+            cleaned_value[key] = value
+
+        return cleaned_value
+
+    def clean_keys_with_field(self, data: dict) -> dict:
+        errors: list[ValidationError] = []
+        cleaned_value = {}
+
+        for key, value in data.items():
+            try:
+                key = self.key_field.clean(key)
+                if key:
+                    cleaned_value[key] = value
+            except ValidationError as error:
+                for message in error.messages:
+                    errors.append(
+                        ValidationError(
+                            message=_(
+                                "dict field key error", '"%(value)s": %(message)s'
+                            ),
+                            code="invalid_key",
+                            params={"value": key, "message": message},
+                        )
+                    )
+
+        if errors:
+            raise ValidationError(errors)
+
+        return cleaned_value
+
+    def clean_values_with_field(self, data: dict) -> dict:
+        errors: list[ValidationError] = []
+        cleaned_value = {}
+
+        for key, value in data.items():
+            try:
+                if c_value := self.value_field.clean(value):
+                    cleaned_value[key] = c_value
+            except ValidationError as error:
+                for message in error.messages:
+                    errors.append(
+                        ValidationError(
+                            message=_(
+                                "dict field value error", '"%(value)s": %(message)s'
+                            ),
+                            code="invalid_value",
+                            params={"value": value, "message": message},
+                        )
+                    )
+
+        if errors:
+            raise ValidationError(errors)
+
+        return cleaned_value
+
+    def validate(self, value: dict) -> dict:
+        if self.required and not value:
+            raise ValidationError(self.error_messages["required"], code="required")
+
+        if self.choices:
+            self.validate_against_choices(value)
+
+    def validate_against_choices(self, value: dict) -> dict:
+        for key in value:
+            if key not in self.choices:
+                raise ValidationError(
+                    self.error_messages["invalid_choice"],
+                    code="invalid_choice",
+                    params={"value": key},
+                )
+
+    def has_changed(self, initial: dict | None, data: dict | None) -> bool:
+        if self.disabled:
+            return False
+        if initial is None:
+            initial = {}
+        if data is None:
+            data = {}
+        return initial != data
 
 
 class ListField(Field):
@@ -93,6 +274,8 @@ class ListField(Field):
         return clean_value
 
     def clean(self, value: list[str]) -> list:
+        value = self.to_python(value)
+
         if not self.field:
             return value
 
@@ -112,19 +295,8 @@ class ListField(Field):
         if errors:
             raise ValidationError(errors)
 
+        self.validate(clean_data)
         return clean_data
 
     def validate(self, value: list):
         pass
-
-
-class DictField(Field):
-    def __init__(
-        self,
-        *,
-        key_field: Field | None = None,
-        value_field: Field | None = None,
-        **kwargs,
-    ):
-        self.key_field = key_field
-        self.value_field = value_field
