@@ -1,35 +1,23 @@
 from typing_extensions import TYPE_CHECKING
 
 from django import forms
-from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.utils.translation import pgettext
 
 from ..categories.models import Category
 from ..threads.models import Thread
-from .choices import PollChoice, PollChoices
+from .choices import PollChoices
 from .enums import PublicPollsAvailability
-from .models import Poll
+from .fields import (
+    EditPollChoicesField,
+    PollChoicesField,
+    PollChoicesFieldValue,
+)
+from .models import Poll, PollVote
 from .validators import validate_poll_choices, validate_poll_question
 
 if TYPE_CHECKING:
     from ..users.models import User
-
-
-class NewPollChoicesWidget(forms.Widget):
-    def value_from_datadict(self, data, files, name):
-        obj = PollChoices()
-        for choice in data.getlist(name):
-            if name := choice.strip():
-                obj.add(name)
-        return obj
-
-
-class NewPollChoicesField(forms.Field):
-    widget = NewPollChoicesWidget
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
 
 class PollForm(forms.Form):
@@ -37,14 +25,11 @@ class PollForm(forms.Form):
     required: bool
 
     question = forms.CharField(max_length=255, required=False)
-    choices_text = forms.CharField(max_length=1000, required=False)
-    choices_list = NewPollChoicesField(required=False)
     duration = forms.IntegerField(
         initial=0, min_value=0, max_value=1825, required=False
     )
     max_choices = forms.IntegerField(initial=1, min_value=1, required=False)
     can_change_vote = forms.BooleanField(required=False)
-    is_public = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
@@ -73,64 +58,41 @@ class PollForm(forms.Form):
         choices_obj = PollChoices.from_str(data)
         return choices_obj.inputvalue()
 
-    def clean_choices(self, cleaned_data: dict) -> PollChoices | None:
-        if choices_list := cleaned_data.get("choices_list"):
-            try:
-                choices = choices_list
-                validate_poll_choices(
-                    choices,
-                    self.request.settings.poll_max_choices,
-                    self.request.settings.poll_choice_min_length,
-                    self.request.settings.poll_choice_max_length,
-                    self.request,
-                )
-                return choices
-            except ValidationError as error:
-                self.add_error("choices_list", error)
-
-        if choices_text := cleaned_data.get("choices_text"):
-            try:
-                choices = PollChoices.from_str(choices_text)
-                validate_poll_choices(
-                    choices,
-                    self.request.settings.poll_max_choices,
-                    self.request.settings.poll_choice_min_length,
-                    self.request.settings.poll_choice_max_length,
-                    self.request,
-                )
-                return choices
-            except ValidationError as error:
-                self.add_error("choices_text", error)
-
-        if (
-            self.required
-            and not self.errors.get("choices_text")
-            and not self.errors.get("choices_list")
-        ):
-            self.add_error(
-                "choices_text",
-                pgettext("form validation", "This field is required."),
-            )
-            self.add_error(
-                "choices_list",
-                pgettext("form validation", "This field is required."),
-            )
-
-        return None
+    def clean_choices(self) -> PollChoicesFieldValue | None:
+        data = self.cleaned_data["choices"]
+        validate_poll_choices(
+            data.json(),
+            self.request.settings.poll_max_choices,
+            self.request.settings.poll_choice_min_length,
+            self.request.settings.poll_choice_max_length,
+            self.request,
+        )
+        return data
 
 
 class StartPollForm(PollForm):
     def setup_form_fields(self, settings):
         super().setup_form_fields(settings)
 
-        if settings.enable_public_polls != PublicPollsAvailability.ENABLED:
-            del self.fields["is_public"]
+        self.fields["choices"] = PollChoicesField(
+            max_choices=settings.poll_max_choices,
+            required=False,
+        )
+
+        if settings.enable_public_polls == PublicPollsAvailability.ENABLED:
+            self.fields["is_public"] = forms.BooleanField(required=False)
 
     def clean(self):
         cleaned_data = super().clean()
 
-        if choices := self.clean_choices(cleaned_data):
-            cleaned_data["choices"] = choices
+        if (
+            self.required
+            and not self.cleaned_data.get("choices")
+            and not self.errors.get("choices")
+        ):
+            self.add_error(
+                "choices", pgettext("form validation", "This field is required.")
+            )
 
         return cleaned_data
 
@@ -158,22 +120,11 @@ class StartPollForm(PollForm):
         return self.get_poll_instance(category, thread, user, save=True)
 
 
-class EditPollChoicesWidget(forms.Widget):
-    def value_from_datadict(self, data, files, name):
-        obj = PollChoices()
-        for choice in data.getlist(name):
-            if name := choice.strip():
-                obj.add(name)
-        return obj
-
-
 class EditPollForm(PollForm):
     instance: Poll
 
     def __init__(self, *args, **kwargs):
         self.instance = instance = kwargs.pop("instance")
-
-        choices = PollChoices(instance.choices)
 
         kwargs["initial"] = {
             "question": instance.question,
@@ -186,11 +137,25 @@ class EditPollForm(PollForm):
 
     def setup_form_fields(self, settings):
         super().setup_form_fields(settings)
-        del self.fields["is_public"]
+
+        self.fields["choices"] = EditPollChoicesField(
+            initial=PollChoicesFieldValue(choices=self.instance.choices),
+            max_choices=settings.poll_max_choices,
+            required=False,
+        )
 
     def save(self):
+        choices = self.cleaned_data["choices"]
+
+        PollVote.objects.filter(
+            poll=self.instance, choice_id__in=choices.delete
+        ).delete()
+
         self.instance.question = self.cleaned_data["question"]
         self.instance.duration = self.cleaned_data["duration"] or 0
+        self.instance.choices = choices.json()
         self.instance.max_choices = self.cleaned_data["max_choices"]
         self.instance.can_change_vote = self.cleaned_data["can_change_vote"]
+        self.instance.votes = PollVote.objects.filter(poll=self.instance).count()
+
         self.instance.save()

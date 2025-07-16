@@ -1,0 +1,207 @@
+from typing import Iterable
+
+from django import forms
+from django.utils.crypto import get_random_string
+
+from ..forms.fields import DictField, ListField
+from ..forms.widgets import DictInput, ListInput, ListTextarea
+from .choices import PollChoices
+
+
+class PollChoicesFieldValue:
+    choices: PollChoices
+    edit: dict[str, str]
+    delete: set[str]
+    new: list[str]
+
+    def __init__(
+        self,
+        choices: PollChoices | None,
+        edit: dict[str, str] | None = None,
+        delete: Iterable[str] | None = None,
+        new: list[str] | None = None,
+    ):
+        self.choices = choices or []
+        self.edit = edit or {}
+        self.new = new or []
+        self.delete = set(delete) if delete else set()
+
+    def __bool__(self):
+        return bool(self.json())
+
+    def json(self):
+        choices: PollChoices = []
+
+        for choice in self.choices:
+            choice_id = choice["id"]
+            if choice_id in self.delete:
+                continue
+
+            choice = choice.copy()
+            if choice_id in self.edit:
+                choice["name"] = self.edit[choice_id]
+
+            choices.append(choice)
+
+        for name in self.new:
+            choices.append(
+                {
+                    "id": get_random_string(12),
+                    "name": name,
+                    "votes": 0,
+                }
+            )
+
+        return choices
+
+
+CHOICES_FIELDS = ("new", "new_noscript", "edit", "delete")
+
+
+class PollChoicesWidget(forms.MultiWidget):
+    template_name = "misago/poll/widgets/choices.html"
+    subwidgets_names = CHOICES_FIELDS
+
+    def __init__(self):
+        super().__init__(self.get_widgets())
+
+    def get_widgets(self) -> tuple[forms.Widget, ...]:
+        return (
+            ListInput(),
+            ListTextarea(),
+        )
+
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+
+        if not isinstance(value, (list, tuple)):
+            value = self.decompress(value)
+
+        final_attrs = context["widget"]["attrs"]
+        id_ = final_attrs.get("id")
+
+        for i, (widget_name, widget) in enumerate(
+            zip(self.widgets_names, self.widgets)
+        ):
+            widget_name = name + widget_name
+            try:
+                widget_value = value[i]
+            except IndexError:
+                widget_value = None
+            if id_:
+                widget_attrs = final_attrs.copy()
+                widget_attrs["id"] = "%s_%s" % (id_, i)
+            else:
+                widget_attrs = final_attrs
+            context["widget"][self.subwidgets_names[i]] = widget.get_context(
+                widget_name, widget_value, widget_attrs
+            )["widget"]
+
+        return context
+
+    def decompress(self, value: PollChoicesFieldValue | None):
+        if value:
+            edit_names = {choice["id"]: choice["name"] for choice in value.choices}
+            return [value.new, value.new, edit_names, value.delete]
+
+        return [[], [], {}, []]
+
+
+class EditPollChoicesWidget(PollChoicesWidget):
+    def get_widgets(self) -> tuple[forms.Widget, ...]:
+        return (
+            ListInput(),
+            ListTextarea(),
+            DictInput(),
+            ListInput(),
+        )
+
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+
+        edit = context["widget"]["edit"]
+        delete = context["widget"]["delete"]
+
+        choices = []
+        for choice in value.choices:
+            choice_id = choice["id"]
+            choices.append(
+                {
+                    "id": choice_id,
+                    "edit_name": f'{edit["name"]}[{choice_id}]',
+                    "delete_name": f'{delete["name"]}',
+                    "value": value.edit.get(choice_id) or choice["name"],
+                    "checked": choice_id in value.delete,
+                }
+            )
+
+        context["widget"]["choices"] = choices
+        return context
+
+
+class PollChoicesField(forms.MultiValueField):
+    widget = PollChoicesWidget
+    subfields = CHOICES_FIELDS
+
+    def __init__(self, *args, **kwargs):
+        self.max_choices = kwargs.pop("max_choices", 5)
+
+        super().__init__(
+            *args,
+            **kwargs,
+            require_all_fields=False,
+            fields=self.get_fields(),
+        )
+
+    def get_fields(self) -> tuple[forms.Field, ...]:
+        return (
+            ListField(required=False, widget=ListInput),
+            ListField(required=False),
+        )
+
+    def widget_attrs(self, widget: forms.Widget) -> dict:
+        return {"max_choices": self.max_choices}
+
+    def compress(self, data):
+        if not data:
+            return PollChoicesFieldValue()
+
+        data_dict = {self.subfields[i]: v for i, v in enumerate(data)}
+        return PollChoicesFieldValue(
+            new=data_dict["new"] or data_dict["new_noscript"],
+        )
+
+    def get_bound_field(self, form, field_name):
+        return PollChoicesBoundField(form, self, field_name)
+
+
+class EditPollChoicesField(PollChoicesField):
+    widget = EditPollChoicesWidget
+
+    def get_fields(self) -> tuple[forms.Field, ...]:
+        return (
+            ListField(required=False),
+            ListField(required=False),
+            DictField(required=False),
+            ListField(required=False),
+        )
+
+    def compress(self, data):
+        if not data:
+            return PollChoicesFieldValue(choices=self.initial.choices)
+
+        data_dict = {self.subfields[i]: v for i, v in enumerate(data)}
+        print(data_dict)
+
+        return PollChoicesFieldValue(
+            choices=self.initial.choices,
+            new=data_dict["new"] or data_dict["new_noscript"],
+            edit=data_dict["edit"],
+            delete=data_dict["delete"],
+        )
+
+
+class PollChoicesBoundField(forms.BoundField):
+    @property
+    def max_choices(self) -> int:
+        return self.field.max_choices

@@ -114,7 +114,7 @@ def _validate_poll_choices_action(
             },
         )
 
-    for name in choices.names():
+    for name in [choice["name"] for choice in choices]:
         name_length = len(name)
 
         if name_length < choice_min_length:
@@ -159,7 +159,9 @@ def validate_poll_vote(
             code="required",
         )
 
-    valid_choices = set(poll_choices.ids()).intersection(user_choices)
+    valid_choices = set(choice["id"] for choice in poll_choices).intersection(
+        user_choices
+    )
 
     if not valid_choices:
         raise ValidationError(

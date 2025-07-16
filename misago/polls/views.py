@@ -20,7 +20,6 @@ from ..threads.views.generic import ThreadView
 from ..threadupdates.create import create_started_poll_thread_update
 from ..threadupdates.models import ThreadUpdate
 from ..polls.models import Poll
-from .choices import PollChoices
 from .close import close_thread_poll, open_thread_poll
 from .delete import delete_thread_poll
 from .enums import PollTemplate, PublicPollsAvailability
@@ -214,12 +213,11 @@ class ThreadPollVoteView(ThreadPollView):
                 pgettext("poll vote", "This poll doesn’t allow vote changes.")
             )
 
-        poll_choices = PollChoices(poll.choices)
         user_choices = request.POST.getlist("poll_choice")
 
         try:
             valid_choices = validate_poll_vote(
-                user_choices, poll_choices, poll.max_choices
+                user_choices, poll.choices, poll.max_choices
             )
         except ValidationError as error:
             return self.get_error_response(request, thread, poll, user_choices, error)

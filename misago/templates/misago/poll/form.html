@@ -11,28 +11,20 @@
     {% endfor %}
   </div>
 {% endwith %}
-{% with field=form.choices_list %}
-  <div class="form-group d-js-block{% if field.errors %} has-error{% endif %}">
+{% with field=form.choices %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label class="control-label">
       {% translate "Choices:" context "poll form" %}
     </label>
-    <ol class="form-control-poll-choices" max-choices="{{ settings.poll_max_choices }}" misago-poll-choices-control>
-      {% for choice in field.value.values %}
-        <li class="form-control-poll-choices-item">
-          <input type="text" class="form-control" name="{{ field.html_name }}" placeholder="{% translate 'Poll choice...' context 'poll choices control' %}" value="{{ choice.name }}" />
-        </li>
-      {% endfor %}
-      {% if field.value|length < settings.poll_max_choices %}
-        <li class="form-control-poll-choices-item">
-          <input type="text" class="form-control" name="{{ field.html_name }}" placeholder="{% translate 'Poll choice...' context 'poll choices control' %}" value="" />
-        </li>
-      {% endif %}
-    </ol>
+    {{ field }}
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}
     <p class="help-block">
-      {% blocktranslate trimmed count choices=settings.poll_max_choices context "poll choices control" %}
+      <noscript>
+        {% translate "Enter one choice per line." context "poll form" %}
+      </noscript>
+      {% blocktranslate trimmed count choices=field.max_choices context "poll choices control" %}
         You can add up to {{ choices }} choice to a poll.
       {% plural %}
         You can add up to {{ choices }} choices to a poll.
@@ -40,28 +32,6 @@
       {% translate "Blank choices are ignored." context "poll form" %}
     </p>
   </div>
-{% endwith %}
-{% with field=form.choices_text %}
-  <noscript>
-    <div class="form-group{% if field.errors %} has-error{% endif %}">
-      <label class="control-label" for="{{ field.id_for_label }}">
-        {% translate "Choices:" context "poll form" %}
-      </label>
-      <textarea class="form-control field-sizing-content" id="{{ field.id_for_label }}" name="{{ field.html_name }}" rows="4">{{ field.value|default:'' }}</textarea>
-      {% for error in field.errors %}
-        <p class="help-block">{{ error }}</p>
-      {% endfor %}
-      <p class="help-block">
-        {% translate "Enter one choice per line." context "poll form" %}
-        {% blocktranslate trimmed count choices=settings.poll_max_choices context "poll form" %}
-          You can add up to {{ choices }} choice to a poll.
-        {% plural %}
-          You can add up to {{ choices }} choices to a poll.
-        {% endblocktranslate %}
-        {% translate "Blank lines are ignored." context "poll form" %}
-      </p>
-    </div>
-  </noscript>
 {% endwith %}
 {% with field=form.duration %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">

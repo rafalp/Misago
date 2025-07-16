@@ -4,14 +4,12 @@ from django.core.exceptions import ValidationError
 from ..choices import PollChoices
 from ..validators import validate_poll_vote
 
-poll_choices = PollChoices(
-    [
-        {"id": "aa", "name": "first"},
-        {"id": "bb", "name": "second"},
-        {"id": "cc", "name": "third"},
-        {"id": "dd", "name": "fourth"},
-    ]
-)
+poll_choices: PollChoices = [
+    {"id": "aa", "name": "first", "votes": 0},
+    {"id": "bb", "name": "second", "votes": 0},
+    {"id": "cc", "name": "third", "votes": 0},
+    {"id": "dd", "name": "fourth", "votes": 0},
+]
 
 
 def test_validate_poll_vote_passes_valid_choices():
