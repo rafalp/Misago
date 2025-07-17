@@ -1,12 +1,10 @@
-from ..choices import PollChoices
 from ..votes import get_user_poll_votes
 
 
 def test_get_user_poll_votes_returns_set_with_user_poll_vote(
     user, poll, poll_vote_factory
 ):
-    choices = PollChoices(poll.choices)
-    choice_id = choices.ids()[0]
+    choice_id = poll.choices[0]["id"]
 
     poll_vote_factory(poll, user, choice_id)
 
@@ -16,10 +14,8 @@ def test_get_user_poll_votes_returns_set_with_user_poll_vote(
 def test_get_user_poll_votes_returns_set_with_user_poll_votes(
     user, poll, poll_vote_factory
 ):
-    choices = PollChoices(poll.choices)
-
-    choice_id1 = choices.ids()[0]
-    choice_id2 = choices.ids()[-1]
+    choice_id1 = poll.choices[0]["id"]
+    choice_id2 = poll.choices[-1]["id"]
 
     poll_vote_factory(poll, user, choice_id1)
     poll_vote_factory(poll, user, choice_id2)

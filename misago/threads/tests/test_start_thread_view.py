@@ -670,7 +670,7 @@ def test_start_thread_view_displays_poll_form(user_client, default_category):
         ),
     )
     assert_contains(response, "Start new thread")
-    assert_contains(response, "misago-poll-choices-control")
+    assert_contains(response, "m-poll-choices-control")
 
 
 def test_start_thread_view_hides_poll_form_for_user_without_permission(
@@ -686,7 +686,7 @@ def test_start_thread_view_hides_poll_form_for_user_without_permission(
         ),
     )
     assert_contains(response, "Start new thread")
-    assert_not_contains(response, "misago-poll-choices-control")
+    assert_not_contains(response, "m-poll-choices-control")
 
 
 @override_dynamic_settings(enable_public_polls=PublicPollsAvailability.ENABLED)
@@ -723,12 +723,13 @@ def test_start_thread_view_starts_thread_with_poll(user_client, user, default_ca
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
             "posting-poll-question": "What's your mood?",
-            "posting-poll-choices_list": [
+            "posting-poll-choices_0": [
                 "Great",
                 "Okay",
                 "About average",
                 "Sad panda",
             ],
+            "posting-poll-choices_1": "",
             "posting-poll-duration": "30",
             "posting-poll-max_choices": "2",
             "posting-poll-can_change_vote": "1",

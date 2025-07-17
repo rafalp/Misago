@@ -6,7 +6,6 @@ from django.utils.translation import npgettext, pgettext
 
 from ..core.utils import slugify
 from ..parser.parse import ParsingResult
-from ..polls.choices import PollChoices
 from .floodcontrol import flood_control
 from .hooks import (
     validate_post_hook,

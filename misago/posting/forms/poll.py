@@ -27,18 +27,10 @@ class PollForm(StartPollForm, PostingForm):
                 "question", pgettext("form validation", "This field is required.")
             )
 
-        if not choices:
-            if not self.errors.get("choices_text") and not self.errors.get(
-                "choices_list"
-            ):
-                self.add_error(
-                    "choices_text",
-                    pgettext("form validation", "This field is required."),
-                )
-                self.add_error(
-                    "choices_list",
-                    pgettext("form validation", "This field is required."),
-                )
+        if not choices and not self.errors.get("choices"):
+            self.add_error(
+                "choices", pgettext("form validation", "This field is required.")
+            )
 
         return cleaned_data
 

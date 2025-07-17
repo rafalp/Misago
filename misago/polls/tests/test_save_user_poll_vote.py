@@ -1,11 +1,9 @@
-from ..choices import PollChoices
 from ..models import PollVote
 from ..votes import save_user_poll_vote
 
 
 def test_save_user_poll_vote_saves_user_vote(user, poll):
-    poll_choices = PollChoices(poll.choices)
-    choice_id = poll_choices.ids()[0]
+    choice_id = poll.choices[0]["id"]
 
     save_user_poll_vote(user, poll, [choice_id])
 
@@ -25,9 +23,8 @@ def test_save_user_poll_vote_saves_user_vote(user, poll):
 
 
 def test_save_user_poll_vote_saves_multiple_user_votes(user, poll):
-    poll_choices = PollChoices(poll.choices)
-    choice_id1 = poll_choices.ids()[0]
-    choice_id2 = poll_choices.ids()[-1]
+    choice_id1 = poll.choices[0]["id"]
+    choice_id2 = poll.choices[-1]["id"]
 
     save_user_poll_vote(user, poll, [choice_id1, choice_id2])
 

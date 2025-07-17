@@ -66,8 +66,8 @@ def test_poll_form_validation_with_empty_data_passes(rf, dynamic_settings):
         "/",
         {
             "question": "",
-            "choices_text": "",
-            "choices_list": [""],
+            "choices_0": [],
+            "choices_1": "",
             "duration": "",
             "max_choices": "",
         },
@@ -83,8 +83,8 @@ def test_poll_form_validation_requires_choices_if_question_is_set(rf, dynamic_se
         "/",
         {
             "question": "Lorem ipsum",
-            "choices_text": "",
-            "choices_list": [""],
+            "choices_0": [],
+            "choices_1": "",
             "duration": "",
             "max_choices": "",
         },
@@ -94,29 +94,8 @@ def test_poll_form_validation_requires_choices_if_question_is_set(rf, dynamic_se
     form = PollForm(request.POST, request=request)
     assert not form.is_valid()
     assert form.errors == {
-        "choices_text": ["This field is required."],
-        "choices_list": ["This field is required."],
+        "choices": ["This field is required."],
     }
-
-
-def test_poll_form_validation_requires_question_if_choices_text_is_set(
-    rf, dynamic_settings
-):
-    request = rf.post(
-        "/",
-        {
-            "question": "",
-            "choices_text": "Lorem\nIpsum",
-            "choices_list": [""],
-            "duration": "",
-            "max_choices": "",
-        },
-    )
-    request.settings = dynamic_settings
-
-    form = PollForm(request.POST, request=request)
-    assert not form.is_valid()
-    assert form.errors == {"question": ["This field is required."]}
 
 
 def test_poll_form_validation_requires_question_if_choices_list_is_set(
@@ -126,8 +105,8 @@ def test_poll_form_validation_requires_question_if_choices_list_is_set(
         "/",
         {
             "question": "",
-            "choices_text": "",
-            "choices_list": ["Lorem", "Ipsum"],
+            "choices_0": ["Lorem", "Ipsum"],
+            "choices_1": "",
             "duration": "",
             "max_choices": "",
         },
@@ -139,13 +118,15 @@ def test_poll_form_validation_requires_question_if_choices_list_is_set(
     assert form.errors == {"question": ["This field is required."]}
 
 
-def test_poll_form_validation_parses_choices_text(rf, dynamic_settings):
+def test_poll_form_validation_requires_question_if_choices_text_is_set(
+    rf, dynamic_settings
+):
     request = rf.post(
         "/",
         {
-            "question": "Lorem ipsum",
-            "choices_text": "  \n  Lorem  \n  Ipsum  \n  ",
-            "choices_list": [""],
+            "question": "",
+            "choices_0": [],
+            "choices_1": "Lorem\nIpsum",
             "duration": "",
             "max_choices": "",
         },
@@ -153,19 +134,8 @@ def test_poll_form_validation_parses_choices_text(rf, dynamic_settings):
     request.settings = dynamic_settings
 
     form = PollForm(request.POST, request=request)
-    assert form.is_valid()
-    assert form.cleaned_data == {
-        "question": "Lorem ipsum",
-        "choices_text": "Lorem\nIpsum",
-        "choices_list": ANY,
-        "choices": ANY,
-        "duration": None,
-        "max_choices": None,
-        "can_change_vote": False,
-        "is_public": False,
-    }
-
-    assert not form.cleaned_data["choices_list"]
+    assert not form.is_valid()
+    assert form.errors == {"question": ["This field is required."]}
 
 
 def test_poll_form_validation_parses_choices_list(rf, dynamic_settings):
@@ -173,7 +143,8 @@ def test_poll_form_validation_parses_choices_list(rf, dynamic_settings):
         "/",
         {
             "question": "Lorem ipsum",
-            "choices_list": ["Lorem", "", "Ipsum"],
+            "choices_0": ["Lorem", "", "Ipsum"],
+            "choices_1": "",
             "duration": "",
             "max_choices": "",
         },
@@ -184,8 +155,7 @@ def test_poll_form_validation_parses_choices_list(rf, dynamic_settings):
     assert form.is_valid()
     assert form.cleaned_data == {
         "question": "Lorem ipsum",
-        "choices_text": "",
-        "choices_list": ANY,
+        "choices": ANY,
         "choices": ANY,
         "duration": None,
         "max_choices": None,
@@ -193,10 +163,34 @@ def test_poll_form_validation_parses_choices_list(rf, dynamic_settings):
         "is_public": False,
     }
 
-    assert form.cleaned_data["choices_list"].values() == [
-        {"id": None, "name": "Lorem"},
-        {"id": None, "name": "Ipsum"},
-    ]
+    assert form.cleaned_data["choices"].new == ["Lorem", "Ipsum"]
+
+
+def test_poll_form_validation_parses_choices_text(rf, dynamic_settings):
+    request = rf.post(
+        "/",
+        {
+            "question": "Lorem ipsum",
+            "choices_0": [],
+            "choices_1": "  \n  Lorem  \n  Ipsum  \n  ",
+            "duration": "",
+            "max_choices": "",
+        },
+    )
+    request.settings = dynamic_settings
+
+    form = PollForm(request.POST, request=request)
+    assert form.is_valid()
+    assert form.cleaned_data == {
+        "question": "Lorem ipsum",
+        "choices": ANY,
+        "duration": None,
+        "max_choices": None,
+        "can_change_vote": False,
+        "is_public": False,
+    }
+
+    assert form.cleaned_data["choices"].new == ["Lorem", "Ipsum"]
 
 
 def test_poll_form_validation_validates_question(rf, dynamic_settings):
@@ -204,8 +198,8 @@ def test_poll_form_validation_validates_question(rf, dynamic_settings):
         "/",
         {
             "question": "I",
-            "choices_text": "  \n  Lorem  \n  Ipsum  \n  ",
-            "choices_list": [""],
+            "choices_0": [],
+            "choices_1": "  \n  Lorem  \n  Ipsum  \n  ",
             "duration": "",
             "max_choices": "",
         },
@@ -226,8 +220,8 @@ def test_poll_form_validation_validates_choices_text(rf, dynamic_settings):
         "/",
         {
             "question": "Lorem ipsum",
-            "choices_text": "  \n  Lorem  \n    \n  ",
-            "choices_list": [""],
+            "choices_0": [],
+            "choices_1": "  \n  Lorem  \n    \n  ",
             "duration": "",
             "max_choices": "",
         },
@@ -236,7 +230,7 @@ def test_poll_form_validation_validates_choices_text(rf, dynamic_settings):
 
     form = PollForm(request.POST, request=request)
     assert not form.is_valid()
-    assert form.errors == {"choices_text": ["Poll must have at least two choices."]}
+    assert form.errors == {"choices": ["Poll must have at least two choices."]}
 
 
 def test_poll_form_validation_validates_choices_list(rf, dynamic_settings):
@@ -244,8 +238,8 @@ def test_poll_form_validation_validates_choices_list(rf, dynamic_settings):
         "/",
         {
             "question": "Lorem ipsum",
-            "choices_text": "",
-            "choices_list": ["Lorem"],
+            "choices_0": ["Lorem"],
+            "choices_1": "",
             "duration": "",
             "max_choices": "",
         },
@@ -254,4 +248,4 @@ def test_poll_form_validation_validates_choices_list(rf, dynamic_settings):
 
     form = PollForm(request.POST, request=request)
     assert not form.is_valid()
-    assert form.errors == {"choices_list": ["Poll must have at least two choices."]}
+    assert form.errors == {"choices": ["Poll must have at least two choices."]}

@@ -1,10 +1,7 @@
-from datetime import datetime, timedelta
 from typing import Sequence
 
 import pytest
-from django.utils import timezone
 
-from ..polls.choices import PollChoices
 from ..polls.models import Poll, PollVote
 from ..threads.models import Thread
 from .utils import (
@@ -154,10 +151,10 @@ def poll_vote_factory():
             voted_at=factory_timestamp_arg(voted_at),
         )
 
-        choices = PollChoices(poll.choices)
-        choices[choice_id]["votes"] += 1
+        for choice in poll.choices:
+            if choice["id"] == choice_id:
+                choice["votes"] += 1
 
-        poll.choices = choices.json()
         poll.votes += 1
         poll.save()
 

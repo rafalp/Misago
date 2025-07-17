@@ -1,15 +1,23 @@
 import pytest
 from django.core.exceptions import ValidationError
 
-from ..choices import PollChoices
 from ..validators import validate_poll_choices
 
 
 def test_validate_poll_choices_validates_valid_choices():
-    choices = PollChoices.from_str("lorem\nipsum")
-
     validate_poll_choices(
-        choices,
+        [
+            {
+                "id": "aaaaaaaaaaaa",
+                "name": "lorem",
+                "votes": 0,
+            },
+            {
+                "id": "bbbbbbbbbbbb",
+                "name": "ipsum",
+                "votes": 0,
+            },
+        ],
         max_choices=2,
         choice_min_length=1,
         choice_max_length=20,
@@ -17,11 +25,25 @@ def test_validate_poll_choices_validates_valid_choices():
 
 
 def test_validate_poll_choices_raises_validation_error_if_choices_number_is_exceeded():
-    choices = PollChoices.from_str("lorem\nipsum\ndolor")
-
     with pytest.raises(ValidationError) as exc_info:
         validate_poll_choices(
-            choices,
+            [
+                {
+                    "id": "aaaaaaaaaaaa",
+                    "name": "lorem",
+                    "votes": 0,
+                },
+                {
+                    "id": "bbbbbbbbbbbb",
+                    "name": "ipsum",
+                    "votes": 0,
+                },
+                {
+                    "id": "cccccccccccc",
+                    "name": "dolor",
+                    "votes": 0,
+                },
+            ],
             max_choices=2,
             choice_min_length=1,
             choice_max_length=20,
@@ -36,11 +58,25 @@ def test_validate_poll_choices_raises_validation_error_if_choices_number_is_exce
 
 
 def test_validate_poll_choices_raises_validation_error_if_choice_is_too_short():
-    choices = PollChoices.from_str("lorem\nip\ndolor")
-
     with pytest.raises(ValidationError) as exc_info:
         validate_poll_choices(
-            choices,
+            [
+                {
+                    "id": "aaaaaaaaaaaa",
+                    "name": "lorem",
+                    "votes": 0,
+                },
+                {
+                    "id": "bbbbbbbbbbbb",
+                    "name": "ip",
+                    "votes": 0,
+                },
+                {
+                    "id": "cccccccccccc",
+                    "name": "dolor",
+                    "votes": 0,
+                },
+            ],
             max_choices=3,
             choice_min_length=3,
             choice_max_length=20,
@@ -55,11 +91,25 @@ def test_validate_poll_choices_raises_validation_error_if_choice_is_too_short():
 
 
 def test_validate_poll_choices_raises_validation_error_if_choice_is_too_long():
-    choices = PollChoices.from_str("lorem\nipsum\ndolormet")
-
     with pytest.raises(ValidationError) as exc_info:
         validate_poll_choices(
-            choices,
+            [
+                {
+                    "id": "aaaaaaaaaaaa",
+                    "name": "lorem",
+                    "votes": 0,
+                },
+                {
+                    "id": "bbbbbbbbbbbb",
+                    "name": "ipsum",
+                    "votes": 0,
+                },
+                {
+                    "id": "cccccccccccc",
+                    "name": "dolormet",
+                    "votes": 0,
+                },
+            ],
             max_choices=3,
             choice_min_length=3,
             choice_max_length=5,

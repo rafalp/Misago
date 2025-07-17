@@ -6,7 +6,6 @@ from django.utils.translation import pgettext
 
 from ..categories.models import Category
 from ..threads.models import Thread
-from .choices import PollChoices
 from .enums import PublicPollsAvailability
 from .fields import (
     EditPollChoicesField,
@@ -53,13 +52,11 @@ class PollForm(forms.Form):
             )
         return data
 
-    def clean_choices_text(self):
-        data = self.cleaned_data["choices_text"]
-        choices_obj = PollChoices.from_str(data)
-        return choices_obj.inputvalue()
-
     def clean_choices(self) -> PollChoicesFieldValue | None:
         data = self.cleaned_data["choices"]
+        if not data and not self.required:
+            return data
+
         validate_poll_choices(
             data.json(),
             self.request.settings.poll_max_choices,
@@ -76,7 +73,7 @@ class StartPollForm(PollForm):
 
         self.fields["choices"] = PollChoicesField(
             max_choices=settings.poll_max_choices,
-            required=False,
+            required=self.required,
         )
 
         if settings.enable_public_polls == PublicPollsAvailability.ENABLED:

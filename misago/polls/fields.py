@@ -16,7 +16,7 @@ class PollChoicesFieldValue:
 
     def __init__(
         self,
-        choices: PollChoices | None,
+        choices: PollChoices | None = None,
         edit: dict[str, str] | None = None,
         delete: Iterable[str] | None = None,
         new: list[str] | None = None,
@@ -191,7 +191,6 @@ class EditPollChoicesField(PollChoicesField):
             return PollChoicesFieldValue(choices=self.initial.choices)
 
         data_dict = {self.subfields[i]: v for i, v in enumerate(data)}
-        print(data_dict)
 
         return PollChoicesFieldValue(
             choices=self.initial.choices,
