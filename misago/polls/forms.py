@@ -93,12 +93,12 @@ class StartPollForm(PollForm):
 
         return cleaned_data
 
-    def get_poll_instance(
-        self, category: Category, thread: Thread, user: "User", save: bool = False
+    def create_poll_instance(
+        self, category: Category, thread: Thread, user: "User"
     ) -> Poll:
         choices_json = self.cleaned_data["choices"].json()
 
-        poll = Poll(
+        return Poll(
             category=category,
             thread=thread,
             starter=user,
@@ -111,12 +111,6 @@ class StartPollForm(PollForm):
             can_change_vote=self.cleaned_data.get("can_change_vote") or False,
             is_public=self.cleaned_data.get("is_public") or False,
         )
-        if save:
-            poll.save()
-        return poll
-
-    def save(self, category: Category, thread: Thread, user: "User") -> Poll:
-        return self.get_poll_instance(category, thread, user, save=True)
 
 
 class EditPollForm(PollForm):
@@ -143,7 +137,7 @@ class EditPollForm(PollForm):
             required=False,
         )
 
-    def save(self):
+    def update_poll_instance(self) -> Poll:
         choices = self.cleaned_data["choices"]
 
         PollVote.objects.filter(
@@ -159,4 +153,4 @@ class EditPollForm(PollForm):
         self.instance.can_change_vote = self.cleaned_data["can_change_vote"]
         self.instance.votes = PollVote.objects.filter(poll=self.instance).count()
 
-        self.instance.save()
+        return self.instance

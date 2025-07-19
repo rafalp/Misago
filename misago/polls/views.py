@@ -25,6 +25,7 @@ from .delete import delete_thread_poll
 from .enums import PollTemplate, PublicPollsAvailability
 from .forms import EditPollForm, StartPollForm
 from .nexturl import get_next_url
+from .save import edit_thread_poll, save_thread_poll
 from .validators import validate_poll_vote
 from .votes import (
     delete_user_poll_votes,
@@ -68,11 +69,8 @@ class StartThreadPollView(ThreadView):
 
         form = StartPollForm(request.POST, request=request)
         if form.is_valid():
-            poll = form.save(thread.category, thread, request.user)
-            thread.has_poll = True
-            thread.save(update_fields=["has_poll"])
-
-            create_started_poll_thread_update(thread, poll, request.user, request)
+            poll = form.create_poll_instance(thread.category, thread, request.user)
+            save_thread_poll(thread, poll, request.user, request)
 
             messages.success(request, pgettext("start poll", "Poll started"))
             return redirect(
@@ -127,7 +125,8 @@ class EditThreadPollView(ThreadPollView):
     def handle_form(
         self, request: HttpRequest, thread: Thread, poll: Poll, form: EditPollForm
     ) -> HttpResponse:
-        form.save()
+        poll = form.update_poll_instance()
+        edit_thread_poll(thread, poll, request.user, request)
 
         messages.success(request, pgettext("edit poll", "Poll edited"))
 
