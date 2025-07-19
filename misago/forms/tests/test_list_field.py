@@ -1,47 +1,48 @@
 import pytest
 from django.forms import IntegerField, ValidationError
+from django.http import QueryDict
 
 from ..fields import ListField
 
 
-def test_list_field_to_python_returns_value():
+def test_list_field_clean_returns_empty_values():
     field = ListField(strip=False)
-    assert field.to_python(["A", " B ", "", "A", "  "]) == ["A", " B ", "", "A", "  "]
+    assert field.clean(["A", " B ", "", "A", "  "]) == ["A", " B ", "", "A", "  "]
 
 
-def test_list_field_to_python_returns_value_with_whitespaces_stripped():
+def test_list_field_clean_returns_value_with_whitespaces_stripped():
     field = ListField()
-    assert field.to_python(["A", " B ", "", "A", "  "]) == ["A", "B", "A"]
+    assert field.clean(["A", " B ", "", "A", "  "]) == ["A", "B", "A"]
 
 
-def test_list_field_to_python_lowercase_returns_value_lowercased():
+def test_list_field_clean_lowercase_returns_value_lowercased():
     field = ListField(lowercase=True)
-    assert field.to_python(["A", " B ", "", "A", "  "]) == ["a", "b", "a"]
+    assert field.clean(["A", " B ", "", "A", "  "]) == ["a", "b", "a"]
 
 
-def test_list_field_to_python_uppercase_returns_value_uppercased():
+def test_list_field_clean_uppercase_returns_value_uppercased():
     field = ListField(uppercase=True)
-    assert field.to_python(["a", " b ", "", "a", "  "]) == ["A", "B", "A"]
+    assert field.clean(["a", " b ", "", "a", "  "]) == ["A", "B", "A"]
 
 
-def test_list_field_to_python_unique_returns_unique_value():
+def test_list_field_clean_unique_returns_unique_value():
     field = ListField(unique=True)
-    assert field.to_python(["A", " B ", "", " A", "a"]) == ["A", "B", "a"]
+    assert field.clean(["A", " B ", "", " A", "a"]) == ["A", "B", "a"]
 
 
-def test_list_field_to_python_unique_lowercase_returns_unique_lowercase_value():
+def test_list_field_clean_unique_lowercase_returns_unique_lowercase_value():
     field = ListField(unique=True, lowercase=True)
-    assert field.to_python(["A", " B ", "", " A", "a"]) == ["a", "b"]
+    assert field.clean(["A", " B ", "", " A", "a"]) == ["a", "b"]
 
 
-def test_list_field_to_python_unique_uppercase_returns_unique_uppercase_value():
+def test_list_field_clean_unique_uppercase_returns_unique_uppercase_value():
     field = ListField(unique=True, uppercase=True)
-    assert field.to_python(["a", " b ", "", " A", "a"]) == ["A", "B"]
+    assert field.clean(["a", " b ", "", " A", "a"]) == ["A", "B"]
 
 
-def test_list_field_to_python_unique_caseinsensitive_returns_caseinsensitive_value():
+def test_list_field_clean_unique_caseinsensitive_returns_caseinsensitive_value():
     field = ListField(unique=True, case_insensitive=True)
-    assert field.to_python(["a", " B ", "", " A", "a"]) == ["a", "B"]
+    assert field.clean(["a", " B ", "", " A", "a"]) == ["a", "B"]
 
 
 def test_list_field_raises_error_if_lowercase_is_set_with_uppercase():
