@@ -96,6 +96,8 @@ class StartPollForm(PollForm):
     def get_poll_instance(
         self, category: Category, thread: Thread, user: "User", save: bool = False
     ) -> Poll:
+        choices_json = self.cleaned_data["choices"].json()
+
         poll = Poll(
             category=category,
             thread=thread,
@@ -103,9 +105,9 @@ class StartPollForm(PollForm):
             starter_name=user.username,
             starter_slug=user.slug,
             question=self.cleaned_data["question"],
-            choices=self.cleaned_data["choices"].json(),
+            choices=choices_json,
             duration=self.cleaned_data.get("duration") or 0,
-            max_choices=self.cleaned_data.get("max_choices", 1),
+            max_choices=max(self.cleaned_data.get("max_choices", 1), len(choices_json)),
             can_change_vote=self.cleaned_data.get("can_change_vote") or False,
             is_public=self.cleaned_data.get("is_public") or False,
         )
@@ -151,7 +153,9 @@ class EditPollForm(PollForm):
         self.instance.question = self.cleaned_data["question"]
         self.instance.duration = self.cleaned_data["duration"] or 0
         self.instance.choices = choices.json()
-        self.instance.max_choices = self.cleaned_data["max_choices"]
+        self.instance.max_choices = max(
+            self.cleaned_data["max_choices"], len(self.instance.choices)
+        )
         self.instance.can_change_vote = self.cleaned_data["can_change_vote"]
         self.instance.votes = PollVote.objects.filter(poll=self.instance).count()
 

@@ -15,6 +15,7 @@
       action="{% url 'misago:edit-thread-poll' id=thread.id slug=thread.slug %}" method="post"
     >
       {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next_url }}">
       <div class="panel panel-default panel-form">
         <div class="panel-heading">
           <h3 class="panel-title">

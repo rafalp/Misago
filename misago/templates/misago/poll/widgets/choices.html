@@ -5,7 +5,7 @@
       {% for choice in field %}
         <li class="form-control-poll-choices-item">
           <div class="form-control-poll-choices-item-group">
-            <input type="text" class="form-control" name="{{ choice.edit_name }}" placeholder="{% translate 'Poll choice...' context 'poll choices control' %}" value="{{ choice.value }}" />
+            <input type="text" class="form-control" name="{{ choice.edit_name }}" value="{{ choice.value }}" />
             <label class="form-control-poll-choices-delete-item checkbox">
               <input type="checkbox" name="{{ choice.delete_name }}" value="{{ choice.id }}"{% if checked %} checked{% endif %}>
               {% translate "Delete" context "delete poll item" %}
@@ -20,7 +20,7 @@
       {% if choice.strip %}
         <li class="form-control-poll-choices-item" m-poll-new-choice>
           <div class="form-control-poll-choices-item-group">
-            <input type="text" class="form-control" name="{{ field.name }}" placeholder="{% translate 'Poll choice...' context 'poll choices control' %}" value="{{ choice }}" />
+            <input type="text" class="form-control" name="{{ field.name }}" placeholder="{% translate 'New choice...' context 'poll choices control' %}" value="{{ choice }}" />
           </div>
         </li>
       {% endif %}
@@ -28,7 +28,7 @@
     {% if field.value|length < widget.attrs.max_choices %}
       <li class="form-control-poll-choices-item" m-poll-new-choice>
         <div class="form-control-poll-choices-item-group">
-          <input type="text" class="form-control" name="{{ field.name }}" placeholder="{% translate 'Poll choice...' context 'poll choices control' %}" value="" />
+          <input type="text" class="form-control" name="{{ field.name }}" placeholder="{% translate 'New choice...' context 'poll choices control' %}" value="" />
         </div>
       </li>
     {% endif %}

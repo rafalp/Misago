@@ -21,15 +21,27 @@
       <p class="help-block">{{ error }}</p>
     {% endfor %}
     <p class="help-block">
-      <noscript>
-        {% translate "Enter one choice per line." context "poll form" %}
-      </noscript>
-      {% blocktranslate trimmed count choices=field.max_choices context "poll choices control" %}
-        You can add up to {{ choices }} choice to a poll.
-      {% plural %}
-        You can add up to {{ choices }} choices to a poll.
-      {% endblocktranslate %}
-      {% translate "Blank choices are ignored." context "poll form" %}
+      {% if form.instance %}
+        <noscript>
+          {% translate "Enter each new choice on a separate line." context "poll form" %}
+        </noscript>
+        {% blocktranslate trimmed count choices=field.max_choices context "poll choices control" %}
+          Poll can have up to {{ choices }} choice.
+        {% plural %}
+          Poll can have up to {{ choices }} choices.
+        {% endblocktranslate %}
+        {% translate "Blank new choices are ignored." context "poll form" %}
+      {% else %}
+        <noscript>
+          {% translate "Enter one choice per line." context "poll form" %}
+        </noscript>
+        {% blocktranslate trimmed count choices=field.max_choices context "poll choices control" %}
+          You can add up to {{ choices }} choice to a poll.
+        {% plural %}
+          You can add up to {{ choices }} choices to a poll.
+        {% endblocktranslate %}
+        {% translate "Blank choices are ignored." context "poll form" %}
+      {% endif %}
     </p>
   </div>
 {% endwith %}

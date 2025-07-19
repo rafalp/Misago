@@ -66,10 +66,10 @@ class PollChoicesWidget(forms.MultiWidget):
         super().__init__(self.get_widgets())
 
     def get_widgets(self) -> tuple[forms.Widget, ...]:
-        return (
-            ListInput(),
-            ListTextarea(),
-        )
+        return {
+            "new": ListInput(),
+            "new_noscript": ListTextarea(),
+        }
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
@@ -109,29 +109,33 @@ class PollChoicesWidget(forms.MultiWidget):
 
 class EditPollChoicesWidget(PollChoicesWidget):
     def get_widgets(self) -> tuple[forms.Widget, ...]:
-        return (
-            ListInput(),
-            ListTextarea(),
-            DictInput(),
-            ListInput(),
-        )
+        return {
+            "new": ListInput(),
+            "new_noscript": ListTextarea(),
+            "edit": DictInput(),
+            "delete": ListInput(),
+        }
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
 
-        edit = context["widget"]["edit"]
-        delete = context["widget"]["delete"]
+        if not isinstance(value, (list, tuple)):
+            value = self.decompress(value)
+
+        edit_attrs = context["widget"]["edit"]
+        delete_attrs = context["widget"]["delete"]
+
+        _, _, edit, delete = value
 
         choices = []
-        for choice in value.choices:
-            choice_id = choice["id"]
+        for choice_id, choice_name in edit.items():
             choices.append(
                 {
                     "id": choice_id,
-                    "edit_name": f'{edit["name"]}[{choice_id}]',
-                    "delete_name": f'{delete["name"]}',
-                    "value": value.edit.get(choice_id) or choice["name"],
-                    "checked": choice_id in value.delete,
+                    "edit_name": f'{edit_attrs["name"]}[{choice_id}]',
+                    "delete_name": f'{delete_attrs["name"]}',
+                    "value": choice_name,
+                    "checked": choice_id in delete,
                 }
             )
 
@@ -185,6 +189,21 @@ class EditPollChoicesField(PollChoicesField):
             DictField(required=False),
             ListField(required=False),
         )
+
+    def bound_data(self, data, initial):
+        if self.disabled:
+            return initial
+        if not initial:
+            return data
+
+        new, new_noscript, edit, delete = data
+
+        if initial:
+            choices_names = {choice["id"]: choice["name"] for choice in initial.choices}
+            for choice_id, choice_name in edit.items():
+                edit[choice_id] = choice_name or choices_names.get(choice_id, "")
+
+        return [new, new_noscript, edit, delete]
 
     def compress(self, data):
         if not data:

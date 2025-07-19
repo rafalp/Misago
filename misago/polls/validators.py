@@ -114,38 +114,57 @@ def _validate_poll_choices_action(
             },
         )
 
+    errors = []
+
     for name in [choice["name"] for choice in choices]:
         name_length = len(name)
 
-        if name_length < choice_min_length:
-            raise ValidationError(
+        error = None
+        if not name_length:
+            error = ValidationError(
+                message=pgettext(
+                    "poll choices validator", "Edited poll choice can't be empty."
+                ),
+                code="min_length",
+            )
+
+        elif name_length < choice_min_length:
+            error = ValidationError(
                 message=npgettext(
                     "poll choices validator",
-                    "Poll choice should be at least %(limit_value)s character long (it has %(show_value)s).",
-                    "Poll choice should be at least %(limit_value)s characters long (it has %(show_value)s).",
+                    '"%(choice)s": choice should be at least %(limit_value)s character long (it has %(show_value)s).',
+                    '"%(choice)s": choice should be at least %(limit_value)s characters long (it has %(show_value)s).',
                     choice_min_length,
                 ),
                 code="min_length",
                 params={
+                    "choice": name,
                     "limit_value": choice_min_length,
                     "show_value": name_length,
                 },
             )
 
-        if name_length > choice_max_length:
-            raise ValidationError(
+        elif name_length > choice_max_length:
+            error = ValidationError(
                 message=npgettext(
                     "poll choices validator",
-                    "Poll choice cannot exceed %(limit_value)s character (it currently has %(show_value)s).",
-                    "Poll choice cannot exceed %(limit_value)s characters (it currently has %(show_value)s).",
+                    '"%(choice)s": choice cannot exceed %(limit_value)s character long (it has %(show_value)s).',
+                    '"%(choice)s": choice cannot exceed %(limit_value)s characters long (it has %(show_value)s).',
                     choice_max_length,
                 ),
                 code="max_length",
                 params={
+                    "choice": name,
                     "limit_value": choice_max_length,
                     "show_value": name_length,
                 },
             )
+
+        if error:
+            errors.append(error)
+
+    if errors:
+        raise ValidationError(errors, code="choices")
 
 
 def validate_poll_vote(

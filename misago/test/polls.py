@@ -14,7 +14,7 @@ from .utils import (
 
 CHOICES = (
     "Yes",
-    "No",
+    "Nope",
     "Maybe",
     "I don't know",
     "Can you repeat the question",
