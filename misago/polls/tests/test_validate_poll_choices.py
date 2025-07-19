@@ -82,12 +82,9 @@ def test_validate_poll_choices_raises_validation_error_if_choice_is_too_short():
             choice_max_length=20,
         )
 
-    assert str(exc_info.value.message) == (
-        "Poll choice should be at least %(limit_value)s characters long "
-        "(it has %(show_value)s)."
-    )
-    assert exc_info.value.code == "min_length"
-    assert exc_info.value.params == {"limit_value": 3, "show_value": 2}
+    assert exc_info.value.messages == [
+        '"ip": choice should be at least 3 characters long (it has 2).'
+    ]
 
 
 def test_validate_poll_choices_raises_validation_error_if_choice_is_too_long():
@@ -115,9 +112,6 @@ def test_validate_poll_choices_raises_validation_error_if_choice_is_too_long():
             choice_max_length=5,
         )
 
-    assert str(exc_info.value.message) == (
-        "Poll choice cannot exceed %(limit_value)s characters "
-        "(it currently has %(show_value)s)."
-    )
-    assert exc_info.value.code == "max_length"
-    assert exc_info.value.params == {"limit_value": 5, "show_value": 8}
+    assert exc_info.value.messages == [
+        '"dolormet": choice cannot exceed 5 characters (it has 8).'
+    ]

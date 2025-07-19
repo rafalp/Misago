@@ -672,6 +672,34 @@ def test_edit_thread_poll_view_edits_poll_max_choices(
     assert user_poll.max_choices == 3
 
 
+def test_edit_thread_poll_view_overrides_max_choices_with_poll_choices_number(
+    user_client, user_thread, user_poll
+):
+    data = {
+        "question": "Edited question",
+        "duration": str(user_poll.duration),
+        "choices_new": [],
+        "choices_new_noscript": "",
+        "choices_delete": [],
+        "max_choices": "20",
+    }
+
+    for choice in user_poll.choices:
+        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread-poll",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        data,
+    )
+    assert response.status_code == 302
+
+    user_poll.refresh_from_db()
+    assert user_poll.max_choices == 3
+
+
 def test_edit_thread_poll_view_enables_vote_change(user_client, user_thread, user_poll):
     data = {
         "question": "Edited question",

@@ -107,7 +107,7 @@ class StartPollForm(PollForm):
             question=self.cleaned_data["question"],
             choices=choices_json,
             duration=self.cleaned_data.get("duration") or 0,
-            max_choices=max(self.cleaned_data.get("max_choices", 1), len(choices_json)),
+            max_choices=min(self.cleaned_data.get("max_choices", 1), len(choices_json)),
             can_change_vote=self.cleaned_data.get("can_change_vote") or False,
             is_public=self.cleaned_data.get("is_public") or False,
         )
@@ -153,7 +153,7 @@ class EditPollForm(PollForm):
         self.instance.question = self.cleaned_data["question"]
         self.instance.duration = self.cleaned_data["duration"] or 0
         self.instance.choices = choices.json()
-        self.instance.max_choices = max(
+        self.instance.max_choices = min(
             self.cleaned_data["max_choices"], len(self.instance.choices)
         )
         self.instance.can_change_vote = self.cleaned_data["can_change_vote"]

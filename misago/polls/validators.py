@@ -148,8 +148,8 @@ def _validate_poll_choices_action(
             error = ValidationError(
                 message=npgettext(
                     "poll choices validator",
-                    '"%(choice)s": choice cannot exceed %(limit_value)s character long (it has %(show_value)s).',
-                    '"%(choice)s": choice cannot exceed %(limit_value)s characters long (it has %(show_value)s).',
+                    '"%(choice)s": choice cannot exceed %(limit_value)s character (it has %(show_value)s).',
+                    '"%(choice)s": choice cannot exceed %(limit_value)s characters (it has %(show_value)s).',
                     choice_max_length,
                 ),
                 code="max_length",
@@ -164,7 +164,7 @@ def _validate_poll_choices_action(
             errors.append(error)
 
     if errors:
-        raise ValidationError(errors, code="choices")
+        raise ValidationError(errors)
 
 
 def validate_poll_vote(
