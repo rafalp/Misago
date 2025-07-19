@@ -32,7 +32,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetPrivateThreadRepliesPagePostsQuerysetHookAction`
 
-A standard Misago function used to get a queryset used to get posts displayed on the ptivate thread replies page.
+Misago function used to get a queryset used to get posts displayed on the ptivate thread replies page.
 
 See the [action](#action) section for details.
 
@@ -54,7 +54,7 @@ def get_private_thread_replies_page_posts_queryset_action(request: HttpRequest, 
     ...
 ```
 
-A standard Misago function used to get a queryset used to get posts displayed on the private thread replies page.
+Misago function used to get a queryset used to get posts displayed on the private thread replies page.
 
 
 ### Arguments

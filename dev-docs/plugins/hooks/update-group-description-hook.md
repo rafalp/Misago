@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: UpdateGroupDescriptionHookAction`
 
-A standard Misago function used to update an existing user group's description or the next filter function from another plugin.
+Misago function used to update an existing user group's description or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -70,7 +70,7 @@ def update_group_description_action(group: Group, **kwargs) -> Group:
     ...
 ```
 
-A standard Misago function used to update an existing user group's description or the next filter function from another plugin.
+Misago function used to update an existing user group's description or the next filter function from another plugin.
 
 
 ### Arguments

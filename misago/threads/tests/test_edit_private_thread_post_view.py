@@ -114,7 +114,7 @@ def test_edit_private_thread_post_view_displays_error_page_to_user_trying_to_edi
 
     assert_contains(
         response,
-        "You can&#x27;t edit other users posts.",
+        "You can&#x27;t edit other users&#x27; posts.",
         status_code=403,
     )
 

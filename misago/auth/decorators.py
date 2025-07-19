@@ -32,7 +32,7 @@ def _create_login_required_decorator(f: Callable, message: str | None = None):
             return login(
                 request,
                 message=login_message,
-                next=request.get_full_path_info(),
+                next=request.get_full_path(),
             )
 
         return f(request, *args, **kwargs)

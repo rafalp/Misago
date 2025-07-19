@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CanUploadThreadsAttachmentsHookAction`
 
-A standard Misago function that checks if a user has permission to upload attachments in a category.
+Misago function that checks if a user has permission to upload attachments in a category.
 
 See the [action](#action) section for details.
 
@@ -59,7 +59,7 @@ def can_upload_threads_attachments_action(
     ...
 ```
 
-A standard Misago function that checks if a user has permission to upload attachments in a category.
+Misago function that checks if a user has permission to upload attachments in a category.
 
 
 ### Arguments

@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class RenderTokensToPlaintextHookAction(Protocol):
     """
-    A standard Misago function used to convert a token stream into plain text.
+    Misago function used to convert a token stream into plain text.
 
     # Arguments
 
@@ -43,7 +43,7 @@ class RenderTokensToPlaintextHookFilter(Protocol):
 
     ## `action: RenderTokensToPlaintextHookAction`
 
-    A standard Misago function used to convert a token stream into plain text.
+    Misago function used to convert a token stream into plain text.
 
     See the [action](#action) section for details.
 

@@ -1,0 +1,10 @@
+{% load i18n misago_component %}
+<div
+  class="panel panel-default panel-poll"
+  id="misago-htmx-poll"
+  hx-target="#misago-htmx-poll"
+  hx-swap="innerHTML show:none"
+  hx-push-url="false"
+>
+  {% includecomponent poll %}
+</div>

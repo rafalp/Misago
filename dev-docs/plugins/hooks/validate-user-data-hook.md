@@ -36,7 +36,7 @@ Should raise a Django's `ValidationError` if data is invalid.
 
 #### `action: ValidateUserDataHookAction`
 
-A standard Misago function used for filtering the user data, or the next filter function from another plugin.
+Misago function used for filtering the user data, or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -96,7 +96,7 @@ def validate_user_data_action(
     ...
 ```
 
-A standard Misago function used for validating the user data, or the next filter function from another plugin.
+Misago function used for validating the user data, or the next filter function from another plugin.
 
 Should raise a Django's `ValidationError` if data is invalid.
 

@@ -29,7 +29,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CanUploadPrivateThreadsAttachmentsHookAction`
 
-A standard Misago function that checks whether a user has permission to upload attachments in private threads.
+Misago function that checks whether a user has permission to upload attachments in private threads.
 
 See the [action](#action) section for details.
 
@@ -51,7 +51,7 @@ def can_upload_private_threads_attachments_action(permissions: 'UserPermissionsP
     ...
 ```
 
-A standard Misago function that checks whether a user has permission to upload attachments in private threads.
+Misago function that checks whether a user has permission to upload attachments in private threads.
 
 
 ### Arguments

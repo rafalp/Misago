@@ -8,7 +8,7 @@ from ..models import Post
 
 class GetRedirectToPostResponseHookAction(Protocol):
     """
-    A standard Misago function used to get a HTTP redirect response to a post.
+    Misago function used to get a HTTP redirect response to a post.
 
     # Arguments
 
@@ -40,7 +40,7 @@ class GetRedirectToPostResponseHookFilter(Protocol):
 
     ## `action: GetRedirectToPostResponseHookAction`
 
-    A standard Misago function used to get a HTTP redirect response to a post.
+    Misago function used to get a HTTP redirect response to a post.
 
     See the [action](#action) section for details.
 

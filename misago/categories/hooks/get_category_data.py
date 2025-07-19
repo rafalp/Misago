@@ -5,7 +5,7 @@ from ...plugins.hooks import FilterHook
 
 class GetCategoryDataHookAction(Protocol):
     """
-    A standard Misago function used to build a `dict` with category result from queryset's
+    Misago function used to build a `dict` with category result from queryset's
     result.
 
     # Arguments

@@ -8,14 +8,11 @@ from .models import ThreadUpdate
 def hide_thread_update(
     thread_update: ThreadUpdate, request: HttpRequest | None = None
 ) -> bool:
-    return hide_thread_update_hook(
-        _hide_thread_update_action, thread_update, {"is_hidden", "hidden_at"}, request
-    )
+    return hide_thread_update_hook(_hide_thread_update_action, thread_update, request)
 
 
 def _hide_thread_update_action(
     thread_update: ThreadUpdate,
-    update_fields: set[str],
     request: HttpRequest | None = None,
 ) -> bool:
     if thread_update.is_hidden:
@@ -27,9 +24,8 @@ def _hide_thread_update_action(
     if request and request.user.is_authenticated:
         thread_update.hidden_by = request.user
         thread_update.hidden_by_name = request.user.username
-        update_fields.update(("hidden_by", "hidden_by_name"))
 
-    thread_update.save(update_fields=update_fields)
+    thread_update.save()
     return True
 
 
@@ -37,13 +33,12 @@ def unhide_thread_update(
     thread_update: ThreadUpdate, request: HttpRequest | None = None
 ) -> bool:
     return unhide_thread_update_hook(
-        _unhide_thread_update_action, thread_update, {"is_hidden", "hidden_at"}, request
+        _unhide_thread_update_action, thread_update, request
     )
 
 
 def _unhide_thread_update_action(
     thread_update: ThreadUpdate,
-    update_fields: set[str],
     request: HttpRequest | None = None,
 ) -> bool:
     if not thread_update.is_hidden:
@@ -53,8 +48,6 @@ def _unhide_thread_update_action(
     thread_update.hidden_by = None
     thread_update.hidden_by_name = None
     thread_update.hidden_at = None
+    thread_update.save()
 
-    update_fields.update(("hidden_by", "hidden_by_name"))
-
-    thread_update.save(update_fields=update_fields)
     return True

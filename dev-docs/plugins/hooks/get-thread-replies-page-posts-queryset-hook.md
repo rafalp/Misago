@@ -32,7 +32,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetThreadRepliesPagePostsQuerysetHookAction`
 
-A standard Misago function used to get a queryset used to get posts displayed on the thread replies page.
+Misago function used to get a queryset used to get posts displayed on the thread replies page.
 
 See the [action](#action) section for details.
 
@@ -54,7 +54,7 @@ def get_thread_replies_page_posts_queryset_action(request: HttpRequest, thread: 
     ...
 ```
 
-A standard Misago function used to get a queryset used to get posts displayed on the thread replies page.
+Misago function used to get a queryset used to get posts displayed on the thread replies page.
 
 
 ### Arguments

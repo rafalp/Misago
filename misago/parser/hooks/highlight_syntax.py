@@ -5,7 +5,7 @@ from ...plugins.hooks import FilterHook
 
 class HighlightSyntaxHookAction(Protocol):
     """
-    A standard Misago function used to return HTML with highlighted code.
+    Misago function used to return HTML with highlighted code.
 
     # Arguments
 
@@ -33,7 +33,7 @@ class HighlightSyntaxHookFilter(Protocol):
 
     ## `action: HighlightSyntaxHookAction`
 
-    A standard Misago function used to return HTML with highlighted code.
+    Misago function used to return HTML with highlighted code.
 
     See the [action](#action) section for details.
 

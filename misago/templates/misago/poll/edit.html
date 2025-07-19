@@ -1,0 +1,46 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+  {% translate "Edit poll" context "edit poll page" %} | {{ thread }} | {{ settings.forum_name }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-thread page-start-poll">
+  {% include "misago/thread/header.html" %}
+  <div class="container page-container">
+    <form 
+      action="{% url 'misago:edit-thread-poll' id=thread.id slug=thread.slug %}" method="post"
+    >
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next_url }}">
+      <div class="panel panel-default panel-form">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            {% translate "Edit poll" context "edit poll page" %}
+          </h3>
+        </div>
+        <div class="panel-body">
+
+          {% include "misago/poll/form.html" %}
+
+        </div>
+        <div class="panel-footer panel-footer-sticky">
+          <a
+            href="{{ next_url }}"
+            class="btn btn-default"
+            misago-confirm="{% translate 'Cancel edits? Unsaved changes will be lost.' context 'poll edit cancel prompt' %}"
+          >
+            {% translate "Cancel" context "poll footer btn" %}
+          </a>
+          <button class="btn btn-primary" type="submit">
+            {% translate "Save" context "edit poll submit btn" %}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

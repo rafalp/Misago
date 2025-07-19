@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class CheckSeeThreadPostPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if the user has a permission to see
+    Misago function used to check if the user has a permission to see
     a post in a thread. Raises Django's `Http404` if they can't see it or
     `PermissionDenied` with an error message if they can't see it's contents.
 
@@ -50,7 +50,7 @@ class CheckSeeThreadPostPermissionHookFilter(Protocol):
 
     ## `action: CheckSeeThreadPostPermissionHookAction`
 
-    A standard Misago function used to check if the user has a permission to see
+    Misago function used to check if the user has a permission to see
     a post in a thread. Raises Django's `Http404` if they can't see it or
     `PermissionDenied` with an error message if they can't see it's contents.
 

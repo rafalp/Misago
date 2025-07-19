@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetThreadsPageContextDataHookAction`
 
-A standard Misago function used to get the template context data for the threads page.
+Misago function used to get the template context data for the threads page.
 
 See the [action](#action) section for details.
 
@@ -57,7 +57,7 @@ def get_threads_page_context_data_action(request: HttpRequest, kwargs: dict) -> 
     ...
 ```
 
-A standard Misago function used to get the template context data for the threads page.
+Misago function used to get the template context data for the threads page.
 
 
 ### Arguments

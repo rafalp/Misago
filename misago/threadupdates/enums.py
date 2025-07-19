@@ -23,6 +23,11 @@ class ThreadUpdateActionName(StrEnum):
 
     CHANGED_TITLE = "changed_title"
 
+    STARTED_POLL = "started_poll"
+    CLOSED_POLL = "closed_poll"
+    OPENED_POLL = "opened_poll"
+    DELETED_POLL = "deleted_poll"
+
     TOOK_OWNERSHIP = "took_ownership"
     CHANGED_OWNER = "changed_owner"
 

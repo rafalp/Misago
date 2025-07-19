@@ -1,0 +1,116 @@
+{% extends "misago/admin/conf/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Posting" context "admin content settings form" %}</legend>
+
+    {% form_row form.thread_title_length_min %}
+    {% form_row form.thread_title_length_max %}
+    
+    {% form_row form.post_length_min %}
+    {% form_row form.post_length_max %}
+
+    {% form_row form.merge_concurrent_posts %}
+    {% form_row form.flood_control %}
+    
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Attachments" context "admin content settings form" %}</legend>
+    
+    {% form_row form.allowed_attachment_types %}
+
+    {% with field=form.restrict_attachments_extensions select=form.restrict_attachments_extensions_type %}
+      <div class="form-group{% if field.errors or select.errors %} has-error{% endif %}" id="{{ field.id_for_label }}_group">
+        <label for="{{ field.id_for_label }}" class="control-label{% if label_class %} {{ label_class }}{% endif %}">
+          {{ field.label }}:
+        </label>
+        <div>
+          <div class="mb-3">
+            {% form_input select %}
+          </div>
+          {% form_input field %}
+          {% for error in field.errors %}
+            <small class="form-text text-danger font-weight-bold">{{ error }}</small>
+          {% endfor %}
+          {% for error in select.errors %}
+            <small class="form-text text-danger font-weight-bold">{{ error }}</small>
+          {% endfor %}
+          {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+          {% endif %}
+        </div>
+      </div>
+    {% endwith%}
+
+    {% form_row form.allow_private_threads_attachments %}
+    {% form_row form.post_attachments_limit %}
+    {% form_row form.additional_embedded_attachments_limit %}
+    {% form_row form.unused_attachments_storage_limit %}
+    {% form_row form.unused_attachments_lifetime %}
+    {% form_dimensions_row form.attachment_image_max_width form.attachment_image_max_height %}
+    {% form_dimensions_row form.attachment_thumbnail_width form.attachment_thumbnail_height %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Polls" context "admin content settings form" %}</legend>
+    
+    {% form_row form.poll_question_min_length %}
+    {% form_row form.poll_question_max_length %}
+    {% form_row form.poll_max_choices %}
+    {% form_row form.poll_choice_min_length %}
+    {% form_row form.poll_choice_max_length %}
+    {% form_row form.enable_public_polls %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Threads lists" context "admin content settings form" %}</legend>
+    
+    {% form_row form.threads_list_item_categories_component %}
+    {% form_row form.threads_per_page %}
+    {% form_row form.threads_lists_polling %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Main threads page" context "admin content settings form" %}</legend>
+
+    {% form_row form.threads_list_categories_component %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Thread posts" context "admin content settings form" %}</legend>
+    
+    {% form_row form.posts_per_page %}
+    {% form_row form.posts_per_page_orphans %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Thread updates" context "admin content settings form" %}</legend>
+    
+    {% form_row form.thread_updates_per_page %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Read-tracker" context "admin content settings form" %}</legend>
+    
+    {% form_row form.readtracker_cutoff %}
+
+  </fieldset>
+</div>
+{% endblock form-body %}

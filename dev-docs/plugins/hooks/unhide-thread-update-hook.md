@@ -5,10 +5,10 @@ This hook wraps a standard Misago function used to unhide a `ThreadUpdate` objec
 
 ## Location
 
-This hook can be imported from `misago.threads.hooks`:
+This hook can be imported from `misago.threadupdates.hooks`:
 
 ```python
-from misago.threads.hooks import unhide_thread_update_hook
+from misago.threadupdates.hooks import unhide_thread_update_hook
 ```
 
 
@@ -18,7 +18,6 @@ from misago.threads.hooks import unhide_thread_update_hook
 def custom_unhide_thread_update_filter(
     action: UnhideThreadUpdateHookAction,
     thread_update: 'ThreadUpdate',
-    update_fields: set[str],
     request: HttpRequest | None=None,
 ) -> bool:
     ...
@@ -31,17 +30,12 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: UnhideThreadUpdateHookAction`
 
-A standard Misago function used to unhide a `ThreadUpdate` object.
+Misago function used to unhide a `ThreadUpdate` object.
 
 
 #### `thread_update: ThreadUpdate`
 
 A `ThreadUpdate` instance to unhide.
-
-
-#### `update_fields: set[str]`
-
-A `set` of `str` containing the names of fields to pass to the `update(update_fields=...)` option.
 
 
 #### `request: HttpRequest | None = None`
@@ -58,14 +52,12 @@ The request object or `None` if not available.
 
 ```python
 def unhide_thread_update_action(
-    thread_update: 'ThreadUpdate',
-    update_fields: set[str],
-    request: HttpRequest | None=None,
+    thread_update: 'ThreadUpdate', request: HttpRequest | None=None
 ) -> bool:
     ...
 ```
 
-A standard Misago function used to unhide a `ThreadUpdate` object.
+Misago function used to unhide a `ThreadUpdate` object.
 
 
 ### Arguments
@@ -73,11 +65,6 @@ A standard Misago function used to unhide a `ThreadUpdate` object.
 #### `thread_update: ThreadUpdate`
 
 A `ThreadUpdate` instance to unhide.
-
-
-#### `update_fields: set[str]`
-
-A `set` of `str` containing the names of fields to pass to the `update(update_fields=...)` option.
 
 
 #### `request: HttpRequest | None = None`
@@ -104,14 +91,12 @@ from misago.threads.models import ThreadUpdate
 def save_client_ip_on_thread_update_unhide(
     action,
     thread_update: ThreadUpdate,
-    update_fields: set[str],
     request: HttpRequest | None = None,
 ) -> bool:
     if not request:
-        return action(thread_update, update_fields)
+        return action(thread_update)
 
     thread_update.plugin_data["last_ip"] = request.client_ip
-    update_fields.add("plugin_data")
 
-    return action(thread_update, update_fields, request)
+    return action(thread_update, request)
 ```

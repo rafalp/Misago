@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class CheckPostInClosedCategoryPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if the user has permission to
+    Misago function used to check if the user has permission to
     post in a closed category. It raises Django's `PermissionDenied` with an
     error message if category is closed and they can't post in it.
 
@@ -39,7 +39,7 @@ class CheckPostInClosedCategoryPermissionHookFilter(Protocol):
 
     ## `action: CheckPostInClosedCategoryPermissionHookAction`
 
-    A standard Misago function used to check if the user has permission to
+    Misago function used to check if the user has permission to
     post in a closed category. It raises Django's `PermissionDenied` with an
     error message if category is closed and they can't post in it.
 

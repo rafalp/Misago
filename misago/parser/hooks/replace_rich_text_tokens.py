@@ -8,7 +8,7 @@ from ...threads.models import Thread
 
 class ReplaceRichTextTokensHookAction(Protocol):
     """
-    A standard Misago function used to replace rich-text tokens in pre-rendered
+    Misago function used to replace rich-text tokens in pre-rendered
     HTML or the next filter from another plugin.
 
     # Arguments
@@ -51,7 +51,7 @@ class ReplaceRichTextTokensHookFilter(Protocol):
 
     ## `action: ReplaceRichTextTokensHookAction`
 
-    A standard Misago function used to replace rich-text tokens in pre-rendered
+    Misago function used to replace rich-text tokens in pre-rendered
     HTML or the next filter from another plugin.
 
     See the [action](#action) section for details.

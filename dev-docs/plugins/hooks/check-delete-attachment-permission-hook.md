@@ -33,7 +33,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CheckDeleteAttachmentPermissionHookAction`
 
-A standard Misago function used to check if a user has permission to delete an attachment. It raises `PermissionDenied` if they are not allowed to delete it.
+Misago function used to check if a user has permission to delete an attachment. It raises `PermissionDenied` if they are not allowed to delete it.
 
 See the [action](#action) section for details.
 
@@ -76,7 +76,7 @@ def check_delete_attachment_permission_action(
     ...
 ```
 
-A standard Misago function used to check if a user has permission to delete an attachment. It raises `PermissionDenied` if they are not allowed to delete it.
+Misago function used to check if a user has permission to delete an attachment. It raises `PermissionDenied` if they are not allowed to delete it.
 
 
 ### Arguments

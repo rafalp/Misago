@@ -35,7 +35,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CreateParserHookAction`
 
-A standard Misago function used to create a configured MarkdownIt instance or the next filter function from another plugin.
+Misago function used to create a configured MarkdownIt instance or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -85,7 +85,7 @@ def create_parser_action(
     ...
 ```
 
-A standard Misago function used to create a configured MarkdownIt instance or the next filter function from another plugin.
+Misago function used to create a configured MarkdownIt instance or the next filter function from another plugin.
 
 
 ### Arguments

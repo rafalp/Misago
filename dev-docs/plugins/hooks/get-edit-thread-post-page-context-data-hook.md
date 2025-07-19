@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetEditThreadPostPageContextDataHookAction`
 
-A standard Misago function used to get the template context data for the edit thread post page.
+Misago function used to get the template context data for the edit thread post page.
 
 See the [action](#action) section for details.
 
@@ -65,7 +65,7 @@ def get_edit_thread_post_page_context_data_action(
     ...
 ```
 
-A standard Misago function used to get the template context data for the edit thread post page.
+Misago function used to get the template context data for the edit thread post page.
 
 
 ### Arguments

@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CheckStartThreadInCategoryPermissionHookAction`
 
-A standard Misago function used to check if the user has permission to start a new thread in a category. It raises Django's `PermissionDenied` with an error message if they can't start thread in a category.
+Misago function used to check if the user has permission to start a new thread in a category. It raises Django's `PermissionDenied` with an error message if they can't start thread in a category.
 
 See the [action](#action) section for details.
 
@@ -54,7 +54,7 @@ def check_start_thread_permission_action(
     ...
 ```
 
-A standard Misago function used to check if the user has permission to start a new thread in a category. It raises Django's `PermissionDenied` with an error message if they can't start thread in a category.
+Misago function used to check if the user has permission to start a new thread in a category. It raises Django's `PermissionDenied` with an error message if they can't start thread in a category.
 
 
 ### Arguments

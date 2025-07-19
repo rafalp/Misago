@@ -34,7 +34,7 @@ def get_categories_query_values_action(self) -> set[str]:
     ...
 ```
 
-A standard Misago function used to retrieve a set of arguments for the `values` call on the categories queryset.
+Misago function used to retrieve a set of arguments for the `values` call on the categories queryset.
 
 
 ### Return value

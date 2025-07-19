@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CheckSeeCategoryPermissionHookAction`
 
-A standard Misago function used to check if the user has a permission to see a category. Raises Django's `Http404` error if they don't.
+Misago function used to check if the user has a permission to see a category. Raises Django's `Http404` error if they don't.
 
 See the [action](#action) section for details.
 
@@ -54,7 +54,7 @@ def check_see_category_permission_action(
     ...
 ```
 
-A standard Misago function used to check if the user has a permission to see a category. Raises Django's `Http404` error if they don't.
+Misago function used to check if the user has a permission to see a category. Raises Django's `Http404` error if they don't.
 
 
 ### Arguments

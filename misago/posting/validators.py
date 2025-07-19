@@ -20,6 +20,8 @@ if TYPE_CHECKING:
 
 __all__ = [
     "validate_flood_control",
+    "validate_poll_choices",
+    "validate_poll_question",
     "validate_post",
     "validate_posted_contents",
     "validate_thread_title",
@@ -30,7 +32,6 @@ def validate_post(
     value: ParsingResult,
     min_length: int,
     max_length: int,
-    *,
     request: HttpRequest | None = None,
 ):
     validate_post_hook(
@@ -38,7 +39,7 @@ def validate_post(
         value,
         min_length,
         max_length,
-        request=request,
+        request,
     )
 
 
@@ -46,7 +47,6 @@ def _validate_post_action(
     value: ParsingResult,
     min_length: int,
     max_length: int,
-    *,
     request: HttpRequest | None = None,
 ):
     length = len(value.text)
@@ -91,7 +91,6 @@ def validate_thread_title(
     value: str,
     min_length: int,
     max_length: int,
-    *,
     request: HttpRequest | None = None,
 ):
     validate_thread_title_hook(
@@ -107,7 +106,6 @@ def _validate_thread_title_action(
     value: str,
     min_length: int,
     max_length: int,
-    *,
     request: HttpRequest | None = None,
 ):
     length = len(value)

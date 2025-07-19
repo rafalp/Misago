@@ -32,7 +32,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: FilterAccessibleThreadPostsHookAction`
 
-A standard Misago function used to set filters on a queryset of posts from a thread of any type (regular, private, or plugin-specified), limiting it to only the posts that the user can see.
+Misago function used to set filters on a queryset of posts from a thread of any type (regular, private, or plugin-specified), limiting it to only the posts that the user can see.
 
 
 #### `user_permissions: UserPermissionsProxy`
@@ -72,7 +72,7 @@ def filter_accessible_thread_posts_action(
     ...
 ```
 
-A standard Misago function used to set filters on a queryset of posts from a thread of any type (regular, private, or plugin-specified), limiting it to only the posts that the user can see.
+Misago function used to set filters on a queryset of posts from a thread of any type (regular, private, or plugin-specified), limiting it to only the posts that the user can see.
 
 
 ### Arguments

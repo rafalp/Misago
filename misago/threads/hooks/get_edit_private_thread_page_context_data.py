@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class GetEditPrivateThreadPageContextDataHookAction(Protocol):
     """
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the edit private thread page.
 
     # Arguments
@@ -50,7 +50,7 @@ class GetEditPrivateThreadPageContextDataHookFilter(Protocol):
 
     ## `action: GetEditPrivateThreadPageContextDataHookAction`
 
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the edit private thread page.
 
     See the [action](#action) section for details.

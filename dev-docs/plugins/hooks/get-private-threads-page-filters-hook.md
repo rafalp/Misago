@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetPrivateThreadsPageFiltersHookAction`
 
-A standard Misago function used to get available filters for the private threads list.
+Misago function used to get available filters for the private threads list.
 
 See the [action](#action) section for details.
 
@@ -50,7 +50,7 @@ def get_private_threads_page_filters_action(request: HttpRequest) -> list[Thread
     ...
 ```
 
-A standard Misago function used to get available filters for the private threads list.
+Misago function used to get available filters for the private threads list.
 
 
 ### Arguments

@@ -7,7 +7,7 @@ from ...users.models import Group
 
 class BuildUserCategoryPermissionsHookAction(Protocol):
     """
-    A standard Misago function used to get user category permissions.
+    Misago function used to get user category permissions.
 
     # Arguments
 
@@ -50,7 +50,7 @@ class BuildUserCategoryPermissionsHookFilter(Protocol):
 
     ## `action: BuildUserCategoryPermissionsHookAction`
 
-    A standard Misago function used to build user category permissions or the next
+    Misago function used to build user category permissions or the next
     filter function from another plugin.
 
     See the [action](#action) section for details.

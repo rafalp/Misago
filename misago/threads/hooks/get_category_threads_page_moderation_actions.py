@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class GetCategoryThreadsPageModerationActionsHookAction(Protocol):
     """
-    A standard Misago function used to get available moderation actions for
+    Misago function used to get available moderation actions for
     a category's threads list.
 
     # Arguments
@@ -44,7 +44,7 @@ class GetCategoryThreadsPageModerationActionsHookFilter(Protocol):
 
     ## `action: GetCategoryThreadsPageModerationActionsHookAction`
 
-    A standard Misago function used to get available filters for
+    Misago function used to get available filters for
     a category's threads list.
 
     See the [action](#action) section for details.

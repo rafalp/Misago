@@ -10,7 +10,7 @@ from ..models import Thread
 
 class GetThreadUrlHookAction(Protocol):
     """
-    A standard Misago function used to retrieve a thread URL based on its category type.
+    Misago function used to retrieve a thread URL based on its category type.
 
     # Arguments
 
@@ -42,7 +42,7 @@ class GetThreadUrlHookFilter(Protocol):
 
     ## `action: GetThreadUrlHookAction`
 
-    A standard Misago function used to retrieve a thread URL based on its category type.
+    Misago function used to retrieve a thread URL based on its category type.
 
     See the [action](#action) section for details.
 

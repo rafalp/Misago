@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class GetStartThreadPageContextDataHookAction(Protocol):
     """
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the start thread page.
 
     # Arguments
@@ -49,7 +49,7 @@ class GetStartThreadPageContextDataHookFilter(Protocol):
 
     ## `action: GetStartThreadPageContextDataHookAction`
 
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the start thread page.
 
     See the [action](#action) section for details.

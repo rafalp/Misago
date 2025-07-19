@@ -7,7 +7,7 @@ from ...plugins.hooks import FilterHook
 
 class GetThreadsPageThreadsHookAction(Protocol):
     """
-    A standard Misago function used to get the complete threads data for the threads page.
+    Misago function used to get the complete threads data for the threads page.
     Returns a `dict` that is included in the template context under the `threads` key.
 
     # Arguments
@@ -36,7 +36,7 @@ class GetThreadsPageThreadsHookFilter(Protocol):
 
     ## `action: GetThreadsPageThreadsHookAction`
 
-    A standard Misago function used to get the complete threads data for the threads page.
+    Misago function used to get the complete threads data for the threads page.
     Returns a `dict` that is included in the template context under the `threads` key.
 
     See the [action](#action) section for details.

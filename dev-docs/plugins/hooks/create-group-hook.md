@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CreateGroupHookAction`
 
-A standard Misago function used for creating a new user group or the next filter function from another plugin.
+Misago function used for creating a new user group or the next filter function from another plugin.
 
 See the [action](#action) section for details.
 
@@ -67,7 +67,7 @@ def create_group_action(**kwargs) -> Group:
     ...
 ```
 
-A standard Misago function used for creating a new user group or the next filter function from another plugin.
+Misago function used for creating a new user group or the next filter function from another plugin.
 
 
 ### Arguments

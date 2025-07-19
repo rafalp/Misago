@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class CheckDeleteAttachmentPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if a user has permission to
+    Misago function used to check if a user has permission to
     delete an attachment. It raises `PermissionDenied` if they are not allowed
     to delete it.
 
@@ -56,7 +56,7 @@ class CheckDeleteAttachmentPermissionHookFilter(Protocol):
 
     ## `action: CheckDeleteAttachmentPermissionHookAction`
 
-    A standard Misago function used to check if a user has permission to
+    Misago function used to check if a user has permission to
     delete an attachment. It raises `PermissionDenied` if they are not allowed
     to delete it.
 

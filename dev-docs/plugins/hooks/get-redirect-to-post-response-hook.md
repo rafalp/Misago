@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetRedirectToPostResponseHookAction`
 
-A standard Misago function used to get a HTTP redirect response to a post.
+Misago function used to get a HTTP redirect response to a post.
 
 See the [action](#action) section for details.
 
@@ -57,7 +57,7 @@ def get_redirect_to_post_response_action(request: HttpRequest, post: Post) -> Ht
     ...
 ```
 
-A standard Misago function used to get a HTTP redirect response to a post.
+Misago function used to get a HTTP redirect response to a post.
 
 
 ### Arguments

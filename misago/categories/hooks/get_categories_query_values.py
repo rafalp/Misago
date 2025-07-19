@@ -5,7 +5,7 @@ from ...plugins.hooks import FilterHook
 
 class GetCategoriesQueryValuesHookAction(Protocol):
     """
-    A standard Misago function used to retrieve a set of arguments for the `values`
+    Misago function used to retrieve a set of arguments for the `values`
     call on the categories queryset.
 
     # Return value

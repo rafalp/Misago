@@ -1,0 +1,7 @@
+{% load misago_component %}
+
+<div hx-swap-oob="beforeend:.posts-feed-inner">
+  {% for item in feed.items %}
+    {% includecomponent item %}
+  {% endfor %}
+</div>

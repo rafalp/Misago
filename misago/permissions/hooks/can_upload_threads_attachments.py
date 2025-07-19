@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class CanUploadThreadsAttachmentsHookAction(Protocol):
     """
-    A standard Misago function that checks if a user has permission to upload
+    Misago function that checks if a user has permission to upload
     attachments in a category.
 
     # Arguments
@@ -42,7 +42,7 @@ class CanUploadThreadsAttachmentsHookFilter(Protocol):
 
     ## `action: CanUploadThreadsAttachmentsHookAction`
 
-    A standard Misago function that checks if a user has permission to upload
+    Misago function that checks if a user has permission to upload
     attachments in a category.
 
     See the [action](#action) section for details.

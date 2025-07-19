@@ -6,7 +6,7 @@ from ...threads.models import Post
 
 class UpgradePostCodeBlocksHookAction(Protocol):
     """
-    A standard Misago function used to upgrade a post's code blocks or the next
+    Misago function used to upgrade a post's code blocks or the next
     filter function from another plugin.
 
     # Arguments
@@ -25,7 +25,7 @@ class UpgradePostCodeBlocksHookFilter(Protocol):
 
     # Arguments
 
-    A standard Misago function used to upgrade a post's code blocks or the next
+    Misago function used to upgrade a post's code blocks or the next
     filter function from another plugin.
 
     See the [action](#action) section for details.

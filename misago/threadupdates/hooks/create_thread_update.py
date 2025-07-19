@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class CreateThreadUpdateHookAction(Protocol):
     """
-    A standard Misago function used to create a `ThreadUpdate` object.
+    Misago function used to create a `ThreadUpdate` object.
 
     # Arguments
 
@@ -80,7 +80,7 @@ class CreateThreadUpdateHookFilter(Protocol):
 
     ## `action: CreateThreadUpdateHookAction`
 
-    A standard Misago function used to create a `ThreadUpdate` object.
+    Misago function used to create a `ThreadUpdate` object.
 
     ## `thread: Thread`
 

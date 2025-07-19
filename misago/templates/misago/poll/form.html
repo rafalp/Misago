@@ -1,0 +1,99 @@
+{% load i18n misago_forms %}
+
+{% with field=form.question %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Question:" context "poll form" %}
+    </label>
+    <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }} />
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endwith %}
+{% with field=form.choices %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label">
+      {% translate "Choices:" context "poll form" %}
+    </label>
+    {{ field }}
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+    <p class="help-block">
+      {% if form.instance %}
+        <noscript>
+          {% translate "Enter each new choice on a separate line." context "poll form" %}
+        </noscript>
+        {% blocktranslate trimmed count choices=field.max_choices context "poll choices control" %}
+          Poll can have up to {{ choices }} choice.
+        {% plural %}
+          Poll can have up to {{ choices }} choices.
+        {% endblocktranslate %}
+        {% translate "Blank new choices are ignored." context "poll form" %}
+      {% else %}
+        <noscript>
+          {% translate "Enter one choice per line." context "poll form" %}
+        </noscript>
+        {% blocktranslate trimmed count choices=field.max_choices context "poll choices control" %}
+          You can add up to {{ choices }} choice to a poll.
+        {% plural %}
+          You can add up to {{ choices }} choices to a poll.
+        {% endblocktranslate %}
+        {% translate "Blank choices are ignored." context "poll form" %}
+      {% endif %}
+    </p>
+  </div>
+{% endwith %}
+{% with field=form.duration %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Duration:" context "poll form" %}
+    </label>
+    <div class="input-group" style="max-width: 160px;">
+      <input type="number" class="form-control" min="{{ field.field.min_value }}" max="{{ field.field.max_value }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" />
+      <div class="input-group-addon">{% translate "days" context "poll form duration" %}</div>
+    </div>
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+    <p class="help-block">{% translate "Enter 0 or leave empty to keep the poll open indefinitely." context "poll form" %}</p>
+  </div>
+{% endwith %}
+{% with field=form.max_choices %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Maximum choices per vote:" context "poll form" %}
+    </label>
+    <input type="number" class="form-control" min="{{ field.field.min_value }}" id="{{ field.id_for_label }}" style="width: 80px;" name="{{ field.html_name }}" value="{{ field.value|default:'1' }}" />
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+    <p class="help-block">{% translate "Set how many choices each voter is allowed to pick." context "poll form" %}</p>
+  </div>
+{% endwith %}
+<div class="form-group">
+  <label class="control-label">
+    {% translate "Options:" context "poll form" %}
+  </label>
+  <div>
+    {% with field=form.can_change_vote %}
+      <div class="form-control-checkbox-inline">
+        <label>
+          <input type="checkbox" name="{{ field.html_name }}" value="1"{% if field.value %} checked{% endif %}>
+          {% translate "Allow vote change" context "poll form" %}
+        </label>
+      </div>
+    {% endwith %}
+    {% if form.is_public %}
+      {% with field=form.is_public %}
+        <div class="form-control-checkbox-inline">
+          <label>
+            <input type="checkbox" name="{{ field.html_name }}" value="1"{% if field.value %} checked{% endif %}>
+            {% translate "Make votes visible to others" context "poll form" %}
+          </label>
+        </div>
+      {% endwith %}
+    {% endif %}
+  </div>
+</div>

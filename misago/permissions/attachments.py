@@ -176,7 +176,7 @@ def _check_delete_attachment_permission_action(
             raise PermissionDenied(
                 pgettext(
                     "attachment permission error",
-                    "You can't delete other users attachments.",
+                    "You can't delete other users' attachments.",
                 )
             )
 
