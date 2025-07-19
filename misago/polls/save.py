@@ -22,7 +22,9 @@ def _edit_thread_poll_action(
     thread: Thread, poll: Poll, user: "User", request: HttpRequest | None = None
 ) -> None:
     choices_ids = [choice["id"] for choice in poll.choices]
-    deleted_votes = PollVote.objects.filter(poll=poll).exclude(choice_id__in=choices_ids).delete()
+    deleted_votes = (
+        PollVote.objects.filter(poll=poll).exclude(choice_id__in=choices_ids).delete()
+    )
     if deleted_votes:
         poll.votes = PollVote.objects.filter(poll=poll).count()
 

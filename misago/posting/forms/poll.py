@@ -38,7 +38,9 @@ class PollForm(StartPollForm, PostingForm):
         if not (self.cleaned_data.get("question") and self.cleaned_data.get("choices")):
             return
 
-        state.set_poll(self.get_poll_instance(state.category, state.thread, state.user))
+        state.set_poll(
+            self.create_poll_instance(state.category, state.thread, state.user)
+        )
 
 
 def create_poll_form(request: HttpRequest) -> PollForm:
