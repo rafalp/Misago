@@ -536,6 +536,114 @@ def test_edit_thread_poll_view_adds_new_choices_using_noscript_ui(
     ]
 
 
+def test_edit_thread_poll_view_defaults_to_new_choices_if_both_new_and_new_noscript_are_set(
+    user_client, user_thread, user_poll
+):
+    data = {
+        "question": "Edited question",
+        "duration": str(user_poll.duration),
+        "choices_new": ["New", "Another"],
+        "choices_new_noscript": "Lorem\nIpsum",
+        "choices_delete": [],
+        "max_choices": "1",
+    }
+
+    for votes, choice in enumerate(user_poll.choices):
+        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        choice["votes"] = votes
+
+    user_poll.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread-poll",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        data,
+    )
+    assert response.status_code == 302
+
+    user_poll.refresh_from_db()
+    assert user_poll.choices == [
+        {
+            "id": "choice1",
+            "name": "Yes",
+            "votes": 0,
+        },
+        {
+            "id": "choice2",
+            "name": "Nope",
+            "votes": 1,
+        },
+        {
+            "id": "choice3",
+            "name": "Maybe",
+            "votes": 2,
+        },
+        {
+            "id": ANY,
+            "name": "New",
+            "votes": 0,
+        },
+        {
+            "id": ANY,
+            "name": "Another",
+            "votes": 0,
+        },
+    ]
+
+
+def test_edit_thread_poll_view_changes_deletes_and_adds_poll_choices(
+    user_client, user_thread, user_poll
+):
+    data = {
+        "question": "Edited question",
+        "duration": str(user_poll.duration),
+        "choices_new": ["New"],
+        "choices_new_noscript": "",
+        "choices_delete": ["choice3"],
+        "max_choices": "1",
+    }
+
+    for votes, choice in enumerate(user_poll.choices):
+        if votes == 1:
+            data[f'choices_edit[{choice["id"]}]'] = "Edited " + choice["name"]
+        else:
+            data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+
+        choice["votes"] = votes
+
+    user_poll.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread-poll",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        data,
+    )
+    assert response.status_code == 302
+
+    user_poll.refresh_from_db()
+    assert user_poll.choices == [
+        {
+            "id": "choice1",
+            "name": "Yes",
+            "votes": 0,
+        },
+        {
+            "id": "choice2",
+            "name": "Edited Nope",
+            "votes": 1,
+        },
+        {
+            "id": ANY,
+            "name": "New",
+            "votes": 0,
+        },
+    ]
+
+
 def test_edit_thread_poll_view_edits_poll_max_choices(
     user_client, user_thread, user_poll
 ):
