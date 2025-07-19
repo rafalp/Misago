@@ -723,13 +723,13 @@ def test_start_thread_view_starts_thread_with_poll(user_client, user, default_ca
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
             "posting-poll-question": "What's your mood?",
-            "posting-poll-choices_0": [
+            "posting-poll-choices_new": [
                 "Great",
                 "Okay",
                 "About average",
                 "Sad panda",
             ],
-            "posting-poll-choices_1": "",
+            "posting-poll-choices_new_noscript": "",
             "posting-poll-duration": "30",
             "posting-poll-max_choices": "2",
             "posting-poll-can_change_vote": "1",
