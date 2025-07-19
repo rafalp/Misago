@@ -5,29 +5,29 @@ from django.core.exceptions import ValidationError
 from ..fields import DictField
 
 
-def test_dict_field_to_python_raises_validation_error_if_type_is_wrong():
+def test_dict_field_clean_raises_validation_error_if_type_is_wrong():
     field = DictField()
 
     with pytest.raises(ValidationError) as exc_info:
-        field.to_python("invalid")
+        field.clean("invalid")
 
     assert exc_info.value.message == "Enter a dict."
     assert exc_info.value.code == "invalid_dict"
 
 
-def test_dict_field_to_python_strips_keys_whitespace():
+def test_dict_field_clean_strips_keys_whitespace():
     field = DictField()
-    assert field.to_python({"  a  ": "1"}) == {"a": "1"}
+    assert field.clean({"  a  ": "1"}) == {"a": "1"}
 
 
-def test_dict_field_to_python_strips_values_whitespace():
+def test_dict_field_clean_strips_values_whitespace():
     field = DictField()
-    assert field.to_python({"a": "  1  "}) == {"a": "1"}
+    assert field.clean({"a": "  1  "}) == {"a": "1"}
 
 
-def test_dict_field_to_python_doesnt_strip_values_whitespace():
+def test_dict_field_clean_doesnt_strip_values_whitespace():
     field = DictField(strip=False)
-    assert field.to_python({"a": "  1  "}) == {"a": "  1  "}
+    assert field.clean({"a": "  1  "}) == {"a": "  1  "}
 
 
 def test_dict_field_clean_coerces_keys():
