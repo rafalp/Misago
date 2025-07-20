@@ -82,7 +82,7 @@
               title="{{ poll.ends_at|date:'DATETIME_FORMAT' }}"
               misago-timestamp="{{ poll.ends_at.isoformat }}"
             >
-            {{ poll.ends_at|date_relative }}
+              {{ poll.ends_at|date_relative }}
             </span>
           {% endcapture %}
           {% blocktrans trimmed with timestamp=poll_end|safe context "poll info" %}

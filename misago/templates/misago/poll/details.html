@@ -1,43 +1,59 @@
-{% load i18n misago_capture %}
+{% load i18n misago_capture misago_formats %}
 {% capture trimmed as dropdown_menu %}
-  <ul class="dropdown-menu dropdown-menu-right">
-    <li class="dropdown-subheader">{% translate "Poll starter" context "poll details dropdown" %}</li>
-    <li>
+  <div class="dropdown-menu dropdown-menu-right">
+    <div class="dropdown-subheader">{% translate "Started" context "poll details dropdown" %}</div>
+    <div class="dropdown-menu-item-body poll-details-info">
       {% if poll.starter_id %}
-        <a href="{% url 'misago:user' pk=poll.starter_id slug=poll.starter_slug %}">{{ poll.starter_name }}</a>
+        <a href="{% url 'misago:user' pk=poll.starter_id slug=poll.starter_slug %}" class="item-title">{{ poll.starter_name }}</a>
       {% else %}
-        {{ poll.starter_name }}
+        <span class="item-title">{{ poll.starter_name }}</span>
       {% endif %}
-      &bull;
-      {{ poll.started_at }}
-    </li>
+      <span class="poll-details-separator">&bull;</span>
+      <span
+        class="poll-details-timestamp"
+        title="{{ poll.started_at|date:'DATETIME_FORMAT' }}"
+        misago-timestamp="{{ poll.started_at.isoformat }}"
+        misago-timestamp-format="short"
+      >
+        {{ poll.started_at|date_relative }}
+      </span>
+    </div>
     {% if poll.is_closed and poll.closed_by_name %}
-      <li class="dropdown-subheader">{% translate "Closed by" context "poll details dropdown" %}</li>
-      <li>
+      <div class="divider"></div>
+      <div class="dropdown-subheader">{% translate "Closed" context "poll details dropdown" %}</div>
+      <div class="dropdown-menu-item-body poll-details-info">
         {% if poll.closed_by_id and poll.closed_by_slug %}
-          <a href="{% url 'misago:user' pk=poll.closed_by_id slug=poll.closed_by_slug %}">{{ poll.closed_by_name }}</a>
+          <a href="{% url 'misago:user' pk=poll.closed_by_id slug=poll.closed_by_slug %}" class="item-title">{{ poll.closed_by_name }}</a>
         {% else %}
-          {{ poll.closed_by_name }}
+          <span class="item-title">{{ poll.closed_by_name }}</span>
         {% endif %}
-        &bull;
-        {{ poll.closed_at }}
-      </li>
+        <span class="poll-details-separator">&bull;</span>
+        <span
+          class="poll-details-timestamp"
+          title="{{ poll.closed_at|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ poll.closed_at.isoformat }}"
+          misago-timestamp-format="short"
+        >
+          {{ poll.closed_at|date_relative }}
+        </span>
+      </div>
     {% endif %}
     {% if allow_edit or allow_close or allow_open or allow_delete %}
-      <li class="dropdown-subheader">{% translate "Options" context "poll details dropdown" %}</li>
+      <div class="divider poll-details-option"></div>
+      <div class="dropdown-subheader poll-details-option">{% translate "Options" context "poll details dropdown" %}</div>
     {% endif %}
     {% if allow_edit %}
-      <li>
+      <div class="dropdown-menu-item poll-details-option">
         <a href="{{ edit_url }}"
           class="btn btn-link"
           hx-boost="true"
         >
           {% translate "Edit" context "poll options btn" %}
         </a>
-      </li>
+      </div>
     {% endif %}
     {% if allow_close %}
-      <li>
+      <div class="dropdown-menu-item" poll-details-option>
         <form action="{{ close_url }}" method="POST" hx-boost="true">
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ next_url }}">
@@ -45,30 +61,30 @@
             {% translate "Close" context "poll options btn" %}
           </button>
         </form>
-      </li>
+      </div>
     {% elif allow_open %}
-      <li>
+      <div class="poll-details-option">
         <form action="{{ open_url }}" method="POST" hx-boost="true">
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ next_url }}">
-          <button class="btn btn-link">
+          <button class="btn btn-link dropdown-menu-btn">
             {% translate "Open" context "poll options btn" %}
           </button>
         </form>
-      </li>
+      </div>
     {% endif %}
     {% if allow_delete %}
-      <li>
+      <div class="poll-details-option">
         <form action="{{ delete_url }}" method="POST" misago-confirm="{% translate 'Delete this poll?' context 'poll delete confirmation' %}">
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ next_url }}">
-          <button class="btn btn-link">
+          <button class="btn btn-link dropdown-menu-btn">
             {% translate "Delete" context "poll options btn" %}
           </button>
         </form>
-      </li>
+      </div>
     {% endif %}
-  </ul>
+  </div>
 {% endcapture %}
 <div class="dropdown d-js-block">
   <button class="btn btn-link btn-icon btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
