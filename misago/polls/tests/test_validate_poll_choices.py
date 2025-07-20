@@ -115,3 +115,31 @@ def test_validate_poll_choices_raises_validation_error_if_choice_is_too_long():
     assert exc_info.value.messages == [
         '"dolormet": choice cannot exceed 5 characters (it has 8).'
     ]
+
+
+def test_validate_poll_choices_skips_duplicate_errors():
+    with pytest.raises(ValidationError) as exc_info:
+        validate_poll_choices(
+            [
+                {
+                    "id": "aaaaaaaaaaaa",
+                    "name": "",
+                    "votes": 0,
+                },
+                {
+                    "id": "bbbbbbbbbbbb",
+                    "name": "",
+                    "votes": 0,
+                },
+                {
+                    "id": "cccccccccccc",
+                    "name": "dolor",
+                    "votes": 0,
+                },
+            ],
+            max_choices=3,
+            choice_min_length=3,
+            choice_max_length=10,
+        )
+
+    assert exc_info.value.messages == ["Edited poll choice can't be empty."]
