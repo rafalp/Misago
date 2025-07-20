@@ -200,29 +200,35 @@ class EditPollChoicesField(PollChoicesField):
             ListField(required=False),
         )
 
-    def bound_data(self, data, initial):
+    def bound_data(self, data: list | None, initial: PollChoicesValue | None):
         if self.disabled:
-            return initial
+            if initial:
+                edit = {choice["id"]: choice["name"] for choice in initial.choices}
+                return [initial.new, initial.new, edit, initial.delete]
+            return [[], [], {}, set()]
+
         if not initial:
             return data
 
         new, new_noscript, edit, delete = data
 
-        if initial:
-            choices_names = {choice["id"]: choice["name"] for choice in initial.choices}
-            for choice_id, choice_name in edit.items():
-                edit[choice_id] = choice_name or choices_names.get(choice_id, "")
+        final_edit = {choice["id"]: choice["name"] for choice in initial.choices}
+        for choice_id, choice_name in edit.items():
+            if choice_id in final_edit and choice_name:
+                final_edit[choice_id] = choice_name
 
-        return [new, new_noscript, edit, delete]
+        return [new, new_noscript, final_edit, delete]
 
     def compress(self, data):
+        choices = self.initial.choices if self.initial else None
+
         if not data:
-            return PollChoicesValue(choices=self.initial.choices)
+            return PollChoicesValue(choices=choices)
 
         data_dict = {self.subfields[i]: v for i, v in enumerate(data)}
 
         return PollChoicesValue(
-            choices=self.initial.choices,
+            choices=choices,
             new=data_dict["new"] or data_dict["new_noscript"],
             edit=data_dict["edit"],
             delete=data_dict["delete"],

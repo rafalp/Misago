@@ -8,7 +8,7 @@ def test_poll_choices_field_widget_attrs_returns_max_choices():
     assert field.widget_attrs(None) == {"max_choices": 10}
 
 
-def test_poll_choices_field_compress_returns_empty_poll_choices_value_from_None():
+def test_poll_choices_field_compress_returns_empty_poll_choices_value_from_bone():
     field = PollChoicesField(max_choices=10)
     value = field.compress(None)
 
