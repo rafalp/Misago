@@ -43,9 +43,9 @@
       <div class="dropdown-subheader poll-details-option">{% translate "Options" context "poll details dropdown" %}</div>
     {% endif %}
     {% if allow_edit %}
-      <div class="dropdown-menu-item poll-details-option">
+      <div class="poll-details-option">
         <a href="{{ edit_url }}"
-          class="btn btn-link"
+          class="btn btn-link dropdown-menu-btn"
           hx-boost="true"
         >
           {% translate "Edit" context "poll options btn" %}
@@ -53,11 +53,11 @@
       </div>
     {% endif %}
     {% if allow_close %}
-      <div class="dropdown-menu-item" poll-details-option>
+      <div class="poll-details-option" poll-details-option>
         <form action="{{ close_url }}" method="POST" hx-boost="true">
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ next_url }}">
-          <button class="btn btn-link">
+          <button class="btn btn-link dropdown-menu-btn">
             {% translate "Close" context "poll options btn" %}
           </button>
         </form>
