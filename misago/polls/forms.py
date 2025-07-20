@@ -10,7 +10,7 @@ from .enums import PublicPollsAvailability
 from .fields import (
     EditPollChoicesField,
     PollChoicesField,
-    PollChoicesFieldValue,
+    PollChoicesValue,
 )
 from .models import Poll, PollVote
 from .validators import validate_poll_choices, validate_poll_question
@@ -52,7 +52,7 @@ class PollForm(forms.Form):
             )
         return data
 
-    def clean_choices(self) -> PollChoicesFieldValue | None:
+    def clean_choices(self) -> PollChoicesValue | None:
         data = self.cleaned_data["choices"]
         if not data and not self.required:
             return data
@@ -132,7 +132,7 @@ class EditPollForm(PollForm):
         super().setup_form_fields(settings)
 
         self.fields["choices"] = EditPollChoicesField(
-            initial=PollChoicesFieldValue(choices=self.instance.choices),
+            initial=PollChoicesValue(choices=self.instance.choices),
             max_choices=settings.poll_max_choices,
             required=False,
         )

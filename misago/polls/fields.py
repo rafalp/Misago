@@ -8,11 +8,13 @@ from ..forms.widgets import DictInput, ListInput, ListTextarea
 from .choices import PollChoices
 
 
-class PollChoicesFieldValue:
+class PollChoicesValue:
     choices: PollChoices
     edit: dict[str, str]
     delete: set[str]
     new: list[str]
+
+    __slots__ = ("choices", "edit", "delete", "new")
 
     def __init__(
         self,
@@ -99,7 +101,7 @@ class PollChoicesWidget(forms.MultiWidget):
 
         return context
 
-    def decompress(self, value: PollChoicesFieldValue | None):
+    def decompress(self, value: PollChoicesValue | None):
         if value:
             edit_names = {choice["id"]: choice["name"] for choice in value.choices}
             return [value.new, value.new, edit_names, value.delete]
@@ -168,10 +170,10 @@ class PollChoicesField(forms.MultiValueField):
 
     def compress(self, data):
         if not data:
-            return PollChoicesFieldValue()
+            return PollChoicesValue()
 
         data_dict = {self.subfields[i]: v for i, v in enumerate(data)}
-        return PollChoicesFieldValue(
+        return PollChoicesValue(
             new=data_dict["new"] or data_dict["new_noscript"],
         )
 
@@ -207,11 +209,11 @@ class EditPollChoicesField(PollChoicesField):
 
     def compress(self, data):
         if not data:
-            return PollChoicesFieldValue(choices=self.initial.choices)
+            return PollChoicesValue(choices=self.initial.choices)
 
         data_dict = {self.subfields[i]: v for i, v in enumerate(data)}
 
-        return PollChoicesFieldValue(
+        return PollChoicesValue(
             choices=self.initial.choices,
             new=data_dict["new"] or data_dict["new_noscript"],
             edit=data_dict["edit"],
