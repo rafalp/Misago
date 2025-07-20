@@ -93,9 +93,9 @@
           {% translate "Votes are public." context "poll info" %}
         {% endif %}
       </div>
-      <div class="poll-footer-spacer"></div>
       {% if is_public or allow_vote or allow_edit or allow_close or moderator %}
-        <div class="poll-buttons">
+        <div class="poll-footer-spacer"></div>
+        <div class="poll-buttons{% if not is_public and not allow_vote %} poll-buttons-d-xs-none{% endif %}">
           {% include "misago/poll/footer_buttons.html" %}
           {% if is_public %}
             {% if not show_voters %}
