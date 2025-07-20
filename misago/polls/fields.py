@@ -75,6 +75,8 @@ class PollChoicesWidget(forms.MultiWidget):
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
+        context["widget"].pop("value")
+        context["widget"].pop("subwidgets")
 
         if not isinstance(value, (list, tuple)):
             value = self.decompress(value)
@@ -103,10 +105,9 @@ class PollChoicesWidget(forms.MultiWidget):
 
     def decompress(self, value: PollChoicesValue | None):
         if value:
-            edit_names = {choice["id"]: choice["name"] for choice in value.choices}
-            return [value.new, value.new, edit_names, value.delete]
+            return [value.new, value.new]
 
-        return [[], [], {}, []]
+        return [[], []]
 
 
 class EditPollChoicesWidget(PollChoicesWidget):
@@ -143,6 +144,13 @@ class EditPollChoicesWidget(PollChoicesWidget):
 
         context["widget"]["choices"] = choices
         return context
+
+    def decompress(self, value: PollChoicesValue | None):
+        if value:
+            edit_names = {choice["id"]: choice["name"] for choice in value.choices}
+            return [value.new, value.new, edit_names, value.delete]
+
+        return [[], [], {}, set()]
 
 
 class PollChoicesField(forms.MultiValueField):

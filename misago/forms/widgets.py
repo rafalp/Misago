@@ -19,6 +19,12 @@ class DictInput(Widget):
         if key and key[0] == "[" and key[-1] == "]":
             return key[1:-1] or None
 
+    def format_value(self, value):
+        if not value:
+            return {}
+
+        return value
+
 
 class ListInput(Widget):
     template_name = None
