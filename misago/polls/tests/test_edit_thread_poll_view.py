@@ -259,6 +259,56 @@ def test_edit_thread_poll_view_shows_edit_poll_form_in_htmx(
     assert_contains(response, "Edit poll")
 
 
+def test_edit_thread_poll_view_validates_poll_question(
+    user_client, user_thread, user_poll
+):
+    data = {
+        "question": "Q",
+        "duration": str(user_poll.duration),
+        "choices_new": [],
+        "choices_new_noscript": "",
+        "choices_delete": [],
+        "max_choices": "1",
+    }
+
+    for choice in user_poll.choices:
+        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread-poll",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        data,
+    )
+    assert_contains(response, "Poll question should be at least 8 characters long")
+
+
+def test_edit_thread_poll_view_validates_edited_poll_choices_are_required(
+    user_client, user_thread, user_poll
+):
+    data = {
+        "question": "Edited question",
+        "duration": str(user_poll.duration),
+        "choices_new": [],
+        "choices_new_noscript": "",
+        "choices_delete": [],
+        "max_choices": "1",
+    }
+
+    for choice in user_poll.choices:
+        data[f'choices_edit[{choice["id"]}]'] = ""
+
+    response = user_client.post(
+        reverse(
+            "misago:edit-thread-poll",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        data,
+    )
+    assert_contains(response, "Edited poll choice can&#x27;t be empty.")
+
+
 def test_edit_thread_poll_view_edits_poll_question(user_client, user_thread, user_poll):
     data = {
         "question": "Edited question",

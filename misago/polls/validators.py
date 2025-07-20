@@ -160,7 +160,7 @@ def _validate_poll_choices_action(
                 },
             )
 
-        if error:
+        if error and error not in errors:
             errors.append(error)
 
     if errors:
