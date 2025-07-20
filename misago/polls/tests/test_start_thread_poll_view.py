@@ -131,6 +131,77 @@ def test_start_thread_poll_view_hides_public_poll_option(user_client, user_threa
     assert_not_contains(response, "is_public")
 
 
+def test_start_thread_poll_view_validates_poll_question(user_client, user_thread):
+    response = user_client.post(
+        reverse(
+            "misago:start-thread-poll",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "question": "W",
+            "choices_new": [
+                "Great",
+                "Okay",
+                "About average",
+                "Sad panda",
+            ],
+            "choices_new_noscript": "",
+            "duration": "30",
+            "max_choices": "2",
+            "can_change_vote": "1",
+            "is_public": "1",
+        },
+    )
+    assert_contains(response, "Poll question should be at least 8 characters long")
+
+
+def test_start_thread_poll_view_validates_poll_choices_are_required(
+    user_client, user_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:start-thread-poll",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "question": "What's your mood?",
+            "choices_new": [],
+            "choices_new_noscript": "",
+            "duration": "30",
+            "max_choices": "2",
+            "can_change_vote": "1",
+            "is_public": "1",
+        },
+    )
+    assert_contains(response, "This field is required.")
+
+
+def test_start_thread_poll_view_validates_poll_choices(user_client, user_thread):
+    response = user_client.post(
+        reverse(
+            "misago:start-thread-poll",
+            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "question": "What's your mood?",
+            "choices_new": [
+                "Great",
+                "OK",
+                "About average",
+                "Sad panda",
+            ],
+            "choices_new_noscript": "",
+            "duration": "30",
+            "max_choices": "2",
+            "can_change_vote": "1",
+            "is_public": "1",
+        },
+    )
+    assert_contains(
+        response, "&quot;OK&quot;: choice should be at least 3 characters long"
+    )
+
+
 def test_start_thread_poll_view_starts_thread_poll_using_choices_from_list(
     user_client, user, user_thread
 ):
