@@ -1,9 +1,0 @@
-<ul class="posts-list ui-ready">
-  {% for post in posts %}
-    {% if post.is_event %}
-      {% include "misago/thread/posts/event/index.html" %}
-    {% else %}
-      {% include "misago/thread/posts/post/index.html" %}
-    {% endif %}
-  {% endfor %}
-</ul>

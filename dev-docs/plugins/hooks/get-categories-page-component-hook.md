@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetCategoriesPageComponentHookAction`
 
-A standard Misago function used to build a `dict` with data for the categories list component, used to display the list of categories on the categories page.
+Misago function used to build a `dict` with data for the categories list component, used to display the list of categories on the categories page.
 
 See the [action](#action) section for details.
 
@@ -50,7 +50,7 @@ def get_categories_page_component_action(request: HttpRequest) -> dict:
     ...
 ```
 
-A standard Misago function used to build a `dict` with data for the categories list component, used to display the list of categories on the categories page.
+Misago function used to build a `dict` with data for the categories list component, used to display the list of categories on the categories page.
 
 
 ### Arguments

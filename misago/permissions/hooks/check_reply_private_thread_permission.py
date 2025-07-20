@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class CheckReplyPrivateThreadPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if the user has permission to
+    Misago function used to check if the user has permission to
     reply to a private thread. It raises Django's `PermissionDenied` with an
     error message if they can't reply to it.
 
@@ -39,7 +39,7 @@ class CheckReplyPrivateThreadPermissionHookFilter(Protocol):
 
     ## `action: CheckReplyPrivateThreadPermissionHookAction`
 
-    A standard Misago function used to check if the user has permission to
+    Misago function used to check if the user has permission to
     reply to a private thread. It raises Django's `PermissionDenied` with an
     error message if they can't reply to it.
 

@@ -1,6 +1,10 @@
+from functools import cached_property
+
 from django.core.exceptions import ValidationError
+from django.forms import Form
 from django.http import HttpRequest
 
+from ...collections.dicts import set_key_after, set_key_before
 from ...forms.formset import Formset
 from ..forms import InviteUsersForm, PostForm, TitleForm
 from ..state.base import PostingState
@@ -53,3 +57,110 @@ class PostingFormset(Formset):
     def clear_errors_in_upload(self):
         for form in self.forms.values():
             form.clear_errors_in_upload()
+
+
+class TabbedPostingFormset(PostingFormset):
+    tabs: dict[str, "PostingFormsetTab"]
+
+    def __init__(self):
+        super().__init__()
+        self.tabs = {}
+
+    def get_tabs(self) -> list["PostingFormsetTab"]:
+        return list(self.tabs.values())
+
+    def add_tab(self, tab_id: str, name: str) -> "PostingFormsetTab":
+        tab = PostingFormsetTab(tab_id, name)
+        self.tabs[tab_id] = tab
+        return tab
+
+    def add_tab_after(self, after: str, tab_id: str, name: str) -> "PostingFormsetTab":
+        if after not in self.tabs:
+            raise ValueError(f"Formset does not contain a tab with ID '{after}'.")
+
+        tab = PostingFormsetTab(tab_id, name)
+        self.tabs = set_key_after(self.tabs, after, tab_id, tab)
+        return tab
+
+    def add_tab_before(
+        self, before: str, tab_id: str, name: str
+    ) -> "PostingFormsetTab":
+        if before not in self.tabs:
+            raise ValueError(f"Formset does not contain a tab with ID '{before}'.")
+
+        tab = PostingFormsetTab(tab_id, name)
+        self.tabs[tab_id] = tab
+        self.tabs = set_key_before(self.tabs, before, tab_id, tab)
+        return tab
+
+    def add_form(
+        self,
+        tab: str,
+        form: Form,
+    ) -> Form:
+        self.validate_tab(tab)
+        super().add_form(form)
+        self.tabs[tab].add_form(form)
+        return form
+
+    def add_form_after(self, tab: str, after: str, form: Form) -> Form:
+        self.validate_tab(tab)
+        self.validate_new_form(form)
+
+        if after not in self.forms:
+            raise ValueError(f"Formset does not contain a form with prefix '{after}'.")
+
+        if after not in self.tabs[tab].forms:
+            raise ValueError(
+                f"Tab '{tab}' does not contain a form with prefix '{after}'."
+            )
+
+        self.forms = set_key_after(self.forms, after, form.prefix, form)
+        self.tabs[tab].add_form_after(after, form)
+        return form
+
+    def add_form_before(self, tab: str, before: str, form: Form) -> Form:
+        self.validate_tab(tab)
+        self.validate_new_form(form)
+
+        if before not in self.forms:
+            raise ValueError(f"Formset does not contain a form with prefix '{before}'.")
+
+        if before not in self.tabs[tab].forms:
+            raise ValueError(
+                f"Tab '{tab}' does not contain a form with prefix '{before}'."
+            )
+
+        self.forms = set_key_before(self.forms, before, form.prefix, form)
+        self.tabs[tab].add_form_before(before, form)
+        return form
+
+    def validate_tab(self, tab: str):
+        if tab not in self.tabs:
+            raise ValueError(f"Formset does not contain a tab with ID '{tab}'.")
+
+    @cached_property
+    def has_multiple_tabs(self) -> bool:
+        tabs_with_forms = 0
+        for tab in self.tabs.values():
+            if tab.forms:
+                tabs_with_forms += 1
+        return tabs_with_forms > 1
+
+
+class PostingFormsetTab(Formset):
+    id: str
+    name: str
+
+    def __init__(self, id: str, name: str):
+        super().__init__()
+
+        self.id = id
+        self.name = name
+
+    def __str__(self) -> str:
+        return self.name
+
+    @property
+    def html_id(self):
+        return f"tab-{self.id}"

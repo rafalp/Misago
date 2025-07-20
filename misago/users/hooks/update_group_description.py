@@ -6,7 +6,7 @@ from ..models import Group
 
 class UpdateGroupDescriptionHookAction(Protocol):
     """
-    A standard Misago function used to update an existing user group's description or
+    Misago function used to update an existing user group's description or
     the next filter function from another plugin.
 
     # Arguments
@@ -48,7 +48,7 @@ class UpdateGroupDescriptionHookFilter(Protocol):
 
     ## `action: UpdateGroupDescriptionHookAction`
 
-    A standard Misago function used to update an existing user group's description or
+    Misago function used to update an existing user group's description or
     the next filter function from another plugin.
 
     See the [action](#action) section for details.

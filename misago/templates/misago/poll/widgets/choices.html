@@ -1,0 +1,41 @@
+{% load i18n %}
+<ol class="form-control-poll-choices{% if not widget.edit %} d-js-none{% endif %}" max-choices="{{ widget.attrs.max_choices }}" m-poll-choices-control>
+  {% if widget.choices %}
+    {% with field=widget.choices %}
+      {% for choice in field %}
+        <li class="form-control-poll-choices-item">
+          <div class="form-control-poll-choices-item-group">
+            <input type="text" class="form-control" name="{{ choice.edit_name }}" value="{{ choice.value }}" />
+            <label class="form-control-poll-choices-delete-item checkbox">
+              <input type="checkbox" name="{{ choice.delete_name }}" value="{{ choice.id }}"{% if checked %} checked{% endif %}>
+              {% translate "Delete" context "delete poll item" %}
+            </label>
+          </div>
+        </li>
+      {% endfor %}
+    {% endwith %}
+  {% endif %}
+  {% with field=widget.new %}
+    {% for choice in field.value %}
+      {% if choice.strip %}
+        <li class="form-control-poll-choices-item" m-poll-new-choice>
+          <div class="form-control-poll-choices-item-group">
+            <input type="text" class="form-control" name="{{ field.name }}" placeholder="{% translate 'New choice...' context 'poll choices control' %}" value="{{ choice }}" />
+          </div>
+        </li>
+      {% endif %}
+    {% endfor %}
+    {% if field.value|length < widget.attrs.max_choices %}
+      <li class="form-control-poll-choices-item" m-poll-new-choice>
+        <div class="form-control-poll-choices-item-group">
+          <input type="text" class="form-control" name="{{ field.name }}" placeholder="{% translate 'New choice...' context 'poll choices control' %}" value="" />
+        </div>
+      </li>
+    {% endif %}
+  {% endwith %}
+</ol>
+{% with field=widget.new_noscript %}
+  <noscript>
+    <textarea class="form-control field-sizing-content" name="{{ field.name }}" rows="4">{{ field.value|default:'' }}</textarea>
+  </noscript>
+{% endwith %}

@@ -210,7 +210,7 @@ class ListView(View):
         }
 
     def post_mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
-        current_url = request.get_full_path_info()
+        current_url = request.get_full_path()
         if request.user.is_authenticated:
             if response := self.mark_as_read(request, kwargs):
                 return response
@@ -241,7 +241,7 @@ class ListView(View):
 
     def post_moderation(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         try:
-            current_url = request.get_full_path_info()
+            current_url = request.get_full_path()
             result = self.moderate_threads(request, kwargs)
 
             if isinstance(result, ModerationTemplateResult):

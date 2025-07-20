@@ -1,0 +1,35 @@
+{% load i18n %}
+{% if allow_edit %}
+  <a href="{{ edit_url }}"
+    class="btn btn-link"
+    hx-boost="true"
+  >
+    {% translate "Edit" context "poll footer btn" %}
+  </a>
+{% endif %}
+{% if allow_close %}
+  <form action="{{ close_url }}" method="POST" hx-boost="true">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next_url }}">
+    <button class="btn btn-link">
+      {% translate "Close" context "poll footer btn" %}
+    </button>
+  </form>
+{% elif allow_open %}
+  <form action="{{ open_url }}" method="POST" hx-boost="true">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next_url }}">
+    <button class="btn btn-link">
+      {% translate "Open" context "poll footer btn" %}
+    </button>
+  </form>
+{% endif %}
+{% if allow_delete %}
+  <form action="{{ delete_url }}" method="POST" misago-confirm="{% translate 'Delete this poll?' context 'poll delete confirmation' %}">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next_url }}">
+    <button class="btn btn-link">
+      {% translate "Delete" context "poll footer btn" %}
+    </button>
+  </form>
+{% endif %}

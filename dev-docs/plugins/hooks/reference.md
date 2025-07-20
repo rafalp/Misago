@@ -9,8 +9,10 @@ Hooks instances are importable from the following Python modules:
 - [`misago.oauth2.hooks`](#misago-oauth2-hooks)
 - [`misago.parser.hooks`](#misago-parser-hooks)
 - [`misago.permissions.hooks`](#misago-permissions-hooks)
+- [`misago.polls.hooks`](#misago-polls-hooks)
 - [`misago.posting.hooks`](#misago-posting-hooks)
 - [`misago.threads.hooks`](#misago-threads-hooks)
+- [`misago.threadupdates.hooks`](#misago-threadupdates-hooks)
 - [`misago.users.hooks`](#misago-users-hooks)
 
 
@@ -72,12 +74,16 @@ Hooks instances are importable from the following Python modules:
 - [`check_access_post_permission_hook`](./check-access-post-permission-hook.md)
 - [`check_access_thread_permission_hook`](./check-access-thread-permission-hook.md)
 - [`check_browse_category_permission_hook`](./check-browse-category-permission-hook.md)
+- [`check_close_thread_poll_permission_hook`](./check-close-thread-poll-permission-hook.md)
 - [`check_delete_attachment_permission_hook`](./check-delete-attachment-permission-hook.md)
+- [`check_delete_thread_poll_permission_hook`](./check-delete-thread-poll-permission-hook.md)
 - [`check_download_attachment_permission_hook`](./check-download-attachment-permission-hook.md)
 - [`check_edit_private_thread_permission_hook`](./check-edit-private-thread-permission-hook.md)
 - [`check_edit_private_thread_post_permission_hook`](./check-edit-private-thread-post-permission-hook.md)
 - [`check_edit_thread_permission_hook`](./check-edit-thread-permission-hook.md)
+- [`check_edit_thread_poll_permission_hook`](./check-edit-thread-poll-permission-hook.md)
 - [`check_edit_thread_post_permission_hook`](./check-edit-thread-post-permission-hook.md)
+- [`check_open_thread_poll_permission_hook`](./check-open-thread-poll-permission-hook.md)
 - [`check_post_in_closed_category_permission_hook`](./check-post-in-closed-category-permission-hook.md)
 - [`check_post_in_closed_thread_permission_hook`](./check-post-in-closed-thread-permission-hook.md)
 - [`check_private_threads_permission_hook`](./check-private-threads-permission-hook.md)
@@ -88,8 +94,11 @@ Hooks instances are importable from the following Python modules:
 - [`check_see_private_thread_post_permission_hook`](./check-see-private-thread-post-permission-hook.md)
 - [`check_see_thread_permission_hook`](./check-see-thread-permission-hook.md)
 - [`check_see_thread_post_permission_hook`](./check-see-thread-post-permission-hook.md)
+- [`check_start_poll_permission_hook`](./check-start-poll-permission-hook.md)
 - [`check_start_private_threads_permission_hook`](./check-start-private-threads-permission-hook.md)
 - [`check_start_thread_permission_hook`](./check-start-thread-permission-hook.md)
+- [`check_start_thread_poll_permission_hook`](./check-start-thread-poll-permission-hook.md)
+- [`check_vote_in_thread_poll_permission_hook`](./check-vote-in-thread-poll-permission-hook.md)
 - [`copy_category_permissions_hook`](./copy-category-permissions-hook.md)
 - [`copy_group_permissions_hook`](./copy-group-permissions-hook.md)
 - [`filter_accessible_thread_posts_hook`](./filter-accessible-thread-posts-hook.md)
@@ -106,6 +115,22 @@ Hooks instances are importable from the following Python modules:
 - [`get_threads_pinned_category_query_hook`](./get-threads-pinned-category-query-hook.md)
 - [`get_threads_query_orm_filter_hook`](./get-threads-query-orm-filter-hook.md)
 - [`get_user_permissions_hook`](./get-user-permissions-hook.md)
+
+
+## `misago.polls.hooks`
+
+`misago.polls.hooks` defines the following hooks:
+
+- [`close_poll_hook`](./close-poll-hook.md)
+- [`close_thread_poll_hook`](./close-thread-poll-hook.md)
+- [`delete_poll_hook`](./delete-poll-hook.md)
+- [`delete_thread_poll_hook`](./delete-thread-poll-hook.md)
+- [`edit_thread_poll_hook`](./edit-thread-poll-hook.md)
+- [`open_poll_hook`](./open-poll-hook.md)
+- [`open_thread_poll_hook`](./open-thread-poll-hook.md)
+- [`save_thread_poll_hook`](./save-thread-poll-hook.md)
+- [`validate_poll_choices_hook`](./validate-poll-choices-hook.md)
+- [`validate_poll_question_hook`](./validate-poll-question-hook.md)
 
 
 ## `misago.posting.hooks`
@@ -145,8 +170,6 @@ Hooks instances are importable from the following Python modules:
 `misago.threads.hooks` defines the following hooks:
 
 - [`create_prefetch_posts_feed_related_objects_hook`](./create-prefetch-posts-feed-related-objects-hook.md)
-- [`create_thread_update_hook`](./create-thread-update-hook.md)
-- [`delete_thread_update_hook`](./delete-thread-update-hook.md)
 - [`get_category_threads_page_context_data_hook`](./get-category-threads-page-context-data-hook.md)
 - [`get_category_threads_page_filters_hook`](./get-category-threads-page-filters-hook.md)
 - [`get_category_threads_page_moderation_actions_hook`](./get-category-threads-page-moderation-actions-hook.md)
@@ -179,8 +202,16 @@ Hooks instances are importable from the following Python modules:
 - [`get_threads_page_queryset_hook`](./get-threads-page-queryset-hook.md)
 - [`get_threads_page_subcategories_hook`](./get-threads-page-subcategories-hook.md)
 - [`get_threads_page_threads_hook`](./get-threads-page-threads-hook.md)
-- [`hide_thread_update_hook`](./hide-thread-update-hook.md)
 - [`set_posts_feed_related_objects_hook`](./set-posts-feed-related-objects-hook.md)
+
+
+## `misago.threadupdates.hooks`
+
+`misago.threadupdates.hooks` defines the following hooks:
+
+- [`create_thread_update_hook`](./create-thread-update-hook.md)
+- [`delete_thread_update_hook`](./delete-thread-update-hook.md)
+- [`hide_thread_update_hook`](./hide-thread-update-hook.md)
 - [`unhide_thread_update_hook`](./unhide-thread-update-hook.md)
 
 

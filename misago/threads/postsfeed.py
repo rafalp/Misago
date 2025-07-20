@@ -22,6 +22,7 @@ from .prefetch import prefetch_posts_feed_related_objects
 
 class PostsFeed:
     template_name: str = "misago/posts_feed/index.html"
+    template_name_htmx_append: str = "misago/posts_feed/htmx_append.html"
     post_template_name: str = "misago/posts_feed/post.html"
     thread_update_template_name: str = "misago/posts_feed/thread_update.html"
 
@@ -81,6 +82,7 @@ class PostsFeed:
     def get_context_data(self, context: dict | None = None) -> dict:
         context_data = {
             "template_name": self.template_name,
+            "template_name_htmx_append": self.template_name_htmx_append,
             "items": self.get_feed_data(),
         }
 

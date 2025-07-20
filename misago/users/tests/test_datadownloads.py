@@ -7,7 +7,7 @@ from django.utils import timezone
 from ...categories.models import Category
 from ...notifications.models import Notification
 from ...threads.models import AttachmentType
-from ...threads.test import post_poll, post_thread
+from ...threads.test import post_thread
 from ..audittrail import create_user_audit_trail
 from ..datadownloads import (
     expire_user_data_download,
@@ -267,14 +267,6 @@ class PrepareUserDataDownload(AuthenticatedUserTestCase):
             edited_from="edited from",
             edited_to="edited to",
         )
-
-        self.assert_download_is_valid()
-
-    def test_prepare_download_with_poll(self):
-        """function creates data download for user with poll"""
-        category = Category.objects.get(slug="first-category")
-        thread = post_thread(category, poster=self.user)
-        post_poll(thread, self.user)
 
         self.assert_download_is_valid()
 

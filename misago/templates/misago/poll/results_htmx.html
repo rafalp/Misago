@@ -1,0 +1,6 @@
+{% include "misago/snackbars.html" %}
+{% include "misago/poll/results.html" %}
+
+{% if feed %}
+  {% include feed.template_name_htmx_append %}
+{% endif %}

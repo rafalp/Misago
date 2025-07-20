@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 class CreatePrefetchPostsFeedRelatedObjectsHookAction(Protocol):
     """
-    A standard Misago function used to create a `PrefetchPostsFeedRelatedObjects`
+    Misago function used to create a `PrefetchPostsFeedRelatedObjects`
     object, which is used to prefetch related objects for items displayed on
     a posts feed.
 
@@ -83,7 +83,7 @@ class CreatePrefetchPostsFeedRelatedObjectsHookFilter(Protocol):
 
     ## `action: CreatePrefetchPostsFeedRelatedObjectsHookAction`
 
-    A standard Misago function used to create a `PrefetchPostsFeedRelatedObjects`
+    Misago function used to create a `PrefetchPostsFeedRelatedObjects`
     object, which is used to prefetch related objects for items displayed on
     a posts feed.
 

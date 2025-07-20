@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetCategoryThreadsPageSubcategoriesHookAction`
 
-A standard Misago function used to build a `dict` with data for the categories list component, used to display the list of subcategories on the category threads page.
+Misago function used to build a `dict` with data for the categories list component, used to display the list of subcategories on the category threads page.
 
 See the [action](#action) section for details.
 
@@ -68,7 +68,7 @@ def get_category_threads_page_subcategories_action(request: HttpRequest, categor
     ...
 ```
 
-A standard Misago function used to build a `dict` with data for the categories list component, used to display the list of subcategories on the category threads page.
+Misago function used to build a `dict` with data for the categories list component, used to display the list of subcategories on the category threads page.
 
 
 ### Arguments

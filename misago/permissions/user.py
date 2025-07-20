@@ -82,6 +82,12 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "unused_attachments_storage_limit": 0,
         "attachment_size_limit": 0,
         "can_always_delete_own_attachments": False,
+        "can_start_polls": False,
+        "can_edit_own_polls": False,
+        "own_polls_edit_time_limit": 0,
+        "can_close_own_polls": False,
+        "own_polls_close_time_limit": 0,
+        "can_vote_in_polls": False,
         "can_change_username": False,
         "username_changes_limit": 0,
         "username_changes_expire": 0,
@@ -155,6 +161,36 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
             permissions,
             "can_always_delete_own_attachments",
             group.can_always_delete_own_attachments,
+        )
+        if_true(
+            permissions,
+            "can_start_polls",
+            group.can_start_polls,
+        )
+        if_true(
+            permissions,
+            "can_edit_own_polls",
+            group.can_edit_own_polls,
+        )
+        if_zero_or_greater(
+            permissions,
+            "own_polls_edit_time_limit",
+            group.own_polls_edit_time_limit,
+        )
+        if_true(
+            permissions,
+            "can_close_own_polls",
+            group.can_close_own_polls,
+        )
+        if_zero_or_greater(
+            permissions,
+            "own_polls_close_time_limit",
+            group.own_polls_close_time_limit,
+        )
+        if_true(
+            permissions,
+            "can_vote_in_polls",
+            group.can_vote_in_polls,
         )
         if_true(
             permissions,

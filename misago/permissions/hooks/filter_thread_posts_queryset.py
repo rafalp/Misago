@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class FilterThreadPostsQuerysetHookAction(Protocol):
     """
-    A standard Misago function used to set filters on a queryset used to retrieve
+    Misago function used to set filters on a queryset used to retrieve
     specified thread's posts that user can see.
 
     # Arguments
@@ -49,7 +49,7 @@ class FilterThreadPostsQuerysetHookFilter(Protocol):
 
     ## `action: FilterThreadPostsQuerysetHookAction`
 
-    A standard Misago function used to set filters on a queryset used to retrieve
+    Misago function used to set filters on a queryset used to retrieve
     specified thread's posts that user can see.
 
     See the [action](#action) section for details.

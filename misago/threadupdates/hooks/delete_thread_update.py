@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class DeleteThreadUpdateHookAction(Protocol):
     """
-    A standard Misago function used to delete a `ThreadUpdate` object.
+    Misago function used to delete a `ThreadUpdate` object.
 
     # Arguments
 
@@ -38,7 +38,7 @@ class DeleteThreadUpdateHookFilter(Protocol):
 
     ## `action: DeleteThreadUpdateHookAction`
 
-    A standard Misago function used to delete a `ThreadUpdate` object.
+    Misago function used to delete a `ThreadUpdate` object.
 
     ## `thread_update: ThreadUpdate`
 

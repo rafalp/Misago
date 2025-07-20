@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class FilterPrivateThreadsQuerysetHookAction(Protocol):
     """
-    A standard Misago function used to set filters on a private threads queryset
+    Misago function used to set filters on a private threads queryset
     to limit it only to threads that the user has access to.
 
     # Arguments
@@ -43,7 +43,7 @@ class FilterPrivateThreadsQuerysetHookFilter(Protocol):
 
     ## `action: FilterPrivateThreadsQuerysetHookAction`
 
-    A standard Misago function used to set filters on a private threads queryset to limit
+    Misago function used to set filters on a private threads queryset to limit
     it only to threads that the user has access to.
 
     See the [action](#action) section for details.

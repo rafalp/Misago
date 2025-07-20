@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class CheckAccessPostPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if a user has permission to access
+    Misago function used to check if a user has permission to access
     a post of unknown type (threads, private threads, or plugin-defined).
     Raises Django’s `Http404` or `PermissionDenied` if they can't.
 
@@ -50,7 +50,7 @@ class CheckAccessPostPermissionHookFilter(Protocol):
 
     ## `action: CheckAccessPostPermissionHookAction`
 
-    A standard Misago function used to check if a user has permission to access
+    Misago function used to check if a user has permission to access
     a post of unknown type (threads, private threads, or plugin-defined).
     Raises Django’s `Http404` or `PermissionDenied` if they can't.
 

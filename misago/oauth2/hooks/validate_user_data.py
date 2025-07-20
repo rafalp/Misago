@@ -8,7 +8,7 @@ from ...users.models import User
 
 class ValidateUserDataHookAction(Protocol):
     """
-    A standard Misago function used for validating the user data, or the next
+    Misago function used for validating the user data, or the next
     filter function from another plugin.
 
     Should raise a Django's `ValidationError` if data is invalid.
@@ -76,7 +76,7 @@ class ValidateUserDataHookFilter(Protocol):
 
     ## `action: ValidateUserDataHookAction`
 
-    A standard Misago function used for filtering the user data, or the next
+    Misago function used for filtering the user data, or the next
     filter function from another plugin.
 
     See the [action](#action) section for details.

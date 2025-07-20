@@ -1,0 +1,80 @@
+{% extends "misago/poll/panel.html" %}
+{% load i18n misago_capture misago_formats %}
+
+
+{% block content %}
+<div class="panel-body panel-poll-body">
+  <div class="panel-poll-header">
+    <h3 class="poll-question">{{ poll.question }}</h3>
+    {% include "misago/poll/details.html" %}
+  </div>
+  <div class="poll-vote-form">
+    <form
+      id="thread-poll-form"
+      method="post"
+      action="{{ vote_url }}"
+      hx-boost="true"
+    >
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next_url }}">
+      {% if poll_error_message %}
+        <p class="poll-vote-error">
+          {{ poll_error_message }}
+        </p>
+      {% endif %}
+      <ul class="poll-vote-choices">
+        {% for choice in poll.choices %}
+          <li>
+            <label class="{% if poll.max_choices > 1 %}checkbox{% else %}radio{% endif %}">
+              <input type="{% if poll.max_choices > 1 %}checkbox{% else %}radio{% endif %}" name="poll_choice" value="{{ choice.id }}"{% if choice.id in user_votes %} checked{% endif %}{% if poll.max_choices == 1 %} required{% endif %}>
+              {{ choice.name }}
+            </label>
+          </li>
+        {% endfor %}
+      </ul>
+    </form>
+    <div class="poll-footer">
+      {% if poll.max_choices > 1 or poll.duration or poll.is_public %}
+        <div class="poll-info">
+          {% if poll.max_choices > 1 %}
+            {% blocktrans trimmed count choices=poll.max_choices context "poll info" %}
+              Pick up to {{ choices }} choice.
+            {% plural %}
+              Pick up to {{ choices }} choices.
+            {% endblocktrans %}
+          {% endif %}
+          {% if poll.duration %}
+            {% capture trimmed as poll_end %}
+              <span
+                title="{{ poll.ends_at|date:'DATETIME_FORMAT' }}"
+                misago-timestamp="{{ poll.ends_at.isoformat }}"
+              >
+              {{ poll.ends_at|date_relative }}
+              </span>
+            {% endcapture %}
+            {% blocktrans trimmed with timestamp=poll_end|safe context "poll info" %}
+              Voting ends on {{ timestamp }}.
+            {% endblocktrans %}
+          {% endif %}
+          {% if poll.can_change_vote %}
+            {% translate "Voters can change their vote." context "poll info" %}
+          {% endif %}
+          {% if poll.is_public %}
+            {% translate "Votes are public." context "poll info" %}
+          {% endif %}
+        </div>
+        <div class="poll-footer-spacer"></div>
+      {% endif %}
+      <div class="poll-buttons">
+        {% include "misago/poll/footer_buttons.html" %}
+        <a href="{{ results_url }}" class="btn btn-default" hx-boost="true">
+          {% translate "View results" context "poll footer btn" %}
+        </a>
+        <button class="btn btn-primary" form="thread-poll-form">
+          {% translate "Submit vote" context "poll footer btn" %}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

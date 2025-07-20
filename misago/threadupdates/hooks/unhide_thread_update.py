@@ -10,17 +10,13 @@ if TYPE_CHECKING:
 
 class UnhideThreadUpdateHookAction(Protocol):
     """
-    A standard Misago function used to unhide a `ThreadUpdate` object.
+    Misago function used to unhide a `ThreadUpdate` object.
 
     # Arguments
 
     ## `thread_update: ThreadUpdate`
 
     A `ThreadUpdate` instance to unhide.
-
-    ## `update_fields: set[str]`
-
-    A `set` of `str` containing the names of fields to pass to the `update(update_fields=...)` option.
 
     ## `request: HttpRequest | None = None`
 
@@ -34,7 +30,6 @@ class UnhideThreadUpdateHookAction(Protocol):
     def __call__(
         self,
         thread_update: "ThreadUpdate",
-        update_fields: set[str],
         request: HttpRequest | None = None,
     ) -> bool: ...
 
@@ -47,15 +42,11 @@ class UnhideThreadUpdateHookFilter(Protocol):
 
     ## `action: UnhideThreadUpdateHookAction`
 
-    A standard Misago function used to unhide a `ThreadUpdate` object.
+    Misago function used to unhide a `ThreadUpdate` object.
 
     ## `thread_update: ThreadUpdate`
 
     A `ThreadUpdate` instance to unhide.
-
-    ## `update_fields: set[str]`
-
-    A `set` of `str` containing the names of fields to pass to the `update(update_fields=...)` option.
 
     ## `request: HttpRequest | None = None`
 
@@ -70,7 +61,6 @@ class UnhideThreadUpdateHookFilter(Protocol):
         self,
         action: UnhideThreadUpdateHookAction,
         thread_update: "ThreadUpdate",
-        update_fields: set[str],
         request: HttpRequest | None = None,
     ) -> bool: ...
 
@@ -99,16 +89,14 @@ class UnhideThreadUpdateHook(
     def save_client_ip_on_thread_update_unhide(
         action,
         thread_update: ThreadUpdate,
-        update_fields: set[str],
         request: HttpRequest | None = None,
     ) -> bool:
         if not request:
-            return action(thread_update, update_fields)
+            return action(thread_update)
 
         thread_update.plugin_data["last_ip"] = request.client_ip
-        update_fields.add("plugin_data")
 
-        return action(thread_update, update_fields, request)
+        return action(thread_update, request)
     ```
     """
 
@@ -118,15 +106,9 @@ class UnhideThreadUpdateHook(
         self,
         action: UnhideThreadUpdateHookAction,
         thread_update: "ThreadUpdate",
-        update_fields: set[str],
         request: HttpRequest | None = None,
     ) -> "ThreadUpdate":
-        return super().__call__(
-            action,
-            thread_update,
-            update_fields,
-            request,
-        )
+        return super().__call__(action, thread_update, request)
 
 
 unhide_thread_update_hook = UnhideThreadUpdateHook()

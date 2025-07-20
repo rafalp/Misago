@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class CheckEditPrivateThreadPostPermissionHookAction(Protocol):
     """
-    A standard Misago function used to check if the user has permission to
+    Misago function used to check if the user has permission to
     edit a post in a private thread. It raises Django's `PermissionDenied` with
     an error message if they can't.
 
@@ -45,7 +45,7 @@ class CheckEditPrivateThreadPostPermissionHookFilter(Protocol):
 
     ## `action: CheckEditPrivateThreadPostPermissionHookAction`
 
-    A standard Misago function used to check if the user has permission to
+    Misago function used to check if the user has permission to
     edit a post in a private thread. It raises Django's `PermissionDenied` with
     an error message if they can't.
 

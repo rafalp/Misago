@@ -7,7 +7,7 @@ from ...plugins.hooks import FilterHook
 
 class GetTokensMetadataHookAction(Protocol):
     """
-    A standard Misago function used to extract metadata from a token stream.
+    Misago function used to extract metadata from a token stream.
 
     # Arguments
 
@@ -31,7 +31,7 @@ class GetTokensMetadataHookFilter(Protocol):
 
     ## `action: GetTokensMetadataHookAction`
 
-    A standard Misago function used to extract metadata from a token stream.
+    Misago function used to extract metadata from a token stream.
 
     See the [action](#action) section for details.
 

@@ -95,7 +95,7 @@ class CloseThreadsBulkModerationAction(ThreadsBulkModerationAction):
 
         if updated:
             for thread in open_threads:
-                create_locked_thread_update(thread, request.user, request=request)
+                create_locked_thread_update(thread, request.user, request)
 
             messages.success(
                 request,
@@ -119,7 +119,7 @@ class OpenThreadsBulkModerationAction(ThreadsBulkModerationAction):
 
         if updated:
             for thread in closed_threads:
-                create_opened_thread_update(thread, request.user, request=request)
+                create_opened_thread_update(thread, request.user, request)
 
             messages.success(
                 request,

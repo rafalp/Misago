@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetCategoriesPageMetatagsHookAction`
 
-A standard Misago function used to get metatags for the categories page.
+Misago function used to get metatags for the categories page.
 
 See the [action](#action) section for details.
 
@@ -57,7 +57,7 @@ def get_categories_page_metatags_action(request: HttpRequest, context: dict) -> 
     ...
 ```
 
-A standard Misago function used to get metatags for the categories page.
+Misago function used to get metatags for the categories page.
 
 
 ### Arguments

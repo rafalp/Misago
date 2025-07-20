@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetCategoryThreadsPageQuerysetHookAction`
 
-A standard Misago function used to get the base threads queryset for the category threads page.
+Misago function used to get the base threads queryset for the category threads page.
 
 See the [action](#action) section for details.
 
@@ -50,7 +50,7 @@ def get_category_threads_page_queryset_action(request: HttpRequest) -> QuerySet:
     ...
 ```
 
-A standard Misago function used to get the base threads queryset for the category threads page.
+Misago function used to get the base threads queryset for the category threads page.
 
 
 ### Arguments

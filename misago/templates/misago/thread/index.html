@@ -15,6 +15,10 @@
     {% pluginoutlet THREAD_REPLIES_PAGE_START %}
 
     <a id="misago-page-scroll-target" class="scroll-target"></a>
+
+    <div id="misago-poll-scroll-target" class="scroll-target"></div>
+    {% if poll %}{% includecomponent poll %}{% endif %}
+
     {% include "misago/thread/partial.html" %}
 
     {% if user.is_authenticated %}

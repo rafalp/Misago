@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetThreadUrlHookAction`
 
-A standard Misago function used to retrieve a thread URL based on its category type.
+Misago function used to retrieve a thread URL based on its category type.
 
 See the [action](#action) section for details.
 
@@ -57,7 +57,7 @@ def get_thread_url_action(thread: Thread, category: Category | None=None) -> Que
     ...
 ```
 
-A standard Misago function used to retrieve a thread URL based on its category type.
+Misago function used to retrieve a thread URL based on its category type.
 
 
 ### Arguments

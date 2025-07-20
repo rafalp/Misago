@@ -34,7 +34,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: ReplaceRichTextTokensHookAction`
 
-A standard Misago function used to replace rich-text tokens in pre-rendered HTML or the next filter from another plugin.
+Misago function used to replace rich-text tokens in pre-rendered HTML or the next filter from another plugin.
 
 See the [action](#action) section for details.
 
@@ -73,7 +73,7 @@ def replace_rich_text_tokens_action(
     ...
 ```
 
-A standard Misago function used to replace rich-text tokens in pre-rendered HTML or the next filter from another plugin.
+Misago function used to replace rich-text tokens in pre-rendered HTML or the next filter from another plugin.
 
 
 ### Arguments

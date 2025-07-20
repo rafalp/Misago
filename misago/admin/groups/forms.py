@@ -215,6 +215,42 @@ class EditGroupForm(forms.ModelForm):
         ),
     )
 
+    can_start_polls = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can start polls"),
+    )
+    can_edit_own_polls = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can edit own polls"),
+    )
+    own_polls_edit_time_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Time limit for editing own polls"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of minutes after a user starts a poll during which they can still edit it. Enter zero to remove this time limit.",
+        ),
+        min_value=0,
+    )
+    can_close_own_polls = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can close own polls"),
+    )
+    own_polls_close_time_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Time limit for closing own polls"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of minutes after a user starts a poll during which they can still edit it. Enter zero to remove this time limit.",
+        ),
+        min_value=0,
+    )
+    can_vote_in_polls = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can vote in polls"),
+        help_text=pgettext_lazy(
+            "admin group permissions form", "Users can always vote in their own polls."
+        ),
+    )
+
     can_change_username = YesNoSwitch(
         label=pgettext_lazy("admin group permissions form", "Can change username"),
     )
@@ -249,7 +285,7 @@ class EditGroupForm(forms.ModelForm):
 
     can_see_user_profiles = YesNoSwitch(
         label=pgettext_lazy(
-            "admin group permissions form", "Can see other users profiles"
+            "admin group permissions form", "Can see other users' profiles"
         ),
     )
 
@@ -277,6 +313,12 @@ class EditGroupForm(forms.ModelForm):
             "unused_attachments_storage_limit",
             "attachment_size_limit",
             "can_always_delete_own_attachments",
+            "can_start_polls",
+            "can_edit_own_polls",
+            "own_polls_edit_time_limit",
+            "can_close_own_polls",
+            "own_polls_close_time_limit",
+            "can_vote_in_polls",
             "can_change_username",
             "username_changes_limit",
             "username_changes_expire",

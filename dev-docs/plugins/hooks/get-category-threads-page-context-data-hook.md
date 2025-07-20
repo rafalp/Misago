@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetCategoryThreadsPageContextDataHookAction`
 
-A standard Misago function used to get the template context data for the category threads page.
+Misago function used to get the template context data for the category threads page.
 
 See the [action](#action) section for details.
 
@@ -57,7 +57,7 @@ def get_category_threads_page_context_data_action(request: HttpRequest, kwargs: 
     ...
 ```
 
-A standard Misago function used to get the template context data for the category threads page.
+Misago function used to get the template context data for the category threads page.
 
 
 ### Arguments

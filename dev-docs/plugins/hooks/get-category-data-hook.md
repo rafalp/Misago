@@ -41,7 +41,7 @@ def get_category_data_action(result: dict[str, Any]) -> dict[str, Any]:
     ...
 ```
 
-A standard Misago function used to build a `dict` with category result from queryset's result.
+Misago function used to build a `dict` with category result from queryset's result.
 
 
 ### Arguments

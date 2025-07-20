@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class GetCategoryThreadsQueryHookAction(Protocol):
     """
-    A standard Misago function used to get the name of the predefined database
+    Misago function used to get the name of the predefined database
     `WHERE` clause (represented as a `Q` object instance) to use to retrieve
     threads from the given category.
 
@@ -53,7 +53,7 @@ class GetCategoryThreadsQueryHookFilter(Protocol):
 
     ## `action: GetCategoryThreadsQueryHookAction`
 
-    A standard Misago function used to get the name of the predefined database
+    Misago function used to get the name of the predefined database
     `WHERE` clause (represented as a `Q` object instance) to use to retrieve
     threads from the given category.
 

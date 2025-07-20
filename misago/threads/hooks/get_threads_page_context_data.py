@@ -7,7 +7,7 @@ from ...plugins.hooks import FilterHook
 
 class GetThreadsPageContextDataHookAction(Protocol):
     """
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the threads page.
 
     # Arguments
@@ -36,7 +36,7 @@ class GetThreadsPageContextDataHookFilter(Protocol):
 
     ## `action: GetThreadsPageContextDataHookAction`
 
-    A standard Misago function used to get the template context data
+    Misago function used to get the template context data
     for the threads page.
 
     See the [action](#action) section for details.

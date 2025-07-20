@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 class GetCategoryAccessLevelHookAction(Protocol):
     """
-    A standard Misago function used to get a user's access level for a category.
+    Misago function used to get a user's access level for a category.
     Access levels are used to build the final threads queryset for thread lists.
 
     Default levels are:
@@ -60,7 +60,7 @@ class GetCategoryAccessLevelHookFilter(Protocol):
 
     ## `action: GetCategoryAccessLevelHookAction`
 
-    A standard Misago function used to get a user's access level for a category.
+    Misago function used to get a user's access level for a category.
     Access levels are used to build the final threads queryset for thread lists.
 
     See the [action](#action) section for details.

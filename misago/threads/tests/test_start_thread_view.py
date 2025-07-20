@@ -1,3 +1,5 @@
+from unittest.mock import ANY
+
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
@@ -7,6 +9,8 @@ from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
+from ...polls.enums import PublicPollsAvailability
+from ...polls.models import Poll
 from ...posting.forms import PostForm
 from ...posting.formsets import PostingFormset
 from ...test import (
@@ -655,4 +659,156 @@ def test_start_thread_view_embeds_attachments_in_preview(
     assert_contains_element(response, "a", href=user_image_attachment.get_details_url())
     assert_contains_element(
         response, "img", src=user_image_attachment.get_absolute_url()
+    )
+
+
+def test_start_thread_view_displays_poll_form(user_client, default_category):
+    response = user_client.get(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+    )
+    assert_contains(response, "Start new thread")
+    assert_contains(response, "m-poll-choices-control")
+
+
+def test_start_thread_view_hides_poll_form_for_user_without_permission(
+    user_client, members_group, default_category
+):
+    members_group.can_start_polls = False
+    members_group.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+    )
+    assert_contains(response, "Start new thread")
+    assert_not_contains(response, "m-poll-choices-control")
+
+
+@override_dynamic_settings(enable_public_polls=PublicPollsAvailability.ENABLED)
+def test_start_thread_view_displays_public_poll_option(user_client, default_category):
+    response = user_client.get(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+    )
+    assert_contains(response, "Start new thread")
+    assert_contains(response, "is_public")
+
+
+@override_dynamic_settings(enable_public_polls=PublicPollsAvailability.DISABLED)
+def test_start_thread_view_hides_public_poll_option(user_client, default_category):
+    response = user_client.get(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+    )
+    assert_contains(response, "Start new thread")
+    assert_not_contains(response, "is_public")
+
+
+def test_start_thread_view_starts_thread_with_poll(user_client, user, default_category):
+    response = user_client.post(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+            "posting-poll-question": "What's your mood?",
+            "posting-poll-choices_new": [
+                "Great",
+                "Okay",
+                "About average",
+                "Sad panda",
+            ],
+            "posting-poll-choices_new_noscript": "",
+            "posting-poll-duration": "30",
+            "posting-poll-max_choices": "2",
+            "posting-poll-can_change_vote": "1",
+            "posting-poll-is_public": "1",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"id": thread.pk, "slug": thread.slug}
+    )
+
+    assert thread.has_poll
+
+    poll = Poll.objects.get(thread=thread)
+    assert poll.category == default_category
+    assert poll.thread == thread
+    assert poll.starter == user
+    assert poll.starter_name == user.username
+    assert poll.starter_slug == user.slug
+    assert poll.started_at
+    assert poll.closed_at is None
+    assert poll.question == "What's your mood?"
+    assert poll.choices == [
+        {
+            "id": ANY,
+            "name": "Great",
+            "votes": 0,
+        },
+        {
+            "id": ANY,
+            "name": "Okay",
+            "votes": 0,
+        },
+        {
+            "id": ANY,
+            "name": "About average",
+            "votes": 0,
+        },
+        {
+            "id": ANY,
+            "name": "Sad panda",
+            "votes": 0,
+        },
+    ]
+    assert poll.duration == 30
+    assert poll.max_choices == 2
+    assert poll.can_change_vote
+    assert poll.is_public
+    assert not poll.is_closed
+    assert poll.votes == 0
+    assert poll.closed_by is None
+    assert poll.closed_by_name is None
+    assert poll.closed_by_slug is None
+
+    choices_ids = [len(choice["id"]) for choice in poll.choices]
+    assert choices_ids == [12, 12, 12, 12]
+
+
+def test_start_thread_view_starts_thread_with_poll_form_disabled(
+    user_client, members_group, default_category
+):
+    members_group.can_start_polls = False
+    members_group.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:start-thread",
+            kwargs={"id": default_category.id, "slug": default_category.slug},
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"id": thread.pk, "slug": thread.slug}
     )

@@ -11,7 +11,7 @@ from .forms import (
     GeneralSettingsForm,
     NotificationsSettingsForm,
     OAuth2SettingsForm,
-    ThreadsSettingsForm,
+    ContentSettingsForm,
     UsersSettingsForm,
 )
 
@@ -90,9 +90,9 @@ class OAuth2SettingsView(SettingsView):
     template_name = "misago/admin/conf/oauth2_settings.html"
 
 
-class ThreadsSettingsView(SettingsView):
-    form_class = ThreadsSettingsForm
-    template_name = "misago/admin/conf/threads_settings.html"
+class ContentSettingsView(SettingsView):
+    form_class = ContentSettingsForm
+    template_name = "misago/admin/conf/content_settings.html"
 
 
 class UsersSettingsView(SettingsView):

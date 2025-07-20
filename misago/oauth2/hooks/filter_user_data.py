@@ -8,7 +8,7 @@ from ...users.models import User
 
 class FilterUserDataHookAction(Protocol):
     """
-    A standard Misago function used for filtering the user data, or the next
+    Misago function used for filtering the user data, or the next
     filter function from another plugin.
 
     # Arguments
@@ -65,7 +65,7 @@ class FilterUserDataHookFilter(Protocol):
 
     ## `action: FilterUserDataHookAction`
 
-    A standard Misago function used for filtering the user data, or the next
+    Misago function used for filtering the user data, or the next
     filter function from another plugin.
 
     See the [action](#action) section for details.

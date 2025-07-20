@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 class GetThreadsCategoryPinnedQueryHookAction(Protocol):
     """
-    A standard Misago function used to get the name of the predefined database
+    Misago function used to get the name of the predefined database
     `WHERE` clause (represented as a `Q` object instance) to use to retrieve
     pinned threads from the given category for displaying on the threads page.
 
@@ -52,7 +52,7 @@ class GetThreadsCategoryPinnedQueryHookFilter(Protocol):
 
     ## `action: GetThreadsCategoryPinnedQueryHookAction`
 
-    A standard Misago function used to get the name of the predefined database
+    Misago function used to get the name of the predefined database
     `WHERE` clause (represented as a `Q` object instance) to use to retrieve
     pinned threads from the given category for displaying on the threads page.
 

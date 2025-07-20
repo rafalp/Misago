@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 class FilterAccessibleThreadPostsHookAction(Protocol):
     """
-    A standard Misago function used to set filters on a queryset of posts from
+    Misago function used to set filters on a queryset of posts from
     a thread of any type (regular, private, or plugin-specified), limiting it
     to only the posts that the user can see.
 
@@ -56,7 +56,7 @@ class FilterAccessibleThreadPostsHookFilter(Protocol):
 
     ## `action: FilterAccessibleThreadPostsHookAction`
 
-    A standard Misago function used to set filters on a queryset of posts from
+    Misago function used to set filters on a queryset of posts from
     a thread of any type (regular, private, or plugin-specified), limiting it
     to only the posts that the user can see.
 

@@ -34,7 +34,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: TokenizeHookAction`
 
-A standard Misago function used to create a token stream from markup.
+Misago function used to create a token stream from markup.
 
 See the [action](#action) section for details.
 
@@ -51,7 +51,7 @@ A `str` to tokenize.
 
 #### `processors: Iterable[Callable[[list[Token]], list[Token] | None]]`
 
-A list of callables that each accept a single argument (a list of tokens) and return either a updated list of tokens or None if no changes were made.
+A list of callables that each accept a single argument (a list of tokens) and return either a updated list of tokens or `None` if no changes were made.
 
 
 ### Return value
@@ -71,7 +71,7 @@ def tokenize_action(
     ...
 ```
 
-A standard Misago function used to create a token stream from markup.
+Misago function used to create a token stream from markup.
 
 
 ### Arguments
@@ -88,7 +88,7 @@ A `str` to tokenize.
 
 #### `processors: Iterable[Callable[[list[Token]], list[Token] | None]]`
 
-A list of callables that each accept a single argument (a list of tokens) and return either a updated list of tokens or None if no changes were made.
+A list of callables that each accept a single argument (a list of tokens) and return either a updated list of tokens or `None` if no changes were made.
 
 
 ### Return value
