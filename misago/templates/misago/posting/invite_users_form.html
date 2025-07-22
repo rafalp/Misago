@@ -1,10 +1,17 @@
-{% load i18n misago_forms %}
+{% load i18n misago_avatars misago_forms %}
 
 {% with field=form.users %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label class="control-label" for="{{ field.id_for_label }}">
       {% translate "Invite users:" context "posting users form" %}
     </label>
+    <div class="form-control" contenteditable>
+      {% for user in form.invite_users %}<span contenteditable="false">
+          <img src="{{ user|avatar:16 }}" srcset="{{ user|avatar:32 }}" width="16" height="16" alt="">
+          {{ user.username }}
+          <input type="hidden" name="todo" value="{{ user.id }}">
+        </span>{% endfor %}
+    </div>
     <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" {{ field|requiredhtml }}/>
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>

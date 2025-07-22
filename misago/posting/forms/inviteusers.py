@@ -6,13 +6,12 @@ from django.http import HttpRequest
 from django.utils.translation import npgettext, pgettext
 
 from ...core.utils import slugify
+from ...users.fields import UserMultipleChoiceField
 from ..state import StartPrivateThreadState
 from .base import PostingForm
 
 if TYPE_CHECKING:
     from ...users.models import User
-else:
-    User = get_user_model()
 
 
 class InviteUsersForm(PostingForm):
@@ -22,13 +21,19 @@ class InviteUsersForm(PostingForm):
     request: HttpRequest
     invite_users: list["User"]
 
-    users = forms.CharField(max_length=200)
+    users = UserMultipleChoiceField()
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         self.invite_users: list["User"] = []
 
         super().__init__(*args, **kwargs)
+
+        self.setup_users_field(self.fields["users"])
+
+    def setup_users_field(self, field: UserMultipleChoiceField):
+        field.queryset = get_user_model().objects.filter(is_active=True)
+        field.max_choices = self.request.user_permissions.private_thread_users_limit
 
     def clean_users(self):
         uniques: dict[str, str] = {}
