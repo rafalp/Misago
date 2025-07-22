@@ -1,5 +1,5 @@
 {% load i18n %}
-<ol class="form-control-poll-choices{% if not widget.edit %} d-js-none{% endif %}" max-choices="{{ widget.attrs.max_choices }}" m-poll-choices-control>
+<ol class="form-control-poll-choices{% if not widget.edit %} d-js-block{% endif %}" max-choices="{{ widget.attrs.max_choices }}" m-poll-choices-control>
   {% if widget.choices %}
     {% with field=widget.choices %}
       {% for choice in field %}
@@ -18,7 +18,7 @@
   {% with field=widget.new %}
     {% for choice in field.value %}
       {% if choice.strip %}
-        <li class="form-control-poll-choices-item" m-poll-new-choice>
+        <li class="form-control-poll-choices-item d-js-list-item" m-poll-new-choice>
           <div class="form-control-poll-choices-item-group">
             <input type="text" class="form-control" name="{{ field.name }}" placeholder="{% translate 'New choice...' context 'poll choices control' %}" value="{{ choice }}" />
           </div>
@@ -26,7 +26,7 @@
       {% endif %}
     {% endfor %}
     {% if field.value|length < widget.attrs.max_choices %}
-      <li class="form-control-poll-choices-item" m-poll-new-choice>
+      <li class="form-control-poll-choices-item d-js-list-item" m-poll-new-choice>
         <div class="form-control-poll-choices-item-group">
           <input type="text" class="form-control" name="{{ field.name }}" placeholder="{% translate 'New choice...' context 'poll choices control' %}" value="" />
         </div>
