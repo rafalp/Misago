@@ -14,7 +14,8 @@ textarea.form-control {
   }
 }
 
-.has-error input.form-control {
+.has-error input.form-control,
+.has-error textarea.form-control {
   border-color: @state-danger-border;
   box-shadow: inset 0px 0px 0px 1px @state-danger-border;
 
@@ -24,7 +25,8 @@ textarea.form-control {
   }
 }
 
-.has-success input.form-control {
+.has-success input.form-control,
+.has-success textarea.form-control {
   border-color: @state-success-border;
   box-shadow: inset 0px 0px 0px 1px @state-success-border;
 
@@ -48,4 +50,67 @@ textarea.form-control {
   .progress {
     margin: 0px;
   }
+}
+
+// Form chips input
+.form-chips-control {
+  width: 100%;
+  height: auto;
+  min-height: @input-height-base;
+
+  background-color: @input-bg;
+  border-color: @input-border;
+  border-radius: @input-border-radius;
+  box-shadow: inset 0px 0px 0px 2px @input-border;
+
+  color: @input-color;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+
+  &.focused {
+    border-color: @input-border-focus;
+    box-shadow: inset 0px 0px 0px 2px @input-border-focus;
+  }
+}
+
+.has-error .form-chips-control {
+  border-color: @state-danger-border;
+  box-shadow: inset 0px 0px 0px 2px @state-danger-border;
+
+  &.focused {
+    border-color: lighten(@state-danger-border, 20%);
+    box-shadow: inset 0px 0px 0px 2px lighten(@state-danger-border, 20%);
+  }
+}
+
+.has-success .form-chips-control {
+  border-color: @state-success-border;
+  box-shadow: inset 0px 0px 0px 1px @state-success-border;
+
+  &.focused {
+    border-color: lighten(@state-success-border, 20%);
+    box-shadow: inset 0px 0px 0px 2px lighten(@state-success-border, 20%);
+  }
+}
+
+.form-chips-control-input {
+  display: inline-block;
+
+  width: 100%;
+  height: @input-height-base;
+  padding: @padding-base-vertical @padding-base-horizontal;
+
+  background-color: transparent;
+  border: none;
+
+  color: @input-color;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.form-chips-control-input:focus {
 }

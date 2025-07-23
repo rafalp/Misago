@@ -1,0 +1,17 @@
+{% load i18n misago_avatars misago_forms %}
+{% with widget=widget.default %}
+  {{ widget }}
+  <div class="form-chips-control d-js-block" m-user-multiple-choice="">
+    <input type="text" class="form-chips-control-input" id="{{ widget.attrs.id }}" m-user-multiple-choice-input>
+  </div>
+  <template id="m-user-multiple-choice-template">
+    <span m-user-multiple-choice-item>
+      <img src="" srcset="" width="16" height="16" alt="">
+      <input type="hidden" name="{{ widget.html_name }}" value="{{ user.id }}">
+    </span>
+  </template>
+{% endwith %}
+{% with widget=widget.noscript %}
+  {{ widget }}
+  <input type="text" class="form-control" id="{{ widget.attrs.id }}" name="{{ widget.html_name }}" value="{{ widget.value|default:'' }}" {{ widget|requiredhtml }}>
+{% endwith %}

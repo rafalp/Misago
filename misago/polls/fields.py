@@ -61,7 +61,7 @@ CHOICES_FIELDS = ("new", "new_noscript", "edit", "delete")
 
 
 class PollChoicesWidget(forms.MultiWidget):
-    template_name = "misago/poll/widgets/choices.html"
+    template_name = "misago/widgets/poll_choices.html"
     subwidgets_names = CHOICES_FIELDS
 
     def __init__(self):
@@ -75,8 +75,8 @@ class PollChoicesWidget(forms.MultiWidget):
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
-        context["widget"].pop("value")
-        context["widget"].pop("subwidgets")
+        del context["widget"]["value"]
+        del context["widget"]["subwidgets"]
 
         if not isinstance(value, (list, tuple)):
             value = self.decompress(value)

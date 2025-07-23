@@ -23,6 +23,7 @@ import quote from "./Quote"
 import "./richtext"
 import * as snackbars from "./snackbars"
 import { updateTabGroups } from "./TabGroups"
+import userMultipleChoice from "./UserMultipleChoice"
 import "./scrollTo"
 import "./timestamps"
 
@@ -44,8 +45,9 @@ export class Misago {
     this.deleteElement = deleteElement
     this.slideUpElement = slideUpElement
 
-    this.tabGroups = updateTabGroups
     this.activatePollChoicesControl = activatePollChoicesControl
+    this.tabGroups = updateTabGroups
+    this.userMultipleChoice = userMultipleChoice
   }
 
   addInitializer(initializer) {
