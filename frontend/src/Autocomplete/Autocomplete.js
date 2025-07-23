@@ -18,37 +18,37 @@ const KEY_SELECT = {
 }
 
 class Autocomplete {
-  constructor(options) {
-    this.control = options.control
-    this.select = options.select
+  constructor(config) {
+    this.control = config.control
+    this.select = config.select
 
-    this.getQuery = options.getQuery
-    this.onSelect = options.onSelect
+    this.getQuery = config.getQuery
+    this.onSelect = config.onSelect
 
-    control.addEventListener("keydown", this.onKeyDown)
-    control.addEventListener("keyup", this.onKeyUp)
-    control.addEventListener("blur", select.hide)
+    this.control.addEventListener("keydown", this.onKeyDown)
+    this.control.addEventListener("keyup", this.onKeyUp)
+    this.control.addEventListener("blur", this.select.hide)
   }
 
   onKeyDown = (event) => {
-    if (KEY_SELECT[event.code] && select.visible) {
+    if (KEY_SELECT[event.code] && this.select.visible) {
       event.preventDefault()
     }
   }
 
   onKeyUp = (event) => {
-    if (KEY_INVALID[event.code] && select.visible) {
-      select.handleKey(event.code)
+    if (KEY_INVALID[event.code] && this.select.visible) {
+      this.select.handleKey(event.code)
       event.preventDefault()
-    } else if (INVALID_KEYS[event.code]) {
-      select.hide()
+    } else if (KEY_INVALID[event.code]) {
+      this.select.hide()
     } else {
       const query = this.getQuery(event.target)
 
       if (query) {
-        this.getSuggestions(query)
+        // this.getSuggestions(query)
       } else {
-        select.hide()
+        this.select.hide()
       }
     }
   }
