@@ -1,4 +1,5 @@
 import htmx from "htmx.org"
+import { Autocomplete, getUsers } from "./Autocomplete"
 
 const DATA_ATTRIBUTE_ELEMENT = "m-user-multiple-choice"
 const DATA_ATTRIBUTE_INPUT = "m-user-multiple-choice-input"
@@ -12,8 +13,16 @@ const CLASS_NAME_FOCUS = "focused"
 
 const EVENT_FOCUS = ["focusin", "click"]
 
+const KEY_OVERRIDE = {
+  Delete: false,
+  Space: false,
+  ArrowLeft: false,
+  ArrowRight: false,
+}
+
 class UserMultipleChoice {
   constructor() {
+    this.autocomplete = null
     this.element = null
     this.input = null
     this.template = null
@@ -29,6 +38,17 @@ class UserMultipleChoice {
     this.element = element
     this.input = document.querySelector(SELECTOR_INPUT)
     this.template = document.getElementById(TEMPLATE_ID)
+
+    this.autocomplete = new Autocomplete({
+      control: this.input,
+      keyOverride: KEY_OVERRIDE,
+      source: getUsers,
+      select: {
+        hide: () => console.log("hide select"),
+      },
+      getQuery: (control) => control.value.trim().replace(/\s+/, ""),
+      onSelect: null,
+    })
 
     EVENT_FOCUS.forEach((event) => {
       element.addEventListener(event, this.onFocus)

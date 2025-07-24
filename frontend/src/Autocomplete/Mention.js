@@ -24,6 +24,7 @@ const SELECT_KEYS = {
 }
 
 const DEBOUNCE = 800
+const INITIAL_DELAY = 100
 
 class Mention {
   constructor(control) {
@@ -109,27 +110,31 @@ class Mention {
   getSuggestions(query) {
     if (!!this.debounce) {
       window.clearTimeout(this.debounce)
+      this.debounce = null
     }
 
-    this.debounce = window.setTimeout(() => {
-      suggestions.get(query.text).then((results) => {
-        select.show(this.control, query, results, (choice) => {
-          const value = this.control.value
-          const prefix = value.substring(0, query.start)
-          const suffix = value.substring(query.end)
-          this.control.value = prefix + "@" + choice + " " + suffix
+    this.debounce = window.setTimeout(
+      () => {
+        suggestions.get(query.text).then((results) => {
+          select.show(this.control, query, results, (choice) => {
+            const value = this.control.value
+            const prefix = value.substring(0, query.start)
+            const suffix = value.substring(query.end)
+            this.control.value = prefix + "@" + choice + " " + suffix
 
-          window.setTimeout(() => {
-            const scroll = this.control.scrollTop
-            this.control.focus()
-            this.control.scrollTop = scroll
+            window.setTimeout(() => {
+              const scroll = this.control.scrollTop
+              this.control.focus()
+              this.control.scrollTop = scroll
 
-            const caret = query.start + choice.length + 2
-            this.control.setSelectionRange(caret, caret)
-          }, 100)
+              const caret = query.start + choice.length + 2
+              this.control.setSelectionRange(caret, caret)
+            }, 100)
+          })
         })
-      })
-    }, DEBOUNCE)
+      },
+      this.debounce ? DEBOUNCE : INITIAL_DELAY
+    )
   }
 }
 

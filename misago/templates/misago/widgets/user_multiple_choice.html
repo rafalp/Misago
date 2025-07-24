@@ -7,11 +7,11 @@
   <template id="m-user-multiple-choice-template">
     <span m-user-multiple-choice-item>
       <img src="" srcset="" width="16" height="16" alt="">
-      <input type="hidden" name="{{ widget.html_name }}" value="{{ user.id }}">
+      <input type="hidden" name="{{ widget.name }}" value="{{ user.id }}">
     </span>
   </template>
 {% endwith %}
 {% with widget=widget.noscript %}
   {{ widget }}
-  <input type="text" class="form-control" id="{{ widget.attrs.id }}" name="{{ widget.html_name }}" value="{{ widget.value|default:'' }}" {{ widget|requiredhtml }}>
+  <input type="text" class="form-control" id="{{ widget.attrs.id }}" name="{{ widget.name }}" value="{{ widget.value|default:'' }}" {{ widget|requiredhtml }}>
 {% endwith %}
