@@ -25,7 +25,6 @@ class UserMultipleChoiceWidget(forms.MultiWidget):
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
-        print(context)
         for i, subwidget in enumerate(context["widget"]["subwidgets"]):
             subwidget_name = self.subfields[i]
             context["widget"][subwidget_name] = subwidget
@@ -35,7 +34,7 @@ class UserMultipleChoiceWidget(forms.MultiWidget):
         return context
 
     def decompress(self, value):
-        if value:
+        if value and isinstance(value[0], get_user_model()):
             return [value, value]
         return [None, None]
 
@@ -46,8 +45,8 @@ class UserMultipleChoiceField(forms.MultiValueField):
     def __init__(self, *, queryset: QuerySet | None = None, max_choices: int = 5, **kwargs):
         super().__init__(
             fields=(
-                UserMultipleChoiceJavaScriptSubField(),
-                UserMultipleChoiceNoScriptSubField(),
+                UserMultipleChoiceJavaScriptSubField(required=False),
+                UserMultipleChoiceNoScriptSubField(required=False),
             ),
             require_all_fields=False,
             **kwargs,
@@ -101,9 +100,9 @@ class UserMultipleChoiceJavaScriptSubField(UserMultipleChoiceSubField):
         value = self.to_python(value)[:self.max_choices]
 
         if value:
-            value = self.get_users(self.queryset, value)
+            value = list(self.get_users(self.queryset, value))
         else:
-            value = self.queryset.empty()
+            value = []
 
         self.validate(value)
         self.run_validators(value)
@@ -112,6 +111,9 @@ class UserMultipleChoiceJavaScriptSubField(UserMultipleChoiceSubField):
 
 class UserMultipleChoiceNoScriptSubField(UserMultipleChoiceSubField):
     def to_python(self, value) -> list[str]:
+        if not value:
+            return []
+
         final_value = []
         for item in value.split():
             if "," in item:
@@ -127,9 +129,9 @@ class UserMultipleChoiceNoScriptSubField(UserMultipleChoiceSubField):
             raise forms.ValidationError("TODO")
 
         if value:
-            value = self.get_users(self.queryset, value)
+            value = list(self.get_users(self.queryset, value))
         else:
-            value = self.queryset.empty()
+            value = []
 
         self.validate(value)
         self.run_validators(value)

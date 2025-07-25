@@ -17,6 +17,15 @@ def suggest_users(request: HttpRequest) -> JsonResponse:
 
 
 def find_users_suggestions(request: HttpRequest, query: str) -> list:
+    exclude = []
+    for user_id in request.GET.getlist("exclude")[:20]:
+        try:
+            user_id = int(user_id)
+            if user_id and user_id not in exclude:
+                exclude.append(user_id)
+        except (TypeError, ValueError):
+            pass
+
     results: list = []
 
     query_lower = query.lower()
@@ -27,6 +36,9 @@ def find_users_suggestions(request: HttpRequest, query: str) -> list:
         .filter(is_active=True, similarity__gt=0.2)
         .order_by("-similarity")
     )
+
+    if exclude:
+        queryset = queryset.exclude(id__in=exclude)
 
     if request.user.is_authenticated and request.user.username == query_lower:
         results.append(request.user)
@@ -108,6 +120,7 @@ def sort_results(query: str, results: list) -> list:
 
 def serialize_user(user) -> dict:
     return {
+        "id": user.id,
         "username": user.username,
         "slug": user.slug,
         "avatar": user.avatars,

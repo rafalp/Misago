@@ -24,14 +24,16 @@ const KEY_SELECT = {
 class Autocomplete {
   constructor(config) {
     this.control = config.control
+    this.anchor = config.anchor
     this.source = config.source
+    this.getQuery = config.getQuery
     this.select = config.select
+    this.errors = config.errors || true
 
     this.keyCancel = config.keyOverride
       ? Object.assign({}, KEY_CANCEL, config.keyOverride)
       : KEY_CANCEL
 
-    this.getQuery = config.getQuery
     this.onSelect = config.onSelect
 
     this.delay = {
@@ -80,7 +82,7 @@ class Autocomplete {
   }
 
   showSuggestions = (query) => {
-    if (query.text === this._query.text) {
+    if (this._query && query.text === this._query.text) {
       return
     }
 
@@ -92,7 +94,20 @@ class Autocomplete {
     this._query = query
     this._debounce = window.setTimeout(
       () => {
-        this.source.get(query.text).then((results) => {})
+        this.source(query.text).then(
+          (data) => {
+            if (this.select && this.onSelect) {
+              this.select.show(query, data, this.onSelect)
+            } else {
+              console.warn(
+                "Autocomplete was initialized without the 'select' or 'onSelect' options."
+              )
+            }
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
       },
       this._debounce ? this.delay.debounced : this.delay.initial
     )

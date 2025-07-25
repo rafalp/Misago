@@ -1,4 +1,4 @@
-class UsersSource {
+class SourceUsers {
   constructor() {
     this.cache = {}
     this.url = window.misago_suggest_users
@@ -26,10 +26,10 @@ class UsersSource {
   }
 }
 
-const singleton = new UsersSource()
+const _users = new SourceUsers()
 
-function source(query) {
-  return singleton.get(query)
+function users(query) {
+  return _users.get(query)
 }
 
-export { source }
+export { users }

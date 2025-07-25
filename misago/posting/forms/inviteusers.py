@@ -36,65 +36,39 @@ class InviteUsersForm(PostingForm):
         field.max_choices = self.request.user_permissions.private_thread_users_limit
 
     def clean_users(self):
-        uniques: dict[str, str] = {}
-        for username in self.cleaned_data["users"].split():
-            slug = slugify(username)
-            if slug not in uniques:
-                uniques[slug] = username
+        data: list["User"] = self.cleaned_data["users"]
 
-        if self.request.user.slug in uniques and len(uniques) == 1:
-            raise forms.ValidationError(
-                pgettext("posting form", "You can't invite yourself.")
-            )
+        if self.request.user in data:
+            data.remove(self.request.user)
 
-        uniques.pop(self.request.user.slug, None)
+            if not data:
+                raise forms.ValidationError(
+                    pgettext("posting form", "You can't invite yourself.")
+                )
 
-        if not uniques:
+        data_length = len(data)
+
+        if not data_length:
             raise forms.ValidationError(
                 pgettext("posting form", "Enter at least one username.")
             )
 
         limit = self.request.user_permissions.private_thread_users_limit
-        if len(uniques) > limit:
+        if data_length > limit:
             raise forms.ValidationError(
                 npgettext(
                     "posting form",
                     "You can't invite more than %(limit)s user.",
                     "You can't invite more than %(limit)s users.",
-                    len(uniques),
+                    data_length,
                 ),
                 params={"limit": limit},
             )
 
-        users = list(User.objects.filter(slug__in=uniques, is_active=True))
-
-        if len(users) != len(uniques):
-            found_users: set[str] = set([u.slug for u in users])
-            missing_users: list[str] = set(uniques).difference(found_users)
-            missing_usernames: list[str] = [uniques[slug] for slug in missing_users]
-
-            if len(missing_usernames) == 1:
-                raise forms.ValidationError(
-                    pgettext(
-                        "posting form",
-                        "One user could not be found: %(username)s",
-                    ),
-                    params={"username": missing_usernames[0]},
-                )
-
-            raise forms.ValidationError(
-                pgettext(
-                    "posting form",
-                    "Users could not be found: %(usernames)s",
-                ),
-                params={"usernames": ", ".join(missing_usernames)},
-            )
-
-        self.invite_users = users
-        return " ".join([u.username for u in users])
+        return data
 
     def update_state(self, state: StartPrivateThreadState):
-        state.set_invite_users(self.invite_users)
+        state.set_invite_users(self.cleaned_data["users"])
 
 
 def create_invite_users_form(request: HttpRequest) -> InviteUsersForm:

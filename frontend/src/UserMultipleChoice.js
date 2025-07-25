@@ -1,5 +1,10 @@
 import htmx from "htmx.org"
-import { Autocomplete, getUsers } from "./Autocomplete"
+import {
+  Autocomplete,
+  AnchorInput,
+  SelectUser,
+  sources,
+} from "./Autocomplete_v2"
 
 const DATA_ATTRIBUTE_ELEMENT = "m-user-multiple-choice"
 const DATA_ATTRIBUTE_INPUT = "m-user-multiple-choice-input"
@@ -39,15 +44,43 @@ class UserMultipleChoice {
     this.input = document.querySelector(SELECTOR_INPUT)
     this.template = document.getElementById(TEMPLATE_ID)
 
+    function getQuery(control) {
+      const text = control.value.trim().replace(/\s+/, "")
+      return { prefix: "", text }
+    }
+
+    const onSelect = (choice) => {
+      const item = this.template.content.cloneNode(true)
+
+      item.querySelector("input").value = choice.slug
+      item.querySelector('slot[name="username"]').replaceWith(choice.username)
+
+      const avatars = choice.avatar
+        .filter(function ({ size }) {
+          return size >= 32
+        })
+        .reverse()
+
+      const img = item.querySelector("img")
+      if (avatars.length) {
+        img.setAttribute("src", avatars[0].url)
+      } else {
+        img.remove()
+      }
+
+      this.input.value = ""
+      this.input.before(item)
+    }
+
     this.autocomplete = new Autocomplete({
       control: this.input,
       keyOverride: KEY_OVERRIDE,
-      source: getUsers,
-      select: {
-        hide: () => console.log("hide select"),
-      },
-      getQuery: (control) => control.value.trim().replace(/\s+/, ""),
-      onSelect: null,
+      source: sources.users,
+      select: new SelectUser({
+        anchor: new AnchorInput(this.input),
+      }),
+      getQuery,
+      onSelect,
     })
 
     EVENT_FOCUS.forEach((event) => {
