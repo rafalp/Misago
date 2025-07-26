@@ -2,23 +2,23 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
-# uwnyuD, 2023
-#
+# manubazsi, 2024
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-20 20:02+0000\n"
+"POT-Creation-Date: 2025-03-15 09:26+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
-"Last-Translator: uwnyuD, 2023\n"
+"Last-Translator: manubazsi, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/misago/teams/65369/hu/)\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: acl/admin/__init__.py:24
@@ -214,8 +214,8 @@ msgstr "Rövid név"
 #: categories/admin/forms.py:58
 msgctxt "admin category form"
 msgid ""
-"Optional, alternative or abbreviated name (eg. abbreviation) used on threads "
-"list."
+"Optional, alternative or abbreviated name (eg. abbreviation) used on threads"
+" list."
 msgstr ""
 "Opcionális, alternatív vagy rövidített név (pl. rövidítés), amelyet a témák "
 "listáján használnak."
@@ -250,7 +250,7 @@ msgstr "Opcionális leírás, amely elmagyarázza a kategória célját."
 #: categories/admin/forms.py:90
 msgctxt "admin category form"
 msgid "CSS class"
-msgstr ""
+msgstr "CSS osztály"
 
 #: categories/admin/forms.py:94
 msgctxt "admin category form"
@@ -315,8 +315,8 @@ msgstr "A téma kora"
 #: categories/admin/forms.py:134
 msgctxt "admin category form"
 msgid ""
-"Prune thread if number of days since its creation is greater than specified. "
-"Enter 0 to disable this pruning criteria."
+"Prune thread if number of days since its creation is greater than specified."
+" Enter 0 to disable this pruning criteria."
 msgstr ""
 "Metsze meg a témát, ha a létrehozása óta eltelt napok száma nagyobb a "
 "megadottnál. Írjon be 0-t a metszési feltétel letiltásához."
@@ -377,7 +377,8 @@ msgstr "Archívum"
 #: categories/admin/forms.py:221
 msgctxt "admin category form"
 msgid ""
-"Instead of being deleted, pruned threads can be moved to designated category."
+"Instead of being deleted, pruned threads can be moved to designated "
+"category."
 msgstr "Törlés helyett a levágott témák áthelyezhetők a kijelölt kategóriába."
 
 #: categories/admin/forms.py:225
@@ -632,8 +633,8 @@ msgstr "Értesítések"
 #: conf/admin/__init__.py:99
 msgctxt "admin node"
 msgid ""
-"Those settings control default notification preferences of new user accounts "
-"and storage time of existing notifications."
+"Those settings control default notification preferences of new user accounts"
+" and storage time of existing notifications."
 msgstr ""
 "Ezek a beállítások szabályozzák az új felhasználói fiókok alapértelmezett "
 "értesítési beállításait és a meglévő értesítések tárolási idejét."
@@ -857,7 +858,8 @@ msgstr ""
 #: conf/admin/forms/general.py:75
 msgctxt "admin general settings form"
 msgid ""
-"Image that will be displayed in forum navbar instead of a small logo or text."
+"Image that will be displayed in forum navbar instead of a small logo or "
+"text."
 msgstr ""
 
 #: conf/admin/forms/general.py:80
@@ -916,7 +918,7 @@ msgstr ""
 #: conf/admin/forms/general.py:119
 msgctxt "admin general settings form"
 msgid "Replace image with avatar on user profiles"
-msgstr ""
+msgstr "Kép cseréje avatárra a felhasználói profilokban"
 
 #: conf/admin/forms/general.py:124
 msgctxt "admin general settings form"
@@ -954,8 +956,8 @@ msgstr ""
 msgctxt "admin general settings form"
 msgid ""
 "Hiding the link to the ACP from user menus reduces risk of malicious actors "
-"gaining access to admin session for admin users who are sharing their device "
-"with others or who are logging in to the site in public spaces."
+"gaining access to admin session for admin users who are sharing their device"
+" with others or who are logging in to the site in public spaces."
 msgstr ""
 
 #: conf/admin/forms/general.py:163
@@ -1060,8 +1062,8 @@ msgstr ""
 #: conf/admin/forms/oauth2.py:79
 msgctxt "admin oauth2 settings form"
 msgid ""
-"Address of the login form on provider's server that users will be redirected "
-"to."
+"Address of the login form on provider's server that users will be redirected"
+" to."
 msgstr ""
 
 #: conf/admin/forms/oauth2.py:86
@@ -1099,8 +1101,8 @@ msgstr ""
 #: conf/admin/forms/oauth2.py:110
 msgctxt "admin oauth2 settings form"
 msgid ""
-"Name of key containing the access token in JSON returned by the provider. If "
-"token is nested, use period (\".\") for path, eg: \"result.token\" will "
+"Name of key containing the access token in JSON returned by the provider. If"
+" token is nested, use period (\".\") for path, eg: \"result.token\" will "
 "retrieve the token from \"token\" key nested in \"result\"."
 msgstr ""
 
@@ -1147,8 +1149,8 @@ msgstr ""
 #: conf/admin/forms/oauth2.py:167
 msgctxt "admin oauth2 settings form"
 msgid ""
-"List of extra headers to include in a HTTP request made to retrieve the user "
-"profile. Example header is \"Header-name: value\". Specify each header on "
+"List of extra headers to include in a HTTP request made to retrieve the user"
+" profile. Example header is \"Header-name: value\". Specify each header on "
 "separate line."
 msgstr ""
 
@@ -1288,10 +1290,10 @@ msgstr ""
 #: conf/admin/forms/threads.py:91
 msgctxt "admin threads settings form"
 msgid ""
-"Controls amount of data used by read-tracking system. All content older than "
-"number of days specified in this setting is considered old and read, even if "
-"the opposite is true for the user. Active forums can try lowering this value "
-"while less active ones may wish to increase it instead."
+"Controls amount of data used by read-tracking system. All content older than"
+" number of days specified in this setting is considered old and read, even "
+"if the opposite is true for the user. Active forums can try lowering this "
+"value while less active ones may wish to increase it instead."
 msgstr ""
 
 #: conf/admin/forms/threads.py:99
@@ -1390,8 +1392,8 @@ msgstr ""
 #: conf/admin/forms/users.py:75
 msgctxt "admin users settings form"
 msgid ""
-"Delete new inactive accounts if they weren't activated within this number of "
-"days"
+"Delete new inactive accounts if they weren't activated within this number of"
+" days"
 msgstr ""
 
 #: conf/admin/forms/users.py:79
@@ -1459,8 +1461,8 @@ msgstr ""
 #: conf/admin/forms/users.py:149
 msgctxt "admin users settings form"
 msgid ""
-"Select which avatar to use when user has no Gravatar associated with their e-"
-"mail address."
+"Select which avatar to use when user has no Gravatar associated with their "
+"e-mail address."
 msgstr ""
 
 #: conf/admin/forms/users.py:154
@@ -1534,9 +1536,9 @@ msgstr ""
 #: conf/admin/forms/users.py:239
 msgctxt "admin users settings form"
 msgid ""
-"This setting prevents situations when the last page of a users list contains "
-"very few items. If number of users to be displayed on the last page is less "
-"or equal to number specified in this setting, those users will instead be "
+"This setting prevents situations when the last page of a users list contains"
+" very few items. If number of users to be displayed on the last page is less"
+" or equal to number specified in this setting, those users will instead be "
 "appended to the previous page, reducing number of list's pages."
 msgstr ""
 
@@ -1713,8 +1715,8 @@ msgstr ""
 #: templates/misago/admin/dashboard/index.html:37
 msgctxt "admin version check"
 msgid ""
-"Version check feature relies on the API operated by the Python Package Index "
-"(pypi.org) to retrieve the latest Misago release version."
+"Version check feature relies on the API operated by the Python Package Index"
+" (pypi.org) to retrieve the latest Misago release version."
 msgstr ""
 
 #: graphql/admin/versioncheck.py:76
@@ -2009,7 +2011,8 @@ msgstr ""
 #: menus/admin/forms.py:28
 msgctxt "admin menu item form"
 msgid ""
-"Optional. Additional CSS class to include in link's \"class\" HTML attribute."
+"Optional. Additional CSS class to include in link's \"class\" HTML "
+"attribute."
 msgstr ""
 
 #: menus/admin/forms.py:33
@@ -2140,8 +2143,7 @@ msgstr ""
 #: notifications/threads.py:262
 #, python-format
 msgctxt "new private thread email subject"
-msgid ""
-"%(user)s has invited you to participate in private thread \"%(thread)s\""
+msgid "%(user)s has invited you to participate in private thread \"%(thread)s\""
 msgstr ""
 
 #: oauth2/exceptions.py:14
@@ -2161,7 +2163,8 @@ msgstr ""
 
 #: oauth2/exceptions.py:35
 msgctxt "oauth2 error"
-msgid "The OAuth2 state sent by the provider did not match one in the session."
+msgid ""
+"The OAuth2 state sent by the provider did not match one in the session."
 msgstr ""
 
 #: oauth2/exceptions.py:45
@@ -2223,7 +2226,7 @@ msgstr ""
 #: oauth2/exceptions.py:121
 msgctxt "oauth2 error"
 msgid "User profile retrieved from the OAuth2 provider did not validate."
-msgstr ""
+msgstr "Az OAuth2-szolgáltatótól lekért felhasználói profil nem érvényesült."
 
 #: oauth2/user.py:99
 msgctxt "oauth2 error"
@@ -2235,7 +2238,8 @@ msgstr ""
 #: oauth2/user.py:109
 msgctxt "oauth2 error"
 msgid ""
-"Your username returned by the provider is not available for use on this site."
+"Your username returned by the provider is not available for use on this "
+"site."
 msgstr ""
 
 #: plugins/admin/__init__.py:15
@@ -2280,6 +2284,8 @@ msgstr ""
 msgctxt "admin node"
 msgid "Enable users to sign on and login using their social profile."
 msgstr ""
+"Lehetővé teszi a felhasználók számára, hogy közösségi profiljuk segítségével"
+" bejelentkezzenek és bejelentkezzenek."
 
 #: socialauth/admin/forms/base.py:11
 msgctxt "admin social auth provider form"
@@ -2305,10 +2311,10 @@ msgstr ""
 msgctxt "admin social auth provider form"
 msgid ""
 "This setting controls handling of e-mail collisions that occur when e-mail "
-"address returned from social site is already stored in the forum's database. "
-"Enabling this option will result in the user being signed in to pre-existing "
-"account. Otherwise they will be asked to specify a different e-mail to "
-"complete the sign in using social site."
+"address returned from social site is already stored in the forum's database."
+" Enabling this option will result in the user being signed in to pre-"
+"existing account. Otherwise they will be asked to specify a different e-mail"
+" to complete the sign in using social site."
 msgstr ""
 
 #: socialauth/admin/forms/base.py:59 socialauth/admin/forms/base.py:61
@@ -2388,8 +2394,8 @@ msgstr ""
 #, python-format
 msgctxt "social auth"
 msgid ""
-"The e-mail address associated with your %(backend)s account is not available "
-"for use on this site."
+"The e-mail address associated with your %(backend)s account is not available"
+" for use on this site."
 msgstr ""
 
 #: socialauth/pipeline.py:99
@@ -2483,8 +2489,8 @@ msgstr ""
 #: templates/misago/activation/request.html:32
 msgctxt "account activation page"
 msgid ""
-"The site administrator may impose a requirement on newly registered accounts "
-"to be activated before users will be able to sign in."
+"The site administrator may impose a requirement on newly registered accounts"
+" to be activated before users will be able to sign in."
 msgstr ""
 
 #: templates/misago/activation/request.html:35
@@ -3514,7 +3520,7 @@ msgstr ""
 #: templates/misago/admin/dashboard/totals.html:7
 msgctxt "admin dashboard totals"
 msgid "Users"
-msgstr ""
+msgstr "Felhasználók"
 
 #: templates/misago/admin/dashboard/totals.html:19
 msgctxt "admin dashboard totals"
@@ -3615,7 +3621,8 @@ msgstr ""
 #: templates/misago/admin/errorpages/404.html:16
 msgctxt "admin error 404"
 msgid ""
-"The link you've followed was incorrect or the page has been moved or deleted."
+"The link you've followed was incorrect or the page has been moved or "
+"deleted."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure.html:5
@@ -3646,22 +3653,22 @@ msgstr ""
 #: templates/misago/admin/errorpages/csrf_failure_message.html:12
 msgctxt "admin csrf error"
 msgid ""
-"The form was sent after being opened in the browser for a long time (eg. few "
-"days) and cookie token has expired."
+"The form was sent after being opened in the browser for a long time (eg. few"
+" days) and cookie token has expired."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:15
 msgctxt "admin csrf error"
 msgid ""
-"The site is configured to use the HTTPS, but this form was sent over the the "
-"HTTP."
+"The site is configured to use the HTTPS, but this form was sent over the the"
+" HTTP."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:16
 msgctxt "admin csrf error"
 msgid ""
-"If you are an owner of this site, please check if the HTTPS certificate used "
-"by the site is valid and accepted by the browser."
+"If you are an owner of this site, please check if the HTTPS certificate used"
+" by the site is valid and accepted by the browser."
 msgstr ""
 
 #: templates/misago/admin/generic/filter_form.html:7
@@ -3974,12 +3981,9 @@ msgid "Plugin"
 msgstr ""
 
 #: templates/misago/admin/plugins/list.html:23
-#, fuzzy
-#| msgctxt "admin node"
-#| msgid "Permissions"
 msgctxt "admin plugins"
 msgid "Version"
-msgstr "Engedélyek"
+msgstr ""
 
 #: templates/misago/admin/plugins/list.html:24
 msgctxt "admin plugins"
@@ -4142,7 +4146,7 @@ msgstr ""
 #: templates/misago/admin/ranks/list.html:105
 msgctxt "admin ranks"
 msgid "List users"
-msgstr ""
+msgstr "Felhasználók listája"
 
 #: templates/misago/admin/ranks/list.html:111
 msgctxt "admin ranks"
@@ -4285,8 +4289,8 @@ msgstr ""
 #, python-format
 msgctxt "admin social auth providers"
 msgid ""
-"OAuth2 client is enabled. Social authentication has been disabled with login "
-"and registration delegated to the %(provider)s."
+"OAuth2 client is enabled. Social authentication has been disabled with login"
+" and registration delegated to the %(provider)s."
 msgstr ""
 
 #: templates/misago/admin/socialauth/list.html:109
@@ -4631,7 +4635,7 @@ msgstr ""
 #: templates/misago/admin/users/ban.html:83
 msgctxt "admin ban users form"
 msgid "Ban users"
-msgstr ""
+msgstr "Felhasználók kitiltása"
 
 #: templates/misago/admin/users/ban.html:11
 msgctxt "admin ban users form"
@@ -4641,7 +4645,7 @@ msgstr ""
 #: templates/misago/admin/users/ban.html:22
 msgctxt "admin ban users form"
 msgid "Users"
-msgstr ""
+msgstr "Felhasználók"
 
 #: templates/misago/admin/users/ban.html:28
 msgctxt "admin ban users list"
@@ -4834,7 +4838,7 @@ msgstr ""
 #: templates/misago/admin/users/edit.html:246
 msgctxt "admin user form"
 msgid "Notifications preferences"
-msgstr ""
+msgstr "Értesítési beállítások"
 
 #: templates/misago/admin/users/edit.html:259
 msgctxt "admin user form"
@@ -4851,8 +4855,8 @@ msgstr ""
 #: templates/misago/admin/users/edit.html:264
 msgctxt "admin user form"
 msgid ""
-"No additional action is required. This account will be deleted automatically "
-"when process is completed."
+"No additional action is required. This account will be deleted automatically"
+" when process is completed."
 msgstr ""
 
 #: templates/misago/admin/users/edit.html:307
@@ -5075,8 +5079,8 @@ msgstr ""
 #, python-format
 msgctxt "confirm email change email"
 msgid ""
-"%(user)s, you are receiving this message because you have changed your e-"
-"mail address."
+"%(user)s, you are receiving this message because you have changed your "
+"e-mail address."
 msgstr ""
 
 #: templates/misago/emails/change_email.html:11
@@ -5241,8 +5245,8 @@ msgstr ""
 #: templates/misago/emails/register/inactive.txt:25
 msgctxt "welcome email"
 msgid ""
-"Before you will be able to join discussion on our site, you have to activate "
-"your account. To do so, simply click the link below:"
+"Before you will be able to join discussion on our site, you have to activate"
+" your account. To do so, simply click the link below:"
 msgstr ""
 
 #: templates/misago/emails/register/inactive.html:27
@@ -5343,7 +5347,8 @@ msgstr ""
 #: templates/misago/errorpages/404.html:38
 msgctxt "error 404 page"
 msgid ""
-"The link you've followed was incorrect or the page has been moved or deleted."
+"The link you've followed was incorrect or the page has been moved or "
+"deleted."
 msgstr ""
 
 #: templates/misago/errorpages/404.html:37
@@ -5399,8 +5404,8 @@ msgstr ""
 #: templates/misago/errorpages/csrf_failure.html:9
 msgctxt "error csrf page"
 msgid ""
-"This error is usually caused by your browser not accepting or using outdated "
-"cookies. Check your browser configuration and try again."
+"This error is usually caused by your browser not accepting or using outdated"
+" cookies. Check your browser configuration and try again."
 msgstr ""
 
 #: templates/misago/errorpages/csrf_failure.html:23
@@ -5574,8 +5579,8 @@ msgstr ""
 #: templates/misago/forgottenpassword/request.html:47
 msgctxt "forgotten password page"
 msgid ""
-"Instead, you can change your password using special secure form that will be "
-"available by special link valid only for your browser, for seven days or "
+"Instead, you can change your password using special secure form that will be"
+" available by special link valid only for your browser, for seven days or "
 "until your password is changed."
 msgstr ""
 
@@ -5604,7 +5609,7 @@ msgstr ""
 #: templates/misago/navbar.html:57
 msgctxt "navbar"
 msgid "Open notifications"
-msgstr ""
+msgstr "Értesítések megnyitása"
 
 #: templates/misago/navbar.html:62
 msgctxt "navbar"
@@ -5621,10 +5626,11 @@ msgctxt "cta"
 msgid "Register"
 msgstr ""
 
-#: templates/misago/notifications.html:5 templates/misago/notifications.html:18
+#: templates/misago/notifications.html:5
+#: templates/misago/notifications.html:18
 msgctxt "notifications page"
 msgid "Notifications"
-msgstr ""
+msgstr "Értesítések"
 
 #: templates/misago/notifications.html:36
 msgctxt "notifications page"
@@ -5646,13 +5652,13 @@ msgstr ""
 #: templates/misago/notifications_disabled.html:18
 msgctxt "notifications disabled page"
 msgid "E-mail notifications disabled"
-msgstr ""
+msgstr "E-mail értesítések kikapcsolva"
 
 #: templates/misago/notifications_disabled.html:19
 msgctxt "notifications disabled page"
 msgid ""
-"You will no longer receive e-mail notifications when someone replies to this "
-"thread."
+"You will no longer receive e-mail notifications when someone replies to this"
+" thread."
 msgstr ""
 
 #: templates/misago/notifications_disabled.html:20
@@ -6231,17 +6237,17 @@ msgstr ""
 #: templates/misago/thread/posts/event/index.html:56
 msgctxt "thread event"
 msgid "Thread has been pinned globally."
-msgstr ""
+msgstr "Ez a téma globálisan ki lett tűzve."
 
 #: templates/misago/thread/posts/event/index.html:58
 msgctxt "thread event"
 msgid "Thread has been pinned in category."
-msgstr ""
+msgstr "Ez a téma a kategóriában lett kitűzve."
 
 #: templates/misago/thread/posts/event/index.html:60
 msgctxt "thread event"
 msgid "Thread has been unpinned."
-msgstr ""
+msgstr "Ennél a témánál a kitűzés vissza lett vonva."
 
 #: templates/misago/thread/posts/event/index.html:65
 #, python-format
@@ -6362,8 +6368,8 @@ msgstr ""
 #: templates/misago/thread/posts/post/flags.html:29
 msgctxt "post unapproved flag"
 msgid ""
-"This post is unapproved. Only users with permission to approve posts and its "
-"author may see its contents."
+"This post is unapproved. Only users with permission to approve posts and its"
+" author may see its contents."
 msgstr ""
 
 #: templates/misago/thread/posts/post/flags.html:35
@@ -6480,12 +6486,12 @@ msgstr ""
 #: templates/misago/thread_flags.html:7
 msgctxt "thread flag"
 msgid "Pinned globally"
-msgstr ""
+msgstr "Globálisan kitűzve"
 
 #: templates/misago/thread_flags.html:15
 msgctxt "thread flag"
 msgid "Pinned in category"
-msgstr ""
+msgstr "Kategóriában kitűzve"
 
 #: templates/misago/thread_flags.html:23
 msgctxt "thread flag"
@@ -6598,17 +6604,17 @@ msgstr ""
 #: templates/misago/threadslist/toolbar.html:9
 msgctxt "threads page nav"
 msgid "All categories"
-msgstr ""
+msgstr "Minden kategória"
 
 #: templates/misago/threadslist/toolbar.html:29
 msgctxt "threads page nav"
 msgid "All subcategories"
-msgstr ""
+msgstr "Minden alkategória"
 
 #: templates/misago/threadslist/toolbar.html:55
 msgctxt "threads list"
 msgid "All threads"
-msgstr ""
+msgstr "Minden téma"
 
 #: templates/misago/threadslist/toolbar.html:57
 msgctxt "threads list"
@@ -6642,7 +6648,7 @@ msgstr ""
 #: templates/misago/threadslist/toolbar.html:77
 msgctxt "threads page nav"
 msgid "Start thread"
-msgstr ""
+msgstr "Téma indítása"
 
 #: templates/misago/userslists/active_posters.html:5
 msgctxt "active posters page"
@@ -6664,7 +6670,8 @@ msgstr[1] ""
 #, python-format
 msgctxt "active posters page meta"
 msgid "No users have posted any new messages during last %(days)s day."
-msgid_plural "No users have posted any new messages during last %(days)s days."
+msgid_plural ""
+"No users have posted any new messages during last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -6717,7 +6724,7 @@ msgstr ""
 #: templates/misago/userslists/base.html:18
 msgctxt "users page"
 msgid "Users"
-msgstr ""
+msgstr "Felhasználók"
 
 #: templates/misago/userslists/rank.html:9
 #: templates/misago/userslists/rank.html:41
@@ -7207,7 +7214,8 @@ msgstr ""
 #: threads/admin/forms.py:105
 msgctxt "admin attachment type form"
 msgid ""
-"List of comma separated file extensions associated with this attachment type."
+"List of comma separated file extensions associated with this attachment "
+"type."
 msgstr ""
 
 #: threads/admin/forms.py:109
@@ -7339,7 +7347,8 @@ msgstr ""
 #, python-format
 msgctxt "admin attachments types"
 msgid ""
-"Attachment type \"%(name)s\" has associated attachments and can't be deleted."
+"Attachment type \"%(name)s\" has associated attachments and can't be "
+"deleted."
 msgstr ""
 
 #: threads/admin/views/attachmenttypes.py:61
@@ -7569,7 +7578,8 @@ msgstr ""
 #: threads/api/threadendpoints/patch.py:272
 msgctxt "threads api"
 msgid ""
-"This post can't be unmarked because it's not currently marked as best answer."
+"This post can't be unmarked because it's not currently marked as best "
+"answer."
 msgstr ""
 
 #: threads/api/threadendpoints/patch.py:300
@@ -7669,17 +7679,17 @@ msgstr ""
 #: threads/models/thread.py:20
 msgctxt "thread weight choice"
 msgid "Not pinned"
-msgstr ""
+msgstr "Nincs kitűzve"
 
 #: threads/models/thread.py:24
 msgctxt "thread weight choice"
 msgid "Pinned in category"
-msgstr ""
+msgstr "Kategóriában kitűzve"
 
 #: threads/models/thread.py:28
 msgctxt "thread weight choice"
 msgid "Pinned globally"
-msgstr ""
+msgstr "Globálisan kitűzve"
 
 #: threads/moderation/posts.py:55
 msgctxt "post unhide"
@@ -7714,12 +7724,12 @@ msgstr ""
 #: threads/permissions/attachments.py:25
 msgctxt "attachments permission"
 msgid "Can download other users attachments"
-msgstr ""
+msgstr "Letöltheti más felhasználók csatolmányait."
 
 #: threads/permissions/attachments.py:30
 msgctxt "attachments permission"
 msgid "Can delete other users attachments"
-msgstr ""
+msgstr "Törölheti más felhasználók csatolmányait."
 
 #: threads/permissions/attachments.py:39
 msgctxt "attachments permission"
@@ -7749,7 +7759,7 @@ msgstr ""
 #: threads/permissions/bestanswers.py:40
 msgctxt "best answers mark permission choice"
 msgid "All threads"
-msgstr ""
+msgstr "Minden téma"
 
 #: threads/permissions/bestanswers.py:44
 msgctxt "best answers permission"
@@ -7769,7 +7779,7 @@ msgstr ""
 #: threads/permissions/bestanswers.py:50
 msgctxt "best answers change permission choice"
 msgid "All threads"
-msgstr ""
+msgstr "Minden téma"
 
 #: threads/permissions/bestanswers.py:56
 msgctxt "best answers permission"
@@ -7824,8 +7834,8 @@ msgstr ""
 #, python-format
 msgctxt "best answers permission"
 msgid ""
-"You don't have permission to change this thread's marked answer because it's "
-"in the \"%(category)s\" category."
+"You don't have permission to change this thread's marked answer because it's"
+" in the \"%(category)s\" category."
 msgstr ""
 
 #: threads/permissions/bestanswers.py:215
@@ -7897,8 +7907,8 @@ msgstr ""
 #: threads/permissions/bestanswers.py:297
 msgctxt "best answers permission"
 msgid ""
-"You can't unmark this thread's best answer because it's closed and you don't "
-"have permission to open it."
+"You can't unmark this thread's best answer because it's closed and you don't"
+" have permission to open it."
 msgstr ""
 
 #: threads/permissions/bestanswers.py:305
@@ -7968,7 +7978,7 @@ msgstr ""
 #: threads/permissions/polls.py:36
 msgctxt "polls start permission choice"
 msgid "All threads"
-msgstr ""
+msgstr "Minden téma"
 
 #: threads/permissions/polls.py:40
 msgctxt "polls permission"
@@ -8204,8 +8214,8 @@ msgstr ""
 #: threads/permissions/privatethreads.py:66
 msgctxt "private threads permission"
 msgid ""
-"Allows user to report private threads they are participating in, making them "
-"accessible to moderators."
+"Allows user to report private threads they are participating in, making them"
+" accessible to moderators."
 msgstr ""
 
 #: threads/permissions/privatethreads.py:71
@@ -8304,8 +8314,8 @@ msgctxt "threads permission"
 msgid ""
 "Allows access to \"unapproved\" tab on threads lists for easy listing of "
 "threads that are unapproved or contain unapproved posts. Despite the tab "
-"being available on all threads lists, it will only display threads belonging "
-"to categories in which the user has permission to approve content."
+"being available on all threads lists, it will only display threads belonging"
+" to categories in which the user has permission to approve content."
 msgstr ""
 
 #: threads/permissions/threads.py:82
@@ -8345,7 +8355,7 @@ msgstr ""
 #: threads/permissions/threads.py:106
 msgctxt "threads see permission choice"
 msgid "All threads"
-msgstr ""
+msgstr "Minden téma"
 
 #: threads/permissions/threads.py:111
 msgctxt "threads permission"
@@ -8375,7 +8385,7 @@ msgstr ""
 #: threads/permissions/threads.py:124
 msgctxt "threads edit permission choice"
 msgid "All threads"
-msgstr ""
+msgstr "Minden téma"
 
 #: threads/permissions/threads.py:128
 msgctxt "threads permission"
@@ -9560,21 +9570,21 @@ msgstr ""
 #, python-format
 msgctxt "post likes message"
 msgid "%(users)s like this."
-msgstr ""
+msgstr "%(users)s kedveli ezt."
 
 #: threads/templatetags/misago_poststags.py:33
 #, python-format
 msgctxt "post likes message"
 msgid "%(users)s and %(likes)s other user like this."
 msgid_plural "%(users)s and %(likes)s other users like this."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(users)s és %(likes)s felhasználó kedveli ezt."
+msgstr[1] "%(users)s és %(likes)s más felhasználó kedveli ezt."
 
 #: threads/templatetags/misago_poststags.py:45
 #, python-format
 msgctxt "post likes message"
 msgid "%(users)s and %(last_user)s"
-msgstr ""
+msgstr "%(users)s és %(last_user)s"
 
 #: threads/threadtypes/privatethread.py:12
 msgctxt "private threads category name"
@@ -9781,8 +9791,8 @@ msgstr ""
 msgctxt "admin user form"
 msgid ""
 "Designates whether the user can log into admin sites. If Django admin site "
-"is enabled, this user will need additional permissions assigned within it to "
-"admin Django modules."
+"is enabled, this user will need additional permissions assigned within it to"
+" admin Django modules."
 msgstr ""
 
 #: users/admin/forms.py:88
@@ -9931,7 +9941,8 @@ msgstr ""
 #: users/admin/forms.py:226
 msgctxt "admin user form"
 msgid ""
-"Notify about new private thread invitations from users this user is following"
+"Notify about new private thread invitations from users this user is "
+"following"
 msgstr ""
 
 #: users/admin/forms.py:234
@@ -9982,7 +9993,7 @@ msgstr ""
 #: users/admin/forms.py:389
 msgctxt "admin users filter form"
 msgid "Profile fields contain"
-msgstr ""
+msgstr "A profilmezők tartalmazzák"
 
 #: users/admin/forms.py:393
 msgctxt "admin users filter form"
@@ -10044,8 +10055,8 @@ msgstr ""
 #: users/admin/forms.py:488
 msgctxt "admin rank form"
 msgid ""
-"Optional, singular version of rank name displayed by user names. For example "
-"\"GM\" or \"Dev\"."
+"Optional, singular version of rank name displayed by user names. For example"
+" \"GM\" or \"Dev\"."
 msgstr ""
 
 #: users/admin/forms.py:492
@@ -10189,8 +10200,8 @@ msgstr ""
 #: users/admin/forms.py:638
 msgctxt "admin ban form"
 msgid ""
-"This value is case-insensitive and accepts asterisk (*) for partial matches. "
-"For example, making IP ban for value \"83.*\" will ban all IP addresses "
+"This value is case-insensitive and accepts asterisk (*) for partial matches."
+" For example, making IP ban for value \"83.*\" will ban all IP addresses "
 "beginning with \"83.\"."
 msgstr ""
 
@@ -10312,8 +10323,8 @@ msgstr ""
 #: users/admin/forms.py:773
 msgctxt "admin data download request form"
 msgid ""
-"Enter every item in new line. Duplicates will be ignored. This field is case "
-"insensitive. Depending on site configuration and amount of data to archive "
+"Enter every item in new line. Duplicates will be ignored. This field is case"
+" insensitive. Depending on site configuration and amount of data to archive "
 "it may take up to few days for requests to complete. E-mail will "
 "notification will be sent to every user once their download is ready."
 msgstr ""
@@ -10566,7 +10577,7 @@ msgstr ""
 #: users/admin/views/users.py:66
 msgctxt "admin users"
 msgid "Select users"
-msgstr ""
+msgstr "Kiválasztott felhasználók"
 
 #: users/admin/views/users.py:70
 msgctxt "admin users"
@@ -10576,7 +10587,7 @@ msgstr ""
 #: users/admin/views/users.py:74
 msgctxt "admin users"
 msgid "Ban users"
-msgstr ""
+msgstr "Felhasználók kitiltása"
 
 #: users/admin/views/users.py:79
 msgctxt "admin users"
@@ -10883,8 +10894,8 @@ msgstr ""
 #, python-format
 msgctxt "users api"
 msgid ""
-"This feature has been disabled. Please use %(provider)s to change your e-"
-"mail."
+"This feature has been disabled. Please use %(provider)s to change your "
+"e-mail."
 msgstr ""
 
 #: users/api/users.py:231
@@ -11423,7 +11434,7 @@ msgstr ""
 #: users/permissions/moderation.py:46
 msgctxt "users moderation permission"
 msgid "Can moderate profile details"
-msgstr ""
+msgstr "Moderálhatja a profil részleteit"
 
 #: users/permissions/moderation.py:50
 msgctxt "users moderation permission"
@@ -11488,7 +11499,7 @@ msgstr ""
 #: users/permissions/moderation.py:189
 msgctxt "users moderation permission"
 msgid "You have to sign in to edit profile details."
-msgstr ""
+msgstr "A profil adatainak szerkesztéséhez be kell jelentkeznie."
 
 #: users/permissions/moderation.py:198
 msgctxt "users moderation permission"
@@ -11539,7 +11550,7 @@ msgstr ""
 #: users/permissions/profiles.py:27
 msgctxt "users profiles permission"
 msgid "Can search user profiles"
-msgstr ""
+msgstr "Kereshet felhasználói profilokban"
 
 #: users/permissions/profiles.py:32
 msgctxt "users profiles permission"
@@ -11559,7 +11570,7 @@ msgstr ""
 #: users/permissions/profiles.py:45
 msgctxt "users profiles permission"
 msgid "User profiles"
-msgstr ""
+msgstr "Felhasználói fiókok"
 
 #: users/permissions/profiles.py:57
 msgctxt "users profiles permission"
@@ -11670,9 +11681,12 @@ msgstr ""
 msgctxt "website profile field"
 msgid ""
 "If you own a website you wish to share on your profile, you may enter its "
-"address here. Remember that, for it to be valid, it should start with either "
-"\"http://\" or \"https://\"."
+"address here. Remember that, for it to be valid, it should start with either"
+" \"http://\" or \"https://\"."
 msgstr ""
+"Ha van egy weboldala, amelyet meg szeretne osztani a profiljában, itt "
+"megadhatja a címét. Ne feledje, hogy az érvényességhez \"http://\" vagy "
+"\"https://\" előtaggal kell kezdődnie."
 
 #: users/profilefields/default.py:48
 msgctxt "skype id profile field"
@@ -11688,8 +11702,8 @@ msgstr ""
 #, python-format
 msgctxt "twitter handle profile field"
 msgid ""
-"If you own an X account, here you may enter your X handle for other users to "
-"find you. Starting your handle with \"@\" sign is optional. Either "
+"If you own an X account, here you may enter your X handle for other users to"
+" find you. Starting your handle with \"@\" sign is optional. Either "
 "\"@%(slug)s\" or \"%(slug)s\" are valid values."
 msgstr ""
 
@@ -11903,7 +11917,8 @@ msgstr ""
 #: users/views/forgottenpassword.py:45
 #, python-format
 msgctxt "user password"
-msgid "%(user)s, your link has expired. Please request new link and try again."
+msgid ""
+"%(user)s, your link has expired. Please request new link and try again."
 msgstr ""
 
 #: users/views/forgottenpassword.py:52

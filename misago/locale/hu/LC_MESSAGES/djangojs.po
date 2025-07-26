@@ -1,0 +1,4899 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# manubazsi, 2025
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-15 09:26+0000\n"
+"PO-Revision-Date: 2023-07-01 08:52+0000\n"
+"Last-Translator: manubazsi, 2025\n"
+"Language-Team: Hungarian (https://app.transifex.com/misago/teams/65369/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "You don't have any read notifications."
+msgstr "Nincsenek olvasási értesítései."
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "You don't have any unread notifications."
+msgstr "Nincsenek olvasatlan értesítései."
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "You don't have any notifications."
+msgstr "Nincsenek értesítései."
+
+#: static/misago/js/misago.js:1
+msgctxt "notification status"
+msgid "Read notification"
+msgstr "Értesítés olvasása"
+
+#: static/misago/js/misago.js:1
+msgctxt "notification status"
+msgid "Unread notification"
+msgstr "Olvasatlan értesítés"
+
+#: static/misago/js/misago.js:1
+msgid "Check your internet connection and try refreshing the site."
+msgstr ""
+"Ellenőrizze az internetkapcsolatot, és próbálja meg frissíteni a webhelyet."
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "Notifications could not be loaded."
+msgstr "Az értesítéseket nem sikerült betölteni."
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "Loading notifications..."
+msgstr "Értesítések betöltése..."
+
+#: static/misago/js/misago.js:1
+msgctxt "modal"
+msgid "Close"
+msgstr "Bezárás"
+
+#: static/misago/js/misago.js:1
+msgctxt "password strength indicator"
+msgid "Entered password is very weak."
+msgstr "A beírt jelszó nagyon gyenge."
+
+#: static/misago/js/misago.js:1
+msgctxt "password strength indicator"
+msgid "Entered password is weak."
+msgstr "A beírt jelszó gyenge."
+
+#: static/misago/js/misago.js:1
+msgctxt "password strength indicator"
+msgid "Entered password is average."
+msgstr "A beírt jelszó átlagos."
+
+#: static/misago/js/misago.js:1
+msgctxt "password strength indicator"
+msgid "Entered password is strong."
+msgstr "A beírt jelszó erős."
+
+#: static/misago/js/misago.js:1
+msgctxt "password strength indicator"
+msgid "Entered password is very strong."
+msgstr "A beírt jelszó nagyon erős."
+
+#: static/misago/js/misago.js:1
+msgid "Form contains errors."
+msgstr "Az űrlap hibákat tartalmaz."
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal title"
+msgid "Register"
+msgstr "Regisztráció"
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal field"
+msgid "Join with %(site)s"
+msgstr "Csatlakozás %(site)s-al "
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal field"
+msgid "Or create forum account:"
+msgstr "Vagy hozz létre fórum fiókot:"
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal field"
+msgid "Username"
+msgstr "Felhasználónév"
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal field"
+msgid "E-mail"
+msgstr "E-mail"
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal field"
+msgid "Password"
+msgstr "Jelszó"
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal btn"
+msgid "Register account"
+msgstr "Fiók regisztráció"
+
+#: static/misago/js/misago.js:1
+msgctxt "account activation required"
+msgid ""
+"%(username)s, your account has been created but you need to activate it "
+"before you will be able to sign in."
+msgstr ""
+"%(username)s, fiókja létrejött, de aktiválnia kell, mielőtt bejelentkezhet."
+
+#: static/misago/js/misago.js:1
+msgctxt "account activation required"
+msgid ""
+"%(username)s, your account has been created but the site administrator will "
+"have to activate it before you will be able to sign in."
+msgstr ""
+"%(username)s, fiókja létrejött, de a webhely rendszergazdájának aktiválnia "
+"kell azt, mielőtt bejelentkezhet."
+
+#: static/misago/js/misago.js:1
+msgctxt "account activation required"
+msgid ""
+"We have sent an e-mail to %(email)s with link that you have to click to "
+"activate your account."
+msgstr ""
+"Küldtünk egy e-mailt (%(email)s) a linkkel, amelyre kattintva aktiválhatja "
+"fiókját."
+
+#: static/misago/js/misago.js:1
+msgctxt "account activation required"
+msgid "We will send an e-mail to %(email)s when this takes place."
+msgstr "Amikor ez megtörténik, e-mailt küldünk a %(email)s címre."
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal title"
+msgid "Registration complete"
+msgstr "A regisztráció befejeződött"
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal dismiss"
+msgid "Ok"
+msgstr "Ok"
+
+#: static/misago/js/misago.js:1
+msgctxt "register form"
+msgid "Registration form is currently disabled by the site administrator."
+msgstr "A regisztrációs űrlapot az oldal adminisztrátora jelenleg letiltotta."
+
+#: static/misago/js/misago.js:1
+msgctxt "register form"
+msgid "Registration form is currently unavailable due to an error."
+msgstr "A regisztrációs űrlap egy hiba miatt jelenleg nem érhető el."
+
+#: static/misago/js/misago.js:1
+msgctxt "cta"
+msgid "Register"
+msgstr "Regisztráció"
+
+#: static/misago/js/misago.js:1
+msgctxt "register form agreement prompt"
+msgid "I have read and accept %(agreement)s."
+msgstr "Elolvastam és elfogadom %(agreement)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "register form agreement prompt"
+msgid "the terms of service"
+msgstr "szolgáltatási feltételek"
+
+#: static/misago/js/misago.js:1
+msgctxt "register form agreement prompt"
+msgid "the privacy policy"
+msgstr "adatvédelmi szabályzat"
+
+#: static/misago/js/misago.js:1
+msgctxt "search cta"
+msgid "Enter search query (at least 3 characters)."
+msgstr "Írja be a keresési kulcsszavakat (legalább 3 karakter)."
+
+#: static/misago/js/misago.js:1
+msgctxt "search results list"
+msgid "See all %(count)s result."
+msgid_plural "See all %(count)s results."
+msgstr[0] "Az összes %(count)s eredmény megtekintése."
+msgstr[1] "Az összes %(count)s eredmény megtekintése."
+
+#: static/misago/js/misago.js:1
+msgctxt "search results"
+msgid "The search returned no results."
+msgstr "A keresés nem hozott eredményt."
+
+#: static/misago/js/misago.js:1
+msgctxt "search results"
+msgid "The search could not be completed."
+msgstr "A keresést nem lehetett befejezni."
+
+#: static/misago/js/misago.js:1
+msgctxt "search results"
+msgid "Searching..."
+msgstr "Keresés..."
+
+#: static/misago/js/misago.js:1
+msgctxt "cta"
+msgid "Search"
+msgstr "Keresés"
+
+#: static/misago/js/misago.js:1
+msgctxt "cta"
+msgid "Sign in"
+msgstr "Bejelentkezés"
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav"
+msgid "Threads"
+msgstr "Témák"
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav"
+msgid "Categories"
+msgstr "Kategóriák"
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav"
+msgid "Search"
+msgstr "Keresés"
+
+#: static/misago/js/misago.js:1
+msgctxt "cta"
+msgid "You are not signed in"
+msgstr "Nem vagy bejelentkezve"
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav section"
+msgid "Users"
+msgstr "Felhasználók"
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav section"
+msgid "Categories"
+msgstr "Kategóriák"
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav section"
+msgid "Footer"
+msgstr "Lábléc"
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav title"
+msgid "Menu"
+msgstr "Menü"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Pinned globally"
+msgstr "Globálisan kitűzve"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Pinned in category"
+msgstr "Kategóriában kitűzve"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Answered"
+msgstr "Megválaszolz"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Poll"
+msgstr "Szavazás"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Awaiting approval"
+msgstr "Jóváhagyásra vár"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Has unapproved posts"
+msgstr "Jóvá nem hagyott bejegyzései vannak"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Closed"
+msgstr "Lezárva"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Hidden"
+msgstr "Elrejtve"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread replies stat"
+msgid "%(replies)s reply"
+msgid_plural "%(replies)s replies"
+msgstr[0] "%(replies)s válasz"
+msgstr[1] "%(replies)s válasz"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal btn"
+msgid "Download my Gravatar"
+msgstr "Töltse le a Gravatar-omat"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal btn"
+msgid "Re-crop uploaded image"
+msgstr "A feltöltött kép újravágása"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal btn"
+msgid "Upload new image"
+msgstr "Új kép feltöltése"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal btn"
+msgid "Pick avatar from gallery"
+msgstr "Válassz avatárt a galériából"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal btn"
+msgid "Generate my individual avatar"
+msgstr "Az egyéni avatarom létrehozása"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar crop modal btn"
+msgid "Set avatar"
+msgstr "Avatár feltöltése"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar crop modal btn"
+msgid "Crop image"
+msgstr "Kép körbevágása"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar crop modal btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal"
+msgid "Your image has been uploaded and you may now crop it."
+msgstr "A kép feltöltése megtörtént, és most kivághatja."
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal"
+msgid "Selected file is too big. (%(filesize)s)"
+msgstr "A kiválasztott fájl túl nagy. (%(filesize)s)"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal"
+msgid "Selected file type is not supported."
+msgstr "A kiválasztott fájltípus nem támogatott."
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal"
+msgid "%(files)s files smaller than %(limit)s"
+msgstr "%(files)s nál kisebb fájlok %(limit)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal field"
+msgid "Select file"
+msgstr "Válassza ki a fájlt"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal field"
+msgid "%(progress)s % complete"
+msgstr "%(progress)s % teljesítve"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar gallery modal btn"
+msgid "Save choice"
+msgstr "Mentse el a választást"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar gallery modal btn"
+msgid "Select avatar"
+msgstr "Válassza ki az avatárt"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar gallery modal btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal dismiss"
+msgid "Ok"
+msgstr "Ok"
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal title"
+msgid "Change your avatar"
+msgstr "Változtasd meg az avatarod"
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Go to your profile"
+msgstr "Menj a profilodhoz"
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Notifications"
+msgstr "Értesítések"
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Private threads"
+msgstr "Privát témák"
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Admin control panel"
+msgstr "Admin vezérlőpult"
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav section"
+msgid "Change options"
+msgstr "Beállítások módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Change avatar"
+msgstr "Avatar módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "See more"
+msgstr "Több"
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Log out"
+msgstr "Kijelentkezés"
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav title"
+msgid "Your options"
+msgstr "Az Ön lehetőségei"
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile details"
+msgid "No profile details are editable at this time."
+msgstr "Jelenleg nem szerkeszthetők a profiladatok."
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile details"
+msgid "This option is currently unavailable."
+msgstr "Ez a lehetőség jelenleg nem elérhető."
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile details form btn"
+msgid "Save changes"
+msgstr "Módosítások mentése"
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile details form btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile details form title"
+msgid "Edit details"
+msgstr "Részletek szerkesztése"
+
+#: static/misago/js/misago.js:1
+msgctxt "field validation status"
+msgid "(error)"
+msgstr "(hiba)"
+
+#: static/misago/js/misago.js:1
+msgctxt "field validation status"
+msgid "(success)"
+msgstr "(sikeres)"
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict form"
+msgid "Are you sure you want to delete all polls?"
+msgstr "Biztos benne, hogy törölni szeretné az összes szavazást?"
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict modal title"
+msgid "Merge threads"
+msgstr "Egyesítse a témákat"
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict btn"
+msgid "Merge threads"
+msgstr "Egyesítse a témákat"
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict best answer"
+msgid "Best answer"
+msgstr "A legjobb válasz"
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict best answer"
+msgid ""
+"Select the best answer for your newly merged thread. No posts will be "
+"deleted during the merge."
+msgstr ""
+"Válassza ki a legjobb választ az újonnan egyesített témához. Az egyesítés "
+"során egyetlen bejegyzés sem törlődik."
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict poll"
+msgid "Poll"
+msgstr "Szavazás"
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict poll"
+msgid ""
+"Select the poll for your newly merged thread. Rejected polls will be "
+"permanently deleted and cannot be recovered."
+msgstr ""
+"Válassza ki az újonnan egyesített téma szavazását. Az elutasított szavazások"
+" véglegesen törlődnek, és nem állíthatók vissza."
+
+#: static/misago/js/misago.js:1
+msgctxt "modal message dismiss btn"
+msgid "Ok"
+msgstr "Ok"
+
+#: static/misago/js/misago.js:1
+msgctxt "post body invalid"
+msgid "This post's contents cannot be displayed."
+msgstr "A bejegyzés tartalma nem jeleníthető meg."
+
+#: static/misago/js/misago.js:1
+msgctxt "post body invalid"
+msgid "This error is caused by invalid post content manipulation."
+msgstr "Ezt a hibát érvénytelen bejegyzéstartalom-manipuláció okozza."
+
+#: static/misago/js/misago.js:1
+msgctxt "posts feed item header"
+msgid "posted %(posted_on)s"
+msgstr "közzétéve %(posted_on)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "go to post link"
+msgid "See post"
+msgstr "Lásd a bejegyzést"
+
+#: static/misago/js/misago.js:1
+msgctxt "post removed poster username"
+msgid "Removed user"
+msgstr "Felhasználó eltávolítva"
+
+#: static/misago/js/misago.js:1
+msgctxt "post reply"
+msgid "Quote"
+msgstr "Idézet"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Attachment details"
+msgstr "Melléklet részletei"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Type and size"
+msgstr "Típus és méret"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Uploaded at"
+msgstr "Feltöltve"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Uploader"
+msgstr "Feltöltő"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Insert into message"
+msgstr "Beszúrás az üzenetbe"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Remove attachment"
+msgstr "Távolítsa el a mellékletet"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Remove this attachment?"
+msgstr "Eltávolítja ezt a mellékletet?"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "See error"
+msgstr "Hiba megtekintése"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "%(filename)s: %(error)s"
+msgstr "%(filename)s: %(error)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Protected"
+msgstr "Védett"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Protect"
+msgstr "Védje"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Preview"
+msgstr "Előnézet"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Post"
+msgstr "Bejegyzés"
+
+#: static/misago/js/misago.js:1
+msgid "This field is required."
+msgstr "Ez a mező kötelező."
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Code"
+msgstr "Kód"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Syntax highlighting"
+msgstr "Szintaxis kiemelés"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "No syntax highlighting"
+msgstr "Nincs szintaxis kiemelés"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Code to insert"
+msgstr "Beillesztendő kód"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Insert code"
+msgstr "Kód beillesztése"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Formatting help"
+msgstr "Formázási segítség"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Emphasis text"
+msgstr "Hangsúlyos szöveg"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "_This text will have emphasis_"
+msgstr "_Ezen a szövegen lesz a hangsúly_"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "This text will have emphasis"
+msgstr "Ez a szöveg hangsúlyos lesz"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Bold text"
+msgstr "Félkövér szöveg"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "**This text will be bold**"
+msgstr "**Ez a szöveg félkövér lesz**"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "This text will be bold"
+msgstr "Ez a szöveg félkövér lesz"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Removed text"
+msgstr "Szöveg eltávolítva"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "~~This text will be removed~~"
+msgstr "~~Ez a szöveg el lesz távolítva~~"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "This text will be removed"
+msgstr "Ez a szöveg el lesz távolítva"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Bold text (BBCode)"
+msgstr "Félkövér szöveg (BBCode)"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "[b]This text will be bold[/b]"
+msgstr "[b]Ez a szöveg félkövér lesz[/b]"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Underlined text (BBCode)"
+msgstr "Aláhúzott szöveg (BBCode)"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "[u]This text will be underlined[/u]"
+msgstr "[u]Ez a szöveg alá lesz húzva[/u]"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "This text will be underlined"
+msgstr "Ez a szöveg aláhúzva lesz"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Italics text (BBCode)"
+msgstr "Dőlt betűs szöveg (BBCode)"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "[i]This text will be in italics[/i]"
+msgstr "[i]Ez a szöveg dőlt betűvel lesz szedve[/i]"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "This text will be in italics"
+msgstr "Ez a szöveg dőlt betűvel lesz szedve"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Link"
+msgstr "Hivatkozás"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Link with text"
+msgstr "Link szöveggel"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Link text"
+msgstr "Hivatkozás szöveg"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Link (BBCode)"
+msgstr "Hivatkozás (BBCode)"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Link with text (BBCode)"
+msgstr "Link szöveggel (BBCode)"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Image"
+msgstr "Kép"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Image with alternate text"
+msgstr "Kép alternatív szöveggel"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Image text"
+msgstr "Kép szöveg"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Image (BBCode)"
+msgstr "Kép (BBCode)"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Mention user by their name"
+msgstr "Említse meg a felhasználót a nevükön"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Heading 1"
+msgstr "Címsor 1"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "# First level heading"
+msgstr "# Első szintű címsor"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "First level heading"
+msgstr "Első szintű címsor"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Heading 2"
+msgstr "Címsor 2"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "## Second level heading"
+msgstr "## Második szintű címsor"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Second level heading"
+msgstr "Második szintű címsor"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Heading 3"
+msgstr "Címsor 3"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "### Third level heading"
+msgstr "### Harmadik szintű címsor"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Third level heading"
+msgstr "Harmadik szintű címsor"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Heading 4"
+msgstr "Címsor 4"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "#### Fourth level heading"
+msgstr "#### Negyedik szintű címsor"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Fourth level heading"
+msgstr "Negyedik szintű címsor"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Heading 5"
+msgstr "Címsor 5"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "##### Fifth level heading"
+msgstr "##### Ötödik szintű címsor"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Fifth level heading"
+msgstr "Ötödik szintű címsor"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Unordered list"
+msgstr "Rendezetlen lista"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Ordered list"
+msgstr "Rendezett lista"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Quote text"
+msgstr "Idézet szöveg"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Quoted text"
+msgstr "Idézett szöveg"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Quote text (BBCode)"
+msgstr "Idézet szövege (BBCode)"
+
+#: static/misago/js/misago.js:1
+msgid "Quoted message:"
+msgstr "Idézett üzenet:"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Quote text with author (BBCode)"
+msgstr "Idézet szöveg szerzővel (BBCode)"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Quote author"
+msgstr "Idézet szerző"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Quote author has written:"
+msgstr "Az idézet szerzője ezt írta:"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Spoiler"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Secret text"
+msgstr "Titkos szöveg"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Inline code"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "`Inline code`"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Code block"
+msgstr "Kódblokk"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Code block with syntax highlighting"
+msgstr "Kódblokk szintaxis kiemeléssel"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Code block (BBCode)"
+msgstr "Kódblokk (BBCode)"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Code block with syntax highlighting (BBCode)"
+msgstr "Kódblokk szintaktikai kiemeléssel (BBCode)"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Horizontal rule"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Horizontal rule (BBCode)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Reveal spoiler"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Image"
+msgstr "Kép"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Image description"
+msgstr "Kép leírása"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid ""
+"Optional but recommended . Will be displayed instead of image when it fails "
+"to load."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Image URL"
+msgstr "Kép URL-je"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Insert image"
+msgstr "Kép beszúrása"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Link"
+msgstr "Hivatkozás"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Link text"
+msgstr "Link szövege"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Optional. Will be displayed instead of link's address."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Link address"
+msgstr "Link címe"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Insert link"
+msgstr "Link beszúrása"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Quote"
+msgstr "Idézet"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Quote's author or source"
+msgstr "Az idézet szerzője vagy forrása"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Optional. If it's username, put \"@\" before it (\"@JohnDoe\")."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Quoted text"
+msgstr "Idézett szöveg"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Insert quote"
+msgstr "Idézet beszúrása"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "File %(filename)s is bigger than %(limit)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Strong"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "example markup"
+msgid "Strong text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Emphasis"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "example markup"
+msgid "Text with emphasis"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Strikethrough"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "example markup"
+msgid "Text with strikethrough"
+msgstr "Áthúzott szöveg"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Horizontal ruler"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Spoiler"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Spoiler text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Upload file"
+msgstr "Fájl feltöltése"
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Open formatting help"
+msgstr "Nyissa meg a formázási súgót"
+
+#: static/misago/js/misago.js:1
+msgctxt "dialog"
+msgid "Open"
+msgstr "Megnyitás"
+
+#: static/misago/js/misago.js:1
+msgctxt "dialog"
+msgid "Minimize"
+msgstr "Minimalizálás"
+
+#: static/misago/js/misago.js:1
+msgctxt "dialog"
+msgid "Exit the fullscreen mode"
+msgstr "Lépjen ki a teljes képernyős módból"
+
+#: static/misago/js/misago.js:1
+msgctxt "dialog"
+msgid "Enter the fullscreen mode"
+msgstr "Lépjen be a teljes képernyős módba"
+
+#: static/misago/js/misago.js:1
+msgctxt "dialog"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Options"
+msgstr "Opciók"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Pinned globally"
+msgstr "Globálisan kitűzve"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Pinned in category"
+msgstr "Kitűzött kategória"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Not pinned"
+msgstr "Nincs kitűzve"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Open"
+msgstr "Nyitva"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Closed"
+msgstr "Lezárva"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Visible"
+msgstr "Látható"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Hidden"
+msgstr "Rejtett"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Are you sure you want to discard thread?"
+msgstr "Biztosan eldobja a témát?"
+
+#: static/misago/js/misago.js:1
+msgctxt "posting form"
+msgid "You have to enter thread title."
+msgstr "Meg kell adnia a téma címét."
+
+#: static/misago/js/misago.js:1
+msgctxt "posting form"
+msgid "You have to enter a message."
+msgstr "Üzenetet kell beírnia."
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Your thread has been posted."
+msgstr "A témát közzétettük."
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread submit"
+msgid "Start thread"
+msgstr "Téma indítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Thread title"
+msgstr "Téma címe"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Start new thread"
+msgstr "Új téma indítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Are you sure you want to discard private thread?"
+msgstr "Biztosan elveted a privát témát?"
+
+#: static/misago/js/misago.js:1
+msgctxt "posting form"
+msgid "You have to enter at least one recipient."
+msgstr "Legalább egy címzettet meg kell adni."
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Recipients, eg.: Danny, Lisa, Alice"
+msgstr "Címzettek, pl.: Danny, Lisa, Alice"
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Start private thread"
+msgstr "Privát téma indítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "post reply"
+msgid "Are you sure you want to discard your reply?"
+msgstr "Biztosan elveted a válaszodat?"
+
+#: static/misago/js/misago.js:1
+msgctxt "post reply"
+msgid "Your reply has been posted."
+msgstr "Válaszát közzétettük."
+
+#: static/misago/js/misago.js:1
+msgctxt "post reply submit"
+msgid "Post reply"
+msgstr "Válasz küldése"
+
+#: static/misago/js/misago.js:1
+msgctxt "post reply"
+msgid "Reply to: %(thread)s"
+msgstr "Válasz: %(thread)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "edit reply"
+msgid "Are you sure you want to discard changes?"
+msgstr "Biztosan el szeretné vetni a változtatásokat?"
+
+#: static/misago/js/misago.js:1
+msgctxt "edit reply"
+msgid "Reply has been edited."
+msgstr "A válasz szerkesztve."
+
+#: static/misago/js/misago.js:1
+msgctxt "edit reply submit"
+msgid "Edit reply"
+msgstr "Válasz szerkesztése"
+
+#: static/misago/js/misago.js:1
+msgctxt "edit reply"
+msgid "Edit reply by %(poster)s from %(date)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title length validator"
+msgid ""
+"Thread title should be at least %(limit_value)s character long (it has "
+"%(show_value)s)."
+msgid_plural ""
+"Thread title should be at least %(limit_value)s characters long (it has "
+"%(show_value)s)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title length validator"
+msgid ""
+"Thread title cannot be longer than %(limit_value)s character (it has "
+"%(show_value)s)."
+msgid_plural ""
+"Thread title cannot be longer than %(limit_value)s characters (it has "
+"%(show_value)s)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post length validator"
+msgid ""
+"Posted message cannot be longer than %(limit_value)s character (it has "
+"%(show_value)s)."
+msgid_plural ""
+"Posted message cannot be longer than %(limit_value)s characters (it has "
+"%(show_value)s)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post length validator"
+msgid ""
+"Posted message should be at least %(limit_value)s character long (it has "
+"%(show_value)s)."
+msgid_plural ""
+"Posted message should be at least %(limit_value)s characters long (it has "
+"%(show_value)s)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal"
+msgid "Fill out both fields."
+msgstr "Töltse ki mindkét mezőt."
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal btn"
+msgid "Activate account"
+msgstr "Fiók aktiválása"
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal title"
+msgid "Sign in"
+msgstr "Belépés"
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal"
+msgid "Sign in with %(site)s"
+msgstr "Jelentkezzen be a következővel: %(site)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal"
+msgid "Or use your forum account:"
+msgstr "Vagy használja a fórum fiókját:"
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal field"
+msgid "Username or e-mail"
+msgstr "Felhasználónév vagy e-mail"
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal field"
+msgid "Password"
+msgstr "Jelszó"
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal btn"
+msgid "Sign in"
+msgstr "Bejelentkezés"
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal btn"
+msgid "Forgot password?"
+msgstr "Elfelejtetted a jelszavad?"
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s is banned until %(ban_expires)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s is banned"
+msgstr "%(username)s ki van tiltva"
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s is hiding presence"
+msgstr "%(username)s elrejti a jelenlétét"
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s is online (hidden)"
+msgstr "%(username)s elérhető (rejtett)"
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s was last seen %(last_click)s (hidden)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s is online"
+msgstr "%(username)s elérhető"
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s was last seen %(last_click)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "Banned"
+msgstr "Kitiltva"
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "Hidden"
+msgstr "Rejtett"
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "Online (hidden)"
+msgstr "Elérhető (rejtett)"
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "Offline (hidden)"
+msgstr "Nem elérhető (rejtett)"
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "Online"
+msgstr "Elérhető"
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "Offline"
+msgstr "Nem elérhető"
+
+#: static/misago/js/misago.js:1
+msgctxt "username history empty"
+msgid "Your account has no history of name changes."
+msgstr "Fiókjának nincs névváltoztatási előzménye."
+
+#: static/misago/js/misago.js:1
+msgctxt "users list item"
+msgid "Joined on %(joined_on)s"
+msgstr "Csatlakozott %(joined_on)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "users list item"
+msgid "Joined %(joined_on)s"
+msgstr "Csatlakozott %(joined_on)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "users list item"
+msgid "%(posts)s post"
+msgid_plural "%(posts)s posts"
+msgstr[0] "%(posts)s bejegyzés"
+msgstr[1] "%(posts)s bejegyzés"
+
+#: static/misago/js/misago.js:1
+msgctxt "users list item"
+msgid "%(threads)s thread"
+msgid_plural "%(threads)s threads"
+msgstr[0] "%(threads)s téma"
+msgstr[1] "%(threads)s téma"
+
+#: static/misago/js/misago.js:1
+msgctxt "users list item"
+msgid "%(followers)s follower"
+msgid_plural "%(followers)s followers"
+msgstr[0] "%(followers)s követő"
+msgstr[1] "%(followers)s követő"
+
+#: static/misago/js/misago.js:1
+msgctxt "yesno switch choice"
+msgid "yes"
+msgstr "igen"
+
+#: static/misago/js/misago.js:1
+msgctxt "yesno switch choice"
+msgid "no"
+msgstr "nem"
+
+#: static/misago/js/misago.js:1
+msgctxt "time ago"
+msgid "moment ago"
+msgstr "pillanattal ezelőtt"
+
+#: static/misago/js/misago.js:1
+msgctxt "time ago"
+msgid "now"
+msgstr "most"
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "%(day)s at %(time)s"
+msgstr "%(day)s %(time)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "Tomorrow at %(time)s"
+msgstr "Holnap %(time)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "Yesterday at %(time)s"
+msgstr "Tegnap %(time)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "short minutes"
+msgid "%(time)sm"
+msgstr "%(time)sp"
+
+#: static/misago/js/misago.js:1
+msgctxt "short hours"
+msgid "%(time)sh"
+msgstr "%(time)só"
+
+#: static/misago/js/misago.js:1
+msgctxt "short days"
+msgid "%(time)sd"
+msgstr "%(time)sn "
+
+#: static/misago/js/misago.js:1
+msgctxt "accept agreement prompt"
+msgid ""
+"Declining will result in immediate deactivation and deletion of your "
+"account. This action is not reversible."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "accept agreement choice"
+msgid "Decline"
+msgstr "Elutatítás"
+
+#: static/misago/js/misago.js:1
+msgctxt "accept agreement choice"
+msgid "Accept and continue"
+msgstr "Elfogadás és folytatás"
+
+#: static/misago/js/misago.js:1
+msgctxt "auth message"
+msgid ""
+"You have signed in as %(username)s. Please refresh the page before "
+"continuing."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "auth message"
+msgid ""
+"%(username)s, you have been signed out. Please refresh the page before "
+"continuing."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "auth message"
+msgid "Reload page"
+msgstr "Oldal újratöltése"
+
+#: static/misago/js/misago.js:1
+msgctxt "auth message"
+msgid "or press F5 key."
+msgstr "vagy nyomja meg az F5 billentyűt."
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications title"
+msgid "Notifications"
+msgstr "Értesítések"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications dropdown"
+msgid "All"
+msgstr "Összes"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications dropdown"
+msgid "Unread"
+msgstr "Olvasatlan"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications"
+msgid "See all notifications"
+msgstr "Az összes értesítés megtekintése"
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "You have unread notifications!"
+msgstr "Olvasatlan értesítései vannak!"
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open notifications"
+msgstr "Nyissa meg az értesítéseket"
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "You have unread private threads!"
+msgstr "Olvasatlan privát témáid vannak!"
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open private threads"
+msgstr "Nyissa meg a privát témákat"
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open search"
+msgstr "Nyissa meg a keresést"
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open menu"
+msgstr "Menü megnyitása"
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open your options"
+msgstr "Nyissa meg a lehetőségeket"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications nav"
+msgid "All"
+msgstr "Összes"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications nav"
+msgid "Unread"
+msgstr "Olvasatlan"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications nav"
+msgid "Read"
+msgstr "Olvasás"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications pagination"
+msgid "Latest"
+msgstr "Legújabb"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications pagination"
+msgid "Newer"
+msgstr "Újabb"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications pagination"
+msgid "Older"
+msgstr "Régebbi"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications"
+msgid "Mark all as read"
+msgstr "Az összes megjelölése olvasottként"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications title"
+msgid "Unread notifications"
+msgstr "Olvasatlan értesítések"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications title"
+msgid "Read notifications"
+msgstr "Értesítések olvasása"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications"
+msgid "Mark all notifications as read?"
+msgstr "Megjelöli az összes értesítést olvasottként?"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications"
+msgid "All notifications have been marked as read."
+msgstr "Az összes értesítést olvasottként jelöltük meg."
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form"
+msgid "Complete the form."
+msgstr "Töltse ki az űrlapot."
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account title"
+msgid "Delete account"
+msgstr "Fiók törlése"
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options"
+msgid "Change your options"
+msgstr "Módosítsa a beállításokat"
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form"
+msgid "This form lets you delete your account. This action is not reversible."
+msgstr ""
+"Ezzel az űrlappal törölheti fiókját. Ez a művelet nem visszafordítható."
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form"
+msgid ""
+"Your account will be deleted together with its profile details, IP addresses"
+" and notifications."
+msgstr ""
+"Fiókját a profiladatokkal, IP-címekkel és értesítésekkel együtt töröljük."
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form"
+msgid ""
+"Other content will NOT be deleted, but username displayed next to it will be"
+" changed to one shared by all deleted accounts."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form"
+msgid ""
+"Your username and e-maill address will become available again for use during"
+" registration or for other accounts to change to."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form field"
+msgid "Enter your password to confirm"
+msgstr "A megerősítéshez adja meg jelszavát"
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form btn"
+msgid "Delete my account"
+msgstr "Fiókom törlése"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile details form"
+msgid "Your details have been changed."
+msgstr "Az Ön adatai módosultak."
+
+#: static/misago/js/misago.js:1
+msgctxt "edit details"
+msgid "Edit details"
+msgstr "Részletek szerkesztése"
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data"
+msgid "Your request for data download has been registered."
+msgstr "Adatletöltési kérelmét regisztráltuk."
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data title"
+msgid "Download your data"
+msgstr "Töltse le adatait"
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data"
+msgid ""
+"To download your data from the site, click the \"Request data download\" "
+"button. Depending on amount of data to be archived and number of users "
+"wanting to download their data at same time it may take up to few days for "
+"your download to be prepared. An e-mail with notification will be sent to "
+"you when your data is ready to be downloaded."
+msgstr ""
+"Adatainak a webhelyről történő letöltéséhez kattintson az \"Adatok "
+"letöltésének kérése\" gombra. Az archiválandó adatok mennyiségétől és az "
+"adataikat egyszerre letölteni kívánó felhasználók számától függően akár "
+"néhány napig is eltarthat a letöltés előkészítése. Ha adatai készen állnak a"
+" letöltésre, értesítést küldünk Önnek e-mailben."
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data"
+msgid ""
+"The download will only be available for limited amount of time, after which "
+"it will be deleted from the site and marked as expired."
+msgstr ""
+"A letöltés csak korlátozott ideig lesz elérhető, ezután töröljük az "
+"oldalról, és lejártként jelöljük meg."
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data table"
+msgid "Requested on"
+msgstr "Kért napon"
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data table"
+msgid "Download"
+msgstr "Letöltés"
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data table"
+msgid "You have no data downloads."
+msgstr "Nincsenek adatletöltései."
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data btn"
+msgid "Request data download"
+msgstr "Adatletöltés kérése"
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data table btn"
+msgid "Download is being prepared"
+msgstr "A letöltés előkészítés alatt áll"
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data table btn"
+msgid "Download your data"
+msgstr "Töltse le adatait"
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data table btn"
+msgid "Download is expired"
+msgstr "A letöltés lejárt"
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread choice"
+msgid "No"
+msgstr "Nem"
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread choice"
+msgid "Yes, with on site notifications"
+msgstr "Igen, oldal értesítésekkel"
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread choice"
+msgid "Yes, with on site and e-mail notifications"
+msgstr "Igen, oldal és e-mailes értesítésekkel"
+
+#: static/misago/js/misago.js:1
+msgctxt "notification preference"
+msgid "Don't notify"
+msgstr "Ne értesíts"
+
+#: static/misago/js/misago.js:1
+msgctxt "notification preference"
+msgid "Notify on site"
+msgstr "Értesítés az oldalon"
+
+#: static/misago/js/misago.js:1
+msgctxt "notification preference"
+msgid "Notify on site and with e-mail"
+msgstr "Értesítés az oldalon és e-mail"
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads preference"
+msgid "Anybody can invite me to their private threads"
+msgstr "Bárki meghívhat a privát témáiba"
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads preference"
+msgid "Only those I follow can invite me to their private threads"
+msgstr "Csak azok hívhatnak meg témákra, akiket követek"
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads preference"
+msgid "Nobody can invite me to their private threads"
+msgstr "Senki sem hívhat meg a privát témáiba"
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Your forum options have been changed."
+msgstr "A fórum beállításai módosultak."
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Please reload the page and try again."
+msgstr "Kérjük, töltse be újra az oldalt, és próbálja újra."
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options title"
+msgid "Forum options"
+msgstr "Fórum opciók"
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form title"
+msgid "Change forum options"
+msgstr "Módosítsa a fórum beállításait"
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Privacy settings"
+msgstr "Adatvédelmi beállítások"
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Hide my presence"
+msgstr "Rejtsd el a jelenlétemet"
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid ""
+"If you hide your presence, only members with permission to see hidden "
+"presence will see when you are online."
+msgstr ""
+"Ha elrejti jelenlétét, csak azok a tagok látják, akik rendelkeznek a rejtett"
+" jelenlét megtekintésére engedéllyel, ha Ön online állapotban van."
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Hide my presence from other users"
+msgstr "Jelenlétem elrejtése más felhasználók elől"
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Show my presence to other users"
+msgstr "Jelenlétem megjelenítése más felhasználóknak"
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Limit private thread invitations from other users"
+msgstr "Korlátozza a többi felhasználó privát téma meghívásait"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid "Notifications preferences"
+msgstr "Értesítési beállítások"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid "Automatically watch threads I start"
+msgstr "Az általam indított témák automatikus figyelése"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid "Automatically watch threads I reply to"
+msgstr "Automatikusan figyelje meg azokat a témákat, amelyekre válaszolok"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid ""
+"Automatically watch new private threads I'm invited to by the members I am "
+"following"
+msgstr ""
+"Az általam követett felhasználók által meghívott új privát témakörök "
+"automatikus megtekintése"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid ""
+"Automatically watch new private threads I'm invited to by other members"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid ""
+"Notify me about new private thread invitations from the members I am "
+"following"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid "Notify me about new private thread invitations from other members"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form btn"
+msgid "Save changes"
+msgstr "Módosítások mentése"
+
+#: static/misago/js/misago.js:1
+msgctxt "change username title"
+msgid "Change username"
+msgstr "Felhasználónév módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "change username"
+msgid "You will be able to change your username %(next_change)s."
+msgstr "Megváltoztathatja felhasználónevét %(next_change)s."
+
+#: static/misago/js/misago.js:1
+msgctxt "change username"
+msgid "You have changed your name allowed number of times."
+msgstr "A megengedett számú alkalommal megváltoztatta a nevét."
+
+#: static/misago/js/misago.js:1
+msgctxt "change username"
+msgid "You can't change your username at the moment."
+msgstr "Jelenleg nem tudja megváltoztatni a felhasználónevét."
+
+#: static/misago/js/misago.js:1
+msgctxt "change username form"
+msgid "You can change your username %(changes_left)s more time."
+msgid_plural "You can change your username %(changes_left)s more times."
+msgstr[0] "Még %(changes_left)s alkalommal módosíthatja felhasználónevét."
+msgstr[1] "Még %(changes_left)s alkalommal módosíthatja felhasználónevét."
+
+#: static/misago/js/misago.js:1
+msgctxt "change username form"
+msgid "Used changes become available again after %(name_changes_expire)s day."
+msgid_plural ""
+"Used changes become available again after %(name_changes_expire)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change username form"
+msgid "New username is same as current one."
+msgstr "Az új felhasználónév megegyezik a jelenlegivel."
+
+#: static/misago/js/misago.js:1
+msgctxt "change username form field"
+msgid "New username"
+msgstr "Új felhasználónév"
+
+#: static/misago/js/misago.js:1
+msgctxt "change username form btn"
+msgid "Change username"
+msgstr "Felhasználónév módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "change username"
+msgid "Your username has been changed."
+msgstr "Felhasználóneve megváltozott."
+
+#: static/misago/js/misago.js:1
+msgctxt "change email form"
+msgid "Fill out all fields."
+msgstr "Töltse ki az összes mezőt."
+
+#: static/misago/js/misago.js:1
+msgctxt "change email title"
+msgid "Change e-mail address"
+msgstr "E-mail cím módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "change email form field"
+msgid "New e-mail"
+msgstr "Új e-mail"
+
+#: static/misago/js/misago.js:1
+msgctxt "change email form field"
+msgid "Your current password"
+msgstr "Jelenlegi jelszava"
+
+#: static/misago/js/misago.js:1
+msgctxt "change email form btn"
+msgid "Change e-mail"
+msgstr "E-mail módosítás"
+
+#: static/misago/js/misago.js:1
+msgctxt "change password form"
+msgid "Fill out all fields."
+msgstr "Töltse ki az összes mezőt."
+
+#: static/misago/js/misago.js:1
+msgctxt "change password form"
+msgid "New passwords are different."
+msgstr "Az új jelszavak eltérőek."
+
+#: static/misago/js/misago.js:1
+msgctxt "change password title"
+msgid "Change password"
+msgstr "Jelszó módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "change password form field"
+msgid "New password"
+msgstr "Új jelszó"
+
+#: static/misago/js/misago.js:1
+msgctxt "change password form field"
+msgid "Repeat password"
+msgstr "Ismételje meg a jelszót"
+
+#: static/misago/js/misago.js:1
+msgctxt "change password form field"
+msgid "Your current password"
+msgstr "Jelenlegi jelszava"
+
+#: static/misago/js/misago.js:1
+msgctxt "change password form btn"
+msgid "Change password"
+msgstr "Jelszó módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "change sign in credentials title"
+msgid "Change e-mail or password"
+msgstr "E-mail vagy jelszó módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "change sign in credentials"
+msgid ""
+"You need to set a password for your account to be able to change your e-mail"
+" or password."
+msgstr ""
+"Jelszót kell beállítania fiókjához, hogy módosíthassa e-mail címét vagy "
+"jelszavát."
+
+#: static/misago/js/misago.js:1
+msgctxt "change sign in credentials link"
+msgid "Set password"
+msgstr "Jelszó beállítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "change sign in credentials link"
+msgid "Change forgotten password"
+msgstr "Változtassa meg az elfelejtett jelszót"
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options nav btn"
+msgid "Menu"
+msgstr "Menü"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details title"
+msgid "Ban details"
+msgstr "A kitiltás részletei"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "User-shown ban message"
+msgstr "Felhasználó által megjelenített tiltó üzenet"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "Team-shown ban message"
+msgstr "Csapat által megjelenített kitiltási üzenet"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "This ban expires on %(expires_on)s."
+msgstr "A kitiltás lejár %(expires_on)s."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "This ban expires %(expires_on)s."
+msgstr "A kitiltás lejár %(expires_on)s."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "This ban has expired."
+msgstr "Ez a kitiltás lejárt."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "%(username)s's ban is permanent."
+msgstr "%(username)s tiltása végleges."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "Ban expiration"
+msgstr "A tiltás lejárta"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "No ban is active at the moment."
+msgstr "Jelenleg nincs aktív tiltás."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile details empty"
+msgid "You are not sharing any details with others."
+msgstr "Semmilyen részletet nem oszt meg másokkal."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile details empty"
+msgid "%(username)s is not sharing any details with others."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile details title"
+msgid "Details"
+msgstr "Részletek"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile details edit btn"
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile details form"
+msgid "%(username)s's details have been changed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile load more btn"
+msgid "Show older activity"
+msgstr "Régebbi tevékenység megjelenítése"
+
+#: static/misago/js/misago.js:1
+msgctxt "quick search placeholder"
+msgid "Search..."
+msgstr "Keresés..."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers title"
+msgid "Followers"
+msgstr "Követők"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "Found %(users)s user."
+msgid_plural "Found %(users)s users."
+msgstr[0] "Találtunk %(users)s felhasználót."
+msgstr[1] "Találtunk %(users)s felhasználót."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "You have %(users)s follower."
+msgid_plural "You have %(users)s followers."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "%(username)s has %(users)s follower."
+msgid_plural "%(username)s has %(users)s followers."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "Search returned no users matching specified criteria."
+msgstr ""
+"A keresés nem adott eredményt a megadott feltételeknek megfelelő "
+"felhasználóval."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "You have no followers."
+msgstr "Nincsenek követőid."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "%(username)s has no followers."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "Show more (%(more)s)"
+msgstr "Mutass többet (%(more)s)"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers search"
+msgid "Search users..."
+msgstr "Felhasználók keresése..."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows title"
+msgid "Follows"
+msgstr "Követ"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "Found %(users)s user."
+msgid_plural "Found %(users)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "You are following %(users)s user."
+msgid_plural "You are following %(users)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "%(username)s is following %(users)s user."
+msgid_plural "%(username)s is following %(users)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "Loading..."
+msgstr "Betöltés..."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "Search returned no users matching specified criteria."
+msgstr ""
+"A keresés nem adott eredményt a megadott feltételeknek a megfelelő "
+"felhasználóval."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "You are not following any users."
+msgstr "Egyetlen felhasználót sem követ."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "%(username)s is not following any users."
+msgstr "%(username)s egyetlen felhasználót sem követ."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history title"
+msgid "Username history"
+msgstr "Felhasználónév előzmények"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "Found %(changes)s username change."
+msgid_plural "Found %(changes)s username changes."
+msgstr[0] "%(changes)s névváltoztatást találtunk."
+msgstr[1] "%(changes)s névváltoztatást találtunk."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "Your username was changed %(changes)s time."
+msgid_plural "Your username was changed %(changes)s times."
+msgstr[0] "Felhasználóneve megváltozott %(changes)s alkalommal."
+msgstr[1] "Felhasználóneve megváltozott %(changes)s alkalommal."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "%(username)s's username was changed %(changes)s time."
+msgid_plural "%(username)s's username was changed %(changes)s times."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "Loading..."
+msgstr "Betöltés..."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "Search returned no username changes matching specified criteria."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "%(username)s's username was never changed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "Show older (%(more)s)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history search input"
+msgid "Search history..."
+msgstr "Keresési előzmények..."
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile follow btn"
+msgid "Following"
+msgstr "Követések"
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile follow btn"
+msgid "Follow"
+msgstr "Követés"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile message btn"
+msgid "Message"
+msgstr "Üzenet"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation"
+msgid "Avatar controls have been changed."
+msgstr "Az avatarvezérlők megváltoztak."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid "Lock avatar"
+msgstr "Avatár zárolása"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid ""
+"Locking user avatar will prohibit user from changing his avatar and will "
+"reset his/her avatar to default one."
+msgstr ""
+"A felhasználói avatar zárolása megtiltja a felhasználónak, hogy "
+"megváltoztassa avatarját, és visszaállítja az avatarját az "
+"alapértelmezettre."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid "Disallow user from changing avatar"
+msgstr "Az avatar megváltoztatásának letiltása"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid "Allow user to change avatar"
+msgstr "Engedélyezze a felhasználónak az avatar megváltoztatását"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid "User message"
+msgstr "Felhasználói üzenet"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid ""
+"Optional message for user explaining why they are prohibited from changing "
+"their avatar."
+msgstr ""
+"Opcionális üzenet a felhasználónak, amely elmagyarázza, miért tilos az "
+"avatára megváltoztatása"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid "Staff message"
+msgstr "A személyzet üzenete"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid ""
+"Optional message for forum team members explaining why the user is "
+"prohibited form changing their avatar."
+msgstr ""
+"Opcionális üzenet a fórumcsapat tagjai számára, amely elmagyarázza, miért "
+"tilos a felhasználónak megváltoztatni az avatárját."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation btn"
+msgid "Close"
+msgstr "Bezárás"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation btn"
+msgid "Save changes"
+msgstr "Módosítások mentése"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation title"
+msgid "Avatar controls"
+msgstr "Avatar vezérlők"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username moderation"
+msgid "Username has been changed."
+msgstr "A felhasználónév megváltozott."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username moderation field"
+msgid "New username"
+msgstr "Új felhasználónév"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username moderation btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username moderation btn"
+msgid "Change username"
+msgstr "Felhasználónév módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username moderation title"
+msgid "Change username"
+msgstr "Felhasználónév módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete"
+msgid ""
+"%(username)s's account, threads, posts and other content has been deleted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete"
+msgid ""
+"%(username)s's account has been deleted and other content has been hidden."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete btn"
+msgid "Delete %(username)s"
+msgstr "Törlés %(username)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete btn"
+msgid "Please wait... (%(countdown)ss)"
+msgstr "Kérlek várj... (%(countdown)smp)"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete"
+msgid "User content"
+msgstr "Felhasználói tartalom"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete content"
+msgid "Delete together with user's account"
+msgstr "Törlés a felhasználói fiókkal együtt"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete content"
+msgid "Hide after deleting user's account"
+msgstr "Elrejtés a felhasználói fiók törlése után"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete link"
+msgid "Return to users list"
+msgstr "Vissza a felhasználók listájához"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete title"
+msgid "Delete user account"
+msgstr "Felhasználói fiók törlése"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile moderation menu"
+msgid "Avatar controls"
+msgstr "Avatar vezérlők"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile moderation menu"
+msgid "Change username"
+msgstr "Felhasználónév módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile moderation menu"
+msgid "Delete account"
+msgstr "Fiók törlése"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile data list"
+msgid "This user's account has been disabled by administrator."
+msgstr "Ezt a felhasználót az adminisztrátor kikapcsolta."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile data list"
+msgid "Account disabled"
+msgstr "Fiók letiltva"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile data list"
+msgid "Joined on %(joined_on)s"
+msgstr "Csatlakozott %(joined_on)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile data list"
+msgid "Joined %(joined_on)s"
+msgstr "Csatlakozott %(joined_on)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile options btn"
+msgid "Options"
+msgstr "Opciók"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile posts"
+msgid "You have posted no messages."
+msgstr "Nem tettél közzé üzenetet."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile posts"
+msgid "%(username)s posted no messages."
+msgstr "%(username)s nem tett közzé üzenetet."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile posts"
+msgid "You have posted %(posts)s message."
+msgid_plural "You have posted %(posts)s messages."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile posts"
+msgid "%(username)s has posted %(posts)s message."
+msgid_plural "%(username)s has posted %(posts)s messages."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile posts"
+msgid "Loading..."
+msgstr "Betöltés..."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile posts title"
+msgid "Posts"
+msgstr "Bejegyzés"
+
+#: static/misago/js/misago.js:1
+msgctxt "profile threads"
+msgid "You haven't started any threads."
+msgstr "Nem indítottál el egyetlen témát sem."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile threads"
+msgid "%(username)s hasn't started any threads"
+msgstr "%(username)s nem indított el egyetlen témát sem."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile threads"
+msgid "You have started %(threads)s thread."
+msgid_plural "You have started %(threads)s threads."
+msgstr[0] "Elindítottad a %(threads)s témát."
+msgstr[1] "Elindítottad a %(threads)s témákat."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile threads"
+msgid "%(username)s has started %(threads)s thread."
+msgid_plural "%(username)s has started %(threads)s threads."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile threads"
+msgid "Loading..."
+msgstr "Betöltés..."
+
+#: static/misago/js/misago.js:1
+msgctxt "profile threads title"
+msgid "Threads"
+msgstr "Témák"
+
+#: static/misago/js/misago.js:1
+msgctxt "request activation link form"
+msgid "Enter a valid e-mail address."
+msgstr "Adjon meg egy érvényes e-mail címet."
+
+#: static/misago/js/misago.js:1
+msgctxt "request activation link form field"
+msgid "Your e-mail address"
+msgstr "Az Ön e-mail címe"
+
+#: static/misago/js/misago.js:1
+msgctxt "request activation link form btn"
+msgid "Send link"
+msgstr "Link küldése"
+
+#: static/misago/js/misago.js:1
+msgctxt "request activation link form"
+msgid "Activation link was sent to %(email)s"
+msgstr "Az aktiválási link elküldve a következő címre: %(email)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "request activation link form btn"
+msgid "Request another link"
+msgstr "Kérjen másik linket"
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form"
+msgid "Enter a valid e-mail address."
+msgstr "Adjon meg egy érvényes e-mail címet."
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form field"
+msgid "Your e-mail address"
+msgstr "Az Ön e-mail címe"
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form btn"
+msgid "Send link"
+msgstr "Link küldése"
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form"
+msgid "Reset password link was sent to %(email)s"
+msgstr "A jelszó visszaállítása link elküldve a következő címre: %(email)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form btn"
+msgid "Request another link"
+msgstr "Kérjen másik linket"
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form error"
+msgid "Activate your account."
+msgstr "Aktiválja fiókját."
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form error"
+msgid "Your account is inactive."
+msgstr "Fiókja inaktív."
+
+#: static/misago/js/misago.js:1
+msgctxt "password reset form"
+msgid "Enter new password."
+msgstr "Írja be az új jelszót."
+
+#: static/misago/js/misago.js:1
+msgctxt "password reset form field"
+msgid "Enter new password"
+msgstr "Írja be az új jelszót."
+
+#: static/misago/js/misago.js:1
+msgctxt "password reset form btn"
+msgid "Change password"
+msgstr "Jelszó módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "password reset form"
+msgid "%(username)s, your password has been changed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password reset form"
+msgid "Sign in using new password to continue."
+msgstr "A folytatáshoz jelentkezzen be új jelszóval."
+
+#: static/misago/js/misago.js:1
+msgctxt "password reset form btn"
+msgid "Sign in"
+msgstr "Jelentkezzen be"
+
+#: static/misago/js/misago.js:1
+msgctxt "search form"
+msgid "You have to enter search query."
+msgstr "Meg kell adnia a keresési lekérdezést."
+
+#: static/misago/js/misago.js:1
+msgctxt "search form title"
+msgid "Search"
+msgstr "Keresés"
+
+#: static/misago/js/misago.js:1
+msgctxt "search form input"
+msgid "Search"
+msgstr "Keresés"
+
+#: static/misago/js/misago.js:1
+msgctxt "search form btn"
+msgid "Search"
+msgstr "Keresés"
+
+#: static/misago/js/misago.js:1
+msgctxt "search time"
+msgid "Search took %(time)s s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search threads btn"
+msgid "Show more"
+msgstr "Mutass többet"
+
+#: static/misago/js/misago.js:1
+msgctxt "search threads"
+msgid "Loading results..."
+msgstr "Eredmények betöltése..."
+
+#: static/misago/js/misago.js:1
+msgctxt "search threads"
+msgid "No threads matching search query have been found."
+msgstr "Nem található a keresési lekérdezésnek megfelelő téma."
+
+#: static/misago/js/misago.js:1
+msgctxt "search threads"
+msgid "Enter at least two characters to search threads."
+msgstr "Írjon be legalább két karaktert a témák kereséséhez."
+
+#: static/misago/js/misago.js:1
+msgctxt "search users"
+msgid "Loading results..."
+msgstr "Eredmények betöltése..."
+
+#: static/misago/js/misago.js:1
+msgctxt "search users"
+msgid "No users matching search query have been found."
+msgstr "Nem található a keresési lekérdezésnek megfelelő felhasználó."
+
+#: static/misago/js/misago.js:1
+msgctxt "search users"
+msgid "Enter at least two characters to search users."
+msgstr "Írjon be legalább két karaktert a felhasználók kereséséhez."
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth title"
+msgid "Sign in with %(backend)s"
+msgstr "Jelentkezzen be a következővel: %(backend)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth form"
+msgid "Fill out all fields."
+msgstr "Töltse ki az összes mezőt."
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth form"
+msgid "Your e-mail address has been verified by %(backend)s."
+msgstr "Az Ön e-mail címét %(backend)s ellenőrizte."
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth form title"
+msgid "Complete your account"
+msgstr "Töltse ki fiókját"
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth form field"
+msgid "Username"
+msgstr "Felhasználónév"
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth form field"
+msgid "E-mail address"
+msgstr "E-mail cím"
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth form btn"
+msgid "Sign in"
+msgstr "Jelentkezzen be"
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth complete"
+msgid ""
+"%(username)s, your account has been created and you have been signed in to "
+"it."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth complete title"
+msgid "Registration completed!"
+msgstr "A regisztráció befejeződött!"
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth complete link"
+msgid "Return to forum index"
+msgstr "Vissza a fórum indexéhez"
+
+#: static/misago/js/misago.js:1
+msgctxt "add private thread participant"
+msgid "You have to enter user name."
+msgstr "Felhasználónevet kell megadni."
+
+#: static/misago/js/misago.js:1
+msgctxt "add private thread participant"
+msgid "New participant has been added to thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "add private thread participant field"
+msgid "User to add"
+msgstr "Felhasználó hozzáadása"
+
+#: static/misago/js/misago.js:1
+msgctxt "add private thread participant btn"
+msgid "Add participant"
+msgstr "Résztvevő hozzáadása"
+
+#: static/misago/js/misago.js:1
+msgctxt "add private thread participant btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "add private thread participant modal title"
+msgid "Add participant"
+msgstr "Résztvevő hozzáadása"
+
+#: static/misago/js/misago.js:1
+msgctxt "add participant btn"
+msgid "Add participant"
+msgstr "Résztvevő hozzáadása"
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread owner change"
+msgid "Are you sure you want to take over this thread?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread owner change"
+msgid "Are you sure you want to change thread owner to %(user)s?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread participants actions"
+msgid "%(user)s has been made new thread owner."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread owner change btn"
+msgid "Make owner"
+msgstr "Legyen tulajdonos"
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread leave"
+msgid "Are you sure you want to leave this thread?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread leave"
+msgid "Are you sure you want to remove %(user)s from this thread?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread participants actions"
+msgid "You have left this thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread participants actions"
+msgid "%(user)s has been removed from this thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread leave btn"
+msgid "Leave thread"
+msgstr "Téma elhagyása"
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread leave btn"
+msgid "Remove"
+msgstr "Eltávolítás"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread participants profile link"
+msgid "See profile"
+msgstr "Lásd a profilt"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread participants owner status"
+msgid "Thread owner"
+msgstr "A téma tulajdonosa"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread participants stat"
+msgid "This thread has %(users)s participant."
+msgid_plural "This thread has %(users)s participants."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "%(votes)s vote, %(proc)s% of total."
+msgid_plural "%(votes)s votes, %(proc)s% of total."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "You've voted on this choice."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll votes"
+msgstr "Szavazatok"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "%(votes)s user has voted for this choice."
+msgid_plural "%(votes)s users have voted for this choice."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Vote"
+msgstr "Szavazás"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "See votes"
+msgstr "Lásd a szavazatokat"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid ""
+"Are you sure you want to delete this poll? This action is not reversible."
+msgstr "Biztosan törli ezt a szavazást? Ez a művelet nem visszafordítható."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll has been deleted"
+msgstr "A szavazást törölték"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Delete"
+msgstr "Törlés"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Started by %(poster)s %(posted_on)s."
+msgstr "Indította %(poster)s .%(posted_on)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Voting ends %(ends_on)s."
+msgstr "Szavazás véget ér %(ends_on)s."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "%(votes)s vote."
+msgid_plural "%(votes)s votes."
+msgstr[0] "%(votes)s szavazat."
+msgstr[1] "%(votes)s szavazat."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Voting is public."
+msgstr "A szavazás nyilvános."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "You can't select any more choices."
+msgstr "Nem választhat több lehetőséget."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "You can select %(choices)s more choice."
+msgid_plural "You can select %(choices)s more choices."
+msgstr[0] "További %(choices)s lehetőség közül választhat."
+msgstr[1] "További %(choices)s lehetőség közül választhat."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "You can change your vote later."
+msgstr "Később megváltoztathatja szavazatát."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Votes are final."
+msgstr "A szavazatok véglegesek."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll vote"
+msgid "You need to select at least one choice."
+msgstr "Legalább egy lehetőséget ki kell választania."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll vote"
+msgid "Your vote has been saved."
+msgstr "A szavazatod el lett mentve."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll vote btn"
+msgid "Save your vote"
+msgstr "Mentse el szavazatát"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll vote btn"
+msgid "See results"
+msgstr "Lásd az eredményeket"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Add choice"
+msgstr "Választás hozzáadása"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Are you sure you want to remove this choice?"
+msgstr "Biztosan eltávolítja ezt a választást?"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Remove this choice"
+msgstr "Távolítsa el ezt a választást"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll choice"
+msgstr "Szavazás választás"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Are you sure you want to discard changes?"
+msgstr "Biztosan el szeretné vetni a változtatásokat?"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Are you sure you want to discard new poll?"
+msgstr "Biztosan elveted az új szavazást?"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll has been edited."
+msgstr "A szavazás szerkesztve."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll has been posted."
+msgstr "A szavazást közzétettük."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Edit poll"
+msgstr "Szavazás szerkesztése"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Add poll"
+msgstr "Szavazás hozzáadása"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Question and choices"
+msgstr "Kérdés és választási lehetőség"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll question"
+msgstr "Szavazás kérdés"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Available choices"
+msgstr "Rendelkezésre álló lehetőségek"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Voting"
+msgstr "Szavazás"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll length"
+msgstr "Szavazás hossza"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid ""
+"Enter number of days for which voting in this poll should be possible or "
+"zero to run this poll indefinitely."
+msgstr ""
+"Adja meg, hány napig lehet szavazni ebben a szavazásban, vagy nullát a "
+"szavazás határozatlan ideig történő futtatásához."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Allowed choices"
+msgstr "Engedélyezett választási lehetőségek"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Allow vote changes"
+msgstr "Szavazatmódosítások engedélyezése"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Allow participants to change their vote"
+msgstr "Lehetővé teszi a résztvevőknek, hogy módosítsák szavazatukat"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Don't allow participants to change their vote"
+msgstr "Ne hagyja, hogy a résztvevők módosítsák szavazatukat"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Save changes"
+msgstr "Módosítások mentése"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Post poll"
+msgstr "Szavazás közzététele"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Make voting public"
+msgstr "Tegye nyilvánossá a szavazást"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid ""
+"Making voting public will allow everyone to access detailed list of votes, "
+"showing which users voted for which choices and at which times. This option "
+"can't be changed after poll's creation. Moderators may see voting details "
+"for all polls."
+msgstr ""
+"A szavazás nyilvánossá tétele lehetővé teszi, hogy mindenki hozzáférjen a "
+"szavazatok részletes listájához, amely megmutatja, hogy mely felhasználók "
+"melyik választásra és mikor szavaztak. Ez a beállítás a szavazás létrehozása"
+" után nem módosítható. A moderátorok láthatják a szavazás részleteit az "
+"összes szavazásnál."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Votes are public"
+msgstr "A szavazatok nyilvánosak"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Votes are hidden"
+msgstr "A szavazatok el vannak rejtve"
+
+#: static/misago/js/misago.js:1
+msgctxt "event hide btn"
+msgid "Hide"
+msgstr "Elrejtés"
+
+#: static/misago/js/misago.js:1
+msgctxt "event reveal btn"
+msgid "Unhide"
+msgstr "Felfed"
+
+#: static/misago/js/misago.js:1
+msgctxt "event delete"
+msgid ""
+"Are you sure you wish to delete this event? This action is not reversible!"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event delete"
+msgid "Event has been deleted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event delete btn"
+msgid "Delete"
+msgstr "Törlés"
+
+#: static/misago/js/misago.js:1
+msgctxt "event info"
+msgid "Hidden by %(event_by)s %(event_on)s."
+msgstr "Elrejtette %(event_by)s %(event_on)s."
+
+#: static/misago/js/misago.js:1
+msgctxt "event info"
+msgid "By %(event_by)s %(event_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been pinned globally."
+msgstr "A témát globálisan rögzítették."
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been pinned in category."
+msgstr "Ez a téma a kategóriában lett kitűzve."
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been unpinned."
+msgstr "Ennél a témánál a kitűzés vissza lett vonva."
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been approved."
+msgstr "A téma jóváhagyva."
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been opened."
+msgstr "A téma megnyitva."
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been closed."
+msgstr "A téma lezárva."
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been revealed."
+msgstr "A szál fel lett fedve."
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been made hidden."
+msgstr "A téma rejtett lett."
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Took thread over."
+msgstr "Átvette a témát."
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Owner has left thread. This thread is now closed."
+msgstr "A tulajdonos elhagyta a témát. Ez a téma most lezárult."
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Participant has left thread."
+msgstr "A résztvevő elhagyta a témát."
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread title has been changed from %(old_title)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been moved from %(from_category)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "The %(merged_thread)s thread has been merged into this thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Changed thread owner to %(user)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Added %(user)s to thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Removed %(user)s from thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event unread label"
+msgid "New event"
+msgstr "Új esemény"
+
+#: static/misago/js/misago.js:1
+msgctxt "post attachment"
+msgid "%(filetype)s, %(size)s, uploaded by %(uploader)s %(uploaded_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post body hidden"
+msgid "Hidden by %(hidden_by)s %(hidden_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post body hidden"
+msgid "This post is hidden. You cannot see its contents."
+msgstr "Ez a bejegyzés el van rejtve. Nem láthatja a tartalmát."
+
+#: static/misago/js/misago.js:1
+msgctxt "post best answer flag"
+msgid "Marked as best answer by you %(marked_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post best answer flag"
+msgid "Marked as best answer by %(marked_by)s %(marked_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post hidden flag"
+msgid "This post is hidden. Only users with permission may see its contents."
+msgstr ""
+"Ez a bejegyzés el van rejtve. Csak az engedéllyel rendelkező felhasználók "
+"láthatják a tartalmát."
+
+#: static/misago/js/misago.js:1
+msgctxt "post unapproved flag"
+msgid ""
+"This post is unapproved. Only users with permission to approve posts and its"
+" author may see its contents."
+msgstr ""
+"Ez a bejegyzés nincs jóváhagyva. Csak a bejegyzések jóváhagyására jogosult "
+"felhasználók és a szerzők láthatják a tartalmat."
+
+#: static/misago/js/misago.js:1
+msgctxt "post protected flag"
+msgid "This post is protected. Only moderators may change it."
+msgstr "Ez a bejegyzés védett. Csak a moderátorok módosíthatják."
+
+#: static/misago/js/misago.js:1
+msgctxt "post delete"
+msgid ""
+"Are you sure you want to delete this post? This action is not reversible!"
+msgstr "Biztosan törlöd ezt a bejegyzést? Ez a művelet nem visszafordítható!"
+
+#: static/misago/js/misago.js:1
+msgctxt "post delete"
+msgid "Post has been deleted."
+msgstr "A bejegyzés törölve lett."
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes modal"
+msgid "No users have liked this post."
+msgstr "Egyetlen felhasználó sem kedvelte ezt a bejegyzést."
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes modal title"
+msgid "Post Likes"
+msgstr "Bejegyzés kedvelések"
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes modal"
+msgid "%(likes)s like"
+msgid_plural "%(likes)s likes"
+msgstr[0] "%(likes)s kedvelés"
+msgstr[1] "%(likes)s kedvelés"
+
+#: static/misago/js/misago.js:1
+msgctxt "post footer btn"
+msgid "Best answer"
+msgstr "A legjobb válasz"
+
+#: static/misago/js/misago.js:1
+msgctxt "post footer btn"
+msgid "Liked"
+msgstr "Kedvelt"
+
+#: static/misago/js/misago.js:1
+msgctxt "post footer btn"
+msgid "Like"
+msgstr "Kedvelés"
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes"
+msgid "%(user)s likes this."
+msgstr "%(user)s kedvelte ezt"
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes"
+msgid "%(users)s and %(last_user)s"
+msgstr "%(users)s és %(last_user)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes"
+msgid "%(users)s like this."
+msgstr "%(users)s kedvelte ezt"
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes"
+msgid "%(users)s and %(likes)s other user like this."
+msgid_plural "%(users)s and %(likes)s other users like this."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post footer btn"
+msgid "Reply"
+msgstr "Válasz"
+
+#: static/misago/js/misago.js:1
+msgctxt "post footer btn"
+msgid "Quote"
+msgstr "Idézet"
+
+#: static/misago/js/misago.js:1
+msgctxt "post footer btn"
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#: static/misago/js/misago.js:1
+msgctxt "post move modal"
+msgid "You have to enter link to the other thread."
+msgstr "Meg kell adnia a másik témára mutató hivatkozást."
+
+#: static/misago/js/misago.js:1
+msgctxt "post move modal"
+msgid "Selected post was moved to the other thread."
+msgstr "A kiválasztott bejegyzés átkerült a másik témába."
+
+#: static/misago/js/misago.js:1
+msgctxt "post move modal field"
+msgid "Link to thread you want to move post to"
+msgstr "Link arra a témára, amelybe át szeretné helyezni a bejegyzést"
+
+#: static/misago/js/misago.js:1
+msgctxt "post move modal btn"
+msgid "Move post"
+msgstr "Bejegyzés áthelyezése"
+
+#: static/misago/js/misago.js:1
+msgctxt "post move modal title"
+msgid "Move post"
+msgstr "Bejegyzés áthelyezése"
+
+#: static/misago/js/misago.js:1
+msgctxt "post revert btn"
+msgid "Revert post to state from before this edit."
+msgstr "Bejegyzés visszaállítása a szerkesztés előtti állapotra."
+
+#: static/misago/js/misago.js:1
+msgctxt "post revert btn"
+msgid "Revert"
+msgstr "Vissza"
+
+#: static/misago/js/misago.js:1
+msgctxt "post history modal btn"
+msgid "See previous change"
+msgstr "Lásd az előző módosítást"
+
+#: static/misago/js/misago.js:1
+msgctxt "post history modal btn"
+msgid "See next change"
+msgstr "Lásd a következő módosítást"
+
+#: static/misago/js/misago.js:1
+msgctxt "post history modal"
+msgid "By %(edited_by)s %(edited_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post revert"
+msgid ""
+"Are you sure you with to revert this post to the state from before this "
+"edit?"
+msgstr ""
+"Biztos benne, hogy visszaállítja ezt a bejegyzést a szerkesztés előtti "
+"állapotba?"
+
+#: static/misago/js/misago.js:1
+msgctxt "post revert"
+msgid "Post has been reverted to previous state."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post history modal title"
+msgid "Post edits history"
+msgstr "Hozzászólás szerkesztési előzményei"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread hidden switch choice"
+msgid "No"
+msgstr "Nem"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread hidden switch choice"
+msgid "Yes"
+msgstr "Igen"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread closed switch choice"
+msgid "No"
+msgstr "Nem"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread closed switch choice"
+msgid "Yes"
+msgstr "Igen"
+
+#: static/misago/js/misago.js:1
+msgctxt "post split modal"
+msgid "Selected post was split into new thread."
+msgstr "A kiválasztott bejegyzést új szálra osztották."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread weight choice"
+msgid "Not pinned"
+msgstr "Nincs kitűzve"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread weight choice"
+msgid "Pinned in category"
+msgstr "Kategóriában kitűzve"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread weight choice"
+msgid "Pinned globally"
+msgstr "Globálisan kitűzve"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal field"
+msgid "Thread weight"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal field"
+msgid "Hide thread"
+msgstr "Téma elrejtése"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal field"
+msgid "Close thread"
+msgstr "Téma lezárása"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal field"
+msgid "Thread title"
+msgstr "Téma címe"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal field"
+msgid "Category"
+msgstr "Kategória"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal btn"
+msgid "Split post"
+msgstr "Bejegyzés felosztása"
+
+#: static/misago/js/misago.js:1
+msgctxt "post split modal"
+msgid "You can't move this post at the moment."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal title"
+msgid "Split post into new thread"
+msgstr "Bejegyzés felosztása új témára"
+
+#: static/misago/js/misago.js:1
+msgctxt "post permalink"
+msgid "Permament link to this post:"
+msgstr "Állandó link ehhez a bejegyzéshez:"
+
+#: static/misago/js/misago.js:1
+msgctxt "post options permalink btn"
+msgid "Permament link"
+msgstr "Állandó link"
+
+#: static/misago/js/misago.js:1
+msgctxt "post options edit btn"
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#: static/misago/js/misago.js:1
+msgctxt "post options best answer btn"
+msgid "Mark as best answer"
+msgstr "Jelölje meg legjobb válaszként"
+
+#: static/misago/js/misago.js:1
+msgctxt "post options best answer btn"
+msgid "Unmark best answer"
+msgstr "Törölje a legjobb válasz jelölését"
+
+#: static/misago/js/misago.js:1
+msgctxt "post edits"
+msgid "This post was edited %(edits)s time."
+msgid_plural "This post was edited %(edits)s times."
+msgstr[0] "Ezt a bejegyzést %(edits)s alkalommal szerkesztették."
+msgstr[1] "Ezt a bejegyzést %(edits)s alkalommal szerkesztették."
+
+#: static/misago/js/misago.js:1
+msgctxt "post options edit btn"
+msgid "Changes history"
+msgstr "Változástörténet"
+
+#: static/misago/js/misago.js:1
+msgctxt "post options approve btn"
+msgid "Approve"
+msgstr "Jóváhagyás"
+
+#: static/misago/js/misago.js:1
+msgctxt "post options move btn"
+msgid "Move"
+msgstr "Áthelyezés"
+
+#: static/misago/js/misago.js:1
+msgctxt "post options split btn"
+msgid "Split"
+msgstr "Felosztás"
+
+#: static/misago/js/misago.js:1
+msgctxt "post options protect btn"
+msgid "Protect"
+msgstr "Védje"
+
+#: static/misago/js/misago.js:1
+msgctxt "post options protect btn"
+msgid "Remove protection"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options hide btn"
+msgid "Hide"
+msgstr "Elrejtés"
+
+#: static/misago/js/misago.js:1
+msgctxt "post options hide btn"
+msgid "Unhide"
+msgstr "Felfed"
+
+#: static/misago/js/misago.js:1
+msgctxt "post options delete btn"
+msgid "Delete"
+msgstr "Törlés"
+
+#: static/misago/js/misago.js:1
+msgctxt "post unread label"
+msgid "New post"
+msgstr "Új bejegyzés"
+
+#: static/misago/js/misago.js:1
+msgctxt "post unread label"
+msgid "New"
+msgstr "Új"
+
+#: static/misago/js/misago.js:1
+msgctxt "post timestamp"
+msgid "posted %(posted_on)s"
+msgstr "közzétéve %(posted_on)s"
+
+#: static/misago/js/misago.js:1
+msgctxt "post edits stat"
+msgid "This post was edited %(edits)s time."
+msgid_plural "This post was edited %(edits)s times."
+msgstr[0] "Ezt a bejegyzést %(edits)s alkalommal szerkesztették."
+msgstr[1] "Ezt a bejegyzést %(edits)s alkalommal szerkesztették."
+
+#: static/misago/js/misago.js:1
+msgctxt "post edits stat"
+msgid "edited %(edits)s time"
+msgid_plural "edited %(edits)s times"
+msgstr[0] "%(edits)s alkalommal szerkesztve"
+msgstr[1] "%(edits)s alkalommal szerkesztve"
+
+#: static/misago/js/misago.js:1
+msgctxt "post edits stat"
+msgid "%(edits)s edit"
+msgid_plural "%(edits)s edits"
+msgstr[0] "%(edits)s szerkesztve"
+msgstr[1] "%(edits)s szerkesztve"
+
+#: static/misago/js/misago.js:1
+msgctxt "post protected label"
+msgid "This post is protected and may not be edited."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post protected label"
+msgid "protected"
+msgstr "Védett"
+
+#: static/misago/js/misago.js:1
+msgctxt "poster stats"
+msgid "%(posts)s post"
+msgid_plural "%(posts)s posts"
+msgstr[0] "%(posts)s bejegyzés"
+msgstr[1] "%(posts)s bejegyzés"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread starter info"
+msgid "Thread author"
+msgstr "A téma szerzője"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread starter info"
+msgid "Started on: %(timestamp)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title form"
+msgid "You have to enter thread title."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title form field"
+msgid "Thread title"
+msgstr "Téma címe"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title form btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title form btn"
+msgid "Change title"
+msgstr "Cím módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title form title"
+msgid "Change title"
+msgstr "Cím módosítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form"
+msgid "Thread has been merged with other one."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form"
+msgid "You have to enter link to the other thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form field"
+msgid "Link to thread you want to merge with"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form field"
+msgid ""
+"Merge will delete current thread and move its contents to the thread "
+"specified here."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form btn"
+msgid "Merge thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form title"
+msgid "Merge thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form"
+msgid "Thread has been moved."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form field"
+msgid "New category"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form btn"
+msgid "Move thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form title"
+msgid "Move thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form"
+msgid "You can't move this thread at the moment."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form dismiss btn"
+msgid "Ok"
+msgstr "Ok"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been pinned globally."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been pinned in category."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been unpinned."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been approved."
+msgstr "A téma jóváhagyva."
+
+#: static/misago/js/misago.js:1
+msgid "Thread has been opened."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been closed."
+msgstr "A téma lezárva."
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been made visible."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been made hidden."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Are you sure you want to delete this thread?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been deleted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Change title"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Pin globally"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Pin in category"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Unpin"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Move"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Merge"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Approve"
+msgstr "Jóváhagyás"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Open"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Close"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Unhide"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Hide"
+msgstr "Elrejtés"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Delete"
+msgstr "Törlés"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread options btn"
+msgid "Thread options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "Watching"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "Watch"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "Notify about new replies"
+msgstr "Értesítés az új válaszokról"
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "On site and with e-mail"
+msgstr "Csak az oldalon és e-mail"
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "On site only"
+msgstr "Csak az oldalon"
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "Don't notify"
+msgstr "Ne értesíts"
+
+#: static/misago/js/misago.js:1
+msgctxt "breadcrumb"
+msgid "Threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "breadcrumb"
+msgid "Private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go to first page"
+msgstr "Ugrás az első oldalra"
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go to previous page"
+msgstr "Ugrás az előző oldalra"
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Page %(page)s of %(pages)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator input"
+msgid "Page"
+msgstr "Oldal"
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go to next page"
+msgstr "Ugrás a következő oldalra"
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go to last page"
+msgstr "Ugrás az utolsó oldalra"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation modal title"
+msgid "Moderation"
+msgstr "Moderáció"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation modal"
+msgid "One or more posts could not be changed:"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation modal"
+msgid "%(username)s on %(posted_on)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge posts"
+msgid ""
+"Are you sure you want to merge selected posts? This action is not "
+"reversible!"
+msgstr ""
+"Biztosan egyesíteni szeretné a kiválasztott bejegyzéseket? Ez a művelet nem "
+"visszafordítható!"
+
+#: static/misago/js/misago.js:1
+msgctxt "delete posts"
+msgid ""
+"Are you sure you want to delete selected posts? This action is not "
+"reversible!"
+msgstr ""
+"Biztosan törölni szeretnéd a kiválasztott bejegyzéseket? Ez a művelet nem "
+"visszafordítható!"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation move"
+msgid "You have to enter link to the other thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation move"
+msgid "Selected posts were moved to the other thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation move"
+msgid "Link to thread you want to move posts to"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation move btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation move btn"
+msgid "Move posts"
+msgstr "Bejegyzések áthelyezése"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation move title"
+msgid "Move posts"
+msgstr "Bejegyzések áthelyezése"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split"
+msgid "Selected posts were split into new thread."
+msgstr "A kiválasztott bejegyzéseket új témákra osztották."
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split field"
+msgid "Thread weight"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split field"
+msgid "Hide thread"
+msgstr "Téma elrejtése"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split field"
+msgid "Close thread"
+msgstr "Téma bezárása"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split field"
+msgid "Thread title"
+msgstr "Téma címe"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split field"
+msgid "Category"
+msgstr "Kategória"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split btn"
+msgid "Split posts"
+msgstr "Bejegyzések felosztása"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split"
+msgid "You can't move selected posts at the moment."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split dismiss btn"
+msgid "Ok"
+msgstr "Ok"
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split title"
+msgid "Split posts into new thread"
+msgstr "Bejegyzések felosztása új témára"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Approve"
+msgstr "Jóváhagyás"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Merge"
+msgstr "Összeolvasztás"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Move"
+msgstr "Mozgatás"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Split"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Protect"
+msgstr "Védje"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Unprotect"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Hide"
+msgstr "Elfejtés"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Unhide"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Delete"
+msgstr "Törlés"
+
+#: static/misago/js/misago.js:1
+msgctxt "post options btn"
+msgid "Posts options"
+msgstr "Bejegyzések beállításai"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread reply btn"
+msgid "Reply"
+msgstr "Válasz"
+
+#: static/misago/js/misago.js:1
+msgctxt "go up"
+msgid "Go to top"
+msgstr "Ugrás a tetejére"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll btn"
+msgid "Add poll"
+msgstr "Szavazás hozzáadása"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread shortcuts btn"
+msgid "Shortcuts"
+msgstr "Parancsikonok"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread shortcut btn"
+msgid "Go to first post"
+msgstr "Ugrás az első bejegyzésre"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread shortcut btn"
+msgid "Go to new post"
+msgstr "Ugrás az új bejegyzésre"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread shortcut btn"
+msgid "Go to best answer"
+msgstr "Tovább a legjobb válaszhoz"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread shortcut btn"
+msgid "Go to unapproved post"
+msgstr "Ugrás a nem jóváhagyott bejegyzésre"
+
+#: static/misago/js/misago.js:1
+msgctxt "thread shortcut btn"
+msgid "Go to last post"
+msgstr "Ugrás az utolsó bejegyzésre"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation title"
+msgid "Threads moderation"
+msgstr "Téma moderáció"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "One or more threads could not be deleted:"
+msgstr "Egy vagy több téma nem törölhető:"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge field"
+msgid "Thread weight"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge field"
+msgid "Hide thread"
+msgstr "Téma elrejtése"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge field"
+msgid "Close thread"
+msgstr "Zárja be a témát"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge field"
+msgid "Thread title"
+msgstr "Téma címe"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge field"
+msgid "Category"
+msgstr "kategória"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge btn"
+msgid "Merge threads"
+msgstr "Témák összeolvasztása"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge"
+msgid ""
+"You can't merge threads because there are no categories you are allowed to "
+"move them to."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge"
+msgid ""
+"You need permission to start threads in category to be able to merge threads"
+" to it."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge dismiss btn"
+msgid "Ok"
+msgstr "Ok"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge title"
+msgid "Merge threads"
+msgstr "Témák összeolvasztása"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move"
+msgid "Selected threads were moved."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move field"
+msgid "New category"
+msgstr "Új kategória"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move btn"
+msgid "Cancel"
+msgstr "Mégse"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move btn"
+msgid "Move threads"
+msgstr "Témák áthelyezése"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move"
+msgid ""
+"You can't move threads because there are no categories you are allowed to "
+"move them to."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move"
+msgid ""
+"You need permission to start threads in category to be able to move threads "
+"to it."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move dismiss btn"
+msgid "Ok"
+msgstr "Ok"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move title"
+msgid "Move threads"
+msgstr "Témák mozgatása"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were pinned globally."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were pinned in category."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were unpinned."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were approved."
+msgstr "A kiválasztott témákat jóváhagyták."
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were opened."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were closed."
+msgstr "A kiválasztott témákat lezártuk."
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were unhidden."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were hidden."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "You don't have permission to merge this thread with others."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "You have to select at least two threads to merge."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Are you sure you want to delete selected threads?"
+msgstr "Biztosan törölni szeretné a kiválasztott témákat?"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were deleted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Select all"
+msgstr "Válassza ki az összeset"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Select none"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Pin threads globally"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Pin threads in categories"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Unpin threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Move threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Merge threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Approve threads"
+msgstr "Témák jóváhagyása"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Open threads"
+msgstr "Témák nyitása"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Close threads"
+msgstr "Téma bezárása"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Unhide threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Hide threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Delete threads"
+msgstr "Témák törlése"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list nav"
+msgid "Moderation"
+msgstr "Moderálás"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list nav"
+msgid "All categories"
+msgstr "Minden kategória"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list nav"
+msgid "All subcategories"
+msgstr "Minden alkategória"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list nav"
+msgid "Start thread"
+msgstr "Téma indítása"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list empty"
+msgid "There are no threads on this site yet."
+msgstr "Ezen az oldalon még nincsenek témák."
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list empty"
+msgid "There are no threads in this category."
+msgstr "Ebben a kategóriában nincsenek témák."
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list empty"
+msgid "No threads matching specified criteria were found."
+msgstr "Nem található a megadott feltételeknek megfelelő téma."
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "%(timestamp)s - latest activity"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "%(poster)s - latest poster"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "Send e-mail notifications"
+msgstr "E-mail értesítések küldése"
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "Without e-mail notifications"
+msgstr "E-mail értesítések nélkül"
+
+#: static/misago/js/misago.js:1
+msgid "Not watching"
+msgstr "Nem figyel"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Contains unread posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "No unread posts"
+msgstr "Nincsenek olvasatlan bejegyzések"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "%(starter)s - original poster"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Go to page: %(page)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list update prompt"
+msgid "There is %(threads)s new or updated thread. Click here to show it."
+msgid_plural ""
+"There are %(threads)s new or updated threads. Click here to show them."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list title"
+msgid "Threads"
+msgstr "Témák"
+
+#: static/misago/js/misago.js:1
+msgctxt "threas list more btn"
+msgid "Show more"
+msgstr "Mutass többet"
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads title"
+msgid "Private threads"
+msgstr "Privát témák"
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads list"
+msgid ""
+"Private threads are threads which only those that started them and those "
+"they have invited may see and participate in."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads list empty"
+msgid "You aren't participating in any private threads."
+msgstr "Ön nem vesz részt egyetlen privát témában sem."
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "All"
+msgstr "Összes"
+
+#: static/misago/js/misago.js:1
+msgid "All threads"
+msgstr "Összes téma"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "My"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "My threads"
+msgstr "Témáim"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "New"
+msgstr "Új"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "New threads"
+msgstr "Új témák"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Unread"
+msgstr "Olvasatlan"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Unread threads"
+msgstr "Olvasatlan témák"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Watched"
+msgstr "Követve"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Watched threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Unapproved"
+msgstr "Nem jóváhagyott"
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Unapproved content"
+msgstr "Jóvá nem hagyott tartalom"
+
+#: static/misago/js/misago.js:1
+msgctxt "top posters empty"
+msgid "No users have posted any new messages during last %(days)s day."
+msgid_plural ""
+"No users have posted any new messages during last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "top posters list item"
+msgid "Rank"
+msgstr "Rang"
+
+#: static/misago/js/misago.js:1
+msgctxt "top posters list item"
+msgid "Ranked posts"
+msgstr "Rangsorolt ​​bejegyzések"
+
+#: static/misago/js/misago.js:1
+msgctxt "top posters list item"
+msgid "Total posts"
+msgstr "Összes hozzászólás"
+
+#: static/misago/js/misago.js:1
+msgctxt "top posters list"
+msgid "%(posters)s top poster from last %(days)s days."
+msgid_plural "%(posters)s top posters from last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "users page title"
+msgid "Users"
+msgstr "Felhasználók"
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list"
+msgid "There is %(more)s more user with this rank."
+msgid_plural "There are %(more)s more users with this rank."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list empty"
+msgid "There are no more users with this rank."
+msgstr "Nincs több felhasználó ezzel a ranggal."
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list paginator"
+msgid "Go to first page"
+msgstr "Ugrás az első oldalra"
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list paginator"
+msgid "Go to previous page"
+msgstr "Ugrás az előző oldalra"
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list paginator"
+msgid "Go to next page"
+msgstr "Ugrás a következő oldalra"
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list paginator"
+msgid "Go to last page"
+msgstr "Ugrás az utolsó oldalra"
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list"
+msgid "There are no users with this rank at the moment."
+msgstr "Jelenleg nincs ilyen rangú felhasználó."
+
+#: static/misago/js/misago.js:1
+msgctxt "ajax client error"
+msgid "Could not connect to the site."
+msgstr "Nem sikerült csatlakozni a webhelyhez."
+
+#: static/misago/js/misago.js:1
+msgctxt "ajax client error"
+msgid "Action link is invalid."
+msgstr "A műveleti hivatkozás érvénytelen."
+
+#: static/misago/js/misago.js:1
+msgctxt "ajax client error"
+msgid "Unknown error has occurred."
+msgstr "Ismeretlen hiba történt."
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Could not connect to the site."
+msgstr "Nem sikerült csatlakozni a webhelyhez."
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Upload was rejected by the site as too large."
+msgstr "A webhely túl nagy méret miatt elutasította a feltöltést."
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Action link is invalid."
+msgstr "A műveleti hivatkozás érvénytelen."
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Unknown error has occurred."
+msgstr "Ismeretlen hiba történt."
+
+#: static/misago/js/misago.js:1
+msgctxt "captcha field"
+msgid "Failed to load CAPTCHA."
+msgstr "Nem sikerült betölteni a CAPTCHA-t."
+
+#: static/misago/js/misago.js:1
+msgctxt "captcha field"
+msgid "Please solve the quick test"
+msgstr "Kérjük, oldja meg a gyorstesztet"
+
+#: static/misago/js/misago.js:1
+msgctxt "captcha field"
+msgid "This test helps us prevent automated spam registrations on the site."
+msgstr ""
+"Ez a teszt segít megakadályozni az automatikus spamregisztrációkat az "
+"oldalon."
+
+#: static/misago/js/misago.js:1
+msgctxt "page title pagination"
+msgid "page: %(page)s"
+msgstr "oldal: %(page)s"
+
+#: static/misago/js/misago.js:1
+msgid "You are already working on other message. Do you want to discard it?"
+msgstr "Már dolgozol egy másik üzeneten. El akarod dobni?"
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "You don't have permission to perform this action."
+msgstr "Nincs engedélye ennek a műveletnek a végrehajtására."
+
+#: static/misago/js/misago.js:1
+msgctxt "banned page"
+msgid "This ban expires on %(expires_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "banned page"
+msgid "This ban expires %(expires_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "banned page"
+msgid "This ban has expired."
+msgstr "Ez a kitiltás lejárt."
+
+#: static/misago/js/misago.js:1
+msgctxt "banned page"
+msgid "This ban is permanent."
+msgstr "Ez a kitiltás végleges."
+
+#: static/misago/js/misago.js:1
+msgctxt "banned error title"
+msgid "You are banned"
+msgstr "Ki vagy tiltva"
+
+#: static/misago/js/misago.js:1
+msgctxt "agreement validator"
+msgid "You have to accept the terms of service."
+msgstr "El kell fogadnia a szolgáltatási feltételeket."
+
+#: static/misago/js/misago.js:1
+msgctxt "agreement validator"
+msgid "You have to accept the privacy policy."
+msgstr "El kell fogadnia az adatvédelmi szabályzatot."
+
+#: static/misago/js/misago.js:1
+msgctxt "email validator"
+msgid "Enter a valid e-mail address."
+msgstr "Adjon meg egy érvényes e-mail címet."
+
+#: static/misago/js/misago.js:1
+msgctxt "value length validator"
+msgid ""
+"Ensure this value has at least %(limit_value)s character (it has "
+"%(show_value)s)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)s characters (it has "
+"%(show_value)s)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "value length validator"
+msgid ""
+"Ensure this value has at most %(limit_value)s character (it has "
+"%(show_value)s)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)s characters (it has "
+"%(show_value)s)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "username length validator"
+msgid "Username must be at least %(limit_value)s character long."
+msgid_plural "Username must be at least %(limit_value)s characters long."
+msgstr[0] ""
+"A felhasználónévnek legalább %(limit_value)s karakter hosszúnak kell lennie."
+msgstr[1] ""
+"A felhasználónévnek legalább %(limit_value)s karakter hosszúnak kell lennie."
+
+#: static/misago/js/misago.js:1
+msgctxt "username length validator"
+msgid "Username cannot be longer than %(limit_value)s character."
+msgid_plural "Username cannot be longer than %(limit_value)s characters."
+msgstr[0] "A felhasználónév nem lehet hosszabb %(limit_value)s karakternél."
+msgstr[1] "A felhasználónév nem lehet hosszabb %(limit_value)s karakternél."
+
+#: static/misago/js/misago.js:1
+msgctxt "username validator"
+msgid "Username must contain Latin alphabet letters or digits."
+msgstr ""
+"A felhasználónévnek latin ábécé betűit vagy számjegyeit kell tartalmaznia."
+
+#: static/misago/js/misago.js:1
+msgctxt "username validator"
+msgid ""
+"Username can only contain Latin alphabet letters, digits, and an underscore "
+"sign."
+msgstr ""
+"A felhasználónév csak latin ábécé betűit, számjegyeit és aláhúzásjelet "
+"tartalmazhat."
+
+#: static/misago/js/misago.js:1
+msgctxt "password length validator"
+msgid "Valid password must be at least %(limit_value)s character long."
+msgid_plural ""
+"Valid password must be at least %(limit_value)s characters long."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/vendor.js:2
+msgid "<iframe frameborder='0' width='0' height='0'/>"
+msgstr ""
+
+#: static/misago/js/vendor.js:2
+msgid "<script>"
+msgstr ""
+
+#: static/misago/js/vendor.js:2
+msgid "<div>"
+msgstr ""
