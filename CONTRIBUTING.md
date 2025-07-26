@@ -9,9 +9,11 @@ This document is a short guide for common contributions:
 Translations
 ------------
 
-Misago's translations are maintained on a separate service, [Transifex](https://explore.transifex.com/misago/). To contribute translations create an account there and request to join your language's translation team or request new language being added if a translation for it doesn't exist yet.
+Misago's translations are maintained on a separate service, [Transifex](https://explore.transifex.com/misago/). To contribute translations, create an account there and request to join your language's translation team.
 
 Pull requests with new translations on GitHub will be rejected.
+
+Because Misago only supports languages that the Django framework itself supports, new language requests are not accepted. Every new language request will be rejected. Please request to join an existing language instead of requesting a new one.
 
 
 Working on existing issue
