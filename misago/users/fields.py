@@ -28,7 +28,7 @@ class UserMultipleChoiceWidget(forms.MultiWidget):
         for i, subwidget in enumerate(context["widget"]["subwidgets"]):
             subwidget_name = self.subfields[i]
             context["widget"][subwidget_name] = subwidget
-        
+
         del context["widget"]["subwidgets"]
 
         return context
@@ -42,7 +42,9 @@ class UserMultipleChoiceWidget(forms.MultiWidget):
 class UserMultipleChoiceField(forms.MultiValueField):
     widget = UserMultipleChoiceWidget
 
-    def __init__(self, *, queryset: QuerySet | None = None, max_choices: int = 5, **kwargs):
+    def __init__(
+        self, *, queryset: QuerySet | None = None, max_choices: int = 5, **kwargs
+    ):
         super().__init__(
             fields=(
                 UserMultipleChoiceJavaScriptSubField(required=False),
@@ -57,7 +59,7 @@ class UserMultipleChoiceField(forms.MultiValueField):
 
     def _get_max_choices(self) -> int:
         return self._max_choices
-    
+
     def _set_max_choices(self, max_choices: int):
         self._max_choices = max_choices
         for field in self.fields:
@@ -67,7 +69,7 @@ class UserMultipleChoiceField(forms.MultiValueField):
 
     def _get_queryset(self) -> QuerySet:
         return self._queryset
-    
+
     def _set_queryset(self, queryset: QuerySet):
         self._queryset = queryset
         for field in self.fields:
@@ -83,7 +85,9 @@ class UserMultipleChoiceField(forms.MultiValueField):
 
 
 class UserMultipleChoiceSubField(forms.Field):
-    def __init__(self, queryset: QuerySet | None = None, max_choices: int = 5, **kwargs):
+    def __init__(
+        self, queryset: QuerySet | None = None, max_choices: int = 5, **kwargs
+    ):
         self.max_choices = max_choices
         self.queryset = queryset
 
@@ -97,7 +101,7 @@ class UserMultipleChoiceJavaScriptSubField(UserMultipleChoiceSubField):
     widget = ListInput
 
     def clean(self, value: list[str]) -> list["User"]:
-        value = self.to_python(value)[:self.max_choices]
+        value = self.to_python(value)[: self.max_choices]
 
         if value:
             value = list(self.get_users(self.queryset, value))
@@ -136,4 +140,3 @@ class UserMultipleChoiceNoScriptSubField(UserMultipleChoiceSubField):
         self.validate(value)
         self.run_validators(value)
         return value
-
