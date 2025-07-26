@@ -46,7 +46,10 @@ class UserMultipleChoice {
 
     function getQuery(control) {
       const text = control.value.trim().replace(/\s+/, "")
-      return { prefix: "", text }
+      if (text.length) {
+        return { prefix: "", text }
+      }
+      return null
     }
 
     const onSelect = (choice) => {
@@ -69,7 +72,7 @@ class UserMultipleChoice {
       }
 
       this.input.value = ""
-      this.input.before(item)
+      this.input.parentElement.before(item)
     }
 
     this.autocomplete = new Autocomplete({
@@ -93,6 +96,37 @@ class UserMultipleChoice {
           this.onBlur()
         }
       })
+    })
+
+    this.element.addEventListener("click", (event) => {
+      const button = event.target.closest("button")
+      if (button) {
+        button.remove()
+      }
+
+      this.onFocus()
+    })
+
+    this.deleteItemOnBackspace = false
+    this.input.addEventListener("keydown", (event) => {
+      if (event.code === "Backspace") {
+        this.deleteItemOnBackspace = !event.target.value.length
+      } else {
+        this.deleteItemOnBackspace = true
+      }
+    })
+
+    this.input.addEventListener("keyup", (event) => {
+      if (
+        event.code === "Backspace" &&
+        !event.target.value.trim().length &&
+        this.deleteItemOnBackspace
+      ) {
+        const lastItem = event.target.closest("li").previousElementSibling
+        if (lastItem) {
+          lastItem.remove()
+        }
+      }
     })
   }
 

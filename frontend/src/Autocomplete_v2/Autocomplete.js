@@ -82,7 +82,7 @@ class Autocomplete {
   }
 
   showSuggestions = (query) => {
-    if (this._query && query.text === this._query.text) {
+    if (this._query && query.text.trim() && query.text === this._query.text) {
       return
     }
 

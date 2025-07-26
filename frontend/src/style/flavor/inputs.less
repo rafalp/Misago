@@ -54,18 +54,9 @@ textarea.form-control {
 
 // Form chips input
 .form-chips-control {
-  width: 100%;
-  height: auto;
-  min-height: @input-height-base;
-
   background-color: @input-bg;
   border-color: @input-border;
-  border-radius: @input-border-radius;
   box-shadow: inset 0px 0px 0px 2px @input-border;
-
-  color: @input-color;
-  font-size: @font-size-base;
-  line-height: @line-height-base;
 
   &.focused {
     border-color: @input-border-focus;
@@ -91,26 +82,4 @@ textarea.form-control {
     border-color: lighten(@state-success-border, 20%);
     box-shadow: inset 0px 0px 0px 2px lighten(@state-success-border, 20%);
   }
-}
-
-.form-chips-control-input {
-  display: inline-block;
-
-  width: 100%;
-  height: @input-height-base;
-  padding: @padding-base-vertical @padding-base-horizontal;
-
-  background-color: transparent;
-  border: none;
-
-  color: @input-color;
-  font-size: @font-size-base;
-  line-height: @line-height-base;
-
-  &:focus {
-    outline: none;
-  }
-}
-
-.form-chips-control-input:focus {
 }

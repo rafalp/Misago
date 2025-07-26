@@ -1,14 +1,19 @@
 {% load i18n misago_avatars misago_forms %}
 {% with widget=widget.default %}
-  <div class="form-chips-control d-js-flex" style="align-items: center;" m-user-multiple-choice="">
-    <input type="text" class="form-chips-control-input" id="{{ widget.attrs.id }}" m-user-multiple-choice-input>
-  </div>
+  <ul class="form-chips-control d-js-flex" style="align-items: center;" m-user-multiple-choice="">
+    <li>
+      <input type="text" class="form-chips-control-input" id="{{ widget.attrs.id }}" m-user-multiple-choice-input>
+    </li>
+  </ul>
   <template id="m-user-multiple-choice-template">
-    <span m-user-multiple-choice-item style="background-color: #eee; border-radius: 3px; margin-right: 8px; padding: 2px 6px; text-wrap: nowrap; display: inline-flex; align-items: center; font-weight: bold;">
+    <li m-user-multiple-choice-item>
       <input type="hidden" name="{{ widget.name }}" value="">
-      <img src="" srcset="" width="16" height="16" alt="" style="margin-right: 6px; border-radius: 3px;">
-      <slot name="username"></slot>
-    </span>
+      <button class="form-chips-control-item" type="button">
+        <img class="form-chips-control-item-image" src="" alt="">
+        <slot name="username"></slot>
+        <span class="material-icon">clear</span>
+      </button>
+    </li>
   </template>
 {% endwith %}
 {% with widget=widget.noscript %}
