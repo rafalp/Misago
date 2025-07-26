@@ -47,7 +47,7 @@ def test_edit_poll_choices_widget_get_context_without_value():
             },
             "choices": [],
             "required": False,
-            "template_name": "misago/poll/widgets/choices.html",
+            "template_name": "misago/widgets/poll_choices.html",
         },
     }
 
@@ -147,7 +147,7 @@ def test_edit_poll_choices_widget_get_context_with_compressed_value():
                 },
             ],
             "required": False,
-            "template_name": "misago/poll/widgets/choices.html",
+            "template_name": "misago/widgets/poll_choices.html",
         },
     }
 
@@ -215,7 +215,7 @@ def test_edit_poll_choices_widget_get_context_with_decompressed_value():
                 },
             ],
             "required": False,
-            "template_name": "misago/poll/widgets/choices.html",
+            "template_name": "misago/widgets/poll_choices.html",
         },
     }
 

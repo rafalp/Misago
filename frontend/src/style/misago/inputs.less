@@ -106,3 +106,111 @@ input.hidden-file-upload {
   gap: ceil(@grid-gutter-width / 2);
   padding-left: 24px;
 }
+
+// Form chips
+.form-chips-control {
+  display: flex;
+  flex-wrap: wrap;
+  gap: @padding-base-vertical;
+  align-items: center;
+
+  width: 100%;
+  min-height: @input-height-base;
+  padding: @padding-base-vertical @padding-base-horizontal;
+
+  background-color: @input-bg;
+  border-color: @input-border;
+  border-radius: @input-border-radius;
+
+  color: @input-color;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+
+  &.focused {
+    border-color: @input-border-focus;
+  }
+
+  li {
+    display: block;
+    flex-shrink: 0;
+
+    list-style: none;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  li:last-child {
+    flex: 1;
+    min-width: 120px;
+  }
+}
+
+.has-error .form-chips-control {
+  border-color: @state-danger-border;
+
+  &.focused {
+    border-color: lighten(@state-danger-border, 20%);
+  }
+}
+
+.has-success .form-chips-control {
+  border-color: @state-success-border;
+
+  &.focused {
+    border-color: lighten(@state-success-border, 20%);
+  }
+}
+
+.form-chips-control-item {
+  display: flex;
+  align-items: center;
+
+  height: (@input-height-base - (@padding-base-vertical * 2));
+  padding: 0 4px 0 2px;
+
+  background-color: @gray-lighter;
+  border: none;
+  border-radius: @border-radius-small;
+  font-weight: bold;
+}
+
+.form-chips-control-item-image {
+  width: (@input-height-base - (@padding-base-vertical * 2) - 4px);
+  height: (@input-height-base - (@padding-base-vertical * 2) - 4px);
+  margin-right: 4px;
+
+  border-radius: @border-radius-small;
+}
+
+.material-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+
+  color: @gray-light;
+  font-size: 16px;
+  line-height: 0;
+}
+
+.form-chips-control-input {
+  height: (@input-height-base - (@padding-base-vertical * 2));
+  padding: 0;
+  width: 100%;
+
+  background-color: transparent;
+  border: none;
+
+  color: @input-color;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+
+  &:focus {
+    outline: none;
+  }
+}
