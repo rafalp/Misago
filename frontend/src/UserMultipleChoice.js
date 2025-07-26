@@ -110,20 +110,25 @@ class UserMultipleChoice {
       this.onFocus()
     })
 
-    // TODO: FIX THIS SHIT
-    let deleteOnBackspace = false
+    let backspacePressed = false
 
     this.input.addEventListener("keydown", function (event) {
-      deleteOnBackspace =
-        event.key === "Backspace" && event.target.value.trim() === ""
+      if (event.key === "Backspace") {
+        if (!backspacePressed) {
+          backspacePressed = true
+          if (event.target.value.trim() === "") {
+            const lastItem = event.target.closest("li").previousElementSibling
+            if (lastItem) {
+              lastItem.remove()
+            }
+          }
+        }
+      }
     })
 
     this.input.addEventListener("keyup", function (event) {
-      if (event.key === "Backspace" && deleteOnBackspace) {
-        const lastItem = event.target.closest("li").previousElementSibling
-        if (lastItem) {
-          lastItem.remove()
-        }
+      if (event.key === "Backspace") {
+        backspacePressed = false
       }
     })
   }
