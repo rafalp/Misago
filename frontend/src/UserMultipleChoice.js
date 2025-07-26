@@ -55,6 +55,8 @@ class UserMultipleChoice {
     const onSelect = (choice) => {
       const item = this.template.content.cloneNode(true)
 
+      // item.setAttribute("m-user-id", choice.id)
+
       item.querySelector("input").value = choice.slug
       item.querySelector('slot[name="username"]').replaceWith(choice.username)
 
@@ -81,6 +83,7 @@ class UserMultipleChoice {
       source: sources.users,
       select: new SelectUser({
         anchor: new AnchorInput(this.input),
+        placement: "bottom-start",
       }),
       getQuery,
       onSelect,
@@ -101,27 +104,22 @@ class UserMultipleChoice {
     this.element.addEventListener("click", (event) => {
       const button = event.target.closest("button")
       if (button) {
-        button.remove()
+        button.closest("li").remove()
       }
 
       this.onFocus()
     })
 
-    this.deleteItemOnBackspace = false
-    this.input.addEventListener("keydown", (event) => {
-      if (event.code === "Backspace") {
-        this.deleteItemOnBackspace = !event.target.value.length
-      } else {
-        this.deleteItemOnBackspace = true
-      }
+    // TODO: FIX THIS SHIT
+    let deleteOnBackspace = false
+
+    this.input.addEventListener("keydown", function (event) {
+      deleteOnBackspace =
+        event.key === "Backspace" && event.target.value.trim() === ""
     })
 
-    this.input.addEventListener("keyup", (event) => {
-      if (
-        event.code === "Backspace" &&
-        !event.target.value.trim().length &&
-        this.deleteItemOnBackspace
-      ) {
+    this.input.addEventListener("keyup", function (event) {
+      if (event.key === "Backspace" && deleteOnBackspace) {
         const lastItem = event.target.closest("li").previousElementSibling
         if (lastItem) {
           lastItem.remove()

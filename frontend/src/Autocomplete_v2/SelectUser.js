@@ -7,6 +7,7 @@ class SelectUser {
     document.body.appendChild(this.element)
 
     this.anchor = config.anchor
+    this.placement = config.placement || "bottom"
 
     this.choice = 0
     this.choices = []
@@ -104,7 +105,7 @@ class SelectUser {
       const target = this.anchor.getTarget(query)
 
       computePosition(target, this.element, {
-        placement: "top",
+        placement: this.placement,
         middleware: [offset(6), flip(), shift({ padding: 8 })],
       }).then(({ x, y }) => {
         Object.assign(this.element.style, {
