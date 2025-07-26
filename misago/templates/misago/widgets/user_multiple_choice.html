@@ -8,7 +8,7 @@
   <template id="m-user-multiple-choice-template">
     <li m-user-multiple-choice-item>
       <input type="hidden" name="{{ widget.name }}" value="">
-      <button class="form-chips-control-item" type="button">
+      <button class="form-chips-control-item" type="button" aria-label="{% trans 'Remove user from field' context 'user multiple choice delete button' %}">
         <img class="form-chips-control-item-image" src="" alt="">
         <slot name="username"></slot>
         <span class="material-icon">clear</span>

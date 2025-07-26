@@ -45,9 +45,13 @@ class UserMultipleChoice {
     this.template = document.getElementById(TEMPLATE_ID)
 
     function getQuery(control) {
-      const text = control.value.trim().replace(/\s+/, "")
-      if (text.length) {
-        return { prefix: "", text }
+      const value = control.value.trim().replace(/\s+/, "")
+      if (value.length) {
+        const exclude = []
+        element.querySelectorAll("[m-user-id]").forEach(function (item) {
+          exclude.push(item.getAttribute("m-user-id"))
+        })
+        return { prefix: "", exclude, value }
       }
       return null
     }
@@ -55,8 +59,7 @@ class UserMultipleChoice {
     const onSelect = (choice) => {
       const item = this.template.content.cloneNode(true)
 
-      // item.setAttribute("m-user-id", choice.id)
-
+      item.querySelector("li").setAttribute("m-user-id", choice.id)
       item.querySelector("input").value = choice.slug
       item.querySelector('slot[name="username"]').replaceWith(choice.username)
 

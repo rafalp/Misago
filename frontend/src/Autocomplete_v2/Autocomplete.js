@@ -82,7 +82,11 @@ class Autocomplete {
   }
 
   showSuggestions = (query) => {
-    if (this._query && query.text.trim() && query.text === this._query.text) {
+    if (
+      this._query &&
+      query.value.trim() &&
+      query.value === this._query.value
+    ) {
       return
     }
 
@@ -94,7 +98,7 @@ class Autocomplete {
     this._query = query
     this._debounce = window.setTimeout(
       () => {
-        this.source(query.text).then(
+        this.source(query).then(
           (data) => {
             if (this.select && this.onSelect) {
               this.select.show(query, data, this.onSelect)

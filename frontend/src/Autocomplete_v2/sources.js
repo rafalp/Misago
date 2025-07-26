@@ -4,19 +4,28 @@ class SourceUsers {
     this.url = window.misago_suggest_users
   }
 
-  get = (query) => {
-    if (this.cache[query]) {
-      return Promise.resolve(this.cache[query])
+  get = ({ value, exclude }) => {
+    let url = this.url + "?query=" + encodeURIComponent(value)
+    if (exclude && Array.isArray(exclude)) {
+      exclude.forEach(function (item) {
+        if (item) {
+          url += "&exclude=" + encodeURIComponent(item)
+        }
+      })
     }
 
-    return fetch(this.url + "?query=" + encodeURIComponent(query)).then(
+    if (this.cache[url]) {
+      return Promise.resolve(this.cache[url])
+    }
+
+    return fetch(url).then(
       async (response) => {
         if (!response.ok) {
           return []
         }
 
         const { results } = await response.json()
-        this.cache[query] = results
+        this.cache[url] = results
         return results
       },
       () => {
