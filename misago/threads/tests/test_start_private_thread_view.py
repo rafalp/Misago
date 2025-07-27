@@ -114,7 +114,7 @@ def test_start_private_thread_view_posts_new_thread_using_noscript_fallback(
     assert other_user.id in thread.private_thread_member_ids
 
 
-def test_start_private_thread_view_previews_message(user_client, other_user):
+def test_start_private_thread_view_previews_message(user_client):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
