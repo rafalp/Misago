@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import QuerySet
 
 from ..forms.widgets import ListInput
+from ..core.utils import slugify
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -16,7 +17,7 @@ class UserMultipleChoiceWidget(forms.MultiWidget):
 
     def __init__(self, attrs: dict | None = None):
         super().__init__(
-            widgets={
+            {
                 "": ListInput,
                 "noscript": forms.TextInput,
             },
@@ -24,12 +25,18 @@ class UserMultipleChoiceWidget(forms.MultiWidget):
         )
 
     def get_context(self, name, value, attrs):
+        max_choices = attrs.pop("max_choices", None)
+        choices = attrs.pop("choices", None)
+
         context = super().get_context(name, value, attrs)
         for i, subwidget in enumerate(context["widget"]["subwidgets"]):
             subwidget_name = self.subfields[i]
             context["widget"][subwidget_name] = subwidget
 
         del context["widget"]["subwidgets"]
+
+        context["widget"]["max_choices"] = max_choices
+        context["widget"]["choices"] = choices
 
         return context
 
@@ -77,11 +84,20 @@ class UserMultipleChoiceField(forms.MultiValueField):
 
     queryset: QuerySet = property(_get_queryset, _set_queryset)
 
+    def get_users_cache(self) -> list["User"] | None:
+        for field in self.fields:
+            if users_cache := getattr(field, "users_cache", None):
+                return users_cache
+        return None
+
     def compress(self, data_list: tuple[list[str], str]) -> list["User"]:
         if data_list:
             value, value_noscript = data_list
             return value or value_noscript
         return None
+
+    def get_bound_field(self, form, field_name):
+        return UserMultipleChoiceBoundField(form, self, field_name)
 
 
 class UserMultipleChoiceSubField(forms.Field):
@@ -93,24 +109,42 @@ class UserMultipleChoiceSubField(forms.Field):
 
         super().__init__(**kwargs)
 
-    def get_users(self, queryset: QuerySet, usernames: list[str]) -> list["User"]:
-        return queryset.filter(slug__in=set(username.lower() for username in usernames))
+    def get_users(self, queryset: QuerySet, slugs: list[str]) -> list["User"]:
+        return list(queryset.filter(slug__in=set(slugs)))
 
 
 class UserMultipleChoiceJavaScriptSubField(UserMultipleChoiceSubField):
     widget = ListInput
 
+    def to_python(self, value) -> list[str]:
+        if not value:
+            return []
+
+        return [slugify(item) for item in value]
+
     def clean(self, value: list[str]) -> list["User"]:
         value = self.to_python(value)[: self.max_choices]
 
         if value:
-            value = list(self.get_users(self.queryset, value))
+            usernames = value
+            value = self.get_users(self.queryset, value)
+            self.set_users_cache(usernames, value)
         else:
             value = []
 
         self.validate(value)
         self.run_validators(value)
         return value
+
+    def set_users_cache(self, usernames: list[str], users: list[str]):
+        users_map = {user.slug: user for user in users}
+
+        ordered_users = []
+        for username in usernames:
+            slug = username.lower()
+            if slug in users_map:
+                ordered_users.append(users_map.pop(slug))
+        self.users_cache = ordered_users + list(users_map.values())
 
 
 class UserMultipleChoiceNoScriptSubField(UserMultipleChoiceSubField):
@@ -121,9 +155,9 @@ class UserMultipleChoiceNoScriptSubField(UserMultipleChoiceSubField):
         final_value = []
         for item in value.split():
             if "," in item:
-                final_value += [i.strip() for i in item.split(",")]
+                final_value += [slugify(i.strip()) for i in item.split(",")]
             else:
-                final_value.append(item)
+                final_value.append(slugify(item))
         return [item for item in final_value if item]
 
     def clean(self, value: list[str]) -> list["User"]:
@@ -133,10 +167,22 @@ class UserMultipleChoiceNoScriptSubField(UserMultipleChoiceSubField):
             raise forms.ValidationError("TODO")
 
         if value:
-            value = list(self.get_users(self.queryset, value))
+            value = self.get_users(self.queryset, value)
         else:
             value = []
 
         self.validate(value)
         self.run_validators(value)
         return value
+
+
+class UserMultipleChoiceBoundField(forms.BoundField):
+    @property
+    def max_choices(self) -> int:
+        return self.field.max_choices
+
+    def build_widget_attrs(self, attrs: dict, widget: forms.Widget | None = None):
+        attrs = super().build_widget_attrs(attrs, widget)
+        attrs["max_choices"] = self.max_choices
+        attrs["choices"] = self.field.get_users_cache() or []
+        return attrs

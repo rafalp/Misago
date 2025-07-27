@@ -1,6 +1,16 @@
 {% load i18n misago_avatars misago_forms %}
-{% with widget=widget.default %}
-  <ul class="form-chips-control d-js-flex" style="align-items: center;" m-user-multiple-choice="">
+{% with widget=widget.default choices=widget.choices %}
+  <ul class="form-chips-control d-js-flex" style="align-items: center;" m-user-multiple-choice>
+    {% for choice in choices %}
+      <li m-user-multiple-choice-item m-user-id="{{ choice.id }}">
+        <input type="hidden" name="{{ widget.name }}" value="{{ choice.slug }}">
+        <button class="form-chips-control-item" type="button" aria-label="{% trans 'Remove user from field' context 'user multiple choice delete button' %}">
+          <img class="form-chips-control-item-image" src="{{ choice|avatar:32 }}" alt="">
+          {{ choice.username }}
+          <span class="material-icon">clear</span>
+        </button>
+      </li>
+    {% endfor %}
     <li>
       <input type="text" class="form-chips-control-input" id="{{ widget.attrs.id }}" m-user-multiple-choice-input>
     </li>

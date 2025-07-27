@@ -54,11 +54,12 @@ def test_start_private_thread_view_displays_form_page_to_users(user_client):
     assert_contains(response, "Start new private thread")
 
 
-def test_start_private_thread_view_posts_new_thread(user_client, other_user):
+def test_start_private_thread_view_posts_new_thread(user_client, user, other_user):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -69,6 +70,32 @@ def test_start_private_thread_view_posts_new_thread(user_client, other_user):
     assert response["location"] == reverse(
         "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
+
+    assert user.id in thread.private_thread_member_ids
+    assert other_user.id in thread.private_thread_member_ids
+
+
+def test_start_private_thread_view_posts_new_thread_using_noscript_fallback(
+    user_client, user, other_user
+):
+    response = user_client.post(
+        reverse("misago:start-private-thread"),
+        {
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": other_user.username,
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
+    )
+
+    assert user.id in thread.private_thread_member_ids
+    assert other_user.id in thread.private_thread_member_ids
 
 
 def test_start_private_thread_view_previews_message(user_client, other_user):
@@ -84,11 +111,65 @@ def test_start_private_thread_view_previews_message(user_client, other_user):
     assert_contains(response, "Message preview")
 
 
+def test_start_private_thread_view_keeps_invited_users(user_client, other_user):
+    response = user_client.post(
+        reverse("misago:start-private-thread"),
+        {
+            PostingFormset.preview_action: "true",
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert_contains(response, "Start new private thread")
+    assert_contains(response, "Message preview")
+    assert_contains(response, other_user.username)
+
+
+def test_start_private_thread_view_validates_invited_users(user_client, user):
+    response = user_client.post(
+        reverse("misago:start-private-thread"),
+        {
+            "posting-invite-users-users": [user.username],
+            "posting-invite-users-users_noscript": "",
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert_contains(response, "Start new private thread")
+    assert_contains(response, "You can&#x27;t invite yourself.")
+
+
+def test_start_private_thread_view_ignores_user_inviting_self_if_other_users_are_invited(
+    user_client, user, other_user
+):
+    response = user_client.post(
+        reverse("misago:start-private-thread"),
+        {
+            "posting-invite-users-users": [user.username, other_user.username],
+            "posting-invite-users-users_noscript": "",
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
+    )
+
+    assert user.id in thread.private_thread_member_ids
+    assert other_user.id in thread.private_thread_member_ids
+
+
 def test_start_private_thread_view_validates_thread_title(user_client, other_user):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "????",
             "posting-post-post": "How's going?",
         },
@@ -101,7 +182,8 @@ def test_start_private_thread_view_validates_post(user_client, other_user):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "?",
         },
@@ -118,7 +200,8 @@ def test_start_private_thread_view_validates_posted_contents(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "This is a spam message",
         },
@@ -133,7 +216,8 @@ def test_start_private_thread_view_runs_flood_control(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "This is a flood message",
         },
@@ -171,14 +255,15 @@ def test_start_private_thread_view_hides_attachments_form_if_user_has_no_group_p
 
 
 def test_start_private_thread_view_uploads_attachment_on_submit(
-    user, other_user, user_client, teardown_attachments
+    user, user_client, other_user, teardown_attachments
 ):
     assert not Attachment.objects.exists()
 
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
             "posting-post-upload": [
@@ -206,7 +291,7 @@ def test_start_private_thread_view_uploads_attachment_on_submit(
     "action_name", (PostingFormset.preview_action, PostForm.upload_action)
 )
 def test_start_private_thread_view_uploads_attachment_on_preview_or_upload(
-    action_name, user, other_user, user_client, teardown_attachments
+    action_name, user, user_client, other_user, teardown_attachments
 ):
     assert not Attachment.objects.exists()
 
@@ -214,7 +299,8 @@ def test_start_private_thread_view_uploads_attachment_on_preview_or_upload(
         reverse("misago:start-private-thread"),
         {
             action_name: "true",
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
             "posting-post-upload": [
@@ -247,14 +333,15 @@ def test_start_private_thread_view_uploads_attachment_on_preview_or_upload(
     "action_name", (PostingFormset.preview_action, PostForm.upload_action)
 )
 def test_start_private_thread_view_displays_image_attachment(
-    action_name, other_user, user_client, user_image_attachment
+    action_name, user_client, other_user, user_image_attachment
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_image_attachment.id)],
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -277,14 +364,15 @@ def test_start_private_thread_view_displays_image_attachment(
     "action_name", (PostingFormset.preview_action, PostForm.upload_action)
 )
 def test_start_private_thread_view_displays_image_with_thumbnail_attachment(
-    action_name, other_user, user_client, user_image_thumbnail_attachment
+    action_name, user_client, other_user, user_image_thumbnail_attachment
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_image_thumbnail_attachment.id)],
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -307,14 +395,15 @@ def test_start_private_thread_view_displays_image_with_thumbnail_attachment(
     "action_name", (PostingFormset.preview_action, PostForm.upload_action)
 )
 def test_start_private_thread_view_displays_video_attachment(
-    action_name, other_user, user_client, user_video_attachment
+    action_name, user_client, other_user, user_video_attachment
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_video_attachment.id)],
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -337,14 +426,15 @@ def test_start_private_thread_view_displays_video_attachment(
     "action_name", (PostingFormset.preview_action, PostForm.upload_action)
 )
 def test_start_private_thread_view_displays_file_attachment(
-    action_name, other_user, user_client, user_text_attachment
+    action_name, user_client, other_user, user_text_attachment
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -363,13 +453,14 @@ def test_start_private_thread_view_displays_file_attachment(
 
 
 def test_start_private_thread_view_associates_unused_attachment_on_submit(
-    other_user, user_client, user_text_attachment
+    user_client, other_user, user_text_attachment
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -389,14 +480,15 @@ def test_start_private_thread_view_associates_unused_attachment_on_submit(
 
 
 def test_start_private_thread_view_adds_attachment_to_deleted_list(
-    other_user, user_client, user_text_attachment
+    user_client, other_user, user_text_attachment
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
             PostForm.delete_attachment_field: str(user_text_attachment.id),
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -426,7 +518,7 @@ def test_start_private_thread_view_adds_attachment_to_deleted_list(
     "action_name", (PostingFormset.preview_action, PostForm.upload_action)
 )
 def test_start_private_thread_view_maintains_deleted_attachments_list(
-    action_name, other_user, user_client, user_text_attachment
+    action_name, user_client, other_user, user_text_attachment
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
@@ -434,7 +526,8 @@ def test_start_private_thread_view_maintains_deleted_attachments_list(
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
             PostForm.deleted_attachment_ids_field: [str(user_text_attachment.id)],
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -461,14 +554,15 @@ def test_start_private_thread_view_maintains_deleted_attachments_list(
 
 
 def test_start_private_thread_view_deletes_attachment_on_submit(
-    other_user, user_client, user_text_attachment
+    user_client, other_user, user_text_attachment
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
             PostForm.deleted_attachment_ids_field: [str(user_text_attachment.id)],
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -488,7 +582,7 @@ def test_start_private_thread_view_deletes_attachment_on_submit(
 
 
 def test_start_private_thread_view_embeds_attachments_in_preview(
-    other_user, user_client, default_category, user_image_attachment
+    user_client, other_user, default_category, user_image_attachment
 ):
     response = user_client.post(
         reverse(
@@ -498,7 +592,8 @@ def test_start_private_thread_view_embeds_attachments_in_preview(
         {
             PostingFormset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_image_attachment.id)],
-            "posting-invite-users-users": other_user.username,
+            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": (
                 f"Attachment: <attachment={user_image_attachment.name}:{user_image_attachment.id}>"

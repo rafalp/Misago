@@ -9,5 +9,13 @@
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}
+    <p class="help-block">
+      {% blocktranslate trimmed count users=field.max_choices context "private thread participants control" %}
+        You can invite up to {{ users }} user to your thread.
+      {% plural %}
+        You can invite up to {{ users }} users to your thread.
+      {% endblocktranslate %}
+      {% translate "Some users restrict who can invite them to private threads, so you may be unable to invite them." context "private thread participants control" %}
+    </p>
   </div>
 {% endwith %}

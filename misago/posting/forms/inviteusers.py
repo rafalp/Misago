@@ -37,7 +37,7 @@ class InviteUsersForm(PostingForm):
 
     def clean_users(self):
         data: list["User"] = self.cleaned_data["users"]
-
+        print(data)
         if self.request.user in data:
             data.remove(self.request.user)
 

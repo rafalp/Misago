@@ -18,7 +18,7 @@ def suggest_users(request: HttpRequest) -> JsonResponse:
 
 def find_users_suggestions(request: HttpRequest, query: str) -> list:
     exclude = []
-    for user_id in request.GET.getlist("exclude")[:20]:
+    for user_id in request.GET.getlist("exclude")[:50]:
         try:
             user_id = int(user_id)
             if user_id and user_id not in exclude:
