@@ -54,11 +54,17 @@ def test_start_private_thread_view_displays_form_page_to_users(user_client):
     assert_contains(response, "Start new private thread")
 
 
-def test_start_private_thread_view_posts_new_thread(user_client, user, other_user):
+def test_start_private_thread_view_posts_new_thread(
+    user_client, user, admin, moderator, other_user
+):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": [other_user.username],
+            "posting-invite-users-users": [
+                admin.username,
+                moderator.username,
+                other_user.username,
+            ],
             "posting-invite-users-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
@@ -71,18 +77,24 @@ def test_start_private_thread_view_posts_new_thread(user_client, user, other_use
         "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
 
+    assert len(thread.private_thread_member_ids) == 4
+    assert thread.private_thread_owner_id == user.id
     assert user.id in thread.private_thread_member_ids
+    assert admin.id in thread.private_thread_member_ids
+    assert moderator.id in thread.private_thread_member_ids
     assert other_user.id in thread.private_thread_member_ids
 
 
 def test_start_private_thread_view_posts_new_thread_using_noscript_fallback(
-    user_client, user, other_user
+    user_client, user, admin, moderator, other_user
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": other_user.username,
+            "posting-invite-users-users": [],
+            "posting-invite-users-users_noscript": (
+                f"{admin.username},{moderator.username} {other_user.username}"
+            ),
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -94,7 +106,11 @@ def test_start_private_thread_view_posts_new_thread_using_noscript_fallback(
         "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
 
+    assert len(thread.private_thread_member_ids) == 4
+    assert thread.private_thread_owner_id == user.id
     assert user.id in thread.private_thread_member_ids
+    assert admin.id in thread.private_thread_member_ids
+    assert moderator.id in thread.private_thread_member_ids
     assert other_user.id in thread.private_thread_member_ids
 
 
@@ -111,7 +127,9 @@ def test_start_private_thread_view_previews_message(user_client, other_user):
     assert_contains(response, "Message preview")
 
 
-def test_start_private_thread_view_keeps_invited_users(user_client, other_user):
+def test_start_private_thread_view_keeps_invited_users_field_value(
+    user_client, other_user
+):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
@@ -142,7 +160,7 @@ def test_start_private_thread_view_validates_invited_users(user_client, user):
 
 
 def test_start_private_thread_view_ignores_user_inviting_self_if_other_users_are_invited(
-    user_client, user, other_user
+    user_client, user, other_user, admin, moderator
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
@@ -160,6 +178,7 @@ def test_start_private_thread_view_ignores_user_inviting_self_if_other_users_are
         "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
 
+    assert len(thread.private_thread_member_ids) == 2
     assert user.id in thread.private_thread_member_ids
     assert other_user.id in thread.private_thread_member_ids
 
