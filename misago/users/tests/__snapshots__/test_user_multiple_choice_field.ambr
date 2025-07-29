@@ -3,7 +3,7 @@
   '''
   <ul class="form-chips-control d-js-flex" m-user-multiple-choice>
       
-        <li m-user-multiple-choice-item m-user-id="17">
+        <li m-user-multiple-choice-item m-user-id="1">
           <input type="hidden" name="users" value="admin-user">
           <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
             <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
@@ -12,7 +12,7 @@
           </button>
         </li>
       
-        <li m-user-multiple-choice-item m-user-id="18">
+        <li m-user-multiple-choice-item m-user-id="2">
           <input type="hidden" name="users" value="moderator">
           <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
             <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
@@ -21,7 +21,7 @@
           </button>
         </li>
       
-        <li m-user-multiple-choice-item m-user-id="19">
+        <li m-user-multiple-choice-item m-user-id="3">
           <input type="hidden" name="users" value="user">
           <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
             <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
@@ -30,7 +30,7 @@
           </button>
         </li>
       
-        <li m-user-multiple-choice-item m-user-id="20">
+        <li m-user-multiple-choice-item m-user-id="4">
           <input type="hidden" name="users" value="other-user">
           <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
             <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
@@ -89,7 +89,7 @@
   '''
   <ul class="form-chips-control d-js-flex" m-user-multiple-choice>
       
-        <li m-user-multiple-choice-item m-user-id="5">
+        <li m-user-multiple-choice-item m-user-id="1">
           <input type="hidden" name="users" value="admin-user">
           <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
             <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
@@ -98,7 +98,7 @@
           </button>
         </li>
       
-        <li m-user-multiple-choice-item m-user-id="6">
+        <li m-user-multiple-choice-item m-user-id="2">
           <input type="hidden" name="users" value="moderator">
           <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
             <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
@@ -107,7 +107,7 @@
           </button>
         </li>
       
-        <li m-user-multiple-choice-item m-user-id="7">
+        <li m-user-multiple-choice-item m-user-id="3">
           <input type="hidden" name="users" value="user">
           <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
             <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
@@ -116,7 +116,7 @@
           </button>
         </li>
       
-        <li m-user-multiple-choice-item m-user-id="8">
+        <li m-user-multiple-choice-item m-user-id="4">
           <input type="hidden" name="users" value="other-user">
           <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
             <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
