@@ -1,6 +1,6 @@
 {% load i18n misago_avatars misago_forms %}
 {% with widget=widget.default choices=widget.choices %}
-  <ul class="form-chips-control d-js-flex" style="align-items: center;" m-user-multiple-choice>
+  <ul class="form-chips-control d-js-flex" m-user-multiple-choice>
     {% for choice in choices %}
       <li m-user-multiple-choice-item m-user-id="{{ choice.id }}">
         <input type="hidden" name="{{ widget.name }}" value="{{ choice.slug }}">

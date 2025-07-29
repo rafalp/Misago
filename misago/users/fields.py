@@ -28,6 +28,9 @@ class UserMultipleChoiceWidget(forms.MultiWidget):
         max_choices = attrs.pop("max_choices", None)
         choices = attrs.pop("choices", None)
 
+        # Decompress value manually because MultiWidget never calls decompress for lists
+        value = self.decompress_unknown_value(value)
+
         context = super().get_context(name, value, attrs)
         for i, subwidget in enumerate(context["widget"]["subwidgets"]):
             subwidget_name = self.subfields[i]
@@ -40,10 +43,16 @@ class UserMultipleChoiceWidget(forms.MultiWidget):
 
         return context
 
-    def decompress(self, value):
-        if value and isinstance(value[0], get_user_model()):
-            return [value, value]
-        return [None, None]
+    def decompress_unknown_value(self, value) -> list:
+        if not value or not isinstance(value, (list, tuple)):
+            # unknown value, discard
+            return [None, None]
+
+        if isinstance(value[0], get_user_model()):
+            # Iterable[User], initial value
+            return [value, " ".join(user.username for user in value)]
+
+        return value
 
 
 class UserMultipleChoiceField(forms.MultiValueField):
@@ -184,5 +193,5 @@ class UserMultipleChoiceBoundField(forms.BoundField):
     def build_widget_attrs(self, attrs: dict, widget: forms.Widget | None = None):
         attrs = super().build_widget_attrs(attrs, widget)
         attrs["max_choices"] = self.max_choices
-        attrs["choices"] = self.field.get_users_cache() or []
+        attrs["choices"] = self.field.get_users_cache() or self.initial or []
         return attrs
