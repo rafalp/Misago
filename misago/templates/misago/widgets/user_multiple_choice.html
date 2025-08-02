@@ -2,14 +2,31 @@
 {% with widget=widget.default choices=widget.choices %}
   <ul class="form-chips-control d-js-flex" m-user-multiple-choice>
     {% for choice in choices %}
-      <li m-user-multiple-choice-item m-user-id="{{ choice.id }}">
-        <input type="hidden" name="{{ widget.name }}" value="{{ choice.slug }}">
-        <button class="form-chips-control-item" type="button" aria-label="{% trans 'Remove user from field' context 'user multiple choice delete button' %}">
-          <img class="form-chips-control-item-image" src="{{ choice|avatar:32 }}" alt="">
-          {{ choice.username }}
-          <span class="material-icon">clear</span>
-        </button>
-      </li>
+      {% if choice.id %}
+        <li m-user-multiple-choice-item m-user-id="{{ choice.id }}">
+          <input type="hidden" name="{{ widget.name }}" value="{{ choice.username }}">
+          <button class="form-chips-control-item" type="button" aria-label="{% trans 'Remove this choice' context 'user multiple choice delete button' %}">
+            <img class="form-chips-control-item-image" src="{{ choice|avatar:32 }}" alt="">
+            {{ choice.username }}
+            <span class="form-chips-control-item-close-icon">
+              <span class="material-icon">clear</span>
+            </span>
+          </button>
+        </li>
+      {% else %}
+        <li m-user-multiple-choice-item>
+          <input type="hidden" name="{{ widget.name }}" value="{{ choice.username }}">
+          <button class="form-chips-control-item-not-found" type="button" aria-label="{% trans 'Remove this choice' context 'user multiple choice delete button' %}">
+            <span class="form-chips-control-item-not-found-icon">
+              <span class="material-icon">person_outline</span>
+            </span>
+            {{ choice.username }}
+            <span class="form-chips-control-item-close-icon">
+              <span class="material-icon">clear</span>
+            </span>
+          </button>
+        </li>
+      {% endif %}
     {% endfor %}
     <li>
       <input type="text" class="form-chips-control-input" id="{{ widget.attrs.id }}" m-user-multiple-choice-input>
@@ -18,10 +35,12 @@
   <template id="m-user-multiple-choice-template">
     <li m-user-multiple-choice-item>
       <input type="hidden" name="{{ widget.name }}" value="">
-      <button class="form-chips-control-item" type="button" aria-label="{% trans 'Remove user from field' context 'user multiple choice delete button' %}">
+      <button class="form-chips-control-item" type="button" aria-label="{% trans 'Remove this choice' context 'user multiple choice delete button' %}">
         <img class="form-chips-control-item-image" src="" alt="">
         <slot name="username"></slot>
-        <span class="material-icon">clear</span>
+        <span class="form-chips-control-item-close-icon">
+          <span class="material-icon">clear</span>
+        </span>
       </button>
     </li>
   </template>

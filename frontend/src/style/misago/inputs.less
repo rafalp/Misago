@@ -163,7 +163,8 @@ input.hidden-file-upload {
   }
 }
 
-.form-chips-control-item {
+.form-chips-control-item,
+.form-chips-control-item-not-found {
   display: flex;
   align-items: center;
 
@@ -184,7 +185,21 @@ input.hidden-file-upload {
   border-radius: @border-radius-small;
 }
 
-.material-icon {
+.form-chips-control-item-not-found-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: (@input-height-base - (@padding-base-vertical * 2) - 4px);
+  height: (@input-height-base - (@padding-base-vertical * 2) - 4px);
+  margin-right: 4px;
+
+  color: @gray-light;
+  font-size: 18px;
+  line-height: 0;
+}
+
+.form-chips-control-item-close-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -194,7 +209,7 @@ input.hidden-file-upload {
   margin-left: 2px;
 
   color: @gray-light;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 0;
 }
 

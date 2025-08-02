@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from django import forms
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet
+from django.utils.translation import npgettext_lazy, pgettext_lazy
 
 from ..forms.widgets import ListInput
 from ..core.utils import slugify
@@ -102,7 +103,8 @@ class UserMultipleChoiceField(forms.MultiValueField):
     def compress(self, data_list: tuple[list[str], str]) -> list["User"]:
         if data_list:
             value, value_noscript = data_list
-            return value or value_noscript
+            # Prioritize the noscript value because its only present with the JS disabled
+            return value_noscript or value
         return None
 
     def get_bound_field(self, form, field_name):
@@ -110,6 +112,18 @@ class UserMultipleChoiceField(forms.MultiValueField):
 
 
 class UserMultipleChoiceSubField(forms.Field):
+    default_error_messages = {
+        "invalid_choice": pgettext_lazy(
+            "user multiple choice field error", "One or more users not found: %(value)s"
+        ),
+        "max_choices": npgettext_lazy(
+            "user multiple choice field error",
+            "Select no more than %(max)d user.",
+            "Select no more than %(max)d users.",
+            "max",
+        ),
+    }
+
     def __init__(
         self, queryset: QuerySet | None = None, max_choices: int = 5, **kwargs
     ):
@@ -118,26 +132,41 @@ class UserMultipleChoiceSubField(forms.Field):
 
         super().__init__(**kwargs)
 
-    def get_users(self, queryset: QuerySet, slugs: list[str]) -> list["User"]:
-        return list(queryset.filter(slug__in=set(slugs)))
+    def get_users(self, queryset: QuerySet, usernames: list[str]) -> list["User"]:
+        raise NotImplementedError()
+
+    def validate_max_choices(self, value_length: int):
+        if value_length > self.max_choices:
+            raise forms.ValidationError(
+                self.error_messages["max_choices"],
+                code="max_choices",
+                params={"max": self.max_choices},
+            )
+
+
+class UserNotFound:
+    id = None
+    username: str
+
+    __slots__ = ("username",)
+
+    def __init__(self, username: str):
+        self.username = username
 
 
 class UserMultipleChoiceJavaScriptSubField(UserMultipleChoiceSubField):
     widget = ListInput
 
     def to_python(self, value) -> list[str]:
-        if not value:
-            return []
+        return value or []
 
-        return [slugify(item) for item in value]
+    def clean(self, usernames: list[str]) -> list["User"]:
+        usernames = self.to_python(usernames)
 
-    def clean(self, value: list[str]) -> list["User"]:
-        value = self.to_python(value)[: self.max_choices]
-
-        if value:
-            usernames = value
-            value = self.get_users(self.queryset, value)
-            self.set_users_cache(usernames, value)
+        if usernames:
+            value = self.get_users(self.queryset, usernames)
+            self.users_cache = value
+            self.validate_max_choices(len(value))
         else:
             value = []
 
@@ -145,15 +174,33 @@ class UserMultipleChoiceJavaScriptSubField(UserMultipleChoiceSubField):
         self.run_validators(value)
         return value
 
-    def set_users_cache(self, usernames: list[str], users: list[str]):
-        users_map = {user.slug: user for user in users}
+    def get_users(self, queryset: QuerySet, usernames: list[str]) -> list["User"]:
+        slugs: dict[str, str] = {}
+        for username in usernames:
+            slug = slugify(username)
+            slugs[slug] = username
+
+        users = list(queryset.filter(slug__in=slugs)[: self.max_choices + 16])
+        users_dict = {user.slug: user for user in users}
 
         ordered_users = []
-        for username in usernames:
-            slug = username.lower()
-            if slug in users_map:
-                ordered_users.append(users_map.pop(slug))
-        self.users_cache = ordered_users + list(users_map.values())
+        for slug, username in slugs.items():
+            if slug in users_dict:
+                ordered_users.append(users_dict[slug])
+            else:
+                # Return "blank" user item to appear in the UI
+                ordered_users.append(UserNotFound(username))
+
+        return ordered_users
+
+    def validate(self, value: list["User"]):
+        invalid_choices: list[str] = [user.username for user in value if not user.id]
+        if invalid_choices:
+            raise forms.ValidationError(
+                self.error_messages["invalid_choice"],
+                code="invalid_choice",
+                params={"value": ", ".join(invalid_choices)},
+            )
 
 
 class UserMultipleChoiceNoScriptSubField(UserMultipleChoiceSubField):
@@ -164,25 +211,42 @@ class UserMultipleChoiceNoScriptSubField(UserMultipleChoiceSubField):
         final_value = []
         for item in value.split():
             if "," in item:
-                final_value += [slugify(i.strip()) for i in item.split(",")]
+                final_value += [i.strip() for i in item.split(",")]
             else:
-                final_value.append(slugify(item))
+                final_value.append(item)
         return [item for item in final_value if item]
 
-    def clean(self, value: list[str]) -> list["User"]:
-        value = self.to_python(value)
+    def clean(self, usernames: list[str]) -> list["User"]:
+        usernames = self.to_python(usernames)
 
-        if len(value) > self.max_choices:
-            raise forms.ValidationError("TODO")
-
-        if value:
-            value = self.get_users(self.queryset, value)
+        if usernames:
+            self.validate_max_choices(len(usernames))
+            value = self.get_users(self.queryset, usernames)
         else:
             value = []
 
-        self.validate(value)
+        self.validate(value, usernames)
         self.run_validators(value)
         return value
+
+    def get_users(self, queryset: QuerySet, usernames: list[str]) -> list["User"]:
+        slugs: set[str] = set(slugify(username) for username in usernames)
+        return list(queryset.filter(slug__in=slugs)[: self.max_choices + 1])
+
+    def validate(self, value: list["User"], usernames: list[str]):
+        slugs: set[str] = set(user.slug for user in value)
+        invalid_choices: list[str] = []
+        for username in usernames:
+            username_slug = slugify(username)
+            if username_slug not in slugs:
+                invalid_choices.append(username)
+
+        if invalid_choices:
+            raise forms.ValidationError(
+                self.error_messages["invalid_choice"],
+                code="invalid_choice",
+                params={"value": ", ".join(invalid_choices)},
+            )
 
 
 class UserMultipleChoiceBoundField(forms.BoundField):

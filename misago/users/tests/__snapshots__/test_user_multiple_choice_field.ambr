@@ -1,43 +1,50 @@
 # serializer version: 1
-# name: test_user_multiple_choice_field_renders_with_cleaned_query_data_for_field
+# name: test_user_multiple_choice_field_fails_to_validate_nonexisting_users
   '''
   <ul class="form-chips-control d-js-flex" m-user-multiple-choice>
       
-        <li m-user-multiple-choice-item m-user-id="1">
-          <input type="hidden" name="users" value="admin-user">
-          <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
-            <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
-            Admin_User
-            <span class="material-icon">clear</span>
-          </button>
-        </li>
+        
+          <li m-user-multiple-choice-item>
+            <input type="hidden" name="users" value="John">
+            <button class="form-chips-control-item-not-found" type="button" aria-label="Remove this choice">
+              <span class="form-chips-control-item-not-found-icon">
+                <span class="material-icon">person_outline</span>
+              </span>
+              John
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
       
-        <li m-user-multiple-choice-item m-user-id="2">
-          <input type="hidden" name="users" value="moderator">
-          <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
-            <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
-            Moderator
-            <span class="material-icon">clear</span>
-          </button>
-        </li>
+        
+          <li m-user-multiple-choice-item m-user-id="1">
+            <input type="hidden" name="users" value="Admin_User">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              Admin_User
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
       
-        <li m-user-multiple-choice-item m-user-id="3">
-          <input type="hidden" name="users" value="user">
-          <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
-            <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
-            User
-            <span class="material-icon">clear</span>
-          </button>
-        </li>
-      
-        <li m-user-multiple-choice-item m-user-id="4">
-          <input type="hidden" name="users" value="other-user">
-          <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
-            <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
-            Other_User
-            <span class="material-icon">clear</span>
-          </button>
-        </li>
+        
+          <li m-user-multiple-choice-item>
+            <input type="hidden" name="users" value="Doe">
+            <button class="form-chips-control-item-not-found" type="button" aria-label="Remove this choice">
+              <span class="form-chips-control-item-not-found-icon">
+                <span class="material-icon">person_outline</span>
+              </span>
+              Doe
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
       
       <li>
         <input type="text" class="form-chips-control-input" id="id_users_0" m-user-multiple-choice-input>
@@ -46,10 +53,118 @@
     <template id="m-user-multiple-choice-template">
       <li m-user-multiple-choice-item>
         <input type="hidden" name="users" value="">
-        <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
+        <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
           <img class="form-chips-control-item-image" src="" alt="">
           <slot name="username"></slot>
-          <span class="material-icon">clear</span>
+          <span class="form-chips-control-item-close-icon">
+            <span class="material-icon">clear</span>
+          </span>
+        </button>
+      </li>
+    </template>
+  
+  
+    <noscript>
+      <input type="text" class="form-control" id="id_users_1" name="users_noscript" value="" >
+    </noscript>
+  '''
+# ---
+# name: test_user_multiple_choice_field_fails_to_validate_noscript_nonexisting_users
+  '''
+  <ul class="form-chips-control d-js-flex" m-user-multiple-choice>
+      
+      <li>
+        <input type="text" class="form-chips-control-input" id="id_users_0" m-user-multiple-choice-input>
+      </li>
+    </ul>
+    <template id="m-user-multiple-choice-template">
+      <li m-user-multiple-choice-item>
+        <input type="hidden" name="users" value="">
+        <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+          <img class="form-chips-control-item-image" src="" alt="">
+          <slot name="username"></slot>
+          <span class="form-chips-control-item-close-icon">
+            <span class="material-icon">clear</span>
+          </span>
+        </button>
+      </li>
+    </template>
+  
+  
+    <noscript>
+      <input type="text" class="form-control" id="id_users_1" name="users_noscript" value="John Admin_User Doe" >
+    </noscript>
+  '''
+# ---
+# name: test_user_multiple_choice_field_renders_with_cleaned_query_data_for_field
+  '''
+  <ul class="form-chips-control d-js-flex" m-user-multiple-choice>
+      
+        
+          <li m-user-multiple-choice-item m-user-id="1">
+            <input type="hidden" name="users" value="Admin_User">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              Admin_User
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
+      
+        
+          <li m-user-multiple-choice-item m-user-id="2">
+            <input type="hidden" name="users" value="Moderator">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              Moderator
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
+      
+        
+          <li m-user-multiple-choice-item m-user-id="3">
+            <input type="hidden" name="users" value="User">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              User
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
+      
+        
+          <li m-user-multiple-choice-item m-user-id="4">
+            <input type="hidden" name="users" value="Other_User">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              Other_User
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
+      
+      <li>
+        <input type="text" class="form-chips-control-input" id="id_users_0" m-user-multiple-choice-input>
+      </li>
+    </ul>
+    <template id="m-user-multiple-choice-template">
+      <li m-user-multiple-choice-item>
+        <input type="hidden" name="users" value="">
+        <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+          <img class="form-chips-control-item-image" src="" alt="">
+          <slot name="username"></slot>
+          <span class="form-chips-control-item-close-icon">
+            <span class="material-icon">clear</span>
+          </span>
         </button>
       </li>
     </template>
@@ -71,10 +186,12 @@
     <template id="m-user-multiple-choice-template">
       <li m-user-multiple-choice-item>
         <input type="hidden" name="users" value="">
-        <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
+        <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
           <img class="form-chips-control-item-image" src="" alt="">
           <slot name="username"></slot>
-          <span class="material-icon">clear</span>
+          <span class="form-chips-control-item-close-icon">
+            <span class="material-icon">clear</span>
+          </span>
         </button>
       </li>
     </template>
@@ -89,41 +206,57 @@
   '''
   <ul class="form-chips-control d-js-flex" m-user-multiple-choice>
       
-        <li m-user-multiple-choice-item m-user-id="1">
-          <input type="hidden" name="users" value="admin-user">
-          <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
-            <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
-            Admin_User
-            <span class="material-icon">clear</span>
-          </button>
-        </li>
+        
+          <li m-user-multiple-choice-item m-user-id="1">
+            <input type="hidden" name="users" value="Admin_User">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              Admin_User
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
       
-        <li m-user-multiple-choice-item m-user-id="2">
-          <input type="hidden" name="users" value="moderator">
-          <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
-            <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
-            Moderator
-            <span class="material-icon">clear</span>
-          </button>
-        </li>
+        
+          <li m-user-multiple-choice-item m-user-id="2">
+            <input type="hidden" name="users" value="Moderator">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              Moderator
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
       
-        <li m-user-multiple-choice-item m-user-id="3">
-          <input type="hidden" name="users" value="user">
-          <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
-            <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
-            User
-            <span class="material-icon">clear</span>
-          </button>
-        </li>
+        
+          <li m-user-multiple-choice-item m-user-id="3">
+            <input type="hidden" name="users" value="User">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              User
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
       
-        <li m-user-multiple-choice-item m-user-id="4">
-          <input type="hidden" name="users" value="other-user">
-          <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
-            <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
-            Other_User
-            <span class="material-icon">clear</span>
-          </button>
-        </li>
+        
+          <li m-user-multiple-choice-item m-user-id="4">
+            <input type="hidden" name="users" value="Other_User">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              Other_User
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
       
       <li>
         <input type="text" class="form-chips-control-input" id="id_users_0" m-user-multiple-choice-input>
@@ -132,10 +265,12 @@
     <template id="m-user-multiple-choice-template">
       <li m-user-multiple-choice-item>
         <input type="hidden" name="users" value="">
-        <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
+        <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
           <img class="form-chips-control-item-image" src="" alt="">
           <slot name="username"></slot>
-          <span class="material-icon">clear</span>
+          <span class="form-chips-control-item-close-icon">
+            <span class="material-icon">clear</span>
+          </span>
         </button>
       </li>
     </template>
@@ -150,41 +285,57 @@
   '''
   <ul class="form-chips-control d-js-flex" m-user-multiple-choice>
       
-        <li m-user-multiple-choice-item m-user-id="1">
-          <input type="hidden" name="users" value="admin-user">
-          <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
-            <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
-            Admin_User
-            <span class="material-icon">clear</span>
-          </button>
-        </li>
+        
+          <li m-user-multiple-choice-item m-user-id="1">
+            <input type="hidden" name="users" value="Admin_User">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              Admin_User
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
       
-        <li m-user-multiple-choice-item m-user-id="2">
-          <input type="hidden" name="users" value="moderator">
-          <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
-            <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
-            Moderator
-            <span class="material-icon">clear</span>
-          </button>
-        </li>
+        
+          <li m-user-multiple-choice-item m-user-id="2">
+            <input type="hidden" name="users" value="Moderator">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              Moderator
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
       
-        <li m-user-multiple-choice-item m-user-id="3">
-          <input type="hidden" name="users" value="user">
-          <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
-            <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
-            User
-            <span class="material-icon">clear</span>
-          </button>
-        </li>
+        
+          <li m-user-multiple-choice-item m-user-id="3">
+            <input type="hidden" name="users" value="User">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              User
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
       
-        <li m-user-multiple-choice-item m-user-id="4">
-          <input type="hidden" name="users" value="other-user">
-          <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
-            <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
-            Other_User
-            <span class="material-icon">clear</span>
-          </button>
-        </li>
+        
+          <li m-user-multiple-choice-item m-user-id="4">
+            <input type="hidden" name="users" value="Other_User">
+            <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
+              Other_User
+              <span class="form-chips-control-item-close-icon">
+                <span class="material-icon">clear</span>
+              </span>
+            </button>
+          </li>
+        
       
       <li>
         <input type="text" class="form-chips-control-input" id="id_users_0" m-user-multiple-choice-input>
@@ -193,10 +344,12 @@
     <template id="m-user-multiple-choice-template">
       <li m-user-multiple-choice-item>
         <input type="hidden" name="users" value="">
-        <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
+        <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
           <img class="form-chips-control-item-image" src="" alt="">
           <slot name="username"></slot>
-          <span class="material-icon">clear</span>
+          <span class="form-chips-control-item-close-icon">
+            <span class="material-icon">clear</span>
+          </span>
         </button>
       </li>
     </template>
@@ -218,10 +371,12 @@
     <template id="m-user-multiple-choice-template">
       <li m-user-multiple-choice-item>
         <input type="hidden" name="users" value="">
-        <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
+        <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
           <img class="form-chips-control-item-image" src="" alt="">
           <slot name="username"></slot>
-          <span class="material-icon">clear</span>
+          <span class="form-chips-control-item-close-icon">
+            <span class="material-icon">clear</span>
+          </span>
         </button>
       </li>
     </template>
@@ -243,10 +398,12 @@
     <template id="m-user-multiple-choice-template">
       <li m-user-multiple-choice-item>
         <input type="hidden" name="users" value="">
-        <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
+        <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
           <img class="form-chips-control-item-image" src="" alt="">
           <slot name="username"></slot>
-          <span class="material-icon">clear</span>
+          <span class="form-chips-control-item-close-icon">
+            <span class="material-icon">clear</span>
+          </span>
         </button>
       </li>
     </template>
@@ -268,10 +425,12 @@
     <template id="m-user-multiple-choice-template">
       <li m-user-multiple-choice-item>
         <input type="hidden" name="users" value="">
-        <button class="form-chips-control-item" type="button" aria-label="Remove user from field">
+        <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
           <img class="form-chips-control-item-image" src="" alt="">
           <slot name="username"></slot>
-          <span class="material-icon">clear</span>
+          <span class="form-chips-control-item-close-icon">
+            <span class="material-icon">clear</span>
+          </span>
         </button>
       </li>
     </template>
