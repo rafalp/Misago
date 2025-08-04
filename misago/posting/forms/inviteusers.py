@@ -3,9 +3,10 @@ from typing import TYPE_CHECKING
 from django import forms
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
-from django.utils.translation import npgettext, pgettext
+from django.utils.translation import pgettext
 
-from ...core.utils import slugify
+from ...permissions.proxy import UserPermissionsProxy
+from ...privatethreads.validators import validate_can_invite_user
 from ...users.fields import UserMultipleChoiceField
 from ..state import StartPrivateThreadState
 from .base import PostingForm
@@ -37,32 +38,40 @@ class InviteUsersForm(PostingForm):
 
     def clean_users(self):
         data: list["User"] = self.cleaned_data["users"]
+
+        errors: list[forms.ValidationError] = []
         if self.request.user in data:
             data.remove(self.request.user)
-
             if not data:
-                raise forms.ValidationError(
-                    pgettext("posting form", "You can't invite yourself.")
+                errors.append(
+                    forms.ValidationError(
+                        pgettext("posting form", "You can't invite yourself."),
+                        code="invite_self",
+                    )
                 )
 
-        data_length = len(data)
+        request = self.request
+        cache_versions = request.cache_versions
 
-        if not data_length:
-            raise forms.ValidationError(
-                pgettext("posting form", "Enter at least one username.")
-            )
+        for user in data:
+            try:
+                validate_can_invite_user(
+                    UserPermissionsProxy(user, cache_versions),
+                    request.user_permissions,
+                    cache_versions,
+                    request,
+                )
+            except forms.ValidationError as error:
+                errors.append(
+                    forms.ValidationError(
+                        pgettext("posting form", "%(user)s: %(error)s"),
+                        code="invite_self",
+                        params={"user": user.username, "error": error.message},
+                    )
+                )
 
-        limit = self.request.user_permissions.private_thread_users_limit
-        if data_length > limit:
-            raise forms.ValidationError(
-                npgettext(
-                    "posting form",
-                    "You can't invite more than %(limit)s user.",
-                    "You can't invite more than %(limit)s users.",
-                    data_length,
-                ),
-                params={"limit": limit},
-            )
+        if errors:
+            raise forms.ValidationError(errors, code="invalid_users")
 
         return data
 
