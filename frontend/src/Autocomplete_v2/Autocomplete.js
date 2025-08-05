@@ -55,7 +55,6 @@ class Autocomplete {
 
     this.control.addEventListener("keydown", this.onKeyDown)
     this.control.addEventListener("keyup", this.onKeyUp)
-    this.control.addEventListener("blur", this.select.hide)
   }
 
   onKeyDown = (event) => {
@@ -115,6 +114,10 @@ class Autocomplete {
       },
       this._debounce ? this.delay.debounced : this.delay.initial
     )
+  }
+
+  isEventTarget = (event) => {
+    return this.select.isEventTarget(event)
   }
 }
 

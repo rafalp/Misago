@@ -50,7 +50,6 @@ class SelectUser {
       span.innerText = choice.username
       element.appendChild(span)
 
-      // element.innerHTML = choice.username
       element.addEventListener("click", () => {
         callback(choice, query)
         this.hide()
@@ -92,6 +91,16 @@ class SelectUser {
       this.updateActiveChoice()
     } else if (keyCode === "Escape") {
       this.hide()
+    }
+  }
+
+  isEventTarget = (event) => {
+    if (event.relatedTarget) {
+      return !!this.element.contains(event.relatedTarget)
+    } else if (event.target) {
+      return !!this.element.contains(event.target)
+    } else {
+      return false
     }
   }
 

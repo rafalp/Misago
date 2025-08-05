@@ -78,6 +78,9 @@ class UserMultipleChoice {
 
       this.input.value = ""
       this.input.parentElement.before(item)
+      this.input.focus()
+
+      this.focus()
     }
 
     this.autocomplete = new Autocomplete({
@@ -92,14 +95,17 @@ class UserMultipleChoice {
       onSelect,
     })
 
-    EVENT_FOCUS.forEach((event) => {
-      element.addEventListener(event, this.onFocus)
+    EVENT_FOCUS.forEach((eventName) => {
+      element.addEventListener(eventName, this.focus)
     })
 
-    EVENT_FOCUS.forEach((event) => {
-      document.addEventListener(event, (event) => {
-        if (!element.contains(event.target)) {
-          this.onBlur()
+    EVENT_FOCUS.forEach((eventName) => {
+      document.addEventListener(eventName, (event) => {
+        if (
+          !element.contains(event.target) &&
+          !this.autocomplete.isEventTarget(event)
+        ) {
+          this.blur()
         }
       })
     })
@@ -110,7 +116,7 @@ class UserMultipleChoice {
         button.closest("li").remove()
       }
 
-      this.onFocus()
+      this.focus()
     })
 
     let backspacePressed = false
@@ -136,11 +142,11 @@ class UserMultipleChoice {
     })
   }
 
-  onFocus = () => {
+  focus = () => {
     this.element.classList.add(CLASS_NAME_FOCUS)
   }
 
-  onBlur = () => {
+  blur = () => {
     this.element.classList.remove(CLASS_NAME_FOCUS)
   }
 }
