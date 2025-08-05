@@ -8,6 +8,7 @@ from django.utils.translation import pgettext
 from ...auth.decorators import login_required
 from ...categories.enums import CategoryTree
 from ...categories.models import Category
+from ...notifications.tasks import notify_on_new_private_thread
 from ...permissions.categories import check_browse_category_permission
 from ...permissions.privatethreads import (
     check_private_threads_permission,
@@ -75,6 +76,7 @@ class StartThreadView(View):
             )
 
         state.save()
+        self.handle_state(request, state)
 
         messages.success(request, pgettext("thread started", "Thread started"))
 
@@ -104,6 +106,9 @@ class StartThreadView(View):
         context["preview_rich_text_data"] = related_objects
 
         return render(request, self.template_name, context)
+
+    def handle_state(self, request: HttpRequest, state: StartThreadState):
+        pass
 
     def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
         try:
@@ -188,6 +193,13 @@ class StartPrivateThreadView(StartThreadView):
         return reverse(
             "misago:private-thread",
             kwargs={"id": thread.id, "slug": thread.slug},
+        )
+
+    def handle_state(self, request: HttpRequest, state: StartPrivateThreadState):
+        notify_on_new_private_thread.delay(
+            state.thread.starter_id,
+            state.thread.id,
+            [user.id for user in state.invite_users],
         )
 
 

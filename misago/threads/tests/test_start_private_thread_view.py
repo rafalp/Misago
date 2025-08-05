@@ -16,6 +16,11 @@ from ...test import (
 from ..models import Thread
 
 
+@pytest.fixture
+def mock_notify_on_new_private_thread(mocker):
+    return mocker.patch("misago.threads.views.start.notify_on_new_private_thread")
+
+
 def test_start_private_thread_view_displays_login_page_to_guests(db, client):
     response = client.get(reverse("misago:start-private-thread"))
     assert_contains(response, "Sign in to start new thread")
@@ -55,7 +60,7 @@ def test_start_private_thread_view_displays_form_page_to_users(user_client):
 
 
 def test_start_private_thread_view_posts_new_thread(
-    user_client, user, admin, moderator, other_user
+    user_client, user, admin, moderator, other_user, mock_notify_on_new_private_thread
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
@@ -84,9 +89,13 @@ def test_start_private_thread_view_posts_new_thread(
     assert moderator.id in thread.private_thread_member_ids
     assert other_user.id in thread.private_thread_member_ids
 
+    mock_notify_on_new_private_thread.delay.assert_called_with(
+        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+    )
+
 
 def test_start_private_thread_view_posts_new_thread_using_noscript_fallback(
-    user_client, user, admin, moderator, other_user
+    user_client, user, admin, moderator, other_user, mock_notify_on_new_private_thread
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
@@ -112,6 +121,10 @@ def test_start_private_thread_view_posts_new_thread_using_noscript_fallback(
     assert admin.id in thread.private_thread_member_ids
     assert moderator.id in thread.private_thread_member_ids
     assert other_user.id in thread.private_thread_member_ids
+
+    mock_notify_on_new_private_thread.delay.assert_called_with(
+        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+    )
 
 
 def test_start_private_thread_view_previews_message(user_client):
@@ -160,7 +173,7 @@ def test_start_private_thread_view_validates_invited_users(user_client, user):
 
 
 def test_start_private_thread_view_ignores_user_inviting_self_if_other_users_are_invited(
-    user_client, user, other_user, admin, moderator
+    user_client, user, other_user, admin, moderator, mock_notify_on_new_private_thread
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
@@ -274,7 +287,11 @@ def test_start_private_thread_view_hides_attachments_form_if_user_has_no_group_p
 
 
 def test_start_private_thread_view_uploads_attachment_on_submit(
-    user, user_client, other_user, teardown_attachments
+    user,
+    user_client,
+    other_user,
+    teardown_attachments,
+    mock_notify_on_new_private_thread,
 ):
     assert not Attachment.objects.exists()
 
@@ -472,7 +489,7 @@ def test_start_private_thread_view_displays_file_attachment(
 
 
 def test_start_private_thread_view_associates_unused_attachment_on_submit(
-    user_client, other_user, user_text_attachment
+    user_client, other_user, user_text_attachment, mock_notify_on_new_private_thread
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
@@ -573,7 +590,7 @@ def test_start_private_thread_view_maintains_deleted_attachments_list(
 
 
 def test_start_private_thread_view_deletes_attachment_on_submit(
-    user_client, other_user, user_text_attachment
+    user_client, other_user, user_text_attachment, mock_notify_on_new_private_thread
 ):
     response = user_client.post(
         reverse("misago:start-private-thread"),
