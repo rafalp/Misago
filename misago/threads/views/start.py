@@ -76,7 +76,8 @@ class StartThreadView(View):
             )
 
         state.save()
-        self.handle_state(request, state)
+
+        self.post_state_save(request, state)
 
         messages.success(request, pgettext("thread started", "Thread started"))
 
@@ -107,7 +108,7 @@ class StartThreadView(View):
 
         return render(request, self.template_name, context)
 
-    def handle_state(self, request: HttpRequest, state: StartThreadState):
+    def post_state_save(self, request: HttpRequest, state: StartThreadState):
         pass
 
     def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
@@ -195,7 +196,7 @@ class StartPrivateThreadView(StartThreadView):
             kwargs={"id": thread.id, "slug": thread.slug},
         )
 
-    def handle_state(self, request: HttpRequest, state: StartPrivateThreadState):
+    def post_state_save(self, request: HttpRequest, state: StartPrivateThreadState):
         notify_on_new_private_thread.delay(
             state.thread.starter_id,
             state.thread.id,
