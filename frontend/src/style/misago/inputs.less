@@ -134,6 +134,8 @@ input.hidden-file-upload {
     display: block;
     flex-shrink: 0;
 
+    max-width: 100%;
+
     list-style: none;
 
     overflow: hidden;
@@ -168,6 +170,7 @@ input.hidden-file-upload {
   display: flex;
   align-items: center;
 
+  max-width: 100%;
   height: (@input-height-base - (@padding-base-vertical * 2));
   padding: 0 4px 0 2px;
 
@@ -197,6 +200,12 @@ input.hidden-file-upload {
   color: @gray-light;
   font-size: 18px;
   line-height: 0;
+}
+
+.form-chips-control-item-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .form-chips-control-item-close-icon {
