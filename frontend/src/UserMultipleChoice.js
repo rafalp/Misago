@@ -1,10 +1,5 @@
 import htmx from "htmx.org"
-import {
-  Autocomplete,
-  AnchorInput,
-  SelectUser,
-  sources,
-} from "./Autocomplete_v2"
+import { Autocomplete, AnchorInput, SelectUser, sources } from "./Autocomplete"
 
 const DATA_ATTRIBUTE_ELEMENT = "m-user-multiple-choice"
 const DATA_ATTRIBUTE_INPUT = "m-user-multiple-choice-input"
@@ -54,7 +49,7 @@ class UserMultipleChoice {
         element.querySelectorAll("[m-user-id]").forEach(function (item) {
           exclude.push(item.getAttribute("m-user-id"))
         })
-        return { prefix: "", exclude, value }
+        return { exclude, value }
       }
       return null
     }

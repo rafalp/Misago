@@ -1,5 +1,7 @@
-import Mention from "./Mention"
-import select from "./Select"
-import suggestions from "./Suggestions"
+import AnchorElement from "./AnchorElement"
+import AnchorInput from "./AnchorInput"
+import Autocomplete from "./Autocomplete"
+import SelectUser from "./SelectUser"
+import * as sources from "./sources"
 
-export { Mention, select, suggestions }
+export { AnchorElement, AnchorInput, Autocomplete, SelectUser, sources }
