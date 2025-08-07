@@ -8,6 +8,8 @@ class SelectUser {
 
     this.anchor = config.anchor
     this.placement = config.placement || "bottom"
+    this.offset = config.offset || 6
+    this.shift = config.shift || { padding: 8 }
 
     this.choice = 0
     this.choices = []
@@ -115,7 +117,7 @@ class SelectUser {
 
       computePosition(target, this.element, {
         placement: this.placement,
-        middleware: [offset(6), flip(), shift({ padding: 8 })],
+        middleware: [offset(this.offset), flip(), shift(this.shift)],
       }).then(({ x, y }) => {
         Object.assign(this.element.style, {
           left: `${x}px`,
