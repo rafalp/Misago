@@ -81,11 +81,7 @@ class Autocomplete {
   }
 
   showSuggestions = (query) => {
-    if (
-      this._query &&
-      query.value.trim() &&
-      query.value === this._query.value
-    ) {
+    if (!query.value.trim()) {
       return
     }
 
@@ -94,7 +90,6 @@ class Autocomplete {
       this._debounce = null
     }
 
-    this._query = query
     this._debounce = window.setTimeout(
       () => {
         this.source(query).then(
@@ -110,7 +105,9 @@ class Autocomplete {
           (error) => {
             console.log(error)
           }
-        )
+        ).then(() => {
+          this._debounce = null
+        })
       },
       this._debounce ? this.delay.debounced : this.delay.initial
     )
