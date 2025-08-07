@@ -51,7 +51,6 @@ class Autocomplete {
     }
 
     this._debounce = null
-    this._query = null
 
     this.control.addEventListener("keydown", this.onKeyDown)
     this.control.addEventListener("keyup", this.onKeyUp)
@@ -92,22 +91,24 @@ class Autocomplete {
 
     this._debounce = window.setTimeout(
       () => {
-        this.source(query).then(
-          (data) => {
-            if (this.select && this.onSelect) {
-              this.select.show(query, data, this.onSelect)
-            } else {
-              console.warn(
-                "Autocomplete was initialized without the 'select' or 'onSelect' options."
-              )
+        this.source(query)
+          .then(
+            (data) => {
+              if (this.select && this.onSelect) {
+                this.select.show(query, data, this.onSelect)
+              } else {
+                console.warn(
+                  "Autocomplete was initialized without the 'select' or 'onSelect' options."
+                )
+              }
+            },
+            (error) => {
+              console.log(error)
             }
-          },
-          (error) => {
-            console.log(error)
-          }
-        ).then(() => {
-          this._debounce = null
-        })
+          )
+          .then(() => {
+            this._debounce = null
+          })
       },
       this._debounce ? this.delay.debounced : this.delay.initial
     )
