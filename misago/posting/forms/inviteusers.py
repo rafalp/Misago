@@ -3,16 +3,16 @@ from typing import TYPE_CHECKING
 from django import forms
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
-from django.utils.translation import npgettext, pgettext
+from django.utils.translation import pgettext
 
-from ...core.utils import slugify
+from ...permissions.proxy import UserPermissionsProxy
+from ...privatethreads.validators import validate_can_invite_user
+from ...users.fields import UserMultipleChoiceField
 from ..state import StartPrivateThreadState
 from .base import PostingForm
 
 if TYPE_CHECKING:
     from ...users.models import User
-else:
-    User = get_user_model()
 
 
 class InviteUsersForm(PostingForm):
@@ -22,7 +22,7 @@ class InviteUsersForm(PostingForm):
     request: HttpRequest
     invite_users: list["User"]
 
-    users = forms.CharField(max_length=200)
+    users = UserMultipleChoiceField()
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
@@ -30,66 +30,53 @@ class InviteUsersForm(PostingForm):
 
         super().__init__(*args, **kwargs)
 
+        self.setup_users_field(self.fields["users"])
+
+    def setup_users_field(self, field: UserMultipleChoiceField):
+        field.queryset = get_user_model().objects.filter(is_active=True)
+        field.max_choices = self.request.user_permissions.private_thread_users_limit
+
     def clean_users(self):
-        uniques: dict[str, str] = {}
-        for username in self.cleaned_data["users"].split():
-            slug = slugify(username)
-            if slug not in uniques:
-                uniques[slug] = username
+        data: list["User"] = self.cleaned_data["users"]
 
-        if self.request.user.slug in uniques and len(uniques) == 1:
-            raise forms.ValidationError(
-                pgettext("posting form", "You can't invite yourself.")
-            )
-
-        uniques.pop(self.request.user.slug, None)
-
-        if not uniques:
-            raise forms.ValidationError(
-                pgettext("posting form", "Enter at least one username.")
-            )
-
-        limit = self.request.user_permissions.private_thread_users_limit
-        if len(uniques) > limit:
-            raise forms.ValidationError(
-                npgettext(
-                    "posting form",
-                    "You can't invite more than %(limit)s user.",
-                    "You can't invite more than %(limit)s users.",
-                    len(uniques),
-                ),
-                params={"limit": limit},
-            )
-
-        users = list(User.objects.filter(slug__in=uniques, is_active=True))
-
-        if len(users) != len(uniques):
-            found_users: set[str] = set([u.slug for u in users])
-            missing_users: list[str] = set(uniques).difference(found_users)
-            missing_usernames: list[str] = [uniques[slug] for slug in missing_users]
-
-            if len(missing_usernames) == 1:
-                raise forms.ValidationError(
-                    pgettext(
-                        "posting form",
-                        "One user could not be found: %(username)s",
-                    ),
-                    params={"username": missing_usernames[0]},
+        errors: list[forms.ValidationError] = []
+        if self.request.user in data:
+            data.remove(self.request.user)
+            if not data:
+                errors.append(
+                    forms.ValidationError(
+                        pgettext("posting form", "You can't invite yourself."),
+                        code="invite_self",
+                    )
                 )
 
-            raise forms.ValidationError(
-                pgettext(
-                    "posting form",
-                    "Users could not be found: %(usernames)s",
-                ),
-                params={"usernames": ", ".join(missing_usernames)},
-            )
+        request = self.request
+        cache_versions = request.cache_versions
 
-        self.invite_users = users
-        return " ".join([u.username for u in users])
+        for user in data:
+            try:
+                validate_can_invite_user(
+                    UserPermissionsProxy(user, cache_versions),
+                    request.user_permissions,
+                    cache_versions,
+                    request,
+                )
+            except forms.ValidationError as error:
+                errors.append(
+                    forms.ValidationError(
+                        pgettext("posting form", "%(user)s: %(error)s"),
+                        code="invite_self",
+                        params={"user": user.username, "error": error.message},
+                    )
+                )
+
+        if errors:
+            raise forms.ValidationError(errors, code="invalid_users")
+
+        return data
 
     def update_state(self, state: StartPrivateThreadState):
-        state.set_invite_users(self.invite_users)
+        state.set_invite_users(self.cleaned_data["users"])
 
 
 def create_invite_users_form(request: HttpRequest) -> InviteUsersForm:

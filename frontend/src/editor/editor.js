@@ -1,5 +1,5 @@
 import htmx from "htmx.org"
-import { Mention } from "../Autocomplete"
+import Mention from "../Mention"
 import * as animations from "../animations"
 import MarkupEditorUploader from "./uploader"
 import {

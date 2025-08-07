@@ -1,0 +1,58 @@
+{% load i18n misago_avatars misago_forms %}
+{% with widget=widget.default choices=widget.choices max_choices=widget.max_choices %}
+  <ul class="form-chips-control d-js-flex" maxchoices="{{ max_choices }}" m-user-multiple-choice>
+    {% for choice in choices %}
+      {% if choice.id %}
+        <li m-user-multiple-choice-item m-user-id="{{ choice.id }}">
+          <input type="hidden" name="{{ widget.name }}" value="{{ choice.username }}">
+          <button class="form-chips-control-item" type="button" aria-label="{% trans 'Remove this choice' context 'user multiple choice delete button' %}">
+            <img class="form-chips-control-item-image" src="{{ choice|avatar:32 }}" alt="">
+            <span class="form-chips-control-item-name">
+              {{ choice.username }}
+            </span>
+            <span class="form-chips-control-item-close-icon">
+              <span class="material-icon">clear</span>
+            </span>
+          </button>
+        </li>
+      {% else %}
+        <li m-user-multiple-choice-item>
+          <input type="hidden" name="{{ widget.name }}" value="{{ choice.username }}">
+          <button class="form-chips-control-item-not-found" type="button" aria-label="{% trans 'Remove this choice' context 'user multiple choice delete button' %}">
+            <span class="form-chips-control-item-not-found-icon">
+              <span class="material-icon">person_outline</span>
+            </span>
+            <span class="form-chips-control-item-name">
+              {{ choice.username }}
+            </span>
+            <span class="form-chips-control-item-close-icon">
+              <span class="material-icon">clear</span>
+            </span>
+          </button>
+        </li>
+      {% endif %}
+    {% endfor %}
+    <li>
+      <input type="text" class="form-chips-control-input" id="{{ widget.attrs.id }}" m-user-multiple-choice-input>
+    </li>
+  </ul>
+  <template id="m-user-multiple-choice-template">
+    <li m-user-multiple-choice-item>
+      <input type="hidden" name="{{ widget.name }}" value="">
+      <button class="form-chips-control-item" type="button" aria-label="{% trans 'Remove this choice' context 'user multiple choice delete button' %}">
+        <img class="form-chips-control-item-image" src="" alt="">
+        <span class="form-chips-control-item-name">
+          <slot name="username"></slot>
+        </span>
+        <span class="form-chips-control-item-close-icon">
+          <span class="material-icon">clear</span>
+        </span>
+      </button>
+    </li>
+  </template>
+{% endwith %}
+{% with widget=widget.noscript %}
+  <noscript>
+    <input type="text" class="form-control" id="{{ widget.attrs.id }}" name="{{ widget.name }}" value="{{ widget.value|default:'' }}" {{ widget|requiredhtml }}>
+  </noscript>
+{% endwith %}

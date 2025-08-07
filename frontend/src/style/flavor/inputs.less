@@ -14,7 +14,8 @@ textarea.form-control {
   }
 }
 
-.has-error input.form-control {
+.has-error input.form-control,
+.has-error textarea.form-control {
   border-color: @state-danger-border;
   box-shadow: inset 0px 0px 0px 1px @state-danger-border;
 
@@ -24,7 +25,8 @@ textarea.form-control {
   }
 }
 
-.has-success input.form-control {
+.has-success input.form-control,
+.has-success textarea.form-control {
   border-color: @state-success-border;
   box-shadow: inset 0px 0px 0px 1px @state-success-border;
 
@@ -47,5 +49,37 @@ textarea.form-control {
 
   .progress {
     margin: 0px;
+  }
+}
+
+// Form chips input
+.form-chips-control {
+  background-color: @input-bg;
+  border-color: @input-border;
+  box-shadow: inset 0px 0px 0px 2px @input-border;
+
+  &.focused {
+    border-color: @input-border-focus;
+    box-shadow: inset 0px 0px 0px 2px @input-border-focus;
+  }
+}
+
+.has-error .form-chips-control {
+  border-color: @state-danger-border;
+  box-shadow: inset 0px 0px 0px 2px @state-danger-border;
+
+  &.focused {
+    border-color: lighten(@state-danger-border, 20%);
+    box-shadow: inset 0px 0px 0px 2px lighten(@state-danger-border, 20%);
+  }
+}
+
+.has-success .form-chips-control {
+  border-color: @state-success-border;
+  box-shadow: inset 0px 0px 0px 1px @state-success-border;
+
+  &.focused {
+    border-color: lighten(@state-success-border, 20%);
+    box-shadow: inset 0px 0px 0px 2px lighten(@state-success-border, 20%);
   }
 }

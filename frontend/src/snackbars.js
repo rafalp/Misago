@@ -1,4 +1,5 @@
 import htmx from "htmx.org"
+import getHttpResponseErrorMessage from "./getHttpResponseErrorMessage"
 
 const SNACKBAR_TTL = 6
 
@@ -57,6 +58,10 @@ export function warning(message) {
 
 export function error(message) {
   snackbar("danger", message)
+}
+
+export async function httpResponseError(response) {
+  snackbar("danger", await getHttpResponseErrorMessage(response))
 }
 
 htmx.onLoad(renderSnackbars)

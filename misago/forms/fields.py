@@ -75,22 +75,21 @@ class DictField(Field):
 
         return cleaned_value
 
-    def clean(self, data: dict[str, str]) -> dict:
-        data = self.to_python(data)
+    def clean(self, value: dict[str, str]) -> dict:
+        value = self.to_python(value)
 
         if self.coerce:
-            data = self.coerce_keys(data)
+            value = self.coerce_keys(value)
 
         if self.key_field:
-            data = self.clean_keys_with_field(data)
+            value = self.clean_keys_with_field(value)
 
         if self.value_field:
-            data = self.clean_values_with_field(data)
+            value = self.clean_values_with_field(value)
 
-        self.validate(data)
-        self.run_validators(data)
-
-        return data
+        self.validate(value)
+        self.run_validators(value)
+        return value
 
     def coerce_keys(self, data: dict) -> dict:
         cleaned_value = {}
@@ -296,6 +295,7 @@ class ListField(Field):
             raise ValidationError(errors)
 
         self.validate(clean_data)
+        self.run_validators(clean_data)
         return clean_data
 
     def validate(self, value: list):

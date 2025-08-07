@@ -30,7 +30,7 @@ def test_poll_choices_widget_get_context_without_value():
                 "value": None,
             },
             "required": False,
-            "template_name": "misago/poll/widgets/choices.html",
+            "template_name": "misago/widgets/poll_choices.html",
         },
     }
 
@@ -66,7 +66,7 @@ def test_poll_choices_widget_get_context_with_compressed_value():
                 "value": "Lorem\nIpsum\nDolor",
             },
             "required": False,
-            "template_name": "misago/poll/widgets/choices.html",
+            "template_name": "misago/widgets/poll_choices.html",
         },
     }
 
@@ -105,7 +105,7 @@ def test_poll_choices_widget_get_context_with_decompressed_value():
                 "value": "Met\nSit\nAmet",
             },
             "required": False,
-            "template_name": "misago/poll/widgets/choices.html",
+            "template_name": "misago/widgets/poll_choices.html",
         },
     }
 
