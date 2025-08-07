@@ -1,6 +1,6 @@
 {% load i18n misago_avatars misago_forms %}
-{% with widget=widget.default choices=widget.choices %}
-  <ul class="form-chips-control d-js-flex" m-user-multiple-choice>
+{% with widget=widget.default choices=widget.choices max_choices=widget.max_choices %}
+  <ul class="form-chips-control d-js-flex" maxchoices="{{ max_choices }}" m-user-multiple-choice>
     {% for choice in choices %}
       {% if choice.id %}
         <li m-user-multiple-choice-item m-user-id="{{ choice.id }}">

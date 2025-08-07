@@ -41,8 +41,11 @@ class UserMultipleChoice {
     element.setAttribute(DATA_ATTRIBUTE_ELEMENT, "true")
 
     this.element = element
+    this.maxChoices = Number(element.getAttribute("maxchoices") || 1)
     this.input = document.querySelector(SELECTOR_INPUT)
     this.template = document.getElementById(TEMPLATE_ID)
+
+    this.updateInputDisabled()
 
     function getQuery(control) {
       const value = control.value.trim().replace(/\s+/, "")
@@ -78,7 +81,11 @@ class UserMultipleChoice {
 
       this.input.value = ""
       this.input.parentElement.before(item)
-      this.input.focus()
+      this.updateInputDisabled()
+
+      if (!this.input.disabled) {
+        this.input.focus()
+      }
 
       this.focus()
     }
@@ -113,22 +120,21 @@ class UserMultipleChoice {
     this.element.addEventListener("click", (event) => {
       const button = event.target.closest("button")
       if (button) {
-        button.closest("li").remove()
+        this.deleteItem(button.closest("li"))
       }
-
       this.focus()
     })
 
     let backspacePressed = false
 
-    this.input.addEventListener("keydown", function (event) {
+    this.input.addEventListener("keydown", (event) => {
       if (event.key === "Backspace") {
         if (!backspacePressed) {
           backspacePressed = true
           if (event.target.value.trim() === "") {
             const lastItem = event.target.closest("li").previousElementSibling
             if (lastItem) {
-              lastItem.remove()
+              this.deleteItem(lastItem)
             }
           }
         }
@@ -148,6 +154,16 @@ class UserMultipleChoice {
 
   blur = () => {
     this.element.classList.remove(CLASS_NAME_FOCUS)
+  }
+
+  deleteItem = (element) => {
+    element.remove()
+    this.updateInputDisabled()
+  }
+
+  updateInputDisabled = () => {
+    this.input.disabled =
+      this.element.querySelectorAll("li").length - 1 >= this.maxChoices
   }
 }
 
