@@ -1,29 +1,9 @@
-import { error } from "./snackbars"
+import { error, httpResponseError } from "./snackbars"
 
 function handleResponseError(event) {
   if (isEventVisible(event)) {
-    const message = getResponseErrorMessage(event.detail.xhr)
-    error(message)
+    httpResponseError(event.detail.xhr)
   }
-}
-
-function getResponseErrorMessage(xhr) {
-  if (xhr.getResponseHeader("content-type") === "application/json") {
-    const data = JSON.parse(xhr.response)
-    if (data.error) {
-      return data.error
-    }
-  }
-
-  if (xhr.status === 404) {
-    return pgettext("htmx response error", "Page not found")
-  }
-
-  if (xhr.status === 403) {
-    return pgettext("htmx response error", "Permission denied")
-  }
-
-  return pgettext("htmx response error", "Unexpected error")
 }
 
 function handleSendError(event) {

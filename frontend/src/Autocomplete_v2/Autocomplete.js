@@ -91,21 +91,16 @@ class Autocomplete {
 
     this._debounce = window.setTimeout(
       () => {
-        this.source(query)
-          .then(
-            (data) => {
-              if (this.select && this.onSelect) {
-                this.select.show(query, data, this.onSelect)
-              } else {
-                console.warn(
-                  "Autocomplete was initialized without the 'select' or 'onSelect' options."
-                )
-              }
-            },
-            (error) => {
-              console.log(error)
+        this.source(query, this.errors)
+          .then((data) => {
+            if (this.select && this.onSelect) {
+              this.select.show(query, data, this.onSelect)
+            } else {
+              console.warn(
+                "Autocomplete was initialized without the 'select' or 'onSelect' options."
+              )
             }
-          )
+          })
           .then(() => {
             this._debounce = null
           })

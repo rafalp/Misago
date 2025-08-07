@@ -1,10 +1,12 @@
+import { httpResponseError } from "../snackbars"
+
 class SourceUsers {
   constructor() {
     this.cache = {}
     this.url = window.misago_suggest_users
   }
 
-  get = ({ value, exclude }) => {
+  get = ({ value, exclude }, showErrors) => {
     let url = this.url + "?query=" + encodeURIComponent(value)
     if (exclude && Array.isArray(exclude)) {
       exclude.forEach(function (item) {
@@ -21,6 +23,10 @@ class SourceUsers {
     return fetch(url).then(
       async (response) => {
         if (!response.ok) {
+          if (showErrors) {
+            httpResponseError(response)
+          }
+          console.error(response)
           return []
         }
 
@@ -37,8 +43,8 @@ class SourceUsers {
 
 const _users = new SourceUsers()
 
-function users(query) {
-  return _users.get(query)
+function users(query, showErrors) {
+  return _users.get(query, showErrors)
 }
 
 export { users }

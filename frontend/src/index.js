@@ -113,6 +113,10 @@ export class Misago {
     snackbars.error(message)
   }
 
+  snackbarHttpResponseError(response) {
+    snackbars.httpResponseError(response)
+  }
+
   bulkModeration(options) {
     return new BulkModeration(options)
   }
