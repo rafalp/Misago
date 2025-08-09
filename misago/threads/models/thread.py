@@ -103,13 +103,6 @@ class Thread(PluginDataModel):
     best_answer_marked_by_name = models.CharField(max_length=255, null=True, blank=True)
     best_answer_marked_by_slug = models.CharField(max_length=255, null=True, blank=True)
 
-    participants = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name="privatethread_set",
-        through="ThreadParticipant",
-        through_fields=("thread", "user"),
-    )
-
     class Meta:
         indexes = [
             *PluginDataModel.Meta.indexes,
@@ -227,22 +220,24 @@ class Thread(PluginDataModel):
         return "%sK" % round(self.replies / 1000, 0)
 
     @cached_property
+    def private_thread_owner_id(self) -> int | None:
+        return (
+            self.privatethreadmember_set.filter(is_owner=True)
+            .values_list("user_id", flat=True)
+            .first()
+        )
+
+    @cached_property
     def private_thread_member_ids(self) -> list[int]:
         """Returns lists of private thread participating users ids.
 
         Cached property. Thread owner is guaranteed to be first item of the list.
         """
         return list(
-            self.participants.through.objects.order_by("-is_owner", "id").values_list(
+            self.privatethreadmember_set.order_by("-is_owner", "id").values_list(
                 "user_id", flat=True
             )
         )
-
-    @property
-    def private_thread_owner_id(self) -> int | None:
-        if members_ids := self.private_thread_member_ids:
-            return members_ids[0]
-        return None
 
     @property
     def thread_type(self):

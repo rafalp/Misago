@@ -6,7 +6,7 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext
 
 from ...permissions.proxy import UserPermissionsProxy
-from ...privatethreads.validators import validate_new_private_thread_member
+from ...privatethreadmembers.validators import validate_new_private_thread_member
 from ...users.fields import UserMultipleChoiceField
 from ..state import StartPrivateThreadState
 from .base import PostingForm
