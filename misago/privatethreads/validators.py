@@ -7,23 +7,28 @@ from django.utils.translation import pgettext_lazy
 from ..permissions.privatethreads import check_private_threads_permission
 from ..permissions.proxy import UserPermissionsProxy
 from ..users.bans import get_user_ban
+from .hooks import validate_new_private_thread_member_hook
 
 if TYPE_CHECKING:
     from ..users.models import User
 
 
-def validate_can_invite_user(
+def validate_new_private_thread_member(
     invited_user_permissions: UserPermissionsProxy,
     other_user_permissions: UserPermissionsProxy,
     cache_versions: dict,
     request: HttpRequest | None = None,
 ):
-    _validate_can_invite_user_action(
-        invited_user_permissions, other_user_permissions, cache_versions, request
+    validate_new_private_thread_member_hook(
+        _validate_new_private_thread_member_action,
+        invited_user_permissions,
+        other_user_permissions,
+        cache_versions,
+        request,
     )
 
 
-def _validate_can_invite_user_action(
+def _validate_new_private_thread_member_action(
     invited_user_permissions: UserPermissionsProxy,
     other_user_permissions: UserPermissionsProxy,
     cache_versions: dict,
@@ -33,7 +38,9 @@ def _validate_can_invite_user_action(
 
     if get_user_ban(user, cache_versions):
         raise ValidationError(
-            pgettext_lazy("invite user validator", "This user is banned."),
+            pgettext_lazy(
+                "new private thread member validator", "This user is banned."
+            ),
             code="banned",
         )
 
@@ -42,7 +49,8 @@ def _validate_can_invite_user_action(
     except (Http404, PermissionDenied):
         raise ValidationError(
             pgettext_lazy(
-                "invite user validator", "This user can't use private threads."
+                "new private thread member validator",
+                "This user can't use private threads.",
             ),
             code="permission_denied",
         )
@@ -50,7 +58,7 @@ def _validate_can_invite_user_action(
     if not _check_can_be_invited_by_other_user(user, other_user_permissions):
         raise ValidationError(
             pgettext_lazy(
-                "invite user validator",
+                "new private thread member validator",
                 "This user limits who can invite them to private threads.",
             ),
             code="limited",
