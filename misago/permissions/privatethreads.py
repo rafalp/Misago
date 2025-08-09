@@ -6,7 +6,8 @@ from django.http import Http404
 from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
 
-from ..threads.models import Post, Thread, ThreadParticipant
+from ..privatethreadmembers.models import PrivateThreadMember
+from ..threads.models import Post, Thread
 from .hooks import (
     check_edit_private_thread_permission_hook,
     check_edit_private_thread_post_permission_hook,
@@ -107,7 +108,7 @@ def _check_edit_private_thread_permission_action(
     if permissions.is_private_threads_moderator:
         return
 
-    if thread.private_thread_member_ids[0] != permissions.user.id:
+    if thread.private_thread_owner_id != permissions.user.id:
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
@@ -277,7 +278,7 @@ def _filter_private_threads_queryset_action(
         return queryset.none()
 
     return queryset.filter(
-        id__in=ThreadParticipant.objects.filter(user=permissions.user).values(
+        id__in=PrivateThreadMember.objects.filter(user=permissions.user).values(
             "thread_id"
         )
     )
