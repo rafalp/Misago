@@ -1,7 +1,7 @@
 from django.urls import reverse
 
+from ...privatethreadmembers.models import PrivateThreadMember
 from ...test import assert_contains
-from ...threads.models import ThreadParticipant
 from ..verbs import NotificationVerb
 from ..models import Notification
 from ..registry import registry
@@ -114,7 +114,7 @@ def test_notification_view_returns_redirect_to_thread_reply(
 def test_notification_view_returns_redirect_to_private_thread_reply(
     user, user_client, private_threads_category, private_thread, private_thread_reply
 ):
-    ThreadParticipant.objects.create(thread=private_thread, user=user)
+    PrivateThreadMember.objects.create(thread=private_thread, user=user)
 
     notification = Notification.objects.create(
         user=user,
@@ -135,7 +135,7 @@ def test_notification_view_returns_redirect_to_private_thread_reply(
 def test_notification_view_returns_redirect_to_private_thread_invite(
     user, user_client, private_threads_category, private_thread
 ):
-    ThreadParticipant.objects.create(thread=private_thread, user=user)
+    PrivateThreadMember.objects.create(thread=private_thread, user=user)
 
     notification = Notification.objects.create(
         user=user,
