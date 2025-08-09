@@ -1,0 +1,4835 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-15 09:26+0000\n"
+"PO-Revision-Date: 2023-07-01 08:52+0000\n"
+"Language-Team: Azerbaijani (https://app.transifex.com/misago/teams/65369/az/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: az\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "You don't have any read notifications."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "You don't have any unread notifications."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "You don't have any notifications."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notification status"
+msgid "Read notification"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notification status"
+msgid "Unread notification"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Check your internet connection and try refreshing the site."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "Notifications could not be loaded."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications list"
+msgid "Loading notifications..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "modal"
+msgid "Close"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password strength indicator"
+msgid "Entered password is very weak."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password strength indicator"
+msgid "Entered password is weak."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password strength indicator"
+msgid "Entered password is average."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password strength indicator"
+msgid "Entered password is strong."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password strength indicator"
+msgid "Entered password is very strong."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Form contains errors."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal title"
+msgid "Register"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal field"
+msgid "Join with %(site)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal field"
+msgid "Or create forum account:"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal field"
+msgid "Username"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal field"
+msgid "E-mail"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal field"
+msgid "Password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal btn"
+msgid "Register account"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "account activation required"
+msgid ""
+"%(username)s, your account has been created but you need to activate it "
+"before you will be able to sign in."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "account activation required"
+msgid ""
+"%(username)s, your account has been created but the site administrator will "
+"have to activate it before you will be able to sign in."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "account activation required"
+msgid ""
+"We have sent an e-mail to %(email)s with link that you have to click to "
+"activate your account."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "account activation required"
+msgid "We will send an e-mail to %(email)s when this takes place."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal title"
+msgid "Registration complete"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register modal dismiss"
+msgid "Ok"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register form"
+msgid "Registration form is currently disabled by the site administrator."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register form"
+msgid "Registration form is currently unavailable due to an error."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "cta"
+msgid "Register"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register form agreement prompt"
+msgid "I have read and accept %(agreement)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register form agreement prompt"
+msgid "the terms of service"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "register form agreement prompt"
+msgid "the privacy policy"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search cta"
+msgid "Enter search query (at least 3 characters)."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search results list"
+msgid "See all %(count)s result."
+msgid_plural "See all %(count)s results."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search results"
+msgid "The search returned no results."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search results"
+msgid "The search could not be completed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search results"
+msgid "Searching..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "cta"
+msgid "Search"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "cta"
+msgid "Sign in"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav"
+msgid "Threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav"
+msgid "Categories"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav"
+msgid "Search"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "cta"
+msgid "You are not signed in"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav section"
+msgid "Users"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav section"
+msgid "Categories"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav section"
+msgid "Footer"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "site nav title"
+msgid "Menu"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Pinned globally"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Pinned in category"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Answered"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Poll"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Awaiting approval"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Has unapproved posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Closed"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread flag"
+msgid "Hidden"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread replies stat"
+msgid "%(replies)s reply"
+msgid_plural "%(replies)s replies"
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal btn"
+msgid "Download my Gravatar"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal btn"
+msgid "Re-crop uploaded image"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal btn"
+msgid "Upload new image"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal btn"
+msgid "Pick avatar from gallery"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal btn"
+msgid "Generate my individual avatar"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar crop modal btn"
+msgid "Set avatar"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar crop modal btn"
+msgid "Crop image"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar crop modal btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal"
+msgid "Your image has been uploaded and you may now crop it."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal"
+msgid "Selected file is too big. (%(filesize)s)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal"
+msgid "Selected file type is not supported."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal"
+msgid "%(files)s files smaller than %(limit)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal field"
+msgid "Select file"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal field"
+msgid "%(progress)s % complete"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar upload modal btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar gallery modal btn"
+msgid "Save choice"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar gallery modal btn"
+msgid "Select avatar"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar gallery modal btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal dismiss"
+msgid "Ok"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "avatar modal title"
+msgid "Change your avatar"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Go to your profile"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Admin control panel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav section"
+msgid "Change options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Change avatar"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "See more"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav"
+msgid "Log out"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user nav title"
+msgid "Your options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile details"
+msgid "No profile details are editable at this time."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile details"
+msgid "This option is currently unavailable."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile details form btn"
+msgid "Save changes"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile details form btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile details form title"
+msgid "Edit details"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "field validation status"
+msgid "(error)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "field validation status"
+msgid "(success)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict form"
+msgid "Are you sure you want to delete all polls?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict modal title"
+msgid "Merge threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict btn"
+msgid "Merge threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict best answer"
+msgid "Best answer"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict best answer"
+msgid ""
+"Select the best answer for your newly merged thread. No posts will be "
+"deleted during the merge."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict poll"
+msgid "Poll"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge threads conflict poll"
+msgid ""
+"Select the poll for your newly merged thread. Rejected polls will be "
+"permanently deleted and cannot be recovered."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "modal message dismiss btn"
+msgid "Ok"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post body invalid"
+msgid "This post's contents cannot be displayed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post body invalid"
+msgid "This error is caused by invalid post content manipulation."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts feed item header"
+msgid "posted %(posted_on)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "go to post link"
+msgid "See post"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post removed poster username"
+msgid "Removed user"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post reply"
+msgid "Quote"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Attachment details"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Type and size"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Uploaded at"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Uploader"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Insert into message"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Remove attachment"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Remove this attachment?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "See error"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "%(filename)s: %(error)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Protected"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Protect"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Edit"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Preview"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Post"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "This field is required."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Code"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Syntax highlighting"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "No syntax highlighting"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Code to insert"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Insert code"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Formatting help"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Emphasis text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "_This text will have emphasis_"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "This text will have emphasis"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Bold text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "**This text will be bold**"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "This text will be bold"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Removed text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "~~This text will be removed~~"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "This text will be removed"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Bold text (BBCode)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "[b]This text will be bold[/b]"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Underlined text (BBCode)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "[u]This text will be underlined[/u]"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "This text will be underlined"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Italics text (BBCode)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "[i]This text will be in italics[/i]"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "This text will be in italics"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Link"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Link with text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Link text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Link (BBCode)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Link with text (BBCode)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Image"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Image with alternate text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Image text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Image (BBCode)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Mention user by their name"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Heading 1"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "# First level heading"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "First level heading"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Heading 2"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "## Second level heading"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Second level heading"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Heading 3"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "### Third level heading"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Third level heading"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Heading 4"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "#### Fourth level heading"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Fourth level heading"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Heading 5"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "##### Fifth level heading"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Fifth level heading"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Unordered list"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Ordered list"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Quote text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Quoted text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Quote text (BBCode)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Quoted message:"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Quote text with author (BBCode)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Quote author"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Quote author has written:"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Spoiler"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Secret text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Inline code"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "`Inline code`"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Code block"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Code block with syntax highlighting"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Code block (BBCode)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Code block with syntax highlighting (BBCode)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Horizontal rule"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup help"
+msgid "Horizontal rule (BBCode)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Reveal spoiler"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Image"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Image description"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid ""
+"Optional but recommended . Will be displayed instead of image when it fails "
+"to load."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Image URL"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Insert image"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Link"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Link text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Optional. Will be displayed instead of link's address."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Link address"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Insert link"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Quote"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Quote's author or source"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Optional. If it's username, put \"@\" before it (\"@JohnDoe\")."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Quoted text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Insert quote"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "File %(filename)s is bigger than %(limit)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Strong"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "example markup"
+msgid "Strong text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Emphasis"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "example markup"
+msgid "Text with emphasis"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Strikethrough"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "example markup"
+msgid "Text with strikethrough"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Horizontal ruler"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Spoiler"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Spoiler text"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Upload file"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "markup editor"
+msgid "Open formatting help"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "dialog"
+msgid "Open"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "dialog"
+msgid "Minimize"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "dialog"
+msgid "Exit the fullscreen mode"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "dialog"
+msgid "Enter the fullscreen mode"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "dialog"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Pinned globally"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Pinned in category"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Not pinned"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Open"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Closed"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Visible"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Hidden"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Are you sure you want to discard thread?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posting form"
+msgid "You have to enter thread title."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posting form"
+msgid "You have to enter a message."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Your thread has been posted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread submit"
+msgid "Start thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Thread title"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Start new thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Are you sure you want to discard private thread?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posting form"
+msgid "You have to enter at least one recipient."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Recipients, eg.: Danny, Lisa, Alice"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post thread"
+msgid "Start private thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post reply"
+msgid "Are you sure you want to discard your reply?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post reply"
+msgid "Your reply has been posted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post reply submit"
+msgid "Post reply"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post reply"
+msgid "Reply to: %(thread)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "edit reply"
+msgid "Are you sure you want to discard changes?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "edit reply"
+msgid "Reply has been edited."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "edit reply submit"
+msgid "Edit reply"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "edit reply"
+msgid "Edit reply by %(poster)s from %(date)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title length validator"
+msgid ""
+"Thread title should be at least %(limit_value)s character long (it has "
+"%(show_value)s)."
+msgid_plural ""
+"Thread title should be at least %(limit_value)s characters long (it has "
+"%(show_value)s)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title length validator"
+msgid ""
+"Thread title cannot be longer than %(limit_value)s character (it has "
+"%(show_value)s)."
+msgid_plural ""
+"Thread title cannot be longer than %(limit_value)s characters (it has "
+"%(show_value)s)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post length validator"
+msgid ""
+"Posted message cannot be longer than %(limit_value)s character (it has "
+"%(show_value)s)."
+msgid_plural ""
+"Posted message cannot be longer than %(limit_value)s characters (it has "
+"%(show_value)s)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post length validator"
+msgid ""
+"Posted message should be at least %(limit_value)s character long (it has "
+"%(show_value)s)."
+msgid_plural ""
+"Posted message should be at least %(limit_value)s characters long (it has "
+"%(show_value)s)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal"
+msgid "Fill out both fields."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal btn"
+msgid "Activate account"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal title"
+msgid "Sign in"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal"
+msgid "Sign in with %(site)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal"
+msgid "Or use your forum account:"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal field"
+msgid "Username or e-mail"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal field"
+msgid "Password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal btn"
+msgid "Sign in"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "sign in modal btn"
+msgid "Forgot password?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s is banned until %(ban_expires)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s is banned"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s is hiding presence"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s is online (hidden)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s was last seen %(last_click)s (hidden)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s is online"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "%(username)s was last seen %(last_click)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "Banned"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "Hidden"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "Online (hidden)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "Offline (hidden)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "Online"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user status"
+msgid "Offline"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "username history empty"
+msgid "Your account has no history of name changes."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "users list item"
+msgid "Joined on %(joined_on)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "users list item"
+msgid "Joined %(joined_on)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "users list item"
+msgid "%(posts)s post"
+msgid_plural "%(posts)s posts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "users list item"
+msgid "%(threads)s thread"
+msgid_plural "%(threads)s threads"
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "users list item"
+msgid "%(followers)s follower"
+msgid_plural "%(followers)s followers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "yesno switch choice"
+msgid "yes"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "yesno switch choice"
+msgid "no"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "time ago"
+msgid "moment ago"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "time ago"
+msgid "now"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "%(day)s at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "Tomorrow at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "day at time"
+msgid "Yesterday at %(time)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short minutes"
+msgid "%(time)sm"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short hours"
+msgid "%(time)sh"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "short days"
+msgid "%(time)sd"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "accept agreement prompt"
+msgid ""
+"Declining will result in immediate deactivation and deletion of your "
+"account. This action is not reversible."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "accept agreement choice"
+msgid "Decline"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "accept agreement choice"
+msgid "Accept and continue"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "auth message"
+msgid ""
+"You have signed in as %(username)s. Please refresh the page before "
+"continuing."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "auth message"
+msgid ""
+"%(username)s, you have been signed out. Please refresh the page before "
+"continuing."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "auth message"
+msgid "Reload page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "auth message"
+msgid "or press F5 key."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications title"
+msgid "Notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications dropdown"
+msgid "All"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications dropdown"
+msgid "Unread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications"
+msgid "See all notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "You have unread notifications!"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "You have unread private threads!"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open search"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open menu"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "navbar"
+msgid "Open your options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications nav"
+msgid "All"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications nav"
+msgid "Unread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications nav"
+msgid "Read"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications pagination"
+msgid "Latest"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications pagination"
+msgid "Newer"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications pagination"
+msgid "Older"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications"
+msgid "Mark all as read"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications title"
+msgid "Unread notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications title"
+msgid "Read notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications"
+msgid "Mark all notifications as read?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications"
+msgid "All notifications have been marked as read."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form"
+msgid "Complete the form."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account title"
+msgid "Delete account"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options"
+msgid "Change your options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form"
+msgid "This form lets you delete your account. This action is not reversible."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form"
+msgid ""
+"Your account will be deleted together with its profile details, IP addresses"
+" and notifications."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form"
+msgid ""
+"Other content will NOT be deleted, but username displayed next to it will be"
+" changed to one shared by all deleted accounts."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form"
+msgid ""
+"Your username and e-maill address will become available again for use during"
+" registration or for other accounts to change to."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form field"
+msgid "Enter your password to confirm"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "delete your account form btn"
+msgid "Delete my account"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile details form"
+msgid "Your details have been changed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "edit details"
+msgid "Edit details"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data"
+msgid "Your request for data download has been registered."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data title"
+msgid "Download your data"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data"
+msgid ""
+"To download your data from the site, click the \"Request data download\" "
+"button. Depending on amount of data to be archived and number of users "
+"wanting to download their data at same time it may take up to few days for "
+"your download to be prepared. An e-mail with notification will be sent to "
+"you when your data is ready to be downloaded."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data"
+msgid ""
+"The download will only be available for limited amount of time, after which "
+"it will be deleted from the site and marked as expired."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data table"
+msgid "Requested on"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data table"
+msgid "Download"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data table"
+msgid "You have no data downloads."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data btn"
+msgid "Request data download"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data table btn"
+msgid "Download is being prepared"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data table btn"
+msgid "Download your data"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "download your data table btn"
+msgid "Download is expired"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread choice"
+msgid "No"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread choice"
+msgid "Yes, with on site notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread choice"
+msgid "Yes, with on site and e-mail notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notification preference"
+msgid "Don't notify"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notification preference"
+msgid "Notify on site"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notification preference"
+msgid "Notify on site and with e-mail"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads preference"
+msgid "Anybody can invite me to their private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads preference"
+msgid "Only those I follow can invite me to their private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads preference"
+msgid "Nobody can invite me to their private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Your forum options have been changed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Please reload the page and try again."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options title"
+msgid "Forum options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form title"
+msgid "Change forum options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Privacy settings"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Hide my presence"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid ""
+"If you hide your presence, only members with permission to see hidden "
+"presence will see when you are online."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Hide my presence from other users"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Show my presence to other users"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form"
+msgid "Limit private thread invitations from other users"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid "Notifications preferences"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid "Automatically watch threads I start"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid "Automatically watch threads I reply to"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid ""
+"Automatically watch new private threads I'm invited to by the members I am "
+"following"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid ""
+"Automatically watch new private threads I'm invited to by other members"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid ""
+"Notify me about new private thread invitations from the members I am "
+"following"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "notifications options"
+msgid "Notify me about new private thread invitations from other members"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options form btn"
+msgid "Save changes"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change username title"
+msgid "Change username"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change username"
+msgid "You will be able to change your username %(next_change)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change username"
+msgid "You have changed your name allowed number of times."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change username"
+msgid "You can't change your username at the moment."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change username form"
+msgid "You can change your username %(changes_left)s more time."
+msgid_plural "You can change your username %(changes_left)s more times."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change username form"
+msgid "Used changes become available again after %(name_changes_expire)s day."
+msgid_plural ""
+"Used changes become available again after %(name_changes_expire)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change username form"
+msgid "New username is same as current one."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change username form field"
+msgid "New username"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change username form btn"
+msgid "Change username"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change username"
+msgid "Your username has been changed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change email form"
+msgid "Fill out all fields."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change email title"
+msgid "Change e-mail address"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change email form field"
+msgid "New e-mail"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change email form field"
+msgid "Your current password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change email form btn"
+msgid "Change e-mail"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change password form"
+msgid "Fill out all fields."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change password form"
+msgid "New passwords are different."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change password title"
+msgid "Change password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change password form field"
+msgid "New password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change password form field"
+msgid "Repeat password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change password form field"
+msgid "Your current password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change password form btn"
+msgid "Change password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change sign in credentials title"
+msgid "Change e-mail or password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change sign in credentials"
+msgid ""
+"You need to set a password for your account to be able to change your e-mail"
+" or password."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change sign in credentials link"
+msgid "Set password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "change sign in credentials link"
+msgid "Change forgotten password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "forum options nav btn"
+msgid "Menu"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details title"
+msgid "Ban details"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "User-shown ban message"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "Team-shown ban message"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "This ban expires on %(expires_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "This ban expires %(expires_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "This ban has expired."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "%(username)s's ban is permanent."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "Ban expiration"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile ban details"
+msgid "No ban is active at the moment."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile details empty"
+msgid "You are not sharing any details with others."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile details empty"
+msgid "%(username)s is not sharing any details with others."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile details title"
+msgid "Details"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile details edit btn"
+msgid "Edit"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile details form"
+msgid "%(username)s's details have been changed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile load more btn"
+msgid "Show older activity"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "quick search placeholder"
+msgid "Search..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers title"
+msgid "Followers"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "Found %(users)s user."
+msgid_plural "Found %(users)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "You have %(users)s follower."
+msgid_plural "You have %(users)s followers."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "%(username)s has %(users)s follower."
+msgid_plural "%(username)s has %(users)s followers."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "Search returned no users matching specified criteria."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "You have no followers."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "%(username)s has no followers."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers"
+msgid "Show more (%(more)s)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile followers search"
+msgid "Search users..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows title"
+msgid "Follows"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "Found %(users)s user."
+msgid_plural "Found %(users)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "You are following %(users)s user."
+msgid_plural "You are following %(users)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "%(username)s is following %(users)s user."
+msgid_plural "%(username)s is following %(users)s users."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "Loading..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "Search returned no users matching specified criteria."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "You are not following any users."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile follows"
+msgid "%(username)s is not following any users."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history title"
+msgid "Username history"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "Found %(changes)s username change."
+msgid_plural "Found %(changes)s username changes."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "Your username was changed %(changes)s time."
+msgid_plural "Your username was changed %(changes)s times."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "%(username)s's username was changed %(changes)s time."
+msgid_plural "%(username)s's username was changed %(changes)s times."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "Loading..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "Search returned no username changes matching specified criteria."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "%(username)s's username was never changed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history"
+msgid "Show older (%(more)s)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username history search input"
+msgid "Search history..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile follow btn"
+msgid "Following"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "user profile follow btn"
+msgid "Follow"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile message btn"
+msgid "Message"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation"
+msgid "Avatar controls have been changed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid "Lock avatar"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid ""
+"Locking user avatar will prohibit user from changing his avatar and will "
+"reset his/her avatar to default one."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid "Disallow user from changing avatar"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid "Allow user to change avatar"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid "User message"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid ""
+"Optional message for user explaining why they are prohibited from changing "
+"their avatar."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid "Staff message"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation field"
+msgid ""
+"Optional message for forum team members explaining why the user is "
+"prohibited form changing their avatar."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation btn"
+msgid "Close"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation btn"
+msgid "Save changes"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile avatar moderation title"
+msgid "Avatar controls"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username moderation"
+msgid "Username has been changed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username moderation field"
+msgid "New username"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username moderation btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username moderation btn"
+msgid "Change username"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile username moderation title"
+msgid "Change username"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete"
+msgid ""
+"%(username)s's account, threads, posts and other content has been deleted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete"
+msgid ""
+"%(username)s's account has been deleted and other content has been hidden."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete btn"
+msgid "Delete %(username)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete btn"
+msgid "Please wait... (%(countdown)ss)"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete"
+msgid "User content"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete content"
+msgid "Delete together with user's account"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete content"
+msgid "Hide after deleting user's account"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete link"
+msgid "Return to users list"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile delete title"
+msgid "Delete user account"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile moderation menu"
+msgid "Avatar controls"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile moderation menu"
+msgid "Change username"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile moderation menu"
+msgid "Delete account"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile data list"
+msgid "This user's account has been disabled by administrator."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile data list"
+msgid "Account disabled"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile data list"
+msgid "Joined on %(joined_on)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile data list"
+msgid "Joined %(joined_on)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile options btn"
+msgid "Options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile posts"
+msgid "You have posted no messages."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile posts"
+msgid "%(username)s posted no messages."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile posts"
+msgid "You have posted %(posts)s message."
+msgid_plural "You have posted %(posts)s messages."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile posts"
+msgid "%(username)s has posted %(posts)s message."
+msgid_plural "%(username)s has posted %(posts)s messages."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile posts"
+msgid "Loading..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile posts title"
+msgid "Posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile threads"
+msgid "You haven't started any threads."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile threads"
+msgid "%(username)s hasn't started any threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile threads"
+msgid "You have started %(threads)s thread."
+msgid_plural "You have started %(threads)s threads."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile threads"
+msgid "%(username)s has started %(threads)s thread."
+msgid_plural "%(username)s has started %(threads)s threads."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile threads"
+msgid "Loading..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "profile threads title"
+msgid "Threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "request activation link form"
+msgid "Enter a valid e-mail address."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "request activation link form field"
+msgid "Your e-mail address"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "request activation link form btn"
+msgid "Send link"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "request activation link form"
+msgid "Activation link was sent to %(email)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "request activation link form btn"
+msgid "Request another link"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form"
+msgid "Enter a valid e-mail address."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form field"
+msgid "Your e-mail address"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form btn"
+msgid "Send link"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form"
+msgid "Reset password link was sent to %(email)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form btn"
+msgid "Request another link"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form error"
+msgid "Activate your account."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "request password reset form error"
+msgid "Your account is inactive."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password reset form"
+msgid "Enter new password."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password reset form field"
+msgid "Enter new password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password reset form btn"
+msgid "Change password"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password reset form"
+msgid "%(username)s, your password has been changed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password reset form"
+msgid "Sign in using new password to continue."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password reset form btn"
+msgid "Sign in"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search form"
+msgid "You have to enter search query."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search form title"
+msgid "Search"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search form input"
+msgid "Search"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search form btn"
+msgid "Search"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search time"
+msgid "Search took %(time)s s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search threads btn"
+msgid "Show more"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search threads"
+msgid "Loading results..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search threads"
+msgid "No threads matching search query have been found."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search threads"
+msgid "Enter at least two characters to search threads."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search users"
+msgid "Loading results..."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search users"
+msgid "No users matching search query have been found."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "search users"
+msgid "Enter at least two characters to search users."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth title"
+msgid "Sign in with %(backend)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth form"
+msgid "Fill out all fields."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth form"
+msgid "Your e-mail address has been verified by %(backend)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth form title"
+msgid "Complete your account"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth form field"
+msgid "Username"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth form field"
+msgid "E-mail address"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth form btn"
+msgid "Sign in"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth complete"
+msgid ""
+"%(username)s, your account has been created and you have been signed in to "
+"it."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth complete title"
+msgid "Registration completed!"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "social auth complete link"
+msgid "Return to forum index"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "add private thread participant"
+msgid "You have to enter user name."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "add private thread participant"
+msgid "New participant has been added to thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "add private thread participant field"
+msgid "User to add"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "add private thread participant btn"
+msgid "Add participant"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "add private thread participant btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "add private thread participant modal title"
+msgid "Add participant"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "add participant btn"
+msgid "Add participant"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread owner change"
+msgid "Are you sure you want to take over this thread?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread owner change"
+msgid "Are you sure you want to change thread owner to %(user)s?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread participants actions"
+msgid "%(user)s has been made new thread owner."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread owner change btn"
+msgid "Make owner"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread leave"
+msgid "Are you sure you want to leave this thread?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread leave"
+msgid "Are you sure you want to remove %(user)s from this thread?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread participants actions"
+msgid "You have left this thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread participants actions"
+msgid "%(user)s has been removed from this thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread leave btn"
+msgid "Leave thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private thread leave btn"
+msgid "Remove"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread participants profile link"
+msgid "See profile"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread participants owner status"
+msgid "Thread owner"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread participants stat"
+msgid "This thread has %(users)s participant."
+msgid_plural "This thread has %(users)s participants."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "%(votes)s vote, %(proc)s% of total."
+msgid_plural "%(votes)s votes, %(proc)s% of total."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "You've voted on this choice."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll votes"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "%(votes)s user has voted for this choice."
+msgid_plural "%(votes)s users have voted for this choice."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Vote"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "See votes"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Edit"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid ""
+"Are you sure you want to delete this poll? This action is not reversible."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll has been deleted"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Delete"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Started by %(poster)s %(posted_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Voting ends %(ends_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "%(votes)s vote."
+msgid_plural "%(votes)s votes."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Voting is public."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "You can't select any more choices."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "You can select %(choices)s more choice."
+msgid_plural "You can select %(choices)s more choices."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "You can change your vote later."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Votes are final."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll vote"
+msgid "You need to select at least one choice."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll vote"
+msgid "Your vote has been saved."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll vote btn"
+msgid "Save your vote"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll vote btn"
+msgid "See results"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Add choice"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Are you sure you want to remove this choice?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Remove this choice"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll choice"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Are you sure you want to discard changes?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Are you sure you want to discard new poll?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll has been edited."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll has been posted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Edit poll"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Add poll"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Question and choices"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll question"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Available choices"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Voting"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Poll length"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid ""
+"Enter number of days for which voting in this poll should be possible or "
+"zero to run this poll indefinitely."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Allowed choices"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Allow vote changes"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Allow participants to change their vote"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Don't allow participants to change their vote"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Save changes"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Post poll"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Make voting public"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid ""
+"Making voting public will allow everyone to access detailed list of votes, "
+"showing which users voted for which choices and at which times. This option "
+"can't be changed after poll's creation. Moderators may see voting details "
+"for all polls."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Votes are public"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll"
+msgid "Votes are hidden"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event hide btn"
+msgid "Hide"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event reveal btn"
+msgid "Unhide"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event delete"
+msgid ""
+"Are you sure you wish to delete this event? This action is not reversible!"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event delete"
+msgid "Event has been deleted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event delete btn"
+msgid "Delete"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event info"
+msgid "Hidden by %(event_by)s %(event_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event info"
+msgid "By %(event_by)s %(event_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been pinned globally."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been pinned in category."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been unpinned."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been approved."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been opened."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been closed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been revealed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been made hidden."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Took thread over."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Owner has left thread. This thread is now closed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Participant has left thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread title has been changed from %(old_title)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Thread has been moved from %(from_category)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "The %(merged_thread)s thread has been merged into this thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Changed thread owner to %(user)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Added %(user)s to thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event message"
+msgid "Removed %(user)s from thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "event unread label"
+msgid "New event"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post attachment"
+msgid "%(filetype)s, %(size)s, uploaded by %(uploader)s %(uploaded_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post body hidden"
+msgid "Hidden by %(hidden_by)s %(hidden_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post body hidden"
+msgid "This post is hidden. You cannot see its contents."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post best answer flag"
+msgid "Marked as best answer by you %(marked_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post best answer flag"
+msgid "Marked as best answer by %(marked_by)s %(marked_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post hidden flag"
+msgid "This post is hidden. Only users with permission may see its contents."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post unapproved flag"
+msgid ""
+"This post is unapproved. Only users with permission to approve posts and its"
+" author may see its contents."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post protected flag"
+msgid "This post is protected. Only moderators may change it."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post delete"
+msgid ""
+"Are you sure you want to delete this post? This action is not reversible!"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post delete"
+msgid "Post has been deleted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes modal"
+msgid "No users have liked this post."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes modal title"
+msgid "Post Likes"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes modal"
+msgid "%(likes)s like"
+msgid_plural "%(likes)s likes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post footer btn"
+msgid "Best answer"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post footer btn"
+msgid "Liked"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post footer btn"
+msgid "Like"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes"
+msgid "%(user)s likes this."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes"
+msgid "%(users)s and %(last_user)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes"
+msgid "%(users)s like this."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post likes"
+msgid "%(users)s and %(likes)s other user like this."
+msgid_plural "%(users)s and %(likes)s other users like this."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post footer btn"
+msgid "Reply"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post footer btn"
+msgid "Quote"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post footer btn"
+msgid "Edit"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post move modal"
+msgid "You have to enter link to the other thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post move modal"
+msgid "Selected post was moved to the other thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post move modal field"
+msgid "Link to thread you want to move post to"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post move modal btn"
+msgid "Move post"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post move modal title"
+msgid "Move post"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post revert btn"
+msgid "Revert post to state from before this edit."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post revert btn"
+msgid "Revert"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post history modal btn"
+msgid "See previous change"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post history modal btn"
+msgid "See next change"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post history modal"
+msgid "By %(edited_by)s %(edited_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post revert"
+msgid ""
+"Are you sure you with to revert this post to the state from before this "
+"edit?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post revert"
+msgid "Post has been reverted to previous state."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post history modal title"
+msgid "Post edits history"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread hidden switch choice"
+msgid "No"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread hidden switch choice"
+msgid "Yes"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread closed switch choice"
+msgid "No"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread closed switch choice"
+msgid "Yes"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post split modal"
+msgid "Selected post was split into new thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread weight choice"
+msgid "Not pinned"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread weight choice"
+msgid "Pinned in category"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread weight choice"
+msgid "Pinned globally"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal field"
+msgid "Thread weight"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal field"
+msgid "Hide thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal field"
+msgid "Close thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal field"
+msgid "Thread title"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal field"
+msgid "Category"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal btn"
+msgid "Split post"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post split modal"
+msgid "You can't move this post at the moment."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts split modal title"
+msgid "Split post into new thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post permalink"
+msgid "Permament link to this post:"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options permalink btn"
+msgid "Permament link"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options edit btn"
+msgid "Edit"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options best answer btn"
+msgid "Mark as best answer"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options best answer btn"
+msgid "Unmark best answer"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post edits"
+msgid "This post was edited %(edits)s time."
+msgid_plural "This post was edited %(edits)s times."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options edit btn"
+msgid "Changes history"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options approve btn"
+msgid "Approve"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options move btn"
+msgid "Move"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options split btn"
+msgid "Split"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options protect btn"
+msgid "Protect"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options protect btn"
+msgid "Remove protection"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options hide btn"
+msgid "Hide"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options hide btn"
+msgid "Unhide"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options delete btn"
+msgid "Delete"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post unread label"
+msgid "New post"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post unread label"
+msgid "New"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post timestamp"
+msgid "posted %(posted_on)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post edits stat"
+msgid "This post was edited %(edits)s time."
+msgid_plural "This post was edited %(edits)s times."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post edits stat"
+msgid "edited %(edits)s time"
+msgid_plural "edited %(edits)s times"
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post edits stat"
+msgid "%(edits)s edit"
+msgid_plural "%(edits)s edits"
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post protected label"
+msgid "This post is protected and may not be edited."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post protected label"
+msgid "protected"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "poster stats"
+msgid "%(posts)s post"
+msgid_plural "%(posts)s posts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread starter info"
+msgid "Thread author"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread starter info"
+msgid "Started on: %(timestamp)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title form"
+msgid "You have to enter thread title."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title form field"
+msgid "Thread title"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title form btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title form btn"
+msgid "Change title"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread title form title"
+msgid "Change title"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form"
+msgid "Thread has been merged with other one."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form"
+msgid "You have to enter link to the other thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form field"
+msgid "Link to thread you want to merge with"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form field"
+msgid ""
+"Merge will delete current thread and move its contents to the thread "
+"specified here."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form btn"
+msgid "Merge thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread merge form title"
+msgid "Merge thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form"
+msgid "Thread has been moved."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form field"
+msgid "New category"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form btn"
+msgid "Move thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form title"
+msgid "Move thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form"
+msgid "You can't move this thread at the moment."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread move form dismiss btn"
+msgid "Ok"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been pinned globally."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been pinned in category."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been unpinned."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been approved."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Thread has been opened."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been closed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been made visible."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been made hidden."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Are you sure you want to delete this thread?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation"
+msgid "Thread has been deleted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Change title"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Pin globally"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Pin in category"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Unpin"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Move"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Merge"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Approve"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Open"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Close"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Unhide"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Hide"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread moderation btn"
+msgid "Delete"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread options btn"
+msgid "Thread options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "Watching"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "Watch"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "Notify about new replies"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "On site and with e-mail"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "On site only"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "Don't notify"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "breadcrumb"
+msgid "Threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "breadcrumb"
+msgid "Private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go to first page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go to previous page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Page %(page)s of %(pages)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator input"
+msgid "Page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go to next page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "paginator"
+msgid "Go to last page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation modal title"
+msgid "Moderation"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation modal"
+msgid "One or more posts could not be changed:"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation modal"
+msgid "%(username)s on %(posted_on)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "merge posts"
+msgid ""
+"Are you sure you want to merge selected posts? This action is not "
+"reversible!"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "delete posts"
+msgid ""
+"Are you sure you want to delete selected posts? This action is not "
+"reversible!"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation move"
+msgid "You have to enter link to the other thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation move"
+msgid "Selected posts were moved to the other thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation move"
+msgid "Link to thread you want to move posts to"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation move btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation move btn"
+msgid "Move posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation move title"
+msgid "Move posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split"
+msgid "Selected posts were split into new thread."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split field"
+msgid "Thread weight"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split field"
+msgid "Hide thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split field"
+msgid "Close thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split field"
+msgid "Thread title"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split field"
+msgid "Category"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split btn"
+msgid "Split posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split"
+msgid "You can't move selected posts at the moment."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split dismiss btn"
+msgid "Ok"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "posts moderation split title"
+msgid "Split posts into new thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Approve"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Merge"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Move"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Split"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Protect"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Unprotect"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Hide"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Unhide"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread posts moderation"
+msgid "Delete"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "post options btn"
+msgid "Posts options"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread reply btn"
+msgid "Reply"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "go up"
+msgid "Go to top"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread poll btn"
+msgid "Add poll"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread shortcuts btn"
+msgid "Shortcuts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread shortcut btn"
+msgid "Go to first post"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread shortcut btn"
+msgid "Go to new post"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread shortcut btn"
+msgid "Go to best answer"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread shortcut btn"
+msgid "Go to unapproved post"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "thread shortcut btn"
+msgid "Go to last post"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation title"
+msgid "Threads moderation"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "One or more threads could not be deleted:"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge field"
+msgid "Thread weight"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge field"
+msgid "Hide thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge field"
+msgid "Close thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge field"
+msgid "Thread title"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge field"
+msgid "Category"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge btn"
+msgid "Merge threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge"
+msgid ""
+"You can't merge threads because there are no categories you are allowed to "
+"move them to."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge"
+msgid ""
+"You need permission to start threads in category to be able to merge threads"
+" to it."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge dismiss btn"
+msgid "Ok"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation merge title"
+msgid "Merge threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move"
+msgid "Selected threads were moved."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move field"
+msgid "New category"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move btn"
+msgid "Cancel"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move btn"
+msgid "Move threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move"
+msgid ""
+"You can't move threads because there are no categories you are allowed to "
+"move them to."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move"
+msgid ""
+"You need permission to start threads in category to be able to move threads "
+"to it."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move dismiss btn"
+msgid "Ok"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation move title"
+msgid "Move threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were pinned globally."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were pinned in category."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were unpinned."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were approved."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were opened."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were closed."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were unhidden."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were hidden."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "You don't have permission to merge this thread with others."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "You have to select at least two threads to merge."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Are you sure you want to delete selected threads?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation"
+msgid "Selected threads were deleted."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Select all"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Select none"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Pin threads globally"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Pin threads in categories"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Unpin threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Move threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Merge threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Approve threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Open threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Close threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Unhide threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Hide threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads moderation btn"
+msgid "Delete threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list nav"
+msgid "Moderation"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list nav"
+msgid "All categories"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list nav"
+msgid "All subcategories"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list nav"
+msgid "Start thread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list empty"
+msgid "There are no threads on this site yet."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list empty"
+msgid "There are no threads in this category."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list empty"
+msgid "No threads matching specified criteria were found."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "%(timestamp)s - latest activity"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "%(poster)s - latest poster"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "Send e-mail notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "watch thread"
+msgid "Without e-mail notifications"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "Not watching"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Contains unread posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "No unread posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "%(starter)s - original poster"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Go to page: %(page)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list update prompt"
+msgid "There is %(threads)s new or updated thread. Click here to show it."
+msgid_plural ""
+"There are %(threads)s new or updated threads. Click here to show them."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list title"
+msgid "Threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threas list more btn"
+msgid "Show more"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads title"
+msgid "Private threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads list"
+msgid ""
+"Private threads are threads which only those that started them and those "
+"they have invited may see and participate in."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "private threads list empty"
+msgid "You aren't participating in any private threads."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "All"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "All threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "My"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "My threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "New"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "New threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Unread"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Unread threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Watched"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Watched threads"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Unapproved"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "threads list"
+msgid "Unapproved content"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "top posters empty"
+msgid "No users have posted any new messages during last %(days)s day."
+msgid_plural ""
+"No users have posted any new messages during last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "top posters list item"
+msgid "Rank"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "top posters list item"
+msgid "Ranked posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "top posters list item"
+msgid "Total posts"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "top posters list"
+msgid "%(posters)s top poster from last %(days)s days."
+msgid_plural "%(posters)s top posters from last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "users page title"
+msgid "Users"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list"
+msgid "There is %(more)s more user with this rank."
+msgid_plural "There are %(more)s more users with this rank."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list empty"
+msgid "There are no more users with this rank."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list paginator"
+msgid "Go to first page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list paginator"
+msgid "Go to previous page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list paginator"
+msgid "Go to next page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list paginator"
+msgid "Go to last page"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "rank users list"
+msgid "There are no users with this rank at the moment."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "ajax client error"
+msgid "Could not connect to the site."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "ajax client error"
+msgid "Action link is invalid."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "ajax client error"
+msgid "Unknown error has occurred."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Could not connect to the site."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Upload was rejected by the site as too large."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Action link is invalid."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "Unknown error has occurred."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "captcha field"
+msgid "Failed to load CAPTCHA."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "captcha field"
+msgid "Please solve the quick test"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "captcha field"
+msgid "This test helps us prevent automated spam registrations on the site."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "page title pagination"
+msgid "page: %(page)s"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgid "You are already working on other message. Do you want to discard it?"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "api error"
+msgid "You don't have permission to perform this action."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "banned page"
+msgid "This ban expires on %(expires_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "banned page"
+msgid "This ban expires %(expires_on)s."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "banned page"
+msgid "This ban has expired."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "banned page"
+msgid "This ban is permanent."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "banned error title"
+msgid "You are banned"
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "agreement validator"
+msgid "You have to accept the terms of service."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "agreement validator"
+msgid "You have to accept the privacy policy."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "email validator"
+msgid "Enter a valid e-mail address."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "value length validator"
+msgid ""
+"Ensure this value has at least %(limit_value)s character (it has "
+"%(show_value)s)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)s characters (it has "
+"%(show_value)s)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "value length validator"
+msgid ""
+"Ensure this value has at most %(limit_value)s character (it has "
+"%(show_value)s)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)s characters (it has "
+"%(show_value)s)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "username length validator"
+msgid "Username must be at least %(limit_value)s character long."
+msgid_plural "Username must be at least %(limit_value)s characters long."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "username length validator"
+msgid "Username cannot be longer than %(limit_value)s character."
+msgid_plural "Username cannot be longer than %(limit_value)s characters."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/misago.js:1
+msgctxt "username validator"
+msgid "Username must contain Latin alphabet letters or digits."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "username validator"
+msgid ""
+"Username can only contain Latin alphabet letters, digits, and an underscore "
+"sign."
+msgstr ""
+
+#: static/misago/js/misago.js:1
+msgctxt "password length validator"
+msgid "Valid password must be at least %(limit_value)s character long."
+msgid_plural ""
+"Valid password must be at least %(limit_value)s characters long."
+msgstr[0] ""
+msgstr[1] ""
+
+#: static/misago/js/vendor.js:2
+msgid "<iframe frameborder='0' width='0' height='0'/>"
+msgstr ""
+
+#: static/misago/js/vendor.js:2
+msgid "<script>"
+msgstr ""
+
+#: static/misago/js/vendor.js:2
+msgid "<div>"
+msgstr ""
