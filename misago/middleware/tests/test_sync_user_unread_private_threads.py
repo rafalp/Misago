@@ -1,13 +1,7 @@
-from datetime import timedelta
 from unittest.mock import Mock
-
-from django.utils import timezone
 
 from ...categories.proxy import CategoriesProxy
 from ...permissions.proxy import UserPermissionsProxy
-from ...threads.models import ThreadParticipant
-from ...threads.test import post_thread
-from ...readtracker.models import ReadThread
 from ..privatethreads import sync_user_unread_private_threads
 
 
