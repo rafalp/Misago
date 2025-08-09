@@ -172,7 +172,7 @@ def user_has_other_unread_posts(
     return posts_queryset.exists()
 
 
-def notify_participant_on_new_private_thread(
+def notify_user_on_new_private_thread(
     user: "User",
     actor: "User",
     thread: Thread,
@@ -219,10 +219,10 @@ def notify_participant_on_new_private_thread(
     )
 
     if notification == ThreadNotifications.SITE_AND_EMAIL:
-        email_participant_on_new_private_thread(user, actor, watched_thread, settings)
+        email_user_on_new_private_thread(user, actor, watched_thread, settings)
 
 
-def email_participant_on_new_private_thread(
+def email_user_on_new_private_thread(
     user: "User",
     actor: "User",
     watched_thread: WatchedThread,
@@ -232,7 +232,7 @@ def email_participant_on_new_private_thread(
 
     subject = pgettext(
         "new private thread email subject",
-        '%(user)s has invited you to participate in private thread "%(thread)s"',
+        '%(user)s invited you to the private thread "%(thread)s"',
     )
     subject_formats = {"thread": thread.title, "user": actor.username}
 
