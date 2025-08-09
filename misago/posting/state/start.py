@@ -5,8 +5,8 @@ from django.http import HttpRequest
 
 from ...categories.models import Category
 from ...polls.models import Poll
+from ...privatethreads.models import PrivateThreadMember
 from ...threads.checksums import update_post_checksum
-from ...threads.models import ThreadParticipant
 from ..hooks import (
     get_start_private_thread_state_hook,
     get_start_thread_state_hook,
@@ -122,16 +122,25 @@ class StartPrivateThreadState(StartPostingState):
         self.save_users()
 
     def save_users(self):
-        users: list[ThreadParticipant] = [
-            ThreadParticipant(thread=self.thread, user=self.user, is_owner=True),
+        users: list[PrivateThreadMember] = [
+            PrivateThreadMember(
+                thread=self.thread,
+                user=self.user,
+                is_owner=True,
+                created_at=self.timestamp,
+            ),
         ]
 
         for invite_user in self.invite_users:
             users.append(
-                ThreadParticipant(thread=self.thread, user=invite_user),
+                PrivateThreadMember(
+                    thread=self.thread,
+                    user=invite_user,
+                    created_at=self.timestamp,
+                ),
             )
 
-        ThreadParticipant.objects.bulk_create(users)
+        PrivateThreadMember.objects.bulk_create(users)
 
 
 def get_start_thread_state(
