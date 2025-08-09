@@ -17,6 +17,7 @@ from .core.utils import slugify
 from .menus import MENU_ITEMS_CACHE
 from .notifications.models import WatchedThread
 from .permissions.models import Moderator
+from .privatethreadmembers.models import PrivateThreadMember
 from .socialauth import SOCIALAUTH_CACHE
 from .socialauth.models import SocialAuthProvider
 from .test import (
@@ -32,7 +33,7 @@ from .test.polls import *
 from .test.threadupdates import *
 from .test.userpermissions import *
 from .themes import THEME_CACHE
-from .threads.models import Thread, ThreadParticipant
+from .threads.models import Thread
 from .threads.test import post_thread, reply_thread
 from .users import BANS_CACHE
 from .users.enums import DefaultGroupId
@@ -482,9 +483,9 @@ def user_private_thread(private_threads_category, user, other_user, moderator):
         poster=user,
     )
 
-    ThreadParticipant.objects.create(thread=thread, user=user, is_owner=True)
-    ThreadParticipant.objects.create(thread=thread, user=other_user, is_owner=False)
-    ThreadParticipant.objects.create(thread=thread, user=moderator, is_owner=False)
+    PrivateThreadMember.objects.create(thread=thread, user=user, is_owner=True)
+    PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=False)
+    PrivateThreadMember.objects.create(thread=thread, user=moderator, is_owner=False)
 
     return thread
 
@@ -497,9 +498,9 @@ def other_user_private_thread(private_threads_category, user, other_user, modera
         poster=other_user,
     )
 
-    ThreadParticipant.objects.create(thread=thread, user=other_user, is_owner=True)
-    ThreadParticipant.objects.create(thread=thread, user=user, is_owner=False)
-    ThreadParticipant.objects.create(thread=thread, user=moderator, is_owner=False)
+    PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
+    PrivateThreadMember.objects.create(thread=thread, user=user, is_owner=False)
+    PrivateThreadMember.objects.create(thread=thread, user=moderator, is_owner=False)
 
     return thread
 

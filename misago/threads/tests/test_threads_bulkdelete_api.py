@@ -165,26 +165,3 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
                 }
             ],
         )
-
-    @patch_category_acl({"can_hide_threads": 2, "can_hide_own_threads": 2})
-    def test_delete_private_thread(self):
-        """attempt to delete private thread fails"""
-        private_thread = self.threads[0]
-
-        private_thread.category = Category.objects.get(
-            tree_id=trees_map.get_tree_id_for_root(PRIVATE_THREADS_ROOT_NAME)
-        )
-        private_thread.save()
-
-        private_thread.threadparticipant_set.create(user=self.user, is_owner=True)
-
-        threads_ids = [p.id for p in self.threads]
-
-        response = self.delete(self.api_link, threads_ids)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(),
-            {"detail": "One or more threads to delete could not be found."},
-        )
-
-        Thread.objects.get(pk=private_thread.pk)

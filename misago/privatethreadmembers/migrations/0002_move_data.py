@@ -4,7 +4,9 @@ from django.db import migrations
 
 
 def migrate_private_thread_members(apps, _):
-    PrivateThreadMember = apps.get_model("misago_privatethreads", "PrivateThreadMember")
+    PrivateThreadMember = apps.get_model(
+        "misago_privatethreadmembers", "PrivateThreadMember"
+    )
     ThreadParticipant = apps.get_model("misago_threads", "ThreadParticipant")
 
     queryset = ThreadParticipant.objects.order_by("id").values(
@@ -30,7 +32,7 @@ def migrate_private_thread_members(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("misago_privatethreads", "0001_initial"),
+        ("misago_privatethreadmembers", "0001_initial"),
         ("misago_threads", "0020_remove_poll_poll_vote_related_names"),
     ]
 

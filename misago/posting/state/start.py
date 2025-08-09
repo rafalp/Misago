@@ -5,7 +5,7 @@ from django.http import HttpRequest
 
 from ...categories.models import Category
 from ...polls.models import Poll
-from ...privatethreads.models import PrivateThreadMember
+from ...privatethreadmembers.models import PrivateThreadMember
 from ...threads.checksums import update_post_checksum
 from ..hooks import (
     get_start_private_thread_state_hook,
