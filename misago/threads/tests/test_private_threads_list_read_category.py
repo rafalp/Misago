@@ -3,14 +3,15 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils import timezone
 
+from ...privatethreadmembers.models import PrivateThreadMember
 from ...readtracker.models import ReadCategory, ReadThread
-from ..models import Thread, ThreadParticipant
+from ..models import Thread
 from ..test import post_thread
 
 
-def make_user_participant(user):
+def create_user_private_thread_memberships(user):
     for thread in Thread.objects.all():
-        ThreadParticipant.objects.create(user=user, thread=thread)
+        PrivateThreadMember.objects.create(user=user, thread=thread)
 
 
 def test_private_threads_list_without_unread_threads_is_marked_read(
@@ -41,7 +42,7 @@ def test_private_threads_list_without_unread_threads_is_marked_read(
     private_threads_category.synchronize()
     private_threads_category.save()
 
-    make_user_participant(user)
+    create_user_private_thread_memberships(user)
 
     response = user_client.get(reverse("misago:private-threads"))
     assert response.status_code == 200
@@ -80,7 +81,7 @@ def test_private_threads_list_without_unread_threads_clears_user_unread_threads_
     private_threads_category.synchronize()
     private_threads_category.save()
 
-    make_user_participant(user)
+    create_user_private_thread_memberships(user)
 
     response = user_client.get(reverse("misago:private-threads"))
     assert response.status_code == 200
@@ -121,7 +122,7 @@ def test_private_threads_list_read_entry_without_unread_threads_is_marked_read(
     private_threads_category.synchronize()
     private_threads_category.save()
 
-    make_user_participant(user)
+    create_user_private_thread_memberships(user)
 
     response = user_client.get(reverse("misago:private-threads"))
     assert response.status_code == 200
@@ -161,7 +162,7 @@ def test_private_threads_list_with_unread_thread_is_not_marked_read(
     private_threads_category.synchronize()
     private_threads_category.save()
 
-    make_user_participant(user)
+    create_user_private_thread_memberships(user)
 
     response = user_client.get(reverse("misago:private-threads"))
     assert response.status_code == 200

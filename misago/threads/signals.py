@@ -301,9 +301,9 @@ def update_usernames(sender, **kwargs):
 
 
 @receiver(pre_delete, sender=get_user_model())
-def remove_private_threads_without_participants(sender, **kwargs):
-    threads_qs = kwargs["instance"].privatethread_set
+def remove_private_threads_without_members(sender, **kwargs):
+    threads_qs = kwargs["instance"].privatethreadmember_set
     for thread in threads_qs.iterator(chunk_size=50):
-        if thread.participants.count() <= 1:
+        if thread.privatethreadmember_set.count() <= 1:
             with transaction.atomic():
                 thread.delete()
