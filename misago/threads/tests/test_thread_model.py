@@ -6,8 +6,9 @@ from django.utils import timezone
 from .. import test
 from ...categories.models import Category
 from ...polls.models import Poll
+from ...privatethreadmembers.models import PrivateThreadMember
 from ...users.test import create_test_user
-from ..models import Post, Thread, ThreadParticipant
+from ..models import Post, Thread
 
 
 class ThreadModelTests(TestCase):
@@ -392,30 +393,12 @@ class ThreadModelTests(TestCase):
         self.assertEqual(self.thread.last_poster_name, "Admin")
         self.assertEqual(self.thread.last_poster_slug, "admin")
 
-    def test_delete_private_thread(self):
-        """
-        private thread gets deleted automatically
-        when there are no participants left in it
-        """
-        user = create_test_user("User", "user@example.com")
-        other_user = create_test_user("Other_User", "otheruser@example.com")
-
-        ThreadParticipant.objects.add_participants(self.thread, [user, other_user])
-        self.assertEqual(self.thread.participants.count(), 2)
-
-        user.delete(anonymous_username="Deleted")
-        Thread.objects.get(id=self.thread.id)
-
-        other_user.delete(anonymous_username="Deleted")
-        with self.assertRaises(Thread.DoesNotExist):
-            Thread.objects.get(id=self.thread.id)
-
 
 def test_thread_private_thread_member_ids_property_returns_list_of_private_thread_member_ids(
     thread, user, other_user
 ):
-    ThreadParticipant.objects.create(thread=thread, user=user, is_owner=False)
-    ThreadParticipant.objects.create(thread=thread, user=other_user, is_owner=True)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
 
     private_thread_member_ids = list(thread.private_thread_member_ids)
     assert private_thread_member_ids == [other_user.id, user.id]
@@ -424,8 +407,8 @@ def test_thread_private_thread_member_ids_property_returns_list_of_private_threa
 def test_thread_private_thread_owner_id_property_returns_id_of_private_thread_owner(
     thread, user, other_user
 ):
-    ThreadParticipant.objects.create(thread=thread, user=user, is_owner=False)
-    ThreadParticipant.objects.create(thread=thread, user=other_user, is_owner=True)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
 
     assert thread.private_thread_owner_id == other_user.id
 
@@ -433,4 +416,11 @@ def test_thread_private_thread_owner_id_property_returns_id_of_private_thread_ow
 def test_thread_private_thread_owner_id_property_returns_none_if_thread_has_no_members(
     thread,
 ):
+    assert thread.private_thread_owner_id is None
+
+
+def test_thread_private_thread_owner_id_property_returns_none_if_thread_has_no_owner(
+    thread, other_user
+):
+    PrivateThreadMember.objects.create(thread=thread, user=other_user)
     assert thread.private_thread_owner_id is None

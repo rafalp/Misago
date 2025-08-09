@@ -25,7 +25,7 @@ from ...pagination.redirect import redirect_to_last_page
 from ...permissions.attachments import check_delete_attachment_permission
 from ...permissions.checkutils import check_permissions
 from ...permissions.generic import check_access_post_permission
-from ...threads.privatethreads import prefetch_private_thread_member_ids
+from ...privatethreadmembers.prefetch import prefetch_private_thread_member_ids
 from ...users.datadownloads import (
     request_user_data_download,
     user_has_data_download_request,

@@ -10,7 +10,7 @@ from ..users.bans import get_user_ban
 from ..threads.models import Post, Thread
 from .models import WatchedThread
 from .threads import (
-    notify_participant_on_new_private_thread,
+    notify_user_on_new_private_thread,
     notify_watcher_on_new_thread_reply,
 )
 
@@ -81,13 +81,11 @@ def notify_on_new_private_thread(
             continue  # Skip inactive or banned participants
 
         try:
-            notify_participant_on_new_private_thread(
+            notify_user_on_new_private_thread(
                 participant, actor, thread, cache_versions, dynamic_settings
             )
         except Exception:
-            logger.exception(
-                "Unexpected error in 'notify_participant_on_new_private_thread'"
-            )
+            logger.exception("Unexpected error in 'notify_user_on_new_private_thread'")
 
 
 @shared_task(serializer="json")
