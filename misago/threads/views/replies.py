@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Optional
 
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
@@ -8,7 +8,7 @@ from django.http import (
     HttpResponse,
     HttpResponseNotAllowed,
 )
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views import View
 
@@ -20,6 +20,7 @@ from ...permissions.polls import check_start_thread_poll_permission
 from ...permissions.privatethreads import (
     check_edit_private_thread_permission,
     check_reply_private_thread_permission,
+    check_see_private_thread_permission,
 )
 from ...permissions.threads import (
     check_edit_thread_permission,
@@ -35,6 +36,8 @@ from ...posting.formsets import (
     get_reply_private_thread_formset,
     get_reply_thread_formset,
 )
+from ...privatethreadmembers.getmembers import get_private_thread_members
+from ...privatethreadmembers.views import get_private_thread_members_context_data
 from ...readtracker.tracker import (
     get_unread_posts,
     mark_category_read,
@@ -381,11 +384,22 @@ class ThreadRepliesView(RepliesView, ThreadView):
 class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
     template_name: str = "misago/private_thread/index.html"
     template_partial_name: str = "misago/private_thread/partial.html"
+    members_template_name: str = "misago/private_thread/members.html"
+
+    owner: Optional["User"]
+    members: list["User"]
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
         return get_private_thread_replies_page_thread_queryset_hook(
             super().get_thread_queryset, request
         )
+
+    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
+        queryset = self.get_thread_queryset(request)
+        thread = get_object_or_404(queryset, id=thread_id)
+        self.owner, self.members = get_private_thread_members(thread)
+        check_see_private_thread_permission(request.user_permissions, thread)
+        return thread
 
     def get_context_data(
         self, request: HttpRequest, thread: Thread, page: int | None = None
@@ -398,13 +412,13 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         self, request: HttpRequest, thread: Thread, page: int | None = None
     ) -> dict:
         context = super().get_context_data_action(request, thread, page)
+        context["members"] = self.get_thread_members_context_data(request, thread)
 
-        context.update(
-            {
-                "participants": None,
-            }
-        )
-
+        return context
+    
+    def get_thread_members_context_data(self, request: HttpRequest, thread: Thread) -> dict:
+        context = get_private_thread_members_context_data(request, thread, self.owner, self.members)
+        context["template_name"] = self.members_template_name
         return context
 
     def get_thread_posts_queryset(

@@ -1,0 +1,44 @@
+{% load i18n misago_avatars %}
+
+<div class="panel panel-default panel-private-thread-members">
+  <div class="panel-private-thread-members-header">
+    {% for member in members %}
+      <a href="{% url 'misago:user' pk=member.id slug=member.slug %}">
+        <img src="{{ member|avatar:32 }}" srcset="{{ member|avatar:64 }}" alt="{{ member.username }}">
+      </a>
+    {% endfor %}
+    <h3 class="panel-private-thread-members-title">
+      {% blocktranslate trimmed count members=members|length context "private thread members panel" %}
+        {{ members }} member
+      {% plural %}
+        {{ members }} members
+      {% endblocktranslate %}
+    </h3>
+  </div>
+  <details class="panel-private-thread-members-details">
+    <summary class="panel-private-thread-members-summary">
+      <span class="sr-only">
+        {% translate "Open members list" context "private thread members panel" %}
+      </span>
+      <div class="panel-private-thread-members-summary-btn">
+        <span class="material-icon">
+          keyboard_arrow_down
+        </span>
+      </div>
+    </summary>
+    <div class="panel-private-thread-members-body">
+      <ul class="panel-private-thread-members-grid">
+        {% for member in members %}
+          <li>
+            <a href="{% url 'misago:user' pk=member.id slug=member.slug %}">
+              <img src="{{ member|avatar:24 }}" srcset="{{ member|avatar:48 }}" alt="">
+            </a>
+            {{ member.username }}
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="panel-private-thread-members-footer">
+      </div>
+    </div>
+  </details>
+</div>

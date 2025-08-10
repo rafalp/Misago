@@ -1,0 +1,50 @@
+.panel-private-thread-members {
+  padding: @padding-base-horizontal;
+  border: 1px solid @gray-lighter;
+  border-radius: @border-radius-base;
+}
+
+.panel-private-thread-members-header img {
+  border-radius: @border-radius-small;
+}
+
+.panel-private-thread-members-summary {
+  top: @padding-base-horizontal;
+  right: @padding-base-horizontal;
+
+  .material-icon {
+    transform-origin: center;
+    transition: transform 0.3s ease-in-out;
+  }
+}
+
+.panel-private-thread-members-summary {
+  color: @gray;
+
+  &:hover {
+    color: @text-color;
+
+    .panel-private-thread-members-summary-btn {
+      background-color: @gray-lighter;
+      border-radius: @border-radius-small;
+    }
+  }
+  &:active {
+    color: @text-color;
+
+    .panel-private-thread-members-summary-btn {
+      background-color: darken(@gray-lighter, 10);
+      border-radius: @border-radius-small;
+    }
+  }
+}
+
+.panel-private-thread-members-details[open] {
+  .panel-private-thread-members-summary .material-icon {
+    transform: rotate(180deg);
+  }
+}
+
+.panel-private-thread-members-body {
+  margin-top: @padding-base-horizontal;
+}

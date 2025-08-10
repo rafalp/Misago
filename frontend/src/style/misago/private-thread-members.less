@@ -1,0 +1,51 @@
+.panel-private-thread-members {
+  position: relative;
+}
+
+.panel-private-thread-members-header {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: ceil(@grid-gutter-width / 4);
+
+  width: 100%;
+  height: 32px;
+
+  a,
+  img {
+    display: block;
+
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.panel-private-thread-members-title {
+  margin: 0;
+
+  font-size: @font-size-large;
+  line-height: @line-height-computed;
+}
+
+.panel-private-thread-members-summary {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 32px;
+  height: 32px;
+}
+
+.panel-private-thread-members-summary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+
+  font-size: 32px;
+  line-height: 0px;
+
+  cursor: pointer;
+}
