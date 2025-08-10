@@ -260,17 +260,15 @@ class LeftThreadUpdateAction(ThreadUpdateAction):
 
 
 @thread_updates_renderer.register_action
-class InvitedParticipantThreadUpdateAction(UserContextThreadUpdateAction):
-    action = ThreadUpdateActionName.INVITED_PARTICIPANT
+class AddedMemberThreadUpdateAction(UserContextThreadUpdateAction):
+    action = ThreadUpdateActionName.ADDED_MEMBER
     icon = "person_add"
-    description = pgettext_lazy(
-        "thread update action description", "Invited %(context)s"
-    )
+    description = pgettext_lazy("thread update action description", "Added %(context)s")
 
 
 @thread_updates_renderer.register_action
-class RemovedParticipantThreadUpdateAction(UserContextThreadUpdateAction):
-    action = ThreadUpdateActionName.REMOVED_PARTICIPANT
+class RemovedMemberThreadUpdateAction(UserContextThreadUpdateAction):
+    action = ThreadUpdateActionName.REMOVED_MEMBER
     icon = "block"
     description = pgettext_lazy(
         "thread update action description", "Removed %(context)s"

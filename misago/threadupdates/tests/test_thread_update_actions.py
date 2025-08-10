@@ -2,13 +2,13 @@ from django.urls import reverse
 
 from ...test import assert_contains
 from ..create import (
+    create_added_member_thread_update,
     create_approved_thread_update,
     create_changed_owner_thread_update,
     create_changed_title_thread_update,
     create_closed_poll_thread_update,
     create_deleted_poll_thread_update,
     create_hid_thread_update,
-    create_invited_participant_thread_update,
     create_joined_thread_update,
     create_left_thread_update,
     create_locked_thread_update,
@@ -18,7 +18,7 @@ from ..create import (
     create_opened_thread_update,
     create_pinned_globally_thread_update,
     create_pinned_in_category_thread_update,
-    create_removed_participant_thread_update,
+    create_removed_member_thread_update,
     create_split_thread_update,
     create_started_poll_thread_update,
     create_test_thread_update,
@@ -282,17 +282,17 @@ def test_left_thread_update(client, thread, user):
     assert_contains(response, "Left thread")
 
 
-def test_invited_participant_thread_update(client, thread, user, other_user):
-    create_invited_participant_thread_update(thread, other_user, user)
+def test_added_member_thread_update(client, thread, user, other_user):
+    create_added_member_thread_update(thread, other_user, user)
     response = client.get(
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Invited")
+    assert_contains(response, "Added")
     assert_contains(response, other_user.username)
 
 
 def test_invited_thread_update_without_context_object(client, thread, user, other_user):
-    thread_update = create_invited_participant_thread_update(thread, other_user, user)
+    thread_update = create_added_member_thread_update(thread, other_user, user)
 
     thread_update.clear_context_object()
     thread_update.save()
@@ -300,12 +300,12 @@ def test_invited_thread_update_without_context_object(client, thread, user, othe
     response = client.get(
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Invited")
+    assert_contains(response, "Added")
     assert_contains(response, other_user.username)
 
 
-def test_removed_participants_thread_update(client, thread, user, other_user):
-    create_removed_participant_thread_update(thread, other_user, user)
+def test_removed_member_thread_update(client, thread, user, other_user):
+    create_removed_member_thread_update(thread, other_user, user)
     response = client.get(
         reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
     )
@@ -313,10 +313,10 @@ def test_removed_participants_thread_update(client, thread, user, other_user):
     assert_contains(response, other_user.username)
 
 
-def test_removed_participants_thread_update_without_context_object(
+def test_removed_member_thread_update_without_context_object(
     client, thread, user, other_user
 ):
-    thread_update = create_removed_participant_thread_update(thread, other_user, user)
+    thread_update = create_removed_member_thread_update(thread, other_user, user)
 
     thread_update.clear_context_object()
     thread_update.save()
