@@ -10,7 +10,7 @@ from ....acl.models import Role
 from ....admin.forms import IsoDateTimeField, YesNoSwitch
 from ....notifications.threads import ThreadNotifications
 from ....search.filter_queryset import filter_queryset
-from ...enums import DefaultGroupId
+from ...enums import DefaultGroupId, UserNewPrivateThreadsPreference
 from ...models import Group, Rank
 from ...profilefields import profilefields
 from ...utils import slugify_username
@@ -215,10 +215,10 @@ class EditUserForm(BaseUserForm):
         label=pgettext_lazy("admin user form", "Hides presence")
     )
 
-    limits_private_thread_invites_to = forms.TypedChoiceField(
+    allow_new_private_threads_by = forms.TypedChoiceField(
         label=pgettext_lazy("admin user form", "Who can add user to private threads"),
         coerce=int,
-        choices=User.LIMIT_INVITES_TO_CHOICES,
+        choices=UserNewPrivateThreadsPreference.get_choices(),
     )
 
     watch_started_threads = forms.TypedChoiceField(
@@ -285,7 +285,7 @@ class EditUserForm(BaseUserForm):
             "signature",
             "is_signature_locked",
             "is_hiding_presence",
-            "limits_private_thread_invites_to",
+            "allow_new_private_threads_by",
             "signature_lock_user_message",
             "signature_lock_staff_message",
             "watch_started_threads",

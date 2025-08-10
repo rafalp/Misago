@@ -28,7 +28,7 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
         fields = UserSerializer.Meta.fields + [
             "has_usable_password",
             "is_hiding_presence",
-            "limits_private_thread_invites_to",
+            "allow_new_private_threads_by",
             "unread_private_threads",
             "watch_started_threads",
             "watch_replied_threads",

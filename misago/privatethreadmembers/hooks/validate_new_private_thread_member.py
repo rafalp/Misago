@@ -14,7 +14,7 @@ class ValidateNewPrivateThreadMemberHookAction(Protocol):
 
     # Arguments
 
-    ## `invited_user_permissions: UserPermissionsProxy`
+    ## `new_member_permissions: UserPermissionsProxy`
 
     A proxy object with the invited user's permissions.
 
@@ -33,7 +33,7 @@ class ValidateNewPrivateThreadMemberHookAction(Protocol):
 
     def __call__(
         self,
-        invited_user_permissions: "UserPermissionsProxy",
+        new_member_permissions: "UserPermissionsProxy",
         other_user_permissions: "UserPermissionsProxy",
         cache_versions: dict,
         request: HttpRequest | None = None,
@@ -53,7 +53,7 @@ class ValidateNewPrivateThreadMemberHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `invited_user_permissions: UserPermissionsProxy`
+    ## `new_member_permissions: UserPermissionsProxy`
 
     A proxy object with the invited user's permissions.
 
@@ -73,7 +73,7 @@ class ValidateNewPrivateThreadMemberHookFilter(Protocol):
     def __call__(
         self,
         action: ValidateNewPrivateThreadMemberHookAction,
-        invited_user_permissions: "UserPermissionsProxy",
+        new_member_permissions: "UserPermissionsProxy",
         other_user_permissions: "UserPermissionsProxy",
         cache_versions: dict,
         request: HttpRequest | None = None,
@@ -107,13 +107,13 @@ class ValidateNewPrivateThreadMemberHook(
     @validate_new_private_thread_member_hook.append_filter
     def validate_new_private_thread_member_registration_date(
         action,
-        invited_user_permissions: UserPermissionsProxy,
+        new_member_permissions: UserPermissionsProxy,
         other_user_permissions: UserPermissionsProxy,
         cache_versions: dict,
         request: HttpRequest | None = None,
     ):
         action(
-            invited_user_permissions,
+            new_member_permissions,
             other_user_permissions,
             cache_versions,
             request,
@@ -121,7 +121,7 @@ class ValidateNewPrivateThreadMemberHook(
 
         user_is_new = (timezone.now() - user.joined_on).days < 7
 
-        if user_is_new and not invited_user_permissions.moderated_categories:
+        if user_is_new and not new_member_permissions.moderated_categories:
             raise ValidationError(
                 "Your account is less than 7 days old."
             )
@@ -133,14 +133,14 @@ class ValidateNewPrivateThreadMemberHook(
     def __call__(
         self,
         action: ValidateNewPrivateThreadMemberHookAction,
-        invited_user_permissions: "UserPermissionsProxy",
+        new_member_permissions: "UserPermissionsProxy",
         other_user_permissions: "UserPermissionsProxy",
         cache_versions: dict,
         request: HttpRequest | None = None,
     ):
         return super().__call__(
             action,
-            invited_user_permissions,
+            new_member_permissions,
             other_user_permissions,
             cache_versions,
             request,

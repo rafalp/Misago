@@ -14,14 +14,14 @@ if TYPE_CHECKING:
 
 
 def validate_new_private_thread_member(
-    invited_user_permissions: UserPermissionsProxy,
+    new_member_permissions: UserPermissionsProxy,
     other_user_permissions: UserPermissionsProxy,
     cache_versions: dict,
     request: HttpRequest | None = None,
 ):
     validate_new_private_thread_member_hook(
         _validate_new_private_thread_member_action,
-        invited_user_permissions,
+        new_member_permissions,
         other_user_permissions,
         cache_versions,
         request,
@@ -29,12 +29,12 @@ def validate_new_private_thread_member(
 
 
 def _validate_new_private_thread_member_action(
-    invited_user_permissions: UserPermissionsProxy,
+    new_member_permissions: UserPermissionsProxy,
     other_user_permissions: UserPermissionsProxy,
     cache_versions: dict,
     request: HttpRequest | None = None,
 ):
-    user = invited_user_permissions.user
+    user = new_member_permissions.user
 
     if get_user_ban(user, cache_versions):
         raise ValidationError(
@@ -45,7 +45,7 @@ def _validate_new_private_thread_member_action(
         )
 
     try:
-        check_private_threads_permission(invited_user_permissions)
+        check_private_threads_permission(new_member_permissions)
     except (Http404, PermissionDenied):
         raise ValidationError(
             pgettext_lazy(
@@ -55,17 +55,17 @@ def _validate_new_private_thread_member_action(
             code="permission_denied",
         )
 
-    if not _check_can_be_invited_by_other_user(user, other_user_permissions):
+    if not _check_can_be_added_by_other_user(user, other_user_permissions):
         raise ValidationError(
             pgettext_lazy(
                 "new private thread member validator",
-                "This user limits who can invite them to private threads.",
+                "This user limits who can add them to private threads.",
             ),
             code="limited",
         )
 
 
-def _check_can_be_invited_by_other_user(
+def _check_can_be_added_by_other_user(
     user: "User", other_user_permissions: UserPermissionsProxy
 ) -> bool:
     if user.can_be_messaged_by_everyone or other_user_permissions.is_global_moderator:

@@ -326,7 +326,7 @@ def get_default_edit_form_data(user):
         "signature": user.signature or "",
         "is_signature_locked": str(user.is_signature_locked),
         "is_hiding_presence": str(user.is_hiding_presence),
-        "limits_private_thread_invites_to": str(user.limits_private_thread_invites_to),
+        "allow_new_private_threads_by": str(user.allow_new_private_threads_by),
         "signature_lock_staff_message": str(user.signature_lock_staff_message or ""),
         "signature_lock_user_message": str(user.signature_lock_user_message or ""),
         "watch_started_threads": str(user.watch_started_threads),

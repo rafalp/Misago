@@ -36,7 +36,7 @@ class JoinIpProfileFieldTests(AdminTestCase):
                 "is_signature_locked": "0",
                 "is_hiding_presence": "0",
                 "is_active": "1",
-                "limits_private_thread_invites_to": "0",
+                "allow_new_private_threads_by": "0",
                 "signature_lock_staff_message": "",
                 "signature_lock_user_message": "",
                 "watch_started_threads": "0",

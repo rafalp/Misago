@@ -48,9 +48,9 @@
           {% endwith %}
         </div>
         <div class="form-group">
-          {% with field=form.limits_private_thread_invites_to %}
+          {% with field=form.allow_new_private_threads_by %}
             <label class="control-label">
-              {% translate "Limit who can invite me to their private threads:" context "account preferences page form" %}
+              {% translate "Let other users add me to their private threads:" context "account preferences page form" %}
             </label>
             <div class="form-control-choices">
               {% for choice in field.subwidgets %}
