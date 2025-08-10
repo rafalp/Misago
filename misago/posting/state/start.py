@@ -99,15 +99,15 @@ class StartThreadState(StartPostingState):
 
 
 class StartPrivateThreadState(StartPostingState):
-    invite_users: list["User"]
+    members: list["User"]
 
     def __init__(self, request: HttpRequest, category: Category):
         super().__init__(request, category)
 
-        self.invite_users: list["User"] = []
+        self.members: list["User"] = []
 
-    def set_invite_users(self, users: list["User"]):
-        self.invite_users = users
+    def set_members(self, users: list["User"]):
+        self.members = users
 
     @transaction.atomic()
     def save(self):
@@ -119,9 +119,9 @@ class StartPrivateThreadState(StartPostingState):
     def save_action(self, request: HttpRequest, state: "StartPrivateThreadState"):
         super().save_action(request, state)
 
-        self.save_users()
+        self.save_members()
 
-    def save_users(self):
+    def save_members(self):
         users: list[PrivateThreadMember] = [
             PrivateThreadMember(
                 thread=self.thread,
@@ -131,11 +131,11 @@ class StartPrivateThreadState(StartPostingState):
             ),
         ]
 
-        for invite_user in self.invite_users:
+        for user in self.members:
             users.append(
                 PrivateThreadMember(
                     thread=self.thread,
-                    user=invite_user,
+                    user=user,
                     created_at=self.timestamp,
                 ),
             )

@@ -272,7 +272,7 @@ def test_get_start_thread_formset_initializes_valid_forms(
     formset = get_start_thread_formset(request, default_category)
     assert formset.title
     assert formset.post
-    assert not formset.invite_users
+    assert not formset.members
 
 
 def test_get_start_thread_formset_setups_post_form_with_attachment_uploads(
@@ -341,7 +341,7 @@ def test_get_start_private_thread_formset_initializes_valid_forms(
     formset = get_start_private_thread_formset(request, private_threads_category)
     assert formset.title
     assert formset.post
-    assert formset.invite_users
+    assert formset.members
 
 
 def test_get_start_private_thread_formset_setups_post_form_with_attachment_uploads(
@@ -423,7 +423,7 @@ def test_get_reply_thread_formset_initializes_valid_forms(
     formset = get_reply_thread_formset(request, thread)
     assert not formset.title
     assert formset.post
-    assert not formset.invite_users
+    assert not formset.members
 
 
 def test_get_reply_thread_formset_setups_post_form_with_attachment_uploads(
@@ -492,7 +492,7 @@ def test_get_reply_private_thread_formset_initializes_valid_forms(
     formset = get_reply_private_thread_formset(request, private_thread)
     assert not formset.title
     assert formset.post
-    assert not formset.invite_users
+    assert not formset.members
 
 
 def test_get_reply_private_thread_formset_setups_post_form_with_attachment_uploads(
@@ -574,7 +574,7 @@ def test_get_edit_thread_formset_initializes_valid_forms(
     formset = get_edit_thread_formset(request, thread.first_post)
     assert formset.title
     assert formset.post
-    assert not formset.invite_users
+    assert not formset.members
 
 
 def test_get_edit_thread_formset_loads_post_attachments(
@@ -607,7 +607,7 @@ def test_get_edit_thread_formset_loads_post_attachments(
     formset = get_edit_thread_formset(request, thread.first_post)
     assert formset.title
     assert formset.post
-    assert not formset.invite_users
+    assert not formset.members
     assert formset.post.attachments == [second_attachment, attachment]
 
 
@@ -677,7 +677,7 @@ def test_get_edit_private_thread_formset_initializes_valid_forms(
     formset = get_edit_private_thread_formset(request, private_thread.first_post)
     assert formset.title
     assert formset.post
-    assert not formset.invite_users
+    assert not formset.members
 
 
 def test_get_edit_private_thread_formset_loads_post_attachments(
@@ -717,7 +717,7 @@ def test_get_edit_private_thread_formset_loads_post_attachments(
     formset = get_edit_private_thread_formset(request, private_thread.first_post)
     assert formset.title
     assert formset.post
-    assert not formset.invite_users
+    assert not formset.members
     assert formset.post.attachments == [second_attachment, attachment]
 
 
@@ -800,7 +800,7 @@ def test_get_edit_thread_post_formset_initializes_valid_forms(
     formset = get_edit_thread_post_formset(request, thread.first_post)
     assert not formset.title
     assert formset.post
-    assert not formset.invite_users
+    assert not formset.members
 
 
 def test_get_edit_thread_post_formset_loads_post_attachments(
@@ -833,7 +833,7 @@ def test_get_edit_thread_post_formset_loads_post_attachments(
     formset = get_edit_thread_post_formset(request, thread.first_post)
     assert not formset.title
     assert formset.post
-    assert not formset.invite_users
+    assert not formset.members
     assert formset.post.attachments == [second_attachment, attachment]
 
 
@@ -903,7 +903,7 @@ def test_get_edit_private_thread_post_formset_initializes_valid_forms(
     formset = get_edit_private_thread_post_formset(request, private_thread.first_post)
     assert not formset.title
     assert formset.post
-    assert not formset.invite_users
+    assert not formset.members
 
 
 def test_get_edit_private_thread_post_formset_loads_post_attachments(
@@ -940,7 +940,7 @@ def test_get_edit_private_thread_post_formset_loads_post_attachments(
     formset = get_edit_private_thread_post_formset(request, private_thread.first_post)
     assert not formset.title
     assert formset.post
-    assert not formset.invite_users
+    assert not formset.members
     assert formset.post.attachments == [second_attachment, attachment]
 
 

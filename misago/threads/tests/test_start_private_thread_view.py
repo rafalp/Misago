@@ -65,12 +65,12 @@ def test_start_private_thread_view_posts_new_thread(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": [
+            "posting-members-users": [
                 admin.username,
                 moderator.username,
                 other_user.username,
             ],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -100,8 +100,8 @@ def test_start_private_thread_view_posts_new_thread_using_noscript_fallback(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": [],
-            "posting-invite-users-users_noscript": (
+            "posting-members-users": [],
+            "posting-members-users_noscript": (
                 f"{admin.username},{moderator.username} {other_user.username}"
             ),
             "posting-title-title": "Hello world",
@@ -147,8 +147,8 @@ def test_start_private_thread_view_keeps_invited_users_field_value(
         reverse("misago:start-private-thread"),
         {
             PostingFormset.preview_action: "true",
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -162,14 +162,14 @@ def test_start_private_thread_view_validates_invited_users(user_client, user):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": [user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
     )
     assert_contains(response, "Start new private thread")
-    assert_contains(response, "You can&#x27;t invite yourself.")
+    assert_contains(response, "You must enter at least one other user.")
 
 
 def test_start_private_thread_view_ignores_user_inviting_self_if_other_users_are_invited(
@@ -178,8 +178,8 @@ def test_start_private_thread_view_ignores_user_inviting_self_if_other_users_are
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": [user.username, other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [user.username, other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -200,8 +200,8 @@ def test_start_private_thread_view_validates_thread_title(user_client, other_use
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "????",
             "posting-post-post": "How's going?",
         },
@@ -214,8 +214,8 @@ def test_start_private_thread_view_validates_post(user_client, other_user):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "?",
         },
@@ -232,8 +232,8 @@ def test_start_private_thread_view_validates_posted_contents(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "This is a spam message",
         },
@@ -248,8 +248,8 @@ def test_start_private_thread_view_runs_flood_control(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "This is a flood message",
         },
@@ -298,8 +298,8 @@ def test_start_private_thread_view_uploads_attachment_on_submit(
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
             "posting-post-upload": [
@@ -335,8 +335,8 @@ def test_start_private_thread_view_uploads_attachment_on_preview_or_upload(
         reverse("misago:start-private-thread"),
         {
             action_name: "true",
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
             "posting-post-upload": [
@@ -376,8 +376,8 @@ def test_start_private_thread_view_displays_image_attachment(
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_image_attachment.id)],
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -407,8 +407,8 @@ def test_start_private_thread_view_displays_image_with_thumbnail_attachment(
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_image_thumbnail_attachment.id)],
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -438,8 +438,8 @@ def test_start_private_thread_view_displays_video_attachment(
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_video_attachment.id)],
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -469,8 +469,8 @@ def test_start_private_thread_view_displays_file_attachment(
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -495,8 +495,8 @@ def test_start_private_thread_view_associates_unused_attachment_on_submit(
         reverse("misago:start-private-thread"),
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -523,8 +523,8 @@ def test_start_private_thread_view_adds_attachment_to_deleted_list(
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
             PostForm.delete_attachment_field: str(user_text_attachment.id),
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -562,8 +562,8 @@ def test_start_private_thread_view_maintains_deleted_attachments_list(
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
             PostForm.deleted_attachment_ids_field: [str(user_text_attachment.id)],
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -597,8 +597,8 @@ def test_start_private_thread_view_deletes_attachment_on_submit(
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
             PostForm.deleted_attachment_ids_field: [str(user_text_attachment.id)],
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -628,8 +628,8 @@ def test_start_private_thread_view_embeds_attachments_in_preview(
         {
             PostingFormset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_image_attachment.id)],
-            "posting-invite-users-users": [other_user.username],
-            "posting-invite-users-users_noscript": "",
+            "posting-members-users": [other_user.username],
+            "posting-members-users_noscript": "",
             "posting-title-title": "Hello world",
             "posting-post-post": (
                 f"Attachment: <attachment={user_image_attachment.name}:{user_image_attachment.id}>"
