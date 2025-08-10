@@ -15,7 +15,7 @@ def test_members_form_sets_request(rf, user, cache_versions, dynamic_settings):
 def test_members_form_sets_field_max_choices(
     rf, user, members_group, cache_versions, dynamic_settings
 ):
-    members_group.private_thread_users_limit = 12
+    members_group.private_thread_members_limit = 12
     members_group.save()
 
     request = rf.get("/")
@@ -23,7 +23,9 @@ def test_members_form_sets_field_max_choices(
     request.user_permissions = UserPermissionsProxy(user, cache_versions)
 
     form = MembersForm(request=request)
-    assert form.fields["users"].max_choices == members_group.private_thread_users_limit
+    assert (
+        form.fields["users"].max_choices == members_group.private_thread_members_limit
+    )
 
 
 def test_members_form_validates_max_choices(
@@ -36,7 +38,7 @@ def test_members_form_validates_max_choices(
     moderator,
     other_user,
 ):
-    members_group.private_thread_users_limit = 2
+    members_group.private_thread_members_limit = 2
     members_group.save()
 
     request = rf.post(

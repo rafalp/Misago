@@ -160,11 +160,11 @@ class EditGroupForm(forms.ModelForm):
             "admin group permissions form", "Can start new private threads"
         ),
     )
-    private_thread_users_limit = forms.IntegerField(
-        label=pgettext_lazy("admin group permissions form", "Invited users limit"),
+    private_thread_members_limit = forms.IntegerField(
+        label=pgettext_lazy("admin group permissions form", "Members limit"),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the maximum number of users that can be invited to private threads started by members of this group.",
+            "Enter the maximum number of other members that can be added to private threads started by members of this group.",
         ),
         min_value=1,
     )
@@ -307,7 +307,7 @@ class EditGroupForm(forms.ModelForm):
             "exempt_from_flood_control",
             "can_use_private_threads",
             "can_start_private_threads",
-            "private_thread_users_limit",
+            "private_thread_members_limit",
             "can_upload_attachments",
             "attachment_storage_limit",
             "unused_attachments_storage_limit",

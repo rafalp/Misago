@@ -34,7 +34,7 @@ class MembersForm(PostingForm):
 
     def setup_users_field(self, field: UserMultipleChoiceField):
         field.queryset = get_user_model().objects.filter(is_active=True)
-        field.max_choices = self.request.user_permissions.private_thread_users_limit
+        field.max_choices = self.request.user_permissions.private_thread_members_limit
 
     def clean_users(self):
         data: list["User"] = self.cleaned_data["users"]

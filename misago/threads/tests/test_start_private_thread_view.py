@@ -140,9 +140,7 @@ def test_start_private_thread_view_previews_message(user_client):
     assert_contains(response, "Message preview")
 
 
-def test_start_private_thread_view_keeps_invited_users_field_value(
-    user_client, other_user
-):
+def test_start_private_thread_view_keeps_users_field_value(user_client, other_user):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
@@ -158,7 +156,7 @@ def test_start_private_thread_view_keeps_invited_users_field_value(
     assert_contains(response, other_user.username)
 
 
-def test_start_private_thread_view_validates_invited_users(user_client, user):
+def test_start_private_thread_view_validates_users(user_client, user):
     response = user_client.post(
         reverse("misago:start-private-thread"),
         {
@@ -172,7 +170,7 @@ def test_start_private_thread_view_validates_invited_users(user_client, user):
     assert_contains(response, "You must enter at least one other user.")
 
 
-def test_start_private_thread_view_ignores_user_inviting_self_if_other_users_are_invited(
+def test_start_private_thread_view_ignores_user_adding_self_if_other_users_are_added(
     user_client, user, other_user, admin, moderator, mock_notify_on_new_private_thread
 ):
     response = user_client.post(
