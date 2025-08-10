@@ -9,8 +9,8 @@ from django.utils import timezone
 from faker import Factory
 
 from ....categories.models import Category
+from ....notifications.enums import NotificationVerb
 from ....notifications.models import Notification, WatchedThread
-from ....notifications.verbs import NotificationVerb
 from ....threads.checksums import update_post_checksum
 from ....threads.models import Thread
 from ....users.models import Rank
@@ -243,7 +243,7 @@ class Command(BaseCommand):
                 [
                     Notification(
                         user_id=user_id,
-                        verb=NotificationVerb.REPLIED,
+                        verb=NotificationVerb.REPLIED_TO_THREAD,
                         actor=poster,
                         actor_name=poster.username,
                         category=post.category,

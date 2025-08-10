@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from ...privatethreadmembers.models import PrivateThreadMember
 from ...test import assert_contains
-from ..verbs import NotificationVerb
+from ..enums import NotificationVerb
 from ..models import Notification
 from ..registry import registry
 
@@ -97,7 +97,7 @@ def test_notification_view_returns_redirect_to_thread_reply(
 ):
     notification = Notification.objects.create(
         user=user,
-        verb=NotificationVerb.REPLIED,
+        verb=NotificationVerb.REPLIED_TO_THREAD,
         category=default_category,
         thread=thread,
         thread_title=thread.title,
@@ -118,7 +118,7 @@ def test_notification_view_returns_redirect_to_private_thread_reply(
 
     notification = Notification.objects.create(
         user=user,
-        verb=NotificationVerb.REPLIED,
+        verb=NotificationVerb.REPLIED_TO_THREAD,
         category=private_threads_category,
         thread=private_thread,
         thread_title=private_thread.title,
@@ -132,14 +132,14 @@ def test_notification_view_returns_redirect_to_private_thread_reply(
     assert response.headers["location"]
 
 
-def test_notification_view_returns_redirect_to_private_thread_invite(
+def test_notification_view_returns_redirect_to_private_thread(
     user, user_client, private_threads_category, private_thread
 ):
     PrivateThreadMember.objects.create(thread=private_thread, user=user)
 
     notification = Notification.objects.create(
         user=user,
-        verb=NotificationVerb.INVITED,
+        verb=NotificationVerb.ADDED_TO_PRIVATE_THREAD,
         category=private_threads_category,
         thread=private_thread,
         thread_title=private_thread.title,

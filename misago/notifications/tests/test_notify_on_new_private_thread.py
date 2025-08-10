@@ -2,10 +2,10 @@ import pytest
 
 from ...privatethreadmembers.models import PrivateThreadMember
 from ...users.bans import ban_user
+from ..enums import NotificationVerb
 from ..models import Notification, WatchedThread
 from ..tasks import notify_on_new_private_thread
 from ..threads import ThreadNotifications
-from ..verbs import NotificationVerb
 
 
 @pytest.fixture
@@ -203,7 +203,7 @@ def test_notify_on_new_private_thread_skips_notification_if_one_already_exists(
 
     Notification.objects.create(
         user=other_user,
-        verb=NotificationVerb.INVITED,
+        verb=NotificationVerb.ADDED_TO_PRIVATE_THREAD,
         category=user_private_thread.category,
         thread=user_private_thread,
         post=user_private_thread.first_post,
@@ -232,7 +232,7 @@ def test_notify_on_new_private_thread_notifies_participant_if_old_notification_i
 
     Notification.objects.create(
         user=other_user,
-        verb=NotificationVerb.INVITED,
+        verb=NotificationVerb.ADDED_TO_PRIVATE_THREAD,
         category=user_private_thread.category,
         thread=user_private_thread,
         post=user_private_thread.first_post,
