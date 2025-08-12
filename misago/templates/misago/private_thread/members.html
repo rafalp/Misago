@@ -9,7 +9,7 @@
         {{ members }} members
       {% endblocktranslate %}
     </h3>
-    <div class="panel-private-thread-members-avatars-group{% if members|length > 2 %} panel-private-thread-members-avatars-group-compact{% endif %}">
+    <div class="panel-private-thread-members-avatars{% if members|length > 2 %} panel-private-thread-members-avatars-compact{% endif %}">
       {% for member in members %}
         <img src="{{ member|avatar:32 }}" srcset="{{ member|avatar:64 }}" alt="{{ member.username }}">
       {% endfor %}
