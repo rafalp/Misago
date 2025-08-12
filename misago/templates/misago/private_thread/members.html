@@ -11,7 +11,7 @@
     </h3>
     <div class="panel-private-thread-members-avatars{% if members|length > 2 %} panel-private-thread-members-avatars-compact{% endif %}">
       {% for member in members %}
-        <img src="{{ member|avatar:32 }}" srcset="{{ member|avatar:64 }}" alt="{{ member.username }}">
+        <img src="{{ member|avatar:32 }}" srcset="{{ member|avatar:64 }}" alt="" style="--index: {{ forloop.revcounter }};">
       {% endfor %}
     </div>
     <div class="panel-private-thread-members-arrow">

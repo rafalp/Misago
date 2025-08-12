@@ -6,49 +6,37 @@
 }
 
 .panel-private-thread-members-title {
-  text-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .panel-private-thread-members-avatars {
-  position: relative;
-
   width: 100%;
 
   overflow: hidden;
 
-  direction: rtl;
-  text-wrap: nowrap;
+  border-radius: @border-radius-small;
+  text-align: right;
   white-space: nowrap;
 
-  &:before {
-    content: "";
-
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background: linear-gradient(90deg, @panel-bg, transparent 16px);
-  }
-
   img {
-    margin-right: ceil(@grid-gutter-width / 4);
+    margin-left: ceil(@grid-gutter-width / 4);
 
     border-radius: @border-radius-small;
 
     &:first-child {
-      margin-right: 0;
+      margin-left: 0;
     }
   }
 }
 
 @media screen and (max-width: @screen-sm-max) {
   .panel-private-thread-members-avatars-compact img {
-    margin-right: -12px;
+    position: relative;
+    margin-left: ceil(@grid-gutter-width / -2);
 
     box-shadow: 0 0 0 4px @panel-bg;
+
+    z-index: var(--index);
   }
 }
 
@@ -59,8 +47,8 @@
     background-color: @gray-lighter;
     border-radius: @border-radius-base;
 
-    .panel-private-thread-members-avatars:before {
-      background: linear-gradient(90deg, @gray-lighter, transparent 16px);
+    .panel-private-thread-members-avatars-compact img {
+      box-shadow: 0 0 0 4px @gray-lighter;
     }
   }
 }
@@ -68,27 +56,6 @@
 .panel-private-thread-members-arrow .material-icon {
   transform-origin: center;
   transition: transform 0.3s ease-in-out;
-}
-
-.panel-private-thread-members-summary {
-  color: @gray;
-
-  &:hover {
-    color: @text-color;
-
-    .panel-private-thread-members-summary-btn {
-      background-color: @gray-lighter;
-      border-radius: @border-radius-small;
-    }
-  }
-  &:active {
-    color: @text-color;
-
-    .panel-private-thread-members-summary-btn {
-      background-color: darken(@gray-lighter, 10);
-      border-radius: @border-radius-small;
-    }
-  }
 }
 
 .panel-private-thread-members[open] {
