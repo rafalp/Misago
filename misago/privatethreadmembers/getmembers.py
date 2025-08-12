@@ -9,19 +9,20 @@ if TYPE_CHECKING:
 
 def get_private_thread_members(thread: Thread) -> tuple[Optional["User"], list["User"]]:
     """Get the owner and member list of a private thread.
-    
+
     Returns:
         tuple:
             - The thread owner (`User`) or `None` if the owner is missing.
             - A list of `User` objects for all thread members.
-    
+
     Side effects:
         Sets `private_thread_owner_id` and `private_thread_member_ids` attributes
         on the given `thread` instance.
     """
 
     queryset = (
-        PrivateThreadMember.objects.filter(thread=thread).select_related("user")
+        PrivateThreadMember.objects.filter(thread=thread)
+        .select_related("user")
         .order_by("-is_owner", "id")
     )
 
@@ -32,7 +33,7 @@ def get_private_thread_members(thread: Thread) -> tuple[Optional["User"], list["
         if member.is_owner:
             owner = member.user
         members.append(member.user)
-    
+
     thread.private_thread_owner_id = None
     thread.private_thread_member_ids = []
 

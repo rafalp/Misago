@@ -21,7 +21,7 @@
     </div>
   </summary>
   <div class="panel-private-thread-members-body">
-    <ul class="panel-private-thread-members-grid">
+    <ul class="panel-private-thread-members-list">
       {% for member in members %}
         <li>
           <a href="{% url 'misago:user' pk=member.id slug=member.slug %}">

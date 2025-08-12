@@ -415,9 +415,13 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         context["members"] = self.get_thread_members_context_data(request, thread)
 
         return context
-    
-    def get_thread_members_context_data(self, request: HttpRequest, thread: Thread) -> dict:
-        context = get_private_thread_members_context_data(request, thread, self.owner, self.members)
+
+    def get_thread_members_context_data(
+        self, request: HttpRequest, thread: Thread
+    ) -> dict:
+        context = get_private_thread_members_context_data(
+            request, thread, self.owner, self.members
+        )
         context["template_name"] = self.members_template_name
         return context
 
