@@ -10,6 +10,8 @@
 }
 
 .panel-private-thread-members-avatars-group {
+  position: relative;
+
   width: 100%;
 
   overflow: hidden;
@@ -17,20 +19,6 @@
   direction: rtl;
   text-wrap: nowrap;
   white-space: nowrap;
-
-  img {
-    margin-right: ceil(@grid-gutter-width / 4);
-
-    border-radius: @border-radius-small;
-
-    &:first-child {
-      margin-right: 0;
-    }
-  }
-}
-
-.panel-private-thread-members-avatars-group-compact {
-  position: relative;
 
   &:before {
     content: "";
@@ -43,6 +31,16 @@
     height: 100%;
 
     background: linear-gradient(90deg, @panel-bg, transparent 16px);
+  }
+
+  img {
+    margin-right: ceil(@grid-gutter-width / 4);
+
+    border-radius: @border-radius-small;
+
+    &:first-child {
+      margin-right: 0;
+    }
   }
 }
 
@@ -61,7 +59,7 @@
     background-color: @gray-lighter;
     border-radius: @border-radius-base;
 
-    .panel-private-thread-members-avatars-group-compact:before {
+    .panel-private-thread-members-avatars-group:before {
       background: linear-gradient(90deg, @gray-lighter, transparent 16px);
     }
   }
