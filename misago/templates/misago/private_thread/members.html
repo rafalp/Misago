@@ -23,15 +23,34 @@
   <div class="panel-private-thread-members-body">
     <ul class="panel-private-thread-members-list">
       {% for member in members %}
-        <li>
-          <a href="{% url 'misago:user' pk=member.id slug=member.slug %}">
-            <img src="{{ member|avatar:24 }}" srcset="{{ member|avatar:48 }}" alt="">
+        <li class="panel-private-thread-member">
+          <a href="{% url 'misago:user' pk=member.id slug=member.slug %}" class="panel-private-thread-member-avatar">
+            <img src="{{ member|avatar:32 }}" srcset="{{ member|avatar:64 }}" alt="">
           </a>
-          {{ member.username }}
+          <a href="{% url 'misago:user' pk=member.id slug=member.slug %}" class="panel-private-thread-member-username">
+            {{ member.username }}
+          </a>
+          {% if owner and member.id == owner.id %}
+            <span class="panel-private-thread-member-owner" aria-label="{% translate 'Thread owner' context 'private thread members panel' %}"></span>
+          {% endif %}
         </li>
       {% endfor %}
     </ul>
     <div class="panel-private-thread-members-footer">
+      <div class="panel-private-thread-members-legend">
+        <span class="panel-private-thread-member-owner"></span>
+        {% translate 'Thread owner' context 'private thread members panel' %}
+      </div>
+      {% if manage %}
+        <div class="panel-private-thread-members-options">
+          <button type="button" class="btn btn-default">
+            Change owner
+          </button>
+          <button type="button" class="btn btn-default">
+            Add or remove
+          </button>
+        </div>
+      {% endif %}
     </div>
   </div>
 </details>

@@ -47,5 +47,30 @@
 
 .panel-private-thread-members-list {
   display: grid;
-  gap: ceil(@grid-gutter-width / 4);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.panel-private-thread-member {
+  display: flex;
+  align-items: center;
+
+  margin: 0;
+}
+
+@media screen and (min-width: @screen-sm-min) {
+  .panel-private-thread-members-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.panel-private-thread-members-legend {
+  display: flex;
+  align-items: center;
+  gap: @padding-small-horizontal;
 }
