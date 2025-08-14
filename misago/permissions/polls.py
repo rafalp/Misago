@@ -18,8 +18,8 @@ from .hooks import (
 )
 from .proxy import UserPermissionsProxy
 from .threads import (
-    check_post_in_closed_category_permission,
-    check_post_in_closed_thread_permission,
+    check_locked_category_permission,
+    check_locked_thread_permission,
 )
 
 
@@ -60,8 +60,8 @@ def _check_start_thread_poll_permission_action(
     category: Category,
     thread: Thread,
 ):
-    check_post_in_closed_category_permission(permissions, category)
-    check_post_in_closed_thread_permission(permissions, thread)
+    check_locked_category_permission(permissions, category)
+    check_locked_thread_permission(permissions, thread)
 
     if thread.has_poll:
         raise PermissionDenied(
@@ -97,8 +97,8 @@ def check_edit_thread_poll_permission(
 def _check_edit_thread_poll_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
 ):
-    check_post_in_closed_category_permission(permissions, category)
-    check_post_in_closed_thread_permission(permissions, thread)
+    check_locked_category_permission(permissions, category)
+    check_locked_thread_permission(permissions, thread)
 
     if permissions.is_category_moderator(thread.category_id):
         return
@@ -194,8 +194,8 @@ def check_close_thread_poll_permission(
 def _check_close_thread_poll_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
 ):
-    check_post_in_closed_category_permission(permissions, category)
-    check_post_in_closed_thread_permission(permissions, thread)
+    check_locked_category_permission(permissions, category)
+    check_locked_thread_permission(permissions, thread)
 
     if permissions.is_category_moderator(thread.category_id):
         return

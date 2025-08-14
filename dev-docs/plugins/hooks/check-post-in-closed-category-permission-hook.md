@@ -1,4 +1,4 @@
-# `check_post_in_closed_category_permission_hook`
+# `check_locked_category_permission_hook`
 
 This hook wraps the standard function that Misago uses to check if the user has permission to post in a closed category. It raises Django's `PermissionDenied` with an error message if category is closed and they can't post in it.
 
@@ -8,14 +8,14 @@ This hook wraps the standard function that Misago uses to check if the user has 
 This hook can be imported from `misago.permissions.hooks`:
 
 ```python
-from misago.permissions.hooks import check_post_in_closed_category_permission_hook
+from misago.permissions.hooks import check_locked_category_permission_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_check_post_in_closed_category_permission_filter(
+def custom_check_locked_category_permission_filter(
     action: CheckPostInClosedCategoryPermissionHookAction,
     permissions: 'UserPermissionsProxy',
     category: Category,
@@ -48,7 +48,7 @@ A category to check permissions for.
 ## Action
 
 ```python
-def check_post_in_closed_category_permission_action(
+def check_locked_category_permission_action(
     permissions: 'UserPermissionsProxy', category: Category
 ) -> None:
     ...
@@ -75,10 +75,10 @@ The code below implements a custom filter function that permits a user to post i
 
 ```python
 from misago.categories.models import Category
-from misago.permissions.hooks import check_post_in_closed_category_permission_hook
+from misago.permissions.hooks import check_locked_category_permission_hook
 from misago.permissions.proxy import UserPermissionsProxy
 
-@check_post_in_closed_category_permission_hook.append_filter
+@check_locked_category_permission_hook.append_filter
 def check_user_can_post_in_closed_category(
     action,
     permissions: UserPermissionsProxy,

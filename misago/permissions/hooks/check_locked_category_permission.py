@@ -80,10 +80,10 @@ class CheckPostInClosedCategoryPermissionHook(
 
     ```python
     from misago.categories.models import Category
-    from misago.permissions.hooks import check_post_in_closed_category_permission_hook
+    from misago.permissions.hooks import check_locked_category_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
 
-    @check_post_in_closed_category_permission_hook.append_filter
+    @check_locked_category_permission_hook.append_filter
     def check_user_can_post_in_closed_category(
         action,
         permissions: UserPermissionsProxy,
@@ -116,6 +116,6 @@ class CheckPostInClosedCategoryPermissionHook(
         return super().__call__(action, permissions, category)
 
 
-check_post_in_closed_category_permission_hook = (
+check_locked_category_permission_hook = (
     CheckPostInClosedCategoryPermissionHook()
 )

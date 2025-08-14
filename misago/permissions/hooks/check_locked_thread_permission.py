@@ -79,11 +79,11 @@ class CheckPostInClosedThreadPermissionHook(
     post in the specific thread if they have a custom flag set on their account.
 
     ```python
-    from misago.permissions.hooks import check_post_in_closed_thread_permission_hook
+    from misago.permissions.hooks import check_locked_thread_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.threads.models import Thread
 
-    @check_post_in_closed_thread_permission_hook.append_filter
+    @check_locked_thread_permission_hook.append_filter
     def check_user_can_post_in_closed_thread(
         action,
         permissions: UserPermissionsProxy,
@@ -116,4 +116,4 @@ class CheckPostInClosedThreadPermissionHook(
         return super().__call__(action, permissions, thread)
 
 
-check_post_in_closed_thread_permission_hook = CheckPostInClosedThreadPermissionHook()
+check_locked_thread_permission_hook = CheckPostInClosedThreadPermissionHook()
