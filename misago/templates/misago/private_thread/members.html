@@ -39,15 +39,12 @@
     <div class="panel-private-thread-members-footer">
       <div class="panel-private-thread-members-legend">
         <span class="panel-private-thread-member-owner"></span>
-        {% translate 'Thread owner' context 'private thread members panel' %}
+        {% translate "Thread owner" context "private thread members panel" %}
       </div>
       {% if manage %}
         <div class="panel-private-thread-members-options">
           <button type="button" class="btn btn-default">
-            Change owner
-          </button>
-          <button type="button" class="btn btn-default">
-            Add or remove
+            {% translate "Add members" context "private thread members panel" %}
           </button>
         </div>
       {% endif %}
