@@ -63,16 +63,19 @@ class SomeView(View):
 
 ## Forms
 
-If the view uses a single form, name it after the view, but change the suffix to `Form`:
+If the view uses a single form, you can name it after the view, but change the suffix to `Form`:
 
 ```python
 # `LoginView`
 class LoginForm(forms.Form):
     ...
+```
 
+You can shorten form's name if naming it after view would produce a large name:
 
+```python
 # `PrivateThreadMembersAddView`
-class PrivateThreadMembersAddForm(forms.Form):
+class MembersAddForm(forms.Form):
     ...
 ```
 

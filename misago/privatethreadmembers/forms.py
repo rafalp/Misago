@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from ..users.models import User
 
 
-class PrivateThreadMembersAddForm(forms.Form):
+class MembersAddForm(forms.Form):
     request: HttpRequest
     owner: Optional["User"]
     members: list["User"]

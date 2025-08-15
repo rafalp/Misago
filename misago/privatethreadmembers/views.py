@@ -11,7 +11,7 @@ from ..notifications.tasks import notify_on_new_private_thread
 from ..threads.models import Thread
 from ..threads.views.generic import PrivateThreadView
 from ..threadupdates.create import create_added_member_thread_update
-from .forms import PrivateThreadMembersAddForm
+from .forms import MembersAddForm
 from .models import PrivateThreadMember
 
 if TYPE_CHECKING:
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 class PrivateThreadMembersAddView(PrivateThreadView):
     thread_get_members = True
-    form_type = PrivateThreadMembersAddForm
+    form_type = MembersAddForm
     template_name = "misago/private_thread_members/add.html"
     template_name_htmx = "misago/private_thread_members/add_modal.html"
 
@@ -46,25 +46,30 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         )
 
         if form.is_valid():
-            new_members = form.cleaned_data["users"]
-            for member in new_members:
-                PrivateThreadMember.objects.create(thread=thread, user=member)
-                create_added_member_thread_update(
-                    thread, member, self.request.user, request
-                )
-
-            notify_on_new_private_thread(
-                request.user.id, thread.id, [user.id for user in new_members]
-            )
-
-            messages.success(
-                request,
-                pgettext("add private thread members view", "New members added"),
-            )
-
-            return redirect(self.get_thread_url(thread))
+            return self.handle_form(request, thread, form)
 
         return self.render(request, thread, form)
+
+    def handle_form(
+        self, request: HttpRequest, thread: Thread, form: MembersAddForm
+    ) -> HttpResponse:
+        new_members = form.cleaned_data["users"]
+        for member in new_members:
+            PrivateThreadMember.objects.create(thread=thread, user=member)
+            create_added_member_thread_update(
+                thread, member, self.request.user, request
+            )
+
+        notify_on_new_private_thread.delay(
+            request.user.id, thread.id, [user.id for user in new_members]
+        )
+
+        messages.success(
+            request,
+            pgettext("add private thread members view", "New members added"),
+        )
+
+        return redirect(self.get_thread_url(thread))
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         if request.user.is_anonymous:
@@ -91,7 +96,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         return thread
 
     def render_form_page(
-        self, request: HttpRequest, thread: Thread, form: PrivateThreadMembersAddForm
+        self, request: HttpRequest, thread: Thread, form: MembersAddForm
     ):
         if request.is_htmx:
             template_name = self.template_name_htmx
