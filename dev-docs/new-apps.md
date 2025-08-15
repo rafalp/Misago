@@ -3,6 +3,11 @@
 This document is a guide to organizing code in apps. Please don’t treat it as gospel - conventions don’t cover everything, and justified exceptions are allowed.
 
 
+## Follow established Django conventions
+
+The Django framework has its own conventions for organizing application code. Follow those conventions unless Misago explicitly overrides them.
+
+
 ## Function modules
 
 Avoid creating `api.py` or `utils.py` modules for API functions. Instead, put them in files with descriptive names:
