@@ -129,6 +129,8 @@ class ThreadEditView(View):
     template_name_htmx = "thread_edit/form.html"
 ```
 
+Sometimes there are many ways to organize templates. When this happens, use your best judgement.
+
 
 ### Urls
 
