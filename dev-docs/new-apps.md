@@ -1,11 +1,19 @@
-# Naming conventions
+# Writing apps guide
 
-This document is a guide to naming conventions used in the codebase. Please don't treat it as gospel - not everything has a naming convention, and justified exceptions are allowed.
+This document is a guide to organizing code in apps. Please don’t treat it as gospel - conventions don’t cover everything, and justified exceptions are allowed.
 
 
-## Class-based views, forms, templates and url names
+## Function modules
 
-### Views
+Avoid creating `api.py` or `utils.py` modules for API functions. Instead, put them in files with descriptive names:
+
+- `prefetch.py`: Functions that prefetch data.
+- `lock.py`: Functions implementing the lock/open business logic.
+
+If you can’t come up with a name, name the module after the app. For example, the `privatethreadmembers` package can have a `members.py` module containing business logic for retrieving and managing private thread members.
+
+
+## Class-based views
 
 Prefix the class name with the model or feature name when it makes sense:
 
@@ -48,7 +56,7 @@ class SomeView(View):
 ```
 
 
-### Forms
+## Forms
 
 If the view uses a single form, name it after the view, but change the suffix to `Form`:
 
@@ -64,7 +72,7 @@ class PrivateThreadAddMembersForm(forms.Form):
 ```
 
 
-### Templates
+## Templates
 
 Template name should based on the view class (or function) name, but drop the `view` suffix:
 
@@ -121,7 +129,7 @@ class PrivateThreadAddMembers(View):
     template_name_htmx = "private_thread_members/add_htmx.html"
 ```
 
-Sometimes the full template includes the HTMX one. In this case, name the other template after the part of the page it contains:
+If the full template includes the HTMX one, name the other template after the part of the page it represents:
 
 ```python
 class ThreadEditView(View):
@@ -132,7 +140,7 @@ class ThreadEditView(View):
 Sometimes there are many ways to organize templates. When this happens, use your best judgement.
 
 
-### Urls
+## Urls
 
 URL name should be based on the view class (or function) name, but drop the `View` suffix:
 

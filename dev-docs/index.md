@@ -39,4 +39,4 @@ Misago implements a plugin system that extends [Django's existing application me
 
 Additional resources for developers.
 
-- [Naming conventions](./naming-conventions.md)
+- [Writing apps guide](./writing-apps.md)

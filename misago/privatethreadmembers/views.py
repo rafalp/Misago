@@ -11,18 +11,18 @@ from ..notifications.tasks import notify_on_new_private_thread
 from ..threads.models import Thread
 from ..threads.views.generic import PrivateThreadView
 from ..threadupdates.create import create_added_member_thread_update
-from .forms import PrivateThreadAddMembersForm
+from .forms import PrivateThreadMembersAddForm
 from .models import PrivateThreadMember
 
 if TYPE_CHECKING:
     from ..users.models import User
 
 
-class PrivateThreadAddMembersView(PrivateThreadView):
+class PrivateThreadMembersAddView(PrivateThreadView):
     thread_get_members = True
-    form_type = PrivateThreadAddMembersForm
-    template_name = "misago/add_private_thread_members/index.html"
-    template_name_htmx = "misago/add_private_thread_members/form.html"
+    form_type = PrivateThreadMembersAddForm
+    template_name = "misago/private_thread_members/add_full.html"
+    template_name_htmx = "misago/private_thread_members/add_modal.html"
 
     def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
@@ -84,7 +84,7 @@ class PrivateThreadAddMembersView(PrivateThreadView):
         return thread
 
     def render_form_page(
-        self, request: HttpRequest, thread: Thread, form: PrivateThreadAddMembersForm
+        self, request: HttpRequest, thread: Thread, form: PrivateThreadMembersAddForm
     ):
         return render(
             request,
