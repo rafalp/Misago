@@ -1,5 +1,5 @@
+from ..members import get_private_thread_members
 from ..models import PrivateThreadMember
-from ..getmembers import get_private_thread_members
 
 
 def test_get_private_thread_members_returns_thread_owner_and_members_list(

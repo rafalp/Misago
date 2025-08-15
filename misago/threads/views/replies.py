@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
@@ -36,7 +36,6 @@ from ...posting.formsets import (
     get_reply_private_thread_formset,
     get_reply_thread_formset,
 )
-from ...privatethreadmembers.getmembers import get_private_thread_members
 from ...privatethreadmembers.views import get_private_thread_members_context_data
 from ...readtracker.tracker import (
     get_unread_posts,
@@ -382,24 +381,15 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
 
 class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
+    thread_get_members = True
     template_name: str = "misago/private_thread/index.html"
     template_partial_name: str = "misago/private_thread/partial.html"
     members_template_name: str = "misago/private_thread/members.html"
-
-    owner: Optional["User"]
-    members: list["User"]
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
         return get_private_thread_replies_page_thread_queryset_hook(
             super().get_thread_queryset, request
         )
-
-    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
-        queryset = self.get_thread_queryset(request)
-        thread = get_object_or_404(queryset, id=thread_id)
-        self.owner, self.members = get_private_thread_members(thread)
-        check_see_private_thread_permission(request.user_permissions, thread)
-        return thread
 
     def get_context_data(
         self, request: HttpRequest, thread: Thread, page: int | None = None

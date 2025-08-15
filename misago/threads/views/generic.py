@@ -1,9 +1,8 @@
-from typing import Iterable
+from typing import TYPE_CHECKING, Iterable, Optional
 
 from django.core.paginator import Paginator
 from django.db.models import QuerySet
 from django.http import HttpRequest
-from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import Resolver404, resolve, reverse
 from django.views import View
@@ -22,10 +21,14 @@ from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,
 )
+from ...privatethreadmembers.members import get_private_thread_members
 from ...threadupdates.models import ThreadUpdate
 from ..models import Post, Thread
 from ..paginator import ThreadRepliesPaginator
 from ..postsfeed import PostsFeed, PrivateThreadPostsFeed, ThreadPostsFeed
+
+if TYPE_CHECKING:
+    from ...users.models import User
 
 
 class GenericView(View):
@@ -199,9 +202,22 @@ class ThreadView(GenericView):
 
 class PrivateThreadView(GenericView):
     thread_url_name: str = "misago:private-thread"
+    thread_get_members: bool = False
+
+    owner: Optional["User"]
+    members: list["User"]
+
+    def __init__(self, *args, **kwargs):
+        self.owner = None
+        self.members = []
+
+        super().__init__(*args, **kwargs)
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
+        if self.thread_get_members:
+            self.owner, self.members = get_private_thread_members(thread)
+
         check_see_private_thread_permission(request.user_permissions, thread)
         return thread
 
@@ -234,3 +250,9 @@ class PrivateThreadView(GenericView):
 
     def get_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_private_threads_moderator
+
+    def get_owner_status(self, request: HttpRequest, thread: Thread) -> bool:
+        if not self.owner or not request.user.is_authenticated:
+            return False
+
+        return self.owner.id == request.user.id
