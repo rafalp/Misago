@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 class PrivateThreadMembersAddView(PrivateThreadView):
     thread_get_members = True
     form_type = PrivateThreadMembersAddForm
-    template_name = "misago/private_thread_members/add_full.html"
+    template_name = "misago/private_thread_members/add.html"
     template_name_htmx = "misago/private_thread_members/add_modal.html"
 
     def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
@@ -49,11 +49,18 @@ class PrivateThreadMembersAddView(PrivateThreadView):
             new_members = form.cleaned_data["users"]
             for member in new_members:
                 PrivateThreadMember.objects.create(thread=thread, user=member)
-                create_added_member_thread_update(thread, member, self.request.user, request)
+                create_added_member_thread_update(
+                    thread, member, self.request.user, request
+                )
 
-            notify_on_new_private_thread(request.user.id, thread.id, [user.id for user in new_members])
+            notify_on_new_private_thread(
+                request.user.id, thread.id, [user.id for user in new_members]
+            )
 
-            messages.success(request, pgettext("add private thread members view", "New members added"))
+            messages.success(
+                request,
+                pgettext("add private thread members view", "New members added"),
+            )
 
             return redirect(self.get_thread_url(thread))
 
@@ -86,14 +93,18 @@ class PrivateThreadMembersAddView(PrivateThreadView):
     def render_form_page(
         self, request: HttpRequest, thread: Thread, form: PrivateThreadMembersAddForm
     ):
+        if request.is_htmx:
+            template_name = self.template_name_htmx
+        else:
+            template_name = self.template_name
+
         return render(
             request,
-            self.template_name,
+            template_name,
             {
                 "thread": thread,
                 "members": self.members,
                 "form": form,
-                "template_name_htmx": self.template_name_htmx,
             },
         )
 
@@ -114,7 +125,7 @@ def get_private_thread_members_context_data(
         "owner": owner,
         "members": members,
         "add_members_url": reverse(
-            "misago:private-thread-add-members",
+            "misago:private-thread-members-add",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
     }

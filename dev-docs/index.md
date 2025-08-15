@@ -39,4 +39,4 @@ Misago implements a plugin system that extends [Django's existing application me
 
 Additional resources for developers.
 
-- [Writing apps guide](./writing-apps.md)
+- [Writing apps](./writing-apps.md)

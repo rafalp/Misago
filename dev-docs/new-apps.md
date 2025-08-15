@@ -1,4 +1,4 @@
-# Writing apps guide
+# Writing apps
 
 This document is a guide to organizing code in apps. Please don’t treat it as gospel - conventions don’t cover everything, and justified exceptions are allowed.
 
@@ -71,8 +71,8 @@ class LoginForm(forms.Form):
     ...
 
 
-# `PrivateThreadAddMembersView`
-class PrivateThreadAddMembersForm(forms.Form):
+# `PrivateThreadMembersAddView`
+class PrivateThreadMembersAddForm(forms.Form):
     ...
 ```
 
@@ -127,11 +127,14 @@ class ThreadEditView(View):
 class ThreadMoveView(View):
     template_name = "thread_move/full.html"
     template_name_modal = "thread_move/modal.html"
+```
 
+If a templates directory is shared by multiple features, you can omit the `full` suffix from the full template name:
 
-class PrivateThreadAddMembers(View):
-    template_name = "private_thread_members/add_full.html"
-    template_name_htmx = "private_thread_members/add_htmx.html"
+```python
+class PrivateThreadMembersAdd(View):
+    template_name = "private_thread_members/add.html"
+    template_name_htmx = "private_thread_members/add_modal.html"
 ```
 
 If the full template includes the HTMX one, name the other template after the part of the page it represents:

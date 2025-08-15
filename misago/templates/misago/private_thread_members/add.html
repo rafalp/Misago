@@ -3,34 +3,34 @@
 
 
 {% block title %}
-  {% translate "Add members" context "add private thread members page" %} | {{ thread }} | {{ block.super }}
+  {% translate "Add members" context "private thread members add page" %} | {{ thread }} | {{ block.super }}
 {% endblock title %}
 
 
 {% block content %}
-<div class="page page-private-thread-add-members">
+<div class="page page-private-thread-members-add">
   {% include "misago/private_thread/header.html" %}
   <div class="container page-container">
     <form 
-      action="{% url 'misago:private-thread-add-members' id=thread.id slug=thread.slug %}"
+      action="{% url 'misago:private-thread-members-add' id=thread.id slug=thread.slug %}"
       method="post"
     >
       {% csrf_token %}
       <div class="panel panel-default panel-form">
         <div class="panel-heading">
           <h3 class="panel-title">
-            {% translate "Add members" context "add private thread members page" %}
+            {% translate "Add members" context "private thread members add page" %}
           </h3>
         </div>
         <div class="panel-body">
-          {% include "misago/add_private_thread_members/form.html" %}
+          {% include "misago/private_thread_members/add_form.html" %}
         </div>
         <div class="panel-footer panel-footer-sticky">
           <button class="btn btn-primary" type="submit">
-            {% translate "Add members" context "add private thread members submit btn" %}
+            {% translate "Add members" context "private thread members add submit btn" %}
           </button>
           <a href="{% url 'misago:private-thread' id=thread.id slug=thread.slug %}" class="btn btn-default">
-            {% translate "Cancel" context "add private thread members cancel btn" %}
+            {% translate "Cancel" context "private thread members add cancel btn" %}
           </a>
         </div>
       </div>

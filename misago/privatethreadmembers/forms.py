@@ -39,8 +39,9 @@ class PrivateThreadMembersAddForm(forms.Form):
     def setup_users_field(self, field: UserMultipleChoiceField):
         field.queryset = get_user_model().objects.filter(is_active=True)
         field.max_choices = max(
-            self.request.user_permissions.private_thread_members_limit - len(self.members),
-            0
+            self.request.user_permissions.private_thread_members_limit
+            - len(self.members),
+            0,
         )
 
     def clean_users(self):
@@ -53,7 +54,8 @@ class PrivateThreadMembersAddForm(forms.Form):
                 errors.append(
                     forms.ValidationError(
                         pgettext(
-                            "add thread members form", "You must enter at least one other user."
+                            "add thread members form",
+                            "You must enter at least one other user.",
                         ),
                         code="self",
                     )
@@ -66,9 +68,11 @@ class PrivateThreadMembersAddForm(forms.Form):
             try:
                 if user == self.owner or user in self.members:
                     raise forms.ValidationError(
-                            pgettext("add thread members form", "This user is already a member."),
-                            code="invalid_choice",
-                        )
+                        pgettext(
+                            "add thread members form", "This user is already a member."
+                        ),
+                        code="invalid_choice",
+                    )
 
                 validate_new_private_thread_member(
                     UserPermissionsProxy(user, cache_versions),
