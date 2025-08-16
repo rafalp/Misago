@@ -20,7 +20,6 @@ from ...permissions.polls import check_start_thread_poll_permission
 from ...permissions.privatethreads import (
     check_edit_private_thread_permission,
     check_reply_private_thread_permission,
-    check_see_private_thread_permission,
 )
 from ...permissions.threads import (
     check_edit_thread_permission,
@@ -36,6 +35,7 @@ from ...posting.formsets import (
     get_reply_private_thread_formset,
     get_reply_thread_formset,
 )
+from ...privatethreadmembers.enums import PrivateThreadMembersTemplate
 from ...privatethreadmembers.views import get_private_thread_members_context_data
 from ...readtracker.tracker import (
     get_unread_posts,
@@ -255,7 +255,6 @@ class RepliesView(View):
 class ThreadRepliesView(RepliesView, ThreadView):
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
-    poll_template_name: str = "misago/thread/poll.html"
 
     def get(
         self, request: HttpRequest, id: int, slug: str, page: int | None = None
@@ -384,7 +383,6 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
     thread_get_members = True
     template_name: str = "misago/private_thread/index.html"
     template_partial_name: str = "misago/private_thread/partial.html"
-    members_template_name: str = "misago/private_thread/members.html"
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
         return get_private_thread_replies_page_thread_queryset_hook(
@@ -412,7 +410,8 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         context = get_private_thread_members_context_data(
             request, thread, self.owner, self.members
         )
-        context["template_name"] = self.members_template_name
+        context["template_name"] = PrivateThreadMembersTemplate.LIST
+        context["template_name_add_modal"] = PrivateThreadMembersTemplate.ADD_MODAL
         return context
 
     def get_thread_posts_queryset(

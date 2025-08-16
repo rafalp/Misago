@@ -10,9 +10,9 @@ from django.utils.translation import pgettext
 
 from ..notifications.tasks import notify_on_new_private_thread
 from ..threads.models import Thread
-from ..threads.nexturl import get_next_thread_url
 from ..threads.views.generic import PrivateThreadView
 from ..threadupdates.create import create_added_member_thread_update
+from .enums import PrivateThreadMembersTemplate
 from .forms import MembersAddForm
 from .models import PrivateThreadMember
 
@@ -23,8 +23,8 @@ if TYPE_CHECKING:
 class PrivateThreadMembersAddView(PrivateThreadView):
     thread_get_members = True
     form_type = MembersAddForm
-    template_name = "misago/private_thread_members/add.html"
-    template_name_htmx = "misago/private_thread_members/add_modal.html"
+    template_name = PrivateThreadMembersTemplate.ADD
+    template_name_htmx = PrivateThreadMembersTemplate.ADD_HTMX
 
     def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
@@ -55,13 +55,16 @@ class PrivateThreadMembersAddView(PrivateThreadView):
     def handle_form(
         self, request: HttpRequest, thread: Thread, form: MembersAddForm
     ) -> HttpResponse:
+        thread_updates = []
+
         new_members = form.cleaned_data["users"]
         if new_members:
             for member in new_members:
                 PrivateThreadMember.objects.create(thread=thread, user=member)
-                create_added_member_thread_update(
+                thread_update = create_added_member_thread_update(
                     thread, member, self.request.user, request
                 )
+                thread_updates.append(thread_update)
 
             notify_on_new_private_thread.delay(
                 request.user.id, thread.id, [user.id for user in new_members]
@@ -72,7 +75,25 @@ class PrivateThreadMembersAddView(PrivateThreadView):
                 pgettext("add private thread members view", "New members added"),
             )
 
-        return redirect(self.get_next_thread_url(request, thread))
+        if not request.is_htmx:
+            return redirect(self.get_next_thread_url(request, thread))
+
+        context = get_private_thread_members_context_data(
+            request, thread, self.owner, self.members + new_members
+        )
+
+        if thread_updates:
+            posts_feed = self.get_posts_feed(request, thread, [], thread_updates)
+            posts_feed.set_animated_thread_updates(
+                [thread_update.id for thread_update in thread_updates]
+            )
+            context["feed"] = posts_feed.get_context_data()
+
+        response = render(request, PrivateThreadMembersTemplate.HTMX, context)
+        response["hx-trigger"] = "misago:afterUpdateMembers"
+        response["hx-reswap"] = "none"
+
+        return response
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         if request.user.is_anonymous:

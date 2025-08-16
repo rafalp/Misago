@@ -1,6 +1,6 @@
 {% load i18n misago_avatars %}
 
-<details class="panel panel-default panel-private-thread-members">
+<details class="panel panel-default panel-private-thread-members"{% if is_request_htmx %}open{% endif %}>
   <summary class="panel-private-thread-members-header">
     <h3 class="panel-private-thread-members-title">
       {% blocktranslate trimmed count members=members|length context "private thread members panel" %}
@@ -43,7 +43,17 @@
       </div>
       {% if manage %}
         <div class="panel-private-thread-members-options">
-          <a href="{{ add_members_url }}" class="btn btn-default">
+          <a
+            href="{{ add_members_url }}" class="btn btn-default"
+            data-toggle="modal"
+            data-target="#add-members-modal"
+            data-remote="false"
+            hx-ext="loader-tpl"
+            hx-get="{{ add_members_url }}"
+            hx-target="#misago-htmx-add-members-modal"
+            tpl-loader="#modal-loader"
+            hx-swap="innerHTML"
+          >
             {% translate "Add members" context "private thread members panel" %}
           </a>
         </div>

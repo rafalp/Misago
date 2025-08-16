@@ -24,6 +24,19 @@ def test_private_thread_members_add_view_renders_form(user_client, user_private_
     assert_contains(response, "Add members")
 
 
+def test_private_thread_members_add_view_renders_form_in_htmx(
+    user_client, user_private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        ),
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Add members")
+
+
 def test_private_thread_members_add_view_does_nothing_if_new_users_are_members_already(
     mock_notify_on_new_private_thread,
     user,
@@ -98,6 +111,34 @@ def test_private_thread_members_add_view_adds_new_thread_members_using_noscript_
         "misago:private-thread",
         kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
     )
+
+    PrivateThreadMember.objects.get(thread=user_private_thread, user=admin)
+
+    ThreadUpdate.objects.get(
+        thread=user_private_thread,
+        action=ThreadUpdateActionName.ADDED_MEMBER,
+        context=admin.username,
+    )
+
+    mock_notify_on_new_private_thread.delay.assert_called_once_with(
+        user.id, user_private_thread.id, [admin.id]
+    )
+
+
+def test_private_thread_members_add_view_adds_new_thread_members_in_htmx(
+    mock_notify_on_new_private_thread, user, user_client, user_private_thread, admin
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        ),
+        {"users": [admin.username]},
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(response, "4 members")
+    assert_contains(response, admin.username)
 
     PrivateThreadMember.objects.get(thread=user_private_thread, user=admin)
 

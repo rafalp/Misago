@@ -1,0 +1,9 @@
+{% include "misago/snackbars.html" %}
+
+<div id="misago-htmx-members" hx-swap-oob="true">
+  {% include "misago/private_thread_members/list.html" with open=true %}
+</div>
+
+{% if feed %}
+  {% include feed.template_name_htmx_append %}
+{% endif %}
