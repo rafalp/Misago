@@ -56,20 +56,21 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         self, request: HttpRequest, thread: Thread, form: MembersAddForm
     ) -> HttpResponse:
         new_members = form.cleaned_data["users"]
-        for member in new_members:
-            PrivateThreadMember.objects.create(thread=thread, user=member)
-            create_added_member_thread_update(
-                thread, member, self.request.user, request
+        if new_members:
+            for member in new_members:
+                PrivateThreadMember.objects.create(thread=thread, user=member)
+                create_added_member_thread_update(
+                    thread, member, self.request.user, request
+                )
+
+            notify_on_new_private_thread.delay(
+                request.user.id, thread.id, [user.id for user in new_members]
             )
 
-        notify_on_new_private_thread.delay(
-            request.user.id, thread.id, [user.id for user in new_members]
-        )
-
-        messages.success(
-            request,
-            pgettext("add private thread members view", "New members added"),
-        )
+            messages.success(
+                request,
+                pgettext("add private thread members view", "New members added"),
+            )
 
         return redirect(self.get_next_thread_url(request, thread))
 

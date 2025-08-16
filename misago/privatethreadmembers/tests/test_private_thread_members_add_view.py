@@ -24,6 +24,34 @@ def test_private_thread_members_add_view_renders_form(user_client, user_private_
     assert_contains(response, "Add members")
 
 
+def test_private_thread_members_add_view_does_nothing_if_new_users_are_members_already(
+    mock_notify_on_new_private_thread,
+    user,
+    user_client,
+    user_private_thread,
+    other_user,
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        ),
+        {"users": [user.username, other_user.username]},
+    )
+
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+    )
+
+    PrivateThreadMember.objects.get(thread=user_private_thread, user=other_user)
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_notify_on_new_private_thread.delay.assert_not_called()
+
+
 def test_private_thread_members_add_view_adds_new_thread_members(
     mock_notify_on_new_private_thread, user, user_client, user_private_thread, admin
 ):

@@ -47,32 +47,16 @@ class MembersAddForm(forms.Form):
     def clean_users(self):
         data: list["User"] = self.cleaned_data["users"]
 
-        errors: list[forms.ValidationError] = []
-        if self.request.user in data:
-            data.remove(self.request.user)
-            if not data:
-                errors.append(
-                    forms.ValidationError(
-                        pgettext(
-                            "add thread members form",
-                            "You must enter at least one other user.",
-                        ),
-                        code="self",
-                    )
-                )
-
         request = self.request
         cache_versions = request.cache_versions
 
+        errors: list[forms.ValidationError] = []
+
+        cleaned_data: list["User"] = []
         for user in data:
             try:
                 if user == self.owner or user in self.members:
-                    raise forms.ValidationError(
-                        pgettext(
-                            "add thread members form", "This user is already a member."
-                        ),
-                        code="invalid_choice",
-                    )
+                    continue
 
                 validate_new_private_thread_member(
                     UserPermissionsProxy(user, cache_versions),
@@ -88,8 +72,10 @@ class MembersAddForm(forms.Form):
                         params={"user": user.username, "error": error.message},
                     )
                 )
+            else:
+                cleaned_data.append(user)
 
         if errors:
             raise forms.ValidationError(errors, code="invalid_users")
 
-        return data
+        return cleaned_data
