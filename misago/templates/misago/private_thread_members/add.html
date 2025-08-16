@@ -16,6 +16,7 @@
       method="post"
     >
       {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next_url }}">
       <div class="panel panel-default panel-form">
         <div class="panel-heading">
           <h3 class="panel-title">
@@ -29,7 +30,7 @@
           <button class="btn btn-primary" type="submit">
             {% translate "Add members" context "private thread members add submit btn" %}
           </button>
-          <a href="{% url 'misago:private-thread' id=thread.id slug=thread.slug %}" class="btn btn-default">
+          <a href="{{ next_url }}" class="btn btn-default">
             {% translate "Cancel" context "private thread members add cancel btn" %}
           </a>
         </div>

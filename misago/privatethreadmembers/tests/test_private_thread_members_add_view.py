@@ -52,3 +52,136 @@ def test_private_thread_members_add_view_adds_new_thread_members(
     mock_notify_on_new_private_thread.delay.assert_called_once_with(
         user.id, user_private_thread.id, [admin.id]
     )
+
+
+def test_private_thread_members_add_view_adds_new_thread_members_using_noscript_fallback(
+    mock_notify_on_new_private_thread, user, user_client, user_private_thread, admin
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        ),
+        {"users_noscript": admin.username},
+    )
+
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+    )
+
+    PrivateThreadMember.objects.get(thread=user_private_thread, user=admin)
+
+    ThreadUpdate.objects.get(
+        thread=user_private_thread,
+        action=ThreadUpdateActionName.ADDED_MEMBER,
+        context=admin.username,
+    )
+
+    mock_notify_on_new_private_thread.delay.assert_called_once_with(
+        user.id, user_private_thread.id, [admin.id]
+    )
+
+
+def test_private_thread_members_add_view_returns_redirect_to_next_thread_url(
+    mock_notify_on_new_private_thread, user, user_client, user_private_thread, admin
+):
+    next_url = (
+        reverse(
+            "misago:private-thread",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        )
+        + "?next=true"
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        ),
+        {
+            "users": [admin.username],
+            "next": next_url,
+        },
+    )
+
+    assert response.status_code == 302
+    assert response["location"] == next_url
+
+
+def test_private_thread_members_add_view_returns_redirect_to_default_thread_url_if_next_url_is_invalid(
+    mock_notify_on_new_private_thread, user, user_client, user_private_thread, admin
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        ),
+        {
+            "users": [admin.username],
+            "next": "invalid",
+        },
+    )
+
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+    )
+
+
+def test_private_thread_members_add_view_returns_404_if_thread_doesnt_exist(
+    user_client,
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={"id": 1, "slug": "invalid"},
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_private_thread_members_add_view_checks_private_threads_permission(
+    user_client, members_group, user_private_thread
+):
+    members_group.can_use_private_threads = False
+    members_group.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        )
+    )
+    assert response.status_code == 403
+
+
+def test_private_thread_members_add_view_checks_private_thread_access(
+    user_client, private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={"id": private_thread.id, "slug": private_thread.slug},
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_private_thread_members_add_view_checks_private_thread_ownership(
+    user_client, other_user_private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(
+        response, "You can&#x27;t add members to this thread.", status_code=403
+    )

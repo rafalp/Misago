@@ -16,15 +16,14 @@ from ..permissions.polls import (
 )
 from ..threads.postsfeed import ThreadPostsFeed
 from ..threads.models import Thread
+from ..threads.nexturl import get_next_thread_url
 from ..threads.views.generic import ThreadView
-from ..threadupdates.create import create_started_poll_thread_update
 from ..threadupdates.models import ThreadUpdate
 from ..polls.models import Poll
 from .close import close_thread_poll, open_thread_poll
 from .delete import delete_thread_poll
 from .enums import PollTemplate, PublicPollsAvailability
 from .forms import EditPollForm, StartPollForm
-from .nexturl import get_next_url
 from .save import edit_thread_poll, save_thread_poll
 from .validators import validate_poll_vote
 from .votes import (
@@ -131,7 +130,7 @@ class EditThreadPollView(ThreadPollView):
         messages.success(request, pgettext("edit poll", "Poll edited"))
 
         if not request.is_htmx:
-            return redirect(self.get_next_url(request, thread, poll))
+            return redirect(self.get_next_thread_url(request, thread, poll))
 
         user_poll_votes = get_user_poll_votes(request.user, poll)
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
@@ -163,12 +162,14 @@ class EditThreadPollView(ThreadPollView):
                 "category": thread.category,
                 "thread": thread,
                 "form": form,
-                "next_url": self.get_next_url(request, thread, poll),
+                "next_url": self.get_next_thread_url(request, thread, poll),
             },
         )
 
-    def get_next_url(self, request: HttpRequest, thread: Thread, poll: Poll) -> str:
-        next_url = get_next_url(request, thread)
+    def get_next_thread_url(
+        self, request: HttpRequest, thread: Thread, poll: Poll
+    ) -> str:
+        next_url = super().get_next_thread_url(request, thread, strip_qs=True)
 
         if not request.is_htmx:
             return next_url
@@ -229,7 +230,7 @@ class ThreadPollVoteView(ThreadPollView):
             messages.success(request, pgettext("poll vote", "Vote saved"))
 
         if not request.is_htmx:
-            return redirect(get_next_url(request, thread))
+            return redirect(self.get_next_thread_url(request, thread))
 
         context = get_poll_context_data(request, thread, poll, valid_choices)
         return render(request, PollTemplate.RESULTS_HTMX, context)
@@ -246,7 +247,7 @@ class ThreadPollVoteView(ThreadPollView):
 
         if not request.is_htmx:
             messages.error(request, error_message)
-            return redirect(get_next_url(request, thread))
+            return redirect(self.get_next_thread_url(request, thread))
 
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
         context["poll_error_message"] = error_message
@@ -297,7 +298,7 @@ class UpdateThreadPollView(ThreadPollView):
         thread_update = self.update(request, thread, poll)
 
         if not request.is_htmx:
-            return redirect(get_next_url(request, thread))
+            return redirect(self.get_next_thread_url(request, thread))
 
         user_poll_votes = get_user_poll_votes(request.user, poll)
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
@@ -368,7 +369,7 @@ class DeleteThreadPollView(ThreadPollView):
 
         messages.success(request, pgettext("poll vote", "Poll deleted"))
 
-        return redirect(get_next_url(request, thread))
+        return redirect(self.get_next_thread_url(request, thread))
 
 
 def get_poll_context_data(
@@ -411,7 +412,7 @@ def get_poll_context_data(
             request.user_permissions, thread.category, thread, poll
         )
 
-    thread_url = get_next_url(request, thread)
+    thread_url = get_next_thread_url(request, thread, "misago:thread")
 
     return {
         "poll": poll,

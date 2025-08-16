@@ -24,6 +24,7 @@ from ...readtracker.tracker import (
 from ...privatethreadmembers.members import get_private_thread_members
 from ...threadupdates.models import ThreadUpdate
 from ..models import Post, Thread
+from ..nexturl import get_next_thread_url
 from ..paginator import ThreadRepliesPaginator
 from ..postsfeed import PostsFeed, PrivateThreadPostsFeed, ThreadPostsFeed
 
@@ -37,6 +38,7 @@ class GenericView(View):
     thread_url_name: str
     post_select_related: Iterable[str] | True | None = None
     thread_update_select_related: Iterable[str] | True | None = None
+    next_page: str = "next"
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         queryset = self.get_thread_queryset(request)
@@ -100,6 +102,7 @@ class GenericView(View):
         raise NotImplementedError()
 
     def get_thread_url(self, thread: Thread, page: int | None = None) -> str:
+        """Return the absolute URL to a thread."""
         if page and page > 1:
             return reverse(
                 self.thread_url_name,
@@ -111,24 +114,14 @@ class GenericView(View):
             kwargs={"id": thread.id, "slug": thread.slug},
         )
 
-    def clean_thread_url(self, thread: Thread, url_to_clean: str | None = None) -> str:
-        thread_url = self.get_thread_url(thread)
-
-        if url_to_clean:
-            try:
-                url_path = url_to_clean
-                if "#" in url_path:
-                    url_path = url_path[: url_path.index("#")]
-                if "?" in url_path:
-                    url_path = url_path[: url_path.index("?")]
-
-                reverse_match = resolve(url_path)
-                if reverse_match.view_name == self.thread_url_name:
-                    return url_to_clean
-            except Resolver404:
-                pass
-
-        return thread_url
+    def get_next_thread_url(
+        self, request: HttpRequest, thread: Thread, strip_qs: bool = False
+    ) -> str:
+        """
+        Attempt to return an absolute URL to a thread based on either the POST
+        or GET query dict, falling back to get_thread_url if unavailable.
+        """
+        return get_next_thread_url(request, thread, self.thread_url_name, strip_qs)
 
     def get_thread_updates_queryset(
         self,

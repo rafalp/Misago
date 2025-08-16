@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, Optional
+from urllib.parse import quote_plus
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -9,6 +10,7 @@ from django.utils.translation import pgettext
 
 from ..notifications.tasks import notify_on_new_private_thread
 from ..threads.models import Thread
+from ..threads.nexturl import get_next_thread_url
 from ..threads.views.generic import PrivateThreadView
 from ..threadupdates.create import create_added_member_thread_update
 from .forms import MembersAddForm
@@ -69,7 +71,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
             pgettext("add private thread members view", "New members added"),
         )
 
-        return redirect(self.get_thread_url(thread))
+        return redirect(self.get_next_thread_url(request, thread))
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         if request.user.is_anonymous:
@@ -110,6 +112,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
                 "thread": thread,
                 "members": self.members,
                 "form": form,
+                "next_url": self.get_next_thread_url(request, thread),
             },
         )
 
@@ -123,14 +126,19 @@ def get_private_thread_members_context_data(
     moderation = bool(request.user_permissions.is_private_threads_moderator)
     manage = moderation or request.user.id == owner.id if owner else None
 
+    add_members_url = (
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
+        + f"?next={quote_plus(request.get_full_path())}"
+    )
+
     return {
         "manage": manage,
         "moderation": moderation,
         "thread": thread,
         "owner": owner,
         "members": members,
-        "add_members_url": reverse(
-            "misago:private-thread-members-add",
-            kwargs={"id": thread.id, "slug": thread.slug},
-        ),
+        "add_members_url": add_members_url,
     }
