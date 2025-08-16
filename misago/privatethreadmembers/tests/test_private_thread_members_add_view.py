@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 
+from ...permissions.models import ModeratorPermissions
 from ...test import assert_contains
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
@@ -254,3 +255,18 @@ def test_private_thread_members_add_view_checks_private_thread_ownership(
     assert_contains(
         response, "You can&#x27;t add members to this thread.", status_code=403
     )
+
+
+def test_private_thread_members_add_view_allows_moderators_to_add_new_members(
+    moderator_client, other_user_private_thread
+):
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={
+                "id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Add members")
