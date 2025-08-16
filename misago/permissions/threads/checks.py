@@ -44,9 +44,7 @@ def _check_locked_category_permission_action(
         )
 
 
-def check_locked_thread_permission(
-    permissions: UserPermissionsProxy, thread: Thread
-):
+def check_locked_thread_permission(permissions: UserPermissionsProxy, thread: Thread):
     check_locked_thread_permission_hook(
         _check_locked_thread_permission_action,
         permissions,

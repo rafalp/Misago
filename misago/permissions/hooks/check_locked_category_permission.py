@@ -116,6 +116,4 @@ class CheckPostInClosedCategoryPermissionHook(
         return super().__call__(action, permissions, category)
 
 
-check_locked_category_permission_hook = (
-    CheckPostInClosedCategoryPermissionHook()
-)
+check_locked_category_permission_hook = CheckPostInClosedCategoryPermissionHook()
