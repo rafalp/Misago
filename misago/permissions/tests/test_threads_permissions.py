@@ -8,8 +8,8 @@ from ..proxy import UserPermissionsProxy
 from ..threads import (
     check_edit_thread_post_permission,
     check_edit_thread_permission,
-    check_post_in_closed_category_permission,
-    check_post_in_closed_thread_permission,
+    check_locked_category_permission,
+    check_locked_thread_permission,
     check_reply_thread_permission,
     check_see_thread_post_permission,
     check_see_thread_permission,
@@ -459,24 +459,24 @@ def test_check_edit_thread_permission_passes_for_category_moderator_if_out_of_ti
     check_edit_thread_permission(permissions, default_category, thread)
 
 
-def test_check_post_in_closed_category_permission_passes_if_category_is_open(
+def test_check_locked_category_permission_passes_if_category_is_open(
     user, cache_versions, default_category
 ):
     permissions = UserPermissionsProxy(user, cache_versions)
-    check_post_in_closed_category_permission(permissions, default_category)
+    check_locked_category_permission(permissions, default_category)
 
 
-def test_check_post_in_closed_category_permission_passes_if_user_is_global_moderator(
+def test_check_locked_category_permission_passes_if_user_is_global_moderator(
     moderator, cache_versions, default_category
 ):
     default_category.is_closed = True
     default_category.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
-    check_post_in_closed_category_permission(permissions, default_category)
+    check_locked_category_permission(permissions, default_category)
 
 
-def test_check_post_in_closed_category_permission_passes_if_user_is_category_moderator(
+def test_check_locked_category_permission_passes_if_user_is_category_moderator(
     user, cache_versions, default_category
 ):
     default_category.is_closed = True
@@ -489,10 +489,10 @@ def test_check_post_in_closed_category_permission_passes_if_user_is_category_mod
     )
 
     permissions = UserPermissionsProxy(user, cache_versions)
-    check_post_in_closed_category_permission(permissions, default_category)
+    check_locked_category_permission(permissions, default_category)
 
 
-def test_check_post_in_closed_category_permission_fails_if_user_is_not_moderator(
+def test_check_locked_category_permission_fails_if_user_is_not_moderator(
     user, cache_versions, default_category
 ):
     default_category.is_closed = True
@@ -501,10 +501,10 @@ def test_check_post_in_closed_category_permission_fails_if_user_is_not_moderator
     permissions = UserPermissionsProxy(user, cache_versions)
 
     with pytest.raises(PermissionDenied):
-        check_post_in_closed_category_permission(permissions, default_category)
+        check_locked_category_permission(permissions, default_category)
 
 
-def test_check_post_in_closed_category_permission_fails_if_user_is_anonymous(
+def test_check_locked_category_permission_fails_if_user_is_anonymous(
     anonymous_user, cache_versions, default_category
 ):
     default_category.is_closed = True
@@ -513,27 +513,27 @@ def test_check_post_in_closed_category_permission_fails_if_user_is_anonymous(
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
 
     with pytest.raises(PermissionDenied):
-        check_post_in_closed_category_permission(permissions, default_category)
+        check_locked_category_permission(permissions, default_category)
 
 
-def test_check_post_in_closed_thread_permission_passes_if_thread_is_open(
+def test_check_locked_thread_permission_passes_if_thread_is_open(
     user, cache_versions, thread
 ):
     permissions = UserPermissionsProxy(user, cache_versions)
-    check_post_in_closed_thread_permission(permissions, thread)
+    check_locked_thread_permission(permissions, thread)
 
 
-def test_check_post_in_closed_thread_permission_passes_if_user_is_global_moderator(
+def test_check_locked_thread_permission_passes_if_user_is_global_moderator(
     moderator, cache_versions, thread
 ):
     thread.is_closed = True
     thread.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
-    check_post_in_closed_thread_permission(permissions, thread)
+    check_locked_thread_permission(permissions, thread)
 
 
-def test_check_post_in_closed_thread_permission_passes_if_user_is_category_moderator(
+def test_check_locked_thread_permission_passes_if_user_is_category_moderator(
     user, cache_versions, thread
 ):
     thread.is_closed = True
@@ -546,10 +546,10 @@ def test_check_post_in_closed_thread_permission_passes_if_user_is_category_moder
     )
 
     permissions = UserPermissionsProxy(user, cache_versions)
-    check_post_in_closed_thread_permission(permissions, thread)
+    check_locked_thread_permission(permissions, thread)
 
 
-def test_check_post_in_closed_thread_permission_fails_if_user_is_not_moderator(
+def test_check_locked_thread_permission_fails_if_user_is_not_moderator(
     user, cache_versions, thread
 ):
     thread.is_closed = True
@@ -558,10 +558,10 @@ def test_check_post_in_closed_thread_permission_fails_if_user_is_not_moderator(
     permissions = UserPermissionsProxy(user, cache_versions)
 
     with pytest.raises(PermissionDenied):
-        check_post_in_closed_thread_permission(permissions, thread)
+        check_locked_thread_permission(permissions, thread)
 
 
-def test_check_post_in_closed_thread_permission_fails_if_user_is_anonymous(
+def test_check_locked_thread_permission_fails_if_user_is_anonymous(
     anonymous_user, cache_versions, thread
 ):
     thread.is_closed = True
@@ -570,7 +570,7 @@ def test_check_post_in_closed_thread_permission_fails_if_user_is_anonymous(
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
 
     with pytest.raises(PermissionDenied):
-        check_post_in_closed_thread_permission(permissions, thread)
+        check_locked_thread_permission(permissions, thread)
 
 
 def test_check_reply_thread_permission_passes_if_user_has_permission(

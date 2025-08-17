@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckPostInClosedCategoryPermissionHookAction(Protocol):
+class CheckLockedCategoryPermissionHookAction(Protocol):
     """
     Misago function used to check if the user has permission to
     post in a closed category. It raises Django's `PermissionDenied` with an
@@ -31,13 +31,13 @@ class CheckPostInClosedCategoryPermissionHookAction(Protocol):
     ) -> None: ...
 
 
-class CheckPostInClosedCategoryPermissionHookFilter(Protocol):
+class CheckLockedCategoryPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckPostInClosedCategoryPermissionHookAction`
+    ## `action: CheckLockedCategoryPermissionHookAction`
 
     Misago function used to check if the user has permission to
     post in a closed category. It raises Django's `PermissionDenied` with an
@@ -56,16 +56,16 @@ class CheckPostInClosedCategoryPermissionHookFilter(Protocol):
 
     def __call__(
         self,
-        action: CheckPostInClosedCategoryPermissionHookAction,
+        action: CheckLockedCategoryPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
     ) -> None: ...
 
 
-class CheckPostInClosedCategoryPermissionHook(
+class CheckLockedCategoryPermissionHook(
     FilterHook[
-        CheckPostInClosedCategoryPermissionHookAction,
-        CheckPostInClosedCategoryPermissionHookFilter,
+        CheckLockedCategoryPermissionHookAction,
+        CheckLockedCategoryPermissionHookFilter,
     ]
 ):
     """
@@ -80,10 +80,10 @@ class CheckPostInClosedCategoryPermissionHook(
 
     ```python
     from misago.categories.models import Category
-    from misago.permissions.hooks import check_post_in_closed_category_permission_hook
+    from misago.permissions.hooks import check_locked_category_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
 
-    @check_post_in_closed_category_permission_hook.append_filter
+    @check_locked_category_permission_hook.append_filter
     def check_user_can_post_in_closed_category(
         action,
         permissions: UserPermissionsProxy,
@@ -109,13 +109,11 @@ class CheckPostInClosedCategoryPermissionHook(
 
     def __call__(
         self,
-        action: CheckPostInClosedCategoryPermissionHookAction,
+        action: CheckLockedCategoryPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
     ) -> None:
         return super().__call__(action, permissions, category)
 
 
-check_post_in_closed_category_permission_hook = (
-    CheckPostInClosedCategoryPermissionHook()
-)
+check_locked_category_permission_hook = CheckLockedCategoryPermissionHook()
