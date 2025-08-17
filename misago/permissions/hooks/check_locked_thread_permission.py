@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckPostInClosedThreadPermissionHookAction(Protocol):
+class CheckLockedThreadPermissionHookAction(Protocol):
     """
     Misago function used to check if the user has permission to
     post in a closed thread. It raises Django's `PermissionDenied` with an
@@ -31,13 +31,13 @@ class CheckPostInClosedThreadPermissionHookAction(Protocol):
     ) -> None: ...
 
 
-class CheckPostInClosedThreadPermissionHookFilter(Protocol):
+class CheckLockedThreadPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckPostInClosedThreadPermissionHookAction`
+    ## `action: CheckLockedThreadPermissionHookAction`
 
     Misago function used to check if the user has permission to
     post in a closed thread. It raises Django's `PermissionDenied` with an
@@ -56,16 +56,16 @@ class CheckPostInClosedThreadPermissionHookFilter(Protocol):
 
     def __call__(
         self,
-        action: CheckPostInClosedThreadPermissionHookAction,
+        action: CheckLockedThreadPermissionHookAction,
         permissions: "UserPermissionsProxy",
         thread: Thread,
     ) -> None: ...
 
 
-class CheckPostInClosedThreadPermissionHook(
+class CheckLockedThreadPermissionHook(
     FilterHook[
-        CheckPostInClosedThreadPermissionHookAction,
-        CheckPostInClosedThreadPermissionHookFilter,
+        CheckLockedThreadPermissionHookAction,
+        CheckLockedThreadPermissionHookFilter,
     ]
 ):
     """
@@ -109,11 +109,11 @@ class CheckPostInClosedThreadPermissionHook(
 
     def __call__(
         self,
-        action: CheckPostInClosedThreadPermissionHookAction,
+        action: CheckLockedThreadPermissionHookAction,
         permissions: "UserPermissionsProxy",
         thread: Thread,
     ) -> None:
         return super().__call__(action, permissions, thread)
 
 
-check_locked_thread_permission_hook = CheckPostInClosedThreadPermissionHook()
+check_locked_thread_permission_hook = CheckLockedThreadPermissionHook()
