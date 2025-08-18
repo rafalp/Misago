@@ -1,6 +1,15 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Union
+
+from django.db import transaction
+from django.http import HttpRequest
 
 from ..threads.models import Thread
+from ..threadupdates.create import (
+    create_changed_owner_thread_update,
+    create_took_ownership_thread_update,
+)
+from ..threadupdates.models import ThreadUpdate
+from .hooks import change_private_thread_owner_hook
 from .models import PrivateThreadMember
 
 if TYPE_CHECKING:
@@ -43,3 +52,32 @@ def get_private_thread_members(thread: Thread) -> tuple[Optional["User"], list["
         thread.private_thread_member_ids = [member.id for member in members]
 
     return owner, members
+
+
+def change_private_thread_owner(
+    actor: Union["User", str, None],
+    thread: Thread,
+    new_owner: "User",
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    return change_private_thread_owner_hook(
+        _change_private_thread_owner_action, actor, thread, new_owner, request
+    )
+
+
+def _change_private_thread_owner_action(
+    actor: Union["User", str, None],
+    thread: Thread,
+    new_owner: "User",
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    with transaction.atomic():
+        PrivateThreadMember.objects.filter(thread=thread).update(is_owner=False)
+        PrivateThreadMember.objects.filter(thread=thread, user=new_owner).update(
+            is_owner=True
+        )
+
+    if actor == new_owner:
+        return create_took_ownership_thread_update(thread, actor, request)
+
+    return create_changed_owner_thread_update(thread, new_owner, actor, request)

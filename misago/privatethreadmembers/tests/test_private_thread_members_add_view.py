@@ -1,7 +1,6 @@
 import pytest
 from django.urls import reverse
 
-from ...permissions.models import ModeratorPermissions
 from ...test import assert_contains
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate

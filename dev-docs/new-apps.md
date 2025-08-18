@@ -23,12 +23,12 @@ If you can’t come up with a name, name the module after the app. For example, 
 Prefix the class name with the model or feature name when it makes sense:
 
 ```python
-# Login page view
+# Login page view for a "login" feature
 class LoginView(View):
     ...
 
 
-# Poll a model and viewing poll votes is a feature...
+# Poll is a model and viewing poll votes is a feature...
 class PollVotesView(View):
     ...
 
@@ -48,7 +48,12 @@ class PrivateThreadStartView(View):
     pass
 
 
-# Account is not a model, but "forum account" is a feature
+# Private thread owner change is a feature
+class PrivateThreadOwnerChangeView(View):
+    pass
+
+
+# Account is not a model, but it's a feature
 class AccountPreferencesView(View):
     ...
 ```

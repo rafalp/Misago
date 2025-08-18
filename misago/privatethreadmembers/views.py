@@ -3,7 +3,7 @@ from urllib.parse import quote_plus
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import pgettext
@@ -99,7 +99,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         if request.user.is_anonymous:
             raise PermissionDenied(
                 pgettext(
-                    "add private thread members view",
+                    "private thread add members view",
                     "You must be signed in to add members to a private thread.",
                 )
             )
@@ -112,7 +112,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         ):
             raise PermissionDenied(
                 pgettext(
-                    "add private thread members view",
+                    "private thread add members view",
                     "You can't add members to this thread.",
                 )
             )
@@ -137,6 +137,103 @@ class PrivateThreadMembersAddView(PrivateThreadView):
                 "next_url": self.get_next_thread_url(request, thread),
             },
         )
+
+
+class PrivateThreadMemberView(PrivateThreadView):
+    thread_get_members = True
+    template_name = "..."
+
+    def get(
+        self, request: HttpRequest, id: int, slug: str, user_id: int
+    ) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        member = self.get_member(request, user_id)
+
+        return redirect(self.get_next_thread_url(request, thread))
+
+    def post(
+        self, request: HttpRequest, id: int, slug: str, user_id: int
+    ) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        member = self.get_member(request, user_id)
+
+        # do updates mumbo-jumbo
+
+        if not request.is_htmx:
+            return redirect(self.get_next_thread_url(request, thread))
+
+        # Prepare HTMX response
+
+    def get_member(self, request: HttpRequest, id: int) -> Optional["User"]:
+        for member in self.members:
+            if member.id == id:
+                return member
+
+        raise Http404(pgettext("private thread member view", "Member doesn't exist"))
+
+
+class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
+    def post(
+        self, request: HttpRequest, id: int, slug: str, user_id: int
+    ) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        return redirect(self.get_next_thread_url(request, thread))
+
+    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
+        if request.user.is_anonymous:
+            raise PermissionDenied(
+                pgettext(
+                    "private thread owner change view",
+                    "You must be signed in to change a private thread owner.",
+                )
+            )
+
+        thread = super().get_thread(request, thread_id)
+
+        if not (
+            self.get_moderator_status(request, thread)
+            or self.get_owner_status(request, thread)
+        ):
+            raise PermissionDenied(
+                pgettext(
+                    "private thread owner change view",
+                    "You can't change this thread's owner.",
+                )
+            )
+
+        return thread
+
+
+class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
+    def post(
+        self, request: HttpRequest, id: int, slug: str, user_id: int
+    ) -> HttpResponse:
+        thread = self.get_thread(request, id)
+        return redirect(self.get_next_thread_url(request, thread))
+
+    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
+        if request.user.is_anonymous:
+            raise PermissionDenied(
+                pgettext(
+                    "private thread member remove view",
+                    "You must be signed in to remove members from a private thread.",
+                )
+            )
+
+        thread = super().get_thread(request, thread_id)
+
+        if not (
+            self.get_moderator_status(request, thread)
+            or self.get_owner_status(request, thread)
+        ):
+            raise PermissionDenied(
+                pgettext(
+                    "private thread member remove view",
+                    "You can't remove members from this thread.",
+                )
+            )
+
+        return thread
 
 
 def get_private_thread_members_context_data(
