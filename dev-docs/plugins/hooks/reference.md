@@ -171,6 +171,7 @@ Hooks instances are importable from the following Python modules:
 `misago.privatethreadmembers.hooks` defines the following hooks:
 
 - [`change_private_thread_owner_hook`](./change-private-thread-owner-hook.md)
+- [`remove_private_thread_member_hook`](./remove-private-thread-member-hook.md)
 - [`validate_new_private_thread_member_hook`](./validate-new-private-thread-member-hook.md)
 
 

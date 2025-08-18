@@ -6,10 +6,15 @@ from django.http import HttpRequest
 from ..threads.models import Thread
 from ..threadupdates.create import (
     create_changed_owner_thread_update,
+    create_left_thread_update,
+    create_removed_member_thread_update,
     create_took_ownership_thread_update,
 )
 from ..threadupdates.models import ThreadUpdate
-from .hooks import change_private_thread_owner_hook
+from .hooks import (
+    change_private_thread_owner_hook,
+    remove_private_thread_member_hook,
+)
 from .models import PrivateThreadMember
 
 if TYPE_CHECKING:
@@ -81,3 +86,28 @@ def _change_private_thread_owner_action(
         return create_took_ownership_thread_update(thread, actor, request)
 
     return create_changed_owner_thread_update(thread, new_owner, actor, request)
+
+
+def remove_private_thread_member(
+    actor: Union["User", str, None],
+    thread: Thread,
+    user: "User",
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    return remove_private_thread_member_hook(
+        _remove_private_thread_member_action, actor, thread, user, request
+    )
+
+
+def _remove_private_thread_member_action(
+    actor: Union["User", str, None],
+    thread: Thread,
+    user: "User",
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    PrivateThreadMember.objects.filter(thread=thread, user=user).delete()
+
+    if actor == user:
+        return create_left_thread_update(thread, actor, request)
+
+    return create_removed_member_thread_update(thread, user, actor, request)
