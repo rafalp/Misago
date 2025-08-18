@@ -23,11 +23,11 @@ class RemovePrivateThreadMemberAction(Protocol):
 
     ## `thread: Thread`
 
-    The thread from which to remove the user.
+    The thread from which the member will be removed.
 
-    ## `user: User`
+    ## `member: User`
 
-    The user to be removed from the thread.
+    The user to remove from the thread.
 
     ## `request: HttpRequest | None`
 
@@ -42,7 +42,7 @@ class RemovePrivateThreadMemberAction(Protocol):
         self,
         actor: Union["User", str, None],
         thread: Thread,
-        user: "User",
+        member: "User",
         request: HttpRequest | None = None,
     ) -> "ThreadUpdate": ...
 
@@ -67,11 +67,11 @@ class RemovePrivateThreadMemberFilter(Protocol):
 
     ## `thread: Thread`
 
-    The thread from which to remove the user.
+    The thread from which the member will be removed.
 
-    ## `user: User`
+    ## `member: User`
 
-    The user to be removed from the thread.
+    The user to remove from the thread.
 
     ## `request: HttpRequest | None`
 
@@ -87,7 +87,7 @@ class RemovePrivateThreadMemberFilter(Protocol):
         action: RemovePrivateThreadMemberAction,
         actor: Union["User", str, None],
         thread: Thread,
-        user: "User",
+        member: "User",
         request: HttpRequest | None = None,
     ) -> "ThreadUpdate": ...
 
@@ -100,11 +100,11 @@ class RemovePrivateThreadMember(
 ):
     """
     This hook allows plugins to replace or extend the logic for
-    removing a user from a private thread.
+    removing a member from a private thread.
 
     # Example
 
-    Record the IP address used to remove a user from a thread:
+    Record the IP address used to remove a member from a thread:
 
     ```python
     from django.http import HttpRequest
@@ -119,10 +119,10 @@ class RemovePrivateThreadMember(
         action,
         actor: User | str | None,
         thread: Thread,
-        user: User,
+        member: User,
         request: HttpRequest | None = None,
     ) -> ThreadUpdate:
-        thread_update = action(actor, thread, user, request)
+        thread_update = action(actor, thread, member, request)
 
         thread_update.plugin_data["user_ip"] = request.user_ip
         thread_update.save(update_fields=["plugin_data"])
@@ -138,14 +138,14 @@ class RemovePrivateThreadMember(
         action: RemovePrivateThreadMemberAction,
         actor: Union["User", str, None],
         thread: Thread,
-        user: "User",
+        member: "User",
         request: HttpRequest | None = None,
     ) -> "ThreadUpdate":
         return super().__call__(
             action,
             actor,
             thread,
-            user,
+            member,
             request,
         )
 

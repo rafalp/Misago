@@ -91,23 +91,23 @@ def _change_private_thread_owner_action(
 def remove_private_thread_member(
     actor: Union["User", str, None],
     thread: Thread,
-    user: "User",
+    member: "User",
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
     return remove_private_thread_member_hook(
-        _remove_private_thread_member_action, actor, thread, user, request
+        _remove_private_thread_member_action, actor, thread, member, request
     )
 
 
 def _remove_private_thread_member_action(
     actor: Union["User", str, None],
     thread: Thread,
-    user: "User",
+    member: "User",
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
-    PrivateThreadMember.objects.filter(thread=thread, user=user).delete()
+    PrivateThreadMember.objects.filter(thread=thread, user=member).delete()
 
-    if actor == user:
+    if actor == member:
         return create_left_thread_update(thread, actor, request)
 
-    return create_removed_member_thread_update(thread, user, actor, request)
+    return create_removed_member_thread_update(thread, member, actor, request)

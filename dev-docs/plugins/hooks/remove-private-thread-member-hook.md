@@ -1,6 +1,6 @@
 # `remove_private_thread_member_hook`
 
-This hook allows plugins to replace or extend the logic for removing a user from a private thread.
+This hook allows plugins to replace or extend the logic for removing a member from a private thread.
 
 
 ## Location
@@ -20,7 +20,7 @@ from misago.privatethreadmembers.hooks import remove_private_thread_member_hook
 
 ## Example
 
-Record the IP address used to remove a user from a thread:
+Record the IP address used to remove a member from a thread:
 
 ```python
 from django.http import HttpRequest
@@ -35,10 +35,10 @@ def record_private_thread_remove_member_actor_ip(
     action,
     actor: User | str | None,
     thread: Thread,
-    user: User,
+    member: User,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
-    thread_update = action(actor, thread, user, request)
+    thread_update = action(actor, thread, member, request)
 
     thread_update.plugin_data["user_ip"] = request.user_ip
     thread_update.save(update_fields=["plugin_data"])
