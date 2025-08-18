@@ -1,6 +1,6 @@
 # `check_locked_category_permission_hook`
 
-This hook wraps the standard function that Misago uses to check if the user has permission to post in a closed category. It raises Django's `PermissionDenied` with an error message if category is closed and they can't post in it.
+This hook allows plugins to extend or replace the logic for checking whether a user has permission to bypass a category's locked status.
 
 
 ## Location
@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CheckLockedCategoryPermissionHookAction`
 
-Misago function used to check if the user has permission to post in a closed category. It raises Django's `PermissionDenied` with an error message if category is closed and they can't post in it.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
@@ -54,7 +54,7 @@ def check_locked_category_permission_action(
     ...
 ```
 
-Misago function used to check if the user has permission to post in a closed category. It raises Django's `PermissionDenied` with an error message if category is closed and they can't post in it.
+Misago function that checks whether a user has permission to bypass a category's locked status. Raises `PermissionDenied` if they don't.
 
 
 ### Arguments
@@ -79,22 +79,22 @@ from misago.permissions.hooks import check_locked_category_permission_hook
 from misago.permissions.proxy import UserPermissionsProxy
 
 @check_locked_category_permission_hook.append_filter
-def check_user_can_post_in_closed_category(
+def check_user_can_post_in_locked_category(
     action,
     permissions: UserPermissionsProxy,
     category: Category,
 ) -> None:
     user = permissions.user
     if user.is_authenticated:
-        post_in_closed_categories = (
-            user.plugin_data.get("post_in_closed_categories") or []
+        post_in_locked_categories = (
+            user.plugin_data.get("post_in_locked_categories") or []
         )
     else:
-        post_in_closed_categories = None
+        post_in_locked_categories = None
 
     if (
-        not post_in_closed_categories
-        or category.id not in post_in_closed_categories
+        not post_in_locked_categories
+        or category.id not in post_in_locked_categories
     ):
         action(permissions, category)
 ```

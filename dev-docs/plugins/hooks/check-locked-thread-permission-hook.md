@@ -1,6 +1,6 @@
 # `check_locked_thread_permission_hook`
 
-This hook wraps the standard function that Misago uses to check if the user has permission to post in a closed thread. It raises Django's `PermissionDenied` with an error message if thread is closed and they can't post in it.
+This hook allows plugins to extend or replace the logic for checking whether a user has permission to bypass a thread's locked status.
 
 
 ## Location
@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CheckLockedThreadPermissionHookAction`
 
-Misago function used to check if the user has permission to post in a closed thread. It raises Django's `PermissionDenied` with an error message if thread is closed and they can't post in it.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
@@ -54,7 +54,7 @@ def check_locked_thread_permission_action(
     ...
 ```
 
-Misago function used to check if the user has permission to post in a closed thread. It raises Django's `PermissionDenied` with an error message if thread is closed and they can't post in it.
+Misago function that checks whether a user has permission to bypass a thread's locked status. Raises `PermissionDenied` if they don't.
 
 
 ### Arguments
