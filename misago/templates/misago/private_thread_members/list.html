@@ -1,6 +1,6 @@
 {% load i18n misago_avatars %}
 
-<details class="panel panel-default panel-private-thread-members"{% if is_request_htmx %}open{% endif %}>
+<details class="panel panel-default panel-private-thread-members"{% if is_request_htmx %} open{% endif %}>
   <summary class="panel-private-thread-members-header">
     <h3 class="panel-private-thread-members-title">
       {% blocktranslate trimmed count members=members|length context "private thread members panel" %}
@@ -30,8 +30,31 @@
           <a href="{% url 'misago:user' pk=member.id slug=member.slug %}" class="panel-private-thread-member-username">
             {{ member.username }}
           </a>
-          {% if owner and member.id == owner.id %}
+          {% if owner and member == owner %}
             <span class="panel-private-thread-member-owner" aria-label="{% translate 'Thread owner' context 'private thread members panel' %}"></span>
+          {% endif %}
+          {% if manage and member != owner %}
+            <div style="width: 100%;"></div>
+            <div class="dropdown d-js-block">
+              <button class="btn btn-link btn-icon" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="material-icon">more_horiz</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li><a href="#">{% translate "Make owner" context "private thread member action btn" %}</a></li>
+                <li><a href="#">{% translate "Remove from thread" context "private thread member action btn" %}</a></li>
+              </ul>
+            </div>
+            <noscript>
+              <details class="dropdown-noscript">
+                <summary class="btn btn-link btn-icon">
+                  <span class="material-icon">more_horiz</span>
+                </summary>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li><a href="#">{% translate "Make owner" context "private thread member action btn" %}</a></li>
+                  <li><a href="#">{% translate "Remove from thread" context "private thread member action btn" %}</a></li>
+                </ul>
+              </details>
+            </noscript>
           {% endif %}
         </li>
       {% endfor %}
