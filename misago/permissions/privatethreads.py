@@ -91,6 +91,8 @@ def check_reply_private_thread_permission(
 def _check_reply_private_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
+    # TODO: let moderator always reply private thread
+    # Block only thread member from replying if thread has no other members
     pass  # NOOP
 
 

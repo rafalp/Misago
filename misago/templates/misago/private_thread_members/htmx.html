@@ -1,6 +1,6 @@
 {% include "misago/snackbars.html" %}
 
-<div id="misago-htmx-members" hx-swap-oob="true">
+<div id="misago-htmx-members"{% if swap_oob %} hx-swap-oob="outerHTML"{% endif %}>
   {% include "misago/private_thread_members/list.html" with open=true %}
 </div>
 

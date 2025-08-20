@@ -12,8 +12,10 @@ from ..notifications.tasks import notify_on_new_private_thread
 from ..threads.models import Thread
 from ..threads.views.generic import PrivateThreadView
 from ..threadupdates.create import create_added_member_thread_update
+from ..threadupdates.models import ThreadUpdate
 from .enums import PrivateThreadMembersTemplate
 from .forms import MembersAddForm
+from .members import change_private_thread_owner, remove_private_thread_member
 from .models import PrivateThreadMember
 
 if TYPE_CHECKING:
@@ -72,7 +74,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
 
             messages.success(
                 request,
-                pgettext("add private thread members view", "New members added"),
+                pgettext("private thread members add view", "New members added"),
             )
 
         if not request.is_htmx:
@@ -81,6 +83,8 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         context = get_private_thread_members_context_data(
             request, thread, self.owner, self.members + new_members
         )
+
+        context["swap_oob"] = True
 
         if thread_updates:
             posts_feed = self.get_posts_feed(request, thread, [], thread_updates)
@@ -156,13 +160,28 @@ class PrivateThreadMemberView(PrivateThreadView):
     ) -> HttpResponse:
         thread = self.get_thread(request, id)
         member = self.get_member(request, user_id)
-
-        # do updates mumbo-jumbo
+        thread_update = self.update_members(request, thread, member)
 
         if not request.is_htmx:
             return redirect(self.get_next_thread_url(request, thread))
 
-        # Prepare HTMX response
+        context = get_private_thread_members_context_data(
+            request, thread, self.owner, self.members
+        )
+
+        if thread_update:
+            posts_feed = self.get_posts_feed(request, thread, [], [thread_update])
+            posts_feed.set_animated_thread_updates([thread_update.id])
+            context["feed"] = posts_feed.get_context_data()
+
+        response = render(request, PrivateThreadMembersTemplate.HTMX, context)
+
+        return response
+
+    def update_members(
+        self, request: HttpRequest, thread: Thread, member: "User"
+    ) -> ThreadUpdate | None:
+        return None
 
     def get_member(self, request: HttpRequest, id: int) -> Optional["User"]:
         for member in self.members:
@@ -173,11 +192,23 @@ class PrivateThreadMemberView(PrivateThreadView):
 
 
 class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
-    def post(
-        self, request: HttpRequest, id: int, slug: str, user_id: int
-    ) -> HttpResponse:
-        thread = self.get_thread(request, id)
-        return redirect(self.get_next_thread_url(request, thread))
+    def update_members(
+        self, request: HttpRequest, thread: Thread, member: "User"
+    ) -> ThreadUpdate | None:
+        if member == self.owner:
+            return None
+
+        thread_update = change_private_thread_owner(
+            request.user, thread, member, request
+        )
+        self.owner = member
+
+        messages.success(
+            request,
+            pgettext("add private thread owner change view", "Owner changed"),
+        )
+
+        return thread_update
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         if request.user.is_anonymous:
@@ -205,11 +236,24 @@ class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
 
 
 class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
-    def post(
-        self, request: HttpRequest, id: int, slug: str, user_id: int
-    ) -> HttpResponse:
-        thread = self.get_thread(request, id)
-        return redirect(self.get_next_thread_url(request, thread))
+    def update_members(
+        self, request: HttpRequest, thread: Thread, member: "User"
+    ) -> ThreadUpdate | None:
+        if member == self.owner:
+            return None
+
+        thread_update = remove_private_thread_member(
+            request.user, thread, member, request
+        )
+
+        self.members.remove(member)
+
+        messages.success(
+            request,
+            pgettext("add private thread member remove view", "Member removed"),
+        )
+
+        return thread_update
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         if request.user.is_anonymous:

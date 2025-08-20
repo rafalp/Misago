@@ -37,7 +37,7 @@ def get_private_thread_members(thread: Thread) -> tuple[Optional["User"], list["
     queryset = (
         PrivateThreadMember.objects.filter(thread=thread)
         .select_related("user")
-        .order_by("-is_owner", "id")
+        .order_by("id")
     )
 
     owner: Optional["User"] = None

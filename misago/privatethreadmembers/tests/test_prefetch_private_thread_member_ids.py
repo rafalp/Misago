@@ -22,8 +22,8 @@ def test_prefetch_private_thread_member_ids_sets_thread_owner_id_property(
 def test_prefetch_private_thread_member_ids_sets_thread_member_ids_property(
     thread, user_thread, user, other_user, django_assert_num_queries
 ):
-    PrivateThreadMember.objects.create(thread=thread, user=user, is_owner=False)
     PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
+    PrivateThreadMember.objects.create(thread=thread, user=user, is_owner=False)
     PrivateThreadMember.objects.create(thread=user_thread, user=user, is_owner=True)
     PrivateThreadMember.objects.create(
         thread=user_thread, user=other_user, is_owner=False

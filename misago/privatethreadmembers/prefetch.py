@@ -10,7 +10,7 @@ def prefetch_private_thread_member_ids(threads: Iterable[Thread]):
 
     queryset = (
         PrivateThreadMember.objects.filter(thread__in=threads)
-        .order_by("-is_owner", "id")
+        .order_by("id")
         .values_list("thread_id", "user_id", "is_owner")
     )
     for thread_id, user_id, is_owner in queryset:

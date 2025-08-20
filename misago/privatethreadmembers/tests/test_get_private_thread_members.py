@@ -12,7 +12,7 @@ def test_get_private_thread_members_returns_thread_owner_and_members_list(
         owner, members = get_private_thread_members(thread)
 
     assert owner == other_user
-    assert members == [other_user, user]
+    assert members == [user, other_user]
 
 
 def test_get_private_thread_members_sets_thread_owner_and_member_ids_properties(
@@ -24,4 +24,4 @@ def test_get_private_thread_members_sets_thread_owner_and_member_ids_properties(
     with django_assert_num_queries(1):
         get_private_thread_members(thread)
         assert thread.private_thread_owner_id == other_user.id
-        assert thread.private_thread_member_ids == [other_user.id, user.id]
+        assert thread.private_thread_member_ids == [user.id, other_user.id]

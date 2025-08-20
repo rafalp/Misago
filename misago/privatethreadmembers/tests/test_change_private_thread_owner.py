@@ -9,7 +9,7 @@ def test_change_private_thread_owner_changes_private_thread_owner_to_other_membe
 
     owner, members = get_private_thread_members(user_private_thread)
     assert owner == other_user
-    assert members == [other_user, user, moderator]
+    assert members == [user, other_user, moderator]
 
     assert thread_update.action == ThreadUpdateActionName.CHANGED_OWNER
 
@@ -23,6 +23,6 @@ def test_change_private_thread_owner_moderator_takes_ownership(
 
     owner, members = get_private_thread_members(user_private_thread)
     assert owner == moderator
-    assert members == [moderator, user, other_user]
+    assert members == [user, other_user, moderator]
 
     assert thread_update.action == ThreadUpdateActionName.TOOK_OWNERSHIP

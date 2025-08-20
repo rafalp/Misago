@@ -1,6 +1,6 @@
 {% load i18n misago_avatars %}
 
-<details class="panel panel-default panel-private-thread-members"{% if is_request_htmx %} open{% endif %}>
+<details class="panel panel-default panel-private-thread-members" {% if is_request_htmx %}open{% endif %}>
   <summary class="panel-private-thread-members-header">
     <h3 class="panel-private-thread-members-title">
       {% blocktranslate trimmed count members=members|length context "private thread members panel" %}
@@ -39,9 +39,37 @@
               <button class="btn btn-link btn-icon" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span class="material-icon">more_horiz</span>
               </button>
-              <ul class="dropdown-menu dropdown-menu-right">
-                <li><a href="#">{% translate "Make owner" context "private thread member action btn" %}</a></li>
-                <li><a href="#">{% translate "Remove from thread" context "private thread member action btn" %}</a></li>
+              <ul class="dropdown-menu dropdown-menu-right" hx-target="#misago-htmx-members" hx-swap="outerHTML">
+                <li>
+                  <form
+                    class="dropdown-menu-item"
+                    action="{% url 'misago:private-thread-owner-change' id=thread.id slug=thread.slug user_id=member.id %}"
+                    method="post"
+                    hx-post="{% url 'misago:private-thread-owner-change' id=thread.id slug=thread.slug user_id=member.id %}"
+                    hx-confirm="{% translate 'Are you sure you want to change thread owner to this member?' context 'private thread members panel' %}"
+                  >
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next_url }}">
+                    <button type="submit" class="btn-link">
+                      {% translate "Make owner" context "private thread member action btn" %}
+                    </button>
+                  </form>
+                </li>
+                <li>
+                  <form
+                    class="dropdown-menu-item"
+                    action="{% url 'misago:private-thread-member-remove' id=thread.id slug=thread.slug user_id=member.id %}"
+                    method="post"
+                    hx-post="{% url 'misago:private-thread-member-remove' id=thread.id slug=thread.slug user_id=member.id %}"
+                    hx-confirm="{% translate 'Are you sure you want to remove this member?' context 'private thread members panel' %}"
+                  >
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next_url }}">
+                    <button type="submit" class="btn-link">
+                      {% translate "Remove from thread" context "private thread member action btn" %}
+                    </button>
+                  </form>
+                </li>
               </ul>
             </div>
             <noscript>
@@ -50,8 +78,8 @@
                   <span class="material-icon">more_horiz</span>
                 </summary>
                 <ul class="dropdown-menu dropdown-menu-right">
-                  <li><a href="#">{% translate "Make owner" context "private thread member action btn" %}</a></li>
-                  <li><a href="#">{% translate "Remove from thread" context "private thread member action btn" %}</a></li>
+                  <li><a href="{% url 'misago:private-thread-owner-change' id=thread.id slug=thread.slug user_id=member.id %}">{% translate "Make owner" context "private thread member action btn" %}</a></li>
+                  <li><a href="{% url 'misago:private-thread-member-remove' id=thread.id slug=thread.slug user_id=member.id %}">{% translate "Remove from thread" context "private thread member action btn" %}</a></li>
                 </ul>
               </details>
             </noscript>
