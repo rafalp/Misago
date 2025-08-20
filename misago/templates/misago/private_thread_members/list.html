@@ -46,7 +46,7 @@
                     action="{% url 'misago:private-thread-owner-change' id=thread.id slug=thread.slug user_id=member.id %}"
                     method="post"
                     hx-post="{% url 'misago:private-thread-owner-change' id=thread.id slug=thread.slug user_id=member.id %}"
-                    hx-confirm="{% translate 'Are you sure you want to change thread owner to this member?' context 'private thread members panel' %}"
+                    hx-confirm="{% translate 'Change thread owner to this member?' context 'private thread members panel' %}"
                   >
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ next_url }}">
@@ -61,7 +61,7 @@
                     action="{% url 'misago:private-thread-member-remove' id=thread.id slug=thread.slug user_id=member.id %}"
                     method="post"
                     hx-post="{% url 'misago:private-thread-member-remove' id=thread.id slug=thread.slug user_id=member.id %}"
-                    hx-confirm="{% translate 'Are you sure you want to remove this member?' context 'private thread members panel' %}"
+                    hx-confirm="{% translate 'Remove this member?' context 'private thread members panel' %}"
                   >
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ next_url }}">
