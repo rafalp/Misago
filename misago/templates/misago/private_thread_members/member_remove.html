@@ -3,7 +3,7 @@
 
 
 {% block title %}
-  {% translate "Remove member" context "private thread member remove page" %} | {{ thread }} | {{ block.super }}
+  {% translate "Remove member" context "private thread member remove page title" %} | {{ thread }} | {{ block.super }}
 {% endblock title %}
 
 
@@ -19,24 +19,24 @@
       <div class="panel-confirm-form panel-confirm-form-delete">
         <div class="panel-confirm-form-body">
           <h1 class="panel-confirm-form-header">
-            {% translate "Remove member" context "private thread member remove page" %}
+            {% translate "Remove member" context "private thread member remove confirm title" %}
           </h1>
 
           <div class="panel-confirm-form-copy">
             {% capture trimmed as member_username %}
               <strong>{{ member.username }}</strong>
             {% endcapture %}
-            {% blocktranslate trimmed with member=member_username|safe context "private thread member remove page" %}
+            {% blocktranslate trimmed with member=member_username|safe context "private thread member remove confirm prompt" %}
               Are you sure you want to remove {{ member }} from this thread?
             {% endblocktranslate %}
           </div>
 
           <div class="panel-confirm-form-footer">
             <a href="{{ next_url }}" class="btn btn-default btn-block">
-              {% translate "Cancel" context "private thread member remove page cancel btn" %}
+              {% translate "Cancel" context "private thread member remove cancel btn" %}
             </a>
             <button class="btn btn-primary" type="submit">
-              {% translate "Remove member" context "private thread member remove page submit btn" %}
+              {% translate "Remove member" context "private thread member remove confirm btn" %}
             </button>
           </div>
 

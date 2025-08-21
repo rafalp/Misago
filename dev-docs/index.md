@@ -40,3 +40,4 @@ Misago implements a plugin system that extends [Django's existing application me
 Additional resources for developers.
 
 - [Writing apps](./writing-apps.md)
+- [Translation strings contextual markers](./translation-strings-contextual-markers.md)
