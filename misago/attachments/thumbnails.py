@@ -7,7 +7,7 @@ from .models import Attachment
 
 
 def generate_attachment_thumbnail(
-    attachment: Attachment, image, width: int, height: int
+    attachment: Attachment, image, width: int, height: int, format: str
 ):
     thumbnail_stream = BytesIO()
     format = image.format
@@ -23,5 +23,6 @@ def generate_attachment_thumbnail(
 
     attachment.thumbnail_dimensions = "x".join(map(str, image.size))
     attachment.thumbnail_size = attachment.thumbnail.size
+    attachment.thumbnail_format = format
 
     del thumbnail_stream

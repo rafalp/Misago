@@ -56,6 +56,7 @@ class Command(BaseCommand):
 
     def process_attachment(self, settings: DynamicSettings, attachment: Attachment):
         image = Image.open(attachment.upload.path)
+        image_format = image.format
 
         width, height = image.size
         attachment.dimensions = f"{width}x{height}"
@@ -71,7 +72,7 @@ class Command(BaseCommand):
 
         if width > thumbnail_width or height > thumbnail_height:
             generate_attachment_thumbnail(
-                attachment, image, thumbnail_width, thumbnail_height
+                attachment, image, thumbnail_width, thumbnail_height, image_format
             )
 
         attachment.save(
