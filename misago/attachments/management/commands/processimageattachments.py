@@ -71,7 +71,11 @@ class Command(BaseCommand):
 
         if width > thumbnail_width or height > thumbnail_height:
             generate_attachment_thumbnail(
-                attachment, image, image.format, thumbnail_width, thumbnail_height,
+                attachment,
+                image,
+                image.format,
+                thumbnail_width,
+                thumbnail_height,
             )
 
         attachment.save(
