@@ -7,11 +7,10 @@ def test_generate_attachment_thumbnail_generates_thumbnail_image_and_updates_att
     image_attachment, image_large, teardown_attachments
 ):
     image = Image.open(image_large)
-    image_format = image.format
-    generate_attachment_thumbnail(image_attachment, image, 400, 300, image_format)
+    generate_attachment_thumbnail(image_attachment, image, 400, 300, image.format)
 
     assert image_attachment.thumbnail
     assert image_attachment.thumbnail.url
     assert image_attachment.thumbnail_dimensions == "300x300"
     assert image_attachment.thumbnail_size
-    assert image_attachment.thumbnail_format == image_format
+    assert image_attachment.thumbnail_format == image.format

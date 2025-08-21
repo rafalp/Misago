@@ -163,7 +163,7 @@ def _store_attachment_image(
 
     if image.width > thumbnail_width or image.height > thumbnail_height:
         generate_attachment_thumbnail(
-            attachment, image, thumbnail_width, thumbnail_height, image_format
+            attachment, image, image_format, thumbnail_width, thumbnail_height,
         )
 
 
