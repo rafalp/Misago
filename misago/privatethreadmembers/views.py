@@ -13,6 +13,7 @@ from ..threads.models import Thread
 from ..threads.views.generic import PrivateThreadView
 from ..threadupdates.create import create_added_member_thread_update
 from ..threadupdates.models import ThreadUpdate
+from ..threads.nexturl import get_next_thread_url
 from .enums import PrivateThreadMembersTemplate
 from .forms import MembersAddForm
 from .members import change_private_thread_owner, remove_private_thread_member
@@ -145,7 +146,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
 
 class PrivateThreadMemberView(PrivateThreadView):
     thread_get_members = True
-    template_name = "..."
+    template_name: str
 
     def get(
         self, request: HttpRequest, id: int, slug: str, user_id: int
@@ -153,7 +154,15 @@ class PrivateThreadMemberView(PrivateThreadView):
         thread = self.get_thread(request, id)
         member = self.get_member(request, user_id)
 
-        return redirect(self.get_next_thread_url(request, thread))
+        return render(
+            request,
+            self.template_name,
+            {
+                "thread": thread,
+                "member": member,
+                "next_url": self.get_next_thread_url(request, thread, strip_qs=True),
+            }
+        )
 
     def post(
         self, request: HttpRequest, id: int, slug: str, user_id: int
@@ -192,6 +201,8 @@ class PrivateThreadMemberView(PrivateThreadView):
 
 
 class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
+    template_name = PrivateThreadMembersTemplate.OWNER_CHANGE
+
     def update_members(
         self, request: HttpRequest, thread: Thread, member: "User"
     ) -> ThreadUpdate | None:
@@ -236,6 +247,8 @@ class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
 
 
 class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
+    template_name = PrivateThreadMembersTemplate.MEMBER_REMOVE
+
     def update_members(
         self, request: HttpRequest, thread: Thread, member: "User"
     ) -> ThreadUpdate | None:
@@ -289,12 +302,15 @@ def get_private_thread_members_context_data(
     moderation = bool(request.user_permissions.is_private_threads_moderator)
     manage = moderation or request.user.id == owner.id if owner else None
 
+    next_url = get_next_thread_url(request, thread, "misago:private-thread")
+    next_url_quoted = quote_plus(next_url)
+
     add_members_url = (
         reverse(
             "misago:private-thread-members-add",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
-        + f"?next={quote_plus(request.get_full_path())}"
+        + f"?next={next_url_quoted}"
     )
 
     return {
@@ -304,4 +320,5 @@ def get_private_thread_members_context_data(
         "owner": owner,
         "members": members,
         "add_members_url": add_members_url,
+        "next_url_quoted": next_url_quoted,
     }

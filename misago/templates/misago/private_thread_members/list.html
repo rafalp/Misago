@@ -78,8 +78,16 @@
                   <span class="material-icon">more_horiz</span>
                 </summary>
                 <ul class="dropdown-menu dropdown-menu-right">
-                  <li><a href="{% url 'misago:private-thread-owner-change' id=thread.id slug=thread.slug user_id=member.id %}">{% translate "Make owner" context "private thread member action btn" %}</a></li>
-                  <li><a href="{% url 'misago:private-thread-member-remove' id=thread.id slug=thread.slug user_id=member.id %}">{% translate "Remove from thread" context "private thread member action btn" %}</a></li>
+                  <li>
+                    <a href="{% url 'misago:private-thread-owner-change' id=thread.id slug=thread.slug user_id=member.id %}?next={{ next_url_quoted }}">
+                      {% translate "Make owner" context "private thread member action btn" %}
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'misago:private-thread-member-remove' id=thread.id slug=thread.slug user_id=member.id %}?next={{ next_url_quoted }}">
+                      {% translate "Remove from thread" context "private thread member action btn" %}
+                    </a>
+                  </li>
                 </ul>
               </details>
             </noscript>
