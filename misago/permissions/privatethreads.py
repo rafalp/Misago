@@ -1,4 +1,5 @@
 from math import ceil
+from typing_extensions import TYPE_CHECKING
 
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
@@ -12,6 +13,7 @@ from .hooks import (
     check_edit_private_thread_permission_hook,
     check_edit_private_thread_post_permission_hook,
     check_private_threads_permission_hook,
+    check_remove_private_thread_member_permission_hook,
     check_reply_private_thread_permission_hook,
     check_see_private_thread_permission_hook,
     check_see_private_thread_post_permission_hook,
@@ -264,6 +266,44 @@ def _check_edit_private_thread_post_permission_action(
                 minutes,
             )
             % {"minutes": minutes}
+        )
+
+
+def check_remove_private_thread_member_permission(
+    permissions: UserPermissionsProxy,
+    thread: Thread,
+    member_permissions: UserPermissionsProxy,
+):
+    check_remove_private_thread_member_permission_hook(
+        _check_remove_private_thread_member_permission_action,
+        permissions,
+        thread,
+        member_permissions,
+    )
+
+
+def _check_remove_private_thread_member_permission_action(
+    permissions: UserPermissionsProxy,
+    thread: Thread,
+    member_permissions: UserPermissionsProxy,
+):
+    if permissions.is_private_threads_moderator:
+        return
+
+    if permissions.user.id != thread.private_thread_owner_id:
+        raise PermissionDenied(
+            pgettext(
+                "remove private thread member permission error",
+                "You can't remove this member.",
+            )
+        )
+
+    if member_permissions.is_private_threads_moderator:
+        raise PermissionDenied(
+            pgettext(
+                "remove private thread member permission error",
+                "This member is a moderator. You can't remove them.",
+            )
         )
 
 

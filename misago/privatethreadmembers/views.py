@@ -9,6 +9,11 @@ from django.urls import reverse
 from django.utils.translation import pgettext
 
 from ..notifications.tasks import notify_on_new_private_thread
+from ..permissions.checkutils import check_permissions
+from ..permissions.privatethreads import (
+    check_remove_private_thread_member_permission,
+)
+from ..permissions.user import get_user_permissions
 from ..threads.models import Thread
 from ..threads.views.generic import PrivateThreadView
 from ..threadupdates.create import create_added_member_thread_update
@@ -153,6 +158,12 @@ class PrivateThreadMemberView(PrivateThreadView):
     ) -> HttpResponse:
         thread = self.get_thread(request, id)
         member = self.get_member(request, user_id)
+        self.check_permissions(request, thread, member)
+
+        member_permissions = get_user_permissions(member, request.cache_versions)
+        check_remove_private_thread_member_permission(
+            request.user_permissions, thread, member_permissions
+        )
 
         return render(
             request,
@@ -161,7 +172,7 @@ class PrivateThreadMemberView(PrivateThreadView):
                 "thread": thread,
                 "member": member,
                 "next_url": self.get_next_thread_url(request, thread, strip_qs=True),
-            }
+            },
         )
 
     def post(
@@ -169,6 +180,8 @@ class PrivateThreadMemberView(PrivateThreadView):
     ) -> HttpResponse:
         thread = self.get_thread(request, id)
         member = self.get_member(request, user_id)
+        self.check_permissions(request, thread, member)
+
         thread_update = self.update_members(request, thread, member)
 
         if not request.is_htmx:
@@ -192,12 +205,15 @@ class PrivateThreadMemberView(PrivateThreadView):
     ) -> ThreadUpdate | None:
         return None
 
-    def get_member(self, request: HttpRequest, id: int) -> Optional["User"]:
+    def get_member(self, request: HttpRequest, id: int) -> "User":
         for member in self.members:
             if member.id == id:
                 return member
 
         raise Http404(pgettext("private thread member view", "Member doesn't exist"))
+
+    def check_permissions(self, request: HttpRequest, thread: Thread, member: "User"):
+        pass
 
 
 class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
@@ -245,6 +261,12 @@ class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
 
         return thread
 
+    def check_permissions(self, request: HttpRequest, thread: Thread, member: "User"):
+        member_permissions = get_user_permissions(member, request.cache_versions)
+        check_remove_private_thread_member_permission(
+            request.user_permissions, thread, member_permissions
+        )
+
 
 class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
     template_name = PrivateThreadMembersTemplate.MEMBER_REMOVE
@@ -277,20 +299,13 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
                 )
             )
 
-        thread = super().get_thread(request, thread_id)
+        return super().get_thread(request, thread_id)
 
-        if not (
-            self.get_moderator_status(request, thread)
-            or self.get_owner_status(request, thread)
-        ):
-            raise PermissionDenied(
-                pgettext(
-                    "private thread member remove view",
-                    "You can't remove members from this thread.",
-                )
-            )
-
-        return thread
+    def check_permissions(self, request: HttpRequest, thread: Thread, member: "User"):
+        member_permissions = get_user_permissions(member, request.cache_versions)
+        check_remove_private_thread_member_permission(
+            request.user_permissions, thread, member_permissions
+        )
 
 
 def get_private_thread_members_context_data(

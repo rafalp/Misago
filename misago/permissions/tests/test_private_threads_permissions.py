@@ -9,6 +9,7 @@ from ..privatethreads import (
     check_edit_private_thread_post_permission,
     check_edit_private_thread_permission,
     check_private_threads_permission,
+    check_remove_private_thread_member_permission,
     check_reply_private_thread_permission,
     check_see_private_thread_permission,
     check_see_private_thread_post_permission,
@@ -375,6 +376,48 @@ def test_check_see_private_thread_post_permission_always_passes(
 
     permissions = UserPermissionsProxy(user, cache_versions)
     check_see_private_thread_post_permission(permissions, thread, post)
+
+
+def test_check_remove_private_thread_member_permission_passes_for_thread_owner_removing_thread_member(
+    user, other_user, user_private_thread, user_permissions_factory
+):
+    check_remove_private_thread_member_permission(
+        user_permissions_factory(user),
+        user_private_thread,
+        user_permissions_factory(other_user),
+    )
+
+
+def test_check_remove_private_thread_member_permission_passes_for_moderator_removing_thread_member(
+    moderator, other_user, user_private_thread, user_permissions_factory
+):
+    check_remove_private_thread_member_permission(
+        user_permissions_factory(moderator),
+        user_private_thread,
+        user_permissions_factory(other_user),
+    )
+
+
+def test_check_remove_private_thread_member_permission_fails_for_thread_owner_removing_moderator(
+    user, moderator, user_private_thread, user_permissions_factory
+):
+    with pytest.raises(PermissionDenied):
+        check_remove_private_thread_member_permission(
+            user_permissions_factory(user),
+            user_private_thread,
+            user_permissions_factory(moderator),
+        )
+
+
+def test_check_remove_private_thread_member_permission_fails_for_thread_member(
+    user, other_user, user_private_thread, user_permissions_factory
+):
+    with pytest.raises(PermissionDenied):
+        check_remove_private_thread_member_permission(
+            user_permissions_factory(other_user),
+            user_private_thread,
+            user_permissions_factory(user),
+        )
 
 
 def test_filter_private_threads_queryset_returns_nothing_for_anonymous_user(
