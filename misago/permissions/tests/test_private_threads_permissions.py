@@ -6,6 +6,7 @@ from ...privatethreadmembers.models import PrivateThreadMember
 from ...threads.test import post_thread
 from ..models import Moderator
 from ..privatethreads import (
+    check_change_private_thread_owner_permission,
     check_edit_private_thread_post_permission,
     check_edit_private_thread_permission,
     check_private_threads_permission,
@@ -376,6 +377,34 @@ def test_check_see_private_thread_post_permission_always_passes(
 
     permissions = UserPermissionsProxy(user, cache_versions)
     check_see_private_thread_post_permission(permissions, thread, post)
+
+
+def test_check_change_private_thread_owner_permission_passes_for_thread_owner(
+    user, user_private_thread, user_permissions_factory
+):
+    check_change_private_thread_owner_permission(
+        user_permissions_factory(user),
+        user_private_thread,
+    )
+
+
+def test_check_change_private_thread_owner_permission_passes_for_moderator(
+    moderator, user_private_thread, user_permissions_factory
+):
+    check_change_private_thread_owner_permission(
+        user_permissions_factory(moderator),
+        user_private_thread,
+    )
+
+
+def test_check_change_private_thread_owner_permission_fails_for_regular_member(
+    other_user, user_private_thread, user_permissions_factory
+):
+    with pytest.raises(PermissionDenied):
+        check_change_private_thread_owner_permission(
+            user_permissions_factory(other_user),
+            user_private_thread,
+        )
 
 
 def test_check_remove_private_thread_member_permission_passes_for_thread_owner_removing_thread_member(

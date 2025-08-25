@@ -82,7 +82,7 @@ A proxy object with the member’s permissions.
 
 ## Example
 
-Checks if the user has permission to remove a private thread member assigned a plugin-defined "protected" status:
+Prevent a user from removing a private thread member with a "protected" status:
 
 ```python
 from django.core.exceptions import PermissionDenied
@@ -97,11 +97,12 @@ def check_user_can_remove_private_thread_member(
     thread: Thread,
     member_permissions: UserPermissionsProxy,
 ) -> None:
+    # Run default checks
+    action(permissions, thread, member_permissions)
+
     if (
         not permissions.user.is_private_threads_moderator
         and member_permissions.user.plugin_data["private_threads_protect"]
     ):
         raise PermissionDenied("This member is protected. You can't remove them.")
-
-    action(permissions, thread, member_permissions)
 ```

@@ -9,8 +9,8 @@ from django.urls import reverse
 from django.utils.translation import pgettext
 
 from ..notifications.tasks import notify_on_new_private_thread
-from ..permissions.checkutils import check_permissions
 from ..permissions.privatethreads import (
+    check_change_private_thread_owner_permission,
     check_remove_private_thread_member_permission,
 )
 from ..permissions.user import get_user_permissions
@@ -262,10 +262,7 @@ class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
         return thread
 
     def check_permissions(self, request: HttpRequest, thread: Thread, member: "User"):
-        member_permissions = get_user_permissions(member, request.cache_versions)
-        check_remove_private_thread_member_permission(
-            request.user_permissions, thread, member_permissions
-        )
+        check_change_private_thread_owner_permission(request.user_permissions, thread)
 
 
 class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
