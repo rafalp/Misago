@@ -4,9 +4,9 @@ from django.utils import timezone
 from ...conf.test import override_dynamic_settings
 from ...html.element import html_element
 from ...permissions.models import Moderator
+from ...privatethreadmembers.models import PrivateThreadMember
 from ...test import assert_contains, assert_not_contains
 from ...threadupdates.create import create_test_thread_update
-from ..models import ThreadParticipant
 from ..test import reply_thread
 
 
@@ -50,7 +50,7 @@ def test_private_thread_replies_view_shows_error_to_anonymous_user(
 def test_private_thread_replies_view_shows_error_to_user_who_is_not_thread_participant(
     user, user_client, user_private_thread
 ):
-    ThreadParticipant.objects.filter(user=user).delete()
+    PrivateThreadMember.objects.filter(user=user).delete()
 
     response = user_client.get(
         reverse(
@@ -377,7 +377,7 @@ def test_private_thread_replies_view_shows_hidden_thread_updates_to_private_thre
 def test_private_thread_replies_view_shows_hidden_thread_updates_to_global_moderator(
     moderator_client, user, moderator, user_private_thread
 ):
-    ThreadParticipant.objects.create(thread=user_private_thread, user=moderator)
+    PrivateThreadMember.objects.create(thread=user_private_thread, user=moderator)
 
     visible_thread_update = create_test_thread_update(user_private_thread, user)
     hidden_thread_update = create_test_thread_update(

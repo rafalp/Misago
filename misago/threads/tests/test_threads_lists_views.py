@@ -7,8 +7,8 @@ from ...conf.test import override_dynamic_settings
 from ...pagination.cursor import EmptyPageError
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
+from ...privatethreadmembers.models import PrivateThreadMember
 from ...test import assert_contains, assert_not_contains
-from ..models import ThreadParticipant
 from ..test import post_thread
 
 
@@ -215,7 +215,7 @@ def test_private_threads_list_displays_private_thread(
     private_threads_category, user, user_client
 ):
     thread = post_thread(private_threads_category, title="Test Private Thread")
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(reverse("misago:private-threads"))
     assert_contains(response, "Test Private Thread")
@@ -227,7 +227,7 @@ def test_private_threads_list_displays_user_private_thread(
     thread = post_thread(
         private_threads_category, title="Test Private Thread", poster=other_user
     )
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(reverse("misago:private-threads"))
     assert_contains(response, "Test Private Thread")
@@ -287,7 +287,7 @@ def test_private_threads_list_displays_thread_in_htmx_request(
     user, private_threads_category, user_client
 ):
     thread = post_thread(private_threads_category, title="Test Thread")
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
         reverse("misago:private-threads"),
@@ -380,7 +380,7 @@ def test_private_threads_list_displays_thread_with_animation_in_htmx_request(
     private_threads_category, user_client, user
 ):
     thread = post_thread(private_threads_category, title="Test Thread")
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
         reverse("misago:private-threads") + "?animate_new=0",
@@ -395,7 +395,7 @@ def test_private_threads_list_displays_thread_without_animation_in_htmx_request(
     private_threads_category, user_client, user
 ):
     thread = post_thread(private_threads_category, title="Test Thread")
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
         reverse("misago:private-threads") + f"?animate_new={thread.last_post_id + 1}",
@@ -410,7 +410,7 @@ def test_private_threads_list_displays_thread_without_animation_without_htmx(
     private_threads_category, user_client, user
 ):
     thread = post_thread(private_threads_category, title="Test Thread")
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
         reverse("misago:private-threads") + "?animate_new=0",
@@ -500,7 +500,7 @@ def test_private_threads_list_raises_404_error_if_filter_is_invalid(
     private_threads_category, user, user_client
 ):
     thread = post_thread(private_threads_category, title="User Thread", poster=user)
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
         reverse("misago:private-threads", kwargs={"filter": "invalid"})
@@ -516,8 +516,8 @@ def test_private_threads_list_filters_threads(
     )
     hidden_thread = post_thread(private_threads_category, title="Other Thread")
 
-    ThreadParticipant.objects.create(thread=visible_thread, user=user)
-    ThreadParticipant.objects.create(thread=hidden_thread, user=user)
+    PrivateThreadMember.objects.create(thread=visible_thread, user=user)
+    PrivateThreadMember.objects.create(thread=hidden_thread, user=user)
 
     response = user_client.get(
         reverse("misago:private-threads", kwargs={"filter": "my"})
@@ -642,7 +642,7 @@ def test_private_threads_list_renders_unread_thread(
 
     unread_thread = post_thread(private_threads_category, title="Unread Thread")
 
-    ThreadParticipant.objects.create(thread=unread_thread, user=user)
+    PrivateThreadMember.objects.create(thread=unread_thread, user=user)
 
     response = user_client.get(reverse("misago:private-threads"))
     assert_contains(response, "Has unread posts")

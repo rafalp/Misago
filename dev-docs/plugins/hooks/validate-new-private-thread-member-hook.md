@@ -5,10 +5,10 @@ This hook allows plugins to replace or extend the standard logic for validating 
 
 ## Location
 
-This hook can be imported from `misago.privatethreads.hooks`:
+This hook can be imported from `misago.privatethreadmembers.hooks`:
 
 ```python
-from misago.privatethreads.hooks import validate_new_private_thread_member_hook
+from misago.privatethreadmembers.hooks import validate_new_private_thread_member_hook
 ```
 
 
@@ -17,7 +17,7 @@ from misago.privatethreads.hooks import validate_new_private_thread_member_hook
 ```python
 def custom_validate_new_private_thread_member_filter(
     action: ValidateNewPrivateThreadMemberHookAction,
-    invited_user_permissions: 'UserPermissionsProxy',
+    new_member_permissions: 'UserPermissionsProxy',
     other_user_permissions: 'UserPermissionsProxy',
     cache_versions: dict,
     request: HttpRequest | None=None,
@@ -37,7 +37,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `invited_user_permissions: UserPermissionsProxy`
+#### `new_member_permissions: UserPermissionsProxy`
 
 A proxy object with the invited user's permissions.
 
@@ -61,7 +61,7 @@ The request object, or `None` if not provided.
 
 ```python
 def validate_new_private_thread_member_action(
-    invited_user_permissions: 'UserPermissionsProxy',
+    new_member_permissions: 'UserPermissionsProxy',
     other_user_permissions: 'UserPermissionsProxy',
     cache_versions: dict,
     request: HttpRequest | None=None,
@@ -74,7 +74,7 @@ Misago function for validating new private thread members.
 
 ### Arguments
 
-#### `invited_user_permissions: UserPermissionsProxy`
+#### `new_member_permissions: UserPermissionsProxy`
 
 A proxy object with the invited user's permissions.
 
@@ -105,19 +105,19 @@ from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.utils import timezone
 from misago.permissions.proxy import UserPermissionsProxy
-from misago.privatethreads.hooks import validate_new_private_thread_member_hook
+from misago.privatethreadmembers.hooks import validate_new_private_thread_member_hook
 
 
 @validate_new_private_thread_member_hook.append_filter
 def validate_new_private_thread_member_registration_date(
     action,
-    invited_user_permissions: UserPermissionsProxy,
+    new_member_permissions: UserPermissionsProxy,
     other_user_permissions: UserPermissionsProxy,
     cache_versions: dict,
     request: HttpRequest | None = None,
 ):
     action(
-        invited_user_permissions,
+        new_member_permissions,
         other_user_permissions,
         cache_versions,
         request,
@@ -125,7 +125,7 @@ def validate_new_private_thread_member_registration_date(
 
     user_is_new = (timezone.now() - user.joined_on).days < 7
 
-    if user_is_new and not invited_user_permissions.moderated_categories:
+    if user_is_new and not new_member_permissions.moderated_categories:
         raise ValidationError(
             "Your account is less than 7 days old."
         )

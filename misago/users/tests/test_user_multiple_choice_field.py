@@ -215,7 +215,7 @@ def test_user_multiple_choice_field_validates_value_max_choices(
         )
     )
     assert not form.is_valid()
-    assert form.errors == {"users": ["Select no more than 2 users."]}
+    assert form.errors == {"users": ["Enter no more than 2 users."]}
 
 
 def test_user_multiple_choice_field_validates_noscript_value_max_choices(
@@ -230,7 +230,7 @@ def test_user_multiple_choice_field_validates_noscript_value_max_choices(
         )
     )
     assert not form.is_valid()
-    assert form.errors == {"users": ["Select no more than 2 users."]}
+    assert form.errors == {"users": ["Enter no more than 2 users."]}
 
 
 def test_user_multiple_choice_field_fails_to_validate_nonexisting_users(

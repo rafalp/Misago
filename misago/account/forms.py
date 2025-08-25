@@ -21,7 +21,7 @@ class AccountPreferencesForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            "limits_private_thread_invites_to",
+            "allow_new_private_threads_by",
             "watch_started_threads",
             "watch_replied_threads",
             "watch_new_private_threads_by_followed",
@@ -30,7 +30,7 @@ class AccountPreferencesForm(forms.ModelForm):
             "notify_new_private_threads_by_other_users",
         ]
         widgets = {
-            "limits_private_thread_invites_to": forms.RadioSelect(),
+            "allow_new_private_threads_by": forms.RadioSelect(),
         }
 
     def __init__(self, *args, **kwargs):

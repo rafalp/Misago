@@ -388,20 +388,20 @@ def create_joined_thread_update(
     )
 
 
-def create_invited_participant_thread_update(
+def create_added_member_thread_update(
     thread: Thread,
-    invited_user: "User",
+    member: "User",
     actor: Union["User", str, None] = None,
     request: HttpRequest | None = None,
     is_hidden: bool = False,
 ) -> ThreadUpdate:
     return create_thread_update(
         thread,
-        ThreadUpdateActionName.INVITED_PARTICIPANT,
+        ThreadUpdateActionName.ADDED_MEMBER,
         actor,
         request=request,
-        context=invited_user.username,
-        context_object=invited_user,
+        context=member.username,
+        context_object=member,
         is_hidden=is_hidden,
     )
 
@@ -421,20 +421,20 @@ def create_left_thread_update(
     )
 
 
-def create_removed_participant_thread_update(
+def create_removed_member_thread_update(
     thread: Thread,
-    removed_participant: "User",
+    member: "User",
     actor: Union["User", str, None] = None,
     request: HttpRequest | None = None,
     is_hidden: bool = False,
 ) -> ThreadUpdate:
     return create_thread_update(
         thread,
-        ThreadUpdateActionName.REMOVED_PARTICIPANT,
+        ThreadUpdateActionName.REMOVED_MEMBER,
         actor,
         request=request,
-        context=removed_participant.username,
-        context_object=removed_participant,
+        context=member.username,
+        context_object=member,
         is_hidden=is_hidden,
     )
 

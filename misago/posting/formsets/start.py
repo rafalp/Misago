@@ -10,7 +10,7 @@ from ...permissions.checkutils import check_permissions
 from ...permissions.polls import check_start_poll_permission
 from ..enums import StartThreadFormsetTabs
 from ..forms import (
-    create_invite_users_form,
+    create_members_form,
     create_poll_form,
     create_post_form,
     create_title_form,
@@ -90,7 +90,7 @@ def _get_start_private_thread_formset_action(
         )
 
     formset = StartPrivateThreadFormset()
-    formset.add_form(create_invite_users_form(request))
+    formset.add_form(create_members_form(request))
     formset.add_form(create_title_form(request))
     formset.add_form(
         create_post_form(

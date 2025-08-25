@@ -34,5 +34,5 @@ class ThreadUpdateActionName(StrEnum):
     JOINED = "joined"
     LEFT = "left"
 
-    INVITED_PARTICIPANT = "invited_participant"
-    REMOVED_PARTICIPANT = "removed_participant"
+    ADDED_MEMBER = "added_member"
+    REMOVED_MEMBER = "removed_member"

@@ -28,7 +28,7 @@ def get_form_data(group: Group) -> dict:
         "group-can_start_private_threads": (
             "1" if group.can_start_private_threads else ""
         ),
-        "group-private_thread_users_limit": str(group.private_thread_users_limit),
+        "group-private_thread_members_limit": str(group.private_thread_members_limit),
         "group-can_upload_attachments": str(group.can_upload_attachments),
         "group-attachment_storage_limit": str(group.attachment_storage_limit),
         "group-unused_attachments_storage_limit": str(

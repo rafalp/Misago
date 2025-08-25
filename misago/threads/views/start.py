@@ -200,7 +200,7 @@ class StartPrivateThreadView(StartThreadView):
         notify_on_new_private_thread.delay(
             state.thread.starter_id,
             state.thread.id,
-            [user.id for user in state.invite_users],
+            [user.id for user in state.members],
         )
 
 

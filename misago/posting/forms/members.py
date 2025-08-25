@@ -6,7 +6,7 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext
 
 from ...permissions.proxy import UserPermissionsProxy
-from ...privatethreads.validators import validate_new_private_thread_member
+from ...privatethreadmembers.validators import validate_new_private_thread_member
 from ...users.fields import UserMultipleChoiceField
 from ..state import StartPrivateThreadState
 from .base import PostingForm
@@ -15,18 +15,18 @@ if TYPE_CHECKING:
     from ...users.models import User
 
 
-class InviteUsersForm(PostingForm):
-    form_prefix = "posting-invite-users"
-    template_name = "misago/posting/invite_users_form.html"
+class MembersForm(PostingForm):
+    form_prefix = "posting-members"
+    template_name = "misago/posting/members_form.html"
 
     request: HttpRequest
-    invite_users: list["User"]
+    add_members: list["User"]
 
     users = UserMultipleChoiceField()
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.invite_users: list["User"] = []
+        self.add_members: list["User"] = []
 
         super().__init__(*args, **kwargs)
 
@@ -34,7 +34,7 @@ class InviteUsersForm(PostingForm):
 
     def setup_users_field(self, field: UserMultipleChoiceField):
         field.queryset = get_user_model().objects.filter(is_active=True)
-        field.max_choices = self.request.user_permissions.private_thread_users_limit
+        field.max_choices = self.request.user_permissions.private_thread_members_limit
 
     def clean_users(self):
         data: list["User"] = self.cleaned_data["users"]
@@ -45,8 +45,10 @@ class InviteUsersForm(PostingForm):
             if not data:
                 errors.append(
                     forms.ValidationError(
-                        pgettext("posting form", "You can't invite yourself."),
-                        code="invite_self",
+                        pgettext(
+                            "posting form", "You must enter at least one other user."
+                        ),
+                        code="self",
                     )
                 )
 
@@ -65,7 +67,7 @@ class InviteUsersForm(PostingForm):
                 errors.append(
                     forms.ValidationError(
                         pgettext("posting form", "%(user)s: %(error)s"),
-                        code="invite_self",
+                        code="member",
                         params={"user": user.username, "error": error.message},
                     )
                 )
@@ -76,15 +78,15 @@ class InviteUsersForm(PostingForm):
         return data
 
     def update_state(self, state: StartPrivateThreadState):
-        state.set_invite_users(self.cleaned_data["users"])
+        state.set_members(self.cleaned_data["users"])
 
 
-def create_invite_users_form(request: HttpRequest) -> InviteUsersForm:
+def create_members_form(request: HttpRequest) -> MembersForm:
     if request.method == "POST":
-        return InviteUsersForm(
+        return MembersForm(
             request.POST,
             request=request,
-            prefix=InviteUsersForm.form_prefix,
+            prefix=MembersForm.form_prefix,
         )
 
-    return InviteUsersForm(request=request, prefix=InviteUsersForm.form_prefix)
+    return MembersForm(request=request, prefix=MembersForm.form_prefix)

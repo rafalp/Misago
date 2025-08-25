@@ -2,9 +2,9 @@ from django.urls import reverse
 
 from ...categories.models import Category
 from ...conf.test import override_dynamic_settings
+from ...privatethreadmembers.models import PrivateThreadMember
 from ...test import assert_contains, assert_not_contains
 from ..enums import ThreadsListsPolling
-from ..models import ThreadParticipant
 from ..test import post_thread
 
 
@@ -459,7 +459,7 @@ def test_private_threads_list_includes_polling_if_its_not_empty(
     user, user_client, private_threads_category
 ):
     thread = post_thread(private_threads_category)
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(private_threads_category.get_absolute_url())
     assert_contains(
@@ -474,7 +474,7 @@ def test_private_threads_list_excludes_polling_if_its_disabled(
     user, user_client, private_threads_category
 ):
     thread = post_thread(private_threads_category)
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(private_threads_category.get_absolute_url())
     assert_not_contains(
@@ -486,10 +486,10 @@ def test_private_threads_list_poll_returns_update_button_for_hx_request_if_there
     user, user_client, private_threads_category
 ):
     thread_1 = post_thread(private_threads_category)
-    ThreadParticipant.objects.create(thread=thread_1, user=user)
+    PrivateThreadMember.objects.create(thread=thread_1, user=user)
 
     thread_2 = post_thread(private_threads_category)
-    ThreadParticipant.objects.create(thread=thread_2, user=user)
+    PrivateThreadMember.objects.create(thread=thread_2, user=user)
 
     response = user_client.get(
         private_threads_category.get_absolute_url() + "?poll_new=0",
@@ -508,7 +508,7 @@ def test_private_threads_list_poll_returns_update_button_for_hx_request_if_there
     ]
 
     for thread in threads:
-        ThreadParticipant.objects.create(thread=thread, user=user)
+        PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
         private_threads_category.get_absolute_url()
@@ -532,7 +532,7 @@ def test_private_threads_list_poll_doesnt_return_update_button_for_hx_request_if
     user, user_client, private_threads_category
 ):
     thread = post_thread(private_threads_category)
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
         private_threads_category.get_absolute_url()
@@ -547,7 +547,7 @@ def test_private_threads_list_poll_doesnt_return_update_button_if_polling_is_dis
     user, user_client, private_threads_category
 ):
     thread = post_thread(private_threads_category)
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
         private_threads_category.get_absolute_url() + "?poll_new=0",
@@ -560,7 +560,7 @@ def test_private_threads_list_poll_doesnt_return_button_if_request_is_not_htmx(
     user, user_client, private_threads_category
 ):
     thread = post_thread(private_threads_category)
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
         private_threads_category.get_absolute_url() + "?poll_new=0"
@@ -585,7 +585,7 @@ def test_private_threads_list_poll_doesnt_return_button_if_new_threads_are_not_v
     user_client, private_threads_category, other_user
 ):
     thread = post_thread(private_threads_category)
-    ThreadParticipant.objects.create(thread=thread, user=other_user)
+    PrivateThreadMember.objects.create(thread=thread, user=other_user)
 
     response = user_client.get(
         private_threads_category.get_absolute_url() + "?poll_new=0",
@@ -598,7 +598,7 @@ def test_private_threads_list_poll_raises_404_error_if_filter_is_invalid(
     private_threads_category, user, user_client
 ):
     thread = post_thread(private_threads_category, title="User Thread", poster=user)
-    ThreadParticipant.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
         reverse("misago:private-threads", kwargs={"filter": "invalid"}) + "?poll_new=0",
@@ -615,8 +615,8 @@ def test_private_threads_list_poll_filters_threads(
     )
     hidden_thread = post_thread(private_threads_category, title="Other Thread")
 
-    ThreadParticipant.objects.create(thread=visible_thread, user=user)
-    ThreadParticipant.objects.create(thread=hidden_thread, user=user)
+    PrivateThreadMember.objects.create(thread=visible_thread, user=user)
+    PrivateThreadMember.objects.create(thread=hidden_thread, user=user)
 
     response = user_client.get(
         reverse("misago:private-threads", kwargs={"filter": "my"}) + "?poll_new=0",

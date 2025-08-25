@@ -1,8 +1,8 @@
 from ...threads.threadurl import get_thread_url
 from ..create import (
+    create_added_member_thread_update,
     create_approved_thread_update,
     create_changed_title_thread_update,
-    create_invited_participant_thread_update,
     create_moved_thread_update,
     create_split_thread_update,
 )
@@ -127,13 +127,13 @@ def test_thread_updates_renderer_renders_action_with_not_found_thread_context(
 def test_thread_updates_renderer_renders_action_with_user_context(
     thread, user, other_user
 ):
-    thread_update = create_invited_participant_thread_update(thread, other_user, user)
+    thread_update = create_added_member_thread_update(thread, other_user, user)
     data = thread_updates_renderer.render_thread_update(
         thread_update, {"users": {other_user.id: other_user}}
     )
     assert data == {
         "description": (
-            f'Invited <a href="{other_user.get_absolute_url()}">Other_User</a>'
+            f'Added <a href="{other_user.get_absolute_url()}">Other_User</a>'
         ),
         "icon": "person_add",
     }
@@ -142,20 +142,20 @@ def test_thread_updates_renderer_renders_action_with_user_context(
 def test_thread_updates_renderer_renders_action_with_deleted_user_context(
     thread, user, other_user
 ):
-    thread_update = create_invited_participant_thread_update(thread, other_user, user)
+    thread_update = create_added_member_thread_update(thread, other_user, user)
     thread_update.clear_context_object()
     thread_update.save()
 
     data = thread_updates_renderer.render_thread_update(thread_update, {"users": {}})
-    assert data == {"description": "Invited <em>Other_User</em>", "icon": "person_add"}
+    assert data == {"description": "Added <em>Other_User</em>", "icon": "person_add"}
 
 
 def test_thread_updates_renderer_renders_action_with_not_found_user_context(
     thread, user, other_user
 ):
-    thread_update = create_invited_participant_thread_update(thread, other_user, user)
+    thread_update = create_added_member_thread_update(thread, other_user, user)
     data = thread_updates_renderer.render_thread_update(thread_update, {"users": {}})
-    assert data == {"description": "Invited <em>Other_User</em>", "icon": "person_add"}
+    assert data == {"description": "Added <em>Other_User</em>", "icon": "person_add"}
 
 
 def test_thread_updates_renderer_returns_none_for_unsupported_action(thread, user):

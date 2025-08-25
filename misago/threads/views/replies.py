@@ -8,7 +8,7 @@ from django.http import (
     HttpResponse,
     HttpResponseNotAllowed,
 )
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views import View
 
@@ -35,6 +35,8 @@ from ...posting.formsets import (
     get_reply_private_thread_formset,
     get_reply_thread_formset,
 )
+from ...privatethreadmembers.enums import PrivateThreadMembersTemplate
+from ...privatethreadmembers.views import get_private_thread_members_context_data
 from ...readtracker.tracker import (
     get_unread_posts,
     mark_category_read,
@@ -253,7 +255,6 @@ class RepliesView(View):
 class ThreadRepliesView(RepliesView, ThreadView):
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
-    poll_template_name: str = "misago/thread/poll.html"
 
     def get(
         self, request: HttpRequest, id: int, slug: str, page: int | None = None
@@ -379,6 +380,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
 
 class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
+    thread_get_members = True
     template_name: str = "misago/private_thread/index.html"
     template_partial_name: str = "misago/private_thread/partial.html"
 
@@ -398,13 +400,18 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
         self, request: HttpRequest, thread: Thread, page: int | None = None
     ) -> dict:
         context = super().get_context_data_action(request, thread, page)
+        context["members"] = self.get_thread_members_context_data(request, thread)
 
-        context.update(
-            {
-                "participants": None,
-            }
+        return context
+
+    def get_thread_members_context_data(
+        self, request: HttpRequest, thread: Thread
+    ) -> dict:
+        context = get_private_thread_members_context_data(
+            request, thread, self.owner, self.members
         )
-
+        context["template_name"] = PrivateThreadMembersTemplate.LIST
+        context["template_name_add_modal"] = PrivateThreadMembersTemplate.ADD_MODAL
         return context
 
     def get_thread_posts_queryset(

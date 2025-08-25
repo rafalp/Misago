@@ -217,35 +217,6 @@ def test_hide_private_thread_update_view_returns_redirect_to_thread(
     )
 
 
-def user_private_thread(
-    moderator_client, user_private_thread, user_private_thread_update
-):
-    next_url = reverse(
-        "misago:private-thread",
-        kwargs={
-            "id": user_private_thread.id,
-            "slug": user_private_thread.slug,
-            "page": 2,
-        },
-    )
-    user_private_thread += "?redirect=1#update-123"
-
-    response = moderator_client.post(
-        reverse(
-            "misago:hide-private-thread-update",
-            kwargs={
-                "id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-                "thread_update": user_private_thread_update.id,
-            },
-        ),
-        {"next": next_url},
-    )
-
-    assert response.status_code == 302
-    assert response["location"] == next_url
-
-
 def test_hide_private_thread_update_view_returns_redirect_to_thread_for_invalid_next_url(
     moderator_client, user_private_thread, user_private_thread_update
 ):

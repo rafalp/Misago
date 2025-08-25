@@ -1,0 +1,20 @@
+{% load i18n %}
+
+{% block content %}
+<form 
+  action="{% url 'misago:private-thread-members-add' id=thread.id slug=thread.slug %}"
+  method="post"
+  hx-post="{% url 'misago:private-thread-members-add' id=thread.id slug=thread.slug %}"
+>
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ next_url }}">
+  <div class="modal-body">
+    {% include "misago/private_thread_members/add_form.html" %}
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="submit">
+      {% translate "Add members" context "private thread members add submit btn" %}
+    </button>
+  </div>
+</form>
+{% endblock content %}

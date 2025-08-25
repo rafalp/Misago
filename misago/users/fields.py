@@ -118,8 +118,8 @@ class UserMultipleChoiceSubField(forms.Field):
         ),
         "max_choices": npgettext_lazy(
             "user multiple choice field error",
-            "Select no more than %(max)d user.",
-            "Select no more than %(max)d users.",
+            "Enter no more than %(max)d user.",
+            "Enter no more than %(max)d users.",
             "max",
         ),
     }

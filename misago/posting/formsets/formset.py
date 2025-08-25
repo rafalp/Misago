@@ -6,7 +6,7 @@ from django.http import HttpRequest
 
 from ...collections.dicts import set_key_after, set_key_before
 from ...forms.formset import Formset
-from ..forms import InviteUsersForm, PostForm, TitleForm
+from ..forms import MembersForm, PostForm, TitleForm
 from ..state.base import PostingState
 
 
@@ -28,8 +28,8 @@ class PostingFormset(Formset):
         return self.forms.get(PostForm.form_prefix)
 
     @property
-    def invite_users(self) -> InviteUsersForm | None:
-        return self.forms.get(InviteUsersForm.form_prefix)
+    def members(self) -> MembersForm | None:
+        return self.forms.get(MembersForm.form_prefix)
 
     def update_state(self, state: PostingState):
         for form in self.forms.values():

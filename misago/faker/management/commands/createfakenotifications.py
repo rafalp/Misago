@@ -5,8 +5,8 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
 from ....core.management.progressbar import show_progress
+from ....notifications.enums import NotificationVerb
 from ....notifications.models import Notification
-from ....notifications.verbs import NotificationVerb
 from ....threads.models import Post
 
 User = get_user_model()
@@ -52,7 +52,7 @@ class Command(BaseCommand):
                     post_id=post["id"],
                     actor_id=post["poster_id"],
                     actor_name=post["poster_name"],
-                    verb=NotificationVerb.REPLIED,
+                    verb=NotificationVerb.REPLIED_TO_THREAD,
                     is_read=random.choice((True, False)),
                     created_at=post["posted_on"],
                 )

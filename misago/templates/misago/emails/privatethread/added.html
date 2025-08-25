@@ -7,7 +7,7 @@
 <b>{{ thread.title }}</b>
 {% endcapture %}
 {% blocktranslate trimmed with user=user.username sender=sender.username thread=thread_title|safe context "new private thread email" %}
-{{ user }}, you are receiving this message because {{ sender }} has invited you to participate in private thread {{ thread }}.
+{{ user }}, you are receiving this notification because {{ sender }} has added you to the private thread {{ thread }}.
 {% endblocktranslate %}
 <br>
 <br>

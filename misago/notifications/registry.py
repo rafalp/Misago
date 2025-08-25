@@ -5,7 +5,7 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext
 
 from ..threads.views.redirect import get_redirect_to_post_response
-from .verbs import NotificationVerb
+from .enums import NotificationVerb
 from .exceptions import NotificationVerbError
 
 if TYPE_CHECKING:
@@ -143,10 +143,10 @@ def get_test_notification_url(
     return f"/#test-notification-{notification.id}"
 
 
-# REPLIED: new reply in thread or private thread
+# REPLIED_TO_THREAD: new reply in thread or private thread
 
 
-@registry.message(NotificationVerb.REPLIED)
+@registry.message(NotificationVerb.REPLIED_TO_THREAD)
 def get_replied_notification_message(notification: "Notification") -> str:
     message = html.escape(
         pgettext("notification replied", "%(actor)s replied to %(thread)s")
@@ -157,7 +157,7 @@ def get_replied_notification_message(notification: "Notification") -> str:
     }
 
 
-@registry.redirect(NotificationVerb.REPLIED)
+@registry.redirect(NotificationVerb.REPLIED_TO_THREAD)
 def get_replied_notification_url(
     request: HttpRequest, notification: "Notification"
 ) -> str:
@@ -169,13 +169,17 @@ def get_replied_notification_url(
     return response.headers["location"]
 
 
-# INVITED: invited to private thread
+# ADDED_TO_PRIVATE_THREAD: added to private thread
 
 
-@registry.message(NotificationVerb.INVITED)
-def get_invited_notification_message(notification: "Notification") -> str:
+@registry.message(NotificationVerb.ADDED_TO_PRIVATE_THREAD)
+def get_added_to_private_thread_notification_message(
+    notification: "Notification",
+) -> str:
     message = html.escape(
-        pgettext("notification invited", "%(actor)s invited you to %(thread)s")
+        pgettext(
+            "notification added to private thread", "%(actor)s added you to %(thread)s"
+        )
     )
     return message % {
         "actor": bold_escape(notification.actor_name),
@@ -183,8 +187,8 @@ def get_invited_notification_message(notification: "Notification") -> str:
     }
 
 
-@registry.redirect(NotificationVerb.INVITED)
-def get_invited_notification_url(
+@registry.redirect(NotificationVerb.ADDED_TO_PRIVATE_THREAD)
+def get_added_to_private_thread_notification_url(
     request: HttpRequest, notification: "Notification"
 ) -> str:
     return notification.category.thread_type.get_thread_absolute_url(

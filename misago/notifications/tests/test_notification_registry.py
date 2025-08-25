@@ -1,9 +1,9 @@
 import pytest
 
+from ..enums import NotificationVerb
 from ..exceptions import NotificationVerbError
 from ..registry import NotificationRegistry, registry
 from ..models import Notification
-from ..verbs import NotificationVerb
 
 
 @pytest.fixture
@@ -119,11 +119,11 @@ def test_default_notification_registry_supports_test_notifications(request_mock)
     assert redirect == "/#test-notification-1"
 
 
-def test_default_notification_registry_supports_reply_notifications():
+def test_default_notification_registry_supports_reply_to_thread_notifications():
     message = registry.get_message(
         Notification(
             id=1,
-            verb=NotificationVerb.REPLIED,
+            verb=NotificationVerb.REPLIED_TO_THREAD,
             actor_name="Aerith",
             thread_title="Midgar was destroyed!",
         )
@@ -131,13 +131,13 @@ def test_default_notification_registry_supports_reply_notifications():
     assert message == ("<b>Aerith</b> replied to <b>Midgar was destroyed!</b>")
 
 
-def test_default_notification_registry_supports_invite_notifications():
+def test_default_notification_registry_supports_added_to_private_thread_notifications():
     message = registry.get_message(
         Notification(
             id=1,
-            verb=NotificationVerb.INVITED,
+            verb=NotificationVerb.ADDED_TO_PRIVATE_THREAD,
             actor_name="Aerith",
             thread_title="Midgar was destroyed!",
         )
     )
-    assert message == ("<b>Aerith</b> invited you to <b>Midgar was destroyed!</b>")
+    assert message == ("<b>Aerith</b> added you to <b>Midgar was destroyed!</b>")

@@ -9,8 +9,8 @@ EVENT_TYPES = {
     "closed": "locked",
     "entered_thread": "joined",
     "tookover": "took_ownership",
-    "removed_owner": "removed_participant",
-    "added_participant": "invited_participant",
+    "removed_owner": "removed_member",
+    "added_participant": "added_member",
     "owner_left": "left",
     "participant_left": "left",
 }

@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from ...categories.proxy import CategoriesProxy
 from ...permissions.proxy import UserPermissionsProxy
-from ...threads.models import ThreadParticipant
+from ...privatethreadmembers.models import PrivateThreadMember
 from ...threads.test import post_thread
 from ..models import ReadThread
 from ..privatethreads import unread_private_threads_exist
@@ -18,7 +18,7 @@ def test_unread_private_threads_exist_returns_true_for_unread_thread(
     user.save()
 
     thread = post_thread(private_threads_category)
-    ThreadParticipant.objects.create(user=user, thread=thread)
+    PrivateThreadMember.objects.create(user=user, thread=thread)
 
     private_threads_category.last_post_on = thread.last_post_on
     private_threads_category.save()
@@ -41,7 +41,7 @@ def test_unread_private_threads_exist_returns_false_for_read_thread(
     user.save()
 
     thread = post_thread(private_threads_category)
-    ThreadParticipant.objects.create(user=user, thread=thread)
+    PrivateThreadMember.objects.create(user=user, thread=thread)
 
     ReadThread.objects.create(
         user=user,
@@ -71,7 +71,7 @@ def test_unread_private_threads_exist_returns_false_for_thread_in_read_category(
     user.save()
 
     thread = post_thread(private_threads_category)
-    ThreadParticipant.objects.create(user=user, thread=thread)
+    PrivateThreadMember.objects.create(user=user, thread=thread)
 
     private_threads_category.last_post_on = thread.last_post_on
     private_threads_category.save()

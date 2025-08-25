@@ -15,6 +15,7 @@ import { deleteElement, slideUpElement } from "./animations"
 import "./focusOn"
 import "./formValidators"
 import "./htmxErrors"
+import "./htmxExtensionLoaderTpl"
 import Lightbox from "./lightbox"
 import editor, { activateEditors } from "./editor"
 import "./pagination"
@@ -158,6 +159,10 @@ document.addEventListener("htmx:load", activateEditors)
 // Hide moderation modal
 document.addEventListener("misago:afterModeration", () => {
   $("#threads-moderation-modal").modal("hide")
+})
+
+document.addEventListener("misago:afterUpdateMembers", () => {
+  $("#add-members-modal").modal("hide")
 })
 
 // Custom misago-confirm attribute

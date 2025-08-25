@@ -45,7 +45,7 @@ class ThreadParticipantTests(TestCase):
         other_user = create_test_user("User2", "user2@example.com")
 
         ThreadParticipant.objects.set_owner(self.thread, user)
-        self.assertEqual(self.thread.participants.count(), 1)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 1)
 
         participant = ThreadParticipant.objects.get(thread=self.thread, user=user)
         self.assertTrue(participant.is_owner)
@@ -53,7 +53,7 @@ class ThreadParticipantTests(TestCase):
 
         # threads can't have more than one owner
         ThreadParticipant.objects.set_owner(self.thread, other_user)
-        self.assertEqual(self.thread.participants.count(), 2)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 2)
 
         participant = ThreadParticipant.objects.get(thread=self.thread, user=user)
         self.assertFalse(participant.is_owner)
@@ -68,7 +68,7 @@ class ThreadParticipantTests(TestCase):
         ]
 
         ThreadParticipant.objects.add_participants(self.thread, users)
-        self.assertEqual(self.thread.participants.count(), 2)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 2)
 
         for user in users:
             participant = ThreadParticipant.objects.get(thread=self.thread, user=user)
@@ -81,10 +81,10 @@ class ThreadParticipantTests(TestCase):
 
         ThreadParticipant.objects.add_participants(self.thread, [user])
         ThreadParticipant.objects.add_participants(self.thread, [other_user])
-        self.assertEqual(self.thread.participants.count(), 2)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 2)
 
         ThreadParticipant.objects.remove_participant(self.thread, user)
-        self.assertEqual(self.thread.participants.count(), 1)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 1)
 
         with self.assertRaises(ThreadParticipant.DoesNotExist):
             ThreadParticipant.objects.get(thread=self.thread, user=user)

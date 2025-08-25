@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
-from ...threads.models import ThreadParticipant
+from ...privatethreadmembers.models import PrivateThreadMember
 from ...users.bans import ban_user
 from ..models import Notification
 from ..tasks import notify_on_new_thread_reply
@@ -186,7 +186,7 @@ def test_notify_on_new_thread_reply_notifies_user_with_email_about_private_threa
     private_thread_user_reply,
     mailoutbox,
 ):
-    ThreadParticipant.objects.create(thread=private_thread, user=other_user)
+    PrivateThreadMember.objects.create(thread=private_thread, user=other_user)
 
     watched_thread_factory(other_user, private_thread, send_emails=True)
     notify_on_new_thread_reply(private_thread_user_reply.id)
@@ -207,7 +207,7 @@ def test_notify_on_new_thread_reply_checks_if_user_has_private_threads_permissio
     private_thread_user_reply,
     mailoutbox,
 ):
-    ThreadParticipant.objects.create(thread=private_thread, user=other_user)
+    PrivateThreadMember.objects.create(thread=private_thread, user=other_user)
 
     members_group.can_use_private_threads = False
     members_group.save()

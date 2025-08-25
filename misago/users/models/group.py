@@ -28,7 +28,7 @@ class Group(PluginDataModel):
 
     can_use_private_threads = models.BooleanField(default=False)
     can_start_private_threads = models.BooleanField(default=False)
-    private_thread_users_limit = models.PositiveIntegerField(default=1)
+    private_thread_members_limit = models.PositiveIntegerField(default=1)
 
     can_upload_attachments = models.PositiveIntegerField(default=0)
     attachment_storage_limit = models.PositiveIntegerField(default=512)

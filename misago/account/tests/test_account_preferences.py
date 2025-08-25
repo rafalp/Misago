@@ -16,7 +16,7 @@ def test_account_preferences_renders_form(user_client):
 def create_form_data(data: dict | None = None) -> dict:
     default_data = {
         "is_hiding_presence": "0",
-        "limits_private_thread_invites_to": "0",
+        "allow_new_private_threads_by": "0",
         "watch_started_threads": "0",
         "watch_replied_threads": "0",
         "watch_new_private_threads_by_followed": "0",
@@ -37,7 +37,7 @@ def test_account_preferences_form_updates_user_account(user, user_client):
         create_form_data(
             {
                 "is_hiding_presence": "1",
-                "limits_private_thread_invites_to": "1",
+                "allow_new_private_threads_by": "1",
                 "watch_started_threads": "1",
                 "watch_replied_threads": "2",
                 "watch_new_private_threads_by_followed": "1",
@@ -53,7 +53,7 @@ def test_account_preferences_form_updates_user_account(user, user_client):
 
     user.refresh_from_db()
     assert user.is_hiding_presence
-    assert user.limits_private_thread_invites_to == 1
+    assert user.allow_new_private_threads_by == 1
     assert user.watch_started_threads == 1
     assert user.watch_replied_threads == 2
     assert user.watch_new_private_threads_by_followed == 1
@@ -68,7 +68,7 @@ def test_account_preferences_form_updates_user_account_in_htmx(user, user_client
         create_form_data(
             {
                 "is_hiding_presence": "1",
-                "limits_private_thread_invites_to": "1",
+                "allow_new_private_threads_by": "1",
                 "watch_started_threads": "1",
                 "watch_replied_threads": "2",
                 "watch_new_private_threads_by_followed": "1",
@@ -84,7 +84,7 @@ def test_account_preferences_form_updates_user_account_in_htmx(user, user_client
 
     user.refresh_from_db()
     assert user.is_hiding_presence
-    assert user.limits_private_thread_invites_to == 1
+    assert user.allow_new_private_threads_by == 1
     assert user.watch_started_threads == 1
     assert user.watch_replied_threads == 2
     assert user.watch_new_private_threads_by_followed == 1

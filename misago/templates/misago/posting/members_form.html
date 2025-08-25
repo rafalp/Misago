@@ -1,0 +1,21 @@
+{% load i18n %}
+
+{% with field=form.users %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Members:" context "posting users form" %}
+    </label>
+    {{ field }}
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+    <p class="help-block">
+      {% blocktranslate trimmed count users=field.max_choices context "private thread members control" %}
+        You can add {{ users }} user to your thread.
+      {% plural %}
+        You can add up to {{ users }} users to your thread.
+      {% endblocktranslate %}
+      {% translate "Some users restrict who can add them to private threads." context "private thread members control" %}
+    </p>
+  </div>
+{% endwith %}

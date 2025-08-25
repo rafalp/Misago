@@ -852,6 +852,7 @@ def test_prefetch_posts_feed_related_objects_prefetches_private_threads_members(
         )
 
     with django_assert_num_queries(0):
+        user_private_thread.private_thread_owner_id
         user_private_thread.private_thread_member_ids
 
 
@@ -1052,6 +1053,7 @@ def test_prefetch_posts_feed_related_objects_prefetches_objects_in_cascade(
         assert thread.id in data["threads"]
         assert user_private_thread.id in data["threads"]
 
+        assert data["threads"][user_private_thread.id].private_thread_owner_id
         assert data["threads"][user_private_thread.id].private_thread_member_ids
 
         assert post.id in data["posts"]
