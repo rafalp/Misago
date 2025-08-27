@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Optional
 from urllib.parse import quote_plus
 
 from django.contrib import messages
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -13,7 +13,7 @@ from ..permissions.privatethreads import (
     check_change_private_thread_owner_permission,
     check_remove_private_thread_member_permission,
 )
-from ..permissions.user import get_user_permissions
+from ..permissions.proxy import UserPermissionsProxy
 from ..threads.models import Thread
 from ..threads.views.generic import PrivateThreadView
 from ..threadupdates.create import create_added_member_thread_update
@@ -23,6 +23,7 @@ from .enums import PrivateThreadMembersTemplate
 from .forms import MembersAddForm
 from .members import change_private_thread_owner, remove_private_thread_member
 from .models import PrivateThreadMember
+from .validators import validate_new_private_thread_owner
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -160,7 +161,7 @@ class PrivateThreadMemberView(PrivateThreadView):
         member = self.get_member(request, user_id)
         self.check_permissions(request, thread, member)
 
-        member_permissions = get_user_permissions(member, request.cache_versions)
+        member_permissions = UserPermissionsProxy(member, request.cache_versions)
         check_remove_private_thread_member_permission(
             request.user_permissions, thread, member_permissions
         )
@@ -264,6 +265,17 @@ class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
     def check_permissions(self, request: HttpRequest, thread: Thread, member: "User"):
         check_change_private_thread_owner_permission(request.user_permissions, thread)
 
+        try:
+            member_permissions = UserPermissionsProxy(member, request.cache_versions)
+            validate_new_private_thread_owner(
+                member_permissions,
+                request.user_permissions,
+                request.cache_versions,
+                request,
+            )
+        except ValidationError as error:
+            raise PermissionDenied(error.messages[0])
+
 
 class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
     template_name = PrivateThreadMembersTemplate.MEMBER_REMOVE
@@ -299,7 +311,7 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
         return super().get_thread(request, thread_id)
 
     def check_permissions(self, request: HttpRequest, thread: Thread, member: "User"):
-        member_permissions = get_user_permissions(member, request.cache_versions)
+        member_permissions = UserPermissionsProxy(member, request.cache_versions)
         check_remove_private_thread_member_permission(
             request.user_permissions, thread, member_permissions
         )

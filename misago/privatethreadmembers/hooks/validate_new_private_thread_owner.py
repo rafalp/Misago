@@ -8,15 +8,15 @@ if TYPE_CHECKING:
     from ...permissions.proxy import UserPermissionsProxy
 
 
-class ValidateNewPrivateThreadMemberHookAction(Protocol):
+class ValidateNewPrivateThreadOwnerHookAction(Protocol):
     """
-    Misago function for validating new private thread members.
+    Misago function that validates a new private thread owner.
 
     # Arguments
 
-    ## `new_member_permissions: UserPermissionsProxy`
+    ## `new_owner_permissions: UserPermissionsProxy`
 
-    A proxy object with the invited user's permissions.
+    A proxy object with the new owner's permissions.
 
     ## `user_permissions: UserPermissionsProxy`
 
@@ -33,29 +33,29 @@ class ValidateNewPrivateThreadMemberHookAction(Protocol):
 
     def __call__(
         self,
-        new_member_permissions: "UserPermissionsProxy",
+        new_owner_permissions: "UserPermissionsProxy",
         user_permissions: "UserPermissionsProxy",
         cache_versions: dict,
         request: HttpRequest | None = None,
     ): ...
 
 
-class ValidateNewPrivateThreadMemberHookFilter(Protocol):
+class ValidateNewPrivateThreadOwnerHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: ValidateNewPrivateThreadMemberHookAction`
+    ## `action: ValidateNewPrivateThreadOwnerHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
 
     See the [action](#action) section for details.
 
-    ## `new_member_permissions: UserPermissionsProxy`
+    ## `new_owner_permissions: UserPermissionsProxy`
 
-    A proxy object with the invited user's permissions.
+    A proxy object with the new owner's permissions.
 
     ## `user_permissions: UserPermissionsProxy`
 
@@ -72,59 +72,58 @@ class ValidateNewPrivateThreadMemberHookFilter(Protocol):
 
     def __call__(
         self,
-        action: ValidateNewPrivateThreadMemberHookAction,
-        new_member_permissions: "UserPermissionsProxy",
+        action: ValidateNewPrivateThreadOwnerHookAction,
+        new_owner_permissions: "UserPermissionsProxy",
         user_permissions: "UserPermissionsProxy",
         cache_versions: dict,
         request: HttpRequest | None = None,
     ): ...
 
 
-class ValidateNewPrivateThreadMemberHook(
+class ValidateNewPrivateThreadOwnerHook(
     FilterHook[
-        ValidateNewPrivateThreadMemberHookAction,
-        ValidateNewPrivateThreadMemberHookFilter,
+        ValidateNewPrivateThreadOwnerHookAction,
+        ValidateNewPrivateThreadOwnerHookFilter,
     ]
 ):
     """
     This hook allows plugins to replace or extend the standard logic for
-    validating new private thread members.
+    validating new private thread owners.
 
     # Example
 
-    Block new users from inviting non-staff users to their private threads:
+    Prevent a user from changing a private thread owner to someone whose account
+    is less than five days old:
 
     ```python
     from django.core.exceptions import ValidationError
     from django.http import HttpRequest
     from django.utils import timezone
     from misago.permissions.proxy import UserPermissionsProxy
-    from misago.privatethreadmembers.hooks import validate_new_private_thread_member_hook
+    from misago.privatethreadmembers.hooks import validate_new_private_thread_owner_hook
 
 
-    @validate_new_private_thread_member_hook.append_filter
-    def validate_new_private_thread_member_registration_date(
+    @validate_new_private_thread_owner_hook.append_filter
+    def validate_new_private_thread_owner_registration_date(
         action,
-        new_member_permissions: UserPermissionsProxy,
+        new_owner_permissions: UserPermissionsProxy,
         user_permissions: UserPermissionsProxy,
         cache_versions: dict,
         request: HttpRequest | None = None,
     ):
         action(
-            new_member_permissions,
+            new_owner_permissions,
             user_permissions,
             cache_versions,
             request,
         )
 
-        user_is_new = (timezone.now() - user_permissions.user.joined_on).days < 7
-        new_member_is_staff = (
-            new_member_permissions.is_private_threads_moderator
-            or new_member_permissions.moderated_categories
-        )
+        new_owner_account_age = timezone.now() - new_owner_permissions.user.joined_on
 
-        if user_is_new and not new_member_is_staff:
-            raise ValidationError("Your account is less than 7 days old.")
+        if new_owner_account_age.days < 5:
+            raise ValidationError(
+                "Cannot transfer ownership to a user under 5 days old."
+            )
     ```
     """
 
@@ -132,19 +131,19 @@ class ValidateNewPrivateThreadMemberHook(
 
     def __call__(
         self,
-        action: ValidateNewPrivateThreadMemberHookAction,
-        new_member_permissions: "UserPermissionsProxy",
+        action: ValidateNewPrivateThreadOwnerHookAction,
+        new_owner_permissions: "UserPermissionsProxy",
         user_permissions: "UserPermissionsProxy",
         cache_versions: dict,
         request: HttpRequest | None = None,
     ):
         return super().__call__(
             action,
-            new_member_permissions,
+            new_owner_permissions,
             user_permissions,
             cache_versions,
             request,
         )
 
 
-validate_new_private_thread_member_hook = ValidateNewPrivateThreadMemberHook()
+validate_new_private_thread_owner_hook = ValidateNewPrivateThreadOwnerHook()
