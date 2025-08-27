@@ -107,14 +107,6 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         return response
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
-        if request.user.is_anonymous:
-            raise PermissionDenied(
-                pgettext(
-                    "private thread add members view",
-                    "You must be signed in to add members to a private thread.",
-                )
-            )
-
         thread = super().get_thread(request, thread_id)
 
         if not (
@@ -158,7 +150,16 @@ class PrivateThreadMemberView(PrivateThreadView):
         self, request: HttpRequest, id: int, slug: str, user_id: int
     ) -> HttpResponse:
         thread = self.get_thread(request, id)
-        member = self.get_member(request, user_id)
+
+        try:
+            member = self.get_member(request, user_id)
+        except Http404 as error:
+            if request.is_htmx:
+                raise
+
+            messages.error(request, str(error))
+            return redirect(self.get_next_thread_url(request, thread, strip_qs=True))
+
         self.check_permissions(request, thread, member)
 
         member_permissions = UserPermissionsProxy(member, request.cache_versions)
@@ -180,7 +181,16 @@ class PrivateThreadMemberView(PrivateThreadView):
         self, request: HttpRequest, id: int, slug: str, user_id: int
     ) -> HttpResponse:
         thread = self.get_thread(request, id)
-        member = self.get_member(request, user_id)
+
+        try:
+            member = self.get_member(request, user_id)
+        except Http404 as error:
+            if request.is_htmx:
+                raise
+
+            messages.error(request, str(error))
+            return redirect(self.get_next_thread_url(request, thread, strip_qs=True))
+
         self.check_permissions(request, thread, member)
 
         thread_update = self.update_members(request, thread, member)
@@ -239,14 +249,6 @@ class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
         return thread_update
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
-        if request.user.is_anonymous:
-            raise PermissionDenied(
-                pgettext(
-                    "private thread owner change view",
-                    "You must be signed in to change a private thread owner.",
-                )
-            )
-
         thread = super().get_thread(request, thread_id)
 
         if not (
@@ -298,17 +300,6 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
         )
 
         return thread_update
-
-    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
-        if request.user.is_anonymous:
-            raise PermissionDenied(
-                pgettext(
-                    "private thread member remove view",
-                    "You must be signed in to remove members from a private thread.",
-                )
-            )
-
-        return super().get_thread(request, thread_id)
 
     def check_permissions(self, request: HttpRequest, thread: Thread, member: "User"):
         member_permissions = UserPermissionsProxy(member, request.cache_versions)

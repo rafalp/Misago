@@ -224,7 +224,7 @@ def test_private_thread_members_add_view_checks_private_threads_permission(
             kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
         )
     )
-    assert response.status_code == 403
+    assert_contains(response, "You can&#x27;t use private threads.", 403)
 
 
 def test_private_thread_members_add_view_checks_private_thread_access(

@@ -4,10 +4,11 @@ from django.core.paginator import Paginator
 from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
-from django.urls import Resolver404, resolve, reverse
+from django.urls import reverse
 from django.views import View
 
 from ...permissions.privatethreads import (
+    check_private_threads_permission,
     check_see_private_thread_permission,
     filter_private_thread_posts_queryset,
     filter_private_thread_updates_queryset,
@@ -207,6 +208,8 @@ class PrivateThreadView(GenericView):
         super().__init__(*args, **kwargs)
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
+        check_private_threads_permission(request.user_permissions)
+
         thread = super().get_thread(request, thread_id)
         if self.thread_get_members:
             self.owner, self.members = get_private_thread_members(thread)

@@ -77,8 +77,6 @@ def check_see_private_thread_permission(
 def _check_see_private_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
-    check_private_threads_permission(permissions)
-
     if permissions.user.id not in thread.private_thread_member_ids:
         raise Http404()
 

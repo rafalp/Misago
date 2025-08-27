@@ -347,20 +347,6 @@ def test_check_see_private_thread_permission_passes_if_user_has_permission(
     check_see_private_thread_permission(permissions, thread)
 
 
-def test_check_see_private_thread_permission_fails_if_user_cant_use_private_threads(
-    user, cache_versions, thread
-):
-    user.group.can_use_private_threads = False
-    user.group.save()
-
-    PrivateThreadMember.objects.create(thread=thread, user=user)
-
-    permissions = UserPermissionsProxy(user, cache_versions)
-
-    with pytest.raises(PermissionDenied):
-        check_see_private_thread_permission(permissions, thread)
-
-
 def test_check_see_private_thread_permission_fails_if_user_is_not_thread_participant(
     user, cache_versions, thread
 ):

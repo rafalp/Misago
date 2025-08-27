@@ -255,6 +255,14 @@ def user_client(client, user):
 
 
 @pytest.fixture
+def other_user_client(client, other_user):
+    client.force_login(other_user)
+    session = client.session
+    session.save()
+    return client
+
+
+@pytest.fixture
 def moderator_client(client, moderator):
     client.force_login(moderator)
     session = client.session
