@@ -35,6 +35,11 @@ move_thread = Signal()
 update_thread_title = Signal()
 
 
+@receiver(delete_thread)
+def delete_thread_updates(sender, **kwargs):
+    ThreadUpdate.objects.filter(thread=sender).delete()
+
+
 @receiver(merge_thread)
 def merge_threads(sender, **kwargs):
     other_thread = kwargs["other_thread"]

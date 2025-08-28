@@ -5,7 +5,6 @@ from django.urls import reverse
 from ...test import assert_contains
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
-from ...users.bans import ban_user
 from ..members import get_private_thread_members
 
 

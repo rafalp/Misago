@@ -21,7 +21,11 @@ from ..threadupdates.models import ThreadUpdate
 from ..threads.nexturl import get_next_thread_url
 from .enums import PrivateThreadMembersTemplate
 from .forms import MembersAddForm
-from .members import change_private_thread_owner, private_thread_has_members, remove_private_thread_member
+from .members import (
+    change_private_thread_owner,
+    private_thread_has_members,
+    remove_private_thread_member,
+)
 from .models import PrivateThreadMember
 from .validators import validate_new_private_thread_owner
 
@@ -330,7 +334,7 @@ class PrivateThreadMemberLeaveView(PrivateThreadView):
 
         messages.success(
             request,
-            pgettext("private thread member remove view", "Member removed"),
+            pgettext("private thread member leave view", "Left the thread"),
         )
 
         if not private_thread_has_members(thread):
