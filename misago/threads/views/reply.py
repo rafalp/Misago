@@ -262,10 +262,8 @@ class ReplyView(View):
     def is_quick_reply(self, request: HttpRequest) -> bool:
         if not request.is_htmx:
             return False
-
         if request.method == "POST" and request.POST.get("quick_reply"):
             return True
-
         if request.method == "GET" and request.GET.get("quick_reply"):
             return True
 
