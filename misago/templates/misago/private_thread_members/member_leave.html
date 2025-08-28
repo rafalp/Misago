@@ -1,0 +1,46 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+  {% translate "Leave thread" context "private thread leave page title" %} | {{ thread }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-confirm page-confirm-private-thread-member-remove">
+  {% include "misago/private_thread/header.html" %}
+  <div class="container page-container page-confirm-form-container">
+  
+    <form action="{{ path }}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next_url }}">
+
+      <div class="panel-confirm-form panel-confirm-form-delete">
+        <div class="panel-confirm-form-body">
+          <h1 class="panel-confirm-form-header">
+            {% translate "Leave thread" context "private thread leave confirm title" %}
+          </h1>
+
+          <div class="panel-confirm-form-copy">
+            {% blocktranslate trimmed context "private thread leave confirm prompt" %}
+              Are you sure you want to leave this thread?
+            {% endblocktranslate %}
+          </div>
+
+          <div class="panel-confirm-form-footer">
+            <a href="{{ next_url }}" class="btn btn-default btn-block">
+              {% translate "Cancel" context "private thread leave cancel btn" %}
+            </a>
+            <button class="btn btn-primary" type="submit">
+              {% translate "Leave" context "private thread leave confirm btn" %}
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+{% endblock content %}

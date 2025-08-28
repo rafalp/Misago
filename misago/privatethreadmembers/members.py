@@ -111,3 +111,7 @@ def _remove_private_thread_member_action(
         return create_left_thread_update(thread, actor, request)
 
     return create_removed_member_thread_update(thread, member, actor, request)
+
+
+def private_thread_has_members(thread: Thread) -> bool:
+    return PrivateThreadMember.objects.filter(thread=thread).exists()

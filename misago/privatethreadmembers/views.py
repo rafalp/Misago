@@ -21,7 +21,7 @@ from ..threadupdates.models import ThreadUpdate
 from ..threads.nexturl import get_next_thread_url
 from .enums import PrivateThreadMembersTemplate
 from .forms import MembersAddForm
-from .members import change_private_thread_owner, remove_private_thread_member
+from .members import change_private_thread_owner, private_thread_has_members, remove_private_thread_member
 from .models import PrivateThreadMember
 from .validators import validate_new_private_thread_owner
 
@@ -306,6 +306,37 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
         check_remove_private_thread_member_permission(
             request.user_permissions, thread, member_permissions
         )
+
+
+class PrivateThreadMemberLeaveView(PrivateThreadView):
+    template_name = PrivateThreadMembersTemplate.MEMBER_LEAVE
+
+    def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, id)
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "thread": thread,
+                "next_url": self.get_next_thread_url(request, thread, strip_qs=True),
+            },
+        )
+
+    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, id)
+
+        remove_private_thread_member(request.user, thread, request.user, request)
+
+        messages.success(
+            request,
+            pgettext("private thread member remove view", "Member removed"),
+        )
+
+        if not private_thread_has_members(thread):
+            thread.delete()
+
+        return redirect(reverse("misago:private-threads"))
 
 
 def get_private_thread_members_context_data(

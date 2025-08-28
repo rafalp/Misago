@@ -12,11 +12,26 @@
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_BEFORE_SPACER %}
   <div class="toolbar-spacer"></div>
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_AFTER_SPACER %}
-  {% if reply.url and top_toolbar %}
+  {% if top_toolbar %}
     <div class="toolbar-section">
       <div class="toolbar-item">
-        <a href="{{ reply.url }}" class="btn btn-primary btn-block">
-          {% translate "Post reply" context "thread replies toolbar" %}
+        <a href="{% url 'misago:private-thread-member-leave' id=thread.id slug=thread.slug %}" class="btn btn-default btn-block">
+          {% translate "Leave" context "private thread replies toolbar" %}
+        </a>
+      </div>
+      {% if reply.url %}
+        <div class="toolbar-item">
+          <a href="{{ reply.url }}" class="btn btn-primary btn-block">
+            {% translate "Post reply" context "thread replies toolbar" %}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="toolbar-section">
+      <div class="toolbar-item">
+        <a href="{% url 'misago:private-thread-member-leave' id=thread.id slug=thread.slug %}" class="btn btn-default btn-block">
+          {% translate "Leave" context "private thread replies toolbar" %}
         </a>
       </div>
     </div>
