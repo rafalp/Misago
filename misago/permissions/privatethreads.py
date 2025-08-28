@@ -92,9 +92,16 @@ def check_reply_private_thread_permission(
 def _check_reply_private_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
-    # TODO: let moderator always reply private thread
-    # Block only thread member from replying if thread has no other members
-    pass  # NOOP
+    if (
+        not permissions.is_private_threads_moderator
+        and len(thread.private_thread_member_ids) < 2
+    ):
+        raise PermissionDenied(
+            pgettext(
+                "private thread reply permission error",
+                "You can't reply to a private thread without other members.",
+            )
+        )
 
 
 def check_edit_private_thread_permission(

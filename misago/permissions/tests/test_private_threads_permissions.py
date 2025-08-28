@@ -331,11 +331,38 @@ def test_check_start_private_threads_permission_fails_if_user_has_no_permission(
         check_start_private_threads_permission(permissions)
 
 
-def test_check_reply_private_thread_permission_passes(user, cache_versions, thread):
-    PrivateThreadMember.objects.create(thread=thread, user=user)
+def test_check_reply_private_thread_permission_passes(
+    user, cache_versions, user_private_thread
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_reply_private_thread_permission(permissions, user_private_thread)
+
+
+def test_check_reply_private_thread_permission_passes_moderator(
+    moderator, cache_versions, private_thread
+):
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_reply_private_thread_permission(permissions, private_thread)
+
+
+def test_check_reply_private_thread_permission_fails_for_private_thread_without_other_members(
+    user, cache_versions, private_thread
+):
+    PrivateThreadMember.objects.create(thread=private_thread, user=user)
 
     permissions = UserPermissionsProxy(user, cache_versions)
-    check_reply_private_thread_permission(permissions, thread)
+
+    with pytest.raises(PermissionDenied):
+        check_reply_private_thread_permission(permissions, private_thread)
+
+
+def test_check_reply_private_thread_permission_fails_for_private_thread_without_members(
+    user, cache_versions, private_thread
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_reply_private_thread_permission(permissions, private_thread)
 
 
 def test_check_see_private_thread_permission_passes_if_user_has_permission(

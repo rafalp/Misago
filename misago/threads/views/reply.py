@@ -260,7 +260,16 @@ class ReplyView(View):
         raise NotImplementedError()
 
     def is_quick_reply(self, request: HttpRequest) -> bool:
-        return request.is_htmx and request.POST.get("quick_reply")
+        if not request.is_htmx:
+            return False
+
+        if request.method == "POST" and request.POST.get("quick_reply"):
+            return True
+
+        if request.method == "GET" and request.GET.get("quick_reply"):
+            return True
+
+        return False
 
     def is_category_read(
         self, request: HttpRequest, category: Category, read_time: datetime | None
