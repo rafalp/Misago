@@ -14,11 +14,23 @@
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_AFTER_SPACER %}
   {% if top_toolbar %}
     <div class="toolbar-section">
-      <div class="toolbar-item">
+      <div class="toolbar-item d-js-block">
+        <form
+          action="{% url 'misago:private-thread-member-leave' id=thread.id slug=thread.slug %}"
+          method="post"
+          misago-confirm="{% translate 'Are you sure you want to leave this thread?' context 'private thread leave confirm prompt' %}"
+        >
+          {% csrf_token %}
+          <button class="btn btn-default btn-block">
+            {% translate "Leave" context "private thread replies toolbar" %}
+          </button>
+        </form>
+      </div>
+      <noscript class="toolbar-item">
         <a href="{% url 'misago:private-thread-member-leave' id=thread.id slug=thread.slug %}" class="btn btn-default btn-block">
           {% translate "Leave" context "private thread replies toolbar" %}
         </a>
-      </div>
+      </noscript>
       {% if reply.url %}
         <div class="toolbar-item">
           <a href="{{ reply.url }}" class="btn btn-primary btn-block">
@@ -29,11 +41,23 @@
     </div>
   {% else %}
     <div class="toolbar-section">
-      <div class="toolbar-item">
+      <div class="toolbar-item d-js-block">
+        <form
+          action="{% url 'misago:private-thread-member-leave' id=thread.id slug=thread.slug %}"
+          method="post"
+          misago-confirm="{% translate 'Are you sure you want to leave this thread?' context 'private thread leave confirm prompt' %}"
+        >
+          {% csrf_token %}
+          <button class="btn btn-default btn-block">
+            {% translate "Leave" context "private thread replies toolbar" %}
+          </button>
+        </form>
+      </div>
+      <noscript class="toolbar-item">
         <a href="{% url 'misago:private-thread-member-leave' id=thread.id slug=thread.slug %}" class="btn btn-default btn-block">
           {% translate "Leave" context "private thread replies toolbar" %}
         </a>
-      </div>
+      </noscript>
     </div>
   {% endif %}
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_END %}
