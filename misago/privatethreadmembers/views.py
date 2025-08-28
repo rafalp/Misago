@@ -296,7 +296,7 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
 
         messages.success(
             request,
-            pgettext("add private thread member remove view", "Member removed"),
+            pgettext("private thread member remove view", "Member removed"),
         )
 
         return thread_update
