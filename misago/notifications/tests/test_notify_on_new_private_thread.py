@@ -66,7 +66,7 @@ def test_notify_on_new_private_thread_handles_exceptions(
     notify_user_mock.assert_called_once()
 
 
-def test_notify_on_new_private_thread_creates_participant_watched_thread(
+def test_notify_on_new_private_thread_creates_member_watched_thread(
     user, other_user, user_private_thread
 ):
     other_user.watch_new_private_threads_by_followed = ThreadNotifications.NONE
@@ -87,7 +87,7 @@ def test_notify_on_new_private_thread_creates_participant_watched_thread(
     )
 
 
-def test_notify_on_new_private_thread_from_followed_creates_participant_watched_thread(
+def test_notify_on_new_private_thread_from_followed_creates_member_watched_thread(
     user, other_user, user_private_thread
 ):
     other_user.watch_new_private_threads_by_followed = (
@@ -110,7 +110,7 @@ def test_notify_on_new_private_thread_from_followed_creates_participant_watched_
     )
 
 
-def test_notify_on_new_private_thread_notifies_participant(
+def test_notify_on_new_private_thread_notifies_member(
     user, other_user, user_private_thread, mailoutbox
 ):
     other_user.notify_new_private_threads_by_followed = ThreadNotifications.NONE
@@ -128,7 +128,7 @@ def test_notify_on_new_private_thread_notifies_participant(
     assert len(mailoutbox) == 0
 
 
-def test_notify_on_new_private_thread_notifies_participant_with_email(
+def test_notify_on_new_private_thread_notifies_member_with_email(
     user, other_user, user_private_thread, mailoutbox
 ):
     other_user.notify_new_private_threads_by_followed = ThreadNotifications.NONE
@@ -148,7 +148,7 @@ def test_notify_on_new_private_thread_notifies_participant_with_email(
     assert len(mailoutbox) == 1
 
 
-def test_notify_on_new_private_thread_notifies_participant_following_actor(
+def test_notify_on_new_private_thread_notifies_member_following_actor(
     user, other_user, user_private_thread, mailoutbox
 ):
     other_user.notify_new_private_threads_by_followed = ThreadNotifications.SITE_ONLY
@@ -168,7 +168,7 @@ def test_notify_on_new_private_thread_notifies_participant_following_actor(
     assert len(mailoutbox) == 0
 
 
-def test_notify_on_new_private_thread_notifies_participant_following_actor_with_email(
+def test_notify_on_new_private_thread_notifies_member_following_actor_with_email(
     user, other_user, user_private_thread, mailoutbox
 ):
     other_user.notify_new_private_threads_by_followed = (
@@ -219,7 +219,7 @@ def test_notify_on_new_private_thread_skips_notification_if_one_already_exists(
     assert len(mailoutbox) == 0
 
 
-def test_notify_on_new_private_thread_notifies_participant_if_old_notification_is_read(
+def test_notify_on_new_private_thread_notifies_member_if_old_notification_is_read(
     user, other_user, user_private_thread, mailoutbox
 ):
     other_user.notify_new_private_threads_by_followed = ThreadNotifications.NONE
@@ -248,7 +248,7 @@ def test_notify_on_new_private_thread_notifies_participant_if_old_notification_i
     assert len(mailoutbox) == 1
 
 
-def test_notify_on_new_private_thread_skips_participant_if_they_have_no_permission(
+def test_notify_on_new_private_thread_skips_member_if_they_have_no_permission(
     user, other_user, members_group, user_private_thread, mailoutbox
 ):
     other_user.notify_new_private_threads_by_followed = ThreadNotifications.NONE
@@ -271,7 +271,7 @@ def test_notify_on_new_private_thread_skips_participant_if_they_have_no_permissi
     assert len(mailoutbox) == 0
 
 
-def test_notify_on_new_private_thread_skips_user_not_participating(
+def test_notify_on_new_private_thread_skips_user_if_not_member(
     user, other_user, user_private_thread, mailoutbox
 ):
     other_user.notify_new_private_threads_by_followed = ThreadNotifications.NONE

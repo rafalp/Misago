@@ -222,7 +222,7 @@ def test_notify_on_new_thread_reply_checks_if_user_has_private_threads_permissio
     assert len(mailoutbox) == 0
 
 
-def test_notify_on_new_thread_reply_checks_if_user_is_private_thread_participant(
+def test_notify_on_new_thread_reply_checks_if_user_is_private_thread_member(
     watched_thread_factory,
     other_user,
     private_thread,

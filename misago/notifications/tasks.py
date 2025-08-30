@@ -63,7 +63,7 @@ def notify_on_new_thread_reply(reply_id: int):
 def notify_on_new_private_thread(
     actor_id: int,
     thread_id: int,
-    participants: list[int],
+    members: list[int],
 ):
     actor = User.objects.filter(id=actor_id).first()
     if not actor:
@@ -74,15 +74,15 @@ def notify_on_new_private_thread(
     cache_versions = get_cache_versions()
     dynamic_settings = DynamicSettings(cache_versions)
 
-    queryset = User.objects.filter(id__in=participants)
+    queryset = User.objects.filter(id__in=members)
 
-    for participant in queryset.iterator(chunk_size=NOTIFY_CHUNK_SIZE):
-        if not participant.is_active or get_user_ban(participant, cache_versions):
-            continue  # Skip inactive or banned participants
+    for user in queryset.iterator(chunk_size=NOTIFY_CHUNK_SIZE):
+        if not user.is_active or get_user_ban(user, cache_versions):
+            continue  # Skip inactive or banned membmers
 
         try:
             notify_user_on_new_private_thread(
-                participant, actor, thread, cache_versions, dynamic_settings
+                user, actor, thread, cache_versions, dynamic_settings
             )
         except Exception:
             logger.exception("Unexpected error in 'notify_user_on_new_private_thread'")

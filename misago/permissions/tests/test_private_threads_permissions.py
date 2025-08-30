@@ -374,7 +374,7 @@ def test_check_see_private_thread_permission_passes_if_user_has_permission(
     check_see_private_thread_permission(permissions, thread)
 
 
-def test_check_see_private_thread_permission_fails_if_user_is_not_thread_participant(
+def test_check_see_private_thread_permission_fails_if_user_is_not_thread_member(
     user, cache_versions, thread
 ):
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -474,7 +474,7 @@ def test_filter_private_threads_queryset_returns_nothing_for_anonymous_user(
     assert not queryset.exists()
 
 
-def test_filter_private_threads_queryset_returns_thread_for_user_who_is_a_thread_participant(
+def test_filter_private_threads_queryset_returns_thread_for_user_who_is_member(
     private_threads_category, user, cache_versions
 ):
     thread = post_thread(private_threads_category)
@@ -487,7 +487,7 @@ def test_filter_private_threads_queryset_returns_thread_for_user_who_is_a_thread
     assert thread in list(queryset)
 
 
-def test_filter_private_threads_queryset_excludes_thread_user_is_not_participating_in(
+def test_filter_private_threads_queryset_excludes_thread_user_is_not_member(
     private_threads_category, user, other_user, cache_versions
 ):
     thread = post_thread(private_threads_category)

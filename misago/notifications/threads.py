@@ -12,7 +12,10 @@ from ..permissions.generic import (
     filter_accessible_thread_posts,
 )
 from ..permissions.proxy import UserPermissionsProxy
-from ..permissions.privatethreads import check_see_private_thread_permission
+from ..permissions.privatethreads import (
+    check_private_threads_permission,
+    check_see_private_thread_permission,
+)
 from ..threads.models import Post, Thread
 from ..threads.threadurl import get_thread_url
 from .enums import NotificationVerb, ThreadNotifications
@@ -181,6 +184,7 @@ def notify_user_on_new_private_thread(
     user_permissions = UserPermissionsProxy(user, cache_versions)
 
     with check_permissions() as can_see_private_thread:
+        check_private_threads_permission(user_permissions)
         check_see_private_thread_permission(user_permissions, thread)
 
     if not can_see_private_thread:

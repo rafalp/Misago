@@ -47,7 +47,7 @@ def test_private_thread_replies_view_shows_error_to_anonymous_user(
     )
 
 
-def test_private_thread_replies_view_shows_error_to_user_who_is_not_thread_participant(
+def test_private_thread_replies_view_shows_error_to_user_who_is_not_member(
     user, user_client, user_private_thread
 ):
     PrivateThreadMember.objects.filter(user=user).delete()
