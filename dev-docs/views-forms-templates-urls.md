@@ -1,21 +1,6 @@
-# Writing apps
+# Views, forms, templates and urls style guide
 
-This document is a guide to organizing code in apps. Please don’t treat it as gospel - conventions don’t cover everything, and justified exceptions are allowed.
-
-
-## Follow established Django conventions
-
-The Django framework has its own conventions for organizing application code. Follow those conventions unless Misago explicitly overrides them.
-
-
-## Function modules
-
-Avoid creating `api.py` or `utils.py` modules for API functions. Instead, put them in files with descriptive names:
-
-- `prefetch.py`: Functions that prefetch data.
-- `lock.py`: Functions implementing the lock/open business logic.
-
-If you can’t come up with a name, name the module after the app. For example, the `privatethreadmembers` package can have a `members.py` module containing business logic for retrieving and managing private thread members.
+Please don’t treat this style guide as gospel. Justified exceptions are allowed.
 
 
 ## Class-based views
@@ -68,7 +53,7 @@ class SomeView(View):
 
 ## Forms
 
-If the view uses a single form, you can name it after the view, but change the suffix to `Form`:
+If a form is used by a single view, name it after the view, but change the suffix to `Form`:
 
 ```python
 # `LoginView`
@@ -76,11 +61,11 @@ class LoginForm(forms.Form):
     ...
 ```
 
-You can shorten form's name if naming it after view would produce a large name:
+When a form is used by multiple views, you can make its name more generic.:
 
 ```python
-# `PrivateThreadMembersAddView`
-class MembersAddForm(forms.Form):
+# `ThreadPollVoteView` and `PrivateThreadPollVoteView`
+class PollVoteForm(forms.Form):
     ...
 ```
 

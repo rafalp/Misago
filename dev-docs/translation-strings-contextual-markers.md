@@ -1,8 +1,9 @@
-# Translation strings contextual markers
+# Translation strings contextual markers style guide
 
 Contextual markers clarify how a translation string is used. They help translators and prevent collisions when identical English strings (e.g., "Reply") require different translations in other languages.
 
 Every translation string in Misago must include a contextual marker. The only exception is when using a translation string that already exists in Django itself, such as the 'This value is required.' validation message.
+
 
 ## Writing contextual markers
 
