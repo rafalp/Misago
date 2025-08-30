@@ -1,6 +1,6 @@
-# Views, forms, templates and urls style guide
+# Views, forms, templates and URLs style guide
 
-Please don’t treat this style guide as gospel. Justified exceptions are allowed.
+Please note that this guide is not meant to be taken as gospel - justified exceptions are allowed. Practicality beats purity.
 
 
 ## Class-based views
@@ -141,7 +141,7 @@ class ThreadEditView(View):
 Sometimes there are many ways to organize templates. When this happens, use your best judgement.
 
 
-## Urls
+## URLs
 
 URL name should be based on the view class (or function) name, but drop the `View` suffix:
 
