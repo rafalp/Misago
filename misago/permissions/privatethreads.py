@@ -92,6 +92,14 @@ def check_reply_private_thread_permission(
 def _check_reply_private_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
+    if len(thread.private_thread_member_ids) < 2:
+        raise PermissionDenied(
+            pgettext(
+                "private thread reply permission error",
+                "You can't reply to a private thread without other members.",
+            )
+        )
+
     if (
         not permissions.is_private_threads_moderator
         and len(thread.private_thread_member_ids) < 2

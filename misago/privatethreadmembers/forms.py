@@ -38,9 +38,13 @@ class MembersAddForm(forms.Form):
 
     def setup_users_field(self, field: UserMultipleChoiceField):
         field.queryset = get_user_model().objects.filter(is_active=True)
+
+        members = len(self.members)
+        if self.request.user in self.members:
+            members -= 1
+
         field.max_choices = max(
-            self.request.user_permissions.private_thread_members_limit
-            - len(self.members),
+            self.request.user_permissions.private_thread_members_limit - members,
             0,
         )
 
