@@ -53,7 +53,7 @@ class SomeView(View):
 
 ## Forms
 
-If a form is used by a single view, name it after the view, but change the suffix to `Form`:
+A form can be named after the view that uses it (or vice versa):
 
 ```python
 # `LoginView`
@@ -61,10 +61,10 @@ class LoginForm(forms.Form):
     ...
 ```
 
-When a form is used by multiple views, you can make its name more generic.:
+The form’s name doesn’t have to match the view exactly:
 
 ```python
-# `ThreadPollVoteView` and `PrivateThreadPollVoteView`
+# `ThreadPollVoteView`
 class PollVoteForm(forms.Form):
     ...
 ```
