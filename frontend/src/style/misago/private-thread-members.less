@@ -84,18 +84,22 @@
   text-overflow: ellipsis;
 }
 
-@media screen and (min-width: @screen-sm-min) {
-  .panel-private-thread-members-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+.panel-private-thread-members-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .panel-private-thread-members-legend {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.panel-private-thread-members-options {
+  flex: 1;
+  text-align: right;
 }
 
 .private-thread-owner-icon {

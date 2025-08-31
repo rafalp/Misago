@@ -1,6 +1,6 @@
 {% load i18n misago_avatars %}
 
-<details class="panel panel-default panel-private-thread-members" {% if is_request_htmx %}open{% endif %}open>
+<details class="panel panel-default panel-private-thread-members" {% if is_request_htmx %}open{% endif %}>
   <summary class="panel-private-thread-members-header">
     <h3 class="panel-private-thread-members-title">
       {% blocktranslate trimmed count members=members|length context "private thread members panel" %}
