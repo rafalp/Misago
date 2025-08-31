@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Iterable, Optional, Union
 
 from django.db import transaction
 from django.http import HttpRequest
@@ -19,6 +19,25 @@ from .models import PrivateThreadMember
 
 if TYPE_CHECKING:
     from ..users.models import User
+
+
+def prefetch_private_thread_member_ids(threads: Iterable[Thread]):
+    threads_owners: dict[int:int] = {t.id: None for t in threads}
+    threads_members: dict[int : list[int]] = {t.id: [] for t in threads}
+
+    queryset = (
+        PrivateThreadMember.objects.filter(thread__in=threads)
+        .order_by("id")
+        .values_list("thread_id", "user_id", "is_owner")
+    )
+    for thread_id, user_id, is_owner in queryset:
+        if is_owner:
+            threads_owners[thread_id] = user_id
+        threads_members[thread_id].append(user_id)
+
+    for thread in threads:
+        thread.private_thread_owner_id = threads_owners.get(thread.id)
+        thread.private_thread_member_ids = threads_members[thread.id]
 
 
 def get_private_thread_members(thread: Thread) -> tuple[Optional["User"], list["User"]]:

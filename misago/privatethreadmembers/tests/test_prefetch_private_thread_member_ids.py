@@ -1,5 +1,5 @@
+from ..members import prefetch_private_thread_member_ids
 from ..models import PrivateThreadMember
-from ..prefetch import prefetch_private_thread_member_ids
 
 
 def test_prefetch_private_thread_member_ids_sets_thread_owner_id_property(
