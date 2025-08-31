@@ -102,17 +102,8 @@
   border-bottom: 1px solid @gray-lighter;
 }
 
-.panel-private-thread-member-avatar {
-  &,
-  & img {
-    display: block;
-
-    width: 32px;
-    height: 32px;
-
-    border-radius: @border-radius-small;
-    line-height: 0;
-  }
+.panel-private-thread-member-avatar img {
+  border-radius: @border-radius-small;
 }
 
 .panel-private-thread-member-username {
@@ -127,18 +118,4 @@
   &:hover {
     text-decoration: underline;
   }
-}
-
-.panel-private-thread-member-owner {
-  display: inline-block;
-
-  height: 8px;
-  width: 8px;
-
-  background-color: @brand-warning;
-  transform: rotate(45deg);
-}
-
-.panel-private-thread-member-spacer {
-  width: 100%;
 }

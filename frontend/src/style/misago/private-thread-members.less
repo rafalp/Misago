@@ -54,7 +54,34 @@
   display: flex;
   align-items: center;
 
+  min-width: 0;
   margin: 0;
+}
+
+.panel-private-thread-member-avatar {
+  &,
+  & img {
+    display: block;
+
+    width: 32px;
+    height: 32px;
+
+    line-height: 0;
+  }
+}
+
+.panel-private-thread-member-details {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  min-width: 0;
+  width: 100%;
+}
+
+.panel-private-thread-member-username {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media screen and (min-width: @screen-sm-min) {
@@ -68,5 +95,16 @@
 .panel-private-thread-members-legend {
   display: flex;
   align-items: center;
-  gap: @padding-small-horizontal;
+  gap: 4px;
+}
+
+.private-thread-owner-icon {
+  display: inline-block;
+
+  height: 18px;
+  width: 18px;
+
+  color: @brand-warning;
+  font-size: 18px;
+  line-height: 18px;
 }

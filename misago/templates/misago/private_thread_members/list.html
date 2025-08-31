@@ -1,6 +1,6 @@
 {% load i18n misago_avatars %}
 
-<details class="panel panel-default panel-private-thread-members" {% if is_request_htmx %}open{% endif %}>
+<details class="panel panel-default panel-private-thread-members" {% if is_request_htmx %}open{% endif %}open>
   <summary class="panel-private-thread-members-header">
     <h3 class="panel-private-thread-members-title">
       {% blocktranslate trimmed count members=members|length context "private thread members panel" %}
@@ -27,14 +27,20 @@
           <a href="{% url 'misago:user' pk=member.id slug=member.slug %}" class="panel-private-thread-member-avatar">
             <img src="{{ member|avatar:32 }}" srcset="{{ member|avatar:64 }}" alt="">
           </a>
-          <a href="{% url 'misago:user' pk=member.id slug=member.slug %}" class="panel-private-thread-member-username">
-            {{ member.username }}
-          </a>
-          {% if owner and member == owner %}
-            <span class="panel-private-thread-member-owner" aria-label="{% translate 'Thread owner' context 'private thread members panel' %}"></span>
-          {% endif %}
+          <div class="panel-private-thread-member-details">
+            <a href="{% url 'misago:user' pk=member.id slug=member.slug %}" class="panel-private-thread-member-username">
+              {{ member.username }}
+            </a>
+            {% if owner and member == owner %}
+              <span
+                class="material-icon private-thread-owner-icon"
+                aria-label="{% translate 'Thread owner' context 'private thread members panel' %}"
+              >
+                star
+              </span>
+            {% endif %}
+          </div>
           {% if manage and member != owner %}
-            <div class="panel-private-thread-member-spacer"></div>
             <div class="dropdown d-js-block">
               <button class="btn btn-link btn-icon" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span class="material-icon">more_horiz</span>
@@ -97,7 +103,7 @@
     </ul>
     <div class="panel-private-thread-members-footer">
       <div class="panel-private-thread-members-legend">
-        <span class="panel-private-thread-member-owner"></span>
+        <span class="material-icon private-thread-owner-icon">star</span>
         {% translate "Thread owner" context "private thread members panel" %}
       </div>
       {% if manage %}
