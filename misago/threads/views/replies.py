@@ -35,7 +35,6 @@ from ...posting.formsets import (
     get_reply_private_thread_formset,
     get_reply_thread_formset,
 )
-from ...privatethreadmembers.enums import PrivateThreadMembersTemplate
 from ...privatethreadmembers.views import get_private_thread_members_context_data
 from ...readtracker.tracker import (
     get_unread_posts,
@@ -407,12 +406,9 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
     def get_thread_members_context_data(
         self, request: HttpRequest, thread: Thread
     ) -> dict:
-        context = get_private_thread_members_context_data(
+        return get_private_thread_members_context_data(
             request, thread, self.owner, self.members
         )
-        context["template_name"] = PrivateThreadMembersTemplate.LIST
-        context["template_name_add_modal"] = PrivateThreadMembersTemplate.ADD_MODAL
-        return context
 
     def get_thread_posts_queryset(
         self, request: HttpRequest, thread: Thread

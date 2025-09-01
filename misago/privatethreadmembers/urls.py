@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-    PrivateThreadMemberLeaveView,
+    PrivateThreadLeaveView,
     PrivateThreadMemberRemoveView,
     PrivateThreadMembersAddView,
     PrivateThreadOwnerChangeView,
@@ -16,8 +16,8 @@ urlpatterns = [
     ),
     path(
         "p/<slug:slug>/<int:id>/leave/",
-        PrivateThreadMemberLeaveView.as_view(),
-        name="private-thread-member-leave",
+        PrivateThreadLeaveView.as_view(),
+        name="private-thread-leave",
     ),
     path(
         "p/<slug:slug>/<int:id>/change-owner/<int:user_id>/",

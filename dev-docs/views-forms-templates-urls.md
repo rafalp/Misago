@@ -113,16 +113,16 @@ If a view or component has both a regular and an HTMX version, you can different
 
 ```python
 class ThreadEditView(View):
-    template_name = "thread_edit/full.html"
+    template_name = "thread_edit/index.html"
     template_name_htmx = "thread_edit/htmx.html"
 
 
 class ThreadMoveView(View):
-    template_name = "thread_move/full.html"
+    template_name = "thread_move/index.html"
     template_name_modal = "thread_move/modal.html"
 ```
 
-If a templates directory is shared by multiple features, you can omit the `full` suffix from the full template name:
+If a templates directory is shared by multiple features, you can use the suffix from the full template name:
 
 ```python
 class PrivateThreadMembersAdd(View):
@@ -134,7 +134,7 @@ If the full template includes the HTMX one, name the other template after the pa
 
 ```python
 class ThreadEditView(View):
-    template_name = "thread_edit/full.html"
+    template_name = "thread_edit/index.html"
     template_name_htmx = "thread_edit/form.html"
 ```
 

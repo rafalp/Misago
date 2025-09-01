@@ -9,12 +9,12 @@ from ..members import get_private_thread_members
 from ..models import PrivateThreadMember
 
 
-def test_private_thread_member_leave_view_displays_confirm_page_on_get_for_thread_owner(
+def test_private_thread_leave_view_displays_confirm_page_on_get_for_thread_owner(
     user_client, user_private_thread
 ):
     response = user_client.get(
         reverse(
-            "misago:private-thread-member-leave",
+            "misago:private-thread-leave",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -24,12 +24,12 @@ def test_private_thread_member_leave_view_displays_confirm_page_on_get_for_threa
     assert_contains(response, "Are you sure you want to leave this thread?")
 
 
-def test_private_thread_member_leave_view_displays_confirm_page_on_get_for_member(
+def test_private_thread_leave_view_displays_confirm_page_on_get_for_member(
     other_user_client, user_private_thread
 ):
     response = other_user_client.get(
         reverse(
-            "misago:private-thread-member-leave",
+            "misago:private-thread-leave",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -39,12 +39,12 @@ def test_private_thread_member_leave_view_displays_confirm_page_on_get_for_membe
     assert_contains(response, "Are you sure you want to leave this thread?")
 
 
-def test_private_thread_member_leave_view_displays_confirm_page_on_get_for_moderator(
+def test_private_thread_leave_view_displays_confirm_page_on_get_for_moderator(
     moderator_client, user_private_thread
 ):
     response = moderator_client.get(
         reverse(
-            "misago:private-thread-member-leave",
+            "misago:private-thread-leave",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -54,12 +54,12 @@ def test_private_thread_member_leave_view_displays_confirm_page_on_get_for_moder
     assert_contains(response, "Are you sure you want to leave this thread?")
 
 
-def test_private_thread_member_leave_view_removes_thread_owner(
+def test_private_thread_leave_view_removes_thread_owner(
     user_client, user, other_user, moderator, user_private_thread
 ):
     response = user_client.post(
         reverse(
-            "misago:private-thread-member-leave",
+            "misago:private-thread-leave",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -82,12 +82,12 @@ def test_private_thread_member_leave_view_removes_thread_owner(
     user_private_thread.refresh_from_db()
 
 
-def test_private_thread_member_leave_view_removes_thread_member(
+def test_private_thread_leave_view_removes_thread_member(
     other_user_client, user, other_user, moderator, user_private_thread
 ):
     response = other_user_client.post(
         reverse(
-            "misago:private-thread-member-leave",
+            "misago:private-thread-leave",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -110,12 +110,12 @@ def test_private_thread_member_leave_view_removes_thread_member(
     user_private_thread.refresh_from_db()
 
 
-def test_private_thread_member_leave_view_removes_thread_moderator(
+def test_private_thread_leave_view_removes_thread_moderator(
     moderator_client, user, other_user, moderator, user_private_thread
 ):
     response = moderator_client.post(
         reverse(
-            "misago:private-thread-member-leave",
+            "misago:private-thread-leave",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -146,7 +146,7 @@ def test_private_thread_member_deletes_thread_when_last_member_leaves(
 
     response = user_client.post(
         reverse(
-            "misago:private-thread-member-leave",
+            "misago:private-thread-leave",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -164,7 +164,7 @@ def test_private_thread_member_deletes_thread_when_last_member_leaves(
         user_private_thread.refresh_from_db()
 
 
-def test_private_thread_member_leave_view_returns_403_if_user_cant_use_private_threads(
+def test_private_thread_leave_view_returns_403_if_user_cant_use_private_threads(
     user_client, members_group
 ):
     members_group.can_use_private_threads = False
@@ -172,7 +172,7 @@ def test_private_thread_member_leave_view_returns_403_if_user_cant_use_private_t
 
     response = user_client.post(
         reverse(
-            "misago:private-thread-member-leave",
+            "misago:private-thread-leave",
             kwargs={
                 "id": 1,
                 "slug": "thread",
@@ -182,12 +182,12 @@ def test_private_thread_member_leave_view_returns_403_if_user_cant_use_private_t
     assert_contains(response, "You can&#x27;t use private threads.", 403)
 
 
-def test_private_thread_member_leave_view_returns_404_if_thread_doesnt_exist(
+def test_private_thread_leave_view_returns_404_if_thread_doesnt_exist(
     user_client,
 ):
     response = user_client.post(
         reverse(
-            "misago:private-thread-member-leave",
+            "misago:private-thread-leave",
             kwargs={
                 "id": 1,
                 "slug": "thread",
@@ -197,12 +197,12 @@ def test_private_thread_member_leave_view_returns_404_if_thread_doesnt_exist(
     assert response.status_code == 404
 
 
-def test_private_thread_member_leave_view_returns_404_if_user_cant_access_thread(
+def test_private_thread_leave_view_returns_404_if_user_cant_access_thread(
     user_client, private_thread
 ):
     response = user_client.post(
         reverse(
-            "misago:private-thread-member-leave",
+            "misago:private-thread-leave",
             kwargs={
                 "id": private_thread.id,
                 "slug": private_thread.slug,
@@ -212,12 +212,12 @@ def test_private_thread_member_leave_view_returns_404_if_user_cant_access_thread
     assert response.status_code == 404
 
 
-def test_private_thread_member_leave_view_returns_404_if_thread_is_not_private(
+def test_private_thread_leave_view_returns_404_if_thread_is_not_private(
     user_client, thread
 ):
     response = user_client.post(
         reverse(
-            "misago:private-thread-member-leave",
+            "misago:private-thread-leave",
             kwargs={
                 "id": thread.id,
                 "slug": thread.slug,

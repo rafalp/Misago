@@ -51,7 +51,7 @@
     {% include "misago/posting/attachment_templates.html" %}
   {% endif %}
   {% if members.manage %}
-      {% include members.template_name_add_modal %}
+      {% include "misago/private_thread/members_add_modal.html" %}
   {% endif %}
   {% include "misago/lightbox/index.html" %}
 {% endblock modals %}

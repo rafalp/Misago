@@ -9,7 +9,7 @@
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ next_url }}">
   <div class="modal-body">
-    {% include "misago/private_thread_members/add_form.html" %}
+    {% include "misago/private_thread_members_add/form.html" %}
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" type="submit">

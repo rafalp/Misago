@@ -19,7 +19,7 @@ from ..threads.views.generic import PrivateThreadView
 from ..threadupdates.create import create_added_member_thread_update
 from ..threadupdates.models import ThreadUpdate
 from ..threads.nexturl import get_next_thread_url
-from .enums import PrivateThreadMembersTemplate
+from ..threads.postsfeed import PrivateThreadPostsFeed
 from .forms import MembersAddForm
 from .members import (
     change_private_thread_owner,
@@ -36,8 +36,8 @@ if TYPE_CHECKING:
 class PrivateThreadMembersAddView(PrivateThreadView):
     thread_get_members = True
     form_type = MembersAddForm
-    template_name = PrivateThreadMembersTemplate.ADD
-    template_name_htmx = PrivateThreadMembersTemplate.ADD_HTMX
+    template_name = "misago/private_thread_members_add/index.html"
+    template_name_htmx = "misago/private_thread_members_add/htmx.html"
 
     def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
@@ -91,24 +91,17 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         if not request.is_htmx:
             return redirect(self.get_next_thread_url(request, thread))
 
-        context = get_private_thread_members_context_data(
+        response = PrivateThreadMembersHtmxResponse(
             request, thread, self.owner, self.members + new_members
         )
 
-        context["swap_oob"] = True
+        if thread_update:
+            response.set_thread_updates([thread_update])
 
-        if thread_updates:
-            posts_feed = self.get_posts_feed(request, thread, [], thread_updates)
-            posts_feed.set_animated_thread_updates(
-                [thread_update.id for thread_update in thread_updates]
-            )
-            context["feed"] = posts_feed.get_context_data()
-
-        response = render(request, PrivateThreadMembersTemplate.HTMX, context)
-        response["hx-trigger"] = "misago:afterUpdateMembers"
-        response["hx-reswap"] = "none"
-
-        return response
+        return response.render(
+            {"swap_oob": True},
+            {"hx-trigger": "misago:afterUpdateMembers", "hx-reswap": "none"},
+        )
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
@@ -202,18 +195,13 @@ class PrivateThreadMemberView(PrivateThreadView):
         if not request.is_htmx:
             return redirect(self.get_next_thread_url(request, thread))
 
-        context = get_private_thread_members_context_data(
+        response = PrivateThreadMembersHtmxResponse(
             request, thread, self.owner, self.members
         )
-
         if thread_update:
-            posts_feed = self.get_posts_feed(request, thread, [], [thread_update])
-            posts_feed.set_animated_thread_updates([thread_update.id])
-            context["feed"] = posts_feed.get_context_data()
+            response.set_thread_updates([thread_update])
 
-        response = render(request, PrivateThreadMembersTemplate.HTMX, context)
-
-        return response
+        return response.render()
 
     def update_members(
         self, request: HttpRequest, thread: Thread, member: "User"
@@ -232,7 +220,7 @@ class PrivateThreadMemberView(PrivateThreadView):
 
 
 class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
-    template_name = PrivateThreadMembersTemplate.OWNER_CHANGE
+    template_name = "misago/private_thread_owner_change/index.html"
 
     def update_members(
         self, request: HttpRequest, thread: Thread, member: "User"
@@ -284,7 +272,7 @@ class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
 
 
 class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
-    template_name = PrivateThreadMembersTemplate.MEMBER_REMOVE
+    template_name = "misago/private_thread_member_remove/index.html"
 
     def update_members(
         self, request: HttpRequest, thread: Thread, member: "User"
@@ -312,8 +300,8 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
         )
 
 
-class PrivateThreadMemberLeaveView(PrivateThreadView):
-    template_name = PrivateThreadMembersTemplate.MEMBER_LEAVE
+class PrivateThreadLeaveView(PrivateThreadView):
+    template_name = "misago/private_thread_leave/index.html"
 
     def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, id)
@@ -334,13 +322,75 @@ class PrivateThreadMemberLeaveView(PrivateThreadView):
 
         messages.success(
             request,
-            pgettext("private thread member leave view", "Left the thread"),
+            pgettext("private thread leave view", "Left the thread"),
         )
 
         if not private_thread_has_members(thread):
             thread.delete()
 
         return redirect(reverse("misago:private-threads"))
+
+
+class PrivateThreadMembersHtmxResponse:
+    template_name = "misago/private_thread_members/htmx.html"
+
+    request: HttpRequest
+    thread: Thread
+    owner: Optional["User"]
+    members: list["User"]
+    thread_updates: Optional[list[ThreadUpdate]]
+
+    def __init__(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        owner: Optional["User"],
+        members: list["User"],
+    ):
+        self.request = request
+        self.thread = thread
+        self.owner = owner
+        self.members = members
+        self.thread_updates = None
+
+    def set_thread_updates(self, thread_updates: list[ThreadUpdate]):
+        self.thread_updates = thread_updates
+
+    def get_context(self):
+        context = get_private_thread_members_context_data(
+            self.request, self.thread, self.owner, self.members
+        )
+        if self.thread_updates:
+            context["feed"] = self.get_feed_context()
+        return context
+
+    def get_feed_context(self):
+        posts_feed = PrivateThreadPostsFeed(
+            self.request, self.thread, [], self.thread_updates
+        )
+
+        posts_feed.set_animated_thread_updates(
+            [thread_update.id for thread_update in self.thread_updates]
+        )
+
+        return posts_feed.get_context_data()
+
+    def render(
+        self, context: dict | None = None, headers: dict | None = None
+    ) -> HttpResponse:
+        final_context = self.get_context()
+        final_context["open"] = True
+
+        if context:
+            final_context.update(context)
+
+        response = render(self.request, self.template_name, final_context)
+
+        if headers:
+            for header, value in headers.items():
+                response[header] = value
+
+        return response
 
 
 def get_private_thread_members_context_data(
@@ -369,6 +419,7 @@ def get_private_thread_members_context_data(
         "thread": thread,
         "owner": owner,
         "members": members,
+        "template_name": "misago/private_thread_members/index.html",
         "add_members_url": add_members_url,
         "next_url_quoted": next_url_quoted,
     }
