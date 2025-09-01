@@ -31,7 +31,7 @@ class BaseUpdateView:
             messages.success(request, self.success_message)
 
         if not request.is_htmx:
-            return redirect(self.clean_thread_url(thread, request.POST.get("next")))
+            return redirect(self.get_next_thread_url(request, thread))
 
         thread_update_obj.refresh_from_db()
         feed = self.get_posts_feed(request, thread, [], [thread_update_obj])
@@ -132,7 +132,7 @@ class DeleteUpdateView:
 
         if request.POST.get("confirm"):
             self.execute_action(request, thread_update_obj)
-            return redirect(self.clean_thread_url(thread, request.POST.get("next")))
+            return redirect(self.get_next_thread_url(request, thread))
 
         return render(
             request,
@@ -140,7 +140,7 @@ class DeleteUpdateView:
             {
                 "thread": thread,
                 "thread_update": thread_update,
-                "next_url": self.clean_thread_url(thread, request.POST.get("next")),
+                "next_url": self.get_next_thread_url(request, thread),
             },
         )
 

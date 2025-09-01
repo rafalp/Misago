@@ -50,7 +50,7 @@ COPY_GROUP_PERMISSIONS = (
     "exempt_from_flood_control",
     "can_use_private_threads",
     "can_start_private_threads",
-    "private_thread_users_limit",
+    "private_thread_members_limit",
     "can_upload_attachments",
     "attachment_storage_limit",
     "unused_attachments_storage_limit",

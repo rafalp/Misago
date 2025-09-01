@@ -1,0 +1,128 @@
+{% load i18n misago_avatars %}
+
+<details class="panel panel-default panel-private-thread-members" {% if is_request_htmx %}open{% endif %}>
+  <summary class="panel-private-thread-members-header">
+    <h3 class="panel-private-thread-members-title">
+      {% blocktranslate trimmed count members=members|length context "private thread members panel" %}
+        {{ members }} member
+      {% plural %}
+        {{ members }} members
+      {% endblocktranslate %}
+    </h3>
+    <div class="panel-private-thread-members-avatars{% if members|length > 2 %} panel-private-thread-members-avatars-compact{% endif %}">
+      {% for member in members %}
+        <img src="{{ member|avatar:32 }}" srcset="{{ member|avatar:64 }}" alt="" style="--index: {{ forloop.revcounter }};">
+      {% endfor %}
+    </div>
+    <div class="panel-private-thread-members-arrow">
+      <span class="material-icon">
+        keyboard_arrow_down
+      </span>
+    </div>
+  </summary>
+  <div class="panel-private-thread-members-body">
+    <ul class="panel-private-thread-members-list">
+      {% for member in members %}
+        <li class="panel-private-thread-member">
+          <a href="{% url 'misago:user' pk=member.id slug=member.slug %}" class="panel-private-thread-member-avatar">
+            <img src="{{ member|avatar:32 }}" srcset="{{ member|avatar:64 }}" alt="">
+          </a>
+          <div class="panel-private-thread-member-details">
+            <a href="{% url 'misago:user' pk=member.id slug=member.slug %}" class="panel-private-thread-member-username">
+              {{ member.username }}
+            </a>
+            {% if owner and member == owner %}
+              <span
+                class="material-icon private-thread-owner-icon"
+                aria-label="{% translate 'Thread owner' context 'private thread members panel' %}"
+              >
+                star
+              </span>
+            {% endif %}
+          </div>
+          {% if manage and member != owner %}
+            <div class="dropdown d-js-block">
+              <button class="btn btn-link btn-icon" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="material-icon">more_horiz</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right" hx-target="#misago-htmx-members" hx-swap="outerHTML">
+                <li>
+                  <form
+                    class="dropdown-menu-item"
+                    action="{% url 'misago:private-thread-owner-change' id=thread.id slug=thread.slug user_id=member.id %}"
+                    method="post"
+                    hx-post="{% url 'misago:private-thread-owner-change' id=thread.id slug=thread.slug user_id=member.id %}"
+                    hx-confirm="{% translate 'Change thread owner to this member?' context 'private thread members panel' %}"
+                  >
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next_url }}">
+                    <button type="submit" class="btn-link">
+                      {% translate "Make owner" context "private thread member action btn" %}
+                    </button>
+                  </form>
+                </li>
+                <li>
+                  <form
+                    class="dropdown-menu-item"
+                    action="{% url 'misago:private-thread-member-remove' id=thread.id slug=thread.slug user_id=member.id %}"
+                    method="post"
+                    hx-post="{% url 'misago:private-thread-member-remove' id=thread.id slug=thread.slug user_id=member.id %}"
+                    hx-confirm="{% translate 'Remove this member?' context 'private thread members panel' %}"
+                  >
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next_url }}">
+                    <button type="submit" class="btn-link">
+                      {% translate "Remove from thread" context "private thread member action btn" %}
+                    </button>
+                  </form>
+                </li>
+              </ul>
+            </div>
+            <noscript>
+              <details class="dropdown-noscript">
+                <summary class="btn btn-link btn-icon">
+                  <span class="material-icon">more_horiz</span>
+                </summary>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li>
+                    <a href="{% url 'misago:private-thread-owner-change' id=thread.id slug=thread.slug user_id=member.id %}?next={{ next_url_quoted }}">
+                      {% translate "Make owner" context "private thread member action btn" %}
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'misago:private-thread-member-remove' id=thread.id slug=thread.slug user_id=member.id %}?next={{ next_url_quoted }}">
+                      {% translate "Remove from thread" context "private thread member action btn" %}
+                    </a>
+                  </li>
+                </ul>
+              </details>
+            </noscript>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="panel-private-thread-members-footer">
+      <div class="panel-private-thread-members-legend">
+        <span class="material-icon private-thread-owner-icon">star</span>
+        {% translate "Thread owner" context "private thread members panel" %}
+      </div>
+      {% if manage %}
+        <div class="panel-private-thread-members-options">
+          <a
+            href="{{ add_members_url }}" class="btn btn-default"
+            data-toggle="modal"
+            data-target="#add-members-modal"
+            data-remote="false"
+            hx-ext="loader-tpl"
+            hx-get="{{ add_members_url }}"
+            hx-target="#misago-htmx-add-members-modal"
+            tpl-loader="#modal-loader"
+            hx-swap="innerHTML"
+          >
+            {% translate "Add members" context "private thread members panel" %}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</details>

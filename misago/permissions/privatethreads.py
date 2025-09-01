@@ -1,4 +1,5 @@
 from math import ceil
+from typing_extensions import TYPE_CHECKING
 
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
@@ -6,11 +7,14 @@ from django.http import Http404
 from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
 
-from ..threads.models import Post, Thread, ThreadParticipant
+from ..privatethreadmembers.models import PrivateThreadMember
+from ..threads.models import Post, Thread
 from .hooks import (
+    check_change_private_thread_owner_permission_hook,
     check_edit_private_thread_permission_hook,
     check_edit_private_thread_post_permission_hook,
     check_private_threads_permission_hook,
+    check_remove_private_thread_member_permission_hook,
     check_reply_private_thread_permission_hook,
     check_see_private_thread_permission_hook,
     check_see_private_thread_post_permission_hook,
@@ -73,8 +77,6 @@ def check_see_private_thread_permission(
 def _check_see_private_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
-    check_private_threads_permission(permissions)
-
     if permissions.user.id not in thread.private_thread_member_ids:
         raise Http404()
 
@@ -90,7 +92,16 @@ def check_reply_private_thread_permission(
 def _check_reply_private_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
-    pass  # NOOP
+    if (
+        not permissions.is_private_threads_moderator
+        and len(thread.private_thread_member_ids) < 2
+    ):
+        raise PermissionDenied(
+            pgettext(
+                "private thread reply permission error",
+                "You can't reply to a private thread without other members.",
+            )
+        )
 
 
 def check_edit_private_thread_permission(
@@ -107,7 +118,7 @@ def _check_edit_private_thread_permission_action(
     if permissions.is_private_threads_moderator:
         return
 
-    if thread.private_thread_member_ids[0] != permissions.user.id:
+    if thread.private_thread_owner_id != permissions.user.id:
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
@@ -264,6 +275,67 @@ def _check_edit_private_thread_post_permission_action(
         )
 
 
+def check_change_private_thread_owner_permission(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    check_change_private_thread_owner_permission_hook(
+        _check_change_private_thread_owner_permission_action, permissions, thread
+    )
+
+
+def _check_change_private_thread_owner_permission_action(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    if permissions.is_private_threads_moderator:
+        return
+
+    if permissions.user.id != thread.private_thread_owner_id:
+        raise PermissionDenied(
+            pgettext(
+                "change private thread owner permission error",
+                "You can't change this thread's owner.",
+            )
+        )
+
+
+def check_remove_private_thread_member_permission(
+    permissions: UserPermissionsProxy,
+    thread: Thread,
+    member_permissions: UserPermissionsProxy,
+):
+    check_remove_private_thread_member_permission_hook(
+        _check_remove_private_thread_member_permission_action,
+        permissions,
+        thread,
+        member_permissions,
+    )
+
+
+def _check_remove_private_thread_member_permission_action(
+    permissions: UserPermissionsProxy,
+    thread: Thread,
+    member_permissions: UserPermissionsProxy,
+):
+    if permissions.is_private_threads_moderator:
+        return
+
+    if permissions.user.id != thread.private_thread_owner_id:
+        raise PermissionDenied(
+            pgettext(
+                "remove private thread member permission error",
+                "You can't remove this member.",
+            )
+        )
+
+    if member_permissions.is_private_threads_moderator:
+        raise PermissionDenied(
+            pgettext(
+                "remove private thread member permission error",
+                "This member is a moderator. You can't remove them.",
+            )
+        )
+
+
 def filter_private_threads_queryset(permissions: UserPermissionsProxy, queryset):
     return filter_private_threads_queryset_hook(
         _filter_private_threads_queryset_action, permissions, queryset
@@ -277,7 +349,7 @@ def _filter_private_threads_queryset_action(
         return queryset.none()
 
     return queryset.filter(
-        id__in=ThreadParticipant.objects.filter(user=permissions.user).values(
+        id__in=PrivateThreadMember.objects.filter(user=permissions.user).values(
             "thread_id"
         )
     )

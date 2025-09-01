@@ -23,7 +23,7 @@ from ...notifications.enums import ThreadNotifications
 from ...permissions.permissionsid import get_permissions_id
 from ...plugins.models import PluginDataModel
 from ..avatars import store as avatars_store, delete_avatar
-from ..enums import DefaultGroupId
+from ..enums import DefaultGroupId, UserNewPrivateThreadsPreference
 from ..signatures import is_user_signature_valid
 from ..utils import hash_email
 from .group import Group
@@ -172,21 +172,6 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     LIMIT_INVITES_TO_FOLLOWED = 1
     LIMIT_INVITES_TO_NOBODY = 2
 
-    LIMIT_INVITES_TO_CHOICES = [
-        (
-            LIMIT_INVITES_TO_NONE,
-            pgettext_lazy("user default invites choice", "Everybody"),
-        ),
-        (
-            LIMIT_INVITES_TO_FOLLOWED,
-            pgettext_lazy("user default invites choice", "Users I follow"),
-        ),
-        (
-            LIMIT_INVITES_TO_NOBODY,
-            pgettext_lazy("user default invites choice", "Nobody"),
-        ),
-    ]
-
     # Note that "username" field is purely for shows.
     # When searching users by their names, always use lowercased string
     # and slug field instead that is normalized around DB engines
@@ -279,8 +264,9 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
         "self", related_name="blocked_by", symmetrical=False
     )
 
-    limits_private_thread_invites_to = models.PositiveIntegerField(
-        default=LIMIT_INVITES_TO_NONE, choices=LIMIT_INVITES_TO_CHOICES
+    allow_new_private_threads_by = models.PositiveIntegerField(
+        default=UserNewPrivateThreadsPreference.EVERYBODY,
+        choices=UserNewPrivateThreadsPreference.get_choices(),
     )
     unread_private_threads = models.PositiveIntegerField(default=0)
     sync_unread_private_threads = models.BooleanField(default=False)
@@ -417,18 +403,18 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
 
     @property
     def can_be_messaged_by_everyone(self):
-        preference = self.limits_private_thread_invites_to
-        return preference == self.LIMIT_INVITES_TO_NONE
+        preference = self.allow_new_private_threads_by
+        return preference == UserNewPrivateThreadsPreference.EVERYBODY
 
     @property
     def can_be_messaged_by_followed(self):
-        preference = self.limits_private_thread_invites_to
-        return preference == self.LIMIT_INVITES_TO_FOLLOWED
+        preference = self.allow_new_private_threads_by
+        return preference == UserNewPrivateThreadsPreference.FOLLOWED_USERS
 
     @property
     def can_be_messaged_by_nobody(self):
-        preference = self.limits_private_thread_invites_to
-        return preference == self.LIMIT_INVITES_TO_NOBODY
+        preference = self.allow_new_private_threads_by
+        return preference == UserNewPrivateThreadsPreference.NOBODY
 
     @property
     def has_valid_signature(self):

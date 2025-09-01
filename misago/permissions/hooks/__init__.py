@@ -8,6 +8,9 @@ from .check_access_category_permission import check_access_category_permission_h
 from .check_access_post_permission import check_access_post_permission_hook
 from .check_access_thread_permission import check_access_thread_permission_hook
 from .check_browse_category_permission import check_browse_category_permission_hook
+from .check_change_private_thread_owner_permission import (
+    check_change_private_thread_owner_permission_hook,
+)
 from .check_close_thread_poll_permission import check_close_thread_poll_permission_hook
 from .check_delete_attachment_permission import (
     check_delete_attachment_permission_hook,
@@ -35,6 +38,9 @@ from .check_locked_thread_permission import (
 )
 from .check_open_thread_poll_permission import check_open_thread_poll_permission_hook
 from .check_private_threads_permission import check_private_threads_permission_hook
+from .check_remove_private_thread_member_permission import (
+    check_remove_private_thread_member_permission_hook,
+)
 from .check_reply_private_thread_permission import (
     check_reply_private_thread_permission_hook,
 )
@@ -93,6 +99,7 @@ __all__ = [
     "check_access_post_permission_hook",
     "check_access_thread_permission_hook",
     "check_browse_category_permission_hook",
+    "check_change_private_thread_owner_permission_hook",
     "check_close_thread_poll_permission_hook",
     "check_delete_attachment_permission_hook",
     "check_delete_thread_poll_permission_hook",
@@ -106,6 +113,7 @@ __all__ = [
     "check_locked_thread_permission_hook",
     "check_open_thread_poll_permission_hook",
     "check_private_threads_permission_hook",
+    "check_remove_private_thread_member_permission_hook",
     "check_reply_private_thread_permission_hook",
     "check_reply_thread_permission_hook",
     "check_see_category_permission_hook",

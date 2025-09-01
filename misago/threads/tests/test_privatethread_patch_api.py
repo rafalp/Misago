@@ -331,8 +331,10 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(self.other_user.sync_unread_private_threads)
 
         # user was removed from participation
-        self.assertEqual(self.thread.participants.count(), 1)
-        self.assertEqual(self.thread.participants.filter(pk=self.user.pk).count(), 0)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 1)
+        self.assertEqual(
+            self.thread.threadparticipant_set.filter(pk=self.user.pk).count(), 0
+        )
 
     def test_user_leave_closed_thread(self):
         """api allows user to remove themself from closed thread"""
@@ -361,8 +363,10 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(self.other_user.sync_unread_private_threads)
 
         # user was removed from participation
-        self.assertEqual(self.thread.participants.count(), 1)
-        self.assertEqual(self.thread.participants.filter(pk=self.user.pk).count(), 0)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 1)
+        self.assertEqual(
+            self.thread.threadparticipant_set.filter(pk=self.user.pk).count(), 0
+        )
 
     @patch_user_acl({"can_moderate_private_threads": True})
     def test_moderator_remove_user(self):
@@ -396,8 +400,10 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(removed_user.sync_unread_private_threads)
 
         # user was removed from participation
-        self.assertEqual(self.thread.participants.count(), 2)
-        self.assertEqual(self.thread.participants.filter(pk=removed_user.pk).count(), 0)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 2)
+        self.assertEqual(
+            self.thread.threadparticipant_set.filter(pk=removed_user.pk).count(), 0
+        )
 
     def test_owner_remove_user(self):
         """api allows owner to remove other user"""
@@ -423,9 +429,9 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(self.other_user.sync_unread_private_threads)
 
         # user was removed from participation
-        self.assertEqual(self.thread.participants.count(), 1)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 1)
         self.assertEqual(
-            self.thread.participants.filter(pk=self.other_user.pk).count(), 0
+            self.thread.threadparticipant_set.filter(pk=self.other_user.pk).count(), 0
         )
 
     def test_owner_leave_thread(self):
@@ -452,8 +458,10 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(self.other_user.sync_unread_private_threads)
 
         # user was removed from participation
-        self.assertEqual(self.thread.participants.count(), 1)
-        self.assertEqual(self.thread.participants.filter(pk=self.user.pk).count(), 0)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 1)
+        self.assertEqual(
+            self.thread.threadparticipant_set.filter(pk=self.user.pk).count(), 0
+        )
 
     def test_last_user_leave_thread(self):
         """api allows last user leave thread, causing thread to delete"""
@@ -593,7 +601,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(self.other_user.sync_unread_private_threads)
 
         # ownership was transfered
-        self.assertEqual(self.thread.participants.count(), 2)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 2)
         self.assertTrue(ThreadParticipant.objects.get(user=self.other_user).is_owner)
         self.assertFalse(ThreadParticipant.objects.get(user=self.user).is_owner)
 
@@ -622,7 +630,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(self.other_user.sync_unread_private_threads)
 
         # ownership was transferred
-        self.assertEqual(self.thread.participants.count(), 3)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 3)
         self.assertTrue(ThreadParticipant.objects.get(user=new_owner).is_owner)
         self.assertFalse(ThreadParticipant.objects.get(user=self.user).is_owner)
         self.assertFalse(ThreadParticipant.objects.get(user=self.other_user).is_owner)
@@ -647,7 +655,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(self.other_user.sync_unread_private_threads)
 
         # ownership was transfered
-        self.assertEqual(self.thread.participants.count(), 2)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 2)
         self.assertTrue(ThreadParticipant.objects.get(user=self.user).is_owner)
         self.assertFalse(ThreadParticipant.objects.get(user=self.other_user).is_owner)
 
@@ -674,6 +682,6 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(self.other_user.sync_unread_private_threads)
 
         # ownership was transferred
-        self.assertEqual(self.thread.participants.count(), 2)
+        self.assertEqual(self.thread.threadparticipant_set.count(), 2)
         self.assertTrue(ThreadParticipant.objects.get(user=self.user).is_owner)
         self.assertFalse(ThreadParticipant.objects.get(user=self.other_user).is_owner)

@@ -1,14 +1,14 @@
-from typing import Iterable
+from typing import TYPE_CHECKING, Iterable, Optional
 
 from django.core.paginator import Paginator
 from django.db.models import QuerySet
 from django.http import HttpRequest
-from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from django.urls import Resolver404, resolve, reverse
+from django.urls import reverse
 from django.views import View
 
 from ...permissions.privatethreads import (
+    check_private_threads_permission,
     check_see_private_thread_permission,
     filter_private_thread_posts_queryset,
     filter_private_thread_updates_queryset,
@@ -22,10 +22,15 @@ from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,
 )
+from ...privatethreadmembers.members import get_private_thread_members
 from ...threadupdates.models import ThreadUpdate
 from ..models import Post, Thread
+from ..nexturl import get_next_thread_url
 from ..paginator import ThreadRepliesPaginator
 from ..postsfeed import PostsFeed, PrivateThreadPostsFeed, ThreadPostsFeed
+
+if TYPE_CHECKING:
+    from ...users.models import User
 
 
 class GenericView(View):
@@ -34,6 +39,7 @@ class GenericView(View):
     thread_url_name: str
     post_select_related: Iterable[str] | True | None = None
     thread_update_select_related: Iterable[str] | True | None = None
+    next_page: str = "next"
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         queryset = self.get_thread_queryset(request)
@@ -97,6 +103,7 @@ class GenericView(View):
         raise NotImplementedError()
 
     def get_thread_url(self, thread: Thread, page: int | None = None) -> str:
+        """Return the absolute URL to a thread."""
         if page and page > 1:
             return reverse(
                 self.thread_url_name,
@@ -108,24 +115,14 @@ class GenericView(View):
             kwargs={"id": thread.id, "slug": thread.slug},
         )
 
-    def clean_thread_url(self, thread: Thread, url_to_clean: str | None = None) -> str:
-        thread_url = self.get_thread_url(thread)
-
-        if url_to_clean:
-            try:
-                url_path = url_to_clean
-                if "#" in url_path:
-                    url_path = url_path[: url_path.index("#")]
-                if "?" in url_path:
-                    url_path = url_path[: url_path.index("?")]
-
-                reverse_match = resolve(url_path)
-                if reverse_match.view_name == self.thread_url_name:
-                    return url_to_clean
-            except Resolver404:
-                pass
-
-        return thread_url
+    def get_next_thread_url(
+        self, request: HttpRequest, thread: Thread, strip_qs: bool = False
+    ) -> str:
+        """
+        Attempt to return an absolute URL to a thread based on either the POST
+        or GET query dict, falling back to get_thread_url if unavailable.
+        """
+        return get_next_thread_url(request, thread, self.thread_url_name, strip_qs)
 
     def get_thread_updates_queryset(
         self,
@@ -199,9 +196,24 @@ class ThreadView(GenericView):
 
 class PrivateThreadView(GenericView):
     thread_url_name: str = "misago:private-thread"
+    thread_get_members: bool = False
+
+    owner: Optional["User"]
+    members: list["User"]
+
+    def __init__(self, *args, **kwargs):
+        self.owner = None
+        self.members = []
+
+        super().__init__(*args, **kwargs)
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
+        check_private_threads_permission(request.user_permissions)
+
         thread = super().get_thread(request, thread_id)
+        if self.thread_get_members:
+            self.owner, self.members = get_private_thread_members(thread)
+
         check_see_private_thread_permission(request.user_permissions, thread)
         return thread
 
@@ -234,3 +246,9 @@ class PrivateThreadView(GenericView):
 
     def get_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_private_threads_moderator
+
+    def get_owner_status(self, request: HttpRequest, thread: Thread) -> bool:
+        if not self.owner or not request.user.is_authenticated:
+            return False
+
+        return self.owner.id == request.user.id

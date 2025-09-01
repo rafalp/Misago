@@ -1,0 +1,9 @@
+{% include "misago/snackbars.html" %}
+
+<div id="misago-htmx-members"{% if swap_oob %} hx-swap-oob="outerHTML"{% endif %}>
+  {% include template_name %}
+</div>
+
+{% if feed %}
+  {% include feed.template_name_htmx_append %}
+{% endif %}

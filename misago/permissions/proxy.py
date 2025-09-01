@@ -24,7 +24,7 @@ class UserPermissionsProxy:
     categories: dict[str, list[int]]
     can_use_private_threads: bool
     can_start_private_threads: bool
-    private_thread_users_limit: int
+    private_thread_members_limit: int
     can_edit_own_threads: bool
     own_threads_edit_time_limit: int
     can_edit_own_posts: bool

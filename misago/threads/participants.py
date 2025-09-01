@@ -2,11 +2,11 @@ from django.contrib.auth import get_user_model
 
 from ..notifications.tasks import notify_on_new_private_thread
 from ..threadupdates.create import (
+    create_added_member_thread_update,
     create_changed_owner_thread_update,
-    create_invited_participant_thread_update,
     create_joined_thread_update,
     create_left_thread_update,
-    create_removed_participant_thread_update,
+    create_removed_member_thread_update,
     create_took_ownership_thread_update,
 )
 from .models import Thread, ThreadParticipant
@@ -94,7 +94,7 @@ def add_participant(request, thread, new_participant):
     if request.user == new_participant:
         create_joined_thread_update(thread, request.user, request)
     else:
-        create_invited_participant_thread_update(
+        create_added_member_thread_update(
             thread, new_participant, request.user, request
         )
 
@@ -151,6 +151,4 @@ def remove_participant(request, thread, user):
         if request.user == user:
             create_left_thread_update(thread, request.user, request)
         else:
-            create_removed_participant_thread_update(
-                thread, user, request.user, request
-            )
+            create_removed_member_thread_update(thread, user, request.user, request)

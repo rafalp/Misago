@@ -1,0 +1,49 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_capture %}
+
+
+{% block title %}
+  {% translate "Remove member" context "private thread member remove page title" %} | {{ thread }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-confirm page-confirm-private-thread-member-remove">
+  {% include "misago/private_thread/header.html" %}
+  <div class="container page-container page-confirm-form-container">
+  
+    <form action="{{ path }}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next_url }}">
+
+      <div class="panel-confirm-form panel-confirm-form-delete">
+        <div class="panel-confirm-form-body">
+          <h1 class="panel-confirm-form-header">
+            {% translate "Remove member" context "private thread member remove confirm title" %}
+          </h1>
+
+          <div class="panel-confirm-form-copy">
+            {% capture trimmed as member_username %}
+              <strong>{{ member.username }}</strong>
+            {% endcapture %}
+            {% blocktranslate trimmed with member=member_username|safe context "private thread member remove confirm prompt" %}
+              Are you sure you want to remove {{ member }} from this thread?
+            {% endblocktranslate %}
+          </div>
+
+          <div class="panel-confirm-form-footer">
+            <a href="{{ next_url }}" class="btn btn-default btn-block">
+              {% translate "Cancel" context "private thread member remove cancel btn" %}
+            </a>
+            <button class="btn btn-primary" type="submit">
+              {% translate "Remove member" context "private thread member remove confirm btn" %}
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+{% endblock content %}

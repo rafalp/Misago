@@ -14,12 +14,28 @@
 
     {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_START %}
 
+    <div id="misago-htmx-members">
+      {% includecomponent members %}
+    </div>
+
     <a id="misago-page-scroll-target" class="scroll-target"></a>
     {% include "misago/private_thread/partial.html" %}
 
     {% if user.is_authenticated %}
-      <div id="misago-quick-reply-scroll-target" class="scroll-target"></div>
-      {% includecomponent reply %}
+      {% if reply.error %}
+        <div
+          id="misago-htmx-quick-reply"
+          class="thread-no-reply-message"
+          hx-get="{% url 'misago:reply-private-thread' id=thread.id slug=thread.slug %}?quick_reply=true"
+          hx-trigger="misago:afterUpdateMembers from:body"
+          hx-swap="outerHTML"
+        >
+          {{ reply.error }}
+        </div>
+      {% else %}
+        <div id="misago-quick-reply-scroll-target" class="scroll-target"></div>
+        {% includecomponent reply %}
+      {% endif %}
     {% endif %}
 
     {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_END %}
@@ -33,6 +49,9 @@
   {% if user.is_authenticated %}
     {% include "misago/posting/markup_editor_modals.html" %}
     {% include "misago/posting/attachment_templates.html" %}
+  {% endif %}
+  {% if members.manage %}
+      {% include "misago/private_thread/members_add_modal.html" %}
   {% endif %}
   {% include "misago/lightbox/index.html" %}
 {% endblock modals %}

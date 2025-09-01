@@ -9,7 +9,7 @@
 <div class="page page-confirm page-confirm-delete">
   <div class="container page-container page-confirm-form-container">
     
-    <form action="{{ full_patch }}" method="post">
+    <form action="{{ path }}" method="post">
       {% csrf_token %}
       <input type="hidden" name="confirm" value="true">
       <input type="hidden" name="next" value="{{ next_url }}">

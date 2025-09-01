@@ -1,5 +1,5 @@
 from ...parser.parse import parse
-from ...threads.models import ThreadParticipant
+from ...privatethreadmembers.models import PrivateThreadMember
 from ..state import StartPrivateThreadState
 
 
@@ -9,26 +9,26 @@ def test_start_private_thread_state_save_sets_request_user_as_thread_owner(
     state = StartPrivateThreadState(user_request, private_threads_category)
     state.set_thread_title("Test thread")
     state.set_post_message(parse("Hello world"))
-    state.set_invite_users([other_user])
+    state.set_members([other_user])
     state.save()
 
-    ThreadParticipant.objects.get(
+    PrivateThreadMember.objects.get(
         thread=state.thread,
         user=user,
         is_owner=True,
     )
 
 
-def test_start_private_thread_state_save_invites_users_to_saved_thread(
+def test_start_private_thread_state_save_adds_members_to_saved_thread(
     user_request, private_threads_category, other_user
 ):
     state = StartPrivateThreadState(user_request, private_threads_category)
     state.set_thread_title("Test thread")
     state.set_post_message(parse("Hello world"))
-    state.set_invite_users([other_user])
+    state.set_members([other_user])
     state.save()
 
-    ThreadParticipant.objects.get(
+    PrivateThreadMember.objects.get(
         thread=state.thread,
         user=other_user,
         is_owner=False,

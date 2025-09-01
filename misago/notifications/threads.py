@@ -12,13 +12,15 @@ from ..permissions.generic import (
     filter_accessible_thread_posts,
 )
 from ..permissions.proxy import UserPermissionsProxy
-from ..permissions.privatethreads import check_see_private_thread_permission
+from ..permissions.privatethreads import (
+    check_private_threads_permission,
+    check_see_private_thread_permission,
+)
 from ..threads.models import Post, Thread
 from ..threads.threadurl import get_thread_url
-from .enums import ThreadNotifications
+from .enums import NotificationVerb, ThreadNotifications
 from .models import Notification, WatchedThread
 from .users import notify_user
-from .verbs import NotificationVerb
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -114,7 +116,7 @@ def notify_watcher_on_new_thread_reply(
 
     notify_user(
         watched_thread.user,
-        NotificationVerb.REPLIED,
+        NotificationVerb.REPLIED_TO_THREAD,
         post.poster,
         post.category,
         post.thread,
@@ -172,7 +174,7 @@ def user_has_other_unread_posts(
     return posts_queryset.exists()
 
 
-def notify_participant_on_new_private_thread(
+def notify_user_on_new_private_thread(
     user: "User",
     actor: "User",
     thread: Thread,
@@ -182,6 +184,7 @@ def notify_participant_on_new_private_thread(
     user_permissions = UserPermissionsProxy(user, cache_versions)
 
     with check_permissions() as can_see_private_thread:
+        check_private_threads_permission(user_permissions)
         check_see_private_thread_permission(user_permissions, thread)
 
     if not can_see_private_thread:
@@ -201,7 +204,7 @@ def notify_participant_on_new_private_thread(
 
     has_unread_notification = Notification.objects.filter(
         user=user,
-        verb=NotificationVerb.INVITED,
+        verb=NotificationVerb.ADDED_TO_PRIVATE_THREAD,
         post=thread.first_post,
         is_read=False,
     ).exists()
@@ -211,7 +214,7 @@ def notify_participant_on_new_private_thread(
 
     notify_user(
         user,
-        NotificationVerb.INVITED,
+        NotificationVerb.ADDED_TO_PRIVATE_THREAD,
         actor,
         thread.category,
         thread,
@@ -219,10 +222,10 @@ def notify_participant_on_new_private_thread(
     )
 
     if notification == ThreadNotifications.SITE_AND_EMAIL:
-        email_participant_on_new_private_thread(user, actor, watched_thread, settings)
+        email_user_on_new_private_thread(user, actor, watched_thread, settings)
 
 
-def email_participant_on_new_private_thread(
+def email_user_on_new_private_thread(
     user: "User",
     actor: "User",
     watched_thread: WatchedThread,
@@ -232,7 +235,7 @@ def email_participant_on_new_private_thread(
 
     subject = pgettext(
         "new private thread email subject",
-        '%(user)s has invited you to participate in private thread "%(thread)s"',
+        '%(user)s added you to the private thread "%(thread)s"',
     )
     subject_formats = {"thread": thread.title, "user": actor.username}
 

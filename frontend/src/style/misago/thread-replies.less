@@ -23,3 +23,20 @@
     }
   }
 }
+
+.thread-no-reply-message {
+  margin-bottom: @line-height-computed;
+  padding: @padding-base-vertical @padding-base-horizontal;
+
+  border: 1px solid @gray-200;
+  border-radius: @border-radius-small;
+  text-align: center;
+}
+
+@media screen and (min-width: 400px) {
+  .thread-no-reply-message {
+    padding: @padding-large-vertical * 2 @padding-large-horizontal;
+
+    font-size: @font-size-large;
+  }
+}

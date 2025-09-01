@@ -5,8 +5,8 @@ from django.http import HttpRequest
 
 from ...categories.models import Category
 from ...polls.models import Poll
+from ...privatethreadmembers.models import PrivateThreadMember
 from ...threads.checksums import update_post_checksum
-from ...threads.models import ThreadParticipant
 from ..hooks import (
     get_start_private_thread_state_hook,
     get_start_thread_state_hook,
@@ -99,15 +99,15 @@ class StartThreadState(StartPostingState):
 
 
 class StartPrivateThreadState(StartPostingState):
-    invite_users: list["User"]
+    members: list["User"]
 
     def __init__(self, request: HttpRequest, category: Category):
         super().__init__(request, category)
 
-        self.invite_users: list["User"] = []
+        self.members: list["User"] = []
 
-    def set_invite_users(self, users: list["User"]):
-        self.invite_users = users
+    def set_members(self, users: list["User"]):
+        self.members = users
 
     @transaction.atomic()
     def save(self):
@@ -119,19 +119,28 @@ class StartPrivateThreadState(StartPostingState):
     def save_action(self, request: HttpRequest, state: "StartPrivateThreadState"):
         super().save_action(request, state)
 
-        self.save_users()
+        self.save_members()
 
-    def save_users(self):
-        users: list[ThreadParticipant] = [
-            ThreadParticipant(thread=self.thread, user=self.user, is_owner=True),
+    def save_members(self):
+        users: list[PrivateThreadMember] = [
+            PrivateThreadMember(
+                thread=self.thread,
+                user=self.user,
+                is_owner=True,
+                created_at=self.timestamp,
+            ),
         ]
 
-        for invite_user in self.invite_users:
+        for user in self.members:
             users.append(
-                ThreadParticipant(thread=self.thread, user=invite_user),
+                PrivateThreadMember(
+                    thread=self.thread,
+                    user=user,
+                    created_at=self.timestamp,
+                ),
             )
 
-        ThreadParticipant.objects.bulk_create(users)
+        PrivateThreadMember.objects.bulk_create(users)
 
 
 def get_start_thread_state(
