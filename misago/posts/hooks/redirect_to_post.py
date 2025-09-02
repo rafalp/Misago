@@ -85,7 +85,7 @@ class RedirectToPostHook(
     from django.shortcuts import redirect
     from django.urls import reverse
 
-    from misago.postredirect.hooks import redirect_to_post_hook
+    from misago.posts.hooks import redirect_to_post_hook
     from misago.posts.models import Post
 
     BLOG_CATEGORY_TREE = 500
