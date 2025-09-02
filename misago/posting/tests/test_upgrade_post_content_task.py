@@ -1,7 +1,7 @@
 import pytest
 
 from ...html.element import html_element
-from ...threads.models import Post
+from ...posts.models import Post
 from ..tasks import upgrade_post_content
 
 

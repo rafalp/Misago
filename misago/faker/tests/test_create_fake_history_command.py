@@ -7,7 +7,8 @@ from django.core.management import call_command
 from django.utils import timezone
 
 from ...categories.models import Category
-from ...threads.models import Post, Thread
+from ...posts.models import Post
+from ...threads.models import Thread
 from ...users.models import Rank
 from ..management.commands import createfakehistory
 from ..threads import get_fake_thread

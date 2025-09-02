@@ -7,8 +7,8 @@ from django.urls import reverse
 
 from ...acl.test import patch_user_acl
 from ...categories.models import Category
-from ...conf.test import override_dynamic_settings
-from ...threads.models import Post, Thread
+from ...posts.models import Post
+from ...threads.models import Thread
 from ...threads.test import post_thread
 from ..activepostersranking import build_active_posters_ranking
 from ..models import Ban, DeletedUser, Rank

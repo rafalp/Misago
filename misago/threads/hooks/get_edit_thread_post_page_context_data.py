@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ..models import Post
+from ...posts.models import Post
 
 if TYPE_CHECKING:
     from ...posting.formsets import EditThreadPostFormset
@@ -100,8 +100,8 @@ class GetEditThreadPostPageContextDataHook(
     ```python
     from django.http import HttpRequest
     from misago.posting.formsets import EditThreadPostFormset
+    from misago.posts.models import Post
     from misago.threads.hooks import get_edit_thread_post_page_context_data_hook
-    from misago.threads.models import Thread
 
 
     @get_edit_thread_post_page_context_data_hook.append_filter

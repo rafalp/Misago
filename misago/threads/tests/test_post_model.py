@@ -4,9 +4,10 @@ from django.test import TestCase
 from django.utils import timezone
 
 from ...categories.models import Category
+from ...posts.models import Post
 from ...users.test import create_test_user
 from ..checksums import update_post_checksum
-from ..models import Post, Thread
+from ..models import Thread
 
 
 class PostModelTests(TestCase):

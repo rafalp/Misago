@@ -2,6 +2,7 @@ from django.test import RequestFactory
 
 from .. import test
 from ...categories.models import Category
+from ...posts.models import Post
 from ...users.test import AuthenticatedUserTestCase, create_test_user
 from ..models import Post
 

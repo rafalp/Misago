@@ -17,11 +17,12 @@ from ..permissions.generic import (
 )
 from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.checkutils import check_permissions
+from ..posts.models import Post
 from ..privatethreadmembers.members import prefetch_private_thread_member_ids
 from ..threadupdates.models import ThreadUpdate
 from ..users.models import Group
 from .hooks import create_prefetch_posts_feed_related_objects_hook
-from .models import Post, Thread
+from .models import Thread
 
 if TYPE_CHECKING:
     from ..users.models import User

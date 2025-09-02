@@ -4,7 +4,7 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ...attachments.filetypes import filetypes
 from ...attachments.models import Attachment
-from ...threads.models import Post
+from ...posts.models import Post
 from ..views import generic
 from .forms import FilterAttachmentsForm
 

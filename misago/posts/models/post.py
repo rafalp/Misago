@@ -31,8 +31,8 @@ class Post(PluginDataModel):
     metadata = models.JSONField(default=dict)
 
     posted_at = models.DateTimeField(db_index=True)
-    updated_at = models.DateTimeField()
-    hidden_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(null=True, blank=True)
+    hidden_at = models.DateTimeField(null=True, blank=True)
 
     edits = models.PositiveIntegerField(default=0)
     last_editor = models.ForeignKey(

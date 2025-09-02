@@ -2,8 +2,8 @@ from django.db import models, transaction
 from django.http import HttpRequest
 
 from ...parser.parse import ParsingResult, parse
-from ...threads.checksums import update_post_checksum
-from ...threads.models import Post, Thread
+from ...posts.models import Post
+from ...threads.models import Thread
 from ..hooks import (
     get_reply_private_thread_state_hook,
     get_reply_thread_state_hook,
@@ -64,7 +64,6 @@ class ReplyThreadState(PostingState):
             # Save new post so it exists before search vector setup
             self.post.save()
 
-        update_post_checksum(self.post)
         self.post.set_search_vector()
         self.post.save()
 

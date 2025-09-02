@@ -3,8 +3,8 @@ import time
 from django.core.management.base import BaseCommand
 
 from ....core.management.progressbar import show_progress
+from ....posts.models import Post
 from ...checksums import update_post_checksum
-from ...models import Post
 
 
 class Command(BaseCommand):

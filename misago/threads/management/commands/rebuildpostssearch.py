@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 
 from ....core.management.progressbar import show_progress
 from ....parser.parse import parse
-from ...models import Post
+from ....posts.models import Post
 
 
 class Command(BaseCommand):

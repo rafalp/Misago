@@ -35,6 +35,7 @@ from ...posting.state import (
     get_reply_thread_state,
 )
 from ...posting.validators import validate_flood_control, validate_posted_contents
+from ...posts.models import Post
 from ...readtracker.tracker import (
     get_thread_read_time,
     mark_thread_read,
@@ -46,7 +47,7 @@ from ..hooks import (
     get_reply_private_thread_page_context_data_hook,
     get_reply_thread_page_context_data_hook,
 )
-from ..models import Post, Thread
+from ..models import Thread
 from ..prefetch import prefetch_posts_feed_related_objects
 from .redirect import private_thread_post_redirect, thread_post_redirect
 from .generic import PrivateThreadView, ThreadView

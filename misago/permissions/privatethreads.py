@@ -7,8 +7,9 @@ from django.http import Http404
 from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
 
+from ..posts.models import Post
 from ..privatethreadmembers.models import PrivateThreadMember
-from ..threads.models import Post, Thread
+from ..threads.models import Thread
 from .hooks import (
     check_change_private_thread_owner_permission_hook,
     check_edit_private_thread_permission_hook,

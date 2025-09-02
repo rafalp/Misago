@@ -2,7 +2,7 @@ from logging import getLogger
 
 from celery import shared_task
 
-from ..threads.models import Post
+from ..posts.models import Post
 from . import upgradepost
 
 logger = getLogger("misago.posting")

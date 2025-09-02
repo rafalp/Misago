@@ -37,8 +37,8 @@ class Migration(migrations.Migration):
                 ("parsed", models.TextField()),
                 ("metadata", models.JSONField(default=dict)),
                 ("posted_at", models.DateTimeField(db_index=True)),
-                ("updated_at", models.DateTimeField()),
-                ("hidden_at", models.DateTimeField(default=django.utils.timezone.now)),
+                ("updated_at", models.DateTimeField(blank=True, null=True)),
+                ("hidden_at", models.DateTimeField(blank=True, null=True)),
                 ("edits", models.PositiveIntegerField(default=0)),
                 (
                     "last_editor_name",

@@ -30,11 +30,13 @@ from .test import (
 )
 from .test.time import *
 from .test.polls import *
+from .test.posts import *
+from .test.threads import *
 from .test.threadupdates import *
 from .test.userpermissions import *
 from .themes import THEME_CACHE
 from .threads.models import Thread
-from .threads.test import post_thread, reply_thread
+from .threads.test import reply_thread
 from .users import BANS_CACHE
 from .users.enums import DefaultGroupId
 from .users.models import AnonymousUser, Group, GroupDescription
@@ -313,23 +315,23 @@ def default_category(db):
 
 
 @pytest.fixture
-def thread(default_category):
-    return post_thread(default_category)
+def thread(thread_factory, default_category):
+    return thread_factory(default_category)
 
 
 @pytest.fixture
-def other_thread(default_category):
-    return post_thread(default_category)
+def other_thread(thread_factory, default_category):
+    return thread_factory(default_category)
 
 
 @pytest.fixture
-def hidden_thread(default_category):
-    return post_thread(default_category, is_hidden=True)
+def hidden_thread(thread_factory, default_category):
+    return thread_factory(default_category, is_hidden=True)
 
 
 @pytest.fixture
-def unapproved_thread(default_category):
-    return post_thread(default_category, is_unapproved=True)
+def unapproved_thread(thread_factory, default_category):
+    return thread_factory(default_category, is_unapproved=True)
 
 
 @pytest.fixture
@@ -338,13 +340,8 @@ def post(thread):
 
 
 @pytest.fixture
-def reply(thread):
-    return reply_thread(
-        thread,
-        poster="Ghost",
-        posted_on=timezone.now(),
-        message="I am reply",
-    )
+def reply(thread_reply_factory, thread):
+    return thread_reply_factory(thread, poster="Reply", original="I am reply")
 
 
 @pytest.fixture
@@ -434,38 +431,38 @@ def other_user_unapproved_reply(thread, other_user):
 
 
 @pytest.fixture
-def user_thread(default_category, user):
-    return post_thread(default_category, poster=user)
+def user_thread(thread_factory, default_category, user):
+    return thread_factory(default_category, starter=user)
 
 
 @pytest.fixture
-def user_hidden_thread(default_category, user):
-    return post_thread(default_category, poster=user, is_hidden=True)
+def user_hidden_thread(thread_factory, default_category, user):
+    return thread_factory(default_category, starter=user, is_hidden=True)
 
 
 @pytest.fixture
-def user_unapproved_thread(default_category, user):
-    return post_thread(default_category, poster=user, is_unapproved=True)
+def user_unapproved_thread(thread_factory, default_category, user):
+    return thread_factory(default_category, starter=user, is_unapproved=True)
 
 
 @pytest.fixture
-def other_user_thread(default_category, other_user):
-    return post_thread(default_category, poster=other_user)
+def other_user_thread(thread_factory, default_category, other_user):
+    return thread_factory(default_category, starter=other_user)
 
 
 @pytest.fixture
-def other_user_hidden_thread(default_category, other_user):
-    return post_thread(default_category, poster=other_user, is_hidden=True)
+def other_user_hidden_thread(thread_factory, default_category, other_user):
+    return thread_factory(default_category, starter=other_user, is_hidden=True)
 
 
 @pytest.fixture
-def other_user_unapproved_thread(default_category, other_user):
-    return post_thread(default_category, poster=other_user, is_unapproved=True)
+def other_user_unapproved_thread(thread_factory, default_category, other_user):
+    return thread_factory(default_category, starter=other_user, is_unapproved=True)
 
 
 @pytest.fixture
-def private_thread(private_threads_category):
-    return post_thread(private_threads_category)
+def private_thread(thread_factory, private_threads_category):
+    return thread_factory(private_threads_category)
 
 
 @pytest.fixture
@@ -474,21 +471,23 @@ def private_thread_post(private_thread):
 
 
 @pytest.fixture
-def private_thread_reply(private_thread):
-    return reply_thread(private_thread, poster="Ghost", posted_on=timezone.now())
+def private_thread_reply(thread_reply_factory, private_thread):
+    return thread_reply_factory(private_thread, poster="Ghost")
 
 
 @pytest.fixture
-def private_thread_user_reply(private_thread, user):
-    return reply_thread(private_thread, poster=user, posted_on=timezone.now())
+def private_thread_user_reply(thread_reply_factory, private_thread, user):
+    return thread_reply_factory(private_thread, poster=user)
 
 
 @pytest.fixture
-def user_private_thread(private_threads_category, user, other_user, moderator):
-    thread = post_thread(
+def user_private_thread(
+    thread_factory, private_threads_category, user, other_user, moderator
+):
+    thread = thread_factory(
         private_threads_category,
-        "User Private Thread",
-        poster=user,
+        title="User Private Thread",
+        starter=user,
     )
 
     PrivateThreadMember.objects.create(thread=thread, user=user, is_owner=True)
@@ -499,11 +498,13 @@ def user_private_thread(private_threads_category, user, other_user, moderator):
 
 
 @pytest.fixture
-def other_user_private_thread(private_threads_category, user, other_user, moderator):
-    thread = post_thread(
+def other_user_private_thread(
+    thread_factory, private_threads_category, user, other_user, moderator
+):
+    thread = thread_factory(
         private_threads_category,
-        "Other User Private Thread",
-        poster=other_user,
+        title="Other User Private Thread",
+        starter=other_user,
     )
 
     PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)

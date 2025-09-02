@@ -3,7 +3,8 @@ from typing import TYPE_CHECKING, Optional
 from django.db.models import F
 
 from ..categories.models import Category
-from ..threads.models import Post, Thread
+from ..posts.models import Post
+from ..threads.models import Thread
 from .models import Notification
 
 if TYPE_CHECKING:

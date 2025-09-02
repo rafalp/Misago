@@ -35,6 +35,7 @@ from ...posting.formsets import (
     get_reply_private_thread_formset,
     get_reply_thread_formset,
 )
+from ...posts.models import Post
 from ...privatethreadmembers.views import get_private_thread_members_context_data
 from ...readtracker.tracker import (
     get_unread_posts,
@@ -52,7 +53,7 @@ from ..hooks import (
     get_thread_replies_page_posts_queryset_hook,
     get_thread_replies_page_thread_queryset_hook,
 )
-from ..models import Post, Thread
+from ..models import Thread
 from ..paginator import ThreadRepliesPage
 from .generic import PrivateThreadView, ThreadView
 

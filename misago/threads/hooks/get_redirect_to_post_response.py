@@ -3,7 +3,7 @@ from typing import Protocol
 from django.http import HttpRequest, HttpResponse
 
 from ...plugins.hooks import FilterHook
-from ..models import Post
+from ...posts.models import Post
 
 
 class GetRedirectToPostResponseHookAction(Protocol):
@@ -84,9 +84,8 @@ class GetRedirectToPostResponseHook(
     from django.http import HttpRequest
     from django.shortcuts import redirect
     from django.urls import reverse
-
+    from misago.posts.models import Post
     from misago.threads.hooks import get_redirect_to_post_response_hook
-    from misago.threads.models import Post
 
     BLOG_CATEGORY_TREE = 500
 

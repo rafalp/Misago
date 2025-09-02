@@ -1,7 +1,8 @@
 from .. import moderation, test
 from ...categories.models import Category
 from ...users.test import AuthenticatedUserTestCase
-from ..models import Post, Thread
+from ...posts.models import Post
+from ..models import Thread
 
 
 class PostsModerationTests(AuthenticatedUserTestCase):

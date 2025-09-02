@@ -17,7 +17,6 @@ from .files import (
     IMAGE_SMALL,
     TEXT_FILE,
 )
-from .parser import disable_parser_clean_ast
 
 __all__ = [
     "IMAGE_INVALID",

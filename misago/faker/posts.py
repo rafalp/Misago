@@ -2,8 +2,7 @@ import random
 
 from django.utils import timezone
 
-from ..threads.checksums import update_post_checksum
-from ..threads.models import Post
+from ..posts.models import Post
 from .englishcorpus import EnglishCorpus
 from .users import get_fake_username
 

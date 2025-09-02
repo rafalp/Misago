@@ -132,6 +132,7 @@ def post_thread(
     is_closed=False,
     started_on=None,
 ):
+    raise NotImplementedError("use `thread_factory` fixture!")
     started_on = started_on or timezone.now()
 
     kwargs = {
@@ -195,6 +196,7 @@ def reply_thread(
     has_open_reports=False,
     posted_on=None,
 ):
+    raise NotImplementedError("use `post_factory` or `thread_reply_factory` fixture!")
     posted_on = posted_on or thread.last_post_on + timedelta(minutes=5)
 
     kwargs = {

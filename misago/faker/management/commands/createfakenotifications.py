@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 from ....core.management.progressbar import show_progress
 from ....notifications.enums import NotificationVerb
 from ....notifications.models import Notification
-from ....threads.models import Post
+from ....posts.models import Post
 
 User = get_user_model()
 

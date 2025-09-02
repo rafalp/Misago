@@ -2,7 +2,7 @@ from io import StringIO
 
 from django.core.management import call_command
 
-from ...threads.models import Post
+from ...posts.models import Post
 from ..management.commands import createfakeposts
 from ..threads import get_fake_thread
 
