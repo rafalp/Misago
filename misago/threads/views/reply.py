@@ -49,7 +49,7 @@ from ..hooks import (
 )
 from ..models import Thread
 from ..prefetch import prefetch_posts_feed_related_objects
-from .redirect import private_thread_post_redirect, thread_post_redirect
+from .redirect import redirect_to_thread_post
 from .generic import PrivateThreadView, ThreadView
 
 
@@ -320,7 +320,7 @@ class ReplyThreadView(ReplyView, ThreadView):
     def get_redirect_response(
         self, request: HttpRequest, thread: Thread, post: Post
     ) -> HttpResponse:
-        return thread_post_redirect(
+        return redirect_to_thread_post(
             request, id=thread.id, slug=thread.slug, post=post.id
         )
 
@@ -376,7 +376,7 @@ class ReplyPrivateThreadView(ReplyView, PrivateThreadView):
     def get_redirect_response(
         self, request: HttpRequest, thread: Thread, post: Post
     ) -> HttpResponse:
-        return private_thread_post_redirect(
+        return redirect_to_private_thread_post(
             request, id=thread.id, slug=thread.slug, post=post.id
         )
 

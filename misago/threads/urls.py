@@ -8,7 +8,6 @@ from .views.edit import (
 )
 from .views.list import category_threads, private_threads, threads
 from .views.redirect import (
-    PostRedirectView,
     PrivateThreadLastPostRedirectView,
     PrivateThreadUnapprovedPostRedirectView,
     PrivateThreadUnreadPostRedirectView,
@@ -192,10 +191,5 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/delete-update/<int:thread_update>/",
         DeletePrivateThreadView.as_view(),
         name="delete-private-thread-update",
-    ),
-    path(
-        "post/<int:id>/",
-        PostRedirectView.as_view(),
-        name="post",
     ),
 ]

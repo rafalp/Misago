@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     "misago.threads",
     "misago.privatethreads",
     "misago.threadupdates",
+    "misago.postredirect",
     "misago.polls",
     "misago.graphql",
     "misago.apiv2",

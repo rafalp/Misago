@@ -6,7 +6,7 @@ from ...plugins.hooks import FilterHook
 from ...posts.models import Post
 
 
-class GetRedirectToPostResponseHookAction(Protocol):
+class RedirectToPostHookAction(Protocol):
     """
     Misago function used to get a HTTP redirect response to a post.
 
@@ -32,13 +32,13 @@ class GetRedirectToPostResponseHookAction(Protocol):
     ) -> HttpResponse: ...
 
 
-class GetRedirectToPostResponseHookFilter(Protocol):
+class RedirectToPostHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetRedirectToPostResponseHookAction`
+    ## `action: RedirectToPostHookAction`
 
     Misago function used to get a HTTP redirect response to a post.
 
@@ -59,16 +59,16 @@ class GetRedirectToPostResponseHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetRedirectToPostResponseHookAction,
+        action: RedirectToPostHookAction,
         request: HttpRequest,
         post: Post,
     ) -> HttpResponse: ...
 
 
-class GetRedirectToPostResponseHook(
+class RedirectToPostHook(
     FilterHook[
-        GetRedirectToPostResponseHookAction,
-        GetRedirectToPostResponseHookFilter,
+        RedirectToPostHookAction,
+        RedirectToPostHookFilter,
     ]
 ):
     """
@@ -84,12 +84,13 @@ class GetRedirectToPostResponseHook(
     from django.http import HttpRequest
     from django.shortcuts import redirect
     from django.urls import reverse
+
+    from misago.postredirect.hooks import redirect_to_post_hook
     from misago.posts.models import Post
-    from misago.threads.hooks import get_redirect_to_post_response_hook
 
     BLOG_CATEGORY_TREE = 500
 
-    @get_redirect_to_post_response_hook.append_filter
+    @redirect_to_post_hook.append_filter
     def redirect_to_blog_comment(
         action, request: HttpRequest, post: Post
     ) -> HttpResponse:
@@ -109,11 +110,11 @@ class GetRedirectToPostResponseHook(
 
     def __call__(
         self,
-        action: GetRedirectToPostResponseHookAction,
+        action: RedirectToPostHookAction,
         request: HttpRequest,
         post: Post,
     ) -> HttpResponse:
         return super().__call__(action, request, post)
 
 
-get_redirect_to_post_response_hook = GetRedirectToPostResponseHook()
+redirect_to_post_hook = RedirectToPostHook()

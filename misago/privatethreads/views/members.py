@@ -8,29 +8,29 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import pgettext
 
-from ..notifications.tasks import notify_on_new_private_thread
-from ..permissions.privatethreads import (
+from ...notifications.tasks import notify_on_new_private_thread
+from ...permissions.privatethreads import (
     check_change_private_thread_owner_permission,
     check_remove_private_thread_member_permission,
 )
-from ..permissions.proxy import UserPermissionsProxy
-from ..threads.models import Thread
-from ..threads.views.generic import PrivateThreadView
-from ..threadupdates.create import create_added_member_thread_update
-from ..threadupdates.models import ThreadUpdate
-from ..threads.nexturl import get_next_thread_url
-from ..threads.postsfeed import PrivateThreadPostsFeed
-from .forms import MembersAddForm
-from .members import (
+from ...permissions.proxy import UserPermissionsProxy
+from ...threads.models import Thread
+from ...threads.views.generic import PrivateThreadView
+from ...threadupdates.create import create_added_member_thread_update
+from ...threadupdates.models import ThreadUpdate
+from ...threads.nexturl import get_next_thread_url
+from ...threads.postsfeed import PrivateThreadPostsFeed
+from ..forms import MembersAddForm
+from ..members import (
     change_private_thread_owner,
     private_thread_has_members,
     remove_private_thread_member,
 )
-from .models import PrivateThreadMember
-from .validators import validate_new_private_thread_owner
+from ..models import PrivateThreadMember
+from ..validators import validate_new_private_thread_owner
 
 if TYPE_CHECKING:
-    from ..users.models import User
+    from ...users.models import User
 
 
 class PrivateThreadMembersAddView(PrivateThreadView):

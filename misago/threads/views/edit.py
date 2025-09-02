@@ -40,7 +40,7 @@ from ..hooks import (
 )
 from ..models import Thread
 from ..prefetch import prefetch_posts_feed_related_objects
-from .redirect import private_thread_post_redirect, thread_post_redirect
+from .redirect import redirect_to_thread_post
 from .generic import PrivateThreadView, ThreadView
 
 
@@ -221,7 +221,7 @@ class EditThreadPostView(EditView, ThreadView):
         )
 
     def get_redirect_url(self, request: HttpRequest, thread: Thread, post: Post) -> str:
-        return thread_post_redirect(
+        return redirect_to_thread_post(
             request, id=thread.id, slug=thread.slug, post=post.id
         )["location"]
 
@@ -253,7 +253,7 @@ class EditPrivateThreadPostView(EditView, PrivateThreadView):
         )
 
     def get_redirect_url(self, request: HttpRequest, thread: Thread, post: Post) -> str:
-        return private_thread_post_redirect(
+        return redirect_to_private_thread_post(
             request, id=thread.id, slug=thread.slug, post=post.id
         )["location"]
 

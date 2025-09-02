@@ -1,14 +1,12 @@
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpRequest, HttpResponse
 from django.db.models import QuerySet
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.utils.translation import pgettext
 from django.views import View
 
-from ...categories.enums import CategoryTree
 from ...posts.models import Post
 from ...readtracker.readtime import get_default_read_time
-from ..hooks import get_redirect_to_post_response_hook
 from ..models import Thread
 from .generic import PrivateThreadView, ThreadView
 
@@ -128,54 +126,18 @@ class PrivateThreadUnapprovedPostRedirectView(
         return queryset.filter(is_unapproved=True).first()
 
 
-class PostRedirectView(View):
-    def get(self, request: HttpRequest, id: int) -> HttpResponse:
-        return self.real_dispatch(request, id)
-
-    def post(self, request: HttpRequest, id: int) -> HttpResponse:
-        return self.real_dispatch(request, id)
-
-    def real_dispatch(self, request: HttpRequest, id: int) -> HttpResponse:
-        queryset = Post.objects.select_related("category")
-        post = get_object_or_404(queryset, id=id)
-        return get_redirect_to_post_response(request, post)
-
-
-def get_redirect_to_post_response(request: HttpRequest, post: Post) -> HttpResponse:
-    try:
-        return get_redirect_to_post_response_hook(
-            _get_redirect_to_post_response_action, request, post
-        )
-    except PermissionDenied:
-        raise Http404()
-
-
-def _get_redirect_to_post_response_action(
-    request: HttpRequest, post: Post
-) -> HttpResponse:
-    if post.category.tree_id == CategoryTree.THREADS:
-        return thread_post_redirect(request, post.thread_id, "", post=post.id)
-
-    if post.category.tree_id == CategoryTree.PRIVATE_THREADS:
-        return private_thread_post_redirect(request, post.thread_id, "", post=post.id)
-
-    raise Http404()
-
-
-class GetPostRedirectView(RedirectView):
+class PostRedirectView(RedirectView):
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:
-        return get_object_or_404(queryset, id=kwargs["post"])
+        try:
+            return queryset.get(id=kwargs["post"])
+        except Post.DoesNotExist:
+            raise Http404()
 
 
-class ThreadPostRedirectView(GetPostRedirectView, ThreadView):
+class ThreadPostRedirectView(PostRedirectView, ThreadView):
     pass
 
 
-class PrivateThreadPostRedirectView(GetPostRedirectView, PrivateThreadView):
-    pass
-
-
-thread_post_redirect = ThreadPostRedirectView.as_view()
-private_thread_post_redirect = PrivateThreadPostRedirectView.as_view()
+redirect_to_thread_post = ThreadPostRedirectView.as_view()

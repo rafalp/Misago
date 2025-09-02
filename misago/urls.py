@@ -20,6 +20,7 @@ urlpatterns = [
     path("", include("misago.polls.urls")),
     path("", include("misago.threads.urls")),
     path("", include("misago.privatethreads.urls")),
+    path("", include("misago.postredirect.urls")),
     path("", include("misago.notifications.urls")),
     path("", include("misago.search.urls")),
     path("", include("misago.oauth2.urls")),
