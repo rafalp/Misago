@@ -13,37 +13,26 @@ from ...conf import settings
 from ...core.utils import parse_iso8601_string
 from ...markup import finalize_markup
 from ...plugins.models import PluginDataModel
-from ..checksums import is_post_valid, update_post_checksum
 
 if TYPE_CHECKING:
-    from .thread import Thread
+    from ...threads.models import Thread
 
 
 class Post(PluginDataModel):
-    category = models.ForeignKey(
-        "misago_categories.Category", related_name="+", on_delete=models.CASCADE
-    )
-    thread = models.ForeignKey(
-        "misago_threads.Thread", related_name="+", on_delete=models.CASCADE
-    )
+    category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
+    thread = models.ForeignKey("misago_threads.Thread", on_delete=models.CASCADE)
     poster = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        blank=True,
-        null=True,
-        related_name="+",
-        on_delete=models.SET_NULL,
+        settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL
     )
     poster_name = models.CharField(max_length=255)
+
     original = models.TextField()
     parsed = models.TextField()
-    checksum = models.CharField(max_length=64, default="-")
     metadata = models.JSONField(default=dict)
 
-    attachments_cache = models.JSONField(null=True, blank=True)
-
-    posted_on = models.DateTimeField(db_index=True)
-    updated_on = models.DateTimeField()
-    hidden_on = models.DateTimeField(default=timezone.now)
+    posted_at = models.DateTimeField(db_index=True)
+    updated_at = models.DateTimeField()
+    hidden_at = models.DateTimeField(default=timezone.now)
 
     edits = models.PositiveIntegerField(default=0)
     last_editor = models.ForeignKey(
@@ -68,35 +57,35 @@ class Post(PluginDataModel):
 
     has_reports = models.BooleanField(default=False)
     has_open_reports = models.BooleanField(default=False)
+
     is_unapproved = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
     is_protected = models.BooleanField(default=False)
 
-    is_event = models.BooleanField(default=False, db_index=True)
-    event_type = models.CharField(max_length=255, null=True, blank=True)
-    event_context = models.JSONField(null=True, blank=True)
-
-    likes = models.PositiveIntegerField(default=0)
-    last_likes = models.JSONField(null=True, blank=True)
-
-    liked_by = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name="liked_post_set",
-        through="misago_threads.PostLike",
-    )
-
     search_document = models.TextField(null=True, blank=True)
     search_vector = SearchVectorField()
 
+    class Meta:
+        indexes = [
+            *PluginDataModel.Meta.indexes,
+            models.Index(
+                name="misago_post_has_open_repo_part",
+                fields=["has_open_reports"],
+                condition=Q(has_open_reports=True),
+            ),
+            models.Index(
+                name="misago_post_is_hidden_part",
+                fields=["is_hidden"],
+                condition=Q(is_hidden=False),
+            ),
+            GinIndex(fields=["search_vector"]),
+            # Speed up threadview for team members
+            models.Index(fields=["thread", "id"]),
+            models.Index(fields=["poster", "posted_at"]),
+        ]
+
     def __str__(self):
         return "%s..." % self.original[10:].strip()
-
-    def delete(self, *args, **kwargs):
-        from ..signals import delete_post
-
-        delete_post.send(sender=self)
-
-        super().delete(*args, **kwargs)
 
     def merge(self, other_post):
         if self.poster_id != other_post.poster_id:
@@ -119,7 +108,6 @@ class Post(PluginDataModel):
 
         other_post.original = str("\n\n").join((other_post.original, self.original))
         other_post.parsed = str("\n").join((other_post.parsed, self.parsed))
-        update_post_checksum(other_post)
 
         if self.is_protected:
             other_post.is_protected = True
@@ -157,12 +145,6 @@ class Post(PluginDataModel):
                 self._hydrated_attachments_cache.append(attachment)
 
         return self._hydrated_attachments_cache
-
-    @property
-    def sha256_checksum(self) -> str:
-        return hashlib.sha256(
-            f"{self.id}:{self.updated_on}:{self.parsed}".encode()
-        ).hexdigest()
 
     @property
     def content(self):

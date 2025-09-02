@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     "misago.search",
     "misago.socialauth",
     "misago.threads",
+    "misago.posts",
     "misago.threadupdates",
     "misago.polls",
     "misago.privatethreadmembers",
