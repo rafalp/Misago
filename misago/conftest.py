@@ -19,7 +19,7 @@ from .core.utils import slugify
 from .menus import MENU_ITEMS_CACHE
 from .notifications.models import WatchedThread
 from .permissions.models import Moderator
-from .privatethreadmembers.models import PrivateThreadMember
+from .privatethreads.models import PrivateThreadMember
 from .socialauth import SOCIALAUTH_CACHE
 from .socialauth.models import SocialAuthProvider
 from .test import (

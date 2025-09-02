@@ -36,7 +36,7 @@ from ...posting.formsets import (
     get_reply_thread_formset,
 )
 from ...posts.models import Post
-from ...privatethreadmembers.views import get_private_thread_members_context_data
+from ...privatethreads.views import get_private_thread_members_context_data
 from ...readtracker.tracker import (
     get_unread_posts,
     mark_category_read,

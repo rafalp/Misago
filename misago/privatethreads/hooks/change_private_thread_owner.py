@@ -10,9 +10,9 @@ if TYPE_CHECKING:
     from ...users.models import User
 
 
-class RemovePrivateThreadMemberAction(Protocol):
+class ChangePrivateThreadOwnerHookAction(Protocol):
     """
-    Misago function for removing a member from a private thread.
+    Misago function for changing a private thread's owner.
 
     # Arguments
 
@@ -23,11 +23,11 @@ class RemovePrivateThreadMemberAction(Protocol):
 
     ## `thread: Thread`
 
-    The thread from which the member will be removed.
+    The thread whose owner is being changed.
 
-    ## `member: User`
+    ## `new_owner: User`
 
-    The user to remove from the thread.
+    The user who will become the new owner of the thread.
 
     ## `request: HttpRequest | None`
 
@@ -42,18 +42,18 @@ class RemovePrivateThreadMemberAction(Protocol):
         self,
         actor: Union["User", str, None],
         thread: Thread,
-        member: "User",
+        new_owner: "User",
         request: HttpRequest | None = None,
     ) -> "ThreadUpdate": ...
 
 
-class RemovePrivateThreadMemberFilter(Protocol):
+class ChangePrivateThreadOwnerHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: RemovePrivateThreadMemberAction`
+    ## `action: ChangePrivateThreadOwnerHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -67,11 +67,11 @@ class RemovePrivateThreadMemberFilter(Protocol):
 
     ## `thread: Thread`
 
-    The thread from which the member will be removed.
+    The thread whose owner is being changed.
 
-    ## `member: User`
+    ## `new_owner: User`
 
-    The user to remove from the thread.
+    The user who will become the new owner of the thread.
 
     ## `request: HttpRequest | None`
 
@@ -84,45 +84,45 @@ class RemovePrivateThreadMemberFilter(Protocol):
 
     def __call__(
         self,
-        action: RemovePrivateThreadMemberAction,
+        action: ChangePrivateThreadOwnerHookAction,
         actor: Union["User", str, None],
         thread: Thread,
-        member: "User",
+        new_owner: "User",
         request: HttpRequest | None = None,
     ) -> "ThreadUpdate": ...
 
 
-class RemovePrivateThreadMember(
+class ChangePrivateThreadOwnerHook(
     FilterHook[
-        RemovePrivateThreadMemberAction,
-        RemovePrivateThreadMemberFilter,
+        ChangePrivateThreadOwnerHookAction,
+        ChangePrivateThreadOwnerHookFilter,
     ]
 ):
     """
-    This hook allows plugins to replace or extend the logic for
-    removing a member from a private thread.
+    This hook allows plugins to replace or extend the logic for changing
+    a private thread owner.
 
     # Example
 
-    Record the IP address used to remove a member from a thread:
+    Record the IP address used to change the thread owner:
 
     ```python
     from django.http import HttpRequest
-    from misago.privatethreadmembers.hooks import remove_private_thread_member_hook
+    from misago.privatethreads.hooks import change_private_thread_owner_hook
     from misago.threads.models import Thread
     from misago.threadupdates.models import ThreadUpdate
     from misago.users.models import User
 
 
-    @remove_private_thread_member_hook.append_filter
-    def record_private_thread_remove_member_actor_ip(
+    @change_private_thread_owner_hook.append_filter
+    def record_private_thread_owner_change_actor_ip(
         action,
         actor: User | str | None,
         thread: Thread,
-        member: User,
+        new_owner: User,
         request: HttpRequest | None = None,
     ) -> ThreadUpdate:
-        thread_update = action(actor, thread, member, request)
+        thread_update = action(actor, thread, new_owner, request)
 
         thread_update.plugin_data["user_ip"] = request.user_ip
         thread_update.save(update_fields=["plugin_data"])
@@ -135,19 +135,19 @@ class RemovePrivateThreadMember(
 
     def __call__(
         self,
-        action: RemovePrivateThreadMemberAction,
+        action: ChangePrivateThreadOwnerHookAction,
         actor: Union["User", str, None],
         thread: Thread,
-        member: "User",
+        new_owner: "User",
         request: HttpRequest | None = None,
     ) -> "ThreadUpdate":
         return super().__call__(
             action,
             actor,
             thread,
-            member,
+            new_owner,
             request,
         )
 
 
-remove_private_thread_member_hook = RemovePrivateThreadMember()
+change_private_thread_owner_hook = ChangePrivateThreadOwnerHook()

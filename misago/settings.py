@@ -75,11 +75,11 @@ INSTALLED_APPS = [
     "misago.readtracker",
     "misago.search",
     "misago.socialauth",
-    "misago.threads",
     "misago.posts",
+    "misago.threads",
+    "misago.privatethreads",
     "misago.threadupdates",
     "misago.polls",
-    "misago.privatethreadmembers",
     "misago.graphql",
     "misago.apiv2",
 ]

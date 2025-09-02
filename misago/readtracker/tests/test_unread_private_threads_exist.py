@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from ...categories.proxy import CategoriesProxy
 from ...permissions.proxy import UserPermissionsProxy
-from ...privatethreadmembers.models import PrivateThreadMember
+from ...privatethreads.models import PrivateThreadMember
 from ..models import ReadThread
 from ..privatethreads import unread_private_threads_exist
 

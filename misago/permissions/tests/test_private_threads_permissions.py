@@ -2,7 +2,7 @@ import pytest
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
-from ...privatethreadmembers.models import PrivateThreadMember
+from ...privatethreads.models import PrivateThreadMember
 from ..models import Moderator
 from ..privatethreads import (
     check_change_private_thread_owner_permission,

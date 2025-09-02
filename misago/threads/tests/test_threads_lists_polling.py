@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from ...categories.models import Category
 from ...conf.test import override_dynamic_settings
-from ...privatethreadmembers.models import PrivateThreadMember
+from ...privatethreads.models import PrivateThreadMember
 from ...test import assert_contains, assert_not_contains
 from ..enums import ThreadsListsPolling
 

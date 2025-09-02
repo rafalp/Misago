@@ -9,9 +9,7 @@ from ..models import PrivateThreadMember
 
 @pytest.fixture
 def mock_notify_on_new_private_thread(mocker):
-    return mocker.patch(
-        "misago.privatethreadmembers.views.notify_on_new_private_thread"
-    )
+    return mocker.patch("misago.privatethreads.views.notify_on_new_private_thread")
 
 
 def test_private_thread_members_add_view_renders_form(user_client, user_private_thread):
