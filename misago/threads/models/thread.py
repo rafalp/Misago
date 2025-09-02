@@ -48,7 +48,7 @@ class Thread(PluginDataModel):
     last_post_on = models.DateTimeField(db_index=True)
 
     first_post = models.ForeignKey(
-        "misago_threads.Post",
+        "misago_posts.Post",
         related_name="+",
         null=True,
         blank=True,
@@ -61,7 +61,7 @@ class Thread(PluginDataModel):
     starter_slug = models.CharField(max_length=255)
 
     last_post = models.ForeignKey(
-        "misago_threads.Post",
+        "misago_posts.Post",
         related_name="+",
         null=True,
         blank=True,
@@ -85,7 +85,7 @@ class Thread(PluginDataModel):
     is_closed = models.BooleanField(default=False)
 
     best_answer = models.ForeignKey(
-        "misago_threads.Post",
+        "misago_posts.Post",
         related_name="+",
         null=True,
         blank=True,

@@ -40,7 +40,7 @@ class Attachment(PluginDataModel):
         on_delete=models.SET_NULL,
     )
     post = models.ForeignKey(
-        "misago_threads.Post",
+        "misago_posts.Post",
         blank=True,
         null=True,
         related_name="+",

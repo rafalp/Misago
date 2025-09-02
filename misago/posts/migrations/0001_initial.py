@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("misago_categories", "0013_new_behaviors"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ("misago_threads", "0021_remove_post_relations"),
+        ("misago_threads", "0019_remove_post_relations"),
     ]
 
     operations = [
