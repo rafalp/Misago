@@ -80,7 +80,6 @@ INSTALLED_APPS = [
     "misago.threadupdates",
     "misago.polls",
     "misago.privatethreadmembers",
-    "misago.faker",
     "misago.graphql",
     "misago.apiv2",
 ]
