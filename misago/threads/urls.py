@@ -1,13 +1,13 @@
 from django.urls import path
 
-from ..views.edit import (
+from .views.edit import (
     edit_private_thread,
     edit_private_thread_post,
     edit_thread,
     edit_thread_post,
 )
-from ..views.list import category_threads, private_threads, threads
-from ..views.redirect import (
+from .views.list import category_threads, private_threads, threads
+from .views.redirect import (
     PostRedirectView,
     PrivateThreadLastPostRedirectView,
     PrivateThreadUnapprovedPostRedirectView,
@@ -17,11 +17,11 @@ from ..views.redirect import (
     ThreadUnapprovedPostRedirectView,
     ThreadUnreadPostRedirectView,
 )
-from ..views.replies import private_thread_replies, thread_replies
-from ..views.reply import reply_private_thread, reply_thread
-from ..views.selectcategory import SelectCategoryView
-from ..views.start import start_private_thread, start_thread
-from ..views.threadupdates import (
+from .views.replies import private_thread_replies, thread_replies
+from .views.reply import reply_private_thread, reply_thread
+from .views.selectcategory import SelectCategoryView
+from .views.start import start_private_thread, start_thread
+from .views.threadupdates import (
     DeletePrivateThreadView,
     DeleteThreadUpdateView,
     HidePrivateThreadView,

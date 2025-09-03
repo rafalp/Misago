@@ -16,11 +16,6 @@ MISAGO_ACL_EXTENSIONS = [
     "misago.users.permissions.moderation",
     "misago.users.permissions.delete",
     "misago.categories.permissions",
-    "misago.threads.permissions.attachments",
-    "misago.threads.permissions.polls",
-    "misago.threads.permissions.threads",
-    "misago.threads.permissions.privatethreads",
-    "misago.threads.permissions.bestanswers",
     "misago.search.permissions",
 ]
 
@@ -34,11 +29,6 @@ MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = None
 # Custom markup extensions
 
 MISAGO_MARKUP_EXTENSIONS = []
-
-
-# Custom post validators
-
-MISAGO_POST_VALIDATORS = []
 
 
 # Post search filters
@@ -82,7 +72,6 @@ MISAGO_THREAD_TYPES = [
 # Search extensions
 
 MISAGO_SEARCH_EXTENSIONS = [
-    "misago.threads.search.SearchThreads",
     "misago.users.search.SearchUsers",
 ]
 

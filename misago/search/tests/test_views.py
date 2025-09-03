@@ -1,7 +1,6 @@
 from django.urls import reverse
 
 from ...acl.test import patch_user_acl
-from ...threads.search import SearchThreads
 from ...users.test import AuthenticatedUserTestCase
 
 
@@ -16,13 +15,6 @@ class LandingTests(AuthenticatedUserTestCase):
         """view validates permission to search forum"""
         response = self.client.get(self.test_link)
         self.assertContains(response, "have permission to search site", status_code=403)
-
-    @patch_user_acl({"can_search": True})
-    def test_redirect_to_provider(self):
-        """view validates permission to search forum"""
-        response = self.client.get(self.test_link)
-        self.assertEqual(response.status_code, 302)
-        self.assertIn(SearchThreads.url, response["location"])
 
 
 class SearchTests(AuthenticatedUserTestCase):

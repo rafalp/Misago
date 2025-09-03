@@ -2,18 +2,16 @@ from django.core.paginator import EmptyPage, InvalidPage
 from django.http import Http404
 
 from ...acl.objectacl import add_acl_to_obj
+from ...categories.models import Category
 from ...core.cursorpagination import get_page
-from ...core.shortcuts import paginate, pagination_dict
-from ...threads.permissions import exclude_invisible_threads
-from ...threads.serializers import FeedSerializer
+from ...threads.models import Thread
 from ...threads.utils import add_categories_to_items
-from ...threads.viewmodels import ThreadsRootCategory
 
 
 class UserThreads:
     def __init__(self, request, profile, start=0):
-        root_category = ThreadsRootCategory(request)
-        threads_categories = [root_category.unwrap()] + root_category.subcategories
+        root_category = Category.objects.root_category()
+        threads_categories = root_category.get_descendants(include_self=True)
 
         threads_queryset = self.get_threads_queryset(
             request, threads_categories, profile
@@ -38,9 +36,7 @@ class UserThreads:
         for post in posts:
             threads.append(post.thread)
 
-        add_categories_to_items(
-            root_category.unwrap(), threads_categories, posts + threads
-        )
+        add_categories_to_items(root_category, threads_categories, posts + threads)
 
         add_acl_to_obj(request.user_acl, threads)
         add_acl_to_obj(request.user_acl, posts)
@@ -51,9 +47,7 @@ class UserThreads:
         self.list_page = list_page
 
     def get_threads_queryset(self, request, threads_categories, profile):
-        return exclude_invisible_threads(
-            request.user_acl, threads_categories, profile.thread_set
-        )
+        return profile.thread_set.filter(category__in=threads_categories)
 
     def get_posts_queryset(self, user, profile, threads_queryset):
         return profile.post_set.select_related("thread", "poster").filter(
@@ -72,4 +66,4 @@ class UserThreads:
         return {"posts": self.posts, "next": self.list_page.next}
 
 
-UserFeedSerializer = FeedSerializer.exclude_fields("poster")
+UserFeedSerializer = None
