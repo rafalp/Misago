@@ -137,7 +137,7 @@ class PostsFeed:
             "template_name": self.post_template_name,
             "animate": post.id in self.animate_posts,
             "type": "post",
-            "ordering": post.posted_on,
+            "ordering": post.posted_at,
             "post": post,
             "counter": counter,
             "poster": None,

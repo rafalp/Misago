@@ -340,7 +340,11 @@ def post(thread):
 
 @pytest.fixture
 def reply(thread_reply_factory, thread):
-    return thread_reply_factory(thread, poster="Reply", original="I am reply")
+    return thread_reply_factory(
+        thread,
+        poster="Reply",
+        original="I am reply",
+    )
 
 
 @pytest.fixture
@@ -348,7 +352,7 @@ def hidden_reply(thread_reply_factory, thread):
     return thread_reply_factory(
         thread,
         poster="HiddenPoster",
-        message="I am hidden reply",
+        original="I am hidden reply",
         is_hidden=True,
     )
 
@@ -358,7 +362,7 @@ def unapproved_reply(thread_reply_factory, thread):
     return thread_reply_factory(
         thread,
         poster="UnapprovedPoster",
-        message="I am unapproved reply",
+        original="I am unapproved reply",
         is_unapproved=True,
     )
 
@@ -368,7 +372,7 @@ def user_reply(thread_reply_factory, thread, user):
     return thread_reply_factory(
         thread,
         poster=user,
-        message="I am user reply",
+        original="I am user reply",
     )
 
 
@@ -377,7 +381,7 @@ def user_hidden_reply(thread_reply_factory, thread, user):
     return thread_reply_factory(
         thread,
         poster=user,
-        message="I am user hidden reply",
+        original="I am user hidden reply",
         is_hidden=True,
     )
 
@@ -387,7 +391,7 @@ def user_unapproved_reply(thread_reply_factory, thread, user):
     return thread_reply_factory(
         thread,
         poster=user,
-        message="I am user unapproved reply",
+        original="I am user unapproved reply",
         is_unapproved=True,
     )
 
@@ -397,7 +401,7 @@ def other_user_reply(thread_reply_factory, thread, other_user):
     return thread_reply_factory(
         thread,
         poster=other_user,
-        message="I am other user reply",
+        original="I am other user reply",
     )
 
 
@@ -406,7 +410,7 @@ def other_user_hidden_reply(thread_reply_factory, thread, other_user):
     return thread_reply_factory(
         thread,
         poster=other_user,
-        message="I am user hidden reply",
+        original="I am user hidden reply",
         is_hidden=True,
     )
 
@@ -416,7 +420,7 @@ def other_user_unapproved_reply(thread_reply_factory, thread, other_user):
     return thread_reply_factory(
         thread,
         poster=other_user,
-        message="I am other user unapproved reply",
+        original="I am other user unapproved reply",
         is_unapproved=True,
     )
 

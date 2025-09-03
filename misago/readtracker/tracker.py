@@ -137,7 +137,7 @@ def get_unread_posts(
 
     read_data: set[int] = set()
     for post in posts:
-        if post.posted_on > read_time:
+        if post.posted_at > read_time:
             read_data.add(post.id)
 
     return read_data

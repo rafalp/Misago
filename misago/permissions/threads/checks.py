@@ -342,7 +342,7 @@ def _check_edit_thread_post_permission_action(
 
     time_limit = permissions.own_posts_edit_time_limit * 60
 
-    if time_limit and (timezone.now() - post.posted_on).total_seconds() > time_limit:
+    if time_limit and (timezone.now() - post.posted_at).total_seconds() > time_limit:
         if time_limit >= 86400:
             days = ceil(time_limit / 86400)
             raise PermissionDenied(

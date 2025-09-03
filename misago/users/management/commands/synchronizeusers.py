@@ -35,7 +35,7 @@ class Command(BaseCommand):
             ).count()
 
             user.posts = user.post_set.filter(
-                category__in=categories, is_event=False, is_unapproved=False
+                category__in=categories, is_unapproved=False
             ).count()
 
             user.followers = user.followed_by.count()

@@ -78,7 +78,7 @@ def post_factory():
 
 
 @pytest.fixture
-def thread_reply_factory():
+def thread_reply_factory(post_factory):
     def _thread_reply_factory(
         thread: Thread,
         *,
@@ -119,7 +119,7 @@ def thread_reply_factory():
         )
 
         if post.poster:
-            poster_slug = post.poster
+            poster_slug = post.poster.slug
         else:
             poster_slug = slugify(post.poster_name)
 
@@ -140,4 +140,4 @@ def thread_reply_factory():
 
         return post
 
-    return _thread_reply_factory()
+    return _thread_reply_factory

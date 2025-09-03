@@ -147,20 +147,20 @@
         <a
           class="posts-feed-item-post-bit-top-timestamp"
           href="{{ post.get_absolute_url }}"
-          title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
-          misago-timestamp="{{ post.posted_on.isoformat }}"
+          title="{{ post.posted_at|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ post.posted_at.isoformat }}"
         >
-          {{ post.posted_on|date_relative }}
+          {{ post.posted_at|date_relative }}
         </a>
 
         <a
           class="posts-feed-item-post-bit-top-timestamp-compact"
           href="{{ post.get_absolute_url }}"
-          title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
-          misago-timestamp="{{ post.posted_on.isoformat }}"
+          title="{{ post.posted_at|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ post.posted_at.isoformat }}"
           misago-timestamp-format="short"
         >
-          {{ post.posted_on|date_relative_short }}
+          {{ post.posted_at|date_relative_short }}
         </a>
 
         <a

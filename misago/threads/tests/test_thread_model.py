@@ -37,8 +37,8 @@ class ThreadModelTests(TestCase):
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
-            posted_on=datetime,
-            updated_on=datetime,
+            posted_at=datetime,
+            updated_at=datetime,
         )
 
         self.thread.synchronize()
@@ -59,15 +59,15 @@ class ThreadModelTests(TestCase):
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
-            posted_on=datetime,
-            updated_on=datetime,
+            posted_at=datetime,
+            updated_at=datetime,
         )
 
         # first sync call, updates last thread
         self.thread.synchronize()
 
         self.assertEqual(self.thread.last_post, post)
-        self.assertEqual(self.thread.last_post_on, post.posted_on)
+        self.assertEqual(self.thread.last_post_on, post.posted_at)
         self.assertEqual(self.thread.last_poster, user)
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
@@ -85,14 +85,14 @@ class ThreadModelTests(TestCase):
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
-            posted_on=datetime + timedelta(5),
-            updated_on=datetime + timedelta(5),
+            posted_at=datetime + timedelta(5),
+            updated_at=datetime + timedelta(5),
             is_unapproved=True,
         )
 
         self.thread.synchronize()
         self.assertEqual(self.thread.last_post, post)
-        self.assertEqual(self.thread.last_post_on, post.posted_on)
+        self.assertEqual(self.thread.last_post_on, post.posted_at)
         self.assertEqual(self.thread.last_poster, user)
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
@@ -110,14 +110,14 @@ class ThreadModelTests(TestCase):
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
-            posted_on=datetime + timedelta(10),
-            updated_on=datetime + timedelta(10),
+            posted_at=datetime + timedelta(10),
+            updated_at=datetime + timedelta(10),
             is_hidden=True,
         )
 
         self.thread.synchronize()
         self.assertEqual(self.thread.last_post, hidden_post)
-        self.assertEqual(self.thread.last_post_on, hidden_post.posted_on)
+        self.assertEqual(self.thread.last_post_on, hidden_post.posted_at)
         self.assertEqual(self.thread.last_poster, user)
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
@@ -133,7 +133,7 @@ class ThreadModelTests(TestCase):
         # last post changed to unhidden one
         self.thread.synchronize()
         self.assertEqual(self.thread.last_post, hidden_post)
-        self.assertEqual(self.thread.last_post_on, hidden_post.posted_on)
+        self.assertEqual(self.thread.last_post_on, hidden_post.posted_at)
         self.assertEqual(self.thread.last_poster, user)
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
@@ -149,7 +149,7 @@ class ThreadModelTests(TestCase):
         # last post not changed, but flags and count did
         self.thread.synchronize()
         self.assertEqual(self.thread.last_post, hidden_post)
-        self.assertEqual(self.thread.last_post_on, hidden_post.posted_on)
+        self.assertEqual(self.thread.last_post_on, hidden_post.posted_at)
         self.assertEqual(self.thread.last_poster, user)
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
@@ -157,73 +157,6 @@ class ThreadModelTests(TestCase):
         self.assertFalse(self.thread.has_unapproved_posts)
         self.assertFalse(self.thread.has_hidden_posts)
         self.assertEqual(self.thread.replies, 3)
-
-        # add event post
-        event = Post.objects.create(
-            category=self.category,
-            thread=self.thread,
-            poster=user,
-            poster_name=user.username,
-            original="-",
-            parsed="-",
-            checksum="nope",
-            posted_on=datetime + timedelta(10),
-            updated_on=datetime + timedelta(10),
-            is_event=True,
-        )
-
-        self.thread.synchronize()
-        self.assertEqual(self.thread.last_post, event)
-        self.assertEqual(self.thread.last_post_on, event.posted_on)
-        self.assertEqual(self.thread.last_poster, user)
-        self.assertEqual(self.thread.last_poster_name, user.username)
-        self.assertEqual(self.thread.last_poster_slug, user.slug)
-        self.assertTrue(self.thread.last_post_is_event)
-        self.assertTrue(self.thread.has_events)
-        self.assertFalse(self.thread.has_reported_posts)
-        self.assertFalse(self.thread.has_unapproved_posts)
-        self.assertFalse(self.thread.has_hidden_posts)
-        # events don't count to reply count
-        self.assertEqual(self.thread.replies, 3)
-
-        # create another post to provoke other has_events resolution path
-        Post.objects.create(
-            category=self.category,
-            thread=self.thread,
-            poster=user,
-            poster_name=user.username,
-            original="Hello! I am test message!",
-            parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
-            posted_on=datetime,
-            updated_on=datetime,
-        )
-
-        self.thread.synchronize()
-        self.assertFalse(self.thread.last_post_is_event)
-        self.assertTrue(self.thread.has_events)
-
-        # remove event
-        event.delete()
-
-        self.thread.synchronize()
-        self.assertFalse(self.thread.last_post_is_event)
-        self.assertFalse(self.thread.has_events)
-
-        # has poll flag
-        self.assertFalse(self.thread.has_poll)
-
-        Poll.objects.create(
-            category=self.category,
-            thread=self.thread,
-            starter_name="test",
-            starter_slug="test",
-            question="...",
-            choices=[],
-        )
-
-        self.thread.synchronize()
-        self.assertTrue(self.thread.has_poll)
 
     def test_set_first_post(self):
         """set_first_post sets first post and poster data on thread"""
@@ -239,13 +172,13 @@ class ThreadModelTests(TestCase):
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
-            posted_on=datetime,
-            updated_on=datetime,
+            posted_at=datetime,
+            updated_at=datetime,
         )
 
         self.thread.set_first_post(post)
         self.assertEqual(self.thread.first_post, post)
-        self.assertEqual(self.thread.started_on, post.posted_on)
+        self.assertEqual(self.thread.started_on, post.posted_at)
         self.assertEqual(self.thread.starter, user)
         self.assertEqual(self.thread.starter_name, user.username)
         self.assertEqual(self.thread.starter_slug, user.slug)
@@ -264,13 +197,13 @@ class ThreadModelTests(TestCase):
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
-            posted_on=datetime,
-            updated_on=datetime,
+            posted_at=datetime,
+            updated_at=datetime,
         )
 
         self.thread.set_last_post(post)
         self.assertEqual(self.thread.last_post, post)
-        self.assertEqual(self.thread.last_post_on, post.posted_on)
+        self.assertEqual(self.thread.last_post_on, post.posted_at)
         self.assertEqual(self.thread.last_poster, user)
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
@@ -287,8 +220,8 @@ class ThreadModelTests(TestCase):
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
-            posted_on=timezone.now(),
-            updated_on=timezone.now(),
+            posted_at=timezone.now(),
+            updated_at=timezone.now(),
             is_protected=True,
         )
 
@@ -377,8 +310,8 @@ class ThreadModelTests(TestCase):
             original="Hello! I am other message!",
             parsed="<p>Hello! I am other message!</p>",
             checksum="nope",
-            posted_on=datetime,
-            updated_on=datetime,
+            posted_at=datetime,
+            updated_at=datetime,
         )
 
         other_thread.first_post = post
@@ -390,7 +323,7 @@ class ThreadModelTests(TestCase):
         self.thread.synchronize()
         self.assertEqual(self.thread.replies, 1)
         self.assertEqual(self.thread.last_post, post)
-        self.assertEqual(self.thread.last_post_on, post.posted_on)
+        self.assertEqual(self.thread.last_post_on, post.posted_at)
         self.assertEqual(self.thread.last_poster_name, "Admin")
         self.assertEqual(self.thread.last_poster_slug, "admin")
 

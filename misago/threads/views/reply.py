@@ -176,7 +176,7 @@ class ReplyView(View):
         if last_post.poster_id != request.user.id:
             return None
 
-        if (timezone.now() - last_post.posted_on) > timedelta(minutes=merge_time):
+        if (timezone.now() - last_post.posted_at) > timedelta(minutes=merge_time):
             return False
 
         if last_post.is_hidden:

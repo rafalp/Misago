@@ -264,7 +264,7 @@ def test_reply_thread_view_posts_new_thread_reply_in_quick_reply_with_htmx(
 def test_reply_thread_view_posted_reply_in_quick_reply_with_htmx_is_read(
     user, user_client, thread
 ):
-    mark_thread_read(user, thread, thread.last_post.posted_on)
+    mark_thread_read(user, thread, thread.last_post.posted_at)
 
     response = user_client.post(
         reverse(

@@ -210,7 +210,7 @@ def test_get_unread_private_threads_includes_thread_in_read_category_with_unread
 
     assert list(
         get_unread_private_threads(
-            request, private_threads_category, reply.posted_on - timedelta(minutes=1)
+            request, private_threads_category, reply.posted_at - timedelta(minutes=1)
         )
     ) == [thread]
 

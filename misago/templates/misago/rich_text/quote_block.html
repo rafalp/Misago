@@ -31,18 +31,18 @@
         <span class="rich-text-quote-header-separator">&bull;</span>
         <span
           class="rich-text-quote-header-timestamp rich-text-quote-header-timestamp-long"
-          title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
-          misago-timestamp="{{ post.posted_on.isoformat }}"
+          title="{{ post.posted_at|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ post.posted_at.isoformat }}"
         >
-          {{ post.posted_on|date_relative }}
+          {{ post.posted_at|date_relative }}
         </span>
         <span
           class="rich-text-quote-header-timestamp rich-text-quote-header-timestamp-short"
-          title="{{ post.posted_on|date:'DATETIME_FORMAT' }}"
-          misago-timestamp="{{ post.posted_on.isoformat }}"
+          title="{{ post.posted_at|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ post.posted_at.isoformat }}"
           misago-timestamp-format="short"
         >
-          {{ post.posted_on|date_relative_short }}
+          {{ post.posted_at|date_relative_short }}
         </span>
       </div>
       <a href="{{ post.get_absolute_url }}" class="rich-text-quote-btn" misago-scroll-to="#post-{{ post.id }}">

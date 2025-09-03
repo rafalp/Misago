@@ -39,7 +39,7 @@ class Command(BaseCommand):
             "thread__title",
             "poster_id",
             "poster_name",
-            "posted_on",
+            "posted_at",
         )
 
         for user in User.objects.iterator(chunk_size=50):
@@ -54,7 +54,7 @@ class Command(BaseCommand):
                     actor_name=post["poster_name"],
                     verb=NotificationVerb.REPLIED_TO_THREAD,
                     is_read=random.choice((True, False)),
-                    created_at=post["posted_on"],
+                    created_at=post["posted_at"],
                 )
 
                 processed_count += 1

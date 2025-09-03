@@ -11,7 +11,7 @@ class Command(BaseCommand):
     help = "Parses posts, updating their HTML, metadata and search"
 
     def handle(self, *args, **options):
-        posts_to_parse = Post.objects.filter(is_event=False).count()
+        posts_to_parse = Post.objects.count()
 
         if not posts_to_parse:
             self.stdout.write("\n\nNo posts were found")
@@ -25,7 +25,7 @@ class Command(BaseCommand):
         show_progress(self, rebuild_count, posts_to_parse)
         start_time = time.time()
 
-        queryset = Post.objects.select_related("thread").filter(is_event=False)
+        queryset = Post.objects.select_related("thread")
         for post in queryset.iterator(chunk_size=50):
             parsing_result = parse(post.original)
 

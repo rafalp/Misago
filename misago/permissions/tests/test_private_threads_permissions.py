@@ -83,7 +83,7 @@ def test_check_edit_private_thread_post_permission_fails_if_user_is_poster_out_o
     user.group.own_posts_edit_time_limit = 1
     user.group.save()
 
-    private_thread_user_reply.posted_on = private_thread_user_reply.posted_on.replace(
+    private_thread_user_reply.posted_at = private_thread_user_reply.posted_at.replace(
         year=2015
     )
     private_thread_user_reply.save()

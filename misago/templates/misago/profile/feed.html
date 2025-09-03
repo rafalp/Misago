@@ -48,7 +48,7 @@
                 {{ post.category }}
               </a>
               <a class="btn btn-link posted-on" href="{{ post.get_absolute_url }}">
-                {{ post.posted_on|date:'DATETIME_FORMAT' }}
+                {{ post.posted_at|date:'DATETIME_FORMAT' }}
               </a>
             </div>
             {% if post.is_valid %}

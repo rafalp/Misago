@@ -38,8 +38,7 @@ class PostModelTests(TestCase):
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
-            posted_on=datetime,
-            updated_on=datetime,
+            posted_at=datetime,
         )
 
         update_post_checksum(self.post)
@@ -78,8 +77,7 @@ class PostModelTests(TestCase):
                     original="Hello! I am test message!",
                     parsed="<p>Hello! I am test message!</p>",
                     checksum="nope",
-                    posted_on=timezone.now() + timedelta(minutes=5),
-                    updated_on=timezone.now() + timedelta(minutes=5),
+                    posted_at=timezone.now() + timedelta(minutes=5),
                 )
             )
 
@@ -94,25 +92,7 @@ class PostModelTests(TestCase):
                     original="Hello! I am test message!",
                     parsed="<p>Hello! I am test message!</p>",
                     checksum="nope",
-                    posted_on=timezone.now() + timedelta(minutes=5),
-                    updated_on=timezone.now() + timedelta(minutes=5),
-                )
-            )
-
-        # can't merge with events
-        with self.assertRaises(ValueError):
-            self.post.merge(
-                Post.objects.create(
-                    category=self.category,
-                    thread=self.thread,
-                    poster=self.user,
-                    poster_name=self.user.username,
-                    original="Hello! I am test message!",
-                    parsed="<p>Hello! I am test message!</p>",
-                    checksum="nope",
-                    posted_on=timezone.now() + timedelta(minutes=5),
-                    updated_on=timezone.now() + timedelta(minutes=5),
-                    is_event=True,
+                    posted_at=timezone.now() + timedelta(minutes=5),
                 )
             )
 
@@ -126,8 +106,7 @@ class PostModelTests(TestCase):
             original="I am other message!",
             parsed="<p>I am other message!</p>",
             checksum="nope",
-            posted_on=timezone.now() + timedelta(minutes=5),
-            updated_on=timezone.now() + timedelta(minutes=5),
+            posted_at=timezone.now() + timedelta(minutes=5),
         )
 
         other_post.merge(self.post)
@@ -146,8 +125,7 @@ class PostModelTests(TestCase):
             original="I am other message!",
             parsed="<p>I am other message!</p>",
             checksum="nope",
-            posted_on=timezone.now() + timedelta(minutes=5),
-            updated_on=timezone.now() + timedelta(minutes=5),
+            posted_at=timezone.now() + timedelta(minutes=5),
         )
 
         self.thread.set_best_answer(self.user, best_answer)
@@ -166,8 +144,7 @@ class PostModelTests(TestCase):
             original="I am other message!",
             parsed="<p>I am other message!</p>",
             checksum="nope",
-            posted_on=timezone.now() + timedelta(minutes=5),
-            updated_on=timezone.now() + timedelta(minutes=5),
+            posted_at=timezone.now() + timedelta(minutes=5),
         )
 
         other_post = Post.objects.create(
@@ -178,8 +155,7 @@ class PostModelTests(TestCase):
             original="I am other message!",
             parsed="<p>I am other message!</p>",
             checksum="nope",
-            posted_on=timezone.now() + timedelta(minutes=5),
-            updated_on=timezone.now() + timedelta(minutes=5),
+            posted_at=timezone.now() + timedelta(minutes=5),
         )
 
         self.thread.set_best_answer(self.user, best_answer)

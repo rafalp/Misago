@@ -30,7 +30,7 @@ def test_edit_thread_post_state_save_updates_post(
 
     assert post.original == "Edit reply"
     assert post.search_document == "Test thread\n\nEdit reply"
-    assert post.updated_on == state.timestamp
+    assert post.updated_at == state.timestamp
     assert post.edits == 1
     assert post.last_editor == user
     assert post.last_editor_name == user.username

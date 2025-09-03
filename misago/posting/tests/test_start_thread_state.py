@@ -21,7 +21,7 @@ def test_start_thread_state_initializes_thread_and_post(user_request, default_ca
     assert state.post.poster == user_request.user
     assert state.post.poster_name == user_request.user.username
     assert state.post.category == default_category
-    assert state.post.posted_on == state.timestamp
+    assert state.post.posted_at == state.timestamp
 
 
 def test_start_thread_state_stores_category_state(user_request, default_category):

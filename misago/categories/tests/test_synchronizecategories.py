@@ -1,33 +1,61 @@
 from io import StringIO
 
-from django.core.management import call_command
-from django.test import TestCase
+from django.core import management
 
-from ...threads import test
 from ..management.commands import synchronizecategories
 from ..models import Category
 
 
-class SynchronizeCategoriesTests(TestCase):
-    def test_categories_sync(self):
-        """command synchronizes categories"""
-        category = Category.objects.all_categories()[:1][0]
+def call_command():
+    command = synchronizecategories.Command()
 
-        threads = [test.post_thread(category) for _ in range(10)]
-        for thread in threads:
-            [test.reply_thread(thread) for _ in range(5)]
+    out = StringIO()
+    management.call_command(command, stdout=out)
+    return tuple(l.strip() for l in out.getvalue().strip().splitlines())
 
-        category.threads = 0
-        category.posts = 0
 
-        command = synchronizecategories.Command()
+def test_synchronizecategories_command_synchronizes_empty_category(default_category):
+    command_output = call_command()
+    assert command_output[-1].startswith("Synchronized 3 categories")
 
-        out = StringIO()
-        call_command(command, stdout=out)
+    default_category.refresh_from_db()
 
-        category = Category.objects.get(id=category.id)
-        self.assertEqual(category.threads, 10)
-        self.assertEqual(category.posts, 60)
+    assert default_category.threads == 0
+    assert default_category.posts == 0
+    assert default_category.unapproved_threads == 0
+    assert default_category.unapproved_posts == 0
+    assert default_category.last_post_on is None
+    assert default_category.last_thread is None
+    assert default_category.last_thread_title is None
+    assert default_category.last_thread_slug is None
+    assert default_category.last_poster is None
+    assert default_category.last_poster_name is None
+    assert default_category.last_poster_slug is None
 
-        command_output = out.getvalue().splitlines()[-1].strip()
-        self.assertTrue(command_output.startswith("Synchronized 3 categories in"))
+
+def test_synchronizecategories_command_synchronizes_category_with_threads(
+    thread_factory, thread_reply_factory, default_category
+):
+    threads = [thread_factory(default_category) for _ in range(10)]
+    for thread in threads:
+        for _ in range(5):
+            thread_reply_factory(thread)
+
+    command_output = call_command()
+    assert command_output[-1].startswith("Synchronized 3 categories")
+
+    default_category.refresh_from_db()
+
+    last_thread = threads[-1]
+
+    assert default_category.threads == 10
+    assert default_category.posts == 60
+    assert default_category.unapproved_threads == 0
+    assert default_category.unapproved_posts == 0
+    assert default_category.last_post_on == last_thread.last_post_on
+    assert default_category.last_thread == last_thread
+    assert default_category.last_thread_title == last_thread.title
+    assert default_category.last_thread_slug == last_thread.slug
+    assert default_category.last_poster == last_thread.last_poster
+    assert default_category.last_poster_name == last_thread.last_poster_name
+    assert default_category.last_poster_slug == last_thread.last_poster_slug

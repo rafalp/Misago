@@ -81,7 +81,7 @@ def test_private_thread_replies_view_marks_unread_thread_posts_on_page_as_read_f
         user=user,
         category=private_threads_category,
         thread=user_private_thread,
-        read_time=posts[-2].posted_on,
+        read_time=posts[-2].posted_at,
     )
 
 

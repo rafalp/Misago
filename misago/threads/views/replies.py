@@ -148,7 +148,7 @@ class RepliesView(View):
         feed.set_allow_edit_thread(allow_edit_thread)
 
         if unread:
-            self.update_thread_read_time(request, thread, posts[-1].posted_on)
+            self.update_thread_read_time(request, thread, posts[-1].posted_at)
 
         if request.user.is_authenticated and request.user.unread_notifications:
             self.read_user_notifications(request.user, posts)
@@ -164,10 +164,10 @@ class RepliesView(View):
     ) -> list[ThreadUpdate]:
         queryset = self.get_thread_updates_queryset(request, thread)
         if page.number > 1:
-            queryset = queryset.filter(created_at__gt=posts[0].posted_on)
+            queryset = queryset.filter(created_at__gt=posts[0].posted_at)
         if page.next_page_first_item:
             queryset = queryset.filter(
-                created_at__lt=page.next_page_first_item.posted_on
+                created_at__lt=page.next_page_first_item.posted_at
             )
         return list(reversed(queryset[: request.settings.thread_updates_per_page]))
 

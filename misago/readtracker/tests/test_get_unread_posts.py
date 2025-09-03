@@ -44,7 +44,7 @@ def test_get_unread_posts_includes_unread_post(
 def test_get_unread_posts_excludes_unread_post_older_than_user(
     dynamic_settings, default_category, thread, post, user
 ):
-    post.posted_on -= timedelta(minutes=30)
+    post.posted_at -= timedelta(minutes=30)
     post.save()
 
     request = Mock(settings=dynamic_settings, user=user)
@@ -63,7 +63,7 @@ def test_get_unread_posts_excludes_old_unread_post(
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    post.posted_on = post.posted_on.replace(year=2012)
+    post.posted_at = post.posted_at.replace(year=2012)
     post.save()
 
     request = Mock(settings=dynamic_settings, user=user)
@@ -127,7 +127,7 @@ def test_get_unread_posts_includes_read_thread_unread_reply(
     user.joined_on -= timedelta(minutes=30)
     user.save()
 
-    post.posted_on = timezone.now() - timedelta(minutes=10)
+    post.posted_at = timezone.now() - timedelta(minutes=10)
     post.save()
 
     ReadThread.objects.create(
@@ -154,7 +154,7 @@ def test_get_unread_posts_includes_read_thread_in_read_category_with_unread_repl
     user.joined_on -= timedelta(minutes=30)
     user.save()
 
-    post.posted_on = timezone.now() - timedelta(minutes=10)
+    post.posted_at = timezone.now() - timedelta(minutes=10)
     post.save()
 
     ReadCategory.objects.create(

@@ -13,7 +13,7 @@ corpus = EnglishCorpus()
 
 def get_fake_post(fake, thread, poster=None):
     original, parsed = get_fake_post_content(fake)
-    posted_on = timezone.now()
+    posted_at = timezone.now()
 
     post = Post.objects.create(
         category=thread.category,
@@ -22,10 +22,8 @@ def get_fake_post(fake, thread, poster=None):
         poster_name=poster.username if poster else get_fake_username(fake),
         original=original,
         parsed=parsed,
-        posted_on=posted_on,
-        updated_on=posted_on,
+        posted_at=posted_at,
     )
-    update_post_checksum(post)
     post.save(update_fields=["checksum"])
 
     return post

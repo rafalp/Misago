@@ -6,7 +6,6 @@ from django.urls import reverse
 from ...acl.test import patch_user_acl
 from ...categories.models import Category
 from ...test import assert_contains
-from ...threads import test
 from ..models import Ban
 from ..test import AuthenticatedUserTestCase, create_test_user
 
@@ -48,48 +47,10 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
     def test_user_posts_list(self):
         """user profile posts list has no showstoppers"""
         raise SkipTest("broken by misago.threads.permissions deletion")
-        link = reverse("misago:user-posts", kwargs=self.link_kwargs)
-        response = self.client.get(link)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "You have posted no messages")
-
-        thread = test.post_thread(category=self.category, poster=self.user)
-
-        response = self.client.get(link)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, thread.get_absolute_url())
-
-        post = test.reply_thread(thread, poster=self.user)
-        other_post = test.reply_thread(thread, poster=self.user)
-
-        response = self.client.get(link)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, post.get_absolute_url())
-        self.assertContains(response, other_post.get_absolute_url())
 
     def test_user_threads_list(self):
         """user profile threads list has no showstoppers"""
         raise SkipTest("broken by misago.threads.permissions deletion")
-        link = reverse("misago:user-threads", kwargs=self.link_kwargs)
-
-        response = self.client.get(link)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "You haven't started any threads.")
-
-        thread = test.post_thread(category=self.category, poster=self.user)
-
-        response = self.client.get(link)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, thread.get_absolute_url())
-
-        post = test.reply_thread(thread, poster=self.user)
-        other_post = test.reply_thread(thread, poster=self.user)
-
-        response = self.client.get(link)
-        self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, post.get_absolute_url())
-        self.assertNotContains(response, other_post.get_absolute_url())
 
     def test_user_followers(self):
         """user profile followers list has no showstoppers"""

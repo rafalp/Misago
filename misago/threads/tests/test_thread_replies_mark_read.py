@@ -78,7 +78,7 @@ def test_thread_replies_view_marks_unread_thread_posts_on_page_as_read_for_user(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=posts[-2].posted_on,
+        read_time=posts[-2].posted_at,
     )
 
 

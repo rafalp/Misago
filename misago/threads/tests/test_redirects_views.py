@@ -78,7 +78,7 @@ def test_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_anon
 def test_thread_unread_post_redirect_view_returns_redirect_to_first_unread_post_for_user(
     user, user_client, thread
 ):
-    mark_thread_read(user, thread, thread.first_post.posted_on)
+    mark_thread_read(user, thread, thread.first_post.posted_at)
 
     reply = reply_thread(thread, posted_on=timezone.now())
     reply_thread(thread, posted_on=timezone.now())
@@ -174,7 +174,7 @@ def test_private_thread_unread_post_redirect_view_returns_redirect_to_first_unre
     user, user_client, user_private_thread
 ):
     mark_thread_read(
-        user, user_private_thread, user_private_thread.first_post.posted_on
+        user, user_private_thread, user_private_thread.first_post.posted_at
     )
 
     reply = reply_thread(user_private_thread, posted_on=timezone.now())

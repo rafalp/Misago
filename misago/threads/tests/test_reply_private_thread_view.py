@@ -208,7 +208,7 @@ def test_reply_private_thread_view_posted_reply_in_quick_reply_with_htmx_is_read
     user, user_client, other_user_private_thread
 ):
     mark_thread_read(
-        user, other_user_private_thread, other_user_private_thread.last_post.posted_on
+        user, other_user_private_thread, other_user_private_thread.last_post.posted_at
     )
 
     response = user_client.post(

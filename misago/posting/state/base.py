@@ -68,8 +68,7 @@ class PostingState:
             thread=self.thread,
             poster=self.user,
             poster_name=self.user.username,
-            posted_on=self.timestamp,
-            updated_on=self.timestamp,
+            posted_at=self.timestamp,
         )
 
     def store_object_state(self, obj: models.Model):

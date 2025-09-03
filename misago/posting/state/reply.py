@@ -55,7 +55,7 @@ class ReplyThreadState(PostingState):
         self.post.set_search_document(self.thread, self.parsing_result.text)
 
         if self.post.id:
-            self.post.updated_on = self.timestamp
+            self.post.updated_at = self.timestamp
             self.post.edits = models.F("edits") + 1
             self.post.last_editor = self.user
             self.post.last_editor_name = self.user.username

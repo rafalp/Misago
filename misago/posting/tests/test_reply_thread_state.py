@@ -20,7 +20,7 @@ def test_reply_thread_state_initializes_post(user_request, other_user_thread):
     assert state.post.poster == user_request.user
     assert state.post.poster_name == user_request.user.username
     assert state.post.category == other_user_thread.category
-    assert state.post.posted_on == state.timestamp
+    assert state.post.posted_at == state.timestamp
 
 
 def test_reply_thread_state_save_saves_post(user_request, other_user_thread):
@@ -84,7 +84,7 @@ def test_reply_thread_state_updates_existing_post(user, user_request, user_threa
     assert post.original == "I am test message\n\nTest reply"
     assert post.parsed == "<p>I am test message</p>\n<p>Test reply</p>"
     assert post.search_document == "Test thread\n\nI am test message\n\nTest reply"
-    assert post.updated_on == state.timestamp
+    assert post.updated_at == state.timestamp
     assert post.edits == 1
     assert post.last_editor == user
     assert post.last_editor_name == user.username
@@ -96,14 +96,14 @@ def test_reply_thread_state_updates_existing_post(user, user_request, user_threa
     assert user_thread.last_poster == user
     assert user_thread.last_poster_name == user.username
     assert user_thread.last_poster_slug == user.slug
-    assert user_thread.last_post_on == post.posted_on
+    assert user_thread.last_post_on == post.posted_at
 
     category = state.category
     category.refresh_from_db()
     assert category.threads == 1
     assert category.posts == 1
     assert category.last_thread == state.thread
-    assert category.last_post_on == post.posted_on
+    assert category.last_post_on == post.posted_at
     assert category.last_poster == user
     assert category.last_poster_name == user.username
     assert category.last_poster_slug == user.slug

@@ -134,7 +134,7 @@ def test_fake_post_creation_date_is_overridden_by_command(
 
     command.create_fake_post(fake, date)
     post = thread.post_set.last()
-    assert post.posted_on == date
+    assert post.posted_at == date
 
 
 def test_fake_post_is_not_created_if_no_threads_exist(fake, command, date):

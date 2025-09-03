@@ -156,10 +156,10 @@ class Command(BaseCommand):
         else:
             thread = get_fake_thread(fake, category, starter)
 
-        thread.first_post.posted_on = date
-        thread.first_post.updated_on = date
+        thread.first_post.posted_at = date
+        thread.first_post.updated_at = date
         thread.first_post.checksum = update_post_checksum(thread.first_post)
-        thread.first_post.save(update_fields=["checksum", "posted_on", "updated_on"])
+        thread.first_post.save(update_fields=["checksum", "posted_at", "updated_at"])
 
         if starter and random.randint(0, 100) > 15:
             WatchedThread.objects.create(
@@ -220,10 +220,9 @@ class Command(BaseCommand):
 
             self.create_fake_notification(thread, post, poster)
 
-        post.posted_on = date
-        post.updated_on = date
+        post.posted_at = date
         post.checksum = update_post_checksum(post)
-        post.save(update_fields=["checksum", "posted_on", "updated_on"])
+        post.save(update_fields=["checksum", "posted_at"])
 
         self.log_history_event(
             date, '%s has replied to "%s" thread' % (post.poster_name, thread)
