@@ -49,7 +49,7 @@ def thread_factory(post_factory):
         thread = Thread.objects.create(
             category=category,
             title=title,
-            slug=slugify,
+            slug=slugify(title),
             replies=replies,
             has_events=has_events,
             has_poll=has_poll,
