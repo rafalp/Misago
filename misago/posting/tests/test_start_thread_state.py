@@ -52,6 +52,9 @@ def test_start_thread_state_save_saves_post_search_document(
 
 
 def test_start_thread_state_updates_category(user_request, default_category):
+    default_category.synchronize()
+    default_category.save()
+
     state = StartThreadState(user_request, default_category)
     state.set_thread_title("Test thread")
     state.set_post_message(parse("Hello world"))

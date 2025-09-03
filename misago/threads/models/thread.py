@@ -309,7 +309,6 @@ class Thread(PluginDataModel):
 
     def set_last_post(self, post):
         self.last_post_on = post.posted_at
-        self.last_post_is_event = post.is_event
         self.last_post = post
         self.last_poster = post.poster
         self.last_poster_name = post.poster_name

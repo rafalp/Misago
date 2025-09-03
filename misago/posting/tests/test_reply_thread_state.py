@@ -46,11 +46,14 @@ def test_reply_thread_state_updates_thread(user_request, other_user_thread):
 
 
 def test_reply_thread_state_updates_category(user_request, other_user_thread):
+    category = other_user_thread.category
+
+    category.synchronize()
+    category.save()
+
     state = ReplyThreadState(user_request, other_user_thread)
     state.set_post_message(parse("Test reply"))
     state.save()
-
-    category = other_user_thread.category
 
     category.refresh_from_db()
     assert category.threads == 1
@@ -74,16 +77,25 @@ def test_reply_thread_state_updates_user(user_request, other_user_thread, user):
 
 
 def test_reply_thread_state_updates_existing_post(user, user_request, user_thread):
+    category = user_thread.category
+
+    category.synchronize()
+    category.save()
+
     post = user_thread.first_post
+    post_original = post.original
+    post_parsed = post.parsed
 
     state = ReplyThreadState(user_request, user_thread, post)
     state.set_post_message(parse("Test reply"))
     state.save()
 
     post.refresh_from_db()
-    assert post.original == "I am test message\n\nTest reply"
-    assert post.parsed == "<p>I am test message</p>\n<p>Test reply</p>"
-    assert post.search_document == "Test thread\n\nI am test message\n\nTest reply"
+    assert post.original == f"{post_original}\n\nTest reply"
+    assert post.parsed == f"{post_parsed}\n<p>Test reply</p>"
+    assert post.search_document == (
+        f"{user_thread.title}\n\n{post_original}\n\nTest reply"
+    )
     assert post.updated_at == state.timestamp
     assert post.edits == 1
     assert post.last_editor == user
@@ -98,7 +110,6 @@ def test_reply_thread_state_updates_existing_post(user, user_request, user_threa
     assert user_thread.last_poster_slug == user.slug
     assert user_thread.last_post_on == post.posted_at
 
-    category = state.category
     category.refresh_from_db()
     assert category.threads == 1
     assert category.posts == 1

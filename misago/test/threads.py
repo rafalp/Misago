@@ -31,7 +31,7 @@ def thread_factory(post_factory):
         started_on: FactoryTimestampArg = True,
         last_post_on: FactoryTimestampArg = None,
         starter: FactoryUserArg = "Starter",
-        last_poster: FactoryUserArg = "Starter",
+        last_poster: FactoryUserArg = None,
         weight: int = 0,
         is_unapproved: bool = False,
         is_hidden: bool = False,
@@ -76,7 +76,7 @@ def thread_factory(post_factory):
 
         starter_obj, starter_name, starter_slug = unpack_factory_user_arg(starter)
         last_poster_obj, last_poster_name, last_poster_slug = unpack_factory_user_arg(
-            last_poster
+            last_poster or starter
         )
 
         thread.starter = starter_obj

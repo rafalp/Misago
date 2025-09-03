@@ -131,20 +131,10 @@ class Post(PluginDataModel):
         move_post.send(sender=self)
 
     @property
-    def attachments(self):
-        # pylint: disable=access-member-before-definition
-        if hasattr(self, "_hydrated_attachments_cache"):
-            return self._hydrated_attachments_cache
-
-        self._hydrated_attachments_cache = []
-        if self.attachments_cache:
-            for attachment in copy.deepcopy(self.attachments_cache):
-                attachment["uploaded_on"] = parse_iso8601_string(
-                    attachment["uploaded_on"]
-                )
-                self._hydrated_attachments_cache.append(attachment)
-
-        return self._hydrated_attachments_cache
+    def sha256_checksum(self) -> str:
+        return hashlib.sha256(
+            f"{self.id}:{self.updated_at or 'none'}:{self.parsed}".encode()
+        ).hexdigest()
 
     @property
     def content(self):
