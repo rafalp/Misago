@@ -45,7 +45,6 @@ urlpatterns = [
 apipatterns = hooks.apipatterns + [
     path("", include("misago.legal.urls.api")),
     path("", include("misago.markup.urls")),
-    path("", include("misago.threads.urls.api")),
     path("", include("misago.users.urls.api")),
     path("", include("misago.search.urls.api")),
 ]
