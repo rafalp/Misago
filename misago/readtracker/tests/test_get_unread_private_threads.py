@@ -6,7 +6,6 @@ from django.utils import timezone
 from ...categories.proxy import CategoriesProxy
 from ...permissions.proxy import UserPermissionsProxy
 from ...privatethreadmembers.models import PrivateThreadMember
-from ...threads.test import post_thread, reply_thread
 from ..models import ReadThread
 from ..privatethreads import get_unread_private_threads
 
@@ -26,12 +25,12 @@ def test_get_unread_private_threads_returns_nothing_for_empty_category(
 
 
 def test_get_unread_private_threads_returns_unread_thread(
-    dynamic_settings, cache_versions, user, private_threads_category
+    thread_factory, dynamic_settings, cache_versions, user, private_threads_category
 ):
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = post_thread(private_threads_category)
+    thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(user=user, thread=thread)
 
     private_threads_category.last_post_on = thread.last_post_on
@@ -51,12 +50,12 @@ def test_get_unread_private_threads_returns_unread_thread(
 
 
 def test_get_unread_private_threads_excludes_unread_thread_older_than_tracking_period(
-    dynamic_settings, cache_versions, user, private_threads_category
+    thread_factory, dynamic_settings, cache_versions, user, private_threads_category
 ):
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = post_thread(
+    thread = thread_factory(
         private_threads_category, started_on=timezone.now().replace(year=2012)
     )
     PrivateThreadMember.objects.create(user=user, thread=thread)
@@ -76,11 +75,9 @@ def test_get_unread_private_threads_excludes_unread_thread_older_than_tracking_p
 
 
 def test_get_unread_private_threads_excludes_unread_thread_older_than_user(
-    dynamic_settings, cache_versions, user, private_threads_category
+    thread_factory, dynamic_settings, cache_versions, user, private_threads_category
 ):
-    thread = post_thread(
-        private_threads_category, started_on=timezone.now() - timedelta(minutes=30)
-    )
+    thread = thread_factory(private_threads_category, started_on=-900)
     PrivateThreadMember.objects.create(user=user, thread=thread)
 
     private_threads_category.last_post_on = thread.last_post_on
@@ -98,12 +95,12 @@ def test_get_unread_private_threads_excludes_unread_thread_older_than_user(
 
 
 def test_get_unread_private_threads_excludes_read_thread(
-    dynamic_settings, cache_versions, user, private_threads_category
+    thread_factory, dynamic_settings, cache_versions, user, private_threads_category
 ):
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = post_thread(private_threads_category)
+    thread = thread_factory(private_threads_category, started_on=-900)
     PrivateThreadMember.objects.create(user=user, thread=thread)
 
     ReadThread.objects.create(
@@ -128,12 +125,17 @@ def test_get_unread_private_threads_excludes_read_thread(
 
 
 def test_get_unread_private_threads_includes_read_thread_with_unread_reply(
-    dynamic_settings, cache_versions, user, private_threads_category
+    thread_factory,
+    thread_reply_factory,
+    dynamic_settings,
+    cache_versions,
+    user,
+    private_threads_category,
 ):
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = post_thread(private_threads_category)
+    thread = thread_factory(private_threads_category, started_on=-3600)
     PrivateThreadMember.objects.create(user=user, thread=thread)
 
     ReadThread.objects.create(
@@ -143,9 +145,9 @@ def test_get_unread_private_threads_includes_read_thread_with_unread_reply(
         read_time=thread.last_post_on,
     )
 
-    reply_thread(thread)
+    reply = thread_reply_factory(thread)
 
-    private_threads_category.last_post_on = thread.last_post_on
+    private_threads_category.last_post_on = reply.posted_at
     private_threads_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)
@@ -162,12 +164,12 @@ def test_get_unread_private_threads_includes_read_thread_with_unread_reply(
 
 
 def test_get_unread_private_threads_excludes_thread_in_read_category(
-    dynamic_settings, cache_versions, user, private_threads_category
+    thread_factory, dynamic_settings, cache_versions, user, private_threads_category
 ):
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = post_thread(private_threads_category)
+    thread = thread_factory(private_threads_category, started_on=-3600)
     PrivateThreadMember.objects.create(user=user, thread=thread)
 
     private_threads_category.last_post_on = thread.last_post_on
@@ -187,17 +189,22 @@ def test_get_unread_private_threads_excludes_thread_in_read_category(
 
 
 def test_get_unread_private_threads_includes_thread_in_read_category_with_unread_reply(
-    dynamic_settings, cache_versions, user, private_threads_category
+    thread_factory,
+    thread_reply_factory,
+    dynamic_settings,
+    cache_versions,
+    user,
+    private_threads_category,
 ):
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = post_thread(private_threads_category)
+    thread = thread_factory(private_threads_category, started_on=-3600)
     PrivateThreadMember.objects.create(user=user, thread=thread)
 
-    reply = reply_thread(thread)
+    reply = thread_reply_factory(thread)
 
-    private_threads_category.last_post_on = thread.last_post_on
+    private_threads_category.last_post_on = reply.posted_at
     private_threads_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)
@@ -216,12 +223,12 @@ def test_get_unread_private_threads_includes_thread_in_read_category_with_unread
 
 
 def test_get_unread_private_threads_excludes_unread_thread_user_is_not_invited_to(
-    dynamic_settings, cache_versions, user, private_threads_category
+    thread_factory, dynamic_settings, cache_versions, user, private_threads_category
 ):
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = post_thread(private_threads_category)
+    thread = thread_factory(private_threads_category)
 
     private_threads_category.last_post_on = thread.last_post_on
     private_threads_category.save()

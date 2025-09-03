@@ -93,15 +93,15 @@ def test_notification_view_shows_permission_denied_page_to_guests(db, client):
 
 
 def test_notification_view_returns_redirect_to_thread_reply(
-    user, user_client, default_category, old_thread, old_thread_other_user_reply
+    user, user_client, default_category, thread, other_user_reply
 ):
     notification = Notification.objects.create(
         user=user,
         verb=NotificationVerb.REPLIED_TO_THREAD,
         category=default_category,
-        thread=old_thread,
-        thread_title=old_thread.title,
-        post=old_thread_other_user_reply,
+        thread=thread,
+        thread_title=thread.title,
+        post=other_user_reply,
     )
 
     response = user_client.get(

@@ -13,6 +13,9 @@ FactoryUserArg = User | str | None
 def factory_timestamp_arg(
     timestamp: FactoryTimestampArg,
 ) -> tuple[User, str, str | None]:
+    if timestamp is True:
+        return timezone.now()
+
     if isinstance(timestamp, datetime):
         return timestamp
 
@@ -22,9 +25,6 @@ def factory_timestamp_arg(
     if isinstance(timestamp, int):
         if timestamp != 0:
             return timezone.now() + timedelta(seconds=timestamp)
-        return timezone.now()
-
-    if timestamp is True:
         return timezone.now()
 
     return None

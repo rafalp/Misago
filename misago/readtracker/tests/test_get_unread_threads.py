@@ -81,11 +81,14 @@ def test_get_unread_threads_excludes_read_thread(
     user.joined_on -= timedelta(minutes=30)
     user.save()
 
+    thread.last_post_on -= timedelta(minutes=10)
+    thread.save()
+
     ReadThread.objects.create(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=timezone.now(),
+        read_time=thread.last_post_on,
     )
 
     request = Mock(settings=dynamic_settings, user=user)
@@ -104,6 +107,9 @@ def test_get_unread_threads_excludes_unread_thread_in_read_category(
     user.joined_on -= timedelta(minutes=30)
     user.save()
 
+    thread.last_post_on -= timedelta(minutes=10)
+    thread.save()
+
     ReadCategory.objects.create(
         user=user,
         category=default_category,
@@ -121,17 +127,22 @@ def test_get_unread_threads_excludes_unread_thread_in_read_category(
 
 
 def test_get_unread_threads_includes_read_thread_with_unread_reply(
-    dynamic_settings, default_category, thread, user
+    thread_reply_factory, dynamic_settings, default_category, thread, user
 ):
     user.joined_on -= timedelta(minutes=30)
     user.save()
+
+    thread.last_post_on -= timedelta(minutes=10)
+    thread.save()
 
     ReadThread.objects.create(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=timezone.now() - timedelta(minutes=5),
+        read_time=thread.last_post_on,
     )
+
+    thread_reply_factory(thread)
 
     request = Mock(settings=dynamic_settings, user=user)
 
@@ -144,16 +155,21 @@ def test_get_unread_threads_includes_read_thread_with_unread_reply(
 
 
 def test_get_unread_threads_includes_read_thread_in_read_category_with_unread_reply(
-    dynamic_settings, default_category, thread, user
+    thread_reply_factory, dynamic_settings, default_category, thread, user
 ):
     user.joined_on -= timedelta(minutes=30)
     user.save()
+
+    thread.last_post_on -= timedelta(minutes=10)
+    thread.save()
 
     ReadCategory.objects.create(
         user=user,
         category=default_category,
         read_time=timezone.now() - timedelta(minutes=5),
     )
+
+    thread_reply_factory(thread)
 
     request = Mock(settings=dynamic_settings, user=user)
 

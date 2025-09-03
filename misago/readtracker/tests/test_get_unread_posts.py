@@ -12,7 +12,7 @@ from ..tracker import (
 
 
 def test_get_unread_posts_returns_empty_set_for_anonymous_user(
-    dynamic_settings, default_category, thread, post, anonymous_user
+    dynamic_settings, default_category, post, anonymous_user
 ):
     request = Mock(settings=dynamic_settings, user=anonymous_user)
 
@@ -26,7 +26,7 @@ def test_get_unread_posts_returns_empty_set_for_anonymous_user(
 
 
 def test_get_unread_posts_includes_unread_post(
-    dynamic_settings, default_category, thread, post, user
+    dynamic_settings, default_category, post, user
 ):
     user.joined_on -= timedelta(minutes=30)
     user.save()
@@ -42,7 +42,7 @@ def test_get_unread_posts_includes_unread_post(
 
 
 def test_get_unread_posts_excludes_unread_post_older_than_user(
-    dynamic_settings, default_category, thread, post, user
+    dynamic_settings, default_category, post, user
 ):
     post.posted_at -= timedelta(minutes=30)
     post.save()
@@ -58,7 +58,7 @@ def test_get_unread_posts_excludes_unread_post_older_than_user(
 
 
 def test_get_unread_posts_excludes_old_unread_post(
-    dynamic_settings, default_category, thread, post, user
+    dynamic_settings, default_category, post, user
 ):
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
@@ -82,6 +82,9 @@ def test_get_unread_posts_excludes_read_post(
     user.joined_on -= timedelta(minutes=30)
     user.save()
 
+    post.posted_at -= timedelta(seconds=10)
+    post.save()
+
     ReadThread.objects.create(
         user=user,
         category=default_category,
@@ -100,10 +103,13 @@ def test_get_unread_posts_excludes_read_post(
 
 
 def test_get_unread_posts_excludes_unread_post_in_read_category(
-    dynamic_settings, default_category, thread, post, user
+    dynamic_settings, default_category, post, user
 ):
     user.joined_on -= timedelta(minutes=30)
     user.save()
+
+    post.posted_at -= timedelta(seconds=10)
+    post.save()
 
     ReadCategory.objects.create(
         user=user,
@@ -127,7 +133,7 @@ def test_get_unread_posts_includes_read_thread_unread_reply(
     user.joined_on -= timedelta(minutes=30)
     user.save()
 
-    post.posted_at = timezone.now() - timedelta(minutes=10)
+    post.posted_at -= timedelta(minutes=10)
     post.save()
 
     ReadThread.objects.create(
@@ -149,7 +155,7 @@ def test_get_unread_posts_includes_read_thread_unread_reply(
 
 
 def test_get_unread_posts_includes_read_thread_in_read_category_with_unread_reply(
-    dynamic_settings, default_category, thread, post, reply, user
+    dynamic_settings, default_category, post, reply, user
 ):
     user.joined_on -= timedelta(minutes=30)
     user.save()

@@ -1,4 +1,3 @@
-from datetime import timedelta
 from unittest.mock import Mock
 
 from django.utils import timezone
@@ -6,18 +5,17 @@ from django.utils import timezone
 from ...categories.proxy import CategoriesProxy
 from ...permissions.proxy import UserPermissionsProxy
 from ...privatethreadmembers.models import PrivateThreadMember
-from ...threads.test import post_thread
 from ..models import ReadThread
 from ..privatethreads import unread_private_threads_exist
 
 
 def test_unread_private_threads_exist_returns_true_for_unread_thread(
-    dynamic_settings, cache_versions, user, private_threads_category
+    thread_factory, dynamic_settings, cache_versions, user, private_threads_category
 ):
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = post_thread(private_threads_category)
+    thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(user=user, thread=thread)
 
     private_threads_category.last_post_on = thread.last_post_on
@@ -35,12 +33,12 @@ def test_unread_private_threads_exist_returns_true_for_unread_thread(
 
 
 def test_unread_private_threads_exist_returns_false_for_read_thread(
-    dynamic_settings, cache_versions, user, private_threads_category
+    thread_factory, dynamic_settings, cache_versions, user, private_threads_category
 ):
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = post_thread(private_threads_category)
+    thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(user=user, thread=thread)
 
     ReadThread.objects.create(
@@ -65,12 +63,12 @@ def test_unread_private_threads_exist_returns_false_for_read_thread(
 
 
 def test_unread_private_threads_exist_returns_false_for_thread_in_read_category(
-    dynamic_settings, cache_versions, user, private_threads_category
+    thread_factory, dynamic_settings, cache_versions, user, private_threads_category
 ):
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = post_thread(private_threads_category)
+    thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(user=user, thread=thread)
 
     private_threads_category.last_post_on = thread.last_post_on
