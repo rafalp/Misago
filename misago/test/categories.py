@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 import pytest
 
 from ..acl.models import Role
@@ -6,11 +8,9 @@ from ..categories.models import Category, CategoryRole, RoleCategoryACL
 from ..notifications.models import Notification, WatchedThread
 from ..permissions.models import CategoryGroupPermission
 from ..polls.models import Poll, PollVote
+from ..posts.models import Post
 from ..readtracker.models import ReadCategory, ReadThread
 from ..threads.models import (
-    Attachment as LegacyAttachment,
-    AttachmentType,
-    Post,
     PostEdit,
     PostLike,
     Thread,
@@ -20,24 +20,139 @@ from ..threadupdates.create import create_test_thread_update
 from ..threadupdates.models import ThreadUpdate
 from ..users.models import User, Group
 
-__all__ = ["CategoryRelationsFactory"]
+__all__ = ["CategoryRelations", "category_relations_factory"]
 
 
-class CategoryRelationsFactory:
-    category: Category
+@pytest.fixture
+def category_relations_factory(
+    thread_factory, thread_reply_factory, user, other_user, members_group
+):
+    def _category_relations_factory(category: Category) -> "CategoryRelations":
+        thread = thread_factory(category)
+        thread_reply = thread_reply_factory(thread)
+        thread_update = create_test_thread_update(thread, other_user)
 
-    user: User
-    other_user: User
-    group: Group
+        attachment = Attachment.objects.create(
+            category=category,
+            thread=thread,
+            post=thread_reply,
+            uploader_name="Anonymous",
+            uploader_slug="anonymous",
+            name="filename.txt",
+            slug="filename-txt",
+        )
 
+        category_group_permission = CategoryGroupPermission.objects.create(
+            category=category,
+            group=members_group,
+            permission="TEST",
+        )
+
+        notification = Notification.objects.create(
+            user=user,
+            verb="TEST",
+            actor=other_user,
+            actor_name=other_user.username,
+            category=category,
+            thread=thread,
+            thread_title=thread.title,
+            post=thread_reply,
+        )
+
+        poll = Poll.objects.create(
+            category=category,
+            thread=thread,
+            starter=user,
+            starter_name=user.username,
+            starter_slug=user.slug,
+            question="...",
+            choices=[],
+        )
+
+        poll_vote = PollVote.objects.create(
+            category=category,
+            thread=thread,
+            poll=poll,
+            choice_id="aaaa",
+            voter=user,
+            voter_name=user.username,
+            voter_slug=user.slug,
+        )
+
+        # TODO: uncomment this code when those two models are using new Post model
+        # post_edit = PostEdit.objects.create(
+        #     category=category,
+        #     thread=thread,
+        #     post=thread_reply,
+        #     editor=user,
+        #     editor_name=user.username,
+        #     editor_slug=user.slug,
+        #     edited_from="",
+        #     edited_to="",
+        # )
+
+        # post_like = PostLike.objects.create(
+        #     category=category,
+        #     thread=thread,
+        #     post=thread.first_post,
+        #     liker=other_user,
+        #     liker_name=other_user.username,
+        #     liker_slug=other_user.slug,
+        # )
+
+        read_category = ReadCategory.objects.create(
+            user=user,
+            category=category,
+        )
+
+        read_thread = ReadThread.objects.create(
+            user=user,
+            category=category,
+            thread=thread,
+        )
+
+        role_category_acl = RoleCategoryACL.objects.create(
+            role=Role.objects.order_by("id").first(),
+            category=category,
+            category_role=CategoryRole.objects.order_by("id").first(),
+        )
+
+        watched_thread = WatchedThread.objects.create(
+            user=user,
+            category=category,
+            thread=thread,
+        )
+
+        return CategoryRelations(
+            attachment=attachment,
+            category_group_permission=category_group_permission,
+            notification=notification,
+            poll=poll,
+            poll_vote=poll_vote,
+            # post_edit=post_edit,
+            # post_like=post_like,
+            read_category=read_category,
+            read_thread=read_thread,
+            role_category_acl=role_category_acl,
+            thread=thread,
+            thread_first_post=thread.first_post,
+            thread_reply=thread_reply,
+            thread_update=thread_update,
+            watched_thread=watched_thread,
+        )
+
+    return _category_relations_factory
+
+
+@dataclass(frozen=True)
+class CategoryRelations:
     attachment: Attachment
     category_group_permission: CategoryGroupPermission
-    legacy_attachment: LegacyAttachment
     notification: Notification
     poll: Poll
     poll_vote: PollVote
-    post_edit: PostEdit
-    post_like: PostLike
+    # post_edit: PostEdit
+    # post_like: PostLike
     read_category: ReadCategory
     read_thread: ReadThread
     role_category_acl: RoleCategoryACL
@@ -47,167 +162,7 @@ class CategoryRelationsFactory:
     thread_update: ThreadUpdate
     watched_thread: WatchedThread
 
-    def __init__(
-        self,
-        *,
-        category: Category,
-        user: User,
-        other_user: User,
-        group: Group,
-    ):
-        self.category = category
-
-        self.user = user
-        self.other_user = other_user
-        self.group = group
-
-        self.create_relations()
-
-    def create_relations(self):
-        self.thread = self.create_thread()
-        self.thread_first_post = self.thread.first_post
-        self.thread_reply = self.create_thread_reply()
-        self.thread_update = self.create_thread_update()
-
-        self.attachment = self.create_attachment()
-        self.category_group_permission = self.create_category_group_permission()
-        self.legacy_attachment = self.create_legacy_attachment()
-        self.notification = self.create_notification()
-        self.poll = self.create_poll()
-        self.poll_vote = self.create_poll_vote()
-        self.post_edit = self.create_post_edit()
-        self.post_like = self.create_post_like()
-        self.read_category = self.create_read_category()
-        self.read_thread = self.create_read_thread()
-        self.role_category_acl = self.create_role_category_acl()
-        self.watched_thread = self.create_watched_thread()
-
-        self.category.set_last_thread(self.thread)
-        self.category.save()
-
-    def create_attachment(self):
-        return Attachment.objects.create(
-            category=self.category,
-            thread=self.thread,
-            post=self.thread_reply,
-            uploader_name="Anonymous",
-            uploader_slug="anonymous",
-            name="filename.txt",
-            slug="filename-txt",
-        )
-
-    def create_category_group_permission(self) -> CategoryGroupPermission:
-        return CategoryGroupPermission.objects.create(
-            category=self.category,
-            group=self.group,
-            permission="TEST",
-        )
-
-    def create_legacy_attachment(self) -> LegacyAttachment:
-        return LegacyAttachment.objects.create(
-            secret="secret",
-            filetype=AttachmentType.objects.order_by("id").first(),
-            post=self.thread_reply,
-            uploader=self.user,
-            uploader_name=self.user.username,
-            uploader_slug=self.user.slug,
-            filename="filename.txt",
-        )
-
-    def create_notification(self) -> Notification:
-        return Notification.objects.create(
-            user=self.user,
-            verb="TEST",
-            actor=self.other_user,
-            actor_name=self.other_user.username,
-            category=self.category,
-            thread=self.thread,
-            thread_title=self.thread.title,
-            post=self.thread_reply,
-        )
-
-    def create_poll(self) -> Poll:
-        return Poll.objects.create(
-            category=self.category,
-            thread=self.thread,
-            starter=self.user,
-            starter_name=self.user.username,
-            starter_slug=self.user.slug,
-            question="...",
-            choices=[],
-        )
-
-    def create_poll_vote(self) -> PollVote:
-        return PollVote.objects.create(
-            category=self.category,
-            thread=self.thread,
-            poll=self.poll,
-            choice_id="aaaa",
-            voter=self.user,
-            voter_name=self.user.username,
-            voter_slug=self.user.slug,
-        )
-        return self.poll.pollvote_set.order_by("id").first()
-
-    def create_post_edit(self) -> PostEdit:
-        return PostEdit.objects.create(
-            category=self.category,
-            thread=self.thread,
-            post=self.thread_reply,
-            editor=self.user,
-            editor_name=self.user.username,
-            editor_slug=self.user.slug,
-            edited_from="",
-            edited_to="",
-        )
-
-    def create_post_like(self) -> PostLike:
-        return PostLike.objects.create(
-            category=self.category,
-            thread=self.thread,
-            post=self.thread_first_post,
-            liker=self.other_user,
-            liker_name=self.other_user.username,
-            liker_slug=self.other_user.slug,
-        )
-
-    def create_read_category(self) -> ReadCategory:
-        return ReadCategory.objects.create(
-            user=self.user,
-            category=self.category,
-        )
-
-    def create_read_thread(self) -> ReadThread:
-        return ReadThread.objects.create(
-            user=self.user,
-            category=self.category,
-            thread=self.thread,
-        )
-
-    def create_role_category_acl(self) -> RoleCategoryACL:
-        return RoleCategoryACL.objects.create(
-            role=Role.objects.order_by("id").first(),
-            category=self.category,
-            category_role=CategoryRole.objects.order_by("id").first(),
-        )
-
-    def create_thread(self) -> Thread:
-        return post_thread(self.category, poster=self.user)
-
-    def create_thread_reply(self) -> Post:
-        return reply_thread(self.thread, poster=self.other_user)
-
-    def create_thread_update(self) -> ThreadUpdate:
-        return create_test_thread_update(self.thread, self.other_user)
-
-    def create_watched_thread(self) -> WatchedThread:
-        return WatchedThread.objects.create(
-            user=self.user,
-            category=self.category,
-            thread=self.thread,
-        )
-
-    def assert_relations_are_deleted(self):
+    def assert_relations_deleted(self):
         self.attachment.refresh_from_db()
         assert self.attachment.is_deleted, "Attachment should be marked for deletion"
         assert (
@@ -222,11 +177,6 @@ class CategoryRelationsFactory:
             """CategoryGroupPermission should be deleted when category is deleted"""
             self.category_group_permission.refresh_from_db()
 
-        self.legacy_attachment.refresh_from_db()
-        assert (
-            self.legacy_attachment.post is None
-        ), "LegacyAttachment should marked for deletion"
-
         with pytest.raises(Notification.DoesNotExist):
             """Notification should be deleted when category is deleted"""
             self.notification.refresh_from_db()
@@ -239,13 +189,13 @@ class CategoryRelationsFactory:
             """PollVote should be deleted when category is deleted"""
             self.poll_vote.refresh_from_db()
 
-        with pytest.raises(PostEdit.DoesNotExist):
-            """PostEdit should be deleted when category is deleted"""
-            self.post_edit.refresh_from_db()
+        # with pytest.raises(PostEdit.DoesNotExist):
+        #     """PostEdit should be deleted when category is deleted"""
+        #     self.post_edit.refresh_from_db()
 
-        with pytest.raises(PostLike.DoesNotExist):
-            """Notification PostLike be deleted when category is deleted"""
-            self.post_like.refresh_from_db()
+        # with pytest.raises(PostLike.DoesNotExist):
+        #     """Notification PostLike be deleted when category is deleted"""
+        #     self.post_like.refresh_from_db()
 
         with pytest.raises(ReadCategory.DoesNotExist):
             """ReadCategory should be deleted when category is deleted"""
@@ -279,7 +229,7 @@ class CategoryRelationsFactory:
             """WatchedThread should be deleted when category is deleted"""
             self.watched_thread.refresh_from_db()
 
-    def assert_relations_are_moved(self, new_category: Category):
+    def assert_relations_moved(self, new_category: Category):
         self.attachment.refresh_from_db()
         assert not self.attachment.is_deleted, "Attachment was NOT marked for deletion"
         assert (
@@ -289,11 +239,6 @@ class CategoryRelationsFactory:
         with pytest.raises(CategoryGroupPermission.DoesNotExist):
             """CategoryGroupPermission should be deleted when category is deleted"""
             self.category_group_permission.refresh_from_db()
-
-        self.legacy_attachment.refresh_from_db()
-        assert (
-            self.legacy_attachment.post_id == self.thread_reply.id
-        ), "LegacyAttachment post was updated"
 
         self.notification.refresh_from_db()
         assert (
@@ -310,15 +255,15 @@ class CategoryRelationsFactory:
             self.poll_vote.category_id == new_category.id
         ), "PollVote category relation was not updated"
 
-        self.post_edit.refresh_from_db()
-        assert (
-            self.post_edit.category_id == new_category.id
-        ), "PostEdit category relation was not updated"
+        # self.post_edit.refresh_from_db()
+        # assert (
+        #     self.post_edit.category_id == new_category.id
+        # ), "PostEdit category relation was not updated"
 
-        self.post_like.refresh_from_db()
-        assert (
-            self.post_like.category_id == new_category.id
-        ), "PostLike category relation was not updated"
+        # self.post_like.refresh_from_db()
+        # assert (
+        #     self.post_like.category_id == new_category.id
+        # ), "PostLike category relation was not updated"
 
         with pytest.raises(ReadCategory.DoesNotExist):
             """ReadCategory should be deleted when category is deleted"""

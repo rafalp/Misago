@@ -1,6 +1,5 @@
 import pytest
 
-from ...test import CategoryRelationsFactory
 from ...threadupdates.create import create_moved_thread_update
 from ..delete import delete_category
 from ..models import Category
@@ -65,35 +64,25 @@ def test_delete_category_deletes_category(default_category):
 
 
 def test_delete_category_deletes_category_contents(
-    user, other_user, members_group, default_category
+    category_relations_factory, default_category
 ):
-    category_contents = CategoryRelationsFactory(
-        category=default_category,
-        user=user,
-        other_user=other_user,
-        group=members_group,
-    )
+    category_relations = category_relations_factory(default_category)
 
     delete_category(default_category)
 
     with pytest.raises(Category.DoesNotExist):
         default_category.refresh_from_db()
 
-    category_contents.assert_relations_are_deleted()
+    category_relations.assert_relations_deleted()
 
 
 def test_delete_category_deletes_child_category_contents(
-    user, other_user, members_group, default_category
+    category_relations_factory, default_category
 ):
     child_category = Category(name="Child Category", slug="child-category")
     child_category.insert_at(default_category, position="last-child", save=True)
 
-    category_contents = CategoryRelationsFactory(
-        category=child_category,
-        user=user,
-        other_user=other_user,
-        group=members_group,
-    )
+    child_category_relations = category_relations_factory(child_category)
 
     delete_category(default_category, move_children_to=None)
 
@@ -103,39 +92,29 @@ def test_delete_category_deletes_child_category_contents(
     with pytest.raises(Category.DoesNotExist):
         child_category.refresh_from_db()
 
-    category_contents.assert_relations_are_deleted()
+    child_category_relations.assert_relations_deleted()
 
 
 def test_delete_category_moves_category_contents(
-    user, other_user, members_group, default_category, sibling_category
+    category_relations_factory, default_category, sibling_category
 ):
-    category_contents = CategoryRelationsFactory(
-        category=default_category,
-        user=user,
-        other_user=other_user,
-        group=members_group,
-    )
+    category_relations = category_relations_factory(default_category)
 
     delete_category(default_category, move_contents_to=sibling_category)
 
     with pytest.raises(Category.DoesNotExist):
         default_category.refresh_from_db()
 
-    category_contents.assert_relations_are_moved(sibling_category)
+    category_relations.assert_relations_moved(sibling_category)
 
 
 def test_delete_category_moves_deleted_child_category_contents(
-    user, other_user, members_group, default_category, sibling_category
+    category_relations_factory, default_category, sibling_category
 ):
     child_category = Category(name="Child Category", slug="child-category")
     child_category.insert_at(default_category, position="last-child", save=True)
 
-    category_contents = CategoryRelationsFactory(
-        category=child_category,
-        user=user,
-        other_user=other_user,
-        group=members_group,
-    )
+    child_category_relations = category_relations_factory(child_category)
 
     delete_category(
         default_category,
@@ -149,11 +128,11 @@ def test_delete_category_moves_deleted_child_category_contents(
     with pytest.raises(Category.DoesNotExist):
         child_category.refresh_from_db()
 
-    category_contents.assert_relations_are_moved(sibling_category)
+    child_category_relations.assert_relations_moved(sibling_category)
 
 
 def test_delete_category_clears_thread_update_generic_relation(
-    user, other_user, members_group, default_category, sibling_category, thread
+    category_relations_factory, default_category, sibling_category, thread
 ):
     thread.category = sibling_category
     thread.save()
@@ -162,19 +141,14 @@ def test_delete_category_clears_thread_update_generic_relation(
 
     thread_update = create_moved_thread_update(thread, default_category, "test")
 
-    category_contents = CategoryRelationsFactory(
-        category=default_category,
-        user=user,
-        other_user=other_user,
-        group=members_group,
-    )
+    category_relations = category_relations_factory(default_category)
 
     delete_category(default_category)
 
     with pytest.raises(Category.DoesNotExist):
         default_category.refresh_from_db()
 
-    category_contents.assert_relations_are_deleted()
+    category_relations.assert_relations_deleted()
 
     thread_update.refresh_from_db()
     assert thread_update.context_type == None

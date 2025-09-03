@@ -28,6 +28,7 @@ from .test import (
     MisagoClient,
     teardown_attachments,
 )
+from .test.categories import category_relations_factory
 from .test.time import *
 from .test.polls import *
 from .test.posts import *
