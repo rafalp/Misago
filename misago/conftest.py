@@ -1,4 +1,6 @@
+import random
 import os
+from datetime import timedelta
 
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -457,6 +459,68 @@ def other_user_unapproved_thread(thread_factory, default_category, other_user):
 
 
 @pytest.fixture
+def old_thread(thread_factory, default_category):
+    return thread_factory(default_category, started_on=-3600)
+
+
+@pytest.fixture
+def old_user_thread(thread_factory, default_category, user):
+    return thread_factory(default_category, started_on=-3600, starter=user)
+
+
+@pytest.fixture
+def old_other_user_thread(thread_factory, default_category, other_user):
+    return thread_factory(default_category, started_on=-3600, starter=other_user)
+
+
+@pytest.fixture
+def old_thread_reply(thread_reply_factory, old_thread):
+    return thread_reply_factory(old_thread)
+
+
+@pytest.fixture
+def old_thread_user_reply(thread_reply_factory, old_thread, user):
+    return thread_reply_factory(old_thread, poster=user)
+
+
+@pytest.fixture
+def old_thread_other_user_reply(thread_reply_factory, old_thread, other_user):
+    return thread_reply_factory(old_thread, poster=other_user)
+
+
+@pytest.fixture
+def old_user_thread_reply(thread_reply_factory, old_user_thread):
+    return thread_reply_factory(old_user_thread)
+
+
+@pytest.fixture
+def old_user_thread_user_reply(thread_reply_factory, old_user_thread, user):
+    return thread_reply_factory(old_user_thread, poster=user)
+
+
+@pytest.fixture
+def old_user_thread_other_user_reply(thread_reply_factory, old_user_thread, other_user):
+    return thread_reply_factory(old_user_thread, poster=other_user)
+
+
+@pytest.fixture
+def old_other_user_thread_reply(thread_reply_factory, old_other_user_thread):
+    return thread_reply_factory(old_other_user_thread)
+
+
+@pytest.fixture
+def old_other_user_thread_user_reply(thread_reply_factory, old_other_user_thread, user):
+    return thread_reply_factory(old_other_user_thread, poster=user)
+
+
+@pytest.fixture
+def old_other_user_thread_other_user_reply(
+    thread_reply_factory, old_other_user_thread, other_user
+):
+    return thread_reply_factory(old_other_user_thread, poster=other_user)
+
+
+@pytest.fixture
 def private_thread(thread_factory, private_threads_category):
     return thread_factory(private_threads_category)
 
@@ -511,6 +575,16 @@ def other_user_private_thread(
 
 
 @pytest.fixture
+def old_private_thread(thread_factory, private_threads_category):
+    return thread_factory(private_threads_category, started_on=-3600)
+
+
+@pytest.fixture
+def old_private_thread_user_reply(thread_reply_factory, old_private_thread, user):
+    return thread_reply_factory(old_private_thread, poster=user)
+
+
+@pytest.fixture
 def categories_tree(root_category):
     sibling_category = Category(
         name="Sibling Category",
@@ -554,11 +628,23 @@ def other_category(categories_tree):
 @pytest.fixture
 def watched_thread_factory():
     def create_watched_thread(user: "User", thread: "Thread", send_emails: bool):
+        thread_age = timezone.now() - thread.started_on
+        if thread_age.total_seconds() < 10:
+            raise ValueError(
+                "'thread' passed to 'watched_thread_factory' must be "
+                "at least 10 seconds old"
+            )
+
+        read_time = thread.started_on + timedelta(
+            seconds=random.randint(1, int(thread_age.total_seconds()) - 1),
+        )
+
         return WatchedThread.objects.create(
             user=user,
             category_id=thread.category_id,
             thread=thread,
             send_emails=send_emails,
+            read_time=read_time,
         )
 
     return create_watched_thread

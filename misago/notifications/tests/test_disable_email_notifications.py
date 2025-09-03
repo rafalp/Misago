@@ -2,9 +2,9 @@ from django.urls import reverse
 
 
 def test_disable_email_notifications_view_disables_emails_for_watched_thread(
-    watched_thread_factory, user, user_client, thread
+    watched_thread_factory, user, user_client, old_thread
 ):
-    watched_thread = watched_thread_factory(user, thread, send_emails=True)
+    watched_thread = watched_thread_factory(user, old_thread, send_emails=True)
 
     response = user_client.get(
         reverse(
@@ -22,9 +22,9 @@ def test_disable_email_notifications_view_disables_emails_for_watched_thread(
 
 
 def test_disable_email_notifications_view_works_without_authentication(
-    watched_thread_factory, user, client, thread
+    watched_thread_factory, user, client, old_thread
 ):
-    watched_thread = watched_thread_factory(user, thread, send_emails=True)
+    watched_thread = watched_thread_factory(user, old_thread, send_emails=True)
 
     response = client.get(
         reverse(
@@ -42,9 +42,9 @@ def test_disable_email_notifications_view_works_without_authentication(
 
 
 def test_disable_email_notifications_view_returns_404_if_secret_is_invalid(
-    watched_thread_factory, user, client, thread
+    watched_thread_factory, user, client, old_thread
 ):
-    watched_thread = watched_thread_factory(user, thread, send_emails=True)
+    watched_thread = watched_thread_factory(user, old_thread, send_emails=True)
 
     response = client.get(
         reverse(
@@ -59,9 +59,9 @@ def test_disable_email_notifications_view_returns_404_if_secret_is_invalid(
 
 
 def test_disable_email_notifications_view_returns_404_if_watched_thread_is_not_found(
-    watched_thread_factory, user, client, thread
+    watched_thread_factory, user, client, old_thread
 ):
-    watched_thread = watched_thread_factory(user, thread, send_emails=True)
+    watched_thread = watched_thread_factory(user, old_thread, send_emails=True)
 
     response = client.get(
         reverse(
