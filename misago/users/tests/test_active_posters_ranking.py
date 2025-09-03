@@ -1,9 +1,4 @@
-from datetime import timedelta
-
-from django.utils import timezone
-
 from ...conf.test import override_dynamic_settings
-from ...threads.test import reply_thread
 from ..activepostersranking import (
     build_active_posters_ranking,
     get_active_posters_ranking,
@@ -21,28 +16,32 @@ def test_ranking_is_emptied_if_no_posts_exist(user):
 
 
 @override_dynamic_settings(top_posters_ranking_length=5)
-def test_recent_post_by_user_counts_to_ranking(thread, user):
-    reply_thread(thread, poster=user)
+def test_recent_post_by_user_counts_to_ranking(thread_factory, user, default_category):
+    thread_factory(default_category, starter=user)
     assert build_active_posters_ranking()
 
 
 @override_dynamic_settings(top_posters_ranking_length=5)
-def test_recent_post_by_removed_user_doesnt_count_to_ranking(thread):
-    reply_thread(thread)
+def test_recent_post_by_removed_user_doesnt_count_to_ranking(
+    thread_factory, default_category
+):
+    thread_factory(default_category)
     assert not build_active_posters_ranking()
 
 
 @override_dynamic_settings(top_posters_ranking_length=5)
-def test_old_post_by_user_doesnt_count_to_ranking(thread, user):
-    reply_thread(thread, poster=user, posted_on=timezone.now() - timedelta(days=6))
+def test_old_post_by_user_doesnt_count_to_ranking(
+    thread_factory, user, default_category, day_seconds
+):
+    thread_factory(default_category, starter=user, started_on=day_seconds * -6)
     assert not build_active_posters_ranking()
 
 
 @override_dynamic_settings(top_posters_ranking_size=2)
-def test_ranking_size_is_limited(thread):
+def test_ranking_size_is_limited(thread_factory, default_category):
     for i in range(3):
         user = create_test_user("User%s" % i, "user%s@example.com" % i)
-        reply_thread(thread, poster=user)
+        thread_factory(default_category, starter=user)
     assert len(build_active_posters_ranking()) == 2
 
 
