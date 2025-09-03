@@ -7,7 +7,6 @@ from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
-from django.utils import timezone
 
 from ...conf import settings
 from ...core.utils import parse_iso8601_string

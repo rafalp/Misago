@@ -318,22 +318,42 @@ def default_category(db):
 
 @pytest.fixture
 def thread(thread_factory, default_category):
-    return thread_factory(default_category)
+    thread = thread_factory(default_category)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def other_thread(thread_factory, default_category):
-    return thread_factory(default_category)
+    thread = thread_factory(default_category)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def hidden_thread(thread_factory, default_category):
-    return thread_factory(default_category, is_hidden=True)
+    thread = thread_factory(default_category, is_hidden=True)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def unapproved_thread(thread_factory, default_category):
-    return thread_factory(default_category, is_unapproved=True)
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
@@ -343,186 +363,326 @@ def post(thread):
 
 @pytest.fixture
 def reply(thread_reply_factory, thread):
-    return thread_reply_factory(
+    reply = thread_reply_factory(
         thread,
         poster="Reply",
         original="I am reply",
     )
 
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
+
 
 @pytest.fixture
 def hidden_reply(thread_reply_factory, thread):
-    return thread_reply_factory(
+    reply = thread_reply_factory(
         thread,
         poster="HiddenPoster",
         original="I am hidden reply",
         is_hidden=True,
     )
 
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
+
 
 @pytest.fixture
 def unapproved_reply(thread_reply_factory, thread):
-    return thread_reply_factory(
+    reply = thread_reply_factory(
         thread,
         poster="UnapprovedPoster",
         original="I am unapproved reply",
         is_unapproved=True,
     )
 
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
+
 
 @pytest.fixture
 def user_reply(thread_reply_factory, thread, user):
-    return thread_reply_factory(
+    reply = thread_reply_factory(
         thread,
         poster=user,
         original="I am user reply",
     )
 
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
+
 
 @pytest.fixture
 def user_hidden_reply(thread_reply_factory, thread, user):
-    return thread_reply_factory(
+    reply = thread_reply_factory(
         thread,
         poster=user,
         original="I am user hidden reply",
         is_hidden=True,
     )
 
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
+
 
 @pytest.fixture
 def user_unapproved_reply(thread_reply_factory, thread, user):
-    return thread_reply_factory(
+    reply = thread_reply_factory(
         thread,
         poster=user,
         original="I am user unapproved reply",
         is_unapproved=True,
     )
 
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
+
 
 @pytest.fixture
 def other_user_reply(thread_reply_factory, thread, other_user):
-    return thread_reply_factory(
+    reply = thread_reply_factory(
         thread,
         poster=other_user,
         original="I am other user reply",
     )
 
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
+
 
 @pytest.fixture
 def other_user_hidden_reply(thread_reply_factory, thread, other_user):
-    return thread_reply_factory(
+    reply = thread_reply_factory(
         thread,
         poster=other_user,
         original="I am user hidden reply",
         is_hidden=True,
     )
 
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
+
 
 @pytest.fixture
 def other_user_unapproved_reply(thread_reply_factory, thread, other_user):
-    return thread_reply_factory(
+    reply = thread_reply_factory(
         thread,
         poster=other_user,
         original="I am other user unapproved reply",
         is_unapproved=True,
     )
 
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
+
 
 @pytest.fixture
 def user_thread(thread_factory, default_category, user):
-    return thread_factory(default_category, starter=user)
+    thread = thread_factory(default_category, starter=user)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def user_hidden_thread(thread_factory, default_category, user):
-    return thread_factory(default_category, starter=user, is_hidden=True)
+    thread = thread_factory(default_category, starter=user, is_hidden=True)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def user_unapproved_thread(thread_factory, default_category, user):
-    return thread_factory(default_category, starter=user, is_unapproved=True)
+    thread = thread_factory(default_category, starter=user, is_unapproved=True)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def other_user_thread(thread_factory, default_category, other_user):
-    return thread_factory(default_category, starter=other_user)
+    thread = thread_factory(default_category, starter=other_user)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def other_user_hidden_thread(thread_factory, default_category, other_user):
-    return thread_factory(default_category, starter=other_user, is_hidden=True)
+    thread = thread_factory(default_category, starter=other_user, is_hidden=True)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def other_user_unapproved_thread(thread_factory, default_category, other_user):
-    return thread_factory(default_category, starter=other_user, is_unapproved=True)
+    thread = thread_factory(default_category, starter=other_user, is_unapproved=True)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def old_thread(thread_factory, default_category):
-    return thread_factory(default_category, started_on=-3600)
+    thread = thread_factory(default_category, started_on=-3600)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def old_user_thread(thread_factory, default_category, user):
-    return thread_factory(default_category, started_on=-3600, starter=user)
+    thread = thread_factory(default_category, started_on=-3600, starter=user)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def old_other_user_thread(thread_factory, default_category, other_user):
-    return thread_factory(default_category, started_on=-3600, starter=other_user)
+    thread = thread_factory(default_category, started_on=-3600, starter=other_user)
+
+    default_category.synchronize()
+    default_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def old_thread_reply(thread_reply_factory, old_thread):
-    return thread_reply_factory(old_thread)
+    reply = thread_reply_factory(old_thread)
+
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
 
 
 @pytest.fixture
 def old_thread_user_reply(thread_reply_factory, old_thread, user):
-    return thread_reply_factory(old_thread, poster=user)
+    reply = thread_reply_factory(old_thread, poster=user)
+
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
 
 
 @pytest.fixture
 def old_thread_other_user_reply(thread_reply_factory, old_thread, other_user):
-    return thread_reply_factory(old_thread, poster=other_user)
+    reply = thread_reply_factory(old_thread, poster=other_user)
+
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
 
 
 @pytest.fixture
 def old_user_thread_reply(thread_reply_factory, old_user_thread):
-    return thread_reply_factory(old_user_thread)
+    reply = thread_reply_factory(old_user_thread)
+
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
 
 
 @pytest.fixture
 def old_user_thread_user_reply(thread_reply_factory, old_user_thread, user):
-    return thread_reply_factory(old_user_thread, poster=user)
+    reply = thread_reply_factory(old_user_thread, poster=user)
+
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
 
 
 @pytest.fixture
 def old_user_thread_other_user_reply(thread_reply_factory, old_user_thread, other_user):
-    return thread_reply_factory(old_user_thread, poster=other_user)
+    reply = thread_reply_factory(old_user_thread, poster=other_user)
+
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
 
 
 @pytest.fixture
 def old_other_user_thread_reply(thread_reply_factory, old_other_user_thread):
-    return thread_reply_factory(old_other_user_thread)
+    reply = thread_reply_factory(old_other_user_thread)
+
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
 
 
 @pytest.fixture
 def old_other_user_thread_user_reply(thread_reply_factory, old_other_user_thread, user):
-    return thread_reply_factory(old_other_user_thread, poster=user)
+    reply = thread_reply_factory(old_other_user_thread, poster=user)
+
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
 
 
 @pytest.fixture
 def old_other_user_thread_other_user_reply(
     thread_reply_factory, old_other_user_thread, other_user
 ):
-    return thread_reply_factory(old_other_user_thread, poster=other_user)
+    reply = thread_reply_factory(old_other_user_thread, poster=other_user)
+
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
 
 
 @pytest.fixture
 def private_thread(thread_factory, private_threads_category):
-    return thread_factory(private_threads_category)
+    thread = thread_factory(private_threads_category)
+
+    private_threads_category.synchronize()
+    private_threads_category.save()
+
+    return thread
 
 
 @pytest.fixture
@@ -532,12 +692,22 @@ def private_thread_post(private_thread):
 
 @pytest.fixture
 def private_thread_reply(thread_reply_factory, private_thread):
-    return thread_reply_factory(private_thread, poster="Ghost")
+    reply = thread_reply_factory(private_thread, poster="Ghost")
+
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
 
 
 @pytest.fixture
 def private_thread_user_reply(thread_reply_factory, private_thread, user):
-    return thread_reply_factory(private_thread, poster=user)
+    reply = thread_reply_factory(private_thread, poster=user)
+
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
 
 
 @pytest.fixture
@@ -553,6 +723,9 @@ def user_private_thread(
     PrivateThreadMember.objects.create(thread=thread, user=user, is_owner=True)
     PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=False)
     PrivateThreadMember.objects.create(thread=thread, user=moderator, is_owner=False)
+
+    private_threads_category.synchronize()
+    private_threads_category.save()
 
     return thread
 
@@ -571,17 +744,30 @@ def other_user_private_thread(
     PrivateThreadMember.objects.create(thread=thread, user=user, is_owner=False)
     PrivateThreadMember.objects.create(thread=thread, user=moderator, is_owner=False)
 
+    private_threads_category.synchronize()
+    private_threads_category.save()
+
     return thread
 
 
 @pytest.fixture
 def old_private_thread(thread_factory, private_threads_category):
-    return thread_factory(private_threads_category, started_on=-3600)
+    thread = thread_factory(private_threads_category, started_on=-3600)
+
+    private_threads_category.synchronize()
+    private_threads_category.save()
+
+    return thread
 
 
 @pytest.fixture
 def old_private_thread_user_reply(thread_reply_factory, old_private_thread, user):
-    return thread_reply_factory(old_private_thread, poster=user)
+    reply = thread_reply_factory(old_private_thread, poster=user)
+
+    reply.category.synchronize()
+    reply.category.save()
+
+    return reply
 
 
 @pytest.fixture

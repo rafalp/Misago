@@ -30,6 +30,5 @@ def is_category_read(
             | Q(user_readthread__isnull=True)
         )
     )
-    print(list(t.last_post_on for t in queryset))
-    print(category_read_time)
+
     return not queryset.exists()

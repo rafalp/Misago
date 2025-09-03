@@ -37,7 +37,6 @@ class PostModelTests(TestCase):
             poster_name=self.user.username,
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
             posted_at=datetime,
         )
 
@@ -76,7 +75,6 @@ class PostModelTests(TestCase):
                     poster_name=other_user.username,
                     original="Hello! I am test message!",
                     parsed="<p>Hello! I am test message!</p>",
-                    checksum="nope",
                     posted_at=timezone.now() + timedelta(minutes=5),
                 )
             )
@@ -91,7 +89,6 @@ class PostModelTests(TestCase):
                     poster_name=self.user.username,
                     original="Hello! I am test message!",
                     parsed="<p>Hello! I am test message!</p>",
-                    checksum="nope",
                     posted_at=timezone.now() + timedelta(minutes=5),
                 )
             )
@@ -105,7 +102,6 @@ class PostModelTests(TestCase):
             poster_name=self.user.username,
             original="I am other message!",
             parsed="<p>I am other message!</p>",
-            checksum="nope",
             posted_at=timezone.now() + timedelta(minutes=5),
         )
 
@@ -124,7 +120,6 @@ class PostModelTests(TestCase):
             poster_name=self.user.username,
             original="I am other message!",
             parsed="<p>I am other message!</p>",
-            checksum="nope",
             posted_at=timezone.now() + timedelta(minutes=5),
         )
 
@@ -143,7 +138,6 @@ class PostModelTests(TestCase):
             poster_name=self.user.username,
             original="I am other message!",
             parsed="<p>I am other message!</p>",
-            checksum="nope",
             posted_at=timezone.now() + timedelta(minutes=5),
         )
 
@@ -154,7 +148,6 @@ class PostModelTests(TestCase):
             poster_name=self.user.username,
             original="I am other message!",
             parsed="<p>I am other message!</p>",
-            checksum="nope",
             posted_at=timezone.now() + timedelta(minutes=5),
         )
 

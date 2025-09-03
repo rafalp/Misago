@@ -46,15 +46,11 @@ def test_reply_thread_state_updates_thread(user_request, other_user_thread):
 
 
 def test_reply_thread_state_updates_category(user_request, other_user_thread):
-    category = other_user_thread.category
-
-    category.synchronize()
-    category.save()
-
     state = ReplyThreadState(user_request, other_user_thread)
     state.set_post_message(parse("Test reply"))
     state.save()
 
+    category = other_user_thread.category
     category.refresh_from_db()
     assert category.threads == 1
     assert category.posts == 2
@@ -78,10 +74,6 @@ def test_reply_thread_state_updates_user(user_request, other_user_thread, user):
 
 def test_reply_thread_state_updates_existing_post(user, user_request, user_thread):
     category = user_thread.category
-
-    category.synchronize()
-    category.save()
-
     post = user_thread.first_post
     post_original = post.original
     post_parsed = post.parsed

@@ -111,7 +111,7 @@ def test_filter_thread_posts_queryset_shows_users_own_hidden_post_to_user(
     assert user_hidden_reply in queryset
 
 
-def test_filter_thread_posts_queryset_shows_other_users_hidden_post_to_user(
+def test_filter_thread_posts_queryset_hides_other_users_hidden_from_user(
     cache_versions, anonymous_user, thread, post, other_user_hidden_reply
 ):
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)

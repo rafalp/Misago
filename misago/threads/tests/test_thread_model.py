@@ -36,7 +36,6 @@ class ThreadModelTests(TestCase):
             poster_name="Tester",
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
             posted_at=datetime,
             updated_at=datetime,
         )
@@ -58,7 +57,6 @@ class ThreadModelTests(TestCase):
             poster_name=user.username,
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
             posted_at=datetime,
             updated_at=datetime,
         )
@@ -84,7 +82,6 @@ class ThreadModelTests(TestCase):
             poster_name=user.username,
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
             posted_at=datetime + timedelta(5),
             updated_at=datetime + timedelta(5),
             is_unapproved=True,
@@ -109,7 +106,6 @@ class ThreadModelTests(TestCase):
             poster_name=user.username,
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
             posted_at=datetime + timedelta(10),
             updated_at=datetime + timedelta(10),
             is_hidden=True,
@@ -171,7 +167,6 @@ class ThreadModelTests(TestCase):
             poster_name=user.username,
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
             posted_at=datetime,
             updated_at=datetime,
         )
@@ -196,7 +191,6 @@ class ThreadModelTests(TestCase):
             poster_name=user.username,
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
             posted_at=datetime,
             updated_at=datetime,
         )
@@ -219,7 +213,6 @@ class ThreadModelTests(TestCase):
             poster_name=user.username,
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
             posted_at=timezone.now(),
             updated_at=timezone.now(),
             is_protected=True,
@@ -309,7 +302,6 @@ class ThreadModelTests(TestCase):
             poster_name="Admin",
             original="Hello! I am other message!",
             parsed="<p>Hello! I am other message!</p>",
-            checksum="nope",
             posted_at=datetime,
             updated_at=datetime,
         )
