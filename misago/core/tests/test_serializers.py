@@ -1,8 +1,5 @@
-from django.test import TestCase
 from rest_framework import serializers
 
-from ...categories.models import Category
-from ...threads import test
 from ...threads.models import Thread
 from ..serializers import MutableFields
 
@@ -29,59 +26,48 @@ class Serializer(serializers.ModelSerializer, MutableFields):
         ]
 
 
-class MutableFieldsSerializerTests(TestCase):
-    def test_subset_fields(self):
-        """classmethod subset_fields creates new serializer"""
-        category = Category.objects.get(slug="first-category")
-        thread = test.post_thread(category=category)
+def test_mutable_fields_serialized_subset_fields(thread_factory, default_category):
+    thread = thread_factory(default_category)
 
-        fields = ["id", "title", "replies", "last_poster_name"]
+    fields = ["id", "title", "replies", "last_poster_name"]
 
-        serializer = Serializer.subset_fields(*fields)
-        self.assertEqual(
-            serializer.__name__, "SerializerIdTitleRepliesLastPosterNameSubset"
-        )
-        self.assertEqual(serializer.Meta.fields, fields)
+    serializer = Serializer.subset_fields(*fields)
+    assert serializer.__name__ == "SerializerIdTitleRepliesLastPosterNameSubset"
+    assert serializer.Meta.fields == fields
+    assert Serializer.Meta.fields != serializer.Meta.fields
 
-        serialized_thread = serializer(thread).data
-        self.assertEqual(
-            serialized_thread,
-            {
-                "id": thread.id,
-                "title": thread.title,
-                "replies": thread.replies,
-                "last_poster_name": thread.last_poster_name,
-            },
-        )
+    serialized_thread = serializer(thread).data
+    assert serialized_thread == {
+        "id": thread.id,
+        "title": thread.title,
+        "replies": thread.replies,
+        "last_poster_name": thread.last_poster_name,
+    }
 
-        self.assertFalse(Serializer.Meta.fields == serializer.Meta.fields)
 
-    def test_exclude_fields(self):
-        """classmethod exclude_fields creates new serializer"""
-        category = Category.objects.get(slug="first-category")
-        thread = test.post_thread(category=category)
+def test_mutable_fields_serialized_exclude_fields(thread_factory, default_category):
+    thread = thread_factory(default_category)
 
-        kept_fields = ["id", "title", "weight"]
-        removed_fields = list(set(Serializer.Meta.fields) - set(kept_fields))
+    kept_fields = ["id", "title", "weight"]
+    removed_fields = list(set(Serializer.Meta.fields) - set(kept_fields))
 
-        serializer = Serializer.exclude_fields(*removed_fields)
-        self.assertEqual(serializer.__name__, "SerializerIdTitleWeightSubset")
-        self.assertEqual(serializer.Meta.fields, kept_fields)
+    serializer = Serializer.exclude_fields(*removed_fields)
+    assert serializer.__name__ == "SerializerIdTitleWeightSubset"
+    assert serializer.Meta.fields == kept_fields
+    assert Serializer.Meta.fields != serializer.Meta.fields
 
-        serialized_thread = serializer(thread).data
-        self.assertEqual(
-            serialized_thread,
-            {"id": thread.id, "title": thread.title, "weight": thread.weight},
-        )
+    serialized_thread = serializer(thread).data
+    assert serialized_thread == {
+        "id": thread.id,
+        "title": thread.title,
+        "weight": thread.weight,
+    }
 
-        self.assertFalse(Serializer.Meta.fields == serializer.Meta.fields)
 
-    def test_extend_fields(self):
-        """classmethod extend_fields creates new serializer"""
-        category = Category.objects.get(slug="first-category")
-        thread = test.post_thread(category=category)
+def test_mutable_fields_serialized_extend_fields(thread_factory, default_category):
+    thread = thread_factory(default_category)
 
-        serializer = Serializer.extend_fields("category")
+    serializer = Serializer.extend_fields("category")
 
-        serialized_thread = serializer(thread).data
-        self.assertEqual(serialized_thread["category"], category.pk)
+    serialized_thread = serializer(thread).data
+    assert serialized_thread["category"] == default_category.id
