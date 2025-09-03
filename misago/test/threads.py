@@ -68,6 +68,7 @@ def thread_factory(post_factory):
         post = post_factory(
             thread,
             poster=starter,
+            posted_at=started_on,
         )
 
         starter_obj, starter_name, starter_slug = unpack_factory_user_arg(starter)

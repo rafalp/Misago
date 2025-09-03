@@ -4,8 +4,7 @@ import pytest
 from ariadne import gql
 from django.utils import timezone
 
-from ....threads.models import Attachment, AttachmentType
-from ....threads.test import post_thread
+from ....attachments.models import Attachment
 from ....users.datadownloads import request_user_data_download
 from ....users.deletesrecord import record_user_deleted_by_self
 from ....users.test import create_test_user
@@ -108,9 +107,9 @@ def test_old_user_registration_is_excluded_from_analytics(admin_graphql_client):
 
 
 def test_recent_thread_appears_in_current_analytics(
-    admin_graphql_client, default_category
+    admin_graphql_client, thread_factory, default_category
 ):
-    post_thread(default_category)
+    thread_factory(default_category)
     result = admin_graphql_client.query(test_query, {"span": 30})
     analytics = result["analytics"]["threads"]
     assert sum(analytics["current"]) == 1
@@ -118,17 +117,19 @@ def test_recent_thread_appears_in_current_analytics(
 
 
 def test_older_thread_appears_in_previous_analytics(
-    admin_graphql_client, default_category
+    admin_graphql_client, thread_factory, default_category
 ):
-    post_thread(default_category, started_on=previous_datetime)
+    thread_factory(default_category, started_on=previous_datetime)
     result = admin_graphql_client.query(test_query, {"span": 30})
     analytics = result["analytics"]["threads"]
     assert sum(analytics["current"]) == 0
     assert sum(analytics["previous"]) == 1
 
 
-def test_old_thread_is_excluded_from_analytics(admin_graphql_client, default_category):
-    post_thread(default_category, started_on=excluded_datetime)
+def test_old_thread_is_excluded_from_analytics(
+    admin_graphql_client, thread_factory, default_category
+):
+    thread_factory(default_category, started_on=excluded_datetime)
     result = admin_graphql_client.query(test_query, {"span": 30})
     analytics = result["analytics"]["threads"]
     assert sum(analytics["current"]) == 0
@@ -136,9 +137,9 @@ def test_old_thread_is_excluded_from_analytics(admin_graphql_client, default_cat
 
 
 def test_recent_post_appears_in_current_analytics(
-    admin_graphql_client, default_category
+    admin_graphql_client, thread_factory, default_category
 ):
-    post_thread(default_category)
+    thread_factory(default_category)
     result = admin_graphql_client.query(test_query, {"span": 30})
     analytics = result["analytics"]["posts"]
     assert sum(analytics["current"]) == 1
@@ -146,36 +147,35 @@ def test_recent_post_appears_in_current_analytics(
 
 
 def test_older_post_appears_in_previous_analytics(
-    admin_graphql_client, default_category
+    admin_graphql_client, thread_factory, default_category
 ):
-    post_thread(default_category, started_on=previous_datetime)
+    thread_factory(default_category, started_on=previous_datetime)
     result = admin_graphql_client.query(test_query, {"span": 30})
     analytics = result["analytics"]["posts"]
     assert sum(analytics["current"]) == 0
     assert sum(analytics["previous"]) == 1
 
 
-def test_old_post_is_excluded_from_analytics(admin_graphql_client, default_category):
-    post_thread(default_category, started_on=excluded_datetime)
+def test_old_post_is_excluded_from_analytics(
+    admin_graphql_client, thread_factory, default_category
+):
+    thread_factory(default_category, started_on=excluded_datetime)
     result = admin_graphql_client.query(test_query, {"span": 30})
     analytics = result["analytics"]["posts"]
     assert sum(analytics["current"]) == 0
     assert sum(analytics["previous"]) == 0
 
 
-@pytest.fixture
-def attachment_type(db):
-    return AttachmentType.objects.create(name="test", extensions="test")
-
-
-def test_recent_attachment_appears_in_current_analytics(
-    admin_graphql_client, attachment_type
-):
+def test_recent_attachment_appears_in_current_analytics(admin_graphql_client):
     Attachment.objects.create(
-        filetype=attachment_type,
-        uploader_name="test",
-        uploader_slug="test",
-        filename="test",
+        uploader_name="Anonymous",
+        uploader_slug="anonymous",
+        uploaded_at=timezone.now(),
+        name="text.txt",
+        slug="text-txt",
+        upload="attachments/text.txt",
+        size=1024 * 1024,
+        filetype_id="txt",
     )
 
     result = admin_graphql_client.query(test_query, {"span": 30})
@@ -184,15 +184,16 @@ def test_recent_attachment_appears_in_current_analytics(
     assert sum(analytics["previous"]) == 0
 
 
-def test_older_attachment_appears_in_previous_analytics(
-    admin_graphql_client, attachment_type
-):
+def test_older_attachment_appears_in_previous_analytics(admin_graphql_client):
     Attachment.objects.create(
-        filetype=attachment_type,
-        uploader_name="test",
-        uploader_slug="test",
-        filename="test",
-        uploaded_on=previous_datetime,
+        uploader_name="Anonymous",
+        uploader_slug="anonymous",
+        uploaded_at=previous_datetime,
+        name="text.txt",
+        slug="text-txt",
+        upload="attachments/text.txt",
+        size=1024 * 1024,
+        filetype_id="txt",
     )
 
     result = admin_graphql_client.query(test_query, {"span": 30})
@@ -201,15 +202,16 @@ def test_older_attachment_appears_in_previous_analytics(
     assert sum(analytics["previous"]) == 1
 
 
-def test_old_attachment_is_excluded_from_analytics(
-    admin_graphql_client, attachment_type
-):
+def test_old_attachment_is_excluded_from_analytics(admin_graphql_client):
     Attachment.objects.create(
-        filetype=attachment_type,
-        uploader_name="test",
-        uploader_slug="test",
-        filename="test",
-        uploaded_on=excluded_datetime,
+        uploader_name="Anonymous",
+        uploader_slug="anonymous",
+        uploaded_at=excluded_datetime,
+        name="text.txt",
+        slug="text-txt",
+        upload="attachments/text.txt",
+        size=1024 * 1024,
+        filetype_id="txt",
     )
 
     result = admin_graphql_client.query(test_query, {"span": 30})

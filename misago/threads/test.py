@@ -132,7 +132,9 @@ def post_thread(
     is_closed=False,
     started_on=None,
 ):
-    raise NotImplementedError("use `thread_factory` fixture!")
+    raise NotImplementedError(
+        "'post_thread' has been removed, use 'thread_factory' pytest fixture!"
+    )
 
 
 def reply_thread(
@@ -147,7 +149,10 @@ def reply_thread(
     has_open_reports=False,
     posted_on=None,
 ):
-    raise NotImplementedError("use `post_factory` or `thread_reply_factory` fixture!")
+    raise NotImplementedError(
+        "'reply_thread' has been removed, use 'post_factory' "
+        "or 'thread_reply_factory' pytest fixture!"
+    )
 
 
 def post_poll(thread, poster):
