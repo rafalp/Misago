@@ -165,7 +165,7 @@ def user_has_other_unread_posts(
     posts_queryset = Post.objects.filter(
         id__lt=post.id,
         thread=post.thread,
-        posted_on__gt=watched_thread.read_time,
+        posted_at__gt=watched_thread.read_time,
     ).exclude(poster=watched_thread.user)
 
     posts_queryset = filter_accessible_thread_posts(

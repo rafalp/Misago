@@ -190,6 +190,8 @@ def test_replace_rich_text_tokens_replaces_quote_with_same_thread_anonymous_user
     default_category.id = 1
 
     thread.id = 20
+    thread.title = "Test Thread"
+    thread.slug = "test-thread"
 
     post.id = 1234
     post.thread_id = thread.id
@@ -331,6 +333,8 @@ def test_replace_rich_text_tokens_replaces_quote_with_other_thread_user_post(
     default_category.id = 1
 
     thread.id = 20
+    thread.title = "Test Thread"
+    thread.slug = "test-thread"
 
     post.id = 1234
     post.thread_id = thread.id

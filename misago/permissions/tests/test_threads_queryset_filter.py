@@ -4,7 +4,6 @@ from itertools import product
 from ...categories.proxy import CategoriesProxy
 from ...threads.enums import ThreadWeight
 from ...threads.models import Thread
-from ...threads.test import post_thread
 from ..proxy import UserPermissionsProxy
 from ..threads import filter_category_threads_queryset
 
@@ -74,6 +73,7 @@ def test_threads_queryset_combines_multiple_categories_with_see_and_browse_permi
 
 
 def test_threads_queryset_filter(
+    thread_factory,
     threads_filter_factory,
     category,
     child_category,
@@ -106,30 +106,30 @@ def test_threads_queryset_filter(
     )
 
     for args in product(*MATRIX):
-        check_thread_visibility(threads_filter_factory, *args)
+        check_thread_visibility(thread_factory, threads_filter_factory, *args)
 
 
 def check_thread_visibility(
+    thread_factory,
     threads_filter_factory,
     user,
     category,
     started_only,
-    poster,
+    starter,
     thread_weight,
-    thread_hidden,
     thread_unapproved,
+    thread_hidden,
 ):
     if category.show_started_only != started_only:
         category.show_started_only = started_only
         category.save()
 
-    thread = post_thread(
+    thread = thread_factory(
         category,
-        poster=poster if poster.is_authenticated else "Anon",
-        is_global=thread_weight == 2,
-        is_pinned=thread_weight == 1,
-        is_hidden=thread_hidden,
+        starter=starter if starter.is_authenticated else "Anon",
+        weight=thread_weight,
         is_unapproved=thread_unapproved,
+        is_hidden=thread_hidden,
     )
 
     threads_filter = threads_filter_factory(user)
@@ -284,6 +284,7 @@ def test_threads_pinned_queryset_combines_multiple_categories_with_see_and_brows
 
 
 def test_threads_queryset_filter_pinned(
+    thread_factory,
     threads_filter_factory,
     category,
     child_category,
@@ -316,30 +317,30 @@ def test_threads_queryset_filter_pinned(
     )
 
     for args in product(*MATRIX):
-        check_pinned_thread_visibility(threads_filter_factory, *args)
+        check_pinned_thread_visibility(thread_factory, threads_filter_factory, *args)
 
 
 def check_pinned_thread_visibility(
+    thread_factory,
     threads_filter_factory,
     user,
     category,
     started_only,
-    poster,
+    starter,
     thread_weight,
-    thread_hidden,
     thread_unapproved,
+    thread_hidden,
 ):
     if category.show_started_only != started_only:
         category.show_started_only = started_only
         category.save()
 
-    thread = post_thread(
+    thread = thread_factory(
         category,
-        poster=poster if poster.is_authenticated else "Anon",
-        is_global=thread_weight == 2,
-        is_pinned=thread_weight == 1,
-        is_hidden=thread_hidden,
+        starter=starter if starter.is_authenticated else "Anon",
+        weight=thread_weight,
         is_unapproved=thread_unapproved,
+        is_hidden=thread_hidden,
     )
 
     threads_filter = threads_filter_factory(user)
@@ -411,6 +412,7 @@ def assert_pinned_queryset_not_contains(user, category, thread):
 
 
 def test_filter_category_threads_queryset(
+    thread_factory,
     cache_versions,
     category,
     moderator,
@@ -435,18 +437,21 @@ def test_filter_category_threads_queryset(
     )
 
     for args in product(*MATRIX):
-        check_category_thread_visibility(cache_versions, category, *args)
+        check_category_thread_visibility(
+            thread_factory, cache_versions, category, *args
+        )
 
 
 def check_category_thread_visibility(
+    thread_factory,
     cache_versions,
     category,
     user,
     started_only,
-    poster,
+    starter,
     thread_weight,
-    thread_hidden,
     thread_unapproved,
+    thread_hidden,
 ):
     permissions = UserPermissionsProxy(user, cache_versions)
     categories = CategoriesProxy(permissions, cache_versions)
@@ -455,13 +460,12 @@ def check_category_thread_visibility(
         category.show_started_only = started_only
         category.save()
 
-    thread = post_thread(
+    thread = thread_factory(
         category,
-        poster=poster if poster.is_authenticated else "Anon",
-        is_global=thread_weight == 2,
-        is_pinned=thread_weight == 1,
-        is_hidden=thread_hidden,
+        starter=starter if starter.is_authenticated else "Anon",
+        weight=thread_weight,
         is_unapproved=thread_unapproved,
+        is_hidden=thread_hidden,
     )
 
     queryset = filter_category_threads_queryset(

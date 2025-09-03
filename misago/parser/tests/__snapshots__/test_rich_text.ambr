@@ -249,13 +249,13 @@
       
         
           <span class="rich-text-quote-avatar">
-            <img src="blank-avatar.png" alt="Tester">
+            <img src="blank-avatar.png" alt="Starter">
           </span>
         
         <div class="rich-text-quote-info">
           
           
-            <span class="rich-text-quote-header-link">Tester</span>
+            <span class="rich-text-quote-header-link">Starter</span>
           
           <span class="rich-text-quote-header-separator">&bull;</span>
           <span
@@ -279,7 +279,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body" misago-rich-text-quote="Tester, post: 1234">
+    <blockquote class="rich-text-quote-body" misago-rich-text-quote="Starter, post: 1234">
       
   <p>Hello world!</p>
   
@@ -296,13 +296,13 @@
       
         
           <span class="rich-text-quote-avatar">
-            <img src="blank-avatar.png" alt="Tester">
+            <img src="blank-avatar.png" alt="Starter">
           </span>
         
         <div class="rich-text-quote-info">
           
           
-            <span class="rich-text-quote-header-link">Tester</span>
+            <span class="rich-text-quote-header-link">Starter</span>
           
           <span class="rich-text-quote-header-separator">&bull;</span>
           <span
@@ -326,7 +326,7 @@
         </a>
       
     </div>
-    <blockquote class="rich-text-quote-body" misago-rich-text-quote="Tester, post: 1234">
+    <blockquote class="rich-text-quote-body" misago-rich-text-quote="Starter, post: 1234">
       
   <p>Hello world!</p>
   

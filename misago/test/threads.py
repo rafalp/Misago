@@ -71,16 +71,17 @@ def thread_factory(post_factory):
             posted_at=started_on,
         )
 
+        thread.first_post = post
+        thread.last_post = post
+
         starter_obj, starter_name, starter_slug = unpack_factory_user_arg(starter)
         last_poster_obj, last_poster_name, last_poster_slug = unpack_factory_user_arg(
             last_poster
         )
 
-        thread.first_post = post
         thread.starter = starter_obj
         thread.starter_name = starter_name
         thread.starter_slug = starter_slug
-        thread.last_post = post
         thread.last_poster = last_poster_obj
         thread.last_poster_name = last_poster_name
         thread.last_poster_slug = last_poster_slug

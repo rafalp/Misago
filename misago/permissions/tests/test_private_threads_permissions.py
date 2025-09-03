@@ -3,7 +3,6 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
 from ...privatethreadmembers.models import PrivateThreadMember
-from ...threads.test import post_thread
 from ..models import Moderator
 from ..privatethreads import (
     check_change_private_thread_owner_permission,
@@ -463,9 +462,9 @@ def test_check_remove_private_thread_member_permission_fails_for_thread_member(
 
 
 def test_filter_private_threads_queryset_returns_nothing_for_anonymous_user(
-    private_threads_category, anonymous_user, cache_versions
+    thread_factory, private_threads_category, anonymous_user, cache_versions
 ):
-    post_thread(private_threads_category)
+    thread_factory(private_threads_category)
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
     queryset = filter_private_threads_queryset(
@@ -475,9 +474,9 @@ def test_filter_private_threads_queryset_returns_nothing_for_anonymous_user(
 
 
 def test_filter_private_threads_queryset_returns_thread_for_user_who_is_member(
-    private_threads_category, user, cache_versions
+    thread_factory, private_threads_category, user, cache_versions
 ):
-    thread = post_thread(private_threads_category)
+    thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -488,9 +487,9 @@ def test_filter_private_threads_queryset_returns_thread_for_user_who_is_member(
 
 
 def test_filter_private_threads_queryset_excludes_thread_user_is_not_member(
-    private_threads_category, user, other_user, cache_versions
+    thread_factory, private_threads_category, user, other_user, cache_versions
 ):
-    thread = post_thread(private_threads_category)
+    thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=other_user)
 
     permissions = UserPermissionsProxy(user, cache_versions)
