@@ -17,8 +17,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):  # pylint: disable=too-many-branches
         now = timezone.now()
         synchronize_categories = []
+        pruned_categories = []
 
-        for category in Category.objects.iterator():
+        for category in Category.objects.order_by("lft").iterator():
+            if not (category.prune_started_after or category.prune_replied_after):
+                continue
+
+            pruned_categories.append(category)
+
             archive = category.archive_pruned_in
             pruned_threads = 0
 
@@ -56,4 +62,9 @@ class Command(BaseCommand):
             category.synchronize()
             category.save()
 
-        self.stdout.write("\n\nCategories were pruned")
+        self.stdout.write(f"\n\nPruned categories: {len(pruned_categories)}")
+        if pruned_categories:
+            self.stdout.write("")
+
+        for category in pruned_categories:
+            self.stdout.write(f"- #{category.id}: {category.name}")

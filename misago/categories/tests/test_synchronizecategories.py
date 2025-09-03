@@ -3,7 +3,6 @@ from io import StringIO
 from django.core import management
 
 from ..management.commands import synchronizecategories
-from ..models import Category
 
 
 def call_command():
