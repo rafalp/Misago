@@ -36,7 +36,6 @@ from .test.threadupdates import *
 from .test.userpermissions import *
 from .themes import THEME_CACHE
 from .threads.models import Thread
-from .threads.test import reply_thread
 from .users import BANS_CACHE
 from .users.enums import DefaultGroupId
 from .users.models import AnonymousUser, Group, GroupDescription
@@ -345,86 +344,78 @@ def reply(thread_reply_factory, thread):
 
 
 @pytest.fixture
-def hidden_reply(thread):
-    return reply_thread(
+def hidden_reply(thread_reply_factory, thread):
+    return thread_reply_factory(
         thread,
-        poster="Ghost",
-        posted_on=timezone.now(),
+        poster="HiddenPoster",
         message="I am hidden reply",
         is_hidden=True,
     )
 
 
 @pytest.fixture
-def unapproved_reply(thread):
-    return reply_thread(
+def unapproved_reply(thread_reply_factory, thread):
+    return thread_reply_factory(
         thread,
-        poster="Ghost",
-        posted_on=timezone.now(),
+        poster="UnapprovedPoster",
         message="I am unapproved reply",
         is_unapproved=True,
     )
 
 
 @pytest.fixture
-def user_reply(thread, user):
-    return reply_thread(
+def user_reply(thread_reply_factory, thread, user):
+    return thread_reply_factory(
         thread,
         poster=user,
-        posted_on=timezone.now(),
         message="I am user reply",
     )
 
 
 @pytest.fixture
-def user_hidden_reply(thread, user):
-    return reply_thread(
+def user_hidden_reply(thread_reply_factory, thread, user):
+    return thread_reply_factory(
         thread,
         poster=user,
-        posted_on=timezone.now(),
         message="I am user hidden reply",
         is_hidden=True,
     )
 
 
 @pytest.fixture
-def user_unapproved_reply(thread, user):
-    return reply_thread(
+def user_unapproved_reply(thread_reply_factory, thread, user):
+    return thread_reply_factory(
         thread,
         poster=user,
-        posted_on=timezone.now(),
         message="I am user unapproved reply",
         is_unapproved=True,
     )
 
 
 @pytest.fixture
-def other_user_reply(thread, other_user):
-    return reply_thread(
+def other_user_reply(thread_reply_factory, thread, other_user):
+    return thread_reply_factory(
         thread,
         poster=other_user,
-        posted_on=timezone.now(),
         message="I am other user reply",
     )
 
 
 @pytest.fixture
-def other_user_hidden_reply(thread, other_user):
-    return reply_thread(
+def other_user_hidden_reply(thread_reply_factory, thread, other_user):
+    return thread_reply_factory(
         thread,
         poster=other_user,
-        posted_on=timezone.now(),
         message="I am user hidden reply",
         is_hidden=True,
     )
 
 
 @pytest.fixture
-def other_user_unapproved_reply(thread, other_user):
-    return reply_thread(
+def other_user_unapproved_reply(thread_reply_factory, thread, other_user):
+    return thread_reply_factory(
         thread,
         poster=other_user,
-        posted_on=timezone.now(),
         message="I am other user unapproved reply",
         is_unapproved=True,
     )
