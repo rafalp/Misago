@@ -284,7 +284,7 @@ def test_thread_posts_feed_marks_original_post_as_thread_editable_by_moderator(
 def test_private_thread_posts_feed_marks_post_as_editable(
     request_factory, thread_reply_factory, user, user_private_thread
 ):
-    user_reply = thread_reply_factory(user_private_thread, user)
+    user_reply = thread_reply_factory(user_private_thread, poster=user)
     reply = thread_reply_factory(user_private_thread)
 
     request = request_factory(user)
@@ -369,7 +369,7 @@ def test_private_thread_posts_feed_marks_original_post_as_thread_editable(
 def test_private_thread_posts_feed_marks_post_as_editable_by_moderator(
     request_factory, thread_reply_factory, moderator, user, user_private_thread
 ):
-    user_reply = thread_reply_factory(user_private_thread, user)
+    user_reply = thread_reply_factory(user_private_thread, poster=user)
     reply = thread_reply_factory(user_private_thread)
 
     request = request_factory(moderator)
