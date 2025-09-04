@@ -1,9 +1,6 @@
-from datetime import timedelta
-
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
-from django.utils import timezone
 
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
@@ -19,7 +16,6 @@ from ...test import (
     assert_contains_element,
     assert_not_contains,
 )
-from ..test import reply_thread
 
 
 def test_reply_thread_view_displays_login_page_to_guests(client, thread):
@@ -405,8 +401,10 @@ def test_reply_thread_view_runs_flood_control(user_client, thread, user_reply):
     )
 
 
-def test_reply_thread_view_appends_reply_to_user_recent_post(user, user_client, thread):
-    reply = reply_thread(thread, user, message="Previous message")
+def test_reply_thread_view_appends_reply_to_user_recent_post(
+    thread_reply_factory, user, user_client, thread
+):
+    reply = thread_reply_factory(thread, poster=user, original="Previous message")
 
     response = user_client.post(
         reverse(
@@ -434,9 +432,9 @@ def test_reply_thread_view_appends_reply_to_user_recent_post(user, user_client, 
 
 
 def test_reply_thread_view_appends_reply_to_user_recent_post_in_quick_reply_with_htmx(
-    user, user_client, thread
+    thread_reply_factory, user, user_client, thread
 ):
-    reply = reply_thread(thread, user, message="Previous message")
+    reply = thread_reply_factory(thread, poster=user, original="Previous message")
 
     response = user_client.post(
         reverse(
@@ -463,9 +461,9 @@ def test_reply_thread_view_appends_reply_to_user_recent_post_in_quick_reply_with
 
 @override_dynamic_settings(merge_concurrent_posts=0, flood_control=0)
 def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_if_feature_is_disabled(
-    user, user_client, thread
+    thread_reply_factory, user, user_client, thread
 ):
-    reply = reply_thread(thread, user, message="Previous message")
+    reply = thread_reply_factory(thread, poster=user, original="Previous message")
 
     response = user_client.post(
         reverse(
@@ -498,9 +496,9 @@ def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_if_feature_is
 
 @override_dynamic_settings(flood_control=0)
 def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_in_preview(
-    user, user_client, thread
+    thread_reply_factory, user, user_client, thread
 ):
-    reply_thread(thread, user, message="Previous message")
+    thread_reply_factory(thread, poster=user, original="Previous message")
 
     response = user_client.post(
         reverse(
@@ -522,13 +520,13 @@ def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_in_preview(
 
 @override_dynamic_settings(merge_concurrent_posts=1)
 def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_too_old(
-    user, user_client, thread
+    thread_reply_factory, user, user_client, thread
 ):
-    reply = reply_thread(
+    reply = thread_reply_factory(
         thread,
-        user,
-        message="Previous message",
-        posted_on=timezone.now() - timedelta(minutes=2),
+        poster=user,
+        original="Previous message",
+        posted_at=-120,
     )
 
     response = user_client.post(
@@ -562,9 +560,9 @@ def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_pos
 
 @override_dynamic_settings(flood_control=0)
 def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_by_other_user(
-    other_user, user_client, thread
+    thread_reply_factory, other_user, user_client, thread
 ):
-    reply = reply_thread(thread, other_user, message="Previous message")
+    reply = thread_reply_factory(thread, poster=other_user, original="Previous message")
 
     response = user_client.post(
         reverse(
@@ -597,12 +595,12 @@ def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_pos
 
 @override_dynamic_settings(flood_control=0)
 def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_hidden(
-    user, user_client, thread
+    thread_reply_factory, user, user_client, thread
 ):
-    reply = reply_thread(
+    reply = thread_reply_factory(
         thread,
-        user,
-        message="Previous message",
+        poster=user,
+        original="Previous message",
         is_hidden=True,
     )
 
@@ -637,12 +635,12 @@ def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_pos
 
 @override_dynamic_settings(flood_control=0)
 def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_if_recent_post_is_not_editable(
-    user, user_client, thread
+    thread_reply_factory, user, user_client, thread
 ):
-    reply = reply_thread(
+    reply = thread_reply_factory(
         thread,
-        user,
-        message="Previous message",
+        poster=user,
+        original="Previous message",
         is_protected=True,
     )
 

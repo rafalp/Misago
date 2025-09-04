@@ -69,7 +69,7 @@ class UnreadPostRedirectView(RedirectView):
             read_times.append(thread.user_readcategory_time)
 
         read_time = max(read_times)
-        return queryset.filter(posted_on__gt=read_time).first()
+        return queryset.filter(posted_at__gt=read_time).first()
 
 
 class ThreadUnreadPostRedirectView(UnreadPostRedirectView, ThreadView):

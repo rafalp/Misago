@@ -154,7 +154,7 @@ class ReplyView(View):
         thread_is_read = not (
             self.get_thread_posts_queryset(request, thread)
             .exclude(id=state.post.id)
-            .filter(posted_on__gt=read_time)
+            .filter(posted_at__gt=read_time)
             .exists()
         )
 

@@ -1,3 +1,5 @@
+import html
+
 import pytest
 
 from django.utils.crypto import get_random_string
@@ -84,7 +86,7 @@ def thread_reply_factory(post_factory):
         *,
         poster: FactoryUserArg = "Poster",
         original: str = "Hello world!",
-        parsed: str = "<p>Hello world!</p>",
+        parsed: str | None = None,
         metadata: dict | None = None,
         posted_at: FactoryTimestampArg = True,
         updated_at: FactoryTimestampArg = None,
@@ -99,6 +101,9 @@ def thread_reply_factory(post_factory):
         is_protected: bool = False,
         commit: bool = True,
     ):
+        if not parsed:
+            parsed = f"<p>{html.escape(original)}</p>"
+
         post = post_factory(
             thread,
             poster=poster,
