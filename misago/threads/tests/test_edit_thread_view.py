@@ -412,8 +412,10 @@ def test_edit_thread_view_cancels_thread_and_post_edits_inline_in_htmx(
         ),
     )
 
+    thread_title_original = user_thread.title
+
     user_thread.refresh_from_db()
-    assert user_thread.title == "Test thread"
+    assert user_thread.title == thread_title_original
 
     post = user_thread.first_post
     post.refresh_from_db()

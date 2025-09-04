@@ -173,7 +173,7 @@ class Thread(PluginDataModel):
     def synchronize(self):
         self.has_poll = Poll.objects.filter(thread=self).exists()
 
-        self.replies = self.post_set.filter(is_event=False, is_unapproved=False).count()
+        self.replies = self.post_set.filter(is_unapproved=False).count()
 
         if self.replies > 0:
             self.replies -= 1
@@ -205,11 +205,6 @@ class Thread(PluginDataModel):
             self.set_last_post(first_post)
 
         self.has_events = False
-        if last_post:
-            if last_post.is_event:
-                self.has_events = True
-            else:
-                self.has_events = self.post_set.filter(is_event=True).exists()
 
     @property
     def has_best_answer(self):

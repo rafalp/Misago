@@ -14,7 +14,6 @@ from ...test import (
     assert_not_contains,
     assert_not_contains_element,
 )
-from ..test import reply_thread
 
 
 def test_edit_private_thread_post_view_displays_login_page_to_guests(
@@ -97,9 +96,9 @@ def test_edit_private_thread_post_view_displays_error_page_to_user_who_cant_edit
 
 
 def test_edit_private_thread_post_view_displays_error_page_to_user_trying_to_edit_other_user_post(
-    user_client, user_private_thread, other_user
+    thread_reply_factory, user_client, user_private_thread, other_user
 ):
-    post = reply_thread(user_private_thread, poster=other_user)
+    post = thread_reply_factory(user_private_thread, poster=other_user)
 
     response = user_client.get(
         reverse(
@@ -156,9 +155,15 @@ def test_edit_private_thread_post_view_displays_inline_edit_post_form_in_htmx(
 
 
 def test_edit_private_thread_post_view_displays_edit_post_form_for_other_user_post_to_moderator(
-    user, user_client, user_private_thread, other_user, members_group, moderators_group
+    thread_reply_factory,
+    user,
+    user_client,
+    user_private_thread,
+    other_user,
+    members_group,
+    moderators_group,
 ):
-    post = reply_thread(user_private_thread, poster=other_user)
+    post = thread_reply_factory(user_private_thread, poster=other_user)
 
     user.set_groups(members_group, [moderators_group])
     user.save()
