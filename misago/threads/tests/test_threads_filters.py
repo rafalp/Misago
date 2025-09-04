@@ -10,7 +10,6 @@ from ..filters import (
     UnreadThreadsFilter,
 )
 from ..models import Thread
-from ..test import post_thread
 
 
 def test_filter_as_choice_method_returns_active_filter_choice(anonymous_user):
@@ -36,10 +35,10 @@ def test_filter_as_choice_method_returns_inactive_filter_choice(anonymous_user):
 
 
 def test_unread_threads_filter_returns_never_read_thread(
-    dynamic_settings, user, default_category
+    thread_factory, dynamic_settings, user, default_category
 ):
     queryset = Thread.objects.all()
-    thread = post_thread(default_category)
+    thread = thread_factory(default_category)
 
     filter = UnreadThreadsFilter(Mock(settings=dynamic_settings, user=user))
     choice = filter.as_choice("/base/url/", False)
@@ -49,13 +48,10 @@ def test_unread_threads_filter_returns_never_read_thread(
 
 
 def test_unread_threads_filter_excludes_never_read_thread_older_than_user(
-    dynamic_settings, user, default_category
+    thread_factory, dynamic_settings, user, default_category
 ):
     queryset = Thread.objects.all()
-    post_thread(
-        default_category,
-        started_on=timezone.now() - timedelta(minutes=5),
-    )
+    thread_factory(default_category, started_on=-900)
 
     filter = UnreadThreadsFilter(Mock(settings=dynamic_settings, user=user))
     choice = filter.as_choice("/base/url/", False)
@@ -65,10 +61,10 @@ def test_unread_threads_filter_excludes_never_read_thread_older_than_user(
 
 
 def test_unread_threads_filter_excludes_old_never_read_thread(
-    dynamic_settings, user, default_category
+    thread_factory, dynamic_settings, user, default_category
 ):
     queryset = Thread.objects.all()
-    post_thread(
+    thread_factory(
         default_category,
         started_on=timezone.now().replace(year=2010),
     )
@@ -81,16 +77,13 @@ def test_unread_threads_filter_excludes_old_never_read_thread(
 
 
 def test_unread_threads_filter_excludes_read_thread(
-    dynamic_settings, user, default_category
+    thread_factory, dynamic_settings, user, default_category
 ):
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
     queryset = Thread.objects.all()
-    thread = post_thread(
-        default_category,
-        started_on=timezone.now() - timedelta(minutes=30),
-    )
+    thread = thread_factory(default_category, started_on=30 * -60)
 
     ReadThread.objects.create(
         user=user,
@@ -107,16 +100,13 @@ def test_unread_threads_filter_excludes_read_thread(
 
 
 def test_unread_threads_filter_excludes_thread_in_read_category(
-    dynamic_settings, user, default_category
+    thread_factory, dynamic_settings, user, default_category
 ):
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
     queryset = Thread.objects.all()
-    post_thread(
-        default_category,
-        started_on=timezone.now() - timedelta(minutes=30),
-    )
+    thread_factory(default_category, started_on=30 * -60)
 
     ReadCategory.objects.create(
         user=user,
@@ -132,16 +122,13 @@ def test_unread_threads_filter_excludes_thread_in_read_category(
 
 
 def test_unread_threads_filter_shows_read_thread_with_unread_replies(
-    dynamic_settings, user, default_category
+    thread_factory, dynamic_settings, user, default_category
 ):
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
     queryset = Thread.objects.all()
-    thread = post_thread(
-        default_category,
-        started_on=timezone.now() - timedelta(minutes=10),
-    )
+    thread = thread_factory(default_category, started_on=10 * -60)
 
     ReadThread.objects.create(
         user=user,
@@ -158,16 +145,13 @@ def test_unread_threads_filter_shows_read_thread_with_unread_replies(
 
 
 def test_unread_threads_filter_shows_unread_thread_in_read_category(
-    dynamic_settings, user, default_category
+    thread_factory, dynamic_settings, user, default_category
 ):
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
     queryset = Thread.objects.all()
-    thread = post_thread(
-        default_category,
-        started_on=timezone.now(),
-    )
+    thread = thread_factory(default_category)
 
     ReadCategory.objects.create(
         user=user,
@@ -183,16 +167,13 @@ def test_unread_threads_filter_shows_unread_thread_in_read_category(
 
 
 def test_unread_threads_filter_shows_read_thread_in_read_category_with_unread_replies(
-    dynamic_settings, user, default_category
+    thread_factory, dynamic_settings, user, default_category
 ):
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
     queryset = Thread.objects.all()
-    thread = post_thread(
-        default_category,
-        started_on=timezone.now() - timedelta(minutes=10),
-    )
+    thread = thread_factory(default_category, started_on=-600)
 
     ReadCategory.objects.create(
         user=user,
@@ -214,9 +195,11 @@ def test_unread_threads_filter_shows_read_thread_in_read_category_with_unread_re
     assert list(filtered_queryset) == [thread]
 
 
-def test_my_threads_filter_returns_user_started_thread(user, default_category):
+def test_my_threads_filter_returns_user_started_thread(
+    thread_factory, user, default_category
+):
     queryset = Thread.objects.all()
-    thread = post_thread(default_category, poster=user)
+    thread = thread_factory(default_category, starter=user)
 
     filter = MyThreadsFilter(Mock(user=user))
     choice = filter.as_choice("/base/url/", False)
@@ -226,10 +209,10 @@ def test_my_threads_filter_returns_user_started_thread(user, default_category):
 
 
 def test_my_threads_filter_excludes_other_users_threads(
-    user, other_user, default_category
+    thread_factory, user, other_user, default_category
 ):
     queryset = Thread.objects.all()
-    post_thread(default_category, poster=other_user)
+    thread_factory(default_category, starter=other_user)
 
     filter = MyThreadsFilter(Mock(user=user))
     choice = filter.as_choice("/base/url/", False)
@@ -238,9 +221,11 @@ def test_my_threads_filter_excludes_other_users_threads(
     assert list(filtered_queryset) == []
 
 
-def test_my_threads_filter_excludes_anonymous_users_threads(user, default_category):
+def test_my_threads_filter_excludes_anonymous_users_threads(
+    thread_factory, user, default_category
+):
     queryset = Thread.objects.all()
-    post_thread(default_category, poster="Anon")
+    thread_factory(default_category)
 
     filter = MyThreadsFilter(Mock(user=user))
     choice = filter.as_choice("/base/url/", False)
@@ -250,10 +235,10 @@ def test_my_threads_filter_excludes_anonymous_users_threads(user, default_catego
 
 
 def test_my_threads_filter_returns_empty_queryset_if_user_is_anonymous(
-    anonymous_user, user, default_category
+    thread_factory, anonymous_user, user, default_category
 ):
     queryset = Thread.objects.all()
-    post_thread(default_category, poster=user)
+    thread_factory(default_category, starter=user)
 
     filter = MyThreadsFilter(Mock(user=anonymous_user))
     choice = filter.as_choice("/base/url/", False)
@@ -262,9 +247,11 @@ def test_my_threads_filter_returns_empty_queryset_if_user_is_anonymous(
     assert list(filtered_queryset) == []
 
 
-def test_unapproved_threads_filter_returns_unapproved_thread(default_category):
+def test_unapproved_threads_filter_returns_unapproved_thread(
+    thread_factory, default_category
+):
     queryset = Thread.objects.all()
-    thread = post_thread(default_category, is_unapproved=True)
+    thread = thread_factory(default_category, is_unapproved=True)
 
     filter = UnapprovedThreadsFilter(Mock())
     choice = filter.as_choice("/base/url/", False)
@@ -274,13 +261,12 @@ def test_unapproved_threads_filter_returns_unapproved_thread(default_category):
 
 
 def test_unapproved_threads_filter_returns_thread_with_unapproved_posts(
+    thread_factory,
     default_category,
 ):
     queryset = Thread.objects.all()
 
-    thread = post_thread(default_category)
-    thread.has_unapproved_posts = True
-    thread.save()
+    thread = thread_factory(default_category, has_unapproved_posts=True)
 
     filter = UnapprovedThreadsFilter(Mock())
     choice = filter.as_choice("/base/url/", False)
@@ -290,14 +276,12 @@ def test_unapproved_threads_filter_returns_thread_with_unapproved_posts(
 
 
 def test_unapproved_threads_filter_excludes_threads_without_unapproved_status(
+    thread_factory,
     default_category,
 ):
     queryset = Thread.objects.all()
 
-    thread = post_thread(default_category)
-    thread.is_unapproved = False
-    thread.has_unapproved_posts = False
-    thread.save()
+    thread_factory(default_category)
 
     filter = UnapprovedThreadsFilter(Mock())
     choice = filter.as_choice("/base/url/", False)

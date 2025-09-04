@@ -18,11 +18,13 @@ def test_rebuildpostssearch_command_does_nothing_if_there_are_no_posts(db):
     assert command_output == ("No posts were found",)
 
 
-def test_rebuildpostssearch_command_updates_existing_posts_search_documents(post):
+def test_rebuildpostssearch_command_updates_existing_posts_search_documents(
+    thread, post
+):
     post.original = "Hello **world**!"
     post.save()
 
     call_command()
 
     post.refresh_from_db()
-    assert post.search_document == "Test thread Hello world!"
+    assert post.search_document == f"{thread.title} Hello world!"

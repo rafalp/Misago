@@ -9,7 +9,6 @@ from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...privatethreadmembers.models import PrivateThreadMember
 from ...test import assert_contains, assert_not_contains
-from ..test import post_thread
 
 
 @override_dynamic_settings(index_view="categories")
@@ -114,53 +113,57 @@ def test_private_threads_list_renders_empty_to_moderators(moderator_client):
 
 
 @override_dynamic_settings(index_view="categories")
-def test_threads_list_displays_thread_to_user(default_category, user, user_client):
-    post_thread(default_category, title="Test Thread")
+def test_threads_list_displays_thread_to_user(
+    thread_factory, default_category, user_client
+):
+    thread = thread_factory(default_category)
     response = user_client.get(reverse("misago:threads"))
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
 
 
 @override_dynamic_settings(index_view="categories")
-def test_threads_list_displays_thread_to_anonymous_user(default_category, client):
-    post_thread(default_category, title="Test Thread")
+def test_threads_list_displays_thread_to_anonymous_user(
+    thread_factory, default_category, client
+):
+    thread = thread_factory(default_category)
     response = client.get(reverse("misago:threads"))
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
 
 
 def test_category_threads_list_displays_thread_to_user(
-    default_category, user, user_client
+    thread_factory, default_category, user_client
 ):
-    post_thread(default_category, title="Test Thread")
+    thread = thread_factory(default_category)
     response = user_client.get(default_category.get_absolute_url())
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
 
 
 def test_category_threads_list_displays_thread_to_anonymous_user(
-    default_category, client
+    thread_factory, default_category, client
 ):
-    post_thread(default_category, title="Test Thread")
+    thread = thread_factory(default_category)
     response = client.get(default_category.get_absolute_url())
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
 
 
 def test_category_threads_list_displays_user_thread_to_user(
-    default_category, user_client, other_user
+    thread_factory, default_category, user_client, other_user
 ):
-    post_thread(default_category, title="Test Thread", poster=other_user)
+    thread = thread_factory(default_category, starter=other_user)
     response = user_client.get(default_category.get_absolute_url())
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
 
 
 def test_category_threads_list_displays_user_thread_to_anonymous_user(
-    default_category, client, other_user
+    thread_factory, default_category, client, other_user
 ):
-    post_thread(default_category, title="Test Thread", poster=other_user)
+    thread = thread_factory(default_category, starter=other_user)
     response = client.get(default_category.get_absolute_url())
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
 
 
 def test_category_threads_list_includes_child_category_thread(
-    default_category, user, user_client, other_user
+    thread_factory, default_category, user, user_client, other_user
 ):
     default_category.list_children_threads = True
     default_category.save()
@@ -168,7 +171,7 @@ def test_category_threads_list_includes_child_category_thread(
     child_category = Category(name="Child Category", slug="child-category")
     child_category.insert_at(default_category, position="last-child", save=True)
 
-    post_thread(child_category, title="Test Thread", poster=other_user)
+    thread = thread_factory(child_category, starter=other_user)
 
     CategoryGroupPermission.objects.create(
         category=child_category,
@@ -182,11 +185,11 @@ def test_category_threads_list_includes_child_category_thread(
     )
 
     response = user_client.get(default_category.get_absolute_url())
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
 
 
 def test_category_threads_list_excludes_child_category_thread_if_list_children_threads_is_false(
-    default_category, user, user_client, other_user
+    thread_factory, default_category, user, user_client, other_user
 ):
     default_category.list_children_threads = False
     default_category.save()
@@ -194,7 +197,7 @@ def test_category_threads_list_excludes_child_category_thread_if_list_children_t
     child_category = Category(name="Child Category", slug="child-category")
     child_category.insert_at(default_category, position="last-child", save=True)
 
-    post_thread(child_category, title="Test Thread", poster=other_user)
+    thread = thread_factory(child_category, starter=other_user)
 
     CategoryGroupPermission.objects.create(
         category=child_category,
@@ -209,32 +212,31 @@ def test_category_threads_list_excludes_child_category_thread_if_list_children_t
 
     response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, "No threads have been started in this category yet")
+    assert_not_contains(response, thread.title)
 
 
 def test_private_threads_list_displays_private_thread(
-    private_threads_category, user, user_client
+    thread_factory, private_threads_category, user, user_client
 ):
-    thread = post_thread(private_threads_category, title="Test Private Thread")
+    thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(reverse("misago:private-threads"))
-    assert_contains(response, "Test Private Thread")
+    assert_contains(response, thread.title)
 
 
 def test_private_threads_list_displays_user_private_thread(
-    private_threads_category, user, user_client, other_user
+    thread_factory, private_threads_category, user, user_client, other_user
 ):
-    thread = post_thread(
-        private_threads_category, title="Test Private Thread", poster=other_user
-    )
+    thread = thread_factory(private_threads_category, starter=other_user)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(reverse("misago:private-threads"))
-    assert_contains(response, "Test Private Thread")
+    assert_contains(response, thread.title)
 
 
 @override_dynamic_settings(index_view="categories")
-def test_threads_list_displays_empty_in_htmx_request(db, user_client):
+def test_threads_list_displays_empty_in_htmx_request(user_client):
     response = user_client.get(
         reverse("misago:threads"),
         headers={"hx-request": "true"},
@@ -243,14 +245,16 @@ def test_threads_list_displays_empty_in_htmx_request(db, user_client):
 
 
 @override_dynamic_settings(index_view="categories")
-def test_threads_list_displays_thread_in_htmx_request(default_category, user_client):
-    post_thread(default_category, title="Test Thread")
+def test_threads_list_displays_thread_in_htmx_request(
+    thread_factory, default_category, user_client
+):
+    thread = thread_factory(default_category)
     response = user_client.get(
         reverse("misago:threads"),
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
 
 
 def test_category_threads_list_displays_empty_in_htmx_request(
@@ -264,15 +268,15 @@ def test_category_threads_list_displays_empty_in_htmx_request(
 
 
 def test_category_threads_list_displays_thread_in_htmx_request(
-    default_category, user_client
+    thread_factory, default_category, user_client
 ):
-    post_thread(default_category, title="Test Thread")
+    thread = thread_factory(default_category)
     response = user_client.get(
         default_category.get_absolute_url(),
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
 
 
 def test_private__threads_list_displays_empty_in_htmx_request(db, user_client):
@@ -284,9 +288,9 @@ def test_private__threads_list_displays_empty_in_htmx_request(db, user_client):
 
 
 def test_private_threads_list_displays_thread_in_htmx_request(
-    user, private_threads_category, user_client
+    thread_factory, user, private_threads_category, user_client
 ):
-    thread = post_thread(private_threads_category, title="Test Thread")
+    thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
@@ -294,92 +298,92 @@ def test_private_threads_list_displays_thread_in_htmx_request(
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
 
 
 @override_dynamic_settings(index_view="categories")
 def test_threads_list_displays_thread_with_animation_in_htmx_request(
-    default_category, user_client
+    thread_factory, default_category, user_client
 ):
-    post_thread(default_category, title="Test Thread")
+    thread = thread_factory(default_category)
     response = user_client.get(
         reverse("misago:threads") + "?animate_new=0",
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "threads-list-item-animate")
 
 
 @override_dynamic_settings(index_view="categories")
 def test_threads_list_displays_thread_without_animation_in_htmx_request(
-    default_category, user_client
+    thread_factory, default_category, user_client
 ):
-    thread = post_thread(default_category, title="Test Thread")
+    thread = thread_factory(default_category)
     response = user_client.get(
         reverse("misago:threads") + f"?animate_new={thread.last_post_id + 1}",
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
     assert_not_contains(response, "threads-list-item-animate")
 
 
 @override_dynamic_settings(index_view="categories")
 def test_threads_list_displays_thread_without_animation_without_htmx(
-    default_category, user_client
+    thread_factory, default_category, user_client
 ):
-    post_thread(default_category, title="Test Thread")
+    thread = thread_factory(default_category)
     response = user_client.get(
         reverse("misago:threads") + "?animate_new=0",
     )
     assert_contains(response, "<h1>")
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
     assert_not_contains(response, "threads-list-item-animate")
 
 
 def test_category_threads_list_displays_thread_with_animation_in_htmx_request(
-    default_category, user_client
+    thread_factory, default_category, user_client
 ):
-    post_thread(default_category, title="Test Thread")
+    thread = thread_factory(default_category)
     response = user_client.get(
         default_category.get_absolute_url() + "?animate_new=0",
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "threads-list-item-animate")
 
 
 def test_category_threads_list_displays_thread_without_animation_in_htmx_request(
-    default_category, user_client
+    thread_factory, default_category, user_client
 ):
-    thread = post_thread(default_category, title="Test Thread")
+    thread = thread_factory(default_category)
     response = user_client.get(
         default_category.get_absolute_url() + f"?animate_new={thread.last_post_id + 1}",
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
     assert_not_contains(response, "threads-list-item-animate")
 
 
 def test_category_threads_list_displays_thread_without_animation_without_htmx(
-    default_category, user_client
+    thread_factory, default_category, user_client
 ):
-    post_thread(default_category, title="Test Thread")
+    thread = thread_factory(default_category)
     response = user_client.get(
         default_category.get_absolute_url() + "?animate_new=0",
     )
     assert_contains(response, "<h1>")
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
     assert_not_contains(response, "threads-list-item-animate")
 
 
 def test_private_threads_list_displays_thread_with_animation_in_htmx_request(
-    private_threads_category, user_client, user
+    thread_factory, private_threads_category, user_client, user
 ):
-    thread = post_thread(private_threads_category, title="Test Thread")
+    thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
@@ -387,14 +391,14 @@ def test_private_threads_list_displays_thread_with_animation_in_htmx_request(
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "threads-list-item-animate")
 
 
 def test_private_threads_list_displays_thread_without_animation_in_htmx_request(
-    private_threads_category, user_client, user
+    thread_factory, private_threads_category, user_client, user
 ):
-    thread = post_thread(private_threads_category, title="Test Thread")
+    thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
@@ -402,37 +406,39 @@ def test_private_threads_list_displays_thread_without_animation_in_htmx_request(
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
     assert_not_contains(response, "threads-list-item-animate")
 
 
 def test_private_threads_list_displays_thread_without_animation_without_htmx(
-    private_threads_category, user_client, user
+    thread_factory, private_threads_category, user_client, user
 ):
-    thread = post_thread(private_threads_category, title="Test Thread")
+    thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
         reverse("misago:private-threads") + "?animate_new=0",
     )
     assert_contains(response, "<h1>")
-    assert_contains(response, "Test Thread")
+    assert_contains(response, thread.title)
     assert_not_contains(response, "threads-list-item-animate")
 
 
 @override_dynamic_settings(index_view="categories")
 def test_threads_list_raises_404_error_if_filter_is_invalid(
-    default_category, user, user_client
+    thread_factory, default_category, user, user_client
 ):
-    post_thread(default_category, title="User Thread", poster=user)
+    thread_factory(default_category, starter=user)
     response = user_client.get(reverse("misago:threads", kwargs={"filter": "invalid"}))
     assert response.status_code == 404
 
 
 @override_dynamic_settings(index_view="categories")
-def test_threads_list_filters_threads(default_category, user, user_client):
-    visible_thread = post_thread(default_category, title="User Thread", poster=user)
-    hidden_thread = post_thread(default_category, title="Hidden Thread")
+def test_threads_list_filters_threads(
+    thread_factory, default_category, user, user_client
+):
+    visible_thread = thread_factory(default_category, starter=user)
+    hidden_thread = thread_factory(default_category)
 
     response = user_client.get(reverse("misago:threads", kwargs={"filter": "my"}))
     assert_contains(response, visible_thread.title)
@@ -440,9 +446,11 @@ def test_threads_list_filters_threads(default_category, user, user_client):
 
 
 @override_dynamic_settings(index_view="threads")
-def test_index_threads_list_filters_threads(default_category, user, user_client):
-    visible_thread = post_thread(default_category, title="User Thread", poster=user)
-    hidden_thread = post_thread(default_category, title="Hidden Thread")
+def test_index_threads_list_filters_threads(
+    thread_factory, default_category, user, user_client
+):
+    visible_thread = thread_factory(default_category, starter=user)
+    hidden_thread = thread_factory(default_category)
 
     response = user_client.get(reverse("misago:threads", kwargs={"filter": "my"}))
     assert_contains(response, visible_thread.title)
@@ -462,9 +470,9 @@ def test_index_threads_list_builds_valid_filters_urls(user_client):
 
 
 def test_category_threads_list_raises_404_error_if_filter_is_invalid(
-    default_category, user, user_client
+    thread_factory, default_category, user, user_client
 ):
-    post_thread(default_category, title="User Thread", poster=user)
+    thread_factory(default_category, starter=user)
     response = user_client.get(
         reverse(
             "misago:category",
@@ -478,9 +486,11 @@ def test_category_threads_list_raises_404_error_if_filter_is_invalid(
     assert response.status_code == 404
 
 
-def test_category_threads_list_filters_threads(default_category, user, user_client):
-    visible_thread = post_thread(default_category, title="User Thread", poster=user)
-    hidden_thread = post_thread(default_category, title="Other Thread")
+def test_category_threads_list_filters_threads(
+    thread_factory, default_category, user, user_client
+):
+    visible_thread = thread_factory(default_category, starter=user)
+    hidden_thread = thread_factory(default_category)
 
     response = user_client.get(
         reverse(
@@ -497,9 +507,9 @@ def test_category_threads_list_filters_threads(default_category, user, user_clie
 
 
 def test_private_threads_list_raises_404_error_if_filter_is_invalid(
-    private_threads_category, user, user_client
+    thread_factory, private_threads_category, user, user_client
 ):
-    thread = post_thread(private_threads_category, title="User Thread", poster=user)
+    thread = thread_factory(private_threads_category, starter=user)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
@@ -509,12 +519,10 @@ def test_private_threads_list_raises_404_error_if_filter_is_invalid(
 
 
 def test_private_threads_list_filters_threads(
-    private_threads_category, user, user_client
+    thread_factory, private_threads_category, user, user_client
 ):
-    visible_thread = post_thread(
-        private_threads_category, title="User Thread", poster=user
-    )
-    hidden_thread = post_thread(private_threads_category, title="Other Thread")
+    visible_thread = thread_factory(private_threads_category, starter=user)
+    hidden_thread = thread_factory(private_threads_category)
 
     PrivateThreadMember.objects.create(thread=visible_thread, user=user)
     PrivateThreadMember.objects.create(thread=hidden_thread, user=user)
@@ -610,11 +618,13 @@ def test_category_threads_list_renders_for_nested_vanilla_category_without_child
 
 
 @override_dynamic_settings(index_view="categories")
-def test_site_threads_list_renders_unread_thread(user, user_client, default_category):
+def test_site_threads_list_renders_unread_thread(
+    thread_factory, user, user_client, default_category
+):
     user.joined_on = user.joined_on.replace(year=2012)
     user.save()
 
-    unread_thread = post_thread(default_category, title="Unread Thread")
+    unread_thread = thread_factory(default_category)
 
     response = user_client.get(reverse("misago:threads"))
     assert_contains(response, "Has unread posts")
@@ -622,12 +632,12 @@ def test_site_threads_list_renders_unread_thread(user, user_client, default_cate
 
 
 def test_category_threads_list_renders_unread_thread(
-    user, user_client, default_category
+    thread_factory, user, user_client, default_category
 ):
     user.joined_on = user.joined_on.replace(year=2012)
     user.save()
 
-    unread_thread = post_thread(default_category, title="Unread Thread")
+    unread_thread = thread_factory(default_category)
 
     response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, "Has unread posts")
@@ -635,13 +645,12 @@ def test_category_threads_list_renders_unread_thread(
 
 
 def test_private_threads_list_renders_unread_thread(
-    user, user_client, private_threads_category
+    thread_factory, user, user_client, private_threads_category
 ):
     user.joined_on = user.joined_on.replace(year=2012)
     user.save()
 
-    unread_thread = post_thread(private_threads_category, title="Unread Thread")
-
+    unread_thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=unread_thread, user=user)
 
     response = user_client.get(reverse("misago:private-threads"))
