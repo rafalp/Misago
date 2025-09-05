@@ -1,7 +1,6 @@
 from datetime import timedelta
 
 import pytest
-from django.utils import timezone
 
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
