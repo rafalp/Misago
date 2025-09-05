@@ -4,30 +4,30 @@ from django.db.models import QuerySet
 from ...categories.enums import CategoryTree
 from ...posts.models import Post
 from ...posts.redirect import redirect_to_post
-from ...posts.views.redirect import (
-    LastPostRedirectView,
-    PostRedirectView,
-    SolutionRedirectView,
-    UnapprovedPostRedirectView,
-    UnreadPostRedirectView,
+from ...posts.views.post import (
+    PostLastView,
+    PostSolutionView,
+    PostUnapprovedView,
+    PostUnreadView,
+    PostView,
 )
 from ..models import Thread
 from .generic import ThreadView
 
 
-class ThreadLastPostRedirectView(LastPostRedirectView, ThreadView):
+class ThreadPostLastView(PostLastView, ThreadView):
     pass
 
 
-class ThreadUnreadPostRedirectView(UnreadPostRedirectView, ThreadView):
+class ThreadPostSolutionView(PostSolutionView, ThreadView):
     pass
 
 
-class ThreadSolutionRedirectView(SolutionRedirectView, ThreadView):
+class ThreadPostUnreadView(PostUnreadView, ThreadView):
     pass
 
 
-class ThreadUnapprovedPostRedirectView(UnapprovedPostRedirectView, ThreadView):
+class ThreadPostUnapprovedView(PostUnapprovedView, ThreadView):
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:
@@ -37,8 +37,8 @@ class ThreadUnapprovedPostRedirectView(UnapprovedPostRedirectView, ThreadView):
         return queryset.filter(is_unapproved=True).first()
 
 
-class ThreadPostRedirectView(PostRedirectView, ThreadView):
+class ThreadPostView(PostView, ThreadView):
     pass
 
 
-redirect_to_post.view(CategoryTree.THREADS, ThreadPostRedirectView.as_view())
+redirect_to_post.view(CategoryTree.THREADS, ThreadPostView.as_view())

@@ -6,11 +6,11 @@ from .views.members import (
     PrivateThreadMembersAddView,
     PrivateThreadOwnerChangeView,
 )
-from .views.redirect import (
-    PrivateThreadLastPostRedirectView,
-    PrivateThreadPostRedirectView,
-    PrivateThreadUnreadPostRedirectView,
-    PrivateThreadUnapprovedPostRedirectView,
+from .views.post import (
+    PrivateThreadPostLastView,
+    PrivateThreadPostUnapprovedView,
+    PrivateThreadPostUnreadView,
+    PrivateThreadPostView,
 )
 
 
@@ -37,22 +37,22 @@ urlpatterns = [
     ),
     path(
         "p/<slug:slug>/<int:id>/post/<int:post_id>/",
-        PrivateThreadPostRedirectView.as_view(),
+        PrivateThreadPostView.as_view(),
         name="private-thread-post",
     ),
     path(
         "p/<slug:slug>/<int:id>/last/",
-        PrivateThreadLastPostRedirectView.as_view(),
-        name="private-thread-last-post",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/unread/",
-        PrivateThreadUnreadPostRedirectView.as_view(),
-        name="private-thread-unread-post",
+        PrivateThreadPostLastView.as_view(),
+        name="private-thread-post-last",
     ),
     path(
         "p/<slug:slug>/<int:id>/unapproved/",
-        PrivateThreadUnapprovedPostRedirectView.as_view(),
-        name="private-thread-unapproved-post",
+        PrivateThreadPostUnapprovedView.as_view(),
+        name="private-thread-post-unapproved",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/unread/",
+        PrivateThreadPostUnreadView.as_view(),
+        name="private-thread-post-unread",
     ),
 ]

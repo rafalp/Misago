@@ -13,7 +13,7 @@ def test_thread_last_post_redirect_view_returns_redirect(
 
     response = client.get(
         reverse(
-            "misago:thread-last-post",
+            "misago:thread-post-last",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -36,7 +36,7 @@ def test_private_thread_last_post_redirect_view_returns_redirect(
 
     response = user_client.get(
         reverse(
-            "misago:private-thread-last-post",
+            "misago:private-thread-post-last",
             kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
         )
     )
@@ -60,7 +60,7 @@ def test_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_anon
 
     response = client.get(
         reverse(
-            "misago:thread-unread-post",
+            "misago:thread-post-unread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -86,7 +86,7 @@ def test_thread_unread_post_redirect_view_returns_redirect_to_first_unread_post_
 
     response = user_client.get(
         reverse(
-            "misago:thread-unread-post",
+            "misago:thread-post-unread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -112,7 +112,7 @@ def test_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_read
 
     response = user_client.get(
         reverse(
-            "misago:thread-unread-post",
+            "misago:thread-post-unread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -142,7 +142,7 @@ def test_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_read
 
     response = user_client.get(
         reverse(
-            "misago:thread-unread-post",
+            "misago:thread-post-unread",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -163,7 +163,7 @@ def test_private_thread_unread_post_redirect_view_returns_error_404_for_anonymou
 ):
     response = client.get(
         reverse(
-            "misago:private-thread-unread-post",
+            "misago:private-thread-post-unread",
             kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
         )
     )
@@ -183,7 +183,7 @@ def test_private_thread_unread_post_redirect_view_returns_redirect_to_first_unre
 
     response = user_client.get(
         reverse(
-            "misago:private-thread-unread-post",
+            "misago:private-thread-post-unread",
             kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
         )
     )
@@ -209,7 +209,7 @@ def test_private_thread_unread_post_redirect_view_returns_redirect_to_last_post_
 
     response = user_client.get(
         reverse(
-            "misago:private-thread-unread-post",
+            "misago:private-thread-post-unread",
             kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
         )
     )
@@ -239,7 +239,7 @@ def test_private_thread_unread_post_redirect_view_returns_redirect_to_last_post_
 
     response = user_client.get(
         reverse(
-            "misago:private-thread-unread-post",
+            "misago:private-thread-post-unread",
             kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
         )
     )
@@ -266,7 +266,7 @@ def test_thread_solution_redirect_view_returns_redirect_to_solution_post(
 
     response = client.get(
         reverse(
-            "misago:thread-solution-post",
+            "misago:thread-post-solution",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -290,7 +290,7 @@ def test_thread_solution_redirect_view_returns_redirect_to_last_post_in_unsolved
 
     response = client.get(
         reverse(
-            "misago:thread-solution-post",
+            "misago:thread-post-solution",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -311,7 +311,7 @@ def test_thread_unapproved_redirect_view_returns_error_for_anonymous_user(
 ):
     response = client.get(
         reverse(
-            "misago:thread-unapproved-post",
+            "misago:thread-post-unapproved",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -327,7 +327,7 @@ def test_thread_unapproved_redirect_view_returns_error_for_user_without_moderato
 ):
     response = user_client.get(
         reverse(
-            "misago:thread-unapproved-post",
+            "misago:thread-post-unapproved",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -345,7 +345,7 @@ def test_thread_unapproved_redirect_view_redirects_moderator_to_last_post_if_no_
 
     response = moderator_client.get(
         reverse(
-            "misago:thread-unapproved-post",
+            "misago:thread-post-unapproved",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -369,7 +369,7 @@ def test_thread_unapproved_redirect_view_redirects_moderator_to_unapproved_post(
 
     response = moderator_client.get(
         reverse(
-            "misago:thread-unapproved-post",
+            "misago:thread-post-unapproved",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -390,7 +390,7 @@ def test_private_thread_unapproved_redirect_view_returns_error_for_user_without_
 ):
     response = user_client.get(
         reverse(
-            "misago:private-thread-unapproved-post",
+            "misago:private-thread-post-unapproved",
             kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
         )
     )
@@ -408,7 +408,7 @@ def test_private_thread_unapproved_redirect_view_redirects_moderator_to_last_pos
 
     response = moderator_client.get(
         reverse(
-            "misago:private-thread-unapproved-post",
+            "misago:private-thread-post-unapproved",
             kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
         )
     )
@@ -432,7 +432,7 @@ def test_private_thread_unapproved_redirect_view_redirects_moderator_to_unapprov
 
     response = moderator_client.get(
         reverse(
-            "misago:private-thread-unapproved-post",
+            "misago:private-thread-post-unapproved",
             kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
         )
     )

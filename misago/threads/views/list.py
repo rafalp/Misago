@@ -203,12 +203,12 @@ class ListView(View):
 
         return {
             "absolute_url": reverse("misago:thread", kwargs=kwargs),
-            "last_post_url": reverse("misago:thread-last-post", kwargs=kwargs),
+            "last_post_url": reverse("misago:thread-post-last", kwargs=kwargs),
             "unapproved_post_url": reverse(
-                "misago:thread-unapproved-post", kwargs=kwargs
+                "misago:thread-post-unapproved", kwargs=kwargs
             ),
-            "unread_post_url": reverse("misago:thread-unread-post", kwargs=kwargs),
-            "solution_post_url": reverse("misago:thread-solution-post", kwargs=kwargs),
+            "unread_post_url": reverse("misago:thread-post-unread", kwargs=kwargs),
+            "solution_post_url": reverse("misago:thread-post-solution", kwargs=kwargs),
         }
 
     def post_mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
@@ -1449,12 +1449,12 @@ class PrivateThreadsListView(ListView):
 
         return {
             "absolute_url": reverse("misago:private-thread", kwargs=kwargs),
-            "last_post_url": reverse("misago:private-thread-last-post", kwargs=kwargs),
+            "last_post_url": reverse("misago:private-thread-post-last", kwargs=kwargs),
             "unapproved_post_url": reverse(
-                "misago:private-thread-unapproved-post", kwargs=kwargs
+                "misago:private-thread-post-unapproved", kwargs=kwargs
             ),
             "unread_post_url": reverse(
-                "misago:private-thread-unread-post", kwargs=kwargs
+                "misago:private-thread-post-unread", kwargs=kwargs
             ),
         }
 

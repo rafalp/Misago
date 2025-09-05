@@ -22,13 +22,13 @@ class PrivateThread(ThreadType):
 
     def get_category_last_thread_new_url(self, category):
         return reverse(
-            "misago:private-thread-unread-post",
+            "misago:private-thread-post-unread",
             kwargs={"slug": category.last_thread_slug, "id": category.last_thread_id},
         )
 
     def get_category_last_post_url(self, category):
         return reverse(
-            "misago:private-thread-last-post",
+            "misago:private-thread-post-last",
             kwargs={"slug": category.last_thread_slug, "id": category.last_thread_id},
         )
 
@@ -45,12 +45,12 @@ class PrivateThread(ThreadType):
 
     def get_thread_last_post_url(self, thread):
         return reverse(
-            "misago:private-thread-last-post",
+            "misago:private-thread-post-last",
             kwargs={"slug": thread.slug, "id": thread.pk},
         )
 
     def get_thread_new_post_url(self, thread):
         return reverse(
-            "misago:private-thread-unread-post",
+            "misago:private-thread-post-unread",
             kwargs={"slug": thread.slug, "id": thread.pk},
         )

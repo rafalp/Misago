@@ -7,11 +7,12 @@ from .views.edit import (
     edit_thread_post,
 )
 from .views.list import category_threads, private_threads, threads
-from .views.redirect import (
-    ThreadLastPostRedirectView,
-    ThreadSolutionRedirectView,
-    ThreadUnapprovedPostRedirectView,
-    ThreadUnreadPostRedirectView,
+from .views.post import (
+    ThreadPostLastView,
+    ThreadPostSolutionView,
+    ThreadPostUnapprovedView,
+    ThreadPostUnreadView,
+    ThreadPostView,
 )
 from .views.replies import private_thread_replies, thread_replies
 from .views.reply import reply_private_thread, reply_thread
@@ -95,24 +96,29 @@ urlpatterns = [
         name="private-thread",
     ),
     path(
-        "t/<slug:slug>/<int:id>/last/",
-        ThreadLastPostRedirectView.as_view(),
-        name="thread-last-post",
+        "t/<slug:slug>/<int:id>/post/<int:post_id>/",
+        ThreadPostView.as_view(),
+        name="thread-post",
     ),
     path(
-        "t/<slug:slug>/<int:id>/unread/",
-        ThreadUnreadPostRedirectView.as_view(),
-        name="thread-unread-post",
+        "t/<slug:slug>/<int:id>/last/",
+        ThreadPostLastView.as_view(),
+        name="thread-post-last",
     ),
     path(
         "t/<slug:slug>/<int:id>/unapproved/",
-        ThreadUnapprovedPostRedirectView.as_view(),
-        name="thread-unapproved-post",
+        ThreadPostUnapprovedView.as_view(),
+        name="thread-post-unapproved",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/unread/",
+        ThreadPostUnreadView.as_view(),
+        name="thread-post-unread",
     ),
     path(
         "t/<slug:slug>/<int:id>/solution/",
-        ThreadSolutionRedirectView.as_view(),
-        name="thread-solution-post",
+        ThreadPostSolutionView.as_view(),
+        name="thread-post-solution",
     ),
     path(
         "t/<slug:slug>/<int:id>/reply/",

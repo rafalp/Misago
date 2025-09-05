@@ -1,7 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpRequest, HttpResponse
 from django.db.models import QuerySet
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.utils.translation import pgettext
 from django.views import View
 
@@ -11,7 +11,7 @@ from ...threads.models import Thread
 from ..redirect import redirect_to_post
 
 
-class RedirectView(View):
+class PostView(View):
     def get(self, request: HttpRequest, id: int, slug: str, **kwargs) -> HttpResponse:
         thread = self.get_thread(request, id)
         queryset = self.get_thread_posts_queryset(request, thread)
@@ -35,15 +35,21 @@ class RedirectView(View):
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:
-        raise NotImplementedError()
+        try:
+            if not kwargs.get("post_id"):
+                raise Post.DoesNotExist()
+
+            return queryset.get(id=kwargs["post_id"])
+        except Post.DoesNotExist:
+            raise Http404(pgettext("post not found error", "Post not found"))
 
 
-class LastPostRedirectView(RedirectView):
+class PostLastView(PostView):
     def get_post(self, *args) -> None:
         return None  # Redirect to last post is default
 
 
-class UnreadPostRedirectView(RedirectView):
+class PostUnreadView(PostView):
     thread_annotate_read_time = True
 
     def get_post(
@@ -62,7 +68,7 @@ class UnreadPostRedirectView(RedirectView):
         return queryset.filter(posted_at__gt=read_time).first()
 
 
-class SolutionRedirectView(RedirectView):
+class PostSolutionView(PostView):
     thread_annotate_read_time = True
 
     def get_post(
@@ -74,7 +80,7 @@ class SolutionRedirectView(RedirectView):
         return queryset.filter(id=thread.best_answer_id).first()
 
 
-class UnapprovedPostRedirectView(RedirectView):
+class PostUnapprovedView(PostView):
     def raise_permission_denied_error(self):
         raise PermissionDenied(
             pgettext(
@@ -84,24 +90,10 @@ class UnapprovedPostRedirectView(RedirectView):
         )
 
 
-class PostRedirectView(RedirectView):
-    def get_post(
-        self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
-    ) -> Post | None:
-        return get_object_or_404(queryset, id=kwargs["post"])
-
-
-class PostView(View):
-    def get(self, request: HttpRequest, id: int) -> HttpResponse:
-        return self.real_dispatch(request, id)
-
-    def post(self, request: HttpRequest, id: int) -> HttpResponse:
-        return self.real_dispatch(request, id)
-
-    def real_dispatch(self, request: HttpRequest, id: int) -> HttpResponse:
-        try:
-            post = Post.objects.get(id=id)
-        except Post.DoesNotExist as error:
-            raise Http404("Post not found") from error
-
-        return redirect_to_post(request, post)
+def post(request: HttpRequest, id: int) -> HttpResponse:
+    try:
+        post_obj = Post.objects.get(id=id)
+        return redirect_to_post(request, post_obj)
+    except (PermissionDenied, Post.DoesNotExist) as error:
+        # "Post not found" or permission error would leak post's existence
+        raise Http404(pgettext("post not found error", "Thread not found")) from error

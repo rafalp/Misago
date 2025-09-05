@@ -3,8 +3,8 @@ from django.http import Http404
 from django.urls import reverse
 
 # Import views to register them in 'redirect_to_post'
-from ...privatethreads.views.redirect import PrivateThreadPostRedirectView
-from ...threads.views.redirect import ThreadPostRedirectView
+from ...privatethreads.views.post import PrivateThreadPostView
+from ...threads.views.post import ThreadPostView
 from ..redirect import redirect_to_post
 
 

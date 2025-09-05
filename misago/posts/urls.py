@@ -1,12 +1,8 @@
 from django.urls import path
 
-from .views.redirect import PostView
+from .views.post import post
 
 
 urlpatterns = [
-    path(
-        "post/<int:id>/",
-        PostView.as_view(),
-        name="post",
-    ),
+    path("post/<int:id>/", post, name="post"),
 ]
