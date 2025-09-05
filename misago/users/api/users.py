@@ -15,6 +15,7 @@ from ...categories.models import Category
 from ...core.rest_permissions import IsAuthenticatedOrReadOnly
 from ...core.shortcuts import get_int_or_404
 from ...threads.moderation import hide_post, hide_thread
+from ...threads.synchronize import synchronize_thread
 from ..bans import get_user_ban
 from ..datadownloads import request_user_data_download, user_has_data_download_request
 from ..deletesrecord import record_user_deleted_by_staff
@@ -223,8 +224,7 @@ class UserViewSet(viewsets.GenericViewSet):
                     for post in posts.iterator(chunk_size=50):
                         categories_to_sync.add(post.category_id)
                         hide_post(request.user, post)
-                        post.thread.synchronize()
-                        post.thread.save()
+                        synchronize_thread(post.thread)
 
                     categories = Category.objects.filter(id__in=categories_to_sync)
                     for category in categories.iterator():

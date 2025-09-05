@@ -85,7 +85,7 @@ The code below implements a custom filter function that stores the user's IP in 
 from django.http import HttpRequest
 from misago.posting.hooks import get_edit_private_thread_post_state_hook
 from misago.posting.state import EditPrivateThreadPostState
-from misago.threads.models import Post
+from misago.posts.models import Post
 
 
 @get_edit_private_thread_post_state_hook.append_filter

@@ -170,42 +170,6 @@ class Thread(PluginDataModel):
         self.category = new_category
         move_thread.send(sender=self)
 
-    def synchronize(self):
-        self.has_poll = Poll.objects.filter(thread=self).exists()
-
-        self.replies = self.post_set.filter(is_unapproved=False).count()
-
-        if self.replies > 0:
-            self.replies -= 1
-
-        reported_post_qs = self.post_set.filter(has_reports=True)
-        self.has_reported_posts = reported_post_qs.exists()
-
-        if self.has_reported_posts:
-            open_reports_qs = self.post_set.filter(has_open_reports=True)
-            self.has_open_reports = open_reports_qs.exists()
-        else:
-            self.has_open_reports = False
-
-        unapproved_post_qs = self.post_set.filter(is_unapproved=True)
-        self.has_unapproved_posts = unapproved_post_qs.exists()
-
-        hidden_post_qs = self.post_set.filter(is_hidden=True)[:1]
-        self.has_hidden_posts = hidden_post_qs.exists()
-
-        posts = self.post_set.order_by("id")
-
-        first_post = posts.first()
-        self.set_first_post(first_post)
-
-        last_post = posts.filter(is_unapproved=False).last()
-        if last_post:
-            self.set_last_post(last_post)
-        else:
-            self.set_last_post(first_post)
-
-        self.has_events = False
-
     @property
     def has_best_answer(self):
         return bool(self.best_answer_id)

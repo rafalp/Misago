@@ -59,7 +59,7 @@ The code below implements a custom filter function that replaces custom plugin's
 
 ```python
 from misago.posting.hooks import upgrade_post_content_hook
-from misago.threads.models import Post
+from misago.posts.models import Post
 
 
 @upgrade_post_content_hook.append_filter

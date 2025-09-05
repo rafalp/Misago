@@ -6,6 +6,7 @@ from ...conf.test import override_dynamic_settings
 from ...notifications.users import notify_user
 from ...readtracker.models import ReadCategory, ReadThread
 from ...test import assert_contains
+from ..synchronize import synchronize_thread
 
 
 def test_thread_replies_view_doesnt_mark_unread_threads_for_guest(client, thread):
@@ -77,8 +78,7 @@ def test_thread_replies_view_marks_unread_thread_posts_on_page_as_read_for_user(
         posted_at = i * 100 * -1
         posts.append(thread_reply_factory(thread, posted_at=posted_at))
 
-    thread.synchronize()
-    thread.save()
+    synchronize_thread(thread)
 
     default_category.synchronize()
     default_category.save()

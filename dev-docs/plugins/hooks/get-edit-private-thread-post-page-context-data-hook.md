@@ -99,8 +99,8 @@ The code below implements a custom filter function that adds extra values to the
 ```python
 from django.http import HttpRequest
 from misago.posting.formsets import EditPrivateThreadPostFormset
+from misago.posts.models import Post
 from misago.threads.hooks import get_edit_private_thread_post_page_context_data_hook
-from misago.threads.models import Thread
 
 
 @get_edit_private_thread_post_page_context_data_hook.append_filter

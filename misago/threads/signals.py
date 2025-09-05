@@ -26,6 +26,7 @@ from .models import (
     PostLike,
     Thread,
 )
+from .synchronize import synchronize_thread
 
 delete_post = Signal()
 delete_thread = Signal()
@@ -123,8 +124,7 @@ def delete_user_threads(sender, **kwargs):
     if recount_threads:
         changed_threads_qs = Thread.objects.filter(id__in=recount_threads)
         for thread in changed_threads_qs.iterator(chunk_size=50):
-            thread.synchronize()
-            thread.save()
+            synchronize_thread(thread)
 
     if recount_categories:
         for category in Category.objects.filter(id__in=recount_categories):

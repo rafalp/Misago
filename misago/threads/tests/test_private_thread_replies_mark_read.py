@@ -7,6 +7,7 @@ from ...notifications.users import notify_user
 from ...readtracker.models import ReadCategory, ReadThread
 from ...test import assert_contains
 from ..models import Thread
+from ..synchronize import synchronize_thread
 
 
 def update_thread_timestamp(thread: Thread, seconds: int):
@@ -98,8 +99,7 @@ def test_private_thread_replies_view_marks_unread_thread_posts_on_page_as_read_f
         posted_at = (8000 - (i * 1000)) * -1
         posts.append(thread_reply_factory(user_private_thread, posted_at=posted_at))
 
-    user_private_thread.synchronize()
-    user_private_thread.save()
+    synchronize_thread(user_private_thread)
 
     private_threads_category.synchronize()
     private_threads_category.save()

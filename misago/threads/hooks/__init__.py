@@ -68,6 +68,7 @@ from .get_threads_page_queryset import get_threads_page_queryset_hook
 from .get_threads_page_subcategories import get_threads_page_subcategories_hook
 from .get_threads_page_threads import get_threads_page_threads_hook
 from .set_posts_feed_related_objects import set_posts_feed_related_objects_hook
+from .synchronize_thread import synchronize_thread_hook
 
 __all__ = [
     "create_prefetch_posts_feed_related_objects_hook",
@@ -104,4 +105,5 @@ __all__ = [
     "get_threads_page_subcategories_hook",
     "get_threads_page_threads_hook",
     "set_posts_feed_related_objects_hook",
+    "synchronize_thread_hook",
 ]

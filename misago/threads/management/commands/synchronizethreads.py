@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 
 from ....core.management.progressbar import show_progress
 from ...models import Thread
+from ...synchronize import synchronize_thread
 
 
 class Command(BaseCommand):
@@ -25,8 +26,7 @@ class Command(BaseCommand):
         start_time = time.time()
 
         for thread in Thread.objects.iterator(chunk_size=50):
-            thread.synchronize()
-            thread.save()
+            synchronize_thread(thread)
 
             synchronized_count += 1
             show_progress(self, synchronized_count, threads_to_sync, start_time)
