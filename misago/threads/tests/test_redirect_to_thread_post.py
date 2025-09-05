@@ -10,9 +10,11 @@ def test_redirect_to_thread_post_returns_redirect_to_post(
     request.settings = dynamic_settings
     request.user_permissions = user_permissions
 
-    redirect = redirect_to_thread_post(request, thread, post)
+    response = redirect_to_thread_post(request, thread, post)
+
+    assert response.status_code == 302
     assert (
-        redirect["location"]
+        response["location"]
         == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
         + f"#post-{post.id}"
     )

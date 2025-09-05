@@ -10,11 +10,13 @@ def test_redirect_to_private_thread_post_returns_redirect_to_post(
     request.settings = dynamic_settings
     request.user_permissions = user_permissions
 
-    redirect = redirect_to_private_thread_post(
+    response = redirect_to_private_thread_post(
         request, private_thread, private_thread_post
     )
+
+    assert response.status_code == 302
     assert (
-        redirect["location"]
+        response["location"]
         == reverse(
             "misago:private-thread",
             kwargs={"id": private_thread.id, "slug": private_thread.slug},
