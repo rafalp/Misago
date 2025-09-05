@@ -36,6 +36,7 @@ from ...posting.formsets import (
     get_reply_thread_formset,
 )
 from ...posts.models import Post
+from ...posts.paginator import PostPaginatorPage
 from ...privatethreads.views.members import get_private_thread_members_context_data
 from ...readtracker.tracker import (
     get_unread_posts,
@@ -54,7 +55,6 @@ from ..hooks import (
     get_thread_replies_page_thread_queryset_hook,
 )
 from ..models import Thread
-from ..paginator import ThreadRepliesPage
 from .generic import PrivateThreadView, ThreadView
 
 if TYPE_CHECKING:
@@ -159,7 +159,7 @@ class RepliesView(View):
         self,
         request: HttpRequest,
         thread: Thread,
-        page: ThreadRepliesPage,
+        page: PostPaginatorPage,
         posts: list[Post],
     ) -> list[ThreadUpdate]:
         queryset = self.get_thread_updates_queryset(request, thread)
