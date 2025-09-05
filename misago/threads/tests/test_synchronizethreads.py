@@ -1,42 +1,32 @@
 from io import StringIO
 
-from django.core.management import call_command
-from django.test import TestCase
+import pytest
+from django.core import management
 
-from .. import test
-from ...categories.models import Category
 from ..management.commands import synchronizethreads
 
 
-class SynchronizeThreadsTests(TestCase):
-    def test_no_threads_sync(self):
-        """command works when there are no threads"""
-        command = synchronizethreads.Command()
+def call_command():
+    command = synchronizethreads.Command()
 
-        out = StringIO()
-        call_command(command, stdout=out)
-        command_output = out.getvalue().strip()
+    out = StringIO()
+    management.call_command(command, stdout=out)
+    return tuple(l.strip() for l in out.getvalue().strip().splitlines())
 
-        self.assertEqual(command_output, "No threads were found")
 
-    def test_threads_sync(self):
-        """command synchronizes threads"""
-        category = Category.objects.all_categories()[:1][0]
+def test_synchronizethreads_command_does_nothing_if_there_are_no_threads(db):
+    with pytest.raises(management.CommandError) as exc_info:
+        command_output = call_command()
 
-        threads = [test.post_thread(category) for _ in range(10)]
-        for i, thread in enumerate(threads):
-            [test.reply_thread(thread) for _ in range(i)]
-            thread.replies = 0
-            thread.save()
+    assert exc_info.value.args == ("No threads exist.",)
 
-        command = synchronizethreads.Command()
 
-        out = StringIO()
-        call_command(command, stdout=out)
+def test_synchronizethreads_command_synchronizes_threads(
+    thread_factory, default_category
+):
+    thread_factory(default_category)
+    thread_factory(default_category)
 
-        for i, thread in enumerate(threads):
-            db_thread = category.thread_set.get(id=thread.id)
-            self.assertEqual(db_thread.replies, i)
+    command_output = call_command()
 
-        command_output = out.getvalue().splitlines()[-1].strip()
-        self.assertEqual(command_output, "Synchronized 10 threads")
+    assert command_output[-1] == "Synchronized 2 threads."

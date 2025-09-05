@@ -10,7 +10,6 @@ from django.urls import reverse
 
 from ...conf import settings
 from ...core.utils import parse_iso8601_string
-from ...markup import finalize_markup
 from ...plugins.models import PluginDataModel
 
 if TYPE_CHECKING:
@@ -86,79 +85,11 @@ class Post(PluginDataModel):
     def __str__(self):
         return "%s..." % self.original[10:].strip()
 
-    def merge(self, other_post):
-        if self.poster_id != other_post.poster_id:
-            raise ValueError("post can't be merged with other user's post")
-        elif (
-            self.poster_id is None
-            and other_post.poster_id is None
-            and self.poster_name != other_post.poster_name
-        ):
-            raise ValueError("post can't be merged with other user's post")
-
-        if self.thread_id != other_post.thread_id:
-            raise ValueError("only posts belonging to same thread can be merged")
-
-        if self.is_event or other_post.is_event:
-            raise ValueError("can't merge events")
-
-        if self.pk == other_post.pk:
-            raise ValueError("post can't be merged with itself")
-
-        other_post.original = str("\n\n").join((other_post.original, self.original))
-        other_post.parsed = str("\n").join((other_post.parsed, self.parsed))
-
-        if self.is_protected:
-            other_post.is_protected = True
-        if self.is_best_answer:
-            self.thread.best_answer = other_post
-        if other_post.is_best_answer:
-            self.thread.best_answer_is_protected = other_post.is_protected
-
-        from ..signals import merge_post
-
-        merge_post.send(sender=self, other_post=other_post)
-
-    def move(self, new_thread):
-        from ..signals import move_post
-
-        if self.is_best_answer:
-            self.thread.clear_best_answer()
-
-        self.category = new_thread.category
-        self.thread = new_thread
-        move_post.send(sender=self)
-
     @property
     def sha256_checksum(self) -> str:
         return hashlib.sha256(
-            f"{self.id}:{self.updated_at or 'none'}:{self.parsed}".encode()
+            f"{self.id}:{self.updated_at or "n"}:{self.parsed}".encode()
         ).hexdigest()
-
-    @property
-    def content(self):
-        if not hasattr(self, "_finalised_parsed"):
-            self._finalised_parsed = finalize_markup(self.parsed)
-        return self._finalised_parsed
-
-    @property
-    def thread_type(self):
-        return self.category.thread_type
-
-    def get_absolute_url(self):
-        return reverse("misago:post", kwargs={"id": self.id})
-
-    def get_api_url(self):
-        return self.thread_type.get_post_api_url(self)
-
-    def get_likes_api_url(self):
-        return self.thread_type.get_post_likes_api_url(self)
-
-    def get_editor_api_url(self):
-        return self.thread_type.get_post_editor_api_url(self)
-
-    def get_edits_api_url(self):
-        return self.thread_type.get_post_edits_api_url(self)
 
     def set_search_document(self, thread: "Thread", search_document: str):
         if self.id == thread.first_post_id:
@@ -171,22 +102,5 @@ class Post(PluginDataModel):
             "search_document", config=settings.MISAGO_SEARCH_CONFIG
         )
 
-    @property
-    def short(self):
-        if self.is_valid:
-            if len(self.original) > 150:
-                return str("%s...") % self.original[:150].strip()
-            return self.original
-        return ""
-
-    @property
-    def is_valid(self):
-        return is_post_valid(self)
-
-    @property
-    def is_first_post(self):
-        return self.id == self.thread.first_post_id
-
-    @property
-    def is_best_answer(self):
-        return self.id == self.thread.best_answer_id
+    def get_absolute_url(self):
+        return reverse("misago:post", kwargs={"id": self.id})
