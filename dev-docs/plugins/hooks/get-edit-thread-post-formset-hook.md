@@ -85,7 +85,7 @@ The code below implements a custom filter function that adds custom form to the 
 from django.http import HttpRequest
 from misago.posting.formsets import EditThreadPostFormset
 from misago.posting.hooks import get_edit_thread_post_formset_hook
-from misago.threads.models import Post
+from misago.posts.models import Post
 
 from .forms import SelectUserForm
 

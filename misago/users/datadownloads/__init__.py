@@ -37,9 +37,9 @@ def prepare_user_data_download(download, expires_in, logger=None):
             download.save()
             # todo: send an e-mail with download link
             return True
-        except Exception as e:  # pylint: disable=broad-except
+        except Exception as error:  # pylint: disable=broad-except
             if logger:
-                logger.exception(e, exc_info=e)
+                logger.exception(error, exc_info=error)
             return False
 
 

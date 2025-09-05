@@ -3,7 +3,8 @@ from typing import TYPE_CHECKING, Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ...threads.models import Post, Thread
+from ...posts.models import Post
+from ...threads.models import Thread
 
 if TYPE_CHECKING:
     from ..state.reply import ReplyThreadState
@@ -98,12 +99,16 @@ class GetReplyThreadStateHook(
     from django.http import HttpRequest
     from misago.posting.hooks import get_reply_thread_state_hook
     from misago.posting.state import ReplyThreadState
-    from misago.threads.models import Post, Thread
+    from misago.posts.models import Post
+    from misago.threads.models import Thread
 
 
     @get_reply_thread_state_hook.append_filter
     def set_poster_ip_on_reply_thread_state(
-        action, request: HttpRequest, thread: Thread, post: Post | None = None
+        action,
+        request: HttpRequest,
+        thread: Thread,
+        post: Post | None = None,
     ) -> ReplyThreadState:
         state = action(request, thread)
         state.plugin_state["user_id"] = request.user_ip

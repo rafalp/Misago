@@ -4,7 +4,6 @@ from django.http import Http404
 from ...acl.objectacl import add_acl_to_obj
 from ...categories.models import Category
 from ...core.cursorpagination import get_page
-from ...threads.models import Thread
 from ...threads.utils import add_categories_to_items
 
 
@@ -19,7 +18,7 @@ class UserThreads:
 
         posts_queryset = (
             self.get_posts_queryset(request.user, profile, threads_queryset)
-            .filter(is_event=False, is_hidden=False, is_unapproved=False)
+            .filter(is_hidden=False, is_unapproved=False)
             .order_by("-id")
         )
 

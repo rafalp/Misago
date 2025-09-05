@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING, Protocol
 
 from ...plugins.hooks import FilterHook
-from ...threads.models import Post, Thread
+from ...posts.models import Post
+from ...threads.models import Thread
 
 if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
@@ -90,7 +91,9 @@ class CheckSeePrivateThreadPostPermissionHook(
     from django.utils.translation import pgettext
     from misago.permissions.hooks import check_see_private_thread_post_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
-    from misago.threads.models import Post, Thread
+    from misago.posts.models import Post
+    from misago.threads.models import Thread
+
 
     @check_see_private_thread_post_permission_hook.append_filter
     def check_user_can_see_thread(

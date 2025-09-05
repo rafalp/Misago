@@ -8,7 +8,7 @@ from django.http import (
     HttpResponse,
     HttpResponseNotAllowed,
 )
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
 
@@ -35,6 +35,7 @@ from ...posting.formsets import (
     get_reply_private_thread_formset,
     get_reply_thread_formset,
 )
+from ...posts.models import Post
 from ...privatethreadmembers.views import get_private_thread_members_context_data
 from ...readtracker.tracker import (
     get_unread_posts,
@@ -52,7 +53,7 @@ from ..hooks import (
     get_thread_replies_page_posts_queryset_hook,
     get_thread_replies_page_thread_queryset_hook,
 )
-from ..models import Post, Thread
+from ..models import Thread
 from ..paginator import ThreadRepliesPage
 from .generic import PrivateThreadView, ThreadView
 
@@ -147,7 +148,7 @@ class RepliesView(View):
         feed.set_allow_edit_thread(allow_edit_thread)
 
         if unread:
-            self.update_thread_read_time(request, thread, posts[-1].posted_on)
+            self.update_thread_read_time(request, thread, posts[-1].posted_at)
 
         if request.user.is_authenticated and request.user.unread_notifications:
             self.read_user_notifications(request.user, posts)
@@ -163,10 +164,10 @@ class RepliesView(View):
     ) -> list[ThreadUpdate]:
         queryset = self.get_thread_updates_queryset(request, thread)
         if page.number > 1:
-            queryset = queryset.filter(created_at__gt=posts[0].posted_on)
+            queryset = queryset.filter(created_at__gt=posts[0].posted_at)
         if page.next_page_first_item:
             queryset = queryset.filter(
-                created_at__lt=page.next_page_first_item.posted_on
+                created_at__lt=page.next_page_first_item.posted_at
             )
         return list(reversed(queryset[: request.settings.thread_updates_per_page]))
 

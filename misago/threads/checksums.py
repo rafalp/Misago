@@ -7,7 +7,7 @@ def is_post_valid(post):
 
 
 def make_post_checksum(post):
-    post_seeds = [str(v) for v in (post.id, str(post.posted_on.date()))]
+    post_seeds = [str(v) for v in (post.id, str(post.posted_at.date()))]
     return checksums.make_checksum(post.parsed, post_seeds)
 
 

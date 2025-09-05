@@ -1,31 +1,17 @@
-from django.test import RequestFactory
+def test_anonymize_user_thread(user, user_thread):
+    user.anonymize_data(anonymous_username="Deleted")
 
-from .. import test
-from ...categories.models import Category
-from ...users.test import AuthenticatedUserTestCase, create_test_user
-from ..models import Post
+    user_thread.refresh_from_db()
+    user_thread.starter_name == "Deleted"
+    user_thread.starter_slug == "deleted"
+    user_thread.last_poster_name == "Deleted"
+    user_thread.last_poster_slug == "deleted"
 
 
-class AnonymizePostsTests(AuthenticatedUserTestCase):
-    def setUp(self):
-        super().setUp()
-        self.factory = RequestFactory()
+def test_anonymize_user_post(user, user_thread):
+    post = user_thread.first_post
 
-    def get_request(self, user=None):
-        request = self.factory.get("/customer/details")
-        request.user = user or self.user
-        request.user_ip = "127.0.0.1"
+    user.anonymize_data(anonymous_username="Deleted")
 
-        return request
-
-    def test_anonymize_user_posts(self):
-        """post is anonymized by user.anonymize_data"""
-        category = Category.objects.get(slug="first-category")
-        thread = test.post_thread(category)
-
-        user = create_test_user("Other_User", "otheruser@example.com")
-        post = test.reply_thread(thread, poster=user)
-        user.anonymize_data(anonymous_username="Deleted")
-
-        anonymized_post = Post.objects.get(pk=post.pk)
-        self.assertTrue(anonymized_post.is_valid)
+    post.refresh_from_db()
+    post.poster_name == "Deleted"

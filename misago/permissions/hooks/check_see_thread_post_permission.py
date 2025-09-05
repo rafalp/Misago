@@ -2,7 +2,8 @@ from typing import TYPE_CHECKING, Protocol
 
 from ...categories.models import Category
 from ...plugins.hooks import FilterHook
-from ...threads.models import Post, Thread
+from ...posts.models import Post
+from ...threads.models import Thread
 
 if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
@@ -106,7 +107,8 @@ class CheckSeeThreadPostPermissionHook(
     from misago.categories.models import Category
     from misago.permissions.hooks import check_see_thread_post_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
-    from misago.threads.models import Post, Thread
+    from misago.posts.models import Post
+    from misago.threads.models import Thread
 
     @check_see_thread_post_permission_hook.append_filter
     def check_user_can_see_thread_post(

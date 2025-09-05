@@ -6,9 +6,10 @@ from django.utils.translation import pgettext
 from django.views import View
 
 from ...categories.enums import CategoryTree
+from ...posts.models import Post
 from ...readtracker.readtime import get_default_read_time
 from ..hooks import get_redirect_to_post_response_hook
-from ..models import Post, Thread
+from ..models import Thread
 from .generic import PrivateThreadView, ThreadView
 
 
@@ -68,7 +69,7 @@ class UnreadPostRedirectView(RedirectView):
             read_times.append(thread.user_readcategory_time)
 
         read_time = max(read_times)
-        return queryset.filter(posted_on__gt=read_time).first()
+        return queryset.filter(posted_at__gt=read_time).first()
 
 
 class ThreadUnreadPostRedirectView(UnreadPostRedirectView, ThreadView):

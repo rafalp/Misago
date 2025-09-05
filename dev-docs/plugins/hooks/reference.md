@@ -175,6 +175,7 @@ Hooks instances are importable from the following Python modules:
 - [`change_private_thread_owner_hook`](./change-private-thread-owner-hook.md)
 - [`remove_private_thread_member_hook`](./remove-private-thread-member-hook.md)
 - [`validate_new_private_thread_member_hook`](./validate-new-private-thread-member-hook.md)
+- [`validate_new_private_thread_owner_hook`](./validate-new-private-thread-owner-hook.md)
 
 
 ## `misago.threads.hooks`
@@ -214,7 +215,9 @@ Hooks instances are importable from the following Python modules:
 - [`get_threads_page_queryset_hook`](./get-threads-page-queryset-hook.md)
 - [`get_threads_page_subcategories_hook`](./get-threads-page-subcategories-hook.md)
 - [`get_threads_page_threads_hook`](./get-threads-page-threads-hook.md)
+- [`move_threads_hook`](./move-threads-hook.md)
 - [`set_posts_feed_related_objects_hook`](./set-posts-feed-related-objects-hook.md)
+- [`synchronize_thread_hook`](./synchronize-thread-hook.md)
 
 
 ## `misago.threadupdates.hooks`

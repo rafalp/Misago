@@ -190,11 +190,13 @@ def test_replace_rich_text_tokens_replaces_quote_with_same_thread_anonymous_user
     default_category.id = 1
 
     thread.id = 20
+    thread.title = "Test Thread"
+    thread.slug = "test-thread"
 
     post.id = 1234
     post.thread_id = thread.id
     post.category_id = default_category.id
-    post.posted_on = post.posted_on.replace(
+    post.posted_at = post.posted_at.replace(
         year=2022,
         month=5,
         day=7,
@@ -230,7 +232,7 @@ def test_replace_rich_text_tokens_replaces_quote_with_same_thread_user_post(
     user_reply.thread_id = thread.id
     user_reply.category_id = default_category.id
     user_reply.poster_id = user.id
-    user_reply.posted_on = user_reply.posted_on.replace(
+    user_reply.posted_at = user_reply.posted_at.replace(
         year=2022,
         month=5,
         day=7,
@@ -266,7 +268,7 @@ def test_replace_rich_text_tokens_replaces_quote_with_same_thread_invisible_user
     user_reply.thread_id = thread.id
     user_reply.category_id = default_category.id
     user_reply.poster_id = user.id
-    user_reply.posted_on = user_reply.posted_on.replace(
+    user_reply.posted_at = user_reply.posted_at.replace(
         year=2022,
         month=5,
         day=7,
@@ -302,7 +304,7 @@ def test_replace_rich_text_tokens_replaces_quote_with_other_thread_anonymous_use
     user_reply.thread_id = thread.id
     user_reply.category_id = default_category.id
     user_reply.poster_id = user.id
-    user_reply.posted_on = user_reply.posted_on.replace(
+    user_reply.posted_at = user_reply.posted_at.replace(
         year=2022,
         month=5,
         day=7,
@@ -331,11 +333,13 @@ def test_replace_rich_text_tokens_replaces_quote_with_other_thread_user_post(
     default_category.id = 1
 
     thread.id = 20
+    thread.title = "Test Thread"
+    thread.slug = "test-thread"
 
     post.id = 1234
     post.thread_id = thread.id
     post.category_id = default_category.id
-    post.posted_on = post.posted_on.replace(
+    post.posted_at = post.posted_at.replace(
         year=2022,
         month=5,
         day=7,
@@ -368,7 +372,7 @@ def test_replace_rich_text_tokens_replaces_quote_with_other_thread_invisible_use
     post.id = 1234
     post.thread_id = thread.id
     post.category_id = default_category.id
-    post.posted_on = post.posted_on.replace(
+    post.posted_at = post.posted_at.replace(
         year=2022,
         month=5,
         day=7,

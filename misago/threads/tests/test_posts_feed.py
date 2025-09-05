@@ -3,7 +3,6 @@ from django.urls import reverse
 
 from ...permissions.proxy import UserPermissionsProxy
 from ..postsfeed import PostsFeed, PrivateThreadPostsFeed, ThreadPostsFeed
-from ..test import reply_thread
 
 
 @pytest.fixture
@@ -283,10 +282,10 @@ def test_thread_posts_feed_marks_original_post_as_thread_editable_by_moderator(
 
 
 def test_private_thread_posts_feed_marks_post_as_editable(
-    request_factory, user, user_private_thread
+    request_factory, thread_reply_factory, user, user_private_thread
 ):
-    user_reply = reply_thread(user_private_thread, user)
-    reply = reply_thread(user_private_thread)
+    user_reply = thread_reply_factory(user_private_thread, poster=user)
+    reply = thread_reply_factory(user_private_thread)
 
     request = request_factory(user)
 
@@ -312,9 +311,9 @@ def test_private_thread_posts_feed_marks_post_as_editable(
 
 
 def test_private_thread_posts_feed_marks_original_post_as_editable(
-    request_factory, user, user_private_thread
+    request_factory, thread_reply_factory, user, user_private_thread
 ):
-    reply = reply_thread(user_private_thread)
+    reply = thread_reply_factory(user_private_thread)
 
     request = request_factory(user)
 
@@ -340,9 +339,9 @@ def test_private_thread_posts_feed_marks_original_post_as_editable(
 
 
 def test_private_thread_posts_feed_marks_original_post_as_thread_editable(
-    request_factory, user, user_private_thread
+    request_factory, thread_reply_factory, user, user_private_thread
 ):
-    reply = reply_thread(user_private_thread)
+    reply = thread_reply_factory(user_private_thread)
 
     request = request_factory(user)
 
@@ -368,10 +367,10 @@ def test_private_thread_posts_feed_marks_original_post_as_thread_editable(
 
 
 def test_private_thread_posts_feed_marks_post_as_editable_by_moderator(
-    request_factory, moderator, user, user_private_thread
+    request_factory, thread_reply_factory, moderator, user, user_private_thread
 ):
-    user_reply = reply_thread(user_private_thread, user)
-    reply = reply_thread(user_private_thread)
+    user_reply = thread_reply_factory(user_private_thread, poster=user)
+    reply = thread_reply_factory(user_private_thread)
 
     request = request_factory(moderator)
 
@@ -405,9 +404,9 @@ def test_private_thread_posts_feed_marks_post_as_editable_by_moderator(
 
 
 def test_private_thread_posts_feed_marks_original_post_as_editable_by_moderator(
-    request_factory, moderator, user_private_thread
+    request_factory, thread_reply_factory, moderator, user_private_thread
 ):
-    reply = reply_thread(user_private_thread)
+    reply = thread_reply_factory(user_private_thread)
 
     request = request_factory(moderator)
 
@@ -440,9 +439,9 @@ def test_private_thread_posts_feed_marks_original_post_as_editable_by_moderator(
 
 
 def test_private_thread_posts_feed_marks_original_post_as_thread_editable_by_moderator(
-    request_factory, moderator, user_private_thread
+    request_factory, thread_reply_factory, moderator, user_private_thread
 ):
-    reply = reply_thread(user_private_thread)
+    reply = thread_reply_factory(user_private_thread)
 
     request = request_factory(moderator)
 

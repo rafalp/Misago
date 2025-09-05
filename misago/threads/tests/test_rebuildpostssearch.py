@@ -1,5 +1,6 @@
 from io import StringIO
 
+import pytest
 from django.core import management
 
 from ..management.commands import rebuildpostssearch
@@ -14,15 +15,21 @@ def call_command():
 
 
 def test_rebuildpostssearch_command_does_nothing_if_there_are_no_posts(db):
-    command_output = call_command()
-    assert command_output == ("No posts were found",)
+    with pytest.raises(management.CommandError) as exc_info:
+        command_output = call_command()
+
+    assert exc_info.value.args == ("No posts exist.",)
 
 
-def test_rebuildpostssearch_command_updates_existing_posts_search_documents(post):
+def test_rebuildpostssearch_command_updates_existing_posts_search_documents(
+    thread, post
+):
     post.original = "Hello **world**!"
     post.save()
 
-    call_command()
+    command_output = call_command()
+
+    assert command_output[-1] == "Rebuild search index for one post."
 
     post.refresh_from_db()
-    assert post.search_document == "Test thread Hello world!"
+    assert post.search_document == f"{thread.title} Hello world!"

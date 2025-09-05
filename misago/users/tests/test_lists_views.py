@@ -1,9 +1,7 @@
 from django.urls import reverse
 
 from ...acl.test import patch_user_acl
-from ...categories.models import Category
 from ...test import assert_contains, assert_not_contains
-from ...threads.test import post_thread
 from ..activepostersranking import build_active_posters_ranking
 from ..models import Rank
 from ..test import AuthenticatedUserTestCase, create_test_user
@@ -29,31 +27,23 @@ class UsersListLanderTests(UsersListTestCase):
         )
 
 
-class ActivePostersTests(UsersListTestCase):
-    def test_empty_active_posters_list(self):
-        """empty active posters page has no showstoppers"""
-        view_link = reverse("misago:users-active-posters")
+def test_active_posters_view_renders_empty(db, client):
+    response = client.get(reverse("misago:users-active-posters"))
+    assert response.status_code == 200
 
-        response = self.client.get(view_link)
-        self.assertEqual(response.status_code, 200)
 
-    def test_active_posters_list(self):
-        """active posters page has no showstoppers"""
-        category = Category.objects.get(slug="first-category")
-        view_link = reverse("misago:users-active-posters")
+def test_active_posters_view_renders_with_items(
+    client, thread_factory, default_category
+):
+    for i in range(10):
+        user = create_test_user(f"User{i}", f"m{i}@example.com", posts=12345)
+        thread_factory(default_category, starter=user)
 
-        response = self.client.get(view_link)
-        self.assertEqual(response.status_code, 200)
+    assert build_active_posters_ranking()
 
-        # Create 50 test users and see if errors appeared
-        for i in range(50):
-            user = create_test_user("Bob%s" % i, "m%s@te.com" % i, posts=12345)
-            post_thread(category, poster=user)
-
-        build_active_posters_ranking()
-
-        response = self.client.get(view_link)
-        self.assertEqual(response.status_code, 200)
+    response = client.get(reverse("misago:users-active-posters"))
+    for i in range(10):
+        assert_contains(response, f"User{i}")
 
 
 def test_rank_users_list_is_not_available_if_rank_is_not_tab(client, other_user):

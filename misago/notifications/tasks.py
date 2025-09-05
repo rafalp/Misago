@@ -6,8 +6,9 @@ from django.contrib.auth import get_user_model
 
 from ..cache.versions import get_cache_versions
 from ..conf.dynamicsettings import DynamicSettings
+from ..posts.models import Post
+from ..threads.models import Thread
 from ..users.bans import get_user_ban
-from ..threads.models import Post, Thread
 from .models import WatchedThread
 from .threads import (
     notify_user_on_new_private_thread,

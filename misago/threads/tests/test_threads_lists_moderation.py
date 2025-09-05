@@ -3,7 +3,6 @@ from django.urls import reverse
 from ...conf.test import override_dynamic_settings
 from ...permissions.models import Moderator
 from ...test import assert_contains, assert_not_contains
-from ..test import post_thread
 
 MODERATION_FORM_HTML = '<form id="threads-moderation" method="post">'
 MODERATION_FIXED_HTML = '<div class="fixed-moderation">'
@@ -12,7 +11,7 @@ DISABLED_CHECKBOX_HTML = '<input type="checkbox" disabled />'
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_shows_noscript_moderation_form_to_moderators(
-    default_category, moderator_client
+    moderator_client,
 ):
     response = moderator_client.get(reverse("misago:threads"))
     assert_contains(response, MODERATION_FORM_HTML)
@@ -26,9 +25,7 @@ def test_category_threads_list_shows_noscript_moderation_form_to_moderators(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_site_threads_list_shows_fixed_moderation_form_to_moderators(
-    default_category, moderator_client
-):
+def test_site_threads_list_shows_fixed_moderation_form_to_moderators(moderator_client):
     response = moderator_client.get(reverse("misago:threads"))
     assert_contains(response, MODERATION_FIXED_HTML)
 
@@ -41,9 +38,7 @@ def test_category_threads_list_shows_fixed_moderation_form_to_moderators(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_site_threads_list_doesnt_show_moderation_to_users(
-    default_category, user_client
-):
+def test_site_threads_list_doesnt_show_moderation_to_users(user_client):
     response = user_client.get(reverse("misago:threads"))
     assert_not_contains(response, MODERATION_FORM_HTML)
     assert_not_contains(response, MODERATION_FIXED_HTML)
@@ -58,9 +53,7 @@ def test_category_threads_list_doesnt_show_moderation_to_users(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_site_threads_list_doesnt_show_moderation_to_guests(
-    default_category, user_client
-):
+def test_site_threads_list_doesnt_show_moderation_to_guests(user_client):
     response = user_client.get(reverse("misago:threads"))
     assert_not_contains(response, MODERATION_FORM_HTML)
     assert_not_contains(response, MODERATION_FIXED_HTML)
@@ -90,9 +83,9 @@ def test_category_threads_list_doesnt_show_moderation_to_other_category_moderato
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_shows_threads_checkboxes_to_global_moderators(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.get(reverse("misago:threads"))
     assert_contains(response, thread.title)
@@ -101,9 +94,9 @@ def test_site_threads_list_shows_threads_checkboxes_to_global_moderators(
 
 
 def test_category_threads_shows_threads_checkboxes_to_global_moderators(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.get(default_category.get_absolute_url())
     assert_contains(response, thread.title)
@@ -113,14 +106,14 @@ def test_category_threads_shows_threads_checkboxes_to_global_moderators(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_shows_threads_checkboxes_to_category_moderators(
-    default_category, user, user_client
+    thread_factory, default_category, user, user_client
 ):
     Moderator.objects.create(
         categories=[default_category.id],
         user=user,
         is_global=False,
     )
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = user_client.get(reverse("misago:threads"))
     assert_contains(response, thread.title)
@@ -129,14 +122,14 @@ def test_site_threads_list_shows_threads_checkboxes_to_category_moderators(
 
 
 def test_category_threads_shows_threads_checkboxes_to_category_moderators(
-    default_category, user, user_client
+    thread_factory, default_category, user, user_client
 ):
     Moderator.objects.create(
         categories=[default_category.id],
         user=user,
         is_global=False,
     )
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, thread.title)
@@ -146,14 +139,14 @@ def test_category_threads_shows_threads_checkboxes_to_category_moderators(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_shows_disabled_threads_checkboxes_to_other_category_moderators(
-    default_category, child_category, user, user_client
+    thread_factory, default_category, child_category, user, user_client
 ):
     Moderator.objects.create(
         categories=[default_category.id],
         user=user,
         is_global=False,
     )
-    thread = post_thread(child_category, "Moderate Thread")
+    thread = thread_factory(child_category)
 
     response = user_client.get(reverse("misago:threads"))
     assert_contains(response, thread.title)
@@ -162,14 +155,14 @@ def test_site_threads_list_shows_disabled_threads_checkboxes_to_other_category_m
 
 
 def test_category_threads_shows_disabled_threads_checkboxes_to_other_category_moderators(
-    default_category, child_category, user, user_client
+    thread_factory, default_category, child_category, user, user_client
 ):
     Moderator.objects.create(
         categories=[default_category.id],
         user=user,
         is_global=False,
     )
-    thread = post_thread(child_category, "Moderate Thread")
+    thread = thread_factory(child_category)
 
     response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, thread.title)
@@ -179,9 +172,9 @@ def test_category_threads_shows_disabled_threads_checkboxes_to_other_category_mo
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_executes_single_stage_moderation_action(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -195,9 +188,9 @@ def test_site_threads_list_executes_single_stage_moderation_action(
 
 
 def test_category_threads_executes_single_stage_moderation_action(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         default_category.get_absolute_url(),
@@ -212,9 +205,9 @@ def test_category_threads_executes_single_stage_moderation_action(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_executes_single_stage_moderation_action_in_htmx(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -230,9 +223,9 @@ def test_site_threads_list_executes_single_stage_moderation_action_in_htmx(
 
 
 def test_category_threads_executes_single_stage_moderation_action_in_htmx(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         default_category.get_absolute_url(),
@@ -249,9 +242,9 @@ def test_category_threads_executes_single_stage_moderation_action_in_htmx(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_executes_multi_stage_moderation_action(
-    default_category, child_category, moderator_client
+    thread_factory, default_category, child_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -276,9 +269,9 @@ def test_site_threads_list_executes_multi_stage_moderation_action(
 
 
 def test_category_threads_executes_multi_stage_moderation_action(
-    default_category, child_category, moderator_client
+    thread_factory, default_category, child_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         default_category.get_absolute_url(),
@@ -304,9 +297,9 @@ def test_category_threads_executes_multi_stage_moderation_action(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_executes_multi_stage_moderation_action_in_htmx(
-    default_category, child_category, moderator_client
+    thread_factory, default_category, child_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -332,9 +325,9 @@ def test_site_threads_list_executes_multi_stage_moderation_action_in_htmx(
 
 
 def test_category_threads_executes_multi_stage_moderation_action_in_htmx(
-    default_category, child_category, moderator_client
+    thread_factory, default_category, child_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         default_category.get_absolute_url(),
@@ -361,9 +354,9 @@ def test_category_threads_executes_multi_stage_moderation_action_in_htmx(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_moderation_returns_error_for_user(
-    default_category, user_client
+    thread_factory, default_category, user_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = user_client.post(
         reverse("misago:threads"),
@@ -376,9 +369,9 @@ def test_site_threads_list_moderation_returns_error_for_user(
 
 
 def test_category_threads_list_moderation_returns_error_for_user(
-    default_category, user_client
+    thread_factory, default_category, user_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = user_client.post(
         default_category.get_absolute_url(),
@@ -392,9 +385,9 @@ def test_category_threads_list_moderation_returns_error_for_user(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_moderation_returns_error_for_user_in_htmx(
-    default_category, user_client
+    thread_factory, default_category, user_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = user_client.post(
         reverse("misago:threads"),
@@ -408,9 +401,9 @@ def test_site_threads_list_moderation_returns_error_for_user_in_htmx(
 
 
 def test_category_threads_list_moderation_returns_error_for_user_in_htmx(
-    default_category, user_client
+    thread_factory, default_category, user_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = user_client.post(
         default_category.get_absolute_url(),
@@ -424,8 +417,10 @@ def test_category_threads_list_moderation_returns_error_for_user_in_htmx(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_site_threads_list_moderation_returns_error_for_guest(default_category, client):
-    thread = post_thread(default_category, "Moderate Thread")
+def test_site_threads_list_moderation_returns_error_for_guest(
+    thread_factory, default_category, client
+):
+    thread = thread_factory(default_category)
 
     response = client.post(
         reverse("misago:threads"),
@@ -438,9 +433,9 @@ def test_site_threads_list_moderation_returns_error_for_guest(default_category, 
 
 
 def test_category_threads_list_moderation_returns_error_for_guest(
-    default_category, client
+    thread_factory, default_category, client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = client.post(
         default_category.get_absolute_url(),
@@ -454,9 +449,9 @@ def test_category_threads_list_moderation_returns_error_for_guest(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_moderation_returns_error_for_guest_in_htmx(
-    default_category, client
+    thread_factory, default_category, client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = client.post(
         reverse("misago:threads"),
@@ -470,9 +465,9 @@ def test_site_threads_list_moderation_returns_error_for_guest_in_htmx(
 
 
 def test_category_threads_list_moderation_returns_error_for_guest_in_htmx(
-    default_category, client
+    thread_factory, default_category, client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = client.post(
         default_category.get_absolute_url(),
@@ -487,9 +482,9 @@ def test_category_threads_list_moderation_returns_error_for_guest_in_htmx(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_invalid_moderation_action(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -499,9 +494,9 @@ def test_site_threads_list_returns_error_for_invalid_moderation_action(
 
 
 def test_category_threads_returns_error_for_invalid_moderation_action(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         default_category.get_absolute_url(),
@@ -512,9 +507,9 @@ def test_category_threads_returns_error_for_invalid_moderation_action(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_invalid_moderation_action_in_htmx(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -525,9 +520,9 @@ def test_site_threads_list_returns_error_for_invalid_moderation_action_in_htmx(
 
 
 def test_category_threads_returns_error_for_invalid_moderation_action_in_htmx(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         default_category.get_absolute_url(),
@@ -539,9 +534,9 @@ def test_category_threads_returns_error_for_invalid_moderation_action_in_htmx(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_empty_moderation_action(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -551,9 +546,9 @@ def test_site_threads_list_returns_error_for_empty_moderation_action(
 
 
 def test_category_threads_returns_error_for_empty_moderation_action(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         default_category.get_absolute_url(),
@@ -564,9 +559,9 @@ def test_category_threads_returns_error_for_empty_moderation_action(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_empty_moderation_action_in_htmx(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -577,9 +572,9 @@ def test_site_threads_list_returns_error_for_empty_moderation_action_in_htmx(
 
 
 def test_category_threads_returns_error_for_empty_moderation_action_in_htmx(
-    default_category, moderator_client
+    thread_factory, default_category, moderator_client
 ):
-    thread = post_thread(default_category, "Moderate Thread")
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         default_category.get_absolute_url(),
@@ -590,9 +585,7 @@ def test_category_threads_returns_error_for_empty_moderation_action_in_htmx(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_site_threads_list_returns_error_for_empty_threads_selection(
-    default_category, moderator_client
-):
+def test_site_threads_list_returns_error_for_empty_threads_selection(moderator_client):
     response = moderator_client.post(
         reverse("misago:threads"),
         {"moderation": "close", "threads": []},
@@ -612,7 +605,7 @@ def test_category_threads_returns_error_for_empty_threads_selection(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_empty_threads_selection_in_htmx(
-    default_category, moderator_client
+    moderator_client,
 ):
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -635,7 +628,7 @@ def test_category_threads_returns_error_for_empty_threads_selection_in_htmx(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_invalid_threads_selection(
-    default_category, moderator_client
+    moderator_client,
 ):
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -656,7 +649,7 @@ def test_category_threads_returns_error_for_invalid_threads_selection(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_invalid_threads_selection_in_htmx(
-    default_category, moderator_client
+    moderator_client,
 ):
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -679,7 +672,7 @@ def test_category_threads_returns_error_for_invalid_threads_selection_in_htmx(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_invalid_threads_ids_in_selection(
-    default_category, moderator_client
+    moderator_client,
 ):
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -700,7 +693,7 @@ def test_category_threads_returns_error_for_invalid_threads_ids_in_selection(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_invalid_threads_ids_in_selection_in_htmx(
-    default_category, moderator_client
+    moderator_client,
 ):
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -723,7 +716,7 @@ def test_category_threads_returns_error_for_invalid_threads_ids_in_selection_in_
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_not_existing_threads_ids_in_selection(
-    default_category, moderator_client
+    moderator_client,
 ):
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -744,7 +737,7 @@ def test_category_threads_returns_error_for_not_existing_threads_ids_in_selectio
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_not_existing_threads_ids_in_selection_in_htmx(
-    default_category, moderator_client
+    moderator_client,
 ):
     response = moderator_client.post(
         reverse("misago:threads"),
@@ -767,14 +760,14 @@ def test_category_threads_returns_error_for_not_existing_threads_ids_in_selectio
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_thread_in_selection_user_cant_moderate(
-    default_category, child_category, user, user_client
+    thread_factory, default_category, child_category, user, user_client
 ):
     Moderator.objects.create(
         categories=[default_category.id],
         user=user,
         is_global=False,
     )
-    thread = post_thread(child_category, "Moderated Thread")
+    thread = thread_factory(child_category)
 
     response = user_client.post(
         reverse("misago:threads"),
@@ -782,7 +775,7 @@ def test_site_threads_list_returns_error_for_thread_in_selection_user_cant_moder
     )
     assert_contains(
         response,
-        "Can&#x27;t moderate the &quot;Moderated Thread&quot; thread",
+        f"Can&#x27;t moderate the &quot;{thread.title}&quot; thread",
     )
 
     thread.refresh_from_db()
@@ -791,14 +784,14 @@ def test_site_threads_list_returns_error_for_thread_in_selection_user_cant_moder
 
 @override_dynamic_settings(index_view="categories")
 def test_category_threads_list_returns_error_for_thread_in_selection_user_cant_moderate(
-    default_category, child_category, user, user_client
+    thread_factory, default_category, child_category, user, user_client
 ):
     Moderator.objects.create(
         categories=[default_category.id],
         user=user,
         is_global=False,
     )
-    thread = post_thread(child_category, "Moderated Thread")
+    thread = thread_factory(child_category)
 
     response = user_client.post(
         default_category.get_absolute_url(),
@@ -806,7 +799,7 @@ def test_category_threads_list_returns_error_for_thread_in_selection_user_cant_m
     )
     assert_contains(
         response,
-        "Can&#x27;t moderate the &quot;Moderated Thread&quot; thread",
+        f"Can&#x27;t moderate the &quot;{thread.title}&quot; thread",
     )
 
     thread.refresh_from_db()
@@ -815,14 +808,14 @@ def test_category_threads_list_returns_error_for_thread_in_selection_user_cant_m
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_thread_in_selection_user_cant_moderate_in_htmx(
-    default_category, child_category, user, user_client
+    thread_factory, default_category, child_category, user, user_client
 ):
     Moderator.objects.create(
         categories=[default_category.id],
         user=user,
         is_global=False,
     )
-    thread = post_thread(child_category, "Moderated Thread")
+    thread = thread_factory(child_category)
 
     response = user_client.post(
         reverse("misago:threads"),
@@ -831,7 +824,7 @@ def test_site_threads_list_returns_error_for_thread_in_selection_user_cant_moder
     )
     assert_contains(
         response,
-        "Can&#x27;t moderate the &quot;Moderated Thread&quot; thread",
+        f"Can&#x27;t moderate the &quot;{thread.title}&quot; thread",
     )
 
     thread.refresh_from_db()
@@ -840,14 +833,14 @@ def test_site_threads_list_returns_error_for_thread_in_selection_user_cant_moder
 
 @override_dynamic_settings(index_view="categories")
 def test_category_threads_list_returns_error_for_thread_in_selection_user_cant_moderate_in_htmx(
-    default_category, child_category, user, user_client
+    thread_factory, default_category, child_category, user, user_client
 ):
     Moderator.objects.create(
         categories=[default_category.id],
         user=user,
         is_global=False,
     )
-    thread = post_thread(child_category, "Moderated Thread")
+    thread = thread_factory(child_category)
 
     response = user_client.post(
         default_category.get_absolute_url(),
@@ -856,7 +849,7 @@ def test_category_threads_list_returns_error_for_thread_in_selection_user_cant_m
     )
     assert_contains(
         response,
-        "Can&#x27;t moderate the &quot;Moderated Thread&quot; thread",
+        f"Can&#x27;t moderate the &quot;{thread.title}&quot; thread",
     )
 
     thread.refresh_from_db()

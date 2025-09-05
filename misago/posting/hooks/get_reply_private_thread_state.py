@@ -3,7 +3,8 @@ from typing import TYPE_CHECKING, Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ...threads.models import Post, Thread
+from ...posts.models import Post
+from ...threads.models import Thread
 
 if TYPE_CHECKING:
     from ..state.reply import ReplyPrivateThreadState
@@ -100,7 +101,8 @@ class GetReplyPrivateThreadStateHook(
     from django.http import HttpRequest
     from misago.posting.hooks import get_reply_private_thread_state_hook
     from misago.posting.state import ReplyPrivateThreadState
-    from misago.threads.models import Post, Thread
+    from misago.posts.models import Post
+    from misago.threads.models import Thread
 
 
     @get_reply_private_thread_state_hook.append_filter

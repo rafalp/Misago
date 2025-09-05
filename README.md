@@ -151,13 +151,10 @@ Authors
 * https://twitter.com/RafalPiton
 
 
-English sentences used within `misago.faker.phrases` were extracted from [National Aeronautics and Space Administration Solar System Exploration Portal](http://solarsystem.nasa.gov/planets/) and are not copyrighted as per [Media and content usage guidelines](https://www.nasa.gov/multimedia/guidelines/index.html).
-
-
 Copyright and license
 ---------------------
 
-**Misago** - Copyright © 2023 [Rafał Pitoń](http://github.com/rafalp)
+**Misago** - Copyright © 2025 [Rafał Pitoń](http://github.com/rafalp)
 This program comes with ABSOLUTELY NO WARRANTY.
 
 This is free software and you are welcome to modify and redistribute it under the conditions described in the license.

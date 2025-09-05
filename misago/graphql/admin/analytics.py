@@ -5,7 +5,9 @@ from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.utils import timezone
 
-from ...threads.models import Attachment, Post, Thread
+from ...attachments.models import Attachment
+from ...posts.models import Post
+from ...threads.models import Thread
 from ...users.models import DataDownload, DeletedUser
 
 CACHE_KEY = "misago_admin_analytics"
@@ -42,8 +44,8 @@ def get_data_from_db(span):
         "users": analytics.get_data_for_model(User, "joined_on"),
         "userDeletions": analytics.get_data_for_model(DeletedUser, "deleted_on"),
         "threads": analytics.get_data_for_model(Thread, "started_on"),
-        "posts": analytics.get_data_for_model(Post, "posted_on"),
-        "attachments": analytics.get_data_for_model(Attachment, "uploaded_on"),
+        "posts": analytics.get_data_for_model(Post, "posted_at"),
+        "attachments": analytics.get_data_for_model(Attachment, "uploaded_at"),
         "dataDownloads": analytics.get_data_for_model(DataDownload, "requested_on"),
     }
 

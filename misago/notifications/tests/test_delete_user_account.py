@@ -43,9 +43,9 @@ def test_user_delete_excludes_other_users_notifications(user, other_user):
 
 
 def test_user_delete_deletes_users_watched_threads(
-    user, thread, watched_thread_factory
+    watched_thread_factory, user, old_thread
 ):
-    watched_thread = watched_thread_factory(user, thread, send_emails=True)
+    watched_thread = watched_thread_factory(user, old_thread, send_emails=True)
 
     user.delete(anonymous_username="Deleted")
 
@@ -54,9 +54,9 @@ def test_user_delete_deletes_users_watched_threads(
 
 
 def test_user_delete_excludes_other_users_watched_threads(
-    user, other_user, thread, watched_thread_factory
+    watched_thread_factory, user, other_user, old_thread
 ):
-    watched_thread = watched_thread_factory(other_user, thread, send_emails=True)
+    watched_thread = watched_thread_factory(other_user, old_thread, send_emails=True)
 
     user.delete(anonymous_username="Deleted")
 

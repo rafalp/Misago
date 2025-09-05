@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ...threads.models import Post
+from ...posts.models import Post
 
 if TYPE_CHECKING:
     from ..formsets.edit import EditPrivateThreadFormset
@@ -89,7 +89,7 @@ class GetEditPrivateThreadFormsetHook(
     from django.http import HttpRequest
     from misago.posting.formsets import EditPrivateThreadFormset
     from misago.posting.hooks import get_edit_private_thread_formset_hook
-    from misago.threads.models import Post
+    from misago.posts.models import Post
 
     from .forms import SelectUserForm
 

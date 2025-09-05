@@ -2,7 +2,6 @@ from itertools import product
 
 from ...threads.models import Thread
 from ...threads.enums import ThreadWeight
-from ...threads.test import post_thread
 
 
 def test_category_threads_queryset_includes_category_with_see_and_browse_permission(
@@ -34,6 +33,7 @@ def test_category_threads_queryset_includes_category_with_see_permission_and_del
 
 
 def test_category_threads_queryset_filter(
+    thread_factory,
     category_threads_filter_factory,
     category,
     child_category,
@@ -75,20 +75,23 @@ def test_category_threads_queryset_filter(
     )
 
     for args in product(*MATRIX):
-        check_category_thread_visibility(category_threads_filter_factory, *args)
+        check_category_thread_visibility(
+            thread_factory, category_threads_filter_factory, *args
+        )
 
 
 def check_category_thread_visibility(
+    thread_factory,
     category_threads_filter_factory,
     user,
     category,
     thread_category,
     list_children_threads,
     started_only,
-    poster,
+    starter,
     thread_weight,
-    thread_hidden,
     thread_unapproved,
+    thread_hidden,
 ):
     if category.list_children_threads != list_children_threads:
         category.list_children_threads = list_children_threads
@@ -98,13 +101,12 @@ def check_category_thread_visibility(
         thread_category.show_started_only = started_only
         thread_category.save()
 
-    thread = post_thread(
+    thread = thread_factory(
         thread_category,
-        poster=poster if poster.is_authenticated else "Anon",
-        is_global=thread_weight == 2,
-        is_pinned=thread_weight == 1,
-        is_hidden=thread_hidden,
+        starter=starter if starter.is_authenticated else "Anon",
+        weight=thread_weight,
         is_unapproved=thread_unapproved,
+        is_hidden=thread_hidden,
     )
 
     threads_filter = category_threads_filter_factory(user, category)
@@ -269,6 +271,7 @@ def test_category_pinned_threads_queryset_includes_category_with_see_permission_
 
 
 def test_category_pinned_threads_queryset_filter(
+    thread_factory,
     category_threads_filter_factory,
     category,
     child_category,
@@ -310,17 +313,20 @@ def test_category_pinned_threads_queryset_filter(
     )
 
     for args in product(*MATRIX):
-        check_category_pinned_thread_visibility(category_threads_filter_factory, *args)
+        check_category_pinned_thread_visibility(
+            thread_factory, category_threads_filter_factory, *args
+        )
 
 
 def check_category_pinned_thread_visibility(
+    thread_factory,
     category_threads_filter_factory,
     user,
     category,
     thread_category,
     list_children_threads,
     started_only,
-    poster,
+    starter,
     thread_weight,
     thread_hidden,
     thread_unapproved,
@@ -333,13 +339,12 @@ def check_category_pinned_thread_visibility(
         thread_category.show_started_only = started_only
         thread_category.save()
 
-    thread = post_thread(
+    thread = thread_factory(
         thread_category,
-        poster=poster if poster.is_authenticated else "Anon",
-        is_global=thread_weight == 2,
-        is_pinned=thread_weight == 1,
-        is_hidden=thread_hidden,
+        starter=starter if starter.is_authenticated else "Anon",
+        weight=thread_weight,
         is_unapproved=thread_unapproved,
+        is_hidden=thread_hidden,
     )
 
     threads_filter = category_threads_filter_factory(user, category)

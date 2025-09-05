@@ -1,4 +1,3 @@
-from ...threads.test import post_thread
 from ..models import Category
 
 
@@ -12,15 +11,15 @@ def assert_category_is_empty(category: Category):
     assert category.last_poster_slug is None
 
 
-def test_category_synchronize_updates_category_data(default_category):
+def test_category_synchronize_updates_category_data(thread_factory, default_category):
     default_category.synchronize()
 
     assert default_category.threads == 0
     assert default_category.posts == 0
 
-    thread = post_thread(default_category)
-    hidden = post_thread(default_category)
-    unapproved = post_thread(default_category)
+    thread = thread_factory(default_category)
+    hidden = thread_factory(default_category)
+    unapproved = thread_factory(default_category)
 
     default_category.synchronize()
     assert default_category.threads == 3
@@ -55,10 +54,12 @@ def test_category_synchronize_updates_category_data(default_category):
     assert default_category.last_thread == unapproved
 
 
-def test_category_set_last_thread_updates_last_thread_data(default_category):
+def test_category_set_last_thread_updates_last_thread_data(
+    thread_factory, default_category
+):
     default_category.synchronize()
 
-    new_thread = post_thread(default_category)
+    new_thread = thread_factory(default_category)
     default_category.set_last_thread(new_thread)
 
     assert default_category.last_post_on == new_thread.last_post_on
@@ -70,8 +71,10 @@ def test_category_set_last_thread_updates_last_thread_data(default_category):
     assert default_category.last_poster_slug == new_thread.last_poster_slug
 
 
-def test_category_empty_last_thread_empties_last_thread_data(default_category):
-    post_thread(default_category)
+def test_category_empty_last_thread_empties_last_thread_data(
+    thread_factory, default_category
+):
+    thread_factory(default_category)
 
     default_category.synchronize()
     default_category.empty_last_thread()

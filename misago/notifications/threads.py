@@ -16,7 +16,8 @@ from ..permissions.privatethreads import (
     check_private_threads_permission,
     check_see_private_thread_permission,
 )
-from ..threads.models import Post, Thread
+from ..posts.models import Post
+from ..threads.models import Thread
 from ..threads.threadurl import get_thread_url
 from .enums import NotificationVerb, ThreadNotifications
 from .models import Notification, WatchedThread
@@ -164,7 +165,7 @@ def user_has_other_unread_posts(
     posts_queryset = Post.objects.filter(
         id__lt=post.id,
         thread=post.thread,
-        posted_on__gt=watched_thread.read_time,
+        posted_at__gt=watched_thread.read_time,
     ).exclude(poster=watched_thread.user)
 
     posts_queryset = filter_accessible_thread_posts(

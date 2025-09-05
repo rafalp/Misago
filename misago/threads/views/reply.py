@@ -35,6 +35,7 @@ from ...posting.state import (
     get_reply_thread_state,
 )
 from ...posting.validators import validate_flood_control, validate_posted_contents
+from ...posts.models import Post
 from ...readtracker.tracker import (
     get_thread_read_time,
     mark_thread_read,
@@ -46,7 +47,7 @@ from ..hooks import (
     get_reply_private_thread_page_context_data_hook,
     get_reply_thread_page_context_data_hook,
 )
-from ..models import Post, Thread
+from ..models import Thread
 from ..prefetch import prefetch_posts_feed_related_objects
 from .redirect import private_thread_post_redirect, thread_post_redirect
 from .generic import PrivateThreadView, ThreadView
@@ -153,7 +154,7 @@ class ReplyView(View):
         thread_is_read = not (
             self.get_thread_posts_queryset(request, thread)
             .exclude(id=state.post.id)
-            .filter(posted_on__gt=read_time)
+            .filter(posted_at__gt=read_time)
             .exists()
         )
 
@@ -175,7 +176,7 @@ class ReplyView(View):
         if last_post.poster_id != request.user.id:
             return None
 
-        if (timezone.now() - last_post.posted_on) > timedelta(minutes=merge_time):
+        if (timezone.now() - last_post.posted_at) > timedelta(minutes=merge_time):
             return False
 
         if last_post.is_hidden:

@@ -29,8 +29,8 @@ def test_edit_thread_post_state_save_updates_post(
     post.refresh_from_db()
 
     assert post.original == "Edit reply"
-    assert post.search_document == "Test thread\n\nEdit reply"
-    assert post.updated_on == state.timestamp
+    assert post.search_document == f"{other_user_thread.title}\n\nEdit reply"
+    assert post.updated_at == state.timestamp
     assert post.edits == 1
     assert post.last_editor == user
     assert post.last_editor_name == user.username
@@ -144,6 +144,8 @@ def test_edit_thread_post_state_schedules_post_upgrade_for_post_with_code_block(
 def test_edit_thread_post_state_save_creates_thread_update_object_for_changed_title(
     user_request, user, other_user_thread
 ):
+    original_title = other_user_thread.title
+
     assert not ThreadUpdate.objects.exists()
 
     state = EditThreadPostState(user_request, other_user_thread.first_post)
@@ -155,7 +157,7 @@ def test_edit_thread_post_state_save_creates_thread_update_object_for_changed_ti
     thread_update = ThreadUpdate.objects.first()
     assert thread_update.actor == user
     assert thread_update.action == ThreadUpdateActionName.CHANGED_TITLE
-    assert thread_update.context == "Test thread"
+    assert thread_update.context == original_title
     assert not thread_update.context_id
     assert not thread_update.context_type
 

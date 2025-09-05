@@ -31,9 +31,10 @@ def migrate_private_thread_members(apps, _):
 
 class Migration(migrations.Migration):
 
+    atomic = False
+
     dependencies = [
         ("misago_privatethreadmembers", "0001_initial"),
-        ("misago_threads", "0020_remove_poll_poll_vote_related_names"),
     ]
 
     operations = [

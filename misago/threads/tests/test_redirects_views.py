@@ -4,11 +4,12 @@ from django.utils import timezone
 from ...readtracker.models import ReadCategory
 from ...readtracker.tracker import mark_thread_read
 from ...test import assert_contains
-from ..test import reply_thread
 
 
-def test_thread_last_post_redirect_view_returns_redirect(client, thread):
-    reply = reply_thread(thread)
+def test_thread_last_post_redirect_view_returns_redirect(
+    thread_reply_factory, client, thread
+):
+    reply = thread_reply_factory(thread)
 
     response = client.get(
         reverse(
@@ -29,9 +30,9 @@ def test_thread_last_post_redirect_view_returns_redirect(client, thread):
 
 
 def test_private_thread_last_post_redirect_view_returns_redirect(
-    user_client, user_private_thread
+    thread_reply_factory, user_client, user_private_thread
 ):
-    reply = reply_thread(user_private_thread)
+    reply = thread_reply_factory(user_private_thread)
 
     response = user_client.get(
         reverse(
@@ -52,10 +53,10 @@ def test_private_thread_last_post_redirect_view_returns_redirect(
 
 
 def test_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_anonymous_user(
-    client, thread
+    thread_reply_factory, client, thread
 ):
-    reply_thread(thread, posted_on=timezone.now())
-    reply = reply_thread(thread, posted_on=timezone.now())
+    thread_reply_factory(thread)
+    reply = thread_reply_factory(thread)
 
     response = client.get(
         reverse(
@@ -76,12 +77,12 @@ def test_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_anon
 
 
 def test_thread_unread_post_redirect_view_returns_redirect_to_first_unread_post_for_user(
-    user, user_client, thread
+    thread_reply_factory, user, user_client, thread
 ):
-    mark_thread_read(user, thread, thread.first_post.posted_on)
+    mark_thread_read(user, thread, thread.first_post.posted_at)
 
-    reply = reply_thread(thread, posted_on=timezone.now())
-    reply_thread(thread, posted_on=timezone.now())
+    reply = thread_reply_factory(thread)
+    thread_reply_factory(thread)
 
     response = user_client.get(
         reverse(
@@ -102,10 +103,10 @@ def test_thread_unread_post_redirect_view_returns_redirect_to_first_unread_post_
 
 
 def test_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_read_thread(
-    user, user_client, thread
+    thread_reply_factory, user, user_client, thread
 ):
-    reply_thread(thread, posted_on=timezone.now())
-    reply = reply_thread(thread, posted_on=timezone.now())
+    thread_reply_factory(thread)
+    reply = thread_reply_factory(thread)
 
     mark_thread_read(user, thread, timezone.now())
 
@@ -128,10 +129,10 @@ def test_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_read
 
 
 def test_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_read_category(
-    user, user_client, thread
+    thread_reply_factory, user, user_client, thread
 ):
-    reply_thread(thread, posted_on=timezone.now())
-    reply = reply_thread(thread, posted_on=timezone.now())
+    thread_reply_factory(thread)
+    reply = thread_reply_factory(thread)
 
     ReadCategory.objects.create(
         user=user,
@@ -171,14 +172,14 @@ def test_private_thread_unread_post_redirect_view_returns_error_404_for_anonymou
 
 
 def test_private_thread_unread_post_redirect_view_returns_redirect_to_first_unread_post_for_user(
-    user, user_client, user_private_thread
+    thread_reply_factory, user, user_client, user_private_thread
 ):
     mark_thread_read(
-        user, user_private_thread, user_private_thread.first_post.posted_on
+        user, user_private_thread, user_private_thread.first_post.posted_at
     )
 
-    reply = reply_thread(user_private_thread, posted_on=timezone.now())
-    reply_thread(user_private_thread, posted_on=timezone.now())
+    reply = thread_reply_factory(user_private_thread)
+    thread_reply_factory(user_private_thread)
 
     response = user_client.get(
         reverse(
@@ -199,10 +200,10 @@ def test_private_thread_unread_post_redirect_view_returns_redirect_to_first_unre
 
 
 def test_private_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_read_thread(
-    user, user_client, user_private_thread
+    thread_reply_factory, user, user_client, user_private_thread
 ):
-    reply_thread(user_private_thread, posted_on=timezone.now())
-    reply = reply_thread(user_private_thread, posted_on=timezone.now())
+    thread_reply_factory(user_private_thread)
+    reply = thread_reply_factory(user_private_thread)
 
     mark_thread_read(user, user_private_thread, timezone.now())
 
@@ -225,10 +226,10 @@ def test_private_thread_unread_post_redirect_view_returns_redirect_to_last_post_
 
 
 def test_private_thread_unread_post_redirect_view_returns_redirect_to_last_post_for_read_category(
-    user, user_client, user_private_thread
+    thread_reply_factory, user, user_client, user_private_thread
 ):
-    reply_thread(user_private_thread, posted_on=timezone.now())
-    reply = reply_thread(user_private_thread, posted_on=timezone.now())
+    thread_reply_factory(user_private_thread)
+    reply = thread_reply_factory(user_private_thread)
 
     ReadCategory.objects.create(
         user=user,
@@ -255,10 +256,10 @@ def test_private_thread_unread_post_redirect_view_returns_redirect_to_last_post_
 
 
 def test_thread_solution_redirect_view_returns_redirect_to_solution_post(
-    client, thread
+    thread_reply_factory, client, thread
 ):
-    solution = reply_thread(thread)
-    reply_thread(thread)
+    solution = thread_reply_factory(thread)
+    thread_reply_factory(thread)
 
     thread.best_answer = solution
     thread.save()
@@ -282,10 +283,10 @@ def test_thread_solution_redirect_view_returns_redirect_to_solution_post(
 
 
 def test_thread_solution_redirect_view_returns_redirect_to_last_post_in_unsolved_thread(
-    client, thread
+    thread_reply_factory, client, thread
 ):
-    reply_thread(thread)
-    reply = reply_thread(thread)
+    thread_reply_factory(thread)
+    reply = thread_reply_factory(thread)
 
     response = client.get(
         reverse(
@@ -338,9 +339,9 @@ def test_thread_unapproved_redirect_view_returns_error_for_user_without_moderato
 
 
 def test_thread_unapproved_redirect_view_redirects_moderator_to_last_post_if_no_unapproved_posts_exist(
-    moderator_client, thread
+    thread_reply_factory, moderator_client, thread
 ):
-    reply = reply_thread(thread)
+    reply = thread_reply_factory(thread)
 
     response = moderator_client.get(
         reverse(
@@ -361,10 +362,10 @@ def test_thread_unapproved_redirect_view_redirects_moderator_to_last_post_if_no_
 
 
 def test_thread_unapproved_redirect_view_redirects_moderator_to_unapproved_post(
-    moderator_client, thread
+    thread_reply_factory, moderator_client, thread
 ):
-    unapproved = reply_thread(thread, is_unapproved=True)
-    reply_thread(thread)
+    unapproved = thread_reply_factory(thread, is_unapproved=True)
+    thread_reply_factory(thread)
 
     response = moderator_client.get(
         reverse(
@@ -401,9 +402,9 @@ def test_private_thread_unapproved_redirect_view_returns_error_for_user_without_
 
 
 def test_private_thread_unapproved_redirect_view_redirects_moderator_to_last_post_if_no_unapproved_posts_exist(
-    moderator_client, user_private_thread
+    thread_reply_factory, moderator_client, user_private_thread
 ):
-    reply = reply_thread(user_private_thread)
+    reply = thread_reply_factory(user_private_thread)
 
     response = moderator_client.get(
         reverse(
@@ -424,10 +425,10 @@ def test_private_thread_unapproved_redirect_view_redirects_moderator_to_last_pos
 
 
 def test_private_thread_unapproved_redirect_view_redirects_moderator_to_unapproved_post(
-    moderator_client, user_private_thread
+    thread_reply_factory, moderator_client, user_private_thread
 ):
-    unapproved = reply_thread(user_private_thread, is_unapproved=True)
-    reply_thread(user_private_thread)
+    unapproved = thread_reply_factory(user_private_thread, is_unapproved=True)
+    thread_reply_factory(user_private_thread)
 
     response = moderator_client.get(
         reverse(
@@ -447,24 +448,28 @@ def test_private_thread_unapproved_redirect_view_redirects_moderator_to_unapprov
     )
 
 
-def test_post_redirect_view_returns_404_for_not_existing_post_id(client, thread):
-    reply = reply_thread(thread)
+def test_post_redirect_view_returns_404_for_not_existing_post_id(
+    thread_reply_factory, client, thread
+):
+    reply = thread_reply_factory(thread)
 
     response = client.get(reverse("misago:post", kwargs={"id": reply.id + 10}))
     assert response.status_code == 404
 
 
 def test_post_redirect_view_returns_error_404_if_user_cant_see_private_thread(
-    user_client, private_thread
+    thread_reply_factory, user_client, private_thread
 ):
-    reply = reply_thread(private_thread)
+    reply = thread_reply_factory(private_thread)
 
     response = user_client.get(reverse("misago:post", kwargs={"id": reply.id}))
     assert response.status_code == 404
 
 
-def test_post_redirect_view_returns_redirect_to_thread_post(client, thread):
-    reply = reply_thread(thread)
+def test_post_redirect_view_returns_redirect_to_thread_post(
+    thread_reply_factory, client, thread
+):
+    reply = thread_reply_factory(thread)
 
     response = client.get(reverse("misago:post", kwargs={"id": reply.id}))
 
@@ -480,9 +485,9 @@ def test_post_redirect_view_returns_redirect_to_thread_post(client, thread):
 
 
 def test_post_redirect_view_returns_redirect_to_private_thread_post(
-    user_client, user_private_thread
+    thread_reply_factory, user_client, user_private_thread
 ):
-    reply = reply_thread(user_private_thread)
+    reply = thread_reply_factory(user_private_thread)
 
     response = user_client.get(reverse("misago:post", kwargs={"id": reply.id}))
 
@@ -498,9 +503,9 @@ def test_post_redirect_view_returns_redirect_to_private_thread_post(
 
 
 def test_post_redirect_view_returns_redirect_to_thread_post_for_post_request(
-    client, thread
+    thread_reply_factory, client, thread
 ):
-    reply = reply_thread(thread)
+    reply = thread_reply_factory(thread)
 
     response = client.post(reverse("misago:post", kwargs={"id": reply.id}))
 
@@ -516,9 +521,9 @@ def test_post_redirect_view_returns_redirect_to_thread_post_for_post_request(
 
 
 def test_post_redirect_view_returns_redirect_to_private_thread_post_for_post_request(
-    user_client, user_private_thread
+    thread_reply_factory, user_client, user_private_thread
 ):
-    reply = reply_thread(user_private_thread)
+    reply = thread_reply_factory(user_private_thread)
 
     response = user_client.post(reverse("misago:post", kwargs={"id": reply.id}))
 

@@ -13,7 +13,7 @@ from ..plugins.models import PluginDataModel
 from .filetypes import AttachmentFileType, filetypes
 
 if TYPE_CHECKING:
-    from ..threads.models import Post
+    from ..posts.models import Post
 
 
 def upload_to(instance: "Attachment", filename: str) -> str:
@@ -40,7 +40,7 @@ class Attachment(PluginDataModel):
         on_delete=models.SET_NULL,
     )
     post = models.ForeignKey(
-        "misago_threads.Post",
+        "misago_posts.Post",
         blank=True,
         null=True,
         related_name="+",

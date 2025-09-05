@@ -81,20 +81,20 @@ def test_thread_updates_renderer_renders_action_with_thread_context(
     )
     thread_url = get_thread_url(other_thread, default_category)
     assert data == {
-        "description": f'Split this thread from <a href="{thread_url}">Test thread</a>',
+        "description": f'Split this thread from <a href="{thread_url}">{other_thread.title}</a>',
         "icon": "call_split",
     }
 
 
 def test_thread_updates_renderer_renders_action_with_not_found_thread_category(
-    thread, user, default_category, other_thread
+    thread, user, other_thread
 ):
     thread_update = create_split_thread_update(thread, other_thread, user)
     data = thread_updates_renderer.render_thread_update(
         thread_update, {"categories": {}, "threads": {other_thread.id: other_thread}}
     )
     assert data == {
-        "description": "Split this thread from <em>Test thread</em>",
+        "description": f"Split this thread from <em>{other_thread.title}</em>",
         "icon": "call_split",
     }
 
@@ -108,7 +108,7 @@ def test_thread_updates_renderer_renders_action_with_deleted_thread_context(
 
     data = thread_updates_renderer.render_thread_update(thread_update, {"threads": {}})
     assert data == {
-        "description": "Split this thread from <em>Test thread</em>",
+        "description": f"Split this thread from <em>{other_thread.title}</em>",
         "icon": "call_split",
     }
 
@@ -119,7 +119,7 @@ def test_thread_updates_renderer_renders_action_with_not_found_thread_context(
     thread_update = create_split_thread_update(thread, other_thread, user)
     data = thread_updates_renderer.render_thread_update(thread_update, {"threads": {}})
     assert data == {
-        "description": "Split this thread from <em>Test thread</em>",
+        "description": f"Split this thread from <em>{other_thread.title}</em>",
         "icon": "call_split",
     }
 

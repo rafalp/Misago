@@ -7,8 +7,9 @@ from django.http import Http404
 from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
 
+from ..posts.models import Post
 from ..privatethreadmembers.models import PrivateThreadMember
-from ..threads.models import Post, Thread
+from ..threads.models import Thread
 from .hooks import (
     check_change_private_thread_owner_permission_hook,
     check_edit_private_thread_permission_hook,
@@ -238,7 +239,7 @@ def _check_edit_private_thread_post_permission_action(
 
     time_limit = permissions.own_posts_edit_time_limit * 60
 
-    if time_limit and (timezone.now() - post.posted_on).total_seconds() > time_limit:
+    if time_limit and (timezone.now() - post.posted_at).total_seconds() > time_limit:
         if time_limit >= 86400:
             days = ceil(time_limit / 86400)
             raise PermissionDenied(

@@ -85,9 +85,8 @@ The code below implements a custom filter function that creates custom redirect 
 from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.urls import reverse
-
+from misago.posts.models import Post
 from misago.threads.hooks import get_redirect_to_post_response_hook
-from misago.threads.models import Post
 
 BLOG_CATEGORY_TREE = 500
 

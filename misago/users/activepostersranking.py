@@ -36,8 +36,7 @@ def build_active_posters_ranking() -> list[ActivityRanking]:
     queryset = (
         User.objects.filter(
             is_active=True,
-            post__is_event=False,
-            post__posted_on__gte=tracked_since,
+            post__posted_at__gte=tracked_since,
             post__category__in=ranked_categories,
         )
         .annotate(score=Count("post"))

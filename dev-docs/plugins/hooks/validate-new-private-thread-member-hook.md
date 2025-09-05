@@ -18,7 +18,7 @@ from misago.privatethreadmembers.hooks import validate_new_private_thread_member
 def custom_validate_new_private_thread_member_filter(
     action: ValidateNewPrivateThreadMemberHookAction,
     new_member_permissions: 'UserPermissionsProxy',
-    other_user_permissions: 'UserPermissionsProxy',
+    user_permissions: 'UserPermissionsProxy',
     cache_versions: dict,
     request: HttpRequest | None=None,
 ):
@@ -42,9 +42,9 @@ See the [action](#action) section for details.
 A proxy object with the invited user's permissions.
 
 
-#### `other_user_permissions: UserPermissionsProxy`
+#### `user_permissions: UserPermissionsProxy`
 
-A proxy object with the inviting user's permissions.
+A proxy object with the current user's permissions.
 
 
 #### `cache_versions: dict`
@@ -62,7 +62,7 @@ The request object, or `None` if not provided.
 ```python
 def validate_new_private_thread_member_action(
     new_member_permissions: 'UserPermissionsProxy',
-    other_user_permissions: 'UserPermissionsProxy',
+    user_permissions: 'UserPermissionsProxy',
     cache_versions: dict,
     request: HttpRequest | None=None,
 ):
@@ -79,9 +79,9 @@ Misago function for validating new private thread members.
 A proxy object with the invited user's permissions.
 
 
-#### `other_user_permissions: UserPermissionsProxy`
+#### `user_permissions: UserPermissionsProxy`
 
-A proxy object with the inviting user's permissions.
+A proxy object with the current user's permissions.
 
 
 #### `cache_versions: dict`
@@ -96,11 +96,9 @@ The request object, or `None` if not provided.
 
 ## Example
 
-Block new users from inviting non-staff users to their private threads.
+Block new users from inviting non-staff users to their private threads:
 
 ```python
-from datetime import timedelta
-
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.utils import timezone
@@ -112,21 +110,23 @@ from misago.privatethreadmembers.hooks import validate_new_private_thread_member
 def validate_new_private_thread_member_registration_date(
     action,
     new_member_permissions: UserPermissionsProxy,
-    other_user_permissions: UserPermissionsProxy,
+    user_permissions: UserPermissionsProxy,
     cache_versions: dict,
     request: HttpRequest | None = None,
 ):
     action(
         new_member_permissions,
-        other_user_permissions,
+        user_permissions,
         cache_versions,
         request,
     )
 
-    user_is_new = (timezone.now() - user.joined_on).days < 7
+    user_is_new = (timezone.now() - user_permissions.user.joined_on).days < 7
+    new_member_is_staff = (
+        new_member_permissions.is_private_threads_moderator
+        or new_member_permissions.moderated_categories
+    )
 
-    if user_is_new and not new_member_permissions.moderated_categories:
-        raise ValidationError(
-            "Your account is less than 7 days old."
-        )
+    if user_is_new and not new_member_is_staff:
+        raise ValidationError("Your account is less than 7 days old.")
 ```

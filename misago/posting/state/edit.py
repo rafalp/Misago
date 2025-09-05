@@ -1,8 +1,7 @@
 from django.db import models, transaction
 from django.http import HttpRequest
 
-from ...threads.checksums import update_post_checksum
-from ...threads.models import Post
+from ...posts.models import Post
 from ...threadupdates.create import create_changed_title_thread_update
 from ...threadupdates.models import ThreadUpdate
 from ..hooks import (
@@ -59,14 +58,13 @@ class EditThreadPostState(PostingState):
 
     def save_post(self):
         self.post.set_search_document(self.thread, self.parsing_result.text)
-        self.post.updated_on = self.timestamp
+        self.post.updated_at = self.timestamp
         self.post.edits = models.F("edits") + 1
         self.post.last_editor = self.user
         self.post.last_editor_name = self.user.username
         self.post.last_editor_slug = self.user.slug
         self.update_object(self.post)
 
-        update_post_checksum(self.post)
         self.post.set_search_vector()
         self.update_object(self.post)
 

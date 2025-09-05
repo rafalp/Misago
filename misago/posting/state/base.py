@@ -11,7 +11,8 @@ from ...attachments.models import Attachment
 from ...categories.models import Category
 from ...core.utils import slugify
 from ...parser.parse import ParsingResult
-from ...threads.models import Post, Thread
+from ...posts.models import Post
+from ...threads.models import Thread
 from ..tasks import upgrade_post_content
 from ..upgradepost import post_needs_content_upgrade
 
@@ -67,8 +68,7 @@ class PostingState:
             thread=self.thread,
             poster=self.user,
             poster_name=self.user.username,
-            posted_on=self.timestamp,
-            updated_on=self.timestamp,
+            posted_at=self.timestamp,
         )
 
     def store_object_state(self, obj: models.Model):

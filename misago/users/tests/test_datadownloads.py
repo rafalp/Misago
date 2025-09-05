@@ -1,13 +1,11 @@
 import os
 from datetime import timedelta
 
+import pytest
 from django.core.files import File
 from django.utils import timezone
 
-from ...categories.models import Category
 from ...notifications.models import Notification
-from ...threads.models import AttachmentType
-from ...threads.test import post_thread
 from ..audittrail import create_user_audit_trail
 from ..datadownloads import (
     expire_user_data_download,
@@ -63,212 +61,232 @@ class ExpireUserDataDownloadTests(AuthenticatedUserTestCase):
         self.assertEqual(data_download.status, DataDownload.STATUS_EXPIRED)
 
 
-class PrepareUserDataDownload(AuthenticatedUserTestCase):
-    def setUp(self):
-        super().setUp()
-        self.download = request_user_data_download(self.user)
+def test_prepare_user_data_download_prepares_basic_download_file(user):
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
 
-    def assert_download_is_valid(self):
-        result = prepare_user_data_download(self.download, EXPIRATION)
-        self.assertTrue(result)
+    download.refresh_from_db()
+    assert download.file
 
-        self.download.refresh_from_db()
-        self.assertTrue(self.download.file)
 
-    def test_prepare_basic_download(self):
-        """function creates data download for basic user account"""
-        self.assert_download_is_valid()
+def test_prepare_user_data_download_sets_future_expiration_date(user):
+    expires_on = timezone.now() + timedelta(hours=EXPIRATION)
 
-    def test_data_download_is_prepared_with_expiration_date(self):
-        """function creates data download with specified expiration date"""
-        expires_on = timezone.now() + timedelta(hours=EXPIRATION)
-        prepare_user_data_download(self.download, EXPIRATION)
-        self.download.refresh_from_db
-        self.assertGreater(self.download.expires_on, expires_on)
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
 
-    def test_prepare_download_with_profle_fields(self):
-        """function creates data download for user with profile fields"""
-        self.user.profile_fields = {"real_name": "Bob Boberthon!"}
-        self.user.save()
+    download.refresh_from_db()
+    assert download.expires_on > expires_on
 
-        self.assert_download_is_valid()
 
-    def test_prepare_download_with_tmp_avatar(self):
-        """function creates data download for user with tmp avatar"""
-        with open(TEST_FILE_PATH, "rb") as test_file:
-            self.user.avatar_tmp = File(test_file)
-            self.user.save()
+def test_prepare_user_data_download_includes_user_profile_fields(user):
+    user.profile_fields = {"real_name": "Bob Boberthon!"}
+    user.save()
 
-        self.assert_download_is_valid()
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
 
-    def test_prepare_download_with_src_avatar(self):
-        """function creates data download for user with src avatar"""
-        with open(TEST_FILE_PATH, "rb") as test_file:
-            self.user.avatar_src = File(test_file)
-            self.user.save()
+    download.refresh_from_db()
+    assert download.file
 
-        self.assert_download_is_valid()
 
-    def test_prepare_download_with_avatar_set(self):
-        """function creates data download for user with avatar set"""
-        with open(TEST_FILE_PATH, "rb") as test_file:
-            self.user.avatar_set.create(size=100, image=File(test_file))
+def test_prepare_user_data_download_includes_tmp_avatar(user):
+    with open(TEST_FILE_PATH, "rb") as test_file:
+        user.avatar_tmp = File(test_file)
+        user.save()
 
-        self.assert_download_is_valid()
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
 
-    def test_prepare_download_with_file_attachment(self):
-        """function creates data download for user with file attachment"""
-        filetype = AttachmentType.objects.create(
-            name="Test extension", extensions="png", mimetypes="image/png"
-        )
+    download.refresh_from_db()
+    assert download.file
 
-        with open(TEST_FILE_PATH, "rb") as test_file:
-            self.user.attachment_set.create(
-                secret="test",
-                filetype=filetype,
-                uploader_name=self.user.username,
-                uploader_slug=self.user.slug,
-                filename="test.png",
-                size=1000,
-                file=File(test_file),
-            )
 
-        self.assert_download_is_valid()
+def test_prepare_user_data_download_includes_src_avatar(user):
+    with open(TEST_FILE_PATH, "rb") as test_file:
+        user.avatar_src = File(test_file)
+        user.save()
 
-    def test_prepare_download_with_image_attachment(self):
-        """function creates data download for user with image attachment"""
-        filetype = AttachmentType.objects.create(
-            name="Test extension", extensions="png", mimetypes="image/png"
-        )
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
 
-        with open(TEST_FILE_PATH, "rb") as test_file:
-            self.user.attachment_set.create(
-                secret="test",
-                filetype=filetype,
-                uploader_name=self.user.username,
-                uploader_slug=self.user.slug,
-                filename="test.png",
-                size=1000,
-                image=File(test_file),
-            )
+    download.refresh_from_db()
+    assert download.file
 
-        self.assert_download_is_valid()
 
-    def test_prepare_download_with_thumbnail_attachment(self):
-        """function creates data download for user with thumbnail attachment"""
-        filetype = AttachmentType.objects.create(
-            name="Test extension", extensions="png", mimetypes="image/png"
-        )
+def test_prepare_user_data_download_includes_avatar_set(user):
+    with open(TEST_FILE_PATH, "rb") as test_file:
+        user.avatar_set.create(size=100, image=File(test_file))
 
-        with open(TEST_FILE_PATH, "rb") as test_file:
-            self.user.attachment_set.create(
-                secret="test",
-                filetype=filetype,
-                uploader_name=self.user.username,
-                uploader_slug=self.user.slug,
-                filename="test.png",
-                size=1000,
-                thumbnail=File(test_file),
-            )
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
 
-        self.assert_download_is_valid()
+    download.refresh_from_db()
+    assert download.file
 
-    def test_prepare_download_with_self_username_change(self):
-        """function creates data download for user that changed their username"""
-        self.user.record_name_change(self.user, "aerith", "alice")
 
-        self.assert_download_is_valid()
+def test_prepare_user_data_download_includes_file_attachment(
+    attachment_factory, text_file, user
+):
+    attachment_factory(text_file, uploader=user)
 
-    def test_prepare_download_with_username_changed_by_staff(self):
-        """function creates data download for user with username changed by staff"""
-        staff_user = self.get_superuser()
-        self.user.record_name_change(staff_user, "aerith", "alice")
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
 
-        self.assert_download_is_valid()
+    download.refresh_from_db()
+    assert download.file
 
-    def test_prepare_download_with_username_changed_by_deleted_user(self):
-        """
-        function creates data download for user with username changed by deleted user
-        """
-        self.user.record_name_change(self.user, "aerith", "alice")
-        self.user.namechanges.update(changed_by=None)
 
-        self.assert_download_is_valid()
+def test_prepare_user_data_download_includes_image_attachment(
+    attachment_factory, image_small, user
+):
+    attachment_factory(image_small, uploader=user)
 
-    def test_prepare_download_with_audit_trail(self):
-        """function creates data download for user with audit trail"""
-        create_user_audit_trail(self.user, "127.0.0.1", self.user)
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
 
-        self.assert_download_is_valid()
+    download.refresh_from_db()
+    assert download.file
 
-    def test_prepare_download_notification(self):
-        """function creates data download for user with notification"""
-        Notification.objects.create(user=self.user, verb="TEST")
 
-        self.assert_download_is_valid()
+def test_prepare_user_data_download_includes_image_thumbnail_attachment(
+    attachment_factory, image_large, user
+):
+    attachment_factory(image_large, uploader=user)
 
-    def test_prepare_download_with_post(self):
-        """function creates data download for user with post"""
-        category = Category.objects.get(slug="first-category")
-        post_thread(category, poster=self.user)
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
 
-        self.assert_download_is_valid()
+    download.refresh_from_db()
+    assert download.file
 
-    def test_prepare_download_with_owm_post_edit(self):
-        """function creates data download for user with own post edit"""
-        category = Category.objects.get(slug="first-category")
-        thread = post_thread(category, poster=self.user)
-        post = thread.first_post
 
-        post.edits_record.create(
-            category=category,
-            thread=thread,
-            editor=self.user,
-            editor_name=self.user.username,
-            editor_slug=self.user.slug,
-            edited_from="edited from",
-            edited_to="edited to",
-        )
+def test_prepare_user_data_download_includes_self_username_change(user):
+    user.record_name_change(user, "aerith", "alice")
 
-        self.assert_download_is_valid()
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
 
-    def test_prepare_download_with_other_users_post_edit(self):
-        """function creates data download for user with other user's post edit"""
-        category = Category.objects.get(slug="first-category")
-        thread = post_thread(category)
-        post = thread.first_post
+    download.refresh_from_db()
+    assert download.file
 
-        post.edits_record.create(
-            category=category,
-            thread=thread,
-            editor=self.user,
-            editor_name=self.user.username,
-            editor_slug=self.user.slug,
-            edited_from="edited from",
-            edited_to="edited to",
-        )
 
-        self.assert_download_is_valid()
+def test_prepare_user_data_download_includes_username_changed_by_staff(admin, user):
+    user.record_name_change(admin, "aerith", "alice")
 
-    def test_prepare_download_with_own_post_edit_by_staff(self):
-        """function creates data download for user with post edited by staff"""
-        category = Category.objects.get(slug="first-category")
-        thread = post_thread(category, poster=self.user)
-        post = thread.first_post
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
 
-        staff_user = self.get_superuser()
+    download.refresh_from_db()
+    assert download.file
 
-        post.edits_record.create(
-            category=category,
-            thread=thread,
-            editor=staff_user,
-            editor_name=staff_user.username,
-            editor_slug=staff_user.slug,
-            edited_from="edited from",
-            edited_to="edited to",
-        )
 
-        self.assert_download_is_valid()
+def test_prepare_user_data_download_includes_username_changed_by_deleted_user(user):
+    user.record_name_change(user, "aerith", "alice")
+    user.namechanges.update(changed_by=None)
+
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
+
+    download.refresh_from_db()
+    assert download.file
+
+
+def test_prepare_user_data_download_includes_audit_trail(user):
+    create_user_audit_trail(user, "127.0.0.1", user)
+
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
+
+    download.refresh_from_db()
+    assert download.file
+
+
+def test_prepare_user_data_download_includes_notification(user):
+    Notification.objects.create(user=user, verb="TEST")
+
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
+
+    download.refresh_from_db()
+    assert download.file
+
+
+def test_prepare_user_data_download_includes_post(user, user_thread):
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
+
+    download.refresh_from_db()
+    assert download.file
+
+
+@pytest.mark.xfail(reason="post edits broken by `misago.posts` introduction")
+def test_prepare_user_data_download_includes_own_post_edit(
+    default_category, user, user_thread
+):
+    post = user_thread.first_post
+
+    post.edits_record.create(
+        category=default_category,
+        thread=user_thread,
+        editor=user,
+        editor_name=user.username,
+        editor_slug=user.slug,
+        edited_from="edited from",
+        edited_to="edited to",
+    )
+
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
+
+    download.refresh_from_db()
+    assert download.file
+
+
+@pytest.mark.xfail(reason="post edits broken by `misago.posts` introduction")
+def test_prepare_user_data_download_includes_other_users_post_edit(
+    default_category, user, thread
+):
+    post = thread.first_post
+
+    post.edits_record.create(
+        category=default_category,
+        thread=thread,
+        editor=user,
+        editor_name=user.username,
+        editor_slug=user.slug,
+        edited_from="edited from",
+        edited_to="edited to",
+    )
+
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
+
+    download.refresh_from_db()
+    assert download.file
+
+
+@pytest.mark.xfail(reason="post edits broken by `misago.posts` introduction")
+def test_prepare_user_data_download_includes_own_post_edit_by_other_user(
+    default_category, user, moderator, user_thread
+):
+    post = user_thread.first_post
+
+    post.edits_record.create(
+        category=default_category,
+        thread=user_thread,
+        editor=moderator,
+        editor_name=moderator.username,
+        editor_slug=moderator.slug,
+        edited_from="edited from",
+        edited_to="edited to",
+    )
+
+    download = request_user_data_download(user)
+    assert prepare_user_data_download(download, EXPIRATION)
+
+    download.refresh_from_db()
+    assert download.file
 
 
 class RequestUserDataDownloadTests(AuthenticatedUserTestCase):

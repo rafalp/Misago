@@ -75,8 +75,6 @@ djangorestframework==3.14.0
     # via -r requirements.in
 docopt==0.6.2
     # via coveralls
-faker==23.1.0
-    # via -r requirements.in
 freezegun==1.5.1
     # via -r requirements.in
 graphql-core==3.2.3
@@ -151,7 +149,6 @@ pytest-mock==3.12.0
 python-dateutil==2.8.2
     # via
     #   celery
-    #   faker
     #   freezegun
 python3-openid==3.2.0
     # via social-auth-core

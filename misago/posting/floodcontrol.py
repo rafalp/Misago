@@ -14,7 +14,7 @@ def flood_control(request: HttpRequest) -> None:
         return
 
     flood_posts = timezone.now() - timedelta(seconds=request.settings.flood_control)
-    posts_queryset = request.user.post_set.filter(posted_on__gt=flood_posts)
+    posts_queryset = request.user.post_set.filter(posted_at__gt=flood_posts)
 
     if posts_queryset.exists():
         raise ValidationError(

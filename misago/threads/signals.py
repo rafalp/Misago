@@ -10,6 +10,7 @@ from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
+from ..posts.models import Post as NewPost
 from ..threadupdates.models import ThreadUpdate
 from ..users.signals import (
     anonymize_user_data,
@@ -25,6 +26,7 @@ from .models import (
     PostLike,
     Thread,
 )
+from .synchronize import synchronize_thread
 
 delete_post = Signal()
 delete_thread = Signal()
@@ -111,17 +113,18 @@ def delete_user_threads(sender, **kwargs):
         with transaction.atomic():
             thread.delete()
 
-    for post in sender.post_set.iterator(chunk_size=50):
-        recount_categories.add(post.category_id)
-        recount_threads.add(post.thread_id)
+    for post in Post.objects.filter(poster=sender).iterator(chunk_size=50):
+        with transaction.atomic():
+            post.delete()
+
+    for post in NewPost.objects.filter(poster=sender).iterator(chunk_size=50):
         with transaction.atomic():
             post.delete()
 
     if recount_threads:
         changed_threads_qs = Thread.objects.filter(id__in=recount_threads)
         for thread in changed_threads_qs.iterator(chunk_size=50):
-            thread.synchronize()
-            thread.save()
+            synchronize_thread(thread)
 
     if recount_categories:
         for category in Category.objects.filter(id__in=recount_categories):
@@ -134,24 +137,9 @@ def archive_user_attachments(sender, archive=None, **kwargs):
     queryset = Attachment.objects.filter(uploader=sender).order_by("id")
     for attachment in queryset.iterator(chunk_size=50):
         archive.add_model_file(
-            attachment.file,
-            prefix=attachment.uploaded_on.strftime("%H%M%S-file"),
-            date=attachment.uploaded_on,
-        )
-        archive.add_model_file(
-            attachment.video,
-            prefix=attachment.uploaded_on.strftime("%H%M%S-video"),
-            date=attachment.uploaded_on,
-        )
-        archive.add_model_file(
-            attachment.image,
-            prefix=attachment.uploaded_on.strftime("%H%M%S-image"),
-            date=attachment.uploaded_on,
-        )
-        archive.add_model_file(
-            attachment.thumbnail,
-            prefix=attachment.uploaded_on.strftime("%H%M%S-thumbnail"),
-            date=attachment.uploaded_on,
+            attachment.upload,
+            prefix=attachment.uploaded_at.strftime("%H%M%S"),
+            date=attachment.uploaded_at,
         )
 
 
@@ -179,8 +167,8 @@ def archive_user_legacy_attachments(sender, archive=None, **kwargs):
 @receiver(archive_user_data)
 def archive_user_posts(sender, archive=None, **kwargs):
     for post in sender.post_set.order_by("id").iterator(chunk_size=50):
-        item_name = post.posted_on.strftime("%H%M%S-post")
-        archive.add_text(item_name, post.parsed, date=post.posted_on)
+        item_name = post.posted_at.strftime("%H%M%S-post")
+        archive.add_text(item_name, post.parsed, date=post.posted_at)
 
 
 @receiver(archive_user_data)

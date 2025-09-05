@@ -2,7 +2,6 @@ import pytest
 
 from ...categories.models import Category
 from ...categories.proxy import CategoriesProxy
-from ...threads.test import post_thread
 from ...users.test import create_test_user
 from ..enums import CategoryPermission
 from ..models import CategoryGroupPermission, Moderator
@@ -290,60 +289,60 @@ def category_moderator(user, user_password, category, child_category):
 
 
 @pytest.fixture
-def category_thread(category):
-    return post_thread(category, title="Category Thread")
+def category_thread(thread_factory, category):
+    return thread_factory(category, title="Category Thread")
 
 
 @pytest.fixture
-def category_pinned_thread(category):
-    return post_thread(category, title="Category Pinned Thread", is_pinned=True)
+def category_pinned_thread(thread_factory, category):
+    return thread_factory(category, title="Category Pinned Thread", weight=1)
 
 
 @pytest.fixture
-def category_pinned_globally_thread(category):
-    return post_thread(category, title="Category Global Thread", is_global=True)
+def category_pinned_globally_thread(thread_factory, category):
+    return thread_factory(category, title="Category Global Thread", weight=2)
 
 
 @pytest.fixture
-def child_category_thread(child_category):
-    return post_thread(child_category, title="Child Thread")
+def child_category_thread(thread_factory, child_category):
+    return thread_factory(child_category, title="Child Thread")
 
 
 @pytest.fixture
-def child_category_pinned_thread(child_category):
-    return post_thread(child_category, title="Child Pinned Thread", is_pinned=True)
+def child_category_pinned_thread(thread_factory, child_category):
+    return thread_factory(child_category, title="Child Pinned Thread", weight=1)
 
 
 @pytest.fixture
-def child_category_pinned_globally_thread(child_category):
-    return post_thread(child_category, title="Child Global Thread", is_global=True)
+def child_category_pinned_globally_thread(thread_factory, child_category):
+    return thread_factory(child_category, title="Child Global Thread", weight=2)
 
 
 @pytest.fixture
-def sibling_category_thread(sibling_category):
-    return post_thread(sibling_category, title="Sibling Thread")
+def sibling_category_thread(thread_factory, sibling_category):
+    return thread_factory(sibling_category, title="Sibling Thread")
 
 
 @pytest.fixture
-def sibling_category_pinned_thread(sibling_category):
-    return post_thread(sibling_category, title="Sibling Pinned Thread", is_pinned=True)
+def sibling_category_pinned_thread(thread_factory, sibling_category):
+    return thread_factory(sibling_category, title="Sibling Pinned Thread", weight=1)
 
 
 @pytest.fixture
-def sibling_category_pinned_globally_thread(sibling_category):
-    return post_thread(sibling_category, title="Sibling Global Thread", is_global=True)
+def sibling_category_pinned_globally_thread(thread_factory, sibling_category):
+    return thread_factory(sibling_category, title="Sibling Global Thread", weight=2)
 
 
 @pytest.fixture
-def category_user_thread(category, user):
-    return post_thread(category, title="Category Thread", poster=user)
+def category_user_thread(thread_factory, category, user):
+    return thread_factory(category, title="Category Thread", starter=user)
 
 
 @pytest.fixture
-def child_category_user_thread(child_category, user):
-    return post_thread(child_category, title="Child Thread", poster=user)
+def child_category_user_thread(thread_factory, child_category, user):
+    return thread_factory(child_category, title="Child Thread", starter=user)
 
 
 @pytest.fixture
-def sibling_category_user_thread(sibling_category, user):
-    return post_thread(sibling_category, title="Sibling Thread", poster=user)
+def sibling_category_user_thread(thread_factory, sibling_category, user):
+    return thread_factory(sibling_category, title="Sibling Thread", starter=user)

@@ -29,7 +29,7 @@ def test_flood_control_fails_user_if_they_have_recent_post(user_request, user_re
 
 
 def test_flood_control_passes_user_if_their_last_post_is_old(user_request, user_reply):
-    user_reply.posted_on -= timedelta(hours=1)
+    user_reply.posted_at -= timedelta(hours=1)
     user_reply.save()
 
     flood_control(user_request)

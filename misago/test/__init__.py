@@ -9,7 +9,7 @@ from .asserts import (
     assert_not_contains_element,
 )
 from .attachments import teardown_attachments
-from .categories import CategoryRelationsFactory
+from .categories import CategoryRelations
 from .client import MisagoClient
 from .files import (
     IMAGE_INVALID,
@@ -17,14 +17,13 @@ from .files import (
     IMAGE_SMALL,
     TEXT_FILE,
 )
-from .parser import disable_parser_clean_ast
 
 __all__ = [
     "IMAGE_INVALID",
     "IMAGE_LARGE",
     "IMAGE_SMALL",
     "TEXT_FILE",
-    "CategoryRelationsFactory",
+    "CategoryRelations",
     "MisagoClient",
     "assert_contains",
     "assert_contains_element",

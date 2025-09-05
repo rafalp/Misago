@@ -4,7 +4,8 @@ from django.db.models import Model
 from django.http import HttpRequest
 
 from ..categories.models import Category
-from ..threads.models import Post, Thread
+from ..posts.models import Post
+from ..threads.models import Thread
 from .hooks import (
     delete_attachments_hook,
     delete_categories_attachments_hook,

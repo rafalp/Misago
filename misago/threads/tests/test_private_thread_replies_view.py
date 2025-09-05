@@ -1,5 +1,4 @@
 from django.urls import reverse
-from django.utils import timezone
 
 from ...conf.test import override_dynamic_settings
 from ...html.element import html_element
@@ -7,7 +6,6 @@ from ...permissions.models import Moderator
 from ...privatethreadmembers.models import PrivateThreadMember
 from ...test import assert_contains, assert_not_contains
 from ...threadupdates.create import create_test_thread_update
-from ..test import reply_thread
 
 
 def test_private_thread_replies_view_shows_error_on_missing_permission(
@@ -419,12 +417,12 @@ def test_private_thread_replies_view_limits_thread_updates(
     thread_updates_per_page=4, posts_per_page=5, posts_per_page_orphans=1
 )
 def test_private_thread_replies_view_shows_thread_updates_on_first_page(
-    user_client, user, user_private_thread
+    thread_reply_factory, user_client, user, user_private_thread
 ):
     first_page_thread_update = create_test_thread_update(user_private_thread, user)
 
     for _ in range(6):
-        reply_thread(user_private_thread, posted_on=timezone.now())
+        thread_reply_factory(user_private_thread)
 
     last_page_thread_update = create_test_thread_update(user_private_thread, user)
 
@@ -443,20 +441,20 @@ def test_private_thread_replies_view_shows_thread_updates_on_first_page(
     thread_updates_per_page=4, posts_per_page=5, posts_per_page_orphans=1
 )
 def test_private_thread_replies_view_shows_thread_updates_on_second_page(
-    user_client, user, user_private_thread
+    thread_reply_factory, user_client, user, user_private_thread
 ):
     for _ in range(4):
-        reply_thread(user_private_thread, posted_on=timezone.now())
+        thread_reply_factory(user_private_thread)
 
     first_page_thread_update = create_test_thread_update(user_private_thread, user)
 
     for _ in range(5):
-        reply_thread(user_private_thread, posted_on=timezone.now())
+        thread_reply_factory(user_private_thread)
 
     second_page_thread_update = create_test_thread_update(user_private_thread, user)
 
     for _ in range(2):
-        reply_thread(user_private_thread, posted_on=timezone.now())
+        thread_reply_factory(user_private_thread)
 
     last_page_thread_update = create_test_thread_update(user_private_thread, user)
 
@@ -480,15 +478,15 @@ def test_private_thread_replies_view_shows_thread_updates_on_second_page(
     thread_updates_per_page=4, posts_per_page=5, posts_per_page_orphans=1
 )
 def test_private_thread_replies_view_shows_thread_updates_on_last_page(
-    user_client, user, user_private_thread
+    thread_reply_factory, user_client, user, user_private_thread
 ):
     for _ in range(4):
-        reply_thread(user_private_thread, posted_on=timezone.now())
+        thread_reply_factory(user_private_thread)
 
     first_page_thread_update = create_test_thread_update(user_private_thread, user)
 
     for _ in range(2):
-        reply_thread(user_private_thread, posted_on=timezone.now())
+        thread_reply_factory(user_private_thread)
 
     last_page_thread_update = create_test_thread_update(user_private_thread, user)
 

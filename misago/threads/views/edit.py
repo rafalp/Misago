@@ -31,13 +31,14 @@ from ...posting.state import (
     get_edit_thread_post_state,
 )
 from ...posting.validators import validate_posted_contents
+from ...posts.models import Post
 from ..hooks import (
     get_edit_private_thread_page_context_data_hook,
     get_edit_private_thread_post_page_context_data_hook,
     get_edit_thread_page_context_data_hook,
     get_edit_thread_post_page_context_data_hook,
 )
-from ..models import Post, Thread
+from ..models import Thread
 from ..prefetch import prefetch_posts_feed_related_objects
 from .redirect import private_thread_post_redirect, thread_post_redirect
 from .generic import PrivateThreadView, ThreadView

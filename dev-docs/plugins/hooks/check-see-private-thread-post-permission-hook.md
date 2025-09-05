@@ -89,7 +89,9 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext
 from misago.permissions.hooks import check_see_private_thread_post_permission_hook
 from misago.permissions.proxy import UserPermissionsProxy
-from misago.threads.models import Post, Thread
+from misago.posts.models import Post
+from misago.threads.models import Thread
+
 
 @check_see_private_thread_post_permission_hook.append_filter
 def check_user_can_see_thread(

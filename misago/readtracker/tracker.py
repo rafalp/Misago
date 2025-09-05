@@ -2,10 +2,11 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Iterable
 
 from django.http import HttpRequest
-from django.db.models import BooleanField, FilteredRelation, OuterRef, Q, Value
+from django.db.models import FilteredRelation, OuterRef, Q
 
 from ..categories.models import Category
-from ..threads.models import Post, Thread
+from ..posts.models import Post
+from ..threads.models import Thread
 from .readtime import get_default_read_time
 from .models import ReadCategory, ReadThread
 
@@ -136,7 +137,7 @@ def get_unread_posts(
 
     read_data: set[int] = set()
     for post in posts:
-        if post.posted_on > read_time:
+        if post.posted_at > read_time:
             read_data.add(post.id)
 
     return read_data
