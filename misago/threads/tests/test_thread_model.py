@@ -6,7 +6,7 @@ from django.utils import timezone
 from ...categories.models import Category
 from ...polls.models import Poll
 from ...posts.models import Post
-from ...privatethreadmembers.models import PrivateThreadMember
+from ...privatethreads.models import PrivateThreadMember
 from ...users.test import create_test_user
 from ..models import Thread
 

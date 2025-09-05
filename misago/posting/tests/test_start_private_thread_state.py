@@ -1,5 +1,5 @@
 from ...parser.parse import parse
-from ...privatethreadmembers.models import PrivateThreadMember
+from ...privatethreads.models import PrivateThreadMember
 from ..state import StartPrivateThreadState
 
 

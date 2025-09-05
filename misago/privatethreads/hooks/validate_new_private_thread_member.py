@@ -99,7 +99,7 @@ class ValidateNewPrivateThreadMemberHook(
     from django.http import HttpRequest
     from django.utils import timezone
     from misago.permissions.proxy import UserPermissionsProxy
-    from misago.privatethreadmembers.hooks import validate_new_private_thread_member_hook
+    from misago.privatethreads.hooks import validate_new_private_thread_member_hook
 
 
     @validate_new_private_thread_member_hook.append_filter

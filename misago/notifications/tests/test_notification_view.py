@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from ...privatethreadmembers.models import PrivateThreadMember
+from ...privatethreads.models import PrivateThreadMember
 from ...test import assert_contains
 from ..enums import NotificationVerb
 from ..models import Notification

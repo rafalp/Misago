@@ -7,7 +7,7 @@ from ...conf.test import override_dynamic_settings
 from ...pagination.cursor import EmptyPageError
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
-from ...privatethreadmembers.models import PrivateThreadMember
+from ...privatethreads.models import PrivateThreadMember
 from ...test import assert_contains, assert_not_contains
 
 

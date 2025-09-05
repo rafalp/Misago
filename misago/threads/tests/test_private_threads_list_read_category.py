@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.urls import reverse
 
-from ...privatethreadmembers.models import PrivateThreadMember
+from ...privatethreads.models import PrivateThreadMember
 from ...readtracker.models import ReadCategory, ReadThread
 from ..models import Thread
 

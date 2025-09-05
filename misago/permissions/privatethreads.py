@@ -1,5 +1,4 @@
 from math import ceil
-from typing_extensions import TYPE_CHECKING
 
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
@@ -8,7 +7,7 @@ from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
 
 from ..posts.models import Post
-from ..privatethreadmembers.models import PrivateThreadMember
+from ..privatethreads.models import PrivateThreadMember
 from ..threads.models import Thread
 from .hooks import (
     check_change_private_thread_owner_permission_hook,

@@ -1,10 +1,16 @@
 from django.urls import path
 
-from .views import (
+from .views.members import (
     PrivateThreadLeaveView,
     PrivateThreadMemberRemoveView,
     PrivateThreadMembersAddView,
     PrivateThreadOwnerChangeView,
+)
+from .views.post import (
+    PrivateThreadPostLastView,
+    PrivateThreadPostUnapprovedView,
+    PrivateThreadPostUnreadView,
+    PrivateThreadPostView,
 )
 
 
@@ -28,5 +34,25 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/remove-member/<int:user_id>/",
         PrivateThreadMemberRemoveView.as_view(),
         name="private-thread-member-remove",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/post/<int:post_id>/",
+        PrivateThreadPostView.as_view(),
+        name="private-thread-post",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/last/",
+        PrivateThreadPostLastView.as_view(),
+        name="private-thread-post-last",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/unapproved/",
+        PrivateThreadPostUnapprovedView.as_view(),
+        name="private-thread-post-unapproved",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/unread/",
+        PrivateThreadPostUnreadView.as_view(),
+        name="private-thread-post-unread",
     ),
 ]

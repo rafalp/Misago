@@ -5,10 +5,10 @@ This hook allows plugins to replace or extend the logic for removing a member fr
 
 ## Location
 
-This hook can be imported from `misago.privatethreadmembers.hooks`:
+This hook can be imported from `misago.privatethreads.hooks`:
 
 ```python
-from misago.privatethreadmembers.hooks import remove_private_thread_member_hook
+from misago.privatethreads.hooks import remove_private_thread_member_hook
 ```
 
 
@@ -24,7 +24,7 @@ Record the IP address used to remove a member from a thread:
 
 ```python
 from django.http import HttpRequest
-from misago.privatethreadmembers.hooks import remove_private_thread_member_hook
+from misago.privatethreads.hooks import remove_private_thread_member_hook
 from misago.threads.models import Thread
 from misago.threadupdates.models import ThreadUpdate
 from misago.users.models import User
