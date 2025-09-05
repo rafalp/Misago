@@ -1,25 +1,22 @@
 from datetime import timedelta
 
-from django.utils import timezone
-
 from ...readtracker.models import ReadCategory, ReadThread
-from ..test import post_thread
 
 
 def test_unread_category_without_unread_threads_is_marked_read(
-    default_category, user, user_client
+    thread_factory, default_category, user, user_client
 ):
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
     threads = (
-        post_thread(
+        thread_factory(
             default_category,
-            started_on=timezone.now() - timedelta(minutes=40),
+            started_on=-900,
         ),
-        post_thread(
+        thread_factory(
             default_category,
-            started_on=timezone.now() - timedelta(minutes=20),
+            started_on=-600,
         ),
     )
 
@@ -43,25 +40,25 @@ def test_unread_category_without_unread_threads_is_marked_read(
 
 
 def test_unread_category_read_entry_without_unread_threads_is_marked_read(
-    default_category, user, user_client
+    thread_factory, default_category, user, user_client
 ):
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
-    post_thread(
+    thread = thread_factory(
         default_category,
-        started_on=timezone.now() - timedelta(minutes=40),
+        started_on=-2400,
     )
 
     read_category = ReadCategory.objects.create(
         user=user,
         category=default_category,
-        read_time=timezone.now() - timedelta(minutes=30),
+        read_time=thread.last_post_on,
     )
 
-    read_thread = post_thread(
+    read_thread = thread_factory(
         default_category,
-        started_on=timezone.now() - timedelta(minutes=20),
+        started_on=-1200,
     )
 
     ReadThread.objects.create(
@@ -85,14 +82,14 @@ def test_unread_category_read_entry_without_unread_threads_is_marked_read(
 
 
 def test_unread_category_with_unread_thread_is_not_marked_read(
-    default_category, user, user_client
+    thread_factory, default_category, user, user_client
 ):
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
-    read_thread = post_thread(
+    read_thread = thread_factory(
         default_category,
-        started_on=timezone.now() - timedelta(minutes=40),
+        started_on=-900,
     )
 
     ReadThread.objects.create(
@@ -102,9 +99,9 @@ def test_unread_category_with_unread_thread_is_not_marked_read(
         read_time=read_thread.last_post_on,
     )
 
-    post_thread(
+    thread_factory(
         default_category,
-        started_on=timezone.now() - timedelta(minutes=20),
+        started_on=-600,
     )
 
     default_category.synchronize()

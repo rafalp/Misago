@@ -1,12 +1,10 @@
 from datetime import timedelta
 
 from django.urls import reverse
-from django.utils import timezone
 
 from ...privatethreadmembers.models import PrivateThreadMember
 from ...readtracker.models import ReadCategory, ReadThread
 from ..models import Thread
-from ..test import post_thread
 
 
 def create_user_private_thread_memberships(user):
@@ -15,19 +13,19 @@ def create_user_private_thread_memberships(user):
 
 
 def test_private_threads_list_without_unread_threads_is_marked_read(
-    private_threads_category, user, user_client
+    thread_factory, private_threads_category, user, user_client
 ):
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
     threads = (
-        post_thread(
+        thread_factory(
             private_threads_category,
-            started_on=timezone.now() - timedelta(minutes=40),
+            started_on=-900,
         ),
-        post_thread(
+        thread_factory(
             private_threads_category,
-            started_on=timezone.now() - timedelta(minutes=20),
+            started_on=-600,
         ),
     )
 
@@ -53,20 +51,20 @@ def test_private_threads_list_without_unread_threads_is_marked_read(
 
 
 def test_private_threads_list_without_unread_threads_clears_user_unread_threads_count(
-    private_threads_category, user, user_client
+    thread_factory, private_threads_category, user, user_client
 ):
     user.joined_on -= timedelta(minutes=60)
     user.unread_private_threads = 50
     user.save()
 
     threads = (
-        post_thread(
+        thread_factory(
             private_threads_category,
-            started_on=timezone.now() - timedelta(minutes=40),
+            started_on=-900,
         ),
-        post_thread(
+        thread_factory(
             private_threads_category,
-            started_on=timezone.now() - timedelta(minutes=20),
+            started_on=-600,
         ),
     )
 
@@ -91,25 +89,25 @@ def test_private_threads_list_without_unread_threads_clears_user_unread_threads_
 
 
 def test_private_threads_list_read_entry_without_unread_threads_is_marked_read(
-    private_threads_category, user, user_client
+    thread_factory, private_threads_category, user, user_client
 ):
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
-    post_thread(
+    thread = thread_factory(
         private_threads_category,
-        started_on=timezone.now() - timedelta(minutes=40),
+        started_on=-2400,
     )
 
     read_category = ReadCategory.objects.create(
         user=user,
         category=private_threads_category,
-        read_time=timezone.now() - timedelta(minutes=30),
+        read_time=thread.last_post_on,
     )
 
-    read_thread = post_thread(
+    read_thread = thread_factory(
         private_threads_category,
-        started_on=timezone.now() - timedelta(minutes=20),
+        started_on=-1200,
     )
 
     ReadThread.objects.create(
@@ -137,14 +135,14 @@ def test_private_threads_list_read_entry_without_unread_threads_is_marked_read(
 
 
 def test_private_threads_list_with_unread_thread_is_not_marked_read(
-    private_threads_category, user, user_client
+    thread_factory, private_threads_category, user, user_client
 ):
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
-    read_thread = post_thread(
+    read_thread = thread_factory(
         private_threads_category,
-        started_on=timezone.now() - timedelta(minutes=40),
+        started_on=-900,
     )
 
     ReadThread.objects.create(
@@ -154,9 +152,9 @@ def test_private_threads_list_with_unread_thread_is_not_marked_read(
         read_time=read_thread.last_post_on,
     )
 
-    post_thread(
+    thread_factory(
         private_threads_category,
-        started_on=timezone.now() - timedelta(minutes=20),
+        started_on=-600,
     )
 
     private_threads_category.synchronize()

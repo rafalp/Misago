@@ -1,10 +1,11 @@
+from datetime import timedelta
+
 from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
 from ...notifications.users import notify_user
 from ...readtracker.models import ReadCategory, ReadThread
 from ...test import assert_contains
-from ..test import reply_thread
 
 
 def test_thread_replies_view_doesnt_mark_unread_threads_for_guest(client, thread):
@@ -20,6 +21,9 @@ def test_thread_replies_view_doesnt_mark_unread_threads_for_guest(client, thread
 def test_thread_replies_view_marks_category_as_read_for_user(
     user_client, user, default_category, thread
 ):
+    user.joined_on -= timedelta(minutes=60)
+    user.save()
+
     default_category.last_post_on = thread.last_post_on
     default_category.save()
 
@@ -39,6 +43,9 @@ def test_thread_replies_view_marks_category_as_read_for_user(
 def test_thread_replies_view_marks_thread_as_read_for_user(
     user_client, user, default_category, thread, other_thread
 ):
+    user.joined_on -= timedelta(minutes=60)
+    user.save()
+
     default_category.last_post_on = other_thread.last_post_on
     default_category.save()
 
@@ -58,9 +65,17 @@ def test_thread_replies_view_marks_thread_as_read_for_user(
 
 @override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=0)
 def test_thread_replies_view_marks_unread_thread_posts_on_page_as_read_for_user(
-    user_client, user, default_category, thread
+    thread_factory, thread_reply_factory, user_client, user, default_category
 ):
-    posts = [reply_thread(thread) for _ in range(5)]
+    user.joined_on -= timedelta(minutes=60)
+    user.save()
+
+    thread = thread_factory(default_category, started_on=-900)
+
+    posts = []
+    for i in reversed(range(1, 6)):
+        posted_at = i * 100 * -1
+        posts.append(thread_reply_factory(thread, posted_at=posted_at))
 
     thread.synchronize()
     thread.save()
@@ -86,11 +101,14 @@ def test_thread_replies_view_updates_user_watched_thread_read_time(
     user_client,
     user,
     default_category,
-    thread,
+    old_thread,
     other_thread,
     watched_thread_factory,
 ):
-    watched_thread = watched_thread_factory(user, thread, False)
+    user.joined_on -= timedelta(minutes=60)
+    user.save()
+
+    watched_thread = watched_thread_factory(user, old_thread, False)
     watched_thread.read_time = watched_thread.read_time.replace(year=2010)
     watched_thread.save()
 
@@ -98,12 +116,12 @@ def test_thread_replies_view_updates_user_watched_thread_read_time(
     default_category.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"id": old_thread.id, "slug": old_thread.slug}),
     )
-    assert_contains(response, thread.title)
+    assert_contains(response, old_thread.title)
 
     watched_thread.refresh_from_db()
-    assert watched_thread.read_time == thread.last_post_on
+    assert watched_thread.read_time == old_thread.last_post_on
 
 
 def test_thread_replies_view_marks_displayed_posts_notifications_as_read(
@@ -112,6 +130,9 @@ def test_thread_replies_view_marks_displayed_posts_notifications_as_read(
     default_category,
     thread,
 ):
+    user.joined_on -= timedelta(minutes=60)
+    user.save()
+
     notification = notify_user(
         user,
         "test",
