@@ -7,7 +7,6 @@ from ...permissions.models import Moderator
 from ...privatethreadmembers.models import PrivateThreadMember
 from ...test import assert_contains, assert_not_contains
 from ...threadupdates.create import create_test_thread_update
-from ..test import reply_thread
 
 
 def test_private_thread_replies_view_shows_thread_members(

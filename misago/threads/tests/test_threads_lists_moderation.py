@@ -3,7 +3,6 @@ from django.urls import reverse
 from ...conf.test import override_dynamic_settings
 from ...permissions.models import Moderator
 from ...test import assert_contains, assert_not_contains
-from ..test import post_thread
 
 MODERATION_FORM_HTML = '<form id="threads-moderation" method="post">'
 MODERATION_FIXED_HTML = '<div class="fixed-moderation">'

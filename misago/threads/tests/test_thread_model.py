@@ -3,7 +3,6 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from .. import test
 from ...categories.models import Category
 from ...polls.models import Poll
 from ...posts.models import Post
