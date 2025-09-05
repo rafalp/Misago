@@ -19,6 +19,7 @@ from ...permissions.threads import (
     filter_thread_updates_queryset,
 )
 from ...posts.models import Post
+from ...posts.paginator import PostPaginator
 from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,
@@ -27,7 +28,6 @@ from ...privatethreads.members import get_private_thread_members
 from ...threadupdates.models import ThreadUpdate
 from ..models import Thread
 from ..nexturl import get_next_thread_url
-from ..paginator import ThreadRepliesPaginator
 from ..postsfeed import PostsFeed, PrivateThreadPostsFeed, ThreadPostsFeed
 
 if TYPE_CHECKING:
@@ -88,7 +88,7 @@ class GenericView(View):
         request: HttpRequest,
         queryset: QuerySet,
     ) -> Paginator:
-        return ThreadRepliesPaginator(
+        return PostPaginator(
             queryset.order_by("id"),
             request.settings.posts_per_page,
             request.settings.posts_per_page_orphans,
