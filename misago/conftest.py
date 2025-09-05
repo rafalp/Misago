@@ -34,7 +34,7 @@ from .test.categories import category_relations_factory
 from .test.time import *
 from .test.polls import *
 from .test.posts import *
-from .test.threads import *
+from .test.threads import thread_factory, thread_relations_factory
 from .test.threadupdates import *
 from .test.userpermissions import *
 from .themes import THEME_CACHE

@@ -10,15 +10,9 @@ from ..permissions.models import CategoryGroupPermission
 from ..polls.models import Poll, PollVote
 from ..posts.models import Post
 from ..readtracker.models import ReadCategory, ReadThread
-from ..threads.models import (
-    PostEdit,
-    PostLike,
-    Thread,
-)
-from ..threads.test import post_thread, reply_thread
+from ..threads.models import Thread
 from ..threadupdates.create import create_test_thread_update
 from ..threadupdates.models import ThreadUpdate
-from ..users.models import User, Group
 
 __all__ = ["CategoryRelations", "category_relations_factory"]
 
@@ -231,7 +225,7 @@ class CategoryRelations:
 
     def assert_relations_moved(self, new_category: Category):
         self.attachment.refresh_from_db()
-        assert not self.attachment.is_deleted, "Attachment was NOT marked for deletion"
+        assert not self.attachment.is_deleted, "Attachment was marked for deletion"
         assert (
             self.attachment.category_id == new_category.id
         ), "Attachment category relation was not updated"

@@ -12,6 +12,10 @@ from ...users.test import create_test_user
 from ..models import Thread
 
 
+def test_thread_model_set_first_post():
+    pass
+
+
 class ThreadModelTests(TestCase):
     def setUp(self):
         datetime = timezone.now()
@@ -150,63 +154,6 @@ class ThreadModelTests(TestCase):
         with self.assertRaises(ValueError):
             reply = test.reply_thread(self.thread, is_unapproved=True)
             self.thread.set_best_answer(user, reply)
-
-    def test_move(self):
-        """move(new_category) moves thread to other category"""
-        root_category = Category.objects.root_category()
-        Category(name="New Category", slug="new-category").insert_at(
-            root_category, position="last-child", save=True
-        )
-        new_category = Category.objects.get(slug="new-category")
-
-        self.thread.move(new_category)
-        self.assertEqual(self.thread.category, new_category)
-
-        for post in self.thread.post_set.all():
-            self.assertEqual(post.category_id, new_category.id)
-
-    def test_merge(self):
-        """merge(other_thread) moves other thread content to this thread"""
-        with self.assertRaises(ValueError):
-            self.thread.merge(self.thread)
-
-        datetime = timezone.now() + timedelta(5)
-
-        other_thread = Thread(
-            category=self.category,
-            started_on=datetime,
-            starter_name="Tester",
-            starter_slug="tester",
-            last_post_on=datetime,
-            last_poster_name="Tester",
-            last_poster_slug="tester",
-        )
-
-        other_thread.set_title("Other thread")
-        other_thread.save()
-
-        post = Post.objects.create(
-            category=self.category,
-            thread=other_thread,
-            poster_name="Admin",
-            original="Hello! I am other message!",
-            parsed="<p>Hello! I am other message!</p>",
-            posted_at=datetime,
-            updated_at=datetime,
-        )
-
-        other_thread.first_post = post
-        other_thread.last_post = post
-        other_thread.save()
-
-        self.thread.merge(other_thread)
-
-        self.thread.synchronize()
-        self.assertEqual(self.thread.replies, 1)
-        self.assertEqual(self.thread.last_post, post)
-        self.assertEqual(self.thread.last_post_on, post.posted_at)
-        self.assertEqual(self.thread.last_poster_name, "Admin")
-        self.assertEqual(self.thread.last_poster_slug, "admin")
 
 
 def test_thread_private_thread_member_ids_property_returns_list_of_private_thread_member_ids(

@@ -43,7 +43,9 @@ def test_synchronize_thread_removes_has_poll_flag(thread):
     assert not thread.has_poll
 
 
-def test_synchronize_thread_sets_has_unapproved_posts_flag(thread_reply_factory, thread):
+def test_synchronize_thread_sets_has_unapproved_posts_flag(
+    thread_reply_factory, thread
+):
     assert not thread.has_unapproved_posts
 
     thread_reply_factory(thread, is_unapproved=True)

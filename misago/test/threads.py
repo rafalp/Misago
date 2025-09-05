@@ -1,9 +1,17 @@
-import pytest
+from dataclasses import dataclass
 
+import pytest
 from django.utils.crypto import get_random_string
 
+from ..attachments.models import Attachment
 from ..categories.models import Category
+from ..notifications.models import Notification, WatchedThread
+from ..polls.models import Poll, PollVote
+from ..posts.models import Post
+from ..readtracker.models import ReadThread
 from ..threads.models import Thread
+from ..threadupdates.create import create_test_thread_update
+from ..threadupdates.models import ThreadUpdate
 from ..core.utils import slugify
 from .utils import (
     FactoryTimestampArg,
@@ -12,7 +20,7 @@ from .utils import (
     unpack_factory_user_arg,
 )
 
-__all__ = ["thread_factory"]
+__all__ = ["ThreadRelations", "thread_factory", "thread_relations_factory"]
 
 
 @pytest.fixture
@@ -91,3 +99,114 @@ def thread_factory(post_factory):
         return thread
 
     return _thread_factory
+
+
+@pytest.fixture
+def thread_relations_factory(user, other_user):
+    def _thread_relations_factory(thread: Thread) -> "ThreadRelations":
+        post = thread.first_post
+
+        attachment = Attachment.objects.create(
+            category=thread.category,
+            thread=thread,
+            post=post,
+            uploader_name="Anonymous",
+            uploader_slug="anonymous",
+            name="filename.txt",
+            slug="filename-txt",
+        )
+
+        notification = Notification.objects.create(
+            user=user,
+            verb="TEST",
+            actor=other_user,
+            actor_name=other_user.username,
+            category=thread.category,
+            thread=thread,
+            thread_title=thread.title,
+            post=post,
+        )
+
+        poll = Poll.objects.create(
+            category=thread.category,
+            thread=thread,
+            starter=user,
+            starter_name=user.username,
+            starter_slug=user.slug,
+            question="...",
+            choices=[],
+        )
+
+        poll_vote = PollVote.objects.create(
+            category=thread.category,
+            thread=thread,
+            poll=poll,
+            choice_id="aaaa",
+            voter=user,
+            voter_name=user.username,
+            voter_slug=user.slug,
+        )
+
+        read_thread = ReadThread.objects.create(
+            user=user,
+            category=thread.category,
+            thread=thread,
+        )
+
+        thread_update = create_test_thread_update(thread, other_user)
+
+        watched_thread = WatchedThread.objects.create(
+            user=user,
+            category=thread.category,
+            thread=thread,
+        )
+
+        return ThreadRelations(
+            attachment=attachment,
+            notification=notification,
+            poll=poll,
+            poll_vote=poll_vote,
+            post=post,
+            read_thread=read_thread,
+            thread_update=thread_update,
+            watched_thread=watched_thread,
+        )
+
+    return _thread_relations_factory
+
+
+@dataclass(frozen=True)
+class ThreadRelations:
+    attachment: Attachment
+    notification: Notification
+    poll: Poll
+    poll_vote: PollVote
+    post: Post
+    read_thread: ReadThread
+    thread_update: ThreadUpdate
+    watched_thread: WatchedThread
+
+    def assert_category(self, category: Category):
+        self.attachment.refresh_from_db()
+        assert self.attachment.category_id == category.id
+
+        self.notification.refresh_from_db()
+        assert self.notification.category_id == category.id
+
+        self.poll.refresh_from_db()
+        assert self.poll.category_id == category.id
+
+        self.poll_vote.refresh_from_db()
+        assert self.poll_vote.category_id == category.id
+
+        self.read_thread.refresh_from_db()
+        assert self.read_thread.category_id == category.id
+
+        self.post.refresh_from_db()
+        assert self.post.category_id == category.id
+
+        self.thread_update.refresh_from_db()
+        assert self.thread_update.category_id == category.id
+
+        self.watched_thread.refresh_from_db()
+        assert self.watched_thread.category_id == category.id

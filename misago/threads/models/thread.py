@@ -198,52 +198,6 @@ class Thread(PluginDataModel):
             )
         )
 
-    @property
-    def thread_type(self):
-        return self.category.thread_type
-
-    def get_api_url(self):
-        return self.thread_type.get_thread_api_url(self)
-
-    def get_editor_api_url(self):
-        return self.thread_type.get_thread_editor_api_url(self)
-
-    def get_merge_api_url(self):
-        return self.thread_type.get_thread_merge_api_url(self)
-
-    def get_posts_api_url(self):
-        return self.thread_type.get_thread_posts_api_url(self)
-
-    def get_post_merge_api_url(self):
-        return self.thread_type.get_post_merge_api_url(self)
-
-    def get_post_move_api_url(self):
-        return self.thread_type.get_post_move_api_url(self)
-
-    def get_post_split_api_url(self):
-        return self.thread_type.get_post_split_api_url(self)
-
-    def get_poll_api_url(self):
-        return self.thread_type.get_thread_poll_api_url(self)
-
-    def get_watch_api_url(self):
-        return self.thread_type.get_thread_watch_api_url(self)
-
-    def get_absolute_url(self, page=1):
-        return self.thread_type.get_thread_absolute_url(self, page)
-
-    def get_new_post_url(self):
-        return self.thread_type.get_thread_new_post_url(self)
-
-    def get_last_post_url(self):
-        return self.thread_type.get_thread_last_post_url(self)
-
-    def get_best_answer_url(self):
-        return self.thread_type.get_thread_best_answer_url(self)
-
-    def get_unapproved_post_url(self):
-        return self.thread_type.get_thread_unapproved_post_url(self)
-
     def set_title(self, title):
         self.title = title
         self.slug = slugify(title)

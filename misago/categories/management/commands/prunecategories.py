@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
+from ....threads.move import move_threads
 from ...models import Category
 
 
@@ -35,8 +36,7 @@ class Command(BaseCommand):
                 prune_qs = threads_qs.filter(started_on__lte=cutoff)
                 for thread in prune_qs.iterator(chunk_size=50):
                     if archive:
-                        thread.move(archive)
-                        thread.save()
+                        move_threads(thread, archive)
                     else:
                         thread.delete()
                     pruned_threads += 1
@@ -46,8 +46,7 @@ class Command(BaseCommand):
                 prune_qs = threads_qs.filter(last_post_on__lte=cutoff)
                 for thread in prune_qs.iterator(chunk_size=50):
                     if archive:
-                        thread.move(archive)
-                        thread.save()
+                        move_threads(thread, archive)
                     else:
                         thread.delete()
                     pruned_threads += 1

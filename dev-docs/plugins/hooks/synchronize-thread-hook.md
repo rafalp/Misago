@@ -2,7 +2,7 @@
 
 This hook allows plugins to replace or extend the logic used to synchronize threads.
 
-Thread synchronization updates a thread’s reply count, the IDs and timestamps of the first and last posts, the attributes of the first and last posters, and status flags such as has_unapproved_posts.
+Thread synchronization updates a thread’s reply count, the IDs and timestamps of the first and last posts, the attributes of the first and last posters, and status flags such as `has_unapproved_posts`.
 
 
 ## Location
@@ -102,28 +102,32 @@ The request object, or `None` if not provided.
 
 ## Example
 
-Record the IP address used to change the thread owner:
+Record the last user to synchronize the thread:
 
 ```python
 from django.http import HttpRequest
-from misago.privatethreadmembers.hooks import synchronize_thread_hook
+from misago.threads.hooks import synchronize_thread_hook
 from misago.threads.models import Thread
-from misago.threadupdates.models import ThreadUpdate
-from misago.users.models import User
 
 
 @synchronize_thread_hook.append_filter
-def record_private_thread_owner_change_actor_ip(
+def record_user_who_synced_thread(
     action,
-    actor: User | str | None,
     thread: Thread,
-    new_owner: User,
+    data: dict,
+    commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
-    thread_update = action(actor, thread, new_owner, request)
+):
+    if "plugin_data" not in data:
+        data["plugin_data"] = thread.plugin_data
 
-    thread_update.plugin_data["user_ip"] = request.user_ip
-    thread_update.save(update_fields=["plugin_data"])
+    if request:
+        data["plugin_data"]["last_synchronized"] = {
+            "user_id": request.user.id,
+            "user_ip": request.user_ip,
+        }
+    else:
+        data["plugin_data"]["last_synchronized"] = None
 
-    return thread_update
+    action(thread, data, commit, request)
 ```
