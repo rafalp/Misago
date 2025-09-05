@@ -6,6 +6,12 @@ from .views.members import (
     PrivateThreadMembersAddView,
     PrivateThreadOwnerChangeView,
 )
+from .views.redirect import (
+    PrivateThreadLastPostRedirectView,
+    PrivateThreadPostRedirectView,
+    PrivateThreadUnreadPostRedirectView,
+    PrivateThreadUnapprovedPostRedirectView,
+)
 
 
 urlpatterns = [
@@ -28,5 +34,25 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/remove-member/<int:user_id>/",
         PrivateThreadMemberRemoveView.as_view(),
         name="private-thread-member-remove",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/post/<int:post_id>/",
+        PrivateThreadPostRedirectView.as_view(),
+        name="private-thread-post",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/last/",
+        PrivateThreadLastPostRedirectView.as_view(),
+        name="private-thread-last-post",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/unread/",
+        PrivateThreadUnreadPostRedirectView.as_view(),
+        name="private-thread-unread-post",
+    ),
+    path(
+        "p/<slug:slug>/<int:id>/unapproved/",
+        PrivateThreadUnapprovedPostRedirectView.as_view(),
+        name="private-thread-unapproved-post",
     ),
 ]

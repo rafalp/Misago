@@ -36,6 +36,7 @@ from ...posting.state import (
 )
 from ...posting.validators import validate_flood_control, validate_posted_contents
 from ...posts.models import Post
+from ...privatethreads.redirect import redirect_to_private_thread_post
 from ...readtracker.tracker import (
     get_thread_read_time,
     mark_thread_read,
@@ -49,7 +50,7 @@ from ..hooks import (
 )
 from ..models import Thread
 from ..prefetch import prefetch_posts_feed_related_objects
-from .redirect import redirect_to_thread_post
+from ..redirect import redirect_to_thread_post
 from .generic import PrivateThreadView, ThreadView
 
 
@@ -320,9 +321,7 @@ class ReplyThreadView(ReplyView, ThreadView):
     def get_redirect_response(
         self, request: HttpRequest, thread: Thread, post: Post
     ) -> HttpResponse:
-        return redirect_to_thread_post(
-            request, id=thread.id, slug=thread.slug, post=post.id
-        )
+        return redirect_to_thread_post(request, thread, post)
 
     def is_category_read(
         self, request: HttpRequest, category: Category, read_time: datetime | None
@@ -376,9 +375,7 @@ class ReplyPrivateThreadView(ReplyView, PrivateThreadView):
     def get_redirect_response(
         self, request: HttpRequest, thread: Thread, post: Post
     ) -> HttpResponse:
-        return redirect_to_private_thread_post(
-            request, id=thread.id, slug=thread.slug, post=post.id
-        )
+        return redirect_to_private_thread_post(request, thread, post)
 
     def is_category_read(
         self, request: HttpRequest, category: Category, read_time: datetime | None

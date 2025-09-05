@@ -1,9 +1,7 @@
 from ..paginator import PostPaginator
 
 
-def test_post_paginator_counts_pages_without_orphans(
-    thread_reply_factory, thread
-):
+def test_post_paginator_counts_pages_without_orphans(thread_reply_factory, thread):
     paginator = PostPaginator(thread.post_set, 5, 0)
     assert paginator.count == 1
     assert paginator.num_pages == 1
@@ -42,9 +40,7 @@ def test_post_paginator_counts_pages_without_orphans(
     assert paginator.num_pages == 3
 
 
-def test_post_paginator_counts_pages_with_orphans(
-    thread_reply_factory, thread
-):
+def test_post_paginator_counts_pages_with_orphans(thread_reply_factory, thread):
     paginator = PostPaginator(thread.post_set, 5, 2)
     assert paginator.count == 1
     assert paginator.num_pages == 1
@@ -245,9 +241,7 @@ def test_post_paginator_without_orphans_calculates_item_page(
     assert paginator.num_pages == 3
 
 
-def test_post_paginator_with_orphans_calculates_item_page(
-    thread_reply_factory, thread
-):
+def test_post_paginator_with_orphans_calculates_item_page(thread_reply_factory, thread):
     # First item page
     paginator = PostPaginator(thread.post_set, 5, 2)
     assert paginator.get_item_page(0) == 1

@@ -5,12 +5,7 @@ from django.utils import timezone
 
 from ...categories.proxy import CategoriesProxy
 from ...permissions.proxy import UserPermissionsProxy
-<<<<<<< HEAD
-from ...privatethreadmembers.models import PrivateThreadMember
-=======
 from ...privatethreads.models import PrivateThreadMember
-from ...threads.test import post_thread, reply_thread
->>>>>>> 90ec76f89 (Rename privatethreadmembers to private threads)
 from ..models import ReadThread
 from ..privatethreads import get_unread_private_threads
 

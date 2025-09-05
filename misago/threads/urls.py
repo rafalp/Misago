@@ -8,9 +8,6 @@ from .views.edit import (
 )
 from .views.list import category_threads, private_threads, threads
 from .views.redirect import (
-    PrivateThreadLastPostRedirectView,
-    PrivateThreadUnapprovedPostRedirectView,
-    PrivateThreadUnreadPostRedirectView,
     ThreadLastPostRedirectView,
     ThreadSolutionRedirectView,
     ThreadUnapprovedPostRedirectView,
@@ -116,21 +113,6 @@ urlpatterns = [
         "t/<slug:slug>/<int:id>/solution/",
         ThreadSolutionRedirectView.as_view(),
         name="thread-solution-post",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/last/",
-        PrivateThreadLastPostRedirectView.as_view(),
-        name="private-thread-last-post",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/unread/",
-        PrivateThreadUnreadPostRedirectView.as_view(),
-        name="private-thread-unread-post",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/unapproved/",
-        PrivateThreadUnapprovedPostRedirectView.as_view(),
-        name="private-thread-unapproved-post",
     ),
     path(
         "t/<slug:slug>/<int:id>/reply/",
