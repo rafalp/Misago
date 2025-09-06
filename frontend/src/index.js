@@ -31,6 +31,9 @@ import "./timestamps"
 const loader = new AjaxLoader()
 const lightbox = new Lightbox()
 
+htmx.config.historyEnabled = false
+htmx.config.historyCacheSize = 0
+
 export class Misago {
   constructor() {
     this._initializers = []
