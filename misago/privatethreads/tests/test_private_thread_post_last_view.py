@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 
-def test_private_thread_post_last_view_returns_redirect_to_post(
+def test_private_thread_post_last_view_returns_redirect_to_last_post(
     thread_reply_factory, user_client, user_private_thread
 ):
     reply = thread_reply_factory(user_private_thread)
@@ -46,8 +46,6 @@ def test_private_thread_post_last_view_returns_error_403_if_user_cant_use_privat
     members_group.can_use_private_threads = False
     members_group.save()
 
-    thread_reply_factory(user_private_thread)
-
     response = user_client.get(
         reverse(
             "misago:private-thread-post-last",
@@ -64,8 +62,6 @@ def test_private_thread_post_last_view_returns_error_403_if_user_cant_use_privat
 def test_private_thread_post_last_view_returns_error_404_if_user_cant_see_thread(
     thread_reply_factory, user_client, private_thread
 ):
-    thread_reply_factory(private_thread)
-
     response = user_client.get(
         reverse(
             "misago:private-thread-post-last",

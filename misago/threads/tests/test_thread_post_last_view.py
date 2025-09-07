@@ -4,7 +4,7 @@ from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 
 
-def test_thread_post_last_view_returns_redirect_to_post(
+def test_thread_post_last_view_returns_redirect_to_last_post(
     thread_reply_factory, client, thread
 ):
     reply = thread_reply_factory(thread)
