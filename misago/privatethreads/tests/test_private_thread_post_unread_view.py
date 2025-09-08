@@ -164,3 +164,19 @@ def test_private_thread_post_unread_view_returns_error_404_if_user_cant_see_thre
     )
 
     assert response.status_code == 404
+
+
+def test_private_thread_post_unread_view_returns_error_if_thread_is_public(
+    user_client, thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-unread",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+
+    assert response.status_code == 404

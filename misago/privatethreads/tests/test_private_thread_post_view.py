@@ -95,3 +95,22 @@ def test_private_thread_post_view_returns_error_404_if_user_cant_see_thread(
     )
 
     assert response.status_code == 404
+
+
+def test_private_thread_post_view_returns_error_if_thread_is_public(
+    thread_reply_factory, user_client, thread
+):
+    reply = thread_reply_factory(thread)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+                "post_id": reply.id,
+            },
+        )
+    )
+
+    assert response.status_code == 404

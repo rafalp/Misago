@@ -73,3 +73,19 @@ def test_private_thread_post_last_view_returns_error_404_if_user_cant_see_thread
     )
 
     assert response.status_code == 404
+
+
+def test_private_thread_post_last_view_returns_error_if_thread_is_public(
+    user_client, thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-last",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+
+    assert response.status_code == 404
