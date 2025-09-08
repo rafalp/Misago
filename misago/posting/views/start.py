@@ -25,8 +25,8 @@ from ..formsets import (
     get_start_thread_formset,
 )
 from ..hooks import (
-    get_start_private_thread_page_context_data_hook,
-    get_start_thread_page_context_data_hook,
+    get_private_thread_start_context_data_hook,
+    get_thread_start_context_data_hook,
 )
 from ..state.start import (
     StartPrivateThreadState,
@@ -150,7 +150,7 @@ class ThreadStartView(StartView):
     def get_context_data(
         self, request: HttpRequest, category: Category, formset: StartThreadFormset
     ) -> dict:
-        return get_start_thread_page_context_data_hook(
+        return get_thread_start_context_data_hook(
             self.get_context_data_action, request, category, formset
         )
 
@@ -190,7 +190,7 @@ class PrivateThreadStartView(StartView):
         category: Category,
         formset: StartPrivateThreadFormset,
     ) -> dict:
-        return get_start_private_thread_page_context_data_hook(
+        return get_private_thread_start_context_data_hook(
             self.get_context_data_action, request, category, formset
         )
 

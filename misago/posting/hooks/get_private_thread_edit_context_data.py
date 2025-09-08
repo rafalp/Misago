@@ -100,7 +100,6 @@ class GetPrivateThreadEditContextDataHook(
     from misago.posting.hooks import get_private_thread_edit_context_data_hook
     from misago.posts.models import Post
 
-
     @get_private_thread_edit_context_data_hook.append_filter
     def set_show_first_post_warning_in_context(
         action,

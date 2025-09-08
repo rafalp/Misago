@@ -9,10 +9,9 @@ if TYPE_CHECKING:
     from ...posting.formsets import StartThreadFormset
 
 
-class GetStartThreadPageContextDataHookAction(Protocol):
+class GetThreadStartContextDataHookAction(Protocol):
     """
-    Misago function used to get the template context data
-    for the start thread page.
+    Misago function used to get the template context data for the thread start view.
 
     # Arguments
 
@@ -30,7 +29,7 @@ class GetStartThreadPageContextDataHookAction(Protocol):
 
     # Return value
 
-    A Python `dict` with context data to use to `render` the start thread page.
+    A Python `dict` with context data used to `render` the thread start view.
     """
 
     def __call__(
@@ -41,16 +40,16 @@ class GetStartThreadPageContextDataHookAction(Protocol):
     ) -> dict: ...
 
 
-class GetStartThreadPageContextDataHookFilter(Protocol):
+class GetThreadStartContextDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetStartThreadPageContextDataHookAction`
+    ## `action: GetThreadStartContextDataHookAction`
 
-    Misago function used to get the template context data
-    for the start thread page.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 
@@ -68,26 +67,24 @@ class GetStartThreadPageContextDataHookFilter(Protocol):
 
     # Return value
 
-    A Python `dict` with context data to use to `render` the start thread page.
+    A Python `dict` with context data used to `render` the thread start view.
     """
 
     def __call__(
         self,
-        action: GetStartThreadPageContextDataHookAction,
+        action: GetThreadStartContextDataHookAction,
         request: HttpRequest,
         category: Category,
         formset: "StartThreadFormset",
     ) -> dict: ...
 
 
-class GetStartThreadPageContextDataHook(
-    FilterHook[
-        GetStartThreadPageContextDataHookAction, GetStartThreadPageContextDataHookFilter
-    ]
+class GetThreadStartContextDataHook(
+    FilterHook[GetThreadStartContextDataHookAction, GetThreadStartContextDataHookFilter]
 ):
     """
-    This hook wraps the standard function that Misago uses to get the template
-    context data for the start thread page.
+    This hook wraps the function Misago uses to get the template context data
+    for the thread start view.
 
     # Example
 
@@ -98,8 +95,7 @@ class GetStartThreadPageContextDataHook(
     from django.http import HttpRequest
     from misago.categories.models import Category
     from misago.posting.formsets import StartThreadFormset
-    from misago.threads.hooks import get_start_thread_page_context_data_hook
-
+    from misago.posting.hooks import get_start_thread_page_context_data_hook
 
     @get_start_thread_page_context_data_hook.append_filter
     def set_show_first_post_warning_in_context(
@@ -118,7 +114,7 @@ class GetStartThreadPageContextDataHook(
 
     def __call__(
         self,
-        action: GetStartThreadPageContextDataHookAction,
+        action: GetThreadStartContextDataHookAction,
         request: HttpRequest,
         category: Category,
         formset: "StartThreadFormset",
@@ -126,4 +122,4 @@ class GetStartThreadPageContextDataHook(
         return super().__call__(action, request, category, formset)
 
 
-get_start_thread_page_context_data_hook = GetStartThreadPageContextDataHook(cache=False)
+get_thread_start_context_data_hook = GetThreadStartContextDataHook(cache=False)

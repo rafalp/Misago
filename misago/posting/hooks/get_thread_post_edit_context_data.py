@@ -101,7 +101,6 @@ class GetThreadPostEditContextDataHook(
     from misago.posting.hooks import get_thread_post_edit_context_data_hook
     from misago.posts.models import Post
 
-
     @get_thread_post_edit_context_data_hook.append_filter
     def set_show_first_post_warning_in_context(
         action,
