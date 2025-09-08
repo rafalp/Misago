@@ -111,13 +111,19 @@ def test_thread_post_view_returns_error_404_if_user_cant_see_post(
     assert response.status_code == 404
 
 
-def test_thread_post_view_returns_error_404_if_thread_is_private(thread_reply_factory, user_client, user_private_thread):
+def test_thread_post_view_returns_error_404_if_thread_is_private(
+    thread_reply_factory, user_client, user_private_thread
+):
     reply = thread_reply_factory(user_private_thread)
 
     response = user_client.get(
         reverse(
             "misago:thread-post",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug, "post_id": reply.id},
+            kwargs={
+                "id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": reply.id,
+            },
         )
     )
 

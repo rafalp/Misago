@@ -1,18 +1,8 @@
 from .generic import PrivateThreadView
 
-from django.http import HttpRequest
-from django.db.models import QuerySet
-
 from ...categories.enums import CategoryTree
-from ...posts.models import Post
 from ...posts.redirect import redirect_to_post
-from ...posts.views.post import (
-    PostLastView,
-    PostUnapprovedView,
-    PostUnreadView,
-    PostView,
-)
-from ...threads.models import Thread
+from ...threads.views.post import PostLastView, PostUnreadView, PostView
 from .generic import PrivateThreadView
 
 

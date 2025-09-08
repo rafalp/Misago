@@ -101,7 +101,9 @@ def test_thread_post_last_view_returns_error_403_if_user_cant_see_thread_content
     assert response.status_code == 403
 
 
-def test_thread_post_last_view_returns_error_404_if_thread_is_private(user_client, user_private_thread):
+def test_thread_post_last_view_returns_error_404_if_thread_is_private(
+    user_client, user_private_thread
+):
     response = user_client.get(
         reverse(
             "misago:thread-post-last",
@@ -110,4 +112,3 @@ def test_thread_post_last_view_returns_error_404_if_thread_is_private(user_clien
     )
 
     assert response.status_code == 404
-

@@ -119,7 +119,9 @@ def test_thread_post_unapproved_view_returns_error_403_if_user_cant_moderate_thr
     assert_contains(response, "You must be a moderator to view unapproved posts.", 403)
 
 
-def test_thread_post_unapproved_view_returns_error_404_if_thread_is_private(user_client, user_private_thread):
+def test_thread_post_unapproved_view_returns_error_404_if_thread_is_private(
+    user_client, user_private_thread
+):
     response = user_client.get(
         reverse(
             "misago:thread-post-unapproved",

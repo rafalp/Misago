@@ -111,7 +111,9 @@ def test_thread_post_solution_view_returns_error_403_if_user_cant_see_thread_con
     assert response.status_code == 403
 
 
-def test_thread_post_solution_view_returns_error_404_if_thread_is_private(user_client, user_private_thread):
+def test_thread_post_solution_view_returns_error_404_if_thread_is_private(
+    user_client, user_private_thread
+):
     response = user_client.get(
         reverse(
             "misago:thread-post-solution",
@@ -120,4 +122,3 @@ def test_thread_post_solution_view_returns_error_404_if_thread_is_private(user_c
     )
 
     assert response.status_code == 404
-
