@@ -233,7 +233,7 @@ class Thread(PluginDataModel):
     def set_best_answer(self, user, post):
         if post.thread_id != self.id:
             raise ValueError("post to set as best answer must be in same thread")
-        if post.is_first_post:
+        if post.id == self.first_post_id:
             raise ValueError("post to set as best answer can't be first post")
         if post.is_hidden:
             raise ValueError("post to set as best answer can't be hidden")
