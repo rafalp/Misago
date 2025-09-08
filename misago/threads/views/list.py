@@ -1450,9 +1450,6 @@ class PrivateThreadsListView(ListView):
         return {
             "absolute_url": reverse("misago:private-thread", kwargs=kwargs),
             "last_post_url": reverse("misago:private-thread-post-last", kwargs=kwargs),
-            "unapproved_post_url": reverse(
-                "misago:private-thread-post-unapproved", kwargs=kwargs
-            ),
             "unread_post_url": reverse(
                 "misago:private-thread-post-unread", kwargs=kwargs
             ),

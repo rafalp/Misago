@@ -27,6 +27,30 @@ def test_thread_post_last_view_returns_redirect_to_last_post(
     )
 
 
+def test_thread_post_last_view_returns_redirect_to_last_visible_post(
+    thread_reply_factory, client, thread
+):
+    reply = thread_reply_factory(thread)
+    thread_reply_factory(thread, is_unapproved=True)
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-last",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
+    )
+
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"id": thread.id, "slug": thread.slug},
+        )
+        + f"#post-{reply.id}"
+    )
+
+
 def test_thread_post_last_view_returns_error_404_if_thread_doesnt_exist(db, client):
     response = client.get(
         reverse(
@@ -39,14 +63,12 @@ def test_thread_post_last_view_returns_error_404_if_thread_doesnt_exist(db, clie
 
 
 def test_thread_post_last_view_returns_error_404_if_user_cant_see_thread(
-    thread_reply_factory, client, thread
+    client, thread
 ):
     CategoryGroupPermission.objects.filter(
         category=thread.category,
         permission=CategoryPermission.BROWSE,
     ).delete()
-
-    thread_reply_factory(thread)
 
     response = client.get(
         reverse(
@@ -59,7 +81,7 @@ def test_thread_post_last_view_returns_error_404_if_user_cant_see_thread(
 
 
 def test_thread_post_last_view_returns_error_403_if_user_cant_see_thread_contents(
-    thread_reply_factory, client, thread
+    client, thread
 ):
     thread.category.delay_browse_check = True
     thread.category.save()
@@ -68,8 +90,6 @@ def test_thread_post_last_view_returns_error_403_if_user_cant_see_thread_content
         category=thread.category,
         permission=CategoryPermission.BROWSE,
     ).delete()
-
-    thread_reply_factory(thread)
 
     response = client.get(
         reverse(

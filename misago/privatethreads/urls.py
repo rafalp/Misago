@@ -8,7 +8,6 @@ from .views.members import (
 )
 from .views.post import (
     PrivateThreadPostLastView,
-    PrivateThreadPostUnapprovedView,
     PrivateThreadPostUnreadView,
     PrivateThreadPostView,
 )
@@ -44,11 +43,6 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/last/",
         PrivateThreadPostLastView.as_view(),
         name="private-thread-post-last",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/unapproved/",
-        PrivateThreadPostUnapprovedView.as_view(),
-        name="private-thread-post-unapproved",
     ),
     path(
         "p/<slug:slug>/<int:id>/unread/",

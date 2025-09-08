@@ -41,7 +41,7 @@ def test_private_thread_post_last_view_returns_error_404_if_thread_doesnt_exist(
 
 
 def test_private_thread_post_last_view_returns_error_403_if_user_cant_use_private_threads(
-    thread_reply_factory, user_client, members_group, user_private_thread
+    user_client, members_group, user_private_thread
 ):
     members_group.can_use_private_threads = False
     members_group.save()
@@ -60,7 +60,7 @@ def test_private_thread_post_last_view_returns_error_403_if_user_cant_use_privat
 
 
 def test_private_thread_post_last_view_returns_error_404_if_user_cant_see_thread(
-    thread_reply_factory, user_client, private_thread
+    user_client, private_thread
 ):
     response = user_client.get(
         reverse(

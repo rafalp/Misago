@@ -29,10 +29,11 @@ def test_thread_post_unread_view_returns_redirect_to_first_post_for_unread_threa
     )
 
 
-def test_thread_post_unread_view_returns_redirect_to_first_unread_post_using_read_category(
+def test_thread_post_unread_view_returns_redirect_to_first_visible_unread_post_using_read_category(
     thread_reply_factory, user_client, user, thread
 ):
     last_read = thread_reply_factory(thread)
+    thread_reply_factory(thread, is_unapproved=True)
     reply = thread_reply_factory(thread)
     thread_reply_factory(thread)
 
@@ -57,10 +58,11 @@ def test_thread_post_unread_view_returns_redirect_to_first_unread_post_using_rea
     )
 
 
-def test_thread_post_unread_view_returns_redirect_to_first_unread_post_using_read_thread(
+def test_thread_post_unread_view_returns_redirect_to_first_visible_unread_post_using_read_thread(
     thread_reply_factory, user_client, user, thread
 ):
     last_read = thread_reply_factory(thread)
+    thread_reply_factory(thread, is_unapproved=True)
     reply = thread_reply_factory(thread)
     thread_reply_factory(thread)
 
@@ -155,14 +157,12 @@ def test_thread_post_unread_view_returns_error_404_if_thread_doesnt_exist(db, cl
 
 
 def test_thread_post_unread_view_returns_error_404_if_user_cant_see_thread(
-    thread_reply_factory, client, thread
+    client, thread
 ):
     CategoryGroupPermission.objects.filter(
         category=thread.category,
         permission=CategoryPermission.BROWSE,
     ).delete()
-
-    reply = thread_reply_factory(thread)
 
     response = client.get(
         reverse(
@@ -175,7 +175,7 @@ def test_thread_post_unread_view_returns_error_404_if_user_cant_see_thread(
 
 
 def test_thread_post_unread_view_returns_error_403_if_user_cant_see_thread_contents(
-    thread_reply_factory, client, thread
+    client, thread
 ):
     thread.category.delay_browse_check = True
     thread.category.save()
@@ -184,8 +184,6 @@ def test_thread_post_unread_view_returns_error_403_if_user_cant_see_thread_conte
         category=thread.category,
         permission=CategoryPermission.BROWSE,
     ).delete()
-
-    reply = thread_reply_factory(thread)
 
     response = client.get(
         reverse(

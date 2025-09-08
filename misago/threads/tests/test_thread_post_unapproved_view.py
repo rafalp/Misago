@@ -10,6 +10,7 @@ def test_thread_post_unapproved_view_returns_redirect_to_first_unapproved_post(
 ):
     reply = thread_reply_factory(thread, is_unapproved=True)
     thread_reply_factory(thread, is_unapproved=True)
+    thread_reply_factory(thread)
 
     response = moderator_client.get(
         reverse(
