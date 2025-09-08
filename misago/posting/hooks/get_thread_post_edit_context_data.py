@@ -6,13 +6,13 @@ from ...plugins.hooks import FilterHook
 from ...posts.models import Post
 
 if TYPE_CHECKING:
-    from ...posting.formsets import EditThreadFormset
+    from ...posting.formsets import EditThreadPostFormset
 
 
-class GetEditThreadPostPageContextDataHookAction(Protocol):
+class GetThreadPostEditContextDataHookAction(Protocol):
     """
-    Misago function used to get the template context data
-    for the edit thread page.
+    Misago function used to get the template context data for
+    the thread post edit view.
 
     # Arguments
 
@@ -24,34 +24,33 @@ class GetEditThreadPostPageContextDataHookAction(Protocol):
 
     The `Post` instance.
 
-    ## `formset: EditThreadFormset`
+    ## `formset: EditThreadPostFormset`
 
-    The `EditThreadFormset` instance.
+    The `EditThreadPostFormset` instance.
 
     # Return value
 
-    A Python `dict` with context data to use to `render`
-    the edit thread page.
+    A Python `dict` with context data used to `render` the thread post edit view.
     """
 
     def __call__(
         self,
         request: HttpRequest,
         post: Post,
-        formset: "EditThreadFormset",
+        formset: "EditThreadPostFormset",
     ) -> dict: ...
 
 
-class GetEditThreadPostPageContextDataHookFilter(Protocol):
+class GetThreadPostEditContextDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetEditThreadPostPageContextDataHookAction`
+    ## `action: GetThreadPostEditContextDataHookAction`
 
-    Misago function used to get the template context data
-    for the edit thread page.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 
@@ -63,34 +62,33 @@ class GetEditThreadPostPageContextDataHookFilter(Protocol):
 
     The `Post` instance.
 
-    ## `formset: EditThreadFormset`
+    ## `formset: EditThreadPostFormset`
 
-    The `EditThreadFormset` instance.
+    The `EditThreadPostFormset` instance.
 
     # Return value
 
-    A Python `dict` with context data to use to `render`
-    the edit thread page.
+    A Python `dict` with context data used to `render` the thread post edit view.
     """
 
     def __call__(
         self,
-        action: GetEditThreadPostPageContextDataHookAction,
+        action: GetThreadPostEditContextDataHookAction,
         request: HttpRequest,
         post: Post,
-        formset: "EditThreadFormset",
+        formset: "EditThreadPostFormset",
     ) -> dict: ...
 
 
-class GetEditThreadPostPageContextDataHook(
+class GetThreadPostEditContextDataHook(
     FilterHook[
-        GetEditThreadPostPageContextDataHookAction,
-        GetEditThreadPostPageContextDataHookFilter,
+        GetThreadPostEditContextDataHookAction,
+        GetThreadPostEditContextDataHookFilter,
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to get the template
-    context data for the edit thread page.
+    This hook wraps the function Misago uses to get the template context data
+    for the thread post edit view.
 
     # Example
 
@@ -99,17 +97,17 @@ class GetEditThreadPostPageContextDataHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.posting.formsets import EditThreadFormset
+    from misago.posting.formsets import EditThreadPostFormset
+    from misago.posting.hooks import get_thread_post_edit_context_data_hook
     from misago.posts.models import Post
-    from misago.threads.hooks import get_edit_thread_page_context_data_hook
 
 
-    @get_edit_thread_page_context_data_hook.append_filter
+    @get_thread_post_edit_context_data_hook.append_filter
     def set_show_first_post_warning_in_context(
         action,
         request: HttpRequest,
         post: Post,
-        formset: EditThreadFormset,
+        formset: EditThreadPostFormset,
     ) -> dict:
         context = action(request, thread, formset)
         context["show_first_post_warning"] = request.user.posts == 1
@@ -121,14 +119,12 @@ class GetEditThreadPostPageContextDataHook(
 
     def __call__(
         self,
-        action: GetEditThreadPostPageContextDataHookAction,
+        action: GetThreadPostEditContextDataHookAction,
         request: HttpRequest,
         post: Post,
-        formset: "EditThreadFormset",
+        formset: "EditThreadPostFormset",
     ) -> dict:
         return super().__call__(action, request, post, formset)
 
 
-get_edit_thread_page_context_data_hook = GetEditThreadPostPageContextDataHook(
-    cache=False
-)
+get_thread_post_edit_context_data_hook = GetThreadPostEditContextDataHook(cache=False)

@@ -126,7 +126,7 @@ def test_thread_posts_feed_marks_post_as_editable(
     post_data = feed_data["items"][0]
     assert post_data["post"] == user_reply
     assert post_data["edit_url"] == reverse(
-        "misago:edit-thread",
+        "misago:thread-edit",
         kwargs={
             "id": thread.id,
             "slug": thread.slug,
@@ -150,7 +150,7 @@ def test_thread_posts_feed_marks_original_post_as_editable(
     post_data = feed_data["items"][0]
     assert post_data["post"] == user_thread.first_post
     assert post_data["edit_url"] == reverse(
-        "misago:edit-thread",
+        "misago:thread-edit",
         kwargs={
             "id": user_thread.id,
             "slug": user_thread.slug,
@@ -175,7 +175,7 @@ def test_thread_posts_feed_marks_original_post_as_thread_editable(
     post_data = feed_data["items"][0]
     assert post_data["post"] == user_thread.first_post
     assert post_data["edit_url"] == reverse(
-        "misago:edit-thread",
+        "misago:thread-edit",
         kwargs={
             "id": user_thread.id,
             "slug": user_thread.slug,
@@ -199,7 +199,7 @@ def test_thread_posts_feed_marks_post_as_editable_by_moderator(
     post_data = feed_data["items"][0]
     assert post_data["post"] == user_reply
     assert post_data["edit_url"] == reverse(
-        "misago:edit-thread",
+        "misago:thread-edit",
         kwargs={
             "id": thread.id,
             "slug": thread.slug,
@@ -210,7 +210,7 @@ def test_thread_posts_feed_marks_post_as_editable_by_moderator(
     other_post_data = feed_data["items"][1]
     assert other_post_data["post"] == reply
     assert other_post_data["edit_url"] == reverse(
-        "misago:edit-thread",
+        "misago:thread-edit",
         kwargs={
             "id": thread.id,
             "slug": thread.slug,
@@ -231,7 +231,7 @@ def test_thread_posts_feed_marks_original_post_as_editable_by_moderator(
     post_data = feed_data["items"][0]
     assert post_data["post"] == user_thread.first_post
     assert post_data["edit_url"] == reverse(
-        "misago:edit-thread",
+        "misago:thread-edit",
         kwargs={
             "id": user_thread.id,
             "slug": user_thread.slug,
@@ -241,7 +241,7 @@ def test_thread_posts_feed_marks_original_post_as_editable_by_moderator(
     other_post_data = feed_data["items"][1]
     assert other_post_data["post"] == reply
     assert other_post_data["edit_url"] == reverse(
-        "misago:edit-thread",
+        "misago:thread-edit",
         kwargs={
             "id": user_thread.id,
             "slug": user_thread.slug,
@@ -262,7 +262,7 @@ def test_thread_posts_feed_marks_original_post_as_thread_editable_by_moderator(
     post_data = feed_data["items"][0]
     assert post_data["post"] == user_thread.first_post
     assert post_data["edit_url"] == reverse(
-        "misago:edit-thread",
+        "misago:thread-edit",
         kwargs={
             "id": user_thread.id,
             "slug": user_thread.slug,
@@ -272,7 +272,7 @@ def test_thread_posts_feed_marks_original_post_as_thread_editable_by_moderator(
     other_post_data = feed_data["items"][1]
     assert other_post_data["post"] == reply
     assert other_post_data["edit_url"] == reverse(
-        "misago:edit-thread",
+        "misago:thread-edit",
         kwargs={
             "id": user_thread.id,
             "slug": user_thread.slug,
@@ -297,7 +297,7 @@ def test_private_thread_posts_feed_marks_post_as_editable(
     post_data = feed_data["items"][0]
     assert post_data["post"] == user_reply
     assert post_data["edit_url"] == reverse(
-        "misago:edit-private-thread",
+        "misago:private-thread-edit",
         kwargs={
             "id": user_private_thread.id,
             "slug": user_private_thread.slug,
@@ -325,7 +325,7 @@ def test_private_thread_posts_feed_marks_original_post_as_editable(
     post_data = feed_data["items"][0]
     assert post_data["post"] == user_private_thread.first_post
     assert post_data["edit_url"] == reverse(
-        "misago:edit-private-thread",
+        "misago:private-thread-edit",
         kwargs={
             "id": user_private_thread.id,
             "slug": user_private_thread.slug,
@@ -354,7 +354,7 @@ def test_private_thread_posts_feed_marks_original_post_as_thread_editable(
     post_data = feed_data["items"][0]
     assert post_data["post"] == user_private_thread.first_post
     assert post_data["edit_url"] == reverse(
-        "misago:edit-private-thread",
+        "misago:private-thread-edit",
         kwargs={
             "id": user_private_thread.id,
             "slug": user_private_thread.slug,
@@ -383,7 +383,7 @@ def test_private_thread_posts_feed_marks_post_as_editable_by_moderator(
     post_data = feed_data["items"][0]
     assert post_data["post"] == user_reply
     assert post_data["edit_url"] == reverse(
-        "misago:edit-private-thread",
+        "misago:private-thread-edit",
         kwargs={
             "id": user_private_thread.id,
             "slug": user_private_thread.slug,
@@ -394,7 +394,7 @@ def test_private_thread_posts_feed_marks_post_as_editable_by_moderator(
     other_post_data = feed_data["items"][1]
     assert other_post_data["post"] == reply
     assert other_post_data["edit_url"] == reverse(
-        "misago:edit-private-thread",
+        "misago:private-thread-edit",
         kwargs={
             "id": user_private_thread.id,
             "slug": user_private_thread.slug,
@@ -419,7 +419,7 @@ def test_private_thread_posts_feed_marks_original_post_as_editable_by_moderator(
     post_data = feed_data["items"][0]
     assert post_data["post"] == user_private_thread.first_post
     assert post_data["edit_url"] == reverse(
-        "misago:edit-private-thread",
+        "misago:private-thread-edit",
         kwargs={
             "id": user_private_thread.id,
             "slug": user_private_thread.slug,
@@ -429,7 +429,7 @@ def test_private_thread_posts_feed_marks_original_post_as_editable_by_moderator(
     other_post_data = feed_data["items"][1]
     assert other_post_data["post"] == reply
     assert other_post_data["edit_url"] == reverse(
-        "misago:edit-private-thread",
+        "misago:private-thread-edit",
         kwargs={
             "id": user_private_thread.id,
             "slug": user_private_thread.slug,
@@ -454,7 +454,7 @@ def test_private_thread_posts_feed_marks_original_post_as_thread_editable_by_mod
     post_data = feed_data["items"][0]
     assert post_data["post"] == user_private_thread.first_post
     assert post_data["edit_url"] == reverse(
-        "misago:edit-private-thread",
+        "misago:private-thread-edit",
         kwargs={
             "id": user_private_thread.id,
             "slug": user_private_thread.slug,
@@ -464,7 +464,7 @@ def test_private_thread_posts_feed_marks_original_post_as_thread_editable_by_mod
     other_post_data = feed_data["items"][1]
     assert other_post_data["post"] == reply
     assert other_post_data["edit_url"] == reverse(
-        "misago:edit-private-thread",
+        "misago:private-thread-edit",
         kwargs={
             "id": user_private_thread.id,
             "slug": user_private_thread.slug,

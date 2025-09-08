@@ -21,7 +21,7 @@ def test_edit_private_thread_post_view_displays_login_page_to_guests(
 ):
     response = client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -40,7 +40,7 @@ def test_edit_private_thread_post_view_displays_error_page_to_users_without_priv
 
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -60,7 +60,7 @@ def test_edit_private_thread_post_view_displays_error_page_to_user_who_cant_see_
 ):
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": private_thread.id,
                 "slug": private_thread.slug,
@@ -79,7 +79,7 @@ def test_edit_private_thread_post_view_displays_error_page_to_user_who_cant_edit
 
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -102,7 +102,7 @@ def test_edit_private_thread_post_view_displays_error_page_to_user_trying_to_edi
 
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -123,7 +123,7 @@ def test_edit_private_thread_post_view_displays_edit_post_form(
 ):
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -140,7 +140,7 @@ def test_edit_private_thread_post_view_displays_inline_edit_post_form_in_htmx(
 ):
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -170,7 +170,7 @@ def test_edit_private_thread_post_view_displays_edit_post_form_for_other_user_po
 
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -188,7 +188,7 @@ def test_edit_private_thread_post_view_updates_thread_post(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -222,7 +222,7 @@ def test_edit_private_thread_post_view_updates_thread_post_in_htmx(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -258,7 +258,7 @@ def test_edit_private_thread_post_view_updates_thread_post_inline_in_htmx(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -285,7 +285,7 @@ def test_edit_private_thread_post_view_cancels_thread_post_edits_inline_in_htmx(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -302,7 +302,7 @@ def test_edit_private_thread_post_view_cancels_thread_post_edits_inline_in_htmx(
     assert_contains(
         response,
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -323,7 +323,7 @@ def test_edit_private_thread_post_view_previews_message(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -344,7 +344,7 @@ def test_edit_private_thread_post_view_previews_message_in_htmx(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -366,7 +366,7 @@ def test_edit_private_thread_post_view_previews_message_inline_in_htmx(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -387,7 +387,7 @@ def test_edit_private_thread_post_view_previews_message_inline_in_htmx(
 def test_edit_private_thread_post_view_validates_post(user_client, user_private_thread):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -407,7 +407,7 @@ def test_edit_private_thread_post_view_validates_posted_contents(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -427,7 +427,7 @@ def test_edit_private_thread_post_view_skips_flood_control(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -461,7 +461,7 @@ def test_edit_private_thread_post_view_shows_error_if_thread_post_is_accessed(
 ):
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={"id": thread.id, "slug": thread.slug, "post": thread.first_post_id},
         ),
     )
@@ -475,7 +475,7 @@ def test_edit_private_thread_post_view_displays_attachments_form(
 ):
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -493,7 +493,7 @@ def test_edit_private_thread_post_view_hides_attachments_form_if_uploads_are_dis
 ):
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -513,7 +513,7 @@ def test_edit_private_thread_post_view_hides_attachments_form_if_user_has_no_gro
 
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -532,7 +532,7 @@ def test_edit_private_thread_post_view_uploads_attachment_on_submit(
 
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -567,7 +567,7 @@ def test_edit_private_thread_post_view_uploads_attachment_on_preview_or_upload(
 
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -611,7 +611,7 @@ def test_edit_private_thread_post_view_displays_image_attachment(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -646,7 +646,7 @@ def test_edit_private_thread_post_view_displays_image_with_thumbnail_attachment(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -681,7 +681,7 @@ def test_edit_private_thread_post_view_displays_video_attachment(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -716,7 +716,7 @@ def test_edit_private_thread_post_view_displays_file_attachment(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -747,7 +747,7 @@ def test_edit_private_thread_post_view_associates_unused_attachment_on_submit(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -782,7 +782,7 @@ def test_edit_private_thread_post_view_adds_attachment_to_deleted_list(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -824,7 +824,7 @@ def test_edit_private_thread_post_view_maintains_deleted_attachments_list(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -864,7 +864,7 @@ def test_edit_private_thread_post_view_deletes_attachment_on_submit(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -903,7 +903,7 @@ def test_edit_private_thread_post_view_displays_associated_attachment(
 
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -934,7 +934,7 @@ def test_edit_private_thread_post_view_displays_associated_attachment_if_uploads
 
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -969,7 +969,7 @@ def test_edit_private_thread_post_view_displays_associated_attachment_for_user_w
 
     response = user_client.get(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -1001,7 +1001,7 @@ def test_edit_private_thread_post_view_adds_existing_attachment_to_deleted_list(
 
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -1044,7 +1044,7 @@ def test_edit_private_thread_post_view_adds_existing_attachment_to_deleted_list_
 
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -1091,7 +1091,7 @@ def test_edit_private_thread_post_view_adds_existing_attachment_to_deleted_list_
 
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -1135,7 +1135,7 @@ def test_edit_private_thread_post_view_deletes_existing_attachment_on_submit(
 
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -1175,7 +1175,7 @@ def test_edit_private_thread_post_view_deletes_existing_attachment_on_submit_if_
 
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -1217,7 +1217,7 @@ def test_edit_private_thread_post_view_deletes_existing_attachment_on_submit_for
 
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,
@@ -1253,7 +1253,7 @@ def test_edit_private_thread_post_view_embeds_attachments_in_preview(
 ):
     response = user_client.post(
         reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={
                 "id": user_private_thread.id,
                 "slug": user_private_thread.slug,

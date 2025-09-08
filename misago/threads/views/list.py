@@ -663,7 +663,7 @@ class ThreadsListView(ListView):
 
     def get_start_thread_url(self, request: HttpRequest) -> str | None:
         if request.user_permissions.categories[CategoryPermission.START]:
-            return reverse("misago:start-thread")
+            return reverse("misago:thread-start")
 
     def get_moderation_actions(
         self, request: HttpRequest
@@ -1120,7 +1120,7 @@ class CategoryThreadsListView(ListView):
             return None
         else:
             return reverse(
-                "misago:start-thread",
+                "misago:thread-start",
                 kwargs={"id": category.id, "slug": category.slug},
             )
 
@@ -1469,7 +1469,7 @@ class PrivateThreadsListView(ListView):
             check_start_private_threads_permission(request.user_permissions)
 
         if can_start_thread:
-            return reverse("misago:start-private-thread")
+            return reverse("misago:private-thread-start")
 
         return None
 

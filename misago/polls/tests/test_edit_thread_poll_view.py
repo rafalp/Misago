@@ -15,7 +15,7 @@ def test_edit_thread_poll_view_shows_error_if_guest_has_no_category_permission(
 
     response = client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
     )
@@ -29,7 +29,7 @@ def test_edit_thread_poll_view_shows_error_if_guest_has_no_category_permission_i
 
     response = client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         headers={"hx-request": "true"},
@@ -44,7 +44,7 @@ def test_edit_thread_poll_view_shows_error_if_user_has_no_category_permission(
 
     response = user_client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
     )
@@ -58,7 +58,7 @@ def test_edit_thread_poll_view_shows_error_if_user_has_no_category_permission_in
 
     response = user_client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         headers={"hx-request": "true"},
@@ -74,7 +74,7 @@ def test_edit_thread_poll_view_shows_error_if_guest_has_no_thread_permission(
 
     response = client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
     )
@@ -89,7 +89,7 @@ def test_edit_thread_poll_view_shows_error_if_guest_has_no_thread_permission_in_
 
     response = client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         headers={"hx-request": "true"},
@@ -105,7 +105,7 @@ def test_edit_thread_poll_view_shows_error_if_user_has_no_thread_permission(
 
     response = user_client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
     )
@@ -120,7 +120,7 @@ def test_edit_thread_poll_view_shows_error_if_user_has_no_thread_permission_in_h
 
     response = user_client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         headers={"hx-request": "true"},
@@ -131,7 +131,7 @@ def test_edit_thread_poll_view_shows_error_if_user_has_no_thread_permission_in_h
 def test_edit_thread_poll_view_shows_error_for_guests(client, user_thread, user_poll):
     response = client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
     )
@@ -145,7 +145,7 @@ def test_edit_thread_poll_view_shows_error_for_guests_in_htmx(
 ):
     response = client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         headers={"hx-request": "true"},
@@ -161,7 +161,7 @@ def test_edit_thread_poll_view_shows_error_if_user_has_no_edit_poll_permission(
 
     response = user_client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
     )
@@ -176,7 +176,7 @@ def test_edit_thread_poll_view_shows_error_if_user_has_no_edit_poll_permission_i
 
     response = user_client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         headers={"hx-request": "true"},
@@ -189,7 +189,7 @@ def test_edit_thread_poll_view_shows_guest_error_404_if_thread_has_no_poll(
 ):
     response = client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
     )
@@ -201,7 +201,7 @@ def test_edit_thread_poll_view_shows_guest_error_404_if_thread_has_no_poll_in_ht
 ):
     response = client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         headers={"hx-request": "true"},
@@ -214,7 +214,7 @@ def test_edit_thread_poll_view_shows_user_error_404_if_thread_has_no_poll(
 ):
     response = user_client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
     )
@@ -226,7 +226,7 @@ def test_edit_thread_poll_view_shows_user_error_404_if_thread_has_no_poll_in_htm
 ):
     response = user_client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         headers={"hx-request": "true"},
@@ -239,7 +239,7 @@ def test_edit_thread_poll_view_shows_edit_poll_form(
 ):
     response = user_client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
     )
@@ -251,7 +251,7 @@ def test_edit_thread_poll_view_shows_edit_poll_form_in_htmx(
 ):
     response = user_client.get(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         headers={"hx-request": "true"},
@@ -276,7 +276,7 @@ def test_edit_thread_poll_view_validates_poll_question(
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -301,7 +301,7 @@ def test_edit_thread_poll_view_validates_edited_poll_choices_are_required(
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -324,7 +324,7 @@ def test_edit_thread_poll_view_edits_poll_question(user_client, user_thread, use
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -355,7 +355,7 @@ def test_edit_thread_poll_view_renames_existing_choices(
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -400,7 +400,7 @@ def test_edit_thread_poll_view_deletes_choice(user_client, user_thread, user_pol
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -446,7 +446,7 @@ def test_edit_thread_poll_view_deletes_choice_votes(
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -492,7 +492,7 @@ def test_edit_thread_poll_view_adds_new_choices(user_client, user_thread, user_p
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -549,7 +549,7 @@ def test_edit_thread_poll_view_adds_new_choices_using_noscript_ui(
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -606,7 +606,7 @@ def test_edit_thread_poll_view_defaults_to_new_choices_if_both_new_and_new_noscr
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -667,7 +667,7 @@ def test_edit_thread_poll_view_changes_deletes_and_adds_poll_choices(
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -711,7 +711,7 @@ def test_edit_thread_poll_view_edits_poll_max_choices(
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -739,7 +739,7 @@ def test_edit_thread_poll_view_overrides_max_choices_with_poll_choices_number(
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -766,7 +766,7 @@ def test_edit_thread_poll_view_enables_vote_change(user_client, user_thread, use
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -797,7 +797,7 @@ def test_edit_thread_poll_view_disables_vote_change(
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -825,7 +825,7 @@ def test_edit_thread_poll_view_returns_redirect_to_thread_on_save(
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -861,7 +861,7 @@ def test_edit_thread_poll_view_returns_redirect_to_next_url_if_its_valid(
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -891,7 +891,7 @@ def test_edit_thread_poll_view_returns_redirect_to_thread_if_next_url_is_invalid
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -920,7 +920,7 @@ def test_edit_thread_poll_view_returns_vote_form_after_save_in_htmx_if_user_can_
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,
@@ -949,7 +949,7 @@ def test_edit_thread_poll_view_returns_results_after_save_in_htmx_if_user_alread
 
     response = user_client.post(
         reverse(
-            "misago:edit-thread-poll",
+            "misago:thread-edit-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         data,

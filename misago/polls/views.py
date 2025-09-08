@@ -427,7 +427,7 @@ def get_poll_context_data(
         "allow_delete": allow_delete,
         "allow_vote": allow_vote,
         "edit_url": reverse(
-            "misago:edit-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-edit-poll", kwargs={"id": thread.id, "slug": thread.slug}
         ),
         "close_url": reverse(
             "misago:close-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}

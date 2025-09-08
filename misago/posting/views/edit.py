@@ -39,10 +39,10 @@ from ...threads.prefetch import prefetch_posts_feed_related_objects
 from ...threads.redirect import redirect_to_thread_post
 from ...threads.views.generic import ThreadView
 from ..hooks import (
-    get_edit_private_thread_page_context_data_hook,
-    get_edit_private_thread_post_page_context_data_hook,
-    get_edit_thread_page_context_data_hook,
-    get_edit_thread_post_page_context_data_hook,
+    get_private_thread_edit_context_data_hook,
+    get_private_thread_post_edit_context_data_hook,
+    get_thread_edit_context_data_hook,
+    get_thread_post_edit_context_data_hook,
 )
 
 
@@ -220,7 +220,7 @@ class ThreadPostEditView(EditView, ThreadView):
     def get_context_data(
         self, request: HttpRequest, post: Post, formset: PostingFormset
     ) -> dict:
-        return get_edit_thread_post_page_context_data_hook(
+        return get_thread_post_edit_context_data_hook(
             self.get_context_data_action, request, post, formset
         )
 
@@ -252,7 +252,7 @@ class PrivateThreadPostEditView(EditView, PrivateThreadView):
     def get_context_data(
         self, request: HttpRequest, post: Post, formset: PostingFormset
     ) -> dict:
-        return get_edit_private_thread_post_page_context_data_hook(
+        return get_private_thread_post_edit_context_data_hook(
             self.get_context_data_action, request, post, formset
         )
 
@@ -278,7 +278,7 @@ class ThreadEditView(ThreadPostEditView):
     def get_context_data(
         self, request: HttpRequest, post: Post, formset: PostingFormset
     ) -> dict:
-        return get_edit_thread_page_context_data_hook(
+        return get_thread_edit_context_data_hook(
             self.get_context_data_action, request, post, formset
         )
 
@@ -299,6 +299,6 @@ class PrivateThreadEditView(PrivateThreadPostEditView):
     def get_context_data(
         self, request: HttpRequest, post: Post, formset: PostingFormset
     ) -> dict:
-        return get_edit_private_thread_page_context_data_hook(
+        return get_private_thread_edit_context_data_hook(
             self.get_context_data_action, request, post, formset
         )

@@ -315,7 +315,7 @@ class ThreadReplyView(ReplyView, ThreadView):
 
     def get_form_url(self, request: HttpRequest, thread: Thread) -> None:
         return reverse(
-            "misago:reply-thread", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-reply", kwargs={"id": thread.id, "slug": thread.slug}
         )
 
     def get_redirect_response(
@@ -369,7 +369,7 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
 
     def get_form_url(self, request: HttpRequest, thread: Thread) -> None:
         return reverse(
-            "misago:reply-private-thread", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:private-thread-reply", kwargs={"id": thread.id, "slug": thread.slug}
         )
 
     def get_redirect_response(

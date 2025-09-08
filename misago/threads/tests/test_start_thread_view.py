@@ -24,7 +24,7 @@ from ..models import Thread
 def test_start_thread_view_displays_login_page_to_guests(client, default_category):
     response = client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         )
     )
@@ -41,7 +41,7 @@ def test_start_thread_view_displays_error_page_to_users_without_see_category_per
 
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         )
     )
@@ -58,7 +58,7 @@ def test_start_thread_view_displays_error_page_to_users_without_browse_category_
 
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         )
     )
@@ -79,7 +79,7 @@ def test_start_thread_view_displays_error_page_to_users_without_start_threads_pe
 
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         )
     )
@@ -98,7 +98,7 @@ def test_start_thread_view_displays_error_page_to_users_without_post_in_closed_c
 
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         )
     )
@@ -112,7 +112,7 @@ def test_start_thread_view_displays_error_page_to_users_without_post_in_closed_c
 def test_start_thread_view_displays_form_page_to_users(user_client, default_category):
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         )
     )
@@ -130,7 +130,7 @@ def test_start_thread_view_displays_form_page_to_users_with_permission_to_post_i
 
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         )
     )
@@ -140,7 +140,7 @@ def test_start_thread_view_displays_form_page_to_users_with_permission_to_post_i
 def test_start_thread_view_posts_new_thread(user_client, default_category):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -159,7 +159,7 @@ def test_start_thread_view_posts_new_thread(user_client, default_category):
 def test_start_thread_view_previews_message(user_client, default_category):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -175,7 +175,7 @@ def test_start_thread_view_previews_message(user_client, default_category):
 def test_start_thread_view_validates_thread_title(user_client, default_category):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -190,7 +190,7 @@ def test_start_thread_view_validates_thread_title(user_client, default_category)
 def test_start_thread_view_validates_post(user_client, default_category):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -209,7 +209,7 @@ def test_start_thread_view_validates_posted_contents(
 ):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -226,7 +226,7 @@ def test_start_thread_view_runs_flood_control(
 ):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -243,7 +243,7 @@ def test_start_thread_view_runs_flood_control(
 def test_start_thread_view_displays_attachments_form(user_client, default_category):
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
     )
@@ -262,7 +262,7 @@ def test_start_thread_view_hides_attachments_form_if_user_has_no_category_permis
 
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
     )
@@ -276,7 +276,7 @@ def test_start_thread_view_hides_attachments_form_if_uploads_are_disabled(
 ):
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
     )
@@ -292,7 +292,7 @@ def test_start_thread_view_hides_attachments_form_if_user_has_no_group_permissio
 
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
     )
@@ -307,7 +307,7 @@ def test_start_thread_view_uploads_attachment_on_submit(
 
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -344,7 +344,7 @@ def test_start_thread_view_uploads_attachment_on_preview_or_upload(
 
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -385,7 +385,7 @@ def test_start_thread_view_displays_image_attachment(
 ):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -417,7 +417,7 @@ def test_start_thread_view_displays_image_with_thumbnail_attachment(
 ):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -449,7 +449,7 @@ def test_start_thread_view_displays_video_attachment(
 ):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -481,7 +481,7 @@ def test_start_thread_view_displays_file_attachment(
 ):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -509,7 +509,7 @@ def test_start_view_associates_unused_attachment_on_submit(
 ):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -537,7 +537,7 @@ def test_start_thread_view_adds_attachment_to_deleted_list(
 ):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -576,7 +576,7 @@ def test_start_thread_view_maintains_deleted_attachments_list(
 ):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -613,7 +613,7 @@ def test_start_thread_view_deletes_attachment_on_submit(
 ):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -642,7 +642,7 @@ def test_start_thread_view_embeds_attachments_in_preview(
 ):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -665,7 +665,7 @@ def test_start_thread_view_embeds_attachments_in_preview(
 def test_start_thread_view_displays_poll_form(user_client, default_category):
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
     )
@@ -681,7 +681,7 @@ def test_start_thread_view_hides_poll_form_for_user_without_permission(
 
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
     )
@@ -693,7 +693,7 @@ def test_start_thread_view_hides_poll_form_for_user_without_permission(
 def test_start_thread_view_displays_public_poll_option(user_client, default_category):
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
     )
@@ -705,7 +705,7 @@ def test_start_thread_view_displays_public_poll_option(user_client, default_cate
 def test_start_thread_view_hides_public_poll_option(user_client, default_category):
     response = user_client.get(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
     )
@@ -716,7 +716,7 @@ def test_start_thread_view_hides_public_poll_option(user_client, default_categor
 def test_start_thread_view_starts_thread_with_poll(user_client, user, default_category):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {
@@ -798,7 +798,7 @@ def test_start_thread_view_starts_thread_with_poll_form_disabled(
 
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {

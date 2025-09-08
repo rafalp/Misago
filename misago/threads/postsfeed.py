@@ -278,13 +278,13 @@ class ThreadPostsFeed(PostsFeed):
 
     def get_edit_thread_post_url(self) -> str | None:
         return reverse(
-            "misago:edit-thread",
+            "misago:thread-edit",
             kwargs={"id": self.thread.id, "slug": self.thread.slug},
         )
 
     def get_edit_post_url(self, post: Post) -> str | None:
         return reverse(
-            "misago:edit-thread",
+            "misago:thread-edit",
             kwargs={"id": self.thread.id, "slug": self.thread.slug, "post": post.id},
         )
 
@@ -333,13 +333,13 @@ class PrivateThreadPostsFeed(PostsFeed):
 
     def get_edit_thread_post_url(self) -> str | None:
         return reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={"id": self.thread.id, "slug": self.thread.slug},
         )
 
     def get_edit_post_url(self, post: Post) -> str | None:
         return reverse(
-            "misago:edit-private-thread",
+            "misago:private-thread-edit",
             kwargs={"id": self.thread.id, "slug": self.thread.slug, "post": post.id},
         )
 

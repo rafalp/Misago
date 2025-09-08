@@ -22,7 +22,7 @@ def mock_notify_on_new_private_thread(mocker):
 
 
 def test_start_private_thread_view_displays_login_page_to_guests(db, client):
-    response = client.get(reverse("misago:start-private-thread"))
+    response = client.get(reverse("misago:private-thread-start"))
     assert_contains(response, "Sign in to start new thread")
 
 
@@ -32,7 +32,7 @@ def test_start_private_thread_view_displays_error_page_to_users_without_private_
     user.group.can_use_private_threads = False
     user.group.save()
 
-    response = user_client.get(reverse("misago:start-private-thread"))
+    response = user_client.get(reverse("misago:private-thread-start"))
     assert_contains(
         response,
         "You can&#x27;t use private threads.",
@@ -46,7 +46,7 @@ def test_start_private_thread_view_displays_error_page_to_users_without_start_th
     user.group.can_start_private_threads = False
     user.group.save()
 
-    response = user_client.get(reverse("misago:start-private-thread"))
+    response = user_client.get(reverse("misago:private-thread-start"))
     assert_contains(
         response,
         "You can&#x27;t start new private threads.",
@@ -55,7 +55,7 @@ def test_start_private_thread_view_displays_error_page_to_users_without_start_th
 
 
 def test_start_private_thread_view_displays_form_page_to_users(user_client):
-    response = user_client.get(reverse("misago:start-private-thread"))
+    response = user_client.get(reverse("misago:private-thread-start"))
     assert_contains(response, "Start new private thread")
 
 
@@ -63,7 +63,7 @@ def test_start_private_thread_view_posts_new_thread(
     user_client, user, admin, moderator, other_user, mock_notify_on_new_private_thread
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             "posting-members-users": [
                 admin.username,
@@ -98,7 +98,7 @@ def test_start_private_thread_view_posts_new_thread_using_noscript_fallback(
     user_client, user, admin, moderator, other_user, mock_notify_on_new_private_thread
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             "posting-members-users": [],
             "posting-members-users_noscript": (
@@ -129,7 +129,7 @@ def test_start_private_thread_view_posts_new_thread_using_noscript_fallback(
 
 def test_start_private_thread_view_previews_message(user_client):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             PostingFormset.preview_action: "true",
             "posting-title-title": "Hello world",
@@ -142,7 +142,7 @@ def test_start_private_thread_view_previews_message(user_client):
 
 def test_start_private_thread_view_keeps_users_field_value(user_client, other_user):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             PostingFormset.preview_action: "true",
             "posting-members-users": [other_user.username],
@@ -158,7 +158,7 @@ def test_start_private_thread_view_keeps_users_field_value(user_client, other_us
 
 def test_start_private_thread_view_validates_users(user_client, user):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             "posting-members-users": [user.username],
             "posting-members-users_noscript": "",
@@ -174,7 +174,7 @@ def test_start_private_thread_view_ignores_user_adding_self_if_other_users_are_a
     user_client, user, other_user, admin, moderator, mock_notify_on_new_private_thread
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             "posting-members-users": [user.username, other_user.username],
             "posting-members-users_noscript": "",
@@ -196,7 +196,7 @@ def test_start_private_thread_view_ignores_user_adding_self_if_other_users_are_a
 
 def test_start_private_thread_view_validates_thread_title(user_client, other_user):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             "posting-members-users": [other_user.username],
             "posting-members-users_noscript": "",
@@ -210,7 +210,7 @@ def test_start_private_thread_view_validates_thread_title(user_client, other_use
 
 def test_start_private_thread_view_validates_post(user_client, other_user):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             "posting-members-users": [other_user.username],
             "posting-members-users_noscript": "",
@@ -228,7 +228,7 @@ def test_start_private_thread_view_validates_posted_contents(
     user_client, other_user, posted_contents_validator
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             "posting-members-users": [other_user.username],
             "posting-members-users_noscript": "",
@@ -244,7 +244,7 @@ def test_start_private_thread_view_runs_flood_control(
     user_client, other_user, user_reply
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             "posting-members-users": [other_user.username],
             "posting-members-users_noscript": "",
@@ -259,7 +259,7 @@ def test_start_private_thread_view_runs_flood_control(
 
 
 def test_start_private_thread_view_displays_attachments_form(user_client):
-    response = user_client.get(reverse("misago:start-private-thread"))
+    response = user_client.get(reverse("misago:private-thread-start"))
     assert_contains(response, "Start new private thread")
     assert_contains(response, "misago-editor-attachments=")
 
@@ -268,7 +268,7 @@ def test_start_private_thread_view_displays_attachments_form(user_client):
 def test_start_private_thread_view_hides_attachments_form_if_uploads_are_disabled(
     user_client, default_category
 ):
-    response = user_client.get(reverse("misago:start-private-thread"))
+    response = user_client.get(reverse("misago:private-thread-start"))
     assert_contains(response, "Start new private thread")
     assert_not_contains(response, "misago-editor-attachments=")
 
@@ -279,7 +279,7 @@ def test_start_private_thread_view_hides_attachments_form_if_user_has_no_group_p
     members_group.can_upload_attachments = CanUploadAttachments.THREADS
     members_group.save()
 
-    response = user_client.get(reverse("misago:start-private-thread"))
+    response = user_client.get(reverse("misago:private-thread-start"))
     assert_contains(response, "Start new private thread")
     assert_not_contains(response, "misago-editor-attachments=")
 
@@ -294,7 +294,7 @@ def test_start_private_thread_view_uploads_attachment_on_submit(
     assert not Attachment.objects.exists()
 
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             "posting-members-users": [other_user.username],
             "posting-members-users_noscript": "",
@@ -330,7 +330,7 @@ def test_start_private_thread_view_uploads_attachment_on_preview_or_upload(
     assert not Attachment.objects.exists()
 
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             action_name: "true",
             "posting-members-users": [other_user.username],
@@ -370,7 +370,7 @@ def test_start_private_thread_view_displays_image_attachment(
     action_name, user_client, other_user, user_image_attachment
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_image_attachment.id)],
@@ -401,7 +401,7 @@ def test_start_private_thread_view_displays_image_with_thumbnail_attachment(
     action_name, user_client, other_user, user_image_thumbnail_attachment
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_image_thumbnail_attachment.id)],
@@ -432,7 +432,7 @@ def test_start_private_thread_view_displays_video_attachment(
     action_name, user_client, other_user, user_video_attachment
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_video_attachment.id)],
@@ -463,7 +463,7 @@ def test_start_private_thread_view_displays_file_attachment(
     action_name, user_client, other_user, user_text_attachment
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
@@ -490,7 +490,7 @@ def test_start_private_thread_view_associates_unused_attachment_on_submit(
     user_client, other_user, user_text_attachment, mock_notify_on_new_private_thread
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
             "posting-members-users": [other_user.username],
@@ -517,7 +517,7 @@ def test_start_private_thread_view_adds_attachment_to_deleted_list(
     user_client, other_user, user_text_attachment
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
             PostForm.delete_attachment_field: str(user_text_attachment.id),
@@ -555,7 +555,7 @@ def test_start_private_thread_view_maintains_deleted_attachments_list(
     action_name, user_client, other_user, user_text_attachment
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             action_name: "true",
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
@@ -591,7 +591,7 @@ def test_start_private_thread_view_deletes_attachment_on_submit(
     user_client, other_user, user_text_attachment, mock_notify_on_new_private_thread
 ):
     response = user_client.post(
-        reverse("misago:start-private-thread"),
+        reverse("misago:private-thread-start"),
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
             PostForm.deleted_attachment_ids_field: [str(user_text_attachment.id)],
@@ -620,7 +620,7 @@ def test_start_private_thread_view_embeds_attachments_in_preview(
 ):
     response = user_client.post(
         reverse(
-            "misago:start-thread",
+            "misago:thread-start",
             kwargs={"id": default_category.id, "slug": default_category.slug},
         ),
         {

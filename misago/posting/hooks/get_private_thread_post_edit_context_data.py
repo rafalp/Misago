@@ -9,10 +9,10 @@ if TYPE_CHECKING:
     from ...posting.formsets import EditPrivateThreadPostFormset
 
 
-class GetEditPrivateThreadPostPageContextDataHookAction(Protocol):
+class GetPrivateThreadPostEditContextDataHookAction(Protocol):
     """
-    Misago function used to get the template context data
-    for the edit private thread post page.
+    Misago function used to get the template context data for
+    the private thread post edit view.
 
     # Arguments
 
@@ -30,8 +30,8 @@ class GetEditPrivateThreadPostPageContextDataHookAction(Protocol):
 
     # Return value
 
-    A Python `dict` with context data to use to `render`
-    the edit private thread post page.
+    A Python `dict` with context data used to `render`
+    the private thread post edit view.
     """
 
     def __call__(
@@ -42,16 +42,16 @@ class GetEditPrivateThreadPostPageContextDataHookAction(Protocol):
     ) -> dict: ...
 
 
-class GetEditPrivateThreadPostPageContextDataHookFilter(Protocol):
+class GetPrivateThreadPostEditContextDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetEditPrivateThreadPostPageContextDataHookAction`
+    ## `action: GetPrivateThreadPostEditContextDataHookAction`
 
-    Misago function used to get the template context data
-    for the edit private thread post page.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 
@@ -69,28 +69,28 @@ class GetEditPrivateThreadPostPageContextDataHookFilter(Protocol):
 
     # Return value
 
-    A Python `dict` with context data to use to `render`
-    the edit private thread post page.
+    A Python `dict` with context data used to `render`
+    the private thread post edit view.
     """
 
     def __call__(
         self,
-        action: GetEditPrivateThreadPostPageContextDataHookAction,
+        action: GetPrivateThreadPostEditContextDataHookAction,
         request: HttpRequest,
         post: Post,
         formset: "EditPrivateThreadPostFormset",
     ) -> dict: ...
 
 
-class GetEditPrivateThreadPostPageContextDataHook(
+class GetPrivateThreadPostEditContextDataHook(
     FilterHook[
-        GetEditPrivateThreadPostPageContextDataHookAction,
-        GetEditPrivateThreadPostPageContextDataHookFilter,
+        GetPrivateThreadPostEditContextDataHookAction,
+        GetPrivateThreadPostEditContextDataHookFilter,
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to get the template
-    context data for the edit private thread post page.
+    This hook wraps the function Misago uses to get the template context data
+    for the private thread post edit view.
 
     # Example
 
@@ -100,11 +100,11 @@ class GetEditPrivateThreadPostPageContextDataHook(
     ```python
     from django.http import HttpRequest
     from misago.posting.formsets import EditPrivateThreadPostFormset
+    from misago.posting.hooks import get_private_thread_post_edit_context_data_hook
     from misago.posts.models import Post
-    from misago.threads.hooks import get_edit_private_thread_post_page_context_data_hook
 
 
-    @get_edit_private_thread_post_page_context_data_hook.append_filter
+    @get_private_thread_post_edit_context_data_hook.append_filter
     def set_show_first_post_warning_in_context(
         action,
         request: HttpRequest,
@@ -121,7 +121,7 @@ class GetEditPrivateThreadPostPageContextDataHook(
 
     def __call__(
         self,
-        action: GetEditPrivateThreadPostPageContextDataHookAction,
+        action: GetPrivateThreadPostEditContextDataHookAction,
         request: HttpRequest,
         post: Post,
         formset: "EditPrivateThreadPostFormset",
@@ -129,6 +129,6 @@ class GetEditPrivateThreadPostPageContextDataHook(
         return super().__call__(action, request, post, formset)
 
 
-get_edit_private_thread_post_page_context_data_hook = (
-    GetEditPrivateThreadPostPageContextDataHook(cache=False)
+get_private_thread_post_edit_context_data_hook = (
+    GetPrivateThreadPostEditContextDataHook(cache=False)
 )

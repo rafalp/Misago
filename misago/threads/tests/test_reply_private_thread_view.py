@@ -22,7 +22,7 @@ def test_reply_private_thread_view_displays_login_page_to_guests(
 ):
     response = client.get(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -40,7 +40,7 @@ def test_reply_private_thread_view_displays_error_page_to_users_without_private_
 
     response = user_client.get(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -59,7 +59,7 @@ def test_reply_private_thread_view_displays_error_page_to_user_who_cant_see_priv
 ):
     response = user_client.get(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={"id": private_thread.id, "slug": private_thread.slug},
         )
     )
@@ -71,7 +71,7 @@ def test_reply_private_thread_view_displays_reply_thread_form(
 ):
     response = user_client.get(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -86,7 +86,7 @@ def test_reply_private_thread_view_posts_new_thread_reply(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -117,7 +117,7 @@ def test_reply_private_thread_view_posts_new_thread_reply_in_htmx(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -149,7 +149,7 @@ def test_reply_private_thread_view_posts_new_thread_reply_in_quick_reply(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -181,7 +181,7 @@ def test_reply_private_thread_view_posts_new_thread_reply_in_quick_reply_with_ht
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -209,7 +209,7 @@ def test_reply_private_thread_view_posted_reply_in_quick_reply_with_htmx_is_read
 
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -239,7 +239,7 @@ def test_reply_private_thread_view_previews_message(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -259,7 +259,7 @@ def test_reply_private_thread_view_previews_message_in_htmx(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -280,7 +280,7 @@ def test_reply_private_thread_view_previews_message_in_quick_reply(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -301,7 +301,7 @@ def test_reply_private_thread_view_previews_message_in_quick_reply_with_htmx(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -323,7 +323,7 @@ def test_reply_private_thread_view_validates_post(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -344,7 +344,7 @@ def test_reply_private_thread_view_validates_posted_contents(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -364,7 +364,7 @@ def test_reply_private_thread_view_runs_flood_control(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -389,7 +389,7 @@ def test_reply_private_thread_view_appends_reply_to_user_recent_post(
 
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -427,7 +427,7 @@ def test_reply_private_thread_view_appends_reply_to_user_recent_post_in_quick_re
 
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -458,7 +458,7 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_fe
 
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -498,7 +498,7 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_in_pr
 
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -527,7 +527,7 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_re
 
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -567,7 +567,7 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_re
 
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -610,7 +610,7 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_re
 
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -653,7 +653,7 @@ def test_reply_private_thread_view_doesnt_append_reply_to_user_recent_post_if_re
 
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -688,7 +688,7 @@ def test_reply_private_thread_view_shows_error_if_thread_is_accessed(
 ):
     response = user_client.get(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
     )
@@ -702,7 +702,7 @@ def test_reply_private_thread_view_displays_attachments_form(
 ):
     response = user_client.get(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -719,7 +719,7 @@ def test_reply_private_thread_view_hides_attachments_form_if_uploads_are_disable
 ):
     response = user_client.get(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -738,7 +738,7 @@ def test_reply_private_thread_view_hides_attachments_form_if_user_has_no_group_p
 
     response = user_client.get(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -756,7 +756,7 @@ def test_reply_private_thread_view_uploads_attachment_on_submit(
 
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -792,7 +792,7 @@ def test_reply_private_thread_view_uploads_attachment_on_preview_or_upload(
 
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -835,7 +835,7 @@ def test_reply_private_thread_view_displays_image_attachment(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -869,7 +869,7 @@ def test_reply_private_thread_view_displays_image_with_thumbnail_attachment(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -903,7 +903,7 @@ def test_reply_private_thread_view_displays_video_attachment(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -937,7 +937,7 @@ def test_reply_private_thread_view_displays_file_attachment(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -967,7 +967,7 @@ def test_reply_private_thread_view_associates_unused_attachment_on_submit(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -994,7 +994,7 @@ def test_reply_private_thread_view_adds_attachment_to_deleted_list(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -1035,7 +1035,7 @@ def test_reply_private_thread_view_maintains_deleted_attachments_list(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -1074,7 +1074,7 @@ def test_reply_private_thread_view_deletes_attachment_on_submit(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
@@ -1114,7 +1114,7 @@ def test_reply_private_thread_view_embeds_attachments_in_preview(
 ):
     response = user_client.post(
         reverse(
-            "misago:reply-private-thread",
+            "misago:private-thread-reply",
             kwargs={
                 "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,

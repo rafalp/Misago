@@ -28,7 +28,7 @@ def test_thread_replies_view_shows_start_poll_button_to_thread_starter_with_perm
     assert_contains(
         response,
         reverse(
-            "misago:start-thread-poll",
+            "misago:thread-start-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
     )
@@ -45,7 +45,7 @@ def test_thread_replies_view_doesnt_show_start_poll_button_to_user_with_permissi
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread-poll",
+            "misago:thread-start-poll",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
     )
@@ -67,7 +67,7 @@ def test_thread_replies_view_doesnt_show_start_poll_button_to_thread_starter_wit
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread-poll",
+            "misago:thread-start-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
     )
@@ -87,7 +87,7 @@ def test_thread_replies_view_doesnt_show_start_poll_button_to_thread_starter_wit
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread-poll",
+            "misago:thread-start-poll",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
     )
