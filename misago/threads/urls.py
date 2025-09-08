@@ -1,11 +1,5 @@
 from django.urls import path
 
-from .views.edit import (
-    edit_private_thread,
-    edit_private_thread_post,
-    edit_thread,
-    edit_thread_post,
-)
 from .views.list import category_threads, private_threads, threads
 from .views.post import (
     ThreadPostLastView,
@@ -15,9 +9,7 @@ from .views.post import (
     ThreadPostView,
 )
 from .views.replies import private_thread_replies, thread_replies
-from .views.reply import reply_private_thread, reply_thread
 from .views.selectcategory import SelectCategoryView
-from .views.start import start_private_thread, start_thread
 from .views.threadupdates import (
     DeletePrivateThreadView,
     DeleteThreadUpdateView,
@@ -33,16 +25,6 @@ urlpatterns = [
         "start-thread/",
         SelectCategoryView.as_view(),
         name="start-thread",
-    ),
-    path(
-        "c/<slug:slug>/<int:id>/start-thread/",
-        start_thread,
-        name="start-thread",
-    ),
-    path(
-        "private/start-thread/",
-        start_private_thread,
-        name="start-private-thread",
     ),
     path(
         "threads/",
@@ -119,36 +101,6 @@ urlpatterns = [
         "t/<slug:slug>/<int:id>/solution/",
         ThreadPostSolutionView.as_view(),
         name="thread-post-solution",
-    ),
-    path(
-        "t/<slug:slug>/<int:id>/reply/",
-        reply_thread,
-        name="reply-thread",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/reply/",
-        reply_private_thread,
-        name="reply-private-thread",
-    ),
-    path(
-        "t/<slug:slug>/<int:id>/edit/",
-        edit_thread,
-        name="edit-thread",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/edit/",
-        edit_private_thread,
-        name="edit-private-thread",
-    ),
-    path(
-        "t/<slug:slug>/<int:id>/edit/<int:post>/",
-        edit_thread_post,
-        name="edit-thread",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/edit/<int:post>/",
-        edit_private_thread_post,
-        name="edit-private-thread",
     ),
     path(
         "t/<slug:slug>/<int:id>/hide-update/<int:thread_update>/",
