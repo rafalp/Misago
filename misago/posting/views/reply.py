@@ -36,6 +36,7 @@ from ...posting.state import (
 )
 from ...posting.validators import validate_flood_control, validate_posted_contents
 from ...posts.models import Post
+from ...privatethreads.views.generic import PrivateThreadView
 from ...privatethreads.redirect import redirect_to_private_thread_post
 from ...readtracker.tracker import (
     get_thread_read_time,
@@ -44,14 +45,14 @@ from ...readtracker.tracker import (
 )
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
+from ...threads.models import Thread
+from ...threads.prefetch import prefetch_posts_feed_related_objects
+from ...threads.redirect import redirect_to_thread_post
+from ...threads.views.generic import ThreadView
 from ..hooks import (
-    get_reply_private_thread_page_context_data_hook,
-    get_reply_thread_page_context_data_hook,
+    get_private_thread_reply_context_data_hook,
+    get_thread_reply_context_data_hook,
 )
-from ..models import Thread
-from ..prefetch import prefetch_posts_feed_related_objects
-from ..redirect import redirect_to_thread_post
-from .generic import PrivateThreadView, ThreadView
 
 
 class ReplyView(View):
@@ -309,7 +310,7 @@ class ThreadReplyView(ReplyView, ThreadView):
     def get_context_data(
         self, request: HttpRequest, thread: Thread, formset: ThreadReplyFormset
     ) -> dict:
-        return get_reply_thread_page_context_data_hook(
+        return get_thread_reply_context_data_hook(
             self.get_context_data_action, request, thread, formset
         )
 
@@ -363,7 +364,7 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
     def get_context_data(
         self, request: HttpRequest, thread: Thread, formset: ReplyPrivateThreadFormset
     ) -> dict:
-        return get_reply_private_thread_page_context_data_hook(
+        return get_private_thread_reply_context_data_hook(
             self.get_context_data_action, request, thread, formset
         )
 

@@ -1,18 +1,16 @@
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ..models import Thread
-
-if TYPE_CHECKING:
-    from ...posting.formsets import ReplyPrivateThreadFormset
+from ...threads.models import Thread
+from ..formsets import ReplyPrivateThreadFormset
 
 
-class GetReplyPrivateThreadPageContextDataHookAction(Protocol):
+class GetPrivateThreadReplyContextDataHookAction(Protocol):
     """
-    Misago function used to get the template context data
-    for the reply to private thread page.
+    Misago function used to get the template context data for
+    the private thread reply view.
 
     # Arguments
 
@@ -30,8 +28,8 @@ class GetReplyPrivateThreadPageContextDataHookAction(Protocol):
 
     # Return value
 
-    A Python `dict` with context data to use to `render`
-    the reply to private thread page.
+    A Python `dict` with context data used to `render`
+    the private thread thread reply view.
     """
 
     def __call__(
@@ -42,16 +40,16 @@ class GetReplyPrivateThreadPageContextDataHookAction(Protocol):
     ) -> dict: ...
 
 
-class GetReplyPrivateThreadPageContextDataHookFilter(Protocol):
+class GetPrivateThreadReplyContextDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetReplyPrivateThreadPageContextDataHookAction`
+    ## `action: GetPrivateThreadReplyContextDataHookAction`
 
-    Misago function used to get the template context data
-    for the reply to private thread page.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 
@@ -69,28 +67,28 @@ class GetReplyPrivateThreadPageContextDataHookFilter(Protocol):
 
     # Return value
 
-    A Python `dict` with context data to use to `render`
-    the reply to private thread page.
+    A Python `dict` with context data used to `render`
+    the private thread thread reply view.
     """
 
     def __call__(
         self,
-        action: GetReplyPrivateThreadPageContextDataHookAction,
+        action: GetPrivateThreadReplyContextDataHookAction,
         request: HttpRequest,
         thread: Thread,
         formset: "ReplyPrivateThreadFormset",
     ) -> dict: ...
 
 
-class GetReplyPrivateThreadPageContextDataHook(
+class GetPrivateThreadReplyContextDataHook(
     FilterHook[
-        GetReplyPrivateThreadPageContextDataHookAction,
-        GetReplyPrivateThreadPageContextDataHookFilter,
+        GetPrivateThreadReplyContextDataHookAction,
+        GetPrivateThreadReplyContextDataHookFilter,
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to get the template
-    context data for the reply to private thread page.
+    This hook wraps the function Misago uses to get the template context data
+    for the private thread reply view.
 
     # Example
 
@@ -100,11 +98,11 @@ class GetReplyPrivateThreadPageContextDataHook(
     ```python
     from django.http import HttpRequest
     from misago.posting.formsets import ReplyPrivateThreadFormset
-    from misago.threads.hooks import get_reply_private_thread_page_context_data_hook
+    from misago.posting.hooks import get_private_thread_reply_context_data_hook
     from misago.threads.models import Thread
 
 
-    @get_reply_private_thread_page_context_data_hook.append_filter
+    @get_private_thread_reply_context_data_hook.append_filter
     def set_show_first_post_warning_in_context(
         action,
         request: HttpRequest,
@@ -121,7 +119,7 @@ class GetReplyPrivateThreadPageContextDataHook(
 
     def __call__(
         self,
-        action: GetReplyPrivateThreadPageContextDataHookAction,
+        action: GetPrivateThreadReplyContextDataHookAction,
         request: HttpRequest,
         thread: Thread,
         formset: "ReplyPrivateThreadFormset",
@@ -129,6 +127,6 @@ class GetReplyPrivateThreadPageContextDataHook(
         return super().__call__(action, request, thread, formset)
 
 
-get_reply_private_thread_page_context_data_hook = (
-    GetReplyPrivateThreadPageContextDataHook(cache=False)
+get_private_thread_reply_context_data_hook = GetPrivateThreadReplyContextDataHook(
+    cache=False
 )

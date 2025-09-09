@@ -1,18 +1,16 @@
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ..models import Thread
-
-if TYPE_CHECKING:
-    from ...posting.formsets import ReplyThreadFormset
+from ...threads.models import Thread
+from ..formsets import ReplyThreadFormset
 
 
-class GetReplyThreadPageContextDataHookAction(Protocol):
+class GetThreadReplyContextDataHookAction(Protocol):
     """
     Misago function used to get the template context data
-    for the reply to thread page.
+    for the thread reply view.
 
     # Arguments
 
@@ -30,8 +28,8 @@ class GetReplyThreadPageContextDataHookAction(Protocol):
 
     # Return value
 
-    A Python `dict` with context data to use to `render`
-    the reply to thread page.
+    A Python `dict` with context data used to `render`
+    the thread thread reply view.
     """
 
     def __call__(
@@ -42,16 +40,16 @@ class GetReplyThreadPageContextDataHookAction(Protocol):
     ) -> dict: ...
 
 
-class GetReplyThreadPageContextDataHookFilter(Protocol):
+class GetThreadReplyContextDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetReplyThreadPageContextDataHookAction`
+    ## `action: GetThreadReplyContextDataHookAction`
 
-    Misago function used to get the template context data
-    for the reply to thread page.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 
@@ -69,28 +67,28 @@ class GetReplyThreadPageContextDataHookFilter(Protocol):
 
     # Return value
 
-    A Python `dict` with context data to use to `render`
-    the reply to thread page.
+    A Python `dict` with context data used to `render`
+    the thread thread reply view.
     """
 
     def __call__(
         self,
-        action: GetReplyThreadPageContextDataHookAction,
+        action: GetThreadReplyContextDataHookAction,
         request: HttpRequest,
         thread: Thread,
         formset: "ReplyThreadFormset",
     ) -> dict: ...
 
 
-class GetReplyThreadPageContextDataHook(
+class GetThreadReplyContextDataHook(
     FilterHook[
-        GetReplyThreadPageContextDataHookAction,
-        GetReplyThreadPageContextDataHookFilter,
+        GetThreadReplyContextDataHookAction,
+        GetThreadReplyContextDataHookFilter,
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to get the template
-    context data for the reply to thread page.
+    This hook wraps the function Misago uses to get the template context data
+    for the thread reply view.
 
     # Example
 
@@ -100,11 +98,11 @@ class GetReplyThreadPageContextDataHook(
     ```python
     from django.http import HttpRequest
     from misago.posting.formsets import ReplyThreadFormset
-    from misago.threads.hooks import get_reply_thread_page_context_data_hook
+    from misago.threads.posting import get_thread_reply_context_data_hook
     from misago.threads.models import Thread
 
 
-    @get_reply_thread_page_context_data_hook.append_filter
+    @get_thread_reply_context_data_hook.append_filter
     def set_show_first_post_warning_in_context(
         action,
         request: HttpRequest,
@@ -121,7 +119,7 @@ class GetReplyThreadPageContextDataHook(
 
     def __call__(
         self,
-        action: GetReplyThreadPageContextDataHookAction,
+        action: GetThreadReplyContextDataHookAction,
         request: HttpRequest,
         thread: Thread,
         formset: "ReplyThreadFormset",
@@ -129,4 +127,4 @@ class GetReplyThreadPageContextDataHook(
         return super().__call__(action, request, thread, formset)
 
 
-get_reply_thread_page_context_data_hook = GetReplyThreadPageContextDataHook(cache=False)
+get_thread_reply_context_data_hook = GetThreadReplyContextDataHook(cache=False)

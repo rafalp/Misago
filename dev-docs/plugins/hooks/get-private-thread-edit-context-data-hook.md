@@ -1,22 +1,22 @@
-# `get_edit_private_thread_page_context_data_hook`
+# `get_private_thread_edit_context_data_hook`
 
-This hook wraps the standard function that Misago uses to get the template context data for the edit private thread page.
+This hook wraps the function Misago uses to get the template context data for the private thread edit view.
 
 
 ## Location
 
-This hook can be imported from `misago.threads.hooks`:
+This hook can be imported from `misago.posting.hooks`:
 
 ```python
-from misago.threads.hooks import get_edit_private_thread_page_context_data_hook
+from misago.posting.hooks import get_private_thread_edit_context_data_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_edit_private_thread_page_context_data_filter(
-    action: GetEditPrivateThreadPageContextDataHookAction,
+def custom_get_private_thread_edit_context_data_filter(
+    action: GetPrivateThreadEditContextDataHookAction,
     request: HttpRequest,
     post: Post,
     formset: 'EditPrivateThreadFormset',
@@ -29,9 +29,9 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetEditPrivateThreadPageContextDataHookAction`
+#### `action: GetPrivateThreadEditContextDataHookAction`
 
-Misago function used to get the template context data for the edit private thread page.
+The next function registered in this hook, either a custom function or Misago’s default.
 
 See the [action](#action) section for details.
 
@@ -53,19 +53,19 @@ The `EditPrivateThreadFormset` instance.
 
 ### Return value
 
-A Python `dict` with context data to use to `render` the edit private thread page.
+A Python `dict` with context data used to `render` the private thread edit view.
 
 
 ## Action
 
 ```python
-def get_edit_private_thread_page_context_data_action(
+def get_private_thread_edit_context_data_action(
     request: HttpRequest, post: Post, formset: 'EditPrivateThreadFormset'
 ) -> dict:
     ...
 ```
 
-Misago function used to get the template context data for the edit private thread page.
+Misago function used to get the template context data for the thread edit view.
 
 
 ### Arguments
@@ -87,7 +87,7 @@ The `EditPrivateThreadFormset` instance.
 
 ### Return value
 
-A Python `dict` with context data to use to `render` the edit private thread page.
+A Python `dict` with context data used to `render` the private thread edit view.
 
 
 ## Example
@@ -97,11 +97,10 @@ The code below implements a custom filter function that adds extra values to the
 ```python
 from django.http import HttpRequest
 from misago.posting.formsets import EditPrivateThreadFormset
+from misago.posting.hooks import get_private_thread_edit_context_data_hook
 from misago.posts.models import Post
-from misago.threads.hooks import get_edit_private_thread_page_context_data_hook
 
-
-@get_edit_private_thread_page_context_data_hook.append_filter
+@get_private_thread_edit_context_data_hook.append_filter
 def set_show_first_post_warning_in_context(
     action,
     request: HttpRequest,

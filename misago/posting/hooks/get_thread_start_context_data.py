@@ -1,12 +1,10 @@
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 
 from django.http import HttpRequest
 
 from ...categories.models import Category
 from ...plugins.hooks import FilterHook
-
-if TYPE_CHECKING:
-    from ...posting.formsets import StartThreadFormset
+from ..formsets import StartThreadFormset
 
 
 class GetThreadStartContextDataHookAction(Protocol):
