@@ -46,8 +46,8 @@ class ValidateThreadTitleHookFilter(Protocol):
 
     ## `action: ValidateThreadTitleHookAction`
 
-    Next function registered in this hook, either a custom function or
-    Misago's standard one.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 

@@ -23,13 +23,13 @@ from ...permissions.threads import (
 from ...posting.formsets import (
     PostingFormset,
     ReplyPrivateThreadFormset,
-    ThreadReplyFormset,
+    ReplyThreadFormset,
     get_reply_private_thread_formset,
     get_reply_thread_formset,
 )
 from ...posting.state import (
-    State,
-    ReplyPrivateThreadState,
+    PrivateThreadReplyState,
+    ReplyState,
     ThreadReplyState,
     get_reply_private_thread_state,
     get_reply_thread_state,
@@ -113,7 +113,7 @@ class ReplyView(View):
         return redirect
 
     def post_quick_reply(
-        self, request: HttpRequest, thread: Thread, state: ThreadReplyState
+        self, request: HttpRequest, thread: Thread, state: ReplyState
     ) -> HttpResponse:
         # TODO: remove once we no longer serialize user object to preload JSON data
         request.user.refresh_from_db()
@@ -149,7 +149,7 @@ class ReplyView(View):
         return response
 
     def mark_reply_as_read(
-        self, request: HttpRequest, thread: Thread, state: ThreadReplyState
+        self, request: HttpRequest, thread: Thread, state: ReplyState
     ):
         # Is thread (excluding last reply) read?
         read_time = get_thread_read_time(request, thread)
@@ -197,7 +197,7 @@ class ReplyView(View):
     def get_formset(self, request: HttpRequest, thread: Thread) -> PostingFormset:
         raise NotImplementedError()
 
-    def is_valid(self, formset: PostingFormset, state: State) -> bool:
+    def is_valid(self, formset: PostingFormset, state: ReplyState) -> bool:
         return (
             formset.is_valid()
             and (state.is_merged or validate_flood_control(formset, state))
@@ -209,7 +209,7 @@ class ReplyView(View):
         request: HttpRequest,
         thread: Thread,
         formset: PostingFormset,
-        preview: State | None = None,
+        preview: ReplyState | None = None,
         feed: list[dict] | None = None,
         htmx_swap: bool = False,
     ):
@@ -304,11 +304,11 @@ class ThreadReplyView(ReplyView, ThreadView):
     ) -> ThreadReplyState:
         return get_reply_thread_state(request, thread, post)
 
-    def get_formset(self, request: HttpRequest, thread: Thread) -> ThreadReplyFormset:
+    def get_formset(self, request: HttpRequest, thread: Thread) -> ReplyThreadFormset:
         return get_reply_thread_formset(request, thread)
 
     def get_context_data(
-        self, request: HttpRequest, thread: Thread, formset: ThreadReplyFormset
+        self, request: HttpRequest, thread: Thread, formset: ReplyThreadFormset
     ) -> dict:
         return get_thread_reply_context_data_hook(
             self.get_context_data_action, request, thread, formset
@@ -353,7 +353,7 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
 
     def get_state(
         self, request: HttpRequest, thread: Thread, post: Post | None
-    ) -> ReplyPrivateThreadState:
+    ) -> PrivateThreadReplyState:
         return get_reply_private_thread_state(request, thread, post)
 
     def get_formset(

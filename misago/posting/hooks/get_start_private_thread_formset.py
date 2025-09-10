@@ -44,8 +44,8 @@ class GetStartPrivateThreadFormsetHookFilter(Protocol):
 
     ## `action: GetStartPrivateThreadFormsetHookAction`
 
-    A standard function that Misago uses to create a new `StartPrivateThreadFormset`
-    instance with forms for posting a new private thread.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 

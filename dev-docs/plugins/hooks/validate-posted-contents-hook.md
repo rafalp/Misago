@@ -15,7 +15,7 @@ from misago.posting.hooks import validate_posted_contents_hook
 ## Action
 
 ```python
-def custom_validate_posted_contents_filter(formset: 'PostingFormset', state: 'PostingState'):
+def custom_validate_posted_contents_filter(formset: 'PostingFormset', state: 'State'):
     ...
 ```
 
@@ -31,9 +31,9 @@ It should either do nothing, raise `ValidationError`, or add one or more `Valida
 An instance of the `PostingFormset` subclass specific to the posted contents.
 
 
-#### `state: PostingState`
+#### `state: State`
 
-An instance of the `PostingState` subclass specific to the posted contents.
+An instance of the `State` subclass specific to the posted contents.
 
 
 ## Example

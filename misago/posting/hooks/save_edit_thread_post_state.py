@@ -39,8 +39,8 @@ class SaveEditThreadPostStateHookFilter(Protocol):
 
     ## `action: SaveEditThreadPostStateHookAction`
 
-    A standard function that Misago uses to save
-    edited thread post to the database.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 

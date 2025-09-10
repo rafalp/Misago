@@ -44,8 +44,8 @@ class GetEditThreadPostFormsetHookFilter(Protocol):
 
     ## `action: GetEditThreadPostFormsetHookAction`
 
-    A standard function that Misago uses to create a new `EditThreadPostFormset`
-    instance with forms for editing a thread post.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 

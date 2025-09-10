@@ -7,13 +7,13 @@ from ...posts.models import Post
 from ...threads.models import Thread
 
 if TYPE_CHECKING:
-    from ..state.reply import ReplyPrivateThreadState
+    from ..state.reply import PrivateThreadReplyState
 
 
-class GetReplyPrivateThreadStateHookAction(Protocol):
+class GetPrivateThreadReplyStateHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `ReplyPrivateThreadState`
-    instance for replying to a private thread.
+    Misago function used to create a new `PrivateThreadReplyState` instance
+    for the private thread reply view.
 
     # Arguments
 
@@ -31,7 +31,7 @@ class GetReplyPrivateThreadStateHookAction(Protocol):
 
     # Return value
 
-    A `ReplyPrivateThreadState` instance to use to create a reply in a private thread
+    A `PrivateThreadReplyState` instance to use to create a reply in a private thread
     in the database.
     """
 
@@ -40,19 +40,19 @@ class GetReplyPrivateThreadStateHookAction(Protocol):
         request: HttpRequest,
         thread: Thread,
         post: Post | None = None,
-    ) -> "ReplyPrivateThreadState": ...
+    ) -> "PrivateThreadReplyState": ...
 
 
-class GetReplyPrivateThreadStateHookFilter(Protocol):
+class GetPrivateThreadReplyStateHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetReplyPrivateThreadStateHookAction`
+    ## `action: GetPrivateThreadReplyStateHookAction`
 
-    A standard function that Misago uses to create a new `ReplyPrivateThreadState`
-    instance for replying to a private thread.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 
@@ -70,27 +70,27 @@ class GetReplyPrivateThreadStateHookFilter(Protocol):
 
     # Return value
 
-    A `ReplyPrivateThreadState` instance to use to create a reply in a private thread
+    A `PrivateThreadReplyState` instance to use to create a reply in a private thread
     in the database.
     """
 
     def __call__(
         self,
-        action: GetReplyPrivateThreadStateHookAction,
+        action: GetPrivateThreadReplyStateHookAction,
         request: HttpRequest,
         thread: Thread,
         post: Post | None = None,
-    ) -> "ReplyPrivateThreadState": ...
+    ) -> "PrivateThreadReplyState": ...
 
 
-class GetReplyPrivateThreadStateHook(
+class GetPrivateThreadReplyStateHook(
     FilterHook[
-        GetReplyPrivateThreadStateHookAction, GetReplyPrivateThreadStateHookFilter
+        GetPrivateThreadReplyStateHookAction, GetPrivateThreadReplyStateHookFilter
     ]
 ):
     """
     This hook wraps the standard function Misago uses to create a new
-    `ReplyPrivateThreadState` instance for replying to a private thread.
+    `PrivateThreadReplyState` instance for the private thread reply view.
 
     # Example
 
@@ -99,16 +99,16 @@ class GetReplyPrivateThreadStateHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.posting.hooks import get_reply_private_thread_state_hook
-    from misago.posting.state import ReplyPrivateThreadState
+    from misago.posting.hooks import get_private_thread_reply_state_hook
+    from misago.posting.state import PrivateThreadReplyState
     from misago.posts.models import Post
     from misago.threads.models import Thread
 
 
-    @get_reply_private_thread_state_hook.append_filter
+    @get_private_thread_reply_state_hook.append_filter
     def set_poster_ip_on_reply_private_thread_state(
         action, request: HttpRequest, thread: Thread, post: Post | None = None
-    ) -> ReplyPrivateThreadState:
+    ) -> PrivateThreadReplyState:
         state = action(request, thread)
         state.plugin_state["user_id"] = request.user_ip
         return state
@@ -119,12 +119,12 @@ class GetReplyPrivateThreadStateHook(
 
     def __call__(
         self,
-        action: GetReplyPrivateThreadStateHookAction,
+        action: GetPrivateThreadReplyStateHookAction,
         request: HttpRequest,
         thread: Thread,
         post: Post | None = None,
-    ) -> "ReplyPrivateThreadState":
+    ) -> "PrivateThreadReplyState":
         return super().__call__(action, request, thread, post)
 
 
-get_reply_private_thread_state_hook = GetReplyPrivateThreadStateHook()
+get_private_thread_reply_state_hook = GetPrivateThreadReplyStateHook()

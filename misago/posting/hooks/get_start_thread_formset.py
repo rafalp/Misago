@@ -44,8 +44,8 @@ class GetStartThreadFormsetHookFilter(Protocol):
 
     ## `action: GetStartThreadFormsetHookAction`
 
-    A standard function that Misago uses to create a new `StartThreadFormset`
-    instance with forms for posting a new thread.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 

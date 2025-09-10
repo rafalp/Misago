@@ -44,8 +44,8 @@ class GetReplyThreadFormsetHookFilter(Protocol):
 
     ## `action: GetReplyThreadFormsetHookAction`
 
-    A standard function that Misago uses to create a new `ReplyThreadFormset`
-    instance with forms for posting a new thread reply.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 

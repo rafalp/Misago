@@ -1,6 +1,6 @@
-# `get_reply_thread_state_hook`
+# `get_thread_reply_state_hook`
 
-This hook wraps the standard function Misago uses to create a new `ReplyThreadState` instance for replying to a thread.
+This hook wraps the standard function Misago uses to create a new `ThreadReplyState` instance for the thread reply view.
 
 
 ## Location
@@ -8,19 +8,19 @@ This hook wraps the standard function Misago uses to create a new `ReplyThreadSt
 This hook can be imported from `misago.posting.hooks`:
 
 ```python
-from misago.posting.hooks import get_reply_thread_state_hook
+from misago.posting.hooks import get_thread_reply_state_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_reply_thread_state_filter(
-    action: GetReplyThreadStateHookAction,
+def custom_get_thread_reply_state_filter(
+    action: GetThreadReplyStateHookAction,
     request: HttpRequest,
     thread: Thread,
     post: Post | None=None,
-) -> 'ReplyThreadState':
+) -> 'ThreadReplyState':
     ...
 ```
 
@@ -29,9 +29,9 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetReplyThreadStateHookAction`
+#### `action: GetThreadReplyStateHookAction`
 
-A standard function that Misago uses to create a new `ReplyThreadState` instance for replying to a thread.
+The next function registered in this hook, either a custom function or Misago’s default.
 
 See the [action](#action) section for details.
 
@@ -53,19 +53,19 @@ The `Post` instance to append posted contents to, or `None`.
 
 ### Return value
 
-A `ReplyThreadState` instance to use to create a reply in a thread in the database.
+A `ThreadReplyState` instance to use to create a reply in a thread in the database.
 
 
 ## Action
 
 ```python
-def get_reply_thread_state_action(
+def get_thread_reply_state_action(
     request: HttpRequest, thread: Thread, post: Post | None=None
-) -> 'ReplyThreadState':
+) -> 'ThreadReplyState':
     ...
 ```
 
-A standard function that Misago uses to create a new `ReplyThreadState` instance for replying to a thread.
+Misago function used to create a new `ThreadReplyState` instance for the thread reply view.
 
 
 ### Arguments
@@ -87,7 +87,7 @@ The `Post` instance to append posted contents to, or `None`.
 
 ### Return value
 
-A `ReplyThreadState` instance to use to create a reply in a thread in the database.
+A `ThreadReplyState` instance to use to create a reply in a thread in the database.
 
 
 ## Example
@@ -96,19 +96,19 @@ The code below implements a custom filter function that stores the user's IP in 
 
 ```python
 from django.http import HttpRequest
-from misago.posting.hooks import get_reply_thread_state_hook
-from misago.posting.state import ReplyThreadState
+from misago.posting.hooks import get_thread_reply_state_hook
+from misago.posting.state import ThreadReplyState
 from misago.posts.models import Post
 from misago.threads.models import Thread
 
 
-@get_reply_thread_state_hook.append_filter
+@get_thread_reply_state_hook.append_filter
 def set_poster_ip_on_reply_thread_state(
     action,
     request: HttpRequest,
     thread: Thread,
     post: Post | None = None,
-) -> ReplyThreadState:
+) -> ThreadReplyState:
     state = action(request, thread)
     state.plugin_state["user_id"] = request.user_ip
     return state

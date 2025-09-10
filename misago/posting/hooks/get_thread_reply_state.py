@@ -7,13 +7,13 @@ from ...posts.models import Post
 from ...threads.models import Thread
 
 if TYPE_CHECKING:
-    from ..state.reply import ReplyThreadState
+    from ..state.reply import ThreadReplyState
 
 
-class GetReplyThreadStateHookAction(Protocol):
+class GetThreadReplyStateHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `ReplyThreadState`
-    instance for replying to a thread.
+    Misago function used to create a new `ThreadReplyState` instance
+    for the thread reply view.
 
     # Arguments
 
@@ -31,7 +31,7 @@ class GetReplyThreadStateHookAction(Protocol):
 
     # Return value
 
-    A `ReplyThreadState` instance to use to create a reply in a thread
+    A `ThreadReplyState` instance to use to create a reply in a thread
     in the database.
     """
 
@@ -40,19 +40,19 @@ class GetReplyThreadStateHookAction(Protocol):
         request: HttpRequest,
         thread: Thread,
         post: Post | None = None,
-    ) -> "ReplyThreadState": ...
+    ) -> "ThreadReplyState": ...
 
 
-class GetReplyThreadStateHookFilter(Protocol):
+class GetThreadReplyStateHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetReplyThreadStateHookAction`
+    ## `action: GetThreadReplyStateHookAction`
 
-    A standard function that Misago uses to create a new `ReplyThreadState`
-    instance for replying to a thread.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 
@@ -70,25 +70,25 @@ class GetReplyThreadStateHookFilter(Protocol):
 
     # Return value
 
-    A `ReplyThreadState` instance to use to create a reply in a thread
+    A `ThreadReplyState` instance to use to create a reply in a thread
     in the database.
     """
 
     def __call__(
         self,
-        action: GetReplyThreadStateHookAction,
+        action: GetThreadReplyStateHookAction,
         request: HttpRequest,
         thread: Thread,
         post: Post | None = None,
-    ) -> "ReplyThreadState": ...
+    ) -> "ThreadReplyState": ...
 
 
-class GetReplyThreadStateHook(
-    FilterHook[GetReplyThreadStateHookAction, GetReplyThreadStateHookFilter]
+class GetThreadReplyStateHook(
+    FilterHook[GetThreadReplyStateHookAction, GetThreadReplyStateHookFilter]
 ):
     """
     This hook wraps the standard function Misago uses to create a new
-    `ReplyThreadState` instance for replying to a thread.
+    `ThreadReplyState` instance for the thread reply view.
 
     # Example
 
@@ -97,19 +97,19 @@ class GetReplyThreadStateHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.posting.hooks import get_reply_thread_state_hook
-    from misago.posting.state import ReplyThreadState
+    from misago.posting.hooks import get_thread_reply_state_hook
+    from misago.posting.state import ThreadReplyState
     from misago.posts.models import Post
     from misago.threads.models import Thread
 
 
-    @get_reply_thread_state_hook.append_filter
+    @get_thread_reply_state_hook.append_filter
     def set_poster_ip_on_reply_thread_state(
         action,
         request: HttpRequest,
         thread: Thread,
         post: Post | None = None,
-    ) -> ReplyThreadState:
+    ) -> ThreadReplyState:
         state = action(request, thread)
         state.plugin_state["user_id"] = request.user_ip
         return state
@@ -120,12 +120,12 @@ class GetReplyThreadStateHook(
 
     def __call__(
         self,
-        action: GetReplyThreadStateHookAction,
+        action: GetThreadReplyStateHookAction,
         request: HttpRequest,
         thread: Thread,
         post: Post | None = None,
-    ) -> "ReplyThreadState":
+    ) -> "ThreadReplyState":
         return super().__call__(action, request, thread, post)
 
 
-get_reply_thread_state_hook = GetReplyThreadStateHook()
+get_thread_reply_state_hook = GetThreadReplyStateHook()

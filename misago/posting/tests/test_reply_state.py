@@ -1,9 +1,9 @@
 from ...parser.parse import parse
-from ..state import ReplyThreadState
+from ..state import ReplyState
 
 
-def test_reply_thread_state_initializes_post(user_request, other_user_thread):
-    state = ReplyThreadState(user_request, other_user_thread)
+def test_reply_state_initializes_post(user_request, other_user_thread):
+    state = ReplyState(user_request, other_user_thread)
 
     assert state.thread
     assert state.thread.starter == other_user_thread.starter
@@ -23,8 +23,8 @@ def test_reply_thread_state_initializes_post(user_request, other_user_thread):
     assert state.post.posted_at == state.timestamp
 
 
-def test_reply_thread_state_save_saves_post(user_request, other_user_thread):
-    state = ReplyThreadState(user_request, other_user_thread)
+def test_reply_state_save_saves_post(user_request, other_user_thread):
+    state = ReplyState(user_request, other_user_thread)
     state.set_post_message(parse("Test reply"))
     state.save()
 
@@ -32,8 +32,8 @@ def test_reply_thread_state_save_saves_post(user_request, other_user_thread):
     assert state.post.thread == state.thread
 
 
-def test_reply_thread_state_updates_thread(user_request, other_user_thread):
-    state = ReplyThreadState(user_request, other_user_thread)
+def test_reply_state_updates_thread(user_request, other_user_thread):
+    state = ReplyState(user_request, other_user_thread)
     state.set_post_message(parse("Test reply"))
     state.save()
 
@@ -45,8 +45,8 @@ def test_reply_thread_state_updates_thread(user_request, other_user_thread):
     assert state.thread.last_post_on == state.timestamp
 
 
-def test_reply_thread_state_updates_category(user_request, other_user_thread):
-    state = ReplyThreadState(user_request, other_user_thread)
+def test_reply_state_updates_category(user_request, other_user_thread):
+    state = ReplyState(user_request, other_user_thread)
     state.set_post_message(parse("Test reply"))
     state.save()
 
@@ -61,8 +61,8 @@ def test_reply_thread_state_updates_category(user_request, other_user_thread):
     assert category.last_poster_slug == user_request.user.slug
 
 
-def test_reply_thread_state_updates_user(user_request, other_user_thread, user):
-    state = ReplyThreadState(user_request, other_user_thread)
+def test_reply_state_updates_user(user_request, other_user_thread, user):
+    state = ReplyState(user_request, other_user_thread)
     state.set_post_message(parse("Test reply"))
     state.save()
 
@@ -72,13 +72,13 @@ def test_reply_thread_state_updates_user(user_request, other_user_thread, user):
     assert user.last_posted_on == state.timestamp
 
 
-def test_reply_thread_state_updates_existing_post(user, user_request, user_thread):
+def test_reply_state_updates_existing_post(user, user_request, user_thread):
     category = user_thread.category
     post = user_thread.first_post
     post_original = post.original
     post_parsed = post.parsed
 
-    state = ReplyThreadState(user_request, user_thread, post)
+    state = ReplyState(user_request, user_thread, post)
     state.set_post_message(parse("Test reply"))
     state.save()
 
@@ -115,7 +115,7 @@ def test_reply_thread_state_updates_existing_post(user, user_request, user_threa
     assert user.posts == 0
 
 
-def test_reply_thread_state_assigns_attachments_to_category_thread_and_post(
+def test_reply_state_assigns_attachments_to_category_thread_and_post(
     user_request, other_user_thread, user, text_file, attachment_factory
 ):
     attachment = attachment_factory(text_file, uploader=user)
@@ -123,7 +123,7 @@ def test_reply_thread_state_assigns_attachments_to_category_thread_and_post(
     assert not attachment.thread
     assert not attachment.post
 
-    state = ReplyThreadState(user_request, other_user_thread)
+    state = ReplyState(user_request, other_user_thread)
     state.set_post_message(parse("Test reply"))
     state.set_attachments([attachment])
     state.save()
@@ -135,7 +135,7 @@ def test_reply_thread_state_assigns_attachments_to_category_thread_and_post(
     assert attachment.uploaded_at == state.timestamp
 
 
-def test_reply_thread_state_updates_existing_post_attachments(
+def test_reply_state_updates_existing_post_attachments(
     user, user_request, user_thread, text_file, attachment_factory
 ):
     post = user_thread.first_post
@@ -146,7 +146,7 @@ def test_reply_thread_state_updates_existing_post_attachments(
     assert not attachment.thread
     assert not attachment.post
 
-    state = ReplyThreadState(user_request, user_thread, post)
+    state = ReplyState(user_request, user_thread, post)
     state.set_post_message(parse("Test reply"))
     state.set_attachments([attachment])
     state.save()
@@ -164,10 +164,10 @@ def test_reply_thread_state_updates_existing_post_attachments(
     assert attachment.uploaded_at == state.timestamp
 
 
-def test_reply_thread_state_schedules_post_upgrade_for_post_with_code_block(
+def test_reply_state_schedules_post_upgrade_for_post_with_code_block(
     mock_upgrade_post_content, user_request, other_user_thread
 ):
-    state = ReplyThreadState(user_request, other_user_thread)
+    state = ReplyState(user_request, other_user_thread)
     state.set_post_message(parse("Hello world\n[code=python]add(1, 3)[/code]"))
     state.save()
 

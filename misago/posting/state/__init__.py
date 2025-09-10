@@ -6,8 +6,9 @@ from .edit import (
     get_edit_thread_post_state,
 )
 from .reply import (
-    ReplyPrivateThreadState,
-    ReplyThreadState,
+    ReplyState,
+    PrivateThreadReplyState,
+    ThreadReplyState,
     get_reply_private_thread_state,
     get_reply_thread_state,
 )
@@ -23,8 +24,8 @@ __all__ = [
     "EditPrivateThreadPostState",
     "EditThreadPostState",
     "PrivateThreadStartState",
-    "ReplyPrivateThreadState",
-    "ReplyThreadState",
+    "PrivateThreadReplyState",
+    "ThreadReplyState",
     "StartState",
     "State",
     "ThreadStartState",
