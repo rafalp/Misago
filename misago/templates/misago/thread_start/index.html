@@ -16,7 +16,7 @@
     {% endif %}
 
     <form 
-      action="{% url 'misago:thread-start' id=category.id slug=category.slug %}"
+      action="{% url 'misago:thread-start' category_id=category.id slug=category.slug %}"
       method="post"
       enctype="multipart/form-data"
     >

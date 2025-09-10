@@ -16,9 +16,9 @@ from misago.posting.hooks import save_start_private_thread_state_hook
 
 ```python
 def custom_save_start_private_thread_state_filter(
-    action: SaveStartPrivateThreadStateHookAction,
+    action: SavePrivateThreadStartStateHookAction,
     request: HttpRequest,
-    state: 'StartPrivateThreadState',
+    state: 'PrivateThreadStartState',
 ):
     ...
 ```
@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: SaveStartPrivateThreadStateHookAction`
+#### `action: SavePrivateThreadStartStateHookAction`
 
 A standard function that Misago uses to save a new private thread to the database.
 
@@ -40,16 +40,16 @@ See the [action](#action) section for details.
 The request object.
 
 
-#### `state: StartPrivateThreadState`
+#### `state: PrivateThreadStartState`
 
-The `StartPrivateThreadState` object that stores all data to save to the database.
+The `PrivateThreadStartState` object that stores all data to save to the database.
 
 
 ## Action
 
 ```python
 def save_start_private_thread_state_action(
-    request: HttpRequest, state: 'StartPrivateThreadState'
+    request: HttpRequest, state: 'PrivateThreadStartState'
 ):
     ...
 ```
@@ -64,9 +64,9 @@ A standard function that Misago uses to save a new private thread to the databas
 The request object.
 
 
-#### `state: StartPrivateThreadState`
+#### `state: PrivateThreadStartState`
 
-The `StartPrivateThreadState` object that stores all data to save to the database.
+The `PrivateThreadStartState` object that stores all data to save to the database.
 
 
 ## Example
@@ -76,12 +76,12 @@ The code below implements a custom filter function that stores the user's IP on 
 ```python
 from django.http import HttpRequest
 from misago.posting.hooks import save_start_private_thread_state_hook
-from misago.posting.state.start import StartPrivateThreadState
+from misago.posting.state.start import PrivateThreadStartState
 
 
 @save_start_private_thread_state_hook.append_filter
 def save_poster_ip_on_started_private_thread(
-    action, request: HttpRequest, state: StartPrivateThreadState
+    action, request: HttpRequest, state: PrivateThreadStartState
 ):
     state.thread.plugin_data["starter_ip"] = request.user_ip
     state.post.plugin_data["poster_ip"] = request.user_ip

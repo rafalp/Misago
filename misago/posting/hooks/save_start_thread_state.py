@@ -5,10 +5,10 @@ from django.http import HttpRequest
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..state.start import StartThreadState
+    from ..state.start import ThreadStartState
 
 
-class SaveStartThreadStateHookAction(Protocol):
+class SaveThreadStartStateHookAction(Protocol):
     """
     A standard function that Misago uses to save a new thread to the database.
 
@@ -18,25 +18,25 @@ class SaveStartThreadStateHookAction(Protocol):
 
     The request object.
 
-    ## `state: StartThreadState`
+    ## `state: ThreadStartState`
 
-    The `StartThreadState` object that stores all data to save to the database.
+    The `ThreadStartState` object that stores all data to save to the database.
     """
 
     def __call__(
         self,
         request: HttpRequest,
-        state: "StartThreadState",
+        state: "ThreadStartState",
     ): ...
 
 
-class SaveStartThreadStateHookFilter(Protocol):
+class SaveThreadStartStateHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: SaveStartThreadStateHookAction`
+    ## `action: SaveThreadStartStateHookAction`
 
     A standard function that Misago uses to save a new thread to the database.
 
@@ -46,21 +46,21 @@ class SaveStartThreadStateHookFilter(Protocol):
 
     The request object.
 
-    ## `state: StartThreadState`
+    ## `state: ThreadStartState`
 
-    The `StartThreadState` object that stores all data to save to the database.
+    The `ThreadStartState` object that stores all data to save to the database.
     """
 
     def __call__(
         self,
-        action: SaveStartThreadStateHookAction,
+        action: SaveThreadStartStateHookAction,
         request: HttpRequest,
-        state: "StartThreadState",
+        state: "ThreadStartState",
     ): ...
 
 
-class SaveStartThreadStateHook(
-    FilterHook[SaveStartThreadStateHookAction, SaveStartThreadStateHookFilter]
+class SaveThreadStartStateHook(
+    FilterHook[SaveThreadStartStateHookAction, SaveThreadStartStateHookFilter]
 ):
     """
     This hook wraps the standard function that Misago uses to save a new thread
@@ -74,12 +74,12 @@ class SaveStartThreadStateHook(
     ```python
     from django.http import HttpRequest
     from misago.posting.hooks import save_start_thread_state_hook
-    from misago.posting.state.start import StartThreadState
+    from misago.posting.state.start import ThreadStartState
 
 
     @save_start_thread_state_hook.append_filter
     def save_poster_ip_on_started_thread(
-        action, request: HttpRequest, state: StartThreadState
+        action, request: HttpRequest, state: ThreadStartState
     ):
         state.thread.plugin_data["starter_ip"] = request.user_ip
         state.post.plugin_data["poster_ip"] = request.user_ip
@@ -92,11 +92,11 @@ class SaveStartThreadStateHook(
 
     def __call__(
         self,
-        action: SaveStartThreadStateHookAction,
+        action: SaveThreadStartStateHookAction,
         request: HttpRequest,
-        state: "StartThreadState",
+        state: "ThreadStartState",
     ):
         return super().__call__(action, request, state)
 
 
-save_start_thread_state_hook = SaveStartThreadStateHook(cache=False)
+save_start_thread_state_hook = SaveThreadStartStateHook(cache=False)

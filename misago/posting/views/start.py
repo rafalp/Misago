@@ -29,23 +29,17 @@ from ..hooks import (
     get_thread_start_context_data_hook,
 )
 from ..state.start import (
-    StartPrivateThreadState,
-    StartThreadState,
-    get_start_private_thread_state,
-    get_start_thread_state,
+    PrivateThreadStartState,
+    StartState,
+    ThreadStartState,
+    get_private_thread_start_state,
+    get_thread_start_state,
 )
 from ..validators import validate_flood_control, validate_posted_contents
 
 
 class StartView(View):
     template_name: str
-
-
-class ThreadStartView(StartView):
-    template_name: str = "misago/start_thread/index.html"
-
-    def dispatch(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request: HttpRequest, **kwargs) -> HttpResponse:
         category = self.get_category(request, kwargs)
@@ -93,7 +87,7 @@ class ThreadStartView(StartView):
         request: HttpRequest,
         category: Category,
         formset: StartThreadFormset,
-        state: StartThreadState,
+        state: StartState,
     ) -> HttpResponse:
         formset.clear_errors_in_preview()
 
@@ -112,8 +106,40 @@ class ThreadStartView(StartView):
 
         return render(request, self.template_name, context)
 
-    def post_state_save(self, request: HttpRequest, state: StartThreadState):
+    def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
+        raise NotImplementedError()
+
+    def get_formset(
+        self, request: HttpRequest, category: Category
+    ) -> StartThreadFormset:
+        raise NotImplementedError()
+
+    def get_state(self, request: HttpRequest, category: Category) -> StartState:
+        raise NotImplementedError()
+
+    def is_valid(self, formset: StartThreadFormset, state: StartState) -> bool:
+        return (
+            formset.is_valid()
+            and validate_flood_control(formset, state)
+            and validate_posted_contents(formset, state)
+        )
+
+    def post_state_save(self, request: HttpRequest, state: StartState):
         pass
+
+    def get_context_data(
+        self, request: HttpRequest, category: Category, formset: StartThreadFormset
+    ) -> dict:
+        return self.get_context_data_action(request, category, formset)
+
+    def get_context_data_action(
+        self, request: HttpRequest, category: Category, formset: PostingFormset
+    ) -> dict:
+        return {"category": category, "formset": formset}
+
+
+class ThreadStartView(StartView):
+    template_name: str = "misago/thread_start/index.html"
 
     def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
         try:
@@ -137,15 +163,8 @@ class ThreadStartView(StartView):
     ) -> StartThreadFormset:
         return get_start_thread_formset(request, category)
 
-    def get_state(self, request: HttpRequest, category: Category) -> StartThreadState:
-        return get_start_thread_state(request, category)
-
-    def is_valid(self, formset: StartThreadFormset, state: StartThreadState) -> bool:
-        return (
-            formset.is_valid()
-            and validate_flood_control(formset, state)
-            and validate_posted_contents(formset, state)
-        )
+    def get_state(self, request: HttpRequest, category: Category) -> ThreadStartState:
+        return get_thread_start_state(request, category)
 
     def get_context_data(
         self, request: HttpRequest, category: Category, formset: StartThreadFormset
@@ -153,11 +172,6 @@ class ThreadStartView(StartView):
         return get_thread_start_context_data_hook(
             self.get_context_data_action, request, category, formset
         )
-
-    def get_context_data_action(
-        self, request: HttpRequest, category: Category, formset: PostingFormset
-    ) -> dict:
-        return {"category": category, "formset": formset}
 
     def get_thread_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
@@ -167,7 +181,7 @@ class ThreadStartView(StartView):
 
 
 class PrivateThreadStartView(StartView):
-    template_name: str = "misago/start_private_thread/index.html"
+    template_name: str = "misago/private_thread_start/index.html"
 
     def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
         check_private_threads_permission(request.user_permissions)
@@ -181,8 +195,8 @@ class PrivateThreadStartView(StartView):
 
     def get_state(
         self, request: HttpRequest, category: Category
-    ) -> StartPrivateThreadState:
-        return get_start_private_thread_state(request, category)
+    ) -> PrivateThreadStartState:
+        return get_private_thread_start_state(request, category)
 
     def get_context_data(
         self,
@@ -200,7 +214,7 @@ class PrivateThreadStartView(StartView):
             kwargs={"id": thread.id, "slug": thread.slug},
         )
 
-    def post_state_save(self, request: HttpRequest, state: StartPrivateThreadState):
+    def post_state_save(self, request: HttpRequest, state: PrivateThreadStartState):
         notify_on_new_private_thread.delay(
             state.thread.starter_id,
             state.thread.id,

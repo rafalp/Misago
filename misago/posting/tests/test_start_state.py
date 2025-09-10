@@ -1,10 +1,9 @@
 from ...parser.parse import parse
-from ...polls.models import Poll
-from ..state import StartThreadState
+from ..state import StartState
 
 
-def test_start_thread_state_initializes_thread_and_post(user_request, default_category):
-    state = StartThreadState(user_request, default_category)
+def test_start_state_initializes_thread_and_post(user_request, default_category):
+    state = StartState(user_request, default_category)
 
     assert state.thread
     assert state.thread.starter == user_request.user
@@ -24,38 +23,39 @@ def test_start_thread_state_initializes_thread_and_post(user_request, default_ca
     assert state.post.posted_at == state.timestamp
 
 
-def test_start_thread_state_stores_category_state(user_request, default_category):
-    state = StartThreadState(user_request, default_category)
+def test_start_state_stores_category_state(user_request, default_category):
+    state = StartState(user_request, default_category)
     assert state.get_object_state(default_category)
 
 
-def test_start_thread_state_save_saves_thread_and_post(user_request, default_category):
-    state = StartThreadState(user_request, default_category)
+def test_start_state_save_saves_thread_and_post(user_request, default_category):
+    state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
     state.set_post_message(parse("Hello world"))
     state.save()
+    state.save_action(user_request, state)
 
     assert state.thread.id
     assert state.post.id
     assert state.post.thread == state.thread
 
 
-def test_start_thread_state_save_saves_post_search_document(
-    user_request, default_category
-):
-    state = StartThreadState(user_request, default_category)
+def test_start_state_save_saves_post_search_document(user_request, default_category):
+    state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
     state.set_post_message(parse("Hello world"))
     state.save()
+    state.save_action(user_request, state)
 
     assert state.post.search_document == "Test thread\n\nHello world"
 
 
-def test_start_thread_state_updates_category(user_request, default_category):
-    state = StartThreadState(user_request, default_category)
+def test_start_state_updates_category(user_request, default_category):
+    state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
     state.set_post_message(parse("Hello world"))
     state.save()
+    state.save_action(user_request, state)
 
     default_category.refresh_from_db()
     assert default_category.threads == 1
@@ -67,11 +67,12 @@ def test_start_thread_state_updates_category(user_request, default_category):
     assert default_category.last_poster_slug == state.thread.last_poster_slug
 
 
-def test_start_thread_state_updates_user(user_request, default_category, user):
-    state = StartThreadState(user_request, default_category)
+def test_start_state_updates_user(user_request, default_category, user):
+    state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
     state.set_post_message(parse("Hello world"))
     state.save()
+    state.save_action(user_request, state)
 
     user.refresh_from_db()
     assert user.threads == 1
@@ -79,7 +80,7 @@ def test_start_thread_state_updates_user(user_request, default_category, user):
     assert user.last_posted_on == state.timestamp
 
 
-def test_start_thread_state_assigns_attachments_to_category_thread_and_post(
+def test_start_state_assigns_attachments_to_category_thread_and_post(
     user_request, default_category, user, text_file, attachment_factory
 ):
     attachment = attachment_factory(text_file, uploader=user)
@@ -87,11 +88,12 @@ def test_start_thread_state_assigns_attachments_to_category_thread_and_post(
     assert not attachment.thread
     assert not attachment.post
 
-    state = StartThreadState(user_request, default_category)
+    state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
     state.set_post_message(parse("Hello world"))
     state.set_attachments([attachment])
     state.save()
+    state.save_action(user_request, state)
 
     attachment.refresh_from_db()
     assert attachment.category == default_category
@@ -100,7 +102,7 @@ def test_start_thread_state_assigns_attachments_to_category_thread_and_post(
     assert attachment.uploaded_at == state.timestamp
 
 
-def test_start_thread_state_deletes_unused_attachments(
+def test_start_state_deletes_unused_attachments(
     user_request, default_category, user, text_file, attachment_factory
 ):
     attachment = attachment_factory(text_file, uploader=user)
@@ -108,12 +110,13 @@ def test_start_thread_state_deletes_unused_attachments(
     assert not attachment.thread
     assert not attachment.post
 
-    state = StartThreadState(user_request, default_category)
+    state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
     state.set_post_message(parse("Hello world"))
     state.set_attachments([attachment])
     state.set_delete_attachments([attachment])
     state.save()
+    state.save_action(user_request, state)
 
     attachment.refresh_from_db()
     assert not attachment.category
@@ -122,7 +125,7 @@ def test_start_thread_state_deletes_unused_attachments(
     assert attachment.is_deleted
 
 
-def test_start_thread_state_delete_attachments_excludes_unknown_attachments(
+def test_start_state_delete_attachments_excludes_unknown_attachments(
     user_request, default_category, user, text_file, attachment_factory, post
 ):
     attachment = attachment_factory(text_file, uploader=user, post=post)
@@ -130,11 +133,12 @@ def test_start_thread_state_delete_attachments_excludes_unknown_attachments(
     assert attachment.thread == post.thread
     assert attachment.post == post
 
-    state = StartThreadState(user_request, default_category)
+    state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
     state.set_post_message(parse("Hello world"))
     state.set_delete_attachments([attachment])
     state.save()
+    state.save_action(user_request, state)
 
     attachment.refresh_from_db()
     assert attachment.category == post.category
@@ -143,41 +147,14 @@ def test_start_thread_state_delete_attachments_excludes_unknown_attachments(
     assert not attachment.is_deleted
 
 
-def test_start_thread_state_creates_thread_with_poll(
+def test_start_state_schedules_post_upgrade_for_post_with_code_block(
     mock_upgrade_post_content, user_request, default_category
 ):
-    state = StartThreadState(user_request, default_category)
-
-    poll = Poll(
-        category=state.category,
-        thread=state.thread,
-        starter=state.user,
-        starter_name=state.user.username,
-        starter_slug=state.user.slug,
-        question="Test",
-        choices=[],
-    )
-
-    state.set_thread_title("Test thread")
-    state.set_post_message(parse("Hello world"))
-    state.set_poll(poll)
-    state.save()
-
-    assert state.thread.id
-    assert state.thread.has_poll
-    assert state.post.id
-    assert state.post.thread == state.thread
-    assert state.poll.id
-    assert Poll.objects.get(thread=state.thread) == state.poll
-
-
-def test_start_thread_state_schedules_post_upgrade_for_post_with_code_block(
-    mock_upgrade_post_content, user_request, default_category
-):
-    state = StartThreadState(user_request, default_category)
+    state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
     state.set_post_message(parse("Hello world\n[code=python]add(1, 3)[/code]"))
     state.save()
+    state.save_action(user_request, state)
 
     assert state.thread.id
     assert state.post.id

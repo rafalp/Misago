@@ -6,13 +6,13 @@ from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..state.start import StartThreadState
+    from ..state.start import PrivateThreadStartState
 
 
-class GetStartThreadStateHookAction(Protocol):
+class GetPrivateThreadStartStateHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `StartThreadState`
-    instance for starting a new thread.
+    A standard function that Misago uses to create a new `PrivateThreadStartState`
+    instance for starting a new private thread.
 
     # Arguments
 
@@ -26,26 +26,27 @@ class GetStartThreadStateHookAction(Protocol):
 
     # Return value
 
-    A `StartThreadState` instance to use to create a new thread in the database.
+    A `PrivateThreadStartState` instance to use to create a new private thread
+    in the database.
     """
 
     def __call__(
         self,
         request: HttpRequest,
         category: Category,
-    ) -> "StartThreadState": ...
+    ) -> "PrivateThreadStartState": ...
 
 
-class GetStartThreadStateHookFilter(Protocol):
+class GetPrivateThreadStartStateHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetStartThreadStateHookAction`
+    ## `action: GetPrivateThreadStartStateHookAction`
 
-    A standard function that Misago uses to create a new `StartThreadState`
-    instance for starting a new thread.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 
@@ -59,23 +60,26 @@ class GetStartThreadStateHookFilter(Protocol):
 
     # Return value
 
-    A `StartThreadState` instance to use to create a new thread in the database.
+    A `PrivateThreadStartState` instance to use to create a new private thread
+    in the database.
     """
 
     def __call__(
         self,
-        action: GetStartThreadStateHookAction,
+        action: GetPrivateThreadStartStateHookAction,
         request: HttpRequest,
         category: Category,
-    ) -> "StartThreadState": ...
+    ) -> "PrivateThreadStartState": ...
 
 
-class GetStartThreadStateHook(
-    FilterHook[GetStartThreadStateHookAction, GetStartThreadStateHookFilter]
+class GetPrivateThreadStartStateHook(
+    FilterHook[
+        GetPrivateThreadStartStateHookAction, GetPrivateThreadStartStateHookFilter
+    ]
 ):
     """
     This hook wraps the standard function Misago uses to create a new
-    `StartThreadState` instance for starting a new thread.
+    `PrivateThreadStartState` instance for starting a new private thread.
 
     # Example
 
@@ -85,14 +89,14 @@ class GetStartThreadStateHook(
     ```python
     from django.http import HttpRequest
     from misago.categories.models import Category
-    from misago.posting.hooks import get_start_thread_state_hook
-    from misago.posting.state import StartThreadState
+    from misago.posting.hooks import get_private_thread_start_state_hook
+    from misago.posting.state import PrivateThreadStartState
 
 
-    @get_start_thread_state_hook.append_filter
-    def set_poster_ip_on_start_thread_state(
+    @get_private_thread_start_state_hook.append_filter
+    def set_poster_ip_on_start_private_thread_state(
         action, request: HttpRequest, category: Category
-    ) -> StartThreadState:
+    ) -> PrivateThreadStartState:
         state = action(request, category)
         state.plugin_state["user_id"] = request.user_ip
         return state
@@ -103,11 +107,11 @@ class GetStartThreadStateHook(
 
     def __call__(
         self,
-        action: GetStartThreadStateHookAction,
+        action: GetPrivateThreadStartStateHookAction,
         request: HttpRequest,
         category: Category,
-    ) -> "StartThreadState":
+    ) -> "PrivateThreadStartState":
         return super().__call__(action, request, category)
 
 
-get_start_thread_state_hook = GetStartThreadStateHook()
+get_private_thread_start_state_hook = GetPrivateThreadStartStateHook()

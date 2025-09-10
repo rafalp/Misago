@@ -2,7 +2,7 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext
 
 from ...polls.forms import StartPollForm
-from ..state import StartThreadState
+from ..state import ThreadStartState
 from .base import PostingForm
 
 
@@ -34,7 +34,7 @@ class PollForm(StartPollForm, PostingForm):
 
         return cleaned_data
 
-    def update_state(self, state: StartThreadState):
+    def update_state(self, state: ThreadStartState):
         if not (self.cleaned_data.get("question") and self.cleaned_data.get("choices")):
             return
 

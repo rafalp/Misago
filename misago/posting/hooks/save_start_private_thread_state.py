@@ -5,10 +5,10 @@ from django.http import HttpRequest
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..state.start import StartPrivateThreadState
+    from ..state.start import PrivateThreadStartState
 
 
-class SaveStartPrivateThreadStateHookAction(Protocol):
+class SavePrivateThreadStartStateHookAction(Protocol):
     """
     A standard function that Misago uses to save a new private thread to the database.
 
@@ -18,25 +18,25 @@ class SaveStartPrivateThreadStateHookAction(Protocol):
 
     The request object.
 
-    ## `state: StartPrivateThreadState`
+    ## `state: PrivateThreadStartState`
 
-    The `StartPrivateThreadState` object that stores all data to save to the database.
+    The `PrivateThreadStartState` object that stores all data to save to the database.
     """
 
     def __call__(
         self,
         request: HttpRequest,
-        state: "StartPrivateThreadState",
+        state: "PrivateThreadStartState",
     ): ...
 
 
-class SaveStartPrivateThreadStateHookFilter(Protocol):
+class SavePrivateThreadStartStateHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: SaveStartPrivateThreadStateHookAction`
+    ## `action: SavePrivateThreadStartStateHookAction`
 
     A standard function that Misago uses to save a new private thread to the database.
 
@@ -46,22 +46,22 @@ class SaveStartPrivateThreadStateHookFilter(Protocol):
 
     The request object.
 
-    ## `state: StartPrivateThreadState`
+    ## `state: PrivateThreadStartState`
 
-    The `StartPrivateThreadState` object that stores all data to save to the database.
+    The `PrivateThreadStartState` object that stores all data to save to the database.
     """
 
     def __call__(
         self,
-        action: SaveStartPrivateThreadStateHookAction,
+        action: SavePrivateThreadStartStateHookAction,
         request: HttpRequest,
-        state: "StartPrivateThreadState",
+        state: "PrivateThreadStartState",
     ): ...
 
 
-class SaveStartPrivateThreadStateHook(
+class SavePrivateThreadStartStateHook(
     FilterHook[
-        SaveStartPrivateThreadStateHookAction, SaveStartPrivateThreadStateHookFilter
+        SavePrivateThreadStartStateHookAction, SavePrivateThreadStartStateHookFilter
     ]
 ):
     """
@@ -76,12 +76,12 @@ class SaveStartPrivateThreadStateHook(
     ```python
     from django.http import HttpRequest
     from misago.posting.hooks import save_start_private_thread_state_hook
-    from misago.posting.state.start import StartPrivateThreadState
+    from misago.posting.state.start import PrivateThreadStartState
 
 
     @save_start_private_thread_state_hook.append_filter
     def save_poster_ip_on_started_private_thread(
-        action, request: HttpRequest, state: StartPrivateThreadState
+        action, request: HttpRequest, state: PrivateThreadStartState
     ):
         state.thread.plugin_data["starter_ip"] = request.user_ip
         state.post.plugin_data["poster_ip"] = request.user_ip
@@ -94,11 +94,11 @@ class SaveStartPrivateThreadStateHook(
 
     def __call__(
         self,
-        action: SaveStartPrivateThreadStateHookAction,
+        action: SavePrivateThreadStartStateHookAction,
         request: HttpRequest,
-        state: "StartPrivateThreadState",
+        state: "PrivateThreadStartState",
     ):
         return super().__call__(action, request, state)
 
 
-save_start_private_thread_state_hook = SaveStartPrivateThreadStateHook(cache=False)
+save_start_private_thread_state_hook = SavePrivateThreadStartStateHook(cache=False)

@@ -6,13 +6,13 @@ from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..state.start import StartPrivateThreadState
+    from ..state.start import ThreadStartState
 
 
-class GetStartPrivateThreadStateHookAction(Protocol):
+class GetThreadStartStateHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `StartPrivateThreadState`
-    instance for starting a new private thread.
+    A standard function that Misago uses to create a new `ThreadStartState`
+    instance for starting a new thread.
 
     # Arguments
 
@@ -26,27 +26,26 @@ class GetStartPrivateThreadStateHookAction(Protocol):
 
     # Return value
 
-    A `StartPrivateThreadState` instance to use to create a new private thread
-    in the database.
+    A `ThreadStartState` instance to use to create a new thread in the database.
     """
 
     def __call__(
         self,
         request: HttpRequest,
         category: Category,
-    ) -> "StartPrivateThreadState": ...
+    ) -> "ThreadStartState": ...
 
 
-class GetStartPrivateThreadStateHookFilter(Protocol):
+class GetThreadStartStateHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetStartPrivateThreadStateHookAction`
+    ## `action: GetThreadStartStateHookAction`
 
-    A standard function that Misago uses to create a new `StartPrivateThreadState`
-    instance for starting a new private thread.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 
@@ -60,26 +59,23 @@ class GetStartPrivateThreadStateHookFilter(Protocol):
 
     # Return value
 
-    A `StartPrivateThreadState` instance to use to create a new private thread
-    in the database.
+    A `ThreadStartState` instance to use to create a new thread in the database.
     """
 
     def __call__(
         self,
-        action: GetStartPrivateThreadStateHookAction,
+        action: GetThreadStartStateHookAction,
         request: HttpRequest,
         category: Category,
-    ) -> "StartPrivateThreadState": ...
+    ) -> "ThreadStartState": ...
 
 
-class GetStartPrivateThreadStateHook(
-    FilterHook[
-        GetStartPrivateThreadStateHookAction, GetStartPrivateThreadStateHookFilter
-    ]
+class GetThreadStartStateHook(
+    FilterHook[GetThreadStartStateHookAction, GetThreadStartStateHookFilter]
 ):
     """
     This hook wraps the standard function Misago uses to create a new
-    `StartPrivateThreadState` instance for starting a new private thread.
+    `ThreadStartState` instance for starting a new thread.
 
     # Example
 
@@ -89,14 +85,14 @@ class GetStartPrivateThreadStateHook(
     ```python
     from django.http import HttpRequest
     from misago.categories.models import Category
-    from misago.posting.hooks import get_start_private_thread_state_hook
-    from misago.posting.state import StartPrivateThreadState
+    from misago.posting.hooks import get_thread_start_state_hook
+    from misago.posting.state import ThreadStartState
 
 
-    @get_start_private_thread_state_hook.append_filter
-    def set_poster_ip_on_start_private_thread_state(
+    @get_thread_start_state_hook.append_filter
+    def set_poster_ip_on_start_thread_state(
         action, request: HttpRequest, category: Category
-    ) -> StartPrivateThreadState:
+    ) -> ThreadStartState:
         state = action(request, category)
         state.plugin_state["user_id"] = request.user_ip
         return state
@@ -107,11 +103,11 @@ class GetStartPrivateThreadStateHook(
 
     def __call__(
         self,
-        action: GetStartPrivateThreadStateHookAction,
+        action: GetThreadStartStateHookAction,
         request: HttpRequest,
         category: Category,
-    ) -> "StartPrivateThreadState":
+    ) -> "ThreadStartState":
         return super().__call__(action, request, category)
 
 
-get_start_private_thread_state_hook = GetStartPrivateThreadStateHook()
+get_thread_start_state_hook = GetThreadStartStateHook()

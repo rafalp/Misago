@@ -16,9 +16,9 @@ from misago.posting.hooks import save_start_thread_state_hook
 
 ```python
 def custom_save_start_thread_state_filter(
-    action: SaveStartThreadStateHookAction,
+    action: SaveThreadStartStateHookAction,
     request: HttpRequest,
-    state: 'StartThreadState',
+    state: 'ThreadStartState',
 ):
     ...
 ```
@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: SaveStartThreadStateHookAction`
+#### `action: SaveThreadStartStateHookAction`
 
 A standard function that Misago uses to save a new thread to the database.
 
@@ -40,15 +40,15 @@ See the [action](#action) section for details.
 The request object.
 
 
-#### `state: StartThreadState`
+#### `state: ThreadStartState`
 
-The `StartThreadState` object that stores all data to save to the database.
+The `ThreadStartState` object that stores all data to save to the database.
 
 
 ## Action
 
 ```python
-def save_start_thread_state_action(request: HttpRequest, state: 'StartThreadState'):
+def save_start_thread_state_action(request: HttpRequest, state: 'ThreadStartState'):
     ...
 ```
 
@@ -62,9 +62,9 @@ A standard function that Misago uses to save a new thread to the database.
 The request object.
 
 
-#### `state: StartThreadState`
+#### `state: ThreadStartState`
 
-The `StartThreadState` object that stores all data to save to the database.
+The `ThreadStartState` object that stores all data to save to the database.
 
 
 ## Example
@@ -74,12 +74,12 @@ The code below implements a custom filter function that stores the user's IP on 
 ```python
 from django.http import HttpRequest
 from misago.posting.hooks import save_start_thread_state_hook
-from misago.posting.state.start import StartThreadState
+from misago.posting.state.start import ThreadStartState
 
 
 @save_start_thread_state_hook.append_filter
 def save_poster_ip_on_started_thread(
-    action, request: HttpRequest, state: StartThreadState
+    action, request: HttpRequest, state: ThreadStartState
 ):
     state.thread.plugin_data["starter_ip"] = request.user_ip
     state.post.plugin_data["poster_ip"] = request.user_ip
