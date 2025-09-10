@@ -7,7 +7,7 @@ from django.http import HttpRequest
 from ...collections.dicts import set_key_after, set_key_before
 from ...forms.formset import Formset
 from ..forms import MembersForm, PostForm, TitleForm
-from ..state.base import PostingState
+from ..state.state import State
 
 
 class PostingFormset(Formset):
@@ -31,7 +31,7 @@ class PostingFormset(Formset):
     def members(self) -> MembersForm | None:
         return self.forms.get(MembersForm.form_prefix)
 
-    def update_state(self, state: PostingState):
+    def update_state(self, state: State):
         for form in self.forms.values():
             if form.is_valid():
                 form.update_state(state)

@@ -13,13 +13,13 @@ from ..hooks import (
     save_start_private_thread_state_hook,
     save_start_thread_state_hook,
 )
-from .base import PostingState
+from .state import State
 
 if TYPE_CHECKING:
     from ...users.models import User
 
 
-class StartState(PostingState):
+class StartState(State):
     def __init__(self, request: HttpRequest, category: Category):
         super().__init__(request)
 

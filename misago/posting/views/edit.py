@@ -24,7 +24,7 @@ from ...posting.formsets import (
     get_edit_thread_post_formset,
 )
 from ...posting.state import (
-    PostingState,
+    State,
     PrivateThreadPostEditState,
     EditThreadPostState,
     get_edit_private_thread_post_state,
@@ -139,7 +139,7 @@ class EditView(View):
     def get_formset(self, request: HttpRequest, post: Post) -> PostingFormset:
         raise NotImplementedError()
 
-    def is_valid(self, formset: PostingFormset, state: PostingState) -> bool:
+    def is_valid(self, formset: PostingFormset, state: State) -> bool:
         return formset.is_valid() and validate_posted_contents(formset, state)
 
     def render(
@@ -147,7 +147,7 @@ class EditView(View):
         request: HttpRequest,
         post: Post,
         formset: PostingFormset,
-        preview: PostingState | None = None,
+        preview: State | None = None,
     ):
         context = self.get_context_data(request, post, formset)
 

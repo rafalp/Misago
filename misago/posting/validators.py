@@ -15,7 +15,7 @@ from .hooks import (
 
 if TYPE_CHECKING:
     from .formsets import PostingFormset
-    from .state import PostingState
+    from .state import State
 
 
 __all__ = [
@@ -157,12 +157,12 @@ def _validate_thread_title_action(
         )
 
 
-def validate_posted_contents(formset: "PostingFormset", state: "PostingState") -> bool:
+def validate_posted_contents(formset: "PostingFormset", state: "State") -> bool:
     validate_posted_contents_hook(formset, state)
     return not bool(formset.errors)
 
 
-def validate_flood_control(formset: "PostingFormset", state: "PostingState") -> bool:
+def validate_flood_control(formset: "PostingFormset", state: "State") -> bool:
     try:
         flood_control(state.request)
     except ValidationError as e:

@@ -6,7 +6,7 @@ from ...plugins.hooks import ActionHook
 
 if TYPE_CHECKING:
     from ..formsets import PostingFormset
-    from ..state import PostingState
+    from ..state import State
 
 
 class ValidatePostedContentsHookAction(Protocol):
@@ -24,12 +24,12 @@ class ValidatePostedContentsHookAction(Protocol):
 
     An instance of the `PostingFormset` subclass specific to the posted contents.
 
-    ## `state: PostingState`
+    ## `state: State`
 
-    An instance of the `PostingState` subclass specific to the posted contents.
+    An instance of the `State` subclass specific to the posted contents.
     """
 
-    def __call__(self, formset: "PostingFormset", state: "PostingState"): ...
+    def __call__(self, formset: "PostingFormset", state: "State"): ...
 
 
 class ValidatePostedContentsHook(ActionHook[ValidatePostedContentsHookAction]):
@@ -73,7 +73,7 @@ class ValidatePostedContentsHook(ActionHook[ValidatePostedContentsHookAction]):
 
     __slots__ = ActionHook.__slots__
 
-    def __call__(self, formset: "PostingFormset", state: "PostingState"):
+    def __call__(self, formset: "PostingFormset", state: "State"):
         if self._cache is None:
             self._cache = self._actions_first + self._actions_last
         if not self._cache:

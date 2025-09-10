@@ -10,10 +10,10 @@ from ..hooks import (
     save_edit_private_thread_post_state_hook,
     save_edit_thread_post_state_hook,
 )
-from .base import PostingState
+from .state import State
 
 
-class EditThreadPostState(PostingState):
+class EditThreadPostState(State):
     # This state can actually edit both post and its thread's title
     thread_title: str
     post_original: str

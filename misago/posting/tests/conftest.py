@@ -5,7 +5,7 @@ from ...permissions.proxy import UserPermissionsProxy
 
 @pytest.fixture
 def mock_upgrade_post_content(mocker):
-    return mocker.patch("misago.posting.state.base.upgrade_post_content")
+    return mocker.patch("misago.posting.state.state.upgrade_post_content")
 
 
 @pytest.fixture

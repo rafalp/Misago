@@ -10,10 +10,10 @@ from ..hooks import (
     save_start_private_thread_state_hook,
     save_start_thread_state_hook,
 )
-from .base import PostingState
+from .state import State
 
 
-class ReplyThreadState(PostingState):
+class ReplyThreadState(State):
     # True if new reply was merged with the recent post
     is_merged: bool
 

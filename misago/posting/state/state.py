@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from ...users.models import User
 
 
-class PostingState:
+class State:
     request: HttpRequest
     timestamp: datetime
     user: "User"

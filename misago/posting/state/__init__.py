@@ -1,4 +1,4 @@
-from .base import PostingState
+from .state import State
 from .edit import (
     EditPrivateThreadPostState,
     EditThreadPostState,
@@ -22,11 +22,11 @@ from .start import (
 __all__ = [
     "EditPrivateThreadPostState",
     "EditThreadPostState",
-    "PostingState",
     "PrivateThreadStartState",
     "ReplyPrivateThreadState",
     "ReplyThreadState",
     "StartState",
+    "State",
     "ThreadStartState",
     "get_edit_private_thread_post_state",
     "get_edit_thread_post_state",

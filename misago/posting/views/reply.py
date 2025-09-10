@@ -28,7 +28,7 @@ from ...posting.formsets import (
     get_reply_thread_formset,
 )
 from ...posting.state import (
-    PostingState,
+    State,
     ReplyPrivateThreadState,
     ThreadReplyState,
     get_reply_private_thread_state,
@@ -197,7 +197,7 @@ class ReplyView(View):
     def get_formset(self, request: HttpRequest, thread: Thread) -> PostingFormset:
         raise NotImplementedError()
 
-    def is_valid(self, formset: PostingFormset, state: PostingState) -> bool:
+    def is_valid(self, formset: PostingFormset, state: State) -> bool:
         return (
             formset.is_valid()
             and (state.is_merged or validate_flood_control(formset, state))
@@ -209,7 +209,7 @@ class ReplyView(View):
         request: HttpRequest,
         thread: Thread,
         formset: PostingFormset,
-        preview: PostingState | None = None,
+        preview: State | None = None,
         feed: list[dict] | None = None,
         htmx_swap: bool = False,
     ):
