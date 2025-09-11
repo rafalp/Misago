@@ -1,4 +1,4 @@
-# `get_edit_thread_post_state_hook`
+# `get_thread_post_edit_state_hook`
 
 This hook wraps the standard function Misago uses to create a new `EditThreadPostState` instance for editing a thread post.
 
@@ -8,14 +8,14 @@ This hook wraps the standard function Misago uses to create a new `EditThreadPos
 This hook can be imported from `misago.posting.hooks`:
 
 ```python
-from misago.posting.hooks import get_edit_thread_post_state_hook
+from misago.posting.hooks import get_thread_post_edit_state_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_edit_thread_post_state_filter(
+def custom_get_thread_post_edit_state_filter(
     action: GetEditThreadPostStateHookAction,
     request: HttpRequest,
     post: Post,
@@ -53,7 +53,7 @@ A `EditThreadPostState` instance to use to edit a post in a thread in the databa
 ## Action
 
 ```python
-def get_edit_thread_post_state_action(request: HttpRequest, post: Post) -> 'EditThreadPostState':
+def get_thread_post_edit_state_action(request: HttpRequest, post: Post) -> 'EditThreadPostState':
     ...
 ```
 
@@ -83,12 +83,12 @@ The code below implements a custom filter function that stores the user's IP in 
 
 ```python
 from django.http import HttpRequest
-from misago.posting.hooks import get_edit_thread_post_state_hook
+from misago.posting.hooks import get_thread_post_edit_state_hook
 from misago.posting.state import EditThreadPostState
 from misago.posts.models import Post
 
 
-@get_edit_thread_post_state_hook.append_filter
+@get_thread_post_edit_state_hook.append_filter
 def set_poster_ip_on_edit_thread_post_state(
     action, request: HttpRequest, post: Post
 ) -> EditThreadPostState:

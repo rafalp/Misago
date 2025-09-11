@@ -77,11 +77,11 @@ class SavePrivateThreadReplyStateHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.posting.hooks import save_reply_private_thread_state_hook
+    from misago.posting.hooks import save_private_thread_reply_state_hook
     from misago.posting.state import PrivateThreadReplyState
 
 
-    @save_reply_private_thread_state_hook.append_filter
+    @save_private_thread_reply_state_hook.append_filter
     def save_poster_ip_on_private_thread_reply(
         action, request: HttpRequest, state: PrivateThreadReplyState
     ):
@@ -102,4 +102,4 @@ class SavePrivateThreadReplyStateHook(
         return super().__call__(action, request, state)
 
 
-save_reply_private_thread_state_hook = SavePrivateThreadReplyStateHook(cache=False)
+save_private_thread_reply_state_hook = SavePrivateThreadReplyStateHook(cache=False)

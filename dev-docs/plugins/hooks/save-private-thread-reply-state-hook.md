@@ -1,4 +1,4 @@
-# `save_reply_private_thread_state_hook`
+# `save_private_thread_reply_state_hook`
 
 This hook wraps the standard function that Misago uses to save a new private thread reply to the database.
 
@@ -8,14 +8,14 @@ This hook wraps the standard function that Misago uses to save a new private thr
 This hook can be imported from `misago.posting.hooks`:
 
 ```python
-from misago.posting.hooks import save_reply_private_thread_state_hook
+from misago.posting.hooks import save_private_thread_reply_state_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_save_reply_private_thread_state_filter(
+def custom_save_private_thread_reply_state_filter(
     action: SavePrivateThreadReplyStateHookAction,
     request: HttpRequest,
     state: 'PrivateThreadReplyState',
@@ -48,7 +48,7 @@ The `PrivateThreadReplyState` object that stores all data to save to the databas
 ## Action
 
 ```python
-def save_reply_private_thread_state_action(
+def save_private_thread_reply_state_action(
     request: HttpRequest, state: 'PrivateThreadReplyState'
 ):
     ...
@@ -75,11 +75,11 @@ The code below implements a custom filter function that stores the user's IP on 
 
 ```python
 from django.http import HttpRequest
-from misago.posting.hooks import save_reply_private_thread_state_hook
+from misago.posting.hooks import save_private_thread_reply_state_hook
 from misago.posting.state import PrivateThreadReplyState
 
 
-@save_reply_private_thread_state_hook.append_filter
+@save_private_thread_reply_state_hook.append_filter
 def save_poster_ip_on_private_thread_reply(
     action, request: HttpRequest, state: PrivateThreadReplyState
 ):

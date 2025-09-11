@@ -15,7 +15,9 @@ from misago.posting.hooks import validate_posted_contents_hook
 ## Action
 
 ```python
-def custom_validate_posted_contents_filter(formset: 'PostingFormset', state: 'State'):
+def custom_validate_posted_contents_filter(
+    formset: Union['Formset', 'TabbedFormset'], state: 'State'
+):
     ...
 ```
 

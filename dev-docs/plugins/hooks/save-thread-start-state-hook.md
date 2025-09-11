@@ -1,4 +1,4 @@
-# `save_start_thread_state_hook`
+# `save_thread_start_state_hook`
 
 This hook wraps the standard function that Misago uses to save a new thread to the database.
 
@@ -8,14 +8,14 @@ This hook wraps the standard function that Misago uses to save a new thread to t
 This hook can be imported from `misago.posting.hooks`:
 
 ```python
-from misago.posting.hooks import save_start_thread_state_hook
+from misago.posting.hooks import save_thread_start_state_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_save_start_thread_state_filter(
+def custom_save_thread_start_state_filter(
     action: SaveThreadStartStateHookAction,
     request: HttpRequest,
     state: 'ThreadStartState',
@@ -48,7 +48,7 @@ The `ThreadStartState` object that stores all data to save to the database.
 ## Action
 
 ```python
-def save_start_thread_state_action(request: HttpRequest, state: 'ThreadStartState'):
+def save_thread_start_state_action(request: HttpRequest, state: 'ThreadStartState'):
     ...
 ```
 
@@ -73,11 +73,11 @@ The code below implements a custom filter function that stores the user's IP on 
 
 ```python
 from django.http import HttpRequest
-from misago.posting.hooks import save_start_thread_state_hook
+from misago.posting.hooks import save_thread_start_state_hook
 from misago.posting.state.start import ThreadStartState
 
 
-@save_start_thread_state_hook.append_filter
+@save_thread_start_state_hook.append_filter
 def save_poster_ip_on_started_thread(
     action, request: HttpRequest, state: ThreadStartState
 ):

@@ -1,6 +1,6 @@
-# `get_reply_thread_formset_hook`
+# `get_thread_reply_formset_hook`
 
-This hook wraps the standard function that Misago uses to create a new `ReplyThreadFormset` instance with forms for posting a new thread reply.
+This hook wraps the standard function that Misago uses to create a new `ThreadReplyFormset` instance with forms for posting a new thread reply.
 
 
 ## Location
@@ -8,18 +8,18 @@ This hook wraps the standard function that Misago uses to create a new `ReplyThr
 This hook can be imported from `misago.posting.hooks`:
 
 ```python
-from misago.posting.hooks import get_reply_thread_formset_hook
+from misago.posting.hooks import get_thread_reply_formset_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_reply_thread_formset_filter(
-    action: GetReplyThreadFormsetHookAction,
+def custom_get_thread_reply_formset_filter(
+    action: GetThreadReplyFormsetHookAction,
     request: HttpRequest,
     thread: Thread,
-) -> 'ReplyThreadFormset':
+) -> 'ThreadReplyFormset':
     ...
 ```
 
@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetReplyThreadFormsetHookAction`
+#### `action: GetThreadReplyFormsetHookAction`
 
 The next function registered in this hook, either a custom function or Misago’s default.
 
@@ -47,17 +47,17 @@ The `Thread` instance.
 
 ### Return value
 
-A `ReplyThreadFormset` instance with forms for posting a new thread reply.
+A `ThreadReplyFormset` instance with forms for posting a new thread reply.
 
 
 ## Action
 
 ```python
-def get_reply_thread_formset_action(request: HttpRequest, thread: Thread) -> 'ReplyThreadFormset':
+def get_thread_reply_formset_action(request: HttpRequest, thread: Thread) -> 'ThreadReplyFormset':
     ...
 ```
 
-A standard function that Misago uses to create a new `ReplyThreadFormset` instance with forms for posting a new thread reply.
+A standard function that Misago uses to create a new `ThreadReplyFormset` instance with forms for posting a new thread reply.
 
 
 ### Arguments
@@ -74,7 +74,7 @@ The `Thread` instance.
 
 ### Return value
 
-A `ReplyThreadFormset` instance with forms for posting a new thread reply.
+A `ThreadReplyFormset` instance with forms for posting a new thread reply.
 
 
 ## Example
@@ -83,17 +83,17 @@ The code below implements a custom filter function that adds custom form to the 
 
 ```python
 from django.http import HttpRequest
-from misago.posting.formsets import ReplyThreadFormset
-from misago.posting.hooks import get_reply_thread_formset_hook
+from misago.posting.formsets import ThreadReplyFormset
+from misago.posting.hooks import get_thread_reply_formset_hook
 from misago.threads.models import Thread
 
 from .forms import SelectUserForm
 
 
-@get_reply_thread_formset_hook.append_filter
+@get_thread_reply_formset_hook.append_filter
 def add_select_user_form(
     action, request: HttpRequest, thread: Thread
-) -> ReplyThreadFormset:
+) -> ThreadReplyFormset:
     formset = action(request, thread)
 
     if request.method == "POST":

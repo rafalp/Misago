@@ -10,8 +10,8 @@ from ...threads.checksums import update_post_checksum
 from ..hooks import (
     get_private_thread_start_state_hook,
     get_thread_start_state_hook,
-    save_start_private_thread_state_hook,
-    save_start_thread_state_hook,
+    save_private_thread_start_state_hook,
+    save_thread_start_state_hook,
 )
 from .state import State
 
@@ -86,7 +86,7 @@ class ThreadStartState(StartState):
     def save(self):
         super().save()
 
-        save_start_thread_state_hook(self.save_action, self.request, self)
+        save_thread_start_state_hook(self.save_action, self.request, self)
 
     def save_action(self, request: HttpRequest, state: "ThreadStartState"):
         super().save_action(request, state)
@@ -113,7 +113,7 @@ class PrivateThreadStartState(StartState):
     def save(self):
         super().save()
 
-        save_start_private_thread_state_hook(self.save_action, self.request, self)
+        save_private_thread_start_state_hook(self.save_action, self.request, self)
 
     def save_action(self, request: HttpRequest, state: "PrivateThreadStartState"):
         super().save_action(request, state)

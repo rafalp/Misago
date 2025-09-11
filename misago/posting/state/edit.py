@@ -7,8 +7,8 @@ from ...threadupdates.models import ThreadUpdate
 from ..hooks import (
     get_private_thread_post_edit_state_hook,
     get_thread_post_edit_state_hook,
-    save_edit_private_thread_post_state_hook,
-    save_edit_thread_post_state_hook,
+    save_private_thread_post_edit_state_hook,
+    save_thread_post_edit_state_hook,
 )
 from .state import State
 
@@ -82,13 +82,13 @@ class PostEditState(State):
 class ThreadPostEditState(PostEditState):
     @transaction.atomic()
     def save(self):
-        save_edit_thread_post_state_hook(self.save_action, self.request, self)
+        save_thread_post_edit_state_hook(self.save_action, self.request, self)
 
 
 class PrivateThreadPostEditState(PostEditState):
     @transaction.atomic()
     def save(self):
-        save_edit_private_thread_post_state_hook(self.save_action, self.request, self)
+        save_private_thread_post_edit_state_hook(self.save_action, self.request, self)
 
 
 def get_thread_post_edit_state(request: HttpRequest, post: Post) -> ThreadPostEditState:

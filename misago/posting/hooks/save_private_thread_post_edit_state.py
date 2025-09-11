@@ -5,10 +5,10 @@ from django.http import HttpRequest
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..state.edit import EditPrivateThreadPostState
+    from ..state.edit import PrivateThreadPostEditState
 
 
-class SaveEditPrivateThreadPostStateHookAction(Protocol):
+class SavePrivateThreadPostEditStateHookAction(Protocol):
     """
     A standard function that Misago uses to save
     edited private thread post to the database.
@@ -19,25 +19,25 @@ class SaveEditPrivateThreadPostStateHookAction(Protocol):
 
     The request object.
 
-    ## `state: EditPrivateThreadPostState`
+    ## `state: PrivateThreadPostEditState`
 
-    The `EditPrivateThreadPostState` object that stores all data to save to the database.
+    The `PrivateThreadPostEditState` object that stores all data to save to the database.
     """
 
     def __call__(
         self,
         request: HttpRequest,
-        state: "EditPrivateThreadPostState",
+        state: "PrivateThreadPostEditState",
     ): ...
 
 
-class SaveEditPrivateThreadPostStateHookFilter(Protocol):
+class SavePrivateThreadPostEditStateHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: SaveEditPrivateThreadPostStateHookAction`
+    ## `action: SavePrivateThreadPostEditStateHookAction`
 
     The next function registered in this hook, either a custom function or
     Misago’s default.
@@ -48,23 +48,23 @@ class SaveEditPrivateThreadPostStateHookFilter(Protocol):
 
     The request object.
 
-    ## `state: EditPrivateThreadPostState`
+    ## `state: PrivateThreadPostEditState`
 
-    The `EditPrivateThreadPostState` object that stores all data to save to the database.
+    The `PrivateThreadPostEditState` object that stores all data to save to the database.
     """
 
     def __call__(
         self,
-        action: SaveEditPrivateThreadPostStateHookAction,
+        action: SavePrivateThreadPostEditStateHookAction,
         request: HttpRequest,
-        state: "EditPrivateThreadPostState",
+        state: "PrivateThreadPostEditState",
     ): ...
 
 
-class SaveEditPrivateThreadPostStateHook(
+class SavePrivateThreadPostEditStateHook(
     FilterHook[
-        SaveEditPrivateThreadPostStateHookAction,
-        SaveEditPrivateThreadPostStateHookFilter,
+        SavePrivateThreadPostEditStateHookAction,
+        SavePrivateThreadPostEditStateHookFilter,
     ]
 ):
     """
@@ -78,13 +78,13 @@ class SaveEditPrivateThreadPostStateHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.posting.hooks import save_edit_private_thread_post_state_hook
-    from misago.posting.state import EditPrivateThreadPostState
+    from misago.posting.hooks import save_private_thread_post_edit_state_hook
+    from misago.posting.state import PrivateThreadPostEditState
 
 
-    @save_edit_private_thread_post_state_hook.append_filter
+    @save_private_thread_post_edit_state_hook.append_filter
     def save_poster_ip_on_private_thread_post(
-        action, request: HttpRequest, state: EditPrivateThreadPostState
+        action, request: HttpRequest, state: PrivateThreadPostEditState
     ):
         state.post.plugin_data["editor_ip"] = request.user_ip
 
@@ -96,13 +96,13 @@ class SaveEditPrivateThreadPostStateHook(
 
     def __call__(
         self,
-        action: SaveEditPrivateThreadPostStateHookAction,
+        action: SavePrivateThreadPostEditStateHookAction,
         request: HttpRequest,
-        state: "EditPrivateThreadPostState",
+        state: "PrivateThreadPostEditState",
     ):
         return super().__call__(action, request, state)
 
 
-save_edit_private_thread_post_state_hook = SaveEditPrivateThreadPostStateHook(
+save_private_thread_post_edit_state_hook = SavePrivateThreadPostEditStateHook(
     cache=False
 )

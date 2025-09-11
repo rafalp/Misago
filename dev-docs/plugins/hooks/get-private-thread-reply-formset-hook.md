@@ -1,6 +1,6 @@
-# `get_reply_private_thread_formset_hook`
+# `get_private_thread_reply_formset_hook`
 
-This hook wraps the standard function that Misago uses to create a new `ReplyPrivateThreadFormset` instance with forms for posting a new private thread reply.
+This hook wraps the standard function that Misago uses to create a new `PrivateThreadReplyFormset` instance with forms for posting a new private thread reply.
 
 
 ## Location
@@ -8,18 +8,18 @@ This hook wraps the standard function that Misago uses to create a new `ReplyPri
 This hook can be imported from `misago.posting.hooks`:
 
 ```python
-from misago.posting.hooks import get_reply_private_thread_formset_hook
+from misago.posting.hooks import get_private_thread_reply_formset_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_reply_private_thread_formset_filter(
-    action: GetReplyPrivateThreadFormsetHookAction,
+def custom_get_private_thread_reply_formset_filter(
+    action: GetPrivateThreadReplyFormsetHookAction,
     request: HttpRequest,
     thread: Thread,
-) -> 'ReplyPrivateThreadFormset':
+) -> 'PrivateThreadReplyFormset':
     ...
 ```
 
@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetReplyPrivateThreadFormsetHookAction`
+#### `action: GetPrivateThreadReplyFormsetHookAction`
 
 The next function registered in this hook, either a custom function or Misago’s default.
 
@@ -47,17 +47,17 @@ The `Thread` instance.
 
 ### Return value
 
-A `ReplyPrivateThreadFormset` instance with forms for posting a new private thread reply.
+A `PrivateThreadReplyFormset` instance with forms for posting a new private thread reply.
 
 
 ## Action
 
 ```python
-def get_reply_private_thread_formset_action(request: HttpRequest, thread: Thread) -> 'ReplyPrivateThreadFormset':
+def get_private_thread_reply_formset_action(request: HttpRequest, thread: Thread) -> 'PrivateThreadReplyFormset':
     ...
 ```
 
-A standard function that Misago uses to create a new `ReplyPrivateThreadFormset` instance with forms for posting a new private thread reply.
+A standard function that Misago uses to create a new `PrivateThreadReplyFormset` instance with forms for posting a new private thread reply.
 
 
 ### Arguments
@@ -74,7 +74,7 @@ The `Thread` instance.
 
 ### Return value
 
-A `ReplyPrivateThreadFormset` instance with forms for posting a new private thread reply.
+A `PrivateThreadReplyFormset` instance with forms for posting a new private thread reply.
 
 
 ## Example
@@ -83,17 +83,17 @@ The code below implements a custom filter function that adds custom form to the 
 
 ```python
 from django.http import HttpRequest
-from misago.posting.formsets import ReplyPrivateThreadFormset
-from misago.posting.hooks import get_reply_private_thread_formset_hook
+from misago.posting.formsets import PrivateThreadReplyFormset
+from misago.posting.hooks import get_private_thread_reply_formset_hook
 from misago.threads.models import Thread
 
 from .forms import SelectUserForm
 
 
-@get_reply_private_thread_formset_hook.append_filter
+@get_private_thread_reply_formset_hook.append_filter
 def add_select_user_form(
     action, request: HttpRequest, thread: Thread
-) -> ReplyPrivateThreadFormset:
+) -> PrivateThreadReplyFormset:
     formset = action(request, thread)
 
     if request.method == "POST":

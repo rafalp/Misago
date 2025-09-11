@@ -76,11 +76,11 @@ class SavePrivateThreadStartStateHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.posting.hooks import save_start_private_thread_state_hook
+    from misago.posting.hooks import save_private_thread_start_state_hook
     from misago.posting.state.start import PrivateThreadStartState
 
 
-    @save_start_private_thread_state_hook.append_filter
+    @save_private_thread_start_state_hook.append_filter
     def save_poster_ip_on_started_private_thread(
         action, request: HttpRequest, state: PrivateThreadStartState
     ):
@@ -102,4 +102,4 @@ class SavePrivateThreadStartStateHook(
         return super().__call__(action, request, state)
 
 
-save_start_private_thread_state_hook = SavePrivateThreadStartStateHook(cache=False)
+save_private_thread_start_state_hook = SavePrivateThreadStartStateHook(cache=False)

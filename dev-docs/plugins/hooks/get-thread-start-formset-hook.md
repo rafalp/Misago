@@ -1,6 +1,6 @@
-# `get_start_thread_formset_hook`
+# `get_thread_start_formset_hook`
 
-This hook wraps the standard function that Misago uses to create a new `StartThreadFormset` instance with forms for posting a new thread.
+This hook wraps the standard function that Misago uses to create a new `ThreadStartFormset` instance with forms for starting a new thread.
 
 
 ## Location
@@ -8,18 +8,18 @@ This hook wraps the standard function that Misago uses to create a new `StartThr
 This hook can be imported from `misago.posting.hooks`:
 
 ```python
-from misago.posting.hooks import get_start_thread_formset_hook
+from misago.posting.hooks import get_thread_start_formset_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_start_thread_formset_filter(
-    action: GetStartThreadFormsetHookAction,
+def custom_get_thread_start_formset_filter(
+    action: GetThreadStartFormsetHookAction,
     request: HttpRequest,
     category: Category,
-) -> 'StartThreadFormset':
+) -> 'ThreadStartFormset':
     ...
 ```
 
@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetStartThreadFormsetHookAction`
+#### `action: GetThreadStartFormsetHookAction`
 
 The next function registered in this hook, either a custom function or Misago’s default.
 
@@ -47,17 +47,17 @@ The `Category` instance.
 
 ### Return value
 
-A `StartThreadFormset` instance with forms for posting a new thread.
+A `ThreadStartFormset` instance with forms for posting a new thread.
 
 
 ## Action
 
 ```python
-def get_start_thread_formset_action(request: HttpRequest, category: Category) -> 'StartThreadFormset':
+def get_thread_start_formset_action(request: HttpRequest, category: Category) -> 'ThreadStartFormset':
     ...
 ```
 
-A standard function that Misago uses to create a new `StartThreadFormset` instance with forms for posting a new thread.
+A standard function that Misago uses to create a new `ThreadStartFormset` instance with forms for starting a new thread.
 
 
 ### Arguments
@@ -74,7 +74,7 @@ The `Category` instance.
 
 ### Return value
 
-A `StartThreadFormset` instance with forms for posting a new thread.
+A `ThreadStartFormset` instance with forms for posting a new thread.
 
 
 ## Example
@@ -84,16 +84,16 @@ The code below implements a custom filter function that adds custom form to the 
 ```python
 from django.http import HttpRequest
 from misago.categories.models import Category
-from misago.posting.formsets import StartThreadFormset
-from misago.posting.hooks import get_start_thread_formset_hook
+from misago.posting.formsets import ThreadStartFormset
+from misago.posting.hooks import get_thread_start_formset_hook
 
 from .forms import SelectUserForm
 
 
-@get_start_thread_formset_hook.append_filter
+@get_thread_start_formset_hook.append_filter
 def add_select_user_form(
     action, request: HttpRequest, category: Category
-) -> StartThreadFormset:
+) -> ThreadStartFormset:
     formset = action(request, category)
 
     if request.method == "POST":
