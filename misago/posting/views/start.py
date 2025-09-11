@@ -5,7 +5,6 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import pgettext
 
-from ...auth.decorators import login_required
 from ...categories.enums import CategoryTree
 from ...categories.models import Category
 from ...notifications.tasks import notify_on_new_private_thread
@@ -18,11 +17,12 @@ from ...permissions.threads import check_start_thread_permission
 from ...threads.models import Thread
 from ...threads.prefetch import prefetch_posts_feed_related_objects
 from ..formsets import (
-    PostingFormset,
-    StartPrivateThreadFormset,
-    StartThreadFormset,
-    get_start_private_thread_formset,
-    get_start_thread_formset,
+    Formset,
+    PrivateThreadStartFormset,
+    TabbedFormset,
+    ThreadStartFormset,
+    get_private_thread_start_formset,
+    get_thread_start_formset,
 )
 from ..hooks import (
     get_private_thread_start_context_data_hook,
@@ -86,7 +86,7 @@ class StartView(View):
         self,
         request: HttpRequest,
         category: Category,
-        formset: StartThreadFormset,
+        formset: Formset | TabbedFormset,
         state: StartState,
     ) -> HttpResponse:
         formset.clear_errors_in_preview()
@@ -111,13 +111,13 @@ class StartView(View):
 
     def get_formset(
         self, request: HttpRequest, category: Category
-    ) -> StartThreadFormset:
+    ) -> Formset | TabbedFormset:
         raise NotImplementedError()
 
     def get_state(self, request: HttpRequest, category: Category) -> StartState:
         raise NotImplementedError()
 
-    def is_valid(self, formset: StartThreadFormset, state: StartState) -> bool:
+    def is_valid(self, formset: Formset | TabbedFormset, state: StartState) -> bool:
         return (
             formset.is_valid()
             and validate_flood_control(formset, state)
@@ -128,12 +128,12 @@ class StartView(View):
         pass
 
     def get_context_data(
-        self, request: HttpRequest, category: Category, formset: StartThreadFormset
+        self, request: HttpRequest, category: Category, formset: Formset | TabbedFormset
     ) -> dict:
         return self.get_context_data_action(request, category, formset)
 
     def get_context_data_action(
-        self, request: HttpRequest, category: Category, formset: PostingFormset
+        self, request: HttpRequest, category: Category, formset: Formset | TabbedFormset
     ) -> dict:
         return {"category": category, "formset": formset}
 
@@ -160,14 +160,14 @@ class ThreadStartView(StartView):
 
     def get_formset(
         self, request: HttpRequest, category: Category
-    ) -> StartThreadFormset:
-        return get_start_thread_formset(request, category)
+    ) -> ThreadStartFormset:
+        return get_thread_start_formset(request, category)
 
     def get_state(self, request: HttpRequest, category: Category) -> ThreadStartState:
         return get_thread_start_state(request, category)
 
     def get_context_data(
-        self, request: HttpRequest, category: Category, formset: StartThreadFormset
+        self, request: HttpRequest, category: Category, formset: ThreadStartFormset
     ) -> dict:
         return get_thread_start_context_data_hook(
             self.get_context_data_action, request, category, formset
@@ -190,8 +190,8 @@ class PrivateThreadStartView(StartView):
 
     def get_formset(
         self, request: HttpRequest, category: Category
-    ) -> StartPrivateThreadFormset:
-        return get_start_private_thread_formset(request, category)
+    ) -> PrivateThreadStartFormset:
+        return get_private_thread_start_formset(request, category)
 
     def get_state(
         self, request: HttpRequest, category: Category
@@ -202,7 +202,7 @@ class PrivateThreadStartView(StartView):
         self,
         request: HttpRequest,
         category: Category,
-        formset: StartPrivateThreadFormset,
+        formset: PrivateThreadStartFormset,
     ) -> dict:
         return get_private_thread_start_context_data_hook(
             self.get_context_data_action, request, category, formset

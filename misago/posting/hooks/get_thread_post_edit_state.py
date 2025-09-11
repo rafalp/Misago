@@ -86,12 +86,12 @@ class GetEditThreadPostStateHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.posting.hooks import get_edit_thread_post_state_hook
+    from misago.posting.hooks import get_thread_post_edit_state_hook
     from misago.posting.state import EditThreadPostState
     from misago.posts.models import Post
 
 
-    @get_edit_thread_post_state_hook.append_filter
+    @get_thread_post_edit_state_hook.append_filter
     def set_poster_ip_on_edit_thread_post_state(
         action, request: HttpRequest, post: Post
     ) -> EditThreadPostState:
@@ -112,4 +112,4 @@ class GetEditThreadPostStateHook(
         return super().__call__(action, request, post)
 
 
-get_edit_thread_post_state_hook = GetEditThreadPostStateHook()
+get_thread_post_edit_state_hook = GetEditThreadPostStateHook()

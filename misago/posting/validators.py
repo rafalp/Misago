@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest
@@ -14,7 +14,7 @@ from .hooks import (
 )
 
 if TYPE_CHECKING:
-    from .formsets import PostingFormset
+    from .formsets import Formset, TabbedFormset
     from .state import State
 
 
@@ -157,12 +157,16 @@ def _validate_thread_title_action(
         )
 
 
-def validate_posted_contents(formset: "PostingFormset", state: "State") -> bool:
+def validate_posted_contents(
+    formset: Union["Formset", "TabbedFormset"], state: "State"
+) -> bool:
     validate_posted_contents_hook(formset, state)
     return not bool(formset.errors)
 
 
-def validate_flood_control(formset: "PostingFormset", state: "State") -> bool:
+def validate_flood_control(
+    formset: Union["Formset", "TabbedFormset"], state: "State"
+) -> bool:
     try:
         flood_control(state.request)
     except ValidationError as e:

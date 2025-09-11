@@ -6,13 +6,13 @@ from ...plugins.hooks import FilterHook
 from ...threads.models import Thread
 
 if TYPE_CHECKING:
-    from ..formsets.reply import ReplyThreadFormset
+    from ..formsets.reply import PrivateThreadReplyFormset
 
 
-class GetReplyThreadFormsetHookAction(Protocol):
+class GetPrivateThreadReplyFormsetHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `ReplyThreadFormset`
-    instance with forms for posting a new thread reply.
+    A standard function that Misago uses to create a new `PrivateThreadReplyFormset`
+    instance with forms for posting a new private thread reply.
 
     # Arguments
 
@@ -26,23 +26,24 @@ class GetReplyThreadFormsetHookAction(Protocol):
 
     # Return value
 
-    A `ReplyThreadFormset` instance with forms for posting a new thread reply.
+    A `PrivateThreadReplyFormset` instance with forms for posting
+    a new private thread reply.
     """
 
     def __call__(
         self,
         request: HttpRequest,
         thread: Thread,
-    ) -> "ReplyThreadFormset": ...
+    ) -> "PrivateThreadReplyFormset": ...
 
 
-class GetReplyThreadFormsetHookFilter(Protocol):
+class GetPrivateThreadReplyFormsetHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetReplyThreadFormsetHookAction`
+    ## `action: GetPrivateThreadReplyFormsetHookAction`
 
     The next function registered in this hook, either a custom function or
     Misago’s default.
@@ -59,45 +60,47 @@ class GetReplyThreadFormsetHookFilter(Protocol):
 
     # Return value
 
-    A `ReplyThreadFormset` instance with forms for posting a new thread reply.
+    A `PrivateThreadReplyFormset` instance with forms for posting
+    a new private thread reply.
     """
 
     def __call__(
         self,
-        action: GetReplyThreadFormsetHookAction,
+        action: GetPrivateThreadReplyFormsetHookAction,
         request: HttpRequest,
         thread: Thread,
-    ) -> "ReplyThreadFormset": ...
+    ) -> "PrivateThreadReplyFormset": ...
 
 
-class GetReplyThreadFormsetHook(
+class GetPrivateThreadReplyFormsetHook(
     FilterHook[
-        GetReplyThreadFormsetHookAction,
-        GetReplyThreadFormsetHookFilter,
+        GetPrivateThreadReplyFormsetHookAction,
+        GetPrivateThreadReplyFormsetHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to create a new
-    `ReplyThreadFormset` instance with forms for posting a new thread reply.
+    `PrivateThreadReplyFormset` instance with forms for posting a new private
+    thread reply.
 
     # Example
 
     The code below implements a custom filter function that adds custom form to
-    the new thread reply formset:
+    the new private thread reply formset:
 
     ```python
     from django.http import HttpRequest
-    from misago.posting.formsets import ReplyThreadFormset
-    from misago.posting.hooks import get_reply_thread_formset_hook
+    from misago.posting.formsets import PrivateThreadReplyFormset
+    from misago.posting.hooks import get_private_thread_reply_formset_hook
     from misago.threads.models import Thread
 
     from .forms import SelectUserForm
 
 
-    @get_reply_thread_formset_hook.append_filter
+    @get_private_thread_reply_formset_hook.append_filter
     def add_select_user_form(
         action, request: HttpRequest, thread: Thread
-    ) -> ReplyThreadFormset:
+    ) -> PrivateThreadReplyFormset:
         formset = action(request, thread)
 
         if request.method == "POST":
@@ -114,11 +117,11 @@ class GetReplyThreadFormsetHook(
 
     def __call__(
         self,
-        action: GetReplyThreadFormsetHookAction,
+        action: GetPrivateThreadReplyFormsetHookAction,
         request: HttpRequest,
         thread: Thread,
-    ) -> "ReplyThreadFormset":
+    ) -> "PrivateThreadReplyFormset":
         return super().__call__(action, request, thread)
 
 
-get_reply_thread_formset_hook = GetReplyThreadFormsetHook()
+get_private_thread_reply_formset_hook = GetPrivateThreadReplyFormsetHook()

@@ -8,7 +8,6 @@ from django.utils import timezone
 from django.utils.translation import pgettext
 from django.views import View
 
-from ...auth.decorators import login_required
 from ...categories.models import Category
 from ...htmx.response import htmx_redirect
 from ...permissions.checkutils import check_permissions
@@ -21,11 +20,11 @@ from ...permissions.threads import (
     check_reply_thread_permission,
 )
 from ...posting.formsets import (
-    PostingFormset,
-    ReplyPrivateThreadFormset,
-    ReplyThreadFormset,
-    get_reply_private_thread_formset,
-    get_reply_thread_formset,
+    Formset,
+    PrivateThreadReplyFormset,
+    ThreadReplyFormset,
+    get_private_thread_reply_formset,
+    get_thread_reply_formset,
 )
 from ...posting.state import (
     PrivateThreadReplyState,
@@ -194,10 +193,10 @@ class ReplyView(View):
     ) -> ThreadReplyState:
         raise NotImplementedError()
 
-    def get_formset(self, request: HttpRequest, thread: Thread) -> PostingFormset:
+    def get_formset(self, request: HttpRequest, thread: Thread) -> Formset:
         raise NotImplementedError()
 
-    def is_valid(self, formset: PostingFormset, state: ReplyState) -> bool:
+    def is_valid(self, formset: Formset, state: ReplyState) -> bool:
         return (
             formset.is_valid()
             and (state.is_merged or validate_flood_control(formset, state))
@@ -208,7 +207,7 @@ class ReplyView(View):
         self,
         request: HttpRequest,
         thread: Thread,
-        formset: PostingFormset,
+        formset: Formset,
         preview: ReplyState | None = None,
         feed: list[dict] | None = None,
         htmx_swap: bool = False,
@@ -240,12 +239,12 @@ class ReplyView(View):
         return render(request, template_name, context)
 
     def get_context_data(
-        self, request: HttpRequest, thread: Thread, formset: PostingFormset
+        self, request: HttpRequest, thread: Thread, formset: Formset
     ) -> dict:
         raise NotImplementedError()
 
     def get_context_data_action(
-        self, request: HttpRequest, thread: Thread, formset: PostingFormset
+        self, request: HttpRequest, thread: Thread, formset: Formset
     ) -> dict:
         return {
             "thread": thread,
@@ -304,11 +303,11 @@ class ThreadReplyView(ReplyView, ThreadView):
     ) -> ThreadReplyState:
         return get_reply_thread_state(request, thread, post)
 
-    def get_formset(self, request: HttpRequest, thread: Thread) -> ReplyThreadFormset:
-        return get_reply_thread_formset(request, thread)
+    def get_formset(self, request: HttpRequest, thread: Thread) -> ThreadReplyFormset:
+        return get_thread_reply_formset(request, thread)
 
     def get_context_data(
-        self, request: HttpRequest, thread: Thread, formset: ReplyThreadFormset
+        self, request: HttpRequest, thread: Thread, formset: ThreadReplyFormset
     ) -> dict:
         return get_thread_reply_context_data_hook(
             self.get_context_data_action, request, thread, formset
@@ -358,11 +357,11 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
 
     def get_formset(
         self, request: HttpRequest, thread: Thread
-    ) -> ReplyPrivateThreadFormset:
-        return get_reply_private_thread_formset(request, thread)
+    ) -> PrivateThreadReplyFormset:
+        return get_private_thread_reply_formset(request, thread)
 
     def get_context_data(
-        self, request: HttpRequest, thread: Thread, formset: ReplyPrivateThreadFormset
+        self, request: HttpRequest, thread: Thread, formset: PrivateThreadReplyFormset
     ) -> dict:
         return get_private_thread_reply_context_data_hook(
             self.get_context_data_action, request, thread, formset

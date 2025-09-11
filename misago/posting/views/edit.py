@@ -17,18 +17,22 @@ from ...permissions.threads import (
     check_edit_thread_permission,
 )
 from ...posting.formsets import (
-    PostingFormset,
-    get_edit_private_thread_formset,
-    get_edit_private_thread_post_formset,
-    get_edit_thread_formset,
-    get_edit_thread_post_formset,
+    Formset,
+    PrivateThreadEditFormset,
+    PrivateThreadPostEditFormset,
+    ThreadEditFormset,
+    ThreadPostEditFormset,
+    get_private_thread_edit_formset,
+    get_private_thread_post_edit_formset,
+    get_thread_edit_formset,
+    get_thread_post_edit_formset,
 )
 from ...posting.state import (
-    State,
+    PostEditState,
     PrivateThreadPostEditState,
-    EditThreadPostState,
-    get_edit_private_thread_post_state,
-    get_edit_thread_post_state,
+    ThreadPostEditState,
+    get_private_thread_post_edit_state,
+    get_thread_post_edit_state,
 )
 from ...posting.validators import validate_posted_contents
 from ...posts.models import Post
@@ -110,7 +114,7 @@ class EditView(View):
         return response
 
     def post_inline_edit(
-        self, request: HttpRequest, state: EditThreadPostState, animate: bool = True
+        self, request: HttpRequest, state: PostEditState, animate: bool = True
     ) -> HttpResponse:
         feed = self.get_posts_feed(request, state.thread, [state.post])
 
@@ -133,21 +137,21 @@ class EditView(View):
 
         return render(request, self.template_name_inline, context=post_context)
 
-    def get_state(self, request: HttpRequest, post: Post) -> EditThreadPostState:
+    def get_state(self, request: HttpRequest, post: Post) -> PostEditState:
         raise NotImplementedError()
 
-    def get_formset(self, request: HttpRequest, post: Post) -> PostingFormset:
+    def get_formset(self, request: HttpRequest, post: Post) -> Formset:
         raise NotImplementedError()
 
-    def is_valid(self, formset: PostingFormset, state: State) -> bool:
+    def is_valid(self, formset: Formset, state: PostEditState) -> bool:
         return formset.is_valid() and validate_posted_contents(formset, state)
 
     def render(
         self,
         request: HttpRequest,
         post: Post,
-        formset: PostingFormset,
-        preview: State | None = None,
+        formset: Formset,
+        preview: PostEditState | None = None,
     ):
         context = self.get_context_data(request, post, formset)
 
@@ -175,12 +179,12 @@ class EditView(View):
         return render(request, template_name, context)
 
     def get_context_data(
-        self, request: HttpRequest, post: Post, formset: PostingFormset
+        self, request: HttpRequest, post: Post, formset: Formset
     ) -> dict:
         raise NotImplementedError()
 
     def get_context_data_action(
-        self, request: HttpRequest, post: Post, formset: PostingFormset
+        self, request: HttpRequest, post: Post, formset: Formset
     ) -> dict:
         return {
             "template_name_htmx": self.template_name_htmx,
@@ -211,14 +215,14 @@ class ThreadPostEditView(EditView, ThreadView):
         )
         return post
 
-    def get_state(self, request: HttpRequest, post: Post) -> EditThreadPostState:
-        return get_edit_thread_post_state(request, post)
+    def get_state(self, request: HttpRequest, post: Post) -> ThreadPostEditState:
+        return get_thread_post_edit_state(request, post)
 
-    def get_formset(self, request: HttpRequest, post: Post) -> PostingFormset:
-        return get_edit_thread_post_formset(request, post)
+    def get_formset(self, request: HttpRequest, post: Post) -> ThreadPostEditFormset:
+        return get_thread_post_edit_formset(request, post)
 
     def get_context_data(
-        self, request: HttpRequest, post: Post, formset: PostingFormset
+        self, request: HttpRequest, post: Post, formset: ThreadPostEditFormset
     ) -> dict:
         return get_thread_post_edit_context_data_hook(
             self.get_context_data_action, request, post, formset
@@ -244,13 +248,15 @@ class PrivateThreadPostEditView(EditView, PrivateThreadView):
         return post
 
     def get_state(self, request: HttpRequest, post: Post) -> PrivateThreadPostEditState:
-        return get_edit_private_thread_post_state(request, post)
+        return get_private_thread_post_edit_state(request, post)
 
-    def get_formset(self, request: HttpRequest, post: Post) -> PostingFormset:
-        return get_edit_private_thread_post_formset(request, post)
+    def get_formset(
+        self, request: HttpRequest, post: Post
+    ) -> PrivateThreadPostEditFormset:
+        return get_private_thread_post_edit_formset(request, post)
 
     def get_context_data(
-        self, request: HttpRequest, post: Post, formset: PostingFormset
+        self, request: HttpRequest, post: Post, formset: PrivateThreadPostEditFormset
     ) -> dict:
         return get_private_thread_post_edit_context_data_hook(
             self.get_context_data_action, request, post, formset
@@ -272,11 +278,11 @@ class ThreadEditView(ThreadPostEditView):
         check_edit_thread_permission(request.user_permissions, thread.category, thread)
         return thread
 
-    def get_formset(self, request: HttpRequest, post: Post) -> PostingFormset:
-        return get_edit_thread_formset(request, post)
+    def get_formset(self, request: HttpRequest, post: Post) -> ThreadEditFormset:
+        return get_thread_edit_formset(request, post)
 
     def get_context_data(
-        self, request: HttpRequest, post: Post, formset: PostingFormset
+        self, request: HttpRequest, post: Post, formset: ThreadEditFormset
     ) -> dict:
         return get_thread_edit_context_data_hook(
             self.get_context_data_action, request, post, formset
@@ -293,11 +299,11 @@ class PrivateThreadEditView(PrivateThreadPostEditView):
         check_edit_private_thread_permission(request.user_permissions, thread)
         return thread
 
-    def get_formset(self, request: HttpRequest, post: Post) -> PostingFormset:
-        return get_edit_private_thread_formset(request, post)
+    def get_formset(self, request: HttpRequest, post: Post) -> PrivateThreadEditFormset:
+        return get_private_thread_edit_formset(request, post)
 
     def get_context_data(
-        self, request: HttpRequest, post: Post, formset: PostingFormset
+        self, request: HttpRequest, post: Post, formset: PrivateThreadEditFormset
     ) -> dict:
         return get_private_thread_edit_context_data_hook(
             self.get_context_data_action, request, post, formset

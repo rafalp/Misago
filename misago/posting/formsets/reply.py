@@ -6,30 +6,33 @@ from ...permissions.attachments import (
 )
 from ...threads.models import Thread
 from ..forms import create_post_form
-from ..hooks import get_reply_private_thread_formset_hook, get_reply_thread_formset_hook
-from .formset import PostingFormset
+from ..hooks import (
+    get_private_thread_reply_formset_hook,
+    get_thread_reply_formset_hook,
+)
+from .formset import Formset
 
 
-class ReplyThreadFormset(PostingFormset):
+class ThreadReplyFormset(Formset):
     pass
 
 
-class ReplyPrivateThreadFormset(PostingFormset):
+class PrivateThreadReplyFormset(Formset):
     pass
 
 
-def get_reply_thread_formset(
+def get_thread_reply_formset(
     request: HttpRequest, thread: Thread
-) -> ReplyThreadFormset:
-    return get_reply_thread_formset_hook(
-        _get_reply_thread_formset_action, request, thread
+) -> ThreadReplyFormset:
+    return get_thread_reply_formset_hook(
+        _get_thread_reply_formset_action, request, thread
     )
 
 
-def _get_reply_thread_formset_action(
+def _get_thread_reply_formset_action(
     request: HttpRequest, thread: Thread
-) -> ReplyThreadFormset:
-    formset = ReplyThreadFormset()
+) -> ThreadReplyFormset:
+    formset = ThreadReplyFormset()
     formset.add_form(
         create_post_form(
             request,
@@ -41,24 +44,24 @@ def _get_reply_thread_formset_action(
     return formset
 
 
-def get_reply_private_thread_formset(
+def get_private_thread_reply_formset(
     request: HttpRequest, thread: Thread
-) -> ReplyPrivateThreadFormset:
-    return get_reply_private_thread_formset_hook(
-        _get_reply_private_thread_formset_action, request, thread
+) -> PrivateThreadReplyFormset:
+    return get_private_thread_reply_formset_hook(
+        _get_private_thread_reply_formset_action, request, thread
     )
 
 
-def _get_reply_private_thread_formset_action(
+def _get_private_thread_reply_formset_action(
     request: HttpRequest, thread: Thread
-) -> ReplyPrivateThreadFormset:
+) -> PrivateThreadReplyFormset:
     can_upload_attachments = False
     if request.settings.allow_private_threads_attachments:
         can_upload_attachments = can_upload_private_threads_attachments(
             request.user_permissions
         )
 
-    formset = ReplyPrivateThreadFormset()
+    formset = PrivateThreadReplyFormset()
     formset.add_form(
         create_post_form(
             request,

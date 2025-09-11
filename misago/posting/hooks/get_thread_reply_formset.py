@@ -6,13 +6,13 @@ from ...plugins.hooks import FilterHook
 from ...threads.models import Thread
 
 if TYPE_CHECKING:
-    from ..formsets.reply import ReplyPrivateThreadFormset
+    from ..formsets.reply import ThreadReplyFormset
 
 
-class GetReplyPrivateThreadFormsetHookAction(Protocol):
+class GetThreadReplyFormsetHookAction(Protocol):
     """
-    A standard function that Misago uses to create a new `ReplyPrivateThreadFormset`
-    instance with forms for posting a new private thread reply.
+    A standard function that Misago uses to create a new `ThreadReplyFormset`
+    instance with forms for posting a new thread reply.
 
     # Arguments
 
@@ -26,24 +26,23 @@ class GetReplyPrivateThreadFormsetHookAction(Protocol):
 
     # Return value
 
-    A `ReplyPrivateThreadFormset` instance with forms for posting
-    a new private thread reply.
+    A `ThreadReplyFormset` instance with forms for posting a new thread reply.
     """
 
     def __call__(
         self,
         request: HttpRequest,
         thread: Thread,
-    ) -> "ReplyPrivateThreadFormset": ...
+    ) -> "ThreadReplyFormset": ...
 
 
-class GetReplyPrivateThreadFormsetHookFilter(Protocol):
+class GetThreadReplyFormsetHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetReplyPrivateThreadFormsetHookAction`
+    ## `action: GetThreadReplyFormsetHookAction`
 
     The next function registered in this hook, either a custom function or
     Misago’s default.
@@ -60,47 +59,45 @@ class GetReplyPrivateThreadFormsetHookFilter(Protocol):
 
     # Return value
 
-    A `ReplyPrivateThreadFormset` instance with forms for posting
-    a new private thread reply.
+    A `ThreadReplyFormset` instance with forms for posting a new thread reply.
     """
 
     def __call__(
         self,
-        action: GetReplyPrivateThreadFormsetHookAction,
+        action: GetThreadReplyFormsetHookAction,
         request: HttpRequest,
         thread: Thread,
-    ) -> "ReplyPrivateThreadFormset": ...
+    ) -> "ThreadReplyFormset": ...
 
 
-class GetReplyPrivateThreadFormsetHook(
+class GetThreadReplyFormsetHook(
     FilterHook[
-        GetReplyPrivateThreadFormsetHookAction,
-        GetReplyPrivateThreadFormsetHookFilter,
+        GetThreadReplyFormsetHookAction,
+        GetThreadReplyFormsetHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to create a new
-    `ReplyPrivateThreadFormset` instance with forms for posting a new private
-    thread reply.
+    `ThreadReplyFormset` instance with forms for posting a new thread reply.
 
     # Example
 
     The code below implements a custom filter function that adds custom form to
-    the new private thread reply formset:
+    the new thread reply formset:
 
     ```python
     from django.http import HttpRequest
-    from misago.posting.formsets import ReplyPrivateThreadFormset
-    from misago.posting.hooks import get_reply_private_thread_formset_hook
+    from misago.posting.formsets import ThreadReplyFormset
+    from misago.posting.hooks import get_thread_reply_formset_hook
     from misago.threads.models import Thread
 
     from .forms import SelectUserForm
 
 
-    @get_reply_private_thread_formset_hook.append_filter
+    @get_thread_reply_formset_hook.append_filter
     def add_select_user_form(
         action, request: HttpRequest, thread: Thread
-    ) -> ReplyPrivateThreadFormset:
+    ) -> ThreadReplyFormset:
         formset = action(request, thread)
 
         if request.method == "POST":
@@ -117,11 +114,11 @@ class GetReplyPrivateThreadFormsetHook(
 
     def __call__(
         self,
-        action: GetReplyPrivateThreadFormsetHookAction,
+        action: GetThreadReplyFormsetHookAction,
         request: HttpRequest,
         thread: Thread,
-    ) -> "ReplyPrivateThreadFormset":
+    ) -> "ThreadReplyFormset":
         return super().__call__(action, request, thread)
 
 
-get_reply_private_thread_formset_hook = GetReplyPrivateThreadFormsetHook()
+get_thread_reply_formset_hook = GetThreadReplyFormsetHook()

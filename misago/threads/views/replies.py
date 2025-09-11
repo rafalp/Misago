@@ -30,10 +30,10 @@ from ...polls.models import Poll
 from ...polls.views import dispatch_thread_poll_view, get_poll_context_data
 from ...polls.votes import get_user_poll_votes
 from ...posting.formsets import (
-    ReplyPrivateThreadFormset,
-    ReplyThreadFormset,
-    get_reply_private_thread_formset,
-    get_reply_thread_formset,
+    PrivateThreadReplyFormset,
+    ThreadReplyFormset,
+    get_private_thread_reply_formset,
+    get_thread_reply_formset,
 )
 from ...posts.models import Post
 from ...posts.paginator import PostPaginatorPage
@@ -248,7 +248,7 @@ class RepliesView(View):
 
     def get_reply_formset(
         self, request: HttpRequest, thread: Thread
-    ) -> ReplyThreadFormset:
+    ) -> ThreadReplyFormset:
         raise NotImplementedError
 
 
@@ -343,8 +343,8 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
     def get_reply_formset(
         self, request: HttpRequest, thread: Thread
-    ) -> ReplyThreadFormset:
-        return get_reply_thread_formset(request, thread)
+    ) -> ThreadReplyFormset:
+        return get_thread_reply_formset(request, thread)
 
     def get_poll(self, request: HttpRequest, thread: Thread) -> Poll | None:
         if thread.has_poll:
@@ -471,8 +471,8 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
 
     def get_reply_formset(
         self, request: HttpRequest, thread: Thread
-    ) -> ReplyPrivateThreadFormset:
-        return get_reply_private_thread_formset(request, thread)
+    ) -> PrivateThreadReplyFormset:
+        return get_private_thread_reply_formset(request, thread)
 
 
 thread_replies = ThreadRepliesView.as_view()
