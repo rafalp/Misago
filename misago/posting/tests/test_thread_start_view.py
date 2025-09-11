@@ -829,3 +829,18 @@ def test_thread_start_view_starts_thread_with_poll_form_disabled(
     assert response["location"] == reverse(
         "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
+
+
+def test_thread_start_view_displays_error_page_for_private_threads_category(
+    user_client, private_threads_category
+):
+    response = user_client.get(
+        reverse(
+            "misago:thread-start",
+            kwargs={
+                "category_id": private_threads_category.id,
+                "slug": private_threads_category.slug,
+            },
+        )
+    )
+    assert response.status_code == 404
