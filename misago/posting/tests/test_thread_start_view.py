@@ -11,27 +11,23 @@ from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...polls.enums import PublicPollsAvailability
 from ...polls.models import Poll
-from ...posting.forms import PostForm
-from ...posting.formsets import PostingFormset
-from ...test import (
-    assert_contains,
-    assert_contains_element,
-    assert_not_contains,
-)
-from ..models import Thread
+from ...test import assert_contains, assert_contains_element, assert_not_contains
+from ...threads.models import Thread
+from ..forms import PostForm
+from ..formsets import Formset
 
 
-def test_start_thread_view_displays_login_page_to_guests(client, default_category):
+def test_thread_start_view_displays_login_page_to_guests(client, default_category):
     response = client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )
     assert_contains(response, "Sign in to start new thread")
 
 
-def test_start_thread_view_displays_error_page_to_users_without_see_category_permission(
+def test_thread_start_view_displays_error_page_to_users_without_see_category_permission(
     user_client, user, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -42,13 +38,13 @@ def test_start_thread_view_displays_error_page_to_users_without_see_category_per
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )
     assert response.status_code == 404
 
 
-def test_start_thread_view_displays_error_page_to_users_without_browse_category_permission(
+def test_thread_start_view_displays_error_page_to_users_without_browse_category_permission(
     user_client, user, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -59,7 +55,7 @@ def test_start_thread_view_displays_error_page_to_users_without_browse_category_
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )
     assert_contains(
@@ -69,7 +65,7 @@ def test_start_thread_view_displays_error_page_to_users_without_browse_category_
     )
 
 
-def test_start_thread_view_displays_error_page_to_users_without_start_threads_permission(
+def test_thread_start_view_displays_error_page_to_users_without_start_threads_permission(
     user_client, user, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -80,7 +76,7 @@ def test_start_thread_view_displays_error_page_to_users_without_start_threads_pe
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )
     assert_contains(
@@ -90,7 +86,7 @@ def test_start_thread_view_displays_error_page_to_users_without_start_threads_pe
     )
 
 
-def test_start_thread_view_displays_error_page_to_users_without_post_in_closed_category_permission(
+def test_thread_start_view_displays_error_page_to_users_without_post_in_closed_category_permission(
     user_client, default_category
 ):
     default_category.is_closed = True
@@ -99,7 +95,7 @@ def test_start_thread_view_displays_error_page_to_users_without_post_in_closed_c
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )
     assert_contains(
@@ -109,17 +105,20 @@ def test_start_thread_view_displays_error_page_to_users_without_post_in_closed_c
     )
 
 
-def test_start_thread_view_displays_form_page_to_users(user_client, default_category):
+def test_thread_start_view_displays_posting_form(user_client, default_category):
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
         )
     )
-    assert_contains(response, "Start new thread")
+    assert_contains(response, "Start thread")
 
 
-def test_start_thread_view_displays_form_page_to_users_with_permission_to_post_in_closed_category(
+def test_thread_start_view_displays_posting_form_to_users_with_permission_to_post_in_closed_category(
     user, user_client, default_category, members_group, moderators_group
 ):
     default_category.is_closed = True
@@ -131,17 +130,20 @@ def test_start_thread_view_displays_form_page_to_users_with_permission_to_post_i
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )
     assert_contains(response, "Start new thread")
 
 
-def test_start_thread_view_posts_new_thread(user_client, default_category):
+def test_thread_start_view_posts_new_thread(user_client, default_category):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
         ),
         {
             "posting-title-title": "Hello world",
@@ -152,18 +154,21 @@ def test_start_thread_view_posts_new_thread(user_client, default_category):
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.pk, "slug": thread.slug}
+        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
 
 
-def test_start_thread_view_previews_message(user_client, default_category):
+def test_thread_start_view_previews_new_thread(user_client, default_category):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
         ),
         {
-            PostingFormset.preview_action: "true",
+            Formset.preview_action: "true",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -172,11 +177,14 @@ def test_start_thread_view_previews_message(user_client, default_category):
     assert_contains(response, "Message preview")
 
 
-def test_start_thread_view_validates_thread_title(user_client, default_category):
+def test_thread_start_view_validates_thread_title(user_client, default_category):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
         ),
         {
             "posting-title-title": "???",
@@ -187,11 +195,14 @@ def test_start_thread_view_validates_thread_title(user_client, default_category)
     assert_contains(response, "Thread title must include alphanumeric characters.")
 
 
-def test_start_thread_view_validates_post(user_client, default_category):
+def test_thread_start_view_validates_post(user_client, default_category):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
         ),
         {
             "posting-title-title": "Hello world",
@@ -204,13 +215,16 @@ def test_start_thread_view_validates_post(user_client, default_category):
     )
 
 
-def test_start_thread_view_validates_posted_contents(
+def test_thread_start_view_validates_posted_contents(
     user_client, default_category, posted_contents_validator
 ):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
         ),
         {
             "posting-title-title": "Hello world",
@@ -221,13 +235,16 @@ def test_start_thread_view_validates_posted_contents(
     assert_contains(response, "Your message contains spam!")
 
 
-def test_start_thread_view_runs_flood_control(
+def test_thread_start_view_runs_flood_control(
     user_client, default_category, user_reply
 ):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
         ),
         {
             "posting-title-title": "Hello world",
@@ -240,18 +257,18 @@ def test_start_thread_view_runs_flood_control(
     )
 
 
-def test_start_thread_view_displays_attachments_form(user_client, default_category):
+def test_thread_start_view_displays_attachments_form(user_client, default_category):
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_contains(response, "Start new thread")
     assert_contains(response, "misago-editor-attachments=")
 
 
-def test_start_thread_view_hides_attachments_form_if_user_has_no_category_permission(
+def test_thread_start_view_hides_attachments_form_if_user_has_no_category_permission(
     members_group, user_client, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -263,7 +280,7 @@ def test_start_thread_view_hides_attachments_form_if_user_has_no_category_permis
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_contains(response, "Start new thread")
@@ -271,20 +288,20 @@ def test_start_thread_view_hides_attachments_form_if_user_has_no_category_permis
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)
-def test_start_thread_view_hides_attachments_form_if_uploads_are_disabled(
+def test_thread_start_view_hides_attachments_form_if_uploads_are_disabled(
     user_client, default_category
 ):
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_contains(response, "Start new thread")
     assert_not_contains(response, "misago-editor-attachments=")
 
 
-def test_start_thread_view_hides_attachments_form_if_user_has_no_group_permission(
+def test_thread_start_view_hides_attachments_form_if_user_has_no_group_permission(
     members_group, user_client, default_category
 ):
     members_group.can_upload_attachments = CanUploadAttachments.NEVER
@@ -293,14 +310,14 @@ def test_start_thread_view_hides_attachments_form_if_user_has_no_group_permissio
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_contains(response, "Start new thread")
     assert_not_contains(response, "misago-editor-attachments=")
 
 
-def test_start_thread_view_uploads_attachment_on_submit(
+def test_thread_start_view_uploads_attachment_on_submit(
     user, user_client, default_category, teardown_attachments
 ):
     assert not Attachment.objects.exists()
@@ -308,7 +325,7 @@ def test_start_thread_view_uploads_attachment_on_submit(
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
             "posting-title-title": "Hello world",
@@ -322,7 +339,7 @@ def test_start_thread_view_uploads_attachment_on_submit(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.pk, "slug": thread.slug}
+        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
 
     attachment = Attachment.objects.get(uploader=user)
@@ -335,9 +352,9 @@ def test_start_thread_view_uploads_attachment_on_submit(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
-def test_start_thread_view_uploads_attachment_on_preview_or_upload(
+def test_thread_start_view_uploads_attachment_on_preview_or_upload(
     action_name, user, user_client, default_category, teardown_attachments
 ):
     assert not Attachment.objects.exists()
@@ -345,7 +362,7 @@ def test_start_thread_view_uploads_attachment_on_preview_or_upload(
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
             action_name: "true",
@@ -378,15 +395,15 @@ def test_start_thread_view_uploads_attachment_on_preview_or_upload(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
-def test_start_thread_view_displays_image_attachment(
+def test_thread_start_view_displays_image_attachment(
     action_name, user_client, default_category, user_image_attachment
 ):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
             action_name: "true",
@@ -410,15 +427,15 @@ def test_start_thread_view_displays_image_attachment(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
-def test_start_thread_view_displays_image_with_thumbnail_attachment(
+def test_thread_start_view_displays_image_with_thumbnail_attachment(
     action_name, user_client, default_category, user_image_thumbnail_attachment
 ):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
             action_name: "true",
@@ -442,15 +459,15 @@ def test_start_thread_view_displays_image_with_thumbnail_attachment(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
-def test_start_thread_view_displays_video_attachment(
+def test_thread_start_view_displays_video_attachment(
     action_name, user_client, default_category, user_video_attachment
 ):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
             action_name: "true",
@@ -474,15 +491,15 @@ def test_start_thread_view_displays_video_attachment(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
-def test_start_thread_view_displays_file_attachment(
+def test_thread_start_view_displays_file_attachment(
     action_name, user_client, default_category, user_text_attachment
 ):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
             action_name: "true",
@@ -510,7 +527,7 @@ def test_start_view_associates_unused_attachment_on_submit(
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
@@ -522,7 +539,7 @@ def test_start_view_associates_unused_attachment_on_submit(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.pk, "slug": thread.slug}
+        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
 
     user_text_attachment.refresh_from_db()
@@ -532,13 +549,13 @@ def test_start_view_associates_unused_attachment_on_submit(
     assert not user_text_attachment.is_deleted
 
 
-def test_start_thread_view_adds_attachment_to_deleted_list(
+def test_thread_start_view_adds_attachment_to_deleted_list(
     user_client, default_category, user_text_attachment
 ):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
@@ -569,15 +586,15 @@ def test_start_thread_view_adds_attachment_to_deleted_list(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
-def test_start_thread_view_maintains_deleted_attachments_list(
+def test_thread_start_view_maintains_deleted_attachments_list(
     action_name, user_client, default_category, user_text_attachment
 ):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
             action_name: "true",
@@ -608,13 +625,13 @@ def test_start_thread_view_maintains_deleted_attachments_list(
     assert_not_contains(response, user_text_attachment.get_absolute_url())
 
 
-def test_start_thread_view_deletes_attachment_on_submit(
+def test_thread_start_view_deletes_attachment_on_submit(
     user_client, default_category, user_text_attachment
 ):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
@@ -627,7 +644,7 @@ def test_start_thread_view_deletes_attachment_on_submit(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.pk, "slug": thread.slug}
+        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
 
     user_text_attachment.refresh_from_db()
@@ -637,16 +654,16 @@ def test_start_thread_view_deletes_attachment_on_submit(
     assert user_text_attachment.is_deleted
 
 
-def test_start_thread_view_embeds_attachments_in_preview(
+def test_thread_start_view_embeds_attachments_in_preview(
     user_client, default_category, user_image_attachment
 ):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
-            PostingFormset.preview_action: "true",
+            Formset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_image_attachment.id)],
             "posting-title-title": "Hello world",
             "posting-post-post": (
@@ -662,18 +679,18 @@ def test_start_thread_view_embeds_attachments_in_preview(
     )
 
 
-def test_start_thread_view_displays_poll_form(user_client, default_category):
+def test_thread_start_view_displays_poll_form(user_client, default_category):
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_contains(response, "Start new thread")
     assert_contains(response, "m-poll-choices-control")
 
 
-def test_start_thread_view_hides_poll_form_for_user_without_permission(
+def test_thread_start_view_hides_poll_form_for_user_without_permission(
     user_client, members_group, default_category
 ):
     members_group.can_start_polls = False
@@ -682,7 +699,7 @@ def test_start_thread_view_hides_poll_form_for_user_without_permission(
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_contains(response, "Start new thread")
@@ -690,11 +707,11 @@ def test_start_thread_view_hides_poll_form_for_user_without_permission(
 
 
 @override_dynamic_settings(enable_public_polls=PublicPollsAvailability.ENABLED)
-def test_start_thread_view_displays_public_poll_option(user_client, default_category):
+def test_thread_start_view_displays_public_poll_option(user_client, default_category):
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_contains(response, "Start new thread")
@@ -702,22 +719,22 @@ def test_start_thread_view_displays_public_poll_option(user_client, default_cate
 
 
 @override_dynamic_settings(enable_public_polls=PublicPollsAvailability.DISABLED)
-def test_start_thread_view_hides_public_poll_option(user_client, default_category):
+def test_thread_start_view_hides_public_poll_option(user_client, default_category):
     response = user_client.get(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_contains(response, "Start new thread")
     assert_not_contains(response, "is_public")
 
 
-def test_start_thread_view_starts_thread_with_poll(user_client, user, default_category):
+def test_thread_start_view_starts_thread_with_poll(user_client, user, default_category):
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
             "posting-title-title": "Hello world",
@@ -740,7 +757,7 @@ def test_start_thread_view_starts_thread_with_poll(user_client, user, default_ca
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.pk, "slug": thread.slug}
+        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
     )
 
     assert thread.has_poll
@@ -790,7 +807,7 @@ def test_start_thread_view_starts_thread_with_poll(user_client, user, default_ca
     assert choices_ids == [12, 12, 12, 12]
 
 
-def test_start_thread_view_starts_thread_with_poll_form_disabled(
+def test_thread_start_view_starts_thread_with_poll_form_disabled(
     user_client, members_group, default_category
 ):
     members_group.can_start_polls = False
@@ -799,7 +816,7 @@ def test_start_thread_view_starts_thread_with_poll_form_disabled(
     response = user_client.post(
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
         {
             "posting-title-title": "Hello world",
@@ -810,5 +827,5 @@ def test_start_thread_view_starts_thread_with_poll_form_disabled(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.pk, "slug": thread.slug}
+        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
     )

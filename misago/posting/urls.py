@@ -19,7 +19,7 @@ from .views.start import (
 
 urlpatterns = [
     path(
-        "c/<slug:category_slug>/<int:category_id>/start/",
+        "c/<slug:slug>/<int:category_id>/start/",
         login_required(
             pgettext_lazy(
                 "thread start login required error",
@@ -39,7 +39,7 @@ urlpatterns = [
         name="private-thread-start",
     ),
     path(
-        "t/<slug:thread_slug>/<int:thread_id>/reply/",
+        "t/<slug:slug>/<int:thread_id>/reply/",
         login_required(
             pgettext_lazy(
                 "thread reply login required error",
@@ -49,7 +49,7 @@ urlpatterns = [
         name="thread-reply",
     ),
     path(
-        "p/<slug:thread_slug>/<int:thread_id>/reply/",
+        "p/<slug:slug>/<int:thread_id>/reply/",
         login_required(
             pgettext_lazy(
                 "thread reply login required error",
@@ -59,22 +59,22 @@ urlpatterns = [
         name="private-thread-reply",
     ),
     path(
-        "t/<slug:thread_slug>/<int:thread_id>/edit/",
+        "t/<slug:slug>/<int:thread_id>/edit/",
         ThreadEditView.as_view(),
         name="thread-edit",
     ),
     path(
-        "t/<slug:thread_slug>/<int:thread_id>/edit/<int:post_id>/",
+        "t/<slug:slug>/<int:thread_id>/edit/<int:post_id>/",
         ThreadPostEditView.as_view(),
         name="thread-post-edit",
     ),
     path(
-        "p/<slug:thread_slug>/<int:thread_id>/edit/",
+        "p/<slug:slug>/<int:thread_id>/edit/",
         PrivateThreadEditView.as_view(),
         name="private-thread-edit",
     ),
     path(
-        "p/<slug:thread_slug>/<int:thread_id>/edit/<int:post_id>/",
+        "p/<slug:slug>/<int:thread_id>/edit/<int:post_id>/",
         PrivateThreadPostEditView.as_view(),
         name="private-thread-post-edit",
     ),

@@ -144,7 +144,7 @@ class ThreadStartView(StartView):
     def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
         try:
             category = Category.objects.get(
-                id=kwargs["id"],
+                id=kwargs["category_id"],
                 tree_id=CategoryTree.THREADS,
                 level__gt=0,
             )
