@@ -27,7 +27,7 @@ def test_thread_start_view_displays_login_page_to_guests(client, default_categor
     assert_contains(response, "Sign in to start new thread")
 
 
-def test_thread_start_view_displays_error_404_to_users_without_see_category_permission(
+def test_thread_start_view_shows_error_404_to_users_without_see_category_permission(
     user_client, user, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -44,7 +44,7 @@ def test_thread_start_view_displays_error_404_to_users_without_see_category_perm
     assert response.status_code == 404
 
 
-def test_thread_start_view_displays_error_403_to_users_without_browse_category_permission(
+def test_thread_start_view_shows_error_403_to_users_without_browse_category_permission(
     user_client, user, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -65,7 +65,7 @@ def test_thread_start_view_displays_error_403_to_users_without_browse_category_p
     )
 
 
-def test_thread_start_view_displays_error_403_to_users_without_start_threads_permission(
+def test_thread_start_view_shows_error_403_to_users_without_start_threads_permission(
     user_client, user, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -86,7 +86,7 @@ def test_thread_start_view_displays_error_403_to_users_without_start_threads_per
     )
 
 
-def test_thread_start_view_displays_error_403_to_users_without_post_in_closed_category_permission(
+def test_thread_start_view_shows_error_403_to_users_without_post_in_closed_category_permission(
     user_client, default_category
 ):
     default_category.is_closed = True
@@ -831,7 +831,7 @@ def test_thread_start_view_starts_thread_with_poll_form_disabled(
     )
 
 
-def test_thread_start_view_displays_error_404_for_private_threads_category(
+def test_thread_start_view_shows_error_404_for_private_threads_category(
     user_client, private_threads_category
 ):
     response = user_client.get(

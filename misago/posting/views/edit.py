@@ -1,3 +1,4 @@
+from copy import copy
 from typing import Iterable
 
 from django.contrib import messages
@@ -6,7 +7,6 @@ from django.views import View
 from django.shortcuts import redirect, render
 from django.utils.translation import pgettext
 
-from ...auth.decorators import login_required
 from ...htmx.response import htmx_redirect
 from ...permissions.privatethreads import (
     check_edit_private_thread_post_permission,
@@ -66,11 +66,9 @@ class EditView(View):
         post_id: int | None = None,
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
-        post_obj = self.get_thread_post(
-            request, thread, post_id or thread.first_post_id
-        )
-        formset = self.get_formset(request, post_obj)
-        return self.render(request, post_obj, formset)
+        post = self.get_thread_post(request, thread, post_id or thread.first_post_id)
+        formset = self.get_formset(request, post)
+        return self.render(request, post, formset)
 
     def post(
         self,
@@ -80,28 +78,33 @@ class EditView(View):
         post_id: int | None = None,
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
-        post_obj = self.get_thread_post(
-            request, thread, post_id or thread.first_post_id
-        )
-        state = self.get_state(request, post_obj)
+        post = self.get_thread_post(request, thread, post_id or thread.first_post_id)
+        state = self.get_state(request, post)
 
         # Short-circuit post handler if "cancel" button was pressed
         if self.is_inline(request) and request.POST.get("cancel"):
             return self.post_inline_edit(request, state, animate=False)
 
-        formset = self.get_formset(request, post_obj)
+        formset = self.get_formset(request, post)
+
+        # Detach thread and post from state for rendering
+        # Prevents partially updated thread and post from appearing in UI
+        # on validation errors
+        post = copy(post)
+        post.thread = copy(thread)
+
         formset.update_state(state)
 
         if formset.is_request_preview(request):
             formset.clear_errors_in_preview()
-            return self.render(request, post_obj, formset, state)
+            return self.render(request, post, formset, state)
 
         if formset.is_request_upload(request):
             formset.clear_errors_in_upload()
-            return self.render(request, post_obj, formset)
+            return self.render(request, post, formset)
 
         if not self.is_valid(formset, state):
-            return self.render(request, post_obj, formset)
+            return self.render(request, post, formset)
 
         state.save()
 

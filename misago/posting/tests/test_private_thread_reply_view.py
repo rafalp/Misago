@@ -28,7 +28,7 @@ def test_thread_reply_view_displays_login_page_to_guests(
     assert_contains(response, "Sign in to reply to threads")
 
 
-def test_private_thread_reply_view_displays_error_403_to_users_without_private_threads_permission(
+def test_private_thread_reply_view_shows_error_403_to_users_without_private_threads_permission(
     user_client, members_group, other_user_private_thread
 ):
     members_group.can_use_private_threads = False
@@ -46,7 +46,7 @@ def test_private_thread_reply_view_displays_error_403_to_users_without_private_t
     assert_contains(response, "You can&#x27;t use private threads.", 403)
 
 
-def test_private_thread_reply_view_displays_error_404_to_users_who_cant_see_thread(
+def test_private_thread_reply_view_shows_error_404_to_users_who_cant_see_thread(
     user_client, private_thread
 ):
     response = user_client.get(
@@ -1089,7 +1089,7 @@ def test_private_thread_reply_view_deletes_attachment_on_submit(
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.pk,
+                "id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -1130,7 +1130,7 @@ def test_private_thread_reply_view_embeds_attachments_in_preview(
     )
 
 
-def test_private_thread_reply_view_shows_error_if_public_thread_is_accessed(
+def test_private_thread_reply_view_shows_error_if_thread_is_accessed(
     user_client, thread
 ):
     response = user_client.get(

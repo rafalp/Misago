@@ -54,7 +54,7 @@ def child_category(default_category, guests_group, members_group):
     return category
 
 
-def test_select_category_view_displays_error_page_if_guest_cant_start_thread_in_any_category(
+def test_select_category_view_shows_error_page_if_guest_cant_start_thread_in_any_category(
     client, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -65,7 +65,7 @@ def test_select_category_view_displays_error_page_if_guest_cant_start_thread_in_
     assert_contains(response, "You can&#x27;t start new threads.", status_code=403)
 
 
-def test_select_category_view_displays_error_page_if_user_cant_start_thread_in_any_category(
+def test_select_category_view_shows_error_page_if_user_cant_start_thread_in_any_category(
     user_client, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -76,7 +76,7 @@ def test_select_category_view_displays_error_page_if_user_cant_start_thread_in_a
     assert_contains(response, "You can&#x27;t start new threads.", status_code=403)
 
 
-def test_select_category_view_displays_error_message_in_htmx_if_guest_cant_start_thread_in_any_category(
+def test_select_category_view_shows_error_message_in_htmx_if_guest_cant_start_thread_in_any_category(
     client, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -91,7 +91,7 @@ def test_select_category_view_displays_error_message_in_htmx_if_guest_cant_start
     assert_contains(response, "You can't start new threads.")
 
 
-def test_select_category_view_displays_error_message_in_htmx_if_user_cant_start_thread_in_any_category(
+def test_select_category_view_shows_error_message_in_htmx_if_user_cant_start_thread_in_any_category(
     user_client, default_category
 ):
     CategoryGroupPermission.objects.filter(

@@ -33,7 +33,7 @@ def test_account_delete_renders_form(user, user_client):
 
 
 @override_dynamic_settings(enable_oauth2_client=False, allow_delete_own_account=True)
-def test_account_delete_displays_error_if_password_is_incorrect(user, user_client):
+def test_account_delete_shows_error_if_password_is_incorrect(user, user_client):
     response = user_client.post(
         reverse("misago:account-delete"), {"password": "incorrect"}
     )
@@ -44,7 +44,7 @@ def test_account_delete_displays_error_if_password_is_incorrect(user, user_clien
 
 
 @override_dynamic_settings(enable_oauth2_client=False, allow_delete_own_account=True)
-def test_account_delete_displays_error_if_user_account_is_protected(
+def test_account_delete_shows_error_if_user_account_is_protected(
     admin, admin_client, user_password
 ):
     response = admin_client.post(

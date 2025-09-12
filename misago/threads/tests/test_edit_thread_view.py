@@ -27,7 +27,7 @@ def test_edit_thread_view_displays_login_page_to_guests(client, user_thread):
     assert_contains(response, "Sign in to edit posts")
 
 
-def test_edit_thread_view_displays_error_page_to_user_who_cant_see_thread_category(
+def test_edit_thread_view_shows_error_page_to_user_who_cant_see_thread_category(
     user, user_client, user_thread
 ):
     CategoryGroupPermission.objects.filter(
@@ -44,7 +44,7 @@ def test_edit_thread_view_displays_error_page_to_user_who_cant_see_thread_catego
     assert response.status_code == 404
 
 
-def test_edit_thread_view_displays_error_page_to_user_who_cant_browse_thread_category(
+def test_edit_thread_view_shows_error_page_to_user_who_cant_browse_thread_category(
     user, user_client, user_thread
 ):
     CategoryGroupPermission.objects.filter(
@@ -61,7 +61,7 @@ def test_edit_thread_view_displays_error_page_to_user_who_cant_browse_thread_cat
     assert response.status_code == 404
 
 
-def test_edit_thread_view_displays_error_page_to_user_who_cant_edit_in_closed_category(
+def test_edit_thread_view_shows_error_page_to_user_who_cant_edit_in_closed_category(
     user_client, user_thread
 ):
     user_thread.category.is_closed = True
@@ -81,7 +81,7 @@ def test_edit_thread_view_displays_error_page_to_user_who_cant_edit_in_closed_ca
     )
 
 
-def test_edit_thread_view_displays_error_page_to_user_who_cant_edit_in_closed_thread(
+def test_edit_thread_view_shows_error_page_to_user_who_cant_edit_in_closed_thread(
     user_client, user_thread
 ):
     user_thread.is_closed = True
@@ -101,7 +101,7 @@ def test_edit_thread_view_displays_error_page_to_user_who_cant_edit_in_closed_th
     )
 
 
-def test_edit_thread_view_displays_error_page_to_user_who_cant_edit_protected_post(
+def test_edit_thread_view_shows_error_page_to_user_who_cant_edit_protected_post(
     user_client, user_thread
 ):
     post = user_thread.first_post
@@ -122,7 +122,7 @@ def test_edit_thread_view_displays_error_page_to_user_who_cant_edit_protected_po
     )
 
 
-def test_edit_thread_view_displays_error_page_to_user_who_cant_edit_own_threads(
+def test_edit_thread_view_shows_error_page_to_user_who_cant_edit_own_threads(
     user, user_client, user_thread
 ):
     user.group.can_edit_own_threads = False
@@ -142,7 +142,7 @@ def test_edit_thread_view_displays_error_page_to_user_who_cant_edit_own_threads(
     )
 
 
-def test_edit_thread_view_displays_error_page_to_user_who_cant_edit_own_posts(
+def test_edit_thread_view_shows_error_page_to_user_who_cant_edit_own_posts(
     user, user_client, user_thread
 ):
     user.group.can_edit_own_posts = False
@@ -162,7 +162,7 @@ def test_edit_thread_view_displays_error_page_to_user_who_cant_edit_own_posts(
     )
 
 
-def test_edit_thread_view_displays_error_page_to_user_trying_to_edit_other_user_thread(
+def test_edit_thread_view_shows_error_page_to_user_trying_to_edit_other_user_thread(
     user_client, other_user_thread, other_user
 ):
 

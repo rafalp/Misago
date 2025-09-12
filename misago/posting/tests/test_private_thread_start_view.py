@@ -22,7 +22,7 @@ def test_private_thread_start_view_displays_login_page_to_guests(db, client):
     assert_contains(response, "Sign in to start new private thread")
 
 
-def test_private_thread_start_view_displays_error_403_to_users_without_private_threads_permission(
+def test_private_thread_start_view_shows_error_403_to_users_without_private_threads_permission(
     user_client, members_group
 ):
     members_group.can_use_private_threads = False
@@ -32,7 +32,7 @@ def test_private_thread_start_view_displays_error_403_to_users_without_private_t
     assert_contains(response, "You can&#x27;t use private threads.", 403)
 
 
-def test_private_thread_start_view_displays_error_403_to_users_without_start_private_threads_permission(
+def test_private_thread_start_view_shows_error_403_to_users_without_start_private_threads_permission(
     user_client, members_group
 ):
     members_group.can_start_private_threads = False

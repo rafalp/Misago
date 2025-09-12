@@ -27,7 +27,7 @@ def test_thread_reply_view_displays_login_page_to_guests(client, thread):
     assert_contains(response, "Sign in to reply to threads")
 
 
-def test_thread_reply_view_displays_error_404_to_users_without_see_category_permission(
+def test_thread_reply_view_shows_error_404_to_users_without_see_category_permission(
     user_client, user, thread
 ):
     CategoryGroupPermission.objects.filter(
@@ -44,7 +44,7 @@ def test_thread_reply_view_displays_error_404_to_users_without_see_category_perm
     assert response.status_code == 404
 
 
-def test_thread_reply_view_displays_error_404_to_users_without_browse_category_permission(
+def test_thread_reply_view_shows_error_404_to_users_without_browse_category_permission(
     user_client, user, thread
 ):
     CategoryGroupPermission.objects.filter(
@@ -61,7 +61,7 @@ def test_thread_reply_view_displays_error_404_to_users_without_browse_category_p
     assert response.status_code == 404
 
 
-def test_thread_reply_view_displays_error_404_to_users_who_cant_see_thread(
+def test_thread_reply_view_shows_error_404_to_users_who_cant_see_thread(
     user_client, hidden_thread
 ):
     response = user_client.get(
@@ -73,7 +73,7 @@ def test_thread_reply_view_displays_error_404_to_users_who_cant_see_thread(
     assert response.status_code == 404
 
 
-def test_thread_reply_view_displays_error_403_to_users_without_reply_category_permission(
+def test_thread_reply_view_shows_error_403_to_users_without_reply_category_permission(
     user_client, user, thread
 ):
     CategoryGroupPermission.objects.filter(
@@ -90,7 +90,7 @@ def test_thread_reply_view_displays_error_403_to_users_without_reply_category_pe
     assert_contains(response, "You can&#x27;t reply to threads in this category.", 403)
 
 
-def test_thread_reply_view_displays_error_403_to_users_without_in_closed_category_permission(
+def test_thread_reply_view_shows_error_403_to_users_without_in_closed_category_permission(
     user_client, default_category, thread
 ):
     default_category.is_closed = True
@@ -105,7 +105,7 @@ def test_thread_reply_view_displays_error_403_to_users_without_in_closed_categor
     assert_contains(response, "This category is closed.", 403)
 
 
-def test_thread_reply_view_displays_error_403_to_users_without_in_closed_thread_permission(
+def test_thread_reply_view_shows_error_403_to_users_without_in_closed_thread_permission(
     user_client, thread
 ):
     thread.is_closed = True
@@ -1077,7 +1077,7 @@ def test_thread_reply_view_deletes_attachment_on_submit(
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.pk, "slug": thread.slug},
+            kwargs={"id": thread.id, "slug": thread.slug},
         )
         + f"#post-{thread.last_post_id}"
     )
