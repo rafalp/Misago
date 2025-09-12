@@ -61,13 +61,13 @@ class ReplyView(View):
     template_name_htmx: str
     template_name_quick_reply: str = "misago/quick_reply/index.html"
 
-    def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
         formset = self.get_formset(request, thread)
         return self.render(request, thread, formset)
 
-    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
         formset = self.get_formset(request, thread)
 
         if not formset.is_request_preview(request):
@@ -278,8 +278,8 @@ class ReplyView(View):
 
 
 class ThreadReplyView(ReplyView, ThreadView):
-    template_name: str = "misago/reply_thread/index.html"
-    template_name_htmx: str = "misago/reply_thread/form.html"
+    template_name: str = "misago/thread_reply/index.html"
+    template_name_htmx: str = "misago/thread_reply/form.html"
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
@@ -315,7 +315,7 @@ class ThreadReplyView(ReplyView, ThreadView):
 
     def get_form_url(self, request: HttpRequest, thread: Thread) -> None:
         return reverse(
-            "misago:thread-reply", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-reply", kwargs={"thread_id": thread.id, "slug": thread.slug}
         )
 
     def get_redirect_response(
@@ -330,8 +330,8 @@ class ThreadReplyView(ReplyView, ThreadView):
 
 
 class PrivateThreadReplyView(ReplyView, PrivateThreadView):
-    template_name: str = "misago/reply_private_thread/index.html"
-    template_name_htmx: str = "misago/reply_private_thread/form.html"
+    template_name: str = "misago/private_thread_reply/index.html"
+    template_name_htmx: str = "misago/private_thread_reply/form.html"
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
@@ -369,7 +369,8 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
 
     def get_form_url(self, request: HttpRequest, thread: Thread) -> None:
         return reverse(
-            "misago:private-thread-reply", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:private-thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
 
     def get_redirect_response(

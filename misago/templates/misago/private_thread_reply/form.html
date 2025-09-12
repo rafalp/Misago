@@ -10,10 +10,10 @@
   {% endif %}
 
   <form 
-    action="{% url 'misago:thread-reply' id=thread.id slug=thread.slug %}"
+    action="{% url 'misago:private-thread-reply' thread_id=thread.id slug=thread.slug %}"
     method="post"
     enctype="multipart/form-data"
-    hx-post="{% url 'misago:thread-reply' id=thread.id slug=thread.slug %}"
+    hx-post="{% url 'misago:private-thread-reply' thread_id=thread.id slug=thread.slug %}"
     hx-trigger="submit"
     hx-target="#misago-htmx-root"
     hx-swap="outerHTML"
