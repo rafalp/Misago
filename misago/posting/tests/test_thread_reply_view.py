@@ -466,12 +466,41 @@ def test_thread_reply_view_merges_reply_with_users_recent_post(
     )
     assert response.status_code == 302
 
-    reply = thread.post_set.last()
+    reply.refresh_from_db()
 
     assert (
         response["location"]
         == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
         + f"#post-{reply.id}"
     )
+
+    assert reply.original == "Previous message\n\nReply contents"
+
+
+def test_thread_reply_view_merges_reply_with_users_recent_post_in_htmx(
+    thread_reply_factory, user, user_client, thread
+):
+    reply = thread_reply_factory(thread, poster=user, original="Previous message")
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={
+                "id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 200
+
+    reply.refresh_from_db()
+
+    assert_contains(response, f"post-{reply.id}")
+    assert_contains(response, reply.parsed)
 
     assert reply.original == "Previous message\n\nReply contents"

@@ -8,7 +8,7 @@ from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...posting.forms import PostForm
-from ...posting.formsets import PostingFormset
+from ...posting.formsets import Formset
 from ...readtracker.models import ReadCategory
 from ...readtracker.tracker import mark_thread_read
 from ...test import (
@@ -293,7 +293,7 @@ def test_reply_thread_view_previews_message(user_client, thread):
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            PostingFormset.preview_action: "true",
+            Formset.preview_action: "true",
             "posting-post-post": "Reply contents",
         },
     )
@@ -308,7 +308,7 @@ def test_reply_thread_view_previews_message_in_htmx(user_client, thread):
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            PostingFormset.preview_action: "true",
+            Formset.preview_action: "true",
             "posting-post-post": "Reply contents",
         },
         headers={"hx-request": "true"},
@@ -324,7 +324,7 @@ def test_reply_thread_view_previews_message_in_quick_reply(user_client, thread):
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            PostingFormset.preview_action: "true",
+            Formset.preview_action: "true",
             "posting-post-post": "Reply contents",
             "quick_reply": "true",
         },
@@ -342,7 +342,7 @@ def test_reply_thread_view_previews_message_in_quick_reply_with_htmx(
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            PostingFormset.preview_action: "true",
+            Formset.preview_action: "true",
             "posting-post-post": "Reply contents",
             "quick_reply": "true",
         },
@@ -509,7 +509,7 @@ def test_reply_thread_view_doesnt_append_reply_to_user_recent_post_in_preview(
             },
         ),
         {
-            PostingFormset.preview_action: "true",
+            Formset.preview_action: "true",
             "posting-post-post": "Reply contents",
         },
     )
@@ -768,7 +768,7 @@ def test_reply_thread_view_uploads_attachment_on_submit(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
 def test_reply_thread_view_uploads_attachment_on_preview_or_upload(
     action_name, user, user_client, thread, teardown_attachments
@@ -810,7 +810,7 @@ def test_reply_thread_view_uploads_attachment_on_preview_or_upload(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
 def test_reply_thread_view_displays_image_attachment(
     action_name, user_client, thread, user_image_attachment
@@ -841,7 +841,7 @@ def test_reply_thread_view_displays_image_attachment(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
 def test_reply_thread_view_displays_image_with_thumbnail_attachment(
     action_name, user_client, thread, user_image_thumbnail_attachment
@@ -872,7 +872,7 @@ def test_reply_thread_view_displays_image_with_thumbnail_attachment(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
 def test_reply_thread_view_displays_video_attachment(
     action_name, user_client, thread, user_video_attachment
@@ -903,7 +903,7 @@ def test_reply_thread_view_displays_video_attachment(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
 def test_reply_thread_view_displays_file_attachment(
     action_name, user_client, thread, user_text_attachment
@@ -992,7 +992,7 @@ def test_reply_thread_view_adds_attachment_to_deleted_list(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
 def test_reply_thread_view_maintains_deleted_attachments_list(
     action_name, user_client, thread, user_text_attachment
@@ -1072,7 +1072,7 @@ def test_reply_thread_view_embeds_attachments_in_preview(
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {
-            PostingFormset.preview_action: "true",
+            Formset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_image_attachment.id)],
             "posting-post-post": (
                 f"Attachment: <attachment={user_image_attachment.name}:{user_image_attachment.id}>"

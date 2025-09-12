@@ -20,9 +20,9 @@ class ValidatePostedContentsHookAction(Protocol):
 
     # Arguments
 
-    ## `formset: PostingFormset`
+    ## `formset: Formset`
 
-    An instance of the `PostingFormset` subclass specific to the posted contents.
+    An instance of the `Formset` subclass specific to the posted contents.
 
     ## `state: State`
 

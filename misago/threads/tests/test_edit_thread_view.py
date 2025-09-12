@@ -8,7 +8,7 @@ from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...posting.forms import PostForm
-from ...posting.formsets import PostingFormset
+from ...posting.formsets import Formset
 from ...test import (
     assert_contains,
     assert_contains_element,
@@ -432,7 +432,7 @@ def test_edit_thread_view_previews_message(user_client, user_thread):
         ),
         {
             "posting-post-post": "How's going?",
-            PostingFormset.preview_action: "true",
+            Formset.preview_action: "true",
         },
     )
     assert_contains(response, "Edit thread")
@@ -447,7 +447,7 @@ def test_edit_thread_view_previews_message_in_htmx(user_client, user_thread):
         ),
         {
             "posting-post-post": "How's going?",
-            PostingFormset.preview_action: "true",
+            Formset.preview_action: "true",
         },
         headers={"hx-request": "true"},
     )
@@ -464,7 +464,7 @@ def test_edit_thread_view_previews_message_inline_in_htmx(user_client, user_thre
         + "?inline=true",
         {
             "posting-post-post": "How's going?",
-            PostingFormset.preview_action: "true",
+            Formset.preview_action: "true",
         },
         headers={"hx-request": "true"},
     )
@@ -649,7 +649,7 @@ def test_edit_thread_view_uploads_attachment_on_submit(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
 def test_edit_thread_view_uploads_attachment_on_preview_or_upload(
     action_name, user, user_client, user_thread, teardown_attachments
@@ -692,7 +692,7 @@ def test_edit_thread_view_uploads_attachment_on_preview_or_upload(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
 def test_edit_thread_view_displays_image_attachment(
     action_name, user_client, user_thread, user_image_attachment
@@ -724,7 +724,7 @@ def test_edit_thread_view_displays_image_attachment(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
 def test_edit_thread_view_displays_image_with_thumbnail_attachment(
     action_name, user_client, user_thread, user_image_thumbnail_attachment
@@ -756,7 +756,7 @@ def test_edit_thread_view_displays_image_with_thumbnail_attachment(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
 def test_edit_thread_view_displays_video_attachment(
     action_name, user_client, user_thread, user_video_attachment
@@ -788,7 +788,7 @@ def test_edit_thread_view_displays_video_attachment(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
 def test_edit_thread_view_displays_file_attachment(
     action_name, user_client, user_thread, user_text_attachment
@@ -883,7 +883,7 @@ def test_edit_thread_view_adds_attachment_to_deleted_list(
 
 
 @pytest.mark.parametrize(
-    "action_name", (PostingFormset.preview_action, PostForm.upload_action)
+    "action_name", (Formset.preview_action, PostForm.upload_action)
 )
 def test_edit_thread_view_maintains_deleted_attachments_list(
     action_name, user_client, user_thread, user_text_attachment
@@ -1271,7 +1271,7 @@ def test_edit_thread_view_embeds_attachments_in_preview(
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         ),
         {
-            PostingFormset.preview_action: "true",
+            Formset.preview_action: "true",
             PostForm.attachment_ids_field: [str(user_image_attachment.id)],
             "posting-title-title": "Edited title",
             "posting-post-post": (
