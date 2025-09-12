@@ -1,12 +1,12 @@
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Protocol, Union
 
 from django.core.exceptions import ValidationError
 
 from ...plugins.hooks import ActionHook
 
 if TYPE_CHECKING:
-    from ..formsets import PostingFormset
-    from ..state import PostingState
+    from ..formsets import Formset, TabbedFormset
+    from ..state import State
 
 
 class ValidatePostedContentsHookAction(Protocol):
@@ -20,16 +20,16 @@ class ValidatePostedContentsHookAction(Protocol):
 
     # Arguments
 
-    ## `formset: PostingFormset`
+    ## `formset: Formset`
 
-    An instance of the `PostingFormset` subclass specific to the posted contents.
+    An instance of the `Formset` subclass specific to the posted contents.
 
-    ## `state: PostingState`
+    ## `state: State`
 
-    An instance of the `PostingState` subclass specific to the posted contents.
+    An instance of the `State` subclass specific to the posted contents.
     """
 
-    def __call__(self, formset: "PostingFormset", state: "PostingState"): ...
+    def __call__(self, formset: Union["Formset", "TabbedFormset"], state: "State"): ...
 
 
 class ValidatePostedContentsHook(ActionHook[ValidatePostedContentsHookAction]):
@@ -73,7 +73,7 @@ class ValidatePostedContentsHook(ActionHook[ValidatePostedContentsHookAction]):
 
     __slots__ = ActionHook.__slots__
 
-    def __call__(self, formset: "PostingFormset", state: "PostingState"):
+    def __call__(self, formset: Union["Formset", "TabbedFormset"], state: "State"):
         if self._cache is None:
             self._cache = self._actions_first + self._actions_last
         if not self._cache:

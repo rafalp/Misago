@@ -15,7 +15,7 @@ HOOKS_MODULES = (
     "misago.permissions.hooks",
     "misago.polls.hooks",
     "misago.posting.hooks",
-    "misago.privatethreadmembers.hooks",
+    "misago.privatethreads.hooks",
     "misago.threads.hooks",
     "misago.threadupdates.hooks",
     "misago.users.hooks",

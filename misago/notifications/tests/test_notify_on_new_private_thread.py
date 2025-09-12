@@ -1,6 +1,6 @@
 import pytest
 
-from ...privatethreadmembers.models import PrivateThreadMember
+from ...privatethreads.models import PrivateThreadMember
 from ...users.bans import ban_user
 from ..enums import NotificationVerb
 from ..models import Notification, WatchedThread

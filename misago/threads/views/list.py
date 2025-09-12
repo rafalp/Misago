@@ -203,12 +203,12 @@ class ListView(View):
 
         return {
             "absolute_url": reverse("misago:thread", kwargs=kwargs),
-            "last_post_url": reverse("misago:thread-last-post", kwargs=kwargs),
+            "last_post_url": reverse("misago:thread-post-last", kwargs=kwargs),
             "unapproved_post_url": reverse(
-                "misago:thread-unapproved-post", kwargs=kwargs
+                "misago:thread-post-unapproved", kwargs=kwargs
             ),
-            "unread_post_url": reverse("misago:thread-unread-post", kwargs=kwargs),
-            "solution_post_url": reverse("misago:thread-solution-post", kwargs=kwargs),
+            "unread_post_url": reverse("misago:thread-post-unread", kwargs=kwargs),
+            "solution_post_url": reverse("misago:thread-post-solution", kwargs=kwargs),
         }
 
     def post_mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
@@ -663,7 +663,7 @@ class ThreadsListView(ListView):
 
     def get_start_thread_url(self, request: HttpRequest) -> str | None:
         if request.user_permissions.categories[CategoryPermission.START]:
-            return reverse("misago:start-thread")
+            return reverse("misago:thread-start")
 
     def get_moderation_actions(
         self, request: HttpRequest
@@ -1120,8 +1120,8 @@ class CategoryThreadsListView(ListView):
             return None
         else:
             return reverse(
-                "misago:start-thread",
-                kwargs={"id": category.id, "slug": category.slug},
+                "misago:thread-start",
+                kwargs={"category_id": category.id, "slug": category.slug},
             )
 
     def is_category_unread(self, user: "User", category: Category) -> bool:
@@ -1449,12 +1449,9 @@ class PrivateThreadsListView(ListView):
 
         return {
             "absolute_url": reverse("misago:private-thread", kwargs=kwargs),
-            "last_post_url": reverse("misago:private-thread-last-post", kwargs=kwargs),
-            "unapproved_post_url": reverse(
-                "misago:private-thread-unapproved-post", kwargs=kwargs
-            ),
+            "last_post_url": reverse("misago:private-thread-post-last", kwargs=kwargs),
             "unread_post_url": reverse(
-                "misago:private-thread-unread-post", kwargs=kwargs
+                "misago:private-thread-post-unread", kwargs=kwargs
             ),
         }
 
@@ -1472,7 +1469,7 @@ class PrivateThreadsListView(ListView):
             check_start_private_threads_permission(request.user_permissions)
 
         if can_start_thread:
-            return reverse("misago:start-private-thread")
+            return reverse("misago:private-thread-start")
 
         return None
 

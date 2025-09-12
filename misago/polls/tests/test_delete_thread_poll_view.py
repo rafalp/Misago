@@ -11,7 +11,7 @@ def test_delete_thread_poll_view_deletes_poll(moderator_client, thread, poll):
 
     response = moderator_client.post(
         reverse(
-            "misago:delete-thread-poll",
+            "misago:thread-poll-delete",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -38,7 +38,7 @@ def test_delete_thread_poll_view_returns_redirect_to_next_thread_url(
 
     response = moderator_client.post(
         reverse(
-            "misago:delete-thread-poll",
+            "misago:thread-poll-delete",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {"next": thread_url},
@@ -52,7 +52,7 @@ def test_delete_thread_poll_view_returns_redirect_to_default_thread_url_if_next_
 ):
     response = moderator_client.post(
         reverse(
-            "misago:delete-thread-poll",
+            "misago:thread-poll-delete",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {"next": "invalid"},
@@ -66,7 +66,7 @@ def test_delete_thread_poll_view_returns_redirect_to_default_thread_url_if_next_
 def test_delete_thread_poll_view_returns_404_if_thread_doesnt_exist(moderator_client):
     response = moderator_client.post(
         reverse(
-            "misago:delete-thread-poll",
+            "misago:thread-poll-delete",
             kwargs={"id": 1, "slug": "invalid"},
         )
     )
@@ -80,7 +80,7 @@ def test_delete_thread_poll_view_returns_404_if_thread_has_no_poll(
 
     response = moderator_client.post(
         reverse(
-            "misago:delete-thread-poll",
+            "misago:thread-poll-delete",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -94,7 +94,7 @@ def test_delete_thread_poll_view_checks_category_permission(user_client, thread,
 
     response = user_client.post(
         reverse(
-            "misago:delete-thread-poll",
+            "misago:thread-poll-delete",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -114,7 +114,7 @@ def test_delete_thread_poll_view_checks_thread_permission(user_client, thread, p
 
     response = user_client.post(
         reverse(
-            "misago:delete-thread-poll",
+            "misago:thread-poll-delete",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -133,7 +133,7 @@ def test_delete_thread_poll_view_checks_delete_poll_permission(
 
     response = user_client.post(
         reverse(
-            "misago:delete-thread-poll",
+            "misago:thread-poll-delete",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )

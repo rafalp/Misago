@@ -2,7 +2,7 @@ from django import forms
 from django.http import HttpRequest
 from django.utils.translation import pgettext_lazy
 
-from ..state import StartPostingState
+from ..state import StartState
 from ..validators import validate_thread_title
 from .base import PostingForm
 
@@ -40,7 +40,7 @@ class TitleForm(PostingForm):
         )
         return data
 
-    def update_state(self, state: StartPostingState):
+    def update_state(self, state: StartState):
         state.set_thread_title(self.cleaned_data["title"])
 
 

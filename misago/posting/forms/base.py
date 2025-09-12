@@ -1,11 +1,11 @@
 from django import forms
 from django.http import HttpRequest
 
-from ..state.base import PostingState
+from ..state.state import State
 
 
 class PostingForm(forms.Form):
-    def update_state(self, state: PostingState):
+    def update_state(self, state: State):
         pass
 
     @classmethod

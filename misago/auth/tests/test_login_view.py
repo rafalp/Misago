@@ -130,22 +130,22 @@ def test_login_view_displays_delegated_page_if_auth_is_delegated(db, client):
     assert_contains(response, "Sign in with OAuth2")
 
 
-def test_login_view_displays_error_if_username_is_missing(db, client):
+def test_login_view_shows_error_if_username_is_missing(db, client):
     response = client.post(reverse("misago:login"), {"password": "password"})
     assert_contains(response, "Fill out all fields.")
 
 
-def test_login_view_displays_error_if_password_is_missing(db, client):
+def test_login_view_shows_error_if_password_is_missing(db, client):
     response = client.post(reverse("misago:login"), {"username": "username"})
     assert_contains(response, "Fill out all fields.")
 
 
-def test_login_view_displays_error_if_username_and_password_is_missing(db, client):
+def test_login_view_shows_error_if_username_and_password_is_missing(db, client):
     response = client.post(reverse("misago:login"))
     assert_contains(response, "Fill out all fields.")
 
 
-def test_login_view_displays_error_if_username_is_invalid(db, client):
+def test_login_view_shows_error_if_username_is_invalid(db, client):
     response = client.post(
         reverse("misago:login"),
         {"username": "invalid", "password": "invalid"},
@@ -153,7 +153,7 @@ def test_login_view_displays_error_if_username_is_invalid(db, client):
     assert_contains(response, "Login or password is incorrect.")
 
 
-def test_login_view_displays_error_if_password_is_invalid(client, user):
+def test_login_view_shows_error_if_password_is_invalid(client, user):
     response = client.post(
         reverse("misago:login"),
         {"username": user.username, "password": "invalid"},
@@ -161,7 +161,7 @@ def test_login_view_displays_error_if_password_is_invalid(client, user):
     assert_contains(response, "Login or password is incorrect.")
 
 
-def test_login_view_displays_error_if_user_account_is_deactivated(
+def test_login_view_shows_error_if_user_account_is_deactivated(
     client, user, user_password
 ):
     user.is_active = False
@@ -233,7 +233,7 @@ def test_login_view_excludes_misago_admins_from_ban_check(
     assert_contains(response, secondary_admin.username)
 
 
-def test_login_view_displays_error_if_user_needs_admin_activation(
+def test_login_view_shows_error_if_user_needs_admin_activation(
     client, user, user_password
 ):
     user.requires_activation = user.ACTIVATION_ADMIN
@@ -246,7 +246,7 @@ def test_login_view_displays_error_if_user_needs_admin_activation(
     assert_contains(response, "A site administrator has to activate your account")
 
 
-def test_login_view_displays_error_if_user_needs_user_activation(
+def test_login_view_shows_error_if_user_needs_user_activation(
     client, user, user_password
 ):
     user.requires_activation = user.ACTIVATION_USER

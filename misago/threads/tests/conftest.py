@@ -40,21 +40,3 @@ def hidden_category(root_category):
     hidden_category = Category(name="Hidden Category", slug="hidden-category")
     hidden_category.insert_at(root_category, position="last-child", save=True)
     return hidden_category
-
-
-@pytest.fixture
-def posted_contents_validator():
-    validate_posted_contents_hook.append_action(validate_spam_contents)
-    yield
-    validate_posted_contents_hook.clear_actions()
-
-
-def validate_spam_contents(formset, state):
-    # Check if posting form included thread title
-    if formset.title and "spam" in state.thread.title.lower():
-        raise ValidationError("Your message contains spam!")
-
-    if "spam" in state.post.original.lower():
-        raise ValidationError("Your message contains spam!")
-
-    raise ValidationError("Your message contains spam!")

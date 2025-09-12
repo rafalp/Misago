@@ -5,15 +5,15 @@ from ...parser.parse import ParsingResult, parse
 from ...posts.models import Post
 from ...threads.models import Thread
 from ..hooks import (
-    get_reply_private_thread_state_hook,
-    get_reply_thread_state_hook,
-    save_start_private_thread_state_hook,
-    save_start_thread_state_hook,
+    get_private_thread_reply_state_hook,
+    get_thread_reply_state_hook,
+    save_private_thread_reply_state_hook,
+    save_thread_reply_state_hook,
 )
-from .base import PostingState
+from .state import State
 
 
-class ReplyThreadState(PostingState):
+class ReplyState(State):
     # True if new reply was merged with the recent post
     is_merged: bool
 
@@ -40,9 +40,9 @@ class ReplyThreadState(PostingState):
 
     @transaction.atomic()
     def save(self):
-        save_start_thread_state_hook(self.save_action, self.request, self)
+        self.save_action(self.request, self)
 
-    def save_action(self, request: HttpRequest, state: "ReplyThreadState"):
+    def save_action(self, request: HttpRequest, state: "ReplyState"):
         self.save_post()
         self.save_attachments()
 
@@ -91,35 +91,41 @@ class ReplyThreadState(PostingState):
         self.update_object(self.user)
 
 
-class ReplyPrivateThreadState(ReplyThreadState):
+class ThreadReplyState(ReplyState):
     @transaction.atomic()
     def save(self):
-        save_start_private_thread_state_hook(self.save_action, self.request, self)
+        save_thread_reply_state_hook(self.save_action, self.request, self)
+
+
+class PrivateThreadReplyState(ReplyState):
+    @transaction.atomic()
+    def save(self):
+        save_private_thread_reply_state_hook(self.save_action, self.request, self)
 
 
 def get_reply_thread_state(
     request: HttpRequest, thread: Thread, post: Post | None = None
-) -> ReplyThreadState:
-    return get_reply_thread_state_hook(
+) -> ReplyState:
+    return get_thread_reply_state_hook(
         _get_reply_thread_state_action, request, thread, post
     )
 
 
 def _get_reply_thread_state_action(
     request: HttpRequest, thread: Thread, post: Post | None = None
-) -> ReplyThreadState:
-    return ReplyThreadState(request, thread, post)
+) -> ReplyState:
+    return ReplyState(request, thread, post)
 
 
 def get_reply_private_thread_state(
     request: HttpRequest, thread: Thread, post: Post | None = None
-) -> ReplyPrivateThreadState:
-    return get_reply_private_thread_state_hook(
+) -> PrivateThreadReplyState:
+    return get_private_thread_reply_state_hook(
         _get_reply_private_thread_state_action, request, thread, post
     )
 
 
 def _get_reply_private_thread_state_action(
     request: HttpRequest, thread: Thread, post: Post | None = None
-) -> ReplyPrivateThreadState:
-    return ReplyPrivateThreadState(request, thread, post)
+) -> PrivateThreadReplyState:
+    return PrivateThreadReplyState(request, thread, post)

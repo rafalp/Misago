@@ -8,34 +8,34 @@ from ...permissions.attachments import (
 from ...posts.models import Post
 from ..forms import create_post_form, create_title_form
 from ..hooks import (
-    get_edit_private_thread_formset_hook,
-    get_edit_private_thread_post_formset_hook,
-    get_edit_thread_formset_hook,
-    get_edit_thread_post_formset_hook,
+    get_private_thread_edit_formset_hook,
+    get_private_thread_post_edit_formset_hook,
+    get_thread_edit_formset_hook,
+    get_thread_post_edit_formset_hook,
 )
-from .formset import PostingFormset
+from .formset import Formset
 
 
-class EditThreadPostFormset(PostingFormset):
+class ThreadPostEditFormset(Formset):
     pass
 
 
-class EditPrivateThreadPostFormset(PostingFormset):
+class PrivateThreadPostEditFormset(Formset):
     pass
 
 
-def get_edit_thread_post_formset(
+def get_thread_post_edit_formset(
     request: HttpRequest, post: Post
-) -> EditThreadPostFormset:
-    return get_edit_thread_post_formset_hook(
-        _get_edit_thread_post_formset_action, request, post
+) -> ThreadPostEditFormset:
+    return get_thread_post_edit_formset_hook(
+        _get_thread_post_edit_formset_action, request, post
     )
 
 
-def _get_edit_thread_post_formset_action(
+def _get_thread_post_edit_formset_action(
     request: HttpRequest, post: Post
-) -> EditThreadPostFormset:
-    formset = EditThreadPostFormset()
+) -> ThreadPostEditFormset:
+    formset = ThreadPostEditFormset()
     formset.add_form(
         create_post_form(
             request,
@@ -49,24 +49,24 @@ def _get_edit_thread_post_formset_action(
     return formset
 
 
-def get_edit_private_thread_post_formset(
+def get_private_thread_post_edit_formset(
     request: HttpRequest, post: Post
-) -> EditPrivateThreadPostFormset:
-    return get_edit_private_thread_post_formset_hook(
-        _get_edit_private_thread_post_formset_action, request, post
+) -> PrivateThreadPostEditFormset:
+    return get_private_thread_post_edit_formset_hook(
+        _get_private_thread_post_edit_formset_action, request, post
     )
 
 
-def _get_edit_private_thread_post_formset_action(
+def _get_private_thread_post_edit_formset_action(
     request: HttpRequest, post: Post
-) -> EditPrivateThreadPostFormset:
+) -> PrivateThreadPostEditFormset:
     can_upload_attachments = False
     if request.settings.allow_private_threads_attachments:
         can_upload_attachments = can_upload_private_threads_attachments(
             request.user_permissions
         )
 
-    formset = EditPrivateThreadPostFormset()
+    formset = PrivateThreadPostEditFormset()
     formset.add_form(
         create_post_form(
             request,
@@ -78,22 +78,22 @@ def _get_edit_private_thread_post_formset_action(
     return formset
 
 
-class EditThreadFormset(PostingFormset):
+class ThreadEditFormset(Formset):
     pass
 
 
-class EditPrivateThreadFormset(PostingFormset):
+class PrivateThreadEditFormset(Formset):
     pass
 
 
-def get_edit_thread_formset(request: HttpRequest, post: Post) -> EditThreadFormset:
-    return get_edit_thread_formset_hook(_get_edit_thread_formset_action, request, post)
+def get_thread_edit_formset(request: HttpRequest, post: Post) -> ThreadEditFormset:
+    return get_thread_edit_formset_hook(_get_thread_edit_formset_action, request, post)
 
 
-def _get_edit_thread_formset_action(
+def _get_thread_edit_formset_action(
     request: HttpRequest, post: Post
-) -> EditThreadFormset:
-    formset = EditThreadFormset()
+) -> ThreadEditFormset:
+    formset = ThreadEditFormset()
     formset.add_form(create_title_form(request, initial=post.thread.title))
     formset.add_form(
         create_post_form(
@@ -108,24 +108,24 @@ def _get_edit_thread_formset_action(
     return formset
 
 
-def get_edit_private_thread_formset(
+def get_private_thread_edit_formset(
     request: HttpRequest, post: Post
-) -> EditPrivateThreadFormset:
-    return get_edit_private_thread_formset_hook(
-        _get_edit_private_thread_formset_action, request, post
+) -> PrivateThreadEditFormset:
+    return get_private_thread_edit_formset_hook(
+        _get_private_thread_edit_formset_action, request, post
     )
 
 
-def _get_edit_private_thread_formset_action(
+def _get_private_thread_edit_formset_action(
     request: HttpRequest, post: Post
-) -> EditPrivateThreadFormset:
+) -> PrivateThreadEditFormset:
     can_upload_attachments = False
     if request.settings.allow_private_threads_attachments:
         can_upload_attachments = can_upload_private_threads_attachments(
             request.user_permissions
         )
 
-    formset = EditPrivateThreadFormset()
+    formset = PrivateThreadEditFormset()
     formset.add_form(create_title_form(request, initial=post.thread.title))
     formset.add_form(
         create_post_form(

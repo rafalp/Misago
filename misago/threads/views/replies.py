@@ -30,13 +30,14 @@ from ...polls.models import Poll
 from ...polls.views import dispatch_thread_poll_view, get_poll_context_data
 from ...polls.votes import get_user_poll_votes
 from ...posting.formsets import (
-    ReplyPrivateThreadFormset,
-    ReplyThreadFormset,
-    get_reply_private_thread_formset,
-    get_reply_thread_formset,
+    PrivateThreadReplyFormset,
+    ThreadReplyFormset,
+    get_private_thread_reply_formset,
+    get_thread_reply_formset,
 )
 from ...posts.models import Post
-from ...privatethreadmembers.views import get_private_thread_members_context_data
+from ...posts.paginator import PostPaginatorPage
+from ...privatethreads.views.members import get_private_thread_members_context_data
 from ...readtracker.tracker import (
     get_unread_posts,
     mark_category_read,
@@ -54,7 +55,6 @@ from ..hooks import (
     get_thread_replies_page_thread_queryset_hook,
 )
 from ..models import Thread
-from ..paginator import ThreadRepliesPage
 from .generic import PrivateThreadView, ThreadView
 
 if TYPE_CHECKING:
@@ -159,7 +159,7 @@ class RepliesView(View):
         self,
         request: HttpRequest,
         thread: Thread,
-        page: ThreadRepliesPage,
+        page: PostPaginatorPage,
         posts: list[Post],
     ) -> list[ThreadUpdate]:
         queryset = self.get_thread_updates_queryset(request, thread)
@@ -248,7 +248,7 @@ class RepliesView(View):
 
     def get_reply_formset(
         self, request: HttpRequest, thread: Thread
-    ) -> ReplyThreadFormset:
+    ) -> ThreadReplyFormset:
         raise NotImplementedError
 
 
@@ -338,13 +338,13 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
     def get_reply_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
-            "misago:reply-thread", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-reply", kwargs={"thread_id": thread.id, "slug": thread.slug}
         )
 
     def get_reply_formset(
         self, request: HttpRequest, thread: Thread
-    ) -> ReplyThreadFormset:
-        return get_reply_thread_formset(request, thread)
+    ) -> ThreadReplyFormset:
+        return get_thread_reply_formset(request, thread)
 
     def get_poll(self, request: HttpRequest, thread: Thread) -> Poll | None:
         if thread.has_poll:
@@ -466,13 +466,14 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
 
     def get_reply_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
-            "misago:reply-private-thread", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:private-thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
 
     def get_reply_formset(
         self, request: HttpRequest, thread: Thread
-    ) -> ReplyPrivateThreadFormset:
-        return get_reply_private_thread_formset(request, thread)
+    ) -> PrivateThreadReplyFormset:
+        return get_private_thread_reply_formset(request, thread)
 
 
 thread_replies = ThreadRepliesView.as_view()

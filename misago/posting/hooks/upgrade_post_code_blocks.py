@@ -25,8 +25,8 @@ class UpgradePostCodeBlocksHookFilter(Protocol):
 
     # Arguments
 
-    Misago function used to upgrade a post's code blocks or the next
-    filter function from another plugin.
+    The next function registered in this hook, either a custom function or
+    Misago’s default.
 
     See the [action](#action) section for details.
 

@@ -5,10 +5,10 @@ This hook allows plugins to replace or extend the standard logic for validating 
 
 ## Location
 
-This hook can be imported from `misago.privatethreadmembers.hooks`:
+This hook can be imported from `misago.privatethreads.hooks`:
 
 ```python
-from misago.privatethreadmembers.hooks import validate_new_private_thread_member_hook
+from misago.privatethreads.hooks import validate_new_private_thread_member_hook
 ```
 
 
@@ -103,7 +103,7 @@ from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.utils import timezone
 from misago.permissions.proxy import UserPermissionsProxy
-from misago.privatethreadmembers.hooks import validate_new_private_thread_member_hook
+from misago.privatethreads.hooks import validate_new_private_thread_member_hook
 
 
 @validate_new_private_thread_member_hook.append_filter

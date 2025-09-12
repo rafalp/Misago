@@ -1,26 +1,15 @@
 from django.urls import path
 
-from .views.edit import (
-    edit_private_thread,
-    edit_private_thread_post,
-    edit_thread,
-    edit_thread_post,
-)
 from .views.list import category_threads, private_threads, threads
-from .views.redirect import (
-    PostRedirectView,
-    PrivateThreadLastPostRedirectView,
-    PrivateThreadUnapprovedPostRedirectView,
-    PrivateThreadUnreadPostRedirectView,
-    ThreadLastPostRedirectView,
-    ThreadSolutionRedirectView,
-    ThreadUnapprovedPostRedirectView,
-    ThreadUnreadPostRedirectView,
+from .views.post import (
+    ThreadPostLastView,
+    ThreadPostSolutionView,
+    ThreadPostUnapprovedView,
+    ThreadPostUnreadView,
+    ThreadPostView,
 )
 from .views.replies import private_thread_replies, thread_replies
-from .views.reply import reply_private_thread, reply_thread
 from .views.selectcategory import SelectCategoryView
-from .views.start import start_private_thread, start_thread
 from .views.threadupdates import (
     DeletePrivateThreadView,
     DeleteThreadUpdateView,
@@ -33,19 +22,9 @@ from .views.threadupdates import (
 
 urlpatterns = [
     path(
-        "start-thread/",
+        "threads/start/",
         SelectCategoryView.as_view(),
-        name="start-thread",
-    ),
-    path(
-        "c/<slug:slug>/<int:id>/start-thread/",
-        start_thread,
-        name="start-thread",
-    ),
-    path(
-        "private/start-thread/",
-        start_private_thread,
-        name="start-private-thread",
+        name="thread-start",
     ),
     path(
         "threads/",
@@ -99,69 +78,29 @@ urlpatterns = [
         name="private-thread",
     ),
     path(
-        "t/<slug:slug>/<int:id>/last/",
-        ThreadLastPostRedirectView.as_view(),
-        name="thread-last-post",
+        "t/<slug:slug>/<int:id>/post/<int:post_id>/",
+        ThreadPostView.as_view(),
+        name="thread-post",
     ),
     path(
-        "t/<slug:slug>/<int:id>/unread/",
-        ThreadUnreadPostRedirectView.as_view(),
-        name="thread-unread-post",
+        "t/<slug:slug>/<int:id>/last/",
+        ThreadPostLastView.as_view(),
+        name="thread-post-last",
     ),
     path(
         "t/<slug:slug>/<int:id>/unapproved/",
-        ThreadUnapprovedPostRedirectView.as_view(),
-        name="thread-unapproved-post",
+        ThreadPostUnapprovedView.as_view(),
+        name="thread-post-unapproved",
+    ),
+    path(
+        "t/<slug:slug>/<int:id>/unread/",
+        ThreadPostUnreadView.as_view(),
+        name="thread-post-unread",
     ),
     path(
         "t/<slug:slug>/<int:id>/solution/",
-        ThreadSolutionRedirectView.as_view(),
-        name="thread-solution-post",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/last/",
-        PrivateThreadLastPostRedirectView.as_view(),
-        name="private-thread-last-post",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/unread/",
-        PrivateThreadUnreadPostRedirectView.as_view(),
-        name="private-thread-unread-post",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/unapproved/",
-        PrivateThreadUnapprovedPostRedirectView.as_view(),
-        name="private-thread-unapproved-post",
-    ),
-    path(
-        "t/<slug:slug>/<int:id>/reply/",
-        reply_thread,
-        name="reply-thread",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/reply/",
-        reply_private_thread,
-        name="reply-private-thread",
-    ),
-    path(
-        "t/<slug:slug>/<int:id>/edit/",
-        edit_thread,
-        name="edit-thread",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/edit/",
-        edit_private_thread,
-        name="edit-private-thread",
-    ),
-    path(
-        "t/<slug:slug>/<int:id>/edit/<int:post>/",
-        edit_thread_post,
-        name="edit-thread",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/edit/<int:post>/",
-        edit_private_thread_post,
-        name="edit-private-thread",
+        ThreadPostSolutionView.as_view(),
+        name="thread-post-solution",
     ),
     path(
         "t/<slug:slug>/<int:id>/hide-update/<int:thread_update>/",
@@ -192,10 +131,5 @@ urlpatterns = [
         "p/<slug:slug>/<int:id>/delete-update/<int:thread_update>/",
         DeletePrivateThreadView.as_view(),
         name="delete-private-thread-update",
-    ),
-    path(
-        "post/<int:id>/",
-        PostRedirectView.as_view(),
-        name="post",
     ),
 ]

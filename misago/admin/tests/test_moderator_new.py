@@ -117,7 +117,7 @@ def test_moderator_new_user_form_redirects_to_existing_moderator(
     )
 
 
-def test_moderator_new_group_form_displays_error_if_group_is_default(
+def test_moderator_new_group_form_shows_error_if_group_is_default(
     admin_client, custom_group
 ):
     custom_group.is_default = True
@@ -135,7 +135,7 @@ def test_moderator_new_group_form_displays_error_if_group_is_default(
     )
 
 
-def test_moderator_new_group_form_displays_error_if_group_is_protected(
+def test_moderator_new_group_form_shows_error_if_group_is_protected(
     admin_client, guests_group
 ):
     response = admin_client.get(

@@ -54,29 +54,29 @@ def child_category(default_category, guests_group, members_group):
     return category
 
 
-def test_select_category_view_displays_error_page_if_guest_cant_start_thread_in_any_category(
+def test_select_category_view_shows_error_page_if_guest_cant_start_thread_in_any_category(
     client, default_category
 ):
     CategoryGroupPermission.objects.filter(
         category=default_category, permission=CategoryPermission.START
     ).delete()
 
-    response = client.get(reverse("misago:start-thread"))
+    response = client.get(reverse("misago:thread-start"))
     assert_contains(response, "You can&#x27;t start new threads.", status_code=403)
 
 
-def test_select_category_view_displays_error_page_if_user_cant_start_thread_in_any_category(
+def test_select_category_view_shows_error_page_if_user_cant_start_thread_in_any_category(
     user_client, default_category
 ):
     CategoryGroupPermission.objects.filter(
         category=default_category, permission=CategoryPermission.START
     ).delete()
 
-    response = user_client.get(reverse("misago:start-thread"))
+    response = user_client.get(reverse("misago:thread-start"))
     assert_contains(response, "You can&#x27;t start new threads.", status_code=403)
 
 
-def test_select_category_view_displays_error_message_in_htmx_if_guest_cant_start_thread_in_any_category(
+def test_select_category_view_shows_error_message_in_htmx_if_guest_cant_start_thread_in_any_category(
     client, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -84,14 +84,14 @@ def test_select_category_view_displays_error_message_in_htmx_if_guest_cant_start
     ).delete()
 
     response = client.get(
-        reverse("misago:start-thread"),
+        reverse("misago:thread-start"),
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Start new thread in")
     assert_contains(response, "You can't start new threads.")
 
 
-def test_select_category_view_displays_error_message_in_htmx_if_user_cant_start_thread_in_any_category(
+def test_select_category_view_shows_error_message_in_htmx_if_user_cant_start_thread_in_any_category(
     user_client, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -99,7 +99,7 @@ def test_select_category_view_displays_error_message_in_htmx_if_user_cant_start_
     ).delete()
 
     response = user_client.get(
-        reverse("misago:start-thread"),
+        reverse("misago:thread-start"),
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Start new thread in")
@@ -109,13 +109,13 @@ def test_select_category_view_displays_error_message_in_htmx_if_user_cant_start_
 def test_select_category_view_displays_category_if_guest_can_start_thread_in_it(
     client, default_category
 ):
-    response = client.get(reverse("misago:start-thread"))
+    response = client.get(reverse("misago:thread-start"))
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -123,13 +123,13 @@ def test_select_category_view_displays_category_if_guest_can_start_thread_in_it(
 def test_select_category_view_displays_category_if_user_can_start_thread_in_it(
     user_client, default_category
 ):
-    response = user_client.get(reverse("misago:start-thread"))
+    response = user_client.get(reverse("misago:thread-start"))
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -138,15 +138,15 @@ def test_select_category_view_displays_category_in_htmx_if_guest_can_start_threa
     client, guests_group, default_category
 ):
     response = client.get(
-        reverse("misago:start-thread"),
+        reverse("misago:thread-start"),
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -155,15 +155,15 @@ def test_select_category_view_displays_category_in_htmx_if_user_can_start_thread
     user_client, default_category
 ):
     response = user_client.get(
-        reverse("misago:start-thread"),
+        reverse("misago:thread-start"),
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -175,20 +175,20 @@ def test_select_category_view_excludes_category_if_guest_cant_start_thread_in_it
         category=default_category, permission=CategoryPermission.START
     ).delete()
 
-    response = client.get(reverse("misago:start-thread"))
+    response = client.get(reverse("misago:thread-start"))
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -201,22 +201,22 @@ def test_select_category_view_excludes_category_in_htmx_if_guest_cant_start_thre
     ).delete()
 
     response = client.get(
-        reverse("misago:start-thread"),
+        reverse("misago:thread-start"),
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -228,20 +228,20 @@ def test_select_category_view_excludes_category_if_user_cant_start_thread_in_it(
         category=default_category, permission=CategoryPermission.START
     ).delete()
 
-    response = user_client.get(reverse("misago:start-thread"))
+    response = user_client.get(reverse("misago:thread-start"))
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -254,22 +254,22 @@ def test_select_category_view_excludes_category_in_htmx_if_user_cant_start_threa
     ).delete()
 
     response = user_client.get(
-        reverse("misago:start-thread"),
+        reverse("misago:thread-start"),
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -280,20 +280,20 @@ def test_select_category_view_excludes_empty_vanilla_category(
     default_category.is_vanilla = True
     default_category.save()
 
-    response = user_client.get(reverse("misago:start-thread"))
+    response = user_client.get(reverse("misago:thread-start"))
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -305,22 +305,22 @@ def test_select_category_view_excludes_empty_vanilla_category_in_htmx(
     default_category.save()
 
     response = user_client.get(
-        reverse("misago:start-thread"),
+        reverse("misago:thread-start"),
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -331,20 +331,20 @@ def test_select_category_view_includes_vanilla_category_with_children(
     default_category.is_vanilla = True
     default_category.save()
 
-    response = user_client.get(reverse("misago:start-thread"))
+    response = user_client.get(reverse("misago:thread-start"))
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": child_category.id, "slug": child_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -356,22 +356,22 @@ def test_select_category_view_includes_vanilla_category_with_children_in_htmx(
     default_category.save()
 
     response = user_client.get(
-        reverse("misago:start-thread"),
+        reverse("misago:thread-start"),
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": child_category.id, "slug": child_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -383,20 +383,20 @@ def test_select_category_view_excludes_child_category_if_user_cant_start_thread_
         category=child_category, permission=CategoryPermission.START
     ).delete()
 
-    response = user_client.get(reverse("misago:start-thread"))
+    response = user_client.get(reverse("misago:thread-start"))
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": child_category.id, "slug": child_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
         ),
     )
 
@@ -409,22 +409,22 @@ def test_select_category_view_excludes_child_category_in_htmx_if_user_cant_start
     ).delete()
 
     response = user_client.get(
-        reverse("misago:start-thread"),
+        reverse("misago:thread-start"),
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": child_category.id, "slug": child_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
         ),
     )
 
@@ -438,13 +438,13 @@ def test_select_category_view_includes_closed_category_if_user_can_post_in_it(
     user.set_groups(members_group, [moderators_group])
     user.save()
 
-    response = user_client.get(reverse("misago:start-thread"))
+    response = user_client.get(reverse("misago:thread-start"))
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -459,15 +459,15 @@ def test_select_category_view_includes_closed_category_in_htmx_if_user_can_post_
     user.save()
 
     response = user_client.get(
-        reverse("misago:start-thread"),
+        reverse("misago:thread-start"),
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -478,20 +478,20 @@ def test_select_category_view_excludes_closed_category_if_user_cant_post_in_it(
     sibling_category.is_closed = True
     sibling_category.save()
 
-    response = user_client.get(reverse("misago:start-thread"))
+    response = user_client.get(reverse("misago:thread-start"))
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
 
@@ -503,21 +503,21 @@ def test_select_category_view_excludes_closed_category_in_htmx_if_user_cant_post
     sibling_category.save()
 
     response = user_client.get(
-        reverse("misago:start-thread"),
+        reverse("misago:thread-start"),
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Start new thread in")
     assert_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
-            "misago:start-thread",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            "misago:thread-start",
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )

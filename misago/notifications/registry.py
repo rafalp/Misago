@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Callable, Dict, overload
 from django.http import HttpRequest
 from django.utils.translation import pgettext
 
-from ..threads.views.redirect import get_redirect_to_post_response
+from ..posts.redirect import redirect_to_post
 from .enums import NotificationVerb
 from .exceptions import NotificationVerbError
 
@@ -164,7 +164,7 @@ def get_replied_notification_url(
     post = notification.post
     post.category = notification.category
 
-    response = get_redirect_to_post_response(request, post)
+    response = redirect_to_post(request, post)
 
     return response.headers["location"]
 

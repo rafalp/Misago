@@ -6,9 +6,9 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext
 
 from ...permissions.proxy import UserPermissionsProxy
-from ...privatethreadmembers.validators import validate_new_private_thread_member
+from ...privatethreads.validators import validate_new_private_thread_member
 from ...users.fields import UserMultipleChoiceField
-from ..state import StartPrivateThreadState
+from ..state import PrivateThreadStartState
 from .base import PostingForm
 
 if TYPE_CHECKING:
@@ -77,7 +77,7 @@ class MembersForm(PostingForm):
 
         return data
 
-    def update_state(self, state: StartPrivateThreadState):
+    def update_state(self, state: PrivateThreadStartState):
         state.set_members(self.cleaned_data["users"])
 
 

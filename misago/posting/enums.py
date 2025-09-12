@@ -1,6 +1,6 @@
 from enum import StrEnum
 
 
-class StartThreadFormsetTabs(StrEnum):
+class ThreadStartFormsetTabs(StrEnum):
     CONTENT = "content"
     POLL = "poll"

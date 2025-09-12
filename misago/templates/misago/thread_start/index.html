@@ -1,0 +1,85 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_forms %}
+
+
+{% block title %}
+  {% translate "Start new thread" context "start thread page" %} | {{ category }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-start-thread">
+  <div class="container page-container">
+
+    {% if preview %}
+      {% include "misago/posting/preview.html" %}
+    {% endif %}
+
+    <form 
+      action="{% url 'misago:thread-start' category_id=category.id slug=category.slug %}"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      {% csrf_token %}
+      <div class="panel panel-default panel-form">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            {% translate "Start new thread" context "start thread page" %}
+          </h3>
+        </div>
+        {% if formset.has_multiple_tabs %}
+          <div class="panel-body tab-group">
+            {% include "misago/posting/errors.html" %}
+            <div class="tab-group-nav">
+              <div class="tab-group-nav-scroll">
+                {% for tab in formset.get_tabs %}
+                  <a
+                    href="#{{ tab.id }}"
+                    class="tab-group-nav-item{% if formset.is_bound and not tab.is_valid %} tab-group-nav-item-error{% endif %}{% if forloop.first %} active{% endif %}"
+                    {% if formset.is_bound and not tab.is_valid %}title="{% translate 'Contains validation errors' context 'posting form' %}"{% endif %}
+                  >
+                    {% if formset.is_bound and not tab.is_valid %}
+                      <span class="tab-group-nav-bullet-danger"></span>
+                    {% endif %}
+                    {{ tab }}
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+            {% for tab in formset.get_tabs %}
+              <div class="tab-group-tab{% if forloop.first %} visible{% endif %}" misago-tab-group-tab="{{ tab.id }}">
+                <h4 class="tab-group-tab-header">{{ tab }}</h4>
+                {% for form in tab.get_forms %}
+                  {% include form.template_name with form=form post_control_large=True %}
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="panel-body">
+            {% include "misago/posting/errors.html" %}
+            {% for form in formset.get_forms %}
+              {% include form.template_name with form=form post_control_large=True %}
+            {% endfor %}
+          </div>
+        {% endif %}
+        <div class="panel-footer panel-footer-sticky">
+          <button class="btn btn-primary" type="submit">
+            {% translate "Start thread" context "start thread submit btn" %}
+          </button>
+          <button class="btn btn-secondary" type="submit" name="{{ formset.preview_action }}" value="true" formnovalidate>
+            {% translate "Preview" context "start thread preview btn" %}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}
+
+
+{% block modals %}
+{% include "misago/posting/markup_editor_modals.html" %}
+{% include "misago/posting/attachment_templates.html" %}
+{% include "misago/lightbox/index.html" %}
+{% endblock modals %}

@@ -5,12 +5,12 @@ from django.forms import Form
 from django.http import HttpRequest
 
 from ...collections.dicts import set_key_after, set_key_before
-from ...forms.formset import Formset
+from ...forms import formset
 from ..forms import MembersForm, PostForm, TitleForm
-from ..state.base import PostingState
+from ..state.state import State
 
 
-class PostingFormset(Formset):
+class Formset(formset.Formset):
     preview_action: str = "preview"
 
     errors: list[ValidationError]
@@ -31,7 +31,7 @@ class PostingFormset(Formset):
     def members(self) -> MembersForm | None:
         return self.forms.get(MembersForm.form_prefix)
 
-    def update_state(self, state: PostingState):
+    def update_state(self, state: State):
         for form in self.forms.values():
             if form.is_valid():
                 form.update_state(state)
@@ -59,36 +59,34 @@ class PostingFormset(Formset):
             form.clear_errors_in_upload()
 
 
-class TabbedPostingFormset(PostingFormset):
-    tabs: dict[str, "PostingFormsetTab"]
+class TabbedFormset(Formset):
+    tabs: dict[str, "FormsetTab"]
 
     def __init__(self):
         super().__init__()
         self.tabs = {}
 
-    def get_tabs(self) -> list["PostingFormsetTab"]:
+    def get_tabs(self) -> list["FormsetTab"]:
         return list(self.tabs.values())
 
-    def add_tab(self, tab_id: str, name: str) -> "PostingFormsetTab":
-        tab = PostingFormsetTab(tab_id, name)
+    def add_tab(self, tab_id: str, name: str) -> "FormsetTab":
+        tab = FormsetTab(tab_id, name)
         self.tabs[tab_id] = tab
         return tab
 
-    def add_tab_after(self, after: str, tab_id: str, name: str) -> "PostingFormsetTab":
+    def add_tab_after(self, after: str, tab_id: str, name: str) -> "FormsetTab":
         if after not in self.tabs:
             raise ValueError(f"Formset does not contain a tab with ID '{after}'.")
 
-        tab = PostingFormsetTab(tab_id, name)
+        tab = FormsetTab(tab_id, name)
         self.tabs = set_key_after(self.tabs, after, tab_id, tab)
         return tab
 
-    def add_tab_before(
-        self, before: str, tab_id: str, name: str
-    ) -> "PostingFormsetTab":
+    def add_tab_before(self, before: str, tab_id: str, name: str) -> "FormsetTab":
         if before not in self.tabs:
             raise ValueError(f"Formset does not contain a tab with ID '{before}'.")
 
-        tab = PostingFormsetTab(tab_id, name)
+        tab = FormsetTab(tab_id, name)
         self.tabs[tab_id] = tab
         self.tabs = set_key_before(self.tabs, before, tab_id, tab)
         return tab
@@ -148,7 +146,7 @@ class TabbedPostingFormset(PostingFormset):
         return tabs_with_forms > 1
 
 
-class PostingFormsetTab(Formset):
+class FormsetTab(Formset):
     id: str
     name: str
 

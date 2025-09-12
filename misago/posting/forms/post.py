@@ -13,7 +13,7 @@ from ...attachments.models import Attachment
 from ...attachments.upload import handle_attachments_upload
 from ...attachments.validators import validate_post_attachments_limit
 from ...parser.parse import ParsingResult, parse
-from ..state import PostingState
+from ..state import State
 from ..validators import validate_post
 from .base import PostingForm
 from .attachments import MultipleFileField
@@ -234,7 +234,7 @@ class PostForm(PostingForm):
 
         return cleaned_data
 
-    def update_state(self, state: PostingState):
+    def update_state(self, state: State):
         state.set_post_message(self.parsing_result)
         state.set_attachments(self.attachments)
         state.set_delete_attachments(self.deleted_attachments)
