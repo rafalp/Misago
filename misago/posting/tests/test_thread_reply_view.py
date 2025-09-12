@@ -62,7 +62,7 @@ def test_thread_reply_view_displays_error_404_to_users_without_browse_category_p
 
 
 def test_thread_reply_view_displays_error_404_to_users_who_cant_see_thread(
-    user_client, user, hidden_thread
+    user_client, hidden_thread
 ):
     response = user_client.get(
         reverse(
@@ -90,7 +90,7 @@ def test_thread_reply_view_displays_error_403_to_users_without_reply_category_pe
     assert_contains(response, "You can&#x27;t reply to threads in this category.", 403)
 
 
-def test_thread_reply_view_displays_error_403_to_users_without_reply_in_closed_category_permission(
+def test_thread_reply_view_displays_error_403_to_users_without_in_closed_category_permission(
     user_client, default_category, thread
 ):
     default_category.is_closed = True
@@ -105,7 +105,7 @@ def test_thread_reply_view_displays_error_403_to_users_without_reply_in_closed_c
     assert_contains(response, "This category is closed.", 403)
 
 
-def test_thread_reply_view_displays_error_403_to_users_without_reply_in_closed_thread_permission(
+def test_thread_reply_view_displays_error_403_to_users_without_in_closed_thread_permission(
     user_client, thread
 ):
     thread.is_closed = True
@@ -166,7 +166,7 @@ def test_thread_reply_view_displays_posting_form_to_users_with_hidden_thread_acc
     assert_contains(response, hidden_thread.title)
 
 
-def test_thread_reply_view_displays_posting_form_to_users_with_reply_in_closed_category_permission(
+def test_thread_reply_view_displays_posting_form_to_users_with_in_closed_category_permission(
     moderator_client, default_category, thread
 ):
     default_category.is_closed = True
@@ -185,7 +185,7 @@ def test_thread_reply_view_displays_posting_form_to_users_with_reply_in_closed_c
     assert_contains(response, thread.title)
 
 
-def test_thread_reply_view_displays_posting_form_to_users_with_reply_in_closed_thread_permission(
+def test_thread_reply_view_displays_posting_form_to_users_with_in_closed_thread_permission(
     moderator_client, thread
 ):
     thread.is_closed = True

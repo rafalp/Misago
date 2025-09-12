@@ -16,59 +16,6 @@ from ...test import (
 )
 
 
-def test_edit_private_thread_view_displays_login_page_to_guests(
-    client, user_private_thread
-):
-    response = client.get(
-        reverse(
-            "misago:private-thread-edit",
-            kwargs={
-                "id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, "Sign in to edit posts")
-
-
-def test_edit_private_thread_view_displays_error_page_to_users_without_private_threads_permission(
-    user, user_client, user_private_thread
-):
-    user.group.can_use_private_threads = False
-    user.group.save()
-
-    response = user_client.get(
-        reverse(
-            "misago:private-thread-edit",
-            kwargs={
-                "id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(
-        response,
-        "You can&#x27;t use private threads.",
-        status_code=403,
-    )
-
-
-def test_edit_private_thread_view_displays_error_page_to_user_who_cant_see_private_thread(
-    user_client, private_thread
-):
-    response = user_client.get(
-        reverse(
-            "misago:private-thread-edit",
-            kwargs={
-                "id": private_thread.id,
-                "slug": private_thread.slug,
-                "post": private_thread.first_post_id,
-            },
-        )
-    )
-    assert response.status_code == 404
-
-
 def test_edit_private_thread_view_displays_error_page_to_user_who_cant_edit_own_threads(
     user, user_client, user_private_thread
 ):

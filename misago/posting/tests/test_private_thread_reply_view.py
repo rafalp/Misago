@@ -46,7 +46,7 @@ def test_private_thread_reply_view_displays_error_403_to_users_without_private_t
     assert_contains(response, "You can&#x27;t use private threads.", 403)
 
 
-def test_private_thread_reply_view_displays_error_404_to_users_without_thread_access(
+def test_private_thread_reply_view_displays_error_404_to_users_who_cant_see_thread(
     user_client, private_thread
 ):
     response = user_client.get(
