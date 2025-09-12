@@ -11,8 +11,8 @@
 <form
   id="thread-poll-form"
   method="post"
-  action="{% url 'misago:thread-edit-poll' id=thread.id slug=thread.slug %}"
-  hx-post="{% url 'misago:thread-edit-poll' id=thread.id slug=thread.slug %}"
+  action="{% url 'misago:thread-poll-edit' id=thread.id slug=thread.slug %}"
+  hx-post="{% url 'misago:thread-poll-edit' id=thread.id slug=thread.slug %}"
 >
   {% csrf_token %}
   <div class="panel-body panel-poll-body">
