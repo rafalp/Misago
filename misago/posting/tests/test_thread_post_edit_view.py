@@ -230,3 +230,53 @@ def test_thread_post_edit_view_displays_error_403_to_users_without_protected_pos
         )
     )
     assert_contains(response, "You can&#x27;t edit protected posts.", 403)
+
+
+def test_thread_post_edit_view_displays_edit_form(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        )
+    )
+    assert_contains(response, "Edit post")
+    assert_contains(response, thread.title)
+    assert_contains(response, post.original)
+
+
+def test_thread_post_edit_view_displays_edit_form_for_moderator(
+    thread_reply_factory, moderator_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread-post-edit",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        )
+    )
+    assert_contains(response, "Edit post")
+    assert_contains(response, thread.title)
+    assert_contains(response, post.original)
+
+
+def test_thread_post_edit_view_displays_inline_edit_form_in_htmx(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        )
+        + "?inline=true",
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Save")
+    assert_contains(response, post.original)
+    assert_contains(response, "?inline=true")

@@ -89,3 +89,55 @@ def test_private_thread_edit_view_displays_error_403_to_users_who_cant_edit_othe
         )
     )
     assert_contains(response, "You can&#x27;t edit other users&#x27; threads.", 403)
+
+
+def test_private_thread_edit_view_displays_edit_form(user_client, user_private_thread):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, user_private_thread.title)
+    assert_contains(response, user_private_thread.first_post.original)
+
+
+def test_private_thread_edit_view_displays_edit_form_for_moderator(
+    moderator_client, user_private_thread
+):
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, user_private_thread.title)
+    assert_contains(response, user_private_thread.first_post.original)
+
+
+def test_private_thread_edit_view_displays_inline_edit_form_in_htmx(
+    user_client, user_private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + "?inline=true",
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Save")
+    assert_contains(response, user_private_thread.title)
+    assert_contains(response, user_private_thread.first_post.original)
+    assert_contains(response, "?inline=true")

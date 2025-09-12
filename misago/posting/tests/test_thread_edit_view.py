@@ -150,3 +150,53 @@ def test_thread_edit_view_displays_error_403_to_users_without_closed_thread_perm
         )
     )
     assert_contains(response, "This thread is closed.", 403)
+
+
+def test_thread_edit_view_displays_edit_form(user_client, user_thread):
+    response = user_client.get(
+        reverse(
+            "misago:thread-edit",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, user_thread.title)
+    assert_contains(response, user_thread.first_post.original)
+
+
+def test_thread_edit_view_displays_edit_form_for_moderator(
+    moderator_client, user_thread
+):
+    response = moderator_client.get(
+        reverse(
+            "misago:thread-edit",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edit thread")
+    assert_contains(response, user_thread.title)
+    assert_contains(response, user_thread.first_post.original)
+
+
+def test_thread_edit_view_displays_inline_edit_form_in_htmx(user_client, user_thread):
+    response = user_client.get(
+        reverse(
+            "misago:thread-edit",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+        + "?inline=true",
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Save")
+    assert_contains(response, user_thread.title)
+    assert_contains(response, user_thread.first_post.original)
+    assert_contains(response, "?inline=true")

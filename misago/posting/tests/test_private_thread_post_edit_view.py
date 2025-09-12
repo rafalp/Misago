@@ -145,3 +145,65 @@ def test_private_thread_post_edit_view_displays_error_403_to_users_who_cant_see_
         )
     )
     assert_contains(response, "You can&#x27;t edit hidden posts.", 403)
+
+
+def test_private_thread_post_edit_view_displays_edit_form(
+    thread_reply_factory, user_client, user, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edit",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        )
+    )
+    assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
+    assert_contains(response, post.original)
+
+
+def test_private_thread_post_edit_view_displays_edit_form_for_moderator(
+    thread_reply_factory, moderator_client, user, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster=user)
+
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread-post-edit",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        )
+    )
+    assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
+    assert_contains(response, post.original)
+
+
+def test_private_thread_post_edit_view_displays_inline_edit_form_in_htmx(
+    thread_reply_factory, user_client, user, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edit",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        )
+        + "?inline=true",
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Save")
+    assert_contains(response, post.original)
+    assert_contains(response, "?inline=true")
