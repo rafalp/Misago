@@ -12,7 +12,7 @@
   {% include "misago/thread/header.html" %}
   <div class="container page-container">
     <form 
-      action="{% url 'misago:thread-start-poll' id=thread.id slug=thread.slug %}" method="post"
+      action="{% url 'misago:thread-poll-start' id=thread.id slug=thread.slug %}" method="post"
     >
       {% csrf_token %}
       <div class="panel panel-default panel-form">

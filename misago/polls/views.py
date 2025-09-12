@@ -427,16 +427,16 @@ def get_poll_context_data(
         "allow_delete": allow_delete,
         "allow_vote": allow_vote,
         "edit_url": reverse(
-            "misago:thread-edit-poll", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-edit", kwargs={"id": thread.id, "slug": thread.slug}
         ),
         "close_url": reverse(
-            "misago:close-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-close", kwargs={"id": thread.id, "slug": thread.slug}
         ),
         "open_url": reverse(
-            "misago:open-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-open", kwargs={"id": thread.id, "slug": thread.slug}
         ),
         "delete_url": reverse(
-            "misago:delete-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-delete", kwargs={"id": thread.id, "slug": thread.slug}
         ),
         "next_url": thread_url,
         "results_url": f"{thread_url}?poll=results",

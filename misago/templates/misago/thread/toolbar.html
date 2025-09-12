@@ -17,7 +17,7 @@
       {% if allow_start_poll and top_toolbar %}
         <div class="toolbar-item">
           <a
-            href="{% url 'misago:thread-start-poll' id=thread.id slug=thread.slug %}"
+            href="{% url 'misago:thread-poll-start' id=thread.id slug=thread.slug %}"
             class="btn btn-default btn-block"
           >
             {% translate "Start poll" context "thread replies toolbar" %}

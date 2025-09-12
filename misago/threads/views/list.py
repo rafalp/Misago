@@ -1121,7 +1121,7 @@ class CategoryThreadsListView(ListView):
         else:
             return reverse(
                 "misago:thread-start",
-                kwargs={"id": category.id, "slug": category.slug},
+                kwargs={"category_id": category.id, "slug": category.slug},
             )
 
     def is_category_unread(self, user: "User", category: Category) -> bool:

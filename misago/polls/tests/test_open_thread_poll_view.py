@@ -9,7 +9,7 @@ def test_open_thread_poll_view_opens_poll(moderator_client, thread, closed_poll)
 
     response = moderator_client.post(
         reverse(
-            "misago:open-thread-poll",
+            "misago:thread-poll-open",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -33,7 +33,7 @@ def test_open_thread_poll_view_returns_redirect_to_next_thread_url(
 
     response = moderator_client.post(
         reverse(
-            "misago:open-thread-poll",
+            "misago:thread-poll-open",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {"next": thread_url},
@@ -47,7 +47,7 @@ def test_open_thread_poll_view_returns_redirect_to_default_thread_url_if_next_ur
 ):
     response = moderator_client.post(
         reverse(
-            "misago:open-thread-poll",
+            "misago:thread-poll-open",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {"next": "invalid"},
@@ -65,7 +65,7 @@ def test_open_thread_poll_view_returns_partial_in_htmx(
 
     response = moderator_client.post(
         reverse(
-            "misago:open-thread-poll",
+            "misago:thread-poll-open",
             kwargs={"id": thread.id, "slug": thread.slug},
         ),
         {"next": f"{thread_url}extra/"},
@@ -78,7 +78,7 @@ def test_open_thread_poll_view_returns_partial_in_htmx(
 def test_open_thread_poll_view_returns_404_if_thread_doesnt_exist(moderator_client):
     response = moderator_client.post(
         reverse(
-            "misago:open-thread-poll",
+            "misago:thread-poll-open",
             kwargs={"id": 1, "slug": "invalid"},
         )
     )
@@ -92,7 +92,7 @@ def test_open_thread_poll_view_returns_404_if_thread_has_no_poll(
 
     response = moderator_client.post(
         reverse(
-            "misago:open-thread-poll",
+            "misago:thread-poll-open",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -108,7 +108,7 @@ def test_open_thread_poll_view_checks_category_permission(
 
     response = user_client.post(
         reverse(
-            "misago:open-thread-poll",
+            "misago:thread-poll-open",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -131,7 +131,7 @@ def test_open_thread_poll_view_checks_thread_permission(
 
     response = user_client.post(
         reverse(
-            "misago:open-thread-poll",
+            "misago:thread-poll-open",
             kwargs={"id": thread.id, "slug": thread.slug},
         )
     )
@@ -151,7 +151,7 @@ def test_open_thread_poll_view_checks_open_poll_permission(
 
     response = user_client.post(
         reverse(
-            "misago:open-thread-poll",
+            "misago:thread-poll-open",
             kwargs={"id": user_thread.id, "slug": user_thread.slug},
         )
     )

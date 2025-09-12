@@ -22,9 +22,9 @@ from .views.threadupdates import (
 
 urlpatterns = [
     path(
-        "start-thread/",
+        "threads/start/",
         SelectCategoryView.as_view(),
-        name="start-thread",
+        name="thread-start",
     ),
     path(
         "threads/",

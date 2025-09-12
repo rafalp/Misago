@@ -338,7 +338,7 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
     def get_reply_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
-            "misago:thread-reply", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-reply", kwargs={"thread_id": thread.id, "slug": thread.slug}
         )
 
     def get_reply_formset(
@@ -466,7 +466,8 @@ class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
 
     def get_reply_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
-            "misago:private-thread-reply", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:private-thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
 
     def get_reply_formset(

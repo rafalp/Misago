@@ -115,7 +115,7 @@ def test_select_category_view_displays_category_if_guest_can_start_thread_in_it(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -129,7 +129,7 @@ def test_select_category_view_displays_category_if_user_can_start_thread_in_it(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -146,7 +146,7 @@ def test_select_category_view_displays_category_in_htmx_if_guest_can_start_threa
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -163,7 +163,7 @@ def test_select_category_view_displays_category_in_htmx_if_user_can_start_thread
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -181,14 +181,14 @@ def test_select_category_view_excludes_category_if_guest_cant_start_thread_in_it
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -209,14 +209,14 @@ def test_select_category_view_excludes_category_in_htmx_if_guest_cant_start_thre
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -234,14 +234,14 @@ def test_select_category_view_excludes_category_if_user_cant_start_thread_in_it(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -262,14 +262,14 @@ def test_select_category_view_excludes_category_in_htmx_if_user_cant_start_threa
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -286,14 +286,14 @@ def test_select_category_view_excludes_empty_vanilla_category(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -313,14 +313,14 @@ def test_select_category_view_excludes_empty_vanilla_category_in_htmx(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -337,14 +337,14 @@ def test_select_category_view_includes_vanilla_category_with_children(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": child_category.id, "slug": child_category.slug},
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -364,14 +364,14 @@ def test_select_category_view_includes_vanilla_category_with_children_in_htmx(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": child_category.id, "slug": child_category.slug},
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -389,14 +389,14 @@ def test_select_category_view_excludes_child_category_if_user_cant_start_thread_
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": child_category.id, "slug": child_category.slug},
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
         ),
     )
 
@@ -417,14 +417,14 @@ def test_select_category_view_excludes_child_category_in_htmx_if_user_cant_start
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": child_category.id, "slug": child_category.slug},
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
         ),
     )
 
@@ -444,7 +444,7 @@ def test_select_category_view_includes_closed_category_if_user_can_post_in_it(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -467,7 +467,7 @@ def test_select_category_view_includes_closed_category_in_htmx_if_user_can_post_
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
 
@@ -484,14 +484,14 @@ def test_select_category_view_excludes_closed_category_if_user_cant_post_in_it(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )
 
@@ -511,13 +511,13 @@ def test_select_category_view_excludes_closed_category_in_htmx_if_user_cant_post
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": default_category.id, "slug": default_category.slug},
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
         ),
     )
     assert_not_contains(
         response,
         reverse(
             "misago:thread-start",
-            kwargs={"id": sibling_category.id, "slug": sibling_category.slug},
+            kwargs={"category_id": sibling_category.id, "slug": sibling_category.slug},
         ),
     )

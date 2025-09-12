@@ -12,26 +12,26 @@ urlpatterns = [
     path(
         "t/<slug:slug>/<int:id>/poll/start/",
         StartThreadPollView.as_view(),
-        name="start-thread-poll",
+        name="thread-poll-start",
     ),
     path(
         "t/<slug:slug>/<int:id>/poll/edit/",
         EditThreadPollView.as_view(),
-        name="edit-thread-poll",
+        name="thread-poll-edit",
     ),
     path(
         "t/<slug:slug>/<int:id>/poll/close/",
         CloseThreadPollView.as_view(),
-        name="close-thread-poll",
+        name="thread-poll-close",
     ),
     path(
         "t/<slug:slug>/<int:id>/poll/open/",
         OpenThreadPollView.as_view(),
-        name="open-thread-poll",
+        name="thread-poll-open",
     ),
     path(
         "t/<slug:slug>/<int:id>/poll/delete/",
         DeleteThreadPollView.as_view(),
-        name="delete-thread-poll",
+        name="thread-poll-delete",
     ),
 ]

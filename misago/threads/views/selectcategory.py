@@ -52,7 +52,7 @@ class SelectCategoryView(View):
                 "disabled": category.is_vanilla or not has_permission,
                 "url": reverse(
                     "misago:thread-start",
-                    kwargs={"id": category.id, "slug": category.slug},
+                    kwargs={"category_id": category.id, "slug": category.slug},
                 ),
                 "category": category,
             }
