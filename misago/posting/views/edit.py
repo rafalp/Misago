@@ -59,18 +59,30 @@ class EditView(View):
     allow_edit_thread: bool = False
 
     def get(
-        self, request: HttpRequest, id: int, slug: str, post: int | None = None
+        self,
+        request: HttpRequest,
+        thread_id: int,
+        slug: str,
+        post_id: int | None = None,
     ) -> HttpResponse:
-        thread = self.get_thread(request, id)
-        post_obj = self.get_thread_post(request, thread, post or thread.first_post_id)
+        thread = self.get_thread(request, thread_id)
+        post_obj = self.get_thread_post(
+            request, thread, post_id or thread.first_post_id
+        )
         formset = self.get_formset(request, post_obj)
         return self.render(request, post_obj, formset)
 
     def post(
-        self, request: HttpRequest, id: int, slug: str, post: int | None = None
+        self,
+        request: HttpRequest,
+        thread_id: int,
+        slug: str,
+        post_id: int | None = None,
     ) -> HttpResponse:
-        thread = self.get_thread(request, id)
-        post_obj = self.get_thread_post(request, thread, post or thread.first_post_id)
+        thread = self.get_thread(request, thread_id)
+        post_obj = self.get_thread_post(
+            request, thread, post_id or thread.first_post_id
+        )
         state = self.get_state(request, post_obj)
 
         # Short-circuit post handler if "cancel" button was pressed
@@ -93,17 +105,17 @@ class EditView(View):
 
         state.save()
 
-        if post:
+        if post_id:
             success_message = pgettext("thread post edited", "Post edited")
         else:
             success_message = pgettext("thread edited", "Thread edited")
 
         messages.success(request, success_message)
 
-        if post and self.is_inline(request):
+        if post_id and self.is_inline(request):
             return self.post_inline_edit(request, state)
 
-        if post:
+        if post_id:
             response = self.get_redirect_to_post(request, state.thread, state.post)
         else:
             response = redirect(self.get_thread_url(thread))

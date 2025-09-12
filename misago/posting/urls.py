@@ -60,22 +60,42 @@ urlpatterns = [
     ),
     path(
         "t/<slug:slug>/<int:thread_id>/edit/",
-        ThreadEditView.as_view(),
+        login_required(
+            pgettext_lazy(
+                "thread edit login required error",
+                "Sign in to edit threads",
+            )
+        )(ThreadEditView.as_view()),
         name="thread-edit",
     ),
     path(
         "t/<slug:slug>/<int:thread_id>/edit/<int:post_id>/",
-        ThreadPostEditView.as_view(),
+        login_required(
+            pgettext_lazy(
+                "thread post edit login required error",
+                "Sign in to edit posts",
+            )
+        )(ThreadPostEditView.as_view()),
         name="thread-post-edit",
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/edit/",
-        PrivateThreadEditView.as_view(),
+        login_required(
+            pgettext_lazy(
+                "thread edit login required error",
+                "Sign in to edit threads",
+            )
+        )(PrivateThreadEditView.as_view()),
         name="private-thread-edit",
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/edit/<int:post_id>/",
-        PrivateThreadPostEditView.as_view(),
+        login_required(
+            pgettext_lazy(
+                "thread post edit login required error",
+                "Sign in to edit posts",
+            )
+        )(PrivateThreadPostEditView.as_view()),
         name="private-thread-post-edit",
     ),
 ]
