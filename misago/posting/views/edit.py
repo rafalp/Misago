@@ -9,12 +9,12 @@ from django.utils.translation import pgettext
 
 from ...htmx.response import htmx_redirect
 from ...permissions.privatethreads import (
-    check_edit_private_thread_post_permission,
     check_edit_private_thread_permission,
+    check_edit_private_thread_post_permission,
 )
 from ...permissions.threads import (
-    check_edit_thread_post_permission,
     check_edit_thread_permission,
+    check_edit_thread_post_permission,
 )
 from ...posting.formsets import (
     Formset,
@@ -218,8 +218,8 @@ class EditView(View):
 
 
 class ThreadPostEditView(EditView, ThreadView):
-    template_name: str = "misago/edit_thread_post/index.html"
-    template_name_htmx: str = "misago/edit_thread_post/form.html"
+    template_name: str = "misago/thread_post_edit/index.html"
+    template_name_htmx: str = "misago/thread_post_edit/form.html"
 
     def get_thread_post(
         self, request: HttpRequest, thread: Thread, post_id: int
@@ -250,8 +250,8 @@ class ThreadPostEditView(EditView, ThreadView):
 
 
 class PrivateThreadPostEditView(EditView, PrivateThreadView):
-    template_name: str = "misago/edit_private_thread_post/index.html"
-    template_name_htmx: str = "misago/edit_private_thread_post/form.html"
+    template_name: str = "misago/private_thread_post_edit/index.html"
+    template_name_htmx: str = "misago/private_thread_post_edit/form.html"
 
     def get_thread_post(
         self, request: HttpRequest, thread: Thread, post_id: int
@@ -284,8 +284,8 @@ class PrivateThreadPostEditView(EditView, PrivateThreadView):
 
 
 class ThreadEditView(ThreadPostEditView):
-    template_name: str = "misago/edit_thread/index.html"
-    template_name_htmx: str = "misago/edit_thread/form.html"
+    template_name: str = "misago/thread_edit/index.html"
+    template_name_htmx: str = "misago/thread_edit/form.html"
     allow_edit_thread: bool = True
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
@@ -305,8 +305,8 @@ class ThreadEditView(ThreadPostEditView):
 
 
 class PrivateThreadEditView(PrivateThreadPostEditView):
-    template_name: str = "misago/edit_private_thread/index.html"
-    template_name_htmx: str = "misago/edit_private_thread/form.html"
+    template_name: str = "misago/private_thread_edit/index.html"
+    template_name_htmx: str = "misago/private_thread_edit/form.html"
     allow_edit_thread: bool = True
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
