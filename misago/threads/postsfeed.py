@@ -279,13 +279,17 @@ class ThreadPostsFeed(PostsFeed):
     def get_edit_thread_post_url(self) -> str | None:
         return reverse(
             "misago:thread-edit",
-            kwargs={"id": self.thread.id, "slug": self.thread.slug},
+            kwargs={"thread_id": self.thread.id, "slug": self.thread.slug},
         )
 
     def get_edit_post_url(self, post: Post) -> str | None:
         return reverse(
-            "misago:thread-edit",
-            kwargs={"id": self.thread.id, "slug": self.thread.slug, "post": post.id},
+            "misago:thread-post-edit",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
         )
 
     def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
@@ -334,13 +338,17 @@ class PrivateThreadPostsFeed(PostsFeed):
     def get_edit_thread_post_url(self) -> str | None:
         return reverse(
             "misago:private-thread-edit",
-            kwargs={"id": self.thread.id, "slug": self.thread.slug},
+            kwargs={"thread_id": self.thread.id, "slug": self.thread.slug},
         )
 
     def get_edit_post_url(self, post: Post) -> str | None:
         return reverse(
-            "misago:private-thread-edit",
-            kwargs={"id": self.thread.id, "slug": self.thread.slug, "post": post.id},
+            "misago:private-thread-post-edit",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
         )
 
     def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:

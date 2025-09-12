@@ -7,8 +7,7 @@ from django.urls import reverse
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
-from ...permissions.enums import CanUploadAttachments, CategoryPermission
-from ...permissions.models import CategoryGroupPermission
+from ...permissions.enums import CanUploadAttachments
 from ...test import assert_contains, assert_contains_element, assert_not_contains
 from ...threads.models import Thread
 from ..forms import PostForm
@@ -25,7 +24,7 @@ def test_private_thread_start_view_displays_login_page_to_guests(db, client):
     assert_contains(response, "Sign in to start new private thread")
 
 
-def test_private_thread_start_view_displays_error_page_to_users_without_private_threads_permission(
+def test_private_thread_start_view_displays_error_403_to_users_without_private_threads_permission(
     user_client, members_group
 ):
     members_group.can_use_private_threads = False
@@ -35,7 +34,7 @@ def test_private_thread_start_view_displays_error_page_to_users_without_private_
     assert_contains(response, "You can&#x27;t use private threads.", 403)
 
 
-def test_private_thread_start_view_displays_error_page_to_users_without_start_private_threads_permission(
+def test_private_thread_start_view_displays_error_403_to_users_without_start_private_threads_permission(
     user_client, members_group
 ):
     members_group.can_start_private_threads = False
