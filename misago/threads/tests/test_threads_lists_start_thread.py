@@ -7,9 +7,7 @@ from ...test import assert_contains, assert_not_contains
 
 
 @override_dynamic_settings(index_view="categories")
-def test_threads_list_displays_start_thread_button_to_guest_with_permission(
-    guests_group, client, default_category
-):
+def test_threads_list_displays_start_thread_button_to_guest_with_permission(db, client):
     response = client.get(reverse("misago:threads"))
     assert_contains(response, reverse("misago:thread-start"))
 
@@ -21,7 +19,7 @@ def test_threads_list_displays_start_thread_button_to_user_with_permission(user_
 
 
 def test_category_threads_list_displays_start_thread_button_to_guest_with_permission(
-    guests_group, client, default_category
+    client, default_category
 ):
     response = client.get(
         reverse(
@@ -29,7 +27,13 @@ def test_category_threads_list_displays_start_thread_button_to_guest_with_permis
             kwargs={"id": default_category.id, "slug": default_category.slug},
         )
     )
-    assert_contains(response, reverse("misago:thread-start"))
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
+        ),
+    )
 
 
 def test_category_threads_list_displays_start_thread_button_to_user_with_permission(
@@ -41,7 +45,13 @@ def test_category_threads_list_displays_start_thread_button_to_user_with_permiss
             kwargs={"id": default_category.id, "slug": default_category.slug},
         )
     )
-    assert_contains(response, reverse("misago:thread-start"))
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
+        ),
+    )
 
 
 def test_private_threads_list_displays_start_thread_button_to_user_with_permission(
@@ -91,7 +101,13 @@ def test_category_threads_list_hides_start_thread_button_from_guest_without_perm
             kwargs={"id": default_category.id, "slug": default_category.slug},
         )
     )
-    assert_not_contains(response, reverse("misago:thread-start"))
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
+        ),
+    )
 
 
 def test_category_threads_list_hides_start_thread_button_from_user_without_permission(
@@ -133,7 +149,13 @@ def test_closed_category_threads_list_hides_start_thread_button_from_user_withou
             kwargs={"id": default_category.id, "slug": default_category.slug},
         )
     )
-    assert_not_contains(response, reverse("misago:thread-start"))
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
+        ),
+    )
 
 
 def test_closed_category_threads_list_shows_start_thread_button_to_user_with_permission(
@@ -151,4 +173,10 @@ def test_closed_category_threads_list_shows_start_thread_button_to_user_with_per
             kwargs={"id": default_category.id, "slug": default_category.slug},
         )
     )
-    assert_contains(response, reverse("misago:thread-start"))
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
+        ),
+    )
