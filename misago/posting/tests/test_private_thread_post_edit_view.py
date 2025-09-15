@@ -371,8 +371,8 @@ def test_private_thread_post_edit_view_previews_message(
         },
     )
     assert_contains(response, "Edit post")
-    assert_contains(response, "Message preview")
     assert_contains(response, other_user_private_thread.title)
+    assert_contains(response, "Message preview")
     assert_contains(response, "<p>How is going?</p>")
 
 
@@ -533,6 +533,7 @@ def test_private_thread_post_edit_view_displays_attachments_form(
         ),
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
 
@@ -553,6 +554,7 @@ def test_private_thread_post_edit_view_hides_attachments_form_if_uploads_are_dis
         ),
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_not_contains(response, "misago-editor-attachments=")
 
 
@@ -575,6 +577,7 @@ def test_private_thread_post_edit_view_hides_attachments_form_if_user_has_no_gro
         ),
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_not_contains(response, "misago-editor-attachments=")
 
 
@@ -649,6 +652,7 @@ def test_private_thread_post_edit_view_uploads_attachment_on_preview_or_upload(
         },
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     attachment = Attachment.objects.get(uploader=user)
@@ -698,6 +702,7 @@ def test_private_thread_post_edit_view_displays_image_attachment(
         },
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains(response, user_image_attachment.name)
@@ -740,6 +745,7 @@ def test_private_thread_post_edit_view_displays_image_with_thumbnail_attachment(
         },
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains(response, user_image_thumbnail_attachment.name)
@@ -782,6 +788,7 @@ def test_private_thread_post_edit_view_displays_video_attachment(
         },
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains(response, user_video_attachment.name)
@@ -824,6 +831,7 @@ def test_private_thread_post_edit_view_displays_file_attachment(
         },
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains(response, user_text_attachment.name)
@@ -905,6 +913,7 @@ def test_private_thread_post_edit_view_adds_attachment_to_deleted_list(
         },
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains_element(
@@ -955,6 +964,7 @@ def test_private_thread_post_edit_view_maintains_deleted_attachments_list(
         },
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains_element(
@@ -1039,6 +1049,7 @@ def test_private_thread_post_edit_view_displays_associated_attachment(
         ),
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
     assert_contains_element(response, "input", type="file", name="posting-post-upload")
 
@@ -1072,6 +1083,7 @@ def test_private_thread_post_edit_view_displays_associated_attachment_if_uploads
         ),
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
     assert_not_contains_element(
         response, "input", type="file", name="posting-post-upload"
@@ -1114,6 +1126,7 @@ def test_private_thread_post_edit_view_displays_associated_attachment_for_user_w
         ),
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
     assert_not_contains_element(
         response, "input", type="file", name="posting-post-upload"
@@ -1153,6 +1166,7 @@ def test_private_thread_post_edit_view_adds_existing_attachment_to_deleted_list(
         },
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
     assert_contains_element(response, "input", type="file", name="posting-post-upload")
 
@@ -1198,6 +1212,7 @@ def test_private_thread_post_edit_view_adds_existing_attachment_to_deleted_list_
         },
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
     assert_not_contains_element(
         response, "input", type="file", name="posting-post-upload"
@@ -1252,6 +1267,7 @@ def test_private_thread_post_edit_view_adds_existing_attachment_to_deleted_list_
         },
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "misago-editor-attachments=")
     assert_not_contains_element(
         response, "input", type="file", name="posting-post-upload"
@@ -1443,6 +1459,7 @@ def test_private_thread_post_edit_view_embeds_attachments_in_preview(
         },
     )
     assert_contains(response, "Edit post")
+    assert_contains(response, other_user_private_thread.title)
     assert_contains(response, "Message preview")
     assert_contains_element(response, "a", href=user_image_attachment.get_details_url())
     assert_contains_element(

@@ -361,6 +361,7 @@ def test_thread_reply_view_previews_message(user_client, thread):
         },
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "Message preview")
 
 
@@ -426,6 +427,7 @@ def test_thread_reply_view_validates_post(user_client, thread):
         },
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(
         response, "Posted message must be at least 5 characters long (it has 1)."
     )
@@ -443,7 +445,8 @@ def test_thread_reply_view_validates_posted_contents(
             "posting-post-post": "This is a spam message",
         },
     )
-    assert_contains(response, "Post reply")
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "Your message contains spam!")
 
 
@@ -462,7 +465,8 @@ def test_thread_reply_view_runs_flood_control(
             "posting-post-post": "This is a flood message",
         },
     )
-    assert_contains(response, "Post reply")
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(
         response, "You can&#x27;t post a new message so soon after the previous one."
     )
@@ -571,6 +575,8 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_in_preview(
         },
     )
 
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "<p>Reply contents</p>")
     assert_not_contains(response, "<p>Previous message</p>")
 
@@ -707,6 +713,7 @@ def test_thread_reply_view_displays_attachments_form(user_client, thread):
         ),
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
 
@@ -724,6 +731,7 @@ def test_thread_reply_view_hides_attachments_form_if_uploads_are_disabled(
         ),
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_not_contains(response, "misago-editor-attachments=")
 
 
@@ -743,6 +751,7 @@ def test_thread_reply_view_hides_attachments_form_if_user_has_no_group_permissio
         ),
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_not_contains(response, "misago-editor-attachments=")
 
 
@@ -765,6 +774,7 @@ def test_thread_reply_view_hides_attachments_form_if_user_has_no_category_permis
         ),
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_not_contains(response, "misago-editor-attachments=")
 
 
@@ -826,6 +836,7 @@ def test_thread_reply_view_uploads_attachment_on_preview_or_upload(
         },
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     thread.refresh_from_db()
@@ -866,6 +877,7 @@ def test_thread_reply_view_displays_image_attachment(
         },
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains(response, user_image_attachment.name)
@@ -897,6 +909,7 @@ def test_thread_reply_view_displays_image_with_thumbnail_attachment(
         },
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains(response, user_image_thumbnail_attachment.name)
@@ -928,6 +941,7 @@ def test_thread_reply_view_displays_video_attachment(
         },
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains(response, user_video_attachment.name)
@@ -959,6 +973,7 @@ def test_thread_reply_view_displays_file_attachment(
         },
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains(response, user_text_attachment.name)
@@ -1010,6 +1025,7 @@ def test_thread_reply_view_adds_attachment_to_deleted_list(
         },
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains_element(
@@ -1049,6 +1065,7 @@ def test_thread_reply_view_maintains_deleted_attachments_list(
         },
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "misago-editor-attachments=")
 
     assert_contains_element(
@@ -1119,6 +1136,7 @@ def test_thread_reply_view_embeds_attachments_in_preview(
         },
     )
     assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
     assert_contains(response, "Message preview")
     assert_contains_element(response, "a", href=user_image_attachment.get_details_url())
     assert_contains_element(

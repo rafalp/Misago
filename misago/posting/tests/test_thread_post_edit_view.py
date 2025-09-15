@@ -311,8 +311,8 @@ def test_thread_post_edit_view_displays_inline_edit_form_in_htmx(
         + "?inline=true",
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Save")
     assert_contains(response, post.original)
+    assert_contains(response, "Save")
     assert_contains(response, "?inline=true")
 
 
