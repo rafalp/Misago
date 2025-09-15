@@ -27,6 +27,18 @@ def test_thread_start_view_displays_login_page_to_guests(client, default_categor
     assert_contains(response, "Sign in to start new thread")
 
 
+def test_thread_start_view_shows_error_404_if_category_doesnt_exist(
+    user_client, default_category
+):
+    response = user_client.get(
+        reverse(
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id * 100, "slug": "not-found"},
+        )
+    )
+    assert response.status_code == 404
+
+
 def test_thread_start_view_shows_error_404_to_users_without_see_category_permission(
     user_client, user, default_category
 ):

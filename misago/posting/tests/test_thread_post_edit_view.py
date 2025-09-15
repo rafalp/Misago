@@ -35,6 +35,20 @@ def test_thread_post_edit_view_displays_login_page_to_guests(
     assert_contains(response, "Sign in to edit posts")
 
 
+def test_thread_post_edit_view_shows_error_404_if_thread_doesnt_exist(user_client):
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit",
+            kwargs={
+                "thread_id": 100,
+                "slug": "not-found",
+                "post_id": 100,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
 def test_thread_post_edit_view_shows_error_404_to_users_without_see_category_permission(
     thread_reply_factory, user_client, user, thread
 ):
@@ -92,6 +106,24 @@ def test_thread_post_edit_view_shows_error_404_to_users_who_cant_see_thread(
             kwargs={
                 "thread_id": hidden_thread.id,
                 "slug": hidden_thread.slug,
+                "post_id": post.id,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_thread_post_edit_view_shows_error_404_if_post_is_not_part_of_thread(
+    thread_reply_factory, user_client, thread, other_thread
+):
+    post = thread_reply_factory(other_thread)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
                 "post_id": post.id,
             },
         )

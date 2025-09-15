@@ -55,6 +55,22 @@ def test_private_thread_post_edit_view_shows_error_403_to_users_without_private_
     assert_contains(response, "You can&#x27;t use private threads.", 403)
 
 
+def test_private_thread_post_edit_view_shows_error_404_if_thread_doesnt_exist(
+    user_client,
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edit",
+            kwargs={
+                "thread_id": 100,
+                "slug": "not-found",
+                "post_id": 100,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
 def test_private_thread_post_edit_view_shows_error_404_to_users_who_cant_see_thread(
     thread_reply_factory, user_client, private_thread
 ):
@@ -66,6 +82,24 @@ def test_private_thread_post_edit_view_shows_error_404_to_users_who_cant_see_thr
             kwargs={
                 "thread_id": private_thread.id,
                 "slug": private_thread.slug,
+                "post_id": post.id,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_private_thread_post_edit_view_shows_error_404_if_post_is_not_part_of_thread(
+    thread_reply_factory, user_client, user_private_thread, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edit",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
                 "post_id": post.id,
             },
         )

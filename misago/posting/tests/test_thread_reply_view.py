@@ -27,6 +27,19 @@ def test_thread_reply_view_displays_login_page_to_guests(client, thread):
     assert_contains(response, "Sign in to reply to threads")
 
 
+def test_thread_reply_view_shows_error_404_if_thread_doesnt_exist(user_client):
+    response = user_client.get(
+        reverse(
+            "misago:thread-reply",
+            kwargs={
+                "thread_id": 100,
+                "slug": "not-found",
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
 def test_thread_reply_view_shows_error_404_to_users_without_see_category_permission(
     user_client, user, thread
 ):

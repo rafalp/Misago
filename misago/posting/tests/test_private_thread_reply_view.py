@@ -46,6 +46,19 @@ def test_private_thread_reply_view_shows_error_403_to_users_without_private_thre
     assert_contains(response, "You can&#x27;t use private threads.", 403)
 
 
+def test_private_thread_reply_view_shows_error_404_if_thread_doesnt_exist(user_client):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": 100,
+                "slug": "not-found",
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
 def test_private_thread_reply_view_shows_error_404_to_users_who_cant_see_thread(
     user_client, private_thread
 ):
