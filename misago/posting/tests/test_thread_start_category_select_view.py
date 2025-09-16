@@ -54,7 +54,7 @@ def child_category(default_category, guests_group, members_group):
     return category
 
 
-def test_select_category_view_shows_error_page_if_guest_cant_start_thread_in_any_category(
+def test_thread_start_category_select_view_shows_error_page_if_guest_cant_start_thread_in_any_category(
     client, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -65,7 +65,7 @@ def test_select_category_view_shows_error_page_if_guest_cant_start_thread_in_any
     assert_contains(response, "You can&#x27;t start new threads.", status_code=403)
 
 
-def test_select_category_view_shows_error_page_if_user_cant_start_thread_in_any_category(
+def test_thread_start_category_select_view_shows_error_page_if_user_cant_start_thread_in_any_category(
     user_client, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -76,7 +76,7 @@ def test_select_category_view_shows_error_page_if_user_cant_start_thread_in_any_
     assert_contains(response, "You can&#x27;t start new threads.", status_code=403)
 
 
-def test_select_category_view_shows_error_message_in_htmx_if_guest_cant_start_thread_in_any_category(
+def test_thread_start_category_select_view_shows_error_message_in_htmx_if_guest_cant_start_thread_in_any_category(
     client, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -91,7 +91,7 @@ def test_select_category_view_shows_error_message_in_htmx_if_guest_cant_start_th
     assert_contains(response, "You can't start new threads.")
 
 
-def test_select_category_view_shows_error_message_in_htmx_if_user_cant_start_thread_in_any_category(
+def test_thread_start_category_select_view_shows_error_message_in_htmx_if_user_cant_start_thread_in_any_category(
     user_client, default_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -106,7 +106,7 @@ def test_select_category_view_shows_error_message_in_htmx_if_user_cant_start_thr
     assert_contains(response, "You can't start new threads.")
 
 
-def test_select_category_view_displays_category_if_guest_can_start_thread_in_it(
+def test_thread_start_category_select_view_displays_category_if_guest_can_start_thread_in_it(
     client, default_category
 ):
     response = client.get(reverse("misago:thread-start"))
@@ -120,7 +120,7 @@ def test_select_category_view_displays_category_if_guest_can_start_thread_in_it(
     )
 
 
-def test_select_category_view_displays_category_if_user_can_start_thread_in_it(
+def test_thread_start_category_select_view_displays_category_if_user_can_start_thread_in_it(
     user_client, default_category
 ):
     response = user_client.get(reverse("misago:thread-start"))
@@ -134,7 +134,7 @@ def test_select_category_view_displays_category_if_user_can_start_thread_in_it(
     )
 
 
-def test_select_category_view_displays_category_in_htmx_if_guest_can_start_thread_in_it(
+def test_thread_start_category_select_view_displays_category_in_htmx_if_guest_can_start_thread_in_it(
     client, guests_group, default_category
 ):
     response = client.get(
@@ -151,7 +151,7 @@ def test_select_category_view_displays_category_in_htmx_if_guest_can_start_threa
     )
 
 
-def test_select_category_view_displays_category_in_htmx_if_user_can_start_thread_in_it(
+def test_thread_start_category_select_view_displays_category_in_htmx_if_user_can_start_thread_in_it(
     user_client, default_category
 ):
     response = user_client.get(
@@ -168,7 +168,7 @@ def test_select_category_view_displays_category_in_htmx_if_user_can_start_thread
     )
 
 
-def test_select_category_view_excludes_category_if_guest_cant_start_thread_in_it(
+def test_thread_start_category_select_view_excludes_category_if_guest_cant_start_thread_in_it(
     client, default_category, sibling_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -193,7 +193,7 @@ def test_select_category_view_excludes_category_if_guest_cant_start_thread_in_it
     )
 
 
-def test_select_category_view_excludes_category_in_htmx_if_guest_cant_start_thread_in_it(
+def test_thread_start_category_select_view_excludes_category_in_htmx_if_guest_cant_start_thread_in_it(
     client, default_category, sibling_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -221,7 +221,7 @@ def test_select_category_view_excludes_category_in_htmx_if_guest_cant_start_thre
     )
 
 
-def test_select_category_view_excludes_category_if_user_cant_start_thread_in_it(
+def test_thread_start_category_select_view_excludes_category_if_user_cant_start_thread_in_it(
     user_client, default_category, sibling_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -246,7 +246,7 @@ def test_select_category_view_excludes_category_if_user_cant_start_thread_in_it(
     )
 
 
-def test_select_category_view_excludes_category_in_htmx_if_user_cant_start_thread_in_it(
+def test_thread_start_category_select_view_excludes_category_in_htmx_if_user_cant_start_thread_in_it(
     user_client, default_category, sibling_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -274,7 +274,7 @@ def test_select_category_view_excludes_category_in_htmx_if_user_cant_start_threa
     )
 
 
-def test_select_category_view_excludes_empty_vanilla_category(
+def test_thread_start_category_select_view_excludes_empty_vanilla_category(
     user_client, default_category, sibling_category
 ):
     default_category.is_vanilla = True
@@ -298,7 +298,7 @@ def test_select_category_view_excludes_empty_vanilla_category(
     )
 
 
-def test_select_category_view_excludes_empty_vanilla_category_in_htmx(
+def test_thread_start_category_select_view_excludes_empty_vanilla_category_in_htmx(
     user_client, default_category, sibling_category
 ):
     default_category.is_vanilla = True
@@ -325,7 +325,7 @@ def test_select_category_view_excludes_empty_vanilla_category_in_htmx(
     )
 
 
-def test_select_category_view_includes_vanilla_category_with_children(
+def test_thread_start_category_select_view_includes_vanilla_category_with_children(
     user_client, default_category, child_category
 ):
     default_category.is_vanilla = True
@@ -349,7 +349,7 @@ def test_select_category_view_includes_vanilla_category_with_children(
     )
 
 
-def test_select_category_view_includes_vanilla_category_with_children_in_htmx(
+def test_thread_start_category_select_view_includes_vanilla_category_with_children_in_htmx(
     user_client, default_category, child_category
 ):
     default_category.is_vanilla = True
@@ -376,7 +376,7 @@ def test_select_category_view_includes_vanilla_category_with_children_in_htmx(
     )
 
 
-def test_select_category_view_excludes_child_category_if_user_cant_start_thread_in_it(
+def test_thread_start_category_select_view_excludes_child_category_if_user_cant_start_thread_in_it(
     user_client, default_category, child_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -401,7 +401,7 @@ def test_select_category_view_excludes_child_category_if_user_cant_start_thread_
     )
 
 
-def test_select_category_view_excludes_child_category_in_htmx_if_user_cant_start_thread_in_it(
+def test_thread_start_category_select_view_excludes_child_category_in_htmx_if_user_cant_start_thread_in_it(
     user_client, default_category, child_category
 ):
     CategoryGroupPermission.objects.filter(
@@ -429,7 +429,7 @@ def test_select_category_view_excludes_child_category_in_htmx_if_user_cant_start
     )
 
 
-def test_select_category_view_includes_closed_category_if_user_can_post_in_it(
+def test_thread_start_category_select_view_includes_closed_category_if_user_can_post_in_it(
     user, user_client, default_category, members_group, moderators_group
 ):
     default_category.is_closed = True
@@ -449,7 +449,7 @@ def test_select_category_view_includes_closed_category_if_user_can_post_in_it(
     )
 
 
-def test_select_category_view_includes_closed_category_in_htmx_if_user_can_post_in_it(
+def test_thread_start_category_select_view_includes_closed_category_in_htmx_if_user_can_post_in_it(
     user, user_client, default_category, members_group, moderators_group
 ):
     default_category.is_closed = True
@@ -472,7 +472,7 @@ def test_select_category_view_includes_closed_category_in_htmx_if_user_can_post_
     )
 
 
-def test_select_category_view_excludes_closed_category_if_user_cant_post_in_it(
+def test_thread_start_category_select_view_excludes_closed_category_if_user_cant_post_in_it(
     user_client, default_category, sibling_category
 ):
     sibling_category.is_closed = True
@@ -496,7 +496,7 @@ def test_select_category_view_excludes_closed_category_if_user_cant_post_in_it(
     )
 
 
-def test_select_category_view_excludes_closed_category_in_htmx_if_user_cant_post_in_it(
+def test_thread_start_category_select_view_excludes_closed_category_in_htmx_if_user_cant_post_in_it(
     user_client, default_category, sibling_category
 ):
     sibling_category.is_closed = True

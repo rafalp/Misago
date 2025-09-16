@@ -10,9 +10,9 @@ from ...permissions.checkutils import check_permissions
 from ...permissions.threads import check_start_thread_permission
 
 
-class SelectCategoryView(View):
-    template_name = "misago/select_category/page.html"
-    template_name_htmx = "misago/select_category/modal.html"
+class ThreadStartCategorySelectView(View):
+    template_name = "misago/thread_start_category_select/index.html"
+    template_name_htmx = "misago/thread_start_category_select/modal.html"
 
     def get(self, request: HttpRequest) -> HttpResponse:
         choices = self.get_category_choices(request)
@@ -30,7 +30,7 @@ class SelectCategoryView(View):
                 )
             )
 
-        return render(request, template_name, {"start_thread_choices": choices})
+        return render(request, template_name, {"thread_start_choices": choices})
 
     def get_category_choices(self, request: HttpRequest) -> list[dict]:
         queryset = Category.objects.filter(

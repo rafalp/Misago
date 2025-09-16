@@ -9,7 +9,6 @@ from .views.post import (
     ThreadPostView,
 )
 from .views.replies import private_thread_replies, thread_replies
-from .views.selectcategory import SelectCategoryView
 from .views.threadupdates import (
     DeletePrivateThreadView,
     DeleteThreadUpdateView,
@@ -21,11 +20,6 @@ from .views.threadupdates import (
 
 
 urlpatterns = [
-    path(
-        "threads/start/",
-        SelectCategoryView.as_view(),
-        name="thread-start",
-    ),
     path(
         "threads/",
         threads,

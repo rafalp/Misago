@@ -2,6 +2,7 @@ from django.urls import path
 from django.utils.translation import pgettext_lazy
 
 from ..auth.decorators import login_required
+from .views.categoryselect import ThreadStartCategorySelectView
 from .views.edit import (
     PrivateThreadEditView,
     PrivateThreadPostEditView,
@@ -18,6 +19,11 @@ from .views.start import (
 )
 
 urlpatterns = [
+    path(
+        "threads/start/",
+        ThreadStartCategorySelectView.as_view(),
+        name="thread-start",
+    ),
     path(
         "c/<slug:slug>/<int:category_id>/start/",
         login_required(

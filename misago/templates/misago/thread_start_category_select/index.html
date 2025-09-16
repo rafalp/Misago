@@ -3,14 +3,14 @@
 
 
 {% block title %}
-{% translate "Start new thread" context "start thread page" %} | {{ block.super }}
+{% translate "Start new thread" context "thread start category select page title" %} | {{ block.super }}
 {% endblock title %}
 
 
 {% block content %}
 <div class="page page-select-category">
   <div class="container page-container">
-    {% include "misago/select_category/page_choices.html" %}
+    {% include "misago/thread_start_category_select/choices.html" %}
   </div>
 </div>
 {% endblock content %}
