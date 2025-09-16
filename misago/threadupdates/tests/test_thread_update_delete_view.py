@@ -7,14 +7,14 @@ from ...test import assert_contains
 from ...threadupdates.models import ThreadUpdate
 
 
-def test_delete_thread_update_view_returns_404_error_for_not_found_thread(user_client):
+def test_thread_update_delete_view_returns_404_error_for_not_found_thread(user_client):
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": 100,
+                "thread_id": 100,
                 "slug": "not-found",
-                "thread_update": 100,
+                "thread_update_id": 100,
             },
         )
     )
@@ -22,16 +22,16 @@ def test_delete_thread_update_view_returns_404_error_for_not_found_thread(user_c
     assert response.status_code == 404
 
 
-def test_delete_thread_update_view_returns_404_error_for_not_found_update(
+def test_thread_update_delete_view_returns_404_error_for_not_found_update(
     user_client, thread
 ):
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": 100,
+                "thread_update_id": 100,
             },
         )
     )
@@ -39,16 +39,16 @@ def test_delete_thread_update_view_returns_404_error_for_not_found_update(
     assert response.status_code == 404
 
 
-def test_delete_thread_update_view_returns_403_error_for_anonymous_user(
+def test_thread_update_delete_view_returns_403_error_for_anonymous_user(
     client, thread, thread_update
 ):
     response = client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
     )
@@ -58,16 +58,16 @@ def test_delete_thread_update_view_returns_403_error_for_anonymous_user(
     )
 
 
-def test_delete_thread_update_view_returns_403_error_for_user(
+def test_thread_update_delete_view_returns_403_error_for_user(
     user_client, thread, thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
     )
@@ -77,7 +77,7 @@ def test_delete_thread_update_view_returns_403_error_for_user(
     )
 
 
-def test_delete_thread_update_view_checks_category_permission(
+def test_thread_update_delete_view_checks_category_permission(
     user_client, thread, thread_update
 ):
     CategoryGroupPermission.objects.filter(
@@ -86,11 +86,11 @@ def test_delete_thread_update_view_checks_category_permission(
 
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
     )
@@ -98,7 +98,7 @@ def test_delete_thread_update_view_checks_category_permission(
     assert response.status_code == 404
 
 
-def test_delete_thread_update_view_checks_thread_permission(
+def test_thread_update_delete_view_checks_thread_permission(
     user_client, thread, thread_update
 ):
     thread.is_hidden = True
@@ -106,11 +106,11 @@ def test_delete_thread_update_view_checks_thread_permission(
 
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
     )
@@ -118,16 +118,16 @@ def test_delete_thread_update_view_checks_thread_permission(
     assert response.status_code == 404
 
 
-def test_delete_thread_update_view_checks_thread_update_permission(
+def test_thread_update_delete_view_checks_thread_update_permission(
     user_client, thread, hidden_thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update_id": hidden_thread_update.id,
             },
         )
     )
@@ -135,7 +135,7 @@ def test_delete_thread_update_view_checks_thread_update_permission(
     assert response.status_code == 404
 
 
-def test_delete_thread_update_view_shows_confirm_delete_form_for_category_moderator(
+def test_thread_update_delete_view_shows_confirm_delete_form_for_category_moderator(
     user_client, user, default_category, thread, thread_update
 ):
     Moderator.objects.create(
@@ -146,11 +146,11 @@ def test_delete_thread_update_view_shows_confirm_delete_form_for_category_modera
 
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
     )
@@ -158,7 +158,7 @@ def test_delete_thread_update_view_shows_confirm_delete_form_for_category_modera
     assert_contains(response, "Are you sure you want to delete this thread update?")
 
 
-def test_delete_thread_update_view_deletes_update_for_category_moderator(
+def test_thread_update_delete_view_deletes_update_for_category_moderator(
     user_client, user, default_category, thread, thread_update
 ):
     Moderator.objects.create(
@@ -169,11 +169,11 @@ def test_delete_thread_update_view_deletes_update_for_category_moderator(
 
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         {"confirm": "true"},
@@ -185,16 +185,16 @@ def test_delete_thread_update_view_deletes_update_for_category_moderator(
         thread_update.refresh_from_db()
 
 
-def test_delete_thread_update_view_shows_confirm_delete_form_for_global_moderator(
+def test_thread_update_delete_view_shows_confirm_delete_form_for_global_moderator(
     moderator_client, thread, thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
     )
@@ -202,16 +202,16 @@ def test_delete_thread_update_view_shows_confirm_delete_form_for_global_moderato
     assert_contains(response, "Are you sure you want to delete this thread update?")
 
 
-def test_delete_thread_update_view_deletes_update_for_global_moderator(
+def test_thread_update_delete_view_deletes_update_for_global_moderator(
     moderator_client, thread, thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         {"confirm": "true"},
@@ -223,16 +223,16 @@ def test_delete_thread_update_view_deletes_update_for_global_moderator(
         thread_update.refresh_from_db()
 
 
-def test_delete_thread_update_view_returns_redirect_to_thread(
+def test_thread_update_delete_view_returns_redirect_to_thread(
     moderator_client, thread, thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         {"confirm": "true"},
@@ -244,7 +244,7 @@ def test_delete_thread_update_view_returns_redirect_to_thread(
     )
 
 
-def test_delete_thread_update_view_returns_redirect_to_next_url(
+def test_thread_update_delete_view_returns_redirect_to_next_url(
     moderator_client, thread, thread_update
 ):
     next_url = reverse(
@@ -254,11 +254,11 @@ def test_delete_thread_update_view_returns_redirect_to_next_url(
 
     response = moderator_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         {
@@ -271,16 +271,16 @@ def test_delete_thread_update_view_returns_redirect_to_next_url(
     assert response["location"] == next_url
 
 
-def test_delete_thread_update_view_returns_redirect_to_thread_for_invalid_next_url(
+def test_thread_update_delete_view_returns_redirect_to_thread_for_invalid_next_url(
     moderator_client, thread, thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         {
@@ -295,16 +295,16 @@ def test_delete_thread_update_view_returns_redirect_to_thread_for_invalid_next_u
     )
 
 
-def test_delete_thread_update_view_returns_404_error_for_not_found_thread_in_htmx(
+def test_thread_update_delete_view_returns_404_error_for_not_found_thread_in_htmx(
     user_client,
 ):
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": 100,
+                "thread_id": 100,
                 "slug": "not-found",
-                "thread_update": 100,
+                "thread_update_id": 100,
             },
         ),
         headers={"hx-request": "true"},
@@ -313,16 +313,16 @@ def test_delete_thread_update_view_returns_404_error_for_not_found_thread_in_htm
     assert response.status_code == 404
 
 
-def test_delete_thread_update_view_returns_404_error_for_not_found_update_in_htmx(
+def test_thread_update_delete_view_returns_404_error_for_not_found_update_in_htmx(
     user_client, thread
 ):
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": 100,
+                "thread_update_id": 100,
             },
         ),
         headers={"hx-request": "true"},
@@ -331,16 +331,16 @@ def test_delete_thread_update_view_returns_404_error_for_not_found_update_in_htm
     assert response.status_code == 404
 
 
-def test_delete_thread_update_view_returns_403_error_for_anonymous_user_in_htmx(
+def test_thread_update_delete_view_returns_403_error_for_anonymous_user_in_htmx(
     client, thread, thread_update
 ):
     response = client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -351,16 +351,16 @@ def test_delete_thread_update_view_returns_403_error_for_anonymous_user_in_htmx(
     )
 
 
-def test_delete_thread_update_view_returns_403_error_for_user_in_htmx(
+def test_thread_update_delete_view_returns_403_error_for_user_in_htmx(
     user_client, thread, thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -371,7 +371,7 @@ def test_delete_thread_update_view_returns_403_error_for_user_in_htmx(
     )
 
 
-def test_delete_thread_update_view_checks_category_permission_in_htmx(
+def test_thread_update_delete_view_checks_category_permission_in_htmx(
     user_client, thread, thread_update
 ):
     CategoryGroupPermission.objects.filter(
@@ -380,11 +380,11 @@ def test_delete_thread_update_view_checks_category_permission_in_htmx(
 
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -393,7 +393,7 @@ def test_delete_thread_update_view_checks_category_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_delete_thread_update_view_checks_thread_permission_in_htmx(
+def test_thread_update_delete_view_checks_thread_permission_in_htmx(
     user_client, thread, thread_update
 ):
     thread.is_hidden = True
@@ -401,11 +401,11 @@ def test_delete_thread_update_view_checks_thread_permission_in_htmx(
 
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -414,16 +414,16 @@ def test_delete_thread_update_view_checks_thread_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_delete_thread_update_view_checks_thread_update_permission_in_htmx(
+def test_thread_update_delete_view_checks_thread_update_permission_in_htmx(
     user_client, thread, hidden_thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update_id": hidden_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -432,7 +432,7 @@ def test_delete_thread_update_view_checks_thread_update_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_delete_thread_update_view_deletes_update_for_category_moderator_in_htmx(
+def test_thread_update_delete_view_deletes_update_for_category_moderator_in_htmx(
     user_client, user, default_category, thread, thread_update
 ):
     Moderator.objects.create(
@@ -443,11 +443,11 @@ def test_delete_thread_update_view_deletes_update_for_category_moderator_in_htmx
 
     response = user_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -459,16 +459,16 @@ def test_delete_thread_update_view_deletes_update_for_category_moderator_in_htmx
         thread_update.refresh_from_db()
 
 
-def test_delete_thread_update_view_deletes_update_for_global_moderator_in_htmx(
+def test_thread_update_delete_view_deletes_update_for_global_moderator_in_htmx(
     moderator_client, thread, thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},

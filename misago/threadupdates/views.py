@@ -4,38 +4,39 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ...threadupdates.delete import delete_thread_update
-from ...threadupdates.hide import hide_thread_update, unhide_thread_update
-from ...threadupdates.models import ThreadUpdate
-from ..models import Thread
-from .generic import PrivateThreadView, ThreadView
+from ..privatethreads.views.generic import PrivateThreadView
+from ..threads.models import Thread
+from ..threads.views.generic import ThreadView
+from .delete import delete_thread_update
+from .hide import hide_thread_update, unhide_thread_update
+from .models import ThreadUpdate
 
 
-class BaseUpdateView:
+class UpdateView:
     template_name: str = "misago/thread_update/update.html"
     success_message: str
 
     def post(
-        self, request: HttpRequest, id: int, slug: str, thread_update: int
+        self, request: HttpRequest, thread_id: int, slug: str, thread_update_id: int
     ) -> HttpResponse:
         if request.user.is_anonymous:
             self.raise_permission_error()
 
-        thread = self.get_thread(request, id)
-        thread_update_obj = self.get_thread_update(request, thread, thread_update)
+        thread = self.get_thread(request, thread_id)
+        thread_update = self.get_thread_update(request, thread, thread_update_id)
 
         if not self.check_permission(request, thread):
             self.raise_permission_error()
 
-        if self.execute_action(request, thread_update_obj):
+        if self.execute_action(request, thread_update):
             messages.success(request, self.success_message)
 
         if not request.is_htmx:
             return redirect(self.get_next_thread_url(request, thread))
 
-        thread_update_obj.refresh_from_db()
-        feed = self.get_posts_feed(request, thread, [], [thread_update_obj])
-        feed.set_animated_thread_updates([thread_update_obj.id])
+        thread_update.refresh_from_db()
+        feed = self.get_posts_feed(request, thread, [], [thread_update])
+        feed.set_animated_thread_updates([thread_update.id])
 
         return render(
             request,
@@ -55,8 +56,10 @@ class BaseUpdateView:
         return thread_update
 
 
-class HideThreadUpdateMixin:
-    success_message = pgettext_lazy("thread update hidden", "Thread update hidden")
+class UpdateHideView(UpdateView):
+    success_message = pgettext_lazy(
+        "thread update hide success message", "Thread update hidden"
+    )
 
     def execute_action(self, request: HttpRequest, thread_update: ThreadUpdate) -> bool:
         return hide_thread_update(thread_update, request)
@@ -64,13 +67,16 @@ class HideThreadUpdateMixin:
     def raise_permission_error(self):
         raise PermissionDenied(
             pgettext(
-                "hide thread update error", "Only a moderator can hide thread updates."
+                "thread update hide permission error",
+                "Only a moderator can hide thread updates.",
             )
         )
 
 
-class UnhideThreadUpdateMixin:
-    success_message = pgettext_lazy("thread update unhidden", "Thread update unhidden")
+class UpdateUnhideView(UpdateView):
+    success_message = pgettext_lazy(
+        "thread update unhide success message", "Thread update unhidden"
+    )
 
     def execute_action(self, request: HttpRequest, thread_update: ThreadUpdate) -> bool:
         return unhide_thread_update(thread_update, request)
@@ -78,35 +84,33 @@ class UnhideThreadUpdateMixin:
     def raise_permission_error(self):
         raise PermissionDenied(
             pgettext(
-                "hide thread update error",
+                "thread update unhide permission error",
                 "Only a moderator can unhide thread updates.",
             )
         )
 
 
-class HideThreadUpdateView(HideThreadUpdateMixin, BaseUpdateView, ThreadView):
+class ThreadUpdateHideView(UpdateHideView, ThreadView):
     def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_category_moderator(thread.category_id)
 
 
-class UnhideThreadUpdateView(UnhideThreadUpdateMixin, BaseUpdateView, ThreadView):
+class ThreadUpdateUnhideView(UpdateUnhideView, ThreadView):
     def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_category_moderator(thread.category_id)
 
 
-class HidePrivateThreadView(HideThreadUpdateMixin, BaseUpdateView, PrivateThreadView):
+class PrivateThreadUpdateHideView(UpdateHideView, PrivateThreadView):
     def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_private_threads_moderator
 
 
-class UnhidePrivateThreadUpdateView(
-    UnhideThreadUpdateMixin, BaseUpdateView, PrivateThreadView
-):
+class PrivateThreadUpdateUnhideView(UpdateUnhideView, PrivateThreadView):
     def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_private_threads_moderator
 
 
-class DeleteUpdateView:
+class UpdateDeleteView:
     thread_select_related = True
     thread_update_select_related = True
 
@@ -115,23 +119,23 @@ class DeleteUpdateView:
     success_message = pgettext_lazy("thread update deleted", "Thread update deleted")
 
     def post(
-        self, request: HttpRequest, id: int, slug: str, thread_update: int
+        self, request: HttpRequest, thread_id: int, slug: str, thread_update_id: int
     ) -> HttpResponse:
         if request.user.is_anonymous:
             self.raise_permission_error()
 
-        thread = self.get_thread(request, id)
-        thread_update_obj = self.get_thread_update(request, thread, thread_update)
+        thread = self.get_thread(request, thread_id)
+        thread_update = self.get_thread_update(request, thread, thread_update_id)
 
         if not self.check_permission(request, thread):
             self.raise_permission_error()
 
         if request.is_htmx:
-            self.execute_action(request, thread_update_obj)
+            self.execute_action(request, thread_update)
             return render(request, self.template_name)
 
         if request.POST.get("confirm"):
-            self.execute_action(request, thread_update_obj)
+            self.execute_action(request, thread_update)
             return redirect(self.get_next_thread_url(request, thread))
 
         return render(
@@ -150,7 +154,7 @@ class DeleteUpdateView:
     def raise_permission_error(self):
         raise PermissionDenied(
             pgettext(
-                "delete thread update error",
+                "thread update delete permission error",
                 "Only a moderator can delete thread updates.",
             )
         )
@@ -160,11 +164,11 @@ class DeleteUpdateView:
         messages.success(request, self.success_message)
 
 
-class DeleteThreadUpdateView(DeleteUpdateView, ThreadView):
+class ThreadUpdateDeleteView(UpdateDeleteView, ThreadView):
     def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_category_moderator(thread.category_id)
 
 
-class DeletePrivateThreadView(DeleteUpdateView, PrivateThreadView):
+class PrivateThreadUpdateDeleteView(UpdateDeleteView, PrivateThreadView):
     def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_private_threads_moderator

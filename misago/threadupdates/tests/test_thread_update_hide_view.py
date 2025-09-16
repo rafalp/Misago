@@ -5,14 +5,14 @@ from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains
 
 
-def test_hide_thread_update_view_returns_404_error_for_not_found_thread(user_client):
+def test_thread_update_hide_view_returns_404_error_for_not_found_thread(user_client):
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": 100,
+                "thread_id": 100,
                 "slug": "not-found",
-                "thread_update": 100,
+                "thread_update_id": 100,
             },
         )
     )
@@ -20,16 +20,16 @@ def test_hide_thread_update_view_returns_404_error_for_not_found_thread(user_cli
     assert response.status_code == 404
 
 
-def test_hide_thread_update_view_returns_404_error_for_not_found_update(
+def test_thread_update_hide_view_returns_404_error_for_not_found_update(
     user_client, thread
 ):
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": 100,
+                "thread_update_id": 100,
             },
         )
     )
@@ -37,16 +37,16 @@ def test_hide_thread_update_view_returns_404_error_for_not_found_update(
     assert response.status_code == 404
 
 
-def test_hide_thread_update_view_returns_403_error_for_anonymous_user(
+def test_thread_update_hide_view_returns_403_error_for_anonymous_user(
     client, thread, thread_update
 ):
     response = client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
     )
@@ -56,16 +56,16 @@ def test_hide_thread_update_view_returns_403_error_for_anonymous_user(
     )
 
 
-def test_hide_thread_update_view_returns_403_error_for_user(
+def test_thread_update_hide_view_returns_403_error_for_user(
     user_client, thread, thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
     )
@@ -75,7 +75,7 @@ def test_hide_thread_update_view_returns_403_error_for_user(
     )
 
 
-def test_hide_thread_update_view_checks_category_permission(
+def test_thread_update_hide_view_checks_category_permission(
     user_client, thread, thread_update
 ):
     CategoryGroupPermission.objects.filter(
@@ -84,11 +84,11 @@ def test_hide_thread_update_view_checks_category_permission(
 
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
     )
@@ -96,7 +96,7 @@ def test_hide_thread_update_view_checks_category_permission(
     assert response.status_code == 404
 
 
-def test_hide_thread_update_view_checks_thread_permission(
+def test_thread_update_hide_view_checks_thread_permission(
     user_client, thread, thread_update
 ):
     thread.is_hidden = True
@@ -104,11 +104,11 @@ def test_hide_thread_update_view_checks_thread_permission(
 
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
     )
@@ -116,16 +116,16 @@ def test_hide_thread_update_view_checks_thread_permission(
     assert response.status_code == 404
 
 
-def test_hide_thread_update_view_checks_thread_update_permission(
+def test_thread_update_hide_view_checks_thread_update_permission(
     user_client, thread, hidden_thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update_id": hidden_thread_update.id,
             },
         )
     )
@@ -133,7 +133,7 @@ def test_hide_thread_update_view_checks_thread_update_permission(
     assert response.status_code == 404
 
 
-def test_hide_thread_update_view_hides_update_for_category_moderator(
+def test_thread_update_hide_view_hides_update_for_category_moderator(
     user_client, user, default_category, thread, thread_update
 ):
     Moderator.objects.create(
@@ -144,11 +144,11 @@ def test_hide_thread_update_view_hides_update_for_category_moderator(
 
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
     )
@@ -159,16 +159,16 @@ def test_hide_thread_update_view_hides_update_for_category_moderator(
     assert thread_update.is_hidden
 
 
-def test_hide_thread_update_view_hides_update_for_global_moderator(
+def test_thread_update_hide_view_hides_update_for_global_moderator(
     moderator_client, thread, thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
     )
@@ -179,16 +179,16 @@ def test_hide_thread_update_view_hides_update_for_global_moderator(
     assert thread_update.is_hidden
 
 
-def test_hide_thread_update_view_doesnt_update_already_hidden_update(
+def test_thread_update_hide_view_doesnt_update_already_hidden_update(
     moderator_client, thread, hidden_thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update_id": hidden_thread_update.id,
             },
         )
     )
@@ -199,16 +199,16 @@ def test_hide_thread_update_view_doesnt_update_already_hidden_update(
     assert hidden_thread_update.is_hidden
 
 
-def test_hide_thread_update_view_returns_redirect_to_thread(
+def test_thread_update_hide_view_returns_redirect_to_thread(
     moderator_client, thread, thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
     )
@@ -219,7 +219,7 @@ def test_hide_thread_update_view_returns_redirect_to_thread(
     )
 
 
-def test_hide_thread_update_view_returns_redirect_to_next_url(
+def test_thread_update_hide_view_returns_redirect_to_next_url(
     moderator_client, thread, thread_update
 ):
     next_url = reverse(
@@ -229,11 +229,11 @@ def test_hide_thread_update_view_returns_redirect_to_next_url(
 
     response = moderator_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         {"next": next_url},
@@ -243,16 +243,16 @@ def test_hide_thread_update_view_returns_redirect_to_next_url(
     assert response["location"] == next_url
 
 
-def test_hide_thread_update_view_returns_redirect_to_thread_for_invalid_next_url(
+def test_thread_update_hide_view_returns_redirect_to_thread_for_invalid_next_url(
     moderator_client, thread, thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         {"next": "/invalid/url/"},
@@ -264,16 +264,16 @@ def test_hide_thread_update_view_returns_redirect_to_thread_for_invalid_next_url
     )
 
 
-def test_hide_thread_update_view_returns_404_error_for_not_found_thread_in_htmx(
+def test_thread_update_hide_view_returns_404_error_for_not_found_thread_in_htmx(
     user_client,
 ):
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": 100,
+                "thread_id": 100,
                 "slug": "not-found",
-                "thread_update": 100,
+                "thread_update_id": 100,
             },
         ),
         headers={"hx-request": "true"},
@@ -282,16 +282,16 @@ def test_hide_thread_update_view_returns_404_error_for_not_found_thread_in_htmx(
     assert response.status_code == 404
 
 
-def test_hide_thread_update_view_returns_404_error_for_not_found_update_in_htmx(
+def test_thread_update_hide_view_returns_404_error_for_not_found_update_in_htmx(
     user_client, thread
 ):
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": 100,
+                "thread_update_id": 100,
             },
         ),
         headers={"hx-request": "true"},
@@ -300,16 +300,16 @@ def test_hide_thread_update_view_returns_404_error_for_not_found_update_in_htmx(
     assert response.status_code == 404
 
 
-def test_hide_thread_update_view_returns_403_error_for_anonymous_user_in_htmx(
+def test_thread_update_hide_view_returns_403_error_for_anonymous_user_in_htmx(
     client, thread, thread_update
 ):
     response = client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -320,16 +320,16 @@ def test_hide_thread_update_view_returns_403_error_for_anonymous_user_in_htmx(
     )
 
 
-def test_hide_thread_update_view_returns_403_error_for_user_in_htmx(
+def test_thread_update_hide_view_returns_403_error_for_user_in_htmx(
     user_client, thread, thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -340,7 +340,7 @@ def test_hide_thread_update_view_returns_403_error_for_user_in_htmx(
     )
 
 
-def test_hide_thread_update_view_checks_category_permission_in_htmx(
+def test_thread_update_hide_view_checks_category_permission_in_htmx(
     user_client, thread, thread_update
 ):
     CategoryGroupPermission.objects.filter(
@@ -349,11 +349,11 @@ def test_hide_thread_update_view_checks_category_permission_in_htmx(
 
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -362,7 +362,7 @@ def test_hide_thread_update_view_checks_category_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_hide_thread_update_view_checks_thread_permission_in_htmx(
+def test_thread_update_hide_view_checks_thread_permission_in_htmx(
     user_client, thread, thread_update
 ):
     thread.is_hidden = True
@@ -370,11 +370,11 @@ def test_hide_thread_update_view_checks_thread_permission_in_htmx(
 
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -383,16 +383,16 @@ def test_hide_thread_update_view_checks_thread_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_hide_thread_update_view_checks_thread_update_permission_in_htmx(
+def test_thread_update_hide_view_checks_thread_update_permission_in_htmx(
     user_client, thread, hidden_thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update_id": hidden_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -401,7 +401,7 @@ def test_hide_thread_update_view_checks_thread_update_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_hide_thread_update_view_hides_update_for_category_moderator_in_htmx(
+def test_thread_update_hide_view_hides_update_for_category_moderator_in_htmx(
     user_client, user, default_category, thread, thread_update
 ):
     Moderator.objects.create(
@@ -412,11 +412,11 @@ def test_hide_thread_update_view_hides_update_for_category_moderator_in_htmx(
 
     response = user_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -428,16 +428,16 @@ def test_hide_thread_update_view_hides_update_for_category_moderator_in_htmx(
     assert thread_update.is_hidden
 
 
-def test_hide_thread_update_view_hides_update_for_global_moderator_in_htmx(
+def test_thread_update_hide_view_hides_update_for_global_moderator_in_htmx(
     moderator_client, thread, thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -449,16 +449,16 @@ def test_hide_thread_update_view_hides_update_for_global_moderator_in_htmx(
     assert thread_update.is_hidden
 
 
-def test_hide_thread_update_view_doesnt_update_already_hidden_update_in_htmx(
+def test_thread_update_hide_view_doesnt_update_already_hidden_update_in_htmx(
     moderator_client, thread, hidden_thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update": hidden_thread_update.id,
+                "thread_update_id": hidden_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},

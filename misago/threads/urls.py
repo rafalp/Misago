@@ -9,15 +9,6 @@ from .views.post import (
     ThreadPostView,
 )
 from .views.replies import private_thread_replies, thread_replies
-from .views.threadupdates import (
-    DeletePrivateThreadView,
-    DeleteThreadUpdateView,
-    HidePrivateThreadView,
-    HideThreadUpdateView,
-    UnhidePrivateThreadUpdateView,
-    UnhideThreadUpdateView,
-)
-
 
 urlpatterns = [
     path(
@@ -95,35 +86,5 @@ urlpatterns = [
         "t/<slug:slug>/<int:id>/solution/",
         ThreadPostSolutionView.as_view(),
         name="thread-post-solution",
-    ),
-    path(
-        "t/<slug:slug>/<int:id>/hide-update/<int:thread_update>/",
-        HideThreadUpdateView.as_view(),
-        name="hide-thread-update",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/hide-update/<int:thread_update>/",
-        HidePrivateThreadView.as_view(),
-        name="hide-private-thread-update",
-    ),
-    path(
-        "t/<slug:slug>/<int:id>/unhide-update/<int:thread_update>/",
-        UnhideThreadUpdateView.as_view(),
-        name="unhide-thread-update",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/unhide-update/<int:thread_update>/",
-        UnhidePrivateThreadUpdateView.as_view(),
-        name="unhide-private-thread-update",
-    ),
-    path(
-        "t/<slug:slug>/<int:id>/delete-update/<int:thread_update>/",
-        DeleteThreadUpdateView.as_view(),
-        name="delete-thread-update",
-    ),
-    path(
-        "p/<slug:slug>/<int:id>/delete-update/<int:thread_update>/",
-        DeletePrivateThreadView.as_view(),
-        name="delete-private-thread-update",
     ),
 ]

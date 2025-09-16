@@ -294,31 +294,31 @@ class ThreadPostsFeed(PostsFeed):
 
     def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": self.thread.id,
+                "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
 
     def get_unhide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return reverse(
-            "misago:unhide-thread-update",
+            "misago:thread-update-unhide",
             kwargs={
-                "id": self.thread.id,
+                "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
 
     def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": self.thread.id,
+                "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
 
@@ -353,30 +353,30 @@ class PrivateThreadPostsFeed(PostsFeed):
 
     def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return reverse(
-            "misago:hide-private-thread-update",
+            "misago:private-thread-update-hide",
             kwargs={
-                "id": self.thread.id,
+                "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
 
     def get_unhide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": self.thread.id,
+                "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
 
     def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return reverse(
-            "misago:delete-private-thread-update",
+            "misago:private-thread-update-delete",
             kwargs={
-                "id": self.thread.id,
+                "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )

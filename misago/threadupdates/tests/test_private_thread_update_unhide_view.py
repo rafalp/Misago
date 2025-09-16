@@ -4,16 +4,16 @@ from ...permissions.models import Moderator
 from ...test import assert_contains
 
 
-def test_unhide_private_thread_update_view_returns_404_error_for_not_found_thread(
+def test_private_thread_update_unhide_view_returns_404_error_for_not_found_thread(
     user_client,
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": 100,
+                "thread_id": 100,
                 "slug": "not-found",
-                "thread_update": 100,
+                "thread_update_id": 100,
             },
         )
     )
@@ -21,16 +21,16 @@ def test_unhide_private_thread_update_view_returns_404_error_for_not_found_threa
     assert response.status_code == 404
 
 
-def test_unhide_private_thread_update_view_returns_404_error_for_not_found_update(
+def test_private_thread_update_unhide_view_returns_404_error_for_not_found_update(
     user_client, user_private_thread
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": 100,
+                "thread_update_id": 100,
             },
         )
     )
@@ -38,16 +38,16 @@ def test_unhide_private_thread_update_view_returns_404_error_for_not_found_updat
     assert response.status_code == 404
 
 
-def test_unhide_private_thread_update_view_returns_403_error_for_anonymous_user(
+def test_private_thread_update_unhide_view_returns_403_error_for_anonymous_user(
     client, user_private_thread, hidden_user_private_thread_update
 ):
     response = client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         )
     )
@@ -57,16 +57,16 @@ def test_unhide_private_thread_update_view_returns_403_error_for_anonymous_user(
     )
 
 
-def test_unhide_private_thread_update_view_returns_404_error_for_user(
+def test_private_thread_update_unhide_view_returns_404_error_for_user(
     user_client, user_private_thread, hidden_user_private_thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         )
     )
@@ -74,7 +74,7 @@ def test_unhide_private_thread_update_view_returns_404_error_for_user(
     assert response.status_code == 404
 
 
-def test_unhide_private_thread_update_view_checks_private_threads_permission(
+def test_private_thread_update_unhide_view_checks_private_threads_permission(
     user_client, members_group, user_private_thread, hidden_user_private_thread_update
 ):
     members_group.can_use_private_threads = False
@@ -82,11 +82,11 @@ def test_unhide_private_thread_update_view_checks_private_threads_permission(
 
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         )
     )
@@ -94,7 +94,7 @@ def test_unhide_private_thread_update_view_checks_private_threads_permission(
     assert_contains(response, "You can&#x27;t use private threads.", status_code=403)
 
 
-def test_unhide_private_thread_update_view_checks_thread_permission(
+def test_private_thread_update_unhide_view_checks_thread_permission(
     user_client, private_thread, hidden_private_thread_update
 ):
     private_thread.is_hidden = True
@@ -102,11 +102,11 @@ def test_unhide_private_thread_update_view_checks_thread_permission(
 
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": private_thread.id,
+                "thread_id": private_thread.id,
                 "slug": private_thread.slug,
-                "thread_update": hidden_private_thread_update.id,
+                "thread_update_id": hidden_private_thread_update.id,
             },
         )
     )
@@ -114,7 +114,7 @@ def test_unhide_private_thread_update_view_checks_thread_permission(
     assert response.status_code == 404
 
 
-def test_unhide_private_thread_update_view_unhides_update_for_private_threads_moderator(
+def test_private_thread_update_unhide_view_unhides_update_for_private_threads_moderator(
     user_client, user, user_private_thread, hidden_user_private_thread_update
 ):
     Moderator.objects.create(
@@ -125,11 +125,11 @@ def test_unhide_private_thread_update_view_unhides_update_for_private_threads_mo
 
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         )
     )
@@ -140,16 +140,16 @@ def test_unhide_private_thread_update_view_unhides_update_for_private_threads_mo
     assert not hidden_user_private_thread_update.is_hidden
 
 
-def test_unhide_private_thread_update_view_unhides_update_for_global_moderator(
+def test_private_thread_update_unhide_view_unhides_update_for_global_moderator(
     moderator_client, user_private_thread, hidden_user_private_thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         )
     )
@@ -160,16 +160,16 @@ def test_unhide_private_thread_update_view_unhides_update_for_global_moderator(
     assert not hidden_user_private_thread_update.is_hidden
 
 
-def test_unhide_private_thread_update_view_doesnt_update_already_unhidden_update(
+def test_private_thread_update_unhide_view_doesnt_update_already_unhidden_update(
     moderator_client, user_private_thread, user_private_thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": user_private_thread_update.id,
+                "thread_update_id": user_private_thread_update.id,
             },
         )
     )
@@ -180,16 +180,16 @@ def test_unhide_private_thread_update_view_doesnt_update_already_unhidden_update
     assert not user_private_thread_update.is_hidden
 
 
-def test_unhide_private_thread_update_view_returns_redirect_to_thread(
+def test_private_thread_update_unhide_view_returns_redirect_to_thread(
     moderator_client, user_private_thread, hidden_user_private_thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         )
     )
@@ -201,7 +201,7 @@ def test_unhide_private_thread_update_view_returns_redirect_to_thread(
     )
 
 
-def test_unhide_private_thread_update_view_returns_redirect_to_next_url(
+def test_private_thread_update_unhide_view_returns_redirect_to_next_url(
     moderator_client, user_private_thread, hidden_user_private_thread_update
 ):
     next_url = reverse(
@@ -216,11 +216,11 @@ def test_unhide_private_thread_update_view_returns_redirect_to_next_url(
 
     response = moderator_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         ),
         {"next": next_url},
@@ -230,16 +230,16 @@ def test_unhide_private_thread_update_view_returns_redirect_to_next_url(
     assert response["location"] == next_url
 
 
-def test_unhide_private_thread_update_view_returns_redirect_to_thread_for_invalid_next_url(
+def test_private_thread_update_unhide_view_returns_redirect_to_thread_for_invalid_next_url(
     moderator_client, user_private_thread, hidden_user_private_thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         ),
         {"next": "/invalid/url/"},
@@ -252,16 +252,16 @@ def test_unhide_private_thread_update_view_returns_redirect_to_thread_for_invali
     )
 
 
-def test_unhide_private_thread_update_view_returns_404_error_for_not_found_update_in_htmx(
+def test_private_thread_update_unhide_view_returns_404_error_for_not_found_update_in_htmx(
     user_client, user_private_thread
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": 100,
+                "thread_update_id": 100,
             },
         ),
         headers={"hx-request": "true"},
@@ -270,16 +270,16 @@ def test_unhide_private_thread_update_view_returns_404_error_for_not_found_updat
     assert response.status_code == 404
 
 
-def test_unhide_private_thread_update_view_returns_404_error_for_not_found_thread_in_htmx(
+def test_private_thread_update_unhide_view_returns_404_error_for_not_found_thread_in_htmx(
     user_client,
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": 100,
+                "thread_id": 100,
                 "slug": "not-found",
-                "thread_update": 100,
+                "thread_update_id": 100,
             },
         ),
         headers={"hx-request": "true"},
@@ -288,16 +288,16 @@ def test_unhide_private_thread_update_view_returns_404_error_for_not_found_threa
     assert response.status_code == 404
 
 
-def test_unhide_private_thread_update_view_returns_403_error_for_anonymous_user_in_htmx(
+def test_private_thread_update_unhide_view_returns_403_error_for_anonymous_user_in_htmx(
     client, user_private_thread, hidden_user_private_thread_update
 ):
     response = client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -308,16 +308,16 @@ def test_unhide_private_thread_update_view_returns_403_error_for_anonymous_user_
     )
 
 
-def test_unhide_private_thread_update_view_returns_404_error_for_user_in_htmx(
+def test_private_thread_update_unhide_view_returns_404_error_for_user_in_htmx(
     user_client, user_private_thread, hidden_user_private_thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -326,7 +326,7 @@ def test_unhide_private_thread_update_view_returns_404_error_for_user_in_htmx(
     assert response.status_code == 404
 
 
-def test_unhide_private_thread_update_view_checks_private_threads_permission_in_htmx(
+def test_private_thread_update_unhide_view_checks_private_threads_permission_in_htmx(
     user_client, members_group, user_private_thread, hidden_user_private_thread_update
 ):
     members_group.can_use_private_threads = False
@@ -334,11 +334,11 @@ def test_unhide_private_thread_update_view_checks_private_threads_permission_in_
 
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -347,7 +347,7 @@ def test_unhide_private_thread_update_view_checks_private_threads_permission_in_
     assert_contains(response, "You can't use private threads.", status_code=403)
 
 
-def test_unhide_private_thread_update_view_checks_thread_permission_in_htmx(
+def test_private_thread_update_unhide_view_checks_thread_permission_in_htmx(
     user_client, private_thread, hidden_user_private_thread_update
 ):
     private_thread.is_hidden = True
@@ -355,11 +355,11 @@ def test_unhide_private_thread_update_view_checks_thread_permission_in_htmx(
 
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": private_thread.id,
+                "thread_id": private_thread.id,
                 "slug": private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -368,16 +368,16 @@ def test_unhide_private_thread_update_view_checks_thread_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_unhide_private_thread_update_view_checks_thread_update_permission_in_htmx(
+def test_private_thread_update_unhide_view_checks_thread_update_permission_in_htmx(
     user_client, user_private_thread, hidden_private_thread_update
 ):
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_private_thread_update.id,
+                "thread_update_id": hidden_private_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -386,7 +386,7 @@ def test_unhide_private_thread_update_view_checks_thread_update_permission_in_ht
     assert response.status_code == 404
 
 
-def test_unhide_private_thread_update_view_unhides_update_for_private_threads_moderator_in_htmx(
+def test_private_thread_update_unhide_view_unhides_update_for_private_threads_moderator_in_htmx(
     user_client, user, user_private_thread, hidden_user_private_thread_update
 ):
     Moderator.objects.create(
@@ -397,11 +397,11 @@ def test_unhide_private_thread_update_view_unhides_update_for_private_threads_mo
 
     response = user_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -413,16 +413,16 @@ def test_unhide_private_thread_update_view_unhides_update_for_private_threads_mo
     assert not hidden_user_private_thread_update.is_hidden
 
 
-def test_unhide_private_thread_update_view_unhides_update_for_global_moderator_in_htmx(
+def test_private_thread_update_unhide_view_unhides_update_for_global_moderator_in_htmx(
     moderator_client, user_private_thread, hidden_user_private_thread_update
 ):
     response = moderator_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": hidden_user_private_thread_update.id,
+                "thread_update_id": hidden_user_private_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -434,17 +434,17 @@ def test_unhide_private_thread_update_view_unhides_update_for_global_moderator_i
     assert not hidden_user_private_thread_update.is_hidden
 
 
-def test_unhide_private_thread_update_view_doesnt_update_already_unhidden_update_in_htmx(
+def test_private_thread_update_unhide_view_doesnt_update_already_unhidden_update_in_htmx(
     moderator_client, user_private_thread, user_private_thread_update
 ):
 
     response = moderator_client.post(
         reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_update": user_private_thread_update.id,
+                "thread_update_id": user_private_thread_update.id,
             },
         ),
         headers={"hx-request": "true"},
