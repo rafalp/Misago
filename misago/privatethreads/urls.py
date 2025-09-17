@@ -1,12 +1,14 @@
 from django.urls import path
+from django.utils.translation import pgettext_lazy
 
+from ..auth.decorators import login_required
+from .views.list import PrivateThreadListView
 from .views.members import (
     PrivateThreadLeaveView,
     PrivateThreadMemberRemoveView,
     PrivateThreadMembersAddView,
     PrivateThreadOwnerChangeView,
 )
-from .views.list import PrivateThreadListView
 from .views.post import (
     PrivateThreadPostLastView,
     PrivateThreadPostUnreadView,
@@ -17,13 +19,23 @@ from .views.post import (
 urlpatterns = [
     path(
         "private/",
-        PrivateThreadListView.as_view(),
-        name="private-threads",
+        login_required(
+            pgettext_lazy(
+                "private thread list login required error",
+                "Sign in to view private threads",
+            )
+        )(PrivateThreadListView.as_view()),
+        name="private-thread-list",
     ),
     path(
         "private/<slug:filter>/",
-        PrivateThreadListView.as_view(),
-        name="private-threads",
+        login_required(
+            pgettext_lazy(
+                "private thread list login required error",
+                "Sign in to view private threads",
+            )
+        )(PrivateThreadListView.as_view()),
+        name="private-thread-list",
     ),
     path(
         "p/<slug:slug>/<int:id>/add-members/",

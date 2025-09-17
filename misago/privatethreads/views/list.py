@@ -173,7 +173,7 @@ class PrivateThreadListView(ListView):
         }
 
     def get_filters_base_url(self) -> str:
-        return reverse("misago:private-threads")
+        return reverse("misago:private-thread-list")
 
     def get_threads_filters(
         self, request: HttpRequest, base_url: str, filter: str | None
@@ -239,11 +239,11 @@ class PrivateThreadListView(ListView):
     def get_pagination_url(self, kwargs: dict) -> str:
         if kwargs.get("filter"):
             return reverse(
-                "misago:private-threads",
+                "misago:private-thread-list",
                 kwargs={"filter": kwargs["filter"]},
             )
 
-        return reverse("misago:private-threads")
+        return reverse("misago:private-thread-list")
 
     def get_start_thread_url(self, request: HttpRequest) -> str | None:
         with check_permissions() as can_start_thread:

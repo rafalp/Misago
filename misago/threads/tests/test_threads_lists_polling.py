@@ -606,7 +606,8 @@ def test_private_threads_list_poll_raises_404_error_if_filter_is_invalid(
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
-        reverse("misago:private-threads", kwargs={"filter": "invalid"}) + "?poll_new=0",
+        reverse("misago:private-thread-list", kwargs={"filter": "invalid"})
+        + "?poll_new=0",
         headers={"hx-request": "true"},
     )
     assert response.status_code == 404
@@ -622,7 +623,7 @@ def test_private_threads_list_poll_filters_threads(
     PrivateThreadMember.objects.create(thread=hidden_thread, user=user)
 
     response = user_client.get(
-        reverse("misago:private-threads", kwargs={"filter": "my"}) + "?poll_new=0",
+        reverse("misago:private-thread-list", kwargs={"filter": "my"}) + "?poll_new=0",
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Show 1 new or updated thread")

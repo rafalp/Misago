@@ -12,7 +12,7 @@ class PrivateThread(ThreadType):
         return pgettext_lazy("private threads category name", "Private threads")
 
     def get_category_absolute_url(self, category):
-        return reverse("misago:private-threads")
+        return reverse("misago:private-thread-list")
 
     def get_category_last_thread_url(self, category):
         return reverse(

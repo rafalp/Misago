@@ -85,8 +85,6 @@ from ..models import Thread
 
 if TYPE_CHECKING:
     from ...users.models import User
-else:
-    User = get_user_model()
 
 POLL_NEW_THREADS = "poll_new"
 ANIMATE_NEW_THREADS = "animate_new"

@@ -328,7 +328,7 @@ class PrivateThreadLeaveView(PrivateThreadView):
         if not private_thread_has_members(thread):
             thread.delete()
 
-        return redirect(reverse("misago:private-threads"))
+        return redirect(reverse("misago:private-thread-list"))
 
 
 class PrivateThreadMembersHtmxResponse:

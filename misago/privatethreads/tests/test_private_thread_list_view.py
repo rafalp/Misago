@@ -1,0 +1,342 @@
+from datetime import timedelta
+from unittest.mock import patch
+
+from django.urls import reverse
+
+from ...pagination.cursor import EmptyPageError
+from ...readtracker.models import ReadCategory, ReadThread
+from ...test import assert_contains, assert_not_contains
+from ...threads.models import Thread
+from ..models import PrivateThreadMember
+
+
+def test_private_thread_list_view_displays_login_page_to_guests(db, client):
+    response = client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, "Sign in to view private threads")
+
+
+def test_private_thread_list_view_shows_error_403_to_users_without_private_threads_permission(
+    user_client, members_group
+):
+    members_group.can_use_private_threads = False
+    members_group.save()
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, "You can&#x27;t use private threads.", 403)
+
+
+def test_private_thread_list_view_renders_empty_to_users(user_client):
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, "Private threads")
+    assert_contains(response, "You aren't participating in any private threads")
+
+
+def test_private_thread_list_view_renders_empty_to_moderators(moderator_client):
+    response = moderator_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, "Private threads")
+    assert_contains(response, "You aren't participating in any private threads")
+
+
+def test_private_thread_list_view_displays_empty_in_htmx_request(user_client):
+    response = user_client.get(
+        reverse("misago:private-thread-list"),
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+
+
+def test_private_thread_list_view_displays_private_thread(
+    thread_factory, private_threads_category, user, user_client
+):
+    thread = thread_factory(private_threads_category)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, thread.title)
+
+
+def test_private_thread_list_view_displays_user_private_thread(
+    thread_factory, private_threads_category, user, user_client, other_user
+):
+    thread = thread_factory(private_threads_category, starter=other_user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, thread.title)
+
+
+def test_private_thread_list_view_displays_thread_in_htmx(
+    thread_factory, user, private_threads_category, user_client
+):
+    thread = thread_factory(private_threads_category)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-thread-list"),
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, thread.title)
+
+
+def test_private_thread_list_view_displays_thread_with_animation_in_htmx(
+    thread_factory, private_threads_category, user_client, user
+):
+    thread = thread_factory(private_threads_category)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-thread-list") + "?animate_new=0",
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, thread.title)
+    assert_contains(response, "threads-list-item-animate")
+
+
+def test_private_thread_list_view_displays_thread_without_animation_in_htmx(
+    thread_factory, private_threads_category, user_client, user
+):
+    thread = thread_factory(private_threads_category)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-thread-list")
+        + f"?animate_new={thread.last_post_id + 1}",
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "threads-list-item-animate")
+
+
+def test_private_thread_list_view_displays_thread_without_animation_without_htmx(
+    thread_factory, private_threads_category, user_client, user
+):
+    thread = thread_factory(private_threads_category)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-thread-list") + "?animate_new=0",
+    )
+    assert_contains(response, "<h1>")
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "threads-list-item-animate")
+
+
+def test_private_thread_list_view_raises_404_error_if_filter_is_invalid(
+    thread_factory, private_threads_category, user, user_client
+):
+    thread = thread_factory(private_threads_category, starter=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-thread-list", kwargs={"filter": "invalid"})
+    )
+    assert response.status_code == 404
+
+
+def test_private_thread_list_view_filters_threads(
+    thread_factory, private_threads_category, user, user_client
+):
+    visible_thread = thread_factory(private_threads_category, starter=user)
+    hidden_thread = thread_factory(private_threads_category)
+
+    PrivateThreadMember.objects.create(thread=visible_thread, user=user)
+    PrivateThreadMember.objects.create(thread=hidden_thread, user=user)
+
+    response = user_client.get(
+        reverse("misago:private-thread-list", kwargs={"filter": "my"})
+    )
+    assert_contains(response, visible_thread.title)
+    assert_not_contains(response, hidden_thread.title)
+
+
+@patch(
+    "misago.privatethreads.views.list.paginate_queryset", side_effect=EmptyPageError(10)
+)
+def test_private_thread_list_view_redirects_to_last_page_for_invalid_cursor(
+    mock_pagination, user_client
+):
+    response = user_client.get(reverse("misago:private-thread-list"))
+
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:private-thread-list") + "?cursor=10"
+
+    mock_pagination.assert_called_once()
+
+
+def test_private_thread_list_view_renders_unread_thread(
+    thread_factory, user, user_client, private_threads_category
+):
+    user.joined_on = user.joined_on.replace(year=2012)
+    user.save()
+
+    unread_thread = thread_factory(private_threads_category)
+    PrivateThreadMember.objects.create(thread=unread_thread, user=user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, "Has unread posts")
+    assert_contains(response, unread_thread.title)
+
+
+def create_user_private_thread_memberships(user):
+    for thread in Thread.objects.all():
+        PrivateThreadMember.objects.create(user=user, thread=thread)
+
+
+def test_private_thread_list_view_without_unread_threads_marks_category_as_read(
+    thread_factory, private_threads_category, user, user_client
+):
+    user.joined_on -= timedelta(minutes=60)
+    user.save()
+
+    threads = (
+        thread_factory(
+            private_threads_category,
+            started_on=-900,
+        ),
+        thread_factory(
+            private_threads_category,
+            started_on=-600,
+        ),
+    )
+
+    for thread in threads:
+        ReadThread.objects.create(
+            user=user,
+            category=private_threads_category,
+            thread=thread,
+            read_time=thread.last_post_on,
+        )
+
+    private_threads_category.synchronize()
+    private_threads_category.save()
+
+    create_user_private_thread_memberships(user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert response.status_code == 200
+
+    assert not ReadThread.objects.exists()
+
+    ReadCategory.objects.get(user=user, category=private_threads_category)
+
+
+def test_private_thread_list_view_without_unread_threads_clears_user_unread_threads_count(
+    thread_factory, private_threads_category, user, user_client
+):
+    user.joined_on -= timedelta(minutes=60)
+    user.unread_private_threads = 50
+    user.save()
+
+    threads = (
+        thread_factory(
+            private_threads_category,
+            started_on=-900,
+        ),
+        thread_factory(
+            private_threads_category,
+            started_on=-600,
+        ),
+    )
+
+    for thread in threads:
+        ReadThread.objects.create(
+            user=user,
+            category=private_threads_category,
+            thread=thread,
+            read_time=thread.last_post_on,
+        )
+
+    private_threads_category.synchronize()
+    private_threads_category.save()
+
+    create_user_private_thread_memberships(user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert response.status_code == 200
+
+    user.refresh_from_db()
+    assert user.unread_private_threads == 0
+
+
+def test_private_thread_list_view_with_read_entry_without_unread_threads_marks_category_as_read(
+    thread_factory, private_threads_category, user, user_client
+):
+    user.joined_on -= timedelta(minutes=60)
+    user.save()
+
+    thread = thread_factory(
+        private_threads_category,
+        started_on=-2400,
+    )
+
+    read_category = ReadCategory.objects.create(
+        user=user,
+        category=private_threads_category,
+        read_time=thread.last_post_on,
+    )
+
+    read_thread = thread_factory(
+        private_threads_category,
+        started_on=-1200,
+    )
+
+    ReadThread.objects.create(
+        user=user,
+        category=private_threads_category,
+        thread=read_thread,
+        read_time=read_thread.last_post_on,
+    )
+
+    private_threads_category.synchronize()
+    private_threads_category.save()
+
+    create_user_private_thread_memberships(user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert response.status_code == 200
+
+    assert not ReadThread.objects.exists()
+
+    new_read_category = ReadCategory.objects.get(
+        user=user, category=private_threads_category
+    )
+    assert new_read_category.id == read_category.id
+    assert new_read_category.read_time > read_category.read_time
+
+
+def test_private_thread_list_view_with_unread_thread_doesnt_mark_category_as_read(
+    thread_factory, private_threads_category, user, user_client
+):
+    user.joined_on -= timedelta(minutes=60)
+    user.save()
+
+    read_thread = thread_factory(
+        private_threads_category,
+        started_on=-900,
+    )
+
+    ReadThread.objects.create(
+        user=user,
+        category=private_threads_category,
+        thread=read_thread,
+        read_time=read_thread.last_post_on,
+    )
+
+    thread_factory(
+        private_threads_category,
+        started_on=-600,
+    )
+
+    private_threads_category.synchronize()
+    private_threads_category.save()
+
+    create_user_private_thread_memberships(user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert response.status_code == 200
+
+    assert ReadThread.objects.exists()
+    assert not ReadCategory.objects.exists()

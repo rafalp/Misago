@@ -67,7 +67,7 @@ def test_private_thread_leave_view_removes_thread_owner(
         )
     )
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:private-threads")
+    assert response["location"] == reverse("misago:private-thread-list")
 
     owner, members = get_private_thread_members(user_private_thread)
     assert owner is None
@@ -95,7 +95,7 @@ def test_private_thread_leave_view_removes_thread_member(
         )
     )
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:private-threads")
+    assert response["location"] == reverse("misago:private-thread-list")
 
     owner, members = get_private_thread_members(user_private_thread)
     assert owner == user
@@ -123,7 +123,7 @@ def test_private_thread_leave_view_removes_thread_moderator(
         )
     )
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:private-threads")
+    assert response["location"] == reverse("misago:private-thread-list")
 
     owner, members = get_private_thread_members(user_private_thread)
     assert owner == user
@@ -154,7 +154,7 @@ def test_private_thread_member_deletes_thread_when_last_member_leaves(
         )
     )
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:private-threads")
+    assert response["location"] == reverse("misago:private-thread-list")
 
     owner, members = get_private_thread_members(user_private_thread)
     assert owner is None

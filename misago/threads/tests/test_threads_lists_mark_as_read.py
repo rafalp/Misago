@@ -47,7 +47,7 @@ def test_private_threads_list_mark_as_read_displays_confirmation_page_to_users(
     user_client,
 ):
     response = user_client.post(
-        reverse("misago:private-threads"), {"mark_as_read": "true"}
+        reverse("misago:private-thread-list"), {"mark_as_read": "true"}
     )
     assert_contains(response, f"Mark as read | Private threads")
     assert_contains(
@@ -252,10 +252,11 @@ def test_private_threads_list_mark_as_read_marks_private_threads_as_read(
     )
 
     response = user_client.post(
-        reverse("misago:private-threads"), {"mark_as_read": "true", "confirm": "true"}
+        reverse("misago:private-thread-list"),
+        {"mark_as_read": "true", "confirm": "true"},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:private-threads")
+    assert response["location"] == reverse("misago:private-thread-list")
 
     ReadCategory.objects.get(
         user=user,
@@ -276,7 +277,7 @@ def test_private_threads_list_mark_as_read_marks_private_threads_as_read_in_htmx
     )
 
     response = user_client.post(
-        reverse("misago:private-threads"),
+        reverse("misago:private-thread-list"),
         {"mark_as_read": "true", "confirm": "true"},
         headers={"hx-request": "true"},
     )
@@ -297,10 +298,11 @@ def test_private_threads_list_mark_as_read_clears_user_unread_private_threads_co
     user.save()
 
     response = user_client.post(
-        reverse("misago:private-threads"), {"mark_as_read": "true", "confirm": "true"}
+        reverse("misago:private-thread-list"),
+        {"mark_as_read": "true", "confirm": "true"},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:private-threads")
+    assert response["location"] == reverse("misago:private-thread-list")
 
     user.refresh_from_db()
     assert user.unread_private_threads == 0
