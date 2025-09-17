@@ -33,8 +33,8 @@ class GetCategoryThreadsPageQuerysetHookFilter(Protocol):
 
     ## `action: GetCategoryThreadsPageQuerysetHookAction`
 
-    Misago function used to get the base threads queryset
-    for the category threads page.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

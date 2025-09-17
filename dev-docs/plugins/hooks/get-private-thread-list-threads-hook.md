@@ -1,22 +1,22 @@
-# `get_private_threads_page_threads_hook`
+# `get_private_thread_list_threads_hook`
 
-This hook wraps the standard function that Misago uses to get complete threads data for the private threads page.
+This hook wraps the standard function that Misago uses to get the complete thread data for the private thread list view.
 
 
 ## Location
 
-This hook can be imported from `misago.threads.hooks`:
+This hook can be imported from `misago.privatethreads.hooks`:
 
 ```python
-from misago.threads.hooks import get_private_threads_page_threads_hook
+from misago.privatethreads.hooks import get_private_thread_list_threads_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_private_threads_page_threads_filter(
-    action: GetPrivateThreadsPageThreadsHookAction,
+def custom_get_private_thread_list_threads_filter(
+    action: GetPrivateThreadListThreadsHookAction,
     request: HttpRequest,
     category: Category,
     kwargs: dict,
@@ -29,9 +29,9 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetPrivateThreadsPageThreadsHookAction`
+#### `action: GetPrivateThreadListThreadsHookAction`
 
-Misago function used to get the complete threads data for the private threads page. Returns a `dict` that is included in the template context under the `threads` key.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
@@ -59,13 +59,13 @@ A `dict` with the template context.
 ## Action
 
 ```python
-def get_private_threads_page_threads_action(
+def get_private_thread_list_threads_action(
     request: HttpRequest, category: Category, kwargs: dict
 ) -> dict:
     ...
 ```
 
-Misago function used to get the complete threads data for the private threads page. Returns a `dict` that is included in the template context under the `threads` key.
+Misago function used to get the complete thread data for the private thread list view. Returns a `dict` that is added to the template context under the `threads` key.
 
 
 ### Arguments
@@ -97,10 +97,10 @@ The code below implements a custom filter function makes view use a different th
 ```python
 from django.http import HttpRequest
 from misago.categories.models import Category
-from misago.threads.hooks import get_private_threads_page_threads_hook
+from misago.privatethreads.hooks import get_private_thread_list_threads_hook
 
 
-@get_private_threads_page_threads_hook.append_filter
+@get_private_thread_list_threads_hook.append_filter
 def replace_threads_list_template(
     action, request: HttpRequest, category: Category, kwargs: dict
 ) -> dict:

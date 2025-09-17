@@ -3,13 +3,13 @@ from typing import Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ..filters import ThreadsFilter
+from ...threads.filters import ThreadsFilter
 
 
-class GetPrivateThreadsPageFiltersHookAction(Protocol):
+class GetPrivateThreadListFiltersHookAction(Protocol):
     """
     Misago function used to get available filters for
-    the private threads list.
+    the private thread list view.
 
     # Arguments
 
@@ -25,16 +25,16 @@ class GetPrivateThreadsPageFiltersHookAction(Protocol):
     def __call__(self, request: HttpRequest) -> list[ThreadsFilter]: ...
 
 
-class GetPrivateThreadsPageFiltersHookFilter(Protocol):
+class GetPrivateThreadListFiltersHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetPrivateThreadsPageFiltersHookAction`
+    ## `action: GetPrivateThreadListFiltersHookAction`
 
-    Misago function used to get available filters for
-    the private threads list.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 
@@ -49,20 +49,20 @@ class GetPrivateThreadsPageFiltersHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetPrivateThreadsPageFiltersHookAction,
+        action: GetPrivateThreadListFiltersHookAction,
         request: HttpRequest,
     ) -> list[ThreadsFilter]: ...
 
 
-class GetPrivateThreadsPageFiltersHook(
+class GetPrivateThreadListFiltersHook(
     FilterHook[
-        GetPrivateThreadsPageFiltersHookAction,
-        GetPrivateThreadsPageFiltersHookFilter,
+        GetPrivateThreadListFiltersHookAction,
+        GetPrivateThreadListFiltersHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to get available
-    filters for the private threads list.
+    filters for the private thread list view.
 
     # Example
 
@@ -70,8 +70,8 @@ class GetPrivateThreadsPageFiltersHook(
 
     ```python
     from django.http import HttpRequest
+    from misago.privatethreads.hooks import get_private_thread_list_filters_hook
     from misago.threads.filters import ThreadsFilter
-    from misago.threads.hooks import get_private_threads_page_filters_hook
 
 
     class CustomFilter(ThreadsFilter):
@@ -85,7 +85,7 @@ class GetPrivateThreadsPageFiltersHook(
             return queryset.filter(plugin_data__custom=True)
 
 
-    @get_private_threads_page_filters_hook.append_filter
+    @get_private_thread_list_filters_hook.append_filter
     def include_custom_filter(action, request: HttpRequest) -> list[ThreadsFilter]:
         filters = action(request)
         filters.append(CustomFilter(request))
@@ -97,10 +97,10 @@ class GetPrivateThreadsPageFiltersHook(
 
     def __call__(
         self,
-        action: GetPrivateThreadsPageFiltersHookAction,
+        action: GetPrivateThreadListFiltersHookAction,
         request: HttpRequest,
     ) -> list[ThreadsFilter]:
         return super().__call__(action, request)
 
 
-get_private_threads_page_filters_hook = GetPrivateThreadsPageFiltersHook(cache=False)
+get_private_thread_list_filters_hook = GetPrivateThreadListFiltersHook(cache=False)

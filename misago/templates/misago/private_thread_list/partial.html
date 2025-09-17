@@ -13,7 +13,7 @@
       <meta itemprop="itemListOrder" content="http://schema.org/ItemListOrderDescending">
       {% include threads.template_name with cursor=paginator.cursor threads=threads.items url_names=threads.url_names categories_component=threads.categories_component %}
     {% else %}
-      {% include "misago/private_threads/blankslate.html" %}
+      {% include "misago/private_thread_list/blankslate.html" %}
     {% endif %}
   </ul>
 

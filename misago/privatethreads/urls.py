@@ -6,6 +6,7 @@ from .views.members import (
     PrivateThreadMembersAddView,
     PrivateThreadOwnerChangeView,
 )
+from .views.list import PrivateThreadListView
 from .views.post import (
     PrivateThreadPostLastView,
     PrivateThreadPostUnreadView,
@@ -14,6 +15,16 @@ from .views.post import (
 
 
 urlpatterns = [
+    path(
+        "private/",
+        PrivateThreadListView.as_view(),
+        name="private-threads",
+    ),
+    path(
+        "private/<slug:filter>/",
+        PrivateThreadListView.as_view(),
+        name="private-threads",
+    ),
     path(
         "p/<slug:slug>/<int:id>/add-members/",
         PrivateThreadMembersAddView.as_view(),

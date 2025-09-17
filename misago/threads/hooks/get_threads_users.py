@@ -41,7 +41,8 @@ class GetThreadsUsersHookFilter(Protocol):
 
     ## `action: GetThreadsUsersHookAction`
 
-    Misago function used to get `User` objects to display on threads list.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

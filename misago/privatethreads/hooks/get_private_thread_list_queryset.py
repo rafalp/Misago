@@ -7,10 +7,10 @@ from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 
-class GetPrivateThreadsPageQuerysetHookAction(Protocol):
+class GetPrivateThreadListQuerysetHookAction(Protocol):
     """
-    Misago function used to get the base threads queryset
-    for the private threads page.
+    Misago function used to get the base threads queryset for
+    the private thread list view.
 
     # Arguments
 
@@ -30,16 +30,16 @@ class GetPrivateThreadsPageQuerysetHookAction(Protocol):
     def __call__(self, request: HttpRequest, category: Category) -> QuerySet: ...
 
 
-class GetPrivateThreadsPageQuerysetHookFilter(Protocol):
+class GetPrivateThreadListQuerysetHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetPrivateThreadsPageQuerysetHookAction`
+    ## `action: GetPrivateThreadListQuerysetHookAction`
 
-    Misago function used to get the base threads queryset
-    for the private threads page.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 
@@ -58,21 +58,21 @@ class GetPrivateThreadsPageQuerysetHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetPrivateThreadsPageQuerysetHookAction,
+        action: GetPrivateThreadListQuerysetHookAction,
         request: HttpRequest,
         category: Category,
     ) -> QuerySet: ...
 
 
-class GetPrivateThreadsPageQuerysetHook(
+class GetPrivateThreadListQuerysetHook(
     FilterHook[
-        GetPrivateThreadsPageQuerysetHookAction,
-        GetPrivateThreadsPageQuerysetHookFilter,
+        GetPrivateThreadListQuerysetHookAction,
+        GetPrivateThreadListQuerysetHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to get
-    base threads queryset for the private threads page.
+    the base threads queryset for the private thread list view.
 
     # Example
 
@@ -83,10 +83,10 @@ class GetPrivateThreadsPageQuerysetHook(
     from django.db.models import QuerySet
     from django.http import HttpRequest
     from misago.categories.models import Category
-    from misago.threads.hooks import get_private_threads_page_queryset_hook
+    from misago.privatethreads.hooks import get_private_thread_list_queryset_hook
 
 
-    @get_private_threads_page_queryset_hook.append_filter
+    @get_private_thread_list_queryset_hook.append_filter
     def select_first_post(action, request: HttpRequest) -> QuerySet:
         queryset = action(request)
         return queryset.select_related("first_post")
@@ -97,11 +97,11 @@ class GetPrivateThreadsPageQuerysetHook(
 
     def __call__(
         self,
-        action: GetPrivateThreadsPageQuerysetHookAction,
+        action: GetPrivateThreadListQuerysetHookAction,
         request: HttpRequest,
         category: Category,
     ) -> QuerySet:
         return super().__call__(action, request, category)
 
 
-get_private_threads_page_queryset_hook = GetPrivateThreadsPageQuerysetHook(cache=False)
+get_private_thread_list_queryset_hook = GetPrivateThreadListQuerysetHook(cache=False)

@@ -5,10 +5,10 @@ from django.http import HttpRequest
 from ...plugins.hooks import FilterHook
 
 
-class GetPrivateThreadsPageContextDataHookAction(Protocol):
+class GetPrivateThreadListContextDataHookAction(Protocol):
     """
-    Misago function used to get the template context data
-    for the private threads page.
+    Misago function used to get the template context data for
+    the private thread list view.
 
     # Arguments
 
@@ -28,16 +28,16 @@ class GetPrivateThreadsPageContextDataHookAction(Protocol):
     def __call__(self, request: HttpRequest, kwargs: dict) -> dict: ...
 
 
-class GetPrivateThreadsPageContextDataHookFilter(Protocol):
+class GetPrivateThreadListContextDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetPrivateThreadsPageContextDataHookAction`
+    ## `action: GetPrivateThreadListContextDataHookAction`
 
-    Misago function used to get the template context data
-    for the private threads page.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 
@@ -56,33 +56,33 @@ class GetPrivateThreadsPageContextDataHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetPrivateThreadsPageContextDataHookAction,
+        action: GetPrivateThreadListContextDataHookAction,
         request: HttpRequest,
         kwargs: dict,
     ) -> dict: ...
 
 
-class GetPrivateThreadsPageContextDataHook(
+class GetPrivateThreadListContextDataHook(
     FilterHook[
-        GetPrivateThreadsPageContextDataHookAction,
-        GetPrivateThreadsPageContextDataHookFilter,
+        GetPrivateThreadListContextDataHookAction,
+        GetPrivateThreadListContextDataHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to get
-    the template context data for the private threads page.
+    the template context data for the private thread list view.
 
     # Example
 
-    The code below implements a custom filter function that adds custom context
-    data to the private threads page:
+    The code below implements a custom filter function that adds extra values to
+    the template context data:
 
     ```python
     from django.http import HttpRequest
-    from misago.threads.hooks import get_private_threads_page_context_data_hook
+    from misago.privatethreads.hooks import get_private_thread_list_context_data_hook
 
 
-    @get_private_threads_page_context_data_hook.append_filter
+    @get_private_thread_list_context_data_hook.append_filter
     def include_custom_context(action, request: HttpRequest, : dict) -> dict:
         context = action(request, kwargs)
 
@@ -96,13 +96,13 @@ class GetPrivateThreadsPageContextDataHook(
 
     def __call__(
         self,
-        action: GetPrivateThreadsPageContextDataHookAction,
+        action: GetPrivateThreadListContextDataHookAction,
         request: HttpRequest,
         kwargs: dict,
     ) -> dict:
         return super().__call__(action, request, kwargs)
 
 
-get_private_threads_page_context_data_hook = GetPrivateThreadsPageContextDataHook(
+get_private_thread_list_context_data_hook = GetPrivateThreadListContextDataHook(
     cache=False
 )

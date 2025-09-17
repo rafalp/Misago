@@ -1,22 +1,22 @@
-# `get_private_threads_page_filters_hook`
+# `get_private_thread_list_filters_hook`
 
-This hook wraps the standard function that Misago uses to get available filters for the private threads list.
+This hook wraps the standard function that Misago uses to get available filters for the private thread list view.
 
 
 ## Location
 
-This hook can be imported from `misago.threads.hooks`:
+This hook can be imported from `misago.privatethreads.hooks`:
 
 ```python
-from misago.threads.hooks import get_private_threads_page_filters_hook
+from misago.privatethreads.hooks import get_private_thread_list_filters_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_private_threads_page_filters_filter(
-    action: GetPrivateThreadsPageFiltersHookAction, request: HttpRequest
+def custom_get_private_thread_list_filters_filter(
+    action: GetPrivateThreadListFiltersHookAction, request: HttpRequest
 ) -> list[ThreadsFilter]:
     ...
 ```
@@ -26,9 +26,9 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetPrivateThreadsPageFiltersHookAction`
+#### `action: GetPrivateThreadListFiltersHookAction`
 
-Misago function used to get available filters for the private threads list.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
@@ -46,11 +46,11 @@ A Python `list` with `ThreadsFilter` instances.
 ## Action
 
 ```python
-def get_private_threads_page_filters_action(request: HttpRequest) -> list[ThreadsFilter]:
+def get_private_thread_list_filters_action(request: HttpRequest) -> list[ThreadsFilter]:
     ...
 ```
 
-Misago function used to get available filters for the private threads list.
+Misago function used to get available filters for the private thread list view.
 
 
 ### Arguments
@@ -71,8 +71,8 @@ The code below implements a custom filter function that includes a new filter:
 
 ```python
 from django.http import HttpRequest
+from misago.privatethreads.hooks import get_private_thread_list_filters_hook
 from misago.threads.filters import ThreadsFilter
-from misago.threads.hooks import get_private_threads_page_filters_hook
 
 
 class CustomFilter(ThreadsFilter):
@@ -86,7 +86,7 @@ class CustomFilter(ThreadsFilter):
         return queryset.filter(plugin_data__custom=True)
 
 
-@get_private_threads_page_filters_hook.append_filter
+@get_private_thread_list_filters_hook.append_filter
 def include_custom_filter(action, request: HttpRequest) -> list[ThreadsFilter]:
     filters = action(request)
     filters.append(CustomFilter(request))

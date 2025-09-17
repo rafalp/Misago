@@ -36,8 +36,8 @@ class GetThreadsPageContextDataHookFilter(Protocol):
 
     ## `action: GetThreadsPageContextDataHookAction`
 
-    Misago function used to get the template context data
-    for the threads page.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

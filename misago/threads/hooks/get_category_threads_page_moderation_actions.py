@@ -44,8 +44,8 @@ class GetCategoryThreadsPageModerationActionsHookFilter(Protocol):
 
     ## `action: GetCategoryThreadsPageModerationActionsHookAction`
 
-    Misago function used to get available filters for
-    a category's threads list.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

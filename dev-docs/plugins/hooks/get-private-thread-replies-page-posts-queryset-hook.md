@@ -32,7 +32,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetPrivateThreadRepliesPagePostsQuerysetHookAction`
 
-Misago function used to get a queryset used to get posts displayed on the ptivate thread replies page.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 

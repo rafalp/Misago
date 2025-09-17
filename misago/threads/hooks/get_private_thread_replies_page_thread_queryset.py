@@ -33,8 +33,8 @@ class GetPrivateThreadRepliesPageThreadQuerysetHookFilter(Protocol):
 
     ## `action: GetPrivateThreadRepliesPageThreadQuerysetHookAction`
 
-    Misago function used to get a queryset used to get a thread for
-    the private thread replies page.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

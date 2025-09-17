@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views.list import category_threads, private_threads, threads
+from .views.list import category_threads, threads
 from .views.post import (
     ThreadPostLastView,
     ThreadPostSolutionView,
@@ -31,16 +31,6 @@ urlpatterns = [
         "c/<slug:slug>/<int:id>/<slug:filter>/",
         category_threads,
         name="category",
-    ),
-    path(
-        "private/",
-        private_threads,
-        name="private-threads",
-    ),
-    path(
-        "private/<slug:filter>/",
-        private_threads,
-        name="private-threads",
     ),
     path(
         "t/<slug:slug>/<int:id>/",

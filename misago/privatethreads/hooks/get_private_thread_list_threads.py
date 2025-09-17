@@ -6,10 +6,10 @@ from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 
-class GetPrivateThreadsPageThreadsHookAction(Protocol):
+class GetPrivateThreadListThreadsHookAction(Protocol):
     """
-    Misago function used to get the complete threads data for
-    the private threads page. Returns a `dict` that is included in the template
+    Misago function used to get the complete thread data for
+    the private thread list view. Returns a `dict` that is added to the template
     context under the `threads` key.
 
     # Arguments
@@ -39,17 +39,16 @@ class GetPrivateThreadsPageThreadsHookAction(Protocol):
     ) -> dict: ...
 
 
-class GetPrivateThreadsPageThreadsHookFilter(Protocol):
+class GetPrivateThreadListThreadsHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetPrivateThreadsPageThreadsHookAction`
+    ## `action: GetPrivateThreadListThreadsHookAction`
 
-    Misago function used to get the complete threads data for
-    the private threads page. Returns a `dict` that is included in the template
-    context under the `threads` key.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 
@@ -72,22 +71,22 @@ class GetPrivateThreadsPageThreadsHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetPrivateThreadsPageThreadsHookAction,
+        action: GetPrivateThreadListThreadsHookAction,
         request: HttpRequest,
         category: Category,
         kwargs: dict,
     ) -> dict: ...
 
 
-class GetPrivateThreadsPageThreadsHook(
+class GetPrivateThreadListThreadsHook(
     FilterHook[
-        GetPrivateThreadsPageThreadsHookAction,
-        GetPrivateThreadsPageThreadsHookFilter,
+        GetPrivateThreadListThreadsHookAction,
+        GetPrivateThreadListThreadsHookFilter,
     ]
 ):
     """
-    This hook wraps the standard function that Misago uses to get
-    complete threads data for the private threads page.
+    This hook wraps the standard function that Misago uses to get the complete
+    thread data for the private thread list view.
 
     # Example
 
@@ -97,10 +96,10 @@ class GetPrivateThreadsPageThreadsHook(
     ```python
     from django.http import HttpRequest
     from misago.categories.models import Category
-    from misago.threads.hooks import get_private_threads_page_threads_hook
+    from misago.privatethreads.hooks import get_private_thread_list_threads_hook
 
 
-    @get_private_threads_page_threads_hook.append_filter
+    @get_private_thread_list_threads_hook.append_filter
     def replace_threads_list_template(
         action, request: HttpRequest, category: Category, kwargs: dict
     ) -> dict:
@@ -114,7 +113,7 @@ class GetPrivateThreadsPageThreadsHook(
 
     def __call__(
         self,
-        action: GetPrivateThreadsPageThreadsHookAction,
+        action: GetPrivateThreadListThreadsHookAction,
         request: HttpRequest,
         category: Category,
         kwargs: dict,
@@ -122,4 +121,4 @@ class GetPrivateThreadsPageThreadsHook(
         return super().__call__(action, request, category, kwargs)
 
 
-get_private_threads_page_threads_hook = GetPrivateThreadsPageThreadsHook(cache=False)
+get_private_thread_list_threads_hook = GetPrivateThreadListThreadsHook(cache=False)
