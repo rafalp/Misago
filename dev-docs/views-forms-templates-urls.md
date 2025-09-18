@@ -98,6 +98,13 @@ class PrivateThreadStartView(View):
     template_name = "private_thread_start/index.html"
 ```
 
+For detail views, you can omit the `detail` part from the template name:
+
+```python
+class PrivateThreadDetailView(View):
+    template_name = "private_thread/index.html"
+```
+
 If multiple views are closely related (e.g., each view handles a different tab or a section of a single page), you can put their templates in the same directory:
 
 ```python
@@ -157,4 +164,16 @@ path("/...", ThreadStartView.as_view(), name="thread-start")
 path("/...", PrivateThreadStartView.as_view(), name="private-thread-start")
 
 path("/...", AccountPreferencesView.as_view(), name="account-preferences")
+```
+
+For a model’s default or detail view, you can use the model’s name instead:
+
+```python
+path("/...", ThreadDetailView.as_view(), name="thread")
+```
+
+Prefix the `id` url parameter with the model name:
+
+```python
+path("/t/<str:slug>/<int:thread_id>/", ThreadDetailView.as_view(), name="thread")
 ```
