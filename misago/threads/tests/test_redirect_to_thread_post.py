@@ -15,6 +15,8 @@ def test_redirect_to_thread_post_returns_redirect_to_post(
     assert response.status_code == 302
     assert (
         response["location"]
-        == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
         + f"#post-{post.id}"
     )

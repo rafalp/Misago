@@ -31,7 +31,7 @@ def get_next_thread_url(
     if resolved_url_name == url_name:
         return request.path
 
-    return reverse(url_name, kwargs={"id": thread.id, "slug": thread.slug})
+    return reverse(url_name, kwargs={"thread_id": thread.id, "slug": thread.slug})
 
 
 def _get_next_thread_url_from_query_dict(

@@ -18,7 +18,10 @@ def test_private_thread_members_add_view_renders_form(user_client, user_private_
     response = user_client.get(
         reverse(
             "misago:private-thread-members-add",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         )
     )
     assert_contains(response, "Add members")
@@ -30,7 +33,10 @@ def test_private_thread_members_add_view_renders_form_in_htmx(
     response = user_client.get(
         reverse(
             "misago:private-thread-members-add",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
         headers={"hx-request": "true"},
     )
@@ -47,7 +53,10 @@ def test_private_thread_members_add_view_does_nothing_if_new_users_are_members_a
     response = user_client.post(
         reverse(
             "misago:private-thread-members-add",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
         {"users": [user.username, other_user.username]},
     )
@@ -55,7 +64,7 @@ def test_private_thread_members_add_view_does_nothing_if_new_users_are_members_a
     assert response.status_code == 302
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
     )
 
     PrivateThreadMember.objects.get(thread=user_private_thread, user=other_user)
@@ -71,7 +80,10 @@ def test_private_thread_members_add_view_adds_new_thread_members(
     response = user_client.post(
         reverse(
             "misago:private-thread-members-add",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
         {"users": [admin.username]},
     )
@@ -79,7 +91,7 @@ def test_private_thread_members_add_view_adds_new_thread_members(
     assert response.status_code == 302
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
     )
 
     PrivateThreadMember.objects.get(thread=user_private_thread, user=admin)
@@ -101,7 +113,10 @@ def test_private_thread_members_add_view_adds_new_thread_members_using_noscript_
     response = user_client.post(
         reverse(
             "misago:private-thread-members-add",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
         {"users_noscript": admin.username},
     )
@@ -109,7 +124,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_using_noscript_
     assert response.status_code == 302
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
     )
 
     PrivateThreadMember.objects.get(thread=user_private_thread, user=admin)
@@ -131,7 +146,10 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_htmx(
     response = user_client.post(
         reverse(
             "misago:private-thread-members-add",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
         {"users": [admin.username]},
         headers={"hx-request": "true"},
@@ -159,7 +177,10 @@ def test_private_thread_members_add_view_returns_redirect_to_next_thread_url(
     next_url = (
         reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         )
         + "?next=true"
     )
@@ -167,7 +188,10 @@ def test_private_thread_members_add_view_returns_redirect_to_next_thread_url(
     response = user_client.post(
         reverse(
             "misago:private-thread-members-add",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
         {
             "users": [admin.username],
@@ -185,7 +209,10 @@ def test_private_thread_members_add_view_returns_redirect_to_default_thread_url_
     response = user_client.post(
         reverse(
             "misago:private-thread-members-add",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
         {
             "users": [admin.username],
@@ -196,7 +223,7 @@ def test_private_thread_members_add_view_returns_redirect_to_default_thread_url_
     assert response.status_code == 302
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
     )
 
 
@@ -206,7 +233,7 @@ def test_private_thread_members_add_view_returns_404_if_thread_doesnt_exist(
     response = user_client.get(
         reverse(
             "misago:private-thread-members-add",
-            kwargs={"id": 1, "slug": "invalid"},
+            kwargs={"thread_id": 1, "slug": "invalid"},
         )
     )
     assert response.status_code == 404
@@ -221,7 +248,10 @@ def test_private_thread_members_add_view_checks_private_threads_permission(
     response = user_client.get(
         reverse(
             "misago:private-thread-members-add",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         )
     )
     assert_contains(response, "You can&#x27;t use private threads.", 403)
@@ -233,7 +263,7 @@ def test_private_thread_members_add_view_checks_private_thread_access(
     response = user_client.get(
         reverse(
             "misago:private-thread-members-add",
-            kwargs={"id": private_thread.id, "slug": private_thread.slug},
+            kwargs={"thread_id": private_thread.id, "slug": private_thread.slug},
         )
     )
     assert response.status_code == 404
@@ -246,7 +276,7 @@ def test_private_thread_members_add_view_checks_private_thread_ownership(
         reverse(
             "misago:private-thread-members-add",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -263,7 +293,7 @@ def test_private_thread_members_add_view_allows_moderators_to_add_new_members(
         reverse(
             "misago:private-thread-members-add",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )

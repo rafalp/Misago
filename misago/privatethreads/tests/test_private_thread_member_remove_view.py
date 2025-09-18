@@ -15,7 +15,7 @@ def test_private_thread_member_remove_view_displays_confirm_page_on_get_for_thre
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -34,7 +34,7 @@ def test_private_thread_member_remove_view_displays_confirm_page_on_get_for_mode
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -53,7 +53,7 @@ def test_private_thread_member_remove_view_removes_thread_member(
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -63,7 +63,7 @@ def test_private_thread_member_remove_view_removes_thread_member(
     assert response["location"] == reverse(
         "misago:private-thread",
         kwargs={
-            "id": user_private_thread.id,
+            "thread_id": user_private_thread.id,
             "slug": user_private_thread.slug,
         },
     )
@@ -86,7 +86,7 @@ def test_private_thread_member_remove_view_removes_thread_member_for_moderator(
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -96,7 +96,7 @@ def test_private_thread_member_remove_view_removes_thread_member_for_moderator(
     assert response["location"] == reverse(
         "misago:private-thread",
         kwargs={
-            "id": user_private_thread.id,
+            "thread_id": user_private_thread.id,
             "slug": user_private_thread.slug,
         },
     )
@@ -118,7 +118,7 @@ def test_private_thread_member_remove_view_returns_redirect_to_next_url(
     next_url = reverse(
         "misago:private-thread",
         kwargs={
-            "id": user_private_thread.id,
+            "thread_id": user_private_thread.id,
             "slug": user_private_thread.slug,
             "page": 42,
         },
@@ -128,7 +128,7 @@ def test_private_thread_member_remove_view_returns_redirect_to_next_url(
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -145,7 +145,7 @@ def test_private_thread_member_remove_view_returns_redirect_to_thread_if_next_ur
     next_url = reverse(
         "misago:thread",
         kwargs={
-            "id": user_private_thread.id,
+            "thread_id": user_private_thread.id,
             "slug": user_private_thread.slug,
             "page": 42,
         },
@@ -155,7 +155,7 @@ def test_private_thread_member_remove_view_returns_redirect_to_thread_if_next_ur
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -166,7 +166,7 @@ def test_private_thread_member_remove_view_returns_redirect_to_thread_if_next_ur
     assert response["location"] == reverse(
         "misago:private-thread",
         kwargs={
-            "id": user_private_thread.id,
+            "thread_id": user_private_thread.id,
             "slug": user_private_thread.slug,
         },
     )
@@ -179,7 +179,7 @@ def test_private_thread_member_remove_view_removes_thread_member_in_htmx(
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -207,7 +207,7 @@ def test_private_thread_member_remove_view_does_nothing_if_user_tries_to_delete_
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": user.id,
             },
@@ -217,7 +217,7 @@ def test_private_thread_member_remove_view_does_nothing_if_user_tries_to_delete_
     assert response["location"] == reverse(
         "misago:private-thread",
         kwargs={
-            "id": user_private_thread.id,
+            "thread_id": user_private_thread.id,
             "slug": user_private_thread.slug,
         },
     )
@@ -239,7 +239,7 @@ def test_private_thread_member_remove_view_returns_403_if_user_cant_use_private_
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": 1,
+                "thread_id": 1,
                 "slug": "thread",
                 "user_id": other_user.id,
             },
@@ -255,7 +255,7 @@ def test_private_thread_member_remove_view_returns_404_if_thread_doesnt_exist(
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": 1,
+                "thread_id": 1,
                 "slug": "thread",
                 "user_id": other_user.id,
             },
@@ -271,7 +271,7 @@ def test_private_thread_member_remove_view_returns_404_if_user_cant_access_threa
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": private_thread.id,
+                "thread_id": private_thread.id,
                 "slug": private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -287,7 +287,7 @@ def test_private_thread_member_remove_view_returns_redirect_if_member_doesnt_exi
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id * 10,
             },
@@ -303,7 +303,7 @@ def test_private_thread_member_remove_view_returns_404_if_member_doesnt_exist_in
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id * 10,
             },
@@ -320,7 +320,7 @@ def test_private_thread_member_remove_view_returns_403_if_user_is_not_thread_own
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": moderator.id,
             },
@@ -336,7 +336,7 @@ def test_private_thread_member_remove_view_returns_403_if_member_cant_be_removed
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": moderator.id,
             },
@@ -354,7 +354,7 @@ def test_private_thread_member_remove_view_returns_404_if_thread_is_not_private(
         reverse(
             "misago:private-thread-member-remove",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
                 "user_id": other_user.id,
             },

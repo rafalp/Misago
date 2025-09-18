@@ -13,7 +13,7 @@ def test_thread_replies_view_shows_error_on_missing_permission(
     CategoryGroupPermission.objects.filter(group=guests_group).delete()
 
     response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_not_contains(response, thread.title, status_code=404)
 
@@ -22,7 +22,7 @@ def test_thread_replies_view_filters_posts_using_user_permissions(
     client, thread, post, unapproved_reply
 ):
     response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
     assert_contains(response, post.parsed)
@@ -31,11 +31,11 @@ def test_thread_replies_view_filters_posts_using_user_permissions(
 
 def test_thread_replies_view_redirects_if_slug_is_invalid(moderator_client, thread):
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": "invalid"}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": "invalid"}),
     )
     assert response.status_code == 301
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
 
@@ -43,7 +43,7 @@ def test_thread_replies_view_ignores_invalid_slug_in_htmx(
     moderator_client, thread, post
 ):
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": "invalid"}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": "invalid"}),
         headers={"hx-request": "true"},
     )
     assert_contains(response, post.parsed)
@@ -54,12 +54,13 @@ def test_thread_replies_view_redirects_to_last_page_if_page_number_is_too_large(
 ):
     response = moderator_client.get(
         reverse(
-            "misago:thread", kwargs={"id": thread.id, "slug": thread.slug, "page": 1000}
+            "misago:thread",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 1000},
         ),
     )
     assert response.status_code == 302
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
 
@@ -68,7 +69,8 @@ def test_thread_replies_view_shows_last_page_if_page_number_is_too_large_in_htmx
 ):
     response = moderator_client.get(
         reverse(
-            "misago:thread", kwargs={"id": thread.id, "slug": thread.slug, "page": 1000}
+            "misago:thread",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 1000},
         ),
         headers={"hx-request": "true"},
     )
@@ -77,7 +79,7 @@ def test_thread_replies_view_shows_last_page_if_page_number_is_too_large_in_htmx
 
 def test_thread_replies_view_shows_to_anonymous_user(client, thread, post):
     response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
     assert_contains(response, post.parsed)
@@ -85,7 +87,7 @@ def test_thread_replies_view_shows_to_anonymous_user(client, thread, post):
 
 def test_thread_replies_view_shows_to_user(user_client, thread, post):
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
     assert_contains(response, post.parsed)
@@ -101,7 +103,7 @@ def test_thread_replies_view_shows_to_category_moderator(
     )
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
     assert_contains(response, post.parsed)
@@ -109,7 +111,7 @@ def test_thread_replies_view_shows_to_category_moderator(
 
 def test_thread_replies_view_shows_to_global_moderator(moderator_client, thread, post):
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
     assert_contains(response, post.parsed)
@@ -117,7 +119,7 @@ def test_thread_replies_view_shows_to_global_moderator(moderator_client, thread,
 
 def test_thread_replies_view_shows_to_anonymous_user_in_htmx(client, thread, post):
     response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         headers={"hx-request": "true"},
     )
     assert_contains(response, thread.title)
@@ -126,7 +128,7 @@ def test_thread_replies_view_shows_to_anonymous_user_in_htmx(client, thread, pos
 
 def test_thread_replies_view_shows_to_user_in_htmx(user_client, thread, post):
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         headers={"hx-request": "true"},
     )
     assert_contains(response, thread.title)
@@ -143,7 +145,7 @@ def test_thread_replies_view_shows_to_category_moderator_in_htmx(
     )
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         headers={"hx-request": "true"},
     )
     assert_contains(response, thread.title)
@@ -154,7 +156,7 @@ def test_thread_replies_view_shows_to_global_moderator_in_htmx(
     moderator_client, thread, post
 ):
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         headers={"hx-request": "true"},
     )
     assert_contains(response, thread.title)
@@ -171,7 +173,7 @@ def test_thread_replies_view_shows_anonymous_unapproved_reply_to_category_modera
     )
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         headers={"hx-request": "true"},
     )
     assert_contains(response, thread.title)
@@ -183,7 +185,7 @@ def test_thread_replies_view_shows_anonymous_unapproved_reply_to_global_moderato
     moderator_client, thread, post, unapproved_reply
 ):
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         headers={"hx-request": "true"},
     )
     assert_contains(response, thread.title)
@@ -201,7 +203,7 @@ def test_thread_replies_view_shows_other_users_unapproved_reply_to_category_mode
     )
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         headers={"hx-request": "true"},
     )
     assert_contains(response, thread.title)
@@ -213,7 +215,7 @@ def test_thread_replies_view_shows_other_users_unapproved_reply_to_global_modera
     moderator_client, thread, post, other_user_unapproved_reply
 ):
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         headers={"hx-request": "true"},
     )
     assert_contains(response, thread.title)
@@ -243,7 +245,7 @@ def test_thread_replies_view_shows_post_with_attachments(
     text_attachment.save()
 
     response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
     assert_contains(response, post.parsed)
@@ -322,7 +324,7 @@ def test_thread_replies_view_shows_post_with_embed_attachments(
     text_attachment.save()
 
     response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
     assert_not_contains(response, post.parsed)
@@ -339,7 +341,7 @@ def test_thread_replies_view_filters_thread_updates_using_user_permissions(
     hidden_thread_update = create_test_thread_update(thread, user, is_hidden=True)
 
     response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
     assert_contains(response, f"[{visible_thread_update.id}]")
@@ -359,7 +361,7 @@ def test_thread_replies_view_shows_hidden_thread_updates_to_category_moderator(
     hidden_thread_update = create_test_thread_update(thread, user, is_hidden=True)
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
     assert_contains(response, f"[{visible_thread_update.id}]")
@@ -373,7 +375,7 @@ def test_thread_replies_view_shows_hidden_thread_updates_to_global_moderator(
     hidden_thread_update = create_test_thread_update(thread, user, is_hidden=True)
 
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
     assert_contains(response, f"[{visible_thread_update.id}]")
@@ -387,7 +389,7 @@ def test_thread_replies_view_limits_thread_updates(client, user, thread):
         thread_updates.append(create_test_thread_update(thread, user))
 
     response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
     assert_not_contains(response, f"[{thread_updates[0].id}]")
@@ -409,7 +411,7 @@ def test_thread_replies_view_shows_thread_updates_on_first_page(
     last_page_thread_update = create_test_thread_update(thread, user)
 
     response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
     assert_contains(response, f"[{first_page_thread_update.id}]")
@@ -439,7 +441,8 @@ def test_thread_replies_view_shows_thread_updates_on_second_page(
 
     response = client.get(
         reverse(
-            "misago:thread", kwargs={"id": thread.id, "slug": thread.slug, "page": 2}
+            "misago:thread",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 2},
         )
     )
     assert_contains(response, thread.title)
@@ -466,7 +469,8 @@ def test_thread_replies_view_shows_thread_updates_on_last_page(
 
     response = client.get(
         reverse(
-            "misago:thread", kwargs={"id": thread.id, "slug": thread.slug, "page": 2}
+            "misago:thread",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 2},
         )
     )
     assert_contains(response, thread.title)
@@ -480,7 +484,10 @@ def test_thread_replies_view_shows_error_if_private_thread_is_accessed(
     response = user_client.get(
         reverse(
             "misago:thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
     )
     assert_not_contains(response, user_private_thread.title, status_code=404)

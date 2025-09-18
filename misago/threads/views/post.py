@@ -14,8 +14,10 @@ from .generic import ThreadView
 
 
 class PostView(View):
-    def get(self, request: HttpRequest, id: int, slug: str, **kwargs) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def get(
+        self, request: HttpRequest, thread_id: int, slug: str, **kwargs
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
         queryset = self.get_thread_posts_queryset(request, thread)
         post = self.get_post(request, thread, queryset, kwargs)
         paginator = self.get_thread_posts_paginator(request, queryset)
@@ -31,8 +33,10 @@ class PostView(View):
         thread_url = self.get_thread_url(thread, page) + f"#post-{post_id}"
         return redirect(thread_url)
 
-    def post(self, request: HttpRequest, id: int, slug: str, **kwargs) -> HttpResponse:
-        return self.get(request, id, slug, **kwargs)
+    def post(
+        self, request: HttpRequest, thread_id: int, slug: str, **kwargs
+    ) -> HttpResponse:
+        return self.get(request, thread_id, slug, **kwargs)
 
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict

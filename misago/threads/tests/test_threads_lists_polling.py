@@ -428,7 +428,7 @@ def test_category_threads_list_poll_raises_404_error_if_filter_is_invalid(
         reverse(
             "misago:category",
             kwargs={
-                "id": default_category.id,
+                "category_id": default_category.id,
                 "slug": default_category.slug,
                 "filter": "invalid",
             },
@@ -449,7 +449,7 @@ def test_category_threads_list_poll_filters_threads(
         reverse(
             "misago:category",
             kwargs={
-                "id": default_category.id,
+                "category_id": default_category.id,
                 "slug": default_category.slug,
                 "filter": "my",
             },

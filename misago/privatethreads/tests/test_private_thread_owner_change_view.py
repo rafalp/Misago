@@ -16,7 +16,7 @@ def test_private_thread_owner_change_view_displays_confirm_page_on_get_for_threa
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -35,7 +35,7 @@ def test_private_thread_owner_change_view_displays_confirm_page_on_get_for_moder
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -54,7 +54,7 @@ def test_private_thread_owner_change_view_changes_thread_owner(
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -64,7 +64,7 @@ def test_private_thread_owner_change_view_changes_thread_owner(
     assert response["location"] == reverse(
         "misago:private-thread",
         kwargs={
-            "id": user_private_thread.id,
+            "thread_id": user_private_thread.id,
             "slug": user_private_thread.slug,
         },
     )
@@ -87,7 +87,7 @@ def test_private_thread_owner_change_view_changes_thread_owner_for_moderator(
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -97,7 +97,7 @@ def test_private_thread_owner_change_view_changes_thread_owner_for_moderator(
     assert response["location"] == reverse(
         "misago:private-thread",
         kwargs={
-            "id": user_private_thread.id,
+            "thread_id": user_private_thread.id,
             "slug": user_private_thread.slug,
         },
     )
@@ -119,7 +119,7 @@ def test_private_thread_owner_change_view_returns_redirect_to_next_url(
     next_url = reverse(
         "misago:private-thread",
         kwargs={
-            "id": user_private_thread.id,
+            "thread_id": user_private_thread.id,
             "slug": user_private_thread.slug,
             "page": 42,
         },
@@ -129,7 +129,7 @@ def test_private_thread_owner_change_view_returns_redirect_to_next_url(
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -146,7 +146,7 @@ def test_private_thread_owner_change_view_returns_redirect_to_thread_if_next_url
     next_url = reverse(
         "misago:thread",
         kwargs={
-            "id": user_private_thread.id,
+            "thread_id": user_private_thread.id,
             "slug": user_private_thread.slug,
             "page": 42,
         },
@@ -156,7 +156,7 @@ def test_private_thread_owner_change_view_returns_redirect_to_thread_if_next_url
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -167,7 +167,7 @@ def test_private_thread_owner_change_view_returns_redirect_to_thread_if_next_url
     assert response["location"] == reverse(
         "misago:private-thread",
         kwargs={
-            "id": user_private_thread.id,
+            "thread_id": user_private_thread.id,
             "slug": user_private_thread.slug,
         },
     )
@@ -180,7 +180,7 @@ def test_private_thread_owner_change_view_changes_thread_owner_in_htmx(
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -208,7 +208,7 @@ def test_private_thread_owner_change_view_does_nothing_if_member_is_already_owne
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": user.id,
             },
@@ -218,7 +218,7 @@ def test_private_thread_owner_change_view_does_nothing_if_member_is_already_owne
     assert response["location"] == reverse(
         "misago:private-thread",
         kwargs={
-            "id": user_private_thread.id,
+            "thread_id": user_private_thread.id,
             "slug": user_private_thread.slug,
         },
     )
@@ -240,7 +240,7 @@ def test_private_thread_owner_change_view_returns_403_if_user_cant_use_private_t
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": 1,
+                "thread_id": 1,
                 "slug": "thread",
                 "user_id": other_user.id,
             },
@@ -256,7 +256,7 @@ def test_private_thread_owner_change_view_returns_404_if_thread_doesnt_exist(
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": 1,
+                "thread_id": 1,
                 "slug": "thread",
                 "user_id": other_user.id,
             },
@@ -272,7 +272,7 @@ def test_private_thread_owner_change_view_returns_404_if_user_cant_access_thread
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": private_thread.id,
+                "thread_id": private_thread.id,
                 "slug": private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -288,7 +288,7 @@ def test_private_thread_owner_change_view_returns_redirect_if_member_doesnt_exis
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id * 10,
             },
@@ -304,7 +304,7 @@ def test_private_thread_owner_change_view_returns_404_if_member_doesnt_exist_in_
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id * 10,
             },
@@ -321,7 +321,7 @@ def test_private_thread_owner_change_view_returns_403_if_user_is_not_thread_owne
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -339,7 +339,7 @@ def test_private_thread_owner_change_view_returns_403_if_member_cant_be_made_own
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "user_id": other_user.id,
             },
@@ -355,7 +355,7 @@ def test_private_thread_owner_change_view_returns_404_if_thread_is_not_private(
         reverse(
             "misago:private-thread-owner-change",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
                 "user_id": other_user.id,
             },

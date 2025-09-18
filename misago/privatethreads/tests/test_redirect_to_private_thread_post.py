@@ -19,7 +19,7 @@ def test_redirect_to_private_thread_post_returns_redirect_to_post(
         response["location"]
         == reverse(
             "misago:private-thread",
-            kwargs={"id": private_thread.id, "slug": private_thread.slug},
+            kwargs={"thread_id": private_thread.id, "slug": private_thread.slug},
         )
         + f"#post-{private_thread_post.id}"
     )

@@ -11,7 +11,7 @@ from ..synchronize import synchronize_thread
 
 def test_thread_replies_view_doesnt_mark_unread_threads_for_guest(client, thread):
     response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
 
@@ -29,7 +29,7 @@ def test_thread_replies_view_marks_category_as_read_for_user(
     default_category.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
 
@@ -51,7 +51,7 @@ def test_thread_replies_view_marks_thread_as_read_for_user(
     default_category.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
 
@@ -84,7 +84,7 @@ def test_thread_replies_view_marks_unread_thread_posts_on_page_as_read_for_user(
     default_category.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
 
@@ -116,7 +116,10 @@ def test_thread_replies_view_updates_user_watched_thread_read_time(
     default_category.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": old_thread.id, "slug": old_thread.slug}),
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": old_thread.id, "slug": old_thread.slug},
+        ),
     )
     assert_contains(response, old_thread.title)
 
@@ -145,10 +148,7 @@ def test_thread_replies_view_marks_displayed_posts_notifications_as_read(
     user.save()
 
     response = user_client.get(
-        reverse(
-            "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
-        ),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
 

@@ -16,7 +16,8 @@ def test_start_thread_poll_view_shows_error_if_guest_has_no_category_permission(
 
     response = client.get(
         reverse(
-            "misago:thread-poll-start", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-start",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
     )
     assert response.status_code == 404
@@ -29,7 +30,8 @@ def test_start_thread_poll_view_shows_error_if_user_has_no_category_permission(
 
     response = user_client.get(
         reverse(
-            "misago:thread-poll-start", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-start",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
     )
     assert response.status_code == 404
@@ -43,7 +45,8 @@ def test_start_thread_poll_view_shows_error_if_guest_has_no_thread_permission(
 
     response = client.get(
         reverse(
-            "misago:thread-poll-start", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-start",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
     )
     assert response.status_code == 404
@@ -57,7 +60,8 @@ def test_start_thread_poll_view_shows_error_if_user_has_no_thread_permission(
 
     response = user_client.get(
         reverse(
-            "misago:thread-poll-start", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-start",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
     )
     assert response.status_code == 404
@@ -66,7 +70,8 @@ def test_start_thread_poll_view_shows_error_if_user_has_no_thread_permission(
 def test_start_thread_poll_view_shows_error_for_guests(client, thread):
     response = client.get(
         reverse(
-            "misago:thread-poll-start", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-start",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
     )
     assert_contains(response, "You must be signed in to start polls.", 403)
@@ -77,7 +82,8 @@ def test_start_thread_poll_view_shows_error_for_user_without_permission(
 ):
     response = user_client.get(
         reverse(
-            "misago:thread-poll-start", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-start",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
     )
     assert_contains(
@@ -91,7 +97,7 @@ def test_start_thread_poll_view_shows_error_for_user_with_permission_if_thread_h
     response = user_client.get(
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
     )
     assert_contains(response, "This thread already has a poll.", 403)
@@ -101,7 +107,7 @@ def test_start_thread_poll_view_shows_form(user_client, user_thread):
     response = user_client.get(
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
     )
     assert_contains(response, "Start poll")
@@ -112,7 +118,7 @@ def test_start_thread_poll_view_displays_public_poll_option(user_client, user_th
     response = user_client.get(
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
     )
     assert_contains(response, "Start poll")
@@ -124,7 +130,7 @@ def test_start_thread_poll_view_hides_public_poll_option(user_client, user_threa
     response = user_client.get(
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
     )
     assert_contains(response, "Start poll")
@@ -135,7 +141,7 @@ def test_start_thread_poll_view_validates_poll_question(user_client, user_thread
     response = user_client.post(
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
         {
             "question": "W",
@@ -161,7 +167,7 @@ def test_start_thread_poll_view_validates_poll_choices_are_required(
     response = user_client.post(
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
         {
             "question": "What's your mood?",
@@ -180,7 +186,7 @@ def test_start_thread_poll_view_validates_poll_choices(user_client, user_thread)
     response = user_client.post(
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
         {
             "question": "What's your mood?",
@@ -208,7 +214,7 @@ def test_start_thread_poll_view_starts_thread_poll_using_choices_from_list(
     response = user_client.post(
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
         {
             "question": "What's your mood?",
@@ -227,7 +233,7 @@ def test_start_thread_poll_view_starts_thread_poll_using_choices_from_list(
     )
     assert response.status_code == 302
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": user_thread.pk, "slug": user_thread.slug}
+        "misago:thread", kwargs={"thread_id": user_thread.pk, "slug": user_thread.slug}
     )
 
     user_thread.refresh_from_db()
@@ -284,7 +290,7 @@ def test_start_thread_poll_view_starts_thread_poll_using_choices_from_textarea(
     response = user_client.post(
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
         {
             "question": "What's your mood?",
@@ -298,7 +304,7 @@ def test_start_thread_poll_view_starts_thread_poll_using_choices_from_textarea(
     )
     assert response.status_code == 302
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": user_thread.pk, "slug": user_thread.slug}
+        "misago:thread", kwargs={"thread_id": user_thread.pk, "slug": user_thread.slug}
     )
 
     user_thread.refresh_from_db()
@@ -355,7 +361,7 @@ def test_start_thread_poll_view_overrides_max_choices_with_poll_choices_number(
     response = user_client.post(
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
         {
             "question": "What's your mood?",
@@ -374,7 +380,7 @@ def test_start_thread_poll_view_overrides_max_choices_with_poll_choices_number(
     )
     assert response.status_code == 302
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": user_thread.pk, "slug": user_thread.slug}
+        "misago:thread", kwargs={"thread_id": user_thread.pk, "slug": user_thread.slug}
     )
 
     user_thread.refresh_from_db()

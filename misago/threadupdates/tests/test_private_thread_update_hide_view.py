@@ -213,7 +213,7 @@ def test_private_thread_update_hide_view_returns_redirect_to_thread(
     assert response.status_code == 302
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
     )
 
 
@@ -235,7 +235,7 @@ def test_private_thread_update_hide_view_returns_redirect_to_thread_for_invalid_
     assert response.status_code == 302
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
     )
 
 

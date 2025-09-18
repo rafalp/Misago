@@ -12,7 +12,7 @@ def test_thread_post_last_view_returns_redirect_to_last_post(
     response = client.get(
         reverse(
             "misago:thread-post-last",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
 
@@ -21,7 +21,7 @@ def test_thread_post_last_view_returns_redirect_to_last_post(
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{reply.id}"
     )
@@ -36,7 +36,7 @@ def test_thread_post_last_view_returns_redirect_to_last_visible_post(
     response = client.get(
         reverse(
             "misago:thread-post-last",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
 
@@ -45,7 +45,7 @@ def test_thread_post_last_view_returns_redirect_to_last_visible_post(
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{reply.id}"
     )
@@ -55,7 +55,7 @@ def test_thread_post_last_view_returns_error_404_if_thread_doesnt_exist(db, clie
     response = client.get(
         reverse(
             "misago:thread-post-last",
-            kwargs={"id": 1, "slug": "invalid"},
+            kwargs={"thread_id": 1, "slug": "invalid"},
         )
     )
 
@@ -73,7 +73,7 @@ def test_thread_post_last_view_returns_error_404_if_user_cant_see_thread(
     response = client.get(
         reverse(
             "misago:thread-post-last",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
 
@@ -94,7 +94,7 @@ def test_thread_post_last_view_returns_error_403_if_user_cant_see_thread_content
     response = client.get(
         reverse(
             "misago:thread-post-last",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
 
@@ -107,7 +107,10 @@ def test_thread_post_last_view_returns_error_404_if_thread_is_private(
     response = user_client.get(
         reverse(
             "misago:thread-post-last",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         )
     )
 

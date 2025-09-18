@@ -16,7 +16,7 @@ def test_private_thread_leave_view_displays_confirm_page_on_get_for_thread_owner
         reverse(
             "misago:private-thread-leave",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
             },
         )
@@ -31,7 +31,7 @@ def test_private_thread_leave_view_displays_confirm_page_on_get_for_member(
         reverse(
             "misago:private-thread-leave",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
             },
         )
@@ -46,7 +46,7 @@ def test_private_thread_leave_view_displays_confirm_page_on_get_for_moderator(
         reverse(
             "misago:private-thread-leave",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
             },
         )
@@ -61,7 +61,7 @@ def test_private_thread_leave_view_removes_thread_owner(
         reverse(
             "misago:private-thread-leave",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
             },
         )
@@ -89,7 +89,7 @@ def test_private_thread_leave_view_removes_thread_member(
         reverse(
             "misago:private-thread-leave",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
             },
         )
@@ -117,7 +117,7 @@ def test_private_thread_leave_view_removes_thread_moderator(
         reverse(
             "misago:private-thread-leave",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
             },
         )
@@ -148,7 +148,7 @@ def test_private_thread_member_deletes_thread_when_last_member_leaves(
         reverse(
             "misago:private-thread-leave",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
             },
         )
@@ -174,7 +174,7 @@ def test_private_thread_leave_view_returns_403_if_user_cant_use_private_threads(
         reverse(
             "misago:private-thread-leave",
             kwargs={
-                "id": 1,
+                "thread_id": 1,
                 "slug": "thread",
             },
         ),
@@ -189,7 +189,7 @@ def test_private_thread_leave_view_returns_404_if_thread_doesnt_exist(
         reverse(
             "misago:private-thread-leave",
             kwargs={
-                "id": 1,
+                "thread_id": 1,
                 "slug": "thread",
             },
         ),
@@ -204,7 +204,7 @@ def test_private_thread_leave_view_returns_404_if_user_cant_access_thread(
         reverse(
             "misago:private-thread-leave",
             kwargs={
-                "id": private_thread.id,
+                "thread_id": private_thread.id,
                 "slug": private_thread.slug,
             },
         ),
@@ -219,7 +219,7 @@ def test_private_thread_leave_view_returns_404_if_thread_is_not_private(
         reverse(
             "misago:private-thread-leave",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
             },
         ),

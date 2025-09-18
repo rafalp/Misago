@@ -96,7 +96,7 @@ def read_email_change_token(user: "User", token: str) -> str:
 
 def get_email_change_secret(user: "User") -> bytes:
     return (
-        f"{user.pk}:{user.email_hash}:{user.password}:{settings.SECRET_KEY}"
+        f"{user.id}:{user.email_hash}:{user.password}:{settings.SECRET_KEY}"
     ).encode("utf-8")
 
 

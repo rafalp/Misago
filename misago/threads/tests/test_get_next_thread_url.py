@@ -29,7 +29,7 @@ def test_get_next_thread_url_returns_thread_url_if_request_resolve_match_is_not_
 
     next_url = get_next_thread_url(request, thread, "misago:thread")
     assert next_url == reverse(
-        "misago:thread", kwargs={"slug": thread.slug, "id": thread.id}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
 
@@ -39,8 +39,8 @@ def test_get_next_thread_url_returns_thread_url_from_request_post_next_value(
     thread_url = reverse(
         "misago:thread",
         kwargs={
+            "thread_id": thread.id,
             "slug": thread.slug,
-            "id": thread.id,
         },
     )
 
@@ -57,8 +57,8 @@ def test_get_next_thread_url_returns_thread_page_url_from_request_post_next_valu
     thread_url = reverse(
         "misago:thread",
         kwargs={
+            "thread_id": thread.id,
             "slug": thread.slug,
-            "id": thread.id,
             "page": 21,
         },
     )
@@ -76,8 +76,8 @@ def test_get_next_thread_url_returns_thread_url_from_resolver_match_if_post_next
     thread_url = reverse(
         "misago:thread",
         kwargs={
+            "thread_id": thread.id,
             "slug": thread.slug,
-            "id": thread.id,
             "page": 21,
         },
     )
@@ -97,5 +97,5 @@ def test_get_next_thread_url_returns_thread_url_if_resolver_match_and_post_next_
 
     next_url = get_next_thread_url(request, thread, "misago:thread")
     assert next_url == reverse(
-        "misago:thread", kwargs={"slug": thread.slug, "id": thread.id}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )

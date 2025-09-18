@@ -12,7 +12,7 @@ def test_thread_post_view_returns_redirect_to_post(
     response = client.get(
         reverse(
             "misago:thread-post",
-            kwargs={"id": thread.id, "slug": thread.slug, "post_id": reply.id},
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": reply.id},
         )
     )
 
@@ -21,7 +21,7 @@ def test_thread_post_view_returns_redirect_to_post(
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{reply.id}"
     )
@@ -31,7 +31,7 @@ def test_thread_post_view_returns_error_404_if_thread_doesnt_exist(db, client):
     response = client.get(
         reverse(
             "misago:thread-post",
-            kwargs={"id": 1, "slug": "invalid", "post_id": 1},
+            kwargs={"thread_id": 1, "slug": "invalid", "post_id": 1},
         )
     )
 
@@ -43,7 +43,7 @@ def test_thread_post_view_returns_error_404_if_post_doesnt_exist(client, thread)
         reverse(
             "misago:thread-post",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
                 "post_id": thread.first_post_id + 1,
             },
@@ -66,7 +66,7 @@ def test_thread_post_view_returns_error_404_if_user_cant_see_thread(
     response = client.get(
         reverse(
             "misago:thread-post",
-            kwargs={"id": thread.id, "slug": thread.slug, "post_id": reply.id},
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": reply.id},
         )
     )
 
@@ -89,7 +89,7 @@ def test_thread_post_view_returns_error_403_if_user_cant_see_thread_contents(
     response = client.get(
         reverse(
             "misago:thread-post",
-            kwargs={"id": thread.id, "slug": thread.slug, "post_id": reply.id},
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": reply.id},
         )
     )
 
@@ -104,7 +104,7 @@ def test_thread_post_view_returns_error_404_if_user_cant_see_post(
     response = client.get(
         reverse(
             "misago:thread-post",
-            kwargs={"id": thread.id, "slug": thread.slug, "post_id": reply.id},
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": reply.id},
         )
     )
 
@@ -120,7 +120,7 @@ def test_thread_post_view_returns_error_404_if_thread_is_private(
         reverse(
             "misago:thread-post",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "post_id": reply.id,
             },

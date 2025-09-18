@@ -7,7 +7,7 @@ from ...test import assert_contains, assert_not_contains
 
 def test_thread_replies_view_displays_poll(client, thread, poll):
     response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
     assert_contains(response, poll.question)
@@ -20,7 +20,8 @@ def test_thread_replies_view_shows_start_poll_button_to_thread_starter_with_perm
 ):
     response = user_client.get(
         reverse(
-            "misago:thread", kwargs={"id": user_thread.id, "slug": user_thread.slug}
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
     )
     assert_contains(response, user_thread.title)
@@ -29,7 +30,7 @@ def test_thread_replies_view_shows_start_poll_button_to_thread_starter_with_perm
         response,
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
     )
 
@@ -38,7 +39,7 @@ def test_thread_replies_view_doesnt_show_start_poll_button_to_user_with_permissi
     user_client, thread
 ):
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
     assert_not_contains(response, "Start poll")
@@ -46,7 +47,7 @@ def test_thread_replies_view_doesnt_show_start_poll_button_to_user_with_permissi
         response,
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
     )
 
@@ -59,7 +60,8 @@ def test_thread_replies_view_doesnt_show_start_poll_button_to_thread_starter_wit
 
     response = user_client.get(
         reverse(
-            "misago:thread", kwargs={"id": user_thread.id, "slug": user_thread.slug}
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
     )
     assert_contains(response, user_thread.title)
@@ -68,7 +70,7 @@ def test_thread_replies_view_doesnt_show_start_poll_button_to_thread_starter_wit
         response,
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
     )
 
@@ -78,7 +80,8 @@ def test_thread_replies_view_doesnt_show_start_poll_button_to_thread_starter_wit
 ):
     response = user_client.get(
         reverse(
-            "misago:thread", kwargs={"id": user_thread.id, "slug": user_thread.slug}
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
     )
     assert_contains(response, user_thread.title)
@@ -88,14 +91,14 @@ def test_thread_replies_view_doesnt_show_start_poll_button_to_thread_starter_wit
         response,
         reverse(
             "misago:thread-poll-start",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
     )
 
 
 def test_thread_replies_view_displays_poll_results_to_guest(client, thread, poll):
     response = client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
     assert_contains(response, poll.question)
@@ -110,7 +113,7 @@ def test_thread_replies_view_displays_single_choice_poll_vote_form_to_user(
     poll.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
     assert_contains(response, poll.question)
@@ -124,7 +127,7 @@ def test_thread_replies_view_displays_multiple_choice_poll_vote_form_to_user(
     poll.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
     assert_contains(response, poll.question)
@@ -137,7 +140,7 @@ def test_thread_replies_view_displays_poll_results_to_user_who_voted_in_poll(
     poll_vote_factory(poll, user, "choice1")
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
     assert_contains(response, poll.question)
@@ -153,7 +156,7 @@ def test_thread_replies_view_displays_poll_results_to_user_if_poll_has_ended(
     poll.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
     assert_contains(response, poll.question)
@@ -165,7 +168,7 @@ def test_thread_replies_view_displays_poll_results_to_user_if_poll_is_closed(
     user_client, thread, closed_poll
 ):
     response = user_client.get(
-        reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug}),
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
     assert_contains(response, thread.title)
     assert_contains(response, closed_poll.question)

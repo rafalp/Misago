@@ -6,7 +6,7 @@ from django.http import HttpRequest
 from ...plugins.hooks import FilterHook
 
 
-class GetPrivateThreadRepliesPageThreadQuerysetHookAction(Protocol):
+class GetPrivateThreadPostsViewThreadQuerysetHookAction(Protocol):
     """
     Misago function used to get a queryset used to get a thread for
     the private thread replies page.
@@ -25,13 +25,13 @@ class GetPrivateThreadRepliesPageThreadQuerysetHookAction(Protocol):
     def __call__(self, request: HttpRequest) -> QuerySet: ...
 
 
-class GetPrivateThreadRepliesPageThreadQuerysetHookFilter(Protocol):
+class GetPrivateThreadPostsViewThreadQuerysetHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetPrivateThreadRepliesPageThreadQuerysetHookAction`
+    ## `action: GetPrivateThreadPostsViewThreadQuerysetHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -49,15 +49,15 @@ class GetPrivateThreadRepliesPageThreadQuerysetHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetPrivateThreadRepliesPageThreadQuerysetHookAction,
+        action: GetPrivateThreadPostsViewThreadQuerysetHookAction,
         request: HttpRequest,
     ) -> QuerySet: ...
 
 
-class GetPrivateThreadRepliesPageThreadQuerysetHook(
+class GetPrivateThreadPostsViewThreadQuerysetHook(
     FilterHook[
-        GetPrivateThreadRepliesPageThreadQuerysetHookAction,
-        GetPrivateThreadRepliesPageThreadQuerysetHookFilter,
+        GetPrivateThreadPostsViewThreadQuerysetHookAction,
+        GetPrivateThreadPostsViewThreadQuerysetHookFilter,
     ]
 ):
     """
@@ -71,10 +71,10 @@ class GetPrivateThreadRepliesPageThreadQuerysetHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.threads.hooks import get_private_thread_replies_page_thread_queryset_hook
+    from misago.privatethreads.hooks import get_private_thread_posts_view_thread_queryset_hook
 
 
-    @get_private_thread_replies_page_thread_queryset_hook.append_filter
+    @get_private_thread_posts_view_thread_queryset_hook.append_filter
     def select_related_plugin_data(action, request: HttpRequest):
         queryset = action(request)
         return queryset.select_related("plugin")
@@ -85,12 +85,12 @@ class GetPrivateThreadRepliesPageThreadQuerysetHook(
 
     def __call__(
         self,
-        action: GetPrivateThreadRepliesPageThreadQuerysetHookAction,
+        action: GetPrivateThreadPostsViewThreadQuerysetHookAction,
         request: HttpRequest,
     ) -> dict:
         return super().__call__(action, request)
 
 
-get_private_thread_replies_page_thread_queryset_hook = (
-    GetPrivateThreadRepliesPageThreadQuerysetHook()
+get_private_thread_posts_view_thread_queryset_hook = (
+    GetPrivateThreadPostsViewThreadQuerysetHook()
 )

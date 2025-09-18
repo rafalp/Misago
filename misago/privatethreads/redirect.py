@@ -23,7 +23,7 @@ def redirect_to_private_thread_post(
     offset = queryset.filter(id__lt=post.id).count()
     page = paginator.get_item_page(offset)
 
-    url_kwargs = {"id": thread.id, "slug": thread.slug}
+    url_kwargs = {"thread_id": thread.id, "slug": thread.slug}
     if page > 1:
         url_kwargs["page"] = page
 

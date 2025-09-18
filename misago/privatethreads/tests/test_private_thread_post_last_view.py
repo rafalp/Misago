@@ -10,7 +10,7 @@ def test_private_thread_post_last_view_returns_redirect_to_last_post(
         reverse(
             "misago:private-thread-post-last",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
             },
         )
@@ -21,7 +21,10 @@ def test_private_thread_post_last_view_returns_redirect_to_last_post(
         response["location"]
         == reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         )
         + f"#post-{reply.id}"
     )
@@ -33,7 +36,7 @@ def test_private_thread_post_last_view_returns_error_404_if_thread_doesnt_exist(
     response = user_client.get(
         reverse(
             "misago:private-thread-post-last",
-            kwargs={"id": 1, "slug": "invalid"},
+            kwargs={"thread_id": 1, "slug": "invalid"},
         )
     )
 
@@ -50,7 +53,7 @@ def test_private_thread_post_last_view_returns_error_403_if_user_cant_use_privat
         reverse(
             "misago:private-thread-post-last",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
             },
         )
@@ -66,7 +69,7 @@ def test_private_thread_post_last_view_returns_error_404_if_user_cant_see_thread
         reverse(
             "misago:private-thread-post-last",
             kwargs={
-                "id": private_thread.id,
+                "thread_id": private_thread.id,
                 "slug": private_thread.slug,
             },
         )
@@ -82,7 +85,7 @@ def test_private_thread_post_last_view_returns_error_if_thread_is_public(
         reverse(
             "misago:private-thread-post-last",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
             },
         )

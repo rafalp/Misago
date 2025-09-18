@@ -108,12 +108,12 @@ class GenericView(View):
         if page and page > 1:
             return reverse(
                 self.thread_url_name,
-                kwargs={"id": thread.id, "slug": thread.slug, "page": page},
+                kwargs={"thread_id": thread.id, "slug": thread.slug, "page": page},
             )
 
         return reverse(
             self.thread_url_name,
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
 
     def get_next_thread_url(

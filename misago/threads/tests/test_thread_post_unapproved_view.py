@@ -15,7 +15,7 @@ def test_thread_post_unapproved_view_returns_redirect_to_first_unapproved_post(
     response = moderator_client.get(
         reverse(
             "misago:thread-post-unapproved",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
 
@@ -24,7 +24,7 @@ def test_thread_post_unapproved_view_returns_redirect_to_first_unapproved_post(
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{reply.id}"
     )
@@ -40,7 +40,7 @@ def test_thread_post_unapproved_view_returns_redirect_to_last_post_for_thread_wi
     response = moderator_client.get(
         reverse(
             "misago:thread-post-unapproved",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
 
@@ -49,7 +49,7 @@ def test_thread_post_unapproved_view_returns_redirect_to_last_post_for_thread_wi
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{reply.id}"
     )
@@ -61,7 +61,7 @@ def test_thread_post_unapproved_view_returns_error_404_if_thread_doesnt_exist(
     response = moderator_client.get(
         reverse(
             "misago:thread-post-unapproved",
-            kwargs={"id": 1, "slug": "invalid"},
+            kwargs={"thread_id": 1, "slug": "invalid"},
         )
     )
 
@@ -79,7 +79,7 @@ def test_thread_post_unapproved_view_returns_error_404_if_user_cant_see_thread(
     response = moderator_client.get(
         reverse(
             "misago:thread-post-unapproved",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
 
@@ -100,7 +100,7 @@ def test_thread_post_unapproved_view_returns_error_403_if_user_cant_see_thread_c
     response = moderator_client.get(
         reverse(
             "misago:thread-post-unapproved",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
 
@@ -113,7 +113,7 @@ def test_thread_post_unapproved_view_returns_error_403_if_user_cant_moderate_thr
     response = client.get(
         reverse(
             "misago:thread-post-unapproved",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
     assert_contains(response, "You must be a moderator to view unapproved posts.", 403)
@@ -125,7 +125,10 @@ def test_thread_post_unapproved_view_returns_error_404_if_thread_is_private(
     response = user_client.get(
         reverse(
             "misago:thread-post-unapproved",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         )
     )
 

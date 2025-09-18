@@ -274,7 +274,7 @@ def test_private_thread_post_edit_view_updates_thread_post(
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -312,7 +312,7 @@ def test_private_thread_post_edit_view_updates_thread_post_in_htmx(
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -504,7 +504,7 @@ def test_private_thread_post_edit_view_skips_flood_control(
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -874,7 +874,7 @@ def test_private_thread_post_edit_view_associates_unused_attachment_on_submit(
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.pk,
+                "thread_id": other_user_private_thread.pk,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -1016,7 +1016,7 @@ def test_private_thread_post_edit_view_deletes_attachment_on_submit(
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -1320,7 +1320,7 @@ def test_private_thread_post_edit_view_deletes_existing_attachment_on_submit(
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -1365,7 +1365,7 @@ def test_private_thread_post_edit_view_deletes_existing_attachment_on_submit_if_
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -1417,7 +1417,7 @@ def test_private_thread_post_edit_view_deletes_existing_attachment_on_submit_for
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )

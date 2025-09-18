@@ -168,7 +168,7 @@ def test_thread_start_view_posts_new_thread(user_client, default_category):
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
 
@@ -362,7 +362,7 @@ def test_thread_start_view_uploads_attachment_on_submit(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
     attachment = Attachment.objects.get(uploader=user)
@@ -566,7 +566,7 @@ def test_start_view_associates_unused_attachment_on_submit(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
     user_text_attachment.refresh_from_db()
@@ -673,7 +673,7 @@ def test_thread_start_view_deletes_attachment_on_submit(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
     user_text_attachment.refresh_from_db()
@@ -791,7 +791,7 @@ def test_thread_start_view_starts_thread_with_poll(user_client, user, default_ca
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
     assert thread.has_poll
@@ -861,7 +861,7 @@ def test_thread_start_view_starts_thread_with_poll_form_disabled(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
 

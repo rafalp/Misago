@@ -172,7 +172,10 @@ def test_private_thread_edit_view_updates_thread_title_and_post(
     user_private_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={
+            "thread_id": user_private_thread.id,
+            "slug": user_private_thread.slug,
+        },
     )
     assert user_private_thread.title == "Edited title"
 
@@ -203,7 +206,10 @@ def test_private_thread_edit_view_updates_thread_title_and_post_in_htmx(
     user_private_thread.refresh_from_db()
     assert response["hx-redirect"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={
+            "thread_id": user_private_thread.id,
+            "slug": user_private_thread.slug,
+        },
     )
     assert user_private_thread.title == "Edited title"
 
@@ -235,7 +241,10 @@ def test_private_thread_edit_view_updates_thread_title_and_post_inline_in_htmx(
     user_private_thread.refresh_from_db()
     assert response["hx-redirect"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={
+            "thread_id": user_private_thread.id,
+            "slug": user_private_thread.slug,
+        },
     )
     assert user_private_thread.title == "Edited title"
 
@@ -443,7 +452,10 @@ def test_private_thread_edit_view_skips_flood_control(
 
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={
+            "thread_id": user_private_thread.id,
+            "slug": user_private_thread.slug,
+        },
     )
 
     post = user_private_thread.first_post
@@ -752,7 +764,10 @@ def test_private_thread_edit_view_associates_unused_attachment_on_submit(
     user_private_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={
+            "thread_id": user_private_thread.id,
+            "slug": user_private_thread.slug,
+        },
     )
 
     user_text_attachment.refresh_from_db()
@@ -869,7 +884,10 @@ def test_private_thread_edit_view_deletes_attachment_on_submit(
     user_private_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={
+            "thread_id": user_private_thread.id,
+            "slug": user_private_thread.slug,
+        },
     )
 
     user_text_attachment.refresh_from_db()
@@ -1140,7 +1158,10 @@ def test_private_thread_edit_view_deletes_existing_attachment_on_submit(
     user_private_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={
+            "thread_id": user_private_thread.id,
+            "slug": user_private_thread.slug,
+        },
     )
 
     text_attachment.refresh_from_db()
@@ -1177,7 +1198,10 @@ def test_private_thread_edit_view_deletes_existing_attachment_on_submit_if_uploa
     user_private_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={
+            "thread_id": user_private_thread.id,
+            "slug": user_private_thread.slug,
+        },
     )
 
     text_attachment.refresh_from_db()
@@ -1216,7 +1240,10 @@ def test_private_thread_edit_view_deletes_existing_attachment_on_submit_for_user
     user_private_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+        kwargs={
+            "thread_id": user_private_thread.id,
+            "slug": user_private_thread.slug,
+        },
     )
 
     text_attachment.refresh_from_db()

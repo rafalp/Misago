@@ -27,7 +27,7 @@ class PostRedirect:
         except KeyError as error:
             raise ValueError(f"Unknown 'Category' type: {tree_id}") from error
 
-        return view(request, id=post.thread_id, slug="", post_id=post.id)
+        return view(request, thread_id=post.thread_id, slug="", post_id=post.id)
 
 
 redirect_to_post = PostRedirect()

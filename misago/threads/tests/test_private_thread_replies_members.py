@@ -10,7 +10,7 @@ def test_private_thread_replies_view_shows_thread_members(
         reverse(
             "misago:private-thread",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
             },
         )

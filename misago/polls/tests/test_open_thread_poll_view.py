@@ -10,12 +10,12 @@ def test_open_thread_poll_view_opens_poll(moderator_client, thread, closed_poll)
     response = moderator_client.post(
         reverse(
             "misago:thread-poll-open",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
     assert response.status_code == 302
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
     assert_has_success_message(response, "Poll opened")
@@ -28,13 +28,14 @@ def test_open_thread_poll_view_returns_redirect_to_next_thread_url(
     moderator_client, thread, closed_poll
 ):
     thread_url = reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug, "page": 12}
+        "misago:thread",
+        kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 12},
     )
 
     response = moderator_client.post(
         reverse(
             "misago:thread-poll-open",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
         {"next": thread_url},
     )
@@ -48,25 +49,27 @@ def test_open_thread_poll_view_returns_redirect_to_default_thread_url_if_next_ur
     response = moderator_client.post(
         reverse(
             "misago:thread-poll-open",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
         {"next": "invalid"},
     )
     assert response.status_code == 302
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
 
 def test_open_thread_poll_view_returns_partial_in_htmx(
     moderator_client, thread, closed_poll
 ):
-    thread_url = reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+    thread_url = reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
 
     response = moderator_client.post(
         reverse(
             "misago:thread-poll-open",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
         {"next": f"{thread_url}extra/"},
         headers={"hx-request": "true"},
@@ -79,7 +82,7 @@ def test_open_thread_poll_view_returns_404_if_thread_doesnt_exist(moderator_clie
     response = moderator_client.post(
         reverse(
             "misago:thread-poll-open",
-            kwargs={"id": 1, "slug": "invalid"},
+            kwargs={"thread_id": 1, "slug": "invalid"},
         )
     )
     assert response.status_code == 404
@@ -93,7 +96,7 @@ def test_open_thread_poll_view_returns_404_if_thread_has_no_poll(
     response = moderator_client.post(
         reverse(
             "misago:thread-poll-open",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
     assert response.status_code == 404
@@ -109,7 +112,7 @@ def test_open_thread_poll_view_checks_category_permission(
     response = user_client.post(
         reverse(
             "misago:thread-poll-open",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
     assert response.status_code == 404
@@ -132,7 +135,7 @@ def test_open_thread_poll_view_checks_thread_permission(
     response = user_client.post(
         reverse(
             "misago:thread-poll-open",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
     assert response.status_code == 404
@@ -152,7 +155,7 @@ def test_open_thread_poll_view_checks_open_poll_permission(
     response = user_client.post(
         reverse(
             "misago:thread-poll-open",
-            kwargs={"id": user_thread.id, "slug": user_thread.slug},
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         )
     )
     assert response.status_code == 403

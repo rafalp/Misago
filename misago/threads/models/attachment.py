@@ -87,14 +87,14 @@ class Attachment(PluginDataModel):
 
     def get_absolute_url(self):
         return reverse(
-            "misago:attachment", kwargs={"pk": self.pk, "secret": self.secret}
+            "misago:attachment", kwargs={"pk": self.id, "secret": self.secret}
         )
 
     def get_thumbnail_url(self):
         if self.thumbnail:
             return reverse(
                 "misago:attachment-thumbnail",
-                kwargs={"pk": self.pk, "secret": self.secret},
+                kwargs={"pk": self.id, "secret": self.secret},
             )
 
     def set_file(self, upload):

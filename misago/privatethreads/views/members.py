@@ -39,8 +39,8 @@ class PrivateThreadMembersAddView(PrivateThreadView):
     template_name = "misago/private_thread_members_add/index.html"
     template_name_htmx = "misago/private_thread_members_add/htmx.html"
 
-    def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
 
         form = self.form_type(
             request=request,
@@ -50,8 +50,8 @@ class PrivateThreadMembersAddView(PrivateThreadView):
 
         return self.render_form_page(request, thread, form)
 
-    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
 
         form = self.form_type(
             request.POST,
@@ -144,9 +144,9 @@ class PrivateThreadMemberView(PrivateThreadView):
     template_name: str
 
     def get(
-        self, request: HttpRequest, id: int, slug: str, user_id: int
+        self, request: HttpRequest, thread_id: int, slug: str, user_id: int
     ) -> HttpResponse:
-        thread = self.get_thread(request, id)
+        thread = self.get_thread(request, thread_id)
 
         try:
             member = self.get_member(request, user_id)
@@ -175,9 +175,9 @@ class PrivateThreadMemberView(PrivateThreadView):
         )
 
     def post(
-        self, request: HttpRequest, id: int, slug: str, user_id: int
+        self, request: HttpRequest, thread_id: int, slug: str, user_id: int
     ) -> HttpResponse:
-        thread = self.get_thread(request, id)
+        thread = self.get_thread(request, thread_id)
 
         try:
             member = self.get_member(request, user_id)
@@ -208,9 +208,9 @@ class PrivateThreadMemberView(PrivateThreadView):
     ) -> ThreadUpdate | None:
         return None
 
-    def get_member(self, request: HttpRequest, id: int) -> "User":
+    def get_member(self, request: HttpRequest, user_id: int) -> "User":
         for member in self.members:
-            if member.id == id:
+            if member.id == user_id:
                 return member
 
         raise Http404(pgettext("private thread member view", "Member doesn't exist"))
@@ -303,8 +303,8 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
 class PrivateThreadLeaveView(PrivateThreadView):
     template_name = "misago/private_thread_leave/index.html"
 
-    def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
 
         return render(
             request,
@@ -315,8 +315,8 @@ class PrivateThreadLeaveView(PrivateThreadView):
             },
         )
 
-    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
 
         remove_private_thread_member(request.user, thread, request.user, request)
 
@@ -408,7 +408,7 @@ def get_private_thread_members_context_data(
     add_members_url = (
         reverse(
             "misago:private-thread-members-add",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"?next={next_url_quoted}"
     )

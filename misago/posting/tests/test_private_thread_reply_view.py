@@ -114,7 +114,7 @@ def test_private_thread_reply_view_posts_new_reply(
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -147,7 +147,7 @@ def test_private_thread_reply_view_posts_new_reply_in_htmx(
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -180,7 +180,7 @@ def test_private_thread_reply_view_posts_new_reply_in_quick_reply(
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -428,7 +428,7 @@ def test_private_thread_reply_view_merges_reply_with_users_recent_post(
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -499,7 +499,7 @@ def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -570,7 +570,7 @@ def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -609,7 +609,7 @@ def test_private_thread_reply_view_doesnt_merge_reply_with_recent_post_if_its_by
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -652,7 +652,7 @@ def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -695,7 +695,7 @@ def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )
@@ -1118,7 +1118,7 @@ def test_private_thread_reply_view_deletes_attachment_on_submit(
         == reverse(
             "misago:private-thread",
             kwargs={
-                "id": other_user_private_thread.id,
+                "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
             },
         )

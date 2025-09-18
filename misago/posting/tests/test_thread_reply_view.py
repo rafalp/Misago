@@ -236,7 +236,9 @@ def test_thread_reply_view_posts_new_reply(user_client, thread):
 
     assert (
         response["location"]
-        == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
         + f"#post-{reply.id}"
     )
 
@@ -261,7 +263,9 @@ def test_thread_reply_view_posts_new_reply_in_htmx(user_client, thread):
 
     assert (
         response["hx-redirect"]
-        == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
         + f"#post-{reply.id}"
     )
 
@@ -286,7 +290,9 @@ def test_thread_reply_view_posts_new_reply_in_quick_reply(user_client, thread):
 
     assert (
         response["location"]
-        == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
         + f"#post-{reply.id}"
     )
 
@@ -492,7 +498,9 @@ def test_thread_reply_view_merges_reply_with_users_recent_post(
 
     assert (
         response["location"]
-        == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
         + f"#post-{reply.id}"
     )
 
@@ -550,7 +558,9 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_feature_
 
     assert (
         response["location"]
-        == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
         + f"#post-{thread.last_post_id}"
     )
 
@@ -604,7 +614,9 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_too_
 
     assert (
         response["location"]
-        == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
         + f"#post-{reply.id}"
     )
 
@@ -632,7 +644,9 @@ def test_thread_reply_view_doesnt_merge_reply_with_recent_post_if_its_by_other_u
 
     assert (
         response["location"]
-        == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
         + f"#post-{reply.id}"
     )
 
@@ -663,7 +677,9 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_hidd
 
     assert (
         response["location"]
-        == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
         + f"#post-{reply.id}"
     )
 
@@ -694,7 +710,9 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_not_
 
     assert (
         response["location"]
-        == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
         + f"#post-{reply.id}"
     )
 
@@ -1106,8 +1124,7 @@ def test_thread_reply_view_deletes_attachment_on_submit(
     assert (
         response["location"]
         == reverse(
-            "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
         )
         + f"#post-{thread.last_post_id}"
     )

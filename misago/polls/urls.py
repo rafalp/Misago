@@ -10,27 +10,27 @@ from .views import (
 
 urlpatterns = [
     path(
-        "t/<slug:slug>/<int:id>/poll/start/",
+        "t/<slug:slug>/<int:thread_id>/poll/start/",
         StartThreadPollView.as_view(),
         name="thread-poll-start",
     ),
     path(
-        "t/<slug:slug>/<int:id>/poll/edit/",
+        "t/<slug:slug>/<int:thread_id>/poll/edit/",
         EditThreadPollView.as_view(),
         name="thread-poll-edit",
     ),
     path(
-        "t/<slug:slug>/<int:id>/poll/close/",
+        "t/<slug:slug>/<int:thread_id>/poll/close/",
         CloseThreadPollView.as_view(),
         name="thread-poll-close",
     ),
     path(
-        "t/<slug:slug>/<int:id>/poll/open/",
+        "t/<slug:slug>/<int:thread_id>/poll/open/",
         OpenThreadPollView.as_view(),
         name="thread-poll-open",
     ),
     path(
-        "t/<slug:slug>/<int:id>/poll/delete/",
+        "t/<slug:slug>/<int:thread_id>/poll/delete/",
         DeleteThreadPollView.as_view(),
         name="thread-poll-delete",
     ),

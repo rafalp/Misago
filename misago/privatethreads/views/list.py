@@ -226,7 +226,7 @@ class PrivateThreadListView(ListView):
         )
 
     def get_thread_urls(self, thread: Thread) -> dict[str, str]:
-        kwargs = {"id": thread.id, "slug": thread.slug}
+        kwargs = {"thread_id": thread.id, "slug": thread.slug}
 
         return {
             "absolute_url": reverse("misago:private-thread", kwargs=kwargs),

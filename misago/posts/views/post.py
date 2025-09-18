@@ -6,9 +6,9 @@ from ...posts.models import Post
 from ..redirect import redirect_to_post
 
 
-def post(request: HttpRequest, id: int) -> HttpResponse:
+def post(request: HttpRequest, post_id: int) -> HttpResponse:
     try:
-        post_obj = Post.objects.get(id=id)
+        post_obj = Post.objects.get(id=post_id)
         return redirect_to_post(request, post_obj)
     except (PermissionDenied, Post.DoesNotExist) as error:
         # "Post not found" or permission error would leak post's existence

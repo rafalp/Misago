@@ -35,7 +35,10 @@ def test_private_thread_replies_view_marks_category_as_read_for_user(
     response = user_client.get(
         reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
     )
     assert_contains(response, user_private_thread.title)
@@ -67,7 +70,10 @@ def test_private_thread_replies_view_marks_thread_as_read_for_user(
     response = user_client.get(
         reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
     )
     assert_contains(response, user_private_thread.title)
@@ -107,7 +113,10 @@ def test_private_thread_replies_view_marks_unread_thread_posts_on_page_as_read_f
     response = user_client.get(
         reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
     )
     assert_contains(response, user_private_thread.title)
@@ -145,7 +154,10 @@ def test_private_thread_replies_view_updates_user_watched_thread_read_time(
     response = user_client.get(
         reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
     )
     assert_contains(response, user_private_thread.title)
@@ -177,7 +189,10 @@ def test_private_thread_replies_view_marks_displayed_posts_notifications_as_read
     response = user_client.get(
         reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
     )
     assert_contains(response, user_private_thread.title)
@@ -209,7 +224,10 @@ def test_private_thread_replies_view_decreases_user_unread_threads_count_on_thre
     response = user_client.get(
         reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
     )
     assert_contains(response, user_private_thread.title)
@@ -243,7 +261,10 @@ def test_private_thread_replies_view_doesnt_update_user_unread_threads_count_on_
     response = user_client.get(
         reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
     )
     assert_contains(response, user_private_thread.title)
@@ -275,7 +296,10 @@ def test_private_thread_replies_view_clears_user_unread_threads_count_on_categor
     response = user_client.get(
         reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         ),
     )
     assert_contains(response, user_private_thread.title)

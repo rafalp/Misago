@@ -3,10 +3,10 @@ from typing import Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ..models import Thread
+from ...threads.models import Thread
 
 
-class GetPrivateThreadRepliesPageContextDataHookAction(Protocol):
+class GetPrivateThreadPostsViewContextDataHookAction(Protocol):
     """
     Misago function used to get the template context data
     for the private thread replies page.
@@ -39,13 +39,13 @@ class GetPrivateThreadRepliesPageContextDataHookAction(Protocol):
     ) -> dict: ...
 
 
-class GetPrivateThreadRepliesPageContextDataHookFilter(Protocol):
+class GetPrivateThreadPostsViewContextDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetPrivateThreadRepliesPageContextDataHookAction`
+    ## `action: GetPrivateThreadPostsViewContextDataHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -72,17 +72,17 @@ class GetPrivateThreadRepliesPageContextDataHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetPrivateThreadRepliesPageContextDataHookAction,
+        action: GetPrivateThreadPostsViewContextDataHookAction,
         request: HttpRequest,
         thread: Thread,
         page: int | None = None,
     ) -> dict: ...
 
 
-class GetPrivateThreadRepliesPageContextDataHook(
+class GetPrivateThreadPostsViewContextDataHook(
     FilterHook[
-        GetPrivateThreadRepliesPageContextDataHookAction,
-        GetPrivateThreadRepliesPageContextDataHookFilter,
+        GetPrivateThreadPostsViewContextDataHookAction,
+        GetPrivateThreadPostsViewContextDataHookFilter,
     ]
 ):
     """
@@ -96,11 +96,11 @@ class GetPrivateThreadRepliesPageContextDataHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.threads.hooks import get_private_thread_replies_page_context_data_hook
+    from misago.privatethreads.hooks import get_private_thread_posts_view_context_data_hook
     from misago.threads.models import Thread
 
 
-    @get_private_thread_replies_page_context_data_hook.append_filter
+    @get_private_thread_posts_view_context_data_hook.append_filter
     def include_custom_context(
         action,
         request: HttpRequest,
@@ -119,7 +119,7 @@ class GetPrivateThreadRepliesPageContextDataHook(
 
     def __call__(
         self,
-        action: GetPrivateThreadRepliesPageContextDataHookAction,
+        action: GetPrivateThreadPostsViewContextDataHookAction,
         request: HttpRequest,
         thread: Thread,
         page: int | None = None,
@@ -127,6 +127,6 @@ class GetPrivateThreadRepliesPageContextDataHook(
         return super().__call__(action, request, thread, page)
 
 
-get_private_thread_replies_page_context_data_hook = (
-    GetPrivateThreadRepliesPageContextDataHook(cache=False)
+get_private_thread_posts_view_context_data_hook = (
+    GetPrivateThreadPostsViewContextDataHook(cache=False)
 )

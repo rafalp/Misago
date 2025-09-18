@@ -9,7 +9,7 @@ def test_post_view_returns_404_for_not_existing_post_id(
 ):
     reply = thread_reply_factory(thread)
 
-    response = client.get(reverse("misago:post", kwargs={"id": reply.id + 10}))
+    response = client.get(reverse("misago:post", kwargs={"post_id": reply.id + 10}))
     assert response.status_code == 404
 
 
@@ -18,7 +18,7 @@ def test_post_view_returns_error_404_if_user_cant_see_thread(
 ):
     reply = thread_reply_factory(hidden_thread)
 
-    response = user_client.get(reverse("misago:post", kwargs={"id": reply.id}))
+    response = user_client.get(reverse("misago:post", kwargs={"post_id": reply.id}))
     assert response.status_code == 404
 
 
@@ -35,7 +35,7 @@ def test_post_view_returns_error_404_if_user_cant_see_thread_post(
 
     reply = thread_reply_factory(thread)
 
-    response = user_client.get(reverse("misago:post", kwargs={"id": reply.id}))
+    response = user_client.get(reverse("misago:post", kwargs={"post_id": reply.id}))
     assert response.status_code == 404
 
 
@@ -47,7 +47,7 @@ def test_post_view_returns_error_404_if_user_cant_use_private_threads(
 
     reply = thread_reply_factory(user_private_thread)
 
-    response = user_client.get(reverse("misago:post", kwargs={"id": reply.id}))
+    response = user_client.get(reverse("misago:post", kwargs={"post_id": reply.id}))
     assert response.status_code == 404
 
 
@@ -56,7 +56,7 @@ def test_post_view_returns_error_404_if_user_cant_see_private_thread(
 ):
     reply = thread_reply_factory(private_thread)
 
-    response = user_client.get(reverse("misago:post", kwargs={"id": reply.id}))
+    response = user_client.get(reverse("misago:post", kwargs={"post_id": reply.id}))
     assert response.status_code == 404
 
 
@@ -65,14 +65,13 @@ def test_post_view_returns_redirect_to_thread_post(
 ):
     reply = thread_reply_factory(thread)
 
-    response = client.get(reverse("misago:post", kwargs={"id": reply.id}))
+    response = client.get(reverse("misago:post", kwargs={"post_id": reply.id}))
 
     assert response.status_code == 302
     assert (
         response["location"]
         == reverse(
-            "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
         )
         + f"#post-{reply.id}"
     )
@@ -83,14 +82,17 @@ def test_post_view_returns_redirect_to_private_thread_post(
 ):
     reply = thread_reply_factory(user_private_thread)
 
-    response = user_client.get(reverse("misago:post", kwargs={"id": reply.id}))
+    response = user_client.get(reverse("misago:post", kwargs={"post_id": reply.id}))
 
     assert response.status_code == 302
     assert (
         response["location"]
         == reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         )
         + f"#post-{reply.id}"
     )
@@ -101,14 +103,13 @@ def test_post_view_returns_redirect_to_thread_post_for_post_request(
 ):
     reply = thread_reply_factory(thread)
 
-    response = client.post(reverse("misago:post", kwargs={"id": reply.id}))
+    response = client.post(reverse("misago:post", kwargs={"post_id": reply.id}))
 
     assert response.status_code == 302
     assert (
         response["location"]
         == reverse(
-            "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
         )
         + f"#post-{reply.id}"
     )
@@ -119,14 +120,17 @@ def test_post_view_returns_redirect_to_private_thread_post_for_post_request(
 ):
     reply = thread_reply_factory(user_private_thread)
 
-    response = user_client.post(reverse("misago:post", kwargs={"id": reply.id}))
+    response = user_client.post(reverse("misago:post", kwargs={"post_id": reply.id}))
 
     assert response.status_code == 302
     assert (
         response["location"]
         == reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         )
         + f"#post-{reply.id}"
     )

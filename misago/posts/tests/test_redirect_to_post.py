@@ -19,7 +19,9 @@ def test_redirect_to_post_returns_redirect_to_thread_post(
     assert response.status_code == 302
     assert (
         response["location"]
-        == reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
         + f"#post-{post.id}"
     )
 
@@ -48,7 +50,10 @@ def test_redirect_to_post_returns_redirect_to_private_thread_post(
         response["location"]
         == reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         )
         + f"#post-{user_private_thread.first_post.id}"
     )

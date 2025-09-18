@@ -36,21 +36,22 @@ class PrivateThread(ThreadType):
         if page > 1:
             return reverse(
                 "misago:private-thread",
-                kwargs={"slug": thread.slug, "id": thread.id, "page": page},
+                kwargs={"slug": thread.slug, "thread_id": thread.id, "page": page},
             )
 
         return reverse(
-            "misago:private-thread", kwargs={"slug": thread.slug, "id": thread.id}
+            "misago:private-thread",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
 
     def get_thread_last_post_url(self, thread):
         return reverse(
             "misago:private-thread-post-last",
-            kwargs={"slug": thread.slug, "id": thread.pk},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
 
     def get_thread_new_post_url(self, thread):
         return reverse(
             "misago:private-thread-post-unread",
-            kwargs={"slug": thread.slug, "id": thread.pk},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )

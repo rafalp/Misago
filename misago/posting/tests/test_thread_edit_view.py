@@ -225,7 +225,7 @@ def test_thread_edit_view_updates_thread_title_and_post(user_client, user_thread
     user_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:thread",
-        kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
     )
     assert user_thread.title == "Edited title"
 
@@ -256,7 +256,7 @@ def test_thread_edit_view_updates_thread_title_and_post_in_htmx(
     user_thread.refresh_from_db()
     assert response["hx-redirect"] == reverse(
         "misago:thread",
-        kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
     )
     assert user_thread.title == "Edited title"
 
@@ -288,7 +288,7 @@ def test_thread_edit_view_updates_thread_title_and_post_inline_in_htmx(
     user_thread.refresh_from_db()
     assert response["hx-redirect"] == reverse(
         "misago:thread",
-        kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
     )
     assert user_thread.title == "Edited title"
 
@@ -488,7 +488,7 @@ def test_thread_edit_view_skips_flood_control(user_client, user_thread, user_rep
 
     assert response["location"] == reverse(
         "misago:thread",
-        kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
     )
 
     post = user_thread.first_post
@@ -818,7 +818,7 @@ def test_thread_edit_view_associates_unused_attachment_on_submit(
     user_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:thread",
-        kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
     )
 
     user_text_attachment.refresh_from_db()
@@ -935,7 +935,7 @@ def test_thread_edit_view_deletes_attachment_on_submit(
     user_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:thread",
-        kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
     )
 
     user_text_attachment.refresh_from_db()
@@ -1244,7 +1244,7 @@ def test_thread_edit_view_deletes_existing_attachment_on_submit(
     user_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:thread",
-        kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
     )
 
     text_attachment.refresh_from_db()
@@ -1281,7 +1281,7 @@ def test_thread_edit_view_deletes_existing_attachment_on_submit_if_uploads_are_d
     user_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:thread",
-        kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
     )
 
     text_attachment.refresh_from_db()
@@ -1320,7 +1320,7 @@ def test_thread_edit_view_deletes_existing_attachment_on_submit_for_user_without
     user_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:thread",
-        kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
     )
 
     text_attachment.refresh_from_db()
@@ -1362,7 +1362,7 @@ def test_thread_edit_view_deletes_existing_attachment_on_submit_for_user_without
     user_thread.refresh_from_db()
     assert response["location"] == reverse(
         "misago:thread",
-        kwargs={"id": user_thread.id, "slug": user_thread.slug},
+        kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
     )
 
     text_attachment.refresh_from_db()

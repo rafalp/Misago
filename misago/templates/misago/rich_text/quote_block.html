@@ -57,7 +57,7 @@
         <span class="rich-text-quote-header-separator">&bull;</span>
         <span class="rich-text-quote-header-timestamp">#{{ post_id }}</span>
       </div>
-      <a href="{% url 'misago:post' id=post_id %}" class="rich-text-quote-btn">
+      <a href="{% url 'misago:post' post_id=post_id %}" class="rich-text-quote-btn">
         <span class="material-icon">arrow_forward</span>
       </a>
     {% else %}

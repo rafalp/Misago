@@ -196,7 +196,7 @@ def test_thread_update_unhide_view_returns_redirect_to_thread(
 
     assert response.status_code == 302
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
 
@@ -204,7 +204,7 @@ def test_thread_update_unhide_view_returns_redirect_to_next_url(
     moderator_client, thread, hidden_thread_update
 ):
     next_url = reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug, "page": 2}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 2}
     )
     next_url += "?redirect=1#update-123"
 
@@ -241,7 +241,7 @@ def test_thread_update_unhide_view_returns_redirect_to_thread_for_invalid_next_u
 
     assert response.status_code == 302
     assert response["location"] == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
 

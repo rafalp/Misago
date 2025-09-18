@@ -251,7 +251,7 @@ def email_user_on_new_private_thread(
             "thread": thread,
             "thread_url": reverse(
                 "misago:private-thread",
-                kwargs={"id": thread.id, "slug": thread.slug},
+                kwargs={"thread_id": thread.id, "slug": thread.slug},
             ),
         },
     )

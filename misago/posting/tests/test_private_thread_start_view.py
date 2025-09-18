@@ -71,7 +71,7 @@ def test_private_thread_start_view_posts_new_thread(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
     assert len(thread.private_thread_member_ids) == 4
@@ -104,7 +104,7 @@ def test_private_thread_start_view_posts_new_thread_using_noscript_fallback(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
     assert len(thread.private_thread_member_ids) == 4
@@ -178,7 +178,7 @@ def test_private_thread_start_view_ignores_user_adding_self_if_other_users_are_a
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
     assert len(thread.private_thread_member_ids) == 2
@@ -301,7 +301,7 @@ def test_private_thread_start_view_uploads_attachment_on_submit(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
     attachment = Attachment.objects.get(uploader=user)
@@ -485,7 +485,7 @@ def test_private_thread_start_view_associates_unused_attachment_on_submit(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
     user_text_attachment.refresh_from_db()
@@ -583,7 +583,7 @@ def test_private_thread_start_view_deletes_attachment_on_submit(
 
     thread = Thread.objects.get(slug="hello-world")
     assert response["location"] == reverse(
-        "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
     user_text_attachment.refresh_from_db()

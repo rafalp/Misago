@@ -340,7 +340,7 @@ def test_thread_post_edit_view_updates_thread_post(
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{post.id}"
     )
@@ -375,7 +375,7 @@ def test_thread_post_edit_view_updates_thread_post_in_htmx(
         response["hx-redirect"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{post.id}"
     )
@@ -560,7 +560,7 @@ def test_thread_post_edit_view_skips_flood_control(
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{post.id}"
     )
@@ -917,7 +917,7 @@ def test_thread_post_edit_view_associates_unused_attachment_on_submit(
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.pk, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{post.id}"
     )
@@ -1041,7 +1041,7 @@ def test_thread_post_edit_view_deletes_attachment_on_submit(
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{post.id}"
     )
@@ -1418,7 +1418,7 @@ def test_thread_post_edit_view_deletes_existing_attachment_on_submit(
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{post.id}"
     )
@@ -1460,7 +1460,7 @@ def test_thread_post_edit_view_deletes_existing_attachment_on_submit_if_uploads_
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{post.id}"
     )
@@ -1504,7 +1504,7 @@ def test_thread_post_edit_view_deletes_existing_attachment_on_submit_for_user_wi
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{post.id}"
     )
@@ -1551,7 +1551,7 @@ def test_thread_post_edit_view_deletes_existing_attachment_on_submit_for_user_wi
         response["location"]
         == reverse(
             "misago:thread",
-            kwargs={"id": thread.id, "slug": thread.slug},
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
         + f"#post-{post.id}"
     )

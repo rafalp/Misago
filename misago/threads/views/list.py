@@ -187,7 +187,7 @@ class ListView(View):
         return {thread.id: thread.last_post_id > animate_threads for thread in threads}
 
     def get_thread_urls(self, thread: Thread) -> dict[str, str]:
-        kwargs = {"id": thread.id, "slug": thread.slug}
+        kwargs = {"thread_id": thread.id, "slug": thread.slug}
 
         return {
             "absolute_url": reverse("misago:thread", kwargs=kwargs),
@@ -818,7 +818,7 @@ class CategoryThreadsListView(ListView):
             context["pagination_url"] = reverse(
                 "misago:category",
                 kwargs={
-                    "id": category.id,
+                    "category_id": category.id,
                     "slug": category.slug,
                     "filter": kwargs["filter"],
                 },
@@ -837,7 +837,7 @@ class CategoryThreadsListView(ListView):
                 Category.objects, request.user
             )
             category = queryset.get(
-                id=kwargs["id"],
+                id=kwargs["category_id"],
                 tree_id=CategoryTree.THREADS,
                 level__gt=0,
             )

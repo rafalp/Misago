@@ -17,10 +17,6 @@ from ...core.exceptions import OutdatedSlug
 from ...notifications.threads import update_watched_thread_read_time
 from ...permissions.checkutils import check_permissions
 from ...permissions.polls import check_start_thread_poll_permission
-from ...permissions.privatethreads import (
-    check_edit_private_thread_permission,
-    check_reply_private_thread_permission,
-)
 from ...permissions.threads import (
     check_edit_thread_permission,
     check_reply_thread_permission,
@@ -30,32 +26,25 @@ from ...polls.models import Poll
 from ...polls.views import dispatch_thread_poll_view, get_poll_context_data
 from ...polls.votes import get_user_poll_votes
 from ...posting.formsets import (
-    PrivateThreadReplyFormset,
     ThreadReplyFormset,
-    get_private_thread_reply_formset,
     get_thread_reply_formset,
 )
 from ...posts.models import Post
 from ...posts.paginator import PostPaginatorPage
-from ...privatethreads.views.members import get_private_thread_members_context_data
 from ...readtracker.tracker import (
     get_unread_posts,
     mark_category_read,
     mark_thread_read,
 )
-from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
 from ...threadupdates.models import ThreadUpdate
 from ..hooks import (
-    get_private_thread_replies_page_context_data_hook,
-    get_private_thread_replies_page_posts_queryset_hook,
-    get_private_thread_replies_page_thread_queryset_hook,
     get_thread_replies_page_context_data_hook,
     get_thread_replies_page_posts_queryset_hook,
     get_thread_replies_page_thread_queryset_hook,
 )
 from ..models import Thread
-from .generic import PrivateThreadView, ThreadView
+from .generic import ThreadView
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -68,7 +57,7 @@ class PageOutOfRangeError(Exception):
         self.redirect_to = redirect_to
 
 
-class RepliesView(View):
+class DetailView(View):
     thread_annotate_read_time: bool = True
     template_name: str
     template_partial_name: str
@@ -84,9 +73,9 @@ class RepliesView(View):
             return redirect(exc.redirect_to)
 
     def get(
-        self, request: HttpRequest, id: int, slug: str, page: int | None = None
+        self, request: HttpRequest, thread_id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
-        thread = self.get_thread(request, id)
+        thread = self.get_thread(request, thread_id)
 
         if not request.is_htmx and thread.slug != slug:
             raise OutdatedSlug(thread)
@@ -101,7 +90,7 @@ class RepliesView(View):
         return render(request, template_name, context)
 
     def post(
-        self, request: HttpRequest, id: int, slug: str, page: int | None = None
+        self, request: HttpRequest, thread_id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
         return HttpResponseNotAllowed(["GET", "POST"])
 
@@ -252,27 +241,27 @@ class RepliesView(View):
         raise NotImplementedError
 
 
-class ThreadRepliesView(RepliesView, ThreadView):
+class ThreadDetailView(DetailView, ThreadView):
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
 
     def get(
-        self, request: HttpRequest, id: int, slug: str, page: int | None = None
+        self, request: HttpRequest, thread_id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
         if request.is_htmx:
-            if poll_response := dispatch_thread_poll_view(request, id):
+            if poll_response := dispatch_thread_poll_view(request, thread_id):
                 return poll_response
 
-        return super().get(request, id, slug, page)
+        return super().get(request, thread_id, slug, page)
 
     def post(
-        self, request: HttpRequest, id: int, slug: str, page: int | None = None
+        self, request: HttpRequest, thread_id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
         if request.GET.get("poll"):
-            if poll_response := dispatch_thread_poll_view(request, id):
+            if poll_response := dispatch_thread_poll_view(request, thread_id):
                 return poll_response
 
-        return super().post(request, id, slug, page)
+        return super().post(request, thread_id, slug, page)
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
         return get_thread_replies_page_thread_queryset_hook(
@@ -377,104 +366,3 @@ class ThreadRepliesView(RepliesView, ThreadView):
 
         context["template_name"] = template_name
         return context
-
-
-class PrivateThreadRepliesView(RepliesView, PrivateThreadView):
-    thread_get_members = True
-    template_name: str = "misago/private_thread/index.html"
-    template_partial_name: str = "misago/private_thread/partial.html"
-
-    def get_thread_queryset(self, request: HttpRequest) -> Thread:
-        return get_private_thread_replies_page_thread_queryset_hook(
-            super().get_thread_queryset, request
-        )
-
-    def get_context_data(
-        self, request: HttpRequest, thread: Thread, page: int | None = None
-    ) -> dict:
-        return get_private_thread_replies_page_context_data_hook(
-            self.get_context_data_action, request, thread, page
-        )
-
-    def get_context_data_action(
-        self, request: HttpRequest, thread: Thread, page: int | None = None
-    ) -> dict:
-        context = super().get_context_data_action(request, thread, page)
-        context["members"] = self.get_thread_members_context_data(request, thread)
-
-        return context
-
-    def get_thread_members_context_data(
-        self, request: HttpRequest, thread: Thread
-    ) -> dict:
-        return get_private_thread_members_context_data(
-            request, thread, self.owner, self.members
-        )
-
-    def get_thread_posts_queryset(
-        self, request: HttpRequest, thread: Thread
-    ) -> QuerySet:
-        return get_private_thread_replies_page_posts_queryset_hook(
-            super().get_thread_posts_queryset, request, thread
-        )
-
-    def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
-        if request.user.is_anonymous:
-            return False
-
-        with check_permissions() as can_edit_thread:
-            check_edit_private_thread_permission(request.user_permissions, thread)
-
-        return can_edit_thread
-
-    def update_thread_read_time(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        read_time: datetime,
-    ):
-        unread_private_threads = request.user.unread_private_threads
-        if read_time >= thread.last_post_on and request.user.unread_private_threads:
-            request.user.unread_private_threads -= 1
-
-        super().update_thread_read_time(request, thread, read_time)
-
-        if request.user.unread_private_threads != unread_private_threads:
-            request.user.save(update_fields=["unread_private_threads"])
-
-    def is_category_read(
-        self,
-        request: HttpRequest,
-        category: Category,
-        category_read_time: datetime | None,
-    ) -> bool:
-        return not unread_private_threads_exist(request, category, category_read_time)
-
-    def mark_category_read(
-        self,
-        user: "User",
-        category: Category,
-        *,
-        force_update: bool,
-    ):
-        super().mark_category_read(user, category, force_update=force_update)
-
-        user.clear_unread_private_threads()
-
-    def check_reply_thread_permission(self, request: HttpRequest, thread: Thread):
-        check_reply_private_thread_permission(request.user_permissions, thread)
-
-    def get_reply_url(self, request: HttpRequest, thread: Thread) -> str:
-        return reverse(
-            "misago:private-thread-reply",
-            kwargs={"thread_id": thread.id, "slug": thread.slug},
-        )
-
-    def get_reply_formset(
-        self, request: HttpRequest, thread: Thread
-    ) -> PrivateThreadReplyFormset:
-        return get_private_thread_reply_formset(request, thread)
-
-
-thread_replies = ThreadRepliesView.as_view()
-private_thread_replies = PrivateThreadRepliesView.as_view()

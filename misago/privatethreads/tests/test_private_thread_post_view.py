@@ -10,7 +10,7 @@ def test_private_thread_post_view_returns_redirect_to_post(
         reverse(
             "misago:private-thread-post",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "post_id": reply.id,
             },
@@ -22,7 +22,10 @@ def test_private_thread_post_view_returns_redirect_to_post(
         response["location"]
         == reverse(
             "misago:private-thread",
-            kwargs={"id": user_private_thread.id, "slug": user_private_thread.slug},
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         )
         + f"#post-{reply.id}"
     )
@@ -32,7 +35,7 @@ def test_private_thread_post_view_returns_error_404_if_thread_doesnt_exist(user_
     response = user_client.get(
         reverse(
             "misago:private-thread-post",
-            kwargs={"id": 1, "slug": "invalid", "post_id": 1},
+            kwargs={"thread_id": 1, "slug": "invalid", "post_id": 1},
         )
     )
 
@@ -46,7 +49,7 @@ def test_private_thread_post_view_returns_error_404_if_post_doesnt_exist(
         reverse(
             "misago:private-thread-post",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.id,
                 "post_id": user_private_thread.first_post_id + 1,
             },
@@ -68,7 +71,7 @@ def test_private_thread_post_view_returns_error_403_if_user_cant_use_private_thr
         reverse(
             "misago:private-thread-post",
             kwargs={
-                "id": user_private_thread.id,
+                "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
                 "post_id": reply.id,
             },
@@ -87,7 +90,7 @@ def test_private_thread_post_view_returns_error_404_if_user_cant_see_thread(
         reverse(
             "misago:private-thread-post",
             kwargs={
-                "id": private_thread.id,
+                "thread_id": private_thread.id,
                 "slug": private_thread.slug,
                 "post_id": reply.id,
             },
@@ -106,7 +109,7 @@ def test_private_thread_post_view_returns_error_if_thread_is_public(
         reverse(
             "misago:private-thread-post",
             kwargs={
-                "id": thread.id,
+                "thread_id": thread.id,
                 "slug": thread.slug,
                 "post_id": reply.id,
             },
