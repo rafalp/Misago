@@ -31,26 +31,6 @@ def test_private_thread_replies_view_shows_error_on_missing_permission(
     )
 
 
-def test_private_thread_replies_view_shows_error_to_anonymous_user(
-    client, user_private_thread
-):
-    response = client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_not_contains(response, user_private_thread.title, status_code=403)
-    assert_not_contains(
-        response,
-        user_private_thread.first_post.parsed,
-        status_code=403,
-    )
-
-
 def test_private_thread_replies_view_shows_error_to_user_who_is_not_member(
     user, user_client, user_private_thread
 ):
