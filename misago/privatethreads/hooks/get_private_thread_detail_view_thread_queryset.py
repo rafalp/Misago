@@ -6,10 +6,10 @@ from django.http import HttpRequest
 from ...plugins.hooks import FilterHook
 
 
-class GetPrivateThreadPostsViewThreadQuerysetHookAction(Protocol):
+class GetPrivateThreadDetailViewThreadQuerysetHookAction(Protocol):
     """
     Misago function used to get a queryset used to get a thread for
-    the private thread replies page.
+    the private thread detail view.
 
     # Arguments
 
@@ -25,13 +25,13 @@ class GetPrivateThreadPostsViewThreadQuerysetHookAction(Protocol):
     def __call__(self, request: HttpRequest) -> QuerySet: ...
 
 
-class GetPrivateThreadPostsViewThreadQuerysetHookFilter(Protocol):
+class GetPrivateThreadDetailViewThreadQuerysetHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetPrivateThreadPostsViewThreadQuerysetHookAction`
+    ## `action: GetPrivateThreadDetailViewThreadQuerysetHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -49,20 +49,20 @@ class GetPrivateThreadPostsViewThreadQuerysetHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetPrivateThreadPostsViewThreadQuerysetHookAction,
+        action: GetPrivateThreadDetailViewThreadQuerysetHookAction,
         request: HttpRequest,
     ) -> QuerySet: ...
 
 
-class GetPrivateThreadPostsViewThreadQuerysetHook(
+class GetPrivateThreadDetailViewThreadQuerysetHook(
     FilterHook[
-        GetPrivateThreadPostsViewThreadQuerysetHookAction,
-        GetPrivateThreadPostsViewThreadQuerysetHookFilter,
+        GetPrivateThreadDetailViewThreadQuerysetHookAction,
+        GetPrivateThreadDetailViewThreadQuerysetHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to get a queryset
-    used to get a thread for the private thread replies page.
+    used to get a thread for the private thread detail view.
 
     # Example
 
@@ -71,10 +71,10 @@ class GetPrivateThreadPostsViewThreadQuerysetHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.privatethreads.hooks import get_private_thread_posts_view_thread_queryset_hook
+    from misago.privatethreads.hooks import get_private_thread_detail_view_thread_queryset_hook
 
 
-    @get_private_thread_posts_view_thread_queryset_hook.append_filter
+    @get_private_thread_detail_view_thread_queryset_hook.append_filter
     def select_related_plugin_data(action, request: HttpRequest):
         queryset = action(request)
         return queryset.select_related("plugin")
@@ -85,12 +85,12 @@ class GetPrivateThreadPostsViewThreadQuerysetHook(
 
     def __call__(
         self,
-        action: GetPrivateThreadPostsViewThreadQuerysetHookAction,
+        action: GetPrivateThreadDetailViewThreadQuerysetHookAction,
         request: HttpRequest,
     ) -> dict:
         return super().__call__(action, request)
 
 
-get_private_thread_posts_view_thread_queryset_hook = (
-    GetPrivateThreadPostsViewThreadQuerysetHook()
+get_private_thread_detail_view_thread_queryset_hook = (
+    GetPrivateThreadDetailViewThreadQuerysetHook()
 )

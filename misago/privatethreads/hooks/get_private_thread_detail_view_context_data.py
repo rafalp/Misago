@@ -6,10 +6,10 @@ from ...plugins.hooks import FilterHook
 from ...threads.models import Thread
 
 
-class GetPrivateThreadPostsViewContextDataHookAction(Protocol):
+class GetPrivateThreadDetailViewContextDataHookAction(Protocol):
     """
     Misago function used to get the template context data
-    for the private thread replies page.
+    for the private thread detail view.
 
     # Arguments
 
@@ -28,7 +28,7 @@ class GetPrivateThreadPostsViewContextDataHookAction(Protocol):
     # Return value
 
     A Python `dict` with context data to use to `render` the private thread
-    replies page.
+    detail view.
     """
 
     def __call__(
@@ -39,13 +39,13 @@ class GetPrivateThreadPostsViewContextDataHookAction(Protocol):
     ) -> dict: ...
 
 
-class GetPrivateThreadPostsViewContextDataHookFilter(Protocol):
+class GetPrivateThreadDetailViewContextDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetPrivateThreadPostsViewContextDataHookAction`
+    ## `action: GetPrivateThreadDetailViewContextDataHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -67,40 +67,40 @@ class GetPrivateThreadPostsViewContextDataHookFilter(Protocol):
     # Return value
 
     A Python `dict` with context data to use to `render` the private thread
-    replies page.
+    detail view.
     """
 
     def __call__(
         self,
-        action: GetPrivateThreadPostsViewContextDataHookAction,
+        action: GetPrivateThreadDetailViewContextDataHookAction,
         request: HttpRequest,
         thread: Thread,
         page: int | None = None,
     ) -> dict: ...
 
 
-class GetPrivateThreadPostsViewContextDataHook(
+class GetPrivateThreadDetailViewContextDataHook(
     FilterHook[
-        GetPrivateThreadPostsViewContextDataHookAction,
-        GetPrivateThreadPostsViewContextDataHookFilter,
+        GetPrivateThreadDetailViewContextDataHookAction,
+        GetPrivateThreadDetailViewContextDataHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to get
-    the template context data for the private thread replies page.
+    the template context data for the private thread detail view.
 
     # Example
 
     The code below implements a custom filter function that adds custom context
-    data to the thread replies page:
+    data to the thread detail view:
 
     ```python
     from django.http import HttpRequest
-    from misago.privatethreads.hooks import get_private_thread_posts_view_context_data_hook
+    from misago.privatethreads.hooks import get_private_thread_detail_view_context_data_hook
     from misago.threads.models import Thread
 
 
-    @get_private_thread_posts_view_context_data_hook.append_filter
+    @get_private_thread_detail_view_context_data_hook.append_filter
     def include_custom_context(
         action,
         request: HttpRequest,
@@ -119,7 +119,7 @@ class GetPrivateThreadPostsViewContextDataHook(
 
     def __call__(
         self,
-        action: GetPrivateThreadPostsViewContextDataHookAction,
+        action: GetPrivateThreadDetailViewContextDataHookAction,
         request: HttpRequest,
         thread: Thread,
         page: int | None = None,
@@ -127,6 +127,6 @@ class GetPrivateThreadPostsViewContextDataHook(
         return super().__call__(action, request, thread, page)
 
 
-get_private_thread_posts_view_context_data_hook = (
-    GetPrivateThreadPostsViewContextDataHook(cache=False)
+get_private_thread_detail_view_context_data_hook = (
+    GetPrivateThreadDetailViewContextDataHook(cache=False)
 )

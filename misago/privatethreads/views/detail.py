@@ -19,9 +19,9 @@ from ...readtracker.privatethreads import unread_private_threads_exist
 from ...threads.models import Thread
 from ...threads.views.detail import DetailView
 from ..hooks import (
-    get_private_thread_posts_view_context_data_hook,
-    get_private_thread_posts_view_posts_queryset_hook,
-    get_private_thread_posts_view_thread_queryset_hook,
+    get_private_thread_detail_view_context_data_hook,
+    get_private_thread_detail_view_posts_queryset_hook,
+    get_private_thread_detail_view_thread_queryset_hook,
 )
 from .generic import PrivateThreadView
 from .members import get_private_thread_members_context_data
@@ -36,14 +36,14 @@ class PrivateThreadDetailView(DetailView, PrivateThreadView):
     template_partial_name: str = "misago/private_thread/partial.html"
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
-        return get_private_thread_posts_view_thread_queryset_hook(
+        return get_private_thread_detail_view_thread_queryset_hook(
             super().get_thread_queryset, request
         )
 
     def get_context_data(
         self, request: HttpRequest, thread: Thread, page: int | None = None
     ) -> dict:
-        return get_private_thread_posts_view_context_data_hook(
+        return get_private_thread_detail_view_context_data_hook(
             self.get_context_data_action, request, thread, page
         )
 
@@ -65,7 +65,7 @@ class PrivateThreadDetailView(DetailView, PrivateThreadView):
     def get_thread_posts_queryset(
         self, request: HttpRequest, thread: Thread
     ) -> QuerySet:
-        return get_private_thread_posts_view_posts_queryset_hook(
+        return get_private_thread_detail_view_posts_queryset_hook(
             super().get_thread_posts_queryset, request, thread
         )
 

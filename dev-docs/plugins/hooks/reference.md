@@ -181,6 +181,9 @@ Hooks instances are importable from the following Python modules:
 `misago.privatethreads.hooks` defines the following hooks:
 
 - [`change_private_thread_owner_hook`](./change-private-thread-owner-hook.md)
+- [`get_private_thread_detail_view_context_data_hook`](./get-private-thread-detail-view-context-data-hook.md)
+- [`get_private_thread_detail_view_posts_queryset_hook`](./get-private-thread-detail-view-posts-queryset-hook.md)
+- [`get_private_thread_detail_view_thread_queryset_hook`](./get-private-thread-detail-view-thread-queryset-hook.md)
 - [`get_private_thread_list_context_data_hook`](./get-private-thread-list-context-data-hook.md)
 - [`get_private_thread_list_filters_hook`](./get-private-thread-list-filters-hook.md)
 - [`get_private_thread_list_queryset_hook`](./get-private-thread-list-queryset-hook.md)
@@ -201,9 +204,6 @@ Hooks instances are importable from the following Python modules:
 - [`get_category_threads_page_queryset_hook`](./get-category-threads-page-queryset-hook.md)
 - [`get_category_threads_page_subcategories_hook`](./get-category-threads-page-subcategories-hook.md)
 - [`get_category_threads_page_threads_hook`](./get-category-threads-page-threads-hook.md)
-- [`get_private_thread_replies_page_context_data_hook`](./get-private-thread-replies-page-context-data-hook.md)
-- [`get_private_thread_replies_page_posts_queryset_hook`](./get-private-thread-replies-page-posts-queryset-hook.md)
-- [`get_private_thread_replies_page_thread_queryset_hook`](./get-private-thread-replies-page-thread-queryset-hook.md)
 - [`get_thread_replies_page_context_data_hook`](./get-thread-replies-page-context-data-hook.md)
 - [`get_thread_replies_page_posts_queryset_hook`](./get-thread-replies-page-posts-queryset-hook.md)
 - [`get_thread_replies_page_thread_queryset_hook`](./get-thread-replies-page-thread-queryset-hook.md)

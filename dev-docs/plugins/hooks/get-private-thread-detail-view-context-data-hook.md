@@ -1,22 +1,22 @@
-# `get_private_thread_replies_page_context_data_hook`
+# `get_private_thread_detail_view_context_data_hook`
 
-This hook wraps the standard function that Misago uses to get the template context data for the private thread replies page.
+This hook wraps the standard function that Misago uses to get the template context data for the private thread detail view.
 
 
 ## Location
 
-This hook can be imported from `misago.threads.hooks`:
+This hook can be imported from `misago.privatethreads.hooks`:
 
 ```python
-from misago.threads.hooks import get_private_thread_replies_page_context_data_hook
+from misago.privatethreads.hooks import get_private_thread_detail_view_context_data_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_private_thread_replies_page_context_data_filter(
-    action: GetPrivateThreadRepliesPageContextDataHookAction,
+def custom_get_private_thread_detail_view_context_data_filter(
+    action: GetPrivateThreadDetailViewContextDataHookAction,
     request: HttpRequest,
     thread: Thread,
     page: int | None=None,
@@ -29,7 +29,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetPrivateThreadRepliesPageContextDataHookAction`
+#### `action: GetPrivateThreadDetailViewContextDataHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
@@ -53,19 +53,19 @@ An `int` with page number or `None`.
 
 ### Return value
 
-A Python `dict` with context data to use to `render` the private thread replies page.
+A Python `dict` with context data to use to `render` the private thread detail view.
 
 
 ## Action
 
 ```python
-def get_private_thread_replies_page_context_data_action(
+def get_private_thread_detail_view_context_data_action(
     request: HttpRequest, thread: Thread, page: int | None=None
 ) -> dict:
     ...
 ```
 
-Misago function used to get the template context data for the private thread replies page.
+Misago function used to get the template context data for the private thread detail view.
 
 
 ### Arguments
@@ -87,20 +87,20 @@ An `int` with page number or `None`.
 
 ### Return value
 
-A Python `dict` with context data to use to `render` the private thread replies page.
+A Python `dict` with context data to use to `render` the private thread detail view.
 
 
 ## Example
 
-The code below implements a custom filter function that adds custom context data to the thread replies page:
+The code below implements a custom filter function that adds custom context data to the thread detail view:
 
 ```python
 from django.http import HttpRequest
-from misago.threads.hooks import get_private_thread_replies_page_context_data_hook
+from misago.privatethreads.hooks import get_private_thread_detail_view_context_data_hook
 from misago.threads.models import Thread
 
 
-@get_private_thread_replies_page_context_data_hook.append_filter
+@get_private_thread_detail_view_context_data_hook.append_filter
 def include_custom_context(
     action,
     request: HttpRequest,
