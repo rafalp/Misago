@@ -77,8 +77,8 @@ class DetailView(View):
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
-        if not request.is_htmx and thread.slug != slug:
-            raise OutdatedSlug(thread)
+        if not request.is_htmx and (thread.slug != slug or page == 1):
+            return redirect(self.get_thread_url(thread), permanent=thread.slug != slug)
 
         context = self.get_context_data(request, thread, page)
 

@@ -6,6 +6,7 @@ from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments
+from ...privatethreads.models import PrivateThreadMember
 from ...readtracker.models import ReadCategory
 from ...readtracker.tracker import mark_thread_read
 from ...test import assert_contains, assert_contains_element, assert_not_contains
@@ -72,6 +73,25 @@ def test_private_thread_reply_view_shows_error_404_to_users_who_cant_see_thread(
         )
     )
     assert response.status_code == 404
+
+
+def test_private_thread_reply_view_shows_error_403_to_user_if_thread_has_no_other_members(
+    user_client, user, private_thread
+):
+    PrivateThreadMember.objects.create(user=user, thread=private_thread)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": private_thread.id,
+                "slug": private_thread.slug,
+            },
+        )
+    )
+    assert_contains(
+        response, "You can&#x27;t reply to a private thread without other members.", 403
+    )
 
 
 def test_private_thread_reply_view_displays_posting_form(
