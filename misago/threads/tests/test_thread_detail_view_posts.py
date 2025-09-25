@@ -1188,24 +1188,22 @@ def test_thread_detail_view_shows_user_post_with_deleted_user_broken_video_attac
 
 
 def test_thread_detail_view_shows_user_post_with_embedded_user_file_attachment(
-    attachment_factory, thread_reply_factory, user_client, user, thread, text_file
+    thread_reply_factory, user_client, user, thread, user_text_attachment
 ):
-    attachment = attachment_factory(text_file, uploader=user)
-
     post = thread_reply_factory(
         thread,
         parsed=(
             "<p>Attachment with post</p>"
             "\n"
-            f'<misago-attachment id="{attachment.id}" '
+            f'<misago-attachment id="{user_text_attachment.id}" '
             'name="attachment.txt" slug="attachment-txt">'
         ),
         poster=user,
-        metadata={"attachments": [attachment.id]},
+        metadata={"attachments": [user_text_attachment.id]},
     )
 
-    attachment.associate_with_post(post)
-    attachment.save()
+    user_text_attachment.associate_with_post(post)
+    user_text_attachment.save()
 
     response = user_client.get(
         reverse(
@@ -1219,34 +1217,30 @@ def test_thread_detail_view_shows_user_post_with_embedded_user_file_attachment(
 
     assert_contains(response, "Attachment with post")
     assert_not_contains(response, "<misago-attachment")
-    assert_contains(response, attachment.get_absolute_url())
+    assert_contains(response, user_text_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_user_post_with_embedded_other_user_file_attachment(
-    attachment_factory,
     thread_reply_factory,
     user_client,
     user,
-    other_user,
     thread,
-    text_file,
+    other_user_text_attachment,
 ):
-    attachment = attachment_factory(text_file, uploader=other_user)
-
     post = thread_reply_factory(
         thread,
         parsed=(
             "<p>Attachment with post</p>"
             "\n"
-            f'<misago-attachment id="{attachment.id}" '
+            f'<misago-attachment id="{other_user_text_attachment.id}" '
             'name="attachment.txt" slug="attachment-txt">'
         ),
         poster=user,
-        metadata={"attachments": [attachment.id]},
+        metadata={"attachments": [other_user_text_attachment.id]},
     )
 
-    attachment.associate_with_post(post)
-    attachment.save()
+    other_user_text_attachment.associate_with_post(post)
+    other_user_text_attachment.save()
 
     response = user_client.get(
         reverse(
@@ -1260,28 +1254,26 @@ def test_thread_detail_view_shows_user_post_with_embedded_other_user_file_attach
 
     assert_contains(response, "Attachment with post")
     assert_not_contains(response, "<misago-attachment")
-    assert_contains(response, attachment.get_absolute_url())
+    assert_contains(response, other_user_text_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_user_post_with_embedded_delete_user_file_attachment(
-    attachment_factory, thread_reply_factory, user_client, user, thread, text_file
+    thread_reply_factory, user_client, user, thread, text_attachment
 ):
-    attachment = attachment_factory(text_file)
-
     post = thread_reply_factory(
         thread,
         parsed=(
             "<p>Attachment with post</p>"
             "\n"
-            f'<misago-attachment id="{attachment.id}" '
+            f'<misago-attachment id="{text_attachment.id}" '
             'name="attachment.txt" slug="attachment-txt">'
         ),
         poster=user,
-        metadata={"attachments": [attachment.id]},
+        metadata={"attachments": [text_attachment.id]},
     )
 
-    attachment.associate_with_post(post)
-    attachment.save()
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
 
     response = user_client.get(
         reverse(
@@ -1295,13 +1287,19 @@ def test_thread_detail_view_shows_user_post_with_embedded_delete_user_file_attac
 
     assert_contains(response, "Attachment with post")
     assert_not_contains(response, "<misago-attachment")
-    assert_contains(response, attachment.get_absolute_url())
+    assert_contains(response, text_attachment.get_absolute_url())
 
 
 # TODO:
-# - post with attachments
-# - unapproved post with attachments
-# - hidden post with attachments
+# - embedded attachment from same post
+# - embedded attachment from same user unapproved post
+# - embedded attachment from same user hidden post
+# - embedded attachment from other user post
+# - embedded attachment from user user unapproved post
+# - embedded attachment from other user hidden post
+# - embedded attachment from deleted user post
+# - embedded attachment from deleted user unapproved post
+# - embedded attachment from deleted user hidden post
 # - same thread user quote
 # - same thread other user quote
 # - same thread deleted user quote
