@@ -1000,6 +1000,22 @@ def broken_image_attachment(db):
 
 
 @pytest.fixture
+def broken_image_thumbnail_attachment(db):
+    return Attachment.objects.create(
+        uploader_name="Anonymous",
+        uploader_slug="anonymous",
+        uploaded_at=timezone.now(),
+        name="image-with-thumbnail.png",
+        slug="image-with-thumbnail-png",
+        size=1024 * 1024,
+        dimensions="200x200",
+        thumbnail_size=128 * 1024,
+        thumbnail_dimensions="50x50",
+        filetype_id="png",
+    )
+
+
+@pytest.fixture
 def broken_video_attachment(db):
     return Attachment.objects.create(
         uploader_name="Anonymous",
@@ -1102,6 +1118,23 @@ def user_broken_image_attachment(user):
         slug="user-image-png",
         size=1024 * 1024,
         dimensions="200x200",
+        filetype_id="png",
+    )
+
+
+@pytest.fixture
+def user_broken_image_thumbnail_attachment(user):
+    return Attachment.objects.create(
+        uploader=user,
+        uploader_name=user.username,
+        uploader_slug=user.slug,
+        uploaded_at=timezone.now(),
+        name="user-image-with-thumbnail.png",
+        slug="user-image-with-thumbnail-png",
+        size=1024 * 1024,
+        dimensions="200x200",
+        thumbnail_size=128 * 1024,
+        thumbnail_dimensions="50x50",
         filetype_id="png",
     )
 
@@ -1210,6 +1243,23 @@ def other_user_broken_image_attachment(other_user):
         slug="other_user-image-png",
         size=1024 * 1024,
         dimensions="200x200",
+        filetype_id="png",
+    )
+
+
+@pytest.fixture
+def other_user_broken_image_thumbnail_attachment(other_user):
+    return Attachment.objects.create(
+        uploader=other_user,
+        uploader_name=other_user.username,
+        uploader_slug=other_user.slug,
+        uploaded_at=timezone.now(),
+        name="other_user-image.png",
+        slug="other_user-image-png",
+        size=1024 * 1024,
+        dimensions="200x200",
+        thumbnail_size=128 * 1024,
+        thumbnail_dimensions="50x50",
         filetype_id="png",
     )
 
