@@ -26,8 +26,7 @@ from .models import Thread
 
 if TYPE_CHECKING:
     from ..users.models import User
-else:
-    User = get_user_model()
+
 
 __all__ = [
     "PrefetchPostsFeedRelatedObjects",
@@ -117,14 +116,14 @@ class PrefetchPostsFeedRelatedObjects:
     operations: list[PrefetchPostsFeedRelationsOperation]
 
     settings: DynamicSettings
-    permissions: User
+    permissions: UserPermissionsProxy
 
     categories: list[Category]
     threads: list[Thread]
     posts: list[Post]
     thread_updates: list[ThreadUpdate]
     attachments: list[Attachment]
-    users: list[User]
+    users: list["User"]
     extra_kwargs: dict
 
     def __init__(
@@ -507,7 +506,7 @@ def fetch_users(
     permissions: UserPermissionsProxy,
 ):
     if ids_to_fetch := data["user_ids"].difference(data["users"]):
-        queryset = User.objects.filter(id__in=ids_to_fetch, is_active=True)
+        queryset = get_user_model().objects.filter(id__in=ids_to_fetch, is_active=True)
         data["users"].update({u.id: u for u in queryset})
 
 

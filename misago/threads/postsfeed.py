@@ -119,7 +119,7 @@ class PostsFeed:
         )
 
         set_posts_feed_related_objects_hook(
-            self.set_feed_related_objects, feed, related_objects
+            self.set_posts_feed_related_objects, feed, related_objects
         )
 
         return feed
@@ -133,6 +133,15 @@ class PostsFeed:
             else:
                 edit_url = self.get_edit_post_url(post)
 
+        is_visible = (
+            self.is_moderator
+            or not post.is_hidden
+            or (
+                self.request.user.is_authenticated
+                and self.request.user.id == post.poster_id
+            )
+        )
+
         return {
             "template_name": self.post_template_name,
             "animate": post.id in self.animate_posts,
@@ -142,11 +151,13 @@ class PostsFeed:
             "counter": counter,
             "poster": None,
             "poster_name": post.poster_name,
-            "unread": post.id in self.unread_posts,
+            "is_new": post.id in self.unread_posts,
             "rich_text_data": None,
             "attachments": [],
             "edit_url": edit_url,
             "moderation": self.is_moderator,
+            "is_hidden": post.is_hidden,
+            "is_visible": is_visible,
         }
 
     def allow_edit_post(self, post: Post) -> bool:
@@ -197,7 +208,9 @@ class PostsFeed:
     def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return None
 
-    def set_feed_related_objects(self, feed: list[dict], related_objects: dict) -> None:
+    def set_posts_feed_related_objects(
+        self, feed: list[dict], related_objects: dict
+    ) -> None:
         for item in feed:
             if item["type"] == "post":
                 self.set_post_related_objects(item, item["post"], related_objects)

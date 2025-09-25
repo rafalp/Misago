@@ -1152,6 +1152,25 @@ def other_user_image_attachment(other_user):
 
 
 @pytest.fixture
+def other_user_image_thumbnail_attachment(other_user):
+    return Attachment.objects.create(
+        uploader=other_user,
+        uploader_name=other_user.username,
+        uploader_slug=other_user.slug,
+        uploaded_at=timezone.now(),
+        name="other_user-image.png",
+        slug="other_user-image-png",
+        upload="attachments/other_user-image.png",
+        size=1024 * 1024,
+        dimensions="200x200",
+        thumbnail="attachments/other-user-image-thumbnail.png",
+        thumbnail_size=128 * 1024,
+        thumbnail_dimensions="50x50",
+        filetype_id="png",
+    )
+
+
+@pytest.fixture
 def other_user_video_attachment(other_user):
     return Attachment.objects.create(
         uploader=other_user,
