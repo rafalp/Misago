@@ -1257,7 +1257,7 @@ def test_thread_detail_view_shows_user_post_with_embedded_other_user_file_attach
     assert_contains(response, other_user_text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_user_post_with_embedded_delete_user_file_attachment(
+def test_thread_detail_view_shows_user_post_with_embedded_deleted_user_file_attachment(
     thread_reply_factory, user_client, user, thread, text_attachment
 ):
     post = thread_reply_factory(
@@ -1290,7 +1290,321 @@ def test_thread_detail_view_shows_user_post_with_embedded_delete_user_file_attac
     assert_contains(response, text_attachment.get_absolute_url())
 
 
+def test_thread_detail_view_shows_user_post_with_embedded_user_image_attachment(
+    thread_reply_factory, user_client, user, thread, user_image_attachment
+):
+    post = thread_reply_factory(
+        thread,
+        parsed=(
+            "<p>Attachment with post</p>"
+            "\n"
+            f'<misago-attachment id="{user_image_attachment.id}" '
+            'name="attachment.txt" slug="attachment-txt">'
+        ),
+        poster=user,
+        metadata={"attachments": [user_image_attachment.id]},
+    )
+
+    user_image_attachment.associate_with_post(post)
+    user_image_attachment.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+
+    assert_contains(response, "Attachment with post")
+    assert_not_contains(response, "<misago-attachment")
+    assert_contains(response, user_image_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_user_post_with_embedded_other_user_image_attachment(
+    thread_reply_factory,
+    user_client,
+    user,
+    thread,
+    other_user_image_attachment,
+):
+    post = thread_reply_factory(
+        thread,
+        parsed=(
+            "<p>Attachment with post</p>"
+            "\n"
+            f'<misago-attachment id="{other_user_image_attachment.id}" '
+            'name="attachment.txt" slug="attachment-txt">'
+        ),
+        poster=user,
+        metadata={"attachments": [other_user_image_attachment.id]},
+    )
+
+    other_user_image_attachment.associate_with_post(post)
+    other_user_image_attachment.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+
+    assert_contains(response, "Attachment with post")
+    assert_not_contains(response, "<misago-attachment")
+    assert_contains(response, other_user_image_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_user_post_with_embedded_deleted_user_image_attachment(
+    thread_reply_factory, user_client, user, thread, image_attachment
+):
+    post = thread_reply_factory(
+        thread,
+        parsed=(
+            "<p>Attachment with post</p>"
+            "\n"
+            f'<misago-attachment id="{image_attachment.id}" '
+            'name="attachment.txt" slug="attachment-txt">'
+        ),
+        poster=user,
+        metadata={"attachments": [image_attachment.id]},
+    )
+
+    image_attachment.associate_with_post(post)
+    image_attachment.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+
+    assert_contains(response, "Attachment with post")
+    assert_not_contains(response, "<misago-attachment")
+    assert_contains(response, image_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_user_post_with_embedded_user_image_thumbnail_attachment(
+    thread_reply_factory, user_client, user, thread, user_image_thumbnail_attachment
+):
+    post = thread_reply_factory(
+        thread,
+        parsed=(
+            "<p>Attachment with post</p>"
+            "\n"
+            f'<misago-attachment id="{user_image_thumbnail_attachment.id}" '
+            'name="attachment.txt" slug="attachment-txt">'
+        ),
+        poster=user,
+        metadata={"attachments": [user_image_thumbnail_attachment.id]},
+    )
+
+    user_image_thumbnail_attachment.associate_with_post(post)
+    user_image_thumbnail_attachment.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+
+    assert_contains(response, "Attachment with post")
+    assert_not_contains(response, "<misago-attachment")
+    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_user_post_with_embedded_other_user_image_thumbnail_attachment(
+    thread_reply_factory,
+    user_client,
+    user,
+    thread,
+    other_user_image_thumbnail_attachment,
+):
+    post = thread_reply_factory(
+        thread,
+        parsed=(
+            "<p>Attachment with post</p>"
+            "\n"
+            f'<misago-attachment id="{other_user_image_thumbnail_attachment.id}" '
+            'name="attachment.txt" slug="attachment-txt">'
+        ),
+        poster=user,
+        metadata={"attachments": [other_user_image_thumbnail_attachment.id]},
+    )
+
+    other_user_image_thumbnail_attachment.associate_with_post(post)
+    other_user_image_thumbnail_attachment.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+
+    assert_contains(response, "Attachment with post")
+    assert_not_contains(response, "<misago-attachment")
+    assert_contains(response, other_user_image_thumbnail_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_user_post_with_embedded_deleted_user_image_thumbnail_attachment(
+    thread_reply_factory, user_client, user, thread, image_thumbnail_attachment
+):
+    post = thread_reply_factory(
+        thread,
+        parsed=(
+            "<p>Attachment with post</p>"
+            "\n"
+            f'<misago-attachment id="{image_thumbnail_attachment.id}" '
+            'name="attachment.txt" slug="attachment-txt">'
+        ),
+        poster=user,
+        metadata={"attachments": [image_thumbnail_attachment.id]},
+    )
+
+    image_thumbnail_attachment.associate_with_post(post)
+    image_thumbnail_attachment.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+
+    assert_contains(response, "Attachment with post")
+    assert_not_contains(response, "<misago-attachment")
+    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_user_post_with_embedded_user_video_attachment(
+    thread_reply_factory, user_client, user, thread, user_video_attachment
+):
+    post = thread_reply_factory(
+        thread,
+        parsed=(
+            "<p>Attachment with post</p>"
+            "\n"
+            f'<misago-attachment id="{user_video_attachment.id}" '
+            'name="attachment.txt" slug="attachment-txt">'
+        ),
+        poster=user,
+        metadata={"attachments": [user_video_attachment.id]},
+    )
+
+    user_video_attachment.associate_with_post(post)
+    user_video_attachment.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+
+    assert_contains(response, "Attachment with post")
+    assert_not_contains(response, "<misago-attachment")
+    assert_contains(response, user_video_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_user_post_with_embedded_other_user_video_attachment(
+    thread_reply_factory,
+    user_client,
+    user,
+    thread,
+    other_user_video_attachment,
+):
+    post = thread_reply_factory(
+        thread,
+        parsed=(
+            "<p>Attachment with post</p>"
+            "\n"
+            f'<misago-attachment id="{other_user_video_attachment.id}" '
+            'name="attachment.txt" slug="attachment-txt">'
+        ),
+        poster=user,
+        metadata={"attachments": [other_user_video_attachment.id]},
+    )
+
+    other_user_video_attachment.associate_with_post(post)
+    other_user_video_attachment.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+
+    assert_contains(response, "Attachment with post")
+    assert_not_contains(response, "<misago-attachment")
+    assert_contains(response, other_user_video_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_user_post_with_embedded_deleted_user_video_attachment(
+    thread_reply_factory, user_client, user, thread, video_attachment
+):
+    post = thread_reply_factory(
+        thread,
+        parsed=(
+            "<p>Attachment with post</p>"
+            "\n"
+            f'<misago-attachment id="{video_attachment.id}" '
+            'name="attachment.txt" slug="attachment-txt">'
+        ),
+        poster=user,
+        metadata={"attachments": [video_attachment.id]},
+    )
+
+    video_attachment.associate_with_post(post)
+    video_attachment.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+
+    assert_contains(response, "Attachment with post")
+    assert_not_contains(response, "<misago-attachment")
+    assert_contains(response, video_attachment.get_absolute_url())
+
+
 # TODO:
+# - other user post attachments
+# - deleted user post attachments
+# - user post attachments without attachments permission
+# - other user post attachments without attachments permission
+# - deleted user post attachments without attachments permission
 # - embedded attachment from same post
 # - embedded attachment from same user unapproved post
 # - embedded attachment from same user hidden post
@@ -1300,6 +1614,7 @@ def test_thread_detail_view_shows_user_post_with_embedded_delete_user_file_attac
 # - embedded attachment from deleted user post
 # - embedded attachment from deleted user unapproved post
 # - embedded attachment from deleted user hidden post
+# - ditto
 # - same thread user quote
 # - same thread other user quote
 # - same thread deleted user quote
