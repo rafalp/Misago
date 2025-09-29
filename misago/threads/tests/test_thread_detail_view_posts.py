@@ -406,10 +406,18 @@ def test_thread_detail_view_shows_user_hidden_post_to_moderator(
 
 
 # TODO
-# - hidden posts visibility tests
 # - post attachments
+# - unapproved post attachments
+# - hidden post attachments
 # - post attachments without download permission
 # - post embedded attachments
-# - post attachments without download permission
+# - post embedded attachments without download permission
+# - other post embedded attachments
+# - other post embedded attachments without see post permission
+# - other post embedded attachments without download permission
 # - post with other post quote
+# - ditto but no permission to see other post
 # - post with other thread quote
+# - ditto but no permission to see other thread's category
+# - ditto but no permission to see other thread
+# - ditto but no permission to see other thread's post
