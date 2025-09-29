@@ -133,14 +133,7 @@ class PostsFeed:
             else:
                 edit_url = self.get_edit_post_url(post)
 
-        is_visible = (
-            self.is_moderator
-            or not post.is_hidden
-            or (
-                self.request.user.is_authenticated
-                and self.request.user.id == post.poster_id
-            )
-        )
+        is_visible = self.is_moderator or not post.is_hidden
 
         return {
             "template_name": self.post_template_name,
