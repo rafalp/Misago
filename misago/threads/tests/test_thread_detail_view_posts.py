@@ -405,7 +405,7 @@ def test_thread_detail_view_shows_user_hidden_post_to_moderator(
     assert_contains(response, post.original)
 
 
-def test_thread_detail_view_shows_deleted_user_post_attachments_to_anonymous_user(
+def test_thread_detail_view_shows_post_with_all_attachment_types(
     thread_reply_factory,
     client,
     thread,
@@ -589,108 +589,37 @@ def test_thread_detail_view_shows_deleted_user_post_attachments_to_anonymous_use
     assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
 
 
+def test_thread_detail_view_shows_deleted_user_post_attachments_to_anonymous_user(
+    thread_reply_factory,
+    client,
+    thread,
+    user_text_attachment,
+):
+    post = thread_reply_factory(thread, original=get_random_string(12))
+
+    user_text_attachment.associate_with_post(post)
+    user_text_attachment.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_contains(response, user_text_attachment.name)
+    assert_contains(response, user_text_attachment.get_absolute_url())
+
+
 def test_thread_detail_view_shows_deleted_user_post_attachments_to_user(
     thread_reply_factory,
     user_client,
     thread,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(thread, original=get_random_string(12))
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -701,180 +630,17 @@ def test_thread_detail_view_shows_deleted_user_post_attachments_to_user(
     assert_contains(response, text_attachment.name)
     assert_contains(response, text_attachment.get_absolute_url())
 
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_contains(response, video_attachment.get_absolute_url())
-
-    assert_contains(response, broken_text_attachment.name)
-    assert_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_attachment.name)
-    assert_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_thumbnail_attachment.name)
-    assert_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, broken_video_attachment.name)
-    assert_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_text_attachment.name)
-    assert_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_attachment.name)
-    assert_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_thumbnail_attachment.name)
-    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_video_attachment.name)
-    assert_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_text_attachment.name)
-    assert_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_attachment.name)
-    assert_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_contains(response, user_broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_video_attachment.name)
-    assert_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_text_attachment.name)
-    assert_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_attachment.name)
-    assert_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_contains(response, other_user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_video_attachment.name)
-    assert_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_text_attachment.name)
-    assert_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_attachment.name)
-    assert_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_contains(response, other_user_broken_video_attachment.name)
-    assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
-
 
 def test_thread_detail_view_shows_deleted_user_post_attachments_to_moderator(
     thread_reply_factory,
     moderator_client,
     thread,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(thread, original=get_random_string(12))
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -884,77 +650,6 @@ def test_thread_detail_view_shows_deleted_user_post_attachments_to_moderator(
 
     assert_contains(response, text_attachment.name)
     assert_contains(response, text_attachment.get_absolute_url())
-
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_contains(response, video_attachment.get_absolute_url())
-
-    assert_contains(response, broken_text_attachment.name)
-    assert_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_attachment.name)
-    assert_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_thumbnail_attachment.name)
-    assert_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, broken_video_attachment.name)
-    assert_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_text_attachment.name)
-    assert_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_attachment.name)
-    assert_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_thumbnail_attachment.name)
-    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_video_attachment.name)
-    assert_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_text_attachment.name)
-    assert_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_attachment.name)
-    assert_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_contains(response, user_broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_video_attachment.name)
-    assert_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_text_attachment.name)
-    assert_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_attachment.name)
-    assert_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_contains(response, other_user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_video_attachment.name)
-    assert_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_text_attachment.name)
-    assert_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_attachment.name)
-    assert_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_contains(response, other_user_broken_video_attachment.name)
-    assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_user_post_attachments_to_anonymous_user(
@@ -963,103 +658,11 @@ def test_thread_detail_view_shows_user_post_attachments_to_anonymous_user(
     thread,
     user,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -1069,77 +672,6 @@ def test_thread_detail_view_shows_user_post_attachments_to_anonymous_user(
 
     assert_contains(response, text_attachment.name)
     assert_contains(response, text_attachment.get_absolute_url())
-
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_contains(response, video_attachment.get_absolute_url())
-
-    assert_contains(response, broken_text_attachment.name)
-    assert_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_attachment.name)
-    assert_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_thumbnail_attachment.name)
-    assert_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, broken_video_attachment.name)
-    assert_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_text_attachment.name)
-    assert_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_attachment.name)
-    assert_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_thumbnail_attachment.name)
-    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_video_attachment.name)
-    assert_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_text_attachment.name)
-    assert_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_attachment.name)
-    assert_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_contains(response, user_broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_video_attachment.name)
-    assert_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_text_attachment.name)
-    assert_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_attachment.name)
-    assert_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_contains(response, other_user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_video_attachment.name)
-    assert_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_text_attachment.name)
-    assert_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_attachment.name)
-    assert_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_contains(response, other_user_broken_video_attachment.name)
-    assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_user_post_attachments_to_user(
@@ -1148,103 +680,11 @@ def test_thread_detail_view_shows_user_post_attachments_to_user(
     thread,
     user,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -1254,77 +694,6 @@ def test_thread_detail_view_shows_user_post_attachments_to_user(
 
     assert_contains(response, text_attachment.name)
     assert_contains(response, text_attachment.get_absolute_url())
-
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_contains(response, video_attachment.get_absolute_url())
-
-    assert_contains(response, broken_text_attachment.name)
-    assert_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_attachment.name)
-    assert_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_thumbnail_attachment.name)
-    assert_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, broken_video_attachment.name)
-    assert_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_text_attachment.name)
-    assert_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_attachment.name)
-    assert_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_thumbnail_attachment.name)
-    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_video_attachment.name)
-    assert_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_text_attachment.name)
-    assert_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_attachment.name)
-    assert_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_contains(response, user_broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_video_attachment.name)
-    assert_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_text_attachment.name)
-    assert_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_attachment.name)
-    assert_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_contains(response, other_user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_video_attachment.name)
-    assert_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_text_attachment.name)
-    assert_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_attachment.name)
-    assert_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_contains(response, other_user_broken_video_attachment.name)
-    assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_other_user_post_attachments_to_user(
@@ -1333,29 +702,6 @@ def test_thread_detail_view_shows_other_user_post_attachments_to_user(
     thread,
     other_user,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(
         thread, original=get_random_string(12), poster=other_user
@@ -1364,75 +710,6 @@ def test_thread_detail_view_shows_other_user_post_attachments_to_user(
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
-
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -1441,77 +718,6 @@ def test_thread_detail_view_shows_other_user_post_attachments_to_user(
 
     assert_contains(response, text_attachment.name)
     assert_contains(response, text_attachment.get_absolute_url())
-
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_contains(response, video_attachment.get_absolute_url())
-
-    assert_contains(response, broken_text_attachment.name)
-    assert_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_attachment.name)
-    assert_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_thumbnail_attachment.name)
-    assert_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, broken_video_attachment.name)
-    assert_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_text_attachment.name)
-    assert_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_attachment.name)
-    assert_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_thumbnail_attachment.name)
-    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_video_attachment.name)
-    assert_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_text_attachment.name)
-    assert_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_attachment.name)
-    assert_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_contains(response, user_broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_video_attachment.name)
-    assert_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_text_attachment.name)
-    assert_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_attachment.name)
-    assert_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_contains(response, other_user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_video_attachment.name)
-    assert_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_text_attachment.name)
-    assert_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_attachment.name)
-    assert_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_contains(response, other_user_broken_video_attachment.name)
-    assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_user_post_attachments_to_moderator(
@@ -1520,103 +726,11 @@ def test_thread_detail_view_shows_user_post_attachments_to_moderator(
     thread,
     user,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -1627,106 +741,12 @@ def test_thread_detail_view_shows_user_post_attachments_to_moderator(
     assert_contains(response, text_attachment.name)
     assert_contains(response, text_attachment.get_absolute_url())
 
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_contains(response, video_attachment.get_absolute_url())
-
-    assert_contains(response, broken_text_attachment.name)
-    assert_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_attachment.name)
-    assert_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_thumbnail_attachment.name)
-    assert_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, broken_video_attachment.name)
-    assert_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_text_attachment.name)
-    assert_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_attachment.name)
-    assert_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_thumbnail_attachment.name)
-    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_video_attachment.name)
-    assert_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_text_attachment.name)
-    assert_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_attachment.name)
-    assert_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_contains(response, user_broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_video_attachment.name)
-    assert_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_text_attachment.name)
-    assert_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_attachment.name)
-    assert_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_contains(response, other_user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_video_attachment.name)
-    assert_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_text_attachment.name)
-    assert_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_attachment.name)
-    assert_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_contains(response, other_user_broken_video_attachment.name)
-    assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
-
 
 def test_thread_detail_view_doesnt_show_unapproved_post_attachments_to_anonymous_user(
     thread_reply_factory,
     client,
     thread,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(
         thread, original=get_random_string(12), is_unapproved=True
@@ -1734,75 +754,6 @@ def test_thread_detail_view_doesnt_show_unapproved_post_attachments_to_anonymous
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -1813,110 +764,12 @@ def test_thread_detail_view_doesnt_show_unapproved_post_attachments_to_anonymous
     assert_not_contains(response, text_attachment.name)
     assert_not_contains(response, text_attachment.get_absolute_url())
 
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_text_attachment.name)
-    assert_not_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_attachment.name)
-    assert_not_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_thumbnail_attachment.name)
-    assert_not_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_video_attachment.name)
-    assert_not_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_text_attachment.name)
-    assert_not_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_attachment.name)
-    assert_not_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_thumbnail_attachment.name)
-    assert_not_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_video_attachment.name)
-    assert_not_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_text_attachment.name)
-    assert_not_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_attachment.name)
-    assert_not_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, user_broken_video_attachment.name)
-    assert_not_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_text_attachment.name)
-    assert_not_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_attachment.name)
-    assert_not_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_video_attachment.name)
-    assert_not_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_text_attachment.name)
-    assert_not_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_attachment.name)
-    assert_not_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_broken_video_attachment.name)
-    assert_not_contains(response, other_user_broken_video_attachment.get_absolute_url())
-
 
 def test_thread_detail_view_doesnt_show_unapproved_post_attachments_to_user(
     thread_reply_factory,
     user_client,
     thread,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(
         thread, original=get_random_string(12), is_unapproved=True
@@ -1924,75 +777,6 @@ def test_thread_detail_view_doesnt_show_unapproved_post_attachments_to_user(
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -2002,81 +786,6 @@ def test_thread_detail_view_doesnt_show_unapproved_post_attachments_to_user(
 
     assert_not_contains(response, text_attachment.name)
     assert_not_contains(response, text_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_text_attachment.name)
-    assert_not_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_attachment.name)
-    assert_not_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_thumbnail_attachment.name)
-    assert_not_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_video_attachment.name)
-    assert_not_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_text_attachment.name)
-    assert_not_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_attachment.name)
-    assert_not_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_thumbnail_attachment.name)
-    assert_not_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_video_attachment.name)
-    assert_not_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_text_attachment.name)
-    assert_not_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_attachment.name)
-    assert_not_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, user_broken_video_attachment.name)
-    assert_not_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_text_attachment.name)
-    assert_not_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_attachment.name)
-    assert_not_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_video_attachment.name)
-    assert_not_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_text_attachment.name)
-    assert_not_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_attachment.name)
-    assert_not_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_broken_video_attachment.name)
-    assert_not_contains(response, other_user_broken_video_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_unapproved_post_attachments_to_poster(
@@ -2085,29 +794,6 @@ def test_thread_detail_view_shows_unapproved_post_attachments_to_poster(
     thread,
     user,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(
         thread, original=get_random_string(12), poster=user, is_unapproved=True
@@ -2115,75 +801,6 @@ def test_thread_detail_view_shows_unapproved_post_attachments_to_poster(
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -2194,106 +811,12 @@ def test_thread_detail_view_shows_unapproved_post_attachments_to_poster(
     assert_contains(response, text_attachment.name)
     assert_contains(response, text_attachment.get_absolute_url())
 
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_contains(response, video_attachment.get_absolute_url())
-
-    assert_contains(response, broken_text_attachment.name)
-    assert_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_attachment.name)
-    assert_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_thumbnail_attachment.name)
-    assert_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, broken_video_attachment.name)
-    assert_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_text_attachment.name)
-    assert_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_attachment.name)
-    assert_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_thumbnail_attachment.name)
-    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_video_attachment.name)
-    assert_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_text_attachment.name)
-    assert_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_attachment.name)
-    assert_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_contains(response, user_broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_video_attachment.name)
-    assert_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_text_attachment.name)
-    assert_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_attachment.name)
-    assert_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_contains(response, other_user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_video_attachment.name)
-    assert_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_text_attachment.name)
-    assert_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_attachment.name)
-    assert_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_contains(response, other_user_broken_video_attachment.name)
-    assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
-
 
 def test_thread_detail_view_shows_deleted_user_unapproved_post_attachments_to_moderator(
     thread_reply_factory,
     moderator_client,
     thread,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(
         thread, original=get_random_string(12), is_unapproved=True
@@ -2302,75 +825,6 @@ def test_thread_detail_view_shows_deleted_user_unapproved_post_attachments_to_mo
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
-
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -2379,77 +833,6 @@ def test_thread_detail_view_shows_deleted_user_unapproved_post_attachments_to_mo
 
     assert_contains(response, text_attachment.name)
     assert_contains(response, text_attachment.get_absolute_url())
-
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_contains(response, video_attachment.get_absolute_url())
-
-    assert_contains(response, broken_text_attachment.name)
-    assert_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_attachment.name)
-    assert_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_thumbnail_attachment.name)
-    assert_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, broken_video_attachment.name)
-    assert_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_text_attachment.name)
-    assert_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_attachment.name)
-    assert_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_thumbnail_attachment.name)
-    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_video_attachment.name)
-    assert_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_text_attachment.name)
-    assert_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_attachment.name)
-    assert_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_contains(response, user_broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_video_attachment.name)
-    assert_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_text_attachment.name)
-    assert_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_attachment.name)
-    assert_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_contains(response, other_user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_video_attachment.name)
-    assert_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_text_attachment.name)
-    assert_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_attachment.name)
-    assert_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_contains(response, other_user_broken_video_attachment.name)
-    assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_user_unapproved_post_attachments_to_moderator(
@@ -2458,29 +841,6 @@ def test_thread_detail_view_shows_user_unapproved_post_attachments_to_moderator(
     thread,
     user,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(
         thread, original=get_random_string(12), poster=user, is_unapproved=True
@@ -2489,75 +849,6 @@ def test_thread_detail_view_shows_user_unapproved_post_attachments_to_moderator(
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
-
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -2567,180 +858,17 @@ def test_thread_detail_view_shows_user_unapproved_post_attachments_to_moderator(
     assert_contains(response, text_attachment.name)
     assert_contains(response, text_attachment.get_absolute_url())
 
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_contains(response, video_attachment.get_absolute_url())
-
-    assert_contains(response, broken_text_attachment.name)
-    assert_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_attachment.name)
-    assert_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_thumbnail_attachment.name)
-    assert_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, broken_video_attachment.name)
-    assert_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_text_attachment.name)
-    assert_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_attachment.name)
-    assert_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_thumbnail_attachment.name)
-    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_video_attachment.name)
-    assert_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_text_attachment.name)
-    assert_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_attachment.name)
-    assert_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_contains(response, user_broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_video_attachment.name)
-    assert_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_text_attachment.name)
-    assert_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_attachment.name)
-    assert_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_contains(response, other_user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_video_attachment.name)
-    assert_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_text_attachment.name)
-    assert_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_attachment.name)
-    assert_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_contains(response, other_user_broken_video_attachment.name)
-    assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
-
 
 def test_thread_detail_view_doesnt_show_deleted_user_hidden_post_attachments_to_anonymous_user(
     thread_reply_factory,
     client,
     thread,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(thread, original=get_random_string(12), is_hidden=True)
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -2751,184 +879,17 @@ def test_thread_detail_view_doesnt_show_deleted_user_hidden_post_attachments_to_
     assert_not_contains(response, text_attachment.name)
     assert_not_contains(response, text_attachment.get_absolute_url())
 
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_text_attachment.name)
-    assert_not_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_attachment.name)
-    assert_not_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_thumbnail_attachment.name)
-    assert_not_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_video_attachment.name)
-    assert_not_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_text_attachment.name)
-    assert_not_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_attachment.name)
-    assert_not_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_thumbnail_attachment.name)
-    assert_not_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_video_attachment.name)
-    assert_not_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_text_attachment.name)
-    assert_not_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_attachment.name)
-    assert_not_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, user_broken_video_attachment.name)
-    assert_not_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_text_attachment.name)
-    assert_not_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_attachment.name)
-    assert_not_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_video_attachment.name)
-    assert_not_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_text_attachment.name)
-    assert_not_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_attachment.name)
-    assert_not_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_broken_video_attachment.name)
-    assert_not_contains(response, other_user_broken_video_attachment.get_absolute_url())
-
 
 def test_thread_detail_view_doesnt_show_deleted_user_hidden_post_attachments_to_user(
     thread_reply_factory,
     user_client,
     thread,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(thread, original=get_random_string(12), is_hidden=True)
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -2939,184 +900,17 @@ def test_thread_detail_view_doesnt_show_deleted_user_hidden_post_attachments_to_
     assert_not_contains(response, text_attachment.name)
     assert_not_contains(response, text_attachment.get_absolute_url())
 
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_text_attachment.name)
-    assert_not_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_attachment.name)
-    assert_not_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_thumbnail_attachment.name)
-    assert_not_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_video_attachment.name)
-    assert_not_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_text_attachment.name)
-    assert_not_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_attachment.name)
-    assert_not_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_thumbnail_attachment.name)
-    assert_not_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_video_attachment.name)
-    assert_not_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_text_attachment.name)
-    assert_not_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_attachment.name)
-    assert_not_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, user_broken_video_attachment.name)
-    assert_not_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_text_attachment.name)
-    assert_not_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_attachment.name)
-    assert_not_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_video_attachment.name)
-    assert_not_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_text_attachment.name)
-    assert_not_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_attachment.name)
-    assert_not_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_broken_video_attachment.name)
-    assert_not_contains(response, other_user_broken_video_attachment.get_absolute_url())
-
 
 def test_thread_detail_view_shows_deleted_user_hidden_post_attachments_to_moderator(
     thread_reply_factory,
     moderator_client,
     thread,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(thread, original=get_random_string(12), is_hidden=True)
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -3126,77 +920,6 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_attachments_to_modera
 
     assert_contains(response, text_attachment.name)
     assert_contains(response, text_attachment.get_absolute_url())
-
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_contains(response, video_attachment.get_absolute_url())
-
-    assert_contains(response, broken_text_attachment.name)
-    assert_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_attachment.name)
-    assert_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, broken_image_thumbnail_attachment.name)
-    assert_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, broken_video_attachment.name)
-    assert_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_text_attachment.name)
-    assert_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_attachment.name)
-    assert_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_thumbnail_attachment.name)
-    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_video_attachment.name)
-    assert_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_text_attachment.name)
-    assert_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_attachment.name)
-    assert_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_contains(response, user_broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_broken_video_attachment.name)
-    assert_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_text_attachment.name)
-    assert_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_attachment.name)
-    assert_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_contains(response, other_user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_video_attachment.name)
-    assert_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_text_attachment.name)
-    assert_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_attachment.name)
-    assert_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_contains(response, other_user_broken_video_attachment.name)
-    assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_doesnt_show_user_hidden_post_attachments_to_anonymous_user(
@@ -3205,29 +928,6 @@ def test_thread_detail_view_doesnt_show_user_hidden_post_attachments_to_anonymou
     thread,
     user,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(
         thread, original=get_random_string(12), poster=user, is_hidden=True
@@ -3235,75 +935,6 @@ def test_thread_detail_view_doesnt_show_user_hidden_post_attachments_to_anonymou
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -3314,81 +945,6 @@ def test_thread_detail_view_doesnt_show_user_hidden_post_attachments_to_anonymou
     assert_not_contains(response, text_attachment.name)
     assert_not_contains(response, text_attachment.get_absolute_url())
 
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_text_attachment.name)
-    assert_not_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_attachment.name)
-    assert_not_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_thumbnail_attachment.name)
-    assert_not_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_video_attachment.name)
-    assert_not_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_text_attachment.name)
-    assert_not_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_attachment.name)
-    assert_not_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_thumbnail_attachment.name)
-    assert_not_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_video_attachment.name)
-    assert_not_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_text_attachment.name)
-    assert_not_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_attachment.name)
-    assert_not_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, user_broken_video_attachment.name)
-    assert_not_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_text_attachment.name)
-    assert_not_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_attachment.name)
-    assert_not_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_video_attachment.name)
-    assert_not_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_text_attachment.name)
-    assert_not_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_attachment.name)
-    assert_not_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_broken_video_attachment.name)
-    assert_not_contains(response, other_user_broken_video_attachment.get_absolute_url())
-
 
 def test_thread_detail_view_doesnt_show_user_hidden_post_attachments_to_user(
     thread_reply_factory,
@@ -3396,29 +952,6 @@ def test_thread_detail_view_doesnt_show_user_hidden_post_attachments_to_user(
     thread,
     user,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(
         thread, original=get_random_string(12), poster=user, is_hidden=True
@@ -3426,75 +959,6 @@ def test_thread_detail_view_doesnt_show_user_hidden_post_attachments_to_user(
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -3504,81 +968,6 @@ def test_thread_detail_view_doesnt_show_user_hidden_post_attachments_to_user(
 
     assert_not_contains(response, text_attachment.name)
     assert_not_contains(response, text_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_text_attachment.name)
-    assert_not_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_attachment.name)
-    assert_not_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_thumbnail_attachment.name)
-    assert_not_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_video_attachment.name)
-    assert_not_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_text_attachment.name)
-    assert_not_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_attachment.name)
-    assert_not_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_thumbnail_attachment.name)
-    assert_not_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_video_attachment.name)
-    assert_not_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_text_attachment.name)
-    assert_not_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_attachment.name)
-    assert_not_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, user_broken_video_attachment.name)
-    assert_not_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_text_attachment.name)
-    assert_not_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_attachment.name)
-    assert_not_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_video_attachment.name)
-    assert_not_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_text_attachment.name)
-    assert_not_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_attachment.name)
-    assert_not_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_broken_video_attachment.name)
-    assert_not_contains(response, other_user_broken_video_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_doesnt_show_other_user_hidden_post_attachments_to_user(
@@ -3587,29 +976,6 @@ def test_thread_detail_view_doesnt_show_other_user_hidden_post_attachments_to_us
     thread,
     other_user,
     text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-    broken_text_attachment,
-    broken_image_attachment,
-    broken_image_thumbnail_attachment,
-    broken_video_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-    user_broken_text_attachment,
-    user_broken_image_attachment,
-    user_broken_image_thumbnail_attachment,
-    user_broken_video_attachment,
-    other_user_text_attachment,
-    other_user_image_attachment,
-    other_user_image_thumbnail_attachment,
-    other_user_video_attachment,
-    other_user_broken_text_attachment,
-    other_user_broken_image_attachment,
-    other_user_broken_image_thumbnail_attachment,
-    other_user_broken_video_attachment,
 ):
     post = thread_reply_factory(
         thread, original=get_random_string(12), poster=other_user, is_hidden=True
@@ -3617,75 +983,6 @@ def test_thread_detail_view_doesnt_show_other_user_hidden_post_attachments_to_us
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    broken_text_attachment.associate_with_post(post)
-    broken_text_attachment.save()
-
-    broken_image_attachment.associate_with_post(post)
-    broken_image_attachment.save()
-
-    broken_image_thumbnail_attachment.associate_with_post(post)
-    broken_image_thumbnail_attachment.save()
-
-    broken_video_attachment.associate_with_post(post)
-    broken_video_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    user_broken_text_attachment.associate_with_post(post)
-    user_broken_text_attachment.save()
-
-    user_broken_image_attachment.associate_with_post(post)
-    user_broken_image_attachment.save()
-
-    user_broken_image_thumbnail_attachment.associate_with_post(post)
-    user_broken_image_thumbnail_attachment.save()
-
-    user_broken_video_attachment.associate_with_post(post)
-    user_broken_video_attachment.save()
-
-    other_user_text_attachment.associate_with_post(post)
-    other_user_text_attachment.save()
-
-    other_user_image_attachment.associate_with_post(post)
-    other_user_image_attachment.save()
-
-    other_user_image_thumbnail_attachment.associate_with_post(post)
-    other_user_image_thumbnail_attachment.save()
-
-    other_user_video_attachment.associate_with_post(post)
-    other_user_video_attachment.save()
-
-    other_user_broken_text_attachment.associate_with_post(post)
-    other_user_broken_text_attachment.save()
-
-    other_user_broken_image_attachment.associate_with_post(post)
-    other_user_broken_image_attachment.save()
-
-    other_user_broken_image_thumbnail_attachment.associate_with_post(post)
-    other_user_broken_image_thumbnail_attachment.save()
-
-    other_user_broken_video_attachment.associate_with_post(post)
-    other_user_broken_video_attachment.save()
 
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -3696,87 +993,35 @@ def test_thread_detail_view_doesnt_show_other_user_hidden_post_attachments_to_us
     assert_not_contains(response, text_attachment.name)
     assert_not_contains(response, text_attachment.get_absolute_url())
 
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_text_attachment.name)
-    assert_not_contains(response, broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_attachment.name)
-    assert_not_contains(response, broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_image_thumbnail_attachment.name)
-    assert_not_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, broken_video_attachment.name)
-    assert_not_contains(response, broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_text_attachment.name)
-    assert_not_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_attachment.name)
-    assert_not_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_image_thumbnail_attachment.name)
-    assert_not_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_video_attachment.name)
-    assert_not_contains(response, user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_text_attachment.name)
-    assert_not_contains(response, user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_attachment.name)
-    assert_not_contains(response, user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, user_broken_video_attachment.name)
-    assert_not_contains(response, user_broken_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_text_attachment.name)
-    assert_not_contains(response, other_user_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_attachment.name)
-    assert_not_contains(response, other_user_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_video_attachment.name)
-    assert_not_contains(response, other_user_video_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_text_attachment.name)
-    assert_not_contains(response, other_user_broken_text_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_attachment.name)
-    assert_not_contains(response, other_user_broken_image_attachment.get_absolute_url())
-
-    assert_not_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_not_contains(
-        response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
-    )
-
-    assert_not_contains(response, other_user_broken_video_attachment.name)
-    assert_not_contains(response, other_user_broken_video_attachment.get_absolute_url())
-
 
 def test_thread_detail_view_shows_user_hidden_post_attachments_to_moderator(
     thread_reply_factory,
     moderator_client,
     thread,
     user,
+    text_attachment,
+):
+    post = thread_reply_factory(
+        thread, original=get_random_string(12), poster=user, is_hidden=True
+    )
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_post_with_all_attachment_types_embedded(
+    thread_reply_factory,
+    client,
+    thread,
     text_attachment,
     image_attachment,
     image_thumbnail_attachment,
@@ -3802,9 +1047,7 @@ def test_thread_detail_view_shows_user_hidden_post_attachments_to_moderator(
     other_user_broken_image_thumbnail_attachment,
     other_user_broken_video_attachment,
 ):
-    post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=user, is_hidden=True
-    )
+    post = thread_reply_factory(thread, original=get_random_string(12))
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
@@ -3878,11 +1121,93 @@ def test_thread_detail_view_shows_user_hidden_post_attachments_to_moderator(
     other_user_broken_video_attachment.associate_with_post(post)
     other_user_broken_video_attachment.save()
 
-    response = moderator_client.get(
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{image_thumbnail_attachment.id}" name="{image_thumbnail_attachment.name}" slug="{image_thumbnail_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{video_attachment.id}" name="{video_attachment.name}" slug="{video_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{broken_text_attachment.id}" name="{broken_text_attachment.name}" slug="{broken_text_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{broken_image_attachment.id}" name="{broken_image_attachment.name}" slug="{broken_image_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{broken_image_thumbnail_attachment.id}" name="{broken_image_thumbnail_attachment.name}" slug="{broken_image_thumbnail_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{broken_video_attachment.id}" name="{broken_video_attachment.name}" slug="{broken_video_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{user_text_attachment.id}" name="{user_text_attachment.name}" slug="{user_text_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{user_image_attachment.id}" name="{user_image_attachment.name}" slug="{user_image_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{user_image_thumbnail_attachment.id}" name="{user_image_thumbnail_attachment.name}" slug="{user_image_thumbnail_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{user_video_attachment.id}" name="{user_video_attachment.name}" slug="{user_video_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{user_broken_text_attachment.id}" name="{user_broken_text_attachment.name}" slug="{user_broken_text_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{user_broken_image_attachment.id}" name="{user_broken_image_attachment.name}" slug="{user_broken_image_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{user_broken_image_thumbnail_attachment.id}" name="{user_broken_image_thumbnail_attachment.name}" slug="{user_broken_image_thumbnail_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{user_broken_video_attachment.id}" name="{user_broken_video_attachment.name}" slug="{user_broken_video_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{other_user_text_attachment.id}" name="{other_user_text_attachment.name}" slug="{other_user_text_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{other_user_image_attachment.id}" name="{other_user_image_attachment.name}" slug="{other_user_image_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{other_user_image_thumbnail_attachment.id}" name="{other_user_image_thumbnail_attachment.name}" slug="{other_user_image_thumbnail_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{other_user_video_attachment.id}" name="{other_user_video_attachment.name}" slug="{other_user_video_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{other_user_broken_text_attachment.id}" name="{other_user_broken_text_attachment.name}" slug="{other_user_broken_text_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{other_user_broken_image_attachment.id}" name="{other_user_broken_image_attachment.name}" slug="{other_user_broken_image_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{other_user_broken_image_thumbnail_attachment.id}" name="{other_user_broken_image_thumbnail_attachment.name}" slug="{other_user_broken_image_thumbnail_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{other_user_broken_video_attachment.id}" name="{other_user_broken_video_attachment.name}" slug="{other_user_broken_video_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [
+            text_attachment.id,
+            image_attachment.id,
+            image_thumbnail_attachment.id,
+            video_attachment.id,
+            broken_text_attachment.id,
+            broken_image_attachment.id,
+            broken_image_thumbnail_attachment.id,
+            broken_video_attachment.id,
+            user_text_attachment.id,
+            user_image_attachment.id,
+            user_image_thumbnail_attachment.id,
+            user_video_attachment.id,
+            user_broken_text_attachment.id,
+            user_broken_image_attachment.id,
+            user_broken_image_thumbnail_attachment.id,
+            user_broken_video_attachment.id,
+            other_user_text_attachment.id,
+            other_user_image_attachment.id,
+            other_user_image_thumbnail_attachment.id,
+            other_user_video_attachment.id,
+            other_user_broken_text_attachment.id,
+            other_user_broken_image_attachment.id,
+            other_user_broken_image_thumbnail_attachment.id,
+            other_user_broken_video_attachment.id,
+        ],
+    }
+    post.save()
+
+    response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
 
     assert_contains(response, text_attachment.name)
     assert_contains(response, text_attachment.get_absolute_url())
@@ -3897,16 +1222,16 @@ def test_thread_detail_view_shows_user_hidden_post_attachments_to_moderator(
     assert_contains(response, video_attachment.get_absolute_url())
 
     assert_contains(response, broken_text_attachment.name)
-    assert_contains(response, broken_text_attachment.get_absolute_url())
+    assert_not_contains(response, broken_text_attachment.get_absolute_url())
 
     assert_contains(response, broken_image_attachment.name)
-    assert_contains(response, broken_image_attachment.get_absolute_url())
+    assert_not_contains(response, broken_image_attachment.get_absolute_url())
 
     assert_contains(response, broken_image_thumbnail_attachment.name)
-    assert_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
+    assert_not_contains(response, broken_image_thumbnail_attachment.get_absolute_url())
 
     assert_contains(response, broken_video_attachment.name)
-    assert_contains(response, broken_video_attachment.get_absolute_url())
+    assert_not_contains(response, broken_video_attachment.get_absolute_url())
 
     assert_contains(response, user_text_attachment.name)
     assert_contains(response, user_text_attachment.get_absolute_url())
@@ -3921,16 +1246,18 @@ def test_thread_detail_view_shows_user_hidden_post_attachments_to_moderator(
     assert_contains(response, user_video_attachment.get_absolute_url())
 
     assert_contains(response, user_broken_text_attachment.name)
-    assert_contains(response, user_broken_text_attachment.get_absolute_url())
+    assert_not_contains(response, user_broken_text_attachment.get_absolute_url())
 
     assert_contains(response, user_broken_image_attachment.name)
-    assert_contains(response, user_broken_image_attachment.get_absolute_url())
+    assert_not_contains(response, user_broken_image_attachment.get_absolute_url())
 
     assert_contains(response, user_broken_image_thumbnail_attachment.name)
-    assert_contains(response, user_broken_image_thumbnail_attachment.get_absolute_url())
+    assert_not_contains(
+        response, user_broken_image_thumbnail_attachment.get_absolute_url()
+    )
 
     assert_contains(response, user_broken_video_attachment.name)
-    assert_contains(response, user_broken_video_attachment.get_absolute_url())
+    assert_not_contains(response, user_broken_video_attachment.get_absolute_url())
 
     assert_contains(response, other_user_text_attachment.name)
     assert_contains(response, other_user_text_attachment.get_absolute_url())
@@ -3945,27 +1272,259 @@ def test_thread_detail_view_shows_user_hidden_post_attachments_to_moderator(
     assert_contains(response, other_user_video_attachment.get_absolute_url())
 
     assert_contains(response, other_user_broken_text_attachment.name)
-    assert_contains(response, other_user_broken_text_attachment.get_absolute_url())
+    assert_not_contains(response, other_user_broken_text_attachment.get_absolute_url())
 
     assert_contains(response, other_user_broken_image_attachment.name)
-    assert_contains(response, other_user_broken_image_attachment.get_absolute_url())
+    assert_not_contains(response, other_user_broken_image_attachment.get_absolute_url())
 
     assert_contains(response, other_user_broken_image_thumbnail_attachment.name)
-    assert_contains(
+    assert_not_contains(
         response, other_user_broken_image_thumbnail_attachment.get_absolute_url()
     )
 
     assert_contains(response, other_user_broken_video_attachment.name)
-    assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
+    assert_not_contains(response, other_user_broken_video_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_deleted_user_post_embedded_attachments_to_anonymous_user(
+    thread_reply_factory,
+    client,
+    thread,
+    text_attachment,
+):
+    post = thread_reply_factory(thread, original=get_random_string(12))
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [text_attachment.id],
+    }
+    post.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_deleted_user_post_embedded_attachments_to_user(
+    thread_reply_factory,
+    user_client,
+    thread,
+    text_attachment,
+):
+    post = thread_reply_factory(thread, original=get_random_string(12))
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [text_attachment.id],
+    }
+    post.save()
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_deleted_user_post_embedded_attachments_to_moderator(
+    thread_reply_factory,
+    moderator_client,
+    thread,
+    text_attachment,
+):
+    post = thread_reply_factory(thread, original=get_random_string(12))
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [text_attachment.id],
+    }
+    post.save()
+
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_user_post_embedded_attachments_to_anonymous_user(
+    thread_reply_factory,
+    client,
+    thread,
+    user,
+    text_attachment,
+):
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [text_attachment.id],
+    }
+    post.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_user_post_embedded_attachments_to_user(
+    thread_reply_factory,
+    user_client,
+    thread,
+    user,
+    text_attachment,
+):
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [text_attachment.id],
+    }
+    post.save()
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_other_user_post_embedded_attachments_to_user(
+    thread_reply_factory,
+    user_client,
+    thread,
+    other_user,
+    text_attachment,
+):
+    post = thread_reply_factory(
+        thread, original=get_random_string(12), poster=other_user
+    )
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [text_attachment.id],
+    }
+    post.save()
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_user_post_embedded_attachments_to_moderator(
+    thread_reply_factory,
+    moderator_client,
+    thread,
+    user,
+    text_attachment,
+):
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [text_attachment.id],
+    }
+    post.save()
+
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
 
 
 # TODO
-# - post attachments without download permission
-# - post embedded attachments
+# - delete extra attachments from other tests for simplicity
+# - make one "all attachment types are displayed embedded in post"
 # - post embedded attachments without download permission
 # - other post embedded attachments
 # - other post embedded attachments without see post permission
 # - other post embedded attachments without download permission
+
+# TODO
 # - post with other post quote
 # - ditto but no permission to see other post
 # - post with other thread quote
