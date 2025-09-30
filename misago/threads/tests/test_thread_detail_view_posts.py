@@ -1020,12 +1020,15 @@ def test_thread_detail_view_shows_user_hidden_post_attachments_to_moderator(
     assert_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_hides_post_attachment_from_anonymous_user_without_permission(
+def test_thread_detail_view_hides_post_attachments_from_anonymous_user_without_permission(
     thread_reply_factory,
     client,
     guests_group,
     thread,
     text_attachment,
+    image_attachment,
+    image_thumbnail_attachment,
+    video_attachment,
 ):
     CategoryGroupPermission.objects.filter(
         group=guests_group,
@@ -1037,6 +1040,15 @@ def test_thread_detail_view_hides_post_attachment_from_anonymous_user_without_pe
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
+    image_attachment.associate_with_post(post)
+    image_attachment.save()
+
+    image_thumbnail_attachment.associate_with_post(post)
+    image_thumbnail_attachment.save()
+
+    video_attachment.associate_with_post(post)
+    video_attachment.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -1046,13 +1058,25 @@ def test_thread_detail_view_hides_post_attachment_from_anonymous_user_without_pe
     assert_not_contains(response, text_attachment.name)
     assert_not_contains(response, text_attachment.get_absolute_url())
 
+    assert_not_contains(response, image_attachment.name)
+    assert_not_contains(response, image_attachment.get_absolute_url())
 
-def test_thread_detail_view_hides_post_attachment_from_user_without_permission(
+    assert_not_contains(response, image_thumbnail_attachment.name)
+    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
+
+    assert_not_contains(response, video_attachment.name)
+    assert_not_contains(response, video_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_hides_post_attachments_from_user_without_permission(
     thread_reply_factory,
     user_client,
     members_group,
     thread,
     text_attachment,
+    image_attachment,
+    image_thumbnail_attachment,
+    video_attachment,
 ):
     CategoryGroupPermission.objects.filter(
         group=members_group,
@@ -1064,6 +1088,15 @@ def test_thread_detail_view_hides_post_attachment_from_user_without_permission(
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
+    image_attachment.associate_with_post(post)
+    image_attachment.save()
+
+    image_thumbnail_attachment.associate_with_post(post)
+    image_thumbnail_attachment.save()
+
+    video_attachment.associate_with_post(post)
+    video_attachment.save()
+
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -1073,13 +1106,26 @@ def test_thread_detail_view_hides_post_attachment_from_user_without_permission(
     assert_not_contains(response, text_attachment.name)
     assert_not_contains(response, text_attachment.get_absolute_url())
 
+    assert_not_contains(response, image_attachment.name)
+    assert_not_contains(response, image_attachment.get_absolute_url())
 
-def test_thread_detail_view_shows_post_attachment_to_uploader_without_permission(
+    assert_not_contains(response, image_thumbnail_attachment.name)
+    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
+
+    assert_not_contains(response, video_attachment.name)
+    assert_not_contains(response, video_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_post_attachments_to_uploader_without_permission(
     thread_reply_factory,
     user_client,
     members_group,
     thread,
+    text_attachment,
     user_text_attachment,
+    user_image_attachment,
+    user_image_thumbnail_attachment,
+    user_video_attachment,
 ):
     CategoryGroupPermission.objects.filter(
         group=members_group,
@@ -1088,8 +1134,20 @@ def test_thread_detail_view_shows_post_attachment_to_uploader_without_permission
 
     post = thread_reply_factory(thread, original=get_random_string(12))
 
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
     user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
+
+    user_image_attachment.associate_with_post(post)
+    user_image_attachment.save()
+
+    user_image_thumbnail_attachment.associate_with_post(post)
+    user_image_thumbnail_attachment.save()
+
+    user_video_attachment.associate_with_post(post)
+    user_video_attachment.save()
 
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -1097,16 +1155,30 @@ def test_thread_detail_view_shows_post_attachment_to_uploader_without_permission
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
 
+    assert_not_contains(response, text_attachment.get_absolute_url())
+
     assert_contains(response, user_text_attachment.name)
     assert_contains(response, user_text_attachment.get_absolute_url())
 
+    assert_contains(response, user_image_attachment.name)
+    assert_contains(response, user_image_attachment.get_absolute_url())
 
-def test_thread_detail_view_hides_post_attachment_from_moderator_without_permission(
+    assert_contains(response, user_image_thumbnail_attachment.name)
+    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
+
+    assert_contains(response, user_video_attachment.name)
+    assert_contains(response, user_video_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_hides_post_attachments_from_moderator_without_permission(
     thread_reply_factory,
     moderator_client,
     moderators_group,
     thread,
     text_attachment,
+    image_attachment,
+    image_thumbnail_attachment,
+    video_attachment,
 ):
     CategoryGroupPermission.objects.filter(
         group=moderators_group,
@@ -1118,6 +1190,15 @@ def test_thread_detail_view_hides_post_attachment_from_moderator_without_permiss
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
+    image_attachment.associate_with_post(post)
+    image_attachment.save()
+
+    image_thumbnail_attachment.associate_with_post(post)
+    image_thumbnail_attachment.save()
+
+    video_attachment.associate_with_post(post)
+    video_attachment.save()
+
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -1127,13 +1208,25 @@ def test_thread_detail_view_hides_post_attachment_from_moderator_without_permiss
     assert_not_contains(response, text_attachment.name)
     assert_not_contains(response, text_attachment.get_absolute_url())
 
+    assert_not_contains(response, image_attachment.name)
+    assert_not_contains(response, image_attachment.get_absolute_url())
 
-def test_thread_detail_view_shows_post_attachment_to_admin_without_permission(
+    assert_not_contains(response, image_thumbnail_attachment.name)
+    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
+
+    assert_not_contains(response, video_attachment.name)
+    assert_not_contains(response, video_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_post_attachments_to_admin_without_permission(
     thread_reply_factory,
     admin_client,
     admins_group,
     thread,
     text_attachment,
+    image_attachment,
+    image_thumbnail_attachment,
+    video_attachment,
 ):
     CategoryGroupPermission.objects.filter(
         group=admins_group,
@@ -1145,6 +1238,15 @@ def test_thread_detail_view_shows_post_attachment_to_admin_without_permission(
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
+    image_attachment.associate_with_post(post)
+    image_attachment.save()
+
+    image_thumbnail_attachment.associate_with_post(post)
+    image_thumbnail_attachment.save()
+
+    video_attachment.associate_with_post(post)
+    video_attachment.save()
+
     response = admin_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -1153,6 +1255,15 @@ def test_thread_detail_view_shows_post_attachment_to_admin_without_permission(
 
     assert_contains(response, text_attachment.name)
     assert_contains(response, text_attachment.get_absolute_url())
+
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
+
+    assert_contains(response, image_thumbnail_attachment.name)
+    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
+
+    assert_contains(response, video_attachment.name)
+    assert_contains(response, video_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_post_with_all_attachment_types_embedded(
