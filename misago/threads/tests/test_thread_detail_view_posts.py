@@ -1764,14 +1764,364 @@ def test_thread_detail_view_shows_user_post_embedded_attachments_to_moderator(
     assert_contains(response, text_attachment.get_absolute_url())
 
 
+def test_thread_detail_view_doesnt_show_post_embedded_attachments_to_anonymous_user_without_permission(
+    thread_reply_factory,
+    client,
+    guests_group,
+    thread,
+    user,
+    text_attachment,
+    image_attachment,
+    image_thumbnail_attachment,
+    video_attachment,
+):
+    CategoryGroupPermission.objects.filter(
+        group=guests_group,
+        permission=CategoryPermission.ATTACHMENTS,
+    ).delete()
+
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    image_attachment.associate_with_post(post)
+    image_attachment.save()
+
+    image_thumbnail_attachment.associate_with_post(post)
+    image_thumbnail_attachment.save()
+
+    video_attachment.associate_with_post(post)
+    video_attachment.save()
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{image_thumbnail_attachment.id}" name="{image_thumbnail_attachment.name}" slug="{image_thumbnail_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{video_attachment.id}" name="{video_attachment.name}" slug="{video_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [
+            text_attachment.id,
+            image_attachment.id,
+            image_thumbnail_attachment.id,
+            video_attachment.id,
+        ],
+    }
+    post.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, text_attachment.name)
+    assert_not_contains(response, text_attachment.get_absolute_url())
+
+    assert_contains(response, image_attachment.name)
+    assert_not_contains(response, image_attachment.get_absolute_url())
+
+    assert_contains(response, image_thumbnail_attachment.name)
+    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
+
+    assert_contains(response, video_attachment.name)
+    assert_not_contains(response, video_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_doesnt_show_post_embedded_attachments_to_user_without_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    thread,
+    user,
+    text_attachment,
+    image_attachment,
+    image_thumbnail_attachment,
+    video_attachment,
+):
+    CategoryGroupPermission.objects.filter(
+        group=members_group,
+        permission=CategoryPermission.ATTACHMENTS,
+    ).delete()
+
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    image_attachment.associate_with_post(post)
+    image_attachment.save()
+
+    image_thumbnail_attachment.associate_with_post(post)
+    image_thumbnail_attachment.save()
+
+    video_attachment.associate_with_post(post)
+    video_attachment.save()
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{image_thumbnail_attachment.id}" name="{image_thumbnail_attachment.name}" slug="{image_thumbnail_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{video_attachment.id}" name="{video_attachment.name}" slug="{video_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [
+            text_attachment.id,
+            image_attachment.id,
+            image_thumbnail_attachment.id,
+            video_attachment.id,
+        ],
+    }
+    post.save()
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, text_attachment.name)
+    assert_not_contains(response, text_attachment.get_absolute_url())
+
+    assert_contains(response, image_attachment.name)
+    assert_not_contains(response, image_attachment.get_absolute_url())
+
+    assert_contains(response, image_thumbnail_attachment.name)
+    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
+
+    assert_contains(response, video_attachment.name)
+    assert_not_contains(response, video_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_post_embedded_attachments_to_uploader_without_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    thread,
+    user,
+    user_text_attachment,
+    user_image_attachment,
+    user_image_thumbnail_attachment,
+    user_video_attachment,
+):
+    CategoryGroupPermission.objects.filter(
+        group=members_group,
+        permission=CategoryPermission.ATTACHMENTS,
+    ).delete()
+
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    user_text_attachment.associate_with_post(post)
+    user_text_attachment.save()
+
+    user_image_attachment.associate_with_post(post)
+    user_image_attachment.save()
+
+    user_image_thumbnail_attachment.associate_with_post(post)
+    user_image_thumbnail_attachment.save()
+
+    user_video_attachment.associate_with_post(post)
+    user_video_attachment.save()
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{user_text_attachment.id}" name="{user_text_attachment.name}" slug="{user_text_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{user_image_attachment.id}" name="{user_image_attachment.name}" slug="{user_image_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{user_image_thumbnail_attachment.id}" name="{user_image_thumbnail_attachment.name}" slug="{user_image_thumbnail_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{user_video_attachment.id}" name="{user_video_attachment.name}" slug="{user_video_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [
+            user_text_attachment.id,
+            user_image_attachment.id,
+            user_image_thumbnail_attachment.id,
+            user_video_attachment.id,
+        ],
+    }
+    post.save()
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, user_text_attachment.name)
+    assert_contains(response, user_text_attachment.get_absolute_url())
+
+    assert_contains(response, user_image_attachment.name)
+    assert_contains(response, user_image_attachment.get_absolute_url())
+
+    assert_contains(response, user_image_thumbnail_attachment.name)
+    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
+
+    assert_contains(response, user_video_attachment.name)
+    assert_contains(response, user_video_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_doesnt_show_post_embedded_attachments_to_moderator_without_permission(
+    thread_reply_factory,
+    moderator_client,
+    moderators_group,
+    thread,
+    user,
+    text_attachment,
+    image_attachment,
+    image_thumbnail_attachment,
+    video_attachment,
+):
+    CategoryGroupPermission.objects.filter(
+        group=moderators_group,
+        permission=CategoryPermission.ATTACHMENTS,
+    ).delete()
+
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    image_attachment.associate_with_post(post)
+    image_attachment.save()
+
+    image_thumbnail_attachment.associate_with_post(post)
+    image_thumbnail_attachment.save()
+
+    video_attachment.associate_with_post(post)
+    video_attachment.save()
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{image_thumbnail_attachment.id}" name="{image_thumbnail_attachment.name}" slug="{image_thumbnail_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{video_attachment.id}" name="{video_attachment.name}" slug="{video_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [
+            text_attachment.id,
+            image_attachment.id,
+            image_thumbnail_attachment.id,
+            video_attachment.id,
+        ],
+    }
+    post.save()
+
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, text_attachment.name)
+    assert_not_contains(response, text_attachment.get_absolute_url())
+
+    assert_contains(response, image_attachment.name)
+    assert_not_contains(response, image_attachment.get_absolute_url())
+
+    assert_contains(response, image_thumbnail_attachment.name)
+    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
+
+    assert_contains(response, video_attachment.name)
+    assert_not_contains(response, video_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_post_embedded_attachments_to_admin_without_permission(
+    thread_reply_factory,
+    admin_client,
+    admins_group,
+    thread,
+    user,
+    text_attachment,
+    image_attachment,
+    image_thumbnail_attachment,
+    video_attachment,
+):
+    CategoryGroupPermission.objects.filter(
+        group=admins_group,
+        permission=CategoryPermission.ATTACHMENTS,
+    ).delete()
+
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    image_attachment.associate_with_post(post)
+    image_attachment.save()
+
+    image_thumbnail_attachment.associate_with_post(post)
+    image_thumbnail_attachment.save()
+
+    video_attachment.associate_with_post(post)
+    video_attachment.save()
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{image_thumbnail_attachment.id}" name="{image_thumbnail_attachment.name}" slug="{image_thumbnail_attachment.slug}">'
+        "\n"
+        f'<misago-attachment id="{video_attachment.id}" name="{video_attachment.name}" slug="{video_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [
+            text_attachment.id,
+            image_attachment.id,
+            image_thumbnail_attachment.id,
+            video_attachment.id,
+        ],
+    }
+    post.save()
+
+    response = admin_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
+
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
+
+    assert_contains(response, image_thumbnail_attachment.name)
+    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
+
+    assert_contains(response, video_attachment.name)
+    assert_contains(response, video_attachment.get_absolute_url())
+
+
 # TODO
-# - post embedded attachments without download permission
 # - other post embedded attachments
 # - other thread embedded attachments
-# - other post embedded attachments without see category permission
-# - other post embedded attachments without see thread permission
-# - other post embedded attachments without see post permission
-# - other post embedded attachments without download permission
 
 # TODO
 # - post with other post quote
