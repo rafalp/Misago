@@ -344,25 +344,3 @@ def test_private_thread_detail_view_displays_deleted_user_hidden_post_content_to
     )
 
     assert_contains(response, post.parsed)
-
-
-# TODO:
-# - post with attachments
-# - hidden post with attachments
-# - unapproved post
-# - unapproved post with attachments
-# - same thread user quote
-# - same thread other user quote
-# - same thread deleted user quote
-# - accessible thread user quote
-# - accessible thread other user quote
-# - accessible thread deleted user quote
-# - inaccessible thread user quote
-# - inaccessible thread other user quote
-# - inaccessible thread deleted user quote
-# - accessible private thread user quote
-# - accessible private thread other user quote
-# - accessible private thread deleted user quote
-# - inaccessible private thread user quote
-# - inaccessible private thread other user quote
-# - inaccessible private thread deleted user quote
