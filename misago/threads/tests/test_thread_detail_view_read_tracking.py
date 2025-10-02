@@ -6,10 +6,9 @@ from ...conf.test import override_dynamic_settings
 from ...notifications.users import notify_user
 from ...readtracker.models import ReadCategory, ReadThread
 from ...test import assert_contains
-from ..synchronize import synchronize_thread
 
 
-def test_thread_replies_view_doesnt_mark_unread_threads_for_guest(client, thread):
+def test_thread_detail_view_doesnt_mark_unread_threads_for_guest(client, thread):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
     )
@@ -19,7 +18,7 @@ def test_thread_replies_view_doesnt_mark_unread_threads_for_guest(client, thread
     assert not ReadThread.objects.exists()
 
 
-def test_thread_replies_view_marks_category_as_read_for_user(
+def test_thread_detail_view_marks_category_as_read_for_user(
     user_client, user, default_category, thread
 ):
     user.joined_on -= timedelta(minutes=60)
@@ -41,7 +40,7 @@ def test_thread_replies_view_marks_category_as_read_for_user(
     )
 
 
-def test_thread_replies_view_marks_thread_as_read_for_user(
+def test_thread_detail_view_marks_thread_as_read_for_user(
     user_client, user, default_category, thread, other_thread
 ):
     user.joined_on -= timedelta(minutes=60)
@@ -65,7 +64,7 @@ def test_thread_replies_view_marks_thread_as_read_for_user(
 
 
 @override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=0)
-def test_thread_replies_view_marks_unread_thread_posts_on_page_as_read_for_user(
+def test_thread_detail_view_marks_unread_thread_posts_on_page_as_read_for_user(
     thread_factory, thread_reply_factory, user_client, user, default_category
 ):
     user.joined_on -= timedelta(minutes=60)
@@ -77,8 +76,6 @@ def test_thread_replies_view_marks_unread_thread_posts_on_page_as_read_for_user(
     for i in reversed(range(1, 6)):
         posted_at = i * 100 * -1
         posts.append(thread_reply_factory(thread, posted_at=posted_at))
-
-    synchronize_thread(thread)
 
     default_category.synchronize()
     default_category.save()
@@ -97,7 +94,7 @@ def test_thread_replies_view_marks_unread_thread_posts_on_page_as_read_for_user(
     )
 
 
-def test_thread_replies_view_updates_user_watched_thread_read_time(
+def test_thread_detail_view_updates_user_watched_thread_read_time(
     user_client,
     user,
     default_category,
@@ -127,7 +124,7 @@ def test_thread_replies_view_updates_user_watched_thread_read_time(
     assert watched_thread.read_time == old_thread.last_post_on
 
 
-def test_thread_replies_view_marks_displayed_posts_notifications_as_read(
+def test_thread_detail_view_marks_displayed_posts_notifications_as_read(
     user_client,
     user,
     default_category,

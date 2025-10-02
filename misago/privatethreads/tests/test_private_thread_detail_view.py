@@ -93,7 +93,11 @@ def test_private_thread_detail_view_shows_user_other_user_thread(
 def test_private_thread_detail_view_shows_private_threads_moderator_other_user_thread(
     user_client, user, other_user_private_thread
 ):
-    Moderator.objects.create(user=user, private_threads=True)
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
 
     response = user_client.get(
         reverse(
@@ -144,7 +148,11 @@ def test_private_thread_detail_view_shows_private_threads_moderator_deleted_user
 ):
     PrivateThreadMember.objects.create(user=user, thread=private_thread)
 
-    Moderator.objects.create(user=user, private_threads=True)
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
 
     response = user_client.get(
         reverse(
@@ -210,7 +218,11 @@ def test_private_thread_detail_view_shows_user_other_user_thread_in_htmx(
 def test_private_thread_detail_view_shows_private_threads_moderator_other_user_thread_in_htmx(
     user_client, user, other_user_private_thread
 ):
-    Moderator.objects.create(user=user, private_threads=True)
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
 
     response = user_client.get(
         reverse(
@@ -264,7 +276,11 @@ def test_private_thread_detail_view_shows_private_threads_moderator_deleted_user
 ):
     PrivateThreadMember.objects.create(user=user, thread=private_thread)
 
-    Moderator.objects.create(user=user, private_threads=True)
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
 
     response = user_client.get(
         reverse(
@@ -335,7 +351,7 @@ def test_private_thread_detail_view_ignores_invalid_slug_in_htmx(
     assert response.status_code == 200
 
 
-def test_private_thread_reply_view_shows_error_if_thread_is_accessed(
+def test_private_thread_detail_view_shows_error_404_if_thread_is_accessed(
     user_client, thread
 ):
     response = user_client.get(

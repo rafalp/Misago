@@ -99,7 +99,7 @@ def test_posts_feed_marks_post_as_animated(request_factory, user, thread, post, 
     assert not other_post_data["animate"]
 
 
-def test_posts_feed_marks_post_as_unread(request_factory, user, thread, post, reply):
+def test_posts_feed_marks_post_as_new(request_factory, user, thread, post, reply):
     request = request_factory(user)
 
     posts_feed = PostsFeed(request, thread, [post, reply])
@@ -108,11 +108,11 @@ def test_posts_feed_marks_post_as_unread(request_factory, user, thread, post, re
 
     post_data = feed_data["items"][0]
     assert post_data["post"] == post
-    assert post_data["unread"]
+    assert post_data["is_new"]
 
     other_post_data = feed_data["items"][1]
     assert other_post_data["post"] == reply
-    assert not other_post_data["unread"]
+    assert not other_post_data["is_new"]
 
 
 def test_thread_posts_feed_marks_post_as_editable(

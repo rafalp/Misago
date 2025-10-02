@@ -5,9 +5,8 @@ from django.urls import reverse
 from ...conf.test import override_dynamic_settings
 from ...notifications.users import notify_user
 from ...readtracker.models import ReadCategory, ReadThread
+from ...threads.models import Thread
 from ...test import assert_contains
-from ..models import Thread
-from ..synchronize import synchronize_thread
 
 
 def update_thread_timestamp(thread: Thread, seconds: int):
@@ -21,7 +20,7 @@ def update_thread_timestamp(thread: Thread, seconds: int):
     thread.save()
 
 
-def test_private_thread_replies_view_marks_category_as_read_for_user(
+def test_private_thread_detail_view_marks_category_as_read_for_user(
     user_client, user, private_threads_category, user_private_thread
 ):
     user.joined_on -= timedelta(days=10)
@@ -51,7 +50,7 @@ def test_private_thread_replies_view_marks_category_as_read_for_user(
     )
 
 
-def test_private_thread_replies_view_marks_thread_as_read_for_user(
+def test_private_thread_detail_view_marks_thread_as_read_for_user(
     user_client,
     user,
     private_threads_category,
@@ -88,7 +87,7 @@ def test_private_thread_replies_view_marks_thread_as_read_for_user(
 
 
 @override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=0)
-def test_private_thread_replies_view_marks_unread_thread_posts_on_page_as_read_for_user(
+def test_private_thread_detail_view_marks_unread_thread_posts_on_page_as_read_for_user(
     thread_reply_factory,
     user_client,
     user,
@@ -104,8 +103,6 @@ def test_private_thread_replies_view_marks_unread_thread_posts_on_page_as_read_f
     for i in range(5):
         posted_at = (8000 - (i * 1000)) * -1
         posts.append(thread_reply_factory(user_private_thread, posted_at=posted_at))
-
-    synchronize_thread(user_private_thread)
 
     private_threads_category.synchronize()
     private_threads_category.save()
@@ -130,7 +127,7 @@ def test_private_thread_replies_view_marks_unread_thread_posts_on_page_as_read_f
     )
 
 
-def test_private_thread_replies_view_updates_user_watched_thread_read_time(
+def test_private_thread_detail_view_updates_user_watched_thread_read_time(
     watched_thread_factory,
     user_client,
     user,
@@ -166,7 +163,7 @@ def test_private_thread_replies_view_updates_user_watched_thread_read_time(
     assert watched_thread.read_time == user_private_thread.last_post_on
 
 
-def test_private_thread_replies_view_marks_displayed_posts_notifications_as_read(
+def test_private_thread_detail_view_marks_displayed_posts_notifications_as_read(
     user_client,
     user,
     private_threads_category,
@@ -204,7 +201,7 @@ def test_private_thread_replies_view_marks_displayed_posts_notifications_as_read
     assert notification.is_read
 
 
-def test_private_thread_replies_view_decreases_user_unread_threads_count_on_thread_read(
+def test_private_thread_detail_view_decreases_user_unread_threads_count_on_thread_read(
     user_client,
     user,
     private_threads_category,
@@ -237,7 +234,7 @@ def test_private_thread_replies_view_decreases_user_unread_threads_count_on_thre
 
 
 @override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=0)
-def test_private_thread_replies_view_doesnt_update_user_unread_threads_count_on_thread_page_read(
+def test_private_thread_detail_view_doesnt_update_user_unread_threads_count_on_thread_page_read(
     thread_reply_factory,
     user_client,
     user,
@@ -281,7 +278,7 @@ def test_private_thread_replies_view_doesnt_update_user_unread_threads_count_on_
     assert user.unread_private_threads == 5
 
 
-def test_private_thread_replies_view_clears_user_unread_threads_count_on_category_read(
+def test_private_thread_detail_view_clears_user_unread_threads_count_on_category_read(
     user_client, user, private_threads_category, user_private_thread
 ):
     user.joined_on -= timedelta(days=10)
