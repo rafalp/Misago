@@ -11,8 +11,8 @@ from ..threads import (
     check_locked_category_permission,
     check_locked_thread_permission,
     check_reply_thread_permission,
-    check_see_thread_post_permission,
     check_see_thread_permission,
+    check_see_thread_post_permission,
     check_start_thread_permission,
 )
 
@@ -1322,12 +1322,6 @@ def test_check_see_thread_post_permission_for_hidden_post_passes_for_category_mo
 def test_check_see_thread_post_permission_for_hidden_post_passes_for_global_moderator(
     moderator, cache_versions, default_category, thread, user_reply
 ):
-    Moderator.objects.create(
-        user=moderator,
-        is_global=False,
-        categories=[default_category.id],
-    )
-
     user_reply.is_hidden = True
     user_reply.save()
 
@@ -1377,16 +1371,6 @@ def test_check_start_thread_permission_fails_if_anonymous_has_no_permission(
         check_start_thread_permission(permissions, default_category)
 
 
-def test_check_start_thread_permission_passes_if_user_is_global_moderator(
-    moderator, cache_versions, default_category
-):
-    default_category.is_closed = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(moderator, cache_versions)
-    check_start_thread_permission(permissions, default_category)
-
-
 def test_check_start_thread_permission_passes_if_user_is_category_moderator(
     user, cache_versions, default_category
 ):
@@ -1400,6 +1384,16 @@ def test_check_start_thread_permission_passes_if_user_is_category_moderator(
     )
 
     permissions = UserPermissionsProxy(user, cache_versions)
+    check_start_thread_permission(permissions, default_category)
+
+
+def test_check_start_thread_permission_passes_if_user_is_global_moderator(
+    moderator, cache_versions, default_category
+):
+    default_category.is_closed = True
+    default_category.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
     check_start_thread_permission(permissions, default_category)
 
 

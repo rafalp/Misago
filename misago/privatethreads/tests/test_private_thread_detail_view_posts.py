@@ -5,7 +5,6 @@ from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
-from ..models import PrivateThreadMember
 
 
 def test_private_thread_detail_view_returns_redirect_to_first_page_if_page_is_out_of_range(
@@ -234,147 +233,146 @@ def test_private_thread_detail_view_shows_user_post_to_user(
     assert_contains(response, post.original)
 
 
-def test_thread_detail_view_shows_other_user_post_to_user(
-    thread_reply_factory, user_client, thread, other_user
+def test_private_thread_detail_view_shows_other_user_post_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=other_user
+        user_private_thread, original=get_random_string(12), poster=other_user
     )
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
 
 
-def test_thread_detail_view_shows_user_post_to_moderator(
-    thread_reply_factory, moderator_client, thread, user
-):
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-    response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-
-def test_thread_detail_view_doesnt_show_unapproved_post_to_user(
-    thread_reply_factory, user_client, thread
+def test_private_thread_detail_view_shows_user_post_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), is_unapproved=True
-    )
-    response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_not_contains(response, post.get_absolute_url())
-    assert_not_contains(response, post.original)
-
-
-def test_thread_detail_view_shows_unapproved_post_to_poster(
-    thread_reply_factory, user_client, thread, user
-):
-    post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=user, is_unapproved=True
-    )
-    response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-
-def test_thread_detail_view_shows_deleted_user_unapproved_post_to_moderator(
-    thread_reply_factory, moderator_client, thread
-):
-    post = thread_reply_factory(
-        thread, original=get_random_string(12), is_unapproved=True
+        user_private_thread, original=get_random_string(12), poster=user
     )
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
 
 
-def test_thread_detail_view_shows_user_unapproved_post_to_moderator(
-    thread_reply_factory, moderator_client, thread, user
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_to_user(
+    thread_reply_factory, user_client, user_private_thread
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=user, is_unapproved=True
+        user_private_thread, original=get_random_string(12), is_hidden=True
     )
-    response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-
-def test_thread_detail_view_shows_deleted_user_hidden_post_to_user(
-    thread_reply_factory, user_client, thread
-):
-    post = thread_reply_factory(thread, original=get_random_string(12), is_hidden=True)
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_not_contains(response, post.original)
 
 
-def test_thread_detail_view_shows_deleted_user_hidden_post_to_moderator(
-    thread_reply_factory, moderator_client, thread
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread
 ):
-    post = thread_reply_factory(thread, original=get_random_string(12), is_hidden=True)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), is_hidden=True
+    )
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
 
 
-def test_thread_detail_view_shows_user_hidden_post_to_user(
-    thread_reply_factory, user_client, thread, user
+def test_private_thread_detail_view_shows_user_hidden_post_to_user(
+    thread_reply_factory, user_client, user_private_thread, user
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=user, is_hidden=True
+        user_private_thread, original=get_random_string(12), poster=user, is_hidden=True
     )
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_not_contains(response, post.original)
 
 
-def test_thread_detail_view_shows_other_user_hidden_post_to_user(
-    thread_reply_factory, user_client, thread, other_user
+def test_private_thread_detail_view_shows_other_user_hidden_post_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=other_user, is_hidden=True
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
     )
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_not_contains(response, post.original)
 
 
-def test_thread_detail_view_shows_user_hidden_post_to_moderator(
-    thread_reply_factory, moderator_client, thread, user
+def test_private_thread_detail_view_shows_user_hidden_post_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=user, is_hidden=True
+        user_private_thread, original=get_random_string(12), poster=user, is_hidden=True
     )
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
 
 
-def test_thread_detail_view_shows_post_with_all_attachment_types(
+def test_private_thread_detail_view_shows_post_with_all_attachment_types(
     thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
     text_attachment,
     image_attachment,
     image_thumbnail_attachment,
@@ -400,7 +398,7 @@ def test_thread_detail_view_shows_post_with_all_attachment_types(
     other_user_broken_image_thumbnail_attachment,
     other_user_broken_video_attachment,
 ):
-    post = thread_reply_factory(thread, original=get_random_string(12))
+    post = thread_reply_factory(user_private_thread, original=get_random_string(12))
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
@@ -474,8 +472,14 @@ def test_thread_detail_view_shows_post_with_all_attachment_types(
     other_user_broken_video_attachment.associate_with_post(post)
     other_user_broken_video_attachment.save()
 
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -555,19 +559,25 @@ def test_thread_detail_view_shows_post_with_all_attachment_types(
     assert_contains(response, other_user_broken_video_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_deleted_user_post_attachments_to_user(
+def test_private_thread_detail_view_shows_deleted_user_post_attachments_to_user(
     thread_reply_factory,
     user_client,
-    thread,
+    user_private_thread,
     text_attachment,
 ):
-    post = thread_reply_factory(thread, original=get_random_string(12))
+    post = thread_reply_factory(user_private_thread, original=get_random_string(12))
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -576,19 +586,25 @@ def test_thread_detail_view_shows_deleted_user_post_attachments_to_user(
     assert_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_deleted_user_post_attachments_to_moderator(
+def test_private_thread_detail_view_shows_deleted_user_post_attachments_to_moderator(
     thread_reply_factory,
     moderator_client,
-    thread,
+    user_private_thread,
     text_attachment,
 ):
-    post = thread_reply_factory(thread, original=get_random_string(12))
+    post = thread_reply_factory(user_private_thread, original=get_random_string(12))
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -597,20 +613,28 @@ def test_thread_detail_view_shows_deleted_user_post_attachments_to_moderator(
     assert_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_user_post_attachments_to_user(
+def test_private_thread_detail_view_shows_user_post_attachments_to_user(
     thread_reply_factory,
     user_client,
-    thread,
+    user_private_thread,
     user,
     text_attachment,
 ):
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -619,22 +643,28 @@ def test_thread_detail_view_shows_user_post_attachments_to_user(
     assert_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_other_user_post_attachments_to_user(
+def test_private_thread_detail_view_shows_other_user_post_attachments_to_user(
     thread_reply_factory,
     user_client,
-    thread,
+    user_private_thread,
     other_user,
     text_attachment,
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=other_user
+        user_private_thread, original=get_random_string(12), poster=other_user
     )
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -643,90 +673,28 @@ def test_thread_detail_view_shows_other_user_post_attachments_to_user(
     assert_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_user_post_attachments_to_moderator(
+def test_private_thread_detail_view_shows_user_post_attachments_to_moderator(
     thread_reply_factory,
     moderator_client,
-    thread,
-    user,
-    text_attachment,
-):
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    text_attachment.associate_with_post(post)
-    text_attachment.save()
-
-    response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_contains(response, text_attachment.name)
-    assert_contains(response, text_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_doesnt_show_unapproved_post_attachments_to_user(
-    thread_reply_factory,
-    user_client,
-    thread,
-    text_attachment,
-):
-    post = thread_reply_factory(
-        thread, original=get_random_string(12), is_unapproved=True
-    )
-
-    text_attachment.associate_with_post(post)
-    text_attachment.save()
-
-    response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_not_contains(response, post.get_absolute_url())
-    assert_not_contains(response, post.original)
-
-    assert_not_contains(response, text_attachment.name)
-    assert_not_contains(response, text_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_shows_unapproved_post_attachments_to_poster(
-    thread_reply_factory,
-    user_client,
-    thread,
+    user_private_thread,
     user,
     text_attachment,
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=user, is_unapproved=True
-    )
-
-    text_attachment.associate_with_post(post)
-    text_attachment.save()
-
-    response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_contains(response, text_attachment.name)
-    assert_contains(response, text_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_shows_deleted_user_unapproved_post_attachments_to_moderator(
-    thread_reply_factory,
-    moderator_client,
-    thread,
-    text_attachment,
-):
-    post = thread_reply_factory(
-        thread, original=get_random_string(12), is_unapproved=True
+        user_private_thread, original=get_random_string(12), poster=user
     )
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -735,43 +703,27 @@ def test_thread_detail_view_shows_deleted_user_unapproved_post_attachments_to_mo
     assert_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_user_unapproved_post_attachments_to_moderator(
+def test_private_thread_detail_view_doesnt_show_deleted_user_hidden_post_attachments_to_user(
     thread_reply_factory,
-    moderator_client,
-    thread,
-    user,
+    user_client,
+    user_private_thread,
     text_attachment,
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=user, is_unapproved=True
+        user_private_thread, original=get_random_string(12), is_hidden=True
     )
-
-    text_attachment.associate_with_post(post)
-    text_attachment.save()
-
-    response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_contains(response, text_attachment.name)
-    assert_contains(response, text_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_doesnt_show_deleted_user_hidden_post_attachments_to_user(
-    thread_reply_factory,
-    user_client,
-    thread,
-    text_attachment,
-):
-    post = thread_reply_factory(thread, original=get_random_string(12), is_hidden=True)
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_not_contains(response, post.original)
@@ -780,19 +732,27 @@ def test_thread_detail_view_doesnt_show_deleted_user_hidden_post_attachments_to_
     assert_not_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_deleted_user_hidden_post_attachments_to_moderator(
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_attachments_to_moderator(
     thread_reply_factory,
     moderator_client,
-    thread,
+    user_private_thread,
     text_attachment,
 ):
-    post = thread_reply_factory(thread, original=get_random_string(12), is_hidden=True)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), is_hidden=True
+    )
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -801,22 +761,28 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_attachments_to_modera
     assert_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_doesnt_show_user_hidden_post_attachments_to_user(
+def test_private_thread_detail_view_doesnt_show_user_hidden_post_attachments_to_user(
     thread_reply_factory,
     user_client,
-    thread,
+    user_private_thread,
     user,
     text_attachment,
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=user, is_hidden=True
+        user_private_thread, original=get_random_string(12), poster=user, is_hidden=True
     )
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_not_contains(response, post.original)
@@ -825,22 +791,31 @@ def test_thread_detail_view_doesnt_show_user_hidden_post_attachments_to_user(
     assert_not_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_doesnt_show_other_user_hidden_post_attachments_to_user(
+def test_private_thread_detail_view_doesnt_show_other_user_hidden_post_attachments_to_user(
     thread_reply_factory,
     user_client,
-    thread,
+    user_private_thread,
     other_user,
     text_attachment,
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=other_user, is_hidden=True
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
     )
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_not_contains(response, post.original)
@@ -849,22 +824,28 @@ def test_thread_detail_view_doesnt_show_other_user_hidden_post_attachments_to_us
     assert_not_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_user_hidden_post_attachments_to_moderator(
+def test_private_thread_detail_view_shows_user_hidden_post_attachments_to_moderator(
     thread_reply_factory,
     moderator_client,
-    thread,
+    user_private_thread,
     user,
     text_attachment,
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=user, is_hidden=True
+        user_private_thread, original=get_random_string(12), poster=user, is_hidden=True
     )
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
 
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -873,256 +854,10 @@ def test_thread_detail_view_shows_user_hidden_post_attachments_to_moderator(
     assert_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_hides_post_attachments_from_anonymous_user_without_permission(
-    thread_reply_factory,
-    client,
-    guests_group,
-    thread,
-    text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-):
-    CategoryGroupPermission.objects.filter(
-        group=guests_group,
-        permission=CategoryPermission.ATTACHMENTS,
-    ).delete()
-
-    post = thread_reply_factory(thread, original=get_random_string(12))
-
-    text_attachment.associate_with_post(post)
-    text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, text_attachment.name)
-    assert_not_contains(response, text_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_hides_post_attachments_from_user_without_permission(
+def test_private_thread_detail_view_shows_post_with_all_attachment_types_embedded(
     thread_reply_factory,
     user_client,
-    members_group,
-    thread,
-    text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-):
-    CategoryGroupPermission.objects.filter(
-        group=members_group,
-        permission=CategoryPermission.ATTACHMENTS,
-    ).delete()
-
-    post = thread_reply_factory(thread, original=get_random_string(12))
-
-    text_attachment.associate_with_post(post)
-    text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, text_attachment.name)
-    assert_not_contains(response, text_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_shows_post_attachments_to_uploader_without_permission(
-    thread_reply_factory,
-    user_client,
-    members_group,
-    thread,
-    text_attachment,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-):
-    CategoryGroupPermission.objects.filter(
-        group=members_group,
-        permission=CategoryPermission.ATTACHMENTS,
-    ).delete()
-
-    post = thread_reply_factory(thread, original=get_random_string(12))
-
-    text_attachment.associate_with_post(post)
-    text_attachment.save()
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, text_attachment.get_absolute_url())
-
-    assert_contains(response, user_text_attachment.name)
-    assert_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_attachment.name)
-    assert_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_thumbnail_attachment.name)
-    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_video_attachment.name)
-    assert_contains(response, user_video_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_hides_post_attachments_from_moderator_without_permission(
-    thread_reply_factory,
-    moderator_client,
-    moderators_group,
-    thread,
-    text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-):
-    CategoryGroupPermission.objects.filter(
-        group=moderators_group,
-        permission=CategoryPermission.ATTACHMENTS,
-    ).delete()
-
-    post = thread_reply_factory(thread, original=get_random_string(12))
-
-    text_attachment.associate_with_post(post)
-    text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, text_attachment.name)
-    assert_not_contains(response, text_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_shows_post_attachments_to_admin_without_permission(
-    thread_reply_factory,
-    admin_client,
-    admins_group,
-    thread,
-    text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-):
-    CategoryGroupPermission.objects.filter(
-        group=admins_group,
-        permission=CategoryPermission.ATTACHMENTS,
-    ).delete()
-
-    post = thread_reply_factory(thread, original=get_random_string(12))
-
-    text_attachment.associate_with_post(post)
-    text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    response = admin_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_contains(response, text_attachment.name)
-    assert_contains(response, text_attachment.get_absolute_url())
-
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_contains(response, video_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_shows_post_with_all_attachment_types_embedded(
-    thread_reply_factory,
-    client,
-    thread,
+    user_private_thread,
     text_attachment,
     image_attachment,
     image_thumbnail_attachment,
@@ -1148,7 +883,7 @@ def test_thread_detail_view_shows_post_with_all_attachment_types_embedded(
     other_user_broken_image_thumbnail_attachment,
     other_user_broken_video_attachment,
 ):
-    post = thread_reply_factory(thread, original=get_random_string(12))
+    post = thread_reply_factory(user_private_thread, original=get_random_string(12))
 
     text_attachment.associate_with_post(post)
     text_attachment.save()
@@ -1302,8 +1037,14 @@ def test_thread_detail_view_shows_post_with_all_attachment_types_embedded(
     }
     post.save()
 
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -1387,13 +1128,13 @@ def test_thread_detail_view_shows_post_with_all_attachment_types_embedded(
     assert_not_contains(response, other_user_broken_video_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_deleted_user_post_embedded_attachments_to_user(
+def test_private_thread_detail_view_shows_deleted_user_post_embedded_attachments_to_user(
     thread_reply_factory,
     user_client,
-    thread,
+    user_private_thread,
     image_attachment,
 ):
-    post = thread_reply_factory(thread, original=get_random_string(12))
+    post = thread_reply_factory(user_private_thread, original=get_random_string(12))
 
     image_attachment.associate_with_post(post)
     image_attachment.save()
@@ -1408,7 +1149,13 @@ def test_thread_detail_view_shows_deleted_user_post_embedded_attachments_to_user
     post.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -1420,13 +1167,13 @@ def test_thread_detail_view_shows_deleted_user_post_embedded_attachments_to_user
     assert_contains(response, image_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_deleted_user_post_embedded_attachments_to_moderator(
+def test_private_thread_detail_view_shows_deleted_user_post_embedded_attachments_to_moderator(
     thread_reply_factory,
     moderator_client,
-    thread,
+    user_private_thread,
     image_attachment,
 ):
-    post = thread_reply_factory(thread, original=get_random_string(12))
+    post = thread_reply_factory(user_private_thread, original=get_random_string(12))
 
     image_attachment.associate_with_post(post)
     image_attachment.save()
@@ -1441,7 +1188,13 @@ def test_thread_detail_view_shows_deleted_user_post_embedded_attachments_to_mode
     post.save()
 
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -1453,14 +1206,16 @@ def test_thread_detail_view_shows_deleted_user_post_embedded_attachments_to_mode
     assert_contains(response, image_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_user_post_embedded_attachments_to_user(
+def test_private_thread_detail_view_shows_user_post_embedded_attachments_to_user(
     thread_reply_factory,
     user_client,
-    thread,
+    user_private_thread,
     user,
     image_attachment,
 ):
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     image_attachment.associate_with_post(post)
     image_attachment.save()
@@ -1475,7 +1230,13 @@ def test_thread_detail_view_shows_user_post_embedded_attachments_to_user(
     post.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -1487,15 +1248,15 @@ def test_thread_detail_view_shows_user_post_embedded_attachments_to_user(
     assert_contains(response, image_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_other_user_post_embedded_attachments_to_user(
+def test_private_thread_detail_view_shows_other_user_post_embedded_attachments_to_user(
     thread_reply_factory,
     user_client,
-    thread,
+    user_private_thread,
     other_user,
     image_attachment,
 ):
     post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=other_user
+        user_private_thread, original=get_random_string(12), poster=other_user
     )
 
     image_attachment.associate_with_post(post)
@@ -1511,7 +1272,13 @@ def test_thread_detail_view_shows_other_user_post_embedded_attachments_to_user(
     post.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -1523,14 +1290,16 @@ def test_thread_detail_view_shows_other_user_post_embedded_attachments_to_user(
     assert_contains(response, image_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_shows_user_post_embedded_attachments_to_moderator(
+def test_private_thread_detail_view_shows_user_post_embedded_attachments_to_moderator(
     thread_reply_factory,
     moderator_client,
-    thread,
+    user_private_thread,
     user,
     image_attachment,
 ):
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     image_attachment.associate_with_post(post)
     image_attachment.save()
@@ -1545,7 +1314,13 @@ def test_thread_detail_view_shows_user_post_embedded_attachments_to_moderator(
     post.save()
 
     response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -1557,303 +1332,23 @@ def test_thread_detail_view_shows_user_post_embedded_attachments_to_moderator(
     assert_contains(response, image_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_doesnt_show_post_embedded_attachments_to_user_without_permission(
+def test_private_thread_detail_view_shows_post_embedded_attachments_from_other_post(
     thread_reply_factory,
     user_client,
-    members_group,
-    thread,
-    user,
-    text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-):
-    CategoryGroupPermission.objects.filter(
-        group=members_group,
-        permission=CategoryPermission.ATTACHMENTS,
-    ).delete()
-
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    text_attachment.associate_with_post(post)
-    text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    post.parsed += (
-        "\n"
-        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
-        "\n"
-        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
-        "\n"
-        f'<misago-attachment id="{image_thumbnail_attachment.id}" name="{image_thumbnail_attachment.name}" slug="{image_thumbnail_attachment.slug}">'
-        "\n"
-        f'<misago-attachment id="{video_attachment.id}" name="{video_attachment.name}" slug="{video_attachment.slug}">'
-    )
-    post.metadata = {
-        "attachments": [
-            text_attachment.id,
-            image_attachment.id,
-            image_thumbnail_attachment.id,
-            video_attachment.id,
-        ],
-    }
-    post.save()
-
-    response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-attachment")
-
-    assert_contains(response, text_attachment.name)
-    assert_not_contains(response, text_attachment.get_absolute_url())
-
-    assert_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_shows_post_embedded_attachments_to_uploader_without_permission(
-    thread_reply_factory,
-    user_client,
-    members_group,
-    thread,
-    user,
-    user_text_attachment,
-    user_image_attachment,
-    user_image_thumbnail_attachment,
-    user_video_attachment,
-):
-    CategoryGroupPermission.objects.filter(
-        group=members_group,
-        permission=CategoryPermission.ATTACHMENTS,
-    ).delete()
-
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    user_text_attachment.associate_with_post(post)
-    user_text_attachment.save()
-
-    user_image_attachment.associate_with_post(post)
-    user_image_attachment.save()
-
-    user_image_thumbnail_attachment.associate_with_post(post)
-    user_image_thumbnail_attachment.save()
-
-    user_video_attachment.associate_with_post(post)
-    user_video_attachment.save()
-
-    post.parsed += (
-        "\n"
-        f'<misago-attachment id="{user_text_attachment.id}" name="{user_text_attachment.name}" slug="{user_text_attachment.slug}">'
-        "\n"
-        f'<misago-attachment id="{user_image_attachment.id}" name="{user_image_attachment.name}" slug="{user_image_attachment.slug}">'
-        "\n"
-        f'<misago-attachment id="{user_image_thumbnail_attachment.id}" name="{user_image_thumbnail_attachment.name}" slug="{user_image_thumbnail_attachment.slug}">'
-        "\n"
-        f'<misago-attachment id="{user_video_attachment.id}" name="{user_video_attachment.name}" slug="{user_video_attachment.slug}">'
-    )
-    post.metadata = {
-        "attachments": [
-            user_text_attachment.id,
-            user_image_attachment.id,
-            user_image_thumbnail_attachment.id,
-            user_video_attachment.id,
-        ],
-    }
-    post.save()
-
-    response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-attachment")
-
-    assert_contains(response, user_text_attachment.name)
-    assert_contains(response, user_text_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_attachment.name)
-    assert_contains(response, user_image_attachment.get_absolute_url())
-
-    assert_contains(response, user_image_thumbnail_attachment.name)
-    assert_contains(response, user_image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, user_video_attachment.name)
-    assert_contains(response, user_video_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_doesnt_show_post_embedded_attachments_to_moderator_without_permission(
-    thread_reply_factory,
-    moderator_client,
-    moderators_group,
-    thread,
-    user,
-    text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-):
-    CategoryGroupPermission.objects.filter(
-        group=moderators_group,
-        permission=CategoryPermission.ATTACHMENTS,
-    ).delete()
-
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    text_attachment.associate_with_post(post)
-    text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    post.parsed += (
-        "\n"
-        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
-        "\n"
-        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
-        "\n"
-        f'<misago-attachment id="{image_thumbnail_attachment.id}" name="{image_thumbnail_attachment.name}" slug="{image_thumbnail_attachment.slug}">'
-        "\n"
-        f'<misago-attachment id="{video_attachment.id}" name="{video_attachment.name}" slug="{video_attachment.slug}">'
-    )
-    post.metadata = {
-        "attachments": [
-            text_attachment.id,
-            image_attachment.id,
-            image_thumbnail_attachment.id,
-            video_attachment.id,
-        ],
-    }
-    post.save()
-
-    response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-attachment")
-
-    assert_contains(response, text_attachment.name)
-    assert_not_contains(response, text_attachment.get_absolute_url())
-
-    assert_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_shows_post_embedded_attachments_to_admin_without_permission(
-    thread_reply_factory,
-    admin_client,
-    admins_group,
-    thread,
-    user,
-    text_attachment,
-    image_attachment,
-    image_thumbnail_attachment,
-    video_attachment,
-):
-    CategoryGroupPermission.objects.filter(
-        group=admins_group,
-        permission=CategoryPermission.ATTACHMENTS,
-    ).delete()
-
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    text_attachment.associate_with_post(post)
-    text_attachment.save()
-
-    image_attachment.associate_with_post(post)
-    image_attachment.save()
-
-    image_thumbnail_attachment.associate_with_post(post)
-    image_thumbnail_attachment.save()
-
-    video_attachment.associate_with_post(post)
-    video_attachment.save()
-
-    post.parsed += (
-        "\n"
-        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
-        "\n"
-        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
-        "\n"
-        f'<misago-attachment id="{image_thumbnail_attachment.id}" name="{image_thumbnail_attachment.name}" slug="{image_thumbnail_attachment.slug}">'
-        "\n"
-        f'<misago-attachment id="{video_attachment.id}" name="{video_attachment.name}" slug="{video_attachment.slug}">'
-    )
-    post.metadata = {
-        "attachments": [
-            text_attachment.id,
-            image_attachment.id,
-            image_thumbnail_attachment.id,
-            video_attachment.id,
-        ],
-    }
-    post.save()
-
-    response = admin_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-attachment")
-
-    assert_contains(response, text_attachment.name)
-    assert_contains(response, text_attachment.get_absolute_url())
-
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-    assert_contains(response, image_thumbnail_attachment.name)
-    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
-
-    assert_contains(response, video_attachment.name)
-    assert_contains(response, video_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_shows_post_embedded_attachments_from_other_post(
-    thread_reply_factory,
-    client,
-    thread,
+    user_private_thread,
     user,
     text_attachment,
 ):
-    other_post = thread_reply_factory(thread, original=get_random_string(12))
+    other_post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12)
+    )
 
     text_attachment.associate_with_post(other_post)
     text_attachment.save()
 
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed += (
         "\n"
@@ -1864,8 +1359,14 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_other_post(
     }
     post.save()
 
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -1876,21 +1377,23 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_other_post(
     assert_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_unapproved_post(
+def test_private_thread_detail_view_doesnt_show_post_embedded_attachments_from_hidden_post(
     thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
     user,
     image_attachment,
 ):
     other_post = thread_reply_factory(
-        thread, original=get_random_string(12), is_unapproved=True
+        user_private_thread, original=get_random_string(12), is_hidden=True
     )
 
     image_attachment.associate_with_post(other_post)
     image_attachment.save()
 
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed += (
         "\n"
@@ -1901,51 +1404,14 @@ def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_unapprove
     }
     post.save()
 
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-attachment")
-
-    # TODO: fix this in #2002
-    assert_not_contains(
-        response, "You can&#x27;t download attachments in this category."
-    )
-
-    assert_not_contains(response, "rich-text-image")
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_hidden_post(
-    thread_reply_factory,
-    client,
-    thread,
-    user,
-    image_attachment,
-):
-    other_post = thread_reply_factory(
-        thread, original=get_random_string(12), is_hidden=True
-    )
-
-    image_attachment.associate_with_post(other_post)
-    image_attachment.save()
-
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    post.parsed += (
-        "\n"
-        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
-    )
-    post.metadata = {
-        "attachments": [image_attachment.id],
-    }
-    post.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -1963,22 +1429,26 @@ def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_hidden_po
 
 
 @override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=1)
-def test_thread_detail_view_shows_post_embedded_attachments_from_post_on_other_page(
+def test_private_thread_detail_view_shows_post_embedded_attachments_from_post_on_other_page(
     thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
     user,
     image_attachment,
 ):
-    other_post = thread_reply_factory(thread, original=get_random_string(12))
+    other_post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12)
+    )
 
     for _ in range(5):
-        thread_reply_factory(thread, original=get_random_string(12))
+        thread_reply_factory(user_private_thread, original=get_random_string(12))
 
     image_attachment.associate_with_post(other_post)
     image_attachment.save()
 
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed += (
         "\n"
@@ -1989,10 +1459,14 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_post_on_other_p
     }
     post.save()
 
-    response = client.get(
+    response = user_client.get(
         reverse(
-            "misago:thread",
-            kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 2},
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "page": 2,
+            },
         )
     )
     assert_contains(response, post.get_absolute_url())
@@ -2009,54 +1483,10 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_post_on_other_p
     assert_contains(response, image_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_other_post_if_user_has_no_permission(
+def test_private_thread_detail_view_shows_post_embedded_attachments_from_other_thread_post(
     thread_reply_factory,
-    client,
-    guests_group,
-    thread,
-    user,
-    image_attachment,
-):
-    CategoryGroupPermission.objects.filter(
-        group=guests_group,
-        permission=CategoryPermission.ATTACHMENTS,
-    ).delete()
-
-    other_post = thread_reply_factory(thread, original=get_random_string(12))
-
-    image_attachment.associate_with_post(other_post)
-    image_attachment.save()
-
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    post.parsed += (
-        "\n"
-        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
-    )
-    post.metadata = {
-        "attachments": [image_attachment.id],
-    }
-    post.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-attachment")
-
-    assert_contains(response, "You can&#x27;t download attachments in this category.")
-
-    assert_not_contains(response, "rich-text-image")
-    assert_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_shows_post_embedded_attachments_from_other_thread_post(
-    thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
     other_thread,
     user,
     text_attachment,
@@ -2066,7 +1496,9 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_other_thread_po
     text_attachment.associate_with_post(other_post)
     text_attachment.save()
 
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed += (
         "\n"
@@ -2077,8 +1509,14 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_other_thread_po
     }
     post.save()
 
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -2089,10 +1527,10 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_other_thread_po
     assert_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessible_other_thread(
+def test_private_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessible_other_thread(
     thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
     other_thread,
     user,
     text_attachment,
@@ -2105,7 +1543,9 @@ def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessi
     text_attachment.associate_with_post(other_post)
     text_attachment.save()
 
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed += (
         "\n"
@@ -2116,8 +1556,14 @@ def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessi
     }
     post.save()
 
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -2128,10 +1574,10 @@ def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessi
     assert_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessible_other_thread_post(
+def test_private_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessible_other_thread_post(
     thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
     other_thread,
     user,
     image_attachment,
@@ -2143,46 +1589,9 @@ def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessi
     image_attachment.associate_with_post(other_post)
     image_attachment.save()
 
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    post.parsed += (
-        "\n"
-        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
     )
-    post.metadata = {
-        "attachments": [image_attachment.id],
-    }
-    post.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-attachment")
-
-    assert_not_contains(response, "rich-text-image")
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_shows_post_embedded_attachments_from_private_thread_post(
-    thread_reply_factory,
-    user_client,
-    thread,
-    user_private_thread,
-    user,
-    image_attachment,
-):
-    other_post = thread_reply_factory(
-        user_private_thread, original=get_random_string(12)
-    )
-
-    image_attachment.associate_with_post(other_post)
-    image_attachment.save()
-
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
 
     post.parsed += (
         "\n"
@@ -2194,7 +1603,60 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_private_thread_
     post.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_not_contains(response, "rich-text-image")
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
+
+
+def test_private_thread_detail_view_shows_post_embedded_attachments_from_private_thread_post(
+    thread_reply_factory,
+    user_client,
+    user_private_thread,
+    other_user_private_thread,
+    user,
+    image_attachment,
+):
+    other_post = thread_reply_factory(
+        other_user_private_thread, original=get_random_string(12)
+    )
+
+    image_attachment.associate_with_post(other_post)
+    image_attachment.save()
+
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [image_attachment.id],
+    }
+    post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -2206,10 +1668,10 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_private_thread_
     assert_contains(response, image_attachment.get_absolute_url())
 
 
-def test_thread_detail_doesnt_show_post_embedded_attachments_from_inaccessible_private_thread_post(
+def test_private_thread_detail_doesnt_show_post_embedded_attachments_from_inaccessible_private_thread_post(
     thread_reply_factory,
     user_client,
-    thread,
+    user_private_thread,
     private_thread,
     user,
     image_attachment,
@@ -2219,7 +1681,9 @@ def test_thread_detail_doesnt_show_post_embedded_attachments_from_inaccessible_p
     image_attachment.associate_with_post(other_post)
     image_attachment.save()
 
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed += (
         "\n"
@@ -2231,7 +1695,13 @@ def test_thread_detail_doesnt_show_post_embedded_attachments_from_inaccessible_p
     post.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -2243,26 +1713,16 @@ def test_thread_detail_doesnt_show_post_embedded_attachments_from_inaccessible_p
     assert_contains(response, image_attachment.get_absolute_url())
 
 
-def test_thread_detail_doesnt_show_post_embedded_attachments_from_private_thread_post_for_user_without_private_threads_permission(
+def test_private_thread_detail_view_doesnt_show_unassociated_embedded_attachment(
     thread_reply_factory,
     user_client,
-    members_group,
-    thread,
     user_private_thread,
     user,
     image_attachment,
 ):
-    members_group.can_use_private_threads = False
-    members_group.save()
-
-    other_post = thread_reply_factory(
-        user_private_thread, original=get_random_string(12)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
     )
-
-    image_attachment.associate_with_post(other_post)
-    image_attachment.save()
-
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
 
     post.parsed += (
         "\n"
@@ -2274,205 +1734,93 @@ def test_thread_detail_doesnt_show_post_embedded_attachments_from_private_thread
     post.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-attachment")
-
-    assert_not_contains(response, "rich-text-image")
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-
-def test_thread_detail_doesnt_show_post_embedded_attachments_from_private_thread_post_for_anonymous_user(
-    thread_reply_factory,
-    client,
-    thread,
-    private_thread,
-    user,
-    image_attachment,
-):
-    other_post = thread_reply_factory(private_thread, original=get_random_string(12))
-
-    image_attachment.associate_with_post(other_post)
-    image_attachment.save()
-
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    post.parsed += (
-        "\n"
-        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
-    )
-    post.metadata = {
-        "attachments": [image_attachment.id],
-    }
-    post.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-attachment")
-
-    assert_not_contains(response, "rich-text-image")
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_doesnt_show_unassociated_embedded_attachment(
-    thread_reply_factory,
-    client,
-    thread,
-    user,
-    image_attachment,
-):
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    post.parsed += (
-        "\n"
-        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
-    )
-    post.metadata = {
-        "attachments": [image_attachment.id],
-    }
-    post.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-attachment")
-
-    assert_not_contains(response, "rich-text-image")
-    assert_contains(response, image_attachment.name)
-    assert_contains(response, image_attachment.get_absolute_url())
-
-
-def test_thread_detail_view_shows_post_with_previous_post_quote(
-    thread_reply_factory,
-    client,
-    thread,
-    user,
-):
-    previous_post = thread_reply_factory(thread, original=get_random_string(12))
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    post.parsed = (
-        f'<misago-quote user="{previous_post.poster}" post="{previous_post.id}">'
-        f"{previous_post.parsed}"
-        "</misago-quote>"
-        "\n"
-        f"{post.parsed}"
-    )
-    post.metadata = {"posts": [previous_post.id]}
-    post.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-quote")
-    assert_contains(response, "rich-text-quote-btn")
-
-
-def test_thread_detail_view_shows_post_with_unapproved_previous_post_quote(
-    thread_reply_factory,
-    client,
-    thread,
-    user,
-):
-    previous_post = thread_reply_factory(
-        thread, original=get_random_string(12), is_unapproved=True
-    )
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    post.parsed = (
-        f'<misago-quote user="{previous_post.poster}" post="{previous_post.id}">'
-        f"{previous_post.parsed}"
-        "</misago-quote>"
-        "\n"
-        f"{post.parsed}"
-    )
-    post.metadata = {"posts": [previous_post.id]}
-    post.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-quote")
-    assert_contains(response, "rich-text-quote-btn")
-
-
-def test_thread_detail_view_shows_post_with_hidden_previous_post_quote(
-    thread_reply_factory,
-    client,
-    thread,
-    user,
-):
-    previous_post = thread_reply_factory(
-        thread, original=get_random_string(12), is_hidden=True
-    )
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    post.parsed = (
-        f'<misago-quote user="{previous_post.poster}" post="{previous_post.id}">'
-        f"{previous_post.parsed}"
-        "</misago-quote>"
-        "\n"
-        f"{post.parsed}"
-    )
-    post.metadata = {"posts": [previous_post.id]}
-    post.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-quote")
-    assert_contains(response, "rich-text-quote-btn")
-
-
-@override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=1)
-def test_thread_detail_view_shows_post_with_quote_of_deleted_user_post_from_other_page(
-    thread_reply_factory,
-    client,
-    thread,
-    user,
-):
-    previous_post = thread_reply_factory(thread, original=get_random_string(12))
-
-    for _ in range(5):
-        thread_reply_factory(thread, original=get_random_string(12))
-
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    post.parsed = (
-        f'<misago-quote user="{previous_post.poster}" post="{previous_post.id}">'
-        f"{previous_post.parsed}"
-        "</misago-quote>"
-        "\n"
-        f"{post.parsed}"
-    )
-    post.metadata = {"posts": [previous_post.id]}
-    post.save()
-
-    response = client.get(
         reverse(
-            "misago:thread",
-            kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 2},
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_not_contains(response, "rich-text-image")
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
+
+
+def test_private_thread_detail_view_shows_post_with_previous_post_quote(
+    thread_reply_factory,
+    user_client,
+    user_private_thread,
+    user,
+):
+    previous_post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12)
+    )
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
+
+    post.parsed = (
+        f'<misago-quote user="{previous_post.poster}" post="{previous_post.id}">'
+        f"{previous_post.parsed}"
+        "</misago-quote>"
+        "\n"
+        f"{post.parsed}"
+    )
+    post.metadata = {"posts": [previous_post.id]}
+    post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-quote")
+    assert_contains(response, "rich-text-quote-btn")
+
+
+def test_private_thread_detail_view_shows_post_with_hidden_previous_post_quote(
+    thread_reply_factory,
+    user_client,
+    user_private_thread,
+    user,
+):
+    previous_post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), is_hidden=True
+    )
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
+
+    post.parsed = (
+        f'<misago-quote user="{previous_post.poster}" post="{previous_post.id}">'
+        f"{previous_post.parsed}"
+        "</misago-quote>"
+        "\n"
+        f"{post.parsed}"
+    )
+    post.metadata = {"posts": [previous_post.id]}
+    post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
         )
     )
     assert_contains(response, post.get_absolute_url())
@@ -2483,20 +1831,22 @@ def test_thread_detail_view_shows_post_with_quote_of_deleted_user_post_from_othe
 
 
 @override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=1)
-def test_thread_detail_view_shows_post_with_quote_of_user_post_from_other_page(
+def test_private_thread_detail_view_shows_post_with_quote_of_deleted_user_post_from_other_page(
     thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
     user,
 ):
     previous_post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=user
+        user_private_thread, original=get_random_string(12)
     )
 
     for _ in range(5):
-        thread_reply_factory(thread, original=get_random_string(12))
+        thread_reply_factory(user_private_thread, original=get_random_string(12))
 
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed = (
         f'<misago-quote user="{previous_post.poster}" post="{previous_post.id}">'
@@ -2508,10 +1858,14 @@ def test_thread_detail_view_shows_post_with_quote_of_user_post_from_other_page(
     post.metadata = {"posts": [previous_post.id]}
     post.save()
 
-    response = client.get(
+    response = user_client.get(
         reverse(
-            "misago:thread",
-            kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 2},
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "page": 2,
+            },
         )
     )
     assert_contains(response, post.get_absolute_url())
@@ -2522,21 +1876,68 @@ def test_thread_detail_view_shows_post_with_quote_of_user_post_from_other_page(
 
 
 @override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=1)
-def test_thread_detail_view_shows_post_with_quote_of_other_user_post_from_other_page(
+def test_private_thread_detail_view_shows_post_with_quote_of_user_post_from_other_page(
     thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
+    user,
+):
+    previous_post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
+
+    for _ in range(5):
+        thread_reply_factory(user_private_thread, original=get_random_string(12))
+
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
+
+    post.parsed = (
+        f'<misago-quote user="{previous_post.poster}" post="{previous_post.id}">'
+        f"{previous_post.parsed}"
+        "</misago-quote>"
+        "\n"
+        f"{post.parsed}"
+    )
+    post.metadata = {"posts": [previous_post.id]}
+    post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "page": 2,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-quote")
+    assert_contains(response, "rich-text-quote-btn")
+
+
+@override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=1)
+def test_private_thread_detail_view_shows_post_with_quote_of_other_user_post_from_other_page(
+    thread_reply_factory,
+    user_client,
+    user_private_thread,
     user,
     other_user,
 ):
     previous_post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=other_user
+        user_private_thread, original=get_random_string(12), poster=other_user
     )
 
     for _ in range(5):
-        thread_reply_factory(thread, original=get_random_string(12))
+        thread_reply_factory(user_private_thread, original=get_random_string(12))
 
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed = (
         f'<misago-quote user="{previous_post.poster}" post="{previous_post.id}">'
@@ -2548,10 +1949,14 @@ def test_thread_detail_view_shows_post_with_quote_of_other_user_post_from_other_
     post.metadata = {"posts": [previous_post.id]}
     post.save()
 
-    response = client.get(
+    response = user_client.get(
         reverse(
-            "misago:thread",
-            kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 2},
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "page": 2,
+            },
         )
     )
     assert_contains(response, post.get_absolute_url())
@@ -2561,15 +1966,17 @@ def test_thread_detail_view_shows_post_with_quote_of_other_user_post_from_other_
     assert_contains(response, "rich-text-quote-btn")
 
 
-def test_thread_detail_view_shows_post_with_other_thread_deleted_user_post_quote(
+def test_private_thread_detail_view_shows_post_with_other_thread_deleted_user_post_quote(
     thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
     other_thread,
     user,
 ):
     other_post = thread_reply_factory(other_thread, original=get_random_string(12))
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed = (
         f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
@@ -2581,8 +1988,14 @@ def test_thread_detail_view_shows_post_with_other_thread_deleted_user_post_quote
     post.metadata = {"posts": [other_post.id]}
     post.save()
 
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -2591,17 +2004,19 @@ def test_thread_detail_view_shows_post_with_other_thread_deleted_user_post_quote
     assert_contains(response, "rich-text-quote-btn")
 
 
-def test_thread_detail_view_shows_post_with_other_thread_user_post_quote(
+def test_private_thread_detail_view_shows_post_with_other_thread_user_post_quote(
     thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
     other_thread,
     user,
 ):
     other_post = thread_reply_factory(
         other_thread, original=get_random_string(12), poster=user
     )
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed = (
         f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
@@ -2613,8 +2028,14 @@ def test_thread_detail_view_shows_post_with_other_thread_user_post_quote(
     post.metadata = {"posts": [other_post.id]}
     post.save()
 
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -2623,10 +2044,10 @@ def test_thread_detail_view_shows_post_with_other_thread_user_post_quote(
     assert_contains(response, "rich-text-quote-btn")
 
 
-def test_thread_detail_view_shows_post_with_other_thread_other_user_post_quote(
+def test_private_thread_detail_view_shows_post_with_other_thread_other_user_post_quote(
     thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
     other_thread,
     user,
     other_user,
@@ -2634,7 +2055,9 @@ def test_thread_detail_view_shows_post_with_other_thread_other_user_post_quote(
     other_post = thread_reply_factory(
         other_thread, original=get_random_string(12), poster=other_user
     )
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed = (
         f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
@@ -2646,8 +2069,14 @@ def test_thread_detail_view_shows_post_with_other_thread_other_user_post_quote(
     post.metadata = {"posts": [other_post.id]}
     post.save()
 
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -2656,10 +2085,10 @@ def test_thread_detail_view_shows_post_with_other_thread_other_user_post_quote(
     assert_contains(response, "rich-text-quote-btn")
 
 
-def test_thread_detail_view_shows_post_with_inaccessible_thread_quote(
+def test_private_thread_detail_view_shows_post_with_inaccessible_thread_quote(
     thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
     other_thread,
     user,
 ):
@@ -2667,7 +2096,9 @@ def test_thread_detail_view_shows_post_with_inaccessible_thread_quote(
     other_thread.save()
 
     other_post = thread_reply_factory(other_thread, original=get_random_string(12))
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed = (
         f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
@@ -2679,8 +2110,14 @@ def test_thread_detail_view_shows_post_with_inaccessible_thread_quote(
     post.metadata = {"posts": [other_post.id]}
     post.save()
 
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -2689,49 +2126,19 @@ def test_thread_detail_view_shows_post_with_inaccessible_thread_quote(
     assert_contains(response, "rich-text-quote-btn")
 
 
-def test_thread_detail_view_shows_post_with_inaccessible_thread_post_quote(
+def test_private_thread_detail_view_shows_post_with_inaccessible_thread_post_quote(
     thread_reply_factory,
-    client,
-    thread,
+    user_client,
+    user_private_thread,
     other_thread,
     user,
 ):
     other_post = thread_reply_factory(
         other_thread, original=get_random_string(12), is_unapproved=True
     )
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    post.parsed = (
-        f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
-        f"{other_post.parsed}"
-        "</misago-quote>"
-        "\n"
-        f"{post.parsed}"
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
     )
-    post.metadata = {"posts": [other_post.id]}
-    post.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-quote")
-    assert_contains(response, "rich-text-quote-btn")
-
-
-def test_thread_detail_view_shows_post_with_private_thread_post_quote(
-    thread_reply_factory,
-    user_client,
-    thread,
-    user_private_thread,
-    user,
-):
-    other_post = thread_reply_factory(
-        user_private_thread, original=get_random_string(12)
-    )
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
 
     post.parsed = (
         f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
@@ -2744,7 +2151,13 @@ def test_thread_detail_view_shows_post_with_private_thread_post_quote(
     post.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -2753,15 +2166,57 @@ def test_thread_detail_view_shows_post_with_private_thread_post_quote(
     assert_contains(response, "rich-text-quote-btn")
 
 
-def test_thread_detail_view_shows_post_with_inaccessible_private_thread_post_quote(
+def test_private_thread_detail_view_shows_post_with_private_thread_post_quote(
     thread_reply_factory,
     user_client,
-    thread,
+    user_private_thread,
+    other_user_private_thread,
+    user,
+):
+    other_post = thread_reply_factory(
+        other_user_private_thread, original=get_random_string(12)
+    )
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
+
+    post.parsed = (
+        f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
+        f"{other_post.parsed}"
+        "</misago-quote>"
+        "\n"
+        f"{post.parsed}"
+    )
+    post.metadata = {"posts": [other_post.id]}
+    post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-quote")
+    assert_contains(response, "rich-text-quote-btn")
+
+
+def test_private_thread_detail_view_shows_post_with_inaccessible_private_thread_post_quote(
+    thread_reply_factory,
+    user_client,
+    user_private_thread,
     private_thread,
     user,
 ):
     other_post = thread_reply_factory(private_thread, original=get_random_string(12))
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
 
     post.parsed = (
         f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
@@ -2774,7 +2229,13 @@ def test_thread_detail_view_shows_post_with_inaccessible_private_thread_post_quo
     post.save()
 
     response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
@@ -2783,49 +2244,15 @@ def test_thread_detail_view_shows_post_with_inaccessible_private_thread_post_quo
     assert_contains(response, "rich-text-quote-btn")
 
 
-def test_thread_detail_view_shows_post_with_private_thread_post_quote_without_private_threads_permission(
+def test_private_thread_detail_view_shows_post_with_deleted_post_quote(
     thread_reply_factory,
     user_client,
-    members_group,
-    thread,
     user_private_thread,
     user,
 ):
-    members_group.can_use_private_threads = False
-    members_group.save()
-
-    other_post = thread_reply_factory(
-        user_private_thread, original=get_random_string(12)
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
     )
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
-
-    post.parsed = (
-        f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
-        f"{other_post.parsed}"
-        "</misago-quote>"
-        "\n"
-        f"{post.parsed}"
-    )
-    post.metadata = {"posts": [other_post.id]}
-    post.save()
-
-    response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-    assert_not_contains(response, "<misago-quote")
-    assert_contains(response, "rich-text-quote-btn")
-
-
-def test_thread_detail_view_shows_post_with_deleted_post_quote(
-    thread_reply_factory,
-    client,
-    thread,
-    user,
-):
-    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
 
     post.parsed = (
         f'<misago-quote user="Poster" post="{post.id + 100}">'
@@ -2837,8 +2264,14 @@ def test_thread_detail_view_shows_post_with_deleted_post_quote(
     post.metadata = {"posts": [post.id + 100]}
     post.save()
 
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)

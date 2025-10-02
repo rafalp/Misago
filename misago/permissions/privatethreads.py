@@ -184,7 +184,13 @@ def check_see_private_thread_post_permission(
 def _check_see_private_thread_post_permission_action(
     permissions: UserPermissionsProxy, thread: Thread, post: Post
 ):
-    pass
+    if not permissions.is_private_threads_moderator and post.is_hidden:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't view this post's contents.",
+            )
+        )
 
 
 def check_edit_private_thread_post_permission(

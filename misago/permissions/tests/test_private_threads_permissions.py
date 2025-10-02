@@ -382,13 +382,63 @@ def test_check_see_private_thread_permission_fails_if_user_is_not_thread_member(
         check_see_private_thread_permission(permissions, thread)
 
 
-def test_check_see_private_thread_post_permission_always_passes(
+def test_check_see_private_thread_post_permission_passes_if_user_has_permission(
     user, cache_versions, thread, post
 ):
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     permissions = UserPermissionsProxy(user, cache_versions)
     check_see_private_thread_post_permission(permissions, thread, post)
+
+
+def test_check_see_private_thread_post_permission_for_hidden_post_fails_if_user_is_poster(
+    user, cache_versions, thread, user_reply
+):
+    user_reply.is_hidden = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_see_private_thread_post_permission(permissions, thread, user_reply)
+
+
+def test_check_see_private_thread_post_permission_for_hidden_post_fails_if_user_is_not_poster(
+    user, cache_versions, thread, other_user_reply
+):
+    other_user_reply.is_hidden = True
+    other_user_reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_see_private_thread_post_permission(permissions, thread, other_user_reply)
+
+
+def test_check_see_private_thread_post_permission_for_hidden_post_passes_for_private_threads_moderator(
+    user, cache_versions, thread, user_reply
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
+
+    user_reply.is_hidden = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_see_private_thread_post_permission(permissions, thread, user_reply)
+
+
+def test_check_see_private_thread_post_permission_for_hidden_post_passes_for_global_moderator(
+    moderator, cache_versions, thread, user_reply
+):
+    user_reply.is_hidden = True
+    user_reply.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_see_private_thread_post_permission(permissions, thread, user_reply)
 
 
 def test_check_change_private_thread_owner_permission_passes_for_thread_owner(
