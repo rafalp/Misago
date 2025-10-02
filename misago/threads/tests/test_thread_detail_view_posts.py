@@ -2563,7 +2563,7 @@ def test_thread_detail_view_shows_post_with_hidden_previous_post_quote(
 
 
 @override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=1)
-def test_thread_detail_view_shows_post_with_quote_of_post_from_other_page(
+def test_thread_detail_view_shows_post_with_quote_of_deleted_user_post_from_other_page(
     thread_reply_factory,
     client,
     thread,
@@ -2598,7 +2598,84 @@ def test_thread_detail_view_shows_post_with_quote_of_post_from_other_page(
     assert_contains(response, "rich-text-quote-btn")
 
 
-def test_thread_detail_view_shows_post_with_other_thread_post_quote(
+@override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=1)
+def test_thread_detail_view_shows_post_with_quote_of_user_post_from_other_page(
+    thread_reply_factory,
+    client,
+    thread,
+    user,
+):
+    previous_post = thread_reply_factory(
+        thread, original=get_random_string(12), poster=user
+    )
+
+    for _ in range(5):
+        thread_reply_factory(thread, original=get_random_string(12))
+
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    post.parsed = (
+        f'<misago-quote user="{previous_post.poster}" post="{previous_post.id}">'
+        f"{previous_post.parsed}"
+        "</misago-quote>"
+        "\n"
+        f"{post.parsed}"
+    )
+    post.save()
+
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 2},
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-quote")
+    assert_contains(response, "rich-text-quote-btn")
+
+
+@override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=1)
+def test_thread_detail_view_shows_post_with_quote_of_other_user_post_from_other_page(
+    thread_reply_factory,
+    client,
+    thread,
+    user,
+    other_user,
+):
+    previous_post = thread_reply_factory(
+        thread, original=get_random_string(12), poster=other_user
+    )
+
+    for _ in range(5):
+        thread_reply_factory(thread, original=get_random_string(12))
+
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    post.parsed = (
+        f'<misago-quote user="{previous_post.poster}" post="{previous_post.id}">'
+        f"{previous_post.parsed}"
+        "</misago-quote>"
+        "\n"
+        f"{post.parsed}"
+    )
+    post.save()
+
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 2},
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-quote")
+    assert_contains(response, "rich-text-quote-btn")
+
+
+def test_thread_detail_view_shows_post_with_other_thread_deleted_user_post_quote(
     thread_reply_factory,
     client,
     thread,
@@ -2606,6 +2683,69 @@ def test_thread_detail_view_shows_post_with_other_thread_post_quote(
     user,
 ):
     other_post = thread_reply_factory(other_thread, original=get_random_string(12))
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    post.parsed = (
+        f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
+        f"{other_post.parsed}"
+        "</misago-quote>"
+        "\n"
+        f"{post.parsed}"
+    )
+    post.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-quote")
+    assert_contains(response, "rich-text-quote-btn")
+
+
+def test_thread_detail_view_shows_post_with_other_thread_user_post_quote(
+    thread_reply_factory,
+    client,
+    thread,
+    other_thread,
+    user,
+):
+    other_post = thread_reply_factory(
+        other_thread, original=get_random_string(12), poster=user
+    )
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    post.parsed = (
+        f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
+        f"{other_post.parsed}"
+        "</misago-quote>"
+        "\n"
+        f"{post.parsed}"
+    )
+    post.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-quote")
+    assert_contains(response, "rich-text-quote-btn")
+
+
+def test_thread_detail_view_shows_post_with_other_thread_other_user_post_quote(
+    thread_reply_factory,
+    client,
+    thread,
+    other_thread,
+    user,
+    other_user,
+):
+    other_post = thread_reply_factory(
+        other_thread, original=get_random_string(12), poster=other_user
+    )
     post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
 
     post.parsed = (
@@ -2716,3 +2856,11 @@ def test_thread_detail_view_shows_post_with_deleted_post_quote(
 
     assert_not_contains(response, "<misago-quote")
     assert_contains(response, "rich-text-quote-btn")
+
+
+# TODO
+# - embedded attachment from private thread
+# - embedded attachment from inaccessible private thread
+# - quoted user post/quoted anonymous post
+# - quoted post from private thread
+# - quoted post from inaccessible private thread
