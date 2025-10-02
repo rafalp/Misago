@@ -20,8 +20,20 @@ def assert_contains(response, string, status_code=200):
 def assert_not_contains(response, string, status_code=200):
     assert_status_code(response, status_code)
 
+    response_content = response.content.decode("utf-8")
+
     fail_message = f'"{string}" was unexpectedly found in response.content'
-    assert string not in response.content.decode("utf-8"), fail_message
+    if string in response_content:
+        position = response_content.index(string)
+        line_start = response_content.rindex("\n", 0, position) + 1
+        if "\n" in response_content[position:]:
+            line_end = response_content.index("\n", position)
+        else:
+            line_end = len(response_content)
+
+        fail_message = f"{fail_message}:\n\n{response_content[line_start:line_end]}"
+
+    assert string not in response_content, fail_message
 
 
 def assert_contains_element(response, element, status_code=200, **attrs):
