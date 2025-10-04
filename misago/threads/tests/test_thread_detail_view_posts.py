@@ -3116,6 +3116,84 @@ def test_thread_detail_view_shows_post_with_inaccessible_thread_post_quote(
     assert_contains(response, "rich-text-quote-btn")
 
 
+def test_thread_detail_view_shows_post_with_other_category_post_quote(
+    thread_factory,
+    thread_reply_factory,
+    client,
+    guests_group,
+    sibling_category,
+    thread,
+    user,
+):
+    CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=guests_group,
+        permission=CategoryPermission.SEE,
+    )
+    CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=guests_group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+    other_thread = thread_factory(sibling_category)
+    other_post = thread_reply_factory(other_thread, original=get_random_string(12))
+
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    post.parsed = (
+        f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
+        f"{other_post.parsed}"
+        "</misago-quote>"
+        "\n"
+        f"{post.parsed}"
+    )
+    post.metadata = {"posts": [other_post.id]}
+    post.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-quote")
+    assert_contains(response, "rich-text-quote-btn")
+
+
+def test_thread_detail_view_shows_post_with_other_category_inaccessible_post_quote(
+    thread_factory,
+    thread_reply_factory,
+    client,
+    sibling_category,
+    thread,
+    user,
+):
+    other_thread = thread_factory(sibling_category)
+    other_post = thread_reply_factory(other_thread, original=get_random_string(12))
+
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    post.parsed = (
+        f'<misago-quote user="{other_post.poster}" post="{other_post.id}">'
+        f"{other_post.parsed}"
+        "</misago-quote>"
+        "\n"
+        f"{post.parsed}"
+    )
+    post.metadata = {"posts": [other_post.id]}
+    post.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-quote")
+    assert_contains(response, "rich-text-quote-btn")
+
+
 def test_thread_detail_view_shows_post_with_private_thread_post_quote(
     thread_reply_factory,
     user_client,
