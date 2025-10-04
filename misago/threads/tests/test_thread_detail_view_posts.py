@@ -2131,21 +2131,21 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_other_post(
     client,
     thread,
     user,
-    text_attachment,
+    image_attachment,
 ):
     other_post = thread_reply_factory(thread, original=get_random_string(12))
 
-    text_attachment.associate_with_post(other_post)
-    text_attachment.save()
+    image_attachment.associate_with_post(other_post)
+    image_attachment.save()
 
     post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
 
     post.parsed += (
         "\n"
-        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
     )
     post.metadata = {
-        "attachments": [text_attachment.id],
+        "attachments": [image_attachment.id],
     }
     post.save()
 
@@ -2157,8 +2157,9 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_other_post(
 
     assert_not_contains(response, "<misago-attachment")
 
-    assert_contains(response, text_attachment.name)
-    assert_contains(response, text_attachment.get_absolute_url())
+    assert_contains(response, "rich-text-image")
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_unapproved_post(
@@ -2344,21 +2345,21 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_other_thread_po
     thread,
     other_thread,
     user,
-    text_attachment,
+    image_attachment,
 ):
     other_post = thread_reply_factory(other_thread, original=get_random_string(12))
 
-    text_attachment.associate_with_post(other_post)
-    text_attachment.save()
+    image_attachment.associate_with_post(other_post)
+    image_attachment.save()
 
     post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
 
     post.parsed += (
         "\n"
-        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
     )
     post.metadata = {
-        "attachments": [text_attachment.id],
+        "attachments": [image_attachment.id],
     }
     post.save()
 
@@ -2370,8 +2371,9 @@ def test_thread_detail_view_shows_post_embedded_attachments_from_other_thread_po
 
     assert_not_contains(response, "<misago-attachment")
 
-    assert_contains(response, text_attachment.name)
-    assert_contains(response, text_attachment.get_absolute_url())
+    assert_contains(response, "rich-text-image")
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessible_other_thread(
@@ -2380,24 +2382,24 @@ def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessi
     thread,
     other_thread,
     user,
-    text_attachment,
+    image_attachment,
 ):
     other_thread.is_hidden = True
     other_thread.save()
 
     other_post = thread_reply_factory(other_thread, original=get_random_string(12))
 
-    text_attachment.associate_with_post(other_post)
-    text_attachment.save()
+    image_attachment.associate_with_post(other_post)
+    image_attachment.save()
 
     post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
 
     post.parsed += (
         "\n"
-        f'<misago-attachment id="{text_attachment.id}" name="{text_attachment.name}" slug="{text_attachment.slug}">'
+        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
     )
     post.metadata = {
-        "attachments": [text_attachment.id],
+        "attachments": [image_attachment.id],
     }
     post.save()
 
@@ -2409,8 +2411,9 @@ def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessi
 
     assert_not_contains(response, "<misago-attachment")
 
-    assert_contains(response, text_attachment.name)
-    assert_contains(response, text_attachment.get_absolute_url())
+    assert_not_contains(response, "rich-text-image")
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessible_other_thread_post(
@@ -2450,6 +2453,57 @@ def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_inaccessi
     assert_not_contains(response, "rich-text-image")
     assert_contains(response, image_attachment.name)
     assert_contains(response, image_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_other_category_without_attachments_permission(
+    thread_factory,
+    thread_reply_factory,
+    client,
+    guests_group,
+    sibling_category,
+    thread,
+    user,
+    image_attachment,
+):
+    CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=guests_group,
+        permission=CategoryPermission.SEE,
+    )
+    CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=guests_group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+    other_thread = thread_factory(sibling_category)
+    other_post = thread_reply_factory(other_thread, original=get_random_string(12))
+
+    image_attachment.associate_with_post(other_post)
+    image_attachment.save()
+
+    post = thread_reply_factory(thread, original=get_random_string(12), poster=user)
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [image_attachment.id],
+    }
+    post.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_not_contains(response, "rich-text-image")
+    assert_contains(response, image_attachment.name)
+    assert_not_contains(response, image_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_post_embedded_attachments_from_private_thread_post(
