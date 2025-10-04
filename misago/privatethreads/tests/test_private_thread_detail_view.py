@@ -351,6 +351,63 @@ def test_private_thread_detail_view_ignores_invalid_slug_in_htmx(
     assert response.status_code == 200
 
 
+def test_private_thread_detail_view_shows_thread_members_to_thread_owner(
+    user_client, user_private_thread, user, other_user, moderator
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, user_private_thread.title)
+    assert_contains(response, "3 members")
+    assert_contains(response, user.username)
+    assert_contains(response, other_user.username)
+    assert_contains(response, moderator.username)
+
+
+def test_private_thread_detail_view_shows_thread_members_to_other_user(
+    user_client, other_user_private_thread, user, other_user, moderator
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, other_user_private_thread.title)
+    assert_contains(response, "3 members")
+    assert_contains(response, user.username)
+    assert_contains(response, other_user.username)
+    assert_contains(response, moderator.username)
+
+
+def test_private_thread_detail_view_shows_thread_members_to_moderator(
+    moderator_client, user_private_thread, user, other_user, moderator
+):
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, user_private_thread.title)
+    assert_contains(response, "3 members")
+    assert_contains(response, user.username)
+    assert_contains(response, other_user.username)
+    assert_contains(response, moderator.username)
+
+
 def test_private_thread_detail_view_shows_error_404_if_thread_is_accessed(
     user_client, thread
 ):
