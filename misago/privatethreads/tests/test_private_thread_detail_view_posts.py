@@ -1624,6 +1624,70 @@ def test_private_thread_detail_view_doesnt_show_post_embedded_attachments_from_i
     assert_contains(response, image_attachment.get_absolute_url())
 
 
+def test_private_thread_detail_view_shows_post_embedded_attachments_from_other_category(
+    thread_factory,
+    thread_reply_factory,
+    user_client,
+    members_group,
+    sibling_category,
+    user_private_thread,
+    user,
+    image_attachment,
+):
+    CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=members_group,
+        permission=CategoryPermission.SEE,
+    )
+    CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=members_group,
+        permission=CategoryPermission.BROWSE,
+    )
+    CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=members_group,
+        permission=CategoryPermission.ATTACHMENTS,
+    )
+
+    other_thread = thread_factory(sibling_category)
+    other_post = thread_reply_factory(other_thread, original=get_random_string(12))
+
+    image_attachment.associate_with_post(other_post)
+    image_attachment.save()
+
+    post = thread_reply_factory(
+        user_private_thread, original=get_random_string(12), poster=user
+    )
+
+    post.parsed += (
+        "\n"
+        f'<misago-attachment id="{image_attachment.id}" name="{image_attachment.name}" slug="{image_attachment.slug}">'
+    )
+    post.metadata = {
+        "attachments": [image_attachment.id],
+    }
+    post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+
+    assert_not_contains(response, "<misago-attachment")
+
+    assert_contains(response, "rich-text-image")
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
+
+
 def test_private_thread_detail_view_doesnt_show_post_embedded_attachments_from_other_category_without_attachments_permission(
     thread_factory,
     thread_reply_factory,
