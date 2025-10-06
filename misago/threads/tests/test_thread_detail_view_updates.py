@@ -36,7 +36,9 @@ def test_thread_detail_view_shows_thread_update_to_category_moderator(
     user_client, user, thread
 ):
     Moderator.objects.create(
-        user=user, is_global=False, categories=[thread.category_id]
+        user=user,
+        is_global=False,
+        categories=[thread.category_id],
     )
 
     thread_update = create_test_thread_update(thread, user)
@@ -88,7 +90,9 @@ def test_thread_detail_view_shows_deleted_user_thread_update_to_category_moderat
     user_client, user, thread
 ):
     Moderator.objects.create(
-        user=user, is_global=False, categories=[thread.category_id]
+        user=user,
+        is_global=False,
+        categories=[thread.category_id],
     )
 
     thread_update = create_test_thread_update(thread, "DeletedUser")
@@ -140,7 +144,9 @@ def test_thread_detail_view_shows_hidden_thread_update_to_category_moderator(
     user_client, user, thread
 ):
     Moderator.objects.create(
-        user=user, is_global=False, categories=[thread.category_id]
+        user=user,
+        is_global=False,
+        categories=[thread.category_id],
     )
 
     thread_update = create_test_thread_update(thread, user, is_hidden=True)
@@ -214,7 +220,9 @@ def test_thread_detail_view_shows_hide_thread_update_button_to_category_moderato
     user_client, user, thread
 ):
     Moderator.objects.create(
-        user=user, is_global=False, categories=[thread.category_id]
+        user=user,
+        is_global=False,
+        categories=[thread.category_id],
     )
 
     thread_update = create_test_thread_update(thread, user)
@@ -264,7 +272,9 @@ def test_thread_detail_view_shows_unhide_thread_update_button_to_category_modera
     user_client, user, thread
 ):
     Moderator.objects.create(
-        user=user, is_global=False, categories=[thread.category_id]
+        user=user,
+        is_global=False,
+        categories=[thread.category_id],
     )
 
     thread_update = create_test_thread_update(thread, user, is_hidden=True)
@@ -360,7 +370,9 @@ def test_thread_detail_view_shows_delete_thread_update_button_to_category_modera
     user_client, user, thread
 ):
     Moderator.objects.create(
-        user=user, is_global=False, categories=[thread.category_id]
+        user=user,
+        is_global=False,
+        categories=[thread.category_id],
     )
 
     thread_update = create_test_thread_update(thread, user)
