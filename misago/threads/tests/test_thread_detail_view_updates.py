@@ -164,6 +164,248 @@ def test_thread_detail_view_shows_hidden_thread_update_to_global_moderator(
     assert_contains(response, f"[{thread_update.id}]")
 
 
+def test_thread_detail_view_doesnt_show_hide_thread_update_button_to_anonymous_user(
+    client, user, thread
+):
+    thread_update = create_test_thread_update(thread, user)
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, f"[{thread_update.id}]")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-update-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_hide_thread_update_button_to_user(
+    user_client, user, thread
+):
+    thread_update = create_test_thread_update(thread, user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, f"[{thread_update.id}]")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-update-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_hide_thread_update_button_to_category_moderator(
+    user_client, user, thread
+):
+    Moderator.objects.create(
+        user=user, is_global=False, categories=[thread.category_id]
+    )
+
+    thread_update = create_test_thread_update(thread, user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-update-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_hide_thread_update_button_to_global_moderator(
+    moderator_client, user, thread
+):
+    thread_update = create_test_thread_update(thread, user)
+
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-update-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_unhide_thread_update_button_to_category_moderator(
+    user_client, user, thread
+):
+    Moderator.objects.create(
+        user=user, is_global=False, categories=[thread.category_id]
+    )
+
+    thread_update = create_test_thread_update(thread, user, is_hidden=True)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-update-unhide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_unhide_thread_update_button_to_global_moderator(
+    moderator_client, user, thread
+):
+    thread_update = create_test_thread_update(thread, user, is_hidden=True)
+
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-update-unhide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_delete_thread_update_button_to_anonymous_user(
+    client, user, thread
+):
+    thread_update = create_test_thread_update(thread, user)
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, f"[{thread_update.id}]")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-update-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_delete_thread_update_button_to_user(
+    user_client, user, thread
+):
+    thread_update = create_test_thread_update(thread, user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, f"[{thread_update.id}]")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-update-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_delete_thread_update_button_to_category_moderator(
+    user_client, user, thread
+):
+    Moderator.objects.create(
+        user=user, is_global=False, categories=[thread.category_id]
+    )
+
+    thread_update = create_test_thread_update(thread, user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-update-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_delete_thread_update_button_to_global_moderator(
+    moderator_client, user, thread
+):
+    thread_update = create_test_thread_update(thread, user)
+
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, thread.title)
+    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-update-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        ),
+    )
+
+
 @override_dynamic_settings(
     thread_updates_per_page=4, posts_per_page=5, posts_per_page_orphans=1
 )
@@ -351,8 +593,3 @@ def test_thread_detail_view_displays_thread_update_with_user_context(
     assert_contains(response, thread.title)
     assert_contains(response, other_user.username)
     assert_contains(response, other_user.get_absolute_url())
-
-
-# TODO:
-# - hide button visibility
-# - delete button visibility
