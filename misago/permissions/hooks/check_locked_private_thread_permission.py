@@ -7,10 +7,10 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckLockedThreadPermissionHookAction(Protocol):
+class CheckLockedPrivateThreadPermissionHookAction(Protocol):
     """
     Misago function that checks whether a user has permission to bypass
-    a thread's locked status. Raises `PermissionDenied` if they don't.
+    a private thread's locked status. Raises `PermissionDenied` if they don't.
 
     # Arguments
 
@@ -20,7 +20,7 @@ class CheckLockedThreadPermissionHookAction(Protocol):
 
     ## `thread: Thread`
 
-    A thread to check permissions for.
+    A private thread to check permissions for.
     """
 
     def __call__(
@@ -30,13 +30,13 @@ class CheckLockedThreadPermissionHookAction(Protocol):
     ) -> None: ...
 
 
-class CheckLockedThreadPermissionHookFilter(Protocol):
+class CheckLockedPrivateThreadPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckLockedThreadPermissionHookAction`
+    ## `action: CheckLockedPrivateThreadPermissionHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -49,26 +49,26 @@ class CheckLockedThreadPermissionHookFilter(Protocol):
 
     ## `thread: Thread`
 
-    A thread to check permissions for.
+    A private thread to check permissions for.
     """
 
     def __call__(
         self,
-        action: CheckLockedThreadPermissionHookAction,
+        action: CheckLockedPrivateThreadPermissionHookAction,
         permissions: "UserPermissionsProxy",
         thread: Thread,
     ) -> None: ...
 
 
-class CheckLockedThreadPermissionHook(
+class CheckLockedPrivateThreadPermissionHook(
     FilterHook[
-        CheckLockedThreadPermissionHookAction,
-        CheckLockedThreadPermissionHookFilter,
+        CheckLockedPrivateThreadPermissionHookAction,
+        CheckLockedPrivateThreadPermissionHookFilter,
     ]
 ):
     """
     This hook allows plugins to extend or replace the logic for checking
-    whether a user has permission to bypass a thread's locked status.
+    whether a user has permission to bypass a private thread's locked status.
 
     # Example
 
@@ -76,12 +76,12 @@ class CheckLockedThreadPermissionHook(
     post in the specific thread if they have a custom flag set on their account.
 
     ```python
-    from misago.permissions.hooks import check_locked_thread_permission_hook
+    from misago.permissions.hooks import check_locked_private_thread_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.threads.models import Thread
 
-    @check_locked_thread_permission_hook.append_filter
-    def check_user_can_post_in_locked_thread(
+    @check_locked_private_thread_permission_hook.append_filter
+    def check_user_can_post_in_locked_private_thread(
         action,
         permissions: UserPermissionsProxy,
         thread: Thread,
@@ -106,11 +106,11 @@ class CheckLockedThreadPermissionHook(
 
     def __call__(
         self,
-        action: CheckLockedThreadPermissionHookAction,
+        action: CheckLockedPrivateThreadPermissionHookAction,
         permissions: "UserPermissionsProxy",
         thread: Thread,
     ) -> None:
         return super().__call__(action, permissions, thread)
 
 
-check_locked_thread_permission_hook = CheckLockedThreadPermissionHook()
+check_locked_private_thread_permission_hook = CheckLockedPrivateThreadPermissionHook()
