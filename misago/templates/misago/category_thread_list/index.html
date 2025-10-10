@@ -9,7 +9,7 @@
 
 {% block content %}
 <div class="page page-category">
-  {% include "misago/category/header.html" %}
+  {% include "misago/category_thread_list/header.html" %}
 
   <div class="container page-container">
 
@@ -27,7 +27,7 @@
 
     {% pluginoutlet CATEGORY_THREADS_LIST_END %}
 
-    {% include "misago/category/gototop_toolbar.html" %}
+    {% include "misago/category_thread_list/gototop_toolbar.html" %}
 
   </div>
 </div>
@@ -36,7 +36,7 @@
 
 {% block modals %}
 {% if user.is_authenticated %}
-  {% include "misago/category/mark_as_read_modal.html" %}
+  {% include "misago/category_thread_list/mark_as_read_modal.html" %}
   {% include "misago/thread_list/moderation.html" %}
 {% endif %}
 {% endblock modals %}

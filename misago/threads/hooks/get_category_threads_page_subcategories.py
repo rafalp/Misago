@@ -31,7 +31,7 @@ class GetCategoryThreadsPageSubcategoriesHookAction(Protocol):
     ```python
     {
         "categories": ...,
-        "template_name": "misago/category/subcategories.html"
+        "template_name": "misago/category_thread_list/subcategories.html"
     }
     ```
 
@@ -71,7 +71,7 @@ class GetCategoryThreadsPageSubcategoriesHookFilter(Protocol):
     ```python
     {
         "categories": ...,
-        "template_name": "misago/category/subcategories.html"
+        "template_name": "misago/category_thread_list/subcategories.html"
     }
     ```
 

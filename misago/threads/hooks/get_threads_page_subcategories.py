@@ -26,7 +26,7 @@ class GetThreadsPageSubcategoriesHookAction(Protocol):
     ```python
     {
         "categories": ...,
-        "template_name": "misago/category/subcategories.html"
+        "template_name": "misago/category_thread_list/subcategories.html"
     }
     ```
 

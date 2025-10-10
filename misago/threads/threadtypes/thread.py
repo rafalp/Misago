@@ -18,7 +18,7 @@ class Thread(ThreadType):
     def get_category_absolute_url(self, category):
         if category.level:
             return reverse(
-                "misago:category",
+                "misago:category-thread-list",
                 kwargs={"category_id": category.id, "slug": category.slug},
             )
 

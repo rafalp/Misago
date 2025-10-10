@@ -719,11 +719,11 @@ class ThreadListView(ListView):
         return super().get_metatags(request, context)
 
 
-class CategoryThreadsListView(ListView):
-    template_name = "misago/category/index.html"
-    template_name_htmx = "misago/category/partial.html"
-    mark_as_read_template_name = "misago/category/mark_as_read_page.html"
-    moderation_page_template_name = "misago/category/moderation_page.html"
+class CategoryThreadListView(ListView):
+    template_name = "misago/category_thread_list/index.html"
+    template_name_htmx = "misago/category_thread_list/partial.html"
+    mark_as_read_template_name = "misago/category_thread_list/mark_as_read_page.html"
+    moderation_page_template_name = "misago/category_thread_list/moderation_page.html"
     moderation_modal_template_name = "misago/thread_list/moderation_modal.html"
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
@@ -816,7 +816,7 @@ class CategoryThreadsListView(ListView):
 
         if kwargs.get("filter"):
             context["pagination_url"] = reverse(
-                "misago:category",
+                "misago:category-thread-list",
                 kwargs={
                     "category_id": category.id,
                     "slug": category.slug,
@@ -878,7 +878,7 @@ class CategoryThreadsListView(ListView):
 
             return {
                 "categories": categories,
-                "template_name": "misago/category/subcategories_full.html",
+                "template_name": "misago/category_thread_list/subcategories_full.html",
             }
 
         if component == CategoryChildrenComponent.DROPDOWN:
@@ -1245,6 +1245,3 @@ class CategoryThreadsListView(ListView):
             )
 
         return metatags
-
-
-category_threads = CategoryThreadsListView.as_view()

@@ -23,7 +23,7 @@ def test_category_threads_list_displays_start_thread_button_to_guest_with_permis
 ):
     response = client.get(
         reverse(
-            "misago:category",
+            "misago:category-thread-list",
             kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )
@@ -41,7 +41,7 @@ def test_category_threads_list_displays_start_thread_button_to_user_with_permiss
 ):
     response = user_client.get(
         reverse(
-            "misago:category",
+            "misago:category-thread-list",
             kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )
@@ -90,7 +90,7 @@ def test_category_threads_list_hides_start_thread_button_from_guest_without_perm
 
     response = client.get(
         reverse(
-            "misago:category",
+            "misago:category-thread-list",
             kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )
@@ -113,7 +113,7 @@ def test_category_threads_list_hides_start_thread_button_from_user_without_permi
 
     response = user_client.get(
         reverse(
-            "misago:category",
+            "misago:category-thread-list",
             kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )
@@ -128,7 +128,7 @@ def test_closed_category_threads_list_hides_start_thread_button_from_user_withou
 
     response = user_client.get(
         reverse(
-            "misago:category",
+            "misago:category-thread-list",
             kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )
@@ -152,7 +152,7 @@ def test_closed_category_threads_list_shows_start_thread_button_to_user_with_per
 
     response = user_client.get(
         reverse(
-            "misago:category",
+            "misago:category-thread-list",
             kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )

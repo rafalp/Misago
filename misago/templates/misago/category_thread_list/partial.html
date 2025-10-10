@@ -13,7 +13,7 @@
     {% if threads.items %}
       {% include threads.template_name with cursor=paginator.cursor threads=threads.items url_names=threads.url_names categories_component=threads.categories_component moderation=threads.moderation_actions %}
     {% else %}
-      {% include "misago/category/blankslate.html" %}
+      {% include "misago/category_thread_list/blankslate.html" %}
     {% endif %}
   </ul>
 

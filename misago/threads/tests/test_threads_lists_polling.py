@@ -426,7 +426,7 @@ def test_category_threads_list_poll_raises_404_error_if_filter_is_invalid(
     thread_factory(default_category, starter=user)
     response = user_client.get(
         reverse(
-            "misago:category",
+            "misago:category-thread-list",
             kwargs={
                 "category_id": default_category.id,
                 "slug": default_category.slug,
@@ -447,7 +447,7 @@ def test_category_threads_list_poll_filters_threads(
 
     response = user_client.get(
         reverse(
-            "misago:category",
+            "misago:category-thread-list",
             kwargs={
                 "category_id": default_category.id,
                 "slug": default_category.slug,
