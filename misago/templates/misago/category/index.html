@@ -22,7 +22,7 @@
     {% pluginoutlet CATEGORY_THREADS_LIST_MIDDLE %}
 
     <div id="misago-page-scroll-target" class="scroll-target"></div>
-    {% include "misago/threads/filters_noscript.html" %}
+    {% include "misago/thread_list/filters_noscript.html" %}
     {% include template_name_htmx %}
 
     {% pluginoutlet CATEGORY_THREADS_LIST_END %}
@@ -37,6 +37,6 @@
 {% block modals %}
 {% if user.is_authenticated %}
   {% include "misago/category/mark_as_read_modal.html" %}
-  {% include "misago/threads/moderation.html" %}
+  {% include "misago/thread_list/moderation.html" %}
 {% endif %}
 {% endblock modals %}

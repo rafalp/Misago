@@ -165,7 +165,7 @@ def test_edit_thread_poll_view_shows_error_if_user_has_no_edit_poll_permission(
             kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         ),
     )
-    assert_contains(response, "This thread is closed.", 403)
+    assert_contains(response, "This thread is locked", 403)
 
 
 def test_edit_thread_poll_view_shows_error_if_user_has_no_edit_poll_permission_in_htmx(
@@ -181,7 +181,7 @@ def test_edit_thread_poll_view_shows_error_if_user_has_no_edit_poll_permission_i
         ),
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "This thread is closed.", 403)
+    assert_contains(response, "This thread is locked", 403)
 
 
 def test_edit_thread_poll_view_shows_guest_error_404_if_thread_has_no_poll(

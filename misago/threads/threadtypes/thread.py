@@ -22,7 +22,7 @@ class Thread(ThreadType):
                 kwargs={"category_id": category.id, "slug": category.slug},
             )
 
-        return reverse("misago:threads")
+        return reverse("misago:thread-list")
 
     def get_category_last_thread_url(self, category):
         return reverse(

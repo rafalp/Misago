@@ -7,9 +7,9 @@ from ...test import assert_contains
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_mark_as_read_redirects_guests(db, client):
-    response = client.post(reverse("misago:threads"), {"mark_as_read": "true"})
+    response = client.post(reverse("misago:thread-list"), {"mark_as_read": "true"})
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:threads")
+    assert response["location"] == reverse("misago:thread-list")
 
 
 def test_category_threads_list_mark_as_read_redirects_guests(default_category, client):
@@ -24,7 +24,7 @@ def test_category_threads_list_mark_as_read_redirects_guests(default_category, c
 def test_site_threads_list_mark_as_read_displays_confirmation_page_to_users(
     user_client,
 ):
-    response = user_client.post(reverse("misago:threads"), {"mark_as_read": "true"})
+    response = user_client.post(reverse("misago:thread-list"), {"mark_as_read": "true"})
     assert_contains(response, "Mark as read | Threads")
     assert_contains(
         response, "Are you sure you want to mark all threads and categories as read?"
@@ -73,11 +73,11 @@ def test_site_threads_list_mark_as_read_marks_all_categories_as_read(
     )
 
     response = user_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"mark_as_read": "true", "confirm": "true"},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:threads")
+    assert response["location"] == reverse("misago:thread-list")
 
     ReadCategory.objects.get(
         user=user,
@@ -109,7 +109,7 @@ def test_site_threads_list_mark_as_read_marks_all_categories_as_read_in_htmx(
     )
 
     response = user_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"mark_as_read": "true", "confirm": "true"},
         headers={"hx-request": "true"},
     )

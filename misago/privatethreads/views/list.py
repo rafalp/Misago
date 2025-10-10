@@ -162,7 +162,7 @@ class PrivateThreadListView(ListView):
             request.user.clear_unread_private_threads()
 
         return {
-            "template_name": self.threads_component_template_name,
+            "template_name": self.list_items_component_template_name,
             "latest_post": self.get_threads_latest_post_id(threads_list),
             "active_filter": active_filter,
             "filters": filters,

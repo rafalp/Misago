@@ -62,7 +62,7 @@ class GetThreadsPageSubcategoriesHookFilter(Protocol):
     ```python
     {
         "categories": ...,
-        "template_name": "misago/threads/subcategories.html"
+        "template_name": "misago/thread_list/subcategories.html"
     }
     ```
 

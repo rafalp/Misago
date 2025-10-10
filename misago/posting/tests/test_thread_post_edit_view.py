@@ -245,7 +245,7 @@ def test_thread_post_edit_view_shows_error_403_to_users_without_closed_thread_pe
             },
         )
     )
-    assert_contains(response, "This thread is closed.", 403)
+    assert_contains(response, "This thread is locked", 403)
 
 
 def test_thread_post_edit_view_shows_error_403_to_users_without_protected_post_permission(

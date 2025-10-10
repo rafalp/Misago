@@ -5,21 +5,21 @@
   {% if threads.paginator.has_previous or threads.paginator.has_next %}
     <div class="toolbar-section{% if top_toolbar %} flex-order-last-xs{% endif %}">
       <div class="toolbar-item">
-        {% include "misago/threads/paginator.html" with bottom=bottom_toolbar %}
+        {% include "misago/thread_list/paginator.html" with bottom=bottom_toolbar %}
       </div>
     </div>
   {% endif %}
   {% if subcategories and not subcategories.template_name and top_toolbar %}
     <div class="toolbar-section">
       <div class="toolbar-item">
-        {% include "misago/threads/subcategories_dropdown.html" with category=category subcategories=subcategories.categories %}
+        {% include "misago/thread_list/subcategories_dropdown.html" with category=category subcategories=subcategories.categories %}
       </div>
     </div>
   {% endif %}
   {% if threads.filters and top_toolbar %}
     <div class="toolbar-section">
       <div class="toolbar-item">
-        {% include "misago/threads/filters_dropdown.html" with active_filter=threads.active_filter filters=threads.filters remove_filters_url=threads.remove_filters_url %}
+        {% include "misago/thread_list/filters_dropdown.html" with active_filter=threads.active_filter filters=threads.filters remove_filters_url=threads.remove_filters_url %}
       </div>
     </div>
   {% endif %}

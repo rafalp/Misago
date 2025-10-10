@@ -18,7 +18,7 @@
   {% if is_index %}
     {% include "misago/index_header.html" %}
   {% else %}
-    {% include "misago/threads/header.html" %}
+    {% include "misago/thread_list/header.html" %}
   {% endif %}
   <div class="container page-container">
 
@@ -31,7 +31,7 @@
     {% pluginoutlet THREADS_LIST_MIDDLE %}
 
     <div id="misago-page-scroll-target" class="scroll-target"></div>
-    {% include "misago/threads/filters_noscript.html" %}
+    {% include "misago/thread_list/filters_noscript.html" %}
     {% include template_name_htmx %}
 
     {% pluginoutlet THREADS_LIST_END %}
@@ -44,9 +44,9 @@
 
 
 {% block modals %}
-{% include "misago/threads/start_thread.html" %}
+{% include "misago/thread_list/start_thread.html" %}
 {% if user.is_authenticated %}
-  {% include "misago/threads/mark_as_read_modal.html" %}
-  {% include "misago/threads/moderation.html" %}
+  {% include "misago/thread_list/mark_as_read_modal.html" %}
+  {% include "misago/thread_list/moderation.html" %}
 {% endif %}
 {% endblock modals %}

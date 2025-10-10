@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views.detail import ThreadDetailView
-from .views.list import category_threads, threads
+from .views.list import ThreadListView, category_threads
 from .views.post import (
     ThreadPostLastView,
     ThreadPostSolutionView,
@@ -13,14 +13,14 @@ from .views.post import (
 urlpatterns = [
     path(
         "threads/",
-        threads,
-        name="threads",
+        ThreadListView.as_view(),
+        name="thread-list",
         kwargs={"is_index": False},
     ),
     path(
         "threads/<slug:filter>/",
-        threads,
-        name="threads",
+        ThreadListView.as_view(),
+        name="thread-list",
     ),
     path(
         "c/<slug:slug>/<int:category_id>/",

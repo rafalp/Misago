@@ -13,7 +13,7 @@ DISABLED_CHECKBOX_HTML = '<input type="checkbox" disabled />'
 def test_site_threads_list_shows_noscript_moderation_form_to_moderators(
     moderator_client,
 ):
-    response = moderator_client.get(reverse("misago:threads"))
+    response = moderator_client.get(reverse("misago:thread-list"))
     assert_contains(response, MODERATION_FORM_HTML)
 
 
@@ -26,7 +26,7 @@ def test_category_threads_list_shows_noscript_moderation_form_to_moderators(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_shows_fixed_moderation_form_to_moderators(moderator_client):
-    response = moderator_client.get(reverse("misago:threads"))
+    response = moderator_client.get(reverse("misago:thread-list"))
     assert_contains(response, MODERATION_FIXED_HTML)
 
 
@@ -39,7 +39,7 @@ def test_category_threads_list_shows_fixed_moderation_form_to_moderators(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_doesnt_show_moderation_to_users(user_client):
-    response = user_client.get(reverse("misago:threads"))
+    response = user_client.get(reverse("misago:thread-list"))
     assert_not_contains(response, MODERATION_FORM_HTML)
     assert_not_contains(response, MODERATION_FIXED_HTML)
 
@@ -54,7 +54,7 @@ def test_category_threads_list_doesnt_show_moderation_to_users(
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_doesnt_show_moderation_to_guests(user_client):
-    response = user_client.get(reverse("misago:threads"))
+    response = user_client.get(reverse("misago:thread-list"))
     assert_not_contains(response, MODERATION_FORM_HTML)
     assert_not_contains(response, MODERATION_FIXED_HTML)
 
@@ -87,7 +87,7 @@ def test_site_threads_list_shows_threads_checkboxes_to_global_moderators(
 ):
     thread = thread_factory(default_category)
 
-    response = moderator_client.get(reverse("misago:threads"))
+    response = moderator_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_contains(response, "threads-list-item-col-checkbox")
     assert_not_contains(response, DISABLED_CHECKBOX_HTML)
@@ -115,7 +115,7 @@ def test_site_threads_list_shows_threads_checkboxes_to_category_moderators(
     )
     thread = thread_factory(default_category)
 
-    response = user_client.get(reverse("misago:threads"))
+    response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_contains(response, "threads-list-item-col-checkbox")
     assert_not_contains(response, DISABLED_CHECKBOX_HTML)
@@ -148,7 +148,7 @@ def test_site_threads_list_shows_disabled_threads_checkboxes_to_other_category_m
     )
     thread = thread_factory(child_category)
 
-    response = user_client.get(reverse("misago:threads"))
+    response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_contains(response, "threads-list-item-col-checkbox")
     assert_contains(response, DISABLED_CHECKBOX_HTML)
@@ -177,11 +177,11 @@ def test_site_threads_list_executes_single_stage_moderation_action(
     thread = thread_factory(default_category)
 
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": [thread.id]},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:threads")
+    assert response["location"] == reverse("misago:thread-list")
 
     thread.refresh_from_db()
     assert thread.is_closed
@@ -210,7 +210,7 @@ def test_site_threads_list_executes_single_stage_moderation_action_in_htmx(
     thread = thread_factory(default_category)
 
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
@@ -247,13 +247,13 @@ def test_site_threads_list_executes_multi_stage_moderation_action(
     thread = thread_factory(default_category)
 
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "move", "threads": [thread.id]},
     )
     assert_contains(response, "Move threads")
 
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {
             "moderation": "move",
             "threads": [thread.id],
@@ -262,7 +262,7 @@ def test_site_threads_list_executes_multi_stage_moderation_action(
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:threads")
+    assert response["location"] == reverse("misago:thread-list")
 
     thread.refresh_from_db()
     assert thread.category == child_category
@@ -302,14 +302,14 @@ def test_site_threads_list_executes_multi_stage_moderation_action_in_htmx(
     thread = thread_factory(default_category)
 
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "move", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Move threads")
 
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {
             "moderation": "move",
             "threads": [thread.id],
@@ -359,7 +359,7 @@ def test_site_threads_list_moderation_returns_error_for_user(
     thread = thread_factory(default_category)
 
     response = user_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": [thread.id]},
     )
     assert_contains(response, "Invalid moderation action.")
@@ -390,7 +390,7 @@ def test_site_threads_list_moderation_returns_error_for_user_in_htmx(
     thread = thread_factory(default_category)
 
     response = user_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
@@ -423,7 +423,7 @@ def test_site_threads_list_moderation_returns_error_for_guest(
     thread = thread_factory(default_category)
 
     response = client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": [thread.id]},
     )
     assert_contains(response, "Invalid moderation action.")
@@ -454,7 +454,7 @@ def test_site_threads_list_moderation_returns_error_for_guest_in_htmx(
     thread = thread_factory(default_category)
 
     response = client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
@@ -487,7 +487,7 @@ def test_site_threads_list_returns_error_for_invalid_moderation_action(
     thread = thread_factory(default_category)
 
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "invalid", "threads": [thread.id]},
     )
     assert_contains(response, "Invalid moderation action.")
@@ -512,7 +512,7 @@ def test_site_threads_list_returns_error_for_invalid_moderation_action_in_htmx(
     thread = thread_factory(default_category)
 
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "invalid", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
@@ -539,7 +539,7 @@ def test_site_threads_list_returns_error_for_empty_moderation_action(
     thread = thread_factory(default_category)
 
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "", "threads": [thread.id]},
     )
     assert_contains(response, "Invalid moderation action.")
@@ -564,7 +564,7 @@ def test_site_threads_list_returns_error_for_empty_moderation_action_in_htmx(
     thread = thread_factory(default_category)
 
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
@@ -587,7 +587,7 @@ def test_category_threads_returns_error_for_empty_moderation_action_in_htmx(
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_returns_error_for_empty_threads_selection(moderator_client):
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": []},
     )
     assert_contains(response, "No valid threads selected.")
@@ -608,7 +608,7 @@ def test_site_threads_list_returns_error_for_empty_threads_selection_in_htmx(
     moderator_client,
 ):
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": []},
         headers={"hx-request": "true"},
     )
@@ -631,7 +631,7 @@ def test_site_threads_list_returns_error_for_invalid_threads_selection(
     moderator_client,
 ):
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": "invalid"},
     )
     assert_contains(response, "No valid threads selected.")
@@ -652,7 +652,7 @@ def test_site_threads_list_returns_error_for_invalid_threads_selection_in_htmx(
     moderator_client,
 ):
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": "invalid"},
         headers={"hx-request": "true"},
     )
@@ -675,7 +675,7 @@ def test_site_threads_list_returns_error_for_invalid_threads_ids_in_selection(
     moderator_client,
 ):
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": ["invalid"]},
     )
     assert_contains(response, "No valid threads selected.")
@@ -696,7 +696,7 @@ def test_site_threads_list_returns_error_for_invalid_threads_ids_in_selection_in
     moderator_client,
 ):
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": ["invalid"]},
         headers={"hx-request": "true"},
     )
@@ -719,7 +719,7 @@ def test_site_threads_list_returns_error_for_not_existing_threads_ids_in_selecti
     moderator_client,
 ):
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": [42]},
     )
     assert_contains(response, "No valid threads selected.")
@@ -740,7 +740,7 @@ def test_site_threads_list_returns_error_for_not_existing_threads_ids_in_selecti
     moderator_client,
 ):
     response = moderator_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": [42]},
         headers={"hx-request": "true"},
     )
@@ -770,7 +770,7 @@ def test_site_threads_list_returns_error_for_thread_in_selection_user_cant_moder
     thread = thread_factory(child_category)
 
     response = user_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": [thread.id]},
     )
     assert_contains(
@@ -818,7 +818,7 @@ def test_site_threads_list_returns_error_for_thread_in_selection_user_cant_moder
     thread = thread_factory(child_category)
 
     response = user_client.post(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         {"moderation": "close", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )

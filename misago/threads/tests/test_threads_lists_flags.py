@@ -10,7 +10,7 @@ def test_site_threads_list_shows_thread_globally_pinned_flag(
 ):
     thread = thread_factory(default_category, weight=2)
 
-    response = client.get(reverse("misago:threads"))
+    response = client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-pinned-globally")
@@ -33,7 +33,7 @@ def test_site_threads_list_doesnt_show_users_thread_ghost_pinned_flag(
 ):
     thread = thread_factory(default_category, weight=1)
 
-    response = user_client.get(reverse("misago:threads"))
+    response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-pinned-locally")
@@ -56,7 +56,7 @@ def test_site_threads_list_shows_moderators_thread_ghost_pinned_flag(
 ):
     thread = thread_factory(default_category, weight=1)
 
-    response = moderator_client.get(reverse("misago:threads"))
+    response = moderator_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-pinned-locally-elsewhere")
@@ -90,7 +90,7 @@ def test_site_threads_list_doesnt_show_thread_pinned_flag_for_unpinned_thread(
 ):
     thread = thread_factory(default_category)
 
-    response = client.get(reverse("misago:threads"))
+    response = client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-pinned")
@@ -113,7 +113,7 @@ def test_site_threads_list_shows_moderators_thread_has_unapproved_posts_flag(
 ):
     thread = thread_factory(default_category, has_unapproved_posts=True)
 
-    response = moderator_client.get(reverse("misago:threads"))
+    response = moderator_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-unapproved")
@@ -136,7 +136,7 @@ def test_site_threads_list_shows_moderators_thread_is_unapproved_flag(
 ):
     thread = thread_factory(default_category, is_unapproved=True)
 
-    response = moderator_client.get(reverse("misago:threads"))
+    response = moderator_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-unapproved")
@@ -159,7 +159,7 @@ def test_site_threads_list_shows_moderators_thread_has_unapproved_posts_flag(
 ):
     thread = thread_factory(default_category, has_unapproved_posts=True)
 
-    response = moderator_client.get(reverse("misago:threads"))
+    response = moderator_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-unapproved")
@@ -182,7 +182,7 @@ def test_site_threads_list_doesnt_show_user_thread_has_unapproved_posts_flag(
 ):
     thread = thread_factory(default_category, has_unapproved_posts=True)
 
-    response = user_client.get(reverse("misago:threads"))
+    response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-unapproved")

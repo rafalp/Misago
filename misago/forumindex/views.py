@@ -4,7 +4,7 @@ from django.http import Http404
 from django.utils.translation import pgettext_lazy
 
 from ..categories.views import index as categories
-from ..threads.views.list import threads
+from ..threads.views.list import ThreadListView
 
 
 IndexView = Tuple[str, callable]
@@ -31,7 +31,7 @@ index_views = IndexViews()
 index_views.add_index_view(
     "threads",
     pgettext_lazy("index view choice", "Threads"),
-    threads,
+    ThreadListView.as_view(),
 )
 index_views.add_index_view(
     "categories",

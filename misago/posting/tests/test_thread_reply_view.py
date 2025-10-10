@@ -130,7 +130,7 @@ def test_thread_reply_view_shows_error_403_to_users_without_in_closed_thread_per
             kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
     )
-    assert_contains(response, "This thread is closed.", 403)
+    assert_contains(response, "This thread is locked", 403)
 
 
 def test_thread_reply_view_displays_posting_form(user_client, thread):

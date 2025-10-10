@@ -8,13 +8,13 @@ from ...test import assert_contains, assert_not_contains
 
 @override_dynamic_settings(index_view="categories")
 def test_threads_list_displays_start_thread_button_to_guest_with_permission(db, client):
-    response = client.get(reverse("misago:threads"))
+    response = client.get(reverse("misago:thread-list"))
     assert_contains(response, reverse("misago:thread-start"))
 
 
 @override_dynamic_settings(index_view="categories")
 def test_threads_list_displays_start_thread_button_to_user_with_permission(user_client):
-    response = user_client.get(reverse("misago:threads"))
+    response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, reverse("misago:thread-start"))
 
 
@@ -63,7 +63,7 @@ def test_threads_list_hides_start_thread_button_from_guest_without_permission(
         permission=CategoryPermission.START,
     ).delete()
 
-    response = client.get(reverse("misago:threads"))
+    response = client.get(reverse("misago:thread-list"))
     assert_not_contains(response, reverse("misago:thread-start"))
 
 
@@ -76,7 +76,7 @@ def test_threads_list_hides_start_thread_button_from_user_without_permission(
         permission=CategoryPermission.START,
     ).delete()
 
-    response = user_client.get(reverse("misago:threads"))
+    response = user_client.get(reverse("misago:thread-list"))
     assert_not_contains(response, reverse("misago:thread-start"))
 
 

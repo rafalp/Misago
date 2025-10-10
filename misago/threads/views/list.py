@@ -95,8 +95,8 @@ class ListView(View):
     template_name_htmx: str
     moderation_page_template_name: str
     moderation_modal_template_name: str
-    threads_component_template_name = "misago/threads_list/index.html"
-    new_threads_template_name = "misago/threads/poll_new.html"
+    list_items_component_template_name = "misago/thread_list/list_items.html"
+    new_threads_template_name = "misago/thread_list/poll_new.html"
 
     def dispatch(
         self,
@@ -368,12 +368,12 @@ class ListView(View):
         return link
 
 
-class ThreadsListView(ListView):
-    template_name = "misago/threads/index.html"
-    template_name_htmx = "misago/threads/partial.html"
-    mark_as_read_template_name = "misago/threads/mark_as_read_page.html"
-    moderation_page_template_name = "misago/threads/moderation_page.html"
-    moderation_modal_template_name = "misago/threads/moderation_modal.html"
+class ThreadListView(ListView):
+    template_name = "misago/thread_list/index.html"
+    template_name_htmx = "misago/thread_list/partial.html"
+    mark_as_read_template_name = "misago/thread_list/mark_as_read_page.html"
+    moderation_page_template_name = "misago/thread_list/moderation_page.html"
+    moderation_modal_template_name = "misago/thread_list/moderation_modal.html"
 
     def dispatch(
         self,
@@ -467,7 +467,7 @@ class ThreadsListView(ListView):
 
             return {
                 "categories": get_categories_data(request),
-                "template_name": "misago/threads/subcategories_full.html",
+                "template_name": "misago/thread_list/subcategories_full.html",
             }
 
         if component == CategoryChildrenComponent.DROPDOWN:
@@ -544,7 +544,7 @@ class ThreadsListView(ListView):
             items.append(thread_data)
 
         return {
-            "template_name": self.threads_component_template_name,
+            "template_name": self.list_items_component_template_name,
             "latest_post": self.get_threads_latest_post_id(threads_list),
             "active_filter": active_filter,
             "filters": filters,
@@ -559,7 +559,7 @@ class ThreadsListView(ListView):
         }
 
     def get_filters_base_url(self) -> str:
-        return reverse("misago:threads")
+        return reverse("misago:thread-list")
 
     def get_filters_clear_url(self, request: HttpRequest) -> str:
         if request.settings.index_view == "threads":
@@ -645,9 +645,9 @@ class ThreadsListView(ListView):
             return reverse("misago:index")
 
         if kwargs.get("filter"):
-            return reverse("misago:threads", kwargs={"filter": kwargs["filter"]})
+            return reverse("misago:thread-list", kwargs={"filter": kwargs["filter"]})
 
-        return reverse("misago:threads")
+        return reverse("misago:thread-list")
 
     def get_start_thread_url(self, request: HttpRequest) -> str | None:
         if request.user_permissions.categories[CategoryPermission.START]:
@@ -724,7 +724,7 @@ class CategoryThreadsListView(ListView):
     template_name_htmx = "misago/category/partial.html"
     mark_as_read_template_name = "misago/category/mark_as_read_page.html"
     moderation_page_template_name = "misago/category/moderation_page.html"
-    moderation_modal_template_name = "misago/threads/moderation_modal.html"
+    moderation_modal_template_name = "misago/thread_list/moderation_modal.html"
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
         if "mark_as_read" in request.POST:
@@ -992,7 +992,7 @@ class CategoryThreadsListView(ListView):
             mark_category_read(request.user, category)
 
         return {
-            "template_name": self.threads_component_template_name,
+            "template_name": self.list_items_component_template_name,
             "latest_post": self.get_threads_latest_post_id(threads_list),
             "active_filter": active_filter,
             "filters": filters,
@@ -1247,5 +1247,4 @@ class CategoryThreadsListView(ListView):
         return metatags
 
 
-threads = ThreadsListView.as_view()
 category_threads = CategoryThreadsListView.as_view()

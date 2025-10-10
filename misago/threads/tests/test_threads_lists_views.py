@@ -12,19 +12,19 @@ from ...test import assert_contains, assert_not_contains
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_renders_empty_to_guests(db, client):
-    response = client.get(reverse("misago:threads"))
+    response = client.get(reverse("misago:thread-list"))
     assert_contains(response, "No threads have been started yet")
 
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_renders_empty_to_users(user_client):
-    response = user_client.get(reverse("misago:threads"))
+    response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, "No threads have been started yet")
 
 
 @override_dynamic_settings(index_view="categories")
 def test_site_threads_list_renders_empty_to_moderators(moderator_client):
-    response = moderator_client.get(reverse("misago:threads"))
+    response = moderator_client.get(reverse("misago:thread-list"))
     assert_contains(response, "No threads have been started yet")
 
 
@@ -87,7 +87,7 @@ def test_threads_list_displays_thread_to_user(
     thread_factory, default_category, user_client
 ):
     thread = thread_factory(default_category)
-    response = user_client.get(reverse("misago:threads"))
+    response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
 
 
@@ -96,7 +96,7 @@ def test_threads_list_displays_thread_to_anonymous_user(
     thread_factory, default_category, client
 ):
     thread = thread_factory(default_category)
-    response = client.get(reverse("misago:threads"))
+    response = client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
 
 
@@ -188,7 +188,7 @@ def test_category_threads_list_excludes_child_category_thread_if_list_children_t
 @override_dynamic_settings(index_view="categories")
 def test_threads_list_displays_empty_in_htmx(user_client):
     response = user_client.get(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
@@ -200,7 +200,7 @@ def test_threads_list_displays_thread_in_htmx(
 ):
     thread = thread_factory(default_category)
     response = user_client.get(
-        reverse("misago:threads"),
+        reverse("misago:thread-list"),
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
@@ -233,7 +233,7 @@ def test_threads_list_displays_thread_with_animation_in_htmx(
 ):
     thread = thread_factory(default_category)
     response = user_client.get(
-        reverse("misago:threads") + "?animate_new=0",
+        reverse("misago:thread-list") + "?animate_new=0",
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
@@ -247,7 +247,7 @@ def test_threads_list_displays_thread_without_animation_in_htmx(
 ):
     thread = thread_factory(default_category)
     response = user_client.get(
-        reverse("misago:threads") + f"?animate_new={thread.last_post_id + 1}",
+        reverse("misago:thread-list") + f"?animate_new={thread.last_post_id + 1}",
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "<h1>")
@@ -261,7 +261,7 @@ def test_threads_list_displays_thread_without_animation_without_htmx(
 ):
     thread = thread_factory(default_category)
     response = user_client.get(
-        reverse("misago:threads") + "?animate_new=0",
+        reverse("misago:thread-list") + "?animate_new=0",
     )
     assert_contains(response, "<h1>")
     assert_contains(response, thread.title)
@@ -311,7 +311,9 @@ def test_threads_list_raises_404_error_if_filter_is_invalid(
     thread_factory, default_category, user, user_client
 ):
     thread_factory(default_category, starter=user)
-    response = user_client.get(reverse("misago:threads", kwargs={"filter": "invalid"}))
+    response = user_client.get(
+        reverse("misago:thread-list", kwargs={"filter": "invalid"})
+    )
     assert response.status_code == 404
 
 
@@ -322,7 +324,7 @@ def test_threads_list_filters_threads(
     visible_thread = thread_factory(default_category, starter=user)
     hidden_thread = thread_factory(default_category)
 
-    response = user_client.get(reverse("misago:threads", kwargs={"filter": "my"}))
+    response = user_client.get(reverse("misago:thread-list", kwargs={"filter": "my"}))
     assert_contains(response, visible_thread.title)
     assert_not_contains(response, hidden_thread.title)
 
@@ -334,21 +336,21 @@ def test_index_threads_list_filters_threads(
     visible_thread = thread_factory(default_category, starter=user)
     hidden_thread = thread_factory(default_category)
 
-    response = user_client.get(reverse("misago:threads", kwargs={"filter": "my"}))
+    response = user_client.get(reverse("misago:thread-list", kwargs={"filter": "my"}))
     assert_contains(response, visible_thread.title)
     assert_not_contains(response, hidden_thread.title)
 
 
 @override_dynamic_settings(index_view="categories")
 def test_threads_list_builds_valid_filters_urls(user_client):
-    response = user_client.get(reverse("misago:threads"))
-    assert_contains(response, reverse("misago:threads", kwargs={"filter": "my"}))
+    response = user_client.get(reverse("misago:thread-list"))
+    assert_contains(response, reverse("misago:thread-list", kwargs={"filter": "my"}))
 
 
 @override_dynamic_settings(index_view="threads")
 def test_index_threads_list_builds_valid_filters_urls(user_client):
     response = user_client.get(reverse("misago:index"))
-    assert_contains(response, reverse("misago:threads", kwargs={"filter": "my"}))
+    assert_contains(response, reverse("misago:thread-list", kwargs={"filter": "my"}))
 
 
 def test_category_threads_list_raises_404_error_if_filter_is_invalid(
@@ -393,10 +395,10 @@ def test_category_threads_list_filters_threads(
 def test_site_threads_list_redirects_to_last_page_for_invalid_cursor(
     mock_pagination, db, client
 ):
-    response = client.get(reverse("misago:threads"))
+    response = client.get(reverse("misago:thread-list"))
 
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:threads") + "?cursor=10"
+    assert response["location"] == reverse("misago:thread-list") + "?cursor=10"
 
     mock_pagination.assert_called_once()
 
@@ -468,7 +470,7 @@ def test_site_threads_list_renders_unread_thread(
 
     unread_thread = thread_factory(default_category)
 
-    response = user_client.get(reverse("misago:threads"))
+    response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, "Has unread posts")
     assert_contains(response, unread_thread.title)
 
