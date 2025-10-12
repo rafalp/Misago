@@ -4,6 +4,7 @@ from unittest.mock import patch
 from django.urls import reverse
 
 from ...pagination.cursor import EmptyPageError
+from ...permissions.models import Moderator
 from ...readtracker.models import ReadCategory, ReadThread
 from ...test import assert_contains, assert_not_contains
 from ...threads.models import Thread
@@ -25,19 +26,50 @@ def test_private_thread_list_view_shows_error_403_to_users_without_private_threa
     assert_contains(response, "You can&#x27;t use private threads.", 403)
 
 
+def test_private_thread_list_view_displays_start_thread_button_to_user_with_permission(
+    user_client,
+):
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, reverse("misago:private-thread-start"))
+
+
+def test_private_thread_list_view_hides_start_thread_button_from_user_without_permission(
+    user, user_client
+):
+    user.group.can_start_private_threads = False
+    user.group.save()
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_not_contains(response, reverse("misago:private-thread-start"))
+
+
 def test_private_thread_list_view_renders_empty_to_users(user_client):
     response = user_client.get(reverse("misago:private-thread-list"))
     assert_contains(response, "Private threads")
     assert_contains(response, "You aren't participating in any private threads")
 
 
-def test_private_thread_list_view_renders_empty_to_moderators(moderator_client):
+def test_private_thread_list_view_renders_empty_to_private_threads_moderators(
+    user_client, user
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, "Private threads")
+    assert_contains(response, "You aren't participating in any private threads")
+
+
+def test_private_thread_list_view_renders_empty_to_global_moderators(moderator_client):
     response = moderator_client.get(reverse("misago:private-thread-list"))
     assert_contains(response, "Private threads")
     assert_contains(response, "You aren't participating in any private threads")
 
 
-def test_private_thread_list_view_displays_empty_in_htmx_request(user_client):
+def test_private_thread_list_view_renders_empty_in_htmx_request(user_client):
     response = user_client.get(
         reverse("misago:private-thread-list"),
         headers={"hx-request": "true"},
@@ -45,7 +77,7 @@ def test_private_thread_list_view_displays_empty_in_htmx_request(user_client):
     assert_not_contains(response, "<h1>")
 
 
-def test_private_thread_list_view_displays_private_thread(
+def test_private_thread_list_view_displays_deleted_user_private_thread(
     thread_factory, private_threads_category, user, user_client
 ):
     thread = thread_factory(private_threads_category)
@@ -56,6 +88,16 @@ def test_private_thread_list_view_displays_private_thread(
 
 
 def test_private_thread_list_view_displays_user_private_thread(
+    thread_factory, private_threads_category, user, user_client
+):
+    thread = thread_factory(private_threads_category, starter=user)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, thread.title)
+
+
+def test_private_thread_list_view_displays_other_user_private_thread(
     thread_factory, private_threads_category, user, user_client, other_user
 ):
     thread = thread_factory(private_threads_category, starter=other_user)
