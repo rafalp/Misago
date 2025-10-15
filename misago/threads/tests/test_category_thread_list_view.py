@@ -400,6 +400,122 @@ def test_category_thread_list_view_renders_empty_to_global_moderators_in_htmx(
     assert_contains(response, "No threads have been started in this category yet")
 
 
+def test_category_thread_list_view_for_child_category_renders_empty_to_guests(
+    client, child_category
+):
+    response = client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
+        )
+    )
+    assert_contains(response, child_category.name)
+    assert_contains(response, "No threads have been started in this category yet")
+
+
+def test_category_thread_list_view_for_child_category_renders_empty_to_users(
+    user_client, child_category
+):
+    response = user_client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
+        )
+    )
+    assert_contains(response, child_category.name)
+    assert_contains(response, "No threads have been started in this category yet")
+
+
+def test_category_thread_list_view_for_child_category_renders_empty_to_category_moderators(
+    user_client, user, child_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[child_category.id],
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
+        )
+    )
+    assert_contains(response, child_category.name)
+    assert_contains(response, "No threads have been started in this category yet")
+
+
+def test_category_thread_list_view_for_child_category_renders_empty_to_global_moderators(
+    moderator_client, child_category
+):
+    response = moderator_client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
+        )
+    )
+    assert_contains(response, child_category.name)
+    assert_contains(response, "No threads have been started in this category yet")
+
+
+def test_category_thread_list_view_for_child_category_renders_empty_to_guests_in_htmx(
+    client, child_category
+):
+    response = client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
+        ),
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "No threads have been started in this category yet")
+
+
+def test_category_thread_list_view_for_child_category_renders_empty_to_users_in_htmx(
+    user_client, child_category
+):
+    response = user_client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
+        ),
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "No threads have been started in this category yet")
+
+
+def test_category_thread_list_view_for_child_category_renders_empty_to_category_moderators_in_htmx(
+    user_client, user, child_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[child_category.id],
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
+        ),
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "No threads have been started in this category yet")
+
+
+def test_category_thread_list_view_for_child_category_renders_empty_to_global_moderators_in_htmx(
+    moderator_client, child_category
+):
+    response = moderator_client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={"category_id": child_category.id, "slug": child_category.slug},
+        ),
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "No threads have been started in this category yet")
+
+
 def test_category_thread_list_view_displays_deleted_user_thread_to_anonymous_user(
     thread_factory, client, default_category
 ):
