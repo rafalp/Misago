@@ -602,6 +602,61 @@ def test_category_thread_list_view_displays_thread_with_different_starter_and_la
     assert_contains(response, thread.last_poster_name)
 
 
+def test_category_thread_list_view_includes_child_category_thread(
+    thread_factory, default_category, user, user_client, other_user
+):
+    default_category.list_children_threads = True
+    default_category.save()
+
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    thread = thread_factory(child_category, starter=other_user)
+
+    CategoryGroupPermission.objects.create(
+        category=child_category,
+        group=user.group,
+        permission=CategoryPermission.SEE,
+    )
+    CategoryGroupPermission.objects.create(
+        category=child_category,
+        group=user.group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_excludes_child_category_thread_if_list_children_threads_is_false(
+    thread_factory, default_category, user, user_client, other_user
+):
+    default_category.list_children_threads = False
+    default_category.save()
+
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    thread = thread_factory(child_category, starter=other_user)
+
+    CategoryGroupPermission.objects.create(
+        category=child_category,
+        group=user.group,
+        permission=CategoryPermission.SEE,
+    )
+    CategoryGroupPermission.objects.create(
+        category=child_category,
+        group=user.group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, "No threads have been started in this category yet")
+    assert_not_contains(response, thread.title)
+
+
 def test_category_thread_list_view_displays_thread_in_htmx(
     thread_factory, user_client, default_category
 ):
