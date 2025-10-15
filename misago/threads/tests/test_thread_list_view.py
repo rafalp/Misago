@@ -258,9 +258,9 @@ def test_thread_list_view_displays_user_thread_to_anonymous_user(
 
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_displays_user_thread_to_user(
-    thread_factory, user_client, user, default_category
+    thread_factory, user_client, other_user, default_category
 ):
-    thread = thread_factory(default_category, starter=user)
+    thread = thread_factory(default_category, starter=other_user)
     response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
 
@@ -286,6 +286,16 @@ def test_thread_list_view_displays_user_thread_to_global_moderator(
 ):
     thread = thread_factory(default_category, starter=user)
     response = moderator_client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_user_own_thread_to_user(
+    thread_factory, user_client, user, default_category
+):
+    thread = thread_factory(default_category, starter=user)
+
+    response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
 
 

@@ -567,6 +567,8 @@ def test_category_thread_list_view_displays_deleted_user_thread_to_anonymous_use
 ):
     thread = thread_factory(default_category)
     response = client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
 
@@ -575,6 +577,8 @@ def test_category_thread_list_view_displays_deleted_user_thread_to_user(
 ):
     thread = thread_factory(default_category)
     response = user_client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
 
@@ -589,6 +593,8 @@ def test_category_thread_list_view_displays_deleted_user_thread_to_category_mode
 
     thread = thread_factory(default_category)
     response = user_client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
 
@@ -597,6 +603,65 @@ def test_category_thread_list_view_displays_deleted_user_thread_to_global_modera
 ):
     thread = thread_factory(default_category)
     response = moderator_client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_user_thread_to_anonymous_user(
+    thread_factory, client, user, default_category
+):
+    thread = thread_factory(default_category, starter=user)
+    response = client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_user_thread_to_user(
+    thread_factory, user_client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user)
+    response = user_client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_user_thread_to_category_moderator(
+    thread_factory, user_client, user, other_user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    thread = thread_factory(default_category, starter=other_user)
+    response = user_client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_user_thread_to_global_moderator(
+    thread_factory, moderator_client, user, default_category
+):
+    thread = thread_factory(default_category, starter=user)
+    response = moderator_client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_user_own_thread_to_user(
+    thread_factory, user_client, user, default_category
+):
+    thread = thread_factory(default_category, starter=user)
+
+    response = user_client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
 

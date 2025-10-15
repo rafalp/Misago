@@ -77,7 +77,7 @@ def test_private_thread_list_view_renders_empty_in_htmx_request(user_client):
     assert_not_contains(response, "<h1>")
 
 
-def test_private_thread_list_view_displays_deleted_user_private_thread_to_user(
+def test_private_thread_list_view_displays_deleted_user_thread_to_user(
     thread_factory, user_client, user, private_threads_category
 ):
     thread = thread_factory(private_threads_category)
@@ -87,7 +87,7 @@ def test_private_thread_list_view_displays_deleted_user_private_thread_to_user(
     assert_contains(response, thread.title)
 
 
-def test_private_thread_list_view_displays_deleted_user_private_thread_to_private_threads_moderator(
+def test_private_thread_list_view_displays_deleted_user_thread_to_private_threads_moderator(
     thread_factory, user_client, user, private_threads_category
 ):
     Moderator.objects.create(
@@ -103,7 +103,7 @@ def test_private_thread_list_view_displays_deleted_user_private_thread_to_privat
     assert_contains(response, thread.title)
 
 
-def test_private_thread_list_view_displays_deleted_user_private_thread_to_global_moderator(
+def test_private_thread_list_view_displays_deleted_user_thread_to_global_moderator(
     thread_factory, moderator_client, moderator, private_threads_category
 ):
     thread = thread_factory(private_threads_category)
@@ -113,18 +113,18 @@ def test_private_thread_list_view_displays_deleted_user_private_thread_to_global
     assert_contains(response, thread.title)
 
 
-def test_private_thread_list_view_displays_user_private_thread_to_user(
-    thread_factory, user_client, user, private_threads_category
+def test_private_thread_list_view_displays_user_thread_to_user(
+    thread_factory, user_client, user, other_user, private_threads_category
 ):
-    thread = thread_factory(private_threads_category, starter=user)
+    thread = thread_factory(private_threads_category, starter=other_user)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(reverse("misago:private-thread-list"))
     assert_contains(response, thread.title)
 
 
-def test_private_thread_list_view_displays_user_private_thread_to_private_threads_moderator(
-    thread_factory, user_client, user, private_threads_category
+def test_private_thread_list_view_displays_user_thread_to_private_threads_moderator(
+    thread_factory, user_client, user, other_user, private_threads_category
 ):
     Moderator.objects.create(
         user=user,
@@ -132,7 +132,7 @@ def test_private_thread_list_view_displays_user_private_thread_to_private_thread
         private_threads=True,
     )
 
-    thread = thread_factory(private_threads_category, starter=user)
+    thread = thread_factory(private_threads_category, starter=other_user)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(reverse("misago:private-thread-list"))
@@ -149,10 +149,10 @@ def test_private_thread_list_view_displays_user_private_thread_to_global_moderat
     assert_contains(response, thread.title)
 
 
-def test_private_thread_list_view_displays_other_user_private_thread_to_user(
-    thread_factory, user_client, user, other_user, private_threads_category
+def test_private_thread_list_view_user_own_thread_to_user(
+    thread_factory, user_client, user, private_threads_category
 ):
-    thread = thread_factory(private_threads_category, starter=other_user)
+    thread = thread_factory(private_threads_category, starter=user)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(reverse("misago:private-thread-list"))
