@@ -342,6 +342,33 @@ def test_thread_list_view_displays_thread_with_different_starter_and_last_poster
 
 
 @override_dynamic_settings(index_view="categories")
+def test_thread_list_view_includes_child_category_thread(
+    thread_factory, client, guests_group, other_user, default_category
+):
+    default_category.list_children_threads = False
+    default_category.save()
+
+    child_category = Category(name="Child Category", slug="child-category")
+    child_category.insert_at(default_category, position="last-child", save=True)
+
+    thread = thread_factory(child_category, starter=other_user)
+
+    CategoryGroupPermission.objects.create(
+        category=child_category,
+        group=guests_group,
+        permission=CategoryPermission.SEE,
+    )
+    CategoryGroupPermission.objects.create(
+        category=child_category,
+        group=guests_group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+    response = client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
 def test_thread_list_view_doesnt_display_private_threads(
     user_client, user_private_thread
 ):

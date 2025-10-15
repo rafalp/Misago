@@ -603,7 +603,7 @@ def test_category_thread_list_view_displays_thread_with_different_starter_and_la
 
 
 def test_category_thread_list_view_includes_child_category_thread(
-    thread_factory, default_category, user, user_client, other_user
+    thread_factory, user_client, user, other_user, default_category
 ):
     default_category.list_children_threads = True
     default_category.save()
@@ -630,7 +630,7 @@ def test_category_thread_list_view_includes_child_category_thread(
 
 
 def test_category_thread_list_view_excludes_child_category_thread_if_list_children_threads_is_false(
-    thread_factory, default_category, user, user_client, other_user
+    thread_factory, user_client, user, other_user, default_category
 ):
     default_category.list_children_threads = False
     default_category.save()
