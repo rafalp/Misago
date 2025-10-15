@@ -127,6 +127,11 @@ def test_private_thread_list_view_displays_other_user_private_thread_to_user(
     assert_contains(response, thread.title)
 
 
+def test_private_thread_list_view_doesnt_display_threads(user_client, user_thread):
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_not_contains(response, user_thread.title)
+
+
 def test_private_thread_list_view_displays_thread_in_htmx(
     thread_factory, user_client, user, private_threads_category
 ):
@@ -172,7 +177,7 @@ def test_private_thread_list_view_displays_thread_without_animation_in_htmx(
     assert_not_contains(response, "threads-list-item-animate")
 
 
-def test_private_thread_list_view_displays_thread_without_animation_without_htmx(
+def test_private_thread_list_view_disables_animations_without_htmx(
     thread_factory, user_client, user, private_threads_category
 ):
     thread = thread_factory(private_threads_category)

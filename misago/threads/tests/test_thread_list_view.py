@@ -248,6 +248,14 @@ def test_thread_list_view_displays_deleted_user_thread_to_global_moderator(
 
 
 @override_dynamic_settings(index_view="categories")
+def test_thread_list_view_doesnt_display_private_threads(
+    user_client, user_private_thread
+):
+    response = user_client.get(reverse("misago:thread-list"))
+    assert_not_contains(response, user_private_thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
 def test_thread_list_view_displays_thread_in_htmx(
     thread_factory, user_client, default_category
 ):
@@ -292,7 +300,7 @@ def test_thread_list_view_displays_thread_without_animation_in_htmx(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_displays_thread_without_animation_without_htmx(
+def test_thread_list_view_disables_animations_without_htmx(
     thread_factory, user_client, default_category
 ):
     thread = thread_factory(default_category)
@@ -325,6 +333,28 @@ def test_thread_list_view_filters_threads(
     assert_not_contains(response, hidden_thread.title)
 
 
+@override_dynamic_settings(index_view="threads")
+def test_thread_list_view_on_site_index_raises_404_error_if_filter_is_invalid(
+    user_client,
+):
+    response = user_client.get(
+        reverse("misago:thread-list", kwargs={"filter": "invalid"})
+    )
+    assert response.status_code == 404
+
+
+@override_dynamic_settings(index_view="threads")
+def test_thread_list_view_on_site_index_filters_threads(
+    thread_factory, user_client, user, default_category
+):
+    visible_thread = thread_factory(default_category, starter=user)
+    hidden_thread = thread_factory(default_category)
+
+    response = user_client.get(reverse("misago:thread-list", kwargs={"filter": "my"}))
+    assert_contains(response, visible_thread.title)
+    assert_not_contains(response, hidden_thread.title)
+
+
 @patch("misago.threads.views.list.paginate_queryset", side_effect=EmptyPageError(10))
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_redirects_to_last_page_for_invalid_cursor(
@@ -334,6 +364,19 @@ def test_thread_list_view_redirects_to_last_page_for_invalid_cursor(
 
     assert response.status_code == 302
     assert response["location"] == reverse("misago:thread-list") + "?cursor=10"
+
+    mock_pagination.assert_called_once()
+
+
+@patch("misago.threads.views.list.paginate_queryset", side_effect=EmptyPageError(10))
+@override_dynamic_settings(index_view="threads")
+def test_thread_list_view_on_site_index_redirects_to_last_page_for_invalid_cursor(
+    mock_pagination, user_client
+):
+    response = user_client.get(reverse("misago:index"))
+
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:index") + "?cursor=10"
 
     mock_pagination.assert_called_once()
 

@@ -195,6 +195,35 @@ def test_category_thread_list_view_renders_if_global_moderator_cant_browse_it_bu
     assert_contains(response, "No threads have been started in this category yet")
 
 
+def test_category_thread_list_view_returns_error_404_for_private_threads_category(
+    client, private_threads_category
+):
+    response = client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={
+                "category_id": private_threads_category.id,
+                "slug": private_threads_category.slug,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_category_thread_list_view_returns_error_404_for_category_with_invalid_tree_id(
+    client, default_category
+):
+    Category.objects.filter(id=default_category.id).update(tree_id=9001)
+
+    response = client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
+        )
+    )
+    assert response.status_code == 404
+
+
 def test_category_thread_list_view_returns_redirect_to_valid_url_if_slug_is_invalid(
     client, default_category
 ):
@@ -452,7 +481,7 @@ def test_category_thread_list_view_displays_thread_without_animation_in_htmx(
     assert_not_contains(response, "threads-list-item-animate")
 
 
-def test_category_thread_list_view_displays_thread_without_animation_without_htmx(
+def test_category_thread_list_view_disables_animations_without_htmx(
     thread_factory, user_client, default_category
 ):
     category_url = default_category.get_absolute_url()
