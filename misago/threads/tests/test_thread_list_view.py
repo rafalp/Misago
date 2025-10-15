@@ -248,6 +248,100 @@ def test_thread_list_view_displays_deleted_user_thread_to_global_moderator(
 
 
 @override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_user_thread_to_anonymous_user(
+    thread_factory, client, user, default_category
+):
+    thread = thread_factory(default_category, starter=user)
+    response = client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_user_thread_to_user(
+    thread_factory, user_client, user, default_category
+):
+    thread = thread_factory(default_category, starter=user)
+    response = user_client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_user_thread_to_category_moderator(
+    thread_factory, user_client, user, other_user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    thread = thread_factory(default_category, starter=other_user)
+    response = user_client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_user_thread_to_global_moderator(
+    thread_factory, moderator_client, user, default_category
+):
+    thread = thread_factory(default_category, starter=user)
+    response = moderator_client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_thread_with_user_starter_and_deleted_last_poster(
+    thread_factory, thread_reply_factory, client, user, default_category
+):
+    thread = thread_factory(default_category, starter=user)
+    thread_reply_factory(thread)
+
+    response = client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+    assert_contains(response, thread.starter_name)
+    assert_contains(response, thread.last_poster_name)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_thread_with_deleted_starter_and_user_last_poster(
+    thread_factory, thread_reply_factory, client, user, default_category
+):
+    thread = thread_factory(default_category)
+    thread_reply_factory(thread, poster=user)
+
+    response = client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+    assert_contains(response, thread.starter_name)
+    assert_contains(response, thread.last_poster_name)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_thread_with_different_deleted_starter_and_last_poster(
+    thread_factory, thread_reply_factory, client, default_category
+):
+    thread = thread_factory(default_category, starter="SomeStarter")
+    thread_reply_factory(thread, poster="OtherPoster")
+
+    response = client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+    assert_contains(response, thread.starter_name)
+    assert_contains(response, thread.last_poster_name)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_thread_with_different_starter_and_last_poster(
+    thread_factory, thread_reply_factory, client, user, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user)
+    thread_reply_factory(thread, poster=user)
+
+    response = client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+    assert_contains(response, thread.starter_name)
+    assert_contains(response, thread.last_poster_name)
+
+
+@override_dynamic_settings(index_view="categories")
 def test_thread_list_view_doesnt_display_private_threads(
     user_client, user_private_thread
 ):

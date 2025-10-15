@@ -438,6 +438,54 @@ def test_category_thread_list_view_displays_deleted_user_thread_to_global_modera
     assert_contains(response, thread.title)
 
 
+def test_category_thread_list_view_displays_thread_with_user_starter_and_deleted_last_poster(
+    thread_factory, thread_reply_factory, client, user, default_category
+):
+    thread = thread_factory(default_category, starter=user)
+    thread_reply_factory(thread)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+    assert_contains(response, thread.starter_name)
+    assert_contains(response, thread.last_poster_name)
+
+
+def test_category_thread_list_view_displays_thread_with_deleted_starter_and_user_last_poster(
+    thread_factory, thread_reply_factory, client, user, default_category
+):
+    thread = thread_factory(default_category)
+    thread_reply_factory(thread, poster=user)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+    assert_contains(response, thread.starter_name)
+    assert_contains(response, thread.last_poster_name)
+
+
+def test_category_thread_list_view_displays_thread_with_different_deleted_starter_and_last_poster(
+    thread_factory, thread_reply_factory, client, default_category
+):
+    thread = thread_factory(default_category, starter="SomeStarter")
+    thread_reply_factory(thread, poster="OtherPoster")
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+    assert_contains(response, thread.starter_name)
+    assert_contains(response, thread.last_poster_name)
+
+
+def test_category_thread_list_view_displays_thread_with_different_starter_and_last_poster(
+    thread_factory, thread_reply_factory, client, user, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user)
+    thread_reply_factory(thread, poster=user)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+    assert_contains(response, thread.starter_name)
+    assert_contains(response, thread.last_poster_name)
+
+
 def test_category_thread_list_view_displays_thread_in_htmx(
     thread_factory, user_client, default_category
 ):

@@ -104,10 +104,10 @@ def test_private_thread_list_view_displays_deleted_user_private_thread_to_privat
 
 
 def test_private_thread_list_view_displays_deleted_user_private_thread_to_global_moderator(
-    thread_factory, moderator_client, user, private_threads_category
+    thread_factory, moderator_client, moderator, private_threads_category
 ):
     thread = thread_factory(private_threads_category)
-    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=moderator)
 
     response = moderator_client.get(reverse("misago:private-thread-list"))
     assert_contains(response, thread.title)
@@ -157,6 +157,73 @@ def test_private_thread_list_view_displays_other_user_private_thread_to_user(
 
     response = user_client.get(reverse("misago:private-thread-list"))
     assert_contains(response, thread.title)
+
+
+def test_private_thread_list_view_displays_thread_with_user_starter_and_deleted_last_poster(
+    thread_factory,
+    thread_reply_factory,
+    user_client,
+    user,
+    other_user,
+    private_threads_category,
+):
+    thread = thread_factory(private_threads_category, starter=other_user)
+    thread_reply_factory(thread)
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, thread.title)
+    assert_contains(response, thread.starter_name)
+    assert_contains(response, thread.last_poster_name)
+
+
+def test_private_thread_list_view_displays_thread_with_deleted_starter_and_user_last_poster(
+    thread_factory, thread_reply_factory, user_client, user, private_threads_category
+):
+    thread = thread_factory(private_threads_category)
+    thread_reply_factory(thread, poster=user)
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, thread.title)
+    assert_contains(response, thread.starter_name)
+    assert_contains(response, thread.last_poster_name)
+
+
+def test_private_thread_list_view_displays_thread_with_different_deleted_starter_and_last_poster(
+    thread_factory, thread_reply_factory, user_client, user, private_threads_category
+):
+    thread = thread_factory(private_threads_category, starter="SomeStarter")
+    thread_reply_factory(thread, poster="OtherPoster")
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, thread.title)
+    assert_contains(response, thread.starter_name)
+    assert_contains(response, thread.last_poster_name)
+
+
+def test_private_thread_list_view_displays_thread_with_different_starter_and_last_poster(
+    thread_factory,
+    thread_reply_factory,
+    user_client,
+    user,
+    moderator,
+    other_user,
+    private_threads_category,
+):
+    thread = thread_factory(private_threads_category, starter=other_user)
+    thread_reply_factory(thread, poster=moderator)
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, thread.title)
+    assert_contains(response, thread.starter_name)
+    assert_contains(response, thread.last_poster_name)
 
 
 def test_private_thread_list_view_doesnt_display_threads(user_client, user_thread):
