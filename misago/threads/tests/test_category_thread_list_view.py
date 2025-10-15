@@ -1,13 +1,15 @@
 from datetime import timedelta
+from unittest.mock import patch
 
 from django.urls import reverse
 
 from ...categories.enums import CategoryChildrenComponent
 from ...categories.models import Category
+from ...pagination.cursor import EmptyPageError
 from ...permissions.enums import CategoryPermission
-from ...permissions.models import CategoryGroupPermission
+from ...permissions.models import CategoryGroupPermission, Moderator
 from ...readtracker.models import ReadCategory, ReadThread
-from ...test import assert_contains
+from ...test import assert_contains, assert_not_contains
 
 
 def test_category_thread_list_view_returns_error_404_if_category_doesnt_exist(
@@ -279,6 +281,25 @@ def test_category_thread_list_view_renders_empty_to_users(
     assert_contains(response, "No threads have been started in this category yet")
 
 
+def test_category_thread_list_view_renders_empty_to_category_moderators(
+    user_client, user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
+        )
+    )
+    assert_contains(response, default_category.name)
+    assert_contains(response, "No threads have been started in this category yet")
+
+
 def test_category_thread_list_view_renders_empty_to_global_moderators(
     moderator_client, default_category
 ):
@@ -318,6 +339,25 @@ def test_category_thread_list_view_renders_empty_to_users_in_htmx(
     assert_contains(response, "No threads have been started in this category yet")
 
 
+def test_category_thread_list_view_renders_empty_to_category_moderators_in_htmx(
+    user_client, user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
+        ),
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "No threads have been started in this category yet")
+
+
 def test_category_thread_list_view_renders_empty_to_global_moderators_in_htmx(
     moderator_client, default_category
 ):
@@ -329,6 +369,164 @@ def test_category_thread_list_view_renders_empty_to_global_moderators_in_htmx(
         headers={"hx-request": "true"},
     )
     assert_contains(response, "No threads have been started in this category yet")
+
+
+def test_category_thread_list_view_displays_deleted_user_thread_to_anonymous_user(
+    thread_factory, client, default_category
+):
+    thread = thread_factory(default_category)
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_deleted_user_thread_to_user(
+    thread_factory, user_client, default_category
+):
+    thread = thread_factory(default_category)
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_deleted_user_thread_to_category_moderator(
+    thread_factory, user_client, user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    thread = thread_factory(default_category)
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_deleted_user_thread_to_global_moderator(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+    response = moderator_client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_thread_in_htmx(
+    thread_factory, user_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = user_client.get(
+        default_category.get_absolute_url(),
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_thread_with_animation_in_htmx(
+    thread_factory, user_client, default_category
+):
+    category_url = default_category.get_absolute_url()
+    thread = thread_factory(default_category)
+
+    response = user_client.get(
+        category_url + "?animate_new=0",
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, thread.title)
+    assert_contains(response, "threads-list-item-animate")
+
+
+def test_category_thread_list_view_displays_thread_without_animation_in_htmx(
+    thread_factory, user_client, default_category
+):
+    category_url = default_category.get_absolute_url()
+    thread = thread_factory(default_category)
+
+    response = user_client.get(
+        category_url + f"?animate_new={thread.last_post_id + 1}",
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "<h1>")
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "threads-list-item-animate")
+
+
+def test_category_thread_list_view_displays_thread_without_animation_without_htmx(
+    thread_factory, user_client, default_category
+):
+    category_url = default_category.get_absolute_url()
+    thread = thread_factory(default_category)
+
+    response = user_client.get(
+        category_url + "?animate_new=0",
+    )
+    assert_contains(response, "<h1>")
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "threads-list-item-animate")
+
+
+def test_category_thread_list_view_raises_404_error_if_filter_is_invalid(
+    user_client, default_category
+):
+    response = user_client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+                "filter": "invalid",
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_category_thread_list_view_filters_threads(
+    thread_factory, user_client, user, default_category
+):
+    visible_thread = thread_factory(default_category, starter=user)
+    hidden_thread = thread_factory(default_category)
+
+    response = user_client.get(
+        reverse(
+            "misago:category-thread-list",
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+                "filter": "my",
+            },
+        )
+    )
+    assert_contains(response, visible_thread.title)
+    assert_not_contains(response, hidden_thread.title)
+
+
+@patch("misago.threads.views.list.paginate_queryset", side_effect=EmptyPageError(10))
+def test_category_thread_list_view_redirects_to_last_page_for_invalid_cursor(
+    mock_pagination, user_client, default_category
+):
+    category_url = default_category.get_absolute_url()
+
+    response = user_client.get(category_url)
+
+    assert response.status_code == 302
+    assert response["location"] == category_url + "?cursor=10"
+
+    mock_pagination.assert_called_once()
+
+
+def test_category_thread_list_view_renders_unread_thread(
+    thread_factory, user, user_client, default_category
+):
+    user.joined_on = user.joined_on.replace(year=2012)
+    user.save()
+
+    unread_thread = thread_factory(default_category)
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, "Has unread posts")
+    assert_contains(response, unread_thread.title)
 
 
 def test_category_thread_list_view_marks_unread_category_without_unread_threads_as_read(

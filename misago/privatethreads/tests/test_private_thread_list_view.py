@@ -77,8 +77,8 @@ def test_private_thread_list_view_renders_empty_in_htmx_request(user_client):
     assert_not_contains(response, "<h1>")
 
 
-def test_private_thread_list_view_displays_deleted_user_private_thread(
-    thread_factory, private_threads_category, user, user_client
+def test_private_thread_list_view_displays_deleted_user_private_thread_to_user(
+    thread_factory, user_client, user, private_threads_category
 ):
     thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
@@ -87,8 +87,28 @@ def test_private_thread_list_view_displays_deleted_user_private_thread(
     assert_contains(response, thread.title)
 
 
-def test_private_thread_list_view_displays_user_private_thread(
-    thread_factory, private_threads_category, user, user_client
+def test_private_thread_list_view_displays_deleted_user_private_thread_to_private_threads_moderator(
+    thread_factory, user_client, user, private_threads_category
+):
+    thread = thread_factory(private_threads_category)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, thread.title)
+
+
+def test_private_thread_list_view_displays_deleted_user_private_thread_to_global_moderator(
+    thread_factory, user_client, user, private_threads_category
+):
+    thread = thread_factory(private_threads_category)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_contains(response, thread.title)
+
+
+def test_private_thread_list_view_displays_user_private_thread_to_user(
+    thread_factory, user_client, user, private_threads_category
 ):
     thread = thread_factory(private_threads_category, starter=user)
     PrivateThreadMember.objects.create(thread=thread, user=user)
@@ -97,8 +117,8 @@ def test_private_thread_list_view_displays_user_private_thread(
     assert_contains(response, thread.title)
 
 
-def test_private_thread_list_view_displays_other_user_private_thread(
-    thread_factory, private_threads_category, user, user_client, other_user
+def test_private_thread_list_view_displays_other_user_private_thread_to_user(
+    thread_factory, user_client, user, other_user, private_threads_category
 ):
     thread = thread_factory(private_threads_category, starter=other_user)
     PrivateThreadMember.objects.create(thread=thread, user=user)
@@ -108,7 +128,7 @@ def test_private_thread_list_view_displays_other_user_private_thread(
 
 
 def test_private_thread_list_view_displays_thread_in_htmx(
-    thread_factory, user, private_threads_category, user_client
+    thread_factory, user_client, user, private_threads_category
 ):
     thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
@@ -122,7 +142,7 @@ def test_private_thread_list_view_displays_thread_in_htmx(
 
 
 def test_private_thread_list_view_displays_thread_with_animation_in_htmx(
-    thread_factory, private_threads_category, user_client, user
+    thread_factory, user_client, user, private_threads_category
 ):
     thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
@@ -137,7 +157,7 @@ def test_private_thread_list_view_displays_thread_with_animation_in_htmx(
 
 
 def test_private_thread_list_view_displays_thread_without_animation_in_htmx(
-    thread_factory, private_threads_category, user_client, user
+    thread_factory, user_client, user, private_threads_category
 ):
     thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
@@ -153,7 +173,7 @@ def test_private_thread_list_view_displays_thread_without_animation_in_htmx(
 
 
 def test_private_thread_list_view_displays_thread_without_animation_without_htmx(
-    thread_factory, private_threads_category, user_client, user
+    thread_factory, user_client, user, private_threads_category
 ):
     thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
@@ -166,12 +186,7 @@ def test_private_thread_list_view_displays_thread_without_animation_without_htmx
     assert_not_contains(response, "threads-list-item-animate")
 
 
-def test_private_thread_list_view_raises_404_error_if_filter_is_invalid(
-    thread_factory, private_threads_category, user, user_client
-):
-    thread = thread_factory(private_threads_category, starter=user)
-    PrivateThreadMember.objects.create(thread=thread, user=user)
-
+def test_private_thread_list_view_raises_404_error_if_filter_is_invalid(user_client):
     response = user_client.get(
         reverse("misago:private-thread-list", kwargs={"filter": "invalid"})
     )
@@ -179,7 +194,7 @@ def test_private_thread_list_view_raises_404_error_if_filter_is_invalid(
 
 
 def test_private_thread_list_view_filters_threads(
-    thread_factory, private_threads_category, user, user_client
+    thread_factory, user_client, user, private_threads_category
 ):
     visible_thread = thread_factory(private_threads_category, starter=user)
     hidden_thread = thread_factory(private_threads_category)

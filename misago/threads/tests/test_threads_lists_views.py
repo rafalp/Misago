@@ -10,36 +10,6 @@ from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
 
 
-@override_dynamic_settings(index_view="categories")
-def test_site_threads_list_renders_empty_to_guests(db, client):
-    response = client.get(reverse("misago:thread-list"))
-    assert_contains(response, "No threads have been started yet")
-
-
-@override_dynamic_settings(index_view="categories")
-def test_site_threads_list_renders_empty_to_users(user_client):
-    response = user_client.get(reverse("misago:thread-list"))
-    assert_contains(response, "No threads have been started yet")
-
-
-@override_dynamic_settings(index_view="categories")
-def test_site_threads_list_renders_empty_to_moderators(moderator_client):
-    response = moderator_client.get(reverse("misago:thread-list"))
-    assert_contains(response, "No threads have been started yet")
-
-
-def test_category_threads_list_renders_empty_to_guests(default_category, client):
-    response = client.get(default_category.get_absolute_url())
-    assert_contains(response, default_category.name)
-    assert_contains(response, "No threads have been started in this category yet")
-
-
-def test_category_threads_list_renders_empty_to_users(default_category, user_client):
-    response = user_client.get(default_category.get_absolute_url())
-    assert_contains(response, default_category.name)
-    assert_contains(response, "No threads have been started in this category yet")
-
-
 def test_category_threads_list_renders_empty_to_moderators(
     default_category, moderator_client
 ):
