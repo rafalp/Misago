@@ -290,13 +290,83 @@ def test_thread_list_view_displays_user_thread_to_global_moderator(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_user_own_thread_to_user(
+def test_thread_list_view_displays_user_own_thread_to_user(
     thread_factory, user_client, user, default_category
 ):
     thread = thread_factory(default_category, starter=user)
-
     response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_doesnt_displays_user_unapproved_thread_to_anonymous_user(
+    thread_factory, client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user, is_unapproved=True)
+    response = client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_not_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
+    assert_not_contains(response, "thread-flag-unapproved")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_doesnt_displays_user_unapproved_thread_to_user(
+    thread_factory, user_client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user, is_unapproved=True)
+    response = user_client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_not_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
+    assert_not_contains(response, "thread-flag-unapproved")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_user_unapproved_thread_to_category_moderator(
+    thread_factory, user_client, user, other_user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    thread = thread_factory(default_category, starter=other_user, is_unapproved=True)
+    response = user_client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-unapproved")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_user_unapproved_thread_to_global_moderator(
+    thread_factory, moderator_client, user, default_category
+):
+    thread = thread_factory(default_category, starter=user, is_unapproved=True)
+    response = moderator_client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-unapproved")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_user_own_unapproved_thread_to_user(
+    thread_factory, user_client, user, default_category
+):
+    thread = thread_factory(default_category, starter=user, is_unapproved=True)
+    response = user_client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-unapproved")
 
 
 @override_dynamic_settings(index_view="categories")

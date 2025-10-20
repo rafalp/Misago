@@ -149,7 +149,7 @@ def test_private_thread_list_view_displays_user_private_thread_to_global_moderat
     assert_contains(response, thread.title)
 
 
-def test_private_thread_list_view_user_own_thread_to_user(
+def test_private_thread_list_view_displays_user_own_thread_to_user(
     thread_factory, user_client, user, private_threads_category
 ):
     thread = thread_factory(private_threads_category, starter=user)
