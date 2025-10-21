@@ -12,8 +12,7 @@ from ...attachments.storage import (
     get_total_attachment_storage_usage,
     get_total_unused_attachments_size,
 )
-from ...posts.models import Post
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ...users.models import DataDownload
 from . import render
 

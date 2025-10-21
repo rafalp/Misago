@@ -102,6 +102,6 @@ def exclude_old_private_threads_queryset_hook(
        return queryset
 
     return queryset.filter(
-        last_post_on__gt=timezone.now - timedelta(days=30),
+        last_posted_at__gt=timezone.now - timedelta(days=30),
     )
 ```

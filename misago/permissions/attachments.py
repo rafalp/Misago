@@ -7,8 +7,7 @@ from django.utils.translation import pgettext
 from ..attachments.models import Attachment
 from ..categories.enums import CategoryTree
 from ..categories.models import Category
-from ..posts.models import Post
-from ..threads.models import Thread
+from ..threads.models import Post, Thread
 from .enums import CanUploadAttachments, CategoryPermission
 from .hooks import (
     can_upload_private_threads_attachments_hook,

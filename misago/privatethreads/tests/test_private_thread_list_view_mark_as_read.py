@@ -23,7 +23,7 @@ def test_private_thread_list_view_mark_as_read_marks_private_threads_as_read(
         user=user,
         category=private_threads_category,
         thread=user_private_thread,
-        read_time=user_private_thread.last_post_on,
+        read_time=user_private_thread.last_posted_at,
     )
 
     response = user_client.post(
@@ -48,7 +48,7 @@ def test_private_thread_list_view_mark_as_read_marks_private_threads_as_read_in_
         user=user,
         category=private_threads_category,
         thread=user_private_thread,
-        read_time=user_private_thread.last_post_on,
+        read_time=user_private_thread.last_posted_at,
     )
 
     response = user_client.post(

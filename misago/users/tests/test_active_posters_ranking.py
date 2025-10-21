@@ -33,7 +33,7 @@ def test_recent_post_by_removed_user_doesnt_count_to_ranking(
 def test_old_post_by_user_doesnt_count_to_ranking(
     thread_factory, user, default_category, day_seconds
 ):
-    thread_factory(default_category, starter=user, started_on=day_seconds * -6)
+    thread_factory(default_category, starter=user, started_at=day_seconds * -6)
     assert not build_active_posters_ranking()
 
 

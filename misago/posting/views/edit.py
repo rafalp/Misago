@@ -16,7 +16,19 @@ from ...permissions.threads import (
     check_edit_thread_permission,
     check_edit_thread_post_permission,
 )
-from ...posting.formsets import (
+from ...privatethreads.redirect import redirect_to_private_thread_post
+from ...privatethreads.views.generic import PrivateThreadView
+from ...threads.models import Post, Thread
+from ...threads.prefetch import prefetch_posts_feed_related_objects
+from ...threads.redirect import redirect_to_thread_post
+from ...threads.views.generic import ThreadView
+from ..hooks import (
+    get_private_thread_edit_context_data_hook,
+    get_private_thread_post_edit_context_data_hook,
+    get_thread_edit_context_data_hook,
+    get_thread_post_edit_context_data_hook,
+)
+from ..formsets import (
     Formset,
     PrivateThreadEditFormset,
     PrivateThreadPostEditFormset,
@@ -27,27 +39,14 @@ from ...posting.formsets import (
     get_thread_edit_formset,
     get_thread_post_edit_formset,
 )
-from ...posting.state import (
+from ..state import (
     PostEditState,
     PrivateThreadPostEditState,
     ThreadPostEditState,
     get_private_thread_post_edit_state,
     get_thread_post_edit_state,
 )
-from ...posting.validators import validate_posted_contents
-from ...posts.models import Post
-from ...privatethreads.redirect import redirect_to_private_thread_post
-from ...privatethreads.views.generic import PrivateThreadView
-from ...threads.models import Thread
-from ...threads.prefetch import prefetch_posts_feed_related_objects
-from ...threads.redirect import redirect_to_thread_post
-from ...threads.views.generic import ThreadView
-from ..hooks import (
-    get_private_thread_edit_context_data_hook,
-    get_private_thread_post_edit_context_data_hook,
-    get_thread_edit_context_data_hook,
-    get_thread_post_edit_context_data_hook,
-)
+from ..validators import validate_posted_contents
 
 
 class EditView(View):

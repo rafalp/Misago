@@ -5,7 +5,7 @@ from ...permissions.attachments import (
     can_upload_private_threads_attachments,
     can_upload_threads_attachments,
 )
-from ...posts.models import Post
+from ...threads.models import Post
 from ..forms import create_post_form, create_title_form
 from ..hooks import (
     get_private_thread_edit_formset_hook,

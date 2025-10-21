@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("misago_categories", "0013_new_behaviors"),
-        ("misago_threads", "0018_remove_poll_poll_vote_related_names"),
+        ("misago_threads", "0020_remove_poll_poll_vote_related_names"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 

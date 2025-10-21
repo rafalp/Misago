@@ -35,7 +35,7 @@ class Notification(models.Model):
     )
     thread_title = models.CharField(max_length=255, blank=True, null=True)
     post = models.ForeignKey(
-        "misago_posts.Post", blank=True, null=True, on_delete=models.CASCADE
+        "misago_threads.Post", blank=True, null=True, on_delete=models.CASCADE
     )
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)

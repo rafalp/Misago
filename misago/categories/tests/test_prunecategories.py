@@ -38,13 +38,13 @@ def test_prunecategories_command_prunes_threads_using_start_date(
     default_category.prune_started_after = 3
     default_category.save()
 
-    old_thread = thread_factory(default_category, started_on=day_seconds * -4)
+    old_thread = thread_factory(default_category, started_at=day_seconds * -4)
     old_thread_with_reply = thread_factory(
-        default_category, started_on=day_seconds * -4
+        default_category, started_at=day_seconds * -4
     )
     thread_reply_factory(old_thread_with_reply)
 
-    recent_thread = thread_factory(default_category, started_on=day_seconds * -2)
+    recent_thread = thread_factory(default_category, started_at=day_seconds * -2)
 
     command_output = call_command()
     assert command_output[0].strip() == "Pruned categories: 1"
@@ -69,13 +69,13 @@ def test_prunecategories_command_archives_threads_using_start_date(
     default_category.prune_started_after = 3
     default_category.save()
 
-    old_thread = thread_factory(default_category, started_on=day_seconds * -4)
+    old_thread = thread_factory(default_category, started_at=day_seconds * -4)
     old_thread_with_reply = thread_factory(
-        default_category, started_on=day_seconds * -4
+        default_category, started_at=day_seconds * -4
     )
     old_thread_reply = thread_reply_factory(old_thread_with_reply)
 
-    recent_thread = thread_factory(default_category, started_on=day_seconds * -2)
+    recent_thread = thread_factory(default_category, started_at=day_seconds * -2)
 
     command_output = call_command()
     assert command_output[0].strip() == "Pruned categories: 1"
@@ -99,18 +99,18 @@ def test_prunecategories_command_prunes_threads_using_last_reply_date(
     default_category.prune_replied_after = 10
     default_category.save()
 
-    old_thread = thread_factory(default_category, started_on=day_seconds * -15)
+    old_thread = thread_factory(default_category, started_at=day_seconds * -15)
     old_thread_with_old_reply = thread_factory(
-        default_category, started_on=day_seconds * -14
+        default_category, started_at=day_seconds * -14
     )
     old_thread_with_recent_reply = thread_factory(
-        default_category, started_on=day_seconds * -13
+        default_category, started_at=day_seconds * -13
     )
 
     thread_reply_factory(old_thread_with_old_reply, posted_at=day_seconds * -12)
     thread_reply_factory(old_thread_with_recent_reply, posted_at=day_seconds * -8)
 
-    recent_thread = thread_factory(default_category, started_on=day_seconds * -2)
+    recent_thread = thread_factory(default_category, started_at=day_seconds * -2)
     recent_thread_with_recent_reply = thread_factory(default_category)
 
     thread_reply_factory(recent_thread_with_recent_reply)
@@ -140,12 +140,12 @@ def test_prunecategories_command_archives_threads_using_last_reply_date(
     default_category.prune_replied_after = 10
     default_category.save()
 
-    old_thread = thread_factory(default_category, started_on=day_seconds * -15)
+    old_thread = thread_factory(default_category, started_at=day_seconds * -15)
     old_thread_with_old_reply = thread_factory(
-        default_category, started_on=day_seconds * -14
+        default_category, started_at=day_seconds * -14
     )
     old_thread_with_recent_reply = thread_factory(
-        default_category, started_on=day_seconds * -13
+        default_category, started_at=day_seconds * -13
     )
 
     old_thread_old_reply = thread_reply_factory(
@@ -155,7 +155,7 @@ def test_prunecategories_command_archives_threads_using_last_reply_date(
         old_thread_with_recent_reply, posted_at=day_seconds * -8
     )
 
-    recent_thread = thread_factory(default_category, started_on=day_seconds * -2)
+    recent_thread = thread_factory(default_category, started_at=day_seconds * -2)
     recent_thread_with_recent_reply = thread_factory(default_category)
 
     recent_thread_recent_reply = thread_reply_factory(recent_thread_with_recent_reply)

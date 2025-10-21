@@ -137,11 +137,11 @@
               <a
                 href="{{ thread_data.last_post_url }}"
                 class="threads-list-item-last-activity"
-                title="{{ thread.last_post_on|date:'DATETIME_FORMAT' }}"
-                misago-timestamp="{{ thread.last_post_on.isoformat }}"
+                title="{{ thread.last_posted_at|date:'DATETIME_FORMAT' }}"
+                misago-timestamp="{{ thread.last_posted_at.isoformat }}"
                 misago-timestamp-format="short"
               >
-                {{ thread.last_post_on|date_relative_short }}
+                {{ thread.last_posted_at|date_relative_short }}
               </a>
             </div>
             <div class="threads-list-item-col-posters-sm">

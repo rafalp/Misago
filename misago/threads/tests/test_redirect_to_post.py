@@ -4,7 +4,7 @@ from django.urls import reverse
 
 # Import views to register them in 'redirect_to_post'
 from ...privatethreads.views.post import PrivateThreadPostView
-from ...threads.views.post import ThreadPostView
+from ..views.post import ThreadPostView
 from ..redirect import redirect_to_post
 
 

@@ -16,8 +16,7 @@ from ..permissions.privatethreads import (
     check_private_threads_permission,
     check_see_private_thread_permission,
 )
-from ..posts.models import Post
-from ..threads.models import Thread
+from ..threads.models import Post, Thread
 from ..threads.threadurl import get_thread_url
 from .enums import NotificationVerb, ThreadNotifications
 from .models import Notification, WatchedThread
@@ -274,7 +273,7 @@ def watch_new_private_thread(
 
     # Set thread read date in past to prevent first reply to thread
     # From triggering extra notification
-    read_time = thread.started_on - timedelta(seconds=5)
+    read_time = thread.started_at - timedelta(seconds=5)
 
     if watched_thread := get_watched_thread(user, thread):
         watched_thread.read_time = read_time

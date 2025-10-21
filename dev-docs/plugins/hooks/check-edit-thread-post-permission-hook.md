@@ -103,8 +103,7 @@ from django.core.exceptions import PermissionDenied
 from misago.categories.models import Category
 from misago.permissions.hooks import check_edit_thread_post_permission_hook
 from misago.permissions.proxy import UserPermissionsProxy
-from misago.posts.models import Post
-from misago.threads.models import Thread
+from misago.threads.models import Post, Thread
 
 @check_edit_thread_post_permission_hook.append_filter
 def check_user_can_edit_thread_post(

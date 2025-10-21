@@ -5,9 +5,8 @@ from ...categories.models import Category
 from ...conf.dynamicsettings import DynamicSettings
 from ...permissions.proxy import UserPermissionsProxy
 from ...plugins.hooks import FilterHook
-from ...posts.models import Post
 from ...threadupdates.models import ThreadUpdate
-from ..models import Thread
+from ..models import Post, Thread
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -175,8 +174,7 @@ class CreatePrefetchPostsFeedRelatedObjectsHook(
     from misago.conf.dynamicsettings import DynamicSettings
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.plugins.hooks import FilterHook
-    from misago.posts.models import Post
-    from misago.threads.models import Thread
+    from misago.threads.models import Post, Thread
     from misago.threads.prefetch import PrefetchPostsFeedRelatedObjects
     from misago.threadupdates.models import ThreadUpdate
     from misago.users.models import User

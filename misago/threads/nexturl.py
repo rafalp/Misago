@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from django.urls import Resolver404, resolve, reverse
 
-from ..threads.models import Thread
+from .models import Thread
 
 NEXT_PAGE = "next"
 

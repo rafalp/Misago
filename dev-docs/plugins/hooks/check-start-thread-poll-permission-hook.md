@@ -107,7 +107,7 @@ def check_user_can_start_poll(
     # Run standard permission checks
     action(permissions, category, thread)
 
-    if thread.started_on < timezone.now() - timedelta(days=15):
+    if thread.started_at < timezone.now() - timedelta(days=15):
         raise PermissionDenied(
             pgettext(
                 "poll permission error",

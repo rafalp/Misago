@@ -1,7 +1,7 @@
 from typing import Protocol
 
 from ...plugins.hooks import FilterHook
-from ...posts.models import Post
+from ...threads.models import Post
 
 
 class PostNeedsContentUpgradeHookAction(Protocol):
@@ -65,7 +65,7 @@ class PostNeedsContentUpgradeHook(
 
     ```python
     from misago.posting.hooks import post_needs_content_upgrade_hook
-    from misago.posts.models import Post
+    from misago.threads.models import Post
 
 
     @post_needs_content_upgrade_hook.append_filter

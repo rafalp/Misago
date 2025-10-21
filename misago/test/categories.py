@@ -8,9 +8,8 @@ from ..categories.models import Category, CategoryRole, RoleCategoryACL
 from ..notifications.models import Notification, WatchedThread
 from ..permissions.models import CategoryGroupPermission
 from ..polls.models import Poll, PollVote
-from ..posts.models import Post
 from ..readtracker.models import ReadCategory, ReadThread
-from ..threads.models import Thread
+from ..threads.models import Post, Thread
 from ..threadupdates.create import create_test_thread_update
 from ..threadupdates.models import ThreadUpdate
 

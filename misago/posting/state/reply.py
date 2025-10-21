@@ -2,8 +2,7 @@ from django.db import models, transaction
 from django.http import HttpRequest
 
 from ...parser.parse import ParsingResult, parse
-from ...posts.models import Post
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ..hooks import (
     get_private_thread_reply_state_hook,
     get_thread_reply_state_hook,
@@ -86,7 +85,7 @@ class ReplyState(State):
     def save_user(self):
         if not self.is_merged:
             self.user.posts = models.F("posts") + 1
-            self.user.last_posted_on = self.timestamp
+            self.user.last_posted_at = self.timestamp
 
         self.update_object(self.user)
 

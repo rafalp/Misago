@@ -19,22 +19,6 @@ from ...permissions.threads import (
     check_edit_thread_post_permission,
     check_reply_thread_permission,
 )
-from ...posting.formsets import (
-    Formset,
-    PrivateThreadReplyFormset,
-    ThreadReplyFormset,
-    get_private_thread_reply_formset,
-    get_thread_reply_formset,
-)
-from ...posting.state import (
-    PrivateThreadReplyState,
-    ReplyState,
-    ThreadReplyState,
-    get_reply_private_thread_state,
-    get_reply_thread_state,
-)
-from ...posting.validators import validate_flood_control, validate_posted_contents
-from ...posts.models import Post
 from ...privatethreads.views.generic import PrivateThreadView
 from ...privatethreads.redirect import redirect_to_private_thread_post
 from ...readtracker.tracker import (
@@ -44,7 +28,7 @@ from ...readtracker.tracker import (
 )
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ...threads.prefetch import prefetch_posts_feed_related_objects
 from ...threads.redirect import redirect_to_thread_post
 from ...threads.views.generic import ThreadView
@@ -52,6 +36,21 @@ from ..hooks import (
     get_private_thread_reply_context_data_hook,
     get_thread_reply_context_data_hook,
 )
+from ..formsets import (
+    Formset,
+    PrivateThreadReplyFormset,
+    ThreadReplyFormset,
+    get_private_thread_reply_formset,
+    get_thread_reply_formset,
+)
+from ..state import (
+    PrivateThreadReplyState,
+    ReplyState,
+    ThreadReplyState,
+    get_reply_private_thread_state,
+    get_reply_thread_state,
+)
+from ..validators import validate_flood_control, validate_posted_contents
 
 
 class ReplyView(View):

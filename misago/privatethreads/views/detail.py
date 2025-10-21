@@ -85,7 +85,7 @@ class PrivateThreadDetailView(DetailView, PrivateThreadView):
         read_time: datetime,
     ):
         unread_private_threads = request.user.unread_private_threads
-        if read_time >= thread.last_post_on and request.user.unread_private_threads:
+        if read_time >= thread.last_posted_at and request.user.unread_private_threads:
             request.user.unread_private_threads -= 1
 
         super().update_thread_read_time(request, thread, read_time)

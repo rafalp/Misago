@@ -9,12 +9,11 @@ from ..categories.models import RoleCategoryACL
 from ..notifications.models import Notification, WatchedThread
 from ..permissions.models import CategoryGroupPermission
 from ..polls.models import Poll, PollVote
-from ..posts.models import Post
 from ..postgres.delete import delete_all
 from ..readtracker.models import ReadCategory, ReadThread
 from ..threads.models import (
     Attachment as LegacyAttachment,
-    Post as LegacyPost,
+    Post,
     PostEdit,
     PostLike,
     Thread,
@@ -115,7 +114,6 @@ def _move_categories_contents(categories: list[Category], new_category: Category
     _move_objects(Poll, categories, new_category)
     _move_objects(PollVote, categories, new_category)
     _move_objects(Post, categories, new_category)
-    _move_objects(LegacyPost, categories, new_category)
     _move_objects(PostEdit, categories, new_category)
     _move_objects(PostLike, categories, new_category)
     _move_objects(Thread, categories, new_category)

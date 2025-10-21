@@ -6,8 +6,7 @@ from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
 
 from ...categories.models import Category
-from ...posts.models import Post
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ..categories import check_see_category_permission
 from ..enums import CategoryPermission
 from ..hooks import (
@@ -209,7 +208,7 @@ def _check_edit_thread_permission_action(
 
     time_limit = permissions.own_threads_edit_time_limit * 60
 
-    if time_limit and (timezone.now() - thread.started_on).total_seconds() > time_limit:
+    if time_limit and (timezone.now() - thread.started_at).total_seconds() > time_limit:
         if time_limit >= 86400:
             days = ceil(time_limit / 86400)
             raise PermissionDenied(

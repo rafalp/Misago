@@ -2,7 +2,7 @@ from ..models import Category
 
 
 def assert_category_is_empty(category: Category):
-    assert category.last_post_on is None
+    assert category.last_posted_at is None
     assert category.last_thread is None
     assert category.last_thread_title is None
     assert category.last_thread_slug is None
@@ -62,7 +62,7 @@ def test_category_set_last_thread_updates_last_thread_data(
     new_thread = thread_factory(default_category)
     default_category.set_last_thread(new_thread)
 
-    assert default_category.last_post_on == new_thread.last_post_on
+    assert default_category.last_posted_at == new_thread.last_posted_at
     assert default_category.last_thread == new_thread
     assert default_category.last_thread_title == new_thread.title
     assert default_category.last_thread_slug == new_thread.slug

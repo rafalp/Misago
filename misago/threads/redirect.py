@@ -2,10 +2,39 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 
+from ..categories.treeid import get_category_tree_id
 from ..permissions.threads import filter_thread_posts_queryset
-from ..posts.models import Post
-from ..posts.paginator import PostPaginator
-from .models import Thread
+from .models import Post, Thread
+from .paginator import ThreadPostsPaginator
+
+
+class PostRedirectView:
+    def __call__(
+        self, request: HttpRequest, *, id: int, slug: str, post_id: int
+    ) -> HttpResponse: ...
+
+
+class PostRedirectRouter:
+    views: dict[int, PostRedirectView]
+
+    def __init__(self):
+        self.views = {}
+
+    def view(self, tree_id: int, view: PostRedirectView):
+        self.views[tree_id] = view
+
+    def __call__(self, request: HttpRequest, post: Post) -> HttpResponse:
+        tree_id = get_category_tree_id(post.category_id)
+
+        try:
+            view = self.views[tree_id]
+        except KeyError as error:
+            raise ValueError(f"Unknown 'Category' type: {tree_id}") from error
+
+        return view(request, thread_id=post.thread_id, slug="", post_id=post.id)
+
+
+redirect_to_post = PostRedirectRouter()
 
 
 def redirect_to_thread_post(
@@ -14,7 +43,7 @@ def redirect_to_thread_post(
     queryset = filter_thread_posts_queryset(
         request.user_permissions, thread, thread.post_set.order_by("id")
     )
-    paginator = PostPaginator(
+    paginator = ThreadPostsPaginator(
         queryset,
         request.settings.posts_per_page,
         request.settings.posts_per_page_orphans,

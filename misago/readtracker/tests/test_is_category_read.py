@@ -31,7 +31,7 @@ def test_is_category_read_returns_false_for_category_with_unread_thread(
 
     thread = thread_factory(default_category)
 
-    default_category.last_post_on = thread.last_post_on
+    default_category.last_posted_at = thread.last_posted_at
     default_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)
@@ -52,10 +52,10 @@ def test_is_category_read_returns_true_for_category_with_old_unread_thread(
     user.save()
 
     thread = thread_factory(
-        default_category, started_on=timezone.now().replace(year=2012)
+        default_category, started_at=timezone.now().replace(year=2012)
     )
 
-    default_category.last_post_on = thread.last_post_on
+    default_category.last_posted_at = thread.last_posted_at
     default_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)
@@ -72,9 +72,9 @@ def test_is_category_read_returns_true_for_category_with_old_unread_thread(
 def test_is_category_read_returns_true_for_category_with_unread_thread_older_than_user(
     thread_factory, dynamic_settings, cache_versions, user, default_category
 ):
-    thread = thread_factory(default_category, started_on=-900)
+    thread = thread_factory(default_category, started_at=-900)
 
-    default_category.last_post_on = thread.last_post_on
+    default_category.last_posted_at = thread.last_posted_at
     default_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)
@@ -94,16 +94,16 @@ def test_is_category_read_returns_true_for_category_with_read_thread(
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = thread_factory(default_category, started_on=-900)
+    thread = thread_factory(default_category, started_at=-900)
 
     ReadThread.objects.create(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
-    default_category.last_post_on = thread.last_post_on
+    default_category.last_posted_at = thread.last_posted_at
     default_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)
@@ -123,18 +123,18 @@ def test_is_category_read_returns_false_for_category_with_one_read_and_one_unrea
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = thread_factory(default_category, started_on=-900)
+    thread = thread_factory(default_category, started_at=-900)
 
     ReadThread.objects.create(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
-    unread_thread = thread_factory(default_category, started_on=-300)
+    unread_thread = thread_factory(default_category, started_at=-300)
 
-    default_category.last_post_on = unread_thread.last_post_on
+    default_category.last_posted_at = unread_thread.last_posted_at
     default_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)
@@ -154,18 +154,18 @@ def test_is_category_read_returns_true_for_category_with_one_read_and_one_invisi
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread = thread_factory(default_category, started_on=-900)
+    thread = thread_factory(default_category, started_at=-900)
 
     ReadThread.objects.create(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
     thread_factory(default_category, is_hidden=True)
 
-    default_category.last_post_on = thread.last_post_on
+    default_category.last_posted_at = thread.last_posted_at
     default_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)
@@ -185,10 +185,10 @@ def test_is_category_read_returns_true_for_read_category_with_both_read_threads(
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread_factory(default_category, started_on=-900)
+    thread_factory(default_category, started_at=-900)
     recent_thread = thread_factory(default_category)
 
-    default_category.last_post_on = recent_thread.last_post_on
+    default_category.last_posted_at = recent_thread.last_posted_at
     default_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)
@@ -208,10 +208,10 @@ def test_is_category_read_returns_false_for_read_category_with_one_read_and_one_
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread_factory(default_category, started_on=-90)
+    thread_factory(default_category, started_at=-90)
     unread_thread = thread_factory(default_category)
 
-    default_category.last_post_on = unread_thread.last_post_on
+    default_category.last_posted_at = unread_thread.last_posted_at
     default_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)

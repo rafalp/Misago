@@ -5,8 +5,7 @@ from django.http import HttpRequest
 from django.db.models import FilteredRelation, OuterRef, Q
 
 from ..categories.models import Category
-from ..posts.models import Post
-from ..threads.models import Thread
+from ..threads.models import Post, Thread
 from .readtime import get_default_read_time
 from .models import ReadCategory, ReadThread
 
@@ -53,14 +52,14 @@ def is_category_unread(
     category: Category,
     default_read_time: datetime,
 ) -> bool:
-    if not category.last_post_on:
+    if not category.last_posted_at:
         return False
 
-    if category.last_post_on < default_read_time:
+    if category.last_posted_at < default_read_time:
         return False
 
     if user_readcategory := getattr(category, "user_readcategory", None):
-        return category.last_post_on > user_readcategory.read_time
+        return category.last_posted_at > user_readcategory.read_time
 
     return True
 
@@ -107,20 +106,20 @@ def is_thread_unread(
     thread: Thread,
     default_read_time: datetime,
 ) -> bool:
-    if not thread.last_post_on:
+    if not thread.last_posted_at:
         return False
 
-    if thread.last_post_on < default_read_time:
+    if thread.last_posted_at < default_read_time:
         return False
 
     if (
         thread.user_readcategory_time
-        and thread.last_post_on <= thread.user_readcategory_time
+        and thread.last_posted_at <= thread.user_readcategory_time
     ):
         return False
 
     if user_readthread := getattr(thread, "user_readthread", None):
-        return thread.last_post_on > user_readthread.read_time
+        return thread.last_posted_at > user_readthread.read_time
 
     return True
 
@@ -188,13 +187,13 @@ def mark_category_read(user: "User", category: Category, *, force_update: bool =
         create_row = not ReadCategory.objects.filter(
             user=user,
             category=category,
-        ).update(read_time=category.last_post_on)
+        ).update(read_time=category.last_posted_at)
 
     if create_row:
         ReadCategory.objects.create(
             user=user,
             category=category,
-            read_time=category.last_post_on,
+            read_time=category.last_posted_at,
         )
 
     ReadThread.objects.filter(user=user, category=category).delete()

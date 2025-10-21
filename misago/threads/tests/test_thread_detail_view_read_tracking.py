@@ -24,7 +24,7 @@ def test_thread_detail_view_marks_category_as_read_for_user(
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
-    default_category.last_post_on = thread.last_post_on
+    default_category.last_posted_at = thread.last_posted_at
     default_category.save()
 
     response = user_client.get(
@@ -36,7 +36,7 @@ def test_thread_detail_view_marks_category_as_read_for_user(
     ReadCategory.objects.get(
         user=user,
         category=default_category,
-        read_time=default_category.last_post_on,
+        read_time=default_category.last_posted_at,
     )
 
 
@@ -46,7 +46,7 @@ def test_thread_detail_view_marks_thread_as_read_for_user(
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
-    default_category.last_post_on = other_thread.last_post_on
+    default_category.last_posted_at = other_thread.last_posted_at
     default_category.save()
 
     response = user_client.get(
@@ -59,7 +59,7 @@ def test_thread_detail_view_marks_thread_as_read_for_user(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
 
@@ -70,7 +70,7 @@ def test_thread_detail_view_marks_unread_thread_posts_on_page_as_read_for_user(
     user.joined_on -= timedelta(minutes=60)
     user.save()
 
-    thread = thread_factory(default_category, started_on=-900)
+    thread = thread_factory(default_category, started_at=-900)
 
     posts = []
     for i in reversed(range(1, 6)):
@@ -109,7 +109,7 @@ def test_thread_detail_view_updates_user_watched_thread_read_time(
     watched_thread.read_time = watched_thread.read_time.replace(year=2010)
     watched_thread.save()
 
-    default_category.last_post_on = other_thread.last_post_on
+    default_category.last_posted_at = other_thread.last_posted_at
     default_category.save()
 
     response = user_client.get(
@@ -121,7 +121,7 @@ def test_thread_detail_view_updates_user_watched_thread_read_time(
     assert_contains(response, old_thread.title)
 
     watched_thread.refresh_from_db()
-    assert watched_thread.read_time == old_thread.last_post_on
+    assert watched_thread.read_time == old_thread.last_posted_at
 
 
 def test_thread_detail_view_marks_displayed_posts_notifications_as_read(

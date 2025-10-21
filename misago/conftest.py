@@ -555,7 +555,7 @@ def other_user_unapproved_thread(thread_factory, default_category, other_user):
 
 @pytest.fixture
 def old_thread(thread_factory, default_category):
-    thread = thread_factory(default_category, started_on=-3600)
+    thread = thread_factory(default_category, started_at=-3600)
 
     default_category.synchronize()
     default_category.save()
@@ -565,7 +565,7 @@ def old_thread(thread_factory, default_category):
 
 @pytest.fixture
 def old_user_thread(thread_factory, default_category, user):
-    thread = thread_factory(default_category, started_on=-3600, starter=user)
+    thread = thread_factory(default_category, started_at=-3600, starter=user)
 
     default_category.synchronize()
     default_category.save()
@@ -575,7 +575,7 @@ def old_user_thread(thread_factory, default_category, user):
 
 @pytest.fixture
 def old_other_user_thread(thread_factory, default_category, other_user):
-    thread = thread_factory(default_category, started_on=-3600, starter=other_user)
+    thread = thread_factory(default_category, started_at=-3600, starter=other_user)
 
     default_category.synchronize()
     default_category.save()
@@ -752,7 +752,7 @@ def other_user_private_thread(
 
 @pytest.fixture
 def old_private_thread(thread_factory, private_threads_category):
-    thread = thread_factory(private_threads_category, started_on=-3600)
+    thread = thread_factory(private_threads_category, started_at=-3600)
 
     private_threads_category.synchronize()
     private_threads_category.save()
@@ -814,14 +814,14 @@ def other_category(categories_tree):
 @pytest.fixture
 def watched_thread_factory():
     def create_watched_thread(user: "User", thread: "Thread", send_emails: bool):
-        thread_age = timezone.now() - thread.started_on
+        thread_age = timezone.now() - thread.started_at
         if thread_age.total_seconds() < 10:
             raise ValueError(
                 "'thread' passed to 'watched_thread_factory' must be "
                 "at least 10 seconds old"
             )
 
-        read_time = thread.started_on + timedelta(
+        read_time = thread.started_at + timedelta(
             seconds=random.randint(1, int(thread_age.total_seconds()) - 1),
         )
 

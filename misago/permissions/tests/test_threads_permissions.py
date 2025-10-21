@@ -342,7 +342,7 @@ def test_check_edit_thread_permission_fails_if_user_is_starter_out_of_time_limit
     user.group.own_threads_edit_time_limit = 1
     user.group.save()
 
-    user_thread.started_on = user_thread.started_on.replace(year=2015)
+    user_thread.started_at = user_thread.started_at.replace(year=2015)
     user_thread.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -433,7 +433,7 @@ def test_check_edit_thread_permission_passes_for_global_moderator_if_out_of_time
     moderator.group.own_threads_edit_time_limit = 1
     moderator.group.save()
 
-    thread.started_on = thread.started_on.replace(year=2015)
+    thread.started_at = thread.started_at.replace(year=2015)
     thread.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
@@ -452,7 +452,7 @@ def test_check_edit_thread_permission_passes_for_category_moderator_if_out_of_ti
     user.group.own_threads_edit_time_limit = 1
     user.group.save()
 
-    thread.started_on = thread.started_on.replace(year=2015)
+    thread.started_at = thread.started_at.replace(year=2015)
     thread.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)

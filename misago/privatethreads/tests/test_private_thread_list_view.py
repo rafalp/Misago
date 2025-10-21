@@ -355,11 +355,11 @@ def test_private_thread_list_view_without_unread_threads_marks_category_as_read(
     threads = (
         thread_factory(
             private_threads_category,
-            started_on=-900,
+            started_at=-900,
         ),
         thread_factory(
             private_threads_category,
-            started_on=-600,
+            started_at=-600,
         ),
     )
 
@@ -368,7 +368,7 @@ def test_private_thread_list_view_without_unread_threads_marks_category_as_read(
             user=user,
             category=private_threads_category,
             thread=thread,
-            read_time=thread.last_post_on,
+            read_time=thread.last_posted_at,
         )
 
     private_threads_category.synchronize()
@@ -394,11 +394,11 @@ def test_private_thread_list_view_without_unread_threads_clears_user_unread_thre
     threads = (
         thread_factory(
             private_threads_category,
-            started_on=-900,
+            started_at=-900,
         ),
         thread_factory(
             private_threads_category,
-            started_on=-600,
+            started_at=-600,
         ),
     )
 
@@ -407,7 +407,7 @@ def test_private_thread_list_view_without_unread_threads_clears_user_unread_thre
             user=user,
             category=private_threads_category,
             thread=thread,
-            read_time=thread.last_post_on,
+            read_time=thread.last_posted_at,
         )
 
     private_threads_category.synchronize()
@@ -430,25 +430,25 @@ def test_private_thread_list_view_with_read_entry_without_unread_threads_marks_c
 
     thread = thread_factory(
         private_threads_category,
-        started_on=-2400,
+        started_at=-2400,
     )
 
     read_category = ReadCategory.objects.create(
         user=user,
         category=private_threads_category,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
     read_thread = thread_factory(
         private_threads_category,
-        started_on=-1200,
+        started_at=-1200,
     )
 
     ReadThread.objects.create(
         user=user,
         category=private_threads_category,
         thread=read_thread,
-        read_time=read_thread.last_post_on,
+        read_time=read_thread.last_posted_at,
     )
 
     private_threads_category.synchronize()
@@ -476,19 +476,19 @@ def test_private_thread_list_view_with_unread_thread_doesnt_mark_category_as_rea
 
     read_thread = thread_factory(
         private_threads_category,
-        started_on=-900,
+        started_at=-900,
     )
 
     ReadThread.objects.create(
         user=user,
         category=private_threads_category,
         thread=read_thread,
-        read_time=read_thread.last_post_on,
+        read_time=read_thread.last_posted_at,
     )
 
     thread_factory(
         private_threads_category,
-        started_on=-600,
+        started_at=-600,
     )
 
     private_threads_category.synchronize()

@@ -51,7 +51,7 @@ def test_unread_threads_filter_excludes_never_read_thread_older_than_user(
     thread_factory, dynamic_settings, user, default_category
 ):
     queryset = Thread.objects.all()
-    thread_factory(default_category, started_on=-900)
+    thread_factory(default_category, started_at=-900)
 
     filter = UnreadThreadsFilter(Mock(settings=dynamic_settings, user=user))
     choice = filter.as_choice("/base/url/", False)
@@ -66,7 +66,7 @@ def test_unread_threads_filter_excludes_old_never_read_thread(
     queryset = Thread.objects.all()
     thread_factory(
         default_category,
-        started_on=timezone.now().replace(year=2010),
+        started_at=timezone.now().replace(year=2010),
     )
 
     filter = UnreadThreadsFilter(Mock(settings=dynamic_settings, user=user))
@@ -83,7 +83,7 @@ def test_unread_threads_filter_excludes_read_thread(
     user.save()
 
     queryset = Thread.objects.all()
-    thread = thread_factory(default_category, started_on=30 * -60)
+    thread = thread_factory(default_category, started_at=30 * -60)
 
     ReadThread.objects.create(
         user=user,
@@ -106,7 +106,7 @@ def test_unread_threads_filter_excludes_thread_in_read_category(
     user.save()
 
     queryset = Thread.objects.all()
-    thread_factory(default_category, started_on=30 * -60)
+    thread_factory(default_category, started_at=30 * -60)
 
     ReadCategory.objects.create(
         user=user,
@@ -128,7 +128,7 @@ def test_unread_threads_filter_shows_read_thread_with_unread_replies(
     user.save()
 
     queryset = Thread.objects.all()
-    thread = thread_factory(default_category, started_on=10 * -60)
+    thread = thread_factory(default_category, started_at=10 * -60)
 
     ReadThread.objects.create(
         user=user,
@@ -173,7 +173,7 @@ def test_unread_threads_filter_shows_read_thread_in_read_category_with_unread_re
     user.save()
 
     queryset = Thread.objects.all()
-    thread = thread_factory(default_category, started_on=-600)
+    thread = thread_factory(default_category, started_at=-600)
 
     ReadCategory.objects.create(
         user=user,
