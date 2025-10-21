@@ -9,7 +9,7 @@ from ..tracker import mark_category_read
 def test_mark_category_read_creates_read_category_for_category_without_user_readcategory(
     user, default_category
 ):
-    default_category.last_post_on = timezone.now()
+    default_category.last_posted_at = timezone.now()
     default_category.save()
 
     mark_category_read(user, default_category)
@@ -17,7 +17,7 @@ def test_mark_category_read_creates_read_category_for_category_without_user_read
     ReadCategory.objects.get(
         user=user,
         category=default_category,
-        read_time=default_category.last_post_on,
+        read_time=default_category.last_posted_at,
     )
 
 
@@ -33,7 +33,7 @@ def test_mark_category_read_updates_read_category_for_category_with_user_readcat
         read_time=old_read_time,
     )
 
-    default_category.last_post_on = read_time
+    default_category.last_posted_at = read_time
     default_category.save()
 
     default_category.user_readcategory = read_category
@@ -56,7 +56,7 @@ def test_mark_category_read_updates_read_category_for_category_in_forced_update(
         read_time=old_read_time,
     )
 
-    default_category.last_post_on = read_time
+    default_category.last_posted_at = read_time
     default_category.save()
 
     mark_category_read(user, default_category, force_update=True)
@@ -70,7 +70,7 @@ def test_mark_category_read_creates_missing_read_category_for_category_in_forced
 ):
     read_time = timezone.now()
 
-    default_category.last_post_on = read_time
+    default_category.last_posted_at = read_time
     default_category.save()
 
     mark_category_read(user, default_category, force_update=True)

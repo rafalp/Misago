@@ -42,7 +42,7 @@ def get_data_from_db(span):
     return {
         "users": analytics.get_data_for_model(User, "joined_on"),
         "userDeletions": analytics.get_data_for_model(DeletedUser, "deleted_on"),
-        "threads": analytics.get_data_for_model(Thread, "started_on"),
+        "threads": analytics.get_data_for_model(Thread, "started_at"),
         "posts": analytics.get_data_for_model(Post, "posted_at"),
         "attachments": analytics.get_data_for_model(Attachment, "uploaded_at"),
         "dataDownloads": analytics.get_data_for_model(DataDownload, "requested_on"),

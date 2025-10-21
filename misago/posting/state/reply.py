@@ -85,7 +85,7 @@ class ReplyState(State):
     def save_user(self):
         if not self.is_merged:
             self.user.posts = models.F("posts") + 1
-            self.user.last_posted_on = self.timestamp
+            self.user.last_posted_at = self.timestamp
 
         self.update_object(self.user)
 

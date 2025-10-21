@@ -168,7 +168,7 @@ def test_categories_component_data_includes_unread_category(
     user.joined_on = user.joined_on.replace(year=2012)
     user.save()
 
-    default_category.last_post_on = timezone.now()
+    default_category.last_posted_at = timezone.now()
     default_category.save()
 
     data = get_categories_data(mock_request)
@@ -267,7 +267,7 @@ def test_get_subcategories_data_includes_unread_child_category(
         slug="child-category",
         threads=42,
         posts=100,
-        last_post_on=timezone.now(),
+        last_posted_at=timezone.now(),
     )
     child_category.insert_at(default_category, position="last-child", save=True)
 

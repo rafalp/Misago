@@ -119,7 +119,7 @@ def test_recent_thread_appears_in_current_analytics(
 def test_older_thread_appears_in_previous_analytics(
     admin_graphql_client, thread_factory, default_category
 ):
-    thread_factory(default_category, started_on=previous_datetime)
+    thread_factory(default_category, started_at=previous_datetime)
     result = admin_graphql_client.query(test_query, {"span": 30})
     analytics = result["analytics"]["threads"]
     assert sum(analytics["current"]) == 0
@@ -129,7 +129,7 @@ def test_older_thread_appears_in_previous_analytics(
 def test_old_thread_is_excluded_from_analytics(
     admin_graphql_client, thread_factory, default_category
 ):
-    thread_factory(default_category, started_on=excluded_datetime)
+    thread_factory(default_category, started_at=excluded_datetime)
     result = admin_graphql_client.query(test_query, {"span": 30})
     analytics = result["analytics"]["threads"]
     assert sum(analytics["current"]) == 0
@@ -149,7 +149,7 @@ def test_recent_post_appears_in_current_analytics(
 def test_older_post_appears_in_previous_analytics(
     admin_graphql_client, thread_factory, default_category
 ):
-    thread_factory(default_category, started_on=previous_datetime)
+    thread_factory(default_category, started_at=previous_datetime)
     result = admin_graphql_client.query(test_query, {"span": 30})
     analytics = result["analytics"]["posts"]
     assert sum(analytics["current"]) == 0
@@ -159,7 +159,7 @@ def test_older_post_appears_in_previous_analytics(
 def test_old_post_is_excluded_from_analytics(
     admin_graphql_client, thread_factory, default_category
 ):
-    thread_factory(default_category, started_on=excluded_datetime)
+    thread_factory(default_category, started_at=excluded_datetime)
     result = admin_graphql_client.query(test_query, {"span": 30})
     analytics = result["analytics"]["posts"]
     assert sum(analytics["current"]) == 0

@@ -55,7 +55,7 @@ def test_reply_state_updates_category(user_request, other_user_thread):
     assert category.threads == 1
     assert category.posts == 2
     assert category.last_thread == state.thread
-    assert category.last_post_on == state.timestamp
+    assert category.last_posted_at == state.timestamp
     assert category.last_poster == user_request.user
     assert category.last_poster_name == user_request.user.username
     assert category.last_poster_slug == user_request.user.slug
@@ -69,7 +69,7 @@ def test_reply_state_updates_user(user_request, other_user_thread, user):
     user.refresh_from_db()
     assert user.threads == 0
     assert user.posts == 1
-    assert user.last_posted_on == state.timestamp
+    assert user.last_posted_at == state.timestamp
 
 
 def test_reply_state_updates_existing_post(user, user_request, user_thread):
@@ -97,10 +97,10 @@ def test_reply_state_updates_existing_post(user, user_request, user_thread):
     user_thread.refresh_from_db()
     assert user_thread.post_set.count() == 1
     assert user_thread.replies == 0
+    assert user_thread.last_posted_at == post.posted_at
     assert user_thread.last_poster == user
     assert user_thread.last_poster_name == user.username
     assert user_thread.last_poster_slug == user.slug
-    assert user_thread.last_last_posted_atpost_on == post.posted_at
 
     category.refresh_from_db()
     assert category.threads == 1

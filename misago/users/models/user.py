@@ -301,7 +301,7 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     threads = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0, db_index=True)
 
-    last_posted_on = models.DateTimeField(null=True, blank=True)
+    last_posted_at = models.DateTimeField(null=True, blank=True)
 
     profile_fields = HStoreField(default=dict)
     agreements = ArrayField(models.PositiveIntegerField(), default=list)

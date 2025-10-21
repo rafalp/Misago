@@ -207,7 +207,7 @@ class Thread(PluginDataModel):
             update_thread_title.send(sender=self)
 
     def set_first_post(self, post):
-        self.started_at = post.started_at
+        self.started_at = post.posted_at
         self.first_post = post
         self.starter = post.poster
         self.starter_name = post.poster_name
@@ -220,7 +220,7 @@ class Thread(PluginDataModel):
         self.is_hidden = post.is_hidden
 
     def set_last_post(self, post):
-        self.last_posted_at = post.last_posted_at
+        self.last_posted_at = post.posted_at
         self.last_post = post
         self.last_poster = post.poster
         self.last_poster_name = post.poster_name

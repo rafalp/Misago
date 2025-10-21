@@ -18,7 +18,7 @@ def test_unread_private_threads_exist_returns_true_for_unread_thread(
     thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(user=user, thread=thread)
 
-    private_threads_category.last_post_on = thread.last_posted_at
+    private_threads_category.last_posted_at = thread.last_posted_at
     private_threads_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)
@@ -48,7 +48,7 @@ def test_unread_private_threads_exist_returns_false_for_read_thread(
         read_time=thread.last_posted_at,
     )
 
-    private_threads_category.last_post_on = thread.last_posted_at
+    private_threads_category.last_posted_at = thread.last_posted_at
     private_threads_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)
@@ -71,7 +71,7 @@ def test_unread_private_threads_exist_returns_false_for_thread_in_read_category(
     thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(user=user, thread=thread)
 
-    private_threads_category.last_post_on = thread.last_posted_at
+    private_threads_category.last_posted_at = thread.last_posted_at
     private_threads_category.save()
 
     user_permissions = UserPermissionsProxy(user, cache_versions)

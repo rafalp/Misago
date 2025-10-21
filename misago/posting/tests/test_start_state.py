@@ -13,8 +13,8 @@ def test_start_state_initializes_thread_and_post(user_request, default_category)
     assert state.thread.last_poster_name == user_request.user.username
     assert state.thread.last_poster_slug == user_request.user.slug
     assert state.thread.category == default_category
-    assert state.thread.started_on == state.timestamp
-    assert state.thread.last_post_on == state.timestamp
+    assert state.thread.started_at == state.timestamp
+    assert state.thread.last_posted_at == state.timestamp
 
     assert state.post
     assert state.post.poster == user_request.user
@@ -77,7 +77,7 @@ def test_start_state_updates_user(user_request, default_category, user):
     user.refresh_from_db()
     assert user.threads == 1
     assert user.posts == 1
-    assert user.last_posted_on == state.timestamp
+    assert user.last_posted_at == state.timestamp
 
 
 def test_start_state_assigns_attachments_to_category_thread_and_post(

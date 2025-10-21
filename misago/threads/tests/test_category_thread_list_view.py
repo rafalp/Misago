@@ -1254,11 +1254,11 @@ def test_category_thread_list_view_marks_unread_category_without_unread_threads_
     threads = (
         thread_factory(
             default_category,
-            started_on=-900,
+            started_at=-900,
         ),
         thread_factory(
             default_category,
-            started_on=-600,
+            started_at=-600,
         ),
     )
 
@@ -1289,7 +1289,7 @@ def test_category_thread_list_view_marks_unread_category_with_read_entry_without
 
     thread = thread_factory(
         default_category,
-        started_on=-2400,
+        started_at=-2400,
     )
 
     read_category = ReadCategory.objects.create(
@@ -1300,7 +1300,7 @@ def test_category_thread_list_view_marks_unread_category_with_read_entry_without
 
     read_thread = thread_factory(
         default_category,
-        started_on=-1200,
+        started_at=-1200,
     )
 
     ReadThread.objects.create(
@@ -1331,7 +1331,7 @@ def test_category_thread_list_view_doesnt_mark_unread_category_with_unread_threa
 
     read_thread = thread_factory(
         default_category,
-        started_on=-900,
+        started_at=-900,
     )
 
     ReadThread.objects.create(
@@ -1343,7 +1343,7 @@ def test_category_thread_list_view_doesnt_mark_unread_category_with_unread_threa
 
     thread_factory(
         default_category,
-        started_on=-600,
+        started_at=-600,
     )
 
     default_category.synchronize()

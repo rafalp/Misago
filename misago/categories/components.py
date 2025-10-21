@@ -99,7 +99,7 @@ def get_category_data(
             "id": category.last_thread_id,
             "title": category.last_thread_title,
             "slug": category.last_thread_slug,
-            "last_posted_at": category.last_post_on,
+            "last_posted_at": category.last_posted_at,
             "last_poster": None,
             "last_poster_name": category.last_poster_name,
             "is_visible": (

@@ -273,7 +273,7 @@ def watch_new_private_thread(
 
     # Set thread read date in past to prevent first reply to thread
     # From triggering extra notification
-    read_time = thread.started_on - timedelta(seconds=5)
+    read_time = thread.started_at - timedelta(seconds=5)
 
     if watched_thread := get_watched_thread(user, thread):
         watched_thread.read_time = read_time

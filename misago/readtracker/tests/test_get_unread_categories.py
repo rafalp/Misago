@@ -14,7 +14,7 @@ from ..tracker import (
 def test_get_unread_categories_returns_empty_set_for_anonymous_user(
     dynamic_settings, default_category, anonymous_user
 ):
-    default_category.last_post_on = timezone.now()
+    default_category.last_posted_at = timezone.now()
     default_category.save()
 
     request = Mock(settings=dynamic_settings, user=anonymous_user)
@@ -37,7 +37,7 @@ def test_get_unread_categories_excludes_unread_empty_category(dynamic_settings, 
 def test_get_unread_categories_includes_unread_category_with_last_post(
     dynamic_settings, default_category, user
 ):
-    default_category.last_post_on = timezone.now()
+    default_category.last_posted_at = timezone.now()
     default_category.save()
 
     request = Mock(settings=dynamic_settings, user=user)
@@ -69,7 +69,7 @@ def test_get_unread_categories_includes_read_category_with_new_last_post(
     user.joined_on -= timedelta(days=2)
     user.save()
 
-    default_category.last_post_on = timezone.now()
+    default_category.last_posted_at = timezone.now()
     default_category.save()
 
     ReadCategory.objects.create(
@@ -91,13 +91,13 @@ def test_get_unread_categories_excludes_read_category(
     user.joined_on -= timedelta(days=2)
     user.save()
 
-    default_category.last_post_on = timezone.now()
+    default_category.last_posted_at = timezone.now()
     default_category.save()
 
     ReadCategory.objects.create(
         user=user,
         category=default_category,
-        read_time=default_category.last_post_on,
+        read_time=default_category.last_posted_at,
     )
 
     request = Mock(settings=dynamic_settings, user=user)
@@ -113,7 +113,7 @@ def test_get_unread_categories_excludes_unread_category_with_last_post_older_tha
     user.joined_on -= timedelta(days=2)
     user.save()
 
-    default_category.last_post_on = timezone.now() - timedelta(days=3)
+    default_category.last_posted_at = timezone.now() - timedelta(days=3)
     default_category.save()
 
     request = Mock(settings=dynamic_settings, user=user)
@@ -129,7 +129,7 @@ def test_get_unread_categories_excludes_unread_category_with_last_post_older_tha
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    default_category.last_post_on = timezone.now().replace(year=2012)
+    default_category.last_posted_at = timezone.now().replace(year=2012)
     default_category.save()
 
     request = Mock(settings=dynamic_settings, user=user)
@@ -145,7 +145,7 @@ def test_get_unread_categories_excludes_read_category_with_last_post_older_than_
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    default_category.last_post_on = timezone.now().replace(year=2012)
+    default_category.last_posted_at = timezone.now().replace(year=2012)
     default_category.save()
 
     ReadCategory.objects.create(

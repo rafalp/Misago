@@ -51,7 +51,7 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
             "is_closed",
             "threads",
             "posts",
-            "last_post_on",
+            "last_posted_at",
             "last_thread_title",
             "last_poster",
             "last_poster_name",

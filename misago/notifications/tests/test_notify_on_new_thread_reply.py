@@ -166,7 +166,7 @@ def test_notify_on_new_thread_reply_checks_user_has_no_older_unread_posts(
     watched_thread = watched_thread_factory(other_user, old_thread, send_emails=True)
 
     # Make thread's first post unread
-    watched_thread.read_time = old_thread.started_on - timedelta(seconds=5)
+    watched_thread.read_time = old_thread.started_at - timedelta(seconds=5)
     watched_thread.save()
 
     notify_on_new_thread_reply(old_thread_user_reply.id)
@@ -191,7 +191,7 @@ def test_notify_on_new_thread_reply_excludes_user_posts_from_unread_check(
     )
 
     # Make thread's first post unread
-    watched_thread.read_time = old_other_user_thread.started_on - timedelta(seconds=5)
+    watched_thread.read_time = old_other_user_thread.started_at - timedelta(seconds=5)
     watched_thread.save()
 
     notify_on_new_thread_reply(old_other_user_thread_user_reply.id)

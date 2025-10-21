@@ -28,7 +28,7 @@ def test_private_thread_detail_view_marks_category_as_read_for_user(
 
     update_thread_timestamp(user_private_thread, 900)
 
-    private_threads_category.last_post_on = user_private_thread.last_posted_at
+    private_threads_category.last_posted_at = user_private_thread.last_posted_at
     private_threads_category.save()
 
     response = user_client.get(
@@ -63,7 +63,7 @@ def test_private_thread_detail_view_marks_thread_as_read_for_user(
     update_thread_timestamp(user_private_thread, 900)
     update_thread_timestamp(other_user_private_thread, 700)
 
-    private_threads_category.last_post_on = other_user_private_thread.last_posted_at
+    private_threads_category.last_posted_at = other_user_private_thread.last_posted_at
     private_threads_category.save()
 
     response = user_client.get(
@@ -145,7 +145,7 @@ def test_private_thread_detail_view_updates_user_watched_thread_read_time(
     watched_thread.read_time = watched_thread.read_time.replace(year=2010)
     watched_thread.save()
 
-    private_threads_category.last_post_on = other_user_private_thread.last_posted_at
+    private_threads_category.last_posted_at = other_user_private_thread.last_posted_at
     private_threads_category.save()
 
     response = user_client.get(
@@ -215,7 +215,7 @@ def test_private_thread_detail_view_decreases_user_unread_threads_count_on_threa
     update_thread_timestamp(user_private_thread, 900)
     update_thread_timestamp(other_user_private_thread, 300)
 
-    private_threads_category.last_post_on = other_user_private_thread.last_posted_at
+    private_threads_category.last_posted_at = other_user_private_thread.last_posted_at
     private_threads_category.save()
 
     response = user_client.get(
@@ -287,7 +287,7 @@ def test_private_thread_detail_view_clears_user_unread_threads_count_on_category
 
     update_thread_timestamp(user_private_thread, 9000)
 
-    private_threads_category.last_post_on = user_private_thread.last_posted_at
+    private_threads_category.last_posted_at = user_private_thread.last_posted_at
     private_threads_category.save()
 
     response = user_client.get(

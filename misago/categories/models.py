@@ -52,7 +52,7 @@ class Category(MPTTModel, PluginDataModel):
     posts = models.PositiveIntegerField(default=0)
     unapproved_threads = models.PositiveIntegerField(default=0)
     unapproved_posts = models.PositiveIntegerField(default=0)
-    last_post_on = models.DateTimeField(null=True, blank=True)
+    last_posted_at = models.DateTimeField(null=True, blank=True)
     last_thread = models.ForeignKey(
         "misago_threads.Thread",
         related_name="+",
@@ -114,7 +114,7 @@ class Category(MPTTModel, PluginDataModel):
             last_thread_qs = threads_queryset.filter(
                 is_hidden=False, is_unapproved=False
             )
-            last_thread = last_thread_qs.order_by("-last_post_on")[:1][0]
+            last_thread = last_thread_qs.order_by("-last_posted_at")[:1][0]
             self.set_last_thread(last_thread)
         else:
             self.empty_last_thread()
@@ -136,7 +136,7 @@ class Category(MPTTModel, PluginDataModel):
         self.slug = slugify(name)
 
     def set_last_thread(self, thread):
-        self.last_post_on = thread.last_post_on
+        self.last_posted_at = thread.last_posted_at
         self.last_thread = thread
         self.last_thread_title = thread.title
         self.last_thread_slug = thread.slug
@@ -145,7 +145,7 @@ class Category(MPTTModel, PluginDataModel):
         self.last_poster_slug = thread.last_poster_slug
 
     def empty_last_thread(self):
-        self.last_post_on = None
+        self.last_posted_at = None
         self.last_thread = None
         self.last_thread_title = None
         self.last_thread_slug = None

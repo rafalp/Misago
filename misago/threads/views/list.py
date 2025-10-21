@@ -1115,10 +1115,10 @@ class CategoryThreadListView(ListView):
     def is_category_unread(self, user: "User", category: Category) -> bool:
         if user.is_anonymous:
             return False
-        if not category.last_post_on:
+        if not category.last_posted_at:
             return False
         if category_read_time := get_category_read_time(category):
-            return category.last_post_on > category_read_time
+            return category.last_posted_at > category_read_time
 
         return True
 

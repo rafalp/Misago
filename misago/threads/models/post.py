@@ -175,7 +175,7 @@ class Post(PluginDataModel):
     @property
     def sha256_checksum(self) -> str:
         return hashlib.sha256(
-            f"{self.id}:{self.updated_on}:{self.parsed}".encode()
+            f"{self.id}:{self.updated_at or 0}:{self.parsed}".encode()
         ).hexdigest()
 
     @property

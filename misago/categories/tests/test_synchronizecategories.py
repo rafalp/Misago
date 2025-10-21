@@ -23,7 +23,7 @@ def test_synchronizecategories_command_synchronizes_empty_category(default_categ
     assert default_category.posts == 0
     assert default_category.unapproved_threads == 0
     assert default_category.unapproved_posts == 0
-    assert default_category.last_post_on is None
+    assert default_category.last_posted_at is None
     assert default_category.last_thread is None
     assert default_category.last_thread_title is None
     assert default_category.last_thread_slug is None
@@ -51,7 +51,7 @@ def test_synchronizecategories_command_synchronizes_category_with_threads(
     assert default_category.posts == 60
     assert default_category.unapproved_threads == 0
     assert default_category.unapproved_posts == 0
-    assert default_category.last_post_on == last_thread.last_posted_at
+    assert default_category.last_posted_at == last_thread.last_posted_at
     assert default_category.last_thread == last_thread
     assert default_category.last_thread_title == last_thread.title
     assert default_category.last_thread_slug == last_thread.slug
