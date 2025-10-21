@@ -71,7 +71,7 @@ The code below implements a custom filter function that returns `True` if the po
 
 ```python
 from misago.posting.hooks import post_needs_content_upgrade_hook
-from misago.posts.models import Post
+from misago.threads.models import Post
 
 
 @post_needs_content_upgrade_hook.append_filter
