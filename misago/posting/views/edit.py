@@ -16,25 +16,6 @@ from ...permissions.threads import (
     check_edit_thread_permission,
     check_edit_thread_post_permission,
 )
-from ...posting.formsets import (
-    Formset,
-    PrivateThreadEditFormset,
-    PrivateThreadPostEditFormset,
-    ThreadEditFormset,
-    ThreadPostEditFormset,
-    get_private_thread_edit_formset,
-    get_private_thread_post_edit_formset,
-    get_thread_edit_formset,
-    get_thread_post_edit_formset,
-)
-from ...posting.state import (
-    PostEditState,
-    PrivateThreadPostEditState,
-    ThreadPostEditState,
-    get_private_thread_post_edit_state,
-    get_thread_post_edit_state,
-)
-from ...posting.validators import validate_posted_contents
 from ...privatethreads.redirect import redirect_to_private_thread_post
 from ...privatethreads.views.generic import PrivateThreadView
 from ...threads.models import Post, Thread
@@ -47,6 +28,25 @@ from ..hooks import (
     get_thread_edit_context_data_hook,
     get_thread_post_edit_context_data_hook,
 )
+from ..formsets import (
+    Formset,
+    PrivateThreadEditFormset,
+    PrivateThreadPostEditFormset,
+    ThreadEditFormset,
+    ThreadPostEditFormset,
+    get_private_thread_edit_formset,
+    get_private_thread_post_edit_formset,
+    get_thread_edit_formset,
+    get_thread_post_edit_formset,
+)
+from ..state import (
+    PostEditState,
+    PrivateThreadPostEditState,
+    ThreadPostEditState,
+    get_private_thread_post_edit_state,
+    get_thread_post_edit_state,
+)
+from ..validators import validate_posted_contents
 
 
 class EditView(View):

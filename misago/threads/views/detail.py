@@ -13,7 +13,6 @@ from django.urls import reverse
 from django.views import View
 
 from ...categories.models import Category
-from ...core.exceptions import OutdatedSlug
 from ...notifications.threads import update_watched_thread_read_time
 from ...permissions.checkutils import check_permissions
 from ...permissions.polls import check_start_thread_poll_permission
@@ -29,7 +28,6 @@ from ...posting.formsets import (
     ThreadReplyFormset,
     get_thread_reply_formset,
 )
-from ...posts.paginator import PostPaginatorPage
 from ...readtracker.tracker import (
     get_unread_posts,
     mark_category_read,
@@ -43,6 +41,7 @@ from ..hooks import (
     get_thread_replies_page_thread_queryset_hook,
 )
 from ..models import Post, Thread
+from ..paginator import ThreadPostsPaginator
 from .generic import ThreadView
 
 if TYPE_CHECKING:
@@ -147,7 +146,7 @@ class DetailView(View):
         self,
         request: HttpRequest,
         thread: Thread,
-        page: PostPaginatorPage,
+        page: ThreadPostsPaginator,
         posts: list[Post],
     ) -> list[ThreadUpdate]:
         queryset = self.get_thread_updates_queryset(request, thread)

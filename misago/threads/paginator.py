@@ -3,12 +3,12 @@ from math import ceil
 from django.core.paginator import Paginator, Page
 
 
-class PostPaginator(Paginator):
+class ThreadPostsPaginator(Paginator):
     def get_item_page(self, offset: int) -> int:
         item_page = ceil((offset + 1) / self.per_page)
         return min(item_page, self.num_pages)
 
-    def page(self, number) -> "PostPaginatorPage":
+    def page(self, number) -> "ThreadPostsPaginatorPage":
         number = self.validate_number(number)
 
         next_page_first_item = None
@@ -23,10 +23,10 @@ class PostPaginator(Paginator):
             object_list = list(self.object_list[bottom : top + 1])
             object_list, next_page_first_item = object_list[:-1], object_list[-1]
 
-        return PostPaginatorPage(object_list, next_page_first_item, number, self)
+        return ThreadPostsPaginatorPage(object_list, next_page_first_item, number, self)
 
 
-class PostPaginatorPage(Page):
+class ThreadPostsPaginatorPage(Page):
     def __init__(self, object_list, next_page_first_item, number, paginator):
         self.object_list = object_list
         self.next_page_first_item = next_page_first_item

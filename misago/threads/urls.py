@@ -8,9 +8,11 @@ from .views.post import (
     ThreadPostUnapprovedView,
     ThreadPostUnreadView,
     ThreadPostView,
+    post,
 )
 
 urlpatterns = [
+    path("post/<int:post_id>/", post, name="post"),
     path(
         "threads/",
         ThreadListView.as_view(),

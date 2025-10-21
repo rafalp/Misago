@@ -3,8 +3,8 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 from ..permissions.privatethreads import filter_private_thread_posts_queryset
-from ..posts.paginator import PostPaginator
 from ..threads.models import Post, Thread
+from ..threads.paginator import ThreadPostsPaginator
 
 
 def redirect_to_private_thread_post(
@@ -13,7 +13,7 @@ def redirect_to_private_thread_post(
     queryset = filter_private_thread_posts_queryset(
         request.user_permissions, thread, thread.post_set.order_by("id")
     )
-    paginator = PostPaginator(
+    paginator = ThreadPostsPaginator(
         queryset,
         request.settings.posts_per_page,
         request.settings.posts_per_page_orphans,

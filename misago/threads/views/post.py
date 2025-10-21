@@ -6,10 +6,19 @@ from django.utils.translation import pgettext
 from django.views import View
 
 from ...categories.enums import CategoryTree
-from ...posts.redirect import redirect_to_post
 from ...readtracker.readtime import get_default_read_time
 from ..models import Post, Thread
+from ..redirect import redirect_to_post
 from .generic import ThreadView
+
+
+def post(request: HttpRequest, post_id: int) -> HttpResponse:
+    try:
+        post_obj = Post.objects.get(id=post_id)
+        return redirect_to_post(request, post_obj)
+    except (PermissionDenied, Post.DoesNotExist) as error:
+        # "Post not found" or permission error would leak post's existence
+        raise Http404(pgettext("post not found error", "Thread not found")) from error
 
 
 class PostView(View):

@@ -1,7 +1,7 @@
 from .generic import PrivateThreadView
 
 from ...categories.enums import CategoryTree
-from ...posts.redirect import redirect_to_post
+from ...threads.redirect import redirect_to_post
 from ...threads.views.post import PostLastView, PostUnreadView, PostView
 from .generic import PrivateThreadView
 

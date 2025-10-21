@@ -22,7 +22,6 @@ urlpatterns = [
     path("", include("misago.threads.urls")),
     path("", include("misago.privatethreads.urls")),
     path("", include("misago.threadupdates.urls")),
-    path("", include("misago.posts.urls")),
     path("", include("misago.notifications.urls")),
     path("", include("misago.search.urls")),
     path("", include("misago.oauth2.urls")),
