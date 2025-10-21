@@ -54,7 +54,7 @@ Must have at least two keys: `categories` and `template_name`:
 ```python
 {
     "categories": ...,
-    "template_name": "misago/category/subcategories.html"
+    "template_name": "misago/category_thread_list/subcategories.html"
 }
 ```
 
@@ -92,7 +92,7 @@ Must have at least two keys: `categories` and `template_name`:
 ```python
 {
     "categories": ...,
-    "template_name": "misago/category/subcategories.html"
+    "template_name": "misago/category_thread_list/subcategories.html"
 }
 ```
 
