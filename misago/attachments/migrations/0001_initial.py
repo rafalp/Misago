@@ -16,8 +16,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ("misago_acl", "0004_cache_version"),
         ("misago_categories", "0013_new_behaviors"),
-        ("misago_posts", "0002_move_data"),
-        ("misago_threads", "0020_new_posts_table"),
+        ("misago_threads", "0014_plugin_data"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -61,7 +60,7 @@ class Migration(migrations.Migration):
                         null=True,
                         on_delete=django.db.models.deletion.SET_NULL,
                         related_name="+",
-                        to="misago_posts.post",
+                        to="misago_threads.post",
                     ),
                 ),
                 (

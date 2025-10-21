@@ -20,12 +20,8 @@ if TYPE_CHECKING:
 
 
 class Post(PluginDataModel):
-    category = models.ForeignKey(
-        "misago_categories.Category", related_name="+", on_delete=models.CASCADE
-    )
-    thread = models.ForeignKey(
-        "misago_threads.Thread", related_name="+", on_delete=models.CASCADE
-    )
+    category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
+    thread = models.ForeignKey("misago_threads.Thread", on_delete=models.CASCADE)
     poster = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,
@@ -41,9 +37,9 @@ class Post(PluginDataModel):
 
     attachments_cache = models.JSONField(null=True, blank=True)
 
-    posted_on = models.DateTimeField(db_index=True)
-    updated_on = models.DateTimeField()
-    hidden_on = models.DateTimeField(default=timezone.now)
+    posted_at = models.DateTimeField(db_index=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
+    hidden_at = models.DateTimeField(null=True, blank=True)
 
     edits = models.PositiveIntegerField(default=0)
     last_editor = models.ForeignKey(

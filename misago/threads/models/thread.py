@@ -44,11 +44,11 @@ class Thread(PluginDataModel):
     has_unapproved_posts = models.BooleanField(default=False)
     has_hidden_posts = models.BooleanField(default=False)
 
-    started_on = models.DateTimeField(db_index=True)
-    last_post_on = models.DateTimeField(db_index=True)
+    started_at = models.DateTimeField(db_index=True)
+    last_posted_at = models.DateTimeField(db_index=True)
 
     first_post = models.ForeignKey(
-        "misago_posts.Post",
+        "misago_threads.Post",
         related_name="+",
         null=True,
         blank=True,
@@ -61,7 +61,7 @@ class Thread(PluginDataModel):
     starter_slug = models.CharField(max_length=255)
 
     last_post = models.ForeignKey(
-        "misago_posts.Post",
+        "misago_threads.Post",
         related_name="+",
         null=True,
         blank=True,
@@ -85,7 +85,7 @@ class Thread(PluginDataModel):
     is_closed = models.BooleanField(default=False)
 
     best_answer = models.ForeignKey(
-        "misago_posts.Post",
+        "misago_threads.Post",
         related_name="+",
         null=True,
         blank=True,

@@ -73,7 +73,6 @@ INSTALLED_APPS = [
     "misago.polls",
     "misago.postgres",
     "misago.posting",
-    "misago.posts",
     "misago.privatethreads",
     "misago.profile",
     "misago.readtracker",
