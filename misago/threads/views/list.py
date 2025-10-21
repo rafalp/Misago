@@ -977,7 +977,7 @@ class CategoryThreadListView(ListView):
                 "moderation": moderation,
                 "animate": animate.get(thread.id, False),
                 "selected": thread.id in selected,
-                "show_flags": self.show_thread_flags(moderation, thread),
+                "show_flags": self.show_thread_flags(moderation, thread, category),
             }
 
             thread_data.update(self.get_thread_urls(thread))

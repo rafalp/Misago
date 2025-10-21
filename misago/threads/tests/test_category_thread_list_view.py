@@ -796,10 +796,85 @@ def test_category_thread_list_view_doesnt_display_user_own_hidden_thread_to_user
     assert_not_contains(response, "thread-flag-hidden")
 
 
-def test_category_thread_list_view_displays_thread_solved_flag(
+def test_category_thread_list_view_displays_thread_without_flags(
+    thread_factory, client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user)
+    response = client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
+
+
+def test_category_thread_list_view_displays_globally_pinned_thread(
+    thread_factory, client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user, weight=2)
+
+    response = client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-pinned-globally")
+
+
+def test_category_thread_list_view_displays_globally_pinned_thread_from_other_category(
+    thread_factory, client, guests_group, other_user, default_category, sibling_category
+):
+    CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=guests_group,
+        permission=CategoryPermission.SEE,
+    )
+    CategoryGroupPermission.objects.create(
+        category=sibling_category,
+        group=guests_group,
+        permission=CategoryPermission.BROWSE,
+    )
+
+    thread = thread_factory(sibling_category, starter=other_user, weight=2)
+
+    response = client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-pinned-globally")
+
+
+def test_category_thread_list_view_displays_locally_pinned_thread(
+    thread_factory, client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user, weight=1)
+
+    response = client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-pinned-locally")
+
+
+def test_category_thread_list_view_displays_thread_with_poll(
+    thread_factory, poll_factory, client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user)
+    poll_factory(thread)
+
+    response = client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-poll")
+
+
+def test_category_thread_list_view_displays_solved_thread(
     thread_factory, thread_reply_factory, client, other_user, default_category
 ):
-    thread = thread_factory(default_category, starter=other_user, is_closed=True)
+    thread = thread_factory(default_category, starter=other_user)
     thread.best_answer = thread_reply_factory(thread)
     thread.save()
 
@@ -808,10 +883,10 @@ def test_category_thread_list_view_displays_thread_solved_flag(
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-best-answer")
+    assert_contains(response, "thread-flag-answered")
 
 
-def test_category_thread_list_view_displays_thread_closed_flag(
+def test_category_thread_list_view_displays_closed_thread(
     thread_factory, client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, is_closed=True)
@@ -819,8 +894,8 @@ def test_category_thread_list_view_displays_thread_closed_flag(
 
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
-    assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-closed")
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-closed")
 
 
 def test_category_thread_list_view_doesnt_display_thread_unapproved_posts_flag_to_anonymous_user(
@@ -834,7 +909,7 @@ def test_category_thread_list_view_doesnt_display_thread_unapproved_posts_flag_t
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-hidden")
+    assert_not_contains(response, "thread-flag-unapproved")
 
 
 def test_category_thread_list_view_doesnt_display_thread_unapproved_posts_flag_to_user(
@@ -848,7 +923,7 @@ def test_category_thread_list_view_doesnt_display_thread_unapproved_posts_flag_t
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-hidden")
+    assert_not_contains(response, "thread-flag-unapproved")
 
 
 def test_category_thread_list_view_displays_thread_unapproved_posts_flag_to_category_moderator(
@@ -868,7 +943,7 @@ def test_category_thread_list_view_displays_thread_unapproved_posts_flag_to_cate
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-hidden")
+    assert_contains(response, "thread-flag-unapproved")
 
 
 def test_category_thread_list_view_displays_thread_unapproved_posts_flag_to_global_moderator(
@@ -882,7 +957,7 @@ def test_category_thread_list_view_displays_thread_unapproved_posts_flag_to_glob
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-hidden")
+    assert_contains(response, "thread-flag-unapproved")
 
 
 def test_category_thread_list_view_doesnt_display_own_thread_unapproved_posts_flag_to_user(
@@ -894,7 +969,7 @@ def test_category_thread_list_view_doesnt_display_own_thread_unapproved_posts_fl
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-hidden")
+    assert_not_contains(response, "thread-flag-unapproved")
 
 
 def test_category_thread_list_view_displays_thread_with_user_starter_and_deleted_last_poster(

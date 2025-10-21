@@ -441,10 +441,108 @@ def test_thread_list_view_doesnt_display_user_own_hidden_thread_to_user(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_displays_thread_solved_flag(
+def test_thread_list_view_displays_thread_without_flags(
+    thread_factory, client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user)
+    response = client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_globally_pinned_thread(
+    thread_factory, client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user, weight=2)
+    response = client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-pinned-globally")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_doesnt_display_thread_pinned_in_category_flag_to_anonymous_user(
+    thread_factory, client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user, weight=1)
+    response = client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
+    assert_not_contains(response, "thread-flag-pinned-locally-elsewhere")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_doesnt_display_thread_pinned_in_category_flag_to_user(
+    thread_factory, user_client, user, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user, weight=1)
+    response = user_client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
+    assert_not_contains(response, "thread-flag-pinned-locally-elsewhere")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_thread_pinned_in_category_flag_to_category_moderator(
+    thread_factory, user_client, user, other_user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    thread = thread_factory(default_category, starter=other_user, weight=1)
+    response = user_client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-pinned-locally-elsewhere")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_thread_pinned_in_category_flag_to_global_moderator(
+    thread_factory, moderator_client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user, weight=1)
+    response = moderator_client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-pinned-locally-elsewhere")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_thread_with_poll(
+    thread_factory, poll_factory, client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user)
+    poll_factory(thread)
+
+    response = client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-poll")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_solved_thread(
     thread_factory, thread_reply_factory, client, other_user, default_category
 ):
-    thread = thread_factory(default_category, starter=other_user, is_closed=True)
+    thread = thread_factory(default_category, starter=other_user)
     thread.best_answer = thread_reply_factory(thread)
     thread.save()
 
@@ -453,11 +551,11 @@ def test_thread_list_view_displays_thread_solved_flag(
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-best-answer")
+    assert_contains(response, "thread-flag-answered")
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_displays_thread_closed_flag(
+def test_thread_list_view_displays_closed_thread(
     thread_factory, client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, is_closed=True)
@@ -465,8 +563,8 @@ def test_thread_list_view_displays_thread_closed_flag(
 
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
-    assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-closed")
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-closed")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -481,7 +579,7 @@ def test_thread_list_view_doesnt_display_thread_unapproved_posts_flag_to_anonymo
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-hidden")
+    assert_not_contains(response, "thread-flag-unapproved")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -496,7 +594,7 @@ def test_thread_list_view_doesnt_display_thread_unapproved_posts_flag_to_user(
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-hidden")
+    assert_not_contains(response, "thread-flag-unapproved")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -517,7 +615,7 @@ def test_thread_list_view_displays_thread_unapproved_posts_flag_to_category_mode
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-hidden")
+    assert_contains(response, "thread-flag-unapproved")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -532,7 +630,7 @@ def test_thread_list_view_displays_thread_unapproved_posts_flag_to_global_modera
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-hidden")
+    assert_contains(response, "thread-flag-unapproved")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -545,7 +643,7 @@ def test_thread_list_view_doesnt_display_own_thread_unapproved_posts_flag_to_use
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-hidden")
+    assert_not_contains(response, "thread-flag-unapproved")
 
 
 @override_dynamic_settings(index_view="categories")

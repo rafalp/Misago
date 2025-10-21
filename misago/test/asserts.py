@@ -22,18 +22,23 @@ def assert_not_contains(response, string, status_code=200):
 
     response_content = response.content.decode("utf-8")
 
-    fail_message = f'"{string}" was unexpectedly found in response.content'
-    if string in response_content:
-        position = response_content.index(string)
-        line_start = response_content.rindex("\n", 0, position) + 1
-        if "\n" in response_content[position:]:
-            line_end = response_content.index("\n", position)
-        else:
-            line_end = len(response_content)
-
-        fail_message = f"{fail_message}:\n\n{response_content[line_start:line_end]}"
-
+    fail_message = _get_assert_not_contains_message(response_content, string)
     assert string not in response_content, fail_message
+
+
+def _get_assert_not_contains_message(content: str, fragment: str) -> str | None:
+    if fragment not in content:
+        return None
+
+    fail_message = f'"{fragment}" was unexpectedly found in response.content:'
+    lines = [line for line in content.splitlines() if line.strip()]
+
+    for i, line in enumerate(lines):
+        if fragment in line:
+            response_fragment = "\n".join(lines[i - 4 : i + 5])
+            return f"{fail_message}\n\n{response_fragment}"
+
+    return None
 
 
 def assert_contains_element(response, element, status_code=200, **attrs):
