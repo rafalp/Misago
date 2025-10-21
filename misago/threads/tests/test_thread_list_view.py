@@ -441,6 +441,35 @@ def test_thread_list_view_doesnt_display_user_own_hidden_thread_to_user(
 
 
 @override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_thread_solved_flag(
+    thread_factory, thread_reply_factory, client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user, is_closed=True)
+    thread.best_answer = thread_reply_factory(thread)
+    thread.save()
+
+    response = client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-best-answer")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_thread_closed_flag(
+    thread_factory, client, other_user, default_category
+):
+    thread = thread_factory(default_category, starter=other_user, is_closed=True)
+    response = client.get(reverse("misago:thread-list"))
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
+    assert_not_contains(response, "thread-flag-closed")
+
+
+@override_dynamic_settings(index_view="categories")
 def test_thread_list_view_doesnt_display_thread_unapproved_posts_flag_to_anonymous_user(
     thread_factory, client, other_user, default_category
 ):
