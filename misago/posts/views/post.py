@@ -2,7 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpRequest, HttpResponse
 from django.utils.translation import pgettext
 
-from ...posts.models import Post
+from ...threads.models import Post
 from ..redirect import redirect_to_post
 
 

@@ -4,8 +4,7 @@ from django.http import Http404
 
 from ..categories.enums import CategoryTree
 from ..categories.models import Category
-from ..posts.models import Post
-from ..threads.models import Thread
+from ..threads.models import Post, Thread
 from .categories import check_see_category_permission
 from .hooks import (
     check_access_category_permission_hook,

@@ -3,9 +3,8 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 from ..permissions.threads import filter_thread_posts_queryset
-from ..posts.models import Post
 from ..posts.paginator import PostPaginator
-from .models import Thread
+from .models import Post, Thread
 
 
 def redirect_to_thread_post(

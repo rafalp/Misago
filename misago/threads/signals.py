@@ -10,7 +10,6 @@ from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
-from ..posts.models import Post as NewPost
 from ..threadupdates.models import ThreadUpdate
 from ..users.signals import (
     anonymize_user_data,
@@ -114,10 +113,6 @@ def delete_user_threads(sender, **kwargs):
             thread.delete()
 
     for post in Post.objects.filter(poster=sender).iterator(chunk_size=50):
-        with transaction.atomic():
-            post.delete()
-
-    for post in NewPost.objects.filter(poster=sender).iterator(chunk_size=50):
         with transaction.atomic():
             post.delete()
 

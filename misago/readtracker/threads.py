@@ -24,9 +24,9 @@ def is_category_read(
             request.categories.categories[category.id],
             threads_select_related_user_readthread(Thread.objects, request.user),
         )
-        .filter(last_post_on__gt=read_time)
+        .filter(last_posted_at__gt=read_time)
         .filter(
-            Q(last_post_on__gt=F("user_readthread__read_time"))
+            Q(last_posted_at__gt=F("user_readthread__read_time"))
             | Q(user_readthread__isnull=True)
         )
     )

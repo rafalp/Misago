@@ -13,7 +13,7 @@ from ..plugins.models import PluginDataModel
 from .filetypes import AttachmentFileType, filetypes
 
 if TYPE_CHECKING:
-    from ..posts.models import Post
+    from ..threads.models import Post
 
 
 def upload_to(instance: "Attachment", filename: str) -> str:

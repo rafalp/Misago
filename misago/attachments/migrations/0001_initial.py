@@ -14,9 +14,9 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ("misago_threads", "0014_plugin_data"),
         ("misago_acl", "0004_cache_version"),
         ("misago_categories", "0013_new_behaviors"),
-        ("misago_threads", "0014_plugin_data"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 

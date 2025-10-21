@@ -7,9 +7,8 @@ from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
-from ..posts.models import Post
 from ..readtracker.models import ReadThread
-from ..threads.models import Thread
+from ..threads.models import Post, Thread
 from ..threadupdates.create import create_test_thread_update
 from ..threadupdates.models import ThreadUpdate
 from ..core.utils import slugify
@@ -36,8 +35,8 @@ def thread_factory(post_factory):
         has_open_reports: bool = False,
         has_unapproved_posts: bool = False,
         has_hidden_posts: bool = False,
-        started_on: FactoryTimestampArg = True,
-        last_post_on: FactoryTimestampArg = None,
+        started_at: FactoryTimestampArg = True,
+        last_posted_at: FactoryTimestampArg = None,
         starter: FactoryUserArg = "Starter",
         last_poster: FactoryUserArg = None,
         weight: int = 0,
@@ -45,11 +44,11 @@ def thread_factory(post_factory):
         is_hidden: bool = False,
         is_closed: bool = False,
     ):
-        started_on = factory_timestamp_arg(started_on)
-        if last_post_on is None:
-            last_post_on = started_on
+        started_at = factory_timestamp_arg(started_at)
+        if last_posted_at is None:
+            last_posted_at = started_at
         else:
-            last_post_on = factory_timestamp_arg(last_post_on)
+            last_posted_at = factory_timestamp_arg(last_posted_at)
 
         if not title:
             title = f"Thread {get_random_string(8)}"
@@ -65,8 +64,8 @@ def thread_factory(post_factory):
             has_open_reports=has_open_reports,
             has_unapproved_posts=has_unapproved_posts,
             has_hidden_posts=has_hidden_posts,
-            started_on=started_on,
-            last_post_on=last_post_on,
+            started_at=started_at,
+            last_posted_at=last_posted_at,
             weight=weight,
             is_unapproved=is_unapproved,
             is_hidden=is_hidden,
@@ -76,7 +75,7 @@ def thread_factory(post_factory):
         post = post_factory(
             thread,
             poster=starter,
-            posted_at=started_on,
+            posted_at=started_at,
         )
 
         thread.first_post = post

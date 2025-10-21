@@ -31,7 +31,7 @@ def test_categories_view_mark_as_read_marks_categories_read(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
     response = user_client.post(
@@ -59,7 +59,7 @@ def test_categories_view_mark_as_read_marks_categories_read_in_htmx(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
     response = user_client.post(

@@ -3,8 +3,7 @@ from typing import TYPE_CHECKING, Protocol
 from ...attachments.models import Attachment
 from ...categories.models import Category
 from ...plugins.hooks import FilterHook
-from ...posts.models import Post
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 
 if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
@@ -118,8 +117,7 @@ class CheckDownloadAttachmentPermissionHook(
     from misago.categories.models import Category
     from misago.permissions.hooks import check_download_attachment_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
-    from misago.posts.models import Post
-    from misago.threads.models import Thread
+    from misago.threads.models import Post, Thread
 
     @check_download_attachment_permission_hook.append_filter
     def check_user_can_download_attachment(

@@ -6,10 +6,9 @@ from django.utils.translation import pgettext
 from django.views import View
 
 from ...categories.enums import CategoryTree
-from ...posts.models import Post
 from ...posts.redirect import redirect_to_post
 from ...readtracker.readtime import get_default_read_time
-from ..models import Thread
+from ..models import Post, Thread
 from .generic import ThreadView
 
 

@@ -13,8 +13,8 @@ def test_reply_state_initializes_post(user_request, other_user_thread):
     assert state.thread.last_poster_name == other_user_thread.last_poster_name
     assert state.thread.last_poster_slug == other_user_thread.last_poster_slug
     assert state.thread.category == other_user_thread.category
-    assert state.thread.started_on == other_user_thread.started_on
-    assert state.thread.last_post_on == other_user_thread.last_post_on
+    assert state.thread.started_at == other_user_thread.started_at
+    assert state.thread.last_posted_at == other_user_thread.last_posted_at
 
     assert state.post
     assert state.post.poster == user_request.user
@@ -42,7 +42,7 @@ def test_reply_state_updates_thread(user_request, other_user_thread):
     assert state.thread.last_poster == user_request.user
     assert state.thread.last_poster_name == user_request.user.username
     assert state.thread.last_poster_slug == user_request.user.slug
-    assert state.thread.last_post_on == state.timestamp
+    assert state.thread.last_posted_at == state.timestamp
 
 
 def test_reply_state_updates_category(user_request, other_user_thread):
@@ -100,13 +100,13 @@ def test_reply_state_updates_existing_post(user, user_request, user_thread):
     assert user_thread.last_poster == user
     assert user_thread.last_poster_name == user.username
     assert user_thread.last_poster_slug == user.slug
-    assert user_thread.last_post_on == post.posted_at
+    assert user_thread.last_last_posted_atpost_on == post.posted_at
 
     category.refresh_from_db()
     assert category.threads == 1
     assert category.posts == 1
     assert category.last_thread == state.thread
-    assert category.last_post_on == post.posted_at
+    assert category.last_posted_at == post.posted_at
     assert category.last_poster == user
     assert category.last_poster_name == user.username
     assert category.last_poster_slug == user.slug

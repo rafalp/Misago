@@ -61,7 +61,7 @@ def test_start_state_updates_category(user_request, default_category):
     assert default_category.threads == 1
     assert default_category.posts == 1
     assert default_category.last_thread == state.thread
-    assert default_category.last_post_on == state.thread.last_post_on
+    assert default_category.last_posted_at == state.thread.last_posted_at
     assert default_category.last_poster == state.thread.last_poster
     assert default_category.last_poster_name == state.thread.last_poster_name
     assert default_category.last_poster_slug == state.thread.last_poster_slug

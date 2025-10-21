@@ -33,7 +33,7 @@ class Command(BaseCommand):
 
             if category.prune_started_after:
                 cutoff = now - timedelta(days=category.prune_started_after)
-                prune_qs = threads_qs.filter(started_on__lte=cutoff)
+                prune_qs = threads_qs.filter(started_at__lte=cutoff)
                 for thread in prune_qs.iterator(chunk_size=50):
                     if archive:
                         move_threads(thread, archive)
@@ -43,7 +43,7 @@ class Command(BaseCommand):
 
             if category.prune_replied_after:
                 cutoff = now - timedelta(days=category.prune_replied_after)
-                prune_qs = threads_qs.filter(last_post_on__lte=cutoff)
+                prune_qs = threads_qs.filter(last_posted_at__lte=cutoff)
                 for thread in prune_qs.iterator(chunk_size=50):
                     if archive:
                         move_threads(thread, archive)

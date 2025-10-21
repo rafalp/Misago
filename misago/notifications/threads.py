@@ -16,8 +16,7 @@ from ..permissions.privatethreads import (
     check_private_threads_permission,
     check_see_private_thread_permission,
 )
-from ..posts.models import Post
-from ..threads.models import Thread
+from ..threads.models import Post, Thread
 from ..threads.threadurl import get_thread_url
 from .enums import NotificationVerb, ThreadNotifications
 from .models import Notification, WatchedThread

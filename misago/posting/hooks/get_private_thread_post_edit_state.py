@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ...posts.models import Post
+from ...threads.models import Post
 
 if TYPE_CHECKING:
     from ..state.edit import EditPrivateThreadPostState
@@ -91,7 +91,7 @@ class GetEditPrivateThreadPostStateHook(
     from django.http import HttpRequest
     from misago.posting.hooks import get_private_thread_post_edit_state_hook
     from misago.posting.state import EditPrivateThreadPostState
-    from misago.posts.models import Post
+    from misago.threads.models import Post
 
 
     @get_private_thread_post_edit_state_hook.append_filter

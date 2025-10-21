@@ -1267,7 +1267,7 @@ def test_category_thread_list_view_marks_unread_category_without_unread_threads_
             user=user,
             category=default_category,
             thread=thread,
-            read_time=thread.last_post_on,
+            read_time=thread.last_posted_at,
         )
 
     default_category.synchronize()
@@ -1295,7 +1295,7 @@ def test_category_thread_list_view_marks_unread_category_with_read_entry_without
     read_category = ReadCategory.objects.create(
         user=user,
         category=default_category,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
     read_thread = thread_factory(
@@ -1307,7 +1307,7 @@ def test_category_thread_list_view_marks_unread_category_with_read_entry_without
         user=user,
         category=default_category,
         thread=read_thread,
-        read_time=read_thread.last_post_on,
+        read_time=read_thread.last_posted_at,
     )
 
     default_category.synchronize()
@@ -1338,7 +1338,7 @@ def test_category_thread_list_view_doesnt_mark_unread_category_with_unread_threa
         user=user,
         category=default_category,
         thread=read_thread,
-        read_time=read_thread.last_post_on,
+        read_time=read_thread.last_posted_at,
     )
 
     thread_factory(

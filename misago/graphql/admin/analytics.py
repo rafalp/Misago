@@ -6,8 +6,7 @@ from django.core.cache import cache
 from django.utils import timezone
 
 from ...attachments.models import Attachment
-from ...posts.models import Post
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ...users.models import DataDownload, DeletedUser
 
 CACHE_KEY = "misago_admin_analytics"

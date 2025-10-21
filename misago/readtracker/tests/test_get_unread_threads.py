@@ -43,7 +43,7 @@ def test_get_unread_threads_includes_unread_thread(
 def test_get_unread_threads_excludes_unread_thread_older_than_user(
     dynamic_settings, default_category, thread, user
 ):
-    thread.last_post_on -= timedelta(minutes=30)
+    thread.last_posted_at -= timedelta(minutes=30)
     thread.save()
 
     request = Mock(settings=dynamic_settings, user=user)
@@ -62,7 +62,7 @@ def test_get_unread_threads_excludes_old_unread_thread(
     user.joined_on = user.joined_on.replace(year=2010)
     user.save()
 
-    thread.last_post_on = thread.last_post_on.replace(year=2012)
+    thread.last_posted_at = thread.last_posted_at.replace(year=2012)
     thread.save()
 
     request = Mock(settings=dynamic_settings, user=user)
@@ -81,14 +81,14 @@ def test_get_unread_threads_excludes_read_thread(
     user.joined_on -= timedelta(minutes=30)
     user.save()
 
-    thread.last_post_on -= timedelta(minutes=10)
+    thread.last_posted_at -= timedelta(minutes=10)
     thread.save()
 
     ReadThread.objects.create(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
     request = Mock(settings=dynamic_settings, user=user)
@@ -107,13 +107,13 @@ def test_get_unread_threads_excludes_unread_thread_in_read_category(
     user.joined_on -= timedelta(minutes=30)
     user.save()
 
-    thread.last_post_on -= timedelta(minutes=10)
+    thread.last_posted_at -= timedelta(minutes=10)
     thread.save()
 
     ReadCategory.objects.create(
         user=user,
         category=default_category,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
     request = Mock(settings=dynamic_settings, user=user)
@@ -132,14 +132,14 @@ def test_get_unread_threads_includes_read_thread_with_unread_reply(
     user.joined_on -= timedelta(minutes=30)
     user.save()
 
-    thread.last_post_on -= timedelta(minutes=10)
+    thread.last_posted_at -= timedelta(minutes=10)
     thread.save()
 
     ReadThread.objects.create(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
     thread_reply_factory(thread)
@@ -160,7 +160,7 @@ def test_get_unread_threads_includes_read_thread_in_read_category_with_unread_re
     user.joined_on -= timedelta(minutes=30)
     user.save()
 
-    thread.last_post_on -= timedelta(minutes=10)
+    thread.last_posted_at -= timedelta(minutes=10)
     thread.save()
 
     ReadCategory.objects.create(

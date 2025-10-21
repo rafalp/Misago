@@ -15,8 +15,8 @@ def update_thread_timestamp(thread: Thread, seconds: int):
     post.posted_at -= timedelta(seconds=seconds)
     post.save()
 
-    thread.started_on = post.posted_at
-    thread.last_post_on = post.posted_at
+    thread.started_at = post.posted_at
+    thread.last_posted_at = post.posted_at
     thread.save()
 
 
@@ -28,7 +28,7 @@ def test_private_thread_detail_view_marks_category_as_read_for_user(
 
     update_thread_timestamp(user_private_thread, 900)
 
-    private_threads_category.last_post_on = user_private_thread.last_post_on
+    private_threads_category.last_post_on = user_private_thread.last_posted_at
     private_threads_category.save()
 
     response = user_client.get(
@@ -46,7 +46,7 @@ def test_private_thread_detail_view_marks_category_as_read_for_user(
     ReadCategory.objects.get(
         user=user,
         category=private_threads_category,
-        read_time=private_threads_category.last_post_on,
+        read_time=private_threads_category.last_posted_at,
     )
 
 
@@ -63,7 +63,7 @@ def test_private_thread_detail_view_marks_thread_as_read_for_user(
     update_thread_timestamp(user_private_thread, 900)
     update_thread_timestamp(other_user_private_thread, 700)
 
-    private_threads_category.last_post_on = other_user_private_thread.last_post_on
+    private_threads_category.last_post_on = other_user_private_thread.last_posted_at
     private_threads_category.save()
 
     response = user_client.get(
@@ -82,7 +82,7 @@ def test_private_thread_detail_view_marks_thread_as_read_for_user(
         user=user,
         category=private_threads_category,
         thread=user_private_thread,
-        read_time=user_private_thread.last_post_on,
+        read_time=user_private_thread.last_posted_at,
     )
 
 
@@ -145,7 +145,7 @@ def test_private_thread_detail_view_updates_user_watched_thread_read_time(
     watched_thread.read_time = watched_thread.read_time.replace(year=2010)
     watched_thread.save()
 
-    private_threads_category.last_post_on = other_user_private_thread.last_post_on
+    private_threads_category.last_post_on = other_user_private_thread.last_posted_at
     private_threads_category.save()
 
     response = user_client.get(
@@ -160,7 +160,7 @@ def test_private_thread_detail_view_updates_user_watched_thread_read_time(
     assert_contains(response, user_private_thread.title)
 
     watched_thread.refresh_from_db()
-    assert watched_thread.read_time == user_private_thread.last_post_on
+    assert watched_thread.read_time == user_private_thread.last_posted_at
 
 
 def test_private_thread_detail_view_marks_displayed_posts_notifications_as_read(
@@ -215,7 +215,7 @@ def test_private_thread_detail_view_decreases_user_unread_threads_count_on_threa
     update_thread_timestamp(user_private_thread, 900)
     update_thread_timestamp(other_user_private_thread, 300)
 
-    private_threads_category.last_post_on = other_user_private_thread.last_post_on
+    private_threads_category.last_post_on = other_user_private_thread.last_posted_at
     private_threads_category.save()
 
     response = user_client.get(
@@ -287,7 +287,7 @@ def test_private_thread_detail_view_clears_user_unread_threads_count_on_category
 
     update_thread_timestamp(user_private_thread, 9000)
 
-    private_threads_category.last_post_on = user_private_thread.last_post_on
+    private_threads_category.last_post_on = user_private_thread.last_posted_at
     private_threads_category.save()
 
     response = user_client.get(

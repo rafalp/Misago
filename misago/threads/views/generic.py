@@ -18,7 +18,6 @@ from ...permissions.threads import (
     filter_thread_posts_queryset,
     filter_thread_updates_queryset,
 )
-from ...posts.models import Post
 from ...posts.paginator import PostPaginator
 from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
@@ -26,7 +25,7 @@ from ...readtracker.tracker import (
 )
 from ...privatethreads.members import get_private_thread_members
 from ...threadupdates.models import ThreadUpdate
-from ..models import Thread
+from ..models import Post, Thread
 from ..nexturl import get_next_thread_url
 from ..postsfeed import PostsFeed, PrivateThreadPostsFeed, ThreadPostsFeed
 

@@ -1,6 +1,5 @@
 from functools import cached_property
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
@@ -142,7 +141,7 @@ class Thread(PluginDataModel):
                 condition=Q(is_hidden=False),
             ),
             models.Index(fields=["category", "id"]),
-            models.Index(fields=["category", "last_post_on"]),
+            models.Index(fields=["category", "last_posted_at"]),
             models.Index(fields=["category", "replies"]),
         ]
 
@@ -208,7 +207,7 @@ class Thread(PluginDataModel):
             update_thread_title.send(sender=self)
 
     def set_first_post(self, post):
-        self.started_on = post.posted_at
+        self.started_at = post.started_at
         self.first_post = post
         self.starter = post.poster
         self.starter_name = post.poster_name
@@ -221,7 +220,7 @@ class Thread(PluginDataModel):
         self.is_hidden = post.is_hidden
 
     def set_last_post(self, post):
-        self.last_post_on = post.posted_at
+        self.last_posted_at = post.last_posted_at
         self.last_post = post
         self.last_poster = post.poster
         self.last_poster_name = post.poster_name

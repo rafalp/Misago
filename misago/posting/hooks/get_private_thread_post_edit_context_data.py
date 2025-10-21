@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ...posts.models import Post
+from ...threads.models import Post
 
 if TYPE_CHECKING:
     from ..formsets import EditPrivateThreadPostFormset
@@ -101,7 +101,7 @@ class GetPrivateThreadPostEditContextDataHook(
     from django.http import HttpRequest
     from misago.posting.formsets import EditPrivateThreadPostFormset
     from misago.posting.hooks import get_private_thread_post_edit_context_data_hook
-    from misago.posts.models import Post
+    from misago.threads.models import Post
 
     @get_private_thread_post_edit_context_data_hook.append_filter
     def set_show_first_post_warning_in_context(

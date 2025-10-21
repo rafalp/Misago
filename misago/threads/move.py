@@ -7,11 +7,10 @@ from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
-from ..posts.models import Post
 from ..readtracker.models import ReadThread
 from ..threadupdates.models import ThreadUpdate
 from .hooks import move_threads_hook
-from .models import Thread
+from .models import Post, Thread
 
 
 def move_threads(

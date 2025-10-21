@@ -34,7 +34,6 @@ from ...posting.state import (
     get_reply_thread_state,
 )
 from ...posting.validators import validate_flood_control, validate_posted_contents
-from ...posts.models import Post
 from ...privatethreads.views.generic import PrivateThreadView
 from ...privatethreads.redirect import redirect_to_private_thread_post
 from ...readtracker.tracker import (
@@ -44,7 +43,7 @@ from ...readtracker.tracker import (
 )
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ...threads.prefetch import prefetch_posts_feed_related_objects
 from ...threads.redirect import redirect_to_thread_post
 from ...threads.views.generic import ThreadView

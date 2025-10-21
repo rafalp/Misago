@@ -1,14 +1,4 @@
-from datetime import timedelta
-
-from django.test import TestCase
-from django.utils import timezone
-
-from ...categories.models import Category
-from ...polls.models import Poll
-from ...posts.models import Post
 from ...privatethreads.models import PrivateThreadMember
-from ...users.test import create_test_user
-from ..models import Thread
 
 
 def test_thread_model_set_first_post(post_factory, thread, user):
@@ -17,7 +7,7 @@ def test_thread_model_set_first_post(post_factory, thread, user):
     thread.set_first_post(post)
     thread.save()
 
-    assert thread.started_on == post.posted_at
+    assert thread.started_at == post.posted_at
     assert thread.first_post == post
     assert thread.starter == user
     assert thread.starter_name == user.username
@@ -25,7 +15,7 @@ def test_thread_model_set_first_post(post_factory, thread, user):
 
     thread.refresh_from_db()
 
-    assert thread.started_on == post.posted_at
+    assert thread.started_at == post.posted_at
     assert thread.first_post == post
     assert thread.starter == user
     assert thread.starter_name == user.username
@@ -38,7 +28,7 @@ def test_thread_model_set_last_post(post_factory, thread, user):
     thread.set_last_post(post)
     thread.save()
 
-    assert thread.last_post_on == post.posted_at
+    assert thread.last_posted_at == post.posted_at
     assert thread.last_post == post
     assert thread.last_poster == user
     assert thread.last_poster_name == user.username
@@ -46,7 +36,7 @@ def test_thread_model_set_last_post(post_factory, thread, user):
 
     thread.refresh_from_db()
 
-    assert thread.last_post_on == post.posted_at
+    assert thread.last_posted_at == post.posted_at
     assert thread.last_post == post
     assert thread.last_poster == user
     assert thread.last_poster_name == user.username

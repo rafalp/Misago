@@ -26,7 +26,6 @@ class Post(PluginDataModel):
         settings.AUTH_USER_MODEL,
         blank=True,
         null=True,
-        related_name="+",
         on_delete=models.SET_NULL,
     )
     poster_name = models.CharField(max_length=255)
@@ -83,6 +82,25 @@ class Post(PluginDataModel):
 
     search_document = models.TextField(null=True, blank=True)
     search_vector = SearchVectorField()
+
+    class Meta:
+        indexes = [
+            *PluginDataModel.Meta.indexes,
+            models.Index(
+                name="misago_post_has_open_repo_part",
+                fields=["has_open_reports"],
+                condition=Q(has_open_reports=True),
+            ),
+            models.Index(
+                name="misago_post_is_hidden_part",
+                fields=["is_hidden"],
+                condition=Q(is_hidden=False),
+            ),
+            GinIndex(fields=["search_vector"]),
+            # Speed up some views for team members
+            models.Index(fields=["thread", "id"]),
+            models.Index(fields=["poster", "posted_at"]),
+        ]
 
     def __str__(self):
         return "%s..." % self.original[10:].strip()

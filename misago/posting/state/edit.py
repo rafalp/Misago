@@ -1,7 +1,7 @@
 from django.db import models, transaction
 from django.http import HttpRequest
 
-from ...posts.models import Post
+from ...threads.models import Post
 from ...threadupdates.create import create_changed_title_thread_update
 from ...threadupdates.models import ThreadUpdate
 from ..hooks import (

@@ -35,10 +35,9 @@ from ...posting.state import (
     get_thread_post_edit_state,
 )
 from ...posting.validators import validate_posted_contents
-from ...posts.models import Post
 from ...privatethreads.redirect import redirect_to_private_thread_post
 from ...privatethreads.views.generic import PrivateThreadView
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ...threads.prefetch import prefetch_posts_feed_related_objects
 from ...threads.redirect import redirect_to_thread_post
 from ...threads.views.generic import ThreadView

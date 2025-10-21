@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 
 from ..categories.treeid import get_category_tree_id
-from .models import Post
+from ..threads.models import Post
 
 
 class PostRedirectView:

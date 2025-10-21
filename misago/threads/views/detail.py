@@ -29,7 +29,6 @@ from ...posting.formsets import (
     ThreadReplyFormset,
     get_thread_reply_formset,
 )
-from ...posts.models import Post
 from ...posts.paginator import PostPaginatorPage
 from ...readtracker.tracker import (
     get_unread_posts,
@@ -43,7 +42,7 @@ from ..hooks import (
     get_thread_replies_page_posts_queryset_hook,
     get_thread_replies_page_thread_queryset_hook,
 )
-from ..models import Thread
+from ..models import Post, Thread
 from .generic import ThreadView
 
 if TYPE_CHECKING:

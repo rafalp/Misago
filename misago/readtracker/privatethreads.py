@@ -33,9 +33,9 @@ def get_unread_private_threads(
             request.user_permissions,
             threads_select_related_user_readthread(category.thread_set, request.user),
         )
-        .filter(last_post_on__gt=read_time)
+        .filter(last_posted_at__gt=read_time)
         .filter(
-            Q(last_post_on__gt=F("user_readthread__read_time"))
+            Q(last_posted_at__gt=F("user_readthread__read_time"))
             | Q(user_readthread__isnull=True)
         )
     )

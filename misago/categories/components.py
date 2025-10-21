@@ -99,7 +99,7 @@ def get_category_data(
             "id": category.last_thread_id,
             "title": category.last_thread_title,
             "slug": category.last_thread_slug,
-            "last_post_on": category.last_post_on,
+            "last_posted_at": category.last_post_on,
             "last_poster": None,
             "last_poster_name": category.last_poster_name,
             "is_visible": (
@@ -186,7 +186,7 @@ def aggregate_category_to_its_parent(category: dict, parent: dict):
         and item_last_thread["is_visible"]
         and (
             not parent_last_thread
-            or item_last_thread["last_post_on"] > parent_last_thread["last_post_on"]
+            or item_last_thread["last_posted_at"] > parent_last_thread["last_posted_at"]
         )
     ):
         parent["children_last_thread"] = item_last_thread

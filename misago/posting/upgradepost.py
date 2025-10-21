@@ -2,7 +2,7 @@ import html
 import re
 
 from ..parser.highlighter import highlight_syntax
-from ..posts.models import Post
+from ..threads.models import Post
 from .hooks import (
     post_needs_content_upgrade_hook,
     upgrade_post_content_hook,

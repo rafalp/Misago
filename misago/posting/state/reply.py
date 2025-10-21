@@ -2,8 +2,7 @@ from django.db import models, transaction
 from django.http import HttpRequest
 
 from ...parser.parse import ParsingResult, parse
-from ...posts.models import Post
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ..hooks import (
     get_private_thread_reply_state_hook,
     get_thread_reply_state_hook,

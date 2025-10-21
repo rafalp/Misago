@@ -5,8 +5,7 @@ import pytest
 from django.utils.crypto import get_random_string
 
 from ..core.utils import slugify
-from ..posts.models import Post
-from ..threads.models import Thread
+from ..threads.models import Post, Thread
 from .utils import (
     FactoryTimestampArg,
     FactoryUserArg,
@@ -130,7 +129,7 @@ def thread_reply_factory(post_factory):
 
         thread.replies += 1
         thread.last_post = post
-        thread.last_post_on = post.posted_at
+        thread.last_posted_at = post.posted_at
         thread.last_poster = post.poster
         thread.last_poster_name = post.poster_name
         thread.last_poster_slug = poster_slug

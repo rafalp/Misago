@@ -6,8 +6,7 @@ from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
 
 from ...categories.models import Category
-from ...posts.models import Post
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ..categories import check_see_category_permission
 from ..enums import CategoryPermission
 from ..hooks import (

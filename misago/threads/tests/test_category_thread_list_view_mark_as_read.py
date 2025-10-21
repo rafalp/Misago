@@ -31,7 +31,7 @@ def test_category_thread_list_view_mark_as_read_marks_category_as_read(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
     response = user_client.post(
@@ -56,7 +56,7 @@ def test_category_thread_list_view_mark_as_read_marks_category_as_read_in_htmx(
         user=user,
         category=default_category,
         thread=thread,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
     response = user_client.post(
@@ -81,7 +81,7 @@ def test_category_thread_list_view_mark_as_read_marks_child_category_as_read(
         user=user,
         category=child_category,
         thread=thread,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
 
     response = user_client.post(
@@ -113,13 +113,13 @@ def test_category_thread_list_view_mark_as_read_doesnt_mark_child_category_as_re
         user=user,
         category=default_category,
         thread=thread,
-        read_time=thread.last_post_on,
+        read_time=thread.last_posted_at,
     )
     ReadThread.objects.create(
         user=user,
         category=child_category,
         thread=other_thread,
-        read_time=other_thread.last_post_on,
+        read_time=other_thread.last_posted_at,
     )
 
     response = user_client.post(

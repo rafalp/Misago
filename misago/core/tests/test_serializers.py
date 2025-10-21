@@ -15,7 +15,7 @@ class Serializer(serializers.ModelSerializer, MutableFields):
             "replies",
             "has_unapproved_posts",
             "started_on",
-            "last_post_on",
+            "last_posted_at",
             "last_post_is_event",
             "last_post",
             "last_poster_name",

@@ -3,7 +3,7 @@ from typing import Iterable, Protocol, Union
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ...posts.models import Post
+from ...threads.models import Post
 
 
 class DeletePostsAttachmentsHookAction(Protocol):
@@ -89,7 +89,7 @@ class DeletePostsAttachmentsHook(
 
     from django.http import HttpRequest
     from misago.attachments.hooks import delete_posts_attachments_hook
-    from misago.posts.models import Post
+    from misago.threads.models import Post
 
     logger = logging.getLogger("attachments.delete")
 

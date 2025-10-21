@@ -41,7 +41,7 @@ class UnreadThreadsFilter(ThreadsFilter):
         read_time = get_default_read_time(self.request.settings, self.request.user)
 
         queryset = queryset.filter(
-            last_post_on__gt=read_time,
+            last_posted_at__gt=read_time,
         )
 
         categories_read_times = ReadCategory.objects.filter(
@@ -50,13 +50,13 @@ class UnreadThreadsFilter(ThreadsFilter):
 
         for category_id, read_time in categories_read_times:
             queryset = queryset.exclude(
-                category_id=category_id, last_post_on__lte=read_time
+                category_id=category_id, last_posted_at__lte=read_time
             )
 
         queryset = queryset.exclude(
             id__in=ReadThread.objects.filter(
                 user=self.request.user,
-                read_time__gte=F("thread__last_post_on"),
+                read_time__gte=F("thread__last_posted_at"),
             ).values("thread_id")
         )
 

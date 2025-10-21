@@ -11,8 +11,7 @@ from ...attachments.models import Attachment
 from ...categories.models import Category
 from ...core.utils import slugify
 from ...parser.parse import ParsingResult
-from ...posts.models import Post
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ..tasks import upgrade_post_content
 from ..upgradepost import post_needs_content_upgrade
 
@@ -52,8 +51,8 @@ class State:
     def initialize_thread(self) -> Thread:
         return Thread(
             category=self.category,
-            started_on=self.timestamp,
-            last_post_on=self.timestamp,
+            started_at=self.timestamp,
+            last_posted_at=self.timestamp,
             starter=self.user,
             starter_name=self.user.username,
             starter_slug=self.user.slug,

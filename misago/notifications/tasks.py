@@ -6,8 +6,7 @@ from django.contrib.auth import get_user_model
 
 from ..cache.versions import get_cache_versions
 from ..conf.dynamicsettings import DynamicSettings
-from ..posts.models import Post
-from ..threads.models import Thread
+from ..threads.models import Post, Thread
 from ..users.bans import get_user_ban
 from .models import WatchedThread
 from .threads import (
