@@ -835,7 +835,6 @@ def test_category_thread_list_view_displays_globally_pinned_thread_from_other_ca
     )
 
     thread = thread_factory(sibling_category, starter=other_user, weight=2)
-
     response = client.get(default_category.get_absolute_url())
 
     assert_contains(response, default_category.name)
@@ -848,13 +847,66 @@ def test_category_thread_list_view_displays_locally_pinned_thread(
     thread_factory, client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, weight=1)
-
     response = client.get(default_category.get_absolute_url())
 
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-pinned-locally")
+
+
+def test_category_thread_list_view_doesnt_display_thread_pinned_in_child_category_flag_to_anonymous_user(
+    thread_factory, client, other_user, default_category, child_category
+):
+    thread = thread_factory(child_category, starter=other_user, weight=1)
+    response = client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
+    assert_not_contains(response, "thread-flag-pinned-locally-elsewhere")
+
+
+def test_category_thread_list_view_doesnt_display_thread_pinned_in_child_category_flag_to_user(
+    thread_factory, user_client, other_user, default_category, child_category
+):
+    thread = thread_factory(child_category, starter=other_user, weight=1)
+    response = user_client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
+    assert_not_contains(response, "thread-flag-pinned-locally-elsewhere")
+
+
+def test_category_thread_list_view_displays_thread_pinned_in_child_category_flag_to_category_moderator(
+    thread_factory, user_client, user, other_user, default_category, child_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[child_category.id],
+    )
+
+    thread = thread_factory(child_category, starter=other_user, weight=1)
+    response = user_client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-pinned-locally-elsewhere")
+
+
+def test_category_thread_list_view_displays_thread_pinned_in_child_category_flag_to_global_moderator(
+    thread_factory, moderator_client, other_user, default_category, child_category
+):
+    thread = thread_factory(child_category, starter=other_user, weight=1)
+    response = moderator_client.get(default_category.get_absolute_url())
+
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-pinned-locally-elsewhere")
 
 
 def test_category_thread_list_view_displays_thread_with_poll(
