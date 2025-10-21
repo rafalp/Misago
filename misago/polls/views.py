@@ -49,8 +49,8 @@ class ThreadPollView(ThreadView):
 class StartThreadPollView(ThreadView):
     template_name = "misago/poll/start.html"
 
-    def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
 
         check_start_thread_poll_permission(
             request.user_permissions, thread.category, thread
@@ -59,8 +59,8 @@ class StartThreadPollView(ThreadView):
         form = StartPollForm(request=request)
         return self.render(request, thread, form)
 
-    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
 
         check_start_thread_poll_permission(
             request.user_permissions, thread.category, thread
@@ -73,7 +73,10 @@ class StartThreadPollView(ThreadView):
 
             messages.success(request, pgettext("start poll", "Poll started"))
             return redirect(
-                reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+                reverse(
+                    "misago:thread",
+                    kwargs={"thread_id": thread.id, "slug": thread.slug},
+                )
             )
 
         return self.render(request, thread, form)
@@ -96,8 +99,8 @@ class EditThreadPollView(ThreadPollView):
     template_name = "misago/poll/edit.html"
     template_name_htmx = "misago/poll/edit_partial.html"
 
-    def get(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
 
         check_edit_thread_poll_permission(
@@ -107,8 +110,8 @@ class EditThreadPollView(ThreadPollView):
         form = EditPollForm(instance=poll, request=request)
         return self.render(request, thread, poll, form)
 
-    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
 
         check_edit_thread_poll_permission(
@@ -289,8 +292,8 @@ def dispatch_thread_poll_view(
 
 
 class UpdateThreadPollView(ThreadPollView):
-    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
 
         self.check_permission(request, thread, poll)
@@ -357,8 +360,8 @@ class OpenThreadPollView(UpdateThreadPollView):
 
 
 class DeleteThreadPollView(ThreadPollView):
-    def post(self, request: HttpRequest, id: int, slug: str) -> HttpResponse:
-        thread = self.get_thread(request, id)
+    def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
         poll = self.get_poll(request, thread)
 
         check_delete_thread_poll_permission(
@@ -427,16 +430,20 @@ def get_poll_context_data(
         "allow_delete": allow_delete,
         "allow_vote": allow_vote,
         "edit_url": reverse(
-            "misago:edit-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-edit",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
         "close_url": reverse(
-            "misago:close-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-close",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
         "open_url": reverse(
-            "misago:open-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-open",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
         "delete_url": reverse(
-            "misago:delete-thread-poll", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:thread-poll-delete",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         ),
         "next_url": thread_url,
         "results_url": f"{thread_url}?poll=results",

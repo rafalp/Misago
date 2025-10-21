@@ -1,5 +1,4 @@
 from math import ceil
-from typing_extensions import TYPE_CHECKING
 
 from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
@@ -8,12 +7,13 @@ from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
 
 from ..posts.models import Post
-from ..privatethreadmembers.models import PrivateThreadMember
+from ..privatethreads.models import PrivateThreadMember
 from ..threads.models import Thread
 from .hooks import (
     check_change_private_thread_owner_permission_hook,
     check_edit_private_thread_permission_hook,
     check_edit_private_thread_post_permission_hook,
+    check_locked_private_thread_permission_hook,
     check_private_threads_permission_hook,
     check_remove_private_thread_member_permission_hook,
     check_reply_private_thread_permission_hook,
@@ -82,6 +82,28 @@ def _check_see_private_thread_permission_action(
         raise Http404()
 
 
+def check_locked_private_thread_permission(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    check_locked_private_thread_permission_hook(
+        _check_locked_private_thread_permission_action,
+        permissions,
+        thread,
+    )
+
+
+def _check_locked_private_thread_permission_action(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    if thread.is_closed and not permissions.is_private_threads_moderator:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "This thread is locked.",
+            )
+        )
+
+
 def check_reply_private_thread_permission(
     permissions: UserPermissionsProxy, thread: Thread
 ):
@@ -93,10 +115,12 @@ def check_reply_private_thread_permission(
 def _check_reply_private_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
-    if (
-        not permissions.is_private_threads_moderator
-        and len(thread.private_thread_member_ids) < 2
-    ):
+    if permissions.is_private_threads_moderator:
+        return
+
+    check_locked_private_thread_permission(permissions, thread)
+
+    if len(thread.private_thread_member_ids) < 2:
         raise PermissionDenied(
             pgettext(
                 "private thread reply permission error",
@@ -185,7 +209,13 @@ def check_see_private_thread_post_permission(
 def _check_see_private_thread_post_permission_action(
     permissions: UserPermissionsProxy, thread: Thread, post: Post
 ):
-    pass
+    if not permissions.is_private_threads_moderator and post.is_hidden:
+        raise PermissionDenied(
+            pgettext(
+                "threads permission error",
+                "You can't view this post's contents.",
+            )
+        )
 
 
 def check_edit_private_thread_post_permission(

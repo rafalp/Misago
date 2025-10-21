@@ -37,12 +37,12 @@ def test_categories_view_returns_response_when_its_not_homepage(db, client):
 
 @override_dynamic_settings(index_view="threads")
 def test_threads_view_redirects_to_index_when_its_homepage(db, client):
-    response = client.get(reverse("misago:threads"))
+    response = client.get(reverse("misago:thread-list"))
     assert response.status_code == 302
     assert response.headers["location"] == reverse("misago:index")
 
 
 @override_dynamic_settings(index_view="categories")
 def test_threads_view_returns_response_when_its_not_homepage(db, client):
-    response = client.get(reverse("misago:threads"))
+    response = client.get(reverse("misago:thread-list"))
     assert_contains(response, "page-threads")

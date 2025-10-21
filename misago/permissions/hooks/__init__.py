@@ -33,6 +33,9 @@ from .check_edit_thread_post_permission import check_edit_thread_post_permission
 from .check_locked_category_permission import (
     check_locked_category_permission_hook,
 )
+from .check_locked_private_thread_permission import (
+    check_locked_private_thread_permission_hook,
+)
 from .check_locked_thread_permission import (
     check_locked_thread_permission_hook,
 )
@@ -110,6 +113,7 @@ __all__ = [
     "check_edit_thread_poll_permission_hook",
     "check_edit_thread_post_permission_hook",
     "check_locked_category_permission_hook",
+    "check_locked_private_thread_permission_hook",
     "check_locked_thread_permission_hook",
     "check_open_thread_poll_permission_hook",
     "check_private_threads_permission_hook",

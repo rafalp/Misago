@@ -41,7 +41,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CreatePrefetchPostsFeedRelatedObjectsHookAction`
 
-Misago function used to create a `PrefetchPostsFeedRelatedObjects` object, which is used to prefetch related objects for items displayed on a posts feed.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 

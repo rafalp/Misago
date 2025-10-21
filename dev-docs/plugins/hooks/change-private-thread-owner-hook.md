@@ -5,10 +5,10 @@ This hook allows plugins to replace or extend the logic for changing a private t
 
 ## Location
 
-This hook can be imported from `misago.privatethreadmembers.hooks`:
+This hook can be imported from `misago.privatethreads.hooks`:
 
 ```python
-from misago.privatethreadmembers.hooks import change_private_thread_owner_hook
+from misago.privatethreads.hooks import change_private_thread_owner_hook
 ```
 
 
@@ -110,7 +110,7 @@ Record the IP address used to change the thread owner:
 
 ```python
 from django.http import HttpRequest
-from misago.privatethreadmembers.hooks import change_private_thread_owner_hook
+from misago.privatethreads.hooks import change_private_thread_owner_hook
 from misago.threads.models import Thread
 from misago.threadupdates.models import ThreadUpdate
 from misago.users.models import User

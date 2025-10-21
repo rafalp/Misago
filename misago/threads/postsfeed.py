@@ -119,7 +119,7 @@ class PostsFeed:
         )
 
         set_posts_feed_related_objects_hook(
-            self.set_feed_related_objects, feed, related_objects
+            self.set_posts_feed_related_objects, feed, related_objects
         )
 
         return feed
@@ -133,6 +133,8 @@ class PostsFeed:
             else:
                 edit_url = self.get_edit_post_url(post)
 
+        is_visible = self.is_moderator or not post.is_hidden
+
         return {
             "template_name": self.post_template_name,
             "animate": post.id in self.animate_posts,
@@ -142,11 +144,13 @@ class PostsFeed:
             "counter": counter,
             "poster": None,
             "poster_name": post.poster_name,
-            "unread": post.id in self.unread_posts,
+            "is_new": post.id in self.unread_posts,
             "rich_text_data": None,
             "attachments": [],
             "edit_url": edit_url,
             "moderation": self.is_moderator,
+            "is_hidden": post.is_hidden,
+            "is_visible": is_visible,
         }
 
     def allow_edit_post(self, post: Post) -> bool:
@@ -197,7 +201,9 @@ class PostsFeed:
     def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return None
 
-    def set_feed_related_objects(self, feed: list[dict], related_objects: dict) -> None:
+    def set_posts_feed_related_objects(
+        self, feed: list[dict], related_objects: dict
+    ) -> None:
         for item in feed:
             if item["type"] == "post":
                 self.set_post_related_objects(item, item["post"], related_objects)
@@ -278,43 +284,47 @@ class ThreadPostsFeed(PostsFeed):
 
     def get_edit_thread_post_url(self) -> str | None:
         return reverse(
-            "misago:edit-thread",
-            kwargs={"id": self.thread.id, "slug": self.thread.slug},
+            "misago:thread-edit",
+            kwargs={"thread_id": self.thread.id, "slug": self.thread.slug},
         )
 
     def get_edit_post_url(self, post: Post) -> str | None:
         return reverse(
-            "misago:edit-thread",
-            kwargs={"id": self.thread.id, "slug": self.thread.slug, "post": post.id},
+            "misago:thread-post-edit",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
         )
 
     def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return reverse(
-            "misago:hide-thread-update",
+            "misago:thread-update-hide",
             kwargs={
-                "id": self.thread.id,
+                "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
 
     def get_unhide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return reverse(
-            "misago:unhide-thread-update",
+            "misago:thread-update-unhide",
             kwargs={
-                "id": self.thread.id,
+                "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
 
     def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return reverse(
-            "misago:delete-thread-update",
+            "misago:thread-update-delete",
             kwargs={
-                "id": self.thread.id,
+                "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
 
@@ -333,42 +343,46 @@ class PrivateThreadPostsFeed(PostsFeed):
 
     def get_edit_thread_post_url(self) -> str | None:
         return reverse(
-            "misago:edit-private-thread",
-            kwargs={"id": self.thread.id, "slug": self.thread.slug},
+            "misago:private-thread-edit",
+            kwargs={"thread_id": self.thread.id, "slug": self.thread.slug},
         )
 
     def get_edit_post_url(self, post: Post) -> str | None:
         return reverse(
-            "misago:edit-private-thread",
-            kwargs={"id": self.thread.id, "slug": self.thread.slug, "post": post.id},
+            "misago:private-thread-post-edit",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
         )
 
     def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return reverse(
-            "misago:hide-private-thread-update",
+            "misago:private-thread-update-hide",
             kwargs={
-                "id": self.thread.id,
+                "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
 
     def get_unhide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return reverse(
-            "misago:unhide-private-thread-update",
+            "misago:private-thread-update-unhide",
             kwargs={
-                "id": self.thread.id,
+                "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )
 
     def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return reverse(
-            "misago:delete-private-thread-update",
+            "misago:private-thread-update-delete",
             kwargs={
-                "id": self.thread.id,
+                "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update": thread_update.id,
+                "thread_update_id": thread_update.id,
             },
         )

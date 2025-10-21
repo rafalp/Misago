@@ -103,4 +103,4 @@ class Post(PluginDataModel):
         )
 
     def get_absolute_url(self):
-        return reverse("misago:post", kwargs={"id": self.id})
+        return reverse("misago:post", kwargs={"post_id": self.id})

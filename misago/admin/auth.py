@@ -50,7 +50,7 @@ def remove_admin_authorization(request):
 
 
 def make_user_admin_token(user):
-    formula = (str(user.pk), user.email, user.password, settings.SECRET_KEY)
+    formula = (str(user.id), user.email, user.password, settings.SECRET_KEY)
     return md5(":".join(formula).encode()).hexdigest()
 
 

@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetThreadRepliesPageContextDataHookAction`
 
-Misago function used to get the template context data for the thread replies page.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 

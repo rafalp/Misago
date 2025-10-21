@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<div class="modal-dialog modal-sm" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="{% translate 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title">{% translate "Start new thread in" context "thread start category select modal" %}</h4>
+    </div>
+    <div class="modal-body">
+      {% if thread_start_choices %}
+        {% include "misago/thread_start_category_select/modal_choices.html" %}
+      {% else %}
+        <p class="mx-y text-lg text-center">
+          {% translate "You can't start new threads." context "thread start category select modal" %}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+</div>

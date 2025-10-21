@@ -13,11 +13,14 @@ def _get_thread_url_action(thread: Thread, category: Category | None = None) -> 
     tree_id = (category or thread.category).tree_id
 
     if tree_id == CategoryTree.THREADS:
-        return reverse("misago:thread", kwargs={"id": thread.id, "slug": thread.slug})
+        return reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
 
     if tree_id == CategoryTree.PRIVATE_THREADS:
         return reverse(
-            "misago:private-thread", kwargs={"id": thread.id, "slug": thread.slug}
+            "misago:private-thread",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
 
     raise ValueError(

@@ -5,15 +5,15 @@ from ...posts.models import Post
 from ...threadupdates.create import create_changed_title_thread_update
 from ...threadupdates.models import ThreadUpdate
 from ..hooks import (
-    get_edit_private_thread_post_state_hook,
-    get_edit_thread_post_state_hook,
-    save_edit_private_thread_post_state_hook,
-    save_edit_thread_post_state_hook,
+    get_private_thread_post_edit_state_hook,
+    get_thread_post_edit_state_hook,
+    save_private_thread_post_edit_state_hook,
+    save_thread_post_edit_state_hook,
 )
-from .base import PostingState
+from .state import State
 
 
-class EditThreadPostState(PostingState):
+class PostEditState(State):
     # This state can actually edit both post and its thread's title
     thread_title: str
     post_original: str
@@ -34,9 +34,9 @@ class EditThreadPostState(PostingState):
 
     @transaction.atomic()
     def save(self):
-        save_edit_thread_post_state_hook(self.save_action, self.request, self)
+        self.save_action(self.request, self)
 
-    def save_action(self, request: HttpRequest, state: "EditThreadPostState"):
+    def save_action(self, request: HttpRequest, state: "PostEditState"):
         if self.post_original != self.post.original:
             self.save_post()
 
@@ -79,33 +79,39 @@ class EditThreadPostState(PostingState):
         self.update_object(self.category)
 
 
-class EditPrivateThreadPostState(EditThreadPostState):
+class ThreadPostEditState(PostEditState):
     @transaction.atomic()
     def save(self):
-        save_edit_private_thread_post_state_hook(self.save_action, self.request, self)
+        save_thread_post_edit_state_hook(self.save_action, self.request, self)
 
 
-def get_edit_thread_post_state(request: HttpRequest, post: Post) -> EditThreadPostState:
-    return get_edit_thread_post_state_hook(
-        _get_edit_thread_post_state_action, request, post
+class PrivateThreadPostEditState(PostEditState):
+    @transaction.atomic()
+    def save(self):
+        save_private_thread_post_edit_state_hook(self.save_action, self.request, self)
+
+
+def get_thread_post_edit_state(request: HttpRequest, post: Post) -> ThreadPostEditState:
+    return get_thread_post_edit_state_hook(
+        _get_thread_post_edit_state_action, request, post
     )
 
 
-def _get_edit_thread_post_state_action(
+def _get_thread_post_edit_state_action(
     request: HttpRequest, post: Post
-) -> EditThreadPostState:
-    return EditThreadPostState(request, post)
+) -> ThreadPostEditState:
+    return ThreadPostEditState(request, post)
 
 
-def get_edit_private_thread_post_state(
+def get_private_thread_post_edit_state(
     request: HttpRequest, post: Post
-) -> EditPrivateThreadPostState:
-    return get_edit_private_thread_post_state_hook(
-        _get_edit_private_thread_post_state_action, request, post
+) -> PrivateThreadPostEditState:
+    return get_private_thread_post_edit_state_hook(
+        _get_private_thread_post_edit_state_action, request, post
     )
 
 
-def _get_edit_private_thread_post_state_action(
+def _get_private_thread_post_edit_state_action(
     request: HttpRequest, post: Post
-) -> EditPrivateThreadPostState:
-    return EditPrivateThreadPostState(request, post)
+) -> PrivateThreadPostEditState:
+    return PrivateThreadPostEditState(request, post)

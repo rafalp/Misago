@@ -11,7 +11,7 @@ main_menu = Menu()
 
 main_menu.add_item(
     key="threads",
-    url_name="misago:threads",
+    url_name="misago:thread-list",
     label=pgettext_lazy("main menu item", "Threads"),
 )
 main_menu.add_item(

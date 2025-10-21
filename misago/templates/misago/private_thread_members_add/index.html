@@ -12,7 +12,7 @@
   {% include "misago/private_thread/header.html" %}
   <div class="container page-container">
     <form 
-      action="{% url 'misago:private-thread-members-add' id=thread.id slug=thread.slug %}"
+      action="{% url 'misago:private-thread-members-add' thread_id=thread.id slug=thread.slug %}"
       method="post"
     >
       {% csrf_token %}

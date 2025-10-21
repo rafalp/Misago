@@ -31,7 +31,7 @@ class GetCategoryThreadsPageSubcategoriesHookAction(Protocol):
     ```python
     {
         "categories": ...,
-        "template_name": "misago/category/subcategories.html"
+        "template_name": "misago/category_thread_list/subcategories.html"
     }
     ```
 
@@ -49,9 +49,8 @@ class GetCategoryThreadsPageSubcategoriesHookFilter(Protocol):
 
     ## `action: GetCategoryThreadsPageSubcategoriesHookAction`
 
-    Misago function used to build a `dict` with data for
-    the categories list component, used to display the list of subcategories on
-    the category threads page.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 
@@ -72,7 +71,7 @@ class GetCategoryThreadsPageSubcategoriesHookFilter(Protocol):
     ```python
     {
         "categories": ...,
-        "template_name": "misago/category/subcategories.html"
+        "template_name": "misago/category_thread_list/subcategories.html"
     }
     ```
 

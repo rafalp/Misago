@@ -88,8 +88,8 @@ def get_category_data(result: dict[str, Any]) -> dict[str, Any]:
 
 def _get_category_data_action(result: dict[str, Any]) -> dict[str, Any]:
     category_url = reverse(
-        "misago:category",
-        kwargs={"id": result["id"], "slug": result["slug"]},
+        "misago:category-thread-list",
+        kwargs={"category_id": result["id"], "slug": result["slug"]},
     )
 
     return {

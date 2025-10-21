@@ -5,21 +5,21 @@ from django.http import HttpRequest
 
 from ...categories.models import Category
 from ...polls.models import Poll
-from ...privatethreadmembers.models import PrivateThreadMember
+from ...privatethreads.models import PrivateThreadMember
 from ...threads.checksums import update_post_checksum
 from ..hooks import (
-    get_start_private_thread_state_hook,
-    get_start_thread_state_hook,
-    save_start_private_thread_state_hook,
-    save_start_thread_state_hook,
+    get_private_thread_start_state_hook,
+    get_thread_start_state_hook,
+    save_private_thread_start_state_hook,
+    save_thread_start_state_hook,
 )
-from .base import PostingState
+from .state import State
 
 if TYPE_CHECKING:
     from ...users.models import User
 
 
-class StartPostingState(PostingState):
+class StartState(State):
     def __init__(self, request: HttpRequest, category: Category):
         super().__init__(request)
 
@@ -31,9 +31,10 @@ class StartPostingState(PostingState):
 
     @transaction.atomic()
     def save(self):
-        raise NotImplementedError()
+        self.thread.save()
+        self.post.save()
 
-    def save_action(self, request: HttpRequest, state: "StartPostingState"):
+    def save_action(self, request: HttpRequest, state: "StartState"):
         self.save_thread()
         self.save_post()
         self.save_attachments()
@@ -69,7 +70,7 @@ class StartPostingState(PostingState):
         self.update_object(self.user)
 
 
-class StartThreadState(StartPostingState):
+class ThreadStartState(StartState):
     poll: Poll | None
 
     def __init__(self, request: HttpRequest, category: Category):
@@ -83,12 +84,11 @@ class StartThreadState(StartPostingState):
 
     @transaction.atomic()
     def save(self):
-        self.thread.save()
-        self.post.save()
+        super().save()
 
-        save_start_thread_state_hook(self.save_action, self.request, self)
+        save_thread_start_state_hook(self.save_action, self.request, self)
 
-    def save_action(self, request: HttpRequest, state: "StartPrivateThreadState"):
+    def save_action(self, request: HttpRequest, state: "ThreadStartState"):
         super().save_action(request, state)
 
         if self.poll:
@@ -98,7 +98,7 @@ class StartThreadState(StartPostingState):
         self.poll.save()
 
 
-class StartPrivateThreadState(StartPostingState):
+class PrivateThreadStartState(StartState):
     members: list["User"]
 
     def __init__(self, request: HttpRequest, category: Category):
@@ -111,12 +111,11 @@ class StartPrivateThreadState(StartPostingState):
 
     @transaction.atomic()
     def save(self):
-        self.thread.save()
-        self.post.save()
+        super().save()
 
-        save_start_private_thread_state_hook(self.save_action, self.request, self)
+        save_private_thread_start_state_hook(self.save_action, self.request, self)
 
-    def save_action(self, request: HttpRequest, state: "StartPrivateThreadState"):
+    def save_action(self, request: HttpRequest, state: "PrivateThreadStartState"):
         super().save_action(request, state)
 
         self.save_members()
@@ -143,29 +142,29 @@ class StartPrivateThreadState(StartPostingState):
         PrivateThreadMember.objects.bulk_create(users)
 
 
-def get_start_thread_state(
+def get_thread_start_state(
     request: HttpRequest, category: Category
-) -> StartThreadState:
-    return get_start_thread_state_hook(
-        _get_start_thread_state_action, request, category
+) -> ThreadStartState:
+    return get_thread_start_state_hook(
+        _get_thread_start_state_action, request, category
     )
 
 
-def _get_start_thread_state_action(
+def _get_thread_start_state_action(
     request: HttpRequest, category: Category
-) -> StartThreadState:
-    return StartThreadState(request, category)
+) -> ThreadStartState:
+    return ThreadStartState(request, category)
 
 
-def get_start_private_thread_state(
+def get_private_thread_start_state(
     request: HttpRequest, category: Category
-) -> StartPrivateThreadState:
-    return get_start_private_thread_state_hook(
-        _get_start_private_thread_state_action, request, category
+) -> PrivateThreadStartState:
+    return get_private_thread_start_state_hook(
+        _get_private_thread_start_state_action, request, category
     )
 
 
-def _get_start_private_thread_state_action(
+def _get_private_thread_start_state_action(
     request: HttpRequest, category: Category
-) -> StartPrivateThreadState:
-    return StartPrivateThreadState(request, category)
+) -> PrivateThreadStartState:
+    return PrivateThreadStartState(request, category)

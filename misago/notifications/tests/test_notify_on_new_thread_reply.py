@@ -4,7 +4,7 @@ import pytest
 
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
-from ...privatethreadmembers.models import PrivateThreadMember
+from ...privatethreads.models import PrivateThreadMember
 from ...users.bans import ban_user
 from ..models import Notification
 from ..tasks import notify_on_new_thread_reply

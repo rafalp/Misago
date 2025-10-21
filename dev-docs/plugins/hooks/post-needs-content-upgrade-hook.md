@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-Misago function used to check if post content needs an upgrade or the next filter function from another plugin.
+The next function registered in this hook, either a custom function or Misago’s default.
 
 See the [action](#action) section for details.
 

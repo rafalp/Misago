@@ -60,7 +60,7 @@ def _check_locked_thread_permission_action(
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "This thread is closed.",
+                "This thread is locked.",
             )
         )
 

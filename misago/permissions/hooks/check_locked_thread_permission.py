@@ -81,22 +81,22 @@ class CheckLockedThreadPermissionHook(
     from misago.threads.models import Thread
 
     @check_locked_thread_permission_hook.append_filter
-    def check_user_can_post_in_closed_thread(
+    def check_user_can_post_in_locked_thread(
         action,
         permissions: UserPermissionsProxy,
         thread: Thread,
     ) -> None:
         user = permissions.user
         if user.is_authenticated:
-            post_in_closed_categories = (
-                user.plugin_data.get("post_in_closed_threads") or []
+            post_in_locked_threads = (
+                user.plugin_data.get("post_in_locked_threads") or []
             )
         else:
-            post_in_closed_categories = None
+            post_in_locked_threads = None
 
         if (
-            not post_in_closed_categories
-            or thread.id not in post_in_closed_categories
+            not post_in_locked_threads
+            or thread.id not in post_in_locked_threads
         ):
             action(permissions, thread)
     ```

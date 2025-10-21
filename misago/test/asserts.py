@@ -20,8 +20,25 @@ def assert_contains(response, string, status_code=200):
 def assert_not_contains(response, string, status_code=200):
     assert_status_code(response, status_code)
 
-    fail_message = f'"{string}" was unexpectedly found in response.content'
-    assert string not in response.content.decode("utf-8"), fail_message
+    response_content = response.content.decode("utf-8")
+
+    fail_message = _get_assert_not_contains_message(response_content, string)
+    assert string not in response_content, fail_message
+
+
+def _get_assert_not_contains_message(content: str, fragment: str) -> str | None:
+    if fragment not in content:
+        return None
+
+    fail_message = f'"{fragment}" was unexpectedly found in response.content:'
+    lines = [line for line in content.splitlines() if line.strip()]
+
+    for i, line in enumerate(lines):
+        if fragment in line:
+            response_fragment = "\n".join(lines[i - 4 : i + 5])
+            return f"{fail_message}\n\n{response_fragment}"
+
+    return None
 
 
 def assert_contains_element(response, element, status_code=200, **attrs):

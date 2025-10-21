@@ -9,7 +9,7 @@ def test_get_thread_url_returns_thread_url(django_assert_num_queries, thread):
         url = get_thread_url(thread)
 
     assert url == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
 
@@ -21,7 +21,7 @@ def test_get_thread_url_returns_thread_url_using_category_arg(
         url = get_thread_url(thread_without_related, default_category)
 
     assert url == reverse(
-        "misago:thread", kwargs={"id": thread.id, "slug": thread.slug}
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
 
@@ -33,7 +33,7 @@ def test_get_thread_url_returns_private_thread_url(
 
     assert url == reverse(
         "misago:private-thread",
-        kwargs={"id": private_thread.id, "slug": private_thread.slug},
+        kwargs={"thread_id": private_thread.id, "slug": private_thread.slug},
     )
 
 
@@ -46,5 +46,5 @@ def test_get_thread_url_returns_private_thread_url_using_category(
 
     assert url == reverse(
         "misago:private-thread",
-        kwargs={"id": private_thread.id, "slug": private_thread.slug},
+        kwargs={"thread_id": private_thread.id, "slug": private_thread.slug},
     )

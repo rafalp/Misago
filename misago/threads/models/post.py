@@ -175,7 +175,7 @@ class Post(PluginDataModel):
         return self.category.thread_type
 
     def get_absolute_url(self):
-        return reverse("misago:post", kwargs={"id": self.id})
+        return reverse("misago:post", kwargs={"post_id": self.id})
 
     def get_api_url(self):
         return self.thread_type.get_post_api_url(self)

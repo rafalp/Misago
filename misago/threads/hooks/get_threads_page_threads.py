@@ -36,8 +36,8 @@ class GetThreadsPageThreadsHookFilter(Protocol):
 
     ## `action: GetThreadsPageThreadsHookAction`
 
-    Misago function used to get the complete threads data for the threads page.
-    Returns a `dict` that is included in the template context under the `threads` key.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

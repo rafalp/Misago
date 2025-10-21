@@ -34,8 +34,8 @@ class SetPostsFeedRelatedObjectsHookFilter(Protocol):
 
     ## `action: SetPostsFeedRelatedObjectsHookAction`
 
-    Misago function used to set related objects on dicts containing
-    posts feed data.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

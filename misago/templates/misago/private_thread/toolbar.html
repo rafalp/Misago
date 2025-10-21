@@ -16,7 +16,7 @@
     <div class="toolbar-section">
       <div class="toolbar-item d-js-block">
         <form
-          action="{% url 'misago:private-thread-leave' id=thread.id slug=thread.slug %}"
+          action="{% url 'misago:private-thread-leave' thread_id=thread.id slug=thread.slug %}"
           method="post"
           misago-confirm="{% translate 'Are you sure you want to leave this thread?' context 'private thread leave confirm prompt' %}"
         >
@@ -27,7 +27,7 @@
         </form>
       </div>
       <noscript class="toolbar-item">
-        <a href="{% url 'misago:private-thread-leave' id=thread.id slug=thread.slug %}" class="btn btn-default btn-block">
+        <a href="{% url 'misago:private-thread-leave' thread_id=thread.id slug=thread.slug %}" class="btn btn-default btn-block">
           {% translate "Leave" context "private thread replies toolbar" %}
         </a>
       </noscript>
@@ -43,7 +43,7 @@
     <div class="toolbar-section">
       <div class="toolbar-item d-js-block">
         <form
-          action="{% url 'misago:private-thread-leave' id=thread.id slug=thread.slug %}"
+          action="{% url 'misago:private-thread-leave' thread_id=thread.id slug=thread.slug %}"
           method="post"
           misago-confirm="{% translate 'Are you sure you want to leave this thread?' context 'private thread leave confirm prompt' %}"
         >
@@ -54,7 +54,7 @@
         </form>
       </div>
       <noscript class="toolbar-item">
-        <a href="{% url 'misago:private-thread-leave' id=thread.id slug=thread.slug %}" class="btn btn-default btn-block">
+        <a href="{% url 'misago:private-thread-leave' thread_id=thread.id slug=thread.slug %}" class="btn btn-default btn-block">
           {% translate "Leave" context "private thread replies toolbar" %}
         </a>
       </noscript>

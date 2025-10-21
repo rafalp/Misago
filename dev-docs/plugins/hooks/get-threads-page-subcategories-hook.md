@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetThreadsPageSubcategoriesHookAction`
 
-Misago function used to build a `dict` with data for the categories list component, used to display the list of subcategories on the threads page.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
@@ -47,7 +47,7 @@ Must have at least two keys: `categories` and `template_name`:
 ```python
 {
     "categories": ...,
-    "template_name": "misago/threads/subcategories.html"
+    "template_name": "misago/thread_list/subcategories.html"
 }
 ```
 
@@ -80,7 +80,7 @@ Must have at least two keys: `categories` and `template_name`:
 ```python
 {
     "categories": ...,
-    "template_name": "misago/category/subcategories.html"
+    "template_name": "misago/category_thread_list/subcategories.html"
 }
 ```
 

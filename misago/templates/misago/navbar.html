@@ -48,7 +48,7 @@
         </button>
       </div>
       {% if user.is_authenticated and user_acl.can_use_private_threads %}
-        <a id="navbar-private-threads" class="btn btn-navbar-icon" href="{% url 'misago:private-threads' %}" title="{% translate 'Open private threads' context 'navbar' %}">
+        <a id="navbar-private-threads" class="btn btn-navbar-icon" href="{% url 'misago:private-thread-list' %}" title="{% translate 'Open private threads' context 'navbar' %}">
           <span class="material-icon">inbox</span>
         </a>
       {% endif %}

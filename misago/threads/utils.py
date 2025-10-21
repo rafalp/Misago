@@ -8,7 +8,7 @@ from .models import PostLike
 def add_categories_to_items(root_category, categories, items):
     categories_dict = {}
     for category in categories:
-        categories_dict[category.pk] = category
+        categories_dict[category.id] = category
         if category.parent_id:
             category.parent = categories_dict[category.parent_id]
 
@@ -32,11 +32,12 @@ def add_likes_to_posts(user, posts):
 
 
 SUPPORTED_THREAD_ROUTES = {
-    "misago:thread": "id",
-    "misago:thread-post": "pk",
-    "misago:thread-last": "pk",
-    "misago:thread-new": "pk",
-    "misago:thread-unapproved": "pk",
+    "misago:thread": "thread_id",
+    "misago:thread-post": "thread_id",
+    "misago:thread-post-last": "thread_id",
+    "misago:thread-post-unapproved": "thread_id",
+    "misago:thread-post-unread": "thread_id",
+    "misago:thread-post-solution": "thread_id",
 }
 
 

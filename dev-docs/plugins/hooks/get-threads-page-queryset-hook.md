@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetThreadsPageQuerysetHookAction`
 
-Misago function used to get the base threads queryset for the threads page.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 

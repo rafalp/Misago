@@ -1,6 +1,6 @@
 import pytest
 
-from ...privatethreadmembers.models import PrivateThreadMember
+from ...privatethreads.models import PrivateThreadMember
 from ...threads.models import Thread
 
 

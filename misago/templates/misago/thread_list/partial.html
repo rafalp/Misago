@@ -1,0 +1,25 @@
+{% if is_request_htmx %}
+  {% include "misago/snackbars.html" %}
+{% endif %}
+
+<div id="misago-htmx-root">
+  {% include "misago/thread_list/toolbar.html" with top_toolbar=True bottom_toolbar=False %}
+
+  <ul class="threads-list" itemscope itemtype="http://schema.org/ItemList">
+    <meta itemprop="itemListOrder" content="http://schema.org/ItemListOrderDescending">
+    {% if threads.enable_polling and not threads.paginator.has_previous %}
+      {% include "misago/thread_list/poll_new.html" with latest_post=threads.latest_post %}
+    {% endif %}
+    {% if threads.items %}
+      {% include threads.template_name with cursor=paginator.cursor threads=threads.items url_names=threads.url_names categories_component=threads.categories_component moderation=threads.moderation_actions %}
+    {% else %}
+      {% include "misago/thread_list/blankslate.html" %}
+    {% endif %}
+  </ul>
+
+  {% include "misago/thread_list/toolbar.html" with top_toolbar=False bottom_toolbar=True %}
+
+  {% if threads.moderation_actions %}
+    {% include "misago/thread_list/moderation_form.html" with moderation_actions=threads.moderation_actions %}
+  {% endif %}
+</div>

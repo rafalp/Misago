@@ -53,7 +53,7 @@ class AttachmentsList(AttachmentAdmin, generic.ListView):
 
         for attachment in attachments:
             if attachment.post:
-                deleted_attachments.append(attachment.pk)
+                deleted_attachments.append(attachment.id)
                 desynced_posts.append(attachment.post_id)
 
         if desynced_posts:

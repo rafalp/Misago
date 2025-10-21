@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetThreadUrlHookAction`
 
-Misago function used to retrieve a thread URL based on its category type.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
@@ -87,14 +87,13 @@ from misago.categories.models import Category
 from misago.threads.hooks import get_thread_url_hook
 from misago.threads.models import Thread
 
-
 @get_thread_url_hook.append_filter
 def get_thread_blog_url(
     action, thread: Thread, category: Category | None = None
 ):
     if (category or thread.category).plugin_data.get("is_blog"):
         return reverse(
-            "blog", kwargs={"id": thread.id, "slug": thread.slug}
+            "blog", kwargs={"thread_id": thread.id, "slug": thread.slug}
         )
 
     return = action(thread, category)

@@ -2,9 +2,9 @@
 
 {% block content %}
 <form 
-  action="{% url 'misago:private-thread-members-add' id=thread.id slug=thread.slug %}"
+  action="{% url 'misago:private-thread-members-add' thread_id=thread.id slug=thread.slug %}"
   method="post"
-  hx-post="{% url 'misago:private-thread-members-add' id=thread.id slug=thread.slug %}"
+  hx-post="{% url 'misago:private-thread-members-add' thread_id=thread.id slug=thread.slug %}"
 >
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ next_url }}">
