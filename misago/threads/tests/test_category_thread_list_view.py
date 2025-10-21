@@ -566,8 +566,8 @@ def test_category_thread_list_view_displays_deleted_user_thread_to_anonymous_use
     thread_factory, client, default_category
 ):
     thread = thread_factory(default_category)
-    response = client.get(default_category.get_absolute_url())
 
+    response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
@@ -576,8 +576,8 @@ def test_category_thread_list_view_displays_deleted_user_thread_to_user(
     thread_factory, user_client, default_category
 ):
     thread = thread_factory(default_category)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
@@ -592,8 +592,8 @@ def test_category_thread_list_view_displays_deleted_user_thread_to_category_mode
     )
 
     thread = thread_factory(default_category)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
@@ -602,8 +602,8 @@ def test_category_thread_list_view_displays_deleted_user_thread_to_global_modera
     thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category)
-    response = moderator_client.get(default_category.get_absolute_url())
 
+    response = moderator_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
@@ -612,8 +612,8 @@ def test_category_thread_list_view_displays_user_thread_to_anonymous_user(
     thread_factory, client, user, default_category
 ):
     thread = thread_factory(default_category, starter=user)
-    response = client.get(default_category.get_absolute_url())
 
+    response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
@@ -622,8 +622,8 @@ def test_category_thread_list_view_displays_user_thread_to_user(
     thread_factory, user_client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
@@ -638,8 +638,8 @@ def test_category_thread_list_view_displays_user_thread_to_category_moderator(
     )
 
     thread = thread_factory(default_category, starter=other_user)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
@@ -648,8 +648,8 @@ def test_category_thread_list_view_displays_user_thread_to_global_moderator(
     thread_factory, moderator_client, user, default_category
 ):
     thread = thread_factory(default_category, starter=user)
-    response = moderator_client.get(default_category.get_absolute_url())
 
+    response = moderator_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
@@ -658,8 +658,8 @@ def test_category_thread_list_view_displays_user_own_thread_to_user(
     thread_factory, user_client, user, default_category
 ):
     thread = thread_factory(default_category, starter=user)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
@@ -668,8 +668,8 @@ def test_category_thread_list_view_doesnt_display_user_unapproved_thread_to_anon
     thread_factory, client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, is_unapproved=True)
-    response = client.get(default_category.get_absolute_url())
 
+    response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_not_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
@@ -680,8 +680,8 @@ def test_category_thread_list_view_doesnt_display_user_unapproved_thread_to_user
     thread_factory, user_client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, is_unapproved=True)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_not_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
@@ -698,8 +698,8 @@ def test_category_thread_list_view_displays_user_unapproved_thread_to_category_m
     )
 
     thread = thread_factory(default_category, starter=other_user, is_unapproved=True)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -710,8 +710,8 @@ def test_category_thread_list_view_displays_user_unapproved_thread_to_global_mod
     thread_factory, moderator_client, user, default_category
 ):
     thread = thread_factory(default_category, starter=user, is_unapproved=True)
-    response = moderator_client.get(default_category.get_absolute_url())
 
+    response = moderator_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -722,8 +722,8 @@ def test_category_thread_list_view_displays_user_own_unapproved_thread_to_user(
     thread_factory, user_client, user, default_category
 ):
     thread = thread_factory(default_category, starter=user, is_unapproved=True)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -734,8 +734,8 @@ def test_category_thread_list_view_doesnt_display_user_hidden_thread_to_anonymou
     thread_factory, client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, is_hidden=True)
-    response = client.get(default_category.get_absolute_url())
 
+    response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_not_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
@@ -746,8 +746,8 @@ def test_category_thread_list_view_doesnt_display_user_hidden_thread_to_user(
     thread_factory, user_client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, is_hidden=True)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_not_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
@@ -764,8 +764,8 @@ def test_category_thread_list_view_displays_user_hidden_thread_to_category_moder
     )
 
     thread = thread_factory(default_category, starter=other_user, is_hidden=True)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -776,8 +776,8 @@ def test_category_thread_list_view_displays_user_hidden_thread_to_global_moderat
     thread_factory, moderator_client, user, default_category
 ):
     thread = thread_factory(default_category, starter=user, is_hidden=True)
-    response = moderator_client.get(default_category.get_absolute_url())
 
+    response = moderator_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -788,8 +788,8 @@ def test_category_thread_list_view_doesnt_display_user_own_hidden_thread_to_user
     thread_factory, user_client, user, default_category
 ):
     thread = thread_factory(default_category, starter=user, is_hidden=True)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_not_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
@@ -800,8 +800,8 @@ def test_category_thread_list_view_displays_thread_without_flags(
     thread_factory, client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user)
-    response = client.get(default_category.get_absolute_url())
 
+    response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
@@ -813,7 +813,6 @@ def test_category_thread_list_view_displays_globally_pinned_thread(
     thread = thread_factory(default_category, starter=other_user, weight=2)
 
     response = client.get(default_category.get_absolute_url())
-
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -835,8 +834,8 @@ def test_category_thread_list_view_displays_globally_pinned_thread_from_other_ca
     )
 
     thread = thread_factory(sibling_category, starter=other_user, weight=2)
-    response = client.get(default_category.get_absolute_url())
 
+    response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -847,8 +846,8 @@ def test_category_thread_list_view_displays_locally_pinned_thread(
     thread_factory, client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, weight=1)
-    response = client.get(default_category.get_absolute_url())
 
+    response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -859,8 +858,8 @@ def test_category_thread_list_view_doesnt_display_thread_pinned_in_child_categor
     thread_factory, client, other_user, default_category, child_category
 ):
     thread = thread_factory(child_category, starter=other_user, weight=1)
-    response = client.get(default_category.get_absolute_url())
 
+    response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
@@ -871,8 +870,8 @@ def test_category_thread_list_view_doesnt_display_thread_pinned_in_child_categor
     thread_factory, user_client, other_user, default_category, child_category
 ):
     thread = thread_factory(child_category, starter=other_user, weight=1)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
@@ -889,8 +888,8 @@ def test_category_thread_list_view_displays_thread_pinned_in_child_category_flag
     )
 
     thread = thread_factory(child_category, starter=other_user, weight=1)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -901,8 +900,8 @@ def test_category_thread_list_view_displays_thread_pinned_in_child_category_flag
     thread_factory, moderator_client, other_user, default_category, child_category
 ):
     thread = thread_factory(child_category, starter=other_user, weight=1)
-    response = moderator_client.get(default_category.get_absolute_url())
 
+    response = moderator_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -931,7 +930,6 @@ def test_category_thread_list_view_displays_solved_thread(
     thread.save()
 
     response = client.get(default_category.get_absolute_url())
-
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -942,8 +940,8 @@ def test_category_thread_list_view_displays_closed_thread(
     thread_factory, client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, is_closed=True)
-    response = client.get(default_category.get_absolute_url())
 
+    response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -956,8 +954,8 @@ def test_category_thread_list_view_doesnt_display_thread_unapproved_posts_flag_t
     thread = thread_factory(
         default_category, starter=other_user, has_unapproved_posts=True
     )
-    response = client.get(default_category.get_absolute_url())
 
+    response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
@@ -970,8 +968,8 @@ def test_category_thread_list_view_doesnt_display_thread_unapproved_posts_flag_t
     thread = thread_factory(
         default_category, starter=other_user, has_unapproved_posts=True
     )
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
@@ -990,8 +988,8 @@ def test_category_thread_list_view_displays_thread_unapproved_posts_flag_to_cate
     thread = thread_factory(
         default_category, starter=other_user, has_unapproved_posts=True
     )
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -1004,8 +1002,8 @@ def test_category_thread_list_view_displays_thread_unapproved_posts_flag_to_glob
     thread = thread_factory(
         default_category, starter=other_user, has_unapproved_posts=True
     )
-    response = moderator_client.get(default_category.get_absolute_url())
 
+    response = moderator_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
@@ -1016,8 +1014,8 @@ def test_category_thread_list_view_doesnt_display_own_thread_unapproved_posts_fl
     thread_factory, user_client, user, default_category
 ):
     thread = thread_factory(default_category, starter=user, has_unapproved_posts=True)
-    response = user_client.get(default_category.get_absolute_url())
 
+    response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
