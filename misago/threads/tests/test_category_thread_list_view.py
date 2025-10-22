@@ -1151,6 +1151,58 @@ def test_category_thread_list_view_displays_user_own_thread_to_user_if_show_star
     assert_contains(response, thread.title)
 
 
+def test_category_thread_list_view_displays_globally_pinned_thread_to_anonymous_user_if_show_started_only_is_enabled(
+    thread_factory, client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, weight=2)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_globally_pinned_thread_to_user_if_show_started_only_is_enabled(
+    thread_factory, user_client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, weight=2)
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_category_pinned_thread_to_anonymous_user_if_show_started_only_is_enabled(
+    thread_factory, client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, weight=1)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_category_pinned_thread_to_user_if_show_started_only_is_enabled(
+    thread_factory, user_client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, weight=1)
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
 def test_category_thread_list_view_displays_thread_with_user_starter_and_deleted_last_poster(
     thread_factory, thread_reply_factory, client, user, default_category
 ):
