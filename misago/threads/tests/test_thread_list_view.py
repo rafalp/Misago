@@ -862,6 +862,58 @@ def test_thread_list_view_displays_thread_with_different_starter_and_last_poster
     assert_contains(response, thread.last_poster_name)
 
 
+@override_dynamic_settings(
+    index_view="categories",
+    threads_list_item_categories_component="breadcrumbs",
+)
+def test_thread_list_view_displays_category_thread_using_breadcrumbs_component(
+    thread_factory, client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(
+    index_view="categories",
+    threads_list_item_categories_component="labels",
+)
+def test_thread_list_view_displays_category_thread_using_labels_component(
+    thread_factory, client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(
+    index_view="categories",
+    threads_list_item_categories_component="breadcrumbs",
+)
+def test_thread_list_view_displays_child_category_thread_using_breadcrumbs_component(
+    thread_factory, client, child_category
+):
+    thread = thread_factory(child_category)
+
+    response = client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(
+    index_view="categories",
+    threads_list_item_categories_component="labels",
+)
+def test_thread_list_view_displays_child_category_thread_using_labels_component(
+    thread_factory, client, child_category
+):
+    thread = thread_factory(child_category)
+
+    response = client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_includes_child_category_thread(
     thread_factory, client, guests_group, other_user, default_category

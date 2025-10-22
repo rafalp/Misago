@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from ...categories.enums import CategoryChildrenComponent
 from ...categories.models import Category
+from ...conf.test import override_dynamic_settings
 from ...pagination.cursor import EmptyPageError
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
@@ -1249,6 +1250,54 @@ def test_category_thread_list_view_displays_thread_with_different_starter_and_la
     assert_contains(response, thread.title)
     assert_contains(response, thread.starter_name)
     assert_contains(response, thread.last_poster_name)
+
+
+@override_dynamic_settings(
+    threads_list_item_categories_component="breadcrumbs",
+)
+def test_category_thread_list_view_displays_category_thread_using_breadcrumbs_component(
+    thread_factory, client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(
+    threads_list_item_categories_component="labels",
+)
+def test_category_thread_list_view_displays_category_thread_using_labels_component(
+    thread_factory, client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(
+    threads_list_item_categories_component="breadcrumbs",
+)
+def test_category_thread_list_view_displays_child_category_thread_using_breadcrumbs_component(
+    thread_factory, client, default_category, child_category
+):
+    thread = thread_factory(child_category)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(
+    threads_list_item_categories_component="labels",
+)
+def test_category_thread_list_view_displays_child_category_thread_using_labels_component(
+    thread_factory, client, default_category, child_category
+):
+    thread = thread_factory(child_category)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
 
 
 def test_category_thread_list_view_includes_child_category_thread(
