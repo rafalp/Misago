@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from ...categories.enums import CategoryChildrenComponent
 from ...categories.models import Category
+from ...conf.test import override_dynamic_settings
 from ...pagination.cursor import EmptyPageError
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
@@ -1022,6 +1023,187 @@ def test_category_thread_list_view_doesnt_display_own_thread_unapproved_posts_fl
     assert_not_contains(response, "thread-flag-unapproved")
 
 
+def test_category_thread_list_view_doesnt_display_deleted_user_thread_to_anonymous_user_if_show_started_only_is_enabled(
+    thread_factory, client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_not_contains(response, thread.title)
+
+
+def test_category_thread_list_view_doesnt_display_deleted_user_thread_to_user_if_show_started_only_is_enabled(
+    thread_factory, user_client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category)
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_not_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_deleted_user_thread_to_category_moderator_if_show_started_only_is_enabled(
+    thread_factory, user_client, user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category)
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_deleted_user_thread_to_global_moderator_if_show_started_only_is_enabled(
+    thread_factory, moderator_client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category)
+
+    response = moderator_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_doesnt_display_user_thread_to_anonymous_user_if_show_started_only_is_enabled(
+    thread_factory, client, other_user, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, starter=other_user)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_not_contains(response, thread.title)
+
+
+def test_category_thread_list_view_doesnt_display_user_thread_to_user_if_show_started_only_is_enabled(
+    thread_factory, user_client, other_user, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, starter=other_user)
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_not_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_user_thread_to_category_moderator_if_show_started_only_is_enabled(
+    thread_factory, user_client, user, other_user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, starter=other_user)
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_user_thread_to_global_moderator_if_show_started_only_is_enabled(
+    thread_factory, moderator_client, other_user, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, starter=other_user)
+
+    response = moderator_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_user_own_thread_to_user_if_show_started_only_is_enabled(
+    thread_factory, user_client, user, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, starter=user)
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_globally_pinned_thread_to_anonymous_user_if_show_started_only_is_enabled(
+    thread_factory, client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, weight=2)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_globally_pinned_thread_to_user_if_show_started_only_is_enabled(
+    thread_factory, user_client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, weight=2)
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_category_pinned_thread_to_anonymous_user_if_show_started_only_is_enabled(
+    thread_factory, client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, weight=1)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
+def test_category_thread_list_view_displays_category_pinned_thread_to_user_if_show_started_only_is_enabled(
+    thread_factory, user_client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, weight=1)
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+
+
 def test_category_thread_list_view_displays_thread_with_user_starter_and_deleted_last_poster(
     thread_factory, thread_reply_factory, client, user, default_category
 ):
@@ -1068,6 +1250,54 @@ def test_category_thread_list_view_displays_thread_with_different_starter_and_la
     assert_contains(response, thread.title)
     assert_contains(response, thread.starter_name)
     assert_contains(response, thread.last_poster_name)
+
+
+@override_dynamic_settings(
+    threads_list_item_categories_component="breadcrumbs",
+)
+def test_category_thread_list_view_displays_category_thread_using_breadcrumbs_component(
+    thread_factory, client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(
+    threads_list_item_categories_component="labels",
+)
+def test_category_thread_list_view_displays_category_thread_using_labels_component(
+    thread_factory, client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(
+    threads_list_item_categories_component="breadcrumbs",
+)
+def test_category_thread_list_view_displays_child_category_thread_using_breadcrumbs_component(
+    thread_factory, client, default_category, child_category
+):
+    thread = thread_factory(child_category)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(
+    threads_list_item_categories_component="labels",
+)
+def test_category_thread_list_view_displays_child_category_thread_using_labels_component(
+    thread_factory, client, default_category, child_category
+):
+    thread = thread_factory(child_category)
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, thread.title)
 
 
 def test_category_thread_list_view_includes_child_category_thread(
