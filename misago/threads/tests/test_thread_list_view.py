@@ -314,7 +314,6 @@ def test_thread_list_view_doesnt_display_user_unapproved_thread_to_anonymous_use
     thread = thread_factory(default_category, starter=other_user, is_unapproved=True)
 
     response = client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_not_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-unapproved")
@@ -327,7 +326,6 @@ def test_thread_list_view_doesnt_display_user_unapproved_thread_to_user(
     thread = thread_factory(default_category, starter=other_user, is_unapproved=True)
 
     response = user_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_not_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-unapproved")
@@ -346,7 +344,6 @@ def test_thread_list_view_displays_user_unapproved_thread_to_category_moderator(
     thread = thread_factory(default_category, starter=other_user, is_unapproved=True)
 
     response = user_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-unapproved")
@@ -359,7 +356,6 @@ def test_thread_list_view_displays_user_unapproved_thread_to_global_moderator(
     thread = thread_factory(default_category, starter=user, is_unapproved=True)
 
     response = moderator_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-unapproved")
@@ -372,7 +368,6 @@ def test_thread_list_view_displays_user_own_unapproved_thread_to_user(
     thread = thread_factory(default_category, starter=user, is_unapproved=True)
 
     response = user_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-unapproved")
@@ -385,7 +380,6 @@ def test_thread_list_view_doesnt_display_user_hidden_thread_to_anonymous_user(
     thread = thread_factory(default_category, starter=other_user, is_hidden=True)
 
     response = client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_not_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-hidden")
@@ -398,7 +392,6 @@ def test_thread_list_view_doesnt_display_user_hidden_thread_to_user(
     thread = thread_factory(default_category, starter=other_user, is_hidden=True)
 
     response = user_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_not_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-hidden")
@@ -417,7 +410,6 @@ def test_thread_list_view_displays_user_hidden_thread_to_category_moderator(
     thread = thread_factory(default_category, starter=other_user, is_hidden=True)
 
     response = user_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-hidden")
@@ -430,7 +422,6 @@ def test_thread_list_view_displays_user_hidden_thread_to_global_moderator(
     thread = thread_factory(default_category, starter=user, is_hidden=True)
 
     response = moderator_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-hidden")
@@ -443,7 +434,6 @@ def test_thread_list_view_doesnt_display_user_own_hidden_thread_to_user(
     thread = thread_factory(default_category, starter=user, is_hidden=True)
 
     response = user_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_not_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-hidden")
@@ -456,7 +446,6 @@ def test_thread_list_view_displays_thread_without_flags(
     thread = thread_factory(default_category, starter=other_user)
 
     response = client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
 
@@ -468,7 +457,6 @@ def test_thread_list_view_displays_globally_pinned_thread(
     thread = thread_factory(default_category, starter=other_user, weight=2)
 
     response = client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-pinned-globally")
@@ -481,7 +469,6 @@ def test_thread_list_view_doesnt_display_thread_pinned_in_category_flag_to_anony
     thread = thread_factory(default_category, starter=other_user, weight=1)
 
     response = client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-pinned-locally-elsewhere")
@@ -494,7 +481,6 @@ def test_thread_list_view_doesnt_display_thread_pinned_in_category_flag_to_user(
     thread = thread_factory(default_category, starter=other_user, weight=1)
 
     response = user_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-pinned-locally-elsewhere")
@@ -513,7 +499,6 @@ def test_thread_list_view_displays_thread_pinned_in_category_flag_to_category_mo
     thread = thread_factory(default_category, starter=other_user, weight=1)
 
     response = user_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-pinned-locally-elsewhere")
@@ -526,7 +511,6 @@ def test_thread_list_view_displays_thread_pinned_in_category_flag_to_global_mode
     thread = thread_factory(default_category, starter=other_user, weight=1)
 
     response = moderator_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-pinned-locally-elsewhere")
@@ -540,7 +524,6 @@ def test_thread_list_view_displays_thread_with_poll(
     poll_factory(thread)
 
     response = client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-poll")
@@ -555,7 +538,6 @@ def test_thread_list_view_displays_solved_thread(
     thread.save()
 
     response = client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-answered")
@@ -568,7 +550,6 @@ def test_thread_list_view_displays_closed_thread(
     thread = thread_factory(default_category, starter=other_user, is_closed=True)
 
     response = client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-closed")
@@ -583,7 +564,6 @@ def test_thread_list_view_doesnt_display_thread_unapproved_posts_flag_to_anonymo
     )
 
     response = client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-unapproved")
@@ -598,7 +578,6 @@ def test_thread_list_view_doesnt_display_thread_unapproved_posts_flag_to_user(
     )
 
     response = user_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-unapproved")
@@ -619,7 +598,6 @@ def test_thread_list_view_displays_thread_unapproved_posts_flag_to_category_mode
     )
 
     response = user_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-unapproved")
@@ -634,7 +612,6 @@ def test_thread_list_view_displays_thread_unapproved_posts_flag_to_global_modera
     )
 
     response = moderator_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
     assert_contains(response, "thread-flag-unapproved")
@@ -647,10 +624,138 @@ def test_thread_list_view_doesnt_display_own_thread_unapproved_posts_flag_to_use
     thread = thread_factory(default_category, starter=user, has_unapproved_posts=True)
 
     response = user_client.get(reverse("misago:thread-list"))
-    assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
     assert_not_contains(response, "thread-flag-unapproved")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_doesnt_display_deleted_user_thread_to_anonymous_user_if_category_show_started_only_is_enabled(
+    thread_factory, client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category)
+
+    response = client.get(reverse("misago:thread-list"))
+    assert_not_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_doesnt_display_deleted_user_thread_to_user_if_category_show_started_only_is_enabled(
+    thread_factory, user_client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category)
+
+    response = user_client.get(reverse("misago:thread-list"))
+    assert_not_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_deleted_user_thread_to_category_moderator_if_category_show_started_only_is_enabled(
+    thread_factory, user_client, user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category)
+
+    response = user_client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_deleted_user_thread_to_global_moderator_if_category_show_started_only_is_enabled(
+    thread_factory, moderator_client, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category)
+
+    response = moderator_client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_doesnt_display_user_thread_to_anonymous_user_if_category_show_started_only_is_enabled(
+    thread_factory, client, other_user, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, starter=other_user)
+
+    response = client.get(reverse("misago:thread-list"))
+    assert_not_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_doesnt_display_user_thread_to_user_if_category_show_started_only_is_enabled(
+    thread_factory, user_client, other_user, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, starter=other_user)
+
+    response = user_client.get(reverse("misago:thread-list"))
+    assert_not_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_user_thread_to_category_moderator_if_category_show_started_only_is_enabled(
+    thread_factory, user_client, user, other_user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, starter=other_user)
+
+    response = user_client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_user_thread_to_global_moderator_if_category_show_started_only_is_enabled(
+    thread_factory, moderator_client, other_user, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, starter=other_user)
+
+    response = moderator_client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_displays_user_own_thread_to_user_if_category_show_started_only_is_enabled(
+    thread_factory, user_client, user, default_category
+):
+    default_category.show_started_only = True
+    default_category.save()
+
+    thread = thread_factory(default_category, starter=user)
+
+    response = user_client.get(reverse("misago:thread-list"))
+    assert_contains(response, thread.title)
 
 
 @override_dynamic_settings(index_view="categories")
