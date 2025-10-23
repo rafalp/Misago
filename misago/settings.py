@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "misago.htmx",
     "misago.icons",
     "misago.legal",
+    "misago.likes",
     "misago.markup",
     "misago.menus",
     "misago.metatags",
