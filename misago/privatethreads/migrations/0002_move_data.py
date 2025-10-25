@@ -11,7 +11,7 @@ def migrate_private_thread_members(apps, _):
         "user_id", "is_owner", "thread_id", "thread__started_at"
     )
 
-    batch: list[PrivateThreadMember] = []
+    batch: list = []
     batch_size: int = 0
     for data in queryset.iterator(chunk_size=50):
         data["created_at"] = data.pop("thread__started_at")
