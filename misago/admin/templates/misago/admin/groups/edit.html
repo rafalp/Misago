@@ -119,6 +119,16 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
+    <legend>{% translate "Likes" context "admin group permissions form" %}</legend>
+
+    {% form_row form.group.can_like_posts %}
+    {% form_row form.group.can_see_own_posts_likes %}
+    {% form_row form.group.can_see_others_posts_likes %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
     <legend>{% translate "Usernames" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_change_username %}

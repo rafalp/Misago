@@ -18,7 +18,7 @@ class CanSeePostLikes(IntEnum):
                 ),
             ),
             (
-                cls.COUNT,
+                cls.NUMBER,
                 pgettext_lazy("see post likes permission", "Number only"),
             ),
             (cls.NEVER, pgettext_lazy("see post likes permission", "Never")),
