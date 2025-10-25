@@ -7,6 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("misago_threads", "0016_remove_post_mentions"),
+        ("misago_notifications", "0002_migrate_threads_subscriptions"),
     ]
 
     operations = [

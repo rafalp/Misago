@@ -43,6 +43,10 @@ class Group(PluginDataModel):
     own_polls_close_time_limit = models.PositiveIntegerField(default=0)
     can_vote_in_polls = models.BooleanField(default=False)
 
+    can_like_posts = models.BooleanField(default=False)
+    can_see_own_posts_likes = models.PositiveIntegerField(default=0)
+    can_see_others_posts_likes = models.PositiveIntegerField(default=0)
+
     can_change_username = models.BooleanField(default=False)
     username_changes_limit = models.PositiveIntegerField(default=0)
     username_changes_expire = models.PositiveIntegerField(default=0)

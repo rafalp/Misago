@@ -8,7 +8,7 @@ from ...parser.html import render_tokens_to_html
 from ...parser.metadata import get_tokens_metadata
 from ...parser.plaintext import render_tokens_to_plaintext
 from ...parser.tokenizer import tokenize
-from ...permissions.enums import CanUploadAttachments
+from ...permissions.enums import CanSeePostLikes, CanUploadAttachments
 from ...users.models import Group, GroupDescription
 from ..forms import YesNoSwitch
 
@@ -251,6 +251,24 @@ class EditGroupForm(forms.ModelForm):
         ),
     )
 
+    can_like_posts = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Can like posts"),
+    )
+    can_see_own_posts_likes = forms.TypedChoiceField(
+        label=pgettext_lazy("admin group permissions form", "Can see own posts likes"),
+        choices=CanSeePostLikes.get_choices(),
+        widget=forms.RadioSelect(),
+        coerce=int,
+    )
+    can_see_others_posts_likes = forms.TypedChoiceField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Can see other users posts likes"
+        ),
+        choices=CanSeePostLikes.get_choices(),
+        widget=forms.RadioSelect(),
+        coerce=int,
+    )
+
     can_change_username = YesNoSwitch(
         label=pgettext_lazy("admin group permissions form", "Can change username"),
     )
@@ -319,6 +337,9 @@ class EditGroupForm(forms.ModelForm):
             "can_close_own_polls",
             "own_polls_close_time_limit",
             "can_vote_in_polls",
+            "can_like_posts",
+            "can_see_own_posts_likes",
+            "can_see_others_posts_likes",
             "can_change_username",
             "username_changes_limit",
             "username_changes_expire",

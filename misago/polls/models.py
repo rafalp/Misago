@@ -57,7 +57,7 @@ class Poll(PluginDataModel):
         return False
 
 
-class PollVote(models.Model):
+class PollVote(PluginDataModel):
     category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
     thread = models.ForeignKey("misago_threads.Thread", on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
@@ -73,6 +73,7 @@ class PollVote(models.Model):
 
     class Meta:
         indexes = [
+            *PluginDataModel.Meta.indexes,
             models.Index(fields=["poll", "choice_id"]),
             models.Index(fields=["poll", "voter_name"]),
         ]

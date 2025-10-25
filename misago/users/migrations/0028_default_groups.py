@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-from ...permissions.enums import CanUploadAttachments
+from ...permissions.enums import CanSeePostLikes, CanUploadAttachments
 from ...permissions.permissionsid import get_permissions_id
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
@@ -44,6 +44,9 @@ def create_default_groups(apps, schema_editor):
                 can_close_own_polls=True,
                 own_polls_edit_time_limit=0,
                 can_vote_in_polls=True,
+                can_like_posts=True,
+                can_see_own_posts_likes=CanSeePostLikes.USERS,
+                can_see_others_posts_likes=CanSeePostLikes.USERS,
                 can_change_username=True,
                 can_see_user_profiles=True,
             ),
@@ -76,6 +79,9 @@ def create_default_groups(apps, schema_editor):
                 can_close_own_polls=True,
                 own_polls_edit_time_limit=0,
                 can_vote_in_polls=True,
+                can_like_posts=True,
+                can_see_own_posts_likes=CanSeePostLikes.USERS,
+                can_see_others_posts_likes=CanSeePostLikes.USERS,
                 can_change_username=True,
                 can_see_user_profiles=True,
             ),
@@ -104,6 +110,9 @@ def create_default_groups(apps, schema_editor):
                 can_close_own_polls=False,
                 own_polls_edit_time_limit=0,
                 can_vote_in_polls=True,
+                can_like_posts=True,
+                can_see_own_posts_likes=CanSeePostLikes.USERS,
+                can_see_others_posts_likes=CanSeePostLikes.USERS,
                 can_change_username=True,
                 username_changes_limit=5,
                 username_changes_expire=4,
@@ -117,6 +126,7 @@ def create_default_groups(apps, schema_editor):
                 is_hidden=True,
                 ordering=3,
                 # Permissions
+                can_see_others_posts_likes=CanSeePostLikes.USERS,
                 can_see_user_profiles=True,
             ),
         ]
