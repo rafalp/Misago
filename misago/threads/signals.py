@@ -46,8 +46,12 @@ def merge_threads(sender, **kwargs):
     other_thread = kwargs["other_thread"]
 
     other_thread.post_set.update(category=sender.category, thread=sender)
-    other_thread.postedit_set.update(category=sender.category, thread=sender)
-    other_thread.postlike_set.update(category=sender.category, thread=sender)
+    PostEdit.objects.filter(thread=other_thread).update(
+        category=sender.category, thread=sender
+    )
+    PostLike.objects.filter(thread=other_thread).update(
+        category=sender.category, thread=sender
+    )
 
     other_thread.notification_set.update(
         category=sender.category,
@@ -73,8 +77,8 @@ def move_post_notifications(sender, **kwargs):
 @receiver(move_thread)
 def move_thread_content(sender, **kwargs):
     sender.post_set.update(category=sender.category)
-    sender.postedit_set.update(category=sender.category)
-    sender.postlike_set.update(category=sender.category)
+    PostEdit.objects.filter(thread=sender).update(category=sender.category)
+    PostLike.objects.filter(thread=sender).update(category=sender.category)
     sender.pollvote_set.update(category=sender.category)
     sender.notification_set.update(category=sender.category)
     sender.watchedthread_set.update(category=sender.category)
@@ -172,7 +176,9 @@ def archive_user_posts_edits(sender, archive=None, **kwargs):
     for post_edit in queryset.order_by("id").iterator(chunk_size=50):
         item_name = post_edit.edited_on.strftime("%H%M%S-post-edit")
         archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)
-    queryset = sender.postedit_set.exclude(id__in=queryset.values("id"))
+    queryset = PostEdit.objects.filter(editor=sender).exclude(
+        id__in=queryset.values("id")
+    )
     for post_edit in queryset.order_by("id").iterator(chunk_size=50):
         item_name = post_edit.edited_on.strftime("%H%M%S-post-edit")
         archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)
