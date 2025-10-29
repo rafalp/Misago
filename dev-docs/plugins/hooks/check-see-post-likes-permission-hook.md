@@ -117,7 +117,7 @@ def check_user_can_see_post_likes(
     # Run standard permission checks
     action(permissions, category, thread, post)
 
-    if post.plugin_data.get("hide_linkes"):
+    if post.plugin_data.get("hide_likes"):
         raise PermissionDenied(
             pgettext(
                 "post permission error",
