@@ -39,9 +39,8 @@ class CheckReplyPrivateThreadPermissionHookFilter(Protocol):
 
     ## `action: CheckReplyPrivateThreadPermissionHookAction`
 
-    Misago function used to check if the user has permission to
-    reply to a private thread. It raises Django's `PermissionDenied` with an
-    error message if they can't reply to it.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

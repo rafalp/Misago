@@ -39,9 +39,8 @@ class CheckStartThreadInCategoryPermissionHookFilter(Protocol):
 
     ## `action: CheckStartThreadInCategoryPermissionHookAction`
 
-    Misago function used to check if the user has permission to
-    start a new thread in a category. It raises Django's `PermissionDenied` with
-    an error message if they can't start thread in a category.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

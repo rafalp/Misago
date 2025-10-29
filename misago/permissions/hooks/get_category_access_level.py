@@ -60,8 +60,8 @@ class GetCategoryAccessLevelHookFilter(Protocol):
 
     ## `action: GetCategoryAccessLevelHookAction`
 
-    Misago function used to get a user's access level for a category.
-    Access levels are used to build the final threads queryset for thread lists.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

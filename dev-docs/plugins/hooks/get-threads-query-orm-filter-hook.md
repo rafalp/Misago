@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetThreadsQueryORMFilterHookAction`
 
-Misago function used to get Django's `Q` object instance to retrieve threads using a specified query.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 

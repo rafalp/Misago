@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: FilterPrivateThreadsQuerysetHookAction`
 
-Misago function used to set filters on a private threads queryset to limit it only to threads that the user has access to.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 

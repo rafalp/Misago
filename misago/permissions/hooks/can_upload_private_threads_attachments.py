@@ -36,8 +36,8 @@ class CanUploadPrivateThreadsAttachmentsHookFilter(Protocol):
 
     ## `action: CanUploadPrivateThreadsAttachmentsHookAction`
 
-    Misago function that checks whether a user has permission to
-    upload attachments in private threads.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

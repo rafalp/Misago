@@ -50,9 +50,8 @@ class CheckSeeThreadPostPermissionHookFilter(Protocol):
 
     ## `action: CheckSeeThreadPostPermissionHookAction`
 
-    Misago function used to check if the user has a permission to see
-    a post in a thread. Raises Django's `Http404` if they can't see it or
-    `PermissionDenied` with an error message if they can't see it's contents.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

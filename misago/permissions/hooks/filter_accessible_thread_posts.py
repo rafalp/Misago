@@ -56,9 +56,10 @@ class FilterAccessibleThreadPostsHookFilter(Protocol):
 
     ## `action: FilterAccessibleThreadPostsHookAction`
 
-    Misago function used to set filters on a queryset of posts from
-    a thread of any type (regular, private, or plugin-specified), limiting it
-    to only the posts that the user can see.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
+
+    See the [action](#action) section for details.
 
     ## `user_permissions: UserPermissionsProxy`
 

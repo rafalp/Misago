@@ -56,9 +56,8 @@ class CheckDownloadAttachmentPermissionHookFilter(Protocol):
 
     ## `action: CheckDownloadAttachmentPermissionHookAction`
 
-    Misago function used to check if a user has permission to
-    download an attachment. It raises Django's `Http404` if the user cannot
-    see the attachment or `PermissionDenied` if they are not allowed to download it.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

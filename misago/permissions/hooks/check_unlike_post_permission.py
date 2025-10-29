@@ -2,17 +2,16 @@ from typing import TYPE_CHECKING, Protocol
 
 from ...categories.models import Category
 from ...plugins.hooks import FilterHook
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 
 if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckAccessThreadPermissionHookAction(Protocol):
+class CheckUnlikePostPermissionHookAction(Protocol):
     """
-    Misago function used to check if a user has permission to access
-    a thread of unknown type (threads, private threads, or plugin-defined).
-    Raises Django’s `Http404` or `PermissionDenied` if they can't.
+    Misago function used to check if a user has permission to unlike
+    a post. Raises Django’s `PermissionDenied` if they can't.
 
     # Arguments
 
@@ -27,6 +26,10 @@ class CheckAccessThreadPermissionHookAction(Protocol):
     ## `thread: Thread`
 
     A thread to check permissions for.
+
+    ## `post: Post`
+
+    A post to check permissions for.
     """
 
     def __call__(
@@ -34,16 +37,17 @@ class CheckAccessThreadPermissionHookAction(Protocol):
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
+        post: Post,
     ) -> None: ...
 
 
-class CheckAccessThreadPermissionHookFilter(Protocol):
+class CheckUnlikePostPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckAccessThreadPermissionHookAction`
+    ## `action: CheckUnlikePostPermissionHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -61,56 +65,61 @@ class CheckAccessThreadPermissionHookFilter(Protocol):
     ## `thread: Thread`
 
     A thread to check permissions for.
+
+    ## `post: Post`
+
+    A post to check permissions for.
     """
 
     def __call__(
         self,
-        action: CheckAccessThreadPermissionHookAction,
+        action: CheckUnlikePostPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
+        post: Post,
     ) -> None: ...
 
 
-class CheckAccessThreadPermissionHook(
+class CheckUnlikePostPermissionHook(
     FilterHook[
-        CheckAccessThreadPermissionHookAction,
-        CheckAccessThreadPermissionHookFilter,
+        CheckUnlikePostPermissionHookAction,
+        CheckUnlikePostPermissionHookFilter,
     ]
 ):
     """
     This hook wraps a standard Misago function used to check if a user has permission
-    to access a thread of unknown type (threads, private threads, or plugin-defined).
-    Raises Django’s `Http404` or `PermissionDenied` if they can't.
+    to unlike a post. Raises Django’s `PermissionDenied` if they can't.
 
     # Example
 
-    The code below implements a custom filter function that blocks a user from seeing
-    a specified thread if there is a custom flag set on their account.
+    The code below implements a custom filter function that blocks a user from liking
+    a specific post if there is a custom flag set on it.
 
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
     from misago.categories.models import Category
-    from misago.permissions.hooks import check_access_thread_permission_hook
+    from misago.permissions.hooks import check_unlike_post_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
-    from misago.threads.models import Thread
+    from misago.threads.models import Post, Thread
 
-    @check_access_thread_permission_hook.append_filter
-    def check_user_can_access_thread(
+    @check_unlike_post_permission_hook.append_filter
+    def check_user_can_unlike_post(
         action,
         permissions: UserPermissionsProxy,
         category: Category,
         thread: Thread,
+        post: Post,
     ) -> None:
         # Run standard permission checks
-        action(permissions, category, thread)
+        action(permissions, category, thread, post)
 
-        if thread.id in permissions.user.plugin_data.get("hidden_threads", []):
+        if post.plugin_data.get("disable_unlikes"):
             raise PermissionDenied(
                 pgettext(
-                    "thread permission error",
-                    "Site admin has removed your access to this thread."
+                    "post permission error",
+                    "You can't unlike this post."
                 )
             )
     ```
@@ -120,12 +129,13 @@ class CheckAccessThreadPermissionHook(
 
     def __call__(
         self,
-        action: CheckAccessThreadPermissionHookAction,
+        action: CheckUnlikePostPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
+        post: Post,
     ) -> None:
-        return super().__call__(action, permissions, category, thread)
+        return super().__call__(action, permissions, category, thread, post)
 
 
-check_access_thread_permission_hook = CheckAccessThreadPermissionHook()
+check_unlike_post_permission_hook = CheckUnlikePostPermissionHook()

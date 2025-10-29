@@ -1,6 +1,6 @@
-# `check_see_thread_post_permission_hook`
+# `check_like_post_permission_hook`
 
-This hook wraps a standard Misago function used to check if the user has a permission to see a post in a thread. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't see it's contents.
+This hook wraps a standard Misago function used to check if a user has permission to like a post. Raises Django’s `PermissionDenied` if they can't.
 
 
 ## Location
@@ -8,15 +8,15 @@ This hook wraps a standard Misago function used to check if the user has a permi
 This hook can be imported from `misago.permissions.hooks`:
 
 ```python
-from misago.permissions.hooks import check_see_thread_post_permission_hook
+from misago.permissions.hooks import check_like_post_permission_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_check_see_thread_post_permission_filter(
-    action: CheckSeeThreadPostPermissionHookAction,
+def custom_check_like_post_permission_filter(
+    action: CheckLikePostPermissionHookAction,
     permissions: 'UserPermissionsProxy',
     category: Category,
     thread: Thread,
@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: CheckSeeThreadPostPermissionHookAction`
+#### `action: CheckLikePostPermissionHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
@@ -60,7 +60,7 @@ A post to check permissions for.
 ## Action
 
 ```python
-def check_see_thread_post_permission_action(
+def check_like_post_permission_action(
     permissions: 'UserPermissionsProxy',
     category: Category,
     thread: Thread,
@@ -69,7 +69,7 @@ def check_see_thread_post_permission_action(
     ...
 ```
 
-Misago function used to check if the user has a permission to see a post in a thread. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't see it's contents.
+Misago function used to check if a user has permission to like a post. Raises Django’s `PermissionDenied` if they can't.
 
 
 ### Arguments
@@ -96,18 +96,18 @@ A post to check permissions for.
 
 ## Example
 
-The code below implements a custom filter function that blocks a user from seeing a specified post if there is a custom flag set on their account.
+The code below implements a custom filter function that blocks a user from liking a specific post if there is a custom flag set on it.
 
 ```python
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext
 from misago.categories.models import Category
-from misago.permissions.hooks import check_see_thread_post_permission_hook
+from misago.permissions.hooks import check_like_post_permission_hook
 from misago.permissions.proxy import UserPermissionsProxy
 from misago.threads.models import Post, Thread
 
-@check_see_thread_post_permission_hook.append_filter
-def check_user_can_see_thread_post(
+@check_like_post_permission_hook.append_filter
+def check_user_can_like_post(
     action,
     permissions: UserPermissionsProxy,
     category: Category,
@@ -117,11 +117,11 @@ def check_user_can_see_thread_post(
     # Run standard permission checks
     action(permissions, category, thread, post)
 
-    if post.id in permissions.user.plugin_data.get("hidden_post", []):
+    if post.plugin_data.get("disable_likes"):
         raise PermissionDenied(
             pgettext(
                 "post permission error",
-                "Site admin has removed your access to this post."
+                "You can't like this post."
             )
         )
 ```
