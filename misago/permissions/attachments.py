@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.utils.translation import pgettext

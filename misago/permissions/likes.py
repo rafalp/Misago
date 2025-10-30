@@ -1,5 +1,9 @@
+from django.core.exceptions import PermissionDenied
+from django.utils.translation import pgettext
+
 from ..categories.models import Category
 from ..threads.models import Post, Thread
+from .enums import CanSeePostLikes
 from .hooks import (
     check_like_post_permission_hook,
     check_see_post_likes_permission_hook,
@@ -25,7 +29,21 @@ def _check_like_post_permission_action(
     thread: Thread,
     post: Post,
 ):
-    pass
+    if not permissions.user.is_authenticated:
+        raise PermissionDenied(
+            pgettext(
+                "likes permission error",
+                "You can't like posts.",
+            )
+        )
+
+    if not permissions.can_like_posts:
+        raise PermissionDenied(
+            pgettext(
+                "post likes permission error",
+                "You can't like this post.",
+            )
+        )
 
 
 def check_unlike_post_permission(
@@ -45,7 +63,21 @@ def _check_unlike_post_permission_action(
     thread: Thread,
     post: Post,
 ):
-    pass
+    if not permissions.user.is_authenticated:
+        raise PermissionDenied(
+            pgettext(
+                "likes permission error",
+                "You can't remove posts likes.",
+            )
+        )
+
+    if not permissions.can_like_posts:
+        raise PermissionDenied(
+            pgettext(
+                "likes permission error",
+                "You can't remove your like from this post.",
+            )
+        )
 
 
 def check_see_post_likes_permission(
@@ -65,4 +97,17 @@ def _check_see_post_likes_permission_action(
     thread: Thread,
     post: Post,
 ):
-    pass
+    is_user_post = permissions.user.id and permissions.user.id == post.poster_id
+
+    if (
+        is_user_post and permissions.can_see_own_posts_likes != CanSeePostLikes.USERS
+    ) or (
+        not is_user_post
+        and permissions.can_see_others_posts_likes != CanSeePostLikes.USERS
+    ):
+        raise PermissionDenied(
+            pgettext(
+                "likes permission error",
+                "You can't see this post's likes.",
+            )
+        )

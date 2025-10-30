@@ -5,7 +5,7 @@ from django.utils.translation import pgettext_lazy
 
 class CanSeePostLikes(IntEnum):
     USERS = 2
-    NUMBER = 1
+    COUNT = 1
     NEVER = 0
 
     @classmethod
@@ -14,12 +14,12 @@ class CanSeePostLikes(IntEnum):
             (
                 cls.USERS,
                 pgettext_lazy(
-                    "see post likes permission", "Number and users who liked the post"
+                    "see post likes permission", "Count and users who liked the post"
                 ),
             ),
             (
-                cls.NUMBER,
-                pgettext_lazy("see post likes permission", "Number only"),
+                cls.COUNT,
+                pgettext_lazy("see post likes permission", "Count only"),
             ),
             (cls.NEVER, pgettext_lazy("see post likes permission", "Never")),
         )
