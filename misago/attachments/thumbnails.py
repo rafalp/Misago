@@ -7,13 +7,12 @@ from .models import Attachment
 
 
 def generate_attachment_thumbnail(
-    attachment: Attachment, image, width: int, height: int
+    attachment: Attachment, image, image_format: str, width: int, height: int
 ):
     thumbnail_stream = BytesIO()
-    format = image.format
 
     image.thumbnail((width, height))
-    image.save(thumbnail_stream, format)
+    image.save(thumbnail_stream, image_format)
 
     attachment.thumbnail = SimpleUploadedFile(
         attachment.name,

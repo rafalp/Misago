@@ -135,6 +135,40 @@ def test_store_uploaded_file_stores_image_file_scaled_down(
     assert not attachment.thumbnail_size
 
 
+@override_dynamic_settings(
+    attachment_image_max_width=400,
+    attachment_image_max_height=300,
+    attachment_thumbnail_width=150,
+    attachment_thumbnail_height=100,
+)
+def test_store_uploaded_file_stores_image_file_scaled_down_with_thumbnail(
+    user, dynamic_settings, image_large, teardown_attachments
+):
+    with open(image_large, "rb") as fp:
+        upload = SimpleUploadedFile("image.png", fp.read(), "image/png")
+
+    request = Mock(user=user, settings=dynamic_settings)
+    filetype = filetypes.match_filetype(upload.name)
+
+    attachment = store_uploaded_file(request, upload, filetype)
+
+    assert attachment.id
+    assert attachment.uploader == user
+    assert attachment.uploader_name == user.username
+    assert attachment.uploader_slug == user.slug
+    assert attachment.uploaded_at
+    assert attachment.name == upload.name
+    assert attachment.slug == "image-png"
+    assert attachment.filetype_id == filetype.id
+    assert attachment.dimensions == "300x300"
+    assert attachment.upload
+    assert attachment.upload.url
+    assert attachment.size == upload.size
+
+    assert attachment.thumbnail
+    assert attachment.thumbnail_dimensions == "100x100"
+
+
 def test_store_uploaded_file_cleans_filename(
     user, dynamic_settings, text_file, teardown_attachments
 ):
