@@ -6,6 +6,7 @@ Hooks instances are importable from the following Python modules:
 
 - [`misago.attachments.hooks`](#misago-attachments-hooks)
 - [`misago.categories.hooks`](#misago-categories-hooks)
+- [`misago.likes.hooks`](#misago-likes-hooks)
 - [`misago.oauth2.hooks`](#misago-oauth2-hooks)
 - [`misago.parser.hooks`](#misago-parser-hooks)
 - [`misago.permissions.hooks`](#misago-permissions-hooks)
@@ -40,6 +41,13 @@ Hooks instances are importable from the following Python modules:
 - [`get_categories_page_metatags_hook`](./get-categories-page-metatags-hook.md)
 - [`get_categories_query_values_hook`](./get-categories-query-values-hook.md)
 - [`get_category_data_hook`](./get-category-data-hook.md)
+
+
+## `misago.likes.hooks`
+
+`misago.likes.hooks` defines the following hooks:
+
+- [`synchronize_post_likes_hook`](./synchronize-post-likes-hook.md)
 
 
 ## `misago.oauth2.hooks`

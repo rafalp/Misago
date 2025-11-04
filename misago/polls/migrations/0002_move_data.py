@@ -64,7 +64,8 @@ class Migration(migrations.Migration):
                 voter_name,
                 voter_slug,
                 voted_at,
-                choice_id
+                choice_id,
+                plugin_data
             )
             SELECT
                 id,
@@ -75,7 +76,8 @@ class Migration(migrations.Migration):
                 voter_name,
                 voter_slug,
                 voted_on,
-                choice_hash
+                choice_hash,
+                '{}'
             FROM misago_threads_pollvote;
             """,
             migrations.RunSQL.noop,

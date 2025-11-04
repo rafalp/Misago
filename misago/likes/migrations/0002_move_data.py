@@ -18,19 +18,23 @@ class Migration(migrations.Migration):
                 id,
                 category_id,
                 thread_id,
+                post_id,
                 user_id,
                 user_name,
                 user_slug,
-                liked_at
+                liked_at,
+                plugin_data
             )
             SELECT
                 id,
                 category_id,
                 thread_id,
+                post_id,
                 liker_id,
                 liker_name,
                 liker_slug,
-                liked_on
+                liked_on,
+                '{}'
             FROM misago_threads_postlike;
             """,
             migrations.RunSQL.noop,

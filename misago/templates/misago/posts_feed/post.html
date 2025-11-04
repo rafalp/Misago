@@ -217,6 +217,25 @@
           </div>
         </div>
 
+        {% if post.last_likes %}
+          <div class="posts-feed-item-post-body-likes">
+            <ul class="list-inline">
+              <li>
+                <b>
+                  {% blocktranslate trimmed count likes=post.likes %}
+                    {{ likes }} like:
+                  {% plural %}
+                    {{ likes }} likes:
+                  {% endblocktranslate %}
+                </b>
+              </li>
+              {% for like in post.last_likes %}
+                <li>{{ like.username }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
       </div>
     </div>
 
