@@ -98,7 +98,7 @@ class SynchronizePostLikesHook(
 
 
     @synchronize_post_likes_hook.append_filter
-    def record_user_who_synced_thread(
+    def record_user_who_synced_post_likes(
         action,
         post: Post,
         commit: bool = True,
