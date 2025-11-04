@@ -16,7 +16,7 @@ def call_command():
 
 def test_synchronizethreads_command_does_nothing_if_there_are_no_threads(db):
     with pytest.raises(management.CommandError) as exc_info:
-        command_output = call_command()
+        call_command()
 
     assert exc_info.value.args == ("No threads exist.",)
 
