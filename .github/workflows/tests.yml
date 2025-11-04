@@ -45,6 +45,7 @@ jobs:
           POSTGRES_HOST: localhost
           MISAGO_PLUGINS: plugins
         run: |
+          python manage.py makemigrations --check
           pytest --cov=misago
       - name: Linters
         run: |
