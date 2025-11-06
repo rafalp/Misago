@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Protocol, Union
 
 from django.http import HttpRequest
 
@@ -44,7 +44,7 @@ class LikePostHookAction(Protocol):
     def __call__(
         self,
         post: Post,
-        user: "User" | str,
+        user: Union["User", str],
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Like: ...
@@ -91,7 +91,7 @@ class LikePostHookFilter(Protocol):
         self,
         action: LikePostHookAction,
         post: Post,
-        user: "User" | str,
+        user: Union["User", str],
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Like: ...
@@ -125,7 +125,7 @@ class LikePostHook(
     def record_like_ip_address(
         action,
         post: Post,
-        user: "User" | str,
+        user: Union["User", str],
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Like:
@@ -148,7 +148,7 @@ class LikePostHook(
         self,
         action: LikePostHookAction,
         post: Post,
-        user: "User" | str,
+        user: Union["User", str],
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Like:

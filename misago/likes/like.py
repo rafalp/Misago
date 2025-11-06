@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 from django.conf import settings
 from django.http import HttpRequest
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 def like_post(
     post: Post,
-    user: "User" | str,
+    user: Union["User", str],
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Like:
@@ -23,7 +23,7 @@ def like_post(
 
 def _like_post_action(
     post: Post,
-    user: "User" | str,
+    user: Union["User", str],
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Like:
@@ -64,7 +64,7 @@ def _like_post_action(
 
 def unlike_post(
     post: Post,
-    user: "User" | str,
+    user: Union["User", str],
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Like:
@@ -73,7 +73,7 @@ def unlike_post(
 
 def _unlike_post_action(
     post: Post,
-    user: "User" | str,
+    user: Union["User", str],
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Like:

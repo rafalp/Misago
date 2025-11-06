@@ -20,7 +20,7 @@ from misago.likes.hooks import like_post_hook
 def custom_like_post_filter(
     action: LikePostHookAction,
     post: Post,
-    user: 'User' | str,
+    user: Union['User', str],
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> Like:
@@ -71,7 +71,7 @@ New `Like` instance.
 ```python
 def like_post_action(
     post: Post,
-    user: 'User' | str,
+    user: Union['User', str],
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> Like:
@@ -126,7 +126,7 @@ from misago.users.models import User
 def record_like_ip_address(
     action,
     post: Post,
-    user: "User" | str,
+    user: Union["User", str],
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Like:
