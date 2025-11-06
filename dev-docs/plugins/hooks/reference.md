@@ -47,6 +47,7 @@ Hooks instances are importable from the following Python modules:
 
 `misago.likes.hooks` defines the following hooks:
 
+- [`like_post_hook`](./like-post-hook.md)
 - [`synchronize_post_likes_hook`](./synchronize-post-likes-hook.md)
 
 

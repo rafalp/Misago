@@ -20,7 +20,6 @@ from misago.likes.hooks import synchronize_post_likes_hook
 def custom_synchronize_post_likes_filter(
     action: SynchronizePostLikesHookAction,
     post: Post,
-    data: dict,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> None:
@@ -60,10 +59,7 @@ The request object, or `None` if not provided.
 
 ```python
 def synchronize_post_likes_action(
-    post: Post,
-    data: dict,
-    commit: bool=True,
-    request: HttpRequest | None=None,
+    post: Post, commit: bool=True, request: HttpRequest | None=None
 ) -> None:
     ...
 ```
@@ -115,5 +111,6 @@ def record_user_who_synced_post_likes(
             "username": request.user.username if request.user.id else None,
         }
 
-    post.save(update_fields=["likes", "last_likes", "plugin_data"])
+    if commit:
+        post.save(update_fields=["likes", "last_likes", "plugin_data"])
 ```
