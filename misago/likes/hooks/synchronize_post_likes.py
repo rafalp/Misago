@@ -30,7 +30,6 @@ class SynchronizePostLikesHookAction(Protocol):
     def __call__(
         self,
         post: Post,
-        data: dict,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> None: ...
@@ -68,7 +67,6 @@ class SynchronizePostLikesHookFilter(Protocol):
         self,
         action: SynchronizePostLikesHookAction,
         post: Post,
-        data: dict,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> None: ...
@@ -112,7 +110,8 @@ class SynchronizePostLikesHook(
                 "username": request.user.username if request.user.id else None,
             }
 
-        post.save(update_fields=["likes", "last_likes", "plugin_data"])
+        if commit:
+            post.save(update_fields=["likes", "last_likes", "plugin_data"])
     ```
     """
 
