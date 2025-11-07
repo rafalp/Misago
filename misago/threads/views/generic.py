@@ -41,8 +41,13 @@ class GenericView(View):
     thread_update_select_related: Iterable[str] | True | None = None
     next_page: str = "next"
 
-    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
-        queryset = self.get_thread_queryset(request)
+    def get_thread(
+        self, request: HttpRequest, thread_id: int, for_update: bool = False
+    ) -> Thread:
+        if for_update:
+            queryset = Thread.objects.select_for_update()
+        else:
+            queryset = self.get_thread_queryset(request)
         return get_object_or_404(queryset, id=thread_id)
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
@@ -62,13 +67,20 @@ class GenericView(View):
         return thread.post_set.order_by("id")
 
     def get_thread_post(
-        self, request: HttpRequest, thread: Thread, post_id: int
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        post_id: int,
+        for_update: bool = False,
     ) -> Post:
         queryset = self.get_thread_posts_queryset(request, thread)
-        if self.post_select_related is True:
-            queryset = queryset.select_related()
-        elif self.post_select_related:
-            queryset = queryset.select_related(*self.post_select_related)
+        if for_update:
+            queryset = queryset.select_for_update()
+        else:
+            if self.post_select_related is True:
+                queryset = queryset.select_related()
+            elif self.post_select_related:
+                queryset = queryset.select_related(*self.post_select_related)
 
         post = get_object_or_404(queryset, id=post_id)
 
@@ -160,8 +172,10 @@ class ThreadView(GenericView):
     thread_select_related: Iterable[str] | True | None = ("category",)
     thread_url_name: str = "misago:thread"
 
-    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
-        thread = super().get_thread(request, thread_id)
+    def get_thread(
+        self, request: HttpRequest, thread_id: int, for_update: bool = False
+    ) -> Thread:
+        thread = super().get_thread(request, thread_id, for_update)
         check_see_thread_permission(request.user_permissions, thread.category, thread)
         return thread
 
@@ -192,63 +206,3 @@ class ThreadView(GenericView):
 
     def get_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_category_moderator(thread.category_id)
-
-
-class PrivateThreadView(GenericView):
-    thread_url_name: str = "misago:private-thread"
-    thread_get_members: bool = False
-
-    owner: Optional["User"]
-    members: list["User"]
-
-    def __init__(self, *args, **kwargs):
-        self.owner = None
-        self.members = []
-
-        super().__init__(*args, **kwargs)
-
-    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
-        check_private_threads_permission(request.user_permissions)
-
-        thread = super().get_thread(request, thread_id)
-        if self.thread_get_members:
-            self.owner, self.members = get_private_thread_members(thread)
-
-        check_see_private_thread_permission(request.user_permissions, thread)
-        return thread
-
-    def get_thread_posts_queryset(
-        self, request: HttpRequest, thread: Thread
-    ) -> QuerySet:
-        queryset = super().get_thread_posts_queryset(request, thread)
-        return filter_private_thread_posts_queryset(
-            request.user_permissions, thread, queryset
-        )
-
-    def get_thread_updates_queryset(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-    ) -> QuerySet:
-        queryset = super().get_thread_updates_queryset(request, thread)
-        return filter_private_thread_updates_queryset(
-            request.user_permissions, thread, queryset
-        )
-
-    def get_posts_feed(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        posts: list[Post],
-        thread_updates: list[ThreadUpdate] | None = None,
-    ) -> PostsFeed:
-        return PrivateThreadPostsFeed(request, thread, posts, thread_updates)
-
-    def get_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
-        return request.user_permissions.is_private_threads_moderator
-
-    def get_owner_status(self, request: HttpRequest, thread: Thread) -> bool:
-        if not self.owner or not request.user.is_authenticated:
-            return False
-
-        return self.owner.id == request.user.id

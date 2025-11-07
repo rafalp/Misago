@@ -32,10 +32,12 @@ class PrivateThreadView(GenericView):
 
         super().__init__(*args, **kwargs)
 
-    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
+    def get_thread(
+        self, request: HttpRequest, thread_id: int, for_update: bool = False
+    ) -> Thread:
         check_private_threads_permission(request.user_permissions)
 
-        thread = super().get_thread(request, thread_id)
+        thread = super().get_thread(request, thread_id, for_update)
         if self.thread_get_members:
             self.owner, self.members = get_private_thread_members(thread)
 
