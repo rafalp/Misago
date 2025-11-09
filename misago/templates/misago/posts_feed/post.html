@@ -201,6 +201,27 @@
 
         <div class="posts-feed-item-post-body-footer">
           <div class="posts-feed-item-post-body-footer-left">
+            {% if is_liked %}
+              <form action="{% url 'misago:thread-post-unlike' thread_id=thread.id slug=thread.slug post_id=post.id %}" method="post">
+                {% csrf_token %}
+                <button
+                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-like"
+                  type="submit"
+                >
+                  {% translate "Unlike" context "posts feed like post" %}
+                </button>
+              </form>
+            {% else %}
+              <form action="{% url 'misago:thread-post-like' thread_id=thread.id slug=thread.slug post_id=post.id %}" method="post">
+                {% csrf_token %}
+                <button
+                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-like"
+                  type="submit"
+                >
+                  {% translate "Like" context "posts feed like post" %}
+                </button>
+              </form>
+            {% endif %}
           </div>
           <div class="posts-feed-item-post-body-footer-right">
             {% if edit_url %}

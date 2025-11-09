@@ -9,6 +9,7 @@ from ..attachments.models import Attachment
 from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..conf.dynamicsettings import DynamicSettings
+from ..likes.models import Like
 from ..permissions.attachments import check_download_attachment_permission
 from ..permissions.generic import (
     check_access_category_permission,
@@ -84,6 +85,7 @@ def _create_prefetch_posts_feed_related_objects_action(
     prefetch.add(find_attachment_ids)
     prefetch.add(fetch_attachments)
     prefetch.add(find_post_ids)
+    prefetch.add(fetch_likes)
     prefetch.add(fetch_posts)
     prefetch.add(find_thread_ids)
     prefetch.add(fetch_threads)
@@ -168,6 +170,7 @@ class PrefetchPostsFeedRelatedObjects:
             "visible_threads": {t.id for t in self.threads if t.id},
             "posts": {p.id: p for p in self.posts if p.id},
             "visible_posts": {p.id for p in self.posts if p.id},
+            "liked_posts": set(),
             "thread_updates": {u.id: u for u in self.thread_updates},
             "visible_thread_updates": {u for u in self.thread_updates},
             "attachments": {a.id: a for a in self.attachments},
@@ -376,6 +379,40 @@ def fetch_attachments(
         )
 
     data["attachments"].update({a.id: a for a in queryset})
+
+
+def fetch_likes(
+    data: dict,
+    settings: DynamicSettings,
+    permissions: UserPermissionsProxy,
+):
+    if not permissions.user.is_authenticated:
+        return
+
+    user_id = permissions.user.id
+
+    fetch_posts: set[int] = set()
+    for post in data["posts"].values():
+        # Fast look-up user in post's last likes
+        if post.last_likes:
+            users_ids = [like["id"] for like in post.last_likes if list["id"]]
+            if user_id in users_ids:
+                data["liked_posts"].add(post.id)
+
+        # Fallback to fetch like from the database if we can't rely on last likes miss
+        if (
+            post.id not in data["liked_posts"]
+            and post.last_likes
+            and post.likes > len(post.last_likes)
+        ):
+            fetch_posts.add(post.id)
+
+    if fetch_posts:
+        data["liked_posts"].extend(
+            Like.objects.filter(user_id=user_id, post_id__in=fetch_posts).values_list(
+                "post_id", flat=True
+            )
+        )
 
 
 def check_categories_permissions(

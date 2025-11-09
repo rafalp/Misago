@@ -230,6 +230,8 @@ class PostsFeed:
         if item["attachments"]:
             item["attachments"].sort(reverse=True, key=lambda a: a.id)
 
+        item["is_liked"] = post.id in related_objects["liked_posts"]
+
     def set_thread_update_related_objects(
         self, item: dict, thread_update: ThreadUpdate, related_objects: dict
     ) -> None:
