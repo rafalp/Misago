@@ -34,6 +34,10 @@ class RemovePostLikeHookAction(Protocol):
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
+
+    ## Return value
+
+    Returns `True` if like was deleted and `False` otherwise.
     """
 
     def __call__(
@@ -42,7 +46,7 @@ class RemovePostLikeHookAction(Protocol):
         user: "User",
         commit: bool = True,
         request: HttpRequest | None = None,
-    ): ...
+    ) -> bool: ...
 
 
 class RemovePostLikeHookFilter(Protocol):
@@ -75,6 +79,10 @@ class RemovePostLikeHookFilter(Protocol):
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
+
+    ## Return value
+
+    Returns `True` if like was deleted and `False` otherwise.
     """
 
     def __call__(
@@ -84,7 +92,7 @@ class RemovePostLikeHookFilter(Protocol):
         user: "User",
         commit: bool = True,
         request: HttpRequest | None = None,
-    ): ...
+    ) -> bool: ...
 
 
 class RemovePostLikeHook(
@@ -118,10 +126,10 @@ class RemovePostLikeHook(
         user: User,
         commit: bool = True,
         request: HttpRequest | None = None,
-    ):
+    ) -> bool:
         likes = post.likes
 
-        action(post, user, False, request)
+        result = action(post, user, False, request)
 
         if post.plugin_data.get("total_likes"):
             post.plugin_data["total_likes"] = max(likes, post.plugin_data["total_likes"])
@@ -130,6 +138,8 @@ class RemovePostLikeHook(
 
         if commit:
             post.save(update_fields=["likes", "last_likes", "plugin_data"])
+
+        return result
     ```
     """
 
@@ -142,7 +152,7 @@ class RemovePostLikeHook(
         user: "User",
         commit: bool = True,
         request: HttpRequest | None = None,
-    ):
+    ) -> bool:
         return super().__call__(
             action,
             post,

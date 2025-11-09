@@ -65,18 +65,23 @@ def _like_post_action(
 
 def remove_post_like(
     post: Post,
-    user: Union["User", str],
+    user: "User",
     commit: bool = True,
     request: HttpRequest | None = None,
-):
+) -> bool:
     return remove_post_like_hook(_remove_post_like_action, post, user, commit, request)
 
 
 def _remove_post_like_action(
     post: Post,
-    user: Union["User", str],
+    user: "User",
     commit: bool = True,
     request: HttpRequest | None = None,
-):
-    Like.objects.filter(post=post, user=user).delete()
+) -> bool:
+    deleted, _ = Like.objects.filter(post=post, user=user).delete()
+
+    if not deleted:
+        return False
+
     synchronize_post_likes(post, commit, request)
+    return True

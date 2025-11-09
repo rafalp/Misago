@@ -23,7 +23,7 @@ def custom_remove_post_like_filter(
     user: 'User',
     commit: bool=True,
     request: HttpRequest | None=None,
-):
+) -> bool:
     ...
 ```
 
@@ -61,6 +61,11 @@ Defaults to True.
 The request object, or `None` if not provided.
 
 
+#### Return value
+
+Returns `True` if like was deleted and `False` otherwise.
+
+
 ## Action
 
 ```python
@@ -69,7 +74,7 @@ def remove_post_like_action(
     user: 'User',
     commit: bool=True,
     request: HttpRequest | None=None,
-):
+) -> bool:
     ...
 ```
 
@@ -100,6 +105,11 @@ Defaults to True.
 The request object, or `None` if not provided.
 
 
+#### Return value
+
+Returns `True` if like was deleted and `False` otherwise.
+
+
 ## Example
 
 Record the historical number of the post’s likes:
@@ -118,10 +128,10 @@ def record_post_historic_likes(
     user: User,
     commit: bool = True,
     request: HttpRequest | None = None,
-):
+) -> bool:
     likes = post.likes
 
-    action(post, user, False, request)
+    result = action(post, user, False, request)
 
     if post.plugin_data.get("total_likes"):
         post.plugin_data["total_likes"] = max(likes, post.plugin_data["total_likes"])
@@ -130,4 +140,6 @@ def record_post_historic_likes(
 
     if commit:
         post.save(update_fields=["likes", "last_likes", "plugin_data"])
+
+    return result
 ```
