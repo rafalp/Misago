@@ -15,7 +15,6 @@ from ...permissions.privatethreads import (
 )
 from ...permissions.proxy import UserPermissionsProxy
 from ...threads.models import Thread
-from ...threads.views.generic import PrivateThreadView
 from ...threadupdates.create import create_added_member_thread_update
 from ...threadupdates.models import ThreadUpdate
 from ...threads.nexturl import get_next_thread_url
@@ -28,6 +27,7 @@ from ..members import (
 )
 from ..models import PrivateThreadMember
 from ..validators import validate_new_private_thread_owner
+from .generic import PrivateThreadView
 
 if TYPE_CHECKING:
     from ...users.models import User
