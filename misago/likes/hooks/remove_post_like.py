@@ -10,53 +10,48 @@ if TYPE_CHECKING:
     from ...users.models import User
 
 
-class LikePostHookAction(Protocol):
+class RemovePostLikeHookAction(Protocol):
     """
-    Misago function for creating a post `Like` instance and updating the liked
-    post's `likes` and `last_likes` attributes.
+    Misago function for removing a post `Like` from a user and updating the
+    post’s `likes` and `last_likes` attributes.
 
     # Arguments
 
     ## `post: Post`
 
-    The post to like.
+    The post to remove a like from.
 
-    ## `user: User | str`
+    ## `user: User`
 
-    The user who liked the post.
+    The user who's post like will be removed.
 
     ## `commit: bool`
 
-    Whether the new `Like` instance and the updated post instance should be
-    saved to the database.
+    Whether the updated post instance should be saved to the database.
 
     Defaults to True.
 
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
-
-    # Return value
-
-    New `Like` instance.
     """
 
     def __call__(
         self,
         post: Post,
-        user: Union["User", str],
+        user: "User",
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> Like: ...
+    ): ...
 
 
-class LikePostHookFilter(Protocol):
+class RemovePostLikeHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: LikePostHookAction`
+    ## `action: RemovePostLikeHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -65,80 +60,76 @@ class LikePostHookFilter(Protocol):
 
     ## `post: Post`
 
-    The post to like.
+    The post to remove a like from.
 
-    ## `user: User | str`
+    ## `user: User`
 
-    The user who liked the post.
+    The user who's post like will be removed.
 
     ## `commit: bool`
 
-    Whether the new `Like` instance and the updated post instance should be
-    saved to the database.
+    Whether the updated post instance should be saved to the database.
 
     Defaults to True.
 
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
-
-    # Return value
-
-    New `Like` instance.
     """
 
     def __call__(
         self,
-        action: LikePostHookAction,
+        action: RemovePostLikeHookAction,
         post: Post,
-        user: Union["User", str],
+        user: "User",
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> Like: ...
+    ): ...
 
 
-class LikePostHook(
+class RemovePostLikeHook(
     FilterHook[
-        LikePostHookAction,
-        LikePostHookFilter,
+        RemovePostLikeHookAction,
+        RemovePostLikeHookFilter,
     ]
 ):
     """
-    This hook allows plugins to replace or extend the logic used to like a post.
+    This hook allows plugins to replace or extend the logic used to
+    remove a post like from a user.
 
-    It creates a new `Like` instance and updates the post’s `likes` count and
-    `last_likes` JSON field.
+    Internally, Misago uses the `synchronize_post_likes` function to update
+    the post after deleting the `Like` instance.
 
     # Example
 
-    Record the IP address of the user who liked the post:
+    Record the historical number of the post’s likes:
 
     ```python
     from django.http import HttpRequest
-    from misago.likes.hooks import like_post_hook
-    from misago.likes.models import Like
+    from misago.likes.hooks import remove_post_like_hook
     from misago.threads.models import Post
     from misago.users.models import User
 
 
-    @like_post_hook.append_filter
-    def record_like_ip_address(
+    @remove_post_like_hook.append_filter
+    def record_post_historic_likes(
         action,
         post: Post,
-        user: User | str,
+        user: User,
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> Like:
-        like = action(post, user, False, request)
+    ):
+        likes = post.likes
 
-        if request:
-            like.plugin_data["user_up"] = request.user_ip
+        action(post, user, False, request)
+
+        if post.plugin_data.get("total_likes"):
+            post.plugin_data["total_likes"] = max(likes, post.plugin_data["total_likes"])
+        else:
+            post.plugin_data["total_likes"] = likes
 
         if commit:
-            like.save()
-            post.save()
-
-        return like
+            post.save(update_fields=["likes", "last_likes", "plugin_data"])
     ```
     """
 
@@ -146,12 +137,12 @@ class LikePostHook(
 
     def __call__(
         self,
-        action: LikePostHookAction,
+        action: RemovePostLikeHookAction,
         post: Post,
-        user: Union["User", str],
+        user: "User",
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> Like:
+    ):
         return super().__call__(
             action,
             post,
@@ -161,4 +152,4 @@ class LikePostHook(
         )
 
 
-like_post_hook = LikePostHook()
+remove_post_like_hook = RemovePostLikeHook()

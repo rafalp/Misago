@@ -126,7 +126,7 @@ from misago.users.models import User
 def record_like_ip_address(
     action,
     post: Post,
-    user: Union["User", str],
+    user: User | str,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Like:

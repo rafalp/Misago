@@ -5,8 +5,9 @@ from django.http import HttpRequest
 
 from ..core.utils import slugify
 from ..threads.models import Post
-from .hooks import like_post_hook
+from .hooks import like_post_hook, remove_post_like_hook
 from .models import Like
+from .synchronize import synchronize_post_likes
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -62,19 +63,20 @@ def _like_post_action(
     return like
 
 
-def unlike_post(
+def remove_post_like(
     post: Post,
     user: Union["User", str],
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> Like:
-    return hook(_unlike_post_action, post, user, commit, request)
+):
+    return remove_post_like_hook(_remove_post_like_action, post, user, commit, request)
 
 
-def _unlike_post_action(
+def _remove_post_like_action(
     post: Post,
     user: Union["User", str],
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> Like:
-    pass
+):
+    Like.objects.filter(post=post, user=user).delete()
+    synchronize_post_likes(post, commit, request)
