@@ -408,7 +408,7 @@ def fetch_likes(
             fetch_posts.add(post.id)
 
     if fetch_posts:
-        data["liked_posts"].extend(
+        data["liked_posts"].update(
             Like.objects.filter(user_id=user_id, post_id__in=fetch_posts).values_list(
                 "post_id", flat=True
             )

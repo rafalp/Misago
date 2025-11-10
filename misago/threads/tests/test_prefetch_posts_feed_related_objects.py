@@ -1,6 +1,7 @@
 import pytest
 
 from ...conf.test import override_dynamic_settings
+from ...likes.models import Like
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...permissions.proxy import UserPermissionsProxy
@@ -1005,6 +1006,82 @@ def test_prefetch_posts_feed_related_objects_doesnt_prefetch_anonymous_posts_use
 
     with django_assert_num_queries(0):
         assert data["users"][user.id].group
+
+
+def test_prefetch_posts_feed_related_objects_populates_user_liked_posts_using_last_likes(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    user,
+    post,
+):
+    post.likes = 1
+    post.last_likes = [{"id": user.id, "username": user.username}]
+    post.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    with django_assert_num_queries(4):
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings, permissions, [post]
+        )
+        assert data["liked_posts"] == {post.id}
+
+
+def test_prefetch_posts_feed_related_objects_populates_user_liked_posts_using_database(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    user,
+    post,
+):
+    post.likes = 2
+    post.last_likes = [{"id": None, "username": "Deleted"}]
+    post.save()
+
+    Like.objects.create(
+        category_id=post.category_id,
+        thread_id=post.thread_id,
+        post=post,
+        user=user,
+        user_name=user.username,
+        user_slug=user.slug,
+    )
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    with django_assert_num_queries(5):
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings, permissions, [post]
+        )
+        assert data["liked_posts"] == {post.id}
+
+
+def test_prefetch_posts_feed_related_objects_skips_liked_posts_for_anonymous_user(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    anonymous_user,
+    user,
+    post,
+):
+    post.likes = 5
+    post.last_likes = [{"id": user.id, "username": user.username}]
+    post.save()
+
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    with django_assert_num_queries(3):
+        data = prefetch_posts_feed_related_objects(
+            dynamic_settings, permissions, [post]
+        )
+        assert data["liked_posts"] == set()
 
 
 def test_prefetch_posts_feed_related_objects_prefetches_objects_in_cascade(
