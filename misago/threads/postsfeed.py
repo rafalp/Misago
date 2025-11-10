@@ -4,6 +4,7 @@ from typing import Iterable
 from django.http import HttpRequest
 from django.urls import reverse
 
+from ..likes.postfeed import get_post_feed_post_likes_data
 from ..permissions.checkutils import check_permissions
 from ..permissions.privatethreads import (
     check_edit_private_thread_post_permission,
@@ -23,6 +24,7 @@ from .prefetch import prefetch_posts_feed_related_objects
 class PostsFeed:
     template_name: str = "misago/posts_feed/index.html"
     template_name_htmx_append: str = "misago/posts_feed/htmx_append.html"
+    template_name_htmx_like: str = "misago/posts_feed/htmx_like.html"
     post_template_name: str = "misago/posts_feed/post.html"
     thread_update_template_name: str = "misago/posts_feed/thread_update.html"
 
@@ -161,6 +163,12 @@ class PostsFeed:
     def get_edit_post_url(self, post: Post) -> str | None:
         return None
 
+    def get_post_like_url(self, post: Post) -> str | None:
+        return None
+
+    def get_post_unlike_url(self, post: Post) -> str | None:
+        return None
+
     def get_thread_update_data(self, thread_update: ThreadUpdate) -> dict:
         hide_url: str | None = None
         unhide_url: str | None = None
@@ -230,7 +238,13 @@ class PostsFeed:
         if item["attachments"]:
             item["attachments"].sort(reverse=True, key=lambda a: a.id)
 
-        item["is_liked"] = post.id in related_objects["liked_posts"]
+        item["likes"] = get_post_feed_post_likes_data(
+            self.request,
+            post,
+            post.id in related_objects["liked_posts"],
+            self.get_post_like_url(post),
+            self.get_post_unlike_url(post),
+        )
 
     def set_thread_update_related_objects(
         self, item: dict, thread_update: ThreadUpdate, related_objects: dict
@@ -265,6 +279,19 @@ class PostsFeed:
                 {"icon": "broken_image", "description": escape(thread_update.action)}
             )
 
+    def get_like_context_data(self, post: Post, is_liked: bool) -> dict:
+        return {
+            "template_name": self.template_name_htmx_like,
+            "post": post,
+            "likes": get_post_feed_post_likes_data(
+                self.request,
+                post,
+                is_liked,
+                self.get_post_like_url(post),
+                self.get_post_unlike_url(post),
+            )
+        }
+
 
 class ThreadPostsFeed(PostsFeed):
     def get_moderator_status(self) -> bool:
@@ -292,6 +319,26 @@ class ThreadPostsFeed(PostsFeed):
     def get_edit_post_url(self, post: Post) -> str | None:
         return reverse(
             "misago:thread-post-edit",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
+        )
+
+    def get_post_like_url(self, post: Post) -> str | None:
+        return reverse(
+            "misago:thread-post-like",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
+        )
+
+    def get_post_unlike_url(self, post: Post) -> str | None:
+        return reverse(
+            "misago:thread-post-unlike",
             kwargs={
                 "thread_id": self.thread.id,
                 "slug": self.thread.slug,
@@ -351,6 +398,26 @@ class PrivateThreadPostsFeed(PostsFeed):
     def get_edit_post_url(self, post: Post) -> str | None:
         return reverse(
             "misago:private-thread-post-edit",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
+        )
+
+    def get_post_like_url(self, post: Post) -> str | None:
+        return reverse(
+            "misago:private-thread-post-like",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
+        )
+
+    def get_post_unlike_url(self, post: Post) -> str | None:
+        return reverse(
+            "misago:private-thread-post-unlike",
             kwargs={
                 "thread_id": self.thread.id,
                 "slug": self.thread.slug,

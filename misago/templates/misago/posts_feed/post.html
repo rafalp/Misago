@@ -201,24 +201,51 @@
 
         <div class="posts-feed-item-post-body-footer">
           <div class="posts-feed-item-post-body-footer-left">
-            {% if is_liked %}
-              <form action="{% url 'misago:thread-post-unlike' thread_id=thread.id slug=thread.slug post_id=post.id %}" method="post">
+            {% if not likes.is_liked and likes.like_url %}
+              <form
+                id="posts-feed-item-post-like-{{ post.id }}"
+                action="{{ likes.like_url }}"
+                method="post"
+                hx-post="{{ likes.like_url }}"
+                hx-target="this"
+                hx-swap="outerHTML"
+              >
                 {% csrf_token %}
                 <button
                   class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-like"
                   type="submit"
-                >
-                  {% translate "Unlike" context "posts feed like post" %}
-                </button>
-              </form>
-            {% else %}
-              <form action="{% url 'misago:thread-post-like' thread_id=thread.id slug=thread.slug post_id=post.id %}" method="post">
-                {% csrf_token %}
-                <button
-                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-like"
-                  type="submit"
+                  hx-disabled-elt="this"
                 >
                   {% translate "Like" context "posts feed like post" %}
+                  {% if likes.likes %}
+                    <span class="posts-feed-item-post-body-footer-btn-likes-count">
+                      +{{ likes.likes }}
+                    </span>
+                  {% endif %}
+                </button>
+              </form>
+            {% elif likes.is_liked and likes.unlike_url %}
+              <form
+                id="posts-feed-item-post-like-{{ post.id }}"
+                action="{{ likes.unlike_url }}"
+                method="post"
+                hx-post="{{ likes.unlike_url }}"
+                hx-target="this"
+                hx-swap="outerHTML"
+              >
+                {% csrf_token %}
+                <button
+                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-liked"
+                  title="{% translate 'You like this' context 'posts feed like post' %}"
+                  type="submit"
+                  hx-disabled-elt="this"
+                >
+                  {% translate "Like" context "posts feed like post" %}
+                  {% if likes.likes %}
+                    <span class="posts-feed-item-post-body-footer-btn-likes-count">
+                      +{{ likes.likes }}
+                    </span>
+                  {% endif %}
                 </button>
               </form>
             {% endif %}
@@ -238,23 +265,14 @@
           </div>
         </div>
 
-        {% if post.last_likes %}
-          <div class="posts-feed-item-post-body-likes">
-            <ul class="list-inline">
-              <li>
-                <b>
-                  {% blocktranslate trimmed count likes=post.likes %}
-                    {{ likes }} like:
-                  {% plural %}
-                    {{ likes }} likes:
-                  {% endblocktranslate %}
-                </b>
-              </li>
-              {% for like in post.last_likes %}
-                <li>{{ like.username }}</li>
-              {% endfor %}
-            </ul>
+        {% if likes.description %}
+          <div id="posts-feed-item-post-likes-{{ post.id }}" class="posts-feed-item-post-likes animate">
+            <a href="#" class="posts-feed-item-post-body-likes-short">{{ likes.description.short }}</a>
+            <a href="#" class="posts-feed-item-post-body-likes-medium">{{ likes.description.medium }}</a>
+            <a href="#" class="posts-feed-item-post-body-likes-long">{{ likes.description.long }}</a>
           </div>
+        {% else %}
+          <div id="posts-feed-item-post-likes-{{ post.id }}" class="posts-feed-item-post-likes d-none"></div>
         {% endif %}
 
       </div>

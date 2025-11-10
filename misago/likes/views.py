@@ -1,11 +1,14 @@
+from django.contrib import messages
 from django.db import transaction
 from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
+from django.utils.translation import pgettext
 from django.views import View
 
 from ..permissions.likes import check_like_post_permission, check_unlike_post_permission
 from ..privatethreads.views.generic import PrivateThreadView
-from ..threads.views.generic import ThreadView
 from ..threads.redirect import redirect_to_post
+from ..threads.views.generic import ThreadView
 from .like import like_post, remove_post_like
 
 
@@ -22,7 +25,13 @@ class PostLikeView(View):
             )
             like_post(post, request.user, request=True)
 
-        return redirect_to_post(request, post)
+        if not request.is_htmx:
+            messages.success(request, pgettext("post like view", "Post liked"))
+            return redirect_to_post(request, post)
+
+        post_feed = self.get_posts_feed(request, thread, [])
+        context_data = post_feed.get_like_context_data(post, True)
+        return render(request, context_data["template_name"], context_data)
 
 
 class ThreadPostLikeView(PostLikeView, ThreadView):
@@ -46,7 +55,13 @@ class PostUnlikeView(View):
             )
             remove_post_like(post, request.user, request=True)
 
-        return redirect_to_post(request, post)
+        if not request.is_htmx:
+            messages.success(request, pgettext("post unlike view", "Post like removed"))
+            return redirect_to_post(request, post)
+
+        post_feed = self.get_posts_feed(request, thread, [])
+        context_data = post_feed.get_like_context_data(post, False)
+        return render(request, context_data["template_name"], context_data)
 
 
 class ThreadPostUnlikeView(PostUnlikeView, ThreadView):
