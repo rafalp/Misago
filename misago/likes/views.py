@@ -10,6 +10,7 @@ from ..privatethreads.views.generic import PrivateThreadView
 from ..threads.redirect import redirect_to_post
 from ..threads.views.generic import ThreadView
 from .like import like_post, remove_post_like
+from .models import Like
 
 
 class PostLikeView(View):
@@ -23,7 +24,9 @@ class PostLikeView(View):
             check_like_post_permission(
                 request.user_permissions, thread.category, thread, post
             )
-            like_post(post, request.user, request=True)
+
+            if not Like.objects.filter(post=post, user=request.user).exists():
+                like_post(post, request.user, request=True)
 
         if not request.is_htmx:
             messages.success(request, pgettext("post like view", "Post liked"))

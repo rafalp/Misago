@@ -289,7 +289,7 @@ class PostsFeed:
                 is_liked,
                 self.get_post_like_url(post),
                 self.get_post_unlike_url(post),
-            )
+            ),
         }
 
 
