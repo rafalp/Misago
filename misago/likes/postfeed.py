@@ -151,8 +151,11 @@ def get_post_likes_description(
         }
 
     if remaining_likes:
-        return pgettext(
-            "post likes description", "%(users)s, +%(likes)s like this."
+        return npgettext(
+            "post likes description",
+            "%(users)s and %(likes)s other like this.",
+            "%(users)s and %(likes)s others like this.",
+            remaining_likes,
         ) % {
             "users": ", ".join(last_users),
             "likes": remaining_likes,
