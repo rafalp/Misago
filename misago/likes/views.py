@@ -1,11 +1,16 @@
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.db import transaction
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.http import Http404, HttpRequest, HttpResponse
+from django.shortcuts import redirect, render
 from django.utils.translation import pgettext
 from django.views import View
 
-from ..permissions.likes import check_like_post_permission, check_unlike_post_permission
+from ..permissions.likes import (
+    check_like_post_permission,
+    check_see_post_likes_permission,
+    check_unlike_post_permission,
+)
 from ..privatethreads.views.generic import PrivateThreadView
 from ..threads.redirect import redirect_to_post
 from ..threads.views.generic import ThreadView
@@ -76,15 +81,65 @@ class PrivateThreadPostUnlikeView(PostUnlikeView, PrivateThreadView):
 
 
 class PostLikesView(View):
+    template_name: str
+    template_name_htmx = "misago/post_likes/htmx.html"
+    template_name_modal = "misago/post_likes/modal.html"
+
     def get(
         self, request: HttpRequest, thread_id: int, slug: str, post_id: int
     ) -> HttpResponse:
-        pass
+        thread = self.get_thread(request, thread_id)
+        post = self.get_thread_post(request, thread, post_id)
+        check_see_post_likes_permission(
+            request.user_permissions, thread.category, thread, post
+        )
+
+        try:
+            page = request.GET.get("page")
+            if page is not None:
+                page = int(page)
+        except (TypeError, ValueError):
+            raise Http404()
+
+        if not request.is_htmx and (thread.slug != slug or page == 1):
+            return redirect(self.get_thread_url(thread), permanent=thread.slug != slug)
+
+        per_page = 10 if request.is_htmx else 32
+
+        queryset = (
+            Like.objects.filter(post=post)
+            .select_related("user")
+            .prefetch_related("user__group")
+            .order_by("-id")
+        )
+
+        paginator = Paginator(queryset, per_page, 4)
+        page_obj = paginator.get_page(page)
+
+        if request.is_htmx:
+            if request.GET.get("modal"):
+                template_name = self.template_name_modal
+            else:
+                template_name = self.template_name_htmx
+        else:
+            template_name = self.template_name
+
+        return render(
+            request,
+            template_name,
+            {
+                "category": thread.category,
+                "thread": thread,
+                "post": post,
+                "paginator": paginator,
+                "page": page_obj,
+            },
+        )
 
 
 class ThreadPostLikesView(PostLikesView, ThreadView):
-    pass
+    template_name = "misago/thread_post_likes/index.html"
 
 
 class PrivateThreadPostLikesView(PostLikesView, PrivateThreadView):
-    pass
+    template_name = "misago/private_thread_post_likes/index.html"

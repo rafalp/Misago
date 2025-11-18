@@ -54,9 +54,13 @@
   class="posts-feed-item-post-likes {% if likes.description %}animation-fade-in{% else %}d-none{% endif %}"
   hx-swap-oob="outerHTML"
 >
-  {% if likes.description %}
-    <a href="#" class="posts-feed-item-post-body-likes-short">{{ likes.description.short }}</a>
-    <a href="#" class="posts-feed-item-post-body-likes-medium">{{ likes.description.medium }}</a>
-    <a href="#" class="posts-feed-item-post-body-likes-long">{{ likes.description.long }}</a>
+  {% if likes.url %}
+    {% for suffix, description in likes.description.items %}
+      <a href="{{ likes.url }}" class="posts-feed-item-post-body-likes-{{ suffix }}">{{ description }}</a>
+    {% endfor %}
+  {% else %}
+    {% for suffix, description in likes.description.items %}
+      <span class="posts-feed-item-post-body-likes-{{ suffix }}">{{ description }}</span>
+    {% endfor %}
   {% endif %}
 </div>

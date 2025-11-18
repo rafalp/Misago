@@ -1,0 +1,47 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_avatars %}
+
+
+{% block title %}
+  {% blocktranslate trimmed with post=post.id context "thread post likes page" %}
+    Post's #{{ post }} likes
+  {% endblocktranslate %} | {{ thread }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-thread-post-likes">
+  {% include "misago/thread/header.html" %}
+  <div class="container">
+    <ul class="user-cards-grid">
+      {% for like in page.object_list %}
+        <li class="user-cards-grid-item-md">
+          {% if like.user %}
+            <a href="{{ like.user.get_absolute_url }}" class="user-cards-grid-item-md-avatar">
+              <img src="{{ like.user|avatar:32 }}">
+            </a>
+          {% else %}
+            <span class="user-cards-grid-item-md-avatar">
+              <img src="...">
+            </span>
+          {% endif %}
+          <div>
+            {% if like.user %}
+              <a href="{{ like.user.get_absolute_url }}" class="user-cards-grid-item-md-username">
+                {{ like.user.username }}
+              </a>
+            {% else %}
+              <span class="user-cards-grid-item-md-username">
+                {{ like.user_name }}
+              </span>
+            {% endif %}
+            <span>
+              {{ like.liked_at }}
+            </span>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock content %}

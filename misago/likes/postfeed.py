@@ -12,26 +12,44 @@ from ..permissions.likes import (
     check_unlike_post_permission,
 )
 from ..threads.models import Post
+from .hooks import get_post_feed_post_likes_data_hook
 
 if TYPE_CHECKING:
     from ..users.models import User
 
 
 def get_post_feed_post_likes_data(
-    request: HttpRequest, post: Post, is_liked: bool, like_url: str, unlike_url: str
+    request: HttpRequest,
+    post: Post,
+    is_liked: bool,
+    likes_url: str,
+    like_url: str,
+    unlike_url: str,
 ) -> dict:
-    return _get_post_feed_post_likes_data_action(
-        request, post, is_liked, like_url, unlike_url
+    return get_post_feed_post_likes_data_hook(
+        _get_post_feed_post_likes_data_action,
+        request,
+        post,
+        is_liked,
+        likes_url,
+        like_url,
+        unlike_url,
     )
 
 
 def _get_post_feed_post_likes_data_action(
-    request: HttpRequest, post: Post, is_liked: bool, like_url: str, unlike_url: str
+    request: HttpRequest,
+    post: Post,
+    is_liked: bool,
+    likes_url: str,
+    like_url: str,
+    unlike_url: str,
 ) -> dict:
     data = {
         "likes": None,
         "description": None,
         "is_liked": is_liked,
+        "likes_url": None,
         "like_url": None,
         "unlike_url": None,
     }
@@ -41,11 +59,17 @@ def _get_post_feed_post_likes_data_action(
     ):
         data["likes"] = post.likes
 
+        if post.likes:
+            data["description"] = {
+                "number": get_post_likes_number_description(post, is_liked),
+            }
+
     if post.likes and post.last_likes:
         with check_permissions():
             check_see_post_likes_permission(
                 request.user_permissions, post.category, post.thread, post
             )
+            data["likes_url"] = likes_url
             data["description"] = {
                 "short": get_post_likes_description(request.user, post, is_liked, 5),
                 "medium": get_post_likes_description(request.user, post, is_liked, 10),
@@ -67,6 +91,30 @@ def _get_post_feed_post_likes_data_action(
     return data
 
 
+def get_post_likes_number_description(
+    post: Post,
+    is_liked: bool,
+) -> str:
+    if post.likes == 1 and is_liked:
+        return pgettext("post likes description", "You like this.")
+
+    if is_liked:
+        likes = post.likes - 1
+        return npgettext(
+            "post likes description",
+            "You and %(likes)s other like this.",
+            "You and %(likes)s others like this.",
+            likes,
+        ) % {"likes": likes}
+
+    return npgettext(
+        "post likes description",
+        "%(likes)s like.",
+        "%(likes)s likes.",
+        post.likes,
+    ) % {"likes": post.likes}
+
+
 def get_post_likes_description(
     user: Union["User", AnonymousUser],
     post: Post,
@@ -76,10 +124,10 @@ def get_post_likes_description(
     if post.likes == 1:
         if is_liked:
             return pgettext("post likes description", "You like this.")
-        else:
-            return pgettext("post likes description", "%(user)s likes this.") % {
-                "user": post.last_likes[0]["username"]
-            }
+
+        return pgettext("post likes description", "%(user)s likes this.") % {
+            "user": post.last_likes[0]["username"]
+        }
 
     remaining_likes = post.likes
     last_likes = post.last_likes[:length] if length else post.last_likes[:length]
@@ -104,10 +152,10 @@ def get_post_likes_description(
 
     if remaining_likes:
         return pgettext(
-            "post likes description", "%(users)s, +%(extra)s like this."
+            "post likes description", "%(users)s, +%(likes)s like this."
         ) % {
             "users": ", ".join(last_users),
-            "extra": remaining_likes,
+            "likes": remaining_likes,
         }
 
     return pgettext("post likes description", "%(users)s and %(last)s like this.") % {

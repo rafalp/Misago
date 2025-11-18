@@ -163,6 +163,9 @@ class PostsFeed:
     def get_edit_post_url(self, post: Post) -> str | None:
         return None
 
+    def get_post_likes_url(self, post: Post) -> str | None:
+        return None
+
     def get_post_like_url(self, post: Post) -> str | None:
         return None
 
@@ -242,6 +245,7 @@ class PostsFeed:
             self.request,
             post,
             post.id in related_objects["liked_posts"],
+            self.get_post_likes_url(post),
             self.get_post_like_url(post),
             self.get_post_unlike_url(post),
         )
@@ -287,6 +291,7 @@ class PostsFeed:
                 self.request,
                 post,
                 is_liked,
+                self.get_post_likes_url(post),
                 self.get_post_like_url(post),
                 self.get_post_unlike_url(post),
             ),
@@ -319,6 +324,16 @@ class ThreadPostsFeed(PostsFeed):
     def get_edit_post_url(self, post: Post) -> str | None:
         return reverse(
             "misago:thread-post-edit",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
+        )
+
+    def get_post_likes_url(self, post: Post) -> str | None:
+        return reverse(
+            "misago:thread-post-likes",
             kwargs={
                 "thread_id": self.thread.id,
                 "slug": self.thread.slug,
@@ -398,6 +413,16 @@ class PrivateThreadPostsFeed(PostsFeed):
     def get_edit_post_url(self, post: Post) -> str | None:
         return reverse(
             "misago:private-thread-post-edit",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
+        )
+
+    def get_post_likes_url(self, post: Post) -> str | None:
+        return reverse(
+            "misago:thread-post-likes",
             kwargs={
                 "thread_id": self.thread.id,
                 "slug": self.thread.slug,
