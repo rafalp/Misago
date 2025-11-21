@@ -61,7 +61,7 @@ def _get_post_feed_post_likes_data_action(
 
         if post.likes:
             data["description"] = {
-                "number": get_post_likes_number_description(post, is_liked),
+                "count": get_post_likes_count_description(post, is_liked),
             }
 
     if post.likes and post.last_likes:
@@ -91,26 +91,26 @@ def _get_post_feed_post_likes_data_action(
     return data
 
 
-def get_post_likes_number_description(
+def get_post_likes_count_description(
     post: Post,
     is_liked: bool,
 ) -> str:
     if post.likes == 1 and is_liked:
-        return pgettext("post likes description", "You like this.")
+        return pgettext("post likes description", "You like this")
 
     if is_liked:
         likes = post.likes - 1
         return npgettext(
             "post likes description",
-            "You and %(likes)s other like this.",
-            "You and %(likes)s others like this.",
+            "You and %(likes)s other like this",
+            "You and %(likes)s others like this",
             likes,
         ) % {"likes": likes}
 
     return npgettext(
         "post likes description",
-        "%(likes)s like.",
-        "%(likes)s likes.",
+        "%(likes)s like",
+        "%(likes)s likes",
         post.likes,
     ) % {"likes": post.likes}
 
@@ -123,9 +123,9 @@ def get_post_likes_description(
 ) -> str:
     if post.likes == 1:
         if is_liked:
-            return pgettext("post likes description", "You like this.")
+            return pgettext("post likes description", "You like this")
 
-        return pgettext("post likes description", "%(user)s likes this.") % {
+        return pgettext("post likes description", "%(user)s likes this") % {
             "user": post.last_likes[0]["username"]
         }
 
@@ -144,7 +144,7 @@ def get_post_likes_description(
 
     if len(last_users) == 2:
         return pgettext(
-            "post likes description", "%(former)s and %(latter)s like this."
+            "post likes description", "%(former)s and %(latter)s like this"
         ) % {
             "former": last_users[0],
             "latter": last_users[1],
@@ -153,8 +153,8 @@ def get_post_likes_description(
     if remaining_likes:
         return npgettext(
             "post likes description",
-            "%(users)s and %(likes)s other like this.",
-            "%(users)s and %(likes)s others like this.",
+            "%(users)s and %(likes)s other like this",
+            "%(users)s and %(likes)s others like this",
             remaining_likes,
         ) % {
             "users": ", ".join(last_users),

@@ -1,10 +1,11 @@
 from unittest.mock import Mock
 
+from ...permissions.enums import CanSeePostLikes
 from ..like import like_post
 from ..postfeed import get_post_feed_post_likes_data
 
 
-def test_get_post_feed_post_likes_data_returns_empty_data_for_unliked_post_without_likes(
+def test_get_post_feed_post_likes_data_for_unliked_post_without_likes(
     user, user_permissions, post
 ):
     request = Mock(user=user, user_permissions=user_permissions)
@@ -22,7 +23,30 @@ def test_get_post_feed_post_likes_data_returns_empty_data_for_unliked_post_witho
     }
 
 
-def test_get_post_feed_post_likes_data_returns_description_for_unliked_post_with_one_like(
+def test_get_post_feed_post_likes_data_for_unliked_post_without_likes_if_user_cant_see_last_likes(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.save()
+
+    user_permissions = user_permissions_factory(user)
+    request = Mock(user=user, user_permissions=user_permissions)
+
+    data = get_post_feed_post_likes_data(
+        request, post, False, "/likes-url/", "/like-url/", "/unlike-url/"
+    )
+
+    assert data == {
+        "likes": 0,
+        "description": None,
+        "is_liked": False,
+        "likes_url": None,
+        "like_url": "/like-url/",
+        "unlike_url": "/unlike-url/",
+    }
+
+
+def test_get_post_feed_post_likes_data_for_unliked_post_with_one_like(
     user, user_permissions, post
 ):
     like_post(post, "DeletedUser")
@@ -35,9 +59,9 @@ def test_get_post_feed_post_likes_data_returns_description_for_unliked_post_with
     assert data == {
         "likes": 1,
         "description": {
-            "long": "DeletedUser likes this.",
-            "medium": "DeletedUser likes this.",
-            "short": "DeletedUser likes this.",
+            "long": "DeletedUser likes this",
+            "medium": "DeletedUser likes this",
+            "short": "DeletedUser likes this",
         },
         "is_liked": False,
         "likes_url": "/likes-url/",
@@ -46,7 +70,32 @@ def test_get_post_feed_post_likes_data_returns_description_for_unliked_post_with
     }
 
 
-def test_get_post_feed_post_likes_data_returns_description_for_liked_post_with_one_like(
+def test_get_post_feed_post_likes_data_for_unliked_post_with_one_like_if_user_cant_see_last_likes(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.save()
+
+    user_permissions = user_permissions_factory(user)
+    request = Mock(user=user, user_permissions=user_permissions)
+
+    like_post(post, "DeletedUser")
+
+    data = get_post_feed_post_likes_data(
+        request, post, False, "/likes-url/", "/like-url/", "/unlike-url/"
+    )
+
+    assert data == {
+        "likes": 1,
+        "description": {"count": "1 like"},
+        "is_liked": False,
+        "likes_url": None,
+        "like_url": "/like-url/",
+        "unlike_url": "/unlike-url/",
+    }
+
+
+def test_get_post_feed_post_likes_data_for_liked_post_with_one_like(
     user, user_permissions, post
 ):
     like_post(post, user)
@@ -59,9 +108,9 @@ def test_get_post_feed_post_likes_data_returns_description_for_liked_post_with_o
     assert data == {
         "likes": 1,
         "description": {
-            "long": "You like this.",
-            "medium": "You like this.",
-            "short": "You like this.",
+            "long": "You like this",
+            "medium": "You like this",
+            "short": "You like this",
         },
         "is_liked": True,
         "likes_url": "/likes-url/",
@@ -70,7 +119,32 @@ def test_get_post_feed_post_likes_data_returns_description_for_liked_post_with_o
     }
 
 
-def test_get_post_feed_post_likes_data_returns_description_for_unliked_post_with_two_likes(
+def test_get_post_feed_post_likes_data_for_liked_post_with_one_like_if_user_cant_see_last_likes(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.save()
+
+    user_permissions = user_permissions_factory(user)
+    request = Mock(user=user, user_permissions=user_permissions)
+
+    like_post(post, user)
+
+    data = get_post_feed_post_likes_data(
+        request, post, True, "/likes-url/", "/like-url/", "/unlike-url/"
+    )
+
+    assert data == {
+        "likes": 1,
+        "description": {"count": "You like this"},
+        "is_liked": True,
+        "likes_url": None,
+        "like_url": "/like-url/",
+        "unlike_url": "/unlike-url/",
+    }
+
+
+def test_get_post_feed_post_likes_data_for_unliked_post_with_two_likes(
     user, user_permissions, post
 ):
     like_post(post, "DeletedUser")
@@ -84,9 +158,9 @@ def test_get_post_feed_post_likes_data_returns_description_for_unliked_post_with
     assert data == {
         "likes": 2,
         "description": {
-            "long": "OtherUser and DeletedUser like this.",
-            "medium": "OtherUser and DeletedUser like this.",
-            "short": "OtherUser and DeletedUser like this.",
+            "long": "OtherUser and DeletedUser like this",
+            "medium": "OtherUser and DeletedUser like this",
+            "short": "OtherUser and DeletedUser like this",
         },
         "is_liked": False,
         "likes_url": "/likes-url/",
@@ -95,7 +169,7 @@ def test_get_post_feed_post_likes_data_returns_description_for_unliked_post_with
     }
 
 
-def test_get_post_feed_post_likes_data_returns_description_for_liked_post_with_two_likes(
+def test_get_post_feed_post_likes_data_for_liked_post_with_two_likes(
     user, user_permissions, post
 ):
     like_post(post, "DeletedUser")
@@ -109,9 +183,9 @@ def test_get_post_feed_post_likes_data_returns_description_for_liked_post_with_t
     assert data == {
         "likes": 2,
         "description": {
-            "long": "You and DeletedUser like this.",
-            "medium": "You and DeletedUser like this.",
-            "short": "You and DeletedUser like this.",
+            "long": "You and DeletedUser like this",
+            "medium": "You and DeletedUser like this",
+            "short": "You and DeletedUser like this",
         },
         "is_liked": True,
         "likes_url": "/likes-url/",
@@ -120,7 +194,7 @@ def test_get_post_feed_post_likes_data_returns_description_for_liked_post_with_t
     }
 
 
-def test_get_post_feed_post_likes_data_returns_description_for_unliked_post_with_fifty_likes(
+def test_get_post_feed_post_likes_data_for_unliked_post_with_fifty_likes(
     user, user_permissions, post
 ):
     for i in range(1, 51):
@@ -134,9 +208,9 @@ def test_get_post_feed_post_likes_data_returns_description_for_unliked_post_with
     assert data == {
         "likes": 50,
         "description": {
-            "short": "User50, User49, User48, User47, User46 and 45 others like this.",
-            "medium": "User50, User49, User48, User47, User46, User45, User44, User43, User42, User41 and 40 others like this.",
-            "long": "User50, User49, User48, User47, User46, User45, User44, User43, User42, User41, User40, User39, User38, User37, User36, User35, User34, User33, User32, User31 and 30 others like this.",
+            "short": "User50, User49, User48, User47, User46 and 45 others like this",
+            "medium": "User50, User49, User48, User47, User46, User45, User44, User43, User42, User41 and 40 others like this",
+            "long": "User50, User49, User48, User47, User46, User45, User44, User43, User42, User41, User40, User39, User38, User37, User36, User35, User34, User33, User32, User31 and 30 others like this",
         },
         "is_liked": False,
         "likes_url": "/likes-url/",
@@ -145,7 +219,7 @@ def test_get_post_feed_post_likes_data_returns_description_for_unliked_post_with
     }
 
 
-def test_get_post_feed_post_likes_data_returns_description_for_liked_post_with_fifty_likes(
+def test_get_post_feed_post_likes_data_for_liked_post_with_fifty_likes(
     user, user_permissions, post
 ):
     for i in range(1, 50):
@@ -161,9 +235,9 @@ def test_get_post_feed_post_likes_data_returns_description_for_liked_post_with_f
     assert data == {
         "likes": 50,
         "description": {
-            "short": "You, User49, User48, User47, User46 and 45 others like this.",
-            "medium": "You, User49, User48, User47, User46, User45, User44, User43, User42, User41 and 40 others like this.",
-            "long": "You, User49, User48, User47, User46, User45, User44, User43, User42, User41, User40, User39, User38, User37, User36, User35, User34, User33, User32, User31 and 30 others like this.",
+            "short": "You, User49, User48, User47, User46 and 45 others like this",
+            "medium": "You, User49, User48, User47, User46, User45, User44, User43, User42, User41 and 40 others like this",
+            "long": "You, User49, User48, User47, User46, User45, User44, User43, User42, User41, User40, User39, User38, User37, User36, User35, User34, User33, User32, User31 and 30 others like this",
         },
         "is_liked": True,
         "likes_url": "/likes-url/",
