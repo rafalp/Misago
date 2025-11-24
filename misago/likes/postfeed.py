@@ -109,8 +109,8 @@ def get_post_likes_count_description(
 
     return npgettext(
         "post likes description",
-        "%(likes)s like",
-        "%(likes)s likes",
+        "%(likes)s other likes this",
+        "%(likes)s others like this",
         post.likes,
     ) % {"likes": post.likes}
 
