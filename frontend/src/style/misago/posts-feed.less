@@ -283,11 +283,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  margin: 0 (@padding-base-horizontal * -1);
 }
 
 .posts-feed-item-post-body-footer-btn {
-  font-weight: 400;
-  color: @gray-dark;
+  display: inline-flex;
+  align-items: center;
+
+  height: 34px;
+
+  color: @gray-500;
+  font-weight: 600;
 
   &,
   &:active,
@@ -299,36 +306,36 @@
   }
   &:hover,
   &:focus {
-    color: @gray-darker;
+    color: @gray-700;
     text-decoration: none;
-    background-color: @gray-lighter;
+    background-color: @gray-100;
   }
   &:active {
     border-color: transparent;
-    color: @text-color;
-    background-color: darken(@gray-lighter, 10%);
+    color: @gray-900;
+    background-color: @gray-300;
+  }
+
+  .material-icon {
+    display: inline-block;
+    margin-right: 6px;
+
+    position: relative;
+    top: 0px;
+    bottom: 0px;
+
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 16px;
   }
 }
 
-.posts-feed-item-post-body-footer-btn-liked {
-  background-color: fadeout(@brand-primary, 30);
-  color: #fff;
-  font-weight: bold;
+.posts-feed-item-post-body-footer-btn-liked .material-icon {
+  color: @pink-500;
 }
 
-.posts-feed-item-post-body-footer-btn-likes-count {
-  display: inline-block;
-
-  margin-left: 6px;
-  padding: 0 4px;
-
-  background-color: #fff;
-  border-radius: @border-radius-small;
-  color: @brand-primary;
-  font-weight: bold;
-}
-
-.posts-feed-item-post-likes {
+.posts-feed-item-post-body-likes {
   padding-top: floor(@line-height-computed / 2);
 
   a:link,
@@ -343,32 +350,32 @@
   }
 }
 
-.posts-feed-item-post-body-likes-short,
-.posts-feed-item-post-body-likes-medium {
+.posts-feed-item-post-body-likes-message-short,
+.posts-feed-item-post-body-likes-message-medium {
   font-size: @font-size-small;
 }
 
-.posts-feed-item-post-body-likes-medium,
-.posts-feed-item-post-body-likes-long {
+.posts-feed-item-post-body-likes-message-medium,
+.posts-feed-item-post-body-likes-message-long {
   display: none;
 }
 
 @media screen and (min-width: 500px) {
-  .posts-feed-item-post-body-likes-short {
+  .posts-feed-item-post-body-likes-message-short {
     display: none;
   }
 
-  .posts-feed-item-post-body-likes-medium {
+  .posts-feed-item-post-body-likes-message-medium {
     display: inline;
   }
 }
 
 @media screen and (min-width: 900px) {
-  .posts-feed-item-post-body-likes-medium {
+  .posts-feed-item-post-body-likes-message-medium {
     display: none;
   }
 
-  .posts-feed-item-post-body-likes-long {
+  .posts-feed-item-post-body-likes-message-long {
     display: inline;
   }
 }

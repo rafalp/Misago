@@ -15,52 +15,54 @@
       type="submit"
       hx-disabled-elt="this"
     >
+      <span class="material-icon">favorite_border</span>
       {% translate "Like" context "posts feed like post" %}
-      {% if likes.likes %}
-        <span class="posts-feed-item-post-body-footer-btn-likes-count">
-          +{{ likes.likes }}
-        </span>
-      {% endif %}
     </button>
   </form>
 {% elif likes.is_liked and likes.unlike_url %}
-  <form
-    id="posts-feed-item-post-like-{{ post.id }}"
-    action="{{ likes.unlike_url }}"
-    method="post"
-    hx-post="{{ likes.unlike_url }}"
-    hx-target="this"
-    hx-swap="outerHTML"
-  >
-    {% csrf_token %}
+  {% if likes.unlike_url %}
+    <form
+      id="posts-feed-item-post-like-{{ post.id }}"
+      action="{{ likes.unlike_url }}"
+      method="post"
+      hx-post="{{ likes.unlike_url }}"
+      hx-target="this"
+      hx-swap="outerHTML"
+    >
+      {% csrf_token %}
+      <button
+        class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-liked"
+        type="submit"
+        hx-disabled-elt="this"
+      >
+        <span class="material-icon">favorite</span>
+        {% translate "Liked" context "posts feed like post" %}
+      </button>
+    </form>
+  {% else %}
     <button
       class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-liked"
-      title="{% translate 'You like this' context 'posts feed like post' %}"
       type="submit"
-      hx-disabled-elt="this"
+      disabled
     >
-      {% translate "Like" context "posts feed like post" %}
-      {% if likes.likes %}
-        <span class="posts-feed-item-post-body-footer-btn-likes-count">
-          +{{ likes.likes }}
-        </span>
-      {% endif %}
+      <span class="material-icon">favorite</span>
+      {% translate "Liked" context "posts feed like post" %}
     </button>
-  </form>
+  {% endif %}
 {% endif %}
 
 <div
   id="posts-feed-item-post-likes-{{ post.id }}"
-  class="posts-feed-item-post-likes {% if likes.description %}animation-fade-in{% else %}d-none{% endif %}"
+  class="posts-feed-item-post-body-likes{% if likes.is_liked %} posts-feed-item-post-body-likes-liked{% endif %} {% if likes.messages %}animation-fade-in{% else %}d-none{% endif %}"
   hx-swap-oob="outerHTML"
 >
-  {% if likes.url %}
-    {% for suffix, description in likes.description.items %}
-      <a href="{{ likes.url }}" class="posts-feed-item-post-body-likes-{{ suffix }}">{{ description }}</a>
+  {% if likes.likes_url %}
+    {% for type, message in likes.messages.items %}
+      <a href="{{ likes.likes_url }}" class="posts-feed-item-post-body-likes-message-{{ type }}">{{ message }}</a>
     {% endfor %}
   {% else %}
-    {% for suffix, description in likes.description.items %}
-      <span class="posts-feed-item-post-body-likes-{{ suffix }}">{{ description }}</span>
+    {% for type, message in likes.messages.items %}
+      <span class="posts-feed-item-post-body-likes-message-{{ type }}">{{ message }}</span>
     {% endfor %}
   {% endif %}
 </div>

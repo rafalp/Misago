@@ -15,7 +15,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_without_likes(
 
     assert data == {
         "likes": 0,
-        "description": None,
+        "messages": None,
         "is_liked": False,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -38,7 +38,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_without_likes_for_user_w
 
     assert data == {
         "likes": 0,
-        "description": None,
+        "messages": None,
         "is_liked": False,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -61,7 +61,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_without_likes_for_user_w
 
     assert data == {
         "likes": None,
-        "description": None,
+        "messages": None,
         "is_liked": False,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -81,7 +81,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_one_like(
 
     assert data == {
         "likes": 1,
-        "description": {
+        "messages": {
             "long": "DeletedUser likes this",
             "medium": "DeletedUser likes this",
             "short": "DeletedUser likes this",
@@ -110,7 +110,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_one_like_for_user_w
 
     assert data == {
         "likes": 1,
-        "description": {"count": "1 other likes this"},
+        "messages": {"count": "1 other likes this"},
         "is_liked": False,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -135,7 +135,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_one_like_for_user_w
 
     assert data == {
         "likes": None,
-        "description": None,
+        "messages": None,
         "is_liked": False,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -155,7 +155,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_one_like(
 
     assert data == {
         "likes": 1,
-        "description": {"liked": "You like this"},
+        "messages": {"liked": "You like this"},
         "is_liked": True,
         "likes_url": "/likes-url/",
         "like_url": "/like-url/",
@@ -180,7 +180,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_one_like_for_user_wit
 
     assert data == {
         "likes": 1,
-        "description": {"liked": "You like this"},
+        "messages": {"liked": "You like this"},
         "is_liked": True,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -205,7 +205,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_one_like_for_user_wit
 
     assert data == {
         "likes": None,
-        "description": {"liked": "You like this"},
+        "messages": {"liked": "You like this"},
         "is_liked": True,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -226,7 +226,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_two_likes(
 
     assert data == {
         "likes": 2,
-        "description": {
+        "messages": {
             "long": "OtherUser and DeletedUser like this",
             "medium": "OtherUser and DeletedUser like this",
             "short": "OtherUser and DeletedUser like this",
@@ -256,7 +256,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_two_likes_for_user_
 
     assert data == {
         "likes": 2,
-        "description": {"count": "2 others like this"},
+        "messages": {"count": "2 others like this"},
         "is_liked": False,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -282,7 +282,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_two_likes_for_user_
 
     assert data == {
         "likes": None,
-        "description": None,
+        "messages": None,
         "is_liked": False,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -303,7 +303,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_two_likes(
 
     assert data == {
         "likes": 2,
-        "description": {
+        "messages": {
             "long": "You and DeletedUser like this",
             "medium": "You and DeletedUser like this",
             "short": "You and DeletedUser like this",
@@ -333,7 +333,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_two_likes_for_user_wi
 
     assert data == {
         "likes": 2,
-        "description": {"count": "You and 1 other like this"},
+        "messages": {"count": "You and 1 other like this"},
         "is_liked": True,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -359,7 +359,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_two_likes_for_user_wi
 
     assert data == {
         "likes": None,
-        "description": {"liked": "You like this"},
+        "messages": {"liked": "You like this"},
         "is_liked": True,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -380,7 +380,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_fifty_likes(
 
     assert data == {
         "likes": 50,
-        "description": {
+        "messages": {
             "short": "User50, User49, User48, User47, User46 and 45 others like this",
             "medium": "User50, User49, User48, User47, User46, User45, User44, User43, User42, User41 and 40 others like this",
             "long": "User50, User49, User48, User47, User46, User45, User44, User43, User42, User41, User40, User39, User38, User37, User36, User35, User34, User33, User32, User31 and 30 others like this",
@@ -410,7 +410,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_fifty_likes_for_use
 
     assert data == {
         "likes": 50,
-        "description": {"count": "50 others like this"},
+        "messages": {"count": "50 others like this"},
         "is_liked": False,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -436,7 +436,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_fifty_likes_for_use
 
     assert data == {
         "likes": None,
-        "description": None,
+        "messages": None,
         "is_liked": False,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -459,7 +459,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_fifty_likes(
 
     assert data == {
         "likes": 50,
-        "description": {
+        "messages": {
             "short": "You, User49, User48, User47, User46 and 45 others like this",
             "medium": "You, User49, User48, User47, User46, User45, User44, User43, User42, User41 and 40 others like this",
             "long": "You, User49, User48, User47, User46, User45, User44, User43, User42, User41, User40, User39, User38, User37, User36, User35, User34, User33, User32, User31 and 30 others like this",
@@ -491,7 +491,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_fifty_likes_for_user_
 
     assert data == {
         "likes": 50,
-        "description": {"count": "You and 49 others like this"},
+        "messages": {"count": "You and 49 others like this"},
         "is_liked": True,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -519,7 +519,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_fifty_likes_for_user_
 
     assert data == {
         "likes": None,
-        "description": {"liked": "You like this"},
+        "messages": {"liked": "You like this"},
         "is_liked": True,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -542,7 +542,7 @@ def test_get_post_feed_post_likes_data_hides_like_and_unlike_url_if_user_has_no_
 
     assert data == {
         "likes": 0,
-        "description": None,
+        "messages": None,
         "is_liked": False,
         "likes_url": None,
         "like_url": None,
@@ -567,7 +567,7 @@ def test_get_post_feed_post_likes_data_hides_like_and_unlike_url_for_liked_post_
 
     assert data == {
         "likes": 1,
-        "description": {"liked": "You like this"},
+        "messages": {"liked": "You like this"},
         "is_liked": True,
         "likes_url": "/likes-url/",
         "like_url": None,
