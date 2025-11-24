@@ -54,26 +54,41 @@ def _get_post_feed_post_likes_data_action(
         "unlike_url": None,
     }
 
+    show_likes_count = False
+    show_last_likes = False
+
     if can_see_post_likes_count(
         request.user_permissions, post.category, post.thread, post
     ):
+        show_likes_count = True
+
+    with check_permissions() as show_last_likes:
+        check_see_post_likes_permission(
+            request.user_permissions, post.category, post.thread, post
+        )
+
+    if show_likes_count:
         data["likes"] = post.likes
 
-        if post.likes:
-            data["description"] = {
-                "count": get_post_likes_count_description(post, is_liked),
-            }
+    if show_last_likes and post.likes:
+        data["likes_url"] = likes_url
 
-    if post.likes and post.last_likes:
-        with check_permissions():
-            check_see_post_likes_permission(
-                request.user_permissions, post.category, post.thread, post
-            )
-            data["likes_url"] = likes_url
+    if is_liked:
+        data["description"] = {
+            "liked": pgettext("post likes description", "You like this"),
+        }
+
+    if not is_liked or post.likes > 1:
+        if show_last_likes and post.last_likes:
             data["description"] = {
                 "short": get_post_likes_description(request.user, post, is_liked, 5),
                 "medium": get_post_likes_description(request.user, post, is_liked, 10),
                 "long": get_post_likes_description(request.user, post, is_liked, 20),
+            }
+
+        elif show_likes_count and post.likes:
+            data["description"] = {
+                "count": get_post_likes_count_description(post, is_liked),
             }
 
     with check_permissions():
@@ -95,9 +110,6 @@ def get_post_likes_count_description(
     post: Post,
     is_liked: bool,
 ) -> str:
-    if post.likes == 1 and is_liked:
-        return pgettext("post likes description", "You like this")
-
     if is_liked:
         likes = post.likes - 1
         return npgettext(

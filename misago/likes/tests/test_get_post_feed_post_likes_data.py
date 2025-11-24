@@ -155,11 +155,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_one_like(
 
     assert data == {
         "likes": 1,
-        "description": {
-            "long": "You like this",
-            "medium": "You like this",
-            "short": "You like this",
-        },
+        "description": {"liked": "You like this"},
         "is_liked": True,
         "likes_url": "/likes-url/",
         "like_url": "/like-url/",
@@ -184,7 +180,32 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_one_like_for_user_wit
 
     assert data == {
         "likes": 1,
-        "description": {"count": "You like this"},
+        "description": {"liked": "You like this"},
+        "is_liked": True,
+        "likes_url": None,
+        "like_url": "/like-url/",
+        "unlike_url": "/unlike-url/",
+    }
+
+
+def test_get_post_feed_post_likes_data_for_liked_post_with_one_like_for_user_without_likes_permission(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.save()
+
+    user_permissions = user_permissions_factory(user)
+    request = Mock(user=user, user_permissions=user_permissions)
+
+    like_post(post, user)
+
+    data = get_post_feed_post_likes_data(
+        request, post, True, "/likes-url/", "/like-url/", "/unlike-url/"
+    )
+
+    assert data == {
+        "likes": None,
+        "description": {"liked": "You like this"},
         "is_liked": True,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -243,6 +264,32 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_two_likes_for_user_
     }
 
 
+def test_get_post_feed_post_likes_data_for_unliked_post_with_two_likes_for_user_without_likes_permission(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.save()
+
+    user_permissions = user_permissions_factory(user)
+    request = Mock(user=user, user_permissions=user_permissions)
+
+    like_post(post, "DeletedUser")
+    like_post(post, "OtherUser")
+
+    data = get_post_feed_post_likes_data(
+        request, post, False, "/likes-url/", "/like-url/", "/unlike-url/"
+    )
+
+    assert data == {
+        "likes": None,
+        "description": None,
+        "is_liked": False,
+        "likes_url": None,
+        "like_url": "/like-url/",
+        "unlike_url": "/unlike-url/",
+    }
+
+
 def test_get_post_feed_post_likes_data_for_liked_post_with_two_likes(
     user, user_permissions, post
 ):
@@ -294,6 +341,32 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_two_likes_for_user_wi
     }
 
 
+def test_get_post_feed_post_likes_data_for_liked_post_with_two_likes_for_user_without_likes_permission(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.save()
+
+    user_permissions = user_permissions_factory(user)
+    request = Mock(user=user, user_permissions=user_permissions)
+
+    like_post(post, "DeletedUser")
+    like_post(post, user)
+
+    data = get_post_feed_post_likes_data(
+        request, post, True, "/likes-url/", "/like-url/", "/unlike-url/"
+    )
+
+    assert data == {
+        "likes": None,
+        "description": {"liked": "You like this"},
+        "is_liked": True,
+        "likes_url": None,
+        "like_url": "/like-url/",
+        "unlike_url": "/unlike-url/",
+    }
+
+
 def test_get_post_feed_post_likes_data_for_unliked_post_with_fifty_likes(
     user, user_permissions, post
 ):
@@ -338,6 +411,32 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_fifty_likes_for_use
     assert data == {
         "likes": 50,
         "description": {"count": "50 others like this"},
+        "is_liked": False,
+        "likes_url": None,
+        "like_url": "/like-url/",
+        "unlike_url": "/unlike-url/",
+    }
+
+
+def test_get_post_feed_post_likes_data_for_unliked_post_with_fifty_likes_for_user_without_likes_permission(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.save()
+
+    user_permissions = user_permissions_factory(user)
+    request = Mock(user=user, user_permissions=user_permissions)
+
+    for i in range(1, 51):
+        like_post(post, f"User{i}")
+
+    data = get_post_feed_post_likes_data(
+        request, post, False, "/likes-url/", "/like-url/", "/unlike-url/"
+    )
+
+    assert data == {
+        "likes": None,
+        "description": None,
         "is_liked": False,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -397,4 +496,80 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_fifty_likes_for_user_
         "likes_url": None,
         "like_url": "/like-url/",
         "unlike_url": "/unlike-url/",
+    }
+
+
+def test_get_post_feed_post_likes_data_for_liked_post_with_fifty_likes_for_user_without_likes_permission(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.save()
+
+    user_permissions = user_permissions_factory(user)
+    request = Mock(user=user, user_permissions=user_permissions)
+
+    for i in range(1, 50):
+        like_post(post, f"User{i}")
+
+    like_post(post, user)
+
+    data = get_post_feed_post_likes_data(
+        request, post, True, "/likes-url/", "/like-url/", "/unlike-url/"
+    )
+
+    assert data == {
+        "likes": None,
+        "description": {"liked": "You like this"},
+        "is_liked": True,
+        "likes_url": None,
+        "like_url": "/like-url/",
+        "unlike_url": "/unlike-url/",
+    }
+
+
+def test_get_post_feed_post_likes_data_hides_like_and_unlike_url_if_user_has_no_like_permission(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_like_posts = False
+    members_group.save()
+
+    user_permissions = user_permissions_factory(user)
+    request = Mock(user=user, user_permissions=user_permissions)
+
+    data = get_post_feed_post_likes_data(
+        request, post, False, "/likes-url/", "/like-url/", "/unlike-url/"
+    )
+
+    assert data == {
+        "likes": 0,
+        "description": None,
+        "is_liked": False,
+        "likes_url": None,
+        "like_url": None,
+        "unlike_url": None,
+    }
+
+
+def test_get_post_feed_post_likes_data_hides_like_and_unlike_url_for_liked_post_if_user_has_no_like_permission(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_like_posts = False
+    members_group.save()
+
+    user_permissions = user_permissions_factory(user)
+    request = Mock(user=user, user_permissions=user_permissions)
+
+    like_post(post, user)
+
+    data = get_post_feed_post_likes_data(
+        request, post, True, "/likes-url/", "/like-url/", "/unlike-url/"
+    )
+
+    assert data == {
+        "likes": 1,
+        "description": {"liked": "You like this"},
+        "is_liked": True,
+        "likes_url": "/likes-url/",
+        "like_url": None,
+        "unlike_url": None,
     }
