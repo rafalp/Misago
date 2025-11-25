@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from ...users.models import User
 
 
-class SetPostsFeedRelatedObjectsHookAction(Protocol):
+class SetPostFeedRelatedObjectsHookAction(Protocol):
     """
     Misago function used to set related objects on dicts containing
     posts feed data.
@@ -26,13 +26,13 @@ class SetPostsFeedRelatedObjectsHookAction(Protocol):
     def __call__(self, feed: list[dict], related_objects: dict): ...
 
 
-class SetPostsFeedRelatedObjectsHookFilter(Protocol):
+class SetPostFeedRelatedObjectsHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: SetPostsFeedRelatedObjectsHookAction`
+    ## `action: SetPostFeedRelatedObjectsHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -51,15 +51,15 @@ class SetPostsFeedRelatedObjectsHookFilter(Protocol):
 
     def __call__(
         self,
-        action: SetPostsFeedRelatedObjectsHookAction,
+        action: SetPostFeedRelatedObjectsHookAction,
         feed: list[dict],
         related_objects: dict,
     ): ...
 
 
-class SetPostsFeedRelatedObjectsHook(
+class SetPostFeedRelatedObjectsHook(
     FilterHook[
-        SetPostsFeedRelatedObjectsHookAction, SetPostsFeedRelatedObjectsHookFilter
+        SetPostFeedRelatedObjectsHookAction, SetPostFeedRelatedObjectsHookFilter
     ]
 ):
     """
@@ -72,10 +72,10 @@ class SetPostsFeedRelatedObjectsHook(
     with plugin objects
 
     ```python
-    from misago.threads.hooks import set_posts_feed_related_objects_hook
+    from misago.threads.hooks import set_post_feed_related_objects_hook
 
 
-    @set_posts_feed_related_objects_hook.append_filter
+    @set_post_feed_related_objects_hook.append_filter
     def replace_post_poster(
         action, feed: list[dict], related_objects: dict
     ):
@@ -94,11 +94,11 @@ class SetPostsFeedRelatedObjectsHook(
 
     def __call__(
         self,
-        action: SetPostsFeedRelatedObjectsHookAction,
+        action: SetPostFeedRelatedObjectsHookAction,
         feed: list[dict],
         related_objects: dict,
     ):
         return super().__call__(action, feed, related_objects)
 
 
-set_posts_feed_related_objects_hook = SetPostsFeedRelatedObjectsHook(cache=False)
+set_post_feed_related_objects_hook = SetPostFeedRelatedObjectsHook(cache=False)

@@ -1,6 +1,6 @@
-# `create_prefetch_posts_feed_related_objects_hook`
+# `create_prefetch_post_feed_related_objects_hook`
 
-This hook wraps the standard function Misago uses to create a `PrefetchPostsFeedRelatedObjects` object, which is used to prefetch related objects for items displayed in a posts feed.
+This hook wraps the standard function Misago uses to create a `PrefetchPostFeedRelatedObjects` object, which is used to prefetch related objects for items displayed in a posts feed.
 
 The object itself does not implement prefetch logic but instead maintains a list of prefetch operations to be executed in order to fetch the objects from the database.
 
@@ -12,15 +12,15 @@ Additional prefetch operations can be added using the `add`, `add_after` and `ad
 This hook can be imported from `misago.threads.hooks`:
 
 ```python
-from misago.threads.hooks import create_prefetch_posts_feed_related_objects_hook
+from misago.threads.hooks import create_prefetch_post_feed_related_objects_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_create_prefetch_posts_feed_related_objects_filter(
-    action: CreatePrefetchPostsFeedRelatedObjectsHookAction,
+def custom_create_prefetch_post_feed_related_objects_filter(
+    action: CreatePrefetchPostFeedRelatedObjectsHookAction,
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
     posts: Iterable[Post],
@@ -30,7 +30,7 @@ def custom_create_prefetch_posts_feed_related_objects_filter(
     thread_updates: Iterable[ThreadUpdate] | None=None,
     attachments: Iterable[Attachment] | None=None,
     users: Iterable['User'] | None=None,
-) -> 'PrefetchPostsFeedRelatedObjects':
+) -> 'PrefetchPostFeedRelatedObjects':
     ...
 ```
 
@@ -39,7 +39,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: CreatePrefetchPostsFeedRelatedObjectsHookAction`
+#### `action: CreatePrefetchPostFeedRelatedObjectsHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
@@ -88,13 +88,13 @@ Iterable of users that were already loaded. Defaults to `None` if not provided.
 
 ### Return value
 
-A `PrefetchPostsFeedRelatedObjects` object to use to fetch related objects.
+A `PrefetchPostFeedRelatedObjects` object to use to fetch related objects.
 
 
 ## Action
 
 ```python
-def create_prefetch_posts_feed_related_objects_action(
+def create_prefetch_post_feed_related_objects_action(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
     posts: Iterable[Post],
@@ -104,11 +104,11 @@ def create_prefetch_posts_feed_related_objects_action(
     thread_updates: Iterable[ThreadUpdate] | None=None,
     attachments: Iterable[Attachment] | None=None,
     users: Iterable['User'] | None=None,
-) -> 'PrefetchPostsFeedRelatedObjects':
+) -> 'PrefetchPostFeedRelatedObjects':
     ...
 ```
 
-Misago function used to create a `PrefetchPostsFeedRelatedObjects` object, which is used to prefetch related objects for items displayed on a posts feed.
+Misago function used to create a `PrefetchPostFeedRelatedObjects` object, which is used to prefetch related objects for items displayed on a posts feed.
 
 
 ### Arguments
@@ -155,7 +155,7 @@ Iterable of users that were already loaded. Defaults to `None` if not provided.
 
 ### Return value
 
-A `PrefetchPostsFeedRelatedObjects` object to use to fetch related objects.
+A `PrefetchPostFeedRelatedObjects` object to use to fetch related objects.
 
 
 ## Example
@@ -171,7 +171,7 @@ from misago.conf.dynamicsettings import DynamicSettings
 from misago.permissions.proxy import UserPermissionsProxy
 from misago.plugins.hooks import FilterHook
 from misago.threads.models import Post, Thread
-from misago.threads.prefetch import PrefetchPostsFeedRelatedObjects
+from misago.threads.prefetch import PrefetchPostFeedRelatedObjects
 from misago.threadupdates.models import ThreadUpdate
 from misago.users.models import User
 
@@ -194,9 +194,9 @@ def fetch_posts_plugin_data(
         data["plugin_models"] = {u.id: u for u in queryset}
 
 
-@create_prefetch_posts_feed_related_objects_hook.append_filter
+@create_prefetch_post_feed_related_objects_hook.append_filter
 def include_custom_filter(
-    action: CreatePrefetchPostsFeedRelatedObjectsHookAction,
+    action: CreatePrefetchPostFeedRelatedObjectsHookAction,
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
     posts: Iterable[Post],
@@ -206,7 +206,7 @@ def include_custom_filter(
     thread_updates: Iterable[ThreadUpdate] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
-) -> PrefetchPostsFeedRelatedObjects:
+) -> PrefetchPostFeedRelatedObjects:
     prefetch = action(
         settings,
         permissions,

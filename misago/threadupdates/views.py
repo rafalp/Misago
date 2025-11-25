@@ -35,7 +35,7 @@ class UpdateView:
             return redirect(self.get_next_thread_url(request, thread))
 
         thread_update.refresh_from_db()
-        feed = self.get_posts_feed(request, thread, [], [thread_update])
+        feed = self.get_post_feed(request, thread, [], [thread_update])
         feed.set_animated_thread_updates([thread_update.id])
 
         return render(

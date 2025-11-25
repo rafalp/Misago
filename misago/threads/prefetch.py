@@ -21,7 +21,7 @@ from ..permissions.checkutils import check_permissions
 from ..privatethreads.members import prefetch_private_thread_member_ids
 from ..threadupdates.models import ThreadUpdate
 from ..users.models import Group
-from .hooks import create_prefetch_posts_feed_related_objects_hook
+from .hooks import create_prefetch_post_feed_related_objects_hook
 from .models import Post, Thread
 
 if TYPE_CHECKING:
@@ -29,13 +29,13 @@ if TYPE_CHECKING:
 
 
 __all__ = [
-    "PrefetchPostsFeedRelatedObjects",
-    "PrefetchPostsFeedRelationsOperation",
-    "prefetch_posts_feed_related_objects",
+    "PrefetchPostFeedRelatedObjects",
+    "PrefetchPostFeedRelationsOperation",
+    "prefetch_post_feed_related_objects",
 ]
 
 
-def prefetch_posts_feed_related_objects(
+def prefetch_post_feed_related_objects(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
     posts: Iterable[Post],
@@ -46,8 +46,8 @@ def prefetch_posts_feed_related_objects(
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> dict:
-    prefetch = create_prefetch_posts_feed_related_objects_hook(
-        _create_prefetch_posts_feed_related_objects_action,
+    prefetch = create_prefetch_post_feed_related_objects_hook(
+        _create_prefetch_post_feed_related_objects_action,
         settings,
         permissions,
         posts,
@@ -60,7 +60,7 @@ def prefetch_posts_feed_related_objects(
     return prefetch()
 
 
-def _create_prefetch_posts_feed_related_objects_action(
+def _create_prefetch_post_feed_related_objects_action(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
     posts: Iterable[Post],
@@ -70,8 +70,8 @@ def _create_prefetch_posts_feed_related_objects_action(
     thread_updates: Iterable[ThreadUpdate] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
-) -> "PrefetchPostsFeedRelatedObjects":
-    prefetch = PrefetchPostsFeedRelatedObjects(
+) -> "PrefetchPostFeedRelatedObjects":
+    prefetch = PrefetchPostFeedRelatedObjects(
         settings,
         permissions,
         categories=categories,
@@ -103,7 +103,7 @@ def _create_prefetch_posts_feed_related_objects_action(
     return prefetch
 
 
-class PrefetchPostsFeedRelationsOperation(Protocol):
+class PrefetchPostFeedRelationsOperation(Protocol):
     def __call__(
         self,
         data: dict,
@@ -113,8 +113,8 @@ class PrefetchPostsFeedRelationsOperation(Protocol):
         pass
 
 
-class PrefetchPostsFeedRelatedObjects:
-    operations: list[PrefetchPostsFeedRelationsOperation]
+class PrefetchPostFeedRelatedObjects:
+    operations: list[PrefetchPostFeedRelationsOperation]
 
     settings: DynamicSettings
     permissions: UserPermissionsProxy
@@ -188,19 +188,19 @@ class PrefetchPostsFeedRelatedObjects:
 
         return data
 
-    def __contains__(self, op: PrefetchPostsFeedRelationsOperation) -> bool:
+    def __contains__(self, op: PrefetchPostFeedRelationsOperation) -> bool:
         return op in self.operations
 
-    def add(self, op: PrefetchPostsFeedRelationsOperation):
+    def add(self, op: PrefetchPostFeedRelationsOperation):
         self.operations.append(op)
 
     def add_before(
         self,
-        before: PrefetchPostsFeedRelationsOperation,
-        op: PrefetchPostsFeedRelationsOperation,
+        before: PrefetchPostFeedRelationsOperation,
+        op: PrefetchPostFeedRelationsOperation,
     ):
         success = False
-        new_operations: list[PrefetchPostsFeedRelationsOperation] = []
+        new_operations: list[PrefetchPostFeedRelationsOperation] = []
 
         for existing_step in self.operations:
             if existing_step == before:
@@ -217,11 +217,11 @@ class PrefetchPostsFeedRelatedObjects:
 
     def add_after(
         self,
-        after: PrefetchPostsFeedRelationsOperation,
-        op: PrefetchPostsFeedRelationsOperation,
+        after: PrefetchPostFeedRelationsOperation,
+        op: PrefetchPostFeedRelationsOperation,
     ):
         success = False
-        new_operations: list[PrefetchPostsFeedRelationsOperation] = []
+        new_operations: list[PrefetchPostFeedRelationsOperation] = []
 
         for existing_step in self.operations:
             new_operations.append(existing_step)

@@ -15,18 +15,18 @@ from ..permissions.threads import (
 from ..threadupdates.models import ThreadUpdate
 from ..threadupdates.actions import thread_updates_renderer
 from .hooks import (
-    set_posts_feed_related_objects_hook,
+    set_post_feed_related_objects_hook,
 )
 from .models import Post, Thread
-from .prefetch import prefetch_posts_feed_related_objects
+from .prefetch import prefetch_post_feed_related_objects
 
 
-class PostsFeed:
-    template_name: str = "misago/posts_feed/index.html"
-    template_name_htmx_append: str = "misago/posts_feed/htmx_append.html"
-    template_name_htmx_like: str = "misago/posts_feed/htmx_like.html"
-    post_template_name: str = "misago/posts_feed/post.html"
-    thread_update_template_name: str = "misago/posts_feed/thread_update.html"
+class PostFeed:
+    template_name: str = "misago/post_feed/index.html"
+    template_name_htmx_append: str = "misago/post_feed/htmx_append.html"
+    template_name_htmx_like: str = "misago/post_feed/htmx_like.html"
+    post_template_name: str = "misago/post_feed/post.html"
+    thread_update_template_name: str = "misago/post_feed/thread_update.html"
 
     request: HttpRequest
     thread: Thread
@@ -110,7 +110,7 @@ class PostsFeed:
             elif item["type"] == "thread_update":
                 previous_item = f"update-{item['thread_update'].id}"
 
-        related_objects = prefetch_posts_feed_related_objects(
+        related_objects = prefetch_post_feed_related_objects(
             self.request.settings,
             self.request.user_permissions,
             self.posts,
@@ -119,8 +119,8 @@ class PostsFeed:
             thread_updates=self.thread_updates,
         )
 
-        set_posts_feed_related_objects_hook(
-            self.set_posts_feed_related_objects, feed, related_objects
+        set_post_feed_related_objects_hook(
+            self.set_post_feed_related_objects, feed, related_objects
         )
 
         return feed
@@ -211,7 +211,7 @@ class PostsFeed:
     def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return None
 
-    def set_posts_feed_related_objects(
+    def set_post_feed_related_objects(
         self, feed: list[dict], related_objects: dict
     ) -> None:
         for item in feed:
@@ -298,7 +298,7 @@ class PostsFeed:
         }
 
 
-class ThreadPostsFeed(PostsFeed):
+class ThreadPostFeed(PostFeed):
     def get_moderator_status(self) -> bool:
         return self.request.user_permissions.is_category_moderator(
             self.thread.category_id
@@ -392,7 +392,7 @@ class ThreadPostsFeed(PostsFeed):
         )
 
 
-class PrivateThreadPostsFeed(PostsFeed):
+class PrivateThreadPostFeed(PostFeed):
     def get_moderator_status(self) -> bool:
         return self.request.user_permissions.is_private_threads_moderator
 

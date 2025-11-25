@@ -1,4 +1,4 @@
-# `set_posts_feed_related_objects_hook`
+# `set_post_feed_related_objects_hook`
 
 This hook wraps the standard function that Misago uses to set related objects on dicts containing posts feed data.
 
@@ -8,15 +8,15 @@ This hook wraps the standard function that Misago uses to set related objects on
 This hook can be imported from `misago.threads.hooks`:
 
 ```python
-from misago.threads.hooks import set_posts_feed_related_objects_hook
+from misago.threads.hooks import set_post_feed_related_objects_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_set_posts_feed_related_objects_filter(
-    action: SetPostsFeedRelatedObjectsHookAction,
+def custom_set_post_feed_related_objects_filter(
+    action: SetPostFeedRelatedObjectsHookAction,
     feed: list[dict],
     related_objects: dict,
 ):
@@ -28,7 +28,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: SetPostsFeedRelatedObjectsHookAction`
+#### `action: SetPostFeedRelatedObjectsHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
@@ -48,7 +48,7 @@ A `dict` with objects related to the feed's items.
 ## Action
 
 ```python
-def set_posts_feed_related_objects_action(feed: list[dict], related_objects: dict):
+def set_post_feed_related_objects_action(feed: list[dict], related_objects: dict):
     ...
 ```
 
@@ -72,10 +72,10 @@ A `dict` with objects related to the feed's items.
 The code below implements a custom filter function that populates feed's items with plugin objects
 
 ```python
-from misago.threads.hooks import set_posts_feed_related_objects_hook
+from misago.threads.hooks import set_post_feed_related_objects_hook
 
 
-@set_posts_feed_related_objects_hook.append_filter
+@set_post_feed_related_objects_hook.append_filter
 def replace_post_poster(
     action, feed: list[dict], related_objects: dict
 ):

@@ -11,7 +11,7 @@ from ...permissions.privatethreads import (
 )
 from ...threads.views.generic import GenericView
 from ...threads.models import Post, Thread
-from ...threads.postsfeed import PostsFeed, PrivateThreadPostsFeed
+from ...threads.postfeed import PostFeed, PrivateThreadPostFeed
 from ...threadupdates.models import ThreadUpdate
 from ..members import get_private_thread_members
 
@@ -62,14 +62,14 @@ class PrivateThreadView(GenericView):
             request.user_permissions, thread, queryset
         )
 
-    def get_posts_feed(
+    def get_post_feed(
         self,
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
         thread_updates: list[ThreadUpdate] | None = None,
-    ) -> PostsFeed:
-        return PrivateThreadPostsFeed(request, thread, posts, thread_updates)
+    ) -> PostFeed:
+        return PrivateThreadPostFeed(request, thread, posts, thread_updates)
 
     def get_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_private_threads_moderator

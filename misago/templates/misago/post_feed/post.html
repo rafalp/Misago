@@ -192,7 +192,7 @@
               {% rich_text post.parsed rich_text_data thread=thread %}
             </article>
             {% if attachments %}
-              {% include "misago/posts_feed/post_attachments.html" %}
+              {% include "misago/post_feed/post_attachments.html" %}
             {% endif %}
           {% else %}
             {% translate "Hidden" context "posts feed post hidden" %}

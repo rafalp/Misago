@@ -14,7 +14,7 @@ from ..permissions.polls import (
     check_start_thread_poll_permission,
     check_vote_in_thread_poll_permission,
 )
-from ..threads.postsfeed import ThreadPostsFeed
+from ..threads.postfeed import ThreadPostFeed
 from ..threads.models import Thread
 from ..threads.nexturl import get_next_thread_url
 from ..threads.views.generic import ThreadView
@@ -307,9 +307,9 @@ class UpdateThreadPollView(ThreadPollView):
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
 
         if thread_update:
-            posts_feed = ThreadPostsFeed(request, thread, [], [thread_update])
-            posts_feed.set_animated_thread_updates([thread_update.id])
-            context["feed"] = posts_feed.get_context_data()
+            post_feed = ThreadPostFeed(request, thread, [], [thread_update])
+            post_feed.set_animated_thread_updates([thread_update.id])
+            context["feed"] = post_feed.get_context_data()
 
         if context["allow_vote"] and not user_poll_votes:
             template_name = PollTemplate.VOTE_HTMX

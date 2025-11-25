@@ -37,7 +37,7 @@ class PostLikeView(View):
             messages.success(request, pgettext("post like view", "Post liked"))
             return redirect_to_post(request, post)
 
-        post_feed = self.get_posts_feed(request, thread, [])
+        post_feed = self.get_post_feed(request, thread, [])
         context_data = post_feed.get_like_context_data(post, True)
         return render(request, context_data["template_name"], context_data)
 
@@ -67,7 +67,7 @@ class PostUnlikeView(View):
             messages.success(request, pgettext("post unlike view", "Post like removed"))
             return redirect_to_post(request, post)
 
-        post_feed = self.get_posts_feed(request, thread, [])
+        post_feed = self.get_post_feed(request, thread, [])
         context_data = post_feed.get_like_context_data(post, False)
         return render(request, context_data["template_name"], context_data)
 

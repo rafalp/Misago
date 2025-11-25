@@ -29,7 +29,7 @@ from ...readtracker.tracker import (
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
 from ...threads.models import Post, Thread
-from ...threads.prefetch import prefetch_posts_feed_related_objects
+from ...threads.prefetch import prefetch_post_feed_related_objects
 from ...threads.redirect import redirect_to_thread_post
 from ...threads.views.generic import ThreadView
 from ..hooks import (
@@ -120,7 +120,7 @@ class ReplyView(View):
         formset = self.get_formset(request, thread)
         request.method = "POST"
 
-        feed = self.get_posts_feed(request, thread, [state.post])
+        feed = self.get_post_feed(request, thread, [state.post])
         feed.set_animated_posts([state.post.id])
 
         counter_start = (
@@ -216,7 +216,7 @@ class ReplyView(View):
         context["htmx_swap"] = htmx_swap
 
         if preview:
-            related_objects = prefetch_posts_feed_related_objects(
+            related_objects = prefetch_post_feed_related_objects(
                 request.settings,
                 request.user_permissions,
                 [preview.post],

@@ -18,7 +18,7 @@ from ...threads.models import Thread
 from ...threadupdates.create import create_added_member_thread_update
 from ...threadupdates.models import ThreadUpdate
 from ...threads.nexturl import get_next_thread_url
-from ...threads.postsfeed import PrivateThreadPostsFeed
+from ...threads.postfeed import PrivateThreadPostFeed
 from ..forms import MembersAddForm
 from ..members import (
     change_private_thread_owner,
@@ -365,15 +365,15 @@ class PrivateThreadMembersHtmxResponse:
         return context
 
     def get_feed_context(self):
-        posts_feed = PrivateThreadPostsFeed(
+        post_feed = PrivateThreadPostFeed(
             self.request, self.thread, [], self.thread_updates
         )
 
-        posts_feed.set_animated_thread_updates(
+        post_feed.set_animated_thread_updates(
             [thread_update.id for thread_update in self.thread_updates]
         )
 
-        return posts_feed.get_context_data()
+        return post_feed.get_context_data()
 
     def render(
         self, context: dict | None = None, headers: dict | None = None

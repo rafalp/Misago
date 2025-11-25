@@ -20,7 +20,7 @@ from ...threadupdates.models import ThreadUpdate
 from ..models import Post, Thread
 from ..nexturl import get_next_thread_url
 from ..paginator import ThreadPostsPaginator
-from ..postsfeed import PostsFeed, ThreadPostsFeed
+from ..postfeed import PostFeed, ThreadPostFeed
 
 
 class GenericView(View):
@@ -95,13 +95,13 @@ class GenericView(View):
             request.settings.posts_per_page_orphans,
         )
 
-    def get_posts_feed(
+    def get_post_feed(
         self,
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
         thread_updates: list[ThreadUpdate] | None = None,
-    ) -> PostsFeed:
+    ) -> PostFeed:
         raise NotImplementedError()
 
     def get_thread_url(self, thread: Thread, page: int | None = None) -> str:
@@ -185,14 +185,14 @@ class ThreadView(GenericView):
             request.user_permissions, thread, queryset
         )
 
-    def get_posts_feed(
+    def get_post_feed(
         self,
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
         thread_updates: list[ThreadUpdate] | None = None,
-    ) -> PostsFeed:
-        return ThreadPostsFeed(request, thread, posts, thread_updates)
+    ) -> PostFeed:
+        return ThreadPostFeed(request, thread, posts, thread_updates)
 
     def get_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_category_moderator(thread.category_id)

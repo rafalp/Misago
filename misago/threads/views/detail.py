@@ -59,8 +59,8 @@ class DetailView(View):
     thread_annotate_read_time: bool = True
     template_name: str
     template_partial_name: str
-    feed_template_name: str = "misago/posts_feed/index.html"
-    feed_post_template_name: str = "misago/posts_feed/post.html"
+    feed_template_name: str = "misago/post_feed/index.html"
+    feed_post_template_name: str = "misago/post_feed/post.html"
     reply_error_template_name: str = "misago/thread/reply_error.html"
     reply_template_name: str = "misago/quick_reply/form.html"
 
@@ -103,11 +103,11 @@ class DetailView(View):
         return {
             "thread": thread,
             "thread_url": self.get_thread_url(thread),
-            "feed": self.get_posts_feed_data(request, thread, page),
+            "feed": self.get_post_feed_data(request, thread, page),
             "reply": self.get_reply_context_data(request, thread),
         }
 
-    def get_posts_feed_data(
+    def get_post_feed_data(
         self, request: HttpRequest, thread: Thread, page: int | None = None
     ) -> dict:
         queryset = self.get_thread_posts_queryset(request, thread)
@@ -125,7 +125,7 @@ class DetailView(View):
         posts = list(page_obj.object_list)
         thread_updates = self.get_thread_updates(request, thread, page_obj, posts)
 
-        feed = self.get_posts_feed(request, thread, posts, thread_updates)
+        feed = self.get_post_feed(request, thread, posts, thread_updates)
         feed.set_counter_start(page_obj.start_index() - 1)
 
         unread = get_unread_posts(request, thread, posts)

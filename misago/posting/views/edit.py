@@ -19,7 +19,7 @@ from ...permissions.threads import (
 from ...privatethreads.redirect import redirect_to_private_thread_post
 from ...privatethreads.views.generic import PrivateThreadView
 from ...threads.models import Post, Thread
-from ...threads.prefetch import prefetch_posts_feed_related_objects
+from ...threads.prefetch import prefetch_post_feed_related_objects
 from ...threads.redirect import redirect_to_thread_post
 from ...threads.views.generic import ThreadView
 from ..hooks import (
@@ -130,7 +130,7 @@ class EditView(View):
     def post_inline_edit(
         self, request: HttpRequest, state: PostEditState, animate: bool = True
     ) -> HttpResponse:
-        feed = self.get_posts_feed(request, state.thread, [state.post])
+        feed = self.get_post_feed(request, state.thread, [state.post])
 
         if self.allow_edit_thread:
             feed.set_allow_edit_thread(True)
@@ -170,7 +170,7 @@ class EditView(View):
         context = self.get_context_data(request, post, formset)
 
         if preview:
-            related_objects = prefetch_posts_feed_related_objects(
+            related_objects = prefetch_post_feed_related_objects(
                 request.settings,
                 request.user_permissions,
                 [preview.post],
