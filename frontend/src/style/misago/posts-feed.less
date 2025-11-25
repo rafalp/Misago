@@ -331,8 +331,20 @@
   }
 }
 
-.posts-feed-item-post-body-footer-btn-liked .material-icon {
-  color: @pink-500;
+.posts-feed-item-post-body-footer-btn-liked {
+  &,
+  &:hover,
+  &:focus {
+    color: @gray-800;
+  }
+
+  &:active {
+    color: @gray-900;
+  }
+
+  .material-icon {
+    color: @pink-500;
+  }
 }
 
 .posts-feed-item-post-body-likes {
