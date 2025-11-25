@@ -73,11 +73,6 @@ def _get_post_feed_post_likes_data_action(
     if show_last_likes and post.likes:
         data["likes_url"] = likes_url
 
-    if is_liked:
-        data["messages"] = {
-            "liked": pgettext("post likes message", "You like this"),
-        }
-
     if not is_liked or post.likes > 1:
         if show_last_likes and post.last_likes:
             data["messages"] = {
@@ -134,9 +129,6 @@ def get_post_likes_message(
     length: int | None = None,
 ) -> str:
     if post.likes == 1:
-        if is_liked:
-            return pgettext("post likes message", "You like this")
-
         return pgettext("post likes message", "%(user)s likes this") % {
             "user": post.last_likes[0]["username"]
         }
@@ -155,9 +147,7 @@ def get_post_likes_message(
     remaining_likes = max(remaining_likes - len(last_users), 0)
 
     if len(last_users) == 2:
-        return pgettext(
-            "post likes message", "%(former)s and %(latter)s like this"
-        ) % {
+        return pgettext("post likes message", "%(former)s and %(latter)s like this") % {
             "former": last_users[0],
             "latter": last_users[1],
         }

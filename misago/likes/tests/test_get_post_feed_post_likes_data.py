@@ -155,7 +155,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_one_like(
 
     assert data == {
         "likes": 1,
-        "messages": {"liked": "You like this"},
+        "messages": None,
         "is_liked": True,
         "likes_url": "/likes-url/",
         "like_url": "/like-url/",
@@ -180,7 +180,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_one_like_for_user_wit
 
     assert data == {
         "likes": 1,
-        "messages": {"liked": "You like this"},
+        "messages": None,
         "is_liked": True,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -205,7 +205,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_one_like_for_user_wit
 
     assert data == {
         "likes": None,
-        "messages": {"liked": "You like this"},
+        "messages": None,
         "is_liked": True,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -359,7 +359,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_two_likes_for_user_wi
 
     assert data == {
         "likes": None,
-        "messages": {"liked": "You like this"},
+        "messages": None,
         "is_liked": True,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -519,7 +519,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_fifty_likes_for_user_
 
     assert data == {
         "likes": None,
-        "messages": {"liked": "You like this"},
+        "messages": None,
         "is_liked": True,
         "likes_url": None,
         "like_url": "/like-url/",
@@ -567,7 +567,7 @@ def test_get_post_feed_post_likes_data_hides_like_and_unlike_url_for_liked_post_
 
     assert data == {
         "likes": 1,
-        "messages": {"liked": "You like this"},
+        "messages": None,
         "is_liked": True,
         "likes_url": "/likes-url/",
         "like_url": None,
