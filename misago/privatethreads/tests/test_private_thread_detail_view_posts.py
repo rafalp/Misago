@@ -2053,6 +2053,170 @@ def test_private_thread_detail_view_shows_post_with_other_user_like_to_user_with
     assert_not_contains(response, f"{other_user.username} likes this")
 
 
+def test_private_thread_detail_view_show_like_button_to_user_with_permission(
+    thread_reply_factory,
+    user_client,
+    other_user_private_thread,
+):
+    post = thread_reply_factory(other_user_private_thread)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Like")
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-like",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_doesnt_show_like_button_to_user_without_permission(
+    thread_reply_factory,
+    members_group,
+    user_client,
+    other_user_private_thread,
+):
+    members_group.can_like_posts = False
+    members_group.save()
+
+    post = thread_reply_factory(other_user_private_thread)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_not_contains(response, "Like")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-like",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_doesnt_show_like_button_to_user_with_permission_for_liked_post(
+    thread_reply_factory,
+    user_client,
+    user,
+    other_user_private_thread,
+):
+    post = thread_reply_factory(other_user_private_thread)
+    like_post(post, user)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Liked")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-like",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_shows_unlike_button_to_user_with_permission_for_liked_post(
+    thread_reply_factory,
+    user_client,
+    user,
+    other_user_private_thread,
+):
+    post = thread_reply_factory(other_user_private_thread)
+    like_post(post, user)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Liked")
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-unlike",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_doesnt_show_unlike_button_to_user_without_permission_for_liked_post(
+    thread_reply_factory,
+    members_group,
+    user_client,
+    user,
+    other_user_private_thread,
+):
+    members_group.can_like_posts = False
+    members_group.save()
+
+    post = thread_reply_factory(other_user_private_thread)
+    like_post(post, user)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Liked")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-unlike",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
 def test_private_thread_detail_view_shows_post_with_previous_post_quote(
     thread_reply_factory,
     user_client,
