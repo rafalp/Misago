@@ -11,9 +11,10 @@ from ...permissions.privatethreads import (
 )
 from ...threads.views.generic import GenericView
 from ...threads.models import Post, Thread
-from ...threads.postfeed import PostFeed, PrivateThreadPostFeed
+from ...threads.postfeed import PostFeed
 from ...threadupdates.models import ThreadUpdate
 from ..members import get_private_thread_members
+from ..postfeed import PrivateThreadPostFeed
 
 if TYPE_CHECKING:
     from ...users.models import User

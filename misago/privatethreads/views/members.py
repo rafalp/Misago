@@ -18,7 +18,6 @@ from ...threads.models import Thread
 from ...threadupdates.create import create_added_member_thread_update
 from ...threadupdates.models import ThreadUpdate
 from ...threads.nexturl import get_next_thread_url
-from ...threads.postfeed import PrivateThreadPostFeed
 from ..forms import MembersAddForm
 from ..members import (
     change_private_thread_owner,
@@ -26,6 +25,7 @@ from ..members import (
     remove_private_thread_member,
 )
 from ..models import PrivateThreadMember
+from ..postfeed import PrivateThreadPostFeed
 from ..validators import validate_new_private_thread_owner
 from .generic import PrivateThreadView
 

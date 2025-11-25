@@ -2,7 +2,8 @@ from django.utils.crypto import get_random_string
 from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
-from ...permissions.enums import CategoryPermission
+from ...likes.like import like_post
+from ...permissions.enums import CanSeePostLikes, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
 
@@ -1876,6 +1877,180 @@ def test_private_thread_detail_view_doesnt_show_unassociated_embedded_attachment
     assert_not_contains(response, "rich-text-image")
     assert_contains(response, image_attachment.name)
     assert_contains(response, image_attachment.get_absolute_url())
+
+
+def test_private_thread_detail_view_shows_post_with_deleted_user_like_to_user(
+    thread_reply_factory,
+    user_client,
+    other_user_private_thread,
+):
+    post = thread_reply_factory(other_user_private_thread)
+    like_post(post, "DeletedUser")
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "DeletedUser likes this")
+
+
+def test_private_thread_detail_view_shows_post_with_other_user_like_to_user(
+    thread_reply_factory,
+    user_client,
+    other_user,
+    other_user_private_thread,
+):
+    post = thread_reply_factory(other_user_private_thread)
+    like_post(post, other_user)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, f"{other_user.username} likes this")
+
+
+def test_private_thread_detail_view_shows_post_with_user_like_to_user(
+    thread_reply_factory,
+    user_client,
+    user,
+    other_user_private_thread,
+):
+    post = thread_reply_factory(other_user_private_thread)
+    like_post(post, user)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Liked")
+
+
+def test_private_thread_detail_view_shows_post_with_user_like_to_user_without_own_posts_last_likes_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    user,
+    other_user,
+    other_user_private_thread,
+):
+    members_group.can_see_own_posts_likes = CanSeePostLikes.COUNT
+    members_group.save()
+
+    post = thread_reply_factory(other_user_private_thread, poster=user)
+    like_post(post, user)
+    like_post(post, other_user)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Liked")
+    assert_contains(response, f"You and 1 other like this")
+    assert_not_contains(response, f"You and {other_user.username} like this")
+
+
+def test_private_thread_detail_view_shows_post_with_user_like_to_user_without_own_posts_likes_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    user,
+    other_user,
+    other_user_private_thread,
+):
+    members_group.can_see_own_posts_likes = CanSeePostLikes.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(other_user_private_thread, poster=user)
+    like_post(post, user)
+    like_post(post, other_user)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Liked")
+    assert_not_contains(response, "You and 1 other like this")
+    assert_not_contains(response, f"You and {other_user.username} like this")
+
+
+def test_private_thread_detail_view_shows_post_with_other_user_like_to_user_without_others_posts_last_likes_permission(
+    thread_reply_factory,
+    members_group,
+    user_client,
+    other_user,
+    other_user_private_thread,
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.save()
+
+    post = thread_reply_factory(other_user_private_thread)
+    like_post(post, other_user)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_not_contains(response, "Liked")
+    assert_contains(response, "1 other likes this")
+    assert_not_contains(response, f"{other_user.username} likes this")
+
+
+def test_private_thread_detail_view_shows_post_with_other_user_like_to_user_without_others_posts_likes_permission(
+    thread_reply_factory,
+    members_group,
+    user_client,
+    other_user,
+    other_user_private_thread,
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(other_user_private_thread)
+    like_post(post, other_user)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_not_contains(response, "Liked")
+    assert_not_contains(response, "1 other likes this")
+    assert_not_contains(response, f"{other_user.username} likes this")
 
 
 def test_private_thread_detail_view_shows_post_with_previous_post_quote(

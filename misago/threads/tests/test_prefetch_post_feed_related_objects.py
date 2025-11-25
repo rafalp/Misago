@@ -394,9 +394,7 @@ def test_prefetch_post_feed_related_objects_prefetches_quoted_posts(
     post.metadata["posts"] = [user_reply.id]
 
     with django_assert_num_queries(6):
-        data = prefetch_post_feed_related_objects(
-            dynamic_settings, permissions, [post]
-        )
+        data = prefetch_post_feed_related_objects(dynamic_settings, permissions, [post])
         assert data["posts"] == {
             post.id: post,
             user_reply.id: user_reply,
@@ -419,9 +417,7 @@ def test_prefetch_post_feed_related_objects_prefetches_quoted_posts_for_unsaved_
     post.metadata["posts"] = [user_reply.id]
 
     with django_assert_num_queries(5):
-        data = prefetch_post_feed_related_objects(
-            dynamic_settings, permissions, [post]
-        )
+        data = prefetch_post_feed_related_objects(dynamic_settings, permissions, [post])
         assert data["posts"] == {
             user_reply.id: user_reply,
         }
@@ -474,9 +470,7 @@ def test_prefetch_post_feed_related_objects_fetches_posts_metadata_posts(
     post.save()
 
     with django_assert_num_queries(6):
-        data = prefetch_post_feed_related_objects(
-            dynamic_settings, permissions, [post]
-        )
+        data = prefetch_post_feed_related_objects(dynamic_settings, permissions, [post])
         assert data["posts"] == {
             post.id: post,
             user_reply.id: user_reply,
@@ -909,9 +903,7 @@ def test_prefetch_post_feed_related_objects_doesnt_preload_anonymous_user_from_p
     permissions.is_global_moderator
 
     with django_assert_num_queries(3):
-        data = prefetch_post_feed_related_objects(
-            dynamic_settings, permissions, [post]
-        )
+        data = prefetch_post_feed_related_objects(dynamic_settings, permissions, [post])
         assert data["users"] == {}
 
 
@@ -999,9 +991,7 @@ def test_prefetch_post_feed_related_objects_doesnt_prefetch_anonymous_posts_user
     permissions.is_global_moderator
 
     with django_assert_num_queries(4):
-        data = prefetch_post_feed_related_objects(
-            dynamic_settings, permissions, [post]
-        )
+        data = prefetch_post_feed_related_objects(dynamic_settings, permissions, [post])
         assert data["users"] == {user.id: user}
 
     with django_assert_num_queries(0):
@@ -1024,9 +1014,7 @@ def test_prefetch_post_feed_related_objects_populates_user_liked_posts_using_las
     permissions.is_global_moderator
 
     with django_assert_num_queries(4):
-        data = prefetch_post_feed_related_objects(
-            dynamic_settings, permissions, [post]
-        )
+        data = prefetch_post_feed_related_objects(dynamic_settings, permissions, [post])
         assert data["liked_posts"] == {post.id}
 
 
@@ -1055,9 +1043,7 @@ def test_prefetch_post_feed_related_objects_populates_user_liked_posts_using_dat
     permissions.is_global_moderator
 
     with django_assert_num_queries(5):
-        data = prefetch_post_feed_related_objects(
-            dynamic_settings, permissions, [post]
-        )
+        data = prefetch_post_feed_related_objects(dynamic_settings, permissions, [post])
         assert data["liked_posts"] == {post.id}
 
 
@@ -1078,9 +1064,7 @@ def test_prefetch_post_feed_related_objects_skips_liked_posts_for_anonymous_user
     permissions.is_global_moderator
 
     with django_assert_num_queries(3):
-        data = prefetch_post_feed_related_objects(
-            dynamic_settings, permissions, [post]
-        )
+        data = prefetch_post_feed_related_objects(dynamic_settings, permissions, [post])
         assert data["liked_posts"] == set()
 
 

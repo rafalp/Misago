@@ -58,9 +58,7 @@ class SetPostFeedRelatedObjectsHookFilter(Protocol):
 
 
 class SetPostFeedRelatedObjectsHook(
-    FilterHook[
-        SetPostFeedRelatedObjectsHookAction, SetPostFeedRelatedObjectsHookFilter
-    ]
+    FilterHook[SetPostFeedRelatedObjectsHookAction, SetPostFeedRelatedObjectsHookFilter]
 ):
     """
     This hook wraps the standard function that Misago uses to set related objects
