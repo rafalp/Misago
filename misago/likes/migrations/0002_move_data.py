@@ -35,7 +35,8 @@ class Migration(migrations.Migration):
                 liker_slug,
                 liked_on,
                 '{}'
-            FROM misago_threads_postlike;
+            FROM misago_threads_postlike
+            WHERE liker_id IS NOT NULL;
             """,
             migrations.RunSQL.noop,
         ),
