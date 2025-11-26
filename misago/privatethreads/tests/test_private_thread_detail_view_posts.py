@@ -2217,6 +2217,133 @@ def test_private_thread_detail_view_doesnt_show_unlike_button_to_user_without_pe
     )
 
 
+def test_private_thread_detail_view_doesnt_show_post_likes_link_for_post_without_likes(
+    thread_reply_factory,
+    user_client,
+    other_user_private_thread,
+):
+    post = thread_reply_factory(other_user_private_thread)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-likes",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_shows_post_likes_link_for_post_with_likes(
+    thread_reply_factory,
+    user_client,
+    other_user_private_thread,
+):
+    post = thread_reply_factory(other_user_private_thread)
+    like_post(post, "DeletedUser")
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-likes",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_doesnt_show_post_likes_link_for_post_with_likes_for_user_without_last_likes_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    other_user_private_thread,
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.save()
+
+    post = thread_reply_factory(other_user_private_thread)
+    like_post(post, "DeletedUser")
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-likes",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_doesnt_show_post_likes_link_for_post_with_likes_for_user_without_likes_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    other_user_private_thread,
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(other_user_private_thread)
+    like_post(post, "DeletedUser")
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-likes",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
 def test_private_thread_detail_view_shows_post_with_previous_post_quote(
     thread_reply_factory,
     user_client,

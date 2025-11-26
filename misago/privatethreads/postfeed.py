@@ -39,7 +39,7 @@ class PrivateThreadPostFeed(PostFeed):
 
     def get_post_likes_url(self, post: Post) -> str | None:
         return reverse(
-            "misago:thread-post-likes",
+            "misago:private-thread-post-likes",
             kwargs={
                 "thread_id": self.thread.id,
                 "slug": self.thread.slug,

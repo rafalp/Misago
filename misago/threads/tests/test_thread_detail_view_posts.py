@@ -3074,6 +3074,93 @@ def test_thread_detail_view_doesnt_show_unlike_button_to_user_without_permission
     )
 
 
+def test_thread_detail_view_doesnt_show_post_likes_link_for_post_without_likes(
+    thread_reply_factory,
+    user_client,
+    thread,
+):
+    post = thread_reply_factory(thread)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-likes",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_shows_post_likes_link_for_post_with_likes(
+    thread_reply_factory,
+    user_client,
+    thread,
+):
+    post = thread_reply_factory(thread)
+    like_post(post, "DeletedUser")
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-likes",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_post_likes_link_for_post_with_likes_for_user_without_last_likes_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    thread,
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.save()
+
+    post = thread_reply_factory(thread)
+    like_post(post, "DeletedUser")
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-likes",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_post_likes_link_for_post_with_likes_for_user_without_likes_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    thread,
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(thread)
+    like_post(post, "DeletedUser")
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-likes",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
 def test_thread_detail_view_shows_post_with_previous_post_quote(
     thread_reply_factory,
     client,
