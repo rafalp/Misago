@@ -1,12 +1,17 @@
 from django import template
+from django.templatetags.static import static
+
+from ...conf import settings
+from ..avatars.selection import resolve_avatar_for_size
 
 register = template.Library()
 
 
 @register.filter(name="avatar")
 def avatar(user, size=200):
-    found_avatar = user.avatars[0]
-    for user_avatar in user.avatars:
-        if user_avatar["size"] >= size:
-            found_avatar = user_avatar
+    avatars = getattr(user, "avatars", None) if user else None
+    found_avatar = resolve_avatar_for_size(avatars, size)
+    if not found_avatar:
+        return static(settings.MISAGO_BLANK_AVATAR)
+
     return found_avatar["url"]

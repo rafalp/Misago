@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.templatetags.static import static
 
 from ...conf import settings
+from ..avatars.selection import resolve_avatar_for_size
 
 User = get_user_model()
 
@@ -15,10 +16,10 @@ def user_avatar(request, pk, size):
     except User.DoesNotExist:
         return blank_avatar(request)
 
-    found_avatar = user.avatars[0]
-    for avatar in user.avatars:
-        if avatar["size"] >= size:
-            found_avatar = avatar
+    found_avatar = resolve_avatar_for_size(getattr(user, "avatars", None), size)
+    if not found_avatar:
+        return blank_avatar(request)
+
     return redirect(found_avatar["url"])
 
 

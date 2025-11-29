@@ -41,6 +41,32 @@ class AvatarServerTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response["location"].endswith(settings.MISAGO_BLANK_AVATAR))
 
+    def test_get_user_avatar_returns_blank_when_user_has_no_avatars(self):
+        """avatar server falls back to blank avatar when user list is empty"""
+        self.user.avatars = []
+        self.user.save(update_fields=["avatars"])
+
+        avatar_url = reverse(
+            "misago:user-avatar", kwargs={"pk": self.user.pk, "size": 150}
+        )
+        response = self.client.get(avatar_url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response["location"].endswith(settings.MISAGO_BLANK_AVATAR))
+
+    def test_get_user_avatar_returns_blank_when_user_has_none_in_db(self):
+        """avatar server falls back when avatars are None in the database"""
+        self.user.avatars = None
+        self.user.save(update_fields=["avatars"])
+
+        avatar_url = reverse(
+            "misago:user-avatar", kwargs={"pk": self.user.pk, "size": 100}
+        )
+        response = self.client.get(avatar_url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response["location"].endswith(settings.MISAGO_BLANK_AVATAR))
+
     def test_blank_avatar_serving(self):
         """avatar server handles blank avatar requests"""
         response = self.client.get(reverse("misago:blank-avatar"))

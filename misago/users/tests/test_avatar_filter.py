@@ -1,5 +1,8 @@
 import pytest
+from django.contrib.auth.models import AnonymousUser
+from django.templatetags.static import static
 
+from ...conf import settings
 from ..templatetags.misago_avatars import avatar
 
 
@@ -22,3 +25,21 @@ def test_filter_returns_url_largest_image_if_requested_size_is_not_available(
     user, avatars
 ):
     assert avatar(user, 500) == avatars[400]
+
+
+def test_filter_returns_blank_avatar_if_user_has_no_avatars(user):
+    user.avatars = []
+
+    assert avatar(user) == static(settings.MISAGO_BLANK_AVATAR)
+
+
+def test_filter_returns_blank_avatar_for_missing_user():
+    assert avatar(None) == static(settings.MISAGO_BLANK_AVATAR)
+
+
+def test_filter_returns_blank_avatar_for_anonymous_user():
+    assert avatar(AnonymousUser()) == static(settings.MISAGO_BLANK_AVATAR)
+
+
+def test_filter_handles_string_size_argument(user, avatars):
+    assert avatar(user, "250") == avatars[400]
