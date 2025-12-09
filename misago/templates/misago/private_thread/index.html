@@ -54,4 +54,15 @@
       {% include "misago/private_thread/members_add_modal.html" %}
   {% endif %}
   {% include "misago/lightbox/index.html" %}
+  {% include "misago/post_likes/modal.html" %}
 {% endblock modals %}
+
+
+{% block javascript %}
+<script type="text/javascript">
+  misago.quote.activate({
+    reply: {% if reply.url %}!!document.getElementById("misago-htmx-quick-reply"){% else %}false{% endif %},
+    quote: true,
+  })
+</script>
+{% endblock javascript %}

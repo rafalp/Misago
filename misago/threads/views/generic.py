@@ -27,6 +27,7 @@ class GenericView(View):
     thread_select_related: Iterable[str] | True | None = None
     thread_annotate_read_time: bool = False
     thread_url_name: str
+    thread_post_url_name: str
     post_select_related: Iterable[str] | True | None = None
     thread_update_select_related: Iterable[str] | True | None = None
     next_page: str = "next"
@@ -104,6 +105,10 @@ class GenericView(View):
     ) -> PostFeed:
         raise NotImplementedError()
 
+    def get_post_number(self, request: HttpRequest, thread: Thread, post: Post) -> int:
+        queryset = self.get_thread_posts_queryset(request, thread)
+        return queryset.filter(id__lte=post.id).count()
+
     def get_thread_url(self, thread: Thread, page: int | None = None) -> str:
         """Return the absolute URL to a thread."""
         if page and page > 1:
@@ -115,6 +120,12 @@ class GenericView(View):
         return reverse(
             self.thread_url_name,
             kwargs={"thread_id": thread.id, "slug": thread.slug},
+        )
+
+    def get_thread_post_url(self, thread: Thread, post: Post) -> str:
+        return reverse(
+            self.thread_post_url_name,
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
         )
 
     def get_next_thread_url(
@@ -161,6 +172,7 @@ class GenericView(View):
 class ThreadView(GenericView):
     thread_select_related: Iterable[str] | True | None = ("category",)
     thread_url_name: str = "misago:thread"
+    thread_post_url_name: str = "misago:thread-post"
 
     def get_thread(
         self, request: HttpRequest, thread_id: int, for_update: bool = False

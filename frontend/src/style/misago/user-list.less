@@ -1,6 +1,7 @@
 .user-list() {
   display: grid;
 
+  margin: 0;
   padding: 0;
 
   list-style: none;
@@ -87,7 +88,7 @@
   gap: ceil(@grid-gutter-width / 2);
   align-items: center;
 
-  flex-shrink: 0;
+  min-width: 0;
 
   margin-bottom: -1px;
   padding: (ceil(@grid-gutter-width / 4) + 1px) 0;
@@ -111,10 +112,6 @@
   &-body {
     flex: 1;
     min-width: 0;
-
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
   }
 
   &-heading {
@@ -140,19 +137,69 @@
     color: @gray-600;
     font-size: @font-size-small;
   }
+
+  &-heading,
+  &-info {
+    max-width: 100%;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 
-// Post likes list
-.post-likes-list {
-  margin: @line-height-computed 0;
+.user-list-sm() {
+  margin: 0;
+  padding: 0;
 
-  .user-list();
-  .user-list-sm-2-cols();
-  .user-list-md-3-cols();
-  .user-list-lg-4-cols();
+  list-style: none;
+
+  border-top: 1px solid @gray-200;
 }
 
-.post-likes-list-item {
-  .user-list-item();
-  .user-list-sm-cell();
+.user-list-sm-item() {
+  display: flex;
+  gap: ceil(@grid-gutter-width / 2);
+  align-items: center;
+
+  padding: ceil(@line-height-computed / 2) 0;
+
+  border-bottom: 1px solid @gray-200;
+
+  &-avatar {
+    display: block;
+    flex-shrink: 0;
+
+    img {
+      display: block;
+
+      width: 24px;
+      height: 24px;
+
+      border-radius: @border-radius-small;
+    }
+  }
+
+  &-name {
+    display: inline-block;
+
+    color: @gray-700;
+    font-weight: bold;
+  }
+
+  a&-name {
+    min-width: 0;
+
+    &:link,
+    &:visited,
+    &:hover,
+    &:focus,
+    &:active {
+      color: @gray-900;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

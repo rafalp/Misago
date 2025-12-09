@@ -1,11 +1,11 @@
 {% extends "misago/base.html" %}
-{% load i18n misago_avatars %}
+{% load i18n misago_component %}
 
 
 {% block title %}
-  {% blocktranslate trimmed with post=post.id context "thread post likes page" %}
-    Post's #{{ post }} likes
-  {% endblocktranslate %} | {{ thread }} | {{ block.super }}
+  {% blocktranslate trimmed with post=post_number context "thread post likes page title" %}
+    Post #{{ post }} likes
+  {% endblocktranslate %}{% if page.number > 1 %} | {% blocktranslate with page=page.number context "thread post likes page title" %}Page {{ page }}{% endblocktranslate %}{% endif %} | {{ thread }} | {{ block.super }}
 {% endblock title %}
 
 
@@ -13,41 +13,7 @@
 <div class="page page-thread-post-likes">
   {% include "misago/thread/header.html" %}
   <div class="container">
-    <div class="card-post-likes">
-      <div class="card-post-likes-header">
-      </div>
-      <ul class="post-likes-list">
-        {% for like in page.object_list %}
-          <li class="post-likes-list-item">
-            {% if like.user %}
-              <a href="{{ like.user.get_absolute_url }}" class="post-likes-list-item-avatar">
-                <img src="{{ like.user|avatar:32 }}" srcset="{{ like.user|avatar:64 }}" alt="{{ like.user.username }}">
-              </a>
-            {% else %}
-              <span class="post-likes-list-item-avatar">
-                <img src="{{ BLANK_AVATAR_URL }}" alt="{{ like.user_name }}">
-              </span>
-            {% endif %}
-            <div class="post-likes-list-item-body">
-              <div class="post-likes-list-item-heading">
-                {% if like.user %}
-                  <a href="{{ like.user.get_absolute_url }}" class="post-likes-list-item-name">
-                    {{ like.user.username }}{{ like.user.username }}{{ like.user.username }}
-                  </a>
-                {% else %}
-                  <span class="post-likes-list-item-name">
-                    {{ like.user_name }}
-                  </span>
-                {% endif %}
-              </div>
-              <div class="post-likes-list-item-info">
-                {{ like.liked_at }}
-              </div>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
+    {% includecomponent likes %}
   </div>
 </div>
 {% endblock content %}

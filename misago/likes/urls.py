@@ -17,6 +17,11 @@ urlpatterns = [
         name="thread-post-likes",
     ),
     path(
+        "t/<slug:slug>/<int:thread_id>/likes/<int:post_id>/<int:page>/",
+        ThreadPostLikesView.as_view(),
+        name="thread-post-likes",
+    ),
+    path(
         "t/<slug:slug>/<int:thread_id>/like/<int:post_id>/",
         ThreadPostLikeView.as_view(),
         name="thread-post-like",
@@ -28,6 +33,11 @@ urlpatterns = [
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/likes/<int:post_id>/",
+        PrivateThreadPostLikesView.as_view(),
+        name="private-thread-post-likes",
+    ),
+    path(
+        "p/<slug:slug>/<int:thread_id>/likes/<int:post_id>/<int:page>/",
         PrivateThreadPostLikesView.as_view(),
         name="private-thread-post-likes",
     ),

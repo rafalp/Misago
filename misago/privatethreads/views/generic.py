@@ -22,6 +22,8 @@ if TYPE_CHECKING:
 
 class PrivateThreadView(GenericView):
     thread_url_name: str = "misago:private-thread"
+    thread_post_url_name: str = "misago:private-thread-post"
+
     thread_get_members: bool = False
 
     owner: Optional["User"]

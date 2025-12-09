@@ -16,6 +16,7 @@ import "./focusOn"
 import "./formValidators"
 import "./htmxErrors"
 import "./htmxExtensionLoaderTpl"
+import "./htmxExtensionModal"
 import Lightbox from "./lightbox"
 import editor, { activateEditors } from "./editor"
 import "./pagination"
@@ -31,7 +32,7 @@ import "./timestamps"
 const loader = new AjaxLoader()
 const lightbox = new Lightbox()
 
-htmx.config.historyEnabled = false
+htmx.config.historyEnabled = true
 htmx.config.historyCacheSize = 0
 
 export class Misago {

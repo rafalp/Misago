@@ -1,3 +1,5 @@
+import { getClosestBoolAttribute } from "./closest-attribute"
+
 class AjaxLoader {
   constructor() {
     this.element = document.getElementById("misago-ajax-loader")
@@ -37,12 +39,7 @@ class AjaxLoader {
 }
 
 export function useLoader(target) {
-  const silent = target.closest("[hx-silent]")
-  if (silent) {
-    return silent.getAttribute("hx-silent") !== "true"
-  }
-
-  return true
+  return getClosestBoolAttribute(target, "mg-loader", true)
 }
 
 export default AjaxLoader

@@ -3,7 +3,7 @@
   hx-get="{{ pagination_url }}?poll_new={{ latest_post }}"
   hx-trigger="every 60s"
   hx-swap="outerHTML"
-  hx-silent="true"
+  mg-loader="false"
   class="{% if new_threads %}threads-list-poll-new{% else %}d-none{% endif %}"
 >
   {% if new_threads %}

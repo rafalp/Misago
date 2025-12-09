@@ -1,0 +1,30 @@
+{% load i18n misago_avatars %}
+<div class="post-likes-modal">
+  <div class="post-likes-modal-description">
+    {{ description }}
+  </div>
+  <ul class="post-likes-modal-list">
+    {% for like in items %}
+      <li class="post-likes-modal-list-item">
+        {% if like.user %}
+          <a href="{{ like.user.get_absolute_url }}" class="post-likes-modal-list-item-avatar">
+            <img src="{{ like.user|avatar:24 }}" srcset="{{ like.user|avatar:64 }}" alt="{{ like.user.username }}">
+          </a>
+        {% else %}
+          <span class="post-likes-modal-list-item-avatar">
+            <img src="{{ BLANK_AVATAR_URL }}" alt="{{ like.user_name }}">
+          </span>
+        {% endif %}
+        {% if like.user %}
+          <a href="{{ like.user.get_absolute_url }}" class="post-likes-modal-list-item-name">
+            {{ like.user.username }}
+          </a>
+        {% else %}
+          <span class="post-likes-modal-list-item-name">
+            {{ like.user_name }}
+          </span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>
