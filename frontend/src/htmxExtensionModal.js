@@ -1,4 +1,5 @@
 import htmx from "htmx.org"
+import { getClosestAttribute } from "./closest-attribute"
 
 function onEvent(name, event) {
   if (name === "htmx:beforeRequest") {
@@ -15,7 +16,7 @@ function getModalOptions(event) {
   }
 
   const swap = getClosestAttribute(event.target, "hx-swap")
-  if (swap !== null && swap !== "innerHTML") {
+  if (!!swap && swap !== "innerHTML") {
     console.warn(
       "'hx-swap' attribute for modal target must be 'innerHTML' or not set."
     )
@@ -69,20 +70,11 @@ function getModalOptions(event) {
   }
 }
 
-function getClosestAttribute(element, attr) {
-  const el = element.closest("[" + attr + "]")
-  if (el) {
-    return el.getAttribute(attr)
-  }
-  return null
-}
-
 function onModalBeforeRequest(event, options) {
   if (options.title) {
     options.title.element.textContent = options.title.text
   }
 
-  console.log(options)
   if (options.loader) {
     event.detail.target.replaceChildren(options.loader.content.cloneNode(true))
   }

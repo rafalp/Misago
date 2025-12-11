@@ -1,5 +1,11 @@
+{% load i18n %}
 <template id="modal-loader">
   <div class="modal-body modal-loader">
-    <div class="loader-spinning-wheel"></div>
+    <div class="sr-only">{% translate "Loading" context "modal loader" %}</div>
+    <div class="loader-three-dots">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </div>
 </template>

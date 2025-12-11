@@ -13,7 +13,7 @@
       hx-get="{{ pagination_url }}?animate_new={{ latest_post }}"
       hx-target="#misago-htmx-root"
       hx-swap="outerHTML"
-      hx-silent="false"
+      mg-toast="false"
     >
       {% blocktranslate trimmed count new_threads=new_threads context "threads list" %}
         Show {{ new_threads }} new or updated thread

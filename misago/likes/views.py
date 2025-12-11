@@ -103,6 +103,10 @@ class PostLikesView(View):
             request.user_permissions, thread.category, thread, post
         )
 
+        from django.core.exceptions import PermissionDenied
+        if request.is_htmx:
+            raise PermissionDenied("Lorem ipsum dolor")
+
         if not request.is_htmx and (thread.slug != slug or page == 1):
             return redirect(self.get_thread_url(thread), permanent=thread.slug != slug)
 
