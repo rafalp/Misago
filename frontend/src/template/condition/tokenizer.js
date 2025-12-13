@@ -1,4 +1,5 @@
 import COMPARISON from "./comparisons"
+import TOKEN from "./tokens"
 
 function tokenizeTemplateCondition(condition) {
   const rules = RULES.length
@@ -6,7 +7,7 @@ function tokenizeTemplateCondition(condition) {
     tokens: [],
     condition: condition,
     start: 0,
-    end: condition.length - 1,
+    end: condition.length,
   }
 
   while (state.start < state.end) {
@@ -33,16 +34,9 @@ function tokenizeTemplateCondition(condition) {
     }
   }
 
-  return cleanTokens(state.tokens)
-}
-
-function cleanTokens(tokens) {
-  const cleanTokens = tokens.filter(function removeSpaces(item) {
+  return state.tokens.filter(function removeSpaces(item) {
     return item.token !== TOKEN.SPACE
   })
-
-  // TODO: RUN VALIDATION RULES HERE
-  return cleanTokens
 }
 
 function nameRule(state) {
@@ -52,19 +46,35 @@ function nameRule(state) {
 
   const match = state.condition
     .substring(state.start, state.end)
-    .match(/^[_a-z0-9]+/i)
+    .match(/^[_a-z0-9]+(\.[_a-z][_a-z0-9]*)*/i)
+
   if (!match) {
     return false
   }
 
   const name = match[0]
 
-  state.tokens.push({
-    token: TOKEN.NAME,
-    start: state.start,
-    end: state.start + name.length,
-    name,
-  })
+  if (name === "true" || name === "false") {
+    state.tokens.push({
+      token: TOKEN.BOOL,
+      start: state.start,
+      end: state.start + name.length,
+      value: name === "true",
+    })
+  } else if (name === "null") {
+    state.tokens.push({
+      token: TOKEN.NULL,
+      start: state.start,
+      end: state.start + name.length,
+    })
+  } else {
+    state.tokens.push({
+      token: TOKEN.NAME,
+      start: state.start,
+      end: state.start + name.length,
+      name,
+    })
+  }
   state.start += name.length
 
   return true
@@ -73,7 +83,8 @@ function nameRule(state) {
 function integerRule(state) {
   const match = state.condition
     .substring(state.start, state.end)
-    .match(/^[1-9][0-9]*/i)
+    .match(/^(0|([1-9][0-9]*))/)
+
   if (!match) {
     return false
   }
@@ -94,7 +105,8 @@ function integerRule(state) {
 function floatRule(state) {
   const match = state.condition
     .substring(state.start, state.end)
-    .match(/^[1-9][0-9]*.[0-9]*/i)
+    .match(/^(0|([1-9][0-9]*)).[0-9]*/i)
+
   if (!match) {
     return false
   }
@@ -113,7 +125,7 @@ function floatRule(state) {
 }
 
 function strictEqualRule(state) {
-  if (state.start + 3 > state.end) {
+  if (state.start + 2 >= state.end) {
     return false
   }
 
@@ -133,7 +145,7 @@ function strictEqualRule(state) {
 }
 
 function equalRule(state) {
-  if (state.start + 2 > state.end) {
+  if (state.start + 1 >= state.end) {
     return false
   }
 
@@ -153,10 +165,9 @@ function equalRule(state) {
 }
 
 function strictNotEqualRule(state) {
-  if (state.start + 3 > state.end) {
+  if (state.start + 2 >= state.end) {
     return false
   }
-
   if (state.condition.substring(state.start, state.start + 3) !== "!==") {
     return false
   }
@@ -173,7 +184,7 @@ function strictNotEqualRule(state) {
 }
 
 function notEqualRule(state) {
-  if (state.start + 2 > state.end) {
+  if (state.start + 1 >= state.end) {
     return false
   }
 
@@ -193,7 +204,7 @@ function notEqualRule(state) {
 }
 
 function greaterThanEqualRule(state) {
-  if (state.start + 2 > state.end) {
+  if (state.start + 1 >= state.end) {
     return false
   }
 
@@ -229,7 +240,7 @@ function greaterThanRule(state) {
 }
 
 function lessThanEqualRule(state) {
-  if (state.start + 2 > state.end) {
+  if (state.start + 1 >= state.end) {
     return false
   }
 
@@ -264,8 +275,23 @@ function lessThanRule(state) {
   return true
 }
 
+function notRule(state) {
+  if (state.condition[state.start] !== "!") {
+    return false
+  }
+
+  state.tokens.push({
+    token: TOKEN.NOT,
+    start: state.start,
+    end: state.start + 1,
+  })
+  state.start += 1
+
+  return true
+}
+
 function andRule(state) {
-  if (state.start + 2 > state.end) {
+  if (state.start + 1 >= state.end) {
     return false
   }
 
@@ -284,7 +310,7 @@ function andRule(state) {
 }
 
 function orRule(state) {
-  if (state.start + 2 > state.end) {
+  if (state.start + 1 >= state.end) {
     return false
   }
 
@@ -331,6 +357,7 @@ const RULES = [
   equalRule,
   strictNotEqualRule,
   notEqualRule,
+  notRule,
   greaterThanEqualRule,
   greaterThanRule,
   lessThanEqualRule,
@@ -339,14 +366,5 @@ const RULES = [
   orRule,
   spaceRule,
 ]
-
-const TOKEN = {
-  SPACE: 0,
-  NAME: 1,
-  NUMBER: 2,
-  COMPARISON: 3,
-  AND: 4,
-  OR: 5,
-}
 
 export default tokenizeTemplateCondition

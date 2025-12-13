@@ -95,17 +95,18 @@ class PostLikesView(View):
     template_name_modal = "misago/post_likes/modal_partial.html"
 
     def get(
-        self, request: HttpRequest, thread_id: int, slug: str, post_id: int, page: int | None = None
+        self,
+        request: HttpRequest,
+        thread_id: int,
+        slug: str,
+        post_id: int,
+        page: int | None = None,
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
         post = self.get_thread_post(request, thread, post_id)
         check_see_post_likes_permission(
             request.user_permissions, thread.category, thread, post
         )
-
-        from django.core.exceptions import PermissionDenied
-        if request.is_htmx:
-            raise PermissionDenied("Lorem ipsum dolor")
 
         if not request.is_htmx and (thread.slug != slug or page == 1):
             return redirect(self.get_thread_url(thread), permanent=thread.slug != slug)
@@ -116,11 +117,13 @@ class PostLikesView(View):
             return redirect(exc.redirect_to)
 
         if request.is_htmx:
-            likes_data.update({
-                "category": thread.category,
-                "thread": thread,
-                "post": post,
-            })
+            likes_data.update(
+                {
+                    "category": thread.category,
+                    "thread": thread,
+                    "post": post,
+                }
+            )
 
             return render(request, likes_data["template_name"], likes_data)
 
@@ -137,8 +140,10 @@ class PostLikesView(View):
                 "post_url": self.get_thread_post_url(thread, post),
             },
         )
-    
-    def get_likes_data(self, request: HttpRequest, post: Post, page: int | None) -> dict:
+
+    def get_likes_data(
+        self, request: HttpRequest, post: Post, page: int | None
+    ) -> dict:
         is_modal = request.is_htmx and request.GET.get("modal")
         per_page = 10 if request.is_htmx and is_modal else 32
 
@@ -184,7 +189,7 @@ class PostLikesView(View):
             "items": page_obj.object_list,
             "likes_url": self.get_post_likes_url(post.thread, post),
         }
-    
+
     def get_likes_description(self, likes: int, is_liked: bool) -> str | None:
         if is_liked:
             remaining_likes = likes - 1
@@ -204,44 +209,62 @@ class PostLikesView(View):
             "%(users)s users like this post",
             likes,
         ) % {"users": likes}
-    
-    def get_post_likes_url(self, thread: Thread, post: Post, page: int | None = None) -> str:
+
+    def get_post_likes_url(
+        self, thread: Thread, post: Post, page: int | None = None
+    ) -> str:
         raise NotImplementedError()
 
 
 class ThreadPostLikesView(PostLikesView, ThreadView):
     template_name = "misago/thread_post_likes/index.html"
 
-    def get_post_likes_url(self, thread: Thread, post: Post, page: int | None = None) -> str:
+    def get_post_likes_url(
+        self, thread: Thread, post: Post, page: int | None = None
+    ) -> str:
         if page and page > 1:
-            return reverse("misago:thread-post-likes", kwargs={
+            return reverse(
+                "misago:thread-post-likes",
+                kwargs={
+                    "thread_id": thread.id,
+                    "slug": thread.slug,
+                    "post_id": post.id,
+                    "page": page,
+                },
+            )
+
+        return reverse(
+            "misago:thread-post-likes",
+            kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
                 "post_id": post.id,
-                "page": page,
-            })
-
-        return reverse("misago:thread-post-likes", kwargs={
-            "thread_id": thread.id,
-            "slug": thread.slug,
-            "post_id": post.id,
-        })
+            },
+        )
 
 
 class PrivateThreadPostLikesView(PostLikesView, PrivateThreadView):
     template_name = "misago/private_thread_post_likes/index.html"
 
-    def get_post_likes_url(self, thread: Thread, post: Post, page: int | None = None) -> str:
+    def get_post_likes_url(
+        self, thread: Thread, post: Post, page: int | None = None
+    ) -> str:
         if page and page > 1:
-            return reverse("misago:private-thread-post-likes", kwargs={
+            return reverse(
+                "misago:private-thread-post-likes",
+                kwargs={
+                    "thread_id": thread.id,
+                    "slug": thread.slug,
+                    "post_id": post.id,
+                    "page": page,
+                },
+            )
+
+        return reverse(
+            "misago:private-thread-post-likes",
+            kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
                 "post_id": post.id,
-                "page": page,
-            })
-
-        return reverse("misago:private-thread-post-likes", kwargs={
-            "thread_id": thread.id,
-            "slug": thread.slug,
-            "post_id": post.id,
-        })
+            },
+        )

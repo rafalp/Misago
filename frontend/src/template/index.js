@@ -1,3 +1,4 @@
 import { mountTemplate, renderTemplate } from "./render"
+import { evaluateTemplateCondition } from "./condition"
 
-export { mountTemplate, renderTemplate }
+export { evaluateTemplateCondition, mountTemplate, renderTemplate }
