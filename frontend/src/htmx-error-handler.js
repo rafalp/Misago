@@ -1,31 +1,28 @@
-import {
-  getClosestAttribute,
-  getClosestBoolAttribute,
-} from "./closest-attribute"
+import { getClosestAttribute } from "./closest-attribute"
 import { mountTemplate } from "./template"
 import * as toast from "./snackbars"
 
 function createErrorHandler(getErrorMessage) {
   async function handler(event) {
     const error = await getErrorMessage(event)
+    const config = getClosestAttribute(event.target, "mg-error")
 
-    if (getClosestBoolAttribute(event.target, "mg-toast", true)) {
+    if (!config || config === "true") {
       toast.error(error.message)
-    }
+    } else if (config !== "false" && event.detail && event.detail.target) {
+      const template = document.querySelector(config)
+      if (!template) {
+        console.error(
+          "Could not resolve the '" +
+            config +
+            "' element specified in the 'mg-error' attribute."
+        )
+        return
+      }
 
-    const selector = getClosestAttribute(event.target, "mg-error")
-    const template = selector ? document.querySelector(selector) : null
-    if (selector && !template) {
-      console.error(
-        "Could not resolve the '" +
-          selector +
-          "' element specified in the 'mg-error' attribute."
-      )
-      return
-    }
-
-    if (template) {
-      mountTemplate(event.detail.target, template, error)
+      if (template) {
+        mountTemplate(event.detail.target, template, error)
+      }
     }
   }
 

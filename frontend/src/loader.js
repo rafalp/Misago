@@ -1,4 +1,7 @@
-import { getClosestAttribute } from "./closest-attribute"
+import {
+  getClosestAttribute,
+  getClosestBoolAttribute,
+} from "./closest-attribute"
 
 class AjaxLoader {
   constructor() {
@@ -40,7 +43,7 @@ class AjaxLoader {
 
 function useLoader(target) {
   const loader = getClosestAttribute(target, "mg-loader")
-  if (loader === "true" || !loader) {
+  if (!loader || loader === "true") {
     return true
   }
   return false

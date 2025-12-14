@@ -282,7 +282,6 @@
                   hx-get="{{ likes.likes_url }}?modal=true"
                   hx-target="#misago-htmx-post-likes-modal"
                   mg-loader="#modal-loader"
-                  mg-toast="false"
                   mg-error="#modal-error"
                   mg-modal="#post-likes-modal"
                   mg-modal-title="{% blocktranslate trimmed with number=counter context 'post feed post likes modal title' %}Post #{{ number }} likes{% endblocktranslate %}"
