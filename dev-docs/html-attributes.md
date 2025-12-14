@@ -57,6 +57,26 @@ The template receives two variables in its context:
 
 ### `mg-if`
 
+`mg-if` supports simple conditional expressions in `template` elements:
+
+```html
+<template id="loading-error">
+  <div class="loading-error">
+    <span class="material-icon" mt-if="status === 403">shield</span>
+    <span class="material-icon" mt-if="status !== 403">warning</span>
+    <div mt-text="error"></div>
+  </div>
+</template>
+```
+
+If the condition in `mg-if` evaluates to `true`, the element it is applied to will be included in the resulting HTML. If it evaluates to `false`, the element will be removed from the resulting HTML.
+
+Supported syntax:
+
+- Variable names: `variable`, `lorem.ipsum.dolor`
+- Integers and floats: `0`, `4`, `5.12`
+- Logical operators: `&&`, `||`, `!variable`, `!!variable`
+- Comparison operators: `==`, `===`, `!=`, `!==`, `>`, `<`, `>=`, `<=`
 
 
 ### `mg-loader`
@@ -76,14 +96,13 @@ To disable this loader for a specific element, add `mg-loader="false"` to it:
 </button>
 ```
 
-With the `mg-loader` htmx extension, you can also use the contents of a `template` element as the loader:
+If you want to replace the contents of `hx-target` with the contents of an error template, set `mg-loader` to a selector:
 
 ```html
 <div id="htmx-outlet"></div>
 
 <button
   type="button"
-  hx-ext="mg-loader"
   hx-get="/some-url/"
   hx-target="#htmx-outlet"
   mg-loader="#htmx-loader"
@@ -100,4 +119,27 @@ In the above example, the contents of the `htmx-loader` template will be cloned 
 
 This feature ignores the `hx-swap` option and always behaves as if `hx-swap="innerHTML"` was set.
 
-If the `mg-loader` extension is not enabled, no loader will be used.
+
+### `mg-text`
+
+`mg-text` populates an element’s `textContent` in `template` elements with the value of a variable:
+
+```html
+<template id="loading-error">
+  <div class="loading-error">
+    <div mt-text="error"></div>
+  </div>
+</template>
+```
+
+It also supports property traversal:
+
+```html
+<template id="loading-error">
+  <div class="loading-error">
+    <div mt-text="error.message"></div>
+  </div>
+</template>
+```
+
+If variable is not set or is `null`, empty string is used instead.
