@@ -41,26 +41,6 @@ class AjaxLoader {
   }
 }
 
-function useLoader(target) {
-  const loader = getClosestAttribute(target, "mg-loader")
-  if (!loader || loader === "true") {
-    return true
-  }
-  return false
-}
-
 const loader = new AjaxLoader()
-
-document.addEventListener("htmx:beforeRequest", ({ target }) => {
-  if (useLoader(target)) {
-    loader.show()
-  }
-})
-
-document.addEventListener("htmx:afterRequest", ({ target }) => {
-  if (useLoader(target)) {
-    loader.hide()
-  }
-})
 
 export default loader

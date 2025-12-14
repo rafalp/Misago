@@ -8,7 +8,7 @@ function createErrorHandler(getErrorMessage) {
     const config = getClosestAttribute(event.target, "mg-error")
 
     if (!config || config === "true") {
-      toast.error(error.message)
+      toast.error(error.error)
     } else if (config !== "false" && event.detail && event.detail.target) {
       const template = document.querySelector(config)
       if (!template) {
@@ -42,7 +42,10 @@ async function getResponseError(event) {
     if (data.error) {
       return { status, error: data.error }
     }
-  } else if (response.headers.get("content-type") === "application/json") {
+  } else if (
+    typeof response.headers !== "undefined" &&
+    response.headers.get("content-type") === "application/json"
+  ) {
     const data = await response.json()
     if (data.error) {
       return { status, error: data.error }

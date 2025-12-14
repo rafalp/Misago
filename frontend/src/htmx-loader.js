@@ -1,36 +1,36 @@
-import htmx from "htmx.org"
-import { getClosestAttribute } from "./closest-attribute"
+import {
+  getClosestAttribute,
+  getClosestBoolAttribute,
+} from "./closest-attribute"
+import loader from "./loader"
+import { mountTemplate } from "./template"
 
-function onEvent(name, event) {
-  if (
-    name === "htmx:beforeRequest" &&
-    event.target &&
-    event.detail &&
-    event.detail.target
-  ) {
-    const template = getLoaderTemplate(event.target)
+function beforeRequest(event) {
+  const loader = getClosestAttribute(event.target, "mg-loader")
+  if (!loader || loader === "true") {
+    loader.show()
+  } else if (loader !== "false" && event.detail && event.detail.target) {
+    const template = document.querySelector(loader)
+    if (!template) {
+      console.error(
+        "Could not resolve the '" +
+          loader +
+          "' element specified in the 'mg-loader' attribute."
+      )
+      return
+    }
+
     if (template) {
-      event.detail.target.replaceChildren(template.content.cloneNode(true))
+      mountTemplate(event.detail.target, template)
     }
   }
 }
 
-function getLoaderTemplate(target) {
-  const selector = getClosestAttribute(target, "mg-loader")
-  if (!selector || selector === "true" || selector === "false") {
-    return null
+function afterRequest({ target }) {
+  if (getClosestBoolAttribute(target, "mg-loader", true)) {
+    loader.hide()
   }
-
-  const template = document.querySelector(selector)
-  if (!template) {
-    console.warn(
-      "Could not resolve the '" +
-        selector +
-        "' element specified in the 'mg-loader' attribute."
-    )
-  }
-
-  return template
 }
 
-htmx.defineExtension("mg-loader", { onEvent })
+document.addEventListener("htmx:beforeRequest", beforeRequest)
+document.addEventListener("htmx:afterRequest", afterRequest)
