@@ -120,6 +120,77 @@ In the above example, the contents of the `htmx-loader` template will be cloned 
 This feature ignores the `hx-swap` option and always behaves as if `hx-swap="innerHTML"` was set.
 
 
+### `mg-modal`
+
+A replacement for `bs-modal` that uses the htmx `beforeSend` event to open a modal and requires the `mg-modal` extension to work.
+
+It enables additional `mg-modal-*` attributes to enhance modal behavior.
+
+Example:
+
+```html
+<button
+  type="button"
+  hx-get="/some-url/"
+  hx-target="#htmx-modal"
+  mg-modal="#my-modal"
+>
+  Open modal
+</button>
+
+<div
+  id="my-modal"
+  class="modal fade"
+  aria-hidden="false"
+  tabindex="-1"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">My modal</h4>
+      </div>
+      <div id="htmx-modal"></div>
+    </div>
+  </div>
+</div>
+```
+
+
+### `mg-modal-title`
+
+Used together with mg-modal to set a custom modal title. Modal title element is specified by the `mg-modal-title` attribute:
+
+```html
+<button
+  type="button"
+  hx-get="/some-url/"
+  hx-target="#htmx-modal"
+  mg-modal="#my-modal"
+  mg-modal-title="My custom modal!"
+>
+  Open modal
+</button>
+
+<div
+  id="my-modal"
+  class="modal fade"
+  aria-hidden="false"
+  tabindex="-1"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" mg-modal-title></h4>
+      </div>
+      <div id="htmx-modal"></div>
+    </div>
+  </div>
+</div>
+```
+
+
 ### `mg-text`
 
 `mg-text` populates an element’s `textContent` in `template` elements with the value of a variable:

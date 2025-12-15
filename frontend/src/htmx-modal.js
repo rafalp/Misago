@@ -2,10 +2,10 @@ import htmx from "htmx.org"
 import { getClosestAttribute } from "./closest-attribute"
 
 function onEvent(name, event) {
-  if (name === "htmx:beforeRequest") {
+  if (name === "htmx:beforeSend") {
     const options = getModalOptions(event)
     if (options) {
-      onModalBeforeRequest(event, options)
+      onModalBeforeSend(event, options)
     }
   }
 }
@@ -51,32 +51,16 @@ function getModalOptions(event) {
     }
   }
 
-  const loaderSelector = getClosestAttribute(event.target, "mg-modal-loader")
-  let loader = loaderSelector ? document.querySelector(loaderSelector) : null
-  if (loaderSelector && !loader) {
-    console.warn(
-      "Could not resolve the '" +
-        loaderSelector +
-        "' element specified in the 'mg-modal-loader' attribute."
-    )
-    return null
-  }
-
   return {
     modal,
-    loader,
     selector: modalSelector,
     title: modalTitle ? { text: modalTitle, element: modalTitleElement } : null,
   }
 }
 
-function onModalBeforeRequest(event, options) {
+function onModalBeforeSend(event, options) {
   if (options.title) {
     options.title.element.textContent = options.title.text
-  }
-
-  if (options.loader) {
-    event.detail.target.replaceChildren(options.loader.content.cloneNode(true))
   }
 
   $(options.selector).modal("show")
