@@ -91,8 +91,8 @@ class PageOutOfRangeError(Exception):
 
 class PostLikesView(View):
     template_name: str
-    template_name_partial = "misago/post_likes/page_partial.html"
-    template_name_modal = "misago/post_likes/modal_partial.html"
+    template_name_partial = "misago/post_likes/partial.html"
+    template_name_modal = "misago/post_likes/modal/htmx.html"
 
     def get(
         self,

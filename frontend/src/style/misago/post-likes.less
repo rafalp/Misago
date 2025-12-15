@@ -46,7 +46,17 @@
 
 .post-likes-modal-list-item {
   .user-list-sm-item();
+  .user-list-sm-item-info();
 
   padding-left: @modal-inner-padding;
   padding-right: @modal-inner-padding;
+}
+
+.post-likes-modal-blankslate {
+  padding: ceil(@modal-inner-padding * 2) @modal-inner-padding;
+}
+
+.post-likes-modal-blankslate-message {
+  font-weight: bold;
+  text-align: center;
 }

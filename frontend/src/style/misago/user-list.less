@@ -180,11 +180,22 @@
     }
   }
 
+  &-body {
+    display: flex;
+    gap: ceil(@grid-gutter-width / 4);
+    align-items: center;
+
+    min-width: 0;
+  }
+
   &-name {
     display: inline-block;
+    overflow: hidden;
 
     color: @gray-700;
     font-weight: bold;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   a&-name {
@@ -202,4 +213,9 @@
       text-decoration: underline;
     }
   }
+}
+
+.user-list-sm-item-info() {
+  color: @gray-500;
+  white-space: nowrap;
 }

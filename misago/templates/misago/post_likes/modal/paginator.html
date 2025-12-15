@@ -1,0 +1,69 @@
+{% load i18n %}
+<div class="modal-body">
+  <nav
+  class="thread-paginator"
+  role="nav"
+  itemscope
+  itemtype="http://schema.org/SiteNavigationElement"
+  hx-target="#misago-htmx-post-likes-modal"
+  hx-swap="show:#misago-htmx-post-likes-modal:top"
+>
+  {% if page.has_previous %}
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      title="{% translate 'Go to first page' context 'post likes modal paginator' %}"
+      href="{{ likes_url }}"
+      hx-get="{{ likes_url }}?modal=true"
+    >
+      <span class="material-icon">first_page</span>
+    </a>
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      rel="prev"
+      title="{% translate 'Go to previous page' context 'post likes modal paginator' %}"
+      href="{{ likes_url }}{% if page.previous_page_number > 1 %}{{ page.previous_page_number }}/{% endif %}"
+      hx-get="{{ likes_url }}{% if page.previous_page_number > 1 %}{{ page.previous_page_number }}/{% endif %}?modal=true"
+    >
+      <span class="material-icon">chevron_left</span>
+    </a>
+  {% else %}
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to first page' context 'post likes modal paginator' %}" type="button" disabled>
+      <span class="material-icon">first_page</span>
+    </button>
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to previous page' context 'post likes modal paginator' %}" type="button" disabled>
+      <span class="material-icon">chevron_left</span>
+    </button>
+  {% endif %}
+  <div class="paginator-legend">
+    {% blocktranslate trimmed with page=page.number pages=paginator.num_pages context "post likes modal paginator" %}
+      {{ page }} of {{ pages }}
+    {% endblocktranslate %}
+  </div>
+  {% if page.has_next %}
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      title="{% translate 'Go to next page' context 'post likes modal paginator' %}"
+      rel="next"
+      href="{{ likes_url }}{{ page.next_page_number }}/"
+      hx-get="{{ likes_url }}{{ page.next_page_number }}/?modal=true"
+    >
+      <span class="material-icon">chevron_right</span>
+    </a>
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      title="{% translate 'Go to last page' context 'post likes modal paginator' %}"
+      href="{{ likes_url }}{{ paginator.num_pages }}/"
+      hx-get="{{ likes_url }}{{ paginator.num_pages }}/?modal=true"
+    >
+      <span class="material-icon">last_page</span>
+    </a>
+  {% else %}
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to next page' context 'post likes modal paginator' %}" type="button" disabled>
+      <span class="material-icon">chevron_right</span>
+    </button>
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to last page' context 'post likes modal paginator' %}" type="button" disabled>
+      <span class="material-icon">last_page</span>
+    </button>
+  {% endif %}
+</nav>
+</div>

@@ -1,4 +1,4 @@
-{% load i18n misago_avatars %}
+{% load i18n misago_avatars misago_formats %}
 {% if is_request_htmx %}
 <title>{% blocktranslate trimmed with post=post_number context "thread post likes page title " %}
     Post #{{ post }} likes
@@ -37,7 +37,13 @@
                 {% endif %}
               </div>
               <div class="post-likes-list-item-info">
-                {{ like.liked_at }}
+                <span
+                  class="post-likes-modal-list-item-info"
+                  title="{{ like.liked_at|date:'DATETIME_FORMAT' }}"
+                  misago-timestamp="{{ like.liked_at.isoformat }}"
+                >
+                  {{ like.liked_at|date_relative }}
+                </span>
               </div>
             </div>
           </li>
@@ -45,7 +51,7 @@
       </ul>
     </div>
     {% if paginator.num_pages > 1 %}
-      {% include "misago/post_likes/page_paginator.html" %}
+      {% include "misago/post_likes/paginator.html" %}
     {% endif %}
   {% else %}
     <div class="post-likes-blankslate">

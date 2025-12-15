@@ -121,7 +121,7 @@ If a view or component has both a regular and an HTMX version, you can different
 ```python
 class ThreadEditView(View):
     template_name = "thread_edit/index.html"
-    template_name_htmx = "thread_edit/htmx.html"
+    template_name_htmx = "thread_edit/partial.html"
 
 
 class ThreadMoveView(View):
