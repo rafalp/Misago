@@ -1,8 +1,3 @@
-import {
-  getClosestAttribute,
-  getClosestBoolAttribute,
-} from "./closest-attribute"
-
 class AjaxLoader {
   constructor() {
     this.element = document.getElementById("misago-ajax-loader")

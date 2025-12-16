@@ -6,15 +6,15 @@ import loader from "./loader"
 import { mountTemplate } from "./template"
 
 function beforeRequest(event) {
-  const loader = getClosestAttribute(event.target, "mg-loader")
-  if (!loader || loader === "true") {
+  const config = getClosestAttribute(event.target, "mg-loader")
+  if (!config || config === "true") {
     loader.show()
-  } else if (loader !== "false" && event.detail && event.detail.target) {
-    const template = document.querySelector(loader)
+  } else if (config !== "false" && event.detail && event.detail.target) {
+    const template = document.querySelector(config)
     if (!template) {
       console.error(
         "Could not resolve the '" +
-          loader +
+          config +
           "' element specified in the 'mg-loader' attribute."
       )
       return
