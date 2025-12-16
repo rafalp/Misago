@@ -58,7 +58,19 @@
 >
   {% if likes.likes_url %}
     {% for type, message in likes.messages.items %}
-      <a href="{{ likes.likes_url }}" class="posts-feed-item-post-body-likes-message-{{ type }}">{{ message }}</a>
+      <a
+        href="{{ likes.likes_url }}"
+        class="posts-feed-item-post-body-likes-message-{{ type }}"
+        hx-ext="mg-loader,mg-modal"
+        hx-get="{{ likes.likes_url }}?modal=true"
+        hx-target="#misago-htmx-post-likes-modal"
+        mg-loader="#modal-loader"
+        mg-error="#modal-error"
+        mg-modal="#post-likes-modal"
+        mg-modal-title="{% blocktranslate trimmed with number=counter context 'post feed post likes modal title' %}Post #{{ number }} likes{% endblocktranslate %}"
+      >
+        {{ message }}
+      </a>
     {% endfor %}
   {% else %}
     {% for type, message in likes.messages.items %}
