@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: GetCategoryThreadsQueryHookAction`
 
-Misago function used to get the name of the predefined database `WHERE` clause (represented as a `Q` object instance) to use to retrieve threads from the given category.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 

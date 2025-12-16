@@ -88,6 +88,9 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "can_close_own_polls": False,
         "own_polls_close_time_limit": 0,
         "can_vote_in_polls": False,
+        "can_like_posts": False,
+        "can_see_own_posts_likes": 0,
+        "can_see_others_posts_likes": 0,
         "can_change_username": False,
         "username_changes_limit": 0,
         "username_changes_expire": 0,
@@ -186,6 +189,21 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
             permissions,
             "own_polls_close_time_limit",
             group.own_polls_close_time_limit,
+        )
+        if_true(
+            permissions,
+            "can_like_posts",
+            group.can_like_posts,
+        )
+        if_greater(
+            permissions,
+            "can_see_own_posts_likes",
+            group.can_see_own_posts_likes,
+        )
+        if_greater(
+            permissions,
+            "can_see_others_posts_likes",
+            group.can_see_others_posts_likes,
         )
         if_true(
             permissions,

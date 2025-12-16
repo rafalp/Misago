@@ -8,13 +8,13 @@ def migrate_private_thread_members(apps, _):
     ThreadParticipant = apps.get_model("misago_threads", "ThreadParticipant")
 
     queryset = ThreadParticipant.objects.order_by("id").values(
-        "user_id", "is_owner", "thread_id", "thread__started_on"
+        "user_id", "is_owner", "thread_id", "thread__started_at"
     )
 
-    batch: list[PrivateThreadMember] = []
+    batch: list = []
     batch_size: int = 0
     for data in queryset.iterator(chunk_size=50):
-        data["created_at"] = data.pop("thread__started_on")
+        data["created_at"] = data.pop("thread__started_at")
         batch.append(PrivateThreadMember(**data))
         batch_size += 1
 

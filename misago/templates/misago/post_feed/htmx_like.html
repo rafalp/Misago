@@ -1,0 +1,80 @@
+{% load i18n %}
+
+{% if not likes.is_liked and likes.like_url %}
+  <form
+    id="posts-feed-item-post-like-{{ post.id }}"
+    action="{{ likes.like_url }}"
+    method="post"
+    hx-post="{{ likes.like_url }}"
+    hx-target="this"
+    hx-swap="outerHTML"
+  >
+    {% csrf_token %}
+    <button
+      class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-like"
+      type="submit"
+      hx-disabled-elt="this"
+    >
+      <span class="material-icon">favorite_border</span>
+      {% translate "Like" context "posts feed like post" %}
+    </button>
+  </form>
+{% elif likes.is_liked and likes.unlike_url %}
+  {% if likes.unlike_url %}
+    <form
+      id="posts-feed-item-post-like-{{ post.id }}"
+      action="{{ likes.unlike_url }}"
+      method="post"
+      hx-post="{{ likes.unlike_url }}"
+      hx-target="this"
+      hx-swap="outerHTML"
+    >
+      {% csrf_token %}
+      <button
+        class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-liked"
+        type="submit"
+        hx-disabled-elt="this"
+      >
+        <span class="material-icon">favorite</span>
+        {% translate "Liked" context "posts feed like post" %}
+      </button>
+    </form>
+  {% else %}
+    <button
+      class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-liked"
+      type="submit"
+      disabled
+    >
+      <span class="material-icon">favorite</span>
+      {% translate "Liked" context "posts feed like post" %}
+    </button>
+  {% endif %}
+{% endif %}
+
+<div
+  id="posts-feed-item-post-likes-{{ post.id }}"
+  class="posts-feed-item-post-body-likes{% if likes.is_liked %} posts-feed-item-post-body-likes-liked{% endif %} {% if likes.messages %}animation-fade-in{% else %}d-none{% endif %}"
+  hx-swap-oob="outerHTML"
+>
+  {% if likes.likes_url %}
+    {% for type, message in likes.messages.items %}
+      <a
+        href="{{ likes.likes_url }}"
+        class="posts-feed-item-post-body-likes-message-{{ type }}"
+        hx-ext="mg-loader,mg-modal"
+        hx-get="{{ likes.likes_url }}?modal=true"
+        hx-target="#misago-htmx-post-likes-modal"
+        mg-loader="#modal-loader"
+        mg-error="#modal-error"
+        mg-modal="#post-likes-modal"
+        mg-modal-title="{% blocktranslate trimmed with number=counter context 'post feed post likes modal title' %}Post #{{ number }} likes{% endblocktranslate %}"
+      >
+        {{ message }}
+      </a>
+    {% endfor %}
+  {% else %}
+    {% for type, message in likes.messages.items %}
+      <span class="posts-feed-item-post-body-likes-message-{{ type }}">{{ message }}</span>
+    {% endfor %}
+  {% endif %}
+</div>

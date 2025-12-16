@@ -2,7 +2,8 @@ from django.utils.crypto import get_random_string
 from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
-from ...permissions.enums import CategoryPermission
+from ...likes.like import like_post
+from ...permissions.enums import CanSeePostLikes, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
 
@@ -2747,6 +2748,417 @@ def test_thread_detail_view_doesnt_show_unassociated_embedded_attachment(
     assert_not_contains(response, "rich-text-image")
     assert_contains(response, image_attachment.name)
     assert_contains(response, image_attachment.get_absolute_url())
+
+
+def test_thread_detail_view_shows_post_with_deleted_user_like_to_anonymous_user(
+    thread_reply_factory,
+    client,
+    thread,
+):
+    post = thread_reply_factory(thread)
+    like_post(post, "DeletedUser")
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "DeletedUser likes this")
+
+
+def test_thread_detail_view_shows_post_with_deleted_user_like_to_user(
+    thread_reply_factory,
+    user_client,
+    thread,
+):
+    post = thread_reply_factory(thread)
+    like_post(post, "DeletedUser")
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "DeletedUser likes this")
+
+
+def test_thread_detail_view_shows_post_with_other_user_like_to_anonymous_user(
+    thread_reply_factory,
+    client,
+    other_user,
+    thread,
+):
+    post = thread_reply_factory(thread)
+    like_post(post, other_user)
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, f"{other_user.username} likes this")
+
+
+def test_thread_detail_view_shows_post_with_other_user_like_to_user(
+    thread_reply_factory,
+    user_client,
+    other_user,
+    thread,
+):
+    post = thread_reply_factory(thread)
+    like_post(post, other_user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, f"{other_user.username} likes this")
+
+
+def test_thread_detail_view_shows_post_with_user_like_to_user(
+    thread_reply_factory,
+    user_client,
+    user,
+    thread,
+):
+    post = thread_reply_factory(thread)
+    like_post(post, user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Liked")
+
+
+def test_thread_detail_view_shows_post_with_user_like_to_user_without_own_posts_last_likes_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    user,
+    other_user,
+    thread,
+):
+    members_group.can_see_own_posts_likes = CanSeePostLikes.COUNT
+    members_group.save()
+
+    post = thread_reply_factory(thread, poster=user)
+    like_post(post, user)
+    like_post(post, other_user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Liked")
+    assert_contains(response, f"You and 1 other like this")
+    assert_not_contains(response, f"You and {other_user.username} like this")
+
+
+def test_thread_detail_view_shows_post_with_user_like_to_user_without_own_posts_likes_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    user,
+    other_user,
+    thread,
+):
+    members_group.can_see_own_posts_likes = CanSeePostLikes.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(thread, poster=user)
+    like_post(post, user)
+    like_post(post, other_user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Liked")
+    assert_not_contains(response, "You and 1 other like this")
+    assert_not_contains(response, f"You and {other_user.username} like this")
+
+
+def test_thread_detail_view_shows_post_with_other_user_like_to_user_without_others_posts_last_likes_permission(
+    thread_reply_factory,
+    members_group,
+    user_client,
+    other_user,
+    thread,
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.save()
+
+    post = thread_reply_factory(thread)
+    like_post(post, other_user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(response, "Liked")
+    assert_contains(response, "1 other likes this")
+    assert_not_contains(response, f"{other_user.username} likes this")
+
+
+def test_thread_detail_view_shows_post_with_other_user_like_to_user_without_others_posts_likes_permission(
+    thread_reply_factory,
+    members_group,
+    user_client,
+    other_user,
+    thread,
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(thread)
+    like_post(post, other_user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(response, "Liked")
+    assert_not_contains(response, "1 other likes this")
+    assert_not_contains(response, f"{other_user.username} likes this")
+
+
+def test_thread_detail_view_doesnt_show_like_button_to_anonymous_user(
+    thread_reply_factory,
+    client,
+    guests_group,
+    thread,
+):
+    guests_group.can_like_posts = True
+    guests_group.save()
+
+    post = thread_reply_factory(thread)
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(response, "Like")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-like",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_unlike_button_to_anonymous_user(
+    thread_reply_factory,
+    client,
+    guests_group,
+    thread,
+):
+    guests_group.can_like_posts = True
+    guests_group.save()
+
+    post = thread_reply_factory(thread)
+    like_post(post, "DeletedUser")
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(response, "Unike")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-unlike",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_show_like_button_to_user_with_permission(
+    thread_reply_factory,
+    user_client,
+    thread,
+):
+    post = thread_reply_factory(thread)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Like")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-like",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_like_button_to_user_without_permission(
+    thread_reply_factory,
+    members_group,
+    user_client,
+    thread,
+):
+    members_group.can_like_posts = False
+    members_group.save()
+
+    post = thread_reply_factory(thread)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(response, "Like")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-like",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_like_button_to_user_with_permission_for_liked_post(
+    thread_reply_factory,
+    user_client,
+    user,
+    thread,
+):
+    post = thread_reply_factory(thread)
+    like_post(post, user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Liked")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-like",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_shows_unlike_button_to_user_with_permission_for_liked_post(
+    thread_reply_factory,
+    user_client,
+    user,
+    thread,
+):
+    post = thread_reply_factory(thread)
+    like_post(post, user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Liked")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-unlike",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_unlike_button_to_user_without_permission_for_liked_post(
+    thread_reply_factory,
+    members_group,
+    user_client,
+    user,
+    thread,
+):
+    members_group.can_like_posts = False
+    members_group.save()
+
+    post = thread_reply_factory(thread)
+    like_post(post, user)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Liked")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-unlike",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_post_likes_link_for_post_without_likes(
+    thread_reply_factory,
+    user_client,
+    thread,
+):
+    post = thread_reply_factory(thread)
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-likes",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_shows_post_likes_link_for_post_with_likes(
+    thread_reply_factory,
+    user_client,
+    thread,
+):
+    post = thread_reply_factory(thread)
+    like_post(post, "DeletedUser")
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-likes",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_post_likes_link_for_post_with_likes_for_user_without_last_likes_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    thread,
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.save()
+
+    post = thread_reply_factory(thread)
+    like_post(post, "DeletedUser")
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-likes",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_post_likes_link_for_post_with_likes_for_user_without_likes_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    thread,
+):
+    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(thread)
+    like_post(post, "DeletedUser")
+
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-likes",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        ),
+    )
 
 
 def test_thread_detail_view_shows_post_with_previous_post_quote(

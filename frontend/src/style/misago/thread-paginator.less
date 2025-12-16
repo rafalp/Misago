@@ -26,8 +26,25 @@
   display: flex;
 }
 
+.paginator-legend {
+  overflow: hidden;
+
+  width: 100%;
+  min-width: 0;
+
+  padding: @padding-base-vertical @padding-base-horizontal;
+
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 // Make thread paginator full width on small screens
 @media screen and (max-width: @screen-xs-max) {
+  .paginator-legend {
+    padding: @padding-base-vertical 0;
+  }
+
   .toolbar-item .thread-paginator {
     width: 100%;
 

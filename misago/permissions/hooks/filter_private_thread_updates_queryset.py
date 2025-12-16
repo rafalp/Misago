@@ -49,8 +49,8 @@ class FilterPrivateThreadUpdatesQuerysetHookFilter(Protocol):
 
     ## `action: FilterPrivateThreadUpdatesQuerysetHookAction`
 
-    Misago function used to set filters on a queryset used to retrieve
-    specified private thread's updates that user can see.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

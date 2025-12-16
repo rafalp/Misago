@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CanUploadThreadsAttachmentsHookAction`
 
-Misago function that checks if a user has permission to upload attachments in a category.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 

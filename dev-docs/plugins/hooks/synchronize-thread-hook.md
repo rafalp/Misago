@@ -102,7 +102,7 @@ The request object, or `None` if not provided.
 
 ## Example
 
-Record the last user to synchronize the thread:
+Record the last user who synchronized the thread:
 
 ```python
 from django.http import HttpRequest

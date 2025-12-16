@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CheckEditPrivateThreadPermissionHookAction`
 
-Misago function used to check if the user has permission to edit a private thread. It raises Django's `PermissionDenied` with an error message if they can't edit it.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 

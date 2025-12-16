@@ -8,15 +8,16 @@ import "jquery-caret"
 import htmx from "htmx.org"
 import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
-import AjaxLoader, { useLoader } from "./AjaxLoader"
 import BulkModeration from "./BulkModeration"
 import { Mention } from "./Autocomplete"
 import { deleteElement, slideUpElement } from "./animations"
 import "./focusOn"
 import "./formValidators"
-import "./htmxErrors"
-import "./htmxExtensionLoaderTpl"
+import "./htmx-error-handler"
+import "./htmx-loader"
+import "./htmx-modal"
 import Lightbox from "./lightbox"
+import loader from "./loader"
 import editor, { activateEditors } from "./editor"
 import "./pagination"
 import activatePollChoicesControl from "./PollChoicesControl"
@@ -28,10 +29,9 @@ import userMultipleChoice from "./UserMultipleChoice"
 import "./scrollTo"
 import "./timestamps"
 
-const loader = new AjaxLoader()
 const lightbox = new Lightbox()
 
-htmx.config.historyEnabled = false
+htmx.config.historyEnabled = true
 htmx.config.historyCacheSize = 0
 
 export class Misago {
@@ -142,19 +142,6 @@ window.misago = misago
 
 // and export it for tests and stuff
 export default misago
-
-// Register ajax loader events
-document.addEventListener("htmx:beforeRequest", ({ target }) => {
-  if (useLoader(target)) {
-    loader.show()
-  }
-})
-
-document.addEventListener("htmx:afterRequest", ({ target }) => {
-  if (useLoader(target)) {
-    loader.hide()
-  }
-})
 
 // Register editor events
 document.addEventListener("htmx:load", activateEditors)

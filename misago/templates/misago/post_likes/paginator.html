@@ -1,0 +1,92 @@
+{% load i18n %}
+
+<nav
+  class="thread-paginator"
+  role="nav"
+  itemscope
+  itemtype="http://schema.org/SiteNavigationElement"
+  hx-push-url="true"
+  hx-target="#misago-htmx-root"
+  hx-swap="outerHTML show:#misago-page-scroll-target:top"
+>
+  {% if page.has_previous %}
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      title="{% translate 'Go to first page' context 'post likes page paginator' %}"
+      href="{{ likes_url }}"
+      hx-get="{{ likes_url }}"
+    >
+      <span class="material-icon">first_page</span>
+    </a>
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      rel="prev"
+      title="{% translate 'Go to previous page' context 'post likes page paginator' %}"
+      href="{{ likes_url }}{% if page.previous_page_number > 1 %}{{ page.previous_page_number }}/{% endif %}"
+      hx-get="{{ likes_url }}{% if page.previous_page_number > 1 %}{{ page.previous_page_number }}/{% endif %}"
+    >
+      <span class="material-icon">chevron_left</span>
+    </a>
+  {% else %}
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to first page' context 'post likes page paginator' %}" type="button" disabled>
+      <span class="material-icon">first_page</span>
+    </button>
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to previous page' context 'post likes page paginator' %}" type="button" disabled>
+      <span class="material-icon">chevron_left</span>
+    </button>
+  {% endif %}
+  <div class="dropdown">
+    <button
+      aria-haspopup="true"
+      aria-expanded="false"
+      class="btn btn-default btn-block btn-outline"
+      type="button"
+      data-toggle="dropdown"
+    >
+      {% blocktranslate trimmed with page=page.number pages=paginator.num_pages context "post likes page paginator" %}
+        Page {{ page }} of {{ pages }}
+      {% endblocktranslate %}
+    </button>
+    <div class="dropdown-menu" role="menu">
+      <form class="thread-paginator-form" misago-page="{{ page.number }}" misago-page-url="{{ likes_url }}" misago-page-form>
+        <input
+          type="number"
+          min="1"
+          max="{{ paginator.num_pages }}"
+          class="form-control"
+          placeholder="{% translate 'Page' context 'post likes page paginator' %}"
+          required
+        >
+        <button class="btn btn-primary" type="submit">
+          {% translate "Go" context "post likes page paginator" %}
+        </button>
+      </form>
+    </div>
+  </div>
+  {% if page.has_next %}
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      title="{% translate 'Go to next page' context 'post likes page paginator' %}"
+      rel="next"
+      href="{{ likes_url }}{{ page.next_page_number }}/"
+      hx-get="{{ likes_url }}{{ page.next_page_number }}/"
+    >
+      <span class="material-icon">chevron_right</span>
+    </a>
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      title="{% translate 'Go to last page' context 'post likes page paginator' %}"
+      href="{{ likes_url }}{{ paginator.num_pages }}/"
+      hx-get="{{ likes_url }}{{ paginator.num_pages }}/"
+    >
+      <span class="material-icon">last_page</span>
+    </a>
+  {% else %}
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to next page' context 'post likes page paginator' %}" type="button" disabled>
+      <span class="material-icon">chevron_right</span>
+    </button>
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to last page' context 'post likes page paginator' %}" type="button" disabled>
+      <span class="material-icon">last_page</span>
+    </button>
+  {% endif %}
+</nav>

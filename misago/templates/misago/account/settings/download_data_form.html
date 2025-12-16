@@ -11,7 +11,7 @@
     hx-get="{% url 'misago:account-download-data' %}"
     hx-trigger="every 60s"
     hx-swap="outerHTML"
-    hx-silent="true"
+    mg-loader="false"
   {% endif %}
 >
 {% else %}

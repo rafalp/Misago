@@ -26,6 +26,14 @@ Misago's notifications feature is implemented in the `misago.notifications` pack
 
 - [Notifications reference](./notifications.md)
 
+
+## HTML attributes
+
+Like [htmx](https://htmx.org/reference/), Misago includes a set of custom HTML attributes that template authors can use.
+
+[HTML attributes reference](./html-attributes.md)
+
+
 ## Plugins
 
 Misago implements a plugin system that extends [Django's existing application mechanism](https://docs.djangoproject.com/en/4.2/ref/applications/), allowing developers to customize and extend standard features.

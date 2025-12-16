@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: FilterThreadPostsQuerysetHookAction`
 
-Misago function used to set filters on a queryset used to retrieve specified thread's posts that user can see.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 

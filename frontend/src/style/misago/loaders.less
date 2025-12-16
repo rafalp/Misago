@@ -61,3 +61,43 @@
     transform: rotate(360deg);
   }
 }
+
+.loader-three-dots {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 12px;
+  width: ((12px * 3) + (12px * 2));
+
+  div {
+    height: 12px;
+    width: 12px;
+
+    background-color: @gray-400;
+    border-radius: 100%;
+
+    animation-duration: 1.2s;
+    animation-iteration-count: infinite;
+    animation-name: loader-three-dots;
+    animation-timing-function: ease-in-out;
+
+    &:first-child {
+      animation-delay: -400ms;
+    }
+
+    &:last-child {
+      animation-delay: -800ms;
+    }
+  }
+}
+
+@keyframes loader-three-dots {
+  0%,
+  100% {
+    background-color: @gray-400;
+  }
+  80% {
+    background-color: @gray-100;
+  }
+}

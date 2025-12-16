@@ -1,0 +1,63 @@
+{% load i18n misago_avatars misago_formats %}
+{% if is_request_htmx %}
+<title>{% blocktranslate trimmed with post=post_number context "thread post likes page title " %}
+    Post #{{ post }} likes
+{% endblocktranslate %}{% if page.number > 1 %} | {% blocktranslate with page=page.number context "thread post likes page title" %}Page {{ page }}{% endblocktranslate %}{% endif %} | {{ thread }} | {{ block.super }}</title>
+{% endif %}
+
+<div id="misago-htmx-root">
+  <div id="misago-page-scroll-target"></div>
+  {% if items %}
+    <div class="post-likes-card">
+      <div class="post-likes-card-header">
+        {{ description }}
+      </div>
+      <ul class="post-likes-list">
+        {% for like in items %}
+          <li class="post-likes-list-item">
+            {% if like.user %}
+              <a href="{{ like.user.get_absolute_url }}" class="post-likes-list-item-avatar">
+                <img src="{{ like.user|avatar:32 }}" srcset="{{ like.user|avatar:64 }}" alt="{{ like.user.username }}">
+              </a>
+            {% else %}
+              <span class="post-likes-list-item-avatar">
+                <img src="{{ BLANK_AVATAR_URL }}" alt="{{ like.user_name }}">
+              </span>
+            {% endif %}
+            <div class="post-likes-list-item-body">
+              <div class="post-likes-list-item-heading">
+                {% if like.user %}
+                  <a href="{{ like.user.get_absolute_url }}" class="post-likes-list-item-name">
+                    {{ like.user.username }}
+                  </a>
+                {% else %}
+                  <span class="post-likes-list-item-name">
+                    {{ like.user_name }}
+                  </span>
+                {% endif %}
+              </div>
+              <div class="post-likes-list-item-info">
+                <span
+                  class="post-likes-modal-list-item-info"
+                  title="{{ like.liked_at|date:'DATETIME_FORMAT' }}"
+                  misago-timestamp="{{ like.liked_at.isoformat }}"
+                >
+                  {{ like.liked_at|date_relative }}
+                </span>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% if paginator.num_pages > 1 %}
+      {% include "misago/post_likes/paginator.html" %}
+    {% endif %}
+  {% else %}
+    <div class="post-likes-blankslate">
+      <div class="post-likes-blankslate-message">
+        {% translate "This post has no likes." context "thread post likes page blankslate" %}
+      </div>
+    </div>
+  {% endif %}
+</div>

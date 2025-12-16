@@ -30,8 +30,8 @@ class BuildUserPermissionsHookFilter(Protocol):
 
     ## `action: BuildUserPermissionsHookAction`
 
-    Misago function used to build user permissions from their groups
-    or the next filter function from another plugin.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
 
     See the [action](#action) section for details.
 

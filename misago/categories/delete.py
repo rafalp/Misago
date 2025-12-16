@@ -6,6 +6,7 @@ from django.http import HttpRequest
 from ..attachments.delete import delete_categories_attachments
 from ..attachments.models import Attachment
 from ..categories.models import RoleCategoryACL
+from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
 from ..permissions.models import CategoryGroupPermission
 from ..polls.models import Poll, PollVote
@@ -15,7 +16,6 @@ from ..threads.models import (
     Attachment as LegacyAttachment,
     Post,
     PostEdit,
-    PostLike,
     Thread,
 )
 from ..threadupdates.models import ThreadUpdate
@@ -103,20 +103,26 @@ def _move_categories_contents(categories: list[Category], new_category: Category
     # misago.attachments
     _move_objects(Attachment, categories, new_category)
 
+    # misago.likes
+    _move_objects(Like, categories, new_category)
+
     # misago.notifications
     _move_objects(Notification, categories, new_category)
     _move_objects(WatchedThread, categories, new_category)
+
+    # misago.polls
+    _move_objects(Poll, categories, new_category)
+    _move_objects(PollVote, categories, new_category)
 
     # misago.readtracker
     _move_objects(ReadThread, categories, new_category)
 
     # misago.threads
-    _move_objects(Poll, categories, new_category)
-    _move_objects(PollVote, categories, new_category)
     _move_objects(Post, categories, new_category)
     _move_objects(PostEdit, categories, new_category)
-    _move_objects(PostLike, categories, new_category)
     _move_objects(Thread, categories, new_category)
+
+    # misago.threadupdates
     _move_objects(ThreadUpdate, categories, new_category)
 
     new_category.synchronize()
@@ -143,10 +149,10 @@ def _delete_categories_contents(
         first_post=None, last_post=None
     )
 
+    delete_all(Like, category_id=categories)
     delete_all(PollVote, category_id=categories)
     delete_all(Poll, category_id=categories)
     delete_all(PostEdit, category_id=categories)
-    delete_all(PostLike, category_id=categories)
     delete_all(Post, category_id=categories)
     delete_all(ThreadUpdate, category_id=categories)
     delete_all(Thread, category_id=categories)

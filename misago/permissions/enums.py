@@ -3,6 +3,28 @@ from enum import IntEnum, StrEnum
 from django.utils.translation import pgettext_lazy
 
 
+class CanSeePostLikes(IntEnum):
+    USERS = 2
+    COUNT = 1
+    NEVER = 0
+
+    @classmethod
+    def get_choices(cls):
+        return (
+            (
+                cls.USERS,
+                pgettext_lazy(
+                    "see post likes permission", "Count and users who liked the post"
+                ),
+            ),
+            (
+                cls.COUNT,
+                pgettext_lazy("see post likes permission", "Count only"),
+            ),
+            (cls.NEVER, pgettext_lazy("see post likes permission", "Never")),
+        )
+
+
 class CanUploadAttachments(IntEnum):
     EVERYWHERE = 2
     THREADS = 1

@@ -3,7 +3,7 @@
   hx-get="{{ pagination_url }}?poll_new={{ latest_post }}"
   hx-trigger="every 60s"
   hx-swap="outerHTML"
-  hx-silent="true"
+  mg-loader="false"
   class="{% if new_threads %}threads-list-poll-new{% else %}d-none{% endif %}"
 >
   {% if new_threads %}
@@ -13,7 +13,7 @@
       hx-get="{{ pagination_url }}?animate_new={{ latest_post }}"
       hx-target="#misago-htmx-root"
       hx-swap="outerHTML"
-      hx-silent="false"
+      mg-error="false"
     >
       {% blocktranslate trimmed count new_threads=new_threads context "threads list" %}
         Show {{ new_threads }} new or updated thread

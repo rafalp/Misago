@@ -1,0 +1,62 @@
+.post-likes-card-header {
+  margin: @line-height-computed 0;
+
+  font-size: @font-size-large;
+}
+
+.post-likes-list {
+  .user-list();
+  .user-list-sm-2-cols();
+  .user-list-md-3-cols();
+  .user-list-lg-4-cols();
+
+  margin-bottom: @line-height-computed;
+}
+
+.post-likes-list-item {
+  .user-list-item();
+  .user-list-sm-cell();
+}
+
+.post-likes-blankslate {
+  margin: @line-height-computed 0;
+
+  border: 1px solid @gray-200;
+  border-radius: @border-radius-base;
+}
+
+.post-likes-blankslate-message {
+  padding: @line-height-computed 0;
+
+  font-size: @font-size-large;
+  text-align: center;
+}
+
+.post-likes-modal-description {
+  padding: @modal-inner-padding;
+}
+
+.post-likes-modal-list {
+  .user-list-sm();
+
+  &:last-child .post-likes-modal-list-item:last-child {
+    border-bottom: none;
+  }
+}
+
+.post-likes-modal-list-item {
+  .user-list-sm-item();
+  .user-list-sm-item-info();
+
+  padding-left: @modal-inner-padding;
+  padding-right: @modal-inner-padding;
+}
+
+.post-likes-modal-blankslate {
+  padding: ceil(@modal-inner-padding * 2) @modal-inner-padding;
+}
+
+.post-likes-modal-blankslate-message {
+  font-weight: bold;
+  text-align: center;
+}

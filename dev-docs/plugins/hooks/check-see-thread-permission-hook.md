@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CheckSeeThreadPermissionHookAction`
 
-Misago function used to check if the user has a permission to see a thread. Raises Django's `Http404` if they can't see it or `PermissionDenied` with an error message if they can't browse it.
+Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 

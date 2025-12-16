@@ -5,6 +5,7 @@ import pytest
 from ..acl.models import Role
 from ..attachments.models import Attachment
 from ..categories.models import Category, CategoryRole, RoleCategoryACL
+from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
 from ..permissions.models import CategoryGroupPermission
 from ..polls.models import Poll, PollVote
@@ -84,7 +85,7 @@ def category_relations_factory(
         #     edited_to="",
         # )
 
-        # post_like = PostLike.objects.create(
+        # like = PostLike.objects.create(
         #     category=category,
         #     thread=thread,
         #     post=thread.first_post,
@@ -92,6 +93,15 @@ def category_relations_factory(
         #     liker_name=other_user.username,
         #     liker_slug=other_user.slug,
         # )
+
+        like = Like.objects.create(
+            category=category,
+            thread=thread,
+            post=thread.first_post,
+            user=other_user,
+            user_name=other_user.username,
+            user_slug=other_user.slug,
+        )
 
         read_category = ReadCategory.objects.create(
             user=user,
@@ -123,7 +133,7 @@ def category_relations_factory(
             poll=poll,
             poll_vote=poll_vote,
             # post_edit=post_edit,
-            # post_like=post_like,
+            like=like,
             read_category=read_category,
             read_thread=read_thread,
             role_category_acl=role_category_acl,
@@ -145,7 +155,7 @@ class CategoryRelations:
     poll: Poll
     poll_vote: PollVote
     # post_edit: PostEdit
-    # post_like: PostLike
+    like: Like
     read_category: ReadCategory
     read_thread: ReadThread
     role_category_acl: RoleCategoryACL
@@ -186,9 +196,9 @@ class CategoryRelations:
         #     """PostEdit should be deleted when category is deleted"""
         #     self.post_edit.refresh_from_db()
 
-        # with pytest.raises(PostLike.DoesNotExist):
-        #     """Notification PostLike be deleted when category is deleted"""
-        #     self.post_like.refresh_from_db()
+        with pytest.raises(Like.DoesNotExist):
+            """Like should be deleted when category is deleted"""
+            self.like.refresh_from_db()
 
         with pytest.raises(ReadCategory.DoesNotExist):
             """ReadCategory should be deleted when category is deleted"""
@@ -253,10 +263,10 @@ class CategoryRelations:
         #     self.post_edit.category_id == new_category.id
         # ), "PostEdit category relation was not updated"
 
-        # self.post_like.refresh_from_db()
-        # assert (
-        #     self.post_like.category_id == new_category.id
-        # ), "PostLike category relation was not updated"
+        self.like.refresh_from_db()
+        assert (
+            self.like.category_id == new_category.id
+        ), "Like category relation was not updated"
 
         with pytest.raises(ReadCategory.DoesNotExist):
             """ReadCategory should be deleted when category is deleted"""

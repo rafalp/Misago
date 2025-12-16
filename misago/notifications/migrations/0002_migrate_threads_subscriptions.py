@@ -39,10 +39,11 @@ def migrate_threads_subscriptions(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
+
     atomic = False
+
     dependencies = [
         ("misago_notifications", "0001_initial"),
-        ("misago_threads", "0001_initial"),
     ]
 
     operations = [
