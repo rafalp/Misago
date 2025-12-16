@@ -9,6 +9,7 @@ from ..attachments.delete import delete_users_attachments
 from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..likes.models import Like
+from ..likes.synchronize import synchronize_post_likes
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
 from ..threadupdates.models import ThreadUpdate
@@ -106,11 +107,13 @@ def delete_user_threads(sender, **kwargs):
 
     WatchedThread.objects.filter(thread__starter=sender).delete()
 
-    for post in sender.liked_post_set.iterator(chunk_size=50):
-        cleaned_likes = list(filter(lambda i: i["id"] != sender.id, post.last_likes))
-        if cleaned_likes != post.last_likes:
-            post.last_likes = cleaned_likes
-            post.save(update_fields=["last_likes"])
+    liked_posts = Post.objects.filter(
+        id__in=Like.objects.filter(user=sender).values("post_id"),
+    )
+    for post in liked_posts.iterator(chunk_size=50):
+        synchronize_post_likes(post, Like.objects.exclude(user=sender))
+
+    Like.objects.filter(user=sender).delete()
 
     for thread in sender.thread_set.iterator(chunk_size=50):
         recount_categories.add(thread.category_id)
@@ -275,10 +278,6 @@ def update_usernames(sender, **kwargs):
         editor_name=sender.username, editor_slug=sender.slug
     )
 
-    PostLike.objects.filter(liker=sender).update(
-        liker_name=sender.username, liker_slug=sender.slug
-    )
-
     Like.objects.filter(user=sender).update(
         user_name=sender.username, user_slug=sender.slug
     )
@@ -286,7 +285,7 @@ def update_usernames(sender, **kwargs):
     liked_posts = Post.objects.filter(
         id__in=Like.objects.filter(user=sender).values("post_id"),
     )
-    for post in liked_posts:
+    for post in liked_posts.iterator(chunk_size=50):
         update_post_last_likes = False
         for like in post.last_likes:
             if like["id"] == sender.id:

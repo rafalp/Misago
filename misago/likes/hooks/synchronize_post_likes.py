@@ -1,5 +1,6 @@
 from typing import Protocol
 
+from django.db.models import QuerySet
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
@@ -16,6 +17,10 @@ class SynchronizePostLikesHookAction(Protocol):
 
     The post to synchronize.
 
+    ## `queryset: QuerySet | None`
+
+    The queryset used to fetch a post’s likes. Defaults to `Like.objects` if `None`.
+
     ## `commit: bool`
 
     Whether the updated post instance should be saved to the database.
@@ -30,6 +35,7 @@ class SynchronizePostLikesHookAction(Protocol):
     def __call__(
         self,
         post: Post,
+        queryset: QuerySet | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> None: ...
@@ -52,6 +58,10 @@ class SynchronizePostLikesHookFilter(Protocol):
 
     The post to synchronize.
 
+    ## `queryset: QuerySet | None`
+
+    The queryset used to fetch a post’s likes. Defaults to `Like.objects` if `None`.
+
     ## `commit: bool`
 
     Whether the updated post instance should be saved to the database.
@@ -67,6 +77,7 @@ class SynchronizePostLikesHookFilter(Protocol):
         self,
         action: SynchronizePostLikesHookAction,
         post: Post,
+        queryset: QuerySet | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> None: ...
@@ -90,6 +101,7 @@ class SynchronizePostLikesHook(
     Record the last user who synchronized the post likes:
 
     ```python
+    from django.db.models import Queryset
     from django.http import HttpRequest
     from misago.likes.hooks import synchronize_post_likes_hook
     from misago.threads.models import Post
@@ -99,10 +111,11 @@ class SynchronizePostLikesHook(
     def record_user_who_synced_post_likes(
         action,
         post: Post,
+        queryset: QuerySet | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ):
-        action(post, False, request)
+        action(post, queryset, False, request)
 
         if request:
             post.plugin_data["likes_synced_by"] = {
@@ -121,12 +134,14 @@ class SynchronizePostLikesHook(
         self,
         action: SynchronizePostLikesHookAction,
         post: Post,
+        queryset: QuerySet | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> None:
         return super().__call__(
             action,
             post,
+            queryset,
             commit,
             request,
         )

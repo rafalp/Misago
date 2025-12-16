@@ -20,6 +20,7 @@ from misago.likes.hooks import synchronize_post_likes_hook
 def custom_synchronize_post_likes_filter(
     action: SynchronizePostLikesHookAction,
     post: Post,
+    queryset: QuerySet | None=None,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> None:
@@ -43,6 +44,11 @@ See the [action](#action) section for details.
 The post to synchronize.
 
 
+#### `queryset: QuerySet | None`
+
+The queryset used to fetch a post’s likes. Defaults to `Like.objects` if `None`.
+
+
 #### `commit: bool`
 
 Whether the updated post instance should be saved to the database.
@@ -59,7 +65,10 @@ The request object, or `None` if not provided.
 
 ```python
 def synchronize_post_likes_action(
-    post: Post, commit: bool=True, request: HttpRequest | None=None
+    post: Post,
+    queryset: QuerySet | None=None,
+    commit: bool=True,
+    request: HttpRequest | None=None,
 ) -> None:
     ...
 ```
@@ -72,6 +81,11 @@ Misago function for synchronizing post likes.
 #### `post: Post`
 
 The post to synchronize.
+
+
+#### `queryset: QuerySet | None`
+
+The queryset used to fetch a post’s likes. Defaults to `Like.objects` if `None`.
 
 
 #### `commit: bool`
@@ -91,6 +105,7 @@ The request object, or `None` if not provided.
 Record the last user who synchronized the post likes:
 
 ```python
+from django.db.models import Queryset
 from django.http import HttpRequest
 from misago.likes.hooks import synchronize_post_likes_hook
 from misago.threads.models import Post
@@ -100,10 +115,11 @@ from misago.threads.models import Post
 def record_user_who_synced_post_likes(
     action,
     post: Post,
+    queryset: QuerySet | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ):
-    action(post, False, request)
+    action(post, queryset, False, request)
 
     if request:
         post.plugin_data["likes_synced_by"] = {

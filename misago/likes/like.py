@@ -83,5 +83,5 @@ def _remove_post_like_action(
     if not deleted:
         return False
 
-    synchronize_post_likes(post, commit, request)
+    synchronize_post_likes(post, None, commit, request)
     return True
