@@ -196,17 +196,17 @@ class PostLikesView(View):
             if remaining_likes:
                 return npgettext(
                     "post likes page description",
-                    "You and %(users)s other likes this post",
-                    "You and %(users)s others like this post",
+                    "You and %(users)s other likes this post.",
+                    "You and %(users)s others like this post.",
                     likes,
                 ) % {"users": remaining_likes}
 
-            return pgettext("post likes page description", "You like this post")
+            return pgettext("post likes page description", "You like this post.")
 
         return npgettext(
             "post likes page description",
-            "%(users)s user likes this post",
-            "%(users)s users like this post",
+            "%(users)s user likes this post.",
+            "%(users)s users like this post.",
             likes,
         ) % {"users": likes}
 

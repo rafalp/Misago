@@ -163,7 +163,7 @@ def get_post_likes_message(
             "likes": remaining_likes,
         }
 
-    return pgettext("post likes message", "%(users)s and %(last)s like this.") % {
+    return pgettext("post likes message", "%(users)s and %(last)s like this") % {
         "users": ", ".join(last_users[:-1]),
         "last": last_users[-1],
     }
