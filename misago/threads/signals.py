@@ -8,6 +8,7 @@ from django.utils.translation import pgettext
 from ..attachments.delete import delete_users_attachments
 from ..attachments.models import Attachment
 from ..categories.models import Category
+from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
 from ..threadupdates.models import ThreadUpdate
@@ -277,6 +278,22 @@ def update_usernames(sender, **kwargs):
     PostLike.objects.filter(liker=sender).update(
         liker_name=sender.username, liker_slug=sender.slug
     )
+
+    Like.objects.filter(user=sender).update(
+        user_name=sender.username, user_slug=sender.slug
+    )
+
+    liked_posts = Post.objects.filter(
+        id__in=Like.objects.filter(user=sender).values("post_id"),
+    )
+    for post in liked_posts:
+        update_post_last_likes = False
+        for like in post.last_likes:
+            if like["id"] == sender.id:
+                like["username"] = sender.username
+                update_post_last_likes = True
+        if update_post_last_likes:
+            post.save(update_fields=["last_likes"])
 
     Attachment.objects.filter(uploader=sender).update(
         uploader_name=sender.username, uploader_slug=sender.slug
