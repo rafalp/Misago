@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("misago_threads", "0026_sync_likes"),
+        ("misago_threads", "0027_remove_post_edit_related_names"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("misago_categories", "0014_rename_last_post_on_category_last_posted_at"),
     ]
@@ -29,18 +29,6 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("plugin_data", models.JSONField(default=dict)),
-                ("user_name", models.CharField(max_length=255)),
-                ("user_slug", models.CharField(max_length=255)),
-                ("original_before", models.TextField()),
-                ("original_after", models.TextField()),
-                ("original_added", models.PositiveIntegerField(default=0)),
-                ("original_removed", models.PositiveIntegerField(default=0)),
-                ("attachments_before", models.JSONField(default=list)),
-                ("attachments_after", models.JSONField(default=list)),
-                ("attachments_added", models.PositiveIntegerField(default=0)),
-                ("attachments_removed", models.PositiveIntegerField(default=0)),
-                ("edited_at", models.DateTimeField(default=django.utils.timezone.now)),
                 (
                     "category",
                     models.ForeignKey(
@@ -71,6 +59,19 @@ class Migration(migrations.Migration):
                         to=settings.AUTH_USER_MODEL,
                     ),
                 ),
+                ("user_name", models.CharField(max_length=255)),
+                ("user_slug", models.CharField(max_length=255)),
+                ("reason", models.CharField(max_length=255, null=True, blank=True)),
+                ("original_before", models.TextField()),
+                ("original_after", models.TextField()),
+                ("original_added", models.PositiveIntegerField(default=0)),
+                ("original_removed", models.PositiveIntegerField(default=0)),
+                ("attachments_before", models.JSONField(default=list)),
+                ("attachments_after", models.JSONField(default=list)),
+                ("attachments_added", models.PositiveIntegerField(default=0)),
+                ("attachments_removed", models.PositiveIntegerField(default=0)),
+                ("edited_at", models.DateTimeField(default=django.utils.timezone.now)),
+                ("plugin_data", models.JSONField(default=dict)),
             ],
             options={
                 "ordering": ["-id"],

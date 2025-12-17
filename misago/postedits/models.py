@@ -19,6 +19,8 @@ class PostEdit(PluginDataModel):
     user_name = models.CharField(max_length=255)
     user_slug = models.CharField(max_length=255)
 
+    reason = models.CharField(max_length=255, null=True, blank=True)
+
     original_before = models.TextField()
     original_after = models.TextField()
     original_added = models.PositiveIntegerField(default=0)
