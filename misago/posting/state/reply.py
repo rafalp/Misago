@@ -53,18 +53,26 @@ class ReplyState(State):
     def save_post(self):
         self.post.set_search_document(self.thread, self.parsing_result.text)
 
+        post_edits = self.post.edits
+
         if self.post.id:
             self.post.updated_at = self.timestamp
             self.post.edits = models.F("edits") + 1
             self.post.last_editor = self.user
             self.post.last_editor_name = self.user.username
             self.post.last_editor_slug = self.user.slug
+            self.post.last_edit_reason = None
+            post_edits += 1
         else:
             # Save new post so it exists before search vector setup
             self.post.save()
 
         self.post.set_search_vector()
         self.post.save()
+
+        # Replace edits attr with integer
+        # Prevents HTMX merge reply from breaking
+        self.post.edits = post_edits
 
         self.schedule_post_content_upgrade()
 

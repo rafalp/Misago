@@ -41,7 +41,7 @@ class UserRegisterForm:
     username = forms.CharField(
         label=pgettext_lazy("user register form", "Username"),
         help_text=pgettext_lazy(
-            "user register form help text", "New user's name. Must be unique."
+            "user register form", "New user's name. Must be unique."
         ),
     )
 ```

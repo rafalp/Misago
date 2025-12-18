@@ -1,4 +1,4 @@
-{% load i18n misago_avatars misago_formats misago_rich_text %}
+{% load i18n misago_avatars misago_capture misago_formats misago_rich_text %}
 
 <div
   id="posts-feed-item-post-{{ post.id }}"
@@ -193,6 +193,23 @@
             </article>
             {% if attachments %}
               {% include "misago/post_feed/post_attachments.html" %}
+            {% endif %}
+            {% if post.edits %}
+              <div class="posts-feed-item-post-body-edits-message">
+                <span class="material-icon">edit</span>
+                {% blocktranslate trimmed count edits=post.edits context "posts feed post edits" %}
+                  Edited {{ edits }} time.
+                {% plural %}
+                  Edited {{ edits }} times.
+                {% endblocktranslate %}
+                {% if post.updated_at and post.last_editor_name %}
+                  {% if post.last_edit_reason %}
+                    Last edited by {{ post.last_editor_name }} at {{ post.updated_at }} for reason: {{ post.last_edit_reason }}
+                  {% else %}
+                    Last edited by {{ post.last_editor_name }} at {{ post.updated_at }}.
+                  {% endif %}
+                {% endif %}
+              </div>
             {% endif %}
           {% else %}
             {% translate "Hidden" context "posts feed post hidden" %}

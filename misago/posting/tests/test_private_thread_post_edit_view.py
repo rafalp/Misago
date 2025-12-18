@@ -283,7 +283,12 @@ def test_private_thread_post_edit_view_updates_thread_post(
 
     post.refresh_from_db()
     assert post.original == "Edited"
+    assert post.updated_at
     assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason is None
 
 
 def test_private_thread_post_edit_view_updates_thread_post_in_htmx(
@@ -321,7 +326,12 @@ def test_private_thread_post_edit_view_updates_thread_post_in_htmx(
 
     post.refresh_from_db()
     assert post.original == "Edited"
+    assert post.updated_at
     assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason is None
 
 
 def test_private_thread_post_edit_view_updates_thread_post_inline_in_htmx(
@@ -348,7 +358,43 @@ def test_private_thread_post_edit_view_updates_thread_post_inline_in_htmx(
 
     post.refresh_from_db()
     assert post.original == "Edited"
+    assert post.updated_at
     assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason is None
+
+
+def test_private_thread_post_edit_view_sets_edit_reason(
+    thread_reply_factory, user_client, user, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster=user)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-post-edit",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+        {
+            "posting-post-post": "Edited post",
+            "posting-edit-reason-edit_reason": "Lorem ipsum dolor met",
+        },
+    )
+    assert response.status_code == 302
+
+    post.refresh_from_db()
+    assert post.original == "Edited post"
+    assert post.updated_at
+    assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason == "Lorem ipsum dolor met"
 
 
 def test_private_thread_post_edit_view_previews_message(

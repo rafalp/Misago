@@ -206,7 +206,7 @@ def test_thread_edit_view_displays_inline_edit_form_in_htmx(user_client, user_th
     assert_contains(response, "?inline=true")
 
 
-def test_thread_edit_view_updates_thread_title_and_post(user_client, user_thread):
+def test_thread_edit_view_updates_thread_title_and_post(user_client, user, user_thread):
     response = user_client.post(
         reverse(
             "misago:thread-edit",
@@ -231,11 +231,16 @@ def test_thread_edit_view_updates_thread_title_and_post(user_client, user_thread
 
     post = user_thread.first_post
     assert post.original == "Edited post"
+    assert post.updated_at
     assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason is None
 
 
 def test_thread_edit_view_updates_thread_title_and_post_in_htmx(
-    user_client, user_thread
+    user_client, user, user_thread
 ):
     response = user_client.post(
         reverse(
@@ -262,11 +267,16 @@ def test_thread_edit_view_updates_thread_title_and_post_in_htmx(
 
     post = user_thread.first_post
     assert post.original == "Edited post"
+    assert post.updated_at
     assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason is None
 
 
 def test_thread_edit_view_updates_thread_title_and_post_inline_in_htmx(
-    user_client, user_thread
+    user_client, user, user_thread
 ):
     response = user_client.post(
         reverse(
@@ -294,7 +304,40 @@ def test_thread_edit_view_updates_thread_title_and_post_inline_in_htmx(
 
     post = user_thread.first_post
     assert post.original == "Edited post"
+    assert post.updated_at
     assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason is None
+
+
+def test_thread_edit_view_sets_edit_reason(user_client, user, user_thread):
+    response = user_client.post(
+        reverse(
+            "misago:thread-edit",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+            "posting-edit-reason-edit_reason": "Lorem ipsum dolor met",
+        },
+    )
+    assert response.status_code == 302
+
+    post = user_thread.first_post
+    post.refresh_from_db()
+    assert post.original == "Edited post"
+    assert post.updated_at
+    assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason == "Lorem ipsum dolor met"
 
 
 def test_thread_edit_view_creates_changed_title_update_object(

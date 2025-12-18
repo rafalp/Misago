@@ -152,7 +152,7 @@ def test_private_thread_edit_view_displays_inline_edit_form_in_htmx(
 
 
 def test_private_thread_edit_view_updates_thread_title_and_post(
-    user_client, user_private_thread
+    user_client, user, user_private_thread
 ):
     response = user_client.post(
         reverse(
@@ -181,11 +181,16 @@ def test_private_thread_edit_view_updates_thread_title_and_post(
 
     post = user_private_thread.first_post
     assert post.original == "Edited post"
+    assert post.updated_at
     assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason is None
 
 
 def test_private_thread_edit_view_updates_thread_title_and_post_in_htmx(
-    user_client, user_private_thread
+    user_client, user, user_private_thread
 ):
     response = user_client.post(
         reverse(
@@ -215,11 +220,16 @@ def test_private_thread_edit_view_updates_thread_title_and_post_in_htmx(
 
     post = user_private_thread.first_post
     assert post.original == "Edited post"
+    assert post.updated_at
     assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason is None
 
 
 def test_private_thread_edit_view_updates_thread_title_and_post_inline_in_htmx(
-    user_client, user_private_thread
+    user_client, user, user_private_thread
 ):
     response = user_client.post(
         reverse(
@@ -250,7 +260,42 @@ def test_private_thread_edit_view_updates_thread_title_and_post_inline_in_htmx(
 
     post = user_private_thread.first_post
     assert post.original == "Edited post"
+    assert post.updated_at
     assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason is None
+
+
+def test_private_thread_edit_view_sets_edit_reason(
+    user_client, user, user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+            "posting-edit-reason-edit_reason": "Lorem ipsum dolor met",
+        },
+    )
+    assert response.status_code == 302
+
+    post = user_private_thread.first_post
+    post.refresh_from_db()
+    assert post.original == "Edited post"
+    assert post.updated_at
+    assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason == "Lorem ipsum dolor met"
 
 
 def test_private_thread_edit_view_creates_changed_title_update_object(
