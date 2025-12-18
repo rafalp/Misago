@@ -26,8 +26,7 @@ class PostEdit(PluginDataModel):
     original_added = models.PositiveIntegerField(default=0)
     original_removed = models.PositiveIntegerField(default=0)
 
-    attachments_before = models.JSONField(default=list)
-    attachments_after = models.JSONField(default=list)
+    attachments = models.JSONField(default=list)
     attachments_added = models.PositiveIntegerField(default=0)
     attachments_removed = models.PositiveIntegerField(default=0)
 
