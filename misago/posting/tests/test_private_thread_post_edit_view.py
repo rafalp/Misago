@@ -406,6 +406,9 @@ def test_private_thread_post_edit_view_sets_edit_reason(
     assert post.last_editor_slug == user.slug
     assert post.last_edit_reason == "Lorem ipsum dolor met"
 
+    post_edit = PostEdit.objects.get(post=post)
+    assert post_edit.edit_reason == "Lorem ipsum dolor met"
+
 
 def test_private_thread_post_edit_view_previews_message(
     thread_reply_factory, user_client, user, other_user_private_thread

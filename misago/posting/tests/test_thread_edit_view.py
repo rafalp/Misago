@@ -349,6 +349,9 @@ def test_thread_edit_view_sets_edit_reason(user_client, user, user_thread):
     assert post.last_editor_slug == user.slug
     assert post.last_edit_reason == "Lorem ipsum dolor met"
 
+    post_edit = PostEdit.objects.get(post=post)
+    assert post_edit.edit_reason == "Lorem ipsum dolor met"
+
 
 def test_thread_edit_view_creates_changed_title_update_object(
     user_client, user, user_thread
