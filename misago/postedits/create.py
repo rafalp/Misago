@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Union
 
 from django.http import HttpRequest
+from django.utils import timezone
 
 from ..attachments.models import Attachment
 from ..threads.models import Post
@@ -18,7 +19,7 @@ def create_post_edit(
     *,
     post: Post,
     user: Union["User", str],
-    edit_reason: str | None,
+    edit_reason: str | None = None,
     old_content: str,
     attachments: list[Attachment] | None = None,
     deleted_attachments: list[Attachment] | None = None,
@@ -30,7 +31,7 @@ def create_post_edit(
         _create_post_edit_action,
         post=post,
         user=user,
-        edit_reason=edit_reason,
+        edit_reason=edit_reason or None,
         old_content=old_content,
         attachments=attachments or [],
         deleted_attachments=deleted_attachments or [],
@@ -48,9 +49,9 @@ def _create_post_edit_action(
     old_content: str,
     attachments: list[Attachment],
     deleted_attachments: list[Attachment],
-    edited_at: datetime | None = None,
+    edited_at: datetime | None,
     commit: bool = True,
-    request: HttpRequest | None = None,
+    request: HttpRequest | None,
 ) -> PostEdit:
     if isinstance(user, str):
         user_obj = None
@@ -66,6 +67,9 @@ def _create_post_edit_action(
         _serialize_attachments(attachments, deleted_attachments)
     )
 
+    if not edited_at:
+        edited_at = timezone.now()
+
     post_edit = PostEdit(
         category=post.category,
         thread=post.thread,
@@ -74,7 +78,7 @@ def _create_post_edit_action(
         user_name=user_name,
         user_slug=user_slug,
         edit_reason=edit_reason,
-        old_content=old_content,
+        original_old=old_content,
         original_new=post.original,
         original_added=original_diff.added,
         original_removed=original_diff.removed,
@@ -120,7 +124,10 @@ def _serialize_attachments(
                 "uploaded_at": attachment.uploaded_at.isoformat(),
                 "name": attachment.name,
                 "filetype_id": attachment.filetype_id,
-                "dimensions": attachment.dimensions,
+                "dimensions": _serialize_attachment_dimensions(attachment.dimensions),
+                "thumbnail": _serialize_attachment_dimensions(
+                    attachment.thumbnail_dimensions
+                ),
                 "size": attachment.size,
                 "change": change,
             }
@@ -135,3 +142,9 @@ def _serialize_attachments(
         len(new_attachments_ids),
         len(deleted_attachments_ids),
     )
+
+
+def _serialize_attachment_dimensions(dimensions: str | None) -> list[int, int] | None:
+    if not dimensions:
+        return None
+    return [int(size) for size in dimensions.split("x")]
