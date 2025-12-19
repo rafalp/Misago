@@ -195,7 +195,7 @@
               {% include "misago/post_feed/post_attachments.html" %}
             {% endif %}
             {% if post.edits %}
-              <div class="posts-feed-item-post-body-edits-message">
+              <div class="posts-feed-item-edits">
                 <span class="material-icon">edit</span>
                 {% blocktranslate trimmed count edits=post.edits context "posts feed post edits" %}
                   Edited {{ edits }} time.
@@ -288,13 +288,13 @@
         {% if likes.messages %}
           <div
             id="posts-feed-item-post-likes-{{ post.id }}"
-            class="posts-feed-item-post-body-likes{% if likes.is_liked %} posts-feed-item-post-body-likes-liked{% endif %}"
+            class="posts-feed-item-likes{% if likes.is_liked %} posts-feed-item-likes-liked{% endif %}"
           >
             {% if likes.likes_url %}
               {% for type, message in likes.messages.items %}
                 <a
                   href="{{ likes.likes_url }}"
-                  class="posts-feed-item-post-body-likes-message-{{ type }}"
+                  class="posts-feed-item-likes-message-{{ type }}"
                   hx-ext="mg-loader,mg-modal"
                   hx-get="{{ likes.likes_url }}?modal=true"
                   hx-target="#misago-htmx-post-likes-modal"
@@ -308,12 +308,12 @@
               {% endfor %}
             {% else %}
               {% for type, message in likes.messages.items %}
-                <span class="posts-feed-item-post-body-likes-message-{{ type }}">{{ message }}</span>
+                <span class="posts-feed-item-likes-message-{{ type }}">{{ message }}</span>
               {% endfor %}
             {% endif %}
           </div>
         {% else %}
-          <div id="posts-feed-item-post-likes-{{ post.id }}" class="posts-feed-item-post-body-likes d-none"></div>
+          <div id="posts-feed-item-post-likes-{{ post.id }}" class="posts-feed-item-likes d-none"></div>
         {% endif %}
 
       </div>
