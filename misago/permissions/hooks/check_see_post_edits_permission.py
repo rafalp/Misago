@@ -8,14 +8,14 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CanSeePostsLikesCountHookAction(Protocol):
+class CheckSeePostEditsPermissionHookAction(Protocol):
     """
-    Misago function used to check if a user has permission to see a post’s
-    likes count. Returns `True` if they can and `False` if they don't.
+    Misago function used to check if a user has permission to see post edits.
+    Raises Django’s `PermissionDenied` if they can't.
 
     # Arguments
 
-    ## `users: UserPermissionsProxy`
+    ## `user_permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -30,11 +30,6 @@ class CanSeePostsLikesCountHookAction(Protocol):
     ## `post: Post`
 
     A post to check permissions for.
-
-    # Return value
-
-    A `bool` with `True` if user can see post's likes count, and `False` if
-    they can't.
     """
 
     def __call__(
@@ -43,23 +38,23 @@ class CanSeePostsLikesCountHookAction(Protocol):
         category: Category,
         thread: Thread,
         post: Post,
-    ) -> bool: ...
+    ) -> None: ...
 
 
-class CanSeePostsLikesCountHookFilter(Protocol):
+class CheckSeePostEditsPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CanSeePostsLikesCountHookAction`
+    ## `action: CheckSeePostEditsPermissionHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
 
     See the [action](#action) section for details.
 
-    ## `users: UserPermissionsProxy`
+    ## `user_permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -74,59 +69,59 @@ class CanSeePostsLikesCountHookFilter(Protocol):
     ## `post: Post`
 
     A post to check permissions for.
-
-    # Return value
-
-    A `bool` with `True` if user can see post's likes count, and `False` if
-    they can't.
     """
 
     def __call__(
         self,
-        action: CanSeePostsLikesCountHookAction,
+        action: CheckSeePostEditsPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
         post: Post,
-    ) -> bool: ...
+    ) -> None: ...
 
 
-class CanSeePostsLikesCountHook(
+class CheckSeePostEditsPermissionHook(
     FilterHook[
-        CanSeePostsLikesCountHookAction,
-        CanSeePostsLikesCountHookFilter,
+        CheckSeePostEditsPermissionHookAction,
+        CheckSeePostEditsPermissionHookFilter,
     ]
 ):
     """
-    This hook wraps a standard Misago function used to check if a user has
-    permission to see a post’s likes count. Returns `True` if they can
-    and `False` if they don't.
+    This hook wraps a standard Misago function used to check if a user has permission
+    to see post edits. Raises Django’s `PermissionDenied` if they can't.
 
     # Example
 
     The code below implements a custom filter function that blocks a user from
-    seeing a specific post's likes count if it has a flag.
+    seeing a specific post's edits if it has a flag.
 
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
     from misago.categories.models import Category
-    from misago.permissions.hooks import can_see_post_likes_count_hook
+    from misago.permissions.hooks import check_see_post_edits_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.threads.models import Post, Thread
 
-    @can_see_post_likes_count_hook.append_filter
-    def check_user_can_see_post_likes(
+    @check_see_post_edits_permission_hook.append_filter
+    def check_user_can_see_post_edits(
         action,
         permissions: UserPermissionsProxy,
         category: Category,
         thread: Thread,
         post: Post,
-    ) -> bool:
-        if post.plugin_data.get("hide_likes"):
-            return False
+    ) -> None:
+        # Run standard permission checks
+        action(permissions, category, thread, post)
 
-        return action(permissions, category, thread, post)
+        if post.plugin_data.get("hide_edits"):
+            raise PermissionDenied(
+                pgettext(
+                    "post permission error",
+                    "You can't see this post's edits."
+                )
+            )
     ```
     """
 
@@ -134,13 +129,13 @@ class CanSeePostsLikesCountHook(
 
     def __call__(
         self,
-        action: CanSeePostsLikesCountHookAction,
+        action: CheckSeePostEditsPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
         post: Post,
-    ) -> bool:
+    ) -> None:
         return super().__call__(action, permissions, category, thread, post)
 
 
-can_see_post_likes_count_hook = CanSeePostsLikesCountHook()
+check_see_post_edits_permission_hook = CheckSeePostEditsPermissionHook()

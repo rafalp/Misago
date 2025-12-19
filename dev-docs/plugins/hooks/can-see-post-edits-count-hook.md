@@ -1,6 +1,6 @@
-# `can_see_post_likes_count_hook`
+# `can_see_post_edits_count_hook`
 
-This hook wraps a standard Misago function used to check if a user has permission to see a post’s likes count. Returns `True` if they can and `False` if they don't.
+This hook wraps a standard Misago function used to check if a user has permission to see a post’s edits count. Returns `True` if they can and `False` if they don't.
 
 
 ## Location
@@ -8,15 +8,15 @@ This hook wraps a standard Misago function used to check if a user has permissio
 This hook can be imported from `misago.permissions.hooks`:
 
 ```python
-from misago.permissions.hooks import can_see_post_likes_count_hook
+from misago.permissions.hooks import can_see_post_edits_count_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_can_see_post_likes_count_filter(
-    action: CanSeePostsLikesCountHookAction,
+def custom_can_see_post_edits_count_filter(
+    action: CanSeePostsEditsCountHookAction,
     permissions: 'UserPermissionsProxy',
     category: Category,
     thread: Thread,
@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: CanSeePostsLikesCountHookAction`
+#### `action: CanSeePostsEditsCountHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
@@ -59,13 +59,13 @@ A post to check permissions for.
 
 ### Return value
 
-A `bool` with `True` if user can see post's likes count, and `False` if they can't.
+A `bool` with `True` if user can see post's edits count, and `False` if they can't.
 
 
 ## Action
 
 ```python
-def can_see_post_likes_count_action(
+def can_see_post_edits_count_action(
     permissions: 'UserPermissionsProxy',
     category: Category,
     thread: Thread,
@@ -74,7 +74,7 @@ def can_see_post_likes_count_action(
     ...
 ```
 
-Misago function used to check if a user has permission to see a post’s likes count. Returns `True` if they can and `False` if they don't.
+Misago function used to check if a user has permission to see a post’s edits count. Returns `True` if they can and `False` if they don't.
 
 
 ### Arguments
@@ -101,30 +101,30 @@ A post to check permissions for.
 
 ### Return value
 
-A `bool` with `True` if user can see post's likes count, and `False` if they can't.
+A `bool` with `True` if user can see post's edits count, and `False` if they can't.
 
 
 ## Example
 
-The code below implements a custom filter function that blocks a user from seeing a specific post's likes count if it has a flag.
+The code below implements a custom filter function that blocks a user from seeing a specific post's edits count if it has a flag.
 
 ```python
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext
 from misago.categories.models import Category
-from misago.permissions.hooks import can_see_post_likes_count_hook
+from misago.permissions.hooks import can_see_post_edits_count_hook
 from misago.permissions.proxy import UserPermissionsProxy
 from misago.threads.models import Post, Thread
 
-@can_see_post_likes_count_hook.append_filter
-def check_user_can_see_post_likes(
+@can_see_post_edits_count_hook.append_filter
+def check_user_can_see_post_edits(
     action,
     permissions: UserPermissionsProxy,
     category: Category,
     thread: Thread,
     post: Post,
 ) -> bool:
-    if post.plugin_data.get("hide_likes"):
+    if post.plugin_data.get("hide_edits"):
         return False
 
     return action(permissions, category, thread, post)

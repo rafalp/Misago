@@ -5,10 +5,10 @@ This hook wraps a standard Misago function used to create a `PostEdit` object.
 
 ## Location
 
-This hook can be imported from `misago.postedits.hooks`:
+This hook can be imported from `misago.edits.hooks`:
 
 ```python
-from misago.postedits.hooks import create_post_edit_hook
+from misago.edits.hooks import create_post_edit_hook
 ```
 
 
@@ -181,8 +181,8 @@ The code below implements a custom filter function that records the user’s IP 
 ```python
 from django.http import HttpRequest
 from misago.attachments.models import Attachment
-from misago.postedits.hooks import create_post_edit_hook
-from misago.postedits.models import PostEdit
+from misago.edits.hooks import create_post_edit_hook
+from misago.edits.models import PostEdit
 from misago.threads.models import Post
 from misago.users.models import User
 

@@ -6,12 +6,12 @@ Hooks instances are importable from the following Python modules:
 
 - [`misago.attachments.hooks`](#misago-attachments-hooks)
 - [`misago.categories.hooks`](#misago-categories-hooks)
+- [`misago.edits.hooks`](#misago-edits-hooks)
 - [`misago.likes.hooks`](#misago-likes-hooks)
 - [`misago.oauth2.hooks`](#misago-oauth2-hooks)
 - [`misago.parser.hooks`](#misago-parser-hooks)
 - [`misago.permissions.hooks`](#misago-permissions-hooks)
 - [`misago.polls.hooks`](#misago-polls-hooks)
-- [`misago.postedits.hooks`](#misago-postedits-hooks)
 - [`misago.posting.hooks`](#misago-posting-hooks)
 - [`misago.privatethreads.hooks`](#misago-privatethreads-hooks)
 - [`misago.threads.hooks`](#misago-threads-hooks)
@@ -42,6 +42,13 @@ Hooks instances are importable from the following Python modules:
 - [`get_categories_page_metatags_hook`](./get-categories-page-metatags-hook.md)
 - [`get_categories_query_values_hook`](./get-categories-query-values-hook.md)
 - [`get_category_data_hook`](./get-category-data-hook.md)
+
+
+## `misago.edits.hooks`
+
+`misago.edits.hooks` defines the following hooks:
+
+- [`create_post_edit_hook`](./create-post-edit-hook.md)
 
 
 ## `misago.likes.hooks`
@@ -81,6 +88,7 @@ Hooks instances are importable from the following Python modules:
 
 - [`build_user_category_permissions_hook`](./build-user-category-permissions-hook.md)
 - [`build_user_permissions_hook`](./build-user-permissions-hook.md)
+- [`can_see_post_edits_count_hook`](./can-see-post-edits-count-hook.md)
 - [`can_see_post_likes_count_hook`](./can-see-post-likes-count-hook.md)
 - [`can_upload_private_threads_attachments_hook`](./can-upload-private-threads-attachments-hook.md)
 - [`can_upload_threads_attachments_hook`](./can-upload-threads-attachments-hook.md)
@@ -108,6 +116,7 @@ Hooks instances are importable from the following Python modules:
 - [`check_reply_private_thread_permission_hook`](./check-reply-private-thread-permission-hook.md)
 - [`check_reply_thread_permission_hook`](./check-reply-thread-permission-hook.md)
 - [`check_see_category_permission_hook`](./check-see-category-permission-hook.md)
+- [`check_see_post_edits_permission_hook`](./check-see-post-edits-permission-hook.md)
 - [`check_see_post_likes_permission_hook`](./check-see-post-likes-permission-hook.md)
 - [`check_see_private_thread_permission_hook`](./check-see-private-thread-permission-hook.md)
 - [`check_see_private_thread_post_permission_hook`](./check-see-private-thread-post-permission-hook.md)
@@ -151,13 +160,6 @@ Hooks instances are importable from the following Python modules:
 - [`save_thread_poll_hook`](./save-thread-poll-hook.md)
 - [`validate_poll_choices_hook`](./validate-poll-choices-hook.md)
 - [`validate_poll_question_hook`](./validate-poll-question-hook.md)
-
-
-## `misago.postedits.hooks`
-
-`misago.postedits.hooks` defines the following hooks:
-
-- [`create_post_edit_hook`](./create-post-edit-hook.md)
 
 
 ## `misago.posting.hooks`

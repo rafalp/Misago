@@ -10,12 +10,12 @@ from textwrap import dedent, indent
 HOOKS_MODULES = (
     "misago.attachments.hooks",
     "misago.categories.hooks",
+    "misago.edits.hooks",
     "misago.likes.hooks",
     "misago.oauth2.hooks",
     "misago.parser.hooks",
     "misago.permissions.hooks",
     "misago.polls.hooks",
-    "misago.postedits.hooks",
     "misago.posting.hooks",
     "misago.privatethreads.hooks",
     "misago.threads.hooks",
