@@ -5,9 +5,9 @@ from django.urls import reverse
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
+from ...edits.models import PostEdit
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
-from ...postedits.models import PostEdit
 from ...readtracker.models import ReadCategory
 from ...readtracker.tracker import mark_thread_read
 from ...test import assert_contains, assert_contains_element, assert_not_contains

@@ -1,8 +1,8 @@
 from django.db import models, transaction
 from django.http import HttpRequest
 
+from ...edits.create import create_post_edit
 from ...parser.parse import ParsingResult, parse
-from ...postedits.create import create_post_edit
 from ...threads.models import Post, Thread
 from ..hooks import (
     get_private_thread_reply_state_hook,

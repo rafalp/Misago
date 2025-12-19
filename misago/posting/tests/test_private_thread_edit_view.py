@@ -7,8 +7,8 @@ from django.urls import reverse
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
+from ...edits.models import PostEdit
 from ...permissions.enums import CanUploadAttachments
-from ...postedits.models import PostEdit
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
 from ...test import (

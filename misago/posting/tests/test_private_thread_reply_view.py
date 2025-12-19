@@ -5,8 +5,8 @@ from django.urls import reverse
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
+from ...edits.models import PostEdit
 from ...permissions.enums import CanUploadAttachments
-from ...postedits.models import PostEdit
 from ...privatethreads.models import PrivateThreadMember
 from ...readtracker.models import ReadCategory
 from ...readtracker.tracker import mark_thread_read

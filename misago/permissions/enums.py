@@ -25,7 +25,6 @@ class CanSeePostEdits(IntEnum):
         )
 
 
-
 class CanSeePostLikes(IntEnum):
     USERS = 2
     COUNT = 1
