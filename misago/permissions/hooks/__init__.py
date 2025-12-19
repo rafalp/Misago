@@ -1,6 +1,6 @@
 from .build_user_category_permissions import build_user_category_permissions_hook
 from .build_user_permissions import build_user_permissions_hook
-from .can_see_post_edits_count import can_see_post_edits_count_hook
+from .can_see_post_edit_count import can_see_post_edit_count_hook
 from .can_see_post_likes_count import can_see_post_likes_count_hook
 from .can_upload_private_threads_attachments import (
     can_upload_private_threads_attachments_hook,
@@ -52,7 +52,9 @@ from .check_reply_private_thread_permission import (
 )
 from .check_reply_thread_permission import check_reply_thread_permission_hook
 from .check_see_category_permission import check_see_category_permission_hook
-from .check_see_post_edits_permission import check_see_post_edits_permission_hook
+from .check_see_post_edit_history_permission import (
+    check_see_post_edit_history_permission_hook,
+)
 from .check_see_post_likes_permission import check_see_post_likes_permission_hook
 from .check_see_private_thread_permission import (
     check_see_private_thread_permission_hook,
@@ -102,7 +104,7 @@ from .get_user_permissions import get_user_permissions_hook
 __all__ = [
     "build_user_category_permissions_hook",
     "build_user_permissions_hook",
-    "can_see_post_edits_count_hook",
+    "can_see_post_edit_count_hook",
     "can_see_post_likes_count_hook",
     "can_upload_private_threads_attachments_hook",
     "can_upload_threads_attachments_hook",
@@ -130,7 +132,7 @@ __all__ = [
     "check_reply_private_thread_permission_hook",
     "check_reply_thread_permission_hook",
     "check_see_category_permission_hook",
-    "check_see_post_edits_permission_hook",
+    "check_see_post_edit_history_permission_hook",
     "check_see_post_likes_permission_hook",
     "check_see_private_thread_permission_hook",
     "check_see_private_thread_post_permission_hook",

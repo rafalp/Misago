@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 class CheckStartPollPermissionHookAction(Protocol):
     """
     Misago function used to check if the user has permission to start
-    polls. Raises Django's `PermissionDenied` with an error message if they can't.
+    polls. Raises Django's `PermissionDenied` with an error message if they don't.
 
     # Arguments
 

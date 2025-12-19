@@ -8,10 +8,10 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckSeePostEditsPermissionHookAction(Protocol):
+class CheckSeePostEditHistoryPermissionHookAction(Protocol):
     """
-    Misago function used to check if a user has permission to see post edits.
-    Raises Django’s `PermissionDenied` if they can't.
+    Misago function used to check if a user has permission to see post edit history.
+    Raises Django’s `PermissionDenied` if they don't.
 
     # Arguments
 
@@ -41,13 +41,13 @@ class CheckSeePostEditsPermissionHookAction(Protocol):
     ) -> None: ...
 
 
-class CheckSeePostEditsPermissionHookFilter(Protocol):
+class CheckSeePostEditHistoryPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckSeePostEditsPermissionHookAction`
+    ## `action: CheckSeePostEditHistoryPermissionHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -73,7 +73,7 @@ class CheckSeePostEditsPermissionHookFilter(Protocol):
 
     def __call__(
         self,
-        action: CheckSeePostEditsPermissionHookAction,
+        action: CheckSeePostEditHistoryPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
@@ -81,30 +81,31 @@ class CheckSeePostEditsPermissionHookFilter(Protocol):
     ) -> None: ...
 
 
-class CheckSeePostEditsPermissionHook(
+class CheckSeePostEditHistoryPermissionHook(
     FilterHook[
-        CheckSeePostEditsPermissionHookAction,
-        CheckSeePostEditsPermissionHookFilter,
+        CheckSeePostEditHistoryPermissionHookAction,
+        CheckSeePostEditHistoryPermissionHookFilter,
     ]
 ):
     """
-    This hook wraps a standard Misago function used to check if a user has permission
-    to see post edits. Raises Django’s `PermissionDenied` if they can't.
+    This hook wraps the standard Misago function used to check whether a user has
+    permission to see a post’s edit history.
+    Raises Django’s `PermissionDenied` if they don’t.
 
     # Example
 
     The code below implements a custom filter function that blocks a user from
-    seeing a specific post's edits if it has a flag.
+    seeing a specific post’s edit history if it has a flag.
 
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
     from misago.categories.models import Category
-    from misago.permissions.hooks import check_see_post_edits_permission_hook
+    from misago.permissions.hooks import check_see_post_edit_history_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.threads.models import Post, Thread
 
-    @check_see_post_edits_permission_hook.append_filter
+    @check_see_post_edit_history_permission_hook.append_filter
     def check_user_can_see_post_edits(
         action,
         permissions: UserPermissionsProxy,
@@ -129,7 +130,7 @@ class CheckSeePostEditsPermissionHook(
 
     def __call__(
         self,
-        action: CheckSeePostEditsPermissionHookAction,
+        action: CheckSeePostEditHistoryPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
@@ -138,4 +139,4 @@ class CheckSeePostEditsPermissionHook(
         return super().__call__(action, permissions, category, thread, post)
 
 
-check_see_post_edits_permission_hook = CheckSeePostEditsPermissionHook()
+check_see_post_edit_history_permission_hook = CheckSeePostEditHistoryPermissionHook()

@@ -5,24 +5,24 @@ from ..categories.models import Category
 from ..threads.models import Post, Thread
 from .enums import CanSeePostEdits
 from .hooks import (
-    can_see_post_edits_count_hook,
-    check_see_post_edits_history_hook,
+    can_see_post_edit_count_hook,
+    check_see_post_edit_history_permission_hook,
 )
 from .proxy import UserPermissionsProxy
 
 
-def can_see_post_edits_count(
+def can_see_post_edit_count(
     permissions: UserPermissionsProxy,
     category: Category,
     thread: Thread,
     post: Post,
 ) -> bool:
-    return can_see_post_edits_count_hook(
-        _can_see_post_edits_count_action, permissions, category, thread, post
+    return can_see_post_edit_count_hook(
+        _can_see_post_edit_count_action, permissions, category, thread, post
     )
 
 
-def _can_see_post_edits_count_action(
+def _can_see_post_edit_count_action(
     permissions: UserPermissionsProxy,
     category: Category,
     thread: Thread,
@@ -32,18 +32,22 @@ def _can_see_post_edits_count_action(
     return is_user_post or permissions.can_see_others_post_edits
 
 
-def check_see_post_edits_history(
+def check_see_post_edit_history_permission(
     permissions: UserPermissionsProxy,
     category: Category,
     thread: Thread,
     post: Post,
 ):
-    check_see_post_edits_history_hook(
-        _check_see_post_edits_history_action, permissions, category, thread, post
+    check_see_post_edit_history_permission_hook(
+        _check_see_post_edit_history_permission_action,
+        permissions,
+        category,
+        thread,
+        post,
     )
 
 
-def _check_see_post_edits_history_action(
+def _check_see_post_edit_history_permission_action(
     permissions: UserPermissionsProxy,
     category: Category,
     thread: Thread,

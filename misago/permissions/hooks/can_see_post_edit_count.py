@@ -8,10 +8,10 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CanSeePostsEditsCountHookAction(Protocol):
+class CanSeePostsEditCountHookAction(Protocol):
     """
     Misago function used to check if a user has permission to see a post’s
-    edits count. Returns `True` if they can and `False` if they don't.
+    edit count. Returns `True` if they can and `False` if they don't.
 
     # Arguments
 
@@ -33,7 +33,7 @@ class CanSeePostsEditsCountHookAction(Protocol):
 
     # Return value
 
-    A `bool` with `True` if user can see post's edits count, and `False` if
+    A `bool` with `True` if user can see post's edit count, and `False` if
     they can't.
     """
 
@@ -46,13 +46,13 @@ class CanSeePostsEditsCountHookAction(Protocol):
     ) -> bool: ...
 
 
-class CanSeePostsEditsCountHookFilter(Protocol):
+class CanSeePostsEditCountHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CanSeePostsEditsCountHookAction`
+    ## `action: CanSeePostsEditCountHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -77,13 +77,13 @@ class CanSeePostsEditsCountHookFilter(Protocol):
 
     # Return value
 
-    A `bool` with `True` if user can see post's edits count, and `False` if
+    A `bool` with `True` if user can see post's edit count, and `False` if
     they can't.
     """
 
     def __call__(
         self,
-        action: CanSeePostsEditsCountHookAction,
+        action: CanSeePostsEditCountHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
@@ -91,31 +91,31 @@ class CanSeePostsEditsCountHookFilter(Protocol):
     ) -> bool: ...
 
 
-class CanSeePostsEditsCountHook(
+class CanSeePostsEditCountHook(
     FilterHook[
-        CanSeePostsEditsCountHookAction,
-        CanSeePostsEditsCountHookFilter,
+        CanSeePostsEditCountHookAction,
+        CanSeePostsEditCountHookFilter,
     ]
 ):
     """
     This hook wraps a standard Misago function used to check if a user has
-    permission to see a post’s edits count. Returns `True` if they can
+    permission to see a post’s edit count. Returns `True` if they can
     and `False` if they don't.
 
     # Example
 
     The code below implements a custom filter function that blocks a user from
-    seeing a specific post's edits count if it has a flag.
+    seeing a specific post's edit count if it has a flag.
 
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
     from misago.categories.models import Category
-    from misago.permissions.hooks import can_see_post_edits_count_hook
+    from misago.permissions.hooks import can_see_post_edit_count_hook
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.threads.models import Post, Thread
 
-    @can_see_post_edits_count_hook.append_filter
+    @can_see_post_edit_count_hook.append_filter
     def check_user_can_see_post_edits(
         action,
         permissions: UserPermissionsProxy,
@@ -134,7 +134,7 @@ class CanSeePostsEditsCountHook(
 
     def __call__(
         self,
-        action: CanSeePostsEditsCountHookAction,
+        action: CanSeePostsEditCountHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
@@ -143,4 +143,4 @@ class CanSeePostsEditsCountHook(
         return super().__call__(action, permissions, category, thread, post)
 
 
-can_see_post_edits_count_hook = CanSeePostsEditsCountHook()
+can_see_post_edit_count_hook = CanSeePostsEditCountHook()

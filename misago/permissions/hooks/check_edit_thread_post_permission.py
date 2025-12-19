@@ -12,7 +12,7 @@ class CheckEditThreadPostPermissionHookAction(Protocol):
     """
     Misago function used to check if the user has permission to
     edit a post in a thread. It raises Django's `PermissionDenied` with an
-    error message if they can't.
+    error message if they don't.
 
     # Arguments
 
@@ -91,7 +91,7 @@ class CheckEditThreadPostPermissionHook(
     """
     This hook wraps the standard function that Misago uses to check if the user
     has permission to edit a post in a thread. It raises Django's
-    `PermissionDenied` with an error message if they can't.
+    `PermissionDenied` with an error message if they don't.
 
     # Example
 
