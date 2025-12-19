@@ -194,19 +194,47 @@
             {% if attachments %}
               {% include "misago/post_feed/post_attachments.html" %}
             {% endif %}
-            {% if post.edits %}
+            {% if edits %}
               <div class="posts-feed-item-edits">
+                {% if edits_url %}
+                  <a
+                    href="{{ edits_url }}"
+                    hx-ext="mg-modal"
+                    hx-get="{{ edits_url }}?modal=true"
+                    hx-target="#misago-htmx-post-edits-modal"
+                    mg-loader="#modal-loader"
+                    mg-error="#modal-error"
+                    mg-modal="#post-edits-modal"
+                    mg-modal-title="{% blocktranslate trimmed with number=counter context 'post feed post edits modal title' %}Post #{{ number }} edit history{% endblocktranslate %}"
+                  >
+                {% endif %}
                 {% blocktranslate trimmed count edits=post.edits context "posts feed post edits" %}
                   Edited {{ edits }} time.
                 {% plural %}
                   Edited {{ edits }} times.
                 {% endblocktranslate %}
-                {% if post.updated_at and post.last_editor_name %}
-                  {% if post.last_edit_reason %}
-                    Last edited by {{ post.last_editor_name }} at {{ post.updated_at }} for reason: {{ post.last_edit_reason }}
+                {% if last_edited_at and last_editor_name %}
+                  {% capture trimmed as last_edited_at_html %}
+                    <span class="posts-feed-item-last-edit-timestamp"
+                      title="{{ last_edited_at|date:'DATETIME_FORMAT' }}"
+                      mg-timestamp="{{ last_edited_at.isoformat }}"
+                      mg-timestamp-format="sentence"
+                    >
+                      {{ last_edited_at|date_relative_in_sentence }}
+                    </span>
+                  {% endcapture %}
+                  {% if last_edit_reason %}
+                    {% blocktranslate trimmed with editor_name=last_editor_name edited_at=last_edited_at_html|safe reason=last_edit_reason context="post feed post edits" %}
+                      Last by {{ editor_name }}, {{ edited_at }}. Reason: {{ reason }}
+                    {% endblocktranslate %}
                   {% else %}
-                    Last edited by {{ post.last_editor_name }} at {{ post.updated_at }}.
+                    {% blocktranslate trimmed with editor_name=last_editor_name edited_at=last_edited_at_html|safe context="post feed post edits" %}
+                      Last by {{ editor_name }}, {{ edited_at }}.
+                    {% endblocktranslate %}
                   {% endif %}
+                {% endif %}
+                {% if edits_url %}
+                  </a>
                 {% endif %}
               </div>
             {% endif %}
@@ -294,7 +322,7 @@
                 <a
                   href="{{ likes.likes_url }}"
                   class="posts-feed-item-likes-message-{{ type }}"
-                  hx-ext="mg-loader,mg-modal"
+                  hx-ext="mg-modal"
                   hx-get="{{ likes.likes_url }}?modal=true"
                   hx-target="#misago-htmx-post-likes-modal"
                   mg-loader="#modal-loader"

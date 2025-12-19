@@ -78,6 +78,80 @@ def date_relative(value: datetime) -> str:
     return date_format(value, pgettext("other year date", "F j, Y"))
 
 
+def date_relative_in_sentence(value: datetime) -> str:
+    now = timezone.now()
+    delta = abs((now - value).total_seconds())
+    past = value < now
+
+    if delta < 60:
+        return pgettext("time ago in sentence", "a moment ago")
+
+    if delta < 60 * 47:
+        minutes = round(delta / 60)
+        if past:
+            return npgettext(
+                "minutes ago in sentence",
+                "%(time)s minute ago",
+                "%(time)s minutes ago",
+                minutes,
+            ) % {"time": minutes}
+
+        return npgettext(
+            "minutes in future in sentence",
+            "in %(time)s minute",
+            "in %(time)s minutes",
+            minutes,
+        ) % {"time": minutes}
+
+    if delta < 3600 * 3:
+        hours = round(delta / 3600)
+        if past:
+            return npgettext(
+                "hours ago in sentence",
+                "%(time)s hour ago",
+                "%(time)s hours ago",
+                hours,
+            ) % {"time": hours}
+
+        return npgettext(
+            "hours in future in sentence",
+            "in %(time)s hour",
+            "in %(time)s hours",
+            hours,
+        ) % {"time": hours}
+
+    if is_same_day(now, value):
+        if past:
+            return pgettext("day at time in sentence", "at %(time)s") % {
+                "time": time_short(value)
+            }
+
+        return pgettext("day at time in sentence", "today at %(time)s") % {
+            "time": time_short(value)
+        }
+
+    if is_yesterday(now, value):
+        return pgettext("day at time in sentence", "yesterday at %(time)s") % {
+            "time": time_short(value)
+        }
+
+    if is_tomorrow(now, value):
+        return pgettext("day at time in sentence", "tomorrow at %(time)s") % {
+            "time": time_short(value)
+        }
+
+    if past and delta < 3600 * 24 * 6:
+        return pgettext("day at time in sentence", "%(day)s at %(time)s") % {
+            "day": date_format(value, "l"),
+            "time": time_short(value),
+        }
+
+    if is_same_year(now, value):
+        return date_format(value, pgettext("same year date", "F j"))
+
+    return date_format(value, pgettext("other year date", "F j, Y"))
+
+
 def is_same_day(now: datetime, datetime_: datetime) -> bool:
     return date_format(now, "dmY") == date_format(datetime_, "dmY")
 

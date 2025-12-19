@@ -61,7 +61,7 @@
       <a
         href="{{ likes.likes_url }}"
         class="posts-feed-item-likes-message-{{ type }}"
-        hx-ext="mg-loader,mg-modal"
+        hx-ext="mg-modal"
         hx-get="{{ likes.likes_url }}?modal=true"
         hx-target="#misago-htmx-post-likes-modal"
         mg-loader="#modal-loader"
