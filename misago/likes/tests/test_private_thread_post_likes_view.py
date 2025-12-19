@@ -358,7 +358,7 @@ def test_private_thread_post_likes_view_returns_error_403_if_user_is_anonymous(
 def test_private_thread_post_likes_view_returns_error_403_if_user_cant_see_posts_likes(
     user_client, members_group, other_user_private_thread
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     post = other_user_private_thread.first_post
@@ -381,7 +381,7 @@ def test_private_thread_post_likes_view_returns_error_403_if_user_cant_see_posts
 def test_private_thread_post_likes_view_returns_error_403_if_user_can_see_posts_likes_count_only(
     user_client, members_group, other_user_private_thread
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     post = other_user_private_thread.first_post

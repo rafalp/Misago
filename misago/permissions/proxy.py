@@ -40,8 +40,8 @@ class UserPermissionsProxy:
     own_polls_close_time_limit: int
     can_vote_in_polls: bool
     can_like_posts: bool
-    can_see_own_posts_likes: int
-    can_see_others_posts_likes: int
+    can_see_own_post_likes: int
+    can_see_others_post_likes: int
     can_change_username: bool
     username_changes_limit: int
     username_changes_expire: int

@@ -327,7 +327,7 @@ def test_thread_post_likes_view_returns_error_404_if_user_has_no_post_permission
 def test_thread_post_likes_view_returns_error_403_if_user_cant_see_posts_likes(
     user_client, members_group, thread, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     response = user_client.get(
@@ -348,7 +348,7 @@ def test_thread_post_likes_view_returns_error_403_if_user_cant_see_posts_likes(
 def test_thread_post_likes_view_returns_error_403_if_user_can_see_posts_likes_count_only(
     user_client, members_group, thread, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     response = user_client.get(

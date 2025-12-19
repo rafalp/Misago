@@ -1949,7 +1949,7 @@ def test_private_thread_detail_view_shows_post_with_user_like_to_user_without_ow
     other_user,
     other_user_private_thread,
 ):
-    members_group.can_see_own_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_own_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     post = thread_reply_factory(other_user_private_thread, poster=user)
@@ -1978,7 +1978,7 @@ def test_private_thread_detail_view_shows_post_with_user_like_to_user_without_ow
     other_user,
     other_user_private_thread,
 ):
-    members_group.can_see_own_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_own_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     post = thread_reply_factory(other_user_private_thread, poster=user)
@@ -2006,7 +2006,7 @@ def test_private_thread_detail_view_shows_post_with_other_user_like_to_user_with
     other_user,
     other_user_private_thread,
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     post = thread_reply_factory(other_user_private_thread)
@@ -2033,7 +2033,7 @@ def test_private_thread_detail_view_shows_post_with_other_user_like_to_user_with
     other_user,
     other_user_private_thread,
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     post = thread_reply_factory(other_user_private_thread)
@@ -2282,7 +2282,7 @@ def test_private_thread_detail_view_doesnt_show_post_likes_link_for_post_with_li
     members_group,
     other_user_private_thread,
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     post = thread_reply_factory(other_user_private_thread)
@@ -2316,7 +2316,7 @@ def test_private_thread_detail_view_doesnt_show_post_likes_link_for_post_with_li
     members_group,
     other_user_private_thread,
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     post = thread_reply_factory(other_user_private_thread)

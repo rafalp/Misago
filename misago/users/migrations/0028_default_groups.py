@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-from ...permissions.enums import CanSeePostLikes, CanUploadAttachments
+from ...permissions.enums import CanSeePostEdits, CanSeePostLikes, CanUploadAttachments
 from ...permissions.permissionsid import get_permissions_id
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
@@ -30,6 +30,7 @@ def create_default_groups(apps, schema_editor):
                 own_threads_edit_time_limit=0,
                 can_edit_own_posts=True,
                 own_posts_edit_time_limit=0,
+                can_see_others_post_edits=CanSeePostEdits.HISTORY,
                 exempt_from_flood_control=True,
                 can_use_private_threads=True,
                 can_start_private_threads=True,
@@ -45,8 +46,8 @@ def create_default_groups(apps, schema_editor):
                 own_polls_edit_time_limit=0,
                 can_vote_in_polls=True,
                 can_like_posts=True,
-                can_see_own_posts_likes=CanSeePostLikes.USERS,
-                can_see_others_posts_likes=CanSeePostLikes.USERS,
+                can_see_own_post_likes=CanSeePostLikes.USERS,
+                can_see_others_post_likes=CanSeePostLikes.USERS,
                 can_change_username=True,
                 can_see_user_profiles=True,
             ),
@@ -65,6 +66,7 @@ def create_default_groups(apps, schema_editor):
                 own_threads_edit_time_limit=0,
                 can_edit_own_posts=True,
                 own_posts_edit_time_limit=0,
+                can_see_others_post_edits=CanSeePostEdits.HISTORY,
                 exempt_from_flood_control=True,
                 can_use_private_threads=True,
                 can_start_private_threads=True,
@@ -80,8 +82,8 @@ def create_default_groups(apps, schema_editor):
                 own_polls_edit_time_limit=0,
                 can_vote_in_polls=True,
                 can_like_posts=True,
-                can_see_own_posts_likes=CanSeePostLikes.USERS,
-                can_see_others_posts_likes=CanSeePostLikes.USERS,
+                can_see_own_post_likes=CanSeePostLikes.USERS,
+                can_see_others_post_likes=CanSeePostLikes.USERS,
                 can_change_username=True,
                 can_see_user_profiles=True,
             ),
@@ -97,6 +99,7 @@ def create_default_groups(apps, schema_editor):
                 own_threads_edit_time_limit=0,
                 can_edit_own_posts=True,
                 own_posts_edit_time_limit=0,
+                can_see_others_post_edits=CanSeePostEdits.HISTORY,
                 can_use_private_threads=True,
                 can_start_private_threads=True,
                 private_thread_members_limit=5,
@@ -111,8 +114,8 @@ def create_default_groups(apps, schema_editor):
                 own_polls_edit_time_limit=0,
                 can_vote_in_polls=True,
                 can_like_posts=True,
-                can_see_own_posts_likes=CanSeePostLikes.USERS,
-                can_see_others_posts_likes=CanSeePostLikes.USERS,
+                can_see_own_post_likes=CanSeePostLikes.USERS,
+                can_see_others_post_likes=CanSeePostLikes.USERS,
                 can_change_username=True,
                 username_changes_limit=5,
                 username_changes_expire=4,
@@ -126,7 +129,8 @@ def create_default_groups(apps, schema_editor):
                 is_hidden=True,
                 ordering=3,
                 # Permissions
-                can_see_others_posts_likes=CanSeePostLikes.USERS,
+                can_see_others_post_edits=CanSeePostEdits.HISTORY,
+                can_see_others_post_likes=CanSeePostLikes.USERS,
                 can_see_user_profiles=True,
             ),
         ]

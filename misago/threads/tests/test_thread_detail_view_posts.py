@@ -2831,7 +2831,7 @@ def test_thread_detail_view_shows_post_with_user_like_to_user_without_own_posts_
     other_user,
     thread,
 ):
-    members_group.can_see_own_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_own_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     post = thread_reply_factory(thread, poster=user)
@@ -2854,7 +2854,7 @@ def test_thread_detail_view_shows_post_with_user_like_to_user_without_own_posts_
     other_user,
     thread,
 ):
-    members_group.can_see_own_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_own_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     post = thread_reply_factory(thread, poster=user)
@@ -2876,7 +2876,7 @@ def test_thread_detail_view_shows_post_with_other_user_like_to_user_without_othe
     other_user,
     thread,
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     post = thread_reply_factory(thread)
@@ -2897,7 +2897,7 @@ def test_thread_detail_view_shows_post_with_other_user_like_to_user_without_othe
     other_user,
     thread,
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     post = thread_reply_factory(thread)
@@ -3119,7 +3119,7 @@ def test_thread_detail_view_doesnt_show_post_likes_link_for_post_with_likes_for_
     members_group,
     thread,
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     post = thread_reply_factory(thread)
@@ -3143,7 +3143,7 @@ def test_thread_detail_view_doesnt_show_post_likes_link_for_post_with_likes_for_
     members_group,
     thread,
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     post = thread_reply_factory(thread)
