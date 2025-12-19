@@ -37,7 +37,7 @@ class GetPostFeedPostLikesDataHookAction(Protocol):
 
     URL of the view used to unlike the post.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## Return value
 
@@ -92,7 +92,7 @@ class GetPostFeedPostLikesDataHookFilter(Protocol):
 
     URL of the view used to unlike the post.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## Return value
 

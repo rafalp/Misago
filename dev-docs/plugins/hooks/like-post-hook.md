@@ -53,7 +53,7 @@ The user who liked the post.
 
 Whether the new `Like` instance and the updated post instance should be saved to the database.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`
@@ -97,7 +97,7 @@ The user who liked the post.
 
 Whether the new `Like` instance and the updated post instance should be saved to the database.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`

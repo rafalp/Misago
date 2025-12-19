@@ -24,7 +24,7 @@ class SynchronizeThreadHookAction(Protocol):
 
     Whether the updated thread instance should be saved to the database.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## `request: HttpRequest | None`
 
@@ -65,7 +65,7 @@ class SynchronizeThreadHookFilter(Protocol):
 
     Whether the updated thread instance should be saved to the database.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## `request: HttpRequest | None`
 

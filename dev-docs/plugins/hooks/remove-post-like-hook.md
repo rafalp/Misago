@@ -53,7 +53,7 @@ The user who's post like will be removed.
 
 Whether the updated post instance should be saved to the database.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`
@@ -97,7 +97,7 @@ The user who's post like will be removed.
 
 Whether the updated post instance should be saved to the database.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`

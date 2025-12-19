@@ -11,6 +11,7 @@ Hooks instances are importable from the following Python modules:
 - [`misago.parser.hooks`](#misago-parser-hooks)
 - [`misago.permissions.hooks`](#misago-permissions-hooks)
 - [`misago.polls.hooks`](#misago-polls-hooks)
+- [`misago.postedits.hooks`](#misago-postedits-hooks)
 - [`misago.posting.hooks`](#misago-posting-hooks)
 - [`misago.privatethreads.hooks`](#misago-privatethreads-hooks)
 - [`misago.threads.hooks`](#misago-threads-hooks)
@@ -150,6 +151,13 @@ Hooks instances are importable from the following Python modules:
 - [`save_thread_poll_hook`](./save-thread-poll-hook.md)
 - [`validate_poll_choices_hook`](./validate-poll-choices-hook.md)
 - [`validate_poll_question_hook`](./validate-poll-question-hook.md)
+
+
+## `misago.postedits.hooks`
+
+`misago.postedits.hooks` defines the following hooks:
+
+- [`create_post_edit_hook`](./create-post-edit-hook.md)
 
 
 ## `misago.posting.hooks`

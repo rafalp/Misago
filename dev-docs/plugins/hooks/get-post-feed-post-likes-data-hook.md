@@ -68,7 +68,7 @@ URL of the view used to like the post.
 
 URL of the view used to unlike the post.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### Return value
@@ -124,7 +124,7 @@ URL of the view used to like the post.
 
 URL of the view used to unlike the post.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### Return value

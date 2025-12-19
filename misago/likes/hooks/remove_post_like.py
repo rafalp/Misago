@@ -29,7 +29,7 @@ class RemovePostLikeHookAction(Protocol):
 
     Whether the updated post instance should be saved to the database.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## `request: HttpRequest | None`
 
@@ -74,7 +74,7 @@ class RemovePostLikeHookFilter(Protocol):
 
     Whether the updated post instance should be saved to the database.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## `request: HttpRequest | None`
 

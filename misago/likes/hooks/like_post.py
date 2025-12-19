@@ -30,7 +30,7 @@ class LikePostHookAction(Protocol):
     Whether the new `Like` instance and the updated post instance should be
     saved to the database.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## `request: HttpRequest | None`
 
@@ -76,7 +76,7 @@ class LikePostHookFilter(Protocol):
     Whether the new `Like` instance and the updated post instance should be
     saved to the database.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## `request: HttpRequest | None`
 

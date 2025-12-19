@@ -1,6 +1,7 @@
 from django.db import models, transaction
 from django.http import HttpRequest
 
+from ...postedits.create import create_post_edit
 from ...threads.models import Post
 from ...threadupdates.create import create_changed_title_thread_update
 from ...threadupdates.models import ThreadUpdate
@@ -72,6 +73,17 @@ class PostEditState(State):
                 self.save_post()
             else:
                 self.update_object(self.post)
+
+            create_post_edit(
+                post=self.post,
+                user=self.user,
+                edit_reason=self.edit_reason,
+                old_content=self.post_original,
+                attachments=self.attachments,
+                deleted_attachments=self.delete_attachments,
+                edited_at=self.timestamp,
+                request=self.request,
+            )
 
             # Replace edits attr with integer
             # Prevents inline HTMX edit from breaking

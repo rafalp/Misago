@@ -53,7 +53,7 @@ A `dict` of new attributes to set on the thread.
 
 Whether the updated thread instance should be saved to the database.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`
@@ -92,7 +92,7 @@ A `dict` of new attributes to set on the thread.
 
 Whether the updated thread instance should be saved to the database.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`
