@@ -2,6 +2,7 @@ from django.db import models, transaction
 from django.http import HttpRequest
 
 from ...parser.parse import ParsingResult, parse
+from ...postedits.create import create_post_edit
 from ...threads.models import Post, Thread
 from ..hooks import (
     get_private_thread_reply_state_hook,
@@ -15,6 +16,7 @@ from .state import State
 class ReplyState(State):
     # True if new reply was merged with the recent post
     is_merged: bool
+    post_original: str
 
     def __init__(self, request: HttpRequest, thread: Thread, post: Post | None = None):
         super().__init__(request)
@@ -23,6 +25,7 @@ class ReplyState(State):
         self.thread = thread
         self.post = post or self.initialize_post()
         self.is_merged = bool(self.post.id)
+        self.post_original = self.post.original
 
         self.store_object_state(self.category)
         self.store_object_state(self.thread)
@@ -63,6 +66,15 @@ class ReplyState(State):
             self.post.last_editor_slug = self.user.slug
             self.post.last_edit_reason = None
             post_edits += 1
+
+            create_post_edit(
+                post=self.post,
+                user=self.user,
+                old_content=self.post_original,
+                attachments=self.attachments,
+                edited_at=self.timestamp,
+                request=self.request,
+            )
         else:
             # Save new post so it exists before search vector setup
             self.post.save()
