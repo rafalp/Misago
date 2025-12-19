@@ -283,15 +283,6 @@
   margin: ceil(@line-height-computed / 2) 0;
 
   color: @gray-500;
-  vertical-align: middle;
-
-  .material-icon {
-    position: relative;
-    bottom: 2px;
-
-    font-size: 18px;
-    line-height: 18px;
-  }
 
   a:link,
   a:visited {
@@ -319,23 +310,24 @@
 
   height: 34px;
 
-  color: @gray-500;
+  color: @gray-700;
   font-weight: 600;
 
   &,
   &:active,
   &.active,
-  &[disabled],
-  fieldset[disabled] & {
+  &[disabled] {
     background-color: transparent;
     .box-shadow(none);
   }
+
   &:hover,
   &:focus {
     color: @gray-700;
     text-decoration: none;
     background-color: @gray-100;
   }
+
   &:active {
     border-color: transparent;
     color: @gray-900;
