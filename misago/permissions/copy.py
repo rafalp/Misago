@@ -47,6 +47,7 @@ COPY_GROUP_PERMISSIONS = (
     "own_threads_edit_time_limit",
     "can_edit_own_posts",
     "own_posts_edit_time_limit",
+    "can_see_others_post_edits",
     "exempt_from_flood_control",
     "can_use_private_threads",
     "can_start_private_threads",

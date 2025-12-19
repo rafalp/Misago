@@ -76,6 +76,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "own_threads_edit_time_limit": 0,
         "can_edit_own_posts": False,
         "own_posts_edit_time_limit": 0,
+        "can_see_others_post_edits": 0,
         "exempt_from_flood_control": False,
         "can_upload_attachments": CanUploadAttachments.NEVER.value,
         "attachment_storage_limit": 0,
@@ -134,6 +135,11 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
             permissions,
             "own_posts_edit_time_limit",
             group.own_posts_edit_time_limit,
+        )
+        if_greater(
+            permissions,
+            "can_see_others_post_edits",
+            group.can_see_others_post_edits,
         )
         if_true(
             permissions,
