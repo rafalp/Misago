@@ -1,3 +1,5 @@
+from unittest.mock import ANY
+
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
@@ -7,6 +9,7 @@ from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
+from ...postedits.models import PostEdit
 from ...test import (
     assert_contains,
     assert_contains_element,
@@ -237,6 +240,13 @@ def test_thread_edit_view_updates_thread_title_and_post(user_client, user, user_
     assert post.last_editor_name == user.username
     assert post.last_editor_slug == user.slug
     assert post.last_edit_reason is None
+
+    post_edit = PostEdit.objects.get(post=post)
+    assert post_edit.original_added == 1
+    assert post_edit.original_removed == 1
+    assert post_edit.attachments == []
+    assert post_edit.attachments_added == 0
+    assert post_edit.attachments_removed == 0
 
 
 def test_thread_edit_view_updates_thread_title_and_post_in_htmx(
@@ -648,6 +658,30 @@ def test_thread_edit_view_uploads_attachment_on_submit(
     assert not attachment.is_deleted
     assert attachment.name == "test.txt"
 
+    post_edit = PostEdit.objects.get(post=user_thread.first_post.id)
+    assert len(post_edit.attachments) == 1
+    assert post_edit.attachments_added == 1
+    assert post_edit.attachments_removed == 0
+
+    post_edit = PostEdit.objects.get(post=user_thread.first_post.id)
+    assert post_edit.attachments == [
+        {
+            "id": attachment.id,
+            "uploader": attachment.uploader_id,
+            "uploader_name": attachment.uploader_name,
+            "uploader_slug": attachment.uploader_slug,
+            "uploaded_at": ANY,
+            "name": attachment.name,
+            "filetype_id": attachment.filetype_id,
+            "dimensions": None,
+            "thumbnail": None,
+            "size": attachment.size,
+            "change": "+",
+        },
+    ]
+    assert post_edit.attachments_added == 1
+    assert post_edit.attachments_removed == 0
+
 
 @pytest.mark.parametrize(
     "action_name", (Formset.preview_action, PostForm.upload_action)
@@ -864,11 +898,32 @@ def test_thread_edit_view_associates_unused_attachment_on_submit(
         kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
     )
 
+    attachment_uploaded_at = user_text_attachment.uploaded_at
+
     user_text_attachment.refresh_from_db()
     assert user_text_attachment.category_id == user_thread.category_id
     assert user_text_attachment.thread_id == user_thread.id
     assert user_text_attachment.post_id == user_thread.first_post_id
     assert not user_text_attachment.is_deleted
+
+    post_edit = PostEdit.objects.get(post=user_thread.first_post.id)
+    assert post_edit.attachments == [
+        {
+            "id": user_text_attachment.id,
+            "uploader": user_text_attachment.uploader_id,
+            "uploader_name": user_text_attachment.uploader_name,
+            "uploader_slug": user_text_attachment.uploader_slug,
+            "uploaded_at": attachment_uploaded_at.isoformat(),
+            "name": user_text_attachment.name,
+            "filetype_id": user_text_attachment.filetype_id,
+            "dimensions": None,
+            "thumbnail": None,
+            "size": user_text_attachment.size,
+            "change": "+",
+        },
+    ]
+    assert post_edit.attachments_added == 1
+    assert post_edit.attachments_removed == 0
 
 
 def test_thread_edit_view_adds_attachment_to_deleted_list(
@@ -986,6 +1041,11 @@ def test_thread_edit_view_deletes_attachment_on_submit(
     assert user_text_attachment.thread_id is None
     assert user_text_attachment.post_id is None
     assert user_text_attachment.is_deleted
+
+    post_edit = PostEdit.objects.get(post=user_thread.first_post.id)
+    assert post_edit.attachments == []
+    assert post_edit.attachments_added == 0
+    assert post_edit.attachments_removed == 0
 
 
 def test_thread_edit_view_displays_associated_attachment(
@@ -1295,6 +1355,25 @@ def test_thread_edit_view_deletes_existing_attachment_on_submit(
     assert text_attachment.thread_id is None
     assert text_attachment.post_id is None
     assert text_attachment.is_deleted
+
+    post_edit = PostEdit.objects.get(post=user_thread.first_post)
+    assert post_edit.attachments == [
+        {
+            "id": text_attachment.id,
+            "uploader": text_attachment.uploader_id,
+            "uploader_name": text_attachment.uploader_name,
+            "uploader_slug": text_attachment.uploader_slug,
+            "uploaded_at": text_attachment.uploaded_at.isoformat(),
+            "name": text_attachment.name,
+            "filetype_id": text_attachment.filetype_id,
+            "dimensions": None,
+            "thumbnail": None,
+            "size": text_attachment.size,
+            "change": "-",
+        },
+    ]
+    assert post_edit.attachments_added == 0
+    assert post_edit.attachments_removed == 1
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)

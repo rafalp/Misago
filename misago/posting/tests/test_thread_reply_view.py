@@ -7,6 +7,7 @@ from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
+from ...postedits.models import PostEdit
 from ...readtracker.models import ReadCategory
 from ...readtracker.tracker import mark_thread_read
 from ...test import assert_contains, assert_contains_element, assert_not_contains
@@ -505,6 +506,10 @@ def test_thread_reply_view_merges_reply_with_users_recent_post(
     )
 
     assert reply.original == "Previous message\n\nReply contents"
+
+    post_edit = PostEdit.objects.get(post=reply)
+    assert post_edit.original_added == 3
+    assert post_edit.original_removed == 1
 
 
 def test_thread_reply_view_merges_reply_with_users_recent_post_in_htmx(

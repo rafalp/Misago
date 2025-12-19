@@ -101,6 +101,8 @@ def _serialize_attachments(
     if not attachments and not deleted_attachments:
         return [], 0, 0
 
+    # Exclude temporary deleted attachments from diff
+    deleted_attachments = list(filter(lambda a: a.post_id, deleted_attachments))
     new_attachments_ids = set(
         attachment.id for attachment in attachments if not attachment.post_id
     )
