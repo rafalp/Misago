@@ -37,6 +37,16 @@ class PrivateThreadPostFeed(PostFeed):
             },
         )
 
+    def get_post_edits_url(self, post: Post) -> str | None:
+        return reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
+        )
+
     def get_post_likes_url(self, post: Post) -> str | None:
         return reverse(
             "misago:private-thread-post-likes",

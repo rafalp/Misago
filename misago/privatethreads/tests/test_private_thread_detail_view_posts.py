@@ -1,9 +1,10 @@
 from django.utils.crypto import get_random_string
 from django.urls import reverse
+from django.utils import timezone
 
 from ...conf.test import override_dynamic_settings
 from ...likes.like import like_post
-from ...permissions.enums import CanSeePostLikes, CategoryPermission
+from ...permissions.enums import CanSeePostEdits, CanSeePostLikes, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
 
@@ -1877,6 +1878,458 @@ def test_private_thread_detail_view_doesnt_show_unassociated_embedded_attachment
     assert_not_contains(response, "rich-text-image")
     assert_contains(response, image_attachment.name)
     assert_contains(response, image_attachment.get_absolute_url())
+
+
+def test_private_thread_detail_view_shows_user_own_post_edits_to_user(
+    thread_reply_factory,
+    user_client,
+    user,
+    user_private_thread,
+):
+    post = thread_reply_factory(user_private_thread, poster=user, edits=17)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edited 17 times.")
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_shows_user_own_post_edits_to_user_without_edits_history_permission(
+    thread_reply_factory,
+    user_client,
+    user,
+    members_group,
+    user_private_thread,
+):
+    members_group.can_see_others_post_edits = CanSeePostEdits.COUNT
+    members_group.save()
+
+    post = thread_reply_factory(user_private_thread, poster=user, edits=17)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edited 17 times.")
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_shows_user_own_post_edits_to_user_without_edits_permission(
+    thread_reply_factory,
+    user_client,
+    user,
+    members_group,
+    user_private_thread,
+):
+    members_group.can_see_others_post_edits = CanSeePostEdits.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(user_private_thread, poster=user, edits=17)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edited 17 times.")
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_shows_other_user_post_edits_to_user(
+    thread_reply_factory,
+    user_client,
+    other_user,
+    user_private_thread,
+):
+    post = thread_reply_factory(user_private_thread, poster=other_user, edits=17)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edited 17 times.")
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_shows_other_user_post_edits_to_user_without_edits_history_permission(
+    thread_reply_factory,
+    user_client,
+    other_user,
+    members_group,
+    user_private_thread,
+):
+    members_group.can_see_others_post_edits = CanSeePostEdits.COUNT
+    members_group.save()
+
+    post = thread_reply_factory(user_private_thread, poster=other_user, edits=17)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edited 17 times.")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_doesnt_show_other_user_post_edits_to_user_without_edits_permission(
+    thread_reply_factory,
+    user_client,
+    other_user,
+    members_group,
+    user_private_thread,
+):
+    members_group.can_see_others_post_edits = CanSeePostEdits.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(user_private_thread, poster=other_user, edits=17)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_not_contains(response, "Edited 17 times.")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_shows_other_user_post_last_edit_data_to_user(
+    thread_reply_factory,
+    user_client,
+    user,
+    other_user,
+    user_private_thread,
+):
+    post = thread_reply_factory(user_private_thread, poster=other_user, edits=17)
+    post.updated_at = timezone.now()
+    post.last_editor = user
+    post.last_editor_name = user.username
+    post.last_editor_slug = user.slug
+    post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edited 17 times.")
+    assert_contains(response, f"Last by {user.username},")
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_doesnt_show_other_user_post_last_edit_data_to_user_without_edits_history_permission(
+    thread_reply_factory,
+    user_client,
+    user,
+    other_user,
+    members_group,
+    user_private_thread,
+):
+    members_group.can_see_others_post_edits = CanSeePostEdits.COUNT
+    members_group.save()
+
+    post = thread_reply_factory(user_private_thread, poster=other_user, edits=17)
+    post.updated_at = timezone.now()
+    post.last_editor = user
+    post.last_editor_name = user.username
+    post.last_editor_slug = user.slug
+    post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edited 17 times.")
+    assert_not_contains(response, f"Last by {user.username},")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_doesnt_show_other_user_post_last_edit_data_to_user_without_permission(
+    thread_reply_factory,
+    user_client,
+    user,
+    other_user,
+    members_group,
+    user_private_thread,
+):
+    members_group.can_see_others_post_edits = CanSeePostEdits.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(user_private_thread, poster=other_user, edits=17)
+    post.updated_at = timezone.now()
+    post.last_editor = user
+    post.last_editor_name = user.username
+    post.last_editor_slug = user.slug
+    post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_not_contains(response, "Edited 17 times.")
+    assert_not_contains(response, f"Last by {user.username},")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_shows_other_user_post_last_edit_reason_to_user(
+    thread_reply_factory,
+    user_client,
+    user,
+    other_user,
+    user_private_thread,
+):
+    post = thread_reply_factory(user_private_thread, poster=other_user, edits=17)
+    post.updated_at = timezone.now()
+    post.last_editor = user
+    post.last_editor_name = user.username
+    post.last_editor_slug = user.slug
+    post.last_edit_reason = "edited out typos"
+    post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edited 17 times.")
+    assert_contains(response, f"Last by {user.username},")
+    assert_contains(response, "Reason: edited out typos")
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_doesnt_show_other_user_post_last_edit_reason_to_user_without_edits_history_permission(
+    thread_reply_factory,
+    user_client,
+    user,
+    other_user,
+    members_group,
+    user_private_thread,
+):
+    members_group.can_see_others_post_edits = CanSeePostEdits.COUNT
+    members_group.save()
+
+    post = thread_reply_factory(user_private_thread, poster=other_user, edits=17)
+    post.updated_at = timezone.now()
+    post.last_editor = user
+    post.last_editor_name = user.username
+    post.last_editor_slug = user.slug
+    post.last_edit_reason = "edited out typos"
+    post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Edited 17 times.")
+    assert_not_contains(response, f"Last by {user.username},")
+    assert_not_contains(response, "Reason: edited out typos")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_doesnt_show_other_user_post_last_edit_reason_to_user_without_permission(
+    thread_reply_factory,
+    user_client,
+    user,
+    other_user,
+    members_group,
+    user_private_thread,
+):
+    members_group.can_see_others_post_edits = CanSeePostEdits.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(user_private_thread, poster=other_user, edits=17)
+    post.updated_at = timezone.now()
+    post.last_editor = user
+    post.last_editor_name = user.username
+    post.last_editor_slug = user.slug
+    post.last_edit_reason = "edited out typos"
+    post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_not_contains(response, "Edited 17 times.")
+    assert_not_contains(response, f"Last by {user.username},")
+    assert_not_contains(response, "Reason: edited out typos")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": post.id,
+            },
+        ),
+    )
 
 
 def test_private_thread_detail_view_shows_post_with_deleted_user_like_to_user(

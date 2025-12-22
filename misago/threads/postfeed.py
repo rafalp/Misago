@@ -363,7 +363,14 @@ class ThreadPostFeed(PostFeed):
         )
 
     def get_post_edits_url(self, post: Post) -> str | None:
-        return "/post-edits/"
+        return reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
+        )
 
     def get_post_likes_url(self, post: Post) -> str | None:
         return reverse(

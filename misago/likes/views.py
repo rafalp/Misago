@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import transaction
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import npgettext, pgettext
@@ -109,7 +109,9 @@ class PostLikesView(View):
         )
 
         if not request.is_htmx and (thread.slug != slug or page == 1):
-            return redirect(self.get_thread_url(thread), permanent=thread.slug != slug)
+            return redirect(
+                self.get_post_likes_url(thread, post), permanent=thread.slug != slug
+            )
 
         try:
             likes_data = self.get_likes_data(request, post, page)
