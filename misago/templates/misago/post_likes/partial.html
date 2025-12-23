@@ -51,7 +51,7 @@
       </ul>
     </div>
     {% if paginator.num_pages > 1 %}
-      {% include "misago/post_likes/paginator.html" scroll=true %}
+      {% include "misago/post_likes/paginator.html" with scroll=true %}
     {% endif %}
   {% else %}
     <div class="post-likes-blankslate">

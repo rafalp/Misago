@@ -128,7 +128,7 @@ def test_diff_text_diffs_changed_character():
     assert result.removed == 1
 
 
-def test_diff_text_diffs_changed_some_character():
+def test_diff_text_diffs_changed_some_characters():
     result = diff_text("Lorem islum", "Lolem iplum")
     assert result.lines == [
         {
@@ -175,6 +175,38 @@ def test_diff_text_diffs_changed_some_character():
                     "marker": None,
                     "text": "lum",
                     "length": 3,
+                },
+            ],
+        },
+    ]
+    assert result.added == 1
+    assert result.removed == 1
+
+
+def test_diff_text_diffs_changed_word():
+    result = diff_text("Lorem ipsum dolor met", "Lorem ipsum elit met")
+    assert result.lines == [
+        {
+            "marker": "?",
+            "diff": [
+                {"index": 0, "marker": None, "text": "Lorem ipsum ", "length": 12},
+                {
+                    "index": 12,
+                    "marker": "-",
+                    "text": "dolor",
+                    "length": 5,
+                },
+                {
+                    "index": 12,
+                    "marker": "+",
+                    "text": "elit",
+                    "length": 4,
+                },
+                {
+                    "index": 16,
+                    "marker": None,
+                    "text": " met",
+                    "length": 4,
                 },
             ],
         },

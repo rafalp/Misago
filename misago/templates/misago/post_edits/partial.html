@@ -35,7 +35,11 @@
               <h3 class="post-edit-card-section-title">
                 {% translate "Thread title" context "post edit diff section title" %}
               </h3>
-              {{ post_edit.old_title }}{{ post_edit.new_title }}
+              {% for line in edit_diff.title.lines %}
+                {% if line.text.strip or line.diff %}
+                  <pre class="post-edit-diff-line post-edit-diff-line-{% if line.marker == '-' %}removed{% elif line.marker == '+' %}added{% else %}neutral{% endif %}">{% if line.marker == "?" %}{% for diff in line.diff %}{% if diff.marker == "-" %}<del>{{ diff.text }}</del>{% elif diff.marker == "+" %}<ins>{{ diff.text }}</ins>{% else %}{{ diff.text }}{% endif %}{% endfor %}{% else %}{{ line.text }}{% endif %}</pre>
+                {% endif %}
+              {% endfor %}
             </div>
           {% endif %}
           {% if edit_diff.content %}

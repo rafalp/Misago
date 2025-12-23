@@ -25,6 +25,7 @@
 
 .post-edit-card-section-title {
   margin: 0;
+  margin-bottom: ceil(@panel-body-padding / 2);
 
   font-size: @font-size-base;
   font-weight: bold;
@@ -33,7 +34,6 @@
 
 .post-edit-diff-lines {
   margin: 0;
-  margin-top: ceil(@panel-body-padding / 2);
 
   color: @gray-300;
   font-family: @font-family-monospace;
@@ -44,10 +44,11 @@
   margin: 0;
 
   overflow: hidden;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   white-space: pre-wrap;
 
   border: none;
+  border-radius: 0;
   color: @gray-700;
 
   del {
