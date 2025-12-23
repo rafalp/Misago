@@ -31,8 +31,8 @@ import "./timestamps"
 
 const lightbox = new Lightbox()
 
-htmx.config.historyEnabled = true
 htmx.config.historyCacheSize = 0
+htmx.config.refreshOnHistoryMiss = true
 
 export class Misago {
   constructor() {
