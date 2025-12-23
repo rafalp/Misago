@@ -10,7 +10,7 @@ class TextDiff:
 
 
 def diff_text(before: str, after: str) -> TextDiff:
-    raw_diff = ndiff(before.splitlines(keepends=True), after.splitlines(keepends=True))
+    raw_diff = ndiff(before.splitlines(), after.splitlines())
     diff_lines = list(map(parse_diff_line, raw_diff))
     diff_lines = merge_lines_diff_data(diff_lines)
 
@@ -23,6 +23,7 @@ def diff_text(before: str, after: str) -> TextDiff:
             removed += 1
 
     diff_lines = merge_changed_lines(diff_lines)
+    diff_lines = cleanup_lines(diff_lines)
 
     return TextDiff(
         lines=diff_lines,
@@ -94,9 +95,112 @@ def merge_changed_lines(lines: list[dict]) -> list[dict]:
 
 
 def combine_two_lines(src: dict, dst: dict) -> dict:
-    if src["diff"] and dst["diff"]:
-        pass  # Update src with changes from diff
-    if src["diff"]:
-        pass  # 
-    if dst["diff"]:
-        pass
+    if not dst["diff"]:
+        # Fast path for single line diff
+        return {
+            "marker": "?",
+            "diff": split_src_line_blocks(src),
+        }
+
+    src_blocks: list[dict] = split_src_line_blocks(src)
+    dst_blocks: list[dict] = split_dst_line_blocks(dst)
+
+    src_map: dict[int, dict] = {block["index"]: block for block in src_blocks}
+    dst_map: dict[int, dict] = {block["index"]: block for block in dst_blocks}
+
+    diff: list[dict] = []
+    start = 0
+    end = max(len(src["text"]), len(dst["text"]))
+
+    while start < end:
+        try:
+            src_block = src_map[start]
+        except KeyError:
+            src_block = None
+        try:
+            dst_block = dst_map[start]
+        except KeyError:
+            dst_block = None
+
+        if not src_block and not dst_block:
+            start += 1
+
+        if dst_block:
+            if src_block and src_block["marker"] is not None:
+                diff.append(src_block)
+            diff.append(dst_block)
+            start += dst_block["length"]
+        elif src_block:
+            diff.append(src_block)
+            start += src_block["length"]
+
+    return {
+        "marker": "?",
+        "diff": diff,
+    }
+
+
+def split_src_line_blocks(src: dict) -> list[dict]:
+    return split_line_blocks(src, "removed", "-")
+
+
+def split_dst_line_blocks(dst: dict) -> list[dict]:
+    return split_line_blocks(dst, "added", "+")
+
+
+def split_line_blocks(line: dict, source: str, marker: str) -> list[dict]:
+    blocks: list[dict] = []
+
+    for i, c in enumerate(line["text"]):
+        if i in line[source] or i in line["changed"]:
+            block_marker = marker
+        else:
+            block_marker = None
+
+        if not blocks or blocks[-1]["marker"] != block_marker:
+            blocks.append(
+                {
+                    "index": i,
+                    "marker": block_marker,
+                    "text": c,
+                    "length": 1,
+                }
+            )
+        else:
+            blocks[-1]["text"] += c
+            blocks[-1]["length"] += 1
+
+    return merge_close_diff_blocks(blocks)
+
+
+def merge_close_diff_blocks(blocks: list[dict], distance: int = 2) -> list[dict]:
+    last_block = len(blocks) - 1
+    merged_blocks: list[dict] = []
+
+    for i, block in enumerate(blocks):
+        if (
+            merged_blocks
+            and block["marker"] is None
+            and block["length"] <= distance
+            and i < last_block
+        ):
+            merged_blocks[-1]["text"] += block["text"]
+            merged_blocks[-1]["length"] += block["length"]
+        elif merged_blocks and merged_blocks[-1]["marker"] == block["marker"]:
+            merged_blocks[-1]["text"] += block["text"]
+            merged_blocks[-1]["length"] += block["length"]
+        else:
+            merged_blocks.append(block)
+
+    return merged_blocks
+
+
+def cleanup_lines(lines: list[dict]) -> list[dict]:
+    new_lines: list[dict] = []
+    for line in lines:
+        if line["marker"] == "?":
+            new_lines.append(line)
+        else:
+            new_lines.append({"marker": line["marker"], "text": line["text"]})
+
+    return new_lines

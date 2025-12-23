@@ -46,8 +46,8 @@
               <ol class="post-edit-diff-lines">
                 {% for line in edit_diff.content.lines %}
                   <li>
-                    {% if line.text.strip %}
-                      <pre class="post-edit-diff-line post-edit-diff-line-{% if line.mark == '-' %}removed{% elif line.mark == '+' %}added{% else %}neutral{% endif %}">{{ line.text }}</pre>
+                    {% if line.text.strip or line.diff %}
+                      <pre class="post-edit-diff-line post-edit-diff-line-{% if line.marker == '-' %}removed{% elif line.marker == '+' %}added{% else %}neutral{% endif %}">{% if line.marker == "?" %}{% for diff in line.diff %}{% if diff.marker == "-" %}<del>{{ diff.text }}</del>{% elif diff.marker == "+" %}<ins>{{ diff.text }}</ins>{% else %}{{ diff.text }}{% endif %}{% endfor %}{% else %}{{ line.text }}{% endif %}</pre>
                     {% endif %}
                   </li>
                 {% endfor %}

@@ -22,8 +22,8 @@
       class="btn btn-default btn-outline btn-icon"
       rel="prev"
       title="{% translate 'Go to previous page' context 'post edits page paginator' %}"
-      href="{{ edits_url }}{% if page.previous_page_number > 1 %}{{ page.previous_page_number }}/{% endif %}"
-      hx-get="{{ edits_url }}{% if page.previous_page_number > 1 %}{{ page.previous_page_number }}/{% endif %}"
+      href="{{ edits_url }}{{ page.previous_page_number }}/"
+      hx-get="{{ edits_url }}{{ page.previous_page_number }}/"
     >
       <span class="material-icon">chevron_left</span>
     </a>

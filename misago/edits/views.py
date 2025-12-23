@@ -44,10 +44,7 @@ class PostEditsView:
         )
         paginator = Paginator(queryset, per_page=1)
 
-        if not page:
-            return redirect(self.get_post_edits_url(thread, post, paginator.num_pages))
-
-        if page > paginator.num_pages:
+        if not page or page > paginator.num_pages:
             return redirect(self.get_post_edits_url(thread, post, paginator.num_pages))
 
         page_obj = paginator.get_page(page)
@@ -86,11 +83,11 @@ class PostEditsView:
         self, thread: Thread, post: Post, page: int | None = None
     ) -> str:
         raise NotImplementedError()
-    
+
     def get_edit_diff(self, post_edit: PostEdit | None):
         if not post_edit:
             return None
-        
+
         diff = {
             "title": None,
             "content": None,
@@ -120,7 +117,7 @@ class ThreadPostEditsView(ThreadView, PostEditsView):
     def get_post_edits_url(
         self, thread: Thread, post: Post, page: int | None = None
     ) -> str:
-        if page and page > 1:
+        if page:
             return reverse(
                 "misago:thread-post-edits",
                 kwargs={
@@ -156,7 +153,7 @@ class PrivateThreadPostEditsView(PrivateThreadView, PostEditsView):
     def get_post_edits_url(
         self, thread: Thread, post: Post, page: int | None = None
     ) -> str:
-        if page and page > 1:
+        if page:
             return reverse(
                 "misago:private-thread-post-edits",
                 kwargs={
