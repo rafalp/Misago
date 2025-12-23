@@ -1,0 +1,60 @@
+{% load i18n misago_avatars misago_formats %}
+
+{% if is_request_htmx %}
+<title>
+  {% if post_edit %}
+    {% blocktranslate trimmed with post=post_number edit=page.number context "thread post edits page title" %}
+      Post #{{ post }} edit #{{ edit }}
+    {% endblocktranslate %}
+  {% else %}
+    {% blocktranslate trimmed with post=post_number context "thread post edits page title" %}
+      Post #{{ post }} edits
+    {% endblocktranslate %}
+  {% endif %} | {{ thread }} | {{ settings.forum_name }}
+</title>
+{% endif %}
+
+<div id="misago-htmx-root">
+  <div id="misago-page-scroll-target" class="scroll-target"></div>
+  {% if paginator.num_pages > 1 %}
+    {% include "misago/post_edits/paginator.html" %}
+  {% endif %}
+  {% if post_edit %}
+    <div class="post-edit-card">
+      <div class="post-edit-card-header">
+        <div class="post-edit-card-revision">
+          {% blocktranslate trimmed with edit=page.number context "thread post edits page title" %}
+            Edit #{{ edit }}
+          {% endblocktranslate %}
+        </div>
+      </div>
+      <div class="post-edit-card-body">
+        <div class="post-edit-card-section">
+          <h3 class="post-edit-card-section-title">
+            {% translate "Thread title" context "post edit card section title" %}
+          </h3>
+          {{ post_edit.old_title }}{{ post_edit.new_title }}
+        </div>
+        <div class="post-edit-card-section">
+          <h3 class="post-edit-card-section-title">
+            {% translate "Content" context "post edit card section title" %}
+          </h3>
+          {{ post_edit.old_content }}{{ post_edit.new_content }}
+        </div>
+        {% if post_edit.attachments %}
+          <div class="post-edit-card-section">
+            <h3 class="post-edit-card-section-title">
+              {% translate "Attachments" context "post edit card section title" %}
+            </h3>
+            {{ post_edit.attachments }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    {% if paginator.num_pages > 1 %}
+      {% include "misago/post_edits/paginator.html" with scroll=True %}
+    {% endif %}
+  {% else %}
+    BLANKSLATE
+  {% endif %}
+</div>

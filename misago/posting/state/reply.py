@@ -71,6 +71,7 @@ class ReplyState(State):
                 post=self.post,
                 user=self.user,
                 old_content=self.post_original,
+                new_content=self.post.original,
                 attachments=self.attachments,
                 edited_at=self.timestamp,
                 request=self.request,

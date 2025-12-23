@@ -30,9 +30,21 @@ class CreatePostEditHookAction(Protocol):
 
     A `str` with a short description of the changes, or `None`.
 
-    ## `old_content: str`
+    ## `old_title: str | None = None`
 
-    A `str` with a snapshot of `Post.original` before the edit.
+    A `str` with the previous thread title, or `None`.
+
+    ## `new_title: str | None = None`
+
+    A `str` with the new thread title, or `None`.
+
+    ## `old_content: str | None`
+
+    A `str` with a snapshot of `Post.original` before the edit, or `None`.
+
+    ## `new_content: str | None`
+
+    A `str` with a snapshot of new `Post.original`, or `None`.
 
     ## `attachments: list[Attachment]`
 
@@ -69,7 +81,10 @@ class CreatePostEditHookAction(Protocol):
         post: "Post",
         user: Union["User", str],
         edit_reason: str | None,
-        old_content: str,
+        old_title: str | None,
+        new_title: str | None,
+        old_content: str | None,
+        new_content: str | None,
         attachments: list["Attachment"],
         deleted_attachments: list["Attachment"],
         edited_at: datetime | None = None,
@@ -107,6 +122,14 @@ class CreatePostEditHookFilter(Protocol):
 
     A `str` with a snapshot of `Post.original` before the edit.
 
+    ## `old_title: str | None = None`
+
+    A `str` with the previous thread title, or `None`.
+
+    ## `new_title: str | None = None`
+
+    A `str` with the new thread title, or `None`.
+
     ## `attachments: list[Attachment]`
 
     A `list` of new or current `Attachment` instances.
@@ -143,7 +166,10 @@ class CreatePostEditHookFilter(Protocol):
         post: "Post",
         user: Union["User", str],
         edit_reason: str | None,
-        old_content: str,
+        old_title: str | None,
+        new_title: str | None,
+        old_content: str | None,
+        new_content: str | None,
         attachments: list["Attachment"],
         deleted_attachments: list["Attachment"],
         edited_at: datetime | None = None,
@@ -208,7 +234,10 @@ class CreatePostEditHook(
         post: "Post",
         user: Union["User", str],
         edit_reason: str | None,
-        old_content: str,
+        old_title: str | None,
+        new_title: str | None,
+        old_content: str | None,
+        new_content: str | None,
         attachments: list["Attachment"],
         deleted_attachments: list["Attachment"],
         edited_at: datetime | None = None,
@@ -220,7 +249,10 @@ class CreatePostEditHook(
             post=post,
             user=user,
             edit_reason=edit_reason,
+            old_title=old_title,
+            new_title=new_title,
             old_content=old_content,
+            new_content=new_content,
             attachments=attachments,
             deleted_attachments=deleted_attachments,
             edited_at=edited_at,

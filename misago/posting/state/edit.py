@@ -47,6 +47,9 @@ class PostEditState(State):
         self.post.last_edit_reason = self.edit_reason
 
     def is_post_changed(self):
+        if self.thread_title != self.thread.title:
+            return True
+
         if self.post_original != self.post.original:
             return True
 
@@ -78,7 +81,10 @@ class PostEditState(State):
                 post=self.post,
                 user=self.user,
                 edit_reason=self.edit_reason,
+                old_title=self.thread_title,
+                new_title=self.thread.title,
                 old_content=self.post_original,
+                new_content=self.post.original,
                 attachments=self.attachments,
                 deleted_attachments=self.delete_attachments,
                 edited_at=self.timestamp,

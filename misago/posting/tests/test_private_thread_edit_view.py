@@ -157,6 +157,8 @@ def test_private_thread_edit_view_displays_inline_edit_form_in_htmx(
 def test_private_thread_edit_view_updates_thread_title_and_post(
     user_client, user, user_private_thread
 ):
+    old_title = user_private_thread.title
+
     response = user_client.post(
         reverse(
             "misago:private-thread-edit",
@@ -192,11 +194,13 @@ def test_private_thread_edit_view_updates_thread_title_and_post(
     assert post.last_edit_reason is None
 
     post_edit = PostEdit.objects.get(post=post)
-    assert post_edit.original_added == 1
-    assert post_edit.original_removed == 1
+    assert post_edit.old_title == old_title
+    assert post_edit.new_title == "Edited title"
+    assert post_edit.added_content == 1
+    assert post_edit.removed_content == 1
     assert post_edit.attachments == []
-    assert post_edit.attachments_added == 0
-    assert post_edit.attachments_removed == 0
+    assert post_edit.added_attachments == 0
+    assert post_edit.removed_attachments == 0
 
 
 def test_private_thread_edit_view_updates_thread_title_and_post_in_htmx(
@@ -625,8 +629,8 @@ def test_private_thread_edit_view_uploads_attachment_on_submit(
             "change": "+",
         },
     ]
-    assert post_edit.attachments_added == 1
-    assert post_edit.attachments_removed == 0
+    assert post_edit.added_attachments == 1
+    assert post_edit.removed_attachments == 0
 
 
 @pytest.mark.parametrize(
@@ -871,8 +875,8 @@ def test_private_thread_edit_view_associates_unused_attachment_on_submit(
             "change": "+",
         },
     ]
-    assert post_edit.attachments_added == 1
-    assert post_edit.attachments_removed == 0
+    assert post_edit.added_attachments == 1
+    assert post_edit.removed_attachments == 0
 
 
 def test_private_thread_edit_view_adds_attachment_to_deleted_list(
@@ -996,8 +1000,8 @@ def test_private_thread_edit_view_deletes_attachment_on_submit(
 
     post_edit = PostEdit.objects.get(post=user_private_thread.first_post.id)
     assert post_edit.attachments == []
-    assert post_edit.attachments_added == 0
-    assert post_edit.attachments_removed == 0
+    assert post_edit.added_attachments == 0
+    assert post_edit.removed_attachments == 0
 
 
 def test_private_thread_edit_view_displays_associated_attachment(
@@ -1289,8 +1293,8 @@ def test_private_thread_edit_view_deletes_existing_attachment_on_submit(
             "change": "-",
         },
     ]
-    assert post_edit.attachments_added == 0
-    assert post_edit.attachments_removed == 1
+    assert post_edit.added_attachments == 0
+    assert post_edit.removed_attachments == 1
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)

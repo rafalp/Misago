@@ -509,8 +509,8 @@ def test_thread_reply_view_merges_reply_with_users_recent_post(
 
     post_edit = PostEdit.objects.get(post=reply)
     assert not post_edit.edit_reason
-    assert post_edit.original_added == 3
-    assert post_edit.original_removed == 1
+    assert post_edit.added_content == 3
+    assert post_edit.removed_content == 1
 
 
 def test_thread_reply_view_merges_reply_with_users_recent_post_in_htmx(

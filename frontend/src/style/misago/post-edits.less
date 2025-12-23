@@ -1,0 +1,44 @@
+.post-edit-card {
+  margin: @line-height-computed 0;
+
+  border: 1px solid @gray-200;
+  border-radius: @border-radius-base;
+  overflow: hidden;
+}
+
+.post-edit-card-header {
+  padding: @panel-body-padding;
+
+  background-color: @gray-50;
+  border-bottom: 1px solid @gray-200;
+}
+
+.post-edit-card-body {
+  padding: ceil(@panel-body-padding / 2) 0;
+
+  background-color: @panel-bg;
+}
+
+.post-edit-card-section {
+  padding: ceil(@panel-body-padding / 2) @panel-body-padding;
+}
+
+.post-edit-card-section-title {
+  margin: 0;
+
+  font-size: @font-size-base;
+  font-weight: bold;
+  line-height: @line-height-computed;
+}
+
+.post-edits-paginator {
+  display: flex;
+  align-items: center;
+  gap: ceil(@grid-gutter-width / 2);
+
+  margin: @line-height-computed 0;
+}
+
+.post-edits-paginator-legend {
+  min-width: 0;
+}

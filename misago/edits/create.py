@@ -20,19 +20,30 @@ def create_post_edit(
     post: Post,
     user: Union["User", str],
     edit_reason: str | None = None,
-    old_content: str,
+    old_title: str | None = None,
+    new_title: str | None = None,
+    old_content: str | None = None,
+    new_content: str | None = None,
     attachments: list[Attachment] | None = None,
     deleted_attachments: list[Attachment] | None = None,
     edited_at: datetime | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> PostEdit:
+    if old_title == new_title:
+        old_title = new_title = None
+    if old_content == new_content:
+        old_content = new_content = None
+
     return create_post_edit_hook(
         _create_post_edit_action,
         post=post,
         user=user,
         edit_reason=edit_reason or None,
-        old_content=old_content,
+        old_title=old_title or None,
+        new_title=new_title or None,
+        old_content=old_content or None,
+        new_content=new_content or None,
         attachments=attachments or [],
         deleted_attachments=deleted_attachments or [],
         edited_at=edited_at,
@@ -46,7 +57,10 @@ def _create_post_edit_action(
     post: Post,
     user: Union["User", str],
     edit_reason: str | None,
-    old_content: str,
+    old_title: str | None,
+    new_title: str | None,
+    old_content: str | None,
+    new_content: str | None,
     attachments: list[Attachment],
     deleted_attachments: list[Attachment],
     edited_at: datetime | None,
@@ -62,8 +76,15 @@ def _create_post_edit_action(
         user_name = user.username
         user_slug = user.slug
 
-    original_diff = diff_text(old_content, post.original)
-    serialized_attachments, attachments_added, attachments_removed = (
+    if old_content and new_content:
+        content_diff = diff_text(old_content, post.original)
+        added_content = content_diff.added
+        removed_content = content_diff.removed
+    else:
+        added_content = 0
+        removed_content = 0
+
+    serialized_attachments, added_attachments, removed_attachments = (
         _serialize_attachments(attachments, deleted_attachments)
     )
 
@@ -78,13 +99,15 @@ def _create_post_edit_action(
         user_name=user_name,
         user_slug=user_slug,
         edit_reason=edit_reason,
-        original_old=old_content,
-        original_new=post.original,
-        original_added=original_diff.added,
-        original_removed=original_diff.removed,
+        old_title=old_title,
+        new_title=new_title,
+        old_content=old_content or post.original,
+        new_content=new_content or post.original,
+        added_content=added_content,
+        removed_content=removed_content,
         attachments=serialized_attachments,
-        attachments_added=attachments_added,
-        attachments_removed=attachments_removed,
+        added_attachments=added_attachments,
+        removed_attachments=removed_attachments,
         edited_at=edited_at,
     )
 

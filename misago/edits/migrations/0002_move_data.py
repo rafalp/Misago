@@ -19,10 +19,10 @@ def migrate_edits_data_from_threads(apps, schema_editor):
             user_id=legacy_edit.editor_id,
             user_name=legacy_edit.editor_name,
             user_slug=legacy_edit.editor_slug,
-            original_old=legacy_edit.edited_from,
-            original_new=legacy_edit.edited_to,
-            original_added=diff.added,
-            original_removed=diff.removed,
+            old_content=legacy_edit.edited_from,
+            new_content=legacy_edit.edited_to,
+            added_content=diff.added,
+            removed_content=diff.removed,
             edited_at=legacy_edit.edited_on,
         )
 

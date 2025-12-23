@@ -7,7 +7,7 @@
   itemtype="http://schema.org/SiteNavigationElement"
   hx-push-url="true"
   hx-target="#misago-htmx-root"
-  hx-swap="outerHTML show:#misago-page-scroll-target:top"
+  hx-swap="outerHTML{% if scroll %} show:#misago-page-scroll-target:top{% endif %}"
 >
   {% if page.has_previous %}
     <a
