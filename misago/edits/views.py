@@ -10,6 +10,7 @@ from ..permissions.threads import check_see_thread_post_permission
 from ..privatethreads.views.generic import PrivateThreadView
 from ..threads.models import Post, Thread
 from ..threads.views.generic import ThreadView
+from .diff import diff_text
 from .models import PostEdit
 
 
@@ -76,6 +77,7 @@ class PostEditsView:
                 "paginator": paginator,
                 "page": page_obj,
                 "post_edit": post_edit,
+                "edit_diff": self.get_edit_diff(post_edit),
                 "edits_url": self.get_post_edits_url(thread, post),
             },
         )
@@ -84,6 +86,23 @@ class PostEditsView:
         self, thread: Thread, post: Post, page: int | None = None
     ) -> str:
         raise NotImplementedError()
+    
+    def get_edit_diff(self, post_edit: PostEdit | None):
+        if not post_edit:
+            return None
+        
+        diff = {
+            "title": None,
+            "content": None,
+            "attachments": [],
+        }
+
+        if post_edit.old_title != post_edit.new_title:
+            diff["title"] = diff_text(post_edit.old_title, post_edit.new_title)
+        if post_edit.old_content != post_edit.new_content:
+            diff["content"] = diff_text(post_edit.old_content, post_edit.new_content)
+
+        return diff
 
 
 class ThreadPostEditsView(ThreadView, PostEditsView):

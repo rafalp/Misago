@@ -31,6 +31,48 @@
   line-height: @line-height-computed;
 }
 
+.post-edit-diff-lines {
+  margin: 0;
+  margin-top: ceil(@panel-body-padding / 2);
+
+  color: @gray-300;
+  font-family: @font-family-monospace;
+}
+
+.post-edit-diff-line {
+  padding: 0;
+  margin: 0;
+
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+
+  border: none;
+  color: @gray-700;
+
+  del {
+    background: @red-100;
+    color: @red-700;
+  }
+
+  ins {
+    background: @green-100;
+    color: @green-700;
+  }
+}
+
+.post-edit-diff-line-neutral {
+  background: transparent;
+}
+
+.post-edit-diff-line-removed {
+  background: @red-50;
+}
+
+.post-edit-diff-line-added {
+  background: @green-50;
+}
+
 .post-edits-paginator {
   display: flex;
   align-items: center;

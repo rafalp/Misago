@@ -29,25 +29,39 @@
         </div>
       </div>
       <div class="post-edit-card-body">
-        <div class="post-edit-card-section">
-          <h3 class="post-edit-card-section-title">
-            {% translate "Thread title" context "post edit card section title" %}
-          </h3>
-          {{ post_edit.old_title }}{{ post_edit.new_title }}
-        </div>
-        <div class="post-edit-card-section">
-          <h3 class="post-edit-card-section-title">
-            {% translate "Content" context "post edit card section title" %}
-          </h3>
-          {{ post_edit.old_content }}{{ post_edit.new_content }}
-        </div>
-        {% if post_edit.attachments %}
-          <div class="post-edit-card-section">
-            <h3 class="post-edit-card-section-title">
-              {% translate "Attachments" context "post edit card section title" %}
-            </h3>
-            {{ post_edit.attachments }}
-          </div>
+        {% if edit_diff %}
+          {% if edit_diff.title %}
+            <div class="post-edit-card-section">
+              <h3 class="post-edit-card-section-title">
+                {% translate "Thread title" context "post edit diff section title" %}
+              </h3>
+              {{ post_edit.old_title }}{{ post_edit.new_title }}
+            </div>
+          {% endif %}
+          {% if edit_diff.content %}
+            <div class="post-edit-card-section">
+              <h3 class="post-edit-card-section-title">
+                {% translate "Content" context "post edit diff section title" %}
+              </h3>
+              <ol class="post-edit-diff-lines">
+                {% for line in edit_diff.content.lines %}
+                  <li>
+                    {% if line.text.strip %}
+                      <pre class="post-edit-diff-line post-edit-diff-line-{% if line.mark == '-' %}removed{% elif line.mark == '+' %}added{% else %}neutral{% endif %}">{{ line.text }}</pre>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ol>
+            </div>
+          {% endif %}
+          {% if edit_diff.attachments %}
+            <div class="post-edit-card-section">
+              <h3 class="post-edit-card-section-title">
+                {% translate "Attachments" context "post edit diff section title" %}
+              </h3>
+              {{ post_edit.attachments }}
+            </div>
+          {% endif %}
         {% endif %}
       </div>
     </div>
