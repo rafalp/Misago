@@ -67,7 +67,7 @@
         mg-loader="#modal-loader"
         mg-error="#modal-error"
         mg-modal="#post-likes-modal"
-        mg-modal-title="{% blocktranslate trimmed with number=counter context 'post feed post likes modal title' %}Post #{{ number }} likes{% endblocktranslate %}"
+        mg-modal-title="{% blocktranslate trimmed with number=post_number context 'post feed post likes modal title' %}Post #{{ number }} likes{% endblocktranslate %}"
       >
         {{ message }}
       </a>

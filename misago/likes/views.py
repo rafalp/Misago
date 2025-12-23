@@ -41,6 +41,10 @@ class PostLikeView(View):
 
         post_feed = self.get_post_feed(request, thread, [])
         context_data = post_feed.get_like_context_data(post, True)
+        context_data["post_number"] = self.get_thread_post_number(
+            self.request, thread, post
+        )
+
         return render(request, context_data["template_name"], context_data)
 
 
@@ -71,6 +75,10 @@ class PostUnlikeView(View):
 
         post_feed = self.get_post_feed(request, thread, [])
         context_data = post_feed.get_like_context_data(post, False)
+        context_data["post_number"] = self.get_thread_post_number(
+            self.request, thread, post
+        )
+
         return render(request, context_data["template_name"], context_data)
 
 
@@ -134,7 +142,7 @@ class PostLikesView(View):
                 "category": thread.category,
                 "thread": thread,
                 "post": post,
-                "post_number": self.get_post_number(request, thread, post),
+                "post_number": self.get_thread_post_number(request, thread, post),
                 "likes": likes_data,
                 "thread_url": self.get_thread_url(thread),
                 "post_url": self.get_thread_post_url(thread, post),

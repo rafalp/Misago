@@ -105,7 +105,9 @@ class GenericView(View):
     ) -> PostFeed:
         raise NotImplementedError()
 
-    def get_post_number(self, request: HttpRequest, thread: Thread, post: Post) -> int:
+    def get_thread_post_number(
+        self, request: HttpRequest, thread: Thread, post: Post
+    ) -> int:
         queryset = self.get_thread_posts_queryset(request, thread)
         return queryset.filter(id__lte=post.id).count()
 
