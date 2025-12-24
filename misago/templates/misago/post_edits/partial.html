@@ -93,25 +93,69 @@
           {% if edit_diff.attachments %}
             <div class="post-edit-card-section">
               <h3 class="post-edit-card-section-title">
-                {% translate "Attachment changes:" context "post edit diff section title" %}
+                {% translate "Attachments:" context "post edit diff section title" %}
               </h3>
               <ul class="post-edit-diff-attachments">
                 {% for attachment in edit_diff.attachments %}
                   <li class="post-edit-diff-attachment post-edit-diff-attachment-{% if attachment.change == '-' %}removed{% elif attachment.change == '+' %}added{% else %}neutral{% endif %}">
                     <div class="post-edit-diff-attachment-icon">
-                      {% if attachment.filetype.is_video %}
-                        {% include "tabler/movie.svg" %}
-                      {% elif attachment.filetype.is_image %}
-                        {% include "tabler/photo.svg" %}
-                      {% elif attachment.filetype.is_archive %}
-                        {% include "tabler/file-zip.svg" %}
+                      {% if attachment.filetype %}
+                        {% if attachment.filetype.is_video %}
+                          {% include "tabler/movie.svg" %}
+                        {% elif attachment.filetype.is_image %}
+                          {% include "tabler/photo.svg" %}
+                        {% elif attachment.filetype.is_archive %}
+                          {% include "tabler/file-zip.svg" %}
+                        {% else %}
+                          {% include "tabler/file.svg" %}
+                        {% endif %}
                       {% else %}
-                        {% include "tabler/file.svg" %}
+                        {% include "tabler/file-unknown.svg" %}
                       {% endif %}
                     </div>
                     <div class="post-edit-diff-attachment-body">
-                      <strong class="post-edit-diff-attachment-name">{{ attachment.name }}</strong>
-                      {{ attachment }}
+                      <div class="post-edit-diff-attachment-heading">
+                        {% if attachment.url %}
+                          <a href="{{ attachment.url }}" class="post-edit-diff-attachment-name">
+                            {{ attachment.name }}
+                          </a>
+                        {% else %}
+                          <span class="post-edit-diff-attachment-name">
+                            {{ attachment.name }}
+                          </span>
+                        {% endif %}
+                        {% if attachment.change == '-' %}
+                          <strong class="post-edit-diff-attachment-change">{% translate "removed" context "post edit diff attachment removed" %}</strong>
+                        {% elif attachment.change == '+' %}
+                          <strong class="post-edit-diff-attachment-change">{% translate "added" context "post edit diff attachment added" %}</strong>
+                        {% endif %}
+                      </div>
+                      <div class="post-edit-diff-attachment-info">
+                        {% if attachment.filetype %}
+                          {{ attachment.filetype.name }}
+                        {% elif attachment.filetype_id %}
+                          {{ attachment.filetype_id }}
+                        {% endif %}
+                        {{ attachment.size|filesizeformat }}
+                        {% if attachment.width and attachment.height %}
+                          {{ attachment.width }}&times;{{ attachment.height }}
+                        {% endif %}
+                        {% if attachment.uploader %}
+                          <a href="{% url 'misago:user' pk=attachment.uploader slug=attachment.uploader_slug %}">
+                            {{ attachment.uploader_name }}
+                          </a>
+                        {% else %}
+                          <span>
+                            {{ attachment.uploader_name }}
+                          </span>
+                        {% endif %}
+                        <span
+                          title="{{ attachment.uploaded_at|date:'DATETIME_FORMAT' }}"
+                          mg-timestamp="{{ attachment.uploaded_at.isoformat }}"
+                        >
+                          {{ attachment.uploaded_at|date_relative }}
+                        </span>
+                      </div>
                     </div>
                   </li>
                 {% endfor %}

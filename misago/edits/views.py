@@ -76,7 +76,7 @@ class PostEditsView:
                 "paginator": paginator,
                 "page": page_obj,
                 "post_edit": post_edit,
-                "edit_diff": self.get_edit_diff(post_edit),
+                "edit_diff": self.get_edit_diff(request, post_edit),
                 "edits_url": self.get_post_edits_url(thread, post),
             },
         )
@@ -86,7 +86,7 @@ class PostEditsView:
     ) -> str:
         raise NotImplementedError()
 
-    def get_edit_diff(self, post_edit: PostEdit | None):
+    def get_edit_diff(self, request: HttpRequest, post_edit: PostEdit | None):
         if not post_edit:
             return None
 
@@ -114,6 +114,27 @@ class PostEditsView:
                 )
             except ValueError:
                 new_attachment["filetype"] = None
+
+            if new_attachment["dimensions"]:
+                new_attachment["width"] = new_attachment["dimensions"][0]
+                new_attachment["height"] = new_attachment["dimensions"][1]
+            else:
+                new_attachment["width"] = None
+                new_attachment["height"] = None
+
+            if request.user.is_authenticated and (
+                request.user.is_misago_admin
+                or request.user.id == new_attachment["uploader"]
+            ):
+                new_attachment["url"] = reverse(
+                    "misago:attachment-details",
+                    kwargs={
+                        "id": new_attachment["id"],
+                        "slug": new_attachment["slug"],
+                    },
+                )
+            else:
+                new_attachment["url"] = None
 
             diff["attachments"].append(new_attachment)
 

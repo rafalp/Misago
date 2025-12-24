@@ -131,11 +131,23 @@
   padding: 0;
 
   list-style: none;
+  overflow: hidden;
+
+  border: 1px solid @gray-200;
+  border-radius: @border-radius-base;
 }
 
 .post-edit-diff-attachment {
   display: flex;
   align-items: center;
+
+  padding: @padding-base-vertical 0;
+
+  border-bottom: 1px solid @gray-200;
+
+  &:last-child {
+    border: none;
+  }
 }
 
 .post-edit-diff-attachment-icon {
@@ -153,16 +165,18 @@
 .post-edit-diff-attachment-removed {
   background: @red-50;
 
-  .post-edit-diff-attachment-icon {
-    color: @red-500;
+  .post-edit-diff-attachment-icon,
+  .post-edit-diff-attachment-change {
+    color: @red-600;
   }
 }
 
 .post-edit-diff-attachment-added {
   background: @green-50;
 
-  .post-edit-diff-attachment-icon {
-    color: @green-500;
+  .post-edit-diff-attachment-icon,
+  .post-edit-diff-attachment-change {
+    color: @green-600;
   }
 }
 
@@ -181,4 +195,12 @@
 
 .post-edits-paginator-legend {
   min-width: 0;
+}
+
+@media screen and (max-width: @screen-xs-max) {
+  .post-edits-paginator-legend {
+    width: 100%;
+
+    text-align: center;
+  }
 }
