@@ -148,6 +148,7 @@ def _serialize_attachments(
                 "uploader_slug": attachment.uploader_slug,
                 "uploaded_at": attachment.uploaded_at.isoformat(),
                 "name": attachment.name,
+                "slug": attachment.slug,
                 "filetype_id": attachment.filetype_id,
                 "dimensions": _serialize_attachment_dimensions(attachment.dimensions),
                 "thumbnail": _serialize_attachment_dimensions(

@@ -2,8 +2,10 @@ from django.core.paginator import Paginator
 from django.db import transaction
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import redirect, render
+from django.utils import dateparse
 from django.urls import reverse
 
+from ..attachments.filetypes import filetypes
 from ..permissions.edits import check_see_post_edit_history_permission
 from ..permissions.privatethreads import check_see_private_thread_post_permission
 from ..permissions.threads import check_see_thread_post_permission
@@ -98,6 +100,22 @@ class PostEditsView:
             diff["title"] = diff_text(post_edit.old_title, post_edit.new_title)
         if post_edit.old_content != post_edit.new_content:
             diff["content"] = diff_text(post_edit.old_content, post_edit.new_content)
+
+        for attachment in post_edit.attachments:
+            new_attachment = attachment.copy()
+
+            new_attachment["uploaded_at"] = dateparse.parse_datetime(
+                new_attachment["uploaded_at"]
+            )
+
+            try:
+                new_attachment["filetype"] = filetypes.get_filetype(
+                    attachment["filetype_id"]
+                )
+            except ValueError:
+                new_attachment["filetype"] = None
+
+            diff["attachments"].append(new_attachment)
 
         return diff
 

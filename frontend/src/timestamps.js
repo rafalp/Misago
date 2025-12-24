@@ -30,7 +30,7 @@ export function updateTimestamp(element) {
     element.textContent = dateRelativeShort(cache[timestamp])
   } else if (format === "full") {
     element.textContent = fullDateTime.format(cache[timestamp])
-  } else if ("sentence") {
+  } else if (format === "sentence") {
     element.textContent = dateRelativeInSentence(cache[timestamp])
   } else {
     element.textContent = dateRelative(cache[timestamp])

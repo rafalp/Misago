@@ -7,10 +7,60 @@
 }
 
 .post-edit-card-header {
+  display: flex;
+  align-items: center;
+
   padding: @panel-body-padding;
 
   background-color: @gray-50;
   border-bottom: 1px solid @gray-200;
+}
+
+.post-edit-card-avatar {
+  display: block;
+  margin-right: ceil(@grid-gutter-width / 3);
+
+  img {
+    width: 24px;
+    height: 24px;
+
+    border-radius: @border-radius-small;
+  }
+}
+
+.post-edit-card-username {
+  display: block;
+
+  color: @gray-600;
+  font-weight: bold;
+
+  &:link,
+  &:visited,
+  &:hover,
+  &:active {
+    color: @gray-900;
+  }
+
+  &:hover,
+  &:active {
+    text-decoration: underline;
+  }
+}
+
+.post-edit-card-timestamp,
+.post-edit-card-edit-reason {
+  display: flex;
+
+  color: @gray-600;
+
+  &::before {
+    content: "•";
+
+    display: block;
+    margin: 0 ceil(@grid-gutter-width / 4);
+
+    color: @gray-400;
+  }
 }
 
 .post-edit-card-body {
@@ -74,6 +124,51 @@
 
 .post-edit-diff-line-added {
   background: @green-50;
+}
+
+.post-edit-diff-attachments {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.post-edit-diff-attachment {
+  display: flex;
+  align-items: center;
+}
+
+.post-edit-diff-attachment-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 32px;
+
+  color: @gray-400;
+}
+
+.post-edit-diff-attachment-removed {
+  background: @red-50;
+
+  .post-edit-diff-attachment-icon {
+    color: @red-500;
+  }
+}
+
+.post-edit-diff-attachment-added {
+  background: @green-50;
+
+  .post-edit-diff-attachment-icon {
+    color: @green-500;
+  }
+}
+
+.post-edit-diff-attachment-name {
+  color: @gray-700;
+  font-weight: bold;
 }
 
 .post-edits-paginator {
