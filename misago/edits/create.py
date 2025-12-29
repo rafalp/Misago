@@ -143,7 +143,7 @@ def _serialize_attachments(
         serialized_attachments.append(
             {
                 "id": attachment.id,
-                "uploader": attachment.uploader_id,
+                "uploader_id": attachment.uploader_id,
                 "uploader_name": attachment.uploader_name,
                 "uploader_slug": attachment.uploader_slug,
                 "uploaded_at": attachment.uploaded_at.isoformat(),

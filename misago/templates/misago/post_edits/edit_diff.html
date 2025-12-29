@@ -95,10 +95,10 @@
                   </div>
                 </li>
               {% endif %}
-              {% if attachment.uploader %}
+              {% if attachment.uploader_id %}
                 <li>
                   <div class="edit-diff-attachment-info-bullet" aria-hidden="true">&bull;</div>
-                  <a href="{% url 'misago:user' pk=attachment.uploader slug=attachment.uploader_slug %}">
+                  <a href="{% url 'misago:user' pk=attachment.uploader_id slug=attachment.uploader_slug %}">
                     {{ attachment.uploader_name }}
                   </a>
                 </li>

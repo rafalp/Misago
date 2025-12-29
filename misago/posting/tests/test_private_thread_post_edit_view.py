@@ -681,7 +681,7 @@ def test_private_thread_post_edit_view_uploads_attachment_on_submit(
     assert post_edit.attachments == [
         {
             "id": attachment.id,
-            "uploader": attachment.uploader_id,
+            "uploader_id": attachment.uploader_id,
             "uploader_name": attachment.uploader_name,
             "uploader_slug": attachment.uploader_slug,
             "uploaded_at": ANY,
@@ -972,7 +972,7 @@ def test_private_thread_post_edit_view_associates_unused_attachment_on_submit(
     assert post_edit.attachments == [
         {
             "id": user_text_attachment.id,
-            "uploader": user_text_attachment.uploader_id,
+            "uploader_id": user_text_attachment.uploader_id,
             "uploader_name": user_text_attachment.uploader_name,
             "uploader_slug": user_text_attachment.uploader_slug,
             "uploaded_at": attachment_uploaded_at.isoformat(),
@@ -1443,7 +1443,7 @@ def test_private_thread_post_edit_view_deletes_existing_attachment_on_submit(
     assert post_edit.attachments == [
         {
             "id": text_attachment.id,
-            "uploader": text_attachment.uploader_id,
+            "uploader_id": text_attachment.uploader_id,
             "uploader_name": text_attachment.uploader_name,
             "uploader_slug": text_attachment.uploader_slug,
             "uploaded_at": text_attachment.uploaded_at.isoformat(),

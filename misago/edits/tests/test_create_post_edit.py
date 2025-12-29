@@ -155,7 +155,7 @@ def test_create_post_edit_creates_post_edit_with_new_attachment(
     assert post_edit.attachments == [
         {
             "id": user_image_attachment.id,
-            "uploader": user.id,
+            "uploader_id": user.id,
             "uploader_name": user.username,
             "uploader_slug": user.slug,
             "uploaded_at": user_image_attachment.uploaded_at.isoformat(),
@@ -201,7 +201,7 @@ def test_create_post_edit_creates_post_edit_with_unchanged_attachment(
     assert post_edit.attachments == [
         {
             "id": user_image_attachment.id,
-            "uploader": user.id,
+            "uploader_id": user.id,
             "uploader_name": user.username,
             "uploader_slug": user.slug,
             "uploaded_at": user_image_attachment.uploaded_at.isoformat(),
@@ -247,7 +247,7 @@ def test_create_post_edit_creates_post_edit_with_deleted_attachment(
     assert post_edit.attachments == [
         {
             "id": user_image_attachment.id,
-            "uploader": user.id,
+            "uploader_id": user.id,
             "uploader_name": user.username,
             "uploader_slug": user.slug,
             "uploaded_at": user_image_attachment.uploaded_at.isoformat(),
