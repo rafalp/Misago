@@ -1,0 +1,128 @@
+{% load i18n misago_formats %}
+
+{% if edit_diff.blank %}
+  <div class="edit-diff-blankslate">
+    {% blocktranslate trimmed context "edit diff empty message" %}
+      No changes were made in this edit, or you don’t have permission to see them.
+    {% endblocktranslate %}
+  </div>
+{% endif %}
+{% if edit_diff.title %}
+  <div class="edit-diff-section">
+    <h3 class="edit-diff-section-title">
+      {% translate "Title changes" context "edit diff section title" %}
+    </h3>
+    {% for line in edit_diff.title.lines %}
+      {% if line.text.strip or line.diff %}
+        <pre class="edit-diff-line edit-diff-line-{% if line.marker == '-' %}removed{% elif line.marker == '+' %}added{% else %}neutral{% endif %}">{% if line.marker == "?" %}{% for diff in line.diff %}{% if diff.marker == "-" %}<del>{{ diff.text }}</del>{% elif diff.marker == "+" %}<ins>{{ diff.text }}</ins>{% else %}{{ diff.text }}{% endif %}{% endfor %}{% else %}{{ line.text }}{% endif %}</pre>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+{% if edit_diff.content %}
+  <div class="edit-diff-section">
+    <h3 class="edit-diff-section-title">
+      {% translate "Content changes" context "edit diff section title" %}
+    </h3>
+    <ol class="edit-diff-lines">
+      {% for line in edit_diff.content.lines %}
+        <li>
+          {% if line.text.strip or line.diff %}
+            <pre class="edit-diff-line edit-diff-line-{% if line.marker == '-' %}removed{% elif line.marker == '+' %}added{% else %}neutral{% endif %}">{% if line.marker == "?" %}{% for diff in line.diff %}{% if diff.marker == "-" %}<del>{{ diff.text }}</del>{% elif diff.marker == "+" %}<ins>{{ diff.text }}</ins>{% else %}{{ diff.text }}{% endif %}{% endfor %}{% else %}{{ line.text }}{% endif %}</pre>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+{% endif %}
+{% if edit_diff.attachments %}
+  <div class="edit-diff-section">
+    <h3 class="edit-diff-section-title">
+      {% translate "Attachments:" context "edit diff section title" %}
+    </h3>
+    <ul class="edit-diff-attachments">
+      {% for attachment in edit_diff.attachments %}
+        <li class="edit-diff-attachment edit-diff-attachment-{% if attachment.change == '-' %}removed{% elif attachment.change == '+' %}added{% else %}neutral{% endif %}">
+          <div class="edit-diff-attachment-icon">
+            {% if attachment.change == '-' %}
+              {% include "tabler/square-x.svg" %}
+            {% elif attachment.change == '+' %}
+              {% include "tabler/square-plus.svg" %}
+            {% else %}
+              {% include "tabler/square.svg" %}
+            {% endif %}
+          </div>
+          <div class="edit-diff-attachment-body">
+            <div class="edit-diff-attachment-heading">
+              {% if attachment.change == '-' %}
+                <span class="sr-only">{% translate "Removed" context "edit diff attachment change" %}</span>
+              {% elif attachment.change == '+' %}
+                <span class="sr-only">{% translate "Added" context "edit diff attachment change" %}</span>
+              {% endif %}
+              {% if attachment.url %}
+                <a href="{{ attachment.url }}" class="edit-diff-attachment-name">
+                  {{ attachment.name }}
+                </a>
+              {% else %}
+                <span class="edit-diff-attachment-name">
+                  {{ attachment.name }}
+                </span>
+              {% endif %}
+            </div>
+            <ul class="edit-diff-attachment-info">
+              {% if attachment.filetype %}
+                <li>
+                  <div class="edit-diff-attachment-info-bullet" aria-hidden="true">&bull;</div>
+                  {{ attachment.filetype.name }}
+                </li>
+              {% elif attachment.filetype_id %}
+                <li>
+                  <div class="edit-diff-attachment-info-bullet" aria-hidden="true">&bull;</div>
+                  {{ attachment.filetype_id }}
+                </li>
+              {% endif %}
+              <li>
+                <div class="edit-diff-attachment-info-bullet" aria-hidden="true">&bull;</div>
+                <div>
+                  {{ attachment.size|filesizeformat }}
+                </div>
+              </li>
+              {% if attachment.width and attachment.height %}
+                <li>
+                  <div class="edit-diff-attachment-info-bullet" aria-hidden="true">&bull;</div>
+                  <div>
+                    {{ attachment.width }}&times;{{ attachment.height }}
+                  </div>
+                </li>
+              {% endif %}
+              {% if attachment.uploader %}
+                <li>
+                  <div class="edit-diff-attachment-info-bullet" aria-hidden="true">&bull;</div>
+                  <a href="{% url 'misago:user' pk=attachment.uploader slug=attachment.uploader_slug %}">
+                    {{ attachment.uploader_name }}
+                  </a>
+                </li>
+              {% else %}
+                <li>
+                  <div class="edit-diff-attachment-info-bullet" aria-hidden="true">&bull;</div>
+                  <div>
+                    {{ attachment.uploader_name }}
+                  </div>
+                </li>
+              {% endif %}
+              <li>
+                <div class="edit-diff-attachment-info-bullet" aria-hidden="true">&bull;</div>
+                <div
+                  title="{{ attachment.uploaded_at|date:'DATETIME_FORMAT' }}"
+                  mg-timestamp="{{ attachment.uploaded_at.isoformat }}"
+                >
+                  {{ attachment.uploaded_at|date_relative }}
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

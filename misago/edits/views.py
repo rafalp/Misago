@@ -20,6 +20,7 @@ class PostEditsView:
     template_name: str
     template_name_partial = "misago/post_edits/partial.html"
     template_name_modal = "misago/post_edits/modal/htmx.html"
+    template_name_edit_diff = "misago/post_edits/edit_diff.html"
 
     def get(
         self,
@@ -76,7 +77,7 @@ class PostEditsView:
                 "paginator": paginator,
                 "page": page_obj,
                 "post_edit": post_edit,
-                "edit_diff": self.get_edit_diff(request, post_edit),
+                "edit_diff": self.get_edit_diff_data(request, thread, post, post_edit),
                 "edits_url": self.get_post_edits_url(thread, post),
             },
         )
@@ -86,23 +87,49 @@ class PostEditsView:
     ) -> str:
         raise NotImplementedError()
 
-    def get_edit_diff(self, request: HttpRequest, post_edit: PostEdit | None):
+    def get_edit_diff_data(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        post: Post,
+        post_edit: PostEdit | None,
+    ) -> dict:
         if not post_edit:
             return None
 
         diff = {
+            "template_name": self.template_name_edit_diff,
+            "blank": True,
             "title": None,
             "content": None,
-            "attachments": [],
+            "attachments": self.get_edit_diff_attachments(
+                request, thread, post, post_edit
+            ),
         }
 
         if post_edit.old_title != post_edit.new_title:
             diff["title"] = diff_text(post_edit.old_title, post_edit.new_title)
+
         if post_edit.old_content != post_edit.new_content:
             diff["content"] = diff_text(post_edit.old_content, post_edit.new_content)
 
+        diff["blank"] = not bool(
+            diff["title"] or diff["content"] or diff["attachments"]
+        )
+
+        return diff
+
+    def get_edit_diff_attachments(
+        self, request: HttpRequest, thread: Thread, post: Post, post_edit: PostEdit
+    ) -> list:
+        data = []
+
         for attachment in post_edit.attachments:
             new_attachment = attachment.copy()
+            if not self.get_attachment_permission(
+                request, thread, post, new_attachment
+            ):
+                continue
 
             new_attachment["uploaded_at"] = dateparse.parse_datetime(
                 new_attachment["uploaded_at"]
@@ -136,9 +163,16 @@ class PostEditsView:
             else:
                 new_attachment["url"] = None
 
-            diff["attachments"].append(new_attachment)
+            data.append(new_attachment)
 
-        return diff
+        return data
+
+    def get_attachment_permission(
+        self, request: HttpRequest, thread: Thread, post: Post, attachment: dict
+    ) -> bool:
+        raise NotImplementedError(
+            "PostEditsView subclasses need to define 'get_attachment_permission' method"
+        )
 
 
 class ThreadPostEditsView(ThreadView, PostEditsView):
@@ -176,6 +210,11 @@ class ThreadPostEditsView(ThreadView, PostEditsView):
             },
         )
 
+    def get_attachment_permission(
+        self, request: HttpRequest, thread: Thread, post: Post, attachment: dict
+    ) -> bool:
+        return True
+
 
 class PrivateThreadPostEditsView(PrivateThreadView, PostEditsView):
     template_name = "misago/private_thread_post_edits/index.html"
@@ -211,6 +250,11 @@ class PrivateThreadPostEditsView(PrivateThreadView, PostEditsView):
                 "post_id": post.id,
             },
         )
+
+    def get_attachment_permission(
+        self, request: HttpRequest, thread: Thread, post: Post, attachment: dict
+    ) -> bool:
+        return True
 
 
 class PostRestoreView:

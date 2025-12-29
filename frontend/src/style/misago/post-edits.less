@@ -1,5 +1,5 @@
 .post-edit-card {
-  margin: @line-height-computed 0;
+  margin-bottom: @line-height-computed;
 
   border: 1px solid @gray-200;
   border-radius: @border-radius-base;
@@ -69,27 +69,40 @@
   background-color: @panel-bg;
 }
 
-.post-edit-card-section {
+.edit-diff-blankslate {
+  padding: @panel-body-padding;
+
+  font-weight: bold;
+  text-align: center;
+
+  @media screen and (min-width: @screen-sm-min) {
+    font-size: @font-size-large;
+    font-weight: normal;
+  }
+}
+
+.edit-diff-section {
   padding: ceil(@panel-body-padding / 2) @panel-body-padding;
 }
 
-.post-edit-card-section-title {
+.edit-diff-section-title {
   margin: 0;
   margin-bottom: ceil(@panel-body-padding / 2);
 
+  color: @gray-900;
   font-size: @font-size-base;
   font-weight: bold;
   line-height: @line-height-computed;
 }
 
-.post-edit-diff-lines {
+.edit-diff-lines {
   margin: 0;
 
   color: @gray-300;
   font-family: @font-family-monospace;
 }
 
-.post-edit-diff-line {
+.edit-diff-line {
   padding: 0;
   margin: 0;
 
@@ -114,19 +127,19 @@
   }
 }
 
-.post-edit-diff-line-neutral {
+.edit-diff-line-neutral {
   background: transparent;
 }
 
-.post-edit-diff-line-removed {
+.edit-diff-line-removed {
   background: @red-50;
 }
 
-.post-edit-diff-line-added {
+.edit-diff-line-added {
   background: @green-50;
 }
 
-.post-edit-diff-attachments {
+.edit-diff-attachments {
   margin: 0;
   padding: 0;
 
@@ -137,7 +150,7 @@
   border-radius: @border-radius-base;
 }
 
-.post-edit-diff-attachment {
+.edit-diff-attachment {
   display: flex;
   align-items: center;
 
@@ -150,7 +163,7 @@
   }
 }
 
-.post-edit-diff-attachment-icon {
+.edit-diff-attachment-icon {
   display: flex;
   flex-shrink: 0;
   align-items: center;
@@ -162,39 +175,86 @@
   color: @gray-400;
 }
 
-.post-edit-diff-attachment-removed {
+.edit-diff-attachment-removed {
   background: @red-50;
 
-  .post-edit-diff-attachment-icon,
-  .post-edit-diff-attachment-change {
+  .edit-diff-attachment-icon {
     color: @red-600;
   }
 }
 
-.post-edit-diff-attachment-added {
+.edit-diff-attachment-added {
   background: @green-50;
 
-  .post-edit-diff-attachment-icon,
-  .post-edit-diff-attachment-change {
+  .edit-diff-attachment-icon {
     color: @green-600;
   }
 }
 
-.post-edit-diff-attachment-name {
-  color: @gray-700;
+.edit-diff-attachment-heading {
+  word-break: break-all;
+}
+
+.edit-diff-attachment-name {
+  color: @gray-900;
   font-weight: bold;
+}
+
+.edit-diff-attachment-info {
+  padding: 0;
+
+  color: @gray-600;
+  list-style: none;
+
+  overflow: hidden;
+  font-size: 0;
+  word-break: break-all;
+
+  li {
+    display: inline-flex;
+    min-width: 0;
+
+    margin-left: ceil(@grid-gutter-width / -2);
+    margin-right: ceil(@grid-gutter-width / 2);
+
+    font-size: @font-size-base;
+  }
+
+  a:link,
+  a:visited {
+    color: @gray-800;
+  }
+
+  a:focus,
+  a:hover,
+  a:active {
+    text-decoration: underline;
+  }
+
+  .edit-diff-attachment-info-bullet {
+    position: relative;
+    top: 2px;
+
+    width: ceil(@grid-gutter-width / 2);
+
+    flex-shrink: 0;
+
+    color: @gray-500;
+    font-size: @font-size-small;
+    text-align: center;
+  }
 }
 
 .post-edits-paginator {
   display: flex;
   align-items: center;
   gap: ceil(@grid-gutter-width / 2);
-
-  margin: @line-height-computed 0;
 }
 
 .post-edits-paginator-legend {
   min-width: 0;
+
+  white-space: nowrap;
 }
 
 @media screen and (max-width: @screen-xs-max) {
@@ -202,5 +262,7 @@
     width: 100%;
 
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

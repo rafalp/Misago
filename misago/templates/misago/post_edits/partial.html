@@ -17,7 +17,14 @@
 <div id="misago-htmx-root">
   <div id="misago-page-scroll-target" class="scroll-target"></div>
   {% if paginator.num_pages > 1 %}
-    {% include "misago/post_edits/paginator.html" %}
+    <div class="toolbar">
+      <div class="toolbar-section">
+        <div class="toolbar-item">
+          {% include "misago/post_edits/paginator.html" %}
+        </div>
+      </div>
+      <div class="toolbar-spacer"></div>
+    </div>
   {% endif %}
   {% if post_edit %}
     <div class="post-edit-card">
@@ -62,111 +69,19 @@
       </div>
       <div class="post-edit-card-body">
         {% if edit_diff %}
-          {% if edit_diff.title %}
-            <div class="post-edit-card-section">
-              <h3 class="post-edit-card-section-title">
-                {% translate "Title changes" context "post edit diff section title" %}
-              </h3>
-              {% for line in edit_diff.title.lines %}
-                {% if line.text.strip or line.diff %}
-                  <pre class="post-edit-diff-line post-edit-diff-line-{% if line.marker == '-' %}removed{% elif line.marker == '+' %}added{% else %}neutral{% endif %}">{% if line.marker == "?" %}{% for diff in line.diff %}{% if diff.marker == "-" %}<del>{{ diff.text }}</del>{% elif diff.marker == "+" %}<ins>{{ diff.text }}</ins>{% else %}{{ diff.text }}{% endif %}{% endfor %}{% else %}{{ line.text }}{% endif %}</pre>
-                {% endif %}
-              {% endfor %}
-            </div>
-          {% endif %}
-          {% if edit_diff.content %}
-            <div class="post-edit-card-section">
-              <h3 class="post-edit-card-section-title">
-                {% translate "Content changes" context "post edit diff section title" %}
-              </h3>
-              <ol class="post-edit-diff-lines">
-                {% for line in edit_diff.content.lines %}
-                  <li>
-                    {% if line.text.strip or line.diff %}
-                      <pre class="post-edit-diff-line post-edit-diff-line-{% if line.marker == '-' %}removed{% elif line.marker == '+' %}added{% else %}neutral{% endif %}">{% if line.marker == "?" %}{% for diff in line.diff %}{% if diff.marker == "-" %}<del>{{ diff.text }}</del>{% elif diff.marker == "+" %}<ins>{{ diff.text }}</ins>{% else %}{{ diff.text }}{% endif %}{% endfor %}{% else %}{{ line.text }}{% endif %}</pre>
-                    {% endif %}
-                  </li>
-                {% endfor %}
-              </ol>
-            </div>
-          {% endif %}
-          {% if edit_diff.attachments %}
-            <div class="post-edit-card-section">
-              <h3 class="post-edit-card-section-title">
-                {% translate "Attachments:" context "post edit diff section title" %}
-              </h3>
-              <ul class="post-edit-diff-attachments">
-                {% for attachment in edit_diff.attachments %}
-                  <li class="post-edit-diff-attachment post-edit-diff-attachment-{% if attachment.change == '-' %}removed{% elif attachment.change == '+' %}added{% else %}neutral{% endif %}">
-                    <div class="post-edit-diff-attachment-icon">
-                      {% if attachment.filetype %}
-                        {% if attachment.filetype.is_video %}
-                          {% include "tabler/movie.svg" %}
-                        {% elif attachment.filetype.is_image %}
-                          {% include "tabler/photo.svg" %}
-                        {% elif attachment.filetype.is_archive %}
-                          {% include "tabler/file-zip.svg" %}
-                        {% else %}
-                          {% include "tabler/file.svg" %}
-                        {% endif %}
-                      {% else %}
-                        {% include "tabler/file-unknown.svg" %}
-                      {% endif %}
-                    </div>
-                    <div class="post-edit-diff-attachment-body">
-                      <div class="post-edit-diff-attachment-heading">
-                        {% if attachment.url %}
-                          <a href="{{ attachment.url }}" class="post-edit-diff-attachment-name">
-                            {{ attachment.name }}
-                          </a>
-                        {% else %}
-                          <span class="post-edit-diff-attachment-name">
-                            {{ attachment.name }}
-                          </span>
-                        {% endif %}
-                        {% if attachment.change == '-' %}
-                          <strong class="post-edit-diff-attachment-change">{% translate "removed" context "post edit diff attachment removed" %}</strong>
-                        {% elif attachment.change == '+' %}
-                          <strong class="post-edit-diff-attachment-change">{% translate "added" context "post edit diff attachment added" %}</strong>
-                        {% endif %}
-                      </div>
-                      <div class="post-edit-diff-attachment-info">
-                        {% if attachment.filetype %}
-                          {{ attachment.filetype.name }}
-                        {% elif attachment.filetype_id %}
-                          {{ attachment.filetype_id }}
-                        {% endif %}
-                        {{ attachment.size|filesizeformat }}
-                        {% if attachment.width and attachment.height %}
-                          {{ attachment.width }}&times;{{ attachment.height }}
-                        {% endif %}
-                        {% if attachment.uploader %}
-                          <a href="{% url 'misago:user' pk=attachment.uploader slug=attachment.uploader_slug %}">
-                            {{ attachment.uploader_name }}
-                          </a>
-                        {% else %}
-                          <span>
-                            {{ attachment.uploader_name }}
-                          </span>
-                        {% endif %}
-                        <span
-                          title="{{ attachment.uploaded_at|date:'DATETIME_FORMAT' }}"
-                          mg-timestamp="{{ attachment.uploaded_at.isoformat }}"
-                        >
-                          {{ attachment.uploaded_at|date_relative }}
-                        </span>
-                      </div>
-                    </div>
-                  </li>
-                {% endfor %}
-              </ul>
-            </div>
-          {% endif %}
+          {% include "misago/post_edits/edit_diff.html" %}
         {% endif %}
       </div>
     </div>
     {% if paginator.num_pages > 1 %}
-      {% include "misago/post_edits/paginator.html" with scroll=True %}
+      <div class="toolbar">
+        <div class="toolbar-section">
+          <div class="toolbar-item">
+            {% include "misago/post_edits/paginator.html" with scroll=True %}
+          </div>
+        </div>
+        <div class="toolbar-spacer"></div>
+      </div>
     {% endif %}
   {% else %}
     BLANKSLATE
