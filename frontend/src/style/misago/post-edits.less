@@ -8,6 +8,7 @@
 
 .post-edit-card-header {
   display: flex;
+  gap: ceil(@grid-gutter-width / 3);
   align-items: center;
 
   padding: @panel-body-padding;
@@ -18,54 +19,86 @@
 
 .post-edit-card-avatar {
   display: block;
-  margin-right: ceil(@grid-gutter-width / 3);
 
   img {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
 
     border-radius: @border-radius-small;
   }
 }
 
+.post-edit-card-header-main {
+  width: 100%;
+  min-width: 0;
+}
+
+.post-edit-card-header-caption {
+  display: flex;
+  min-width: 0;
+}
+
 .post-edit-card-username {
   display: block;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   color: @gray-600;
   font-weight: bold;
 
-  &:link,
-  &:visited,
-  &:hover,
-  &:active {
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
     color: @gray-900;
   }
 
-  &:hover,
-  &:active {
+  a:hover,
+  a:active {
     text-decoration: underline;
   }
 }
 
-.post-edit-card-timestamp,
-.post-edit-card-edit-reason {
+.post-edit-card-timestamp {
   display: flex;
+  align-items: center;
 
   color: @gray-600;
+}
 
-  &::before {
-    content: "•";
+.post-edit-card-timestamp-separator {
+  width: ceil(@grid-gutter-width / 2);
 
-    display: block;
-    margin: 0 ceil(@grid-gutter-width / 4);
+  color: @gray-500;
+  font-size: @font-size-small;
+  text-align: center;
+}
 
-    color: @gray-400;
+.post-edit-card-timestamp-long {
+  display: none;
+}
+
+@media screen and (min-width: @screen-sm-min) {
+  .post-edit-card-timestamp-short {
+    display: none;
+  }
+
+  .post-edit-card-timestamp-long {
+    display: inline;
   }
 }
 
-.post-edit-card-body {
-  padding: ceil(@panel-body-padding / 2) 0;
+.post-edit-card-reason {
+  max-width: 100%;
 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-edit-card-body {
   background-color: @panel-bg;
 }
 
@@ -82,15 +115,18 @@
 }
 
 .edit-diff-section {
-  padding: ceil(@panel-body-padding / 2) @panel-body-padding;
+  margin: @panel-body-padding;
+}
+
+.edit-diff-section + .edit-diff-section {
+  margin-top: @panel-body-padding * 2;
 }
 
 .edit-diff-section-title {
-  margin: 0;
-  margin-bottom: ceil(@panel-body-padding / 2);
+  margin: 0 0 @panel-body-padding 0;
 
   color: @gray-900;
-  font-size: @font-size-base;
+  font-size: @font-size-large;
   font-weight: bold;
   line-height: @line-height-computed;
 }

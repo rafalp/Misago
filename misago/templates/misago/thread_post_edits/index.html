@@ -4,11 +4,11 @@
 
 {% block title %}
   {% if post_edit %}
-    {% blocktranslate trimmed with post=post_number edit=page.number context "thread post edits page title" %}
+    {% blocktranslate trimmed with post=post_number edit=page.number context "post edits page title" %}
       Post #{{ post }} edit #{{ edit }}
     {% endblocktranslate %}
   {% else %}
-    {% blocktranslate trimmed with post=post_number context "thread post edits page title" %}
+    {% blocktranslate trimmed with post=post_number context "post edits page title" %}
       Post #{{ post }} edits
     {% endblocktranslate %}
   {% endif %} | {{ thread }} | {{ block.super }}

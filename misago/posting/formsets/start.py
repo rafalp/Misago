@@ -40,7 +40,7 @@ def _get_thread_start_formset_action(
 ) -> ThreadStartFormset:
     formset = ThreadStartFormset()
     formset.add_tab(
-        ThreadStartFormsetTabs.CONTENT, pgettext("start thread tab", "Content")
+        ThreadStartFormsetTabs.CONTENT, pgettext("start thread form tab", "Content")
     )
 
     formset.add_form(
@@ -62,7 +62,7 @@ def _get_thread_start_formset_action(
 
     if can_start_poll:
         formset.add_tab(
-            ThreadStartFormsetTabs.POLL, pgettext("start thread tab", "Poll")
+            ThreadStartFormsetTabs.POLL, pgettext("start thread form tab", "Poll")
         )
         formset.add_form(
             ThreadStartFormsetTabs.POLL,

@@ -36,22 +36,16 @@ def test_diff_text_diffs_removed_character():
             "marker": "?",
             "diff": [
                 {
-                    "index": 0,
                     "marker": None,
                     "text": "Lorem ipsu",
-                    "length": 10,
                 },
                 {
-                    "index": 10,
                     "marker": "-",
                     "text": "u",
-                    "length": 1,
                 },
                 {
-                    "index": 11,
                     "marker": None,
                     "text": "m",
-                    "length": 1,
                 },
             ],
         },
@@ -67,22 +61,16 @@ def test_diff_text_diffs_added_character():
             "marker": "?",
             "diff": [
                 {
-                    "index": 0,
                     "marker": None,
                     "text": "Lorem ip",
-                    "length": 8,
                 },
                 {
-                    "index": 8,
                     "marker": "+",
                     "text": "s",
-                    "length": 1,
                 },
                 {
-                    "index": 9,
                     "marker": None,
                     "text": "um",
-                    "length": 2,
                 },
             ],
         },
@@ -98,28 +86,20 @@ def test_diff_text_diffs_changed_character():
             "marker": "?",
             "diff": [
                 {
-                    "index": 0,
                     "marker": None,
                     "text": "Lorem ip",
-                    "length": 8,
                 },
                 {
-                    "index": 8,
                     "marker": "-",
                     "text": "l",
-                    "length": 1,
                 },
                 {
-                    "index": 8,
                     "marker": "+",
                     "text": "s",
-                    "length": 1,
                 },
                 {
-                    "index": 9,
                     "marker": None,
                     "text": "um",
-                    "length": 2,
                 },
             ],
         },
@@ -135,46 +115,32 @@ def test_diff_text_diffs_changed_some_characters():
             "marker": "?",
             "diff": [
                 {
-                    "index": 0,
                     "marker": None,
                     "text": "Lo",
-                    "length": 2,
                 },
                 {
-                    "index": 2,
                     "marker": "-",
                     "text": "r",
-                    "length": 1,
                 },
                 {
-                    "index": 2,
                     "marker": "+",
                     "text": "l",
-                    "length": 1,
                 },
                 {
-                    "index": 3,
                     "marker": None,
                     "text": "em i",
-                    "length": 4,
                 },
                 {
-                    "index": 7,
                     "marker": "-",
                     "text": "s",
-                    "length": 1,
                 },
                 {
-                    "index": 7,
                     "marker": "+",
                     "text": "p",
-                    "length": 1,
                 },
                 {
-                    "index": 8,
                     "marker": None,
                     "text": "lum",
-                    "length": 3,
                 },
             ],
         },
@@ -189,24 +155,21 @@ def test_diff_text_diffs_changed_word():
         {
             "marker": "?",
             "diff": [
-                {"index": 0, "marker": None, "text": "Lorem ipsum ", "length": 12},
                 {
-                    "index": 12,
+                    "marker": None,
+                    "text": "Lorem ipsum ",
+                },
+                {
                     "marker": "-",
                     "text": "dolor",
-                    "length": 5,
                 },
                 {
-                    "index": 12,
                     "marker": "+",
                     "text": "elit",
-                    "length": 4,
                 },
                 {
-                    "index": 16,
                     "marker": None,
                     "text": " met",
-                    "length": 4,
                 },
             ],
         },
@@ -226,22 +189,16 @@ def test_diff_text_real_case_1():
             "marker": "?",
             "diff": [
                 {
-                    "index": 0,
                     "marker": "-",
                     "text": "Basically",
-                    "length": 9,
                 },
                 {
-                    "index": 0,
                     "marker": "+",
                     "text": "If you want to go the `misago-docker` route",
-                    "length": 43,
                 },
                 {
-                    "index": 43,
                     "marker": None,
                     "text": ", start from there: https://misago.gitbook.io/docs/setup/misago#downloading-misago-on-the-server",
-                    "length": 96,
                 },
             ],
         },
@@ -261,34 +218,24 @@ def test_diff_text_real_case_2():
             "marker": "?",
             "diff": [
                 {
-                    "index": 0,
                     "marker": "-",
                     "text": "UI for",
-                    "length": 6,
                 },
                 {
-                    "index": 0,
                     "marker": "+",
                     "text": "Manage",
-                    "length": 6,
                 },
                 {
-                    "index": 6,
                     "marker": None,
                     "text": " private thread",
-                    "length": 15,
                 },
                 {
-                    "index": 21,
                     "marker": "+",
                     "text": "s",
-                    "length": 1,
                 },
                 {
-                    "index": 22,
                     "marker": None,
                     "text": " members",
-                    "length": 8,
                 },
             ],
         },
@@ -308,22 +255,16 @@ def test_diff_text_real_case_3():
             "marker": "?",
             "diff": [
                 {
-                    "index": 0,
                     "marker": "-",
                     "text": "U",
-                    "length": 1,
                 },
                 {
-                    "index": 0,
                     "marker": "+",
                     "text": "Add u",
-                    "length": 5,
                 },
                 {
-                    "index": 5,
                     "marker": None,
                     "text": "ser signatures",
-                    "length": 14,
                 },
             ],
         },
@@ -343,28 +284,73 @@ def test_diff_text_real_case_4():
             "marker": "?",
             "diff": [
                 {
-                    "index": 0,
                     "marker": "-",
                     "text": "M",
-                    "length": 1,
                 },
                 {
-                    "index": 0,
                     "marker": "+",
                     "text": "Add m",
-                    "length": 5,
                 },
                 {
-                    "index": 5,
                     "marker": None,
                     "text": "etatags for search engines and social sites",
-                    "length": 43,
                 },
                 {
-                    "index": 48,
                     "marker": "+",
                     "text": " to pages missing them",
-                    "length": 22,
+                },
+            ],
+        },
+    ]
+    assert result.added == 1
+    assert result.removed == 1
+
+
+def test_diff_text_real_case_5():
+    result = diff_text(
+        "Sometime in 2025. No promises or anything but judging by current pace, summer is most optimistic deadline, but I wouldn't be surprised if I miss it and only release after that.",
+        "Sometime late in 2025. No promises or anything but judging by current pace, November is most optimistic deadline, but I wouldn't be surprised if I miss it and only release after new year of 2026.",
+    )
+
+    assert result.lines == [
+        {
+            "marker": "?",
+            "diff": [
+                {
+                    "marker": None,
+                    "text": "Sometime ",
+                },
+                {
+                    "marker": "+",
+                    "text": "late ",
+                },
+                {
+                    "marker": None,
+                    "text": "in 2025. No promises or anything but judging by current pace, ",
+                },
+                {
+                    "marker": "-",
+                    "text": "summ",
+                },
+                {
+                    "marker": "+",
+                    "text": "Novemb",
+                },
+                {
+                    "marker": None,
+                    "text": "er is most optimistic deadline, but I wouldn't be surprised if I miss it and only release after ",
+                },
+                {
+                    "marker": "-",
+                    "text": "that",
+                },
+                {
+                    "marker": "+",
+                    "text": "new year of 2026",
+                },
+                {
+                    "marker": None,
+                    "text": ".",
                 },
             ],
         },

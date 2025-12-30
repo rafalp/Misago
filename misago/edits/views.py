@@ -1,14 +1,22 @@
 from django.core.paginator import Paginator
 from django.db import transaction
-from django.http import HttpResponse, HttpRequest
+from django.http import Http404, HttpResponse, HttpRequest
 from django.shortcuts import redirect, render
 from django.utils import dateparse
 from django.urls import reverse
 
 from ..attachments.filetypes import filetypes
+from ..permissions.checkutils import check_permissions
 from ..permissions.edits import check_see_post_edit_history_permission
-from ..permissions.privatethreads import check_see_private_thread_post_permission
-from ..permissions.threads import check_see_thread_post_permission
+from ..permissions.enums import CategoryPermission
+from ..permissions.privatethreads import (
+    check_edit_private_thread_post_permission,
+    check_see_private_thread_post_permission,
+)
+from ..permissions.threads import (
+    check_edit_thread_post_permission,
+    check_see_thread_post_permission,
+)
 from ..privatethreads.views.generic import PrivateThreadView
 from ..threads.models import Post, Thread
 from ..threads.views.generic import ThreadView
@@ -65,6 +73,9 @@ class PostEditsView:
         else:
             template_name = self.template_name
 
+        with check_permissions() as can_restore:
+            self.check_thread_post_edit_permission(request, thread, post)
+
         return render(
             request,
             template_name,
@@ -79,12 +90,18 @@ class PostEditsView:
                 "post_edit": post_edit,
                 "edit_diff": self.get_edit_diff_data(request, thread, post, post_edit),
                 "edits_url": self.get_post_edits_url(thread, post),
+                "can_restore": can_restore,
             },
         )
 
     def get_post_edits_url(
         self, thread: Thread, post: Post, page: int | None = None
     ) -> str:
+        raise NotImplementedError()
+
+    def check_thread_post_edit_permission(
+        self, request: HttpRequest, thread: Thread, post: Post
+    ):
         raise NotImplementedError()
 
     def get_edit_diff_data(
@@ -99,6 +116,7 @@ class PostEditsView:
 
         diff = {
             "template_name": self.template_name_edit_diff,
+            "edit_reason": post_edit.edit_reason,
             "blank": True,
             "title": None,
             "content": None,
@@ -170,9 +188,7 @@ class PostEditsView:
     def get_attachment_permission(
         self, request: HttpRequest, thread: Thread, post: Post, attachment: dict
     ) -> bool:
-        raise NotImplementedError(
-            "PostEditsView subclasses need to define 'get_attachment_permission' method"
-        )
+        raise NotImplementedError()
 
 
 class ThreadPostEditsView(ThreadView, PostEditsView):
@@ -210,10 +226,26 @@ class ThreadPostEditsView(ThreadView, PostEditsView):
             },
         )
 
+    def check_thread_post_edit_permission(
+        self, request: HttpRequest, thread: Thread, post: Post
+    ):
+        check_edit_thread_post_permission(
+            request.user_permissions, thread.category, thread, post
+        )
+
     def get_attachment_permission(
         self, request: HttpRequest, thread: Thread, post: Post, attachment: dict
     ) -> bool:
-        return True
+        if (
+            request.user.is_authenticated
+            and request.user.id == attachment["uploader_id"]
+        ):
+            return True
+
+        return (
+            thread.category_id
+            in request.user_permissions.categories[CategoryPermission.ATTACHMENTS]
+        )
 
 
 class PrivateThreadPostEditsView(PrivateThreadView, PostEditsView):
@@ -251,13 +283,83 @@ class PrivateThreadPostEditsView(PrivateThreadView, PostEditsView):
             },
         )
 
+    def check_thread_post_edit_permission(
+        self, request: HttpRequest, thread: Thread, post: Post
+    ):
+        check_edit_private_thread_post_permission(
+            request.user_permissions, thread, post
+        )
+
     def get_attachment_permission(
         self, request: HttpRequest, thread: Thread, post: Post, attachment: dict
     ) -> bool:
         return True
 
 
-class PostRestoreView:
+class PostEditView:
+    def get_thread_post_edit(
+        self,
+        request: HttpRequest,
+        post: Post,
+        post_edit_id: int,
+    ) -> PostEdit:
+        try:
+            return PostEdit.objects.get(id=post_edit_id, post=post)
+        except PostEdit.DoesNotExist:
+            raise Http404()
+
+
+class PostEditHideView(PostEditView):
+    def post(
+        self,
+        request: HttpRequest,
+        thread_id: int,
+        slug: str,
+        post_id: int,
+        post_edit_id: int,
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+        post = self.get_thread_post(request, thread, post_id)
+        post_edit = self.get_thread_post_edit(request, post, post_edit_id)
+
+        raise NotImplementedError()
+
+
+class PostEditUnhideView(PostEditView):
+    def post(
+        self,
+        request: HttpRequest,
+        thread_id: int,
+        slug: str,
+        post_id: int,
+        post_edit_id: int,
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+        post = self.get_thread_post(request, thread, post_id)
+        post_edit = self.get_thread_post_edit(request, post, post_edit_id)
+
+        raise NotImplementedError()
+
+
+class PostEditDeleteView(PostEditView):
+    def post(
+        self,
+        request: HttpRequest,
+        thread_id: int,
+        slug: str,
+        post_id: int,
+        post_edit_id: int,
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+        post = self.get_thread_post(request, thread, post_id)
+        post_edit = self.get_thread_post_edit(request, post, post_edit_id)
+
+        post_edit.delete()
+
+        # Return redirect to somewhere
+
+
+class PostEditRestoreView(PostEditView):
     def post(
         self,
         request: HttpRequest,
@@ -274,7 +376,7 @@ class PostRestoreView:
         raise NotImplementedError()
 
 
-class ThreadPostRestoreView(PostRestoreView, PrivateThreadView):
+class ThreadPostRestoreView(PostEditRestoreView, PrivateThreadView):
     def get_thread_post(
         self, request: HttpRequest, thread: Thread, post_id: int
     ) -> Post:
@@ -285,7 +387,7 @@ class ThreadPostRestoreView(PostRestoreView, PrivateThreadView):
         return post
 
 
-class PrivateThreadPostRestoreView(PostRestoreView, ThreadView):
+class PrivateThreadPostRestoreView(PostEditRestoreView, ThreadView):
     def get_thread_post(
         self, request: HttpRequest, thread: Thread, post_id: int
     ) -> Post:

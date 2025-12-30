@@ -96,10 +96,13 @@ def merge_changed_lines(lines: list[dict]) -> list[dict]:
 
 def combine_two_lines(src: dict, dst: dict) -> dict:
     if not dst["diff"]:
-        # Fast path for single line diff
+        # Fast path for simple line diff
         return {
             "marker": "?",
-            "diff": split_src_line_blocks(src),
+            "diff": [
+                {"marker": block["marker"], "text": block["text"]}
+                for block in split_src_line_blocks(src)
+            ],
         }
 
     src_blocks: list[dict] = split_src_line_blocks(src)
@@ -122,17 +125,28 @@ def combine_two_lines(src: dict, dst: dict) -> dict:
         except KeyError:
             dst_block = None
 
-        if not src_block and not dst_block:
-            start += 1
-
         if dst_block:
             if src_block and src_block["marker"] is not None:
-                diff.append(src_block)
-            diff.append(dst_block)
-            start += dst_block["length"]
-        elif src_block:
-            diff.append(src_block)
-            start += src_block["length"]
+                diff.append(
+                    {
+                        "marker": src_block["marker"],
+                        "text": src_block["text"],
+                    }
+                )
+            diff.append(
+                {
+                    "marker": dst_block["marker"],
+                    "text": dst_block["text"],
+                }
+            )
+        elif src_block and src_block["marker"] is not None:
+            diff.append(
+                {
+                    "marker": src_block["marker"],
+                    "text": src_block["text"],
+                }
+            )
+        start += 1
 
     return {
         "marker": "?",

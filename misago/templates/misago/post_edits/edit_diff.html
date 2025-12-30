@@ -1,31 +1,31 @@
 {% load i18n misago_formats %}
 
-{% if edit_diff.blank %}
+{% if blank %}
   <div class="edit-diff-blankslate">
     {% blocktranslate trimmed context "edit diff empty message" %}
       No changes were made in this edit, or you don’t have permission to see them.
     {% endblocktranslate %}
   </div>
 {% endif %}
-{% if edit_diff.title %}
+{% if title %}
   <div class="edit-diff-section">
     <h3 class="edit-diff-section-title">
       {% translate "Title changes" context "edit diff section title" %}
     </h3>
-    {% for line in edit_diff.title.lines %}
+    {% for line in title.lines %}
       {% if line.text.strip or line.diff %}
         <pre class="edit-diff-line edit-diff-line-{% if line.marker == '-' %}removed{% elif line.marker == '+' %}added{% else %}neutral{% endif %}">{% if line.marker == "?" %}{% for diff in line.diff %}{% if diff.marker == "-" %}<del>{{ diff.text }}</del>{% elif diff.marker == "+" %}<ins>{{ diff.text }}</ins>{% else %}{{ diff.text }}{% endif %}{% endfor %}{% else %}{{ line.text }}{% endif %}</pre>
       {% endif %}
     {% endfor %}
   </div>
 {% endif %}
-{% if edit_diff.content %}
+{% if content %}
   <div class="edit-diff-section">
     <h3 class="edit-diff-section-title">
       {% translate "Content changes" context "edit diff section title" %}
     </h3>
     <ol class="edit-diff-lines">
-      {% for line in edit_diff.content.lines %}
+      {% for line in content.lines %}
         <li>
           {% if line.text.strip or line.diff %}
             <pre class="edit-diff-line edit-diff-line-{% if line.marker == '-' %}removed{% elif line.marker == '+' %}added{% else %}neutral{% endif %}">{% if line.marker == "?" %}{% for diff in line.diff %}{% if diff.marker == "-" %}<del>{{ diff.text }}</del>{% elif diff.marker == "+" %}<ins>{{ diff.text }}</ins>{% else %}{{ diff.text }}{% endif %}{% endfor %}{% else %}{{ line.text }}{% endif %}</pre>
@@ -35,13 +35,13 @@
     </ol>
   </div>
 {% endif %}
-{% if edit_diff.attachments %}
+{% if attachments %}
   <div class="edit-diff-section">
     <h3 class="edit-diff-section-title">
-      {% translate "Attachments:" context "edit diff section title" %}
+      {% translate "Attachments" context "edit diff section title" %}
     </h3>
     <ul class="edit-diff-attachments">
-      {% for attachment in edit_diff.attachments %}
+      {% for attachment in attachments %}
         <li class="edit-diff-attachment edit-diff-attachment-{% if attachment.change == '-' %}removed{% elif attachment.change == '+' %}added{% else %}neutral{% endif %}">
           <div class="edit-diff-attachment-icon">
             {% if attachment.change == '-' %}
