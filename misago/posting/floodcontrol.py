@@ -19,7 +19,7 @@ def flood_control(request: HttpRequest) -> None:
     if posts_queryset.exists():
         raise ValidationError(
             message=pgettext_lazy(
-                "flood control",
+                "flood control validator",
                 "You can't post a new message so soon after the previous one.",
             ),
             code="flood_control",
