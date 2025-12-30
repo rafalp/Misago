@@ -83,7 +83,7 @@
             </div>
           {% endif %}
         </div>
-        {% if can_restore %}
+        {% if not edit_diff.blank and can_restore %}
           <details class="dropdown dropdown-noscript">
             <summary
               class="post-edit-card-dropdown-toggle"
@@ -93,7 +93,11 @@
             </summary>
             <ul class="dropdown-menu dropdown-menu-right">
               {% if can_restore %}
-                <li>RESTORE</li>
+                <li class="dropdown-menu-item">
+                  <a href="/">
+                    {% translate "Restore" context "post edit restore btn" %}
+                  </a>
+                </li>
               {% endif %}
             </ul>
           </details>
@@ -111,12 +115,18 @@
             <ul class="dropdown-menu dropdown-menu-right">
               {% if can_restore %}
                 <li>
-                  <form>
+                  <form
+                    class="dropdown-menu-item"
+                    action="/"
+                    method="post"
+                    mg-confirm="{% translate 'Are you sure you want to restore this post to before this edit? Attachments are not affected.' context 'post edit restore confirmation' %}"
+                  >
                     {% csrf_token %}
                     <button
-                      type="button"
+                      class="btn-link"
+                      type="submit"
                     >
-
+                      {% translate "Restore" context "post edit restore btn" %}
                     </button>
                   </form>
                 </li>
