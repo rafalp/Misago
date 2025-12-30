@@ -18,7 +18,7 @@
         <form
           action="{% url 'misago:private-thread-leave' thread_id=thread.id slug=thread.slug %}"
           method="post"
-          misago-confirm="{% translate 'Are you sure you want to leave this thread?' context 'private thread leave confirm prompt' %}"
+          mg-confirm="{% translate 'Are you sure you want to leave this thread?' context 'private thread leave confirm prompt' %}"
         >
           {% csrf_token %}
           <button class="btn btn-default btn-block">
@@ -45,7 +45,7 @@
         <form
           action="{% url 'misago:private-thread-leave' thread_id=thread.id slug=thread.slug %}"
           method="post"
-          misago-confirm="{% translate 'Are you sure you want to leave this thread?' context 'private thread leave confirm prompt' %}"
+          mg-confirm="{% translate 'Are you sure you want to leave this thread?' context 'private thread leave confirm prompt' %}"
         >
           {% csrf_token %}
           <button class="btn btn-default btn-block">

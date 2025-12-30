@@ -84,10 +84,44 @@
           {% endif %}
         </div>
         {% if can_restore %}
-          <div>
-            <button>
-            {% include "tabler/dots.svg" %}
+          <details class="dropdown dropdown-noscript">
+            <summary
+              class="post-edit-card-dropdown-toggle"
+              aria-label="{% translate 'Toggle options menu' context 'post edit options dropdown toggle' %}"
+            >
+              {% include "tabler/dots.svg" %}
+            </summary>
+            <ul class="dropdown-menu dropdown-menu-right">
+              {% if can_restore %}
+                <li>RESTORE</li>
+              {% endif %}
+            </ul>
+          </details>
+          <div class="dropdown">
+            <button
+              type="button"
+              class="post-edit-card-dropdown-toggle"
+              aria-label="{% translate 'Toggle options menu' context 'post edit options dropdown toggle' %}"
+              aria-haspopup="true"
+              aria-expanded="false"
+              data-toggle="dropdown"
+            >
+              {% include "tabler/dots.svg" %}
             </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              {% if can_restore %}
+                <li>
+                  <form>
+                    {% csrf_token %}
+                    <button
+                      type="button"
+                    >
+
+                    </button>
+                  </form>
+                </li>
+              {% endif %}
+            </ul>
           </div>
         {% endif %}
       </div>
