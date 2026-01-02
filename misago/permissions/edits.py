@@ -1,12 +1,17 @@
-from django.core.exceptions import PermissionDenied
-from django.utils.translation import pgettext
+from math import ceil
 
+from django.core.exceptions import PermissionDenied
+from django.utils import timezone
+from django.utils.translation import npgettext, pgettext
+
+from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..edits.models import PostEdit
 from ..threads.models import Post, Thread
-from .enums import CanSeePostEdits
+from .enums import CanHideOwnPostEdits, CanSeePostEdits
 from .hooks import (
     can_see_post_edit_count_hook,
+    check_delete_post_edit_permission_hook,
     check_see_post_edit_history_permission_hook,
 )
 from .proxy import UserPermissionsProxy
@@ -65,4 +70,102 @@ def _check_see_post_edit_history_permission_action(
                 "edits permission error",
                 "You can’t see this post’s edit history.",
             )
+        )
+
+
+def check_delete_post_edit_permission(
+    permissions: UserPermissionsProxy,
+    category: Category,
+    thread: Thread,
+    post: Post,
+    post_edit: PostEdit,
+):
+    check_delete_post_edit_permission_hook(
+        _check_delete_post_edit_permission_action,
+        permissions,
+        category,
+        thread,
+        post,
+        post_edit,
+    )
+
+
+def _check_delete_post_edit_permission_action(
+    permissions: UserPermissionsProxy,
+    category: Category,
+    thread: Thread,
+    post: Post,
+    post_edit: PostEdit,
+):
+    if permissions.is_global_moderator:
+        return
+
+    if category.tree_id == CategoryTree.THREADS and permissions.is_category_moderator(
+        category.id
+    ):
+        return
+
+    if (
+        category.tree_id == CategoryTree.PRIVATE_THREADS
+        and permissions.is_private_threads_moderator
+    ):
+        return
+
+    is_user_edit = permissions.user.id and permissions.user.id == post_edit.user_id
+
+    if not is_user_edit:
+        raise PermissionDenied(
+            pgettext(
+                "edits permission error",
+                "You can’t delete post edits made by other users.",
+            )
+        )
+
+    if permissions.can_hide_own_post_edits != CanHideOwnPostEdits.DELETE:
+        raise PermissionDenied(
+            pgettext(
+                "edits permission error",
+                "You can’t delete post edits.",
+            )
+        )
+
+    time_limit = permissions.own_post_edits_hide_time_limit * 60
+
+    if (
+        time_limit
+        and (timezone.now() - post_edit.edited_at).total_seconds() > time_limit
+    ):
+        if time_limit >= 86400:
+            days = ceil(time_limit / 86400)
+            raise PermissionDenied(
+                npgettext(
+                    "edits permission error",
+                    "You can't delete post edits older than %(days)s day.",
+                    "You can't delete post edits older than %(days)s days.",
+                    days,
+                )
+                % {"days": days}
+            )
+
+        if time_limit >= 90 * 60:
+            hours = ceil(time_limit / 3600)
+            raise PermissionDenied(
+                npgettext(
+                    "edits permission error",
+                    "You can't delete post edits older than %(hours)s hour.",
+                    "You can't delete post edits older than %(hours)s hours.",
+                    hours,
+                )
+                % {"hours": hours}
+            )
+
+        minutes = ceil(time_limit / 60)
+        raise PermissionDenied(
+            npgettext(
+                "edits permission error",
+                "You can't delete post edits older than %(minutes)s minute.",
+                "You can't delete post edits older than %(minutes)s minutes.",
+                minutes,
+            )
+            % {"minutes": minutes}
         )

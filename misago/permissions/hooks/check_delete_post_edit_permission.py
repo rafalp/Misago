@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Protocol
 
 from ...categories.models import Category
+from ...edits.models import PostEdit
 from ...plugins.hooks import FilterHook
 from ...threads.models import Post, Thread
 
@@ -8,9 +9,9 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckSeePostLikesPermissionHookAction(Protocol):
+class CheckDeletePostEditPermissionHookAction(Protocol):
     """
-    Misago function used to check if a user has permission to see post likes.
+    Misago function used to check if a user has permission to delete a post edit.
     Raises Django’s `PermissionDenied` if they don't.
 
     # Arguments
@@ -30,6 +31,10 @@ class CheckSeePostLikesPermissionHookAction(Protocol):
     ## `post: Post`
 
     A post to check permissions for.
+
+    ## `post_edit: PostEdit`
+
+    A post edit to check permissions for.
     """
 
     def __call__(
@@ -38,16 +43,17 @@ class CheckSeePostLikesPermissionHookAction(Protocol):
         category: Category,
         thread: Thread,
         post: Post,
+        post_edit: PostEdit,
     ) -> None: ...
 
 
-class CheckSeePostLikesPermissionHookFilter(Protocol):
+class CheckDeletePostEditPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckSeePostLikesPermissionHookAction`
+    ## `action: CheckDeletePostEditPermissionHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -69,57 +75,65 @@ class CheckSeePostLikesPermissionHookFilter(Protocol):
     ## `post: Post`
 
     A post to check permissions for.
+
+    ## `post_edit: PostEdit`
+
+    A post edit to check permissions for.
     """
 
     def __call__(
         self,
-        action: CheckSeePostLikesPermissionHookAction,
+        action: CheckDeletePostEditPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
         post: Post,
+        post_edit: PostEdit,
     ) -> None: ...
 
 
-class CheckSeePostLikesPermissionHook(
+class CheckDeletePostEditPermissionHook(
     FilterHook[
-        CheckSeePostLikesPermissionHookAction,
-        CheckSeePostLikesPermissionHookFilter,
+        CheckDeletePostEditPermissionHookAction,
+        CheckDeletePostEditPermissionHookFilter,
     ]
 ):
     """
-    This hook wraps a standard Misago function used to check if a user has permission
-    to see post likes. Raises Django’s `PermissionDenied` if they don't.
+    This hook wraps the standard Misago function used to check whether a user has
+    permission to delete a post edit.
+    Raises Django’s `PermissionDenied` if they don’t.
 
     # Example
 
     The code below implements a custom filter function that blocks a user from
-    seeing a specific post's likes if it has a flag.
+    deleting a post edit record if it has a protected flag.
 
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
     from misago.categories.models import Category
-    from misago.permissions.hooks import check_see_post_likes_permission_hook
+    from misago.edits.models import PostEdit
+    from misago.permissions.hooks import check_delete_post_edit_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.threads.models import Post, Thread
 
-    @check_see_post_likes_permission_hook.append_filter
-    def check_user_can_see_post_likes(
+    @check_delete_post_edit_permission_hook.append_filter
+    def check_user_can_delete_protected_post_edit(
         action,
         permissions: UserPermissionsProxy,
         category: Category,
         thread: Thread,
         post: Post,
+        post_edit: PostEdit,
     ) -> None:
         # Run standard permission checks
-        action(permissions, category, thread, post)
+        action(permissions, category, thread, post, post_edit)
 
-        if post.plugin_data.get("hide_likes"):
+        if post.plugin_data.get("is_protected"):
             raise PermissionDenied(
                 pgettext(
-                    "likes permission error",
-                    "You can't see this post's likes."
+                    "edits permission error",
+                    "You can't delete this post edit."
                 )
             )
     ```
@@ -129,13 +143,14 @@ class CheckSeePostLikesPermissionHook(
 
     def __call__(
         self,
-        action: CheckSeePostLikesPermissionHookAction,
+        action: CheckDeletePostEditPermissionHookAction,
         permissions: "UserPermissionsProxy",
         category: Category,
         thread: Thread,
         post: Post,
+        post_edit: PostEdit,
     ) -> None:
-        return super().__call__(action, permissions, category, thread, post)
+        return super().__call__(action, permissions, category, thread, post, post_edit)
 
 
-check_see_post_likes_permission_hook = CheckSeePostLikesPermissionHook()
+check_delete_post_edit_permission_hook = CheckDeletePostEditPermissionHook()

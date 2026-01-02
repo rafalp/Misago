@@ -282,6 +282,7 @@ def category_moderator(user, user_password, category, child_category):
 
     Moderator.objects.create(
         user=user,
+        is_global=False,
         categories=[category.id, child_category.id],
     )
 

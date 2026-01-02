@@ -120,7 +120,7 @@ def check_user_can_see_post_edits(
     if post.plugin_data.get("hide_edits"):
         raise PermissionDenied(
             pgettext(
-                "post permission error",
+                "edits permission error",
                 "You can't see this post's edits."
             )
         )

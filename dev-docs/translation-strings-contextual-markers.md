@@ -67,14 +67,14 @@ def username_validator(data):
         )
 ```
 
-Permission checks use "noun permission error" contexts for permission errors:
+Permission checks use "nouns permission error" contexts for permission errors:
 
 ```python
 def check_some_post_permission(user_permissions, post):
     if not user_permissions.is_moderator:
         raise PermissionDenied(
             pgettext(
-                "post permission error", "You can't do this."
+                "posts permission error", "You can't do this."
             ),
         )
 ```

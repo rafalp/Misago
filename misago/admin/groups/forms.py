@@ -160,7 +160,7 @@ class EditGroupForm(forms.ModelForm):
         widget=forms.RadioSelect(),
         coerce=int,
     )
-    own_hide_post_edits_time_limit = forms.IntegerField(
+    own_post_edits_hide_time_limit = forms.IntegerField(
         label=pgettext_lazy(
             "admin group permissions form", "Time limit for hiding own post edits"
         ),

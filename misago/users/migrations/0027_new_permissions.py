@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
                 ("can_see_others_post_edits", models.PositiveIntegerField(default=0)),
                 ("can_hide_own_post_edits", models.PositiveIntegerField(default=0)),
                 (
-                    "own_hide_post_edits_time_limit",
+                    "own_post_edits_hide_time_limit",
                     models.PositiveIntegerField(default=0),
                 ),
                 (

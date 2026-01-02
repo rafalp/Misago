@@ -119,7 +119,7 @@ class CheckSeePostEditHistoryPermissionHook(
         if post.plugin_data.get("hide_edits"):
             raise PermissionDenied(
                 pgettext(
-                    "post permission error",
+                    "edits permission error",
                     "You can't see this post's edits."
                 )
             )
