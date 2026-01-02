@@ -58,3 +58,6 @@ pylint.txt
 
 # Docker Compose Override
 docker-compose.override.yml
+
+# Database snapshot
+database.sql
