@@ -30,6 +30,9 @@ class UserPermissionsProxy:
     can_edit_own_posts: bool
     own_posts_edit_time_limit: int
     can_see_others_post_edits: int
+    can_hide_own_post_edits: int
+    own_hide_post_edits_time_limit: int
+    own_delete_post_edits_time_limit: int
     exempt_from_flood_control: bool
     can_upload_attachments: int
     attachment_size_limit: int

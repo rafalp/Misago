@@ -21,7 +21,10 @@ def custom_create_post_edit_filter(
     post: 'Post',
     user: Union['User', str],
     edit_reason: str | None,
-    old_content: str,
+    old_title: str | None,
+    new_title: str | None,
+    old_content: str | None,
+    new_content: str | None,
     attachments: list['Attachment'],
     deleted_attachments: list['Attachment'],
     edited_at: datetime | None=None,
@@ -61,6 +64,16 @@ A `str` with a short description of the changes, or `None`.
 #### `old_content: str`
 
 A `str` with a snapshot of `Post.original` before the edit.
+
+
+#### `old_title: str | None = None`
+
+A `str` with the previous thread title, or `None`.
+
+
+#### `new_title: str | None = None`
+
+A `str` with the new thread title, or `None`.
 
 
 #### `attachments: list[Attachment]`
@@ -105,7 +118,10 @@ def create_post_edit_action(
     post: 'Post',
     user: Union['User', str],
     edit_reason: str | None,
-    old_content: str,
+    old_title: str | None,
+    new_title: str | None,
+    old_content: str | None,
+    new_content: str | None,
     attachments: list['Attachment'],
     deleted_attachments: list['Attachment'],
     edited_at: datetime | None=None,
@@ -135,9 +151,24 @@ The user who performed the edit, a `User` instance or a `str` with the user’s 
 A `str` with a short description of the changes, or `None`.
 
 
-#### `old_content: str`
+#### `old_title: str | None = None`
 
-A `str` with a snapshot of `Post.original` before the edit.
+A `str` with the previous thread title, or `None`.
+
+
+#### `new_title: str | None = None`
+
+A `str` with the new thread title, or `None`.
+
+
+#### `old_content: str | None`
+
+A `str` with a snapshot of `Post.original` before the edit, or `None`.
+
+
+#### `new_content: str | None`
+
+A `str` with a snapshot of new `Post.original`, or `None`.
 
 
 #### `attachments: list[Attachment]`
@@ -195,7 +226,7 @@ def set_user_ip_on_post_edit(
     request: HttpRequest | None = None,
     **kwargs,
 ) -> PostEdit:
-    post_edit action(
+    post_edit = action(
         commit=False,
         request=request,
         **kwargs,

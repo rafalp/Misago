@@ -20,6 +20,7 @@ from ..permissions.threads import (
 from ..privatethreads.views.generic import PrivateThreadView
 from ..threads.models import Post, Thread
 from ..threads.views.generic import ThreadView
+from .delete import delete_post_edit
 from .diff import diff_text
 from .models import PostEdit
 
@@ -304,7 +305,13 @@ class PostEditView:
         post_edit_id: int,
     ) -> PostEdit:
         try:
-            return PostEdit.objects.get(id=post_edit_id, post=post)
+            post_edit = PostEdit.objects.select_related("user", "user__group").get(
+                id=post_edit_id, post=post
+            )
+            post_edit.category = post.category
+            post_edit.thread = post.thread
+            post_edit.post = post
+            return post_edit
         except PostEdit.DoesNotExist:
             raise Http404()
 
@@ -354,7 +361,10 @@ class PostEditDeleteView(PostEditView):
         post = self.get_thread_post(request, thread, post_id)
         post_edit = self.get_thread_post_edit(request, post, post_edit_id)
 
-        post_edit.delete()
+        if not self.check_permission(request, post_edit):
+            pass
+
+        delete_post_edit(post_edit, request=request)
 
         # Return redirect to somewhere
 

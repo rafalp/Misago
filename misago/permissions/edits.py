@@ -2,6 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext
 
 from ..categories.models import Category
+from ..edits.models import PostEdit
 from ..threads.models import Post, Thread
 from .enums import CanSeePostEdits
 from .hooks import (

@@ -49,6 +49,7 @@ Hooks instances are importable from the following Python modules:
 `misago.edits.hooks` defines the following hooks:
 
 - [`create_post_edit_hook`](./create-post-edit-hook.md)
+- [`delete_post_edit_hook`](./delete-post-edit-hook.md)
 
 
 ## `misago.likes.hooks`

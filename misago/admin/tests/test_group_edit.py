@@ -22,6 +22,13 @@ def get_form_data(group: Group) -> dict:
         "group-can_edit_own_posts": "1" if group.can_edit_own_posts else "",
         "group-own_posts_edit_time_limit": str(group.own_posts_edit_time_limit),
         "group-can_see_others_post_edits": str(group.can_see_others_post_edits),
+        "group-can_hide_own_post_edits": str(group.can_hide_own_post_edits),
+        "group-own_hide_post_edits_time_limit": str(
+            group.own_hide_post_edits_time_limit
+        ),
+        "group-own_delete_post_edits_time_limit": str(
+            group.own_delete_post_edits_time_limit
+        ),
         "group-exempt_from_flood_control": (
             "1" if group.exempt_from_flood_control else ""
         ),

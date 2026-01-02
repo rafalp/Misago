@@ -19,9 +19,29 @@ class CanSeePostEdits(IntEnum):
             ),
             (
                 cls.COUNT,
-                pgettext_lazy("see post edists permission", "Count only"),
+                pgettext_lazy("see post edits permission", "Count only"),
             ),
-            (cls.NEVER, pgettext_lazy("see post edists permission", "Never")),
+            (cls.NEVER, pgettext_lazy("see post edits permission", "Never")),
+        )
+
+
+class CanHideOwnPostEdits(IntEnum):
+    NEVER = 0
+    HIDE = 1
+    DELETE = 2
+
+    @classmethod
+    def get_choices(cls):
+        return (
+            (
+                cls.DELETE,
+                pgettext_lazy("hide own post edits permission", "Hide and delete"),
+            ),
+            (
+                cls.HIDE,
+                pgettext_lazy("hide own post edits permission", "Hide only"),
+            ),
+            (cls.NEVER, pgettext_lazy("hide own post edits permission", "Never")),
         )
 
 

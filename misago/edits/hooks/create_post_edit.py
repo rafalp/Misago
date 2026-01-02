@@ -209,7 +209,7 @@ class CreatePostEditHook(
         request: HttpRequest | None = None,
         **kwargs,
     ) -> PostEdit:
-        post_edit action(
+        post_edit = action(
             commit=False,
             request=request,
             **kwargs,

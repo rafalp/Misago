@@ -8,7 +8,12 @@ from ...parser.html import render_tokens_to_html
 from ...parser.metadata import get_tokens_metadata
 from ...parser.plaintext import render_tokens_to_plaintext
 from ...parser.tokenizer import tokenize
-from ...permissions.enums import CanSeePostEdits, CanSeePostLikes, CanUploadAttachments
+from ...permissions.enums import (
+    CanHideOwnPostEdits,
+    CanSeePostEdits,
+    CanSeePostLikes,
+    CanUploadAttachments,
+)
 from ...users.models import Group, GroupDescription
 from ..forms import YesNoSwitch
 
@@ -123,7 +128,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the number of minutes after a user starts a thread during which they can still edit it. Enter zero to remove this time limit.",
+            "Enter the number of minutes after a user starts a thread during which they can still edit it. Enter 0 to remove this time limit.",
         ),
         min_value=0,
     )
@@ -137,7 +142,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the number of minutes after a user posts a message during which they can still edit it. Enter zero to remove this time limit.",
+            "Enter the number of minutes after a user posts a message during which they can still edit it. Enter 0 to remove this time limit.",
         ),
         min_value=0,
     )
@@ -148,6 +153,32 @@ class EditGroupForm(forms.ModelForm):
         choices=CanSeePostEdits.get_choices(),
         widget=forms.RadioSelect(),
         coerce=int,
+    )
+    can_hide_own_post_edits = forms.TypedChoiceField(
+        label=pgettext_lazy("admin group permissions form", "Can hide own post edits"),
+        choices=CanHideOwnPostEdits.get_choices(),
+        widget=forms.RadioSelect(),
+        coerce=int,
+    )
+    own_hide_post_edits_time_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Time limit for hiding own post edits"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of minutes after a user edits a post during which they can still hide the edit record. Enter 0 to remove this time limit.",
+        ),
+        min_value=0,
+    )
+    own_delete_post_edits_time_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Time limit for deleting own post edits"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of minutes after a user edits a post during which they can still delete the edit record. Enter 0 to remove this time limit.",
+        ),
+        min_value=0,
     )
 
     exempt_from_flood_control = YesNoSwitch(
@@ -189,7 +220,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Maximum total storage space, in megabytes, that each member of this group can to use for their attachments. Enter zero to remove this limit.",
+            "Maximum total storage space, in megabytes, that each member of this group can to use for their attachments. Enter 0 to remove this limit.",
         ),
         min_value=0,
     )
@@ -199,7 +230,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Maximum total storage space, in megabytes, for member's attachments that have been uploaded but are not associated with any posts. Enter zero to remove this limit.",
+            "Maximum total storage space, in megabytes, for member's attachments that have been uploaded but are not associated with any posts. Enter 0 to remove this limit.",
         ),
         min_value=0,
     )
@@ -209,7 +240,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Maximum file size of an attachment in kilobytes. Enter zero to remove this limit. Note: Server and Django request body size limits will still apply.",
+            "Maximum file size of an attachment in kilobytes. Enter 0 to remove this limit. Note: Server and Django request body size limits will still apply.",
         ),
         min_value=0,
     )
@@ -235,7 +266,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the number of minutes after a user starts a poll during which they can still edit it. Enter zero to remove this time limit.",
+            "Enter the number of minutes after a user starts a poll during which they can still edit it. Enter 0 to remove this time limit.",
         ),
         min_value=0,
     )
@@ -248,7 +279,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the number of minutes after a user starts a poll during which they can still edit it. Enter zero to remove this time limit.",
+            "Enter the number of minutes after a user starts a poll during which they can still edit it. Enter 0 to remove this time limit.",
         ),
         min_value=0,
     )
@@ -284,7 +315,7 @@ class EditGroupForm(forms.ModelForm):
         label=pgettext_lazy("admin group permissions form", "Limit username changes"),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter zero to don't limit username changes.",
+            "Enter 0 to don't limit username changes.",
         ),
         min_value=0,
     )
@@ -294,7 +325,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the number of hours since the change after which it no longer counts towards the limit, or enter zero for old username changes to always count.",
+            "Enter the number of hours since the change after which it no longer counts towards the limit, or enter 0 for old username changes to always count.",
         ),
         min_value=0,
     )
@@ -304,7 +335,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the minimum time between changes in hours, or enter zero to not limit the time between changes.",
+            "Enter the minimum time between changes in hours, or enter 0 to not limit the time between changes.",
         ),
         min_value=0,
     )

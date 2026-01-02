@@ -2,7 +2,12 @@
 
 from django.db import migrations
 
-from ...permissions.enums import CanSeePostEdits, CanSeePostLikes, CanUploadAttachments
+from ...permissions.enums import (
+    CanHideOwnPostEdits,
+    CanSeePostEdits,
+    CanSeePostLikes,
+    CanUploadAttachments,
+)
 from ...permissions.permissionsid import get_permissions_id
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
@@ -31,6 +36,9 @@ def create_default_groups(apps, schema_editor):
                 can_edit_own_posts=True,
                 own_posts_edit_time_limit=0,
                 can_see_others_post_edits=CanSeePostEdits.HISTORY,
+                can_hide_own_post_edits=CanHideOwnPostEdits.DELETE,
+                own_hide_post_edits_time_limit=0,
+                own_delete_post_edits_time_limit=0,
                 exempt_from_flood_control=True,
                 can_use_private_threads=True,
                 can_start_private_threads=True,
@@ -67,6 +75,9 @@ def create_default_groups(apps, schema_editor):
                 can_edit_own_posts=True,
                 own_posts_edit_time_limit=0,
                 can_see_others_post_edits=CanSeePostEdits.HISTORY,
+                can_hide_own_post_edits=CanHideOwnPostEdits.DELETE,
+                own_hide_post_edits_time_limit=0,
+                own_delete_post_edits_time_limit=0,
                 exempt_from_flood_control=True,
                 can_use_private_threads=True,
                 can_start_private_threads=True,
@@ -100,6 +111,9 @@ def create_default_groups(apps, schema_editor):
                 can_edit_own_posts=True,
                 own_posts_edit_time_limit=0,
                 can_see_others_post_edits=CanSeePostEdits.HISTORY,
+                can_hide_own_post_edits=CanHideOwnPostEdits.HIDE,
+                own_hide_post_edits_time_limit=30,
+                own_delete_post_edits_time_limit=0,
                 can_use_private_threads=True,
                 can_start_private_threads=True,
                 private_thread_members_limit=5,
