@@ -1,9 +1,7 @@
 from typing import TYPE_CHECKING, Protocol
 
-from ...categories.models import Category
 from ...edits.models import PostEdit
 from ...plugins.hooks import FilterHook
-from ...threads.models import Post, Thread
 
 if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
@@ -20,18 +18,6 @@ class CheckDeletePostEditPermissionHookAction(Protocol):
 
     A proxy object with the current user's permissions.
 
-    ## `category: Category`
-
-    A category to check permissions for.
-
-    ## `thread: Thread`
-
-    A thread to check permissions for.
-
-    ## `post: Post`
-
-    A post to check permissions for.
-
     ## `post_edit: PostEdit`
 
     A post edit to check permissions for.
@@ -40,9 +26,6 @@ class CheckDeletePostEditPermissionHookAction(Protocol):
     def __call__(
         self,
         permissions: "UserPermissionsProxy",
-        category: Category,
-        thread: Thread,
-        post: Post,
         post_edit: PostEdit,
     ) -> None: ...
 
@@ -64,18 +47,6 @@ class CheckDeletePostEditPermissionHookFilter(Protocol):
 
     A proxy object with the current user's permissions.
 
-    ## `category: Category`
-
-    A category to check permissions for.
-
-    ## `thread: Thread`
-
-    A thread to check permissions for.
-
-    ## `post: Post`
-
-    A post to check permissions for.
-
     ## `post_edit: PostEdit`
 
     A post edit to check permissions for.
@@ -85,9 +56,6 @@ class CheckDeletePostEditPermissionHookFilter(Protocol):
         self,
         action: CheckDeletePostEditPermissionHookAction,
         permissions: "UserPermissionsProxy",
-        category: Category,
-        thread: Thread,
-        post: Post,
         post_edit: PostEdit,
     ) -> None: ...
 
@@ -111,25 +79,20 @@ class CheckDeletePostEditPermissionHook(
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
-    from misago.categories.models import Category
     from misago.edits.models import PostEdit
     from misago.permissions.hooks import check_delete_post_edit_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
-    from misago.threads.models import Post, Thread
 
     @check_delete_post_edit_permission_hook.append_filter
     def check_user_can_delete_protected_post_edit(
         action,
         permissions: UserPermissionsProxy,
-        category: Category,
-        thread: Thread,
-        post: Post,
         post_edit: PostEdit,
     ) -> None:
         # Run standard permission checks
-        action(permissions, category, thread, post, post_edit)
+        action(permissions, post_edit)
 
-        if post.plugin_data.get("is_protected"):
+        if post_edit.plugin_data.get("is_protected"):
             raise PermissionDenied(
                 pgettext(
                     "edits permission error",
@@ -145,12 +108,9 @@ class CheckDeletePostEditPermissionHook(
         self,
         action: CheckDeletePostEditPermissionHookAction,
         permissions: "UserPermissionsProxy",
-        category: Category,
-        thread: Thread,
-        post: Post,
         post_edit: PostEdit,
     ) -> None:
-        return super().__call__(action, permissions, category, thread, post, post_edit)
+        return super().__call__(action, permissions, post_edit)
 
 
 check_delete_post_edit_permission_hook = CheckDeletePostEditPermissionHook()

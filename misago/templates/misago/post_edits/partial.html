@@ -144,7 +144,7 @@
                     class="dropdown-menu-item"
                     action="{{ post_edit_delete_url }}"
                     method="post"
-                    mg-confirm="{% translate 'Are you sure you want to restore this post to before this edit? Attachments are not affected.' context 'post edit restore confirmation' %}"
+                    mg-confirm="{% translate 'Are you sure you want to delete this edit?' context 'post edit delete confirmation' %}"
                   >
                     {% csrf_token %}
                     <button

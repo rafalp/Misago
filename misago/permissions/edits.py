@@ -74,31 +74,23 @@ def _check_see_post_edit_history_permission_action(
 
 
 def check_delete_post_edit_permission(
-    permissions: UserPermissionsProxy,
-    category: Category,
-    thread: Thread,
-    post: Post,
-    post_edit: PostEdit,
+    permissions: UserPermissionsProxy, post_edit: PostEdit
 ):
     check_delete_post_edit_permission_hook(
         _check_delete_post_edit_permission_action,
         permissions,
-        category,
-        thread,
-        post,
         post_edit,
     )
 
 
 def _check_delete_post_edit_permission_action(
     permissions: UserPermissionsProxy,
-    category: Category,
-    thread: Thread,
-    post: Post,
     post_edit: PostEdit,
 ):
     if permissions.is_global_moderator:
         return
+
+    category = post_edit.category
 
     if category.tree_id == CategoryTree.THREADS and permissions.is_category_moderator(
         category.id

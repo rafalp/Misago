@@ -2,10 +2,14 @@ from django.urls import path
 
 from .views import (
     ThreadPostEditDeleteView,
+    ThreadPostEditHideView,
     ThreadPostEditRestoreView,
+    ThreadPostEditUnhideView,
     ThreadPostEditsView,
     PrivateThreadPostEditDeleteView,
+    PrivateThreadPostEditHideView,
     PrivateThreadPostEditRestoreView,
+    PrivateThreadPostEditUnhideView,
     PrivateThreadPostEditsView,
 )
 
@@ -22,12 +26,22 @@ urlpatterns = [
         name="thread-post-edits",
     ),
     path(
-        "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/restore/<int:post_edit_id>/",
+        "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/restore/",
         ThreadPostEditRestoreView.as_view(),
         name="thread-post-edit-restore",
     ),
     path(
-        "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/delete/<int:post_edit_id>/",
+        "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/hide/",
+        ThreadPostEditHideView.as_view(),
+        name="thread-post-edit-hide",
+    ),
+    path(
+        "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/unhide/",
+        ThreadPostEditUnhideView.as_view(),
+        name="thread-post-edit-unhide",
+    ),
+    path(
+        "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/delete/",
         ThreadPostEditDeleteView.as_view(),
         name="thread-post-edit-delete",
     ),
@@ -42,12 +56,22 @@ urlpatterns = [
         name="private-thread-post-edits",
     ),
     path(
-        "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/restore/<int:post_edit_id>/",
+        "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/restore/",
         PrivateThreadPostEditRestoreView.as_view(),
         name="private-thread-post-edit-restore",
     ),
     path(
-        "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/delete/<int:post_edit_id>/",
+        "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/hide/",
+        PrivateThreadPostEditHideView.as_view(),
+        name="private-thread-post-edit-hide",
+    ),
+    path(
+        "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/unhide/",
+        PrivateThreadPostEditUnhideView.as_view(),
+        name="private-thread-post-edit-unhide",
+    ),
+    path(
+        "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/delete/",
         PrivateThreadPostEditDeleteView.as_view(),
         name="private-thread-post-edit-delete",
     ),
