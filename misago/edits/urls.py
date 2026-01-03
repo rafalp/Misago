@@ -1,10 +1,12 @@
 from django.urls import path
 
 from .views import (
+    ThreadPostEditDeleteView,
+    ThreadPostEditRestoreView,
     ThreadPostEditsView,
-    ThreadPostRestoreView,
+    PrivateThreadPostEditDeleteView,
+    PrivateThreadPostEditRestoreView,
     PrivateThreadPostEditsView,
-    PrivateThreadPostRestoreView,
 )
 
 
@@ -21,22 +23,32 @@ urlpatterns = [
     ),
     path(
         "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/restore/<int:post_edit_id>/",
-        ThreadPostRestoreView.as_view(),
-        name="thread-post-restore",
+        ThreadPostEditRestoreView.as_view(),
+        name="thread-post-edit-restore",
     ),
     path(
-        "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/",
+        "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/delete/<int:post_edit_id>/",
+        ThreadPostEditDeleteView.as_view(),
+        name="thread-post-edit-delete",
+    ),
+    path(
+        "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/",
         PrivateThreadPostEditsView.as_view(),
         name="private-thread-post-edits",
     ),
     path(
-        "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:page>/",
+        "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:page>/",
         PrivateThreadPostEditsView.as_view(),
         name="private-thread-post-edits",
     ),
     path(
-        "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/restore/<int:post_edit_id>/",
-        PrivateThreadPostRestoreView.as_view(),
-        name="private-thread-post-restore",
+        "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/restore/<int:post_edit_id>/",
+        PrivateThreadPostEditRestoreView.as_view(),
+        name="private-thread-post-edit-restore",
+    ),
+    path(
+        "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/delete/<int:post_edit_id>/",
+        PrivateThreadPostEditDeleteView.as_view(),
+        name="private-thread-post-edit-delete",
     ),
 ]

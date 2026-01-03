@@ -83,7 +83,7 @@
             </div>
           {% endif %}
         </div>
-        {% if not edit_diff.blank and can_restore %}
+        {% if not edit_diff.blank and show_options %}
           <details class="dropdown dropdown-noscript">
             <summary
               class="post-edit-card-dropdown-toggle"
@@ -94,8 +94,15 @@
             <ul class="dropdown-menu dropdown-menu-right">
               {% if can_restore %}
                 <li class="dropdown-menu-item">
-                  <a href="/">
+                  <a href="{{ post_edit_restore_url }}">
                     {% translate "Restore" context "post edit restore btn" %}
+                  </a>
+                </li>
+              {% endif %}
+              {% if can_delete %}
+                <li class="dropdown-menu-item">
+                  <a href="{{ post_edit_delete_url }}">
+                    {% translate "Delete" context "post edit restore btn" %}
                   </a>
                 </li>
               {% endif %}
@@ -117,7 +124,7 @@
                 <li>
                   <form
                     class="dropdown-menu-item"
-                    action="/"
+                    action="{{ post_edit_restore_url }}"
                     method="post"
                     mg-confirm="{% translate 'Are you sure you want to restore this post to before this edit? Attachments are not affected.' context 'post edit restore confirmation' %}"
                   >
@@ -127,6 +134,24 @@
                       type="submit"
                     >
                       {% translate "Restore" context "post edit restore btn" %}
+                    </button>
+                  </form>
+                </li>
+              {% endif %}
+              {% if can_delete %}
+                <li>
+                  <form
+                    class="dropdown-menu-item"
+                    action="{{ post_edit_delete_url }}"
+                    method="post"
+                    mg-confirm="{% translate 'Are you sure you want to restore this post to before this edit? Attachments are not affected.' context 'post edit restore confirmation' %}"
+                  >
+                    {% csrf_token %}
+                    <button
+                      class="btn-link"
+                      type="submit"
+                    >
+                      {% translate "Delete" context "post edit restore btn" %}
                     </button>
                   </form>
                 </li>
