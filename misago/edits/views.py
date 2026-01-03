@@ -220,8 +220,6 @@ class PostEditsView(View):
     def get_edit_diff_data(
         self,
         request: HttpRequest,
-        thread: Thread,
-        post: Post,
         post_edit: PostEdit | None,
     ) -> dict:
         if not post_edit:
@@ -233,9 +231,7 @@ class PostEditsView(View):
             "blank": True,
             "title": None,
             "content": None,
-            "attachments": self.get_edit_diff_attachments(
-                request, thread, post, post_edit
-            ),
+            "attachments": self.get_edit_diff_attachments(request, post_edit),
         }
 
         if post_edit.old_title != post_edit.new_title:
@@ -251,14 +247,14 @@ class PostEditsView(View):
         return diff
 
     def get_edit_diff_attachments(
-        self, request: HttpRequest, thread: Thread, post: Post, post_edit: PostEdit
+        self, request: HttpRequest, post_edit: PostEdit
     ) -> list:
         data = []
 
         for attachment in post_edit.attachments:
             new_attachment = attachment.copy()
             if not self.get_attachment_permission(
-                request, thread, post, new_attachment
+                request, post_edit.post, new_attachment
             ):
                 continue
 
@@ -299,7 +295,7 @@ class PostEditsView(View):
         return data
 
     def get_attachment_permission(
-        self, request: HttpRequest, thread: Thread, post: Post, attachment: dict
+        self, request: HttpRequest, post: Post, attachment: dict
     ) -> bool:
         raise NotImplementedError()
 
@@ -321,7 +317,7 @@ class ThreadPostEditsView(PostEditsView):
         )
 
     def get_attachment_permission(
-        self, request: HttpRequest, thread: Thread, post: Post, attachment: dict
+        self, request: HttpRequest, post: Post, attachment: dict
     ) -> bool:
         if (
             request.user.is_authenticated
@@ -330,7 +326,7 @@ class ThreadPostEditsView(PostEditsView):
             return True
 
         return (
-            thread.category_id
+            post.category_id
             in request.user_permissions.categories[CategoryPermission.ATTACHMENTS]
         )
 
@@ -352,7 +348,7 @@ class PrivateThreadPostEditsView(PostEditsView):
         )
 
     def get_attachment_permission(
-        self, request: HttpRequest, thread: Thread, post: Post, attachment: dict
+        self, request: HttpRequest, post: Post, attachment: dict
     ) -> bool:
         return True
 
