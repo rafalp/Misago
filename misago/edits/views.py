@@ -15,14 +15,8 @@ from ..permissions.edits import (
     check_see_post_edit_history_permission,
 )
 from ..permissions.enums import CategoryPermission
-from ..permissions.privatethreads import (
-    check_edit_private_thread_post_permission,
-    check_see_private_thread_post_permission,
-)
-from ..permissions.threads import (
-    check_edit_thread_post_permission,
-    check_see_thread_post_permission,
-)
+from ..permissions.privatethreads import check_edit_private_thread_post_permission
+from ..permissions.threads import check_edit_thread_post_permission
 from ..privatethreads.views.backend import private_thread_backend
 from ..threads.models import Post, Thread
 from ..threads.views.backend import ViewBackend, thread_backend
@@ -145,7 +139,7 @@ class PostEditsView(View):
 
         if not request.is_htmx and thread.slug != slug:
             return redirect(
-                self.thread_backend.get_thread_post_edits_url(thread, post),
+                self.thread_backend.get_thread_post_edits_url(post),
                 permanent=True,
             )
 
@@ -158,9 +152,7 @@ class PostEditsView(View):
 
         if not page or page > paginator.num_pages:
             return redirect(
-                self.thread_backend.get_thread_post_edits_url(
-                    thread, post, paginator.num_pages
-                )
+                self.thread_backend.get_thread_post_edits_url(post, paginator.num_pages)
             )
 
         page_obj = paginator.get_page(page)
@@ -182,7 +174,7 @@ class PostEditsView(View):
             template_name = self.template_name
 
         with check_permissions() as can_restore:
-            self.check_permission(request, thread, post)
+            self.check_permission(request, post)
 
         with check_permissions() as can_delete:
             check_delete_post_edit_permission(request.user_permissions, post_edit)
@@ -198,14 +190,12 @@ class PostEditsView(View):
                 "post_number": self.thread_backend.get_thread_post_number(
                     request, thread, post
                 ),
-                "post_url": self.thread_backend.get_thread_post_url(thread, post),
+                "post_url": self.thread_backend.get_thread_post_url(post),
                 "paginator": paginator,
                 "page": page_obj,
                 "post_edit": post_edit,
                 "edit_diff": self.get_edit_diff_data(request, post_edit),
-                "post_edits_url": self.thread_backend.get_thread_post_edits_url(
-                    thread, post
-                ),
+                "post_edits_url": self.thread_backend.get_thread_post_edits_url(post),
                 "show_options": can_restore or can_delete,
                 "can_restore": can_restore,
                 "can_delete": can_delete,
@@ -218,7 +208,7 @@ class PostEditsView(View):
             },
         )
 
-    def check_permission(self, request: HttpRequest, thread: Thread, post: Post):
+    def check_permission(self, request: HttpRequest, post: Post):
         raise NotImplementedError()
 
     def get_edit_diff_data(
@@ -313,9 +303,9 @@ class ThreadPostEditsView(PostEditsView):
     post_edit_restore_url = "misago:thread-post-edit-restore"
     post_edit_delete_url = "misago:thread-post-edit-delete"
 
-    def check_permission(self, request: HttpRequest, thread: Thread, post: Post):
+    def check_permission(self, request: HttpRequest, post: Post):
         check_edit_thread_post_permission(
-            request.user_permissions, thread.category, thread, post
+            request.user_permissions, post.category, post.thread, post
         )
 
     def get_attachment_permission(
@@ -342,9 +332,9 @@ class PrivateThreadPostEditsView(PostEditsView):
     post_edit_restore_url = "misago:private-thread-post-edit-restore"
     post_edit_delete_url = "misago:private-thread-post-edit-delete"
 
-    def check_permission(self, request: HttpRequest, thread: Thread, post: Post):
+    def check_permission(self, request: HttpRequest, post: Post):
         check_edit_private_thread_post_permission(
-            request.user_permissions, thread, post
+            request.user_permissions, post.thread, post
         )
 
     def get_attachment_permission(
@@ -451,7 +441,6 @@ class PostEditDeleteView(PostEditView):
 
         return redirect(
             self.thread_backend.get_thread_post_edits_url(
-                post_edit.thread,
                 post_edit.post,
                 post_edit_index,
             )

@@ -109,9 +109,7 @@ def test_check_delete_post_edit_permission_passes_for_thread_post_edit_for_globa
     post_edit = create_post_edit(post=post, user="DeletedUser")
 
     permissions = user_permissions_factory(moderator)
-    check_delete_post_edit_permission(
-        permissions, post.category, post.thread, post, post_edit
-    )
+    check_delete_post_edit_permission(permissions, post_edit)
 
 
 def test_check_delete_post_edit_permission_passes_for_thread_post_edit_for_category_moderator(
@@ -126,9 +124,7 @@ def test_check_delete_post_edit_permission_passes_for_thread_post_edit_for_categ
     post_edit = create_post_edit(post=post, user="DeletedUser")
 
     permissions = user_permissions_factory(user)
-    check_delete_post_edit_permission(
-        permissions, post.category, post.thread, post, post_edit
-    )
+    check_delete_post_edit_permission(permissions, post_edit)
 
 
 def test_check_delete_post_edit_permission_passes_for_private_thread_post_edit_for_global_moderator(
@@ -138,9 +134,7 @@ def test_check_delete_post_edit_permission_passes_for_private_thread_post_edit_f
     post_edit = create_post_edit(post=post, user="DeletedUser")
 
     permissions = user_permissions_factory(moderator)
-    check_delete_post_edit_permission(
-        permissions, post.category, post.thread, post, post_edit
-    )
+    check_delete_post_edit_permission(permissions, post_edit)
 
 
 def test_check_delete_post_edit_permission_passes_for_private_thread_post_edit_for_private_threads_moderator(
@@ -156,9 +150,7 @@ def test_check_delete_post_edit_permission_passes_for_private_thread_post_edit_f
     post_edit = create_post_edit(post=post, user="DeletedUser")
 
     permissions = user_permissions_factory(user)
-    check_delete_post_edit_permission(
-        permissions, post.category, post.thread, post, post_edit
-    )
+    check_delete_post_edit_permission(permissions, post_edit)
 
 
 def test_check_delete_post_edit_permission_fails_user_for_deleted_user_post_edit(
@@ -169,9 +161,7 @@ def test_check_delete_post_edit_permission_fails_user_for_deleted_user_post_edit
     permissions = user_permissions_factory(user)
 
     with pytest.raises(PermissionDenied):
-        check_delete_post_edit_permission(
-            permissions, post.category, post.thread, post, post_edit
-        )
+        check_delete_post_edit_permission(permissions, post_edit)
 
 
 def test_check_delete_post_edit_permission_fails_user_for_other_user_post_edit(
@@ -182,9 +172,7 @@ def test_check_delete_post_edit_permission_fails_user_for_other_user_post_edit(
     permissions = user_permissions_factory(user)
 
     with pytest.raises(PermissionDenied):
-        check_delete_post_edit_permission(
-            permissions, post.category, post.thread, post, post_edit
-        )
+        check_delete_post_edit_permission(permissions, post_edit)
 
 
 def test_check_delete_post_edit_permission_fails_user_with_hide_permission_for_own_post_edit(
@@ -198,9 +186,7 @@ def test_check_delete_post_edit_permission_fails_user_with_hide_permission_for_o
     permissions = user_permissions_factory(user)
 
     with pytest.raises(PermissionDenied):
-        check_delete_post_edit_permission(
-            permissions, post.category, post.thread, post, post_edit
-        )
+        check_delete_post_edit_permission(permissions, post_edit)
 
 
 def test_check_delete_post_edit_permission_fails_user_without_hide_permission_for_own_post_edit(
@@ -214,9 +200,7 @@ def test_check_delete_post_edit_permission_fails_user_without_hide_permission_fo
     permissions = user_permissions_factory(user)
 
     with pytest.raises(PermissionDenied):
-        check_delete_post_edit_permission(
-            permissions, post.category, post.thread, post, post_edit
-        )
+        check_delete_post_edit_permission(permissions, post_edit)
 
 
 def test_check_delete_post_edit_permission_passes_user_with_delete_permission_for_own_post_edit(
@@ -228,9 +212,7 @@ def test_check_delete_post_edit_permission_passes_user_with_delete_permission_fo
     post_edit = create_post_edit(post=post, user=user)
 
     permissions = user_permissions_factory(user)
-    check_delete_post_edit_permission(
-        permissions, post.category, post.thread, post, post_edit
-    )
+    check_delete_post_edit_permission(permissions, post_edit)
 
 
 def test_check_delete_post_edit_permission_passes_user_with_delete_permission_for_own_post_edit_if_its_within_time_limit(
@@ -244,9 +226,7 @@ def test_check_delete_post_edit_permission_passes_user_with_delete_permission_fo
     post_edit.edited_at -= timedelta(minutes=30)
 
     permissions = user_permissions_factory(user)
-    check_delete_post_edit_permission(
-        permissions, post.category, post.thread, post, post_edit
-    )
+    check_delete_post_edit_permission(permissions, post_edit)
 
 
 def test_check_delete_post_edit_permission_fails_user_with_delete_permission_for_own_post_edit_if_its_too_old(
@@ -262,6 +242,4 @@ def test_check_delete_post_edit_permission_fails_user_with_delete_permission_for
     permissions = user_permissions_factory(user)
 
     with pytest.raises(PermissionDenied):
-        check_delete_post_edit_permission(
-            permissions, post.category, post.thread, post, post_edit
-        )
+        check_delete_post_edit_permission(permissions, post_edit)

@@ -124,7 +124,11 @@ class ViewBackend(ABC):
         if page and page > 1:
             return reverse(
                 self.thread_url_name,
-                kwargs={"thread_id": thread.id, "slug": thread.slug, "page": page},
+                kwargs={
+                    "thread_id": thread.id,
+                    "slug": thread.slug,
+                    "page": page,
+                },
             )
 
         return reverse(
@@ -132,19 +136,18 @@ class ViewBackend(ABC):
             kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
 
-    def get_thread_post_url(
-        self,
-        thread: Thread,
-        post: Post,
-    ) -> str:
+    def get_thread_post_url(self, post: Post) -> str:
         return reverse(
             self.thread_post_url_name,
-            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+            kwargs={
+                "thread_id": post.thread_id,
+                "slug": post.thread.slug,
+                "post_id": post.id,
+            },
         )
 
     def get_thread_post_edits_url(
         self,
-        thread: Thread,
         post: Post,
         page: int | None = None,
     ) -> str:
@@ -152,8 +155,8 @@ class ViewBackend(ABC):
             return reverse(
                 self.thread_post_edits_url_name,
                 kwargs={
-                    "thread_id": thread.id,
-                    "slug": thread.slug,
+                    "thread_id": post.thread_id,
+                    "slug": post.thread.slug,
                     "post_id": post.id,
                     "page": page,
                 },
@@ -161,33 +164,31 @@ class ViewBackend(ABC):
 
         return reverse(
             self.thread_post_edits_url_name,
-            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+            kwargs={
+                "thread_id": post.thread_id,
+                "slug": post.thread.slug,
+                "post_id": post.id,
+            },
         )
 
     def get_thread_post_redirect(
         self,
         request: HttpRequest,
-        thread: Thread,
         post: Post,
         permanent: bool = False,
     ) -> HttpResponse:
-        queryset = self.get_thread_posts_queryset(request, thread)
+        queryset = self.get_thread_posts_queryset(request, post.thread)
         paginator = self.get_thread_posts_paginator(request, queryset)
         offset = queryset.filter(id__lt=post.id).count()
         page = paginator.get_item_page(offset)
 
         return redirect(
-            self.get_thread_post_redirect_url(thread, post, page),
+            self.get_thread_post_redirect_url(post, page),
             permanent=permanent,
         )
 
-    def get_thread_post_redirect_url(
-        self,
-        thread: Thread,
-        post: Post,
-        page: int = 1,
-    ) -> str:
-        thread_url = self.get_thread_url(thread, page)
+    def get_thread_post_redirect_url(self, post: Post, page: int = 1) -> str:
+        thread_url = self.get_thread_url(post.thread, page)
         return f"{thread_url}#post-{post.id}"
 
 

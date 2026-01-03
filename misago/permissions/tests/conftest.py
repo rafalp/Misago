@@ -1,5 +1,6 @@
 import pytest
 
+from ...categories.enums import CategoryTree
 from ...categories.models import Category
 from ...categories.proxy import CategoriesProxy
 from ...users.test import create_test_user
@@ -275,7 +276,7 @@ def sibling_category_custom_group_browse_permission(sibling_category, custom_gro
 
 
 @pytest.fixture
-def category_moderator(user, user_password, category, child_category):
+def category_moderator(user, user_password):
     user = create_test_user(
         "CategoryModerator", "catmoderator@example.com", user_password
     )
@@ -283,7 +284,11 @@ def category_moderator(user, user_password, category, child_category):
     Moderator.objects.create(
         user=user,
         is_global=False,
-        categories=[category.id, child_category.id],
+        categories=list(
+            Category.objects.filter(tree_id=CategoryTree.THREADS).values_list(
+                "id", flat=True
+            )
+        ),
     )
 
     return user
