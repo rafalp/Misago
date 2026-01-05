@@ -289,6 +289,14 @@ private_thread_post_edit_backend = PrivateThreadPostEditViewBackend()
 class GenericPostEditView(GenericThreadView):
     post_edit_backend: PostEditViewBackend
 
+    @property
+    def template_name_modal(self) -> str:
+        return self.post_edit_backend.template_name_modal
+
+    @property
+    def template_name_partial(self) -> str:
+        return self.post_edit_backend.template_name_partial
+
     def get_thread_post_edit(
         self, request: HttpRequest, post: Post, post_edit_id: int
     ) -> PostEdit:
@@ -352,12 +360,12 @@ class PostEditsView(GenericPostEditView):
 
         if request.is_htmx:
             if request.GET.get("modal"):
-                template_name = self.post_edit_backend.template_name_modal
+                template_name = self.template_name_modal
             else:
-                template_name = self.post_edit_backend.template_name_partial
+                template_name = self.template_name_partial
         else:
             template_name = self.template_name
-            context_data["template_name"] = self.post_edit_backend.template_name_partial
+            context_data["template_name"] = self.template_name_partial
 
         return render(request, template_name, context_data)
 
@@ -446,9 +454,9 @@ class PostEditView(GenericPostEditView):
             )
 
         if request.GET.get("modal"):
-            template_name = self.post_edit_backend.template_name_modal
+            template_name = self.template_name_modal
         else:
-            template_name = self.post_edit_backend.template_name_partial
+            template_name = self.template_name_partial
 
         context_data = self.get_thread_post_edit_context_data(
             request, self.backend, post, paginator.get_page(page)
