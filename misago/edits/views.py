@@ -346,20 +346,18 @@ class PostEditsView(GenericPostEditView):
 
         page_obj = paginator.get_page(page)
 
-        partial_template_name = self.post_edit_backend.template_name_partial
+        context_data = self.get_thread_post_edit_context_data(
+            request, self.backend, post, page_obj
+        )
+
         if request.is_htmx:
             if request.GET.get("modal"):
                 template_name = self.post_edit_backend.template_name_modal
-                partial_template_name = template_name
             else:
                 template_name = self.post_edit_backend.template_name_partial
         else:
             template_name = self.template_name
-
-        context_data = self.get_thread_post_edit_context_data(
-            request, self.backend, post, page_obj
-        )
-        context_data["template_name"] = partial_template_name
+            context_data["template_name"] = self.post_edit_backend.template_name_partial
 
         return render(request, template_name, context_data)
 
