@@ -1,12 +1,11 @@
 from django.contrib import messages
-from django.core.paginator import Paginator
+from django.core.paginator import Page, Paginator
 from django.db import transaction
 from django.http import Http404, HttpResponse, HttpResponseNotAllowed, HttpRequest
 from django.shortcuts import redirect, render
 from django.utils import dateparse
 from django.utils.translation import pgettext
 from django.urls import reverse
-from django.views import View
 
 from ..attachments.filetypes import filetypes
 from ..permissions.checkutils import check_permissions
@@ -18,14 +17,19 @@ from ..permissions.enums import CategoryPermission
 from ..permissions.privatethreads import check_edit_private_thread_post_permission
 from ..permissions.threads import check_edit_thread_post_permission
 from ..privatethreads.views.backend import private_thread_backend
-from ..threads.models import Post, Thread
+from ..threads.models import Post
 from ..threads.views.backend import ViewBackend, thread_backend
+from ..threads.views.generic import GenericThreadView
 from .delete import delete_post_edit
 from .diff import diff_text
 from .models import PostEdit
 
 
 class PostEditViewBackend:
+    template_name_partial = "misago/post_edits/partial.html"
+    template_name_modal = "misago/post_edits/modal/htmx.html"
+    template_name_edit_diff = "misago/post_edits/edit_diff.html"
+
     post_edit_restore_url: str
     post_edit_hide_url: str
     post_edit_unhide_url: str
@@ -43,10 +47,152 @@ class PostEditViewBackend:
         except PostEdit.DoesNotExist:
             raise Http404()
 
-    def get_thread_post_edit_index(self, post_edit: PostEdit) -> int:
-        return PostEdit.objects.filter(
-            post=post_edit.post, id__lte=post_edit.id
-        ).count()
+    def get_thread_post_edit_index(self, post_edit: PostEdit) -> int | None:
+        return (
+            PostEdit.objects.filter(post=post_edit.post, id__lte=post_edit.id).count()
+            or None
+        )
+
+    def get_thread_post_edit_context_data(
+        self, request: HttpRequest, backend: ViewBackend, post: Post, page: Page
+    ) -> dict:
+        if page.object_list:
+            post_edit = page.object_list[0]
+            post_edit.category = post.category
+            post_edit.thread = post.thread
+            post_edit.post = post
+        else:
+            post_edit = None
+
+        context = {
+            "category": post.category,
+            "thread": post.thread,
+            "post": post,
+            "post_number": backend.get_thread_post_number(request, post),
+            "post_url": backend.get_thread_post_url(post),
+            "post_edits_url": backend.get_thread_post_edits_url(post),
+            "paginator": page.paginator,
+            "page": page,
+            "post_edit": post_edit,
+            "edit_number": None,
+            "edit_diff": None,
+            "show_options": False,
+        }
+
+        if not post_edit:
+            return context
+
+        with check_permissions() as can_restore:
+            self.check_restore_post_edit_permission(request, post)
+
+        can_hide = False
+        can_unhide = False
+
+        with check_permissions() as can_delete:
+            check_delete_post_edit_permission(request.user_permissions, post_edit)
+
+        context.update(
+            {
+                "edit_number": page.number,
+                "edit_diff": self._get_edit_diff_data(request, post_edit),
+                "show_options": can_restore or can_delete,
+                "can_restore": can_restore,
+                "can_hide": can_hide,
+                "can_unhide": can_unhide,
+                "can_delete": can_delete,
+                "post_edit_restore_url": self.get_thread_post_edit_restore_url(
+                    post_edit
+                ),
+                "post_edit_delete_url": self.get_thread_post_edit_delete_url(post_edit),
+            }
+        )
+
+        return context
+
+    def _get_edit_diff_data(
+        self,
+        request: HttpRequest,
+        post_edit: PostEdit | None,
+    ) -> dict:
+        if not post_edit:
+            return None
+
+        diff = {
+            "template_name": self.template_name_edit_diff,
+            "edit_reason": post_edit.edit_reason,
+            "blank": True,
+            "title": None,
+            "content": None,
+            "attachments": self._get_edit_diff_attachments(request, post_edit),
+        }
+
+        if post_edit.old_title != post_edit.new_title:
+            diff["title"] = diff_text(post_edit.old_title, post_edit.new_title)
+
+        if post_edit.old_content != post_edit.new_content:
+            diff["content"] = diff_text(post_edit.old_content, post_edit.new_content)
+
+        diff["blank"] = not bool(
+            diff["title"] or diff["content"] or diff["attachments"]
+        )
+
+        return diff
+
+    def _get_edit_diff_attachments(
+        self, request: HttpRequest, post_edit: PostEdit
+    ) -> list:
+        data = []
+
+        for attachment in post_edit.attachments:
+            new_attachment = attachment.copy()
+            if not self.get_attachment_permission(
+                request, post_edit.post, new_attachment
+            ):
+                continue
+
+            new_attachment["uploaded_at"] = dateparse.parse_datetime(
+                new_attachment["uploaded_at"]
+            )
+
+            try:
+                new_attachment["filetype"] = filetypes.get_filetype(
+                    attachment["filetype_id"]
+                )
+            except ValueError:
+                new_attachment["filetype"] = None
+
+            if new_attachment["dimensions"]:
+                new_attachment["width"] = new_attachment["dimensions"][0]
+                new_attachment["height"] = new_attachment["dimensions"][1]
+            else:
+                new_attachment["width"] = None
+                new_attachment["height"] = None
+
+            if request.user.is_authenticated and (
+                request.user.is_misago_admin
+                or request.user.id == new_attachment["uploader"]
+            ):
+                new_attachment["url"] = reverse(
+                    "misago:attachment-details",
+                    kwargs={
+                        "id": new_attachment["id"],
+                        "slug": new_attachment["slug"],
+                    },
+                )
+            else:
+                new_attachment["url"] = None
+
+            data.append(new_attachment)
+
+        return data
+
+    def check_restore_post_edit_permission(self, request: HttpRequest, post: Post):
+        raise NotImplementedError()
+
+    def get_attachment_permission(
+        self, request: HttpRequest, post: Post, attachment: dict
+    ) -> bool:
+        raise NotImplementedError()
 
     def get_thread_post_edit_restore_url(self, post_edit: PostEdit) -> str:
         return reverse(
@@ -99,211 +245,7 @@ class ThreadPostEditViewBackend(PostEditViewBackend):
     post_edit_unhide_url = "misago:thread-post-edit-unhide"
     post_edit_delete_url = "misago:thread-post-edit-delete"
 
-
-class PrivateThreadPostEditViewBackend(PostEditViewBackend):
-    post_edit_restore_url = "misago:private-thread-post-edit-restore"
-    post_edit_hide_url = "misago:private-thread-post-edit-hide"
-    post_edit_unhide_url = "misago:private-thread-post-edit-unhide"
-    post_edit_delete_url = "misago:private-thread-post-edit-delete"
-
-
-thread_post_edit_backend = ThreadPostEditViewBackend()
-private_thread_post_edit_backend = PrivateThreadPostEditViewBackend()
-
-
-class PostEditsView(View):
-    thread_backend: ViewBackend
-    post_edit_backend: PostEditViewBackend
-
-    template_name: str
-    template_name_partial = "misago/post_edits/partial.html"
-    template_name_modal = "misago/post_edits/modal/htmx.html"
-    template_name_edit_diff = "misago/post_edits/edit_diff.html"
-
-    def get(
-        self,
-        request: HttpRequest,
-        thread_id: int,
-        slug: str,
-        post_id: int,
-        page: int | None = None,
-    ) -> HttpResponse:
-        thread = self.thread_backend.get_thread(request, thread_id)
-        post = self.thread_backend.get_thread_post(
-            request, thread, post_id, for_content=True
-        )
-
-        check_see_post_edit_history_permission(
-            request.user_permissions, thread.category, thread, post
-        )
-
-        if not request.is_htmx and thread.slug != slug:
-            return redirect(
-                self.thread_backend.get_thread_post_edits_url(post),
-                permanent=True,
-            )
-
-        queryset = (
-            PostEdit.objects.filter(post=post)
-            .select_related("user", "user__group")
-            .order_by("id")
-        )
-        paginator = Paginator(queryset, per_page=1)
-
-        if not page or page > paginator.num_pages:
-            return redirect(
-                self.thread_backend.get_thread_post_edits_url(post, paginator.num_pages)
-            )
-
-        page_obj = paginator.get_page(page)
-
-        if page_obj.object_list:
-            post_edit = page_obj.object_list[0]
-            post_edit.category = thread.category
-            post_edit.thread = thread
-            post_edit.post = post
-        else:
-            post_edit = None
-
-        if request.is_htmx:
-            if request.GET.get("modal"):
-                template_name = self.template_name_modal
-            else:
-                template_name = self.template_name_partial
-        else:
-            template_name = self.template_name
-
-        with check_permissions() as can_restore:
-            self.check_permission(request, post)
-
-        with check_permissions() as can_delete:
-            check_delete_post_edit_permission(request.user_permissions, post_edit)
-
-        return render(
-            request,
-            template_name,
-            {
-                "template_name": self.template_name_partial,
-                "category": thread.category,
-                "thread": thread,
-                "post": post,
-                "post_number": self.thread_backend.get_thread_post_number(
-                    request, thread, post
-                ),
-                "post_url": self.thread_backend.get_thread_post_url(post),
-                "paginator": paginator,
-                "page": page_obj,
-                "post_edit": post_edit,
-                "edit_diff": self.get_edit_diff_data(request, post_edit),
-                "post_edits_url": self.thread_backend.get_thread_post_edits_url(post),
-                "show_options": can_restore or can_delete,
-                "can_restore": can_restore,
-                "can_delete": can_delete,
-                "post_edit_restore_url": self.post_edit_backend.get_thread_post_edit_restore_url(
-                    post_edit
-                ),
-                "post_edit_delete_url": self.post_edit_backend.get_thread_post_edit_delete_url(
-                    post_edit
-                ),
-            },
-        )
-
-    def check_permission(self, request: HttpRequest, post: Post):
-        raise NotImplementedError()
-
-    def get_edit_diff_data(
-        self,
-        request: HttpRequest,
-        post_edit: PostEdit | None,
-    ) -> dict:
-        if not post_edit:
-            return None
-
-        diff = {
-            "template_name": self.template_name_edit_diff,
-            "edit_reason": post_edit.edit_reason,
-            "blank": True,
-            "title": None,
-            "content": None,
-            "attachments": self.get_edit_diff_attachments(request, post_edit),
-        }
-
-        if post_edit.old_title != post_edit.new_title:
-            diff["title"] = diff_text(post_edit.old_title, post_edit.new_title)
-
-        if post_edit.old_content != post_edit.new_content:
-            diff["content"] = diff_text(post_edit.old_content, post_edit.new_content)
-
-        diff["blank"] = not bool(
-            diff["title"] or diff["content"] or diff["attachments"]
-        )
-
-        return diff
-
-    def get_edit_diff_attachments(
-        self, request: HttpRequest, post_edit: PostEdit
-    ) -> list:
-        data = []
-
-        for attachment in post_edit.attachments:
-            new_attachment = attachment.copy()
-            if not self.get_attachment_permission(
-                request, post_edit.post, new_attachment
-            ):
-                continue
-
-            new_attachment["uploaded_at"] = dateparse.parse_datetime(
-                new_attachment["uploaded_at"]
-            )
-
-            try:
-                new_attachment["filetype"] = filetypes.get_filetype(
-                    attachment["filetype_id"]
-                )
-            except ValueError:
-                new_attachment["filetype"] = None
-
-            if new_attachment["dimensions"]:
-                new_attachment["width"] = new_attachment["dimensions"][0]
-                new_attachment["height"] = new_attachment["dimensions"][1]
-            else:
-                new_attachment["width"] = None
-                new_attachment["height"] = None
-
-            if request.user.is_authenticated and (
-                request.user.is_misago_admin
-                or request.user.id == new_attachment["uploader"]
-            ):
-                new_attachment["url"] = reverse(
-                    "misago:attachment-details",
-                    kwargs={
-                        "id": new_attachment["id"],
-                        "slug": new_attachment["slug"],
-                    },
-                )
-            else:
-                new_attachment["url"] = None
-
-            data.append(new_attachment)
-
-        return data
-
-    def get_attachment_permission(
-        self, request: HttpRequest, post: Post, attachment: dict
-    ) -> bool:
-        raise NotImplementedError()
-
-
-class ThreadPostEditsView(PostEditsView):
-    thread_backend = thread_backend
-    post_edit_backend = thread_post_edit_backend
-
-    template_name = "misago/thread_post_edits/index.html"
-
-    post_edit_restore_url = "misago:thread-post-edit-restore"
-    post_edit_delete_url = "misago:thread-post-edit-delete"
-
-    def check_permission(self, request: HttpRequest, post: Post):
+    def check_restore_post_edit_permission(self, request: HttpRequest, post: Post):
         check_edit_thread_post_permission(
             request.user_permissions, post.category, post.thread, post
         )
@@ -323,16 +265,13 @@ class ThreadPostEditsView(PostEditsView):
         )
 
 
-class PrivateThreadPostEditsView(PostEditsView):
-    thread_backend = private_thread_backend
-    post_edit_backend = private_thread_post_edit_backend
-
-    template_name = "misago/private_thread_post_edits/index.html"
-
+class PrivateThreadPostEditViewBackend(PostEditViewBackend):
     post_edit_restore_url = "misago:private-thread-post-edit-restore"
+    post_edit_hide_url = "misago:private-thread-post-edit-hide"
+    post_edit_unhide_url = "misago:private-thread-post-edit-unhide"
     post_edit_delete_url = "misago:private-thread-post-edit-delete"
 
-    def check_permission(self, request: HttpRequest, post: Post):
+    def check_restore_post_edit_permission(self, request: HttpRequest, post: Post):
         check_edit_private_thread_post_permission(
             request.user_permissions, post.thread, post
         )
@@ -343,8 +282,103 @@ class PrivateThreadPostEditsView(PostEditsView):
         return True
 
 
-class PostEditView(View):
-    thread_backend: ViewBackend
+thread_post_edit_backend = ThreadPostEditViewBackend()
+private_thread_post_edit_backend = PrivateThreadPostEditViewBackend()
+
+
+class GenericPostEditView(GenericThreadView):
+    post_edit_backend: PostEditViewBackend
+
+    def get_thread_post_edit(
+        self, request: HttpRequest, post: Post, post_edit_id: int
+    ) -> PostEdit:
+        return self.post_edit_backend.get_thread_post_edit(request, post, post_edit_id)
+
+    def get_thread_post_edit_index(self, post_edit: PostEdit) -> int | None:
+        return self.post_edit_backend.get_thread_post_edit_index(post_edit)
+
+    def get_thread_post_edit_context_data(
+        self, request: HttpRequest, backend: ViewBackend, post: Post, page: Page
+    ) -> dict:
+        return self.post_edit_backend.get_thread_post_edit_context_data(
+            request, backend, post, page
+        )
+
+    def check_restore_post_edit_permission(self, request: HttpRequest, post: Post):
+        self.backend.check_restore_post_edit_permission(request, post)
+
+
+class PostEditsView(GenericPostEditView):
+    post_edit_backend: PostEditViewBackend
+
+    template_name: str
+
+    def get(
+        self,
+        request: HttpRequest,
+        thread_id: int,
+        slug: str,
+        post_id: int,
+        page: int | None = None,
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+        post = self.get_thread_post(request, thread, post_id, for_content=True)
+
+        check_see_post_edit_history_permission(
+            request.user_permissions, thread.category, thread, post
+        )
+
+        if not request.is_htmx and thread.slug != slug:
+            return redirect(
+                self.get_thread_post_edits_url(post),
+                permanent=True,
+            )
+
+        queryset = (
+            PostEdit.objects.filter(post=post)
+            .select_related("user", "user__group")
+            .order_by("id")
+        )
+        paginator = Paginator(queryset, per_page=1)
+
+        if not page or page > paginator.num_pages:
+            return redirect(self.get_thread_post_edits_url(post, paginator.num_pages))
+
+        page_obj = paginator.get_page(page)
+
+        partial_template_name = self.post_edit_backend.template_name_partial
+        if request.is_htmx:
+            if request.GET.get("modal"):
+                template_name = self.post_edit_backend.template_name_modal
+                partial_template_name = template_name
+            else:
+                template_name = self.post_edit_backend.template_name_partial
+        else:
+            template_name = self.template_name
+
+        context_data = self.get_thread_post_edit_context_data(
+            request, self.backend, post, page_obj
+        )
+        context_data["template_name"] = partial_template_name
+
+        return render(request, template_name, context_data)
+
+
+class ThreadPostEditsView(PostEditsView):
+    backend = thread_backend
+    post_edit_backend = thread_post_edit_backend
+
+    template_name = "misago/thread_post_edits/index.html"
+
+
+class PrivateThreadPostEditsView(PostEditsView):
+    backend = private_thread_backend
+    post_edit_backend = private_thread_post_edit_backend
+
+    template_name = "misago/private_thread_post_edits/index.html"
+
+
+class PostEditView(GenericPostEditView):
     post_edit_backend: PostEditViewBackend
 
     template_name: str
@@ -362,21 +396,19 @@ class PostEditView(View):
         if request.method not in ("GET", "POST", "HEAD"):
             return HttpResponseNotAllowed()
 
-        thread = self.thread_backend.get_thread(request, thread_id)
-        post = self.thread_backend.get_thread_post(
-            request, thread, post_id, for_content=True
-        )
+        thread = self.get_thread(request, thread_id)
+        post = self.get_thread_post(request, thread, post_id, for_content=True)
         check_see_post_edit_history_permission(
             request.user_permissions, thread.category, thread, post
         )
 
-        post_edit = self.post_edit_backend.get_thread_post_edit(
-            request, post, post_edit_id
-        )
+        post_edit = self.get_thread_post_edit(request, post, post_edit_id)
         self.check_permission(request, post_edit)
 
         if request.method == "POST":
             return self.execute_action(request, post_edit)
+
+        edit_index = self.get_thread_post_edit_index(post_edit)
 
         return render(
             request,
@@ -385,7 +417,11 @@ class PostEditView(View):
                 "category": thread.category,
                 "thread": thread,
                 "post": post,
+                "post_number": self.get_thread_post_number(request, post),
                 "post_edit": post_edit,
+                "post_url": self.get_thread_post_url(post),
+                "post_edit_number": edit_index,
+                "post_edit_url": self.get_thread_post_edits_url(post, edit_index),
             },
         )
 
@@ -395,18 +431,45 @@ class PostEditView(View):
     def execute_action(self, request: HttpRequest, post_edit: PostEdit) -> HttpResponse:
         raise NotImplementedError
 
+    def get_action_response(
+        self, request: HttpRequest, post: Post, page: int | None
+    ) -> HttpResponse:
+        queryset = (
+            PostEdit.objects.filter(post=post)
+            .select_related("user", "user__group")
+            .order_by("id")
+        )
+        paginator = Paginator(queryset, per_page=1)
+        page = min(paginator.num_pages, page or 1)
+
+        if not request.is_htmx:
+            return redirect(
+                self.get_thread_post_edits_url(post, min(paginator.num_pages, page))
+            )
+
+        if request.GET.get("modal"):
+            template_name = self.post_edit_backend.template_name_modal
+        else:
+            template_name = self.post_edit_backend.template_name_partial
+
+        context_data = self.get_thread_post_edit_context_data(
+            request, self.backend, post, paginator.get_page(page)
+        )
+
+        return render(request, template_name, context_data)
+
 
 class PostEditHideView(PostEditView):
     pass
 
 
 class ThreadPostEditHideView(PostEditHideView):
-    thread_backend = thread_backend
+    backend = thread_backend
     post_edit_backend = thread_post_edit_backend
 
 
 class PrivateThreadPostEditHideView(PostEditHideView):
-    thread_backend = private_thread_backend
+    backend = private_thread_backend
     post_edit_backend = private_thread_post_edit_backend
 
 
@@ -415,12 +478,12 @@ class PostEditUnhideView(PostEditView):
 
 
 class ThreadPostEditUnhideView(PostEditUnhideView):
-    thread_backend = thread_backend
+    backend = thread_backend
     post_edit_backend = thread_post_edit_backend
 
 
 class PrivateThreadPostEditUnhideView(PostEditUnhideView):
-    thread_backend = private_thread_backend
+    backend = private_thread_backend
     post_edit_backend = private_thread_post_edit_backend
 
 
@@ -430,8 +493,8 @@ class PostEditDeleteView(PostEditView):
     def check_permission(self, request: HttpRequest, post_edit: PostEdit):
         check_delete_post_edit_permission(request.user_permissions, post_edit)
 
-    def execute_action(self, request, post_edit) -> HttpResponse:
-        post_edit_index = self.post_edit_backend.get_thread_post_edit_index(post_edit)
+    def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
+        post_edit_index = self.get_thread_post_edit_index(post_edit)
         delete_post_edit(post_edit, request=request)
 
         messages.success(
@@ -439,46 +502,34 @@ class PostEditDeleteView(PostEditView):
             pgettext("delete post edit", "Post edit deleted"),
         )
 
-        return redirect(
-            self.thread_backend.get_thread_post_edits_url(
-                post_edit.post,
-                post_edit_index,
-            )
-        )
+        return self.get_action_response(request, post_edit.post, post_edit_index)
 
 
 class ThreadPostEditDeleteView(PostEditDeleteView):
-    thread_backend = thread_backend
+    backend = thread_backend
     post_edit_backend = thread_post_edit_backend
 
 
 class PrivateThreadPostEditDeleteView(PostEditDeleteView):
-    thread_backend = private_thread_backend
+    backend = private_thread_backend
     post_edit_backend = private_thread_post_edit_backend
 
 
 class PostEditRestoreView(PostEditView):
-    def post(
-        self,
-        request: HttpRequest,
-        thread_id: int,
-        slug: str,
-        post_id: int,
-        post_edit_id: int,
-    ) -> HttpResponse:
-        thread = self.get_thread(request, thread_id)
+    def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
+        messages.success(
+            request,
+            pgettext("restore post edit", "Post contents restored"),
+        )
 
-        with transaction.atomic():
-            post = self.get_thread_post(request, thread, post_id, for_update=True)
-
-        raise NotImplementedError()
+        return self.get_thread_post_redirect(request, post_edit.post)
 
 
 class ThreadPostEditRestoreView(PostEditRestoreView):
-    thread_backend = thread_backend
+    backend = thread_backend
     post_edit_backend = thread_post_edit_backend
 
 
 class PrivateThreadPostEditRestoreView(PostEditRestoreView):
-    thread_backend = private_thread_backend
+    backend = private_thread_backend
     post_edit_backend = private_thread_post_edit_backend

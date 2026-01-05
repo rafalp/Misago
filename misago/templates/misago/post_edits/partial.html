@@ -2,8 +2,8 @@
 
 {% if is_request_htmx %}
 <title>
-  {% if post_edit %}
-    {% blocktranslate trimmed with post=post_number edit=page.number context "post edits page title" %}
+  {% if edit_number %}
+    {% blocktranslate trimmed with post=post_number edit=edit_number context "post edits page title" %}
       Post #{{ post }} edit #{{ edit }}
     {% endblocktranslate %}
   {% else %}
@@ -12,21 +12,22 @@
     {% endblocktranslate %}
   {% endif %} | {{ thread }} | {{ settings.forum_name }}
 </title>
+{% include "misago/snackbars.html" %}
 {% endif %}
 
 <div id="misago-htmx-root">
   <div id="misago-page-scroll-target" class="scroll-target"></div>
-  {% if paginator.num_pages > 1 %}
-    <div class="toolbar">
-      <div class="toolbar-section">
-        <div class="toolbar-item">
-          {% include "misago/post_edits/paginator.html" %}
-        </div>
-      </div>
-      <div class="toolbar-spacer"></div>
-    </div>
-  {% endif %}
   {% if post_edit %}
+    {% if paginator.num_pages > 1 %}
+      <div class="toolbar">
+        <div class="toolbar-section">
+          <div class="toolbar-item">
+            {% include "misago/post_edits/paginator.html" %}
+          </div>
+        </div>
+        <div class="toolbar-spacer"></div>
+      </div>
+    {% endif %}
     <div class="post-edit-card">
       <div class="post-edit-card-header">
         {% if post_edit.user %}
@@ -144,7 +145,10 @@
                     class="dropdown-menu-item"
                     action="{{ post_edit_delete_url }}"
                     method="post"
-                    mg-confirm="{% translate 'Are you sure you want to delete this edit?' context 'post edit delete confirmation' %}"
+                    hx-post="{{ post_edit_delete_url }}"
+                    hx-target="#misago-htmx-root"
+                    hx-swa="outerHTML"
+                    hx-confirm="{% translate 'Are you sure you want to delete this edit?' context 'post edit delete confirmation' %}"
                   >
                     {% csrf_token %}
                     <button
@@ -175,6 +179,12 @@
       </div>
     {% endif %}
   {% else %}
-    BLANKSLATE
+    <div class="post-edit-card">
+      <div class="post-edit-card-blankslate">
+        {% blocktrans trimmed context "post edit blankslate" %}
+          This post has no edit history.
+        {% endblocktrans %}
+      </div>
+    </div>
   {% endif %}
 </div>

@@ -97,10 +97,8 @@ class ViewBackend(ABC):
         except Post.DoesNotExist:
             raise Http404()
 
-    def get_thread_post_number(
-        self, request: HttpRequest, thread: Thread, post: Post
-    ) -> int:
-        queryset = self.get_thread_posts_queryset(request, thread).filter(
+    def get_thread_post_number(self, request: HttpRequest, post: Post) -> int:
+        queryset = self.get_thread_posts_queryset(request, post.thread).filter(
             id__lte=post.id
         )
         return queryset.count()
