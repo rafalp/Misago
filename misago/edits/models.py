@@ -33,7 +33,20 @@ class PostEdit(PluginDataModel):
     added_attachments = models.PositiveIntegerField(default=0)
     removed_attachments = models.PositiveIntegerField(default=0)
 
+    hidden_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        null=True,
+        related_name="+",
+        on_delete=models.SET_NULL,
+    )
+    hidden_by_name = models.CharField(max_length=255, null=True, blank=True)
+    hidden_by_slug = models.CharField(max_length=255, null=True, blank=True)
+
+    is_hidden = models.BooleanField(default=False)
+
     edited_at = models.DateTimeField(default=timezone.now)
+    hidden_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
         ordering = ["-id"]
