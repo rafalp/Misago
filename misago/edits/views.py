@@ -27,9 +27,9 @@ from .models import PostEdit
 
 
 class PostEditViewBackend:
-    template_name_partial = "misago/post_edits/partial.html"
-    template_name_modal = "misago/post_edits/modal/htmx.html"
-    template_name_edit_diff = "misago/post_edits/edit_diff.html"
+    partial_template_name = "misago/post_edits/partial.html"
+    modal_template_name = "misago/post_edits/modal/index.html"
+    edit_diff_template_name = "misago/post_edits/edit_diff.html"
 
     post_edit_restore_url: str
     post_edit_hide_url: str
@@ -147,7 +147,7 @@ class PostEditViewBackend:
         )
 
         diff = {
-            "template_name": self.template_name_edit_diff,
+            "template_name": self.edit_diff_template_name,
             "edit_reason": post_edit.edit_reason,
             "is_visible": not post_edit.is_hidden or is_moderator,
             "blank": True,
@@ -320,12 +320,16 @@ class GenericPostEditView(GenericThreadView):
     post_edit_backend: PostEditViewBackend
 
     @property
-    def template_name_modal(self) -> str:
-        return self.post_edit_backend.template_name_modal
+    def partial_template_name(self) -> str:
+        return self.post_edit_backend.partial_template_name
 
     @property
-    def template_name_partial(self) -> str:
-        return self.post_edit_backend.template_name_partial
+    def modal_template_name(self) -> str:
+        return self.post_edit_backend.modal_template_name
+
+    @property
+    def edit_diff_template_name(self) -> str:
+        return self.post_edit_backend.edit_diff_template_name
 
     def get_thread_post_edit(
         self, request: HttpRequest, post: Post, post_edit_id: int
@@ -390,12 +394,12 @@ class PostEditsView(GenericPostEditView):
 
         if request.is_htmx:
             if request.GET.get("modal"):
-                template_name = self.template_name_modal
+                template_name = self.modal_template_name
             else:
-                template_name = self.template_name_partial
+                template_name = self.partial_template_name
         else:
             template_name = self.template_name
-            context_data["template_name"] = self.template_name_partial
+            context_data["partial_template_name"] = self.partial_template_name
 
         return render(request, template_name, context_data)
 
@@ -418,8 +422,6 @@ class PostEditView(GenericPostEditView):
     post_edit_backend: PostEditViewBackend
 
     template_name: str
-    template_name_htmx = "misago/post_edit/htmx.html"
-    template_name_modal = "misago/post_edit/modal/.html"
 
     def dispatch(
         self,
@@ -484,9 +486,9 @@ class PostEditView(GenericPostEditView):
             )
 
         if request.GET.get("modal"):
-            template_name = self.template_name_modal
+            template_name = self.modal_template_name
         else:
-            template_name = self.template_name_partial
+            template_name = self.partial_template_name
 
         context_data = self.get_thread_post_edit_context_data(
             request, self.backend, post, paginator.get_page(page)

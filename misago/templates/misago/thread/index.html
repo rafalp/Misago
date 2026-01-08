@@ -39,7 +39,8 @@
     {% include "misago/posting/attachment_templates.html" %}
   {% endif %}
   {% include "misago/lightbox/index.html" %}
-  {% include "misago/post_likes/modal/index.html" %}
+  {% include post_edits_modal_template %}
+  {% include post_likes_modal_template %}
 {% endblock modals %}
 
 

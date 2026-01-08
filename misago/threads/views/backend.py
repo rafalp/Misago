@@ -25,6 +25,9 @@ class ViewBackend(ABC):
     thread_post_url_name: str
     thread_post_edits_url_name: str
 
+    post_edits_modal_template: str = "misago/thread/post_edits_modal.html"
+    post_likes_modal_template: str = "misago/thread/post_likes_modal.html"
+
     @abstractmethod
     def get_thread(
         self,

@@ -42,6 +42,7 @@ from ..hooks import (
 )
 from ..models import Post, Thread
 from ..paginator import ThreadPostsPaginator
+from .backend import ViewBackend, thread_backend
 from .generic import ThreadView
 
 if TYPE_CHECKING:
@@ -56,6 +57,8 @@ class PageOutOfRangeError(Exception):
 
 
 class DetailView(View):
+    backend: ViewBackend
+
     thread_annotate_read_time: bool = True
     template_name: str
     template_partial_name: str
@@ -105,6 +108,8 @@ class DetailView(View):
             "thread_url": self.get_thread_url(thread),
             "feed": self.get_post_feed_data(request, thread, page),
             "reply": self.get_reply_context_data(request, thread),
+            "post_edits_modal_template": self.backend.post_edits_modal_template,
+            "post_likes_modal_template": self.backend.post_likes_modal_template,
         }
 
     def get_post_feed_data(
@@ -240,6 +245,8 @@ class DetailView(View):
 
 
 class ThreadDetailView(DetailView, ThreadView):
+    backend = thread_backend
+
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
 
