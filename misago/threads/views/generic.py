@@ -111,6 +111,11 @@ class GenericThreadView(View):
     def get_thread_post_redirect_url(self, post: Post, page: int = 1) -> str:
         return self.backend.get_thread_post_redirect_url(post, page)
 
+    def get_thread_moderator_permission(
+        self, request: HttpRequest, thread: Thread
+    ) -> bool:
+        return self.backend.get_thread_moderator_permission(request, thread)
+
 
 class GenericView(View):
     thread_select_related: Iterable[str] | True | None = None

@@ -18,9 +18,6 @@ from misago.permissions.hooks import check_delete_post_edit_permission_hook
 def custom_check_delete_post_edit_permission_filter(
     action: CheckDeletePostEditPermissionHookAction,
     permissions: 'UserPermissionsProxy',
-    category: Category,
-    thread: Thread,
-    post: Post,
     post_edit: PostEdit,
 ) -> None:
     ...
@@ -43,21 +40,6 @@ See the [action](#action) section for details.
 A proxy object with the current user's permissions.
 
 
-#### `category: Category`
-
-A category to check permissions for.
-
-
-#### `thread: Thread`
-
-A thread to check permissions for.
-
-
-#### `post: Post`
-
-A post to check permissions for.
-
-
 #### `post_edit: PostEdit`
 
 A post edit to check permissions for.
@@ -67,11 +49,7 @@ A post edit to check permissions for.
 
 ```python
 def check_delete_post_edit_permission_action(
-    permissions: 'UserPermissionsProxy',
-    category: Category,
-    thread: Thread,
-    post: Post,
-    post_edit: PostEdit,
+    permissions: 'UserPermissionsProxy', post_edit: PostEdit
 ) -> None:
     ...
 ```
@@ -86,21 +64,6 @@ Misago function used to check if a user has permission to delete a post edit. Ra
 A proxy object with the current user's permissions.
 
 
-#### `category: Category`
-
-A category to check permissions for.
-
-
-#### `thread: Thread`
-
-A thread to check permissions for.
-
-
-#### `post: Post`
-
-A post to check permissions for.
-
-
 #### `post_edit: PostEdit`
 
 A post edit to check permissions for.
@@ -113,25 +76,20 @@ The code below implements a custom filter function that blocks a user from delet
 ```python
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext
-from misago.categories.models import Category
 from misago.edits.models import PostEdit
 from misago.permissions.hooks import check_delete_post_edit_permission_hook
 from misago.permissions.proxy import UserPermissionsProxy
-from misago.threads.models import Post, Thread
 
 @check_delete_post_edit_permission_hook.append_filter
 def check_user_can_delete_protected_post_edit(
     action,
     permissions: UserPermissionsProxy,
-    category: Category,
-    thread: Thread,
-    post: Post,
     post_edit: PostEdit,
 ) -> None:
     # Run standard permission checks
-    action(permissions, category, thread, post, post_edit)
+    action(permissions, post_edit)
 
-    if post.plugin_data.get("is_protected"):
+    if post_edit.plugin_data.get("is_protected"):
         raise PermissionDenied(
             pgettext(
                 "edits permission error",

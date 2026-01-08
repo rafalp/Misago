@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
                 ),
                 ("is_hidden", models.BooleanField(default=False)),
                 ("edited_at", models.DateTimeField(default=django.utils.timezone.now)),
-                ("hidden_at", models.DateTimeField(default=django.utils.timezone.now)),
+                ("hidden_at", models.DateTimeField(blank=True, null=True)),
                 (
                     "category",
                     models.ForeignKey(

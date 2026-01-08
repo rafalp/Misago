@@ -6,6 +6,7 @@ from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 
+from ...permissions.proxy import UserPermissionsProxy
 from ...permissions.threads import (
     check_see_thread_permission,
     check_see_thread_post_permission,
@@ -189,6 +190,12 @@ class ViewBackend(ABC):
         thread_url = self.get_thread_url(post.thread, page)
         return f"{thread_url}#post-{post.id}"
 
+    @abstractmethod
+    def get_thread_moderator_permission(
+        self, user_permissions: UserPermissionsProxy, thread: Thread
+    ) -> bool:
+        pass
+
 
 class ThreadViewBackend(ViewBackend):
     thread_url_name: str = "misago:thread"
@@ -238,6 +245,11 @@ class ThreadViewBackend(ViewBackend):
                 request.user_permissions, thread.category, thread, post
             )
         return post
+
+    def get_thread_moderator_permission(
+        self, user_permissions: UserPermissionsProxy, thread: Thread
+    ) -> bool:
+        return user_permissions.is_category_moderator(thread.category_id)
 
 
 thread_backend = ThreadViewBackend()

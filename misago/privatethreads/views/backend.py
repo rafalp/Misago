@@ -9,6 +9,7 @@ from ...permissions.privatethreads import (
     check_see_private_thread_post_permission,
     filter_private_thread_posts_queryset,
 )
+from ...permissions.proxy import UserPermissionsProxy
 from ...threads.models import Post, Thread
 from ...threads.views.backend import ViewBackend
 from ..members import get_private_thread_members
@@ -72,6 +73,11 @@ class PrivateThreadViewBackend(ViewBackend):
                 request.user_permissions, thread, post
             )
         return post
+
+    def get_thread_moderator_permission(
+        self, user_permissions: UserPermissionsProxy, thread: Thread
+    ) -> bool:
+        return user_permissions.is_private_threads_moderator
 
 
 private_thread_backend = PrivateThreadViewBackend()

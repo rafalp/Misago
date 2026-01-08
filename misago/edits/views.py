@@ -22,6 +22,7 @@ from ..threads.views.backend import ViewBackend, thread_backend
 from ..threads.views.generic import GenericThreadView
 from .delete import delete_post_edit
 from .diff import diff_text
+from .hide import hide_post_edit, unhide_post_edit
 from .models import PostEdit
 
 
@@ -82,20 +83,41 @@ class PostEditViewBackend:
         if not post_edit:
             return context
 
-        with check_permissions() as can_restore:
-            self.check_restore_post_edit_permission(request, post)
+        is_moderator = backend.get_thread_moderator_permission(
+            request.user_permissions, post_edit.thread
+        )
+
+        can_restore = False
+        if is_moderator:
+            can_restore = True
+        elif not post_edit.is_hidden:
+            with check_permissions() as can_restore:
+                self.check_restore_post_edit_permission(request, post)
 
         can_hide = False
         can_unhide = False
+
+        if post_edit.is_hidden:
+            with check_permissions():
+                check_delete_post_edit_permission(request.user_permissions, post_edit)
+                can_unhide = True
+        else:
+            with check_permissions():
+                check_delete_post_edit_permission(request.user_permissions, post_edit)
+                can_hide = True
+
+        with check_permissions() as can_delete:
+            check_delete_post_edit_permission(request.user_permissions, post_edit)
 
         with check_permissions() as can_delete:
             check_delete_post_edit_permission(request.user_permissions, post_edit)
 
         context.update(
             {
+                "is_moderator": is_moderator,
                 "edit_number": page.number,
-                "edit_diff": self._get_edit_diff_data(request, post_edit),
-                "show_options": can_restore or can_delete,
+                "edit_diff": self._get_edit_diff_data(request, backend, post_edit),
+                "show_options": any((can_restore, can_hide, can_unhide, can_delete)),
                 "can_restore": can_restore,
                 "can_hide": can_hide,
                 "can_unhide": can_unhide,
@@ -103,6 +125,8 @@ class PostEditViewBackend:
                 "post_edit_restore_url": self.get_thread_post_edit_restore_url(
                     post_edit
                 ),
+                "post_edit_hide_url": self.get_thread_post_edit_hide_url(post_edit),
+                "post_edit_unhide_url": self.get_thread_post_edit_unhide_url(post_edit),
                 "post_edit_delete_url": self.get_thread_post_edit_delete_url(post_edit),
             }
         )
@@ -112,14 +136,20 @@ class PostEditViewBackend:
     def _get_edit_diff_data(
         self,
         request: HttpRequest,
+        backend: ViewBackend,
         post_edit: PostEdit | None,
     ) -> dict:
         if not post_edit:
             return None
 
+        is_moderator = backend.get_thread_moderator_permission(
+            request.user_permissions, post_edit.thread
+        )
+
         diff = {
             "template_name": self.template_name_edit_diff,
             "edit_reason": post_edit.edit_reason,
+            "is_visible": not post_edit.is_hidden or is_moderator,
             "blank": True,
             "title": None,
             "content": None,
@@ -466,7 +496,19 @@ class PostEditView(GenericPostEditView):
 
 
 class PostEditHideView(PostEditView):
-    pass
+    def check_permission(self, request: HttpRequest, post_edit: PostEdit):
+        pass
+
+    def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
+        hide_post_edit(post_edit, request.user, request=request)
+
+        messages.success(
+            request,
+            pgettext("hide post edit", "Post edit hidden"),
+        )
+
+        post_edit_index = self.get_thread_post_edit_index(post_edit)
+        return self.get_action_response(request, post_edit.post, post_edit_index)
 
 
 class ThreadPostEditHideView(PostEditHideView):
@@ -480,7 +522,19 @@ class PrivateThreadPostEditHideView(PostEditHideView):
 
 
 class PostEditUnhideView(PostEditView):
-    pass
+    def check_permission(self, request: HttpRequest, post_edit: PostEdit):
+        pass
+
+    def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
+        unhide_post_edit(post_edit, request=request)
+
+        messages.success(
+            request,
+            pgettext("unhide post edit", "Post edit unhidden"),
+        )
+
+        post_edit_index = self.get_thread_post_edit_index(post_edit)
+        return self.get_action_response(request, post_edit.post, post_edit_index)
 
 
 class ThreadPostEditUnhideView(PostEditUnhideView):

@@ -1,26 +1,31 @@
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Protocol, Union
 
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
+    from ...users.models import User
     from ..models import PostEdit
 
 
-class DeletePostEditHookAction(Protocol):
+class HidePostEditHookAction(Protocol):
     """
-    Misago function used to delete a `PostEdit` object.
+    Misago function used to hide a `PostEdit` object.
 
     # Arguments
 
     ## `post_edit: PostEdit`
 
-    A `PostEdit` instance to delete.
+    A `PostEdit` instance to hide.
+
+    ## `user: Union["User", str] = None`
+
+    The user who hid the edit, a `User` instance or a `str` with the user’s name.
 
     ## `commit: bool = True`
 
-    A `bool` indicating whether the `PostEdit` instance should be deleted from the database.
+    A `bool` indicating whether the updated `PostEdit` instance should be saved to the database.
 
     Defaults to `True`.
 
@@ -32,18 +37,19 @@ class DeletePostEditHookAction(Protocol):
     def __call__(
         self,
         post_edit: "PostEdit",
+        user: Union["User", str],
         commit: bool = True,
         request: HttpRequest | None = None,
     ): ...
 
 
-class DeletePostEditHookFilter(Protocol):
+class HidePostEditHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: DeletePostEditHookAction`
+    ## `action: HidePostEditHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -52,11 +58,15 @@ class DeletePostEditHookFilter(Protocol):
 
     ## `post_edit: PostEdit`
 
-    A `PostEdit` instance to delete.
+    A `PostEdit` instance to hide.
+
+    ## `user: Union["User", str] = None`
+
+    The user who hid the edit, a `User` instance or a `str` with the user’s name.
 
     ## `commit: bool = True`
 
-    A `bool` indicating whether the `PostEdit` instance should be deleted from the database.
+    A `bool` indicating whether the updated `PostEdit` instance should be saved to the database.
 
     Defaults to `True`.
 
@@ -67,45 +77,50 @@ class DeletePostEditHookFilter(Protocol):
 
     def __call__(
         self,
-        action: DeletePostEditHookAction,
+        action: HidePostEditHookAction,
         post_edit: "PostEdit",
+        user: Union["User", str],
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> "PostEdit": ...
 
 
-class DeletePostEditHook(
+class HidePostEditHook(
     FilterHook[
-        DeletePostEditHookAction,
-        DeletePostEditHookFilter,
+        HidePostEditHookAction,
+        HidePostEditHookFilter,
     ]
 ):
     """
-    This hook wraps a standard Misago function used to delete a `PostEdit` object.
+    This hook wraps a standard Misago function used to hide a `PostEdit` object.
 
     # Example
 
-    The code below implements a custom filter function that records
-    a number of deleted post edits:
+    The code below implements a custom filter function that records the user's
+    IP address:
 
     ```python
     from django.http import HttpRequest
-    from misago.edits.hooks import delete_post_edit_hook
+    from misago.edits.hooks import hide_post_edit_hook
     from misago.edits.models import PostEdit
+    from misago.users.models import User
 
 
-    @delete_post_edit_hook.append_filter
-    def count_post_edit_deletions(
+    @hide_post_edit_hook.append_filter
+    def hide_post_edit_record_user_ip(
         action,
         post_edit: PostEdit,
+        user: User | str,
         commit: bool = True,
         request: HttpRequest | None = None,
     ):
-        post = post_edit.post
-        action(post_edit, commit, request)
+        action(post_edit, user, False, request)
 
-        post.plugin_data.setdefault("deleted_edits", 0) += 1
-        post.save(update_fields=["plugin_data"])
+        if request:
+            post_edit.plugin_data["hidden_by_ip"] = request.user_ip
+
+        if commit:
+            post_edit.save()
     ```
     """
 
@@ -113,17 +128,19 @@ class DeletePostEditHook(
 
     def __call__(
         self,
-        action: DeletePostEditHookAction,
+        action: HidePostEditHookAction,
         post_edit: "PostEdit",
+        user: Union["User", str],
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> "PostEdit":
         super().__call__(
             action,
             post_edit,
+            user,
             commit,
             request,
         )
 
 
-delete_post_edit_hook = DeletePostEditHook()
+hide_post_edit_hook = HidePostEditHook()

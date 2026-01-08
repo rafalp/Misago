@@ -160,6 +160,43 @@ details[open],
   }
 }
 
+.post-edit-hidden-alert {
+  display: flex;
+  gap: ceil(@grid-gutter-width / 2);
+  align-items: center;
+
+  margin: @panel-body-padding;
+  padding: 4px 8px;
+
+  background-color: @gray-100;
+  border-radius: @border-radius-base;
+  color: @gray-600;
+
+  @media screen and (min-width: @screen-sm-min) {
+    padding: 8px 12px;
+  }
+
+  &-icon {
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+  }
+
+  &-user {
+    &:link,
+    &:visited {
+      color: @gray-700;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: @gray-900;
+      text-decoration: underline;
+    }
+  }
+}
+
 .edit-diff-blankslate {
   padding: @panel-body-padding;
 
