@@ -1,18 +1,7 @@
 import pytest
 
-from ..create import create_post_edit
 from ..delete import delete_post_edit
 from ..models import PostEdit
-
-
-@pytest.fixture
-def post_edit(post):
-    return create_post_edit(
-        post=post,
-        user="User",
-        old_content="Old",
-        new_content="New",
-    )
 
 
 def test_delete_post_edit_deletes_post_edit(post_edit):
