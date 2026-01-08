@@ -384,7 +384,10 @@ class PostEditsView(GenericPostEditView):
         paginator = Paginator(queryset, per_page=1)
 
         if not page or page > paginator.num_pages:
-            return redirect(self.get_thread_post_edits_url(post, paginator.num_pages))
+            redirect_url = self.get_thread_post_edits_url(post, paginator.num_pages)
+            if request.GET.get("modal"):
+                redirect_url += "?modal=true"
+            return redirect(redirect_url)
 
         page_obj = paginator.get_page(page)
 
