@@ -1,9 +1,12 @@
 # Script for generating some of documents in `dev-docs` from Misago's code
 import ast
 import os
-from dataclasses import dataclass
+import sys
+from argparse import ArgumentParser
+from dataclasses import dataclass, field
 from glob import glob
 from importlib import import_module
+from io import StringIO
 from pathlib import Path
 from textwrap import dedent, indent
 
@@ -36,20 +39,76 @@ KEEP_PLUGINS_HOOKS_PATHS = (
 )
 
 
-def main():
-    generate_plugin_manifest_reference()
-    generate_hooks_reference()
-    generate_outlets_reference()
+@dataclass
+class Report:
+    outdated_files: list[str] = field(default_factory=list)
+    missing_files: list[str] = field(default_factory=list)
+
+    @property
+    def return_code(self) -> int:
+        """Return the exit code.
+
+        This considers the current state of changed files:
+        - if any files were changed or are new return 1;
+        - otherwise return 0.
+        """
+        if self.missing_files or self.outdated_files:
+            return 1
+        return 0
+
+
+def main(check: bool):
+    file_name, content = generate_plugin_manifest_reference()
+    files_content = {file_name: content}
+    files_content.update(generate_hooks_reference())
+    file_name, content = generate_outlets_reference()
+    files_content[file_name] = content
+    if check:
+        report = compare_files(files_content)
+        report_code = report.return_code
+        if report_code:
+            print(
+                f"Dev docs report: {len(report.missing_files)} new files; {len(report.outdated_files)} outdated files."
+            )
+        return report_code
+    else:
+        write_files(files_content)
+
+
+def compare_files(files_content):
+    report = Report()
+    for file_path, file_content in files_content.items():
+        # check if file exists
+        if file_path.is_file():
+            # compare content
+            with open(file_path, "r") as fp, file_content as fc:
+                if fp.read() != fc.read():
+                    report.outdated_files.append(file_path)
+        else:
+            report.missing_files.append(file_path)
+    return report
+
+
+def write_files(files_content):
+    for file_path, file_content in files_content.items():
+        with open(file_path, "w") as fp, file_content as fc:
+            fp.write(fc.read())
 
 
 def generate_plugin_manifest_reference():
     manifest_path, manifest_attr = PLUGIN_MANIFEST.rsplit(".", 1)
     manifest_type = getattr(import_module(manifest_path), manifest_attr)
-
-    with open(PLUGINS_PATH / "plugin-manifest-reference.md", "w") as fp:
+    file_name = PLUGINS_PATH / "plugin-manifest-reference.md"
+    fp = StringIO()
+    try:
         fp.write("# Plugin manifest reference")
         fp.write("\n\n")
         fp.write(indent_docstring_headers(dedent(manifest_type.__doc__)).strip())
+    except Exception:
+        fp.close()
+        raise
+
+    return file_name, fp
 
 
 def generate_hooks_reference():
@@ -58,11 +117,17 @@ def generate_hooks_reference():
         init_path = module_path_to_init_path(hooks_module)
         hooks_data[hooks_module] = get_all_modules(init_path)
 
-    generate_hooks_reference_index(hooks_data)
+    file_name, content = generate_hooks_reference_index(hooks_data)
+    hooks_ref_content = {file_name: content}
 
     for import_from, module_hooks in hooks_data.items():
         for hook_name, hook_module in module_hooks.items():
-            generate_hook_reference(import_from, hook_name, hook_module)
+            file_name, content = generate_hook_reference(
+                import_from, hook_name, hook_module
+            )
+            hooks_ref_content[file_name] = content
+
+    return hooks_ref_content
 
 
 def generate_hooks_reference_index(hooks_data: dict[str, dict[str, ast.Module]]):
@@ -72,7 +137,9 @@ def generate_hooks_reference_index(hooks_data: dict[str, dict[str, ast.Module]])
         if filename not in KEEP_PLUGINS_HOOKS_PATHS:
             os.unlink(path)
 
-    with open(PLUGINS_HOOKS_PATH / "reference.md", "w") as fp:
+    file_name = PLUGINS_HOOKS_PATH / "reference.md"
+    fp = StringIO()
+    try:
         fp.write("# Built-in hooks reference")
         fp.write("\n\n")
         fp.write(
@@ -94,6 +161,11 @@ def generate_hooks_reference_index(hooks_data: dict[str, dict[str, ast.Module]])
 
             for module_hook in sorted(module_hooks):
                 fp.write(f"\n- [`{module_hook}`](./{slugify_name(module_hook)}.md)")
+    except Exception:
+        fp.close()
+        raise
+
+    return file_name, fp
 
 
 def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.Module):
@@ -136,7 +208,9 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
     if hook_ast_docstring:
         hook_docstring = parse_hook_docstring(hook_ast_docstring)
 
-    with open(PLUGINS_HOOKS_PATH / hook_filename, "w") as fp:
+    file_name = PLUGINS_HOOKS_PATH / hook_filename
+    fp = StringIO()
+    try:
         fp.write(f"# `{hook_name}`")
         fp.write("\n\n")
 
@@ -268,6 +342,11 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
                 fp.write(f"## {example_title}")
                 fp.write("\n\n")
                 fp.write(example_text)
+    except Exception:
+        fp.close()
+        raise
+
+    return file_name, fp
 
 
 def is_class_base_hook(class_def: ast.ClassDef) -> str | None:
@@ -327,7 +406,9 @@ def generate_outlets_reference():
     outlets_enum = getattr(import_module(outlets_path), outlets_attr)
     outlets_dict = {outlet.name: outlet.value for outlet in outlets_enum}
 
-    with open(PLUGINS_PATH / "template-outlets-reference.md", "w") as fp:
+    file_name = PLUGINS_PATH / "template-outlets-reference.md"
+    fp = StringIO()
+    try:
         fp.write("# Built-in template outlets reference")
         fp.write("\n\n")
         fp.write(
@@ -338,6 +419,11 @@ def generate_outlets_reference():
             fp.write(f"## `{outlet_name}`")
             fp.write("\n\n")
             fp.write(outlet_contents)
+    except Exception:
+        fp.close()
+        raise
+
+    return file_name, fp
 
 
 def get_callable_class_signature(class_def: ast.ClassDef) -> tuple[str, str | None]:
@@ -547,5 +633,22 @@ def slugify_name(py_name: str) -> str:
     return py_name.replace(".", "-").replace("_", "-")
 
 
+def create_parser() -> ArgumentParser:
+    parser = ArgumentParser(
+        description="Script for generating some of documents in `dev-docs` from Misago's code"
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help=(
+            "Don't generate the dev-docs files, just return the status. Return code 0 means"
+            " nothing would change. Return code 1 means some files would be regenerated."
+        ),
+    )
+    return parser
+
+
 if __name__ == "__main__":
-    main()
+    parser = create_parser()
+    args = parser.parse_args()
+    sys.exit(main(args.check))
