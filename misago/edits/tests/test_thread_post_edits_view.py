@@ -74,7 +74,8 @@ def test_thread_post_edits_view_shows_empty_to_anonymous_user_in_modal(
     assert_contains(response, "This post has no edit history.")
 
 
-def test_thread_post_edits_view_redirects_to_first_edit(user_client, thread, post):
+def test_thread_post_edits_view_redirects_to_last_edit(user_client, thread, post):
+    create_post_edit(post=post, user="Moderator")
     create_post_edit(post=post, user="Moderator")
 
     response = user_client.get(
@@ -83,6 +84,7 @@ def test_thread_post_edits_view_redirects_to_first_edit(user_client, thread, pos
             kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
         )
     )
+
     assert response.status_code == 302
     assert response["location"] == reverse(
         "misago:thread-post-edits",
@@ -90,14 +92,15 @@ def test_thread_post_edits_view_redirects_to_first_edit(user_client, thread, pos
             "thread_id": thread.id,
             "slug": thread.slug,
             "post_id": post.id,
-            "page": 1,
+            "page": 2,
         },
     )
 
 
-def test_thread_post_edits_view_redirects_to_first_edit_in_htmx(
+def test_thread_post_edits_view_redirects_to_last_edit_in_htmx(
     user_client, thread, post
 ):
+    create_post_edit(post=post, user="Moderator")
     create_post_edit(post=post, user="Moderator")
 
     response = user_client.get(
@@ -107,6 +110,7 @@ def test_thread_post_edits_view_redirects_to_first_edit_in_htmx(
         ),
         headers={"hx-request": "true"},
     )
+
     assert response.status_code == 302
     assert response["location"] == reverse(
         "misago:thread-post-edits",
@@ -114,14 +118,15 @@ def test_thread_post_edits_view_redirects_to_first_edit_in_htmx(
             "thread_id": thread.id,
             "slug": thread.slug,
             "post_id": post.id,
-            "page": 1,
+            "page": 2,
         },
     )
 
 
-def test_thread_post_edits_view_redirects_to_first_edit_in_modal(
+def test_thread_post_edits_view_redirects_to_last_edit_in_modal(
     user_client, thread, post
 ):
+    create_post_edit(post=post, user="Moderator")
     create_post_edit(post=post, user="Moderator")
 
     response = user_client.get(
@@ -132,6 +137,7 @@ def test_thread_post_edits_view_redirects_to_first_edit_in_modal(
         + "?modal=true",
         headers={"hx-request": "true"},
     )
+
     assert response.status_code == 302
     assert (
         response["location"]
@@ -141,7 +147,104 @@ def test_thread_post_edits_view_redirects_to_first_edit_in_modal(
                 "thread_id": thread.id,
                 "slug": thread.slug,
                 "post_id": post.id,
-                "page": 1,
+                "page": 2,
+            },
+        )
+        + "?modal=true"
+    )
+
+
+def test_thread_post_edits_view_redirects_to_last_edit_for_out_of_range_page(
+    user_client, thread, post
+):
+    create_post_edit(post=post, user="Moderator")
+    create_post_edit(post=post, user="Moderator")
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 5,
+            },
+        )
+    )
+
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread-post-edits",
+        kwargs={
+            "thread_id": thread.id,
+            "slug": thread.slug,
+            "post_id": post.id,
+            "page": 2,
+        },
+    )
+
+
+def test_thread_post_edits_view_redirects_to_last_edit_for_out_of_range_page_in_htmx(
+    user_client, thread, post
+):
+    create_post_edit(post=post, user="Moderator")
+    create_post_edit(post=post, user="Moderator")
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 5,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread-post-edits",
+        kwargs={
+            "thread_id": thread.id,
+            "slug": thread.slug,
+            "post_id": post.id,
+            "page": 2,
+        },
+    )
+
+
+def test_thread_post_edits_view_redirects_to_last_edit_for_out_of_range_page_in_modal(
+    user_client, thread, post
+):
+    create_post_edit(post=post, user="Moderator")
+    create_post_edit(post=post, user="Moderator")
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 5,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
             },
         )
         + "?modal=true"

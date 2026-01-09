@@ -61,10 +61,12 @@ def test_private_thread_post_edits_view_shows_empty_in_modal(
     assert_contains(response, "This post has no edit history.")
 
 
-def test_private_thread_post_edits_view_redirects_to_first_edit(
+def test_private_thread_post_edits_view_redirects_to_last_edit(
     user_client, other_user_private_thread, post
 ):
     post = other_user_private_thread.first_post
+
+    create_post_edit(post=post, user="Moderator")
     create_post_edit(post=post, user="Moderator")
 
     response = user_client.get(
@@ -77,6 +79,7 @@ def test_private_thread_post_edits_view_redirects_to_first_edit(
             },
         )
     )
+
     assert response.status_code == 302
     assert response["location"] == reverse(
         "misago:private-thread-post-edits",
@@ -84,15 +87,17 @@ def test_private_thread_post_edits_view_redirects_to_first_edit(
             "thread_id": other_user_private_thread.id,
             "slug": other_user_private_thread.slug,
             "post_id": post.id,
-            "page": 1,
+            "page": 2,
         },
     )
 
 
-def test_private_thread_post_edits_view_redirects_to_first_edit_in_htmx(
+def test_private_thread_post_edits_view_redirects_to_last_edit_in_htmx(
     user_client, other_user_private_thread, post
 ):
     post = other_user_private_thread.first_post
+
+    create_post_edit(post=post, user="Moderator")
     create_post_edit(post=post, user="Moderator")
 
     response = user_client.get(
@@ -106,6 +111,7 @@ def test_private_thread_post_edits_view_redirects_to_first_edit_in_htmx(
         ),
         headers={"hx-request": "true"},
     )
+
     assert response.status_code == 302
     assert response["location"] == reverse(
         "misago:private-thread-post-edits",
@@ -113,15 +119,17 @@ def test_private_thread_post_edits_view_redirects_to_first_edit_in_htmx(
             "thread_id": other_user_private_thread.id,
             "slug": other_user_private_thread.slug,
             "post_id": post.id,
-            "page": 1,
+            "page": 2,
         },
     )
 
 
-def test_private_thread_post_edits_view_redirects_to_first_edit_in_modal(
+def test_private_thread_post_edits_view_redirects_to_last_edit_in_modal(
     user_client, other_user_private_thread, post
 ):
     post = other_user_private_thread.first_post
+
+    create_post_edit(post=post, user="Moderator")
     create_post_edit(post=post, user="Moderator")
 
     response = user_client.get(
@@ -136,6 +144,7 @@ def test_private_thread_post_edits_view_redirects_to_first_edit_in_modal(
         + "?modal=true",
         headers={"hx-request": "true"},
     )
+
     assert response.status_code == 302
     assert (
         response["location"]
@@ -145,7 +154,110 @@ def test_private_thread_post_edits_view_redirects_to_first_edit_in_modal(
                 "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
                 "post_id": post.id,
-                "page": 1,
+                "page": 2,
+            },
+        )
+        + "?modal=true"
+    )
+
+
+def test_private_thread_post_edits_view_redirects_to_last_edit_for_out_of_range_page(
+    user_client, other_user_private_thread, post
+):
+    post = other_user_private_thread.first_post
+
+    create_post_edit(post=post, user="Moderator")
+    create_post_edit(post=post, user="Moderator")
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        )
+    )
+
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread-post-edits",
+        kwargs={
+            "thread_id": other_user_private_thread.id,
+            "slug": other_user_private_thread.slug,
+            "post_id": post.id,
+            "page": 5,
+            "page": 2,
+        },
+    )
+
+
+def test_private_thread_post_edits_view_redirects_to_last_edit_for_out_of_range_page_in_htmx(
+    user_client, other_user_private_thread, post
+):
+    post = other_user_private_thread.first_post
+
+    create_post_edit(post=post, user="Moderator")
+    create_post_edit(post=post, user="Moderator")
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 5,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread-post-edits",
+        kwargs={
+            "thread_id": other_user_private_thread.id,
+            "slug": other_user_private_thread.slug,
+            "post_id": post.id,
+            "page": 2,
+        },
+    )
+
+
+def test_private_thread_post_edits_view_redirects_to_last_edit_for_out_of_range_page_in_modal(
+    user_client, other_user_private_thread, post
+):
+    post = other_user_private_thread.first_post
+
+    create_post_edit(post=post, user="Moderator")
+    create_post_edit(post=post, user="Moderator")
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 5,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
             },
         )
         + "?modal=true"
