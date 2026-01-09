@@ -22,12 +22,12 @@
             <img
               srcset="{{ post_edit.user|avatar:64 }}"
               src="{{ post_edit.user|avatar:32 }}"
-              alt="{{ post_edit.user.username }}"
+              alt=""
             >
           </a>
         {% else %}
           <span class="post-edit-card-avatar">
-            <img src="{{ BLANK_AVATAR_URL }}" alt="{{ user_name }}">
+            <img src="{{ BLANK_AVATAR_URL }}" alt="">
           </span>
         {% endif %}
         <div class="post-edit-card-header-main">
@@ -38,7 +38,7 @@
                   {{ post_edit.user.username }}
                 </a>
               {% else %}
-                <span>{{ user_name }}</span>
+                <span>{{ post_edit.user_name }}</span>
               {% endif %}
             </div>
             <div class="post-edit-card-timestamp">

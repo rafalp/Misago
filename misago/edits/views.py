@@ -18,7 +18,7 @@ from ..permissions.privatethreads import check_edit_private_thread_post_permissi
 from ..permissions.threads import check_edit_thread_post_permission
 from ..privatethreads.views.backend import private_thread_backend
 from ..threads.models import Post
-from ..threads.views.backend import ViewBackend, thread_backend
+from ..threads.views.backend import thread_backend
 from ..threads.views.generic import GenericThreadView
 from .delete import delete_post_edit
 from .diff import diff_text
@@ -53,168 +53,6 @@ class PostEditViewBackend:
             PostEdit.objects.filter(post=post_edit.post, id__lte=post_edit.id).count()
             or None
         )
-
-    def get_thread_post_edit_context_data(
-        self, request: HttpRequest, backend: ViewBackend, post: Post, page: Page
-    ) -> dict:
-        if page.object_list:
-            post_edit = page.object_list[0]
-            post_edit.category = post.category
-            post_edit.thread = post.thread
-            post_edit.post = post
-        else:
-            post_edit = None
-
-        context = {
-            "category": post.category,
-            "thread": post.thread,
-            "post": post,
-            "post_number": backend.get_thread_post_number(request, post),
-            "post_url": backend.get_thread_post_url(post),
-            "post_edits_url": backend.get_thread_post_edits_url(post),
-            "paginator": page.paginator,
-            "page": page,
-            "post_edit": post_edit,
-            "edit_number": None,
-            "edit_diff": None,
-            "show_options": False,
-        }
-
-        if not post_edit:
-            return context
-
-        is_moderator = backend.get_thread_moderator_permission(
-            request.user_permissions, post_edit.thread
-        )
-
-        can_restore = False
-        if is_moderator:
-            can_restore = True
-        elif not post_edit.is_hidden:
-            with check_permissions() as can_restore:
-                self.check_restore_post_edit_permission(request, post)
-
-        can_hide = False
-        can_unhide = False
-
-        if post_edit.is_hidden:
-            with check_permissions():
-                check_delete_post_edit_permission(request.user_permissions, post_edit)
-                can_unhide = True
-        else:
-            with check_permissions():
-                check_delete_post_edit_permission(request.user_permissions, post_edit)
-                can_hide = True
-
-        with check_permissions() as can_delete:
-            check_delete_post_edit_permission(request.user_permissions, post_edit)
-
-        with check_permissions() as can_delete:
-            check_delete_post_edit_permission(request.user_permissions, post_edit)
-
-        context.update(
-            {
-                "is_moderator": is_moderator,
-                "edit_number": page.number,
-                "edit_diff": self._get_edit_diff_data(request, backend, post_edit),
-                "show_options": any((can_restore, can_hide, can_unhide, can_delete)),
-                "can_restore": can_restore,
-                "can_hide": can_hide,
-                "can_unhide": can_unhide,
-                "can_delete": can_delete,
-                "post_edit_restore_url": self.get_thread_post_edit_restore_url(
-                    post_edit
-                ),
-                "post_edit_hide_url": self.get_thread_post_edit_hide_url(post_edit),
-                "post_edit_unhide_url": self.get_thread_post_edit_unhide_url(post_edit),
-                "post_edit_delete_url": self.get_thread_post_edit_delete_url(post_edit),
-            }
-        )
-
-        return context
-
-    def _get_edit_diff_data(
-        self,
-        request: HttpRequest,
-        backend: ViewBackend,
-        post_edit: PostEdit | None,
-    ) -> dict:
-        if not post_edit:
-            return None
-
-        is_moderator = backend.get_thread_moderator_permission(
-            request.user_permissions, post_edit.thread
-        )
-
-        diff = {
-            "template_name": self.edit_diff_template_name,
-            "edit_reason": post_edit.edit_reason,
-            "is_visible": not post_edit.is_hidden or is_moderator,
-            "blank": True,
-            "title": None,
-            "content": None,
-            "attachments": self._get_edit_diff_attachments(request, post_edit),
-        }
-
-        if post_edit.old_title != post_edit.new_title:
-            diff["title"] = diff_text(post_edit.old_title, post_edit.new_title)
-
-        if post_edit.old_content != post_edit.new_content:
-            diff["content"] = diff_text(post_edit.old_content, post_edit.new_content)
-
-        diff["blank"] = not bool(
-            diff["title"] or diff["content"] or diff["attachments"]
-        )
-
-        return diff
-
-    def _get_edit_diff_attachments(
-        self, request: HttpRequest, post_edit: PostEdit
-    ) -> list:
-        data = []
-
-        for attachment in post_edit.attachments:
-            new_attachment = attachment.copy()
-            if not self.get_attachment_permission(
-                request, post_edit.post, new_attachment
-            ):
-                continue
-
-            new_attachment["uploaded_at"] = dateparse.parse_datetime(
-                new_attachment["uploaded_at"]
-            )
-
-            try:
-                new_attachment["filetype"] = filetypes.get_filetype(
-                    attachment["filetype_id"]
-                )
-            except ValueError:
-                new_attachment["filetype"] = None
-
-            if new_attachment["dimensions"]:
-                new_attachment["width"] = new_attachment["dimensions"][0]
-                new_attachment["height"] = new_attachment["dimensions"][1]
-            else:
-                new_attachment["width"] = None
-                new_attachment["height"] = None
-
-            if request.user.is_authenticated and (
-                request.user.is_misago_admin
-                or request.user.id == new_attachment["uploader"]
-            ):
-                new_attachment["url"] = reverse(
-                    "misago:attachment-details",
-                    kwargs={
-                        "id": new_attachment["id"],
-                        "slug": new_attachment["slug"],
-                    },
-                )
-            else:
-                new_attachment["url"] = None
-
-            data.append(new_attachment)
-
-        return data
 
     def check_restore_post_edit_permission(self, request: HttpRequest, post: Post):
         raise NotImplementedError()
@@ -339,15 +177,188 @@ class GenericPostEditView(GenericThreadView):
     def get_thread_post_edit_index(self, post_edit: PostEdit) -> int | None:
         return self.post_edit_backend.get_thread_post_edit_index(post_edit)
 
-    def get_thread_post_edit_context_data(
-        self, request: HttpRequest, backend: ViewBackend, post: Post, page: Page
-    ) -> dict:
-        return self.post_edit_backend.get_thread_post_edit_context_data(
-            request, backend, post, page
+    def check_restore_post_edit_permission(self, request: HttpRequest, post: Post):
+        self.post_edit_backend.check_restore_post_edit_permission(request, post)
+
+    def get_attachment_permission(
+        self, request: HttpRequest, post: Post, attachment: dict
+    ) -> bool:
+        return self.post_edit_backend.get_attachment_permission(
+            request, post, attachment
         )
 
-    def check_restore_post_edit_permission(self, request: HttpRequest, post: Post):
-        self.backend.check_restore_post_edit_permission(request, post)
+    def get_thread_post_edit_restore_url(self, post_edit: PostEdit) -> str:
+        return self.post_edit_backend.get_thread_post_edit_restore_url(post_edit)
+
+    def get_thread_post_edit_hide_url(self, post_edit: PostEdit) -> str:
+        return self.post_edit_backend.get_thread_post_edit_hide_url(post_edit)
+
+    def get_thread_post_edit_unhide_url(self, post_edit: PostEdit) -> str:
+        return self.post_edit_backend.get_thread_post_edit_unhide_url(post_edit)
+
+    def get_thread_post_edit_delete_url(self, post_edit: PostEdit) -> str:
+        return self.post_edit_backend.get_thread_post_edit_delete_url(post_edit)
+
+    def get_thread_post_edit_context_data(
+        self, request: HttpRequest, post: Post, page: Page
+    ) -> dict:
+        if page.object_list:
+            post_edit = page.object_list[0]
+            post_edit.category = post.category
+            post_edit.thread = post.thread
+            post_edit.post = post
+        else:
+            post_edit = None
+
+        context = {
+            "category": post.category,
+            "thread": post.thread,
+            "post": post,
+            "post_number": self.get_thread_post_number(request, post),
+            "post_url": self.get_thread_post_url(post),
+            "post_edits_url": self.get_thread_post_edits_url(post),
+            "paginator": page.paginator,
+            "page": page,
+            "post_edit": post_edit,
+            "edit_number": None,
+            "edit_diff": None,
+            "show_options": False,
+        }
+
+        if not post_edit:
+            return context
+
+        is_moderator = self.get_thread_moderator_permission(
+            request.user_permissions, post_edit.thread
+        )
+
+        can_restore = False
+        if is_moderator:
+            can_restore = True
+        elif not post_edit.is_hidden:
+            with check_permissions() as can_restore:
+                self.check_restore_post_edit_permission(request, post)
+
+        can_hide = False
+        can_unhide = False
+
+        if post_edit.is_hidden:
+            with check_permissions():
+                check_delete_post_edit_permission(request.user_permissions, post_edit)
+                can_unhide = True
+        else:
+            with check_permissions():
+                check_delete_post_edit_permission(request.user_permissions, post_edit)
+                can_hide = True
+
+        with check_permissions() as can_delete:
+            check_delete_post_edit_permission(request.user_permissions, post_edit)
+
+        with check_permissions() as can_delete:
+            check_delete_post_edit_permission(request.user_permissions, post_edit)
+
+        context.update(
+            {
+                "is_moderator": is_moderator,
+                "edit_number": page.number,
+                "edit_diff": self._get_edit_diff_data(request, post_edit),
+                "show_options": any((can_restore, can_hide, can_unhide, can_delete)),
+                "can_restore": can_restore,
+                "can_hide": can_hide,
+                "can_unhide": can_unhide,
+                "can_delete": can_delete,
+                "post_edit_restore_url": self.get_thread_post_edit_restore_url(
+                    post_edit
+                ),
+                "post_edit_hide_url": self.get_thread_post_edit_hide_url(post_edit),
+                "post_edit_unhide_url": self.get_thread_post_edit_unhide_url(post_edit),
+                "post_edit_delete_url": self.get_thread_post_edit_delete_url(post_edit),
+            }
+        )
+
+        return context
+
+    def _get_edit_diff_data(
+        self,
+        request: HttpRequest,
+        post_edit: PostEdit | None,
+    ) -> dict:
+        if not post_edit:
+            return None
+
+        is_moderator = self.get_thread_moderator_permission(
+            request.user_permissions, post_edit.thread
+        )
+
+        diff = {
+            "template_name": self.edit_diff_template_name,
+            "edit_reason": post_edit.edit_reason,
+            "is_visible": not post_edit.is_hidden or is_moderator,
+            "blank": True,
+            "title": None,
+            "content": None,
+            "attachments": self._get_edit_diff_attachments(request, post_edit),
+        }
+
+        if post_edit.old_title != post_edit.new_title:
+            diff["title"] = diff_text(post_edit.old_title, post_edit.new_title)
+
+        if post_edit.old_content != post_edit.new_content:
+            diff["content"] = diff_text(post_edit.old_content, post_edit.new_content)
+
+        diff["blank"] = not bool(
+            diff["title"] or diff["content"] or diff["attachments"]
+        )
+
+        return diff
+
+    def _get_edit_diff_attachments(
+        self, request: HttpRequest, post_edit: PostEdit
+    ) -> list:
+        data = []
+
+        for attachment in post_edit.attachments:
+            new_attachment = attachment.copy()
+            if not self.get_attachment_permission(
+                request, post_edit.post, new_attachment
+            ):
+                continue
+
+            new_attachment["uploaded_at"] = dateparse.parse_datetime(
+                new_attachment["uploaded_at"]
+            )
+
+            try:
+                new_attachment["filetype"] = filetypes.get_filetype(
+                    attachment["filetype_id"]
+                )
+            except ValueError:
+                new_attachment["filetype"] = None
+
+            if new_attachment["dimensions"]:
+                new_attachment["width"] = new_attachment["dimensions"][0]
+                new_attachment["height"] = new_attachment["dimensions"][1]
+            else:
+                new_attachment["width"] = None
+                new_attachment["height"] = None
+
+            if request.user.is_authenticated and (
+                request.user.is_misago_admin
+                or request.user.id == new_attachment["uploader"]
+            ):
+                new_attachment["url"] = reverse(
+                    "misago:attachment-details",
+                    kwargs={
+                        "id": new_attachment["id"],
+                        "slug": new_attachment["slug"],
+                    },
+                )
+            else:
+                new_attachment["url"] = None
+
+            data.append(new_attachment)
+
+        return data
 
 
 class PostEditsView(GenericPostEditView):
@@ -391,9 +402,7 @@ class PostEditsView(GenericPostEditView):
 
         page_obj = paginator.get_page(page or 1)
 
-        context_data = self.get_thread_post_edit_context_data(
-            request, self.backend, post, page_obj
-        )
+        context_data = self.get_thread_post_edit_context_data(request, post, page_obj)
 
         if request.is_htmx:
             if request.GET.get("modal"):
@@ -494,7 +503,7 @@ class PostEditView(GenericPostEditView):
             template_name = self.partial_template_name
 
         context_data = self.get_thread_post_edit_context_data(
-            request, self.backend, post, paginator.get_page(page)
+            request, post, paginator.get_page(page)
         )
 
         return render(request, template_name, context_data)
