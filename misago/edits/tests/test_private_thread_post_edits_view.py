@@ -62,7 +62,7 @@ def test_private_thread_post_edits_view_shows_empty_in_modal(
 
 
 def test_private_thread_post_edits_view_redirects_to_last_edit(
-    user_client, other_user_private_thread, post
+    user_client, other_user_private_thread
 ):
     post = other_user_private_thread.first_post
 
@@ -93,7 +93,7 @@ def test_private_thread_post_edits_view_redirects_to_last_edit(
 
 
 def test_private_thread_post_edits_view_redirects_to_last_edit_in_htmx(
-    user_client, other_user_private_thread, post
+    user_client, other_user_private_thread
 ):
     post = other_user_private_thread.first_post
 
@@ -125,7 +125,7 @@ def test_private_thread_post_edits_view_redirects_to_last_edit_in_htmx(
 
 
 def test_private_thread_post_edits_view_redirects_to_last_edit_in_modal(
-    user_client, other_user_private_thread, post
+    user_client, other_user_private_thread
 ):
     post = other_user_private_thread.first_post
 
@@ -162,7 +162,7 @@ def test_private_thread_post_edits_view_redirects_to_last_edit_in_modal(
 
 
 def test_private_thread_post_edits_view_redirects_to_last_edit_for_out_of_range_page(
-    user_client, other_user_private_thread, post
+    user_client, other_user_private_thread
 ):
     post = other_user_private_thread.first_post
 
@@ -194,7 +194,7 @@ def test_private_thread_post_edits_view_redirects_to_last_edit_for_out_of_range_
 
 
 def test_private_thread_post_edits_view_redirects_to_last_edit_for_out_of_range_page_in_htmx(
-    user_client, other_user_private_thread, post
+    user_client, other_user_private_thread
 ):
     post = other_user_private_thread.first_post
 
@@ -227,7 +227,7 @@ def test_private_thread_post_edits_view_redirects_to_last_edit_for_out_of_range_
 
 
 def test_private_thread_post_edits_view_redirects_to_last_edit_for_out_of_range_page_in_modal(
-    user_client, other_user_private_thread, post
+    user_client, other_user_private_thread
 ):
     post = other_user_private_thread.first_post
 
@@ -265,7 +265,7 @@ def test_private_thread_post_edits_view_redirects_to_last_edit_for_out_of_range_
 
 
 def test_private_thread_post_edits_view_shows_empty_edit(
-    user_client, other_user_private_thread, post
+    user_client, other_user_private_thread
 ):
     post = other_user_private_thread.first_post
 
@@ -289,7 +289,7 @@ def test_private_thread_post_edits_view_shows_empty_edit(
 
 
 def test_private_thread_post_edits_view_shows_empty_edit_in_htmx(
-    user_client, other_user_private_thread, post
+    user_client, other_user_private_thread
 ):
     post = other_user_private_thread.first_post
 
@@ -314,7 +314,7 @@ def test_private_thread_post_edits_view_shows_empty_edit_in_htmx(
 
 
 def test_private_thread_post_edits_view_shows_empty_edit_in_modal(
-    user_client, other_user_private_thread, post
+    user_client, other_user_private_thread
 ):
     post = other_user_private_thread.first_post
 
@@ -339,8 +339,83 @@ def test_private_thread_post_edits_view_shows_empty_edit_in_modal(
     assert_contains(response, "No changes were made in this edit")
 
 
+def test_private_thread_post_edits_view_shows_edit_user(
+    user_client, moderator, other_user_private_thread
+):
+    post = other_user_private_thread.first_post
+
+    create_post_edit(post=post, user="User")
+    create_post_edit(post=post, user=moderator)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, moderator.get_absolute_url())
+    assert_contains(response, moderator.username)
+
+
+def test_private_thread_post_edits_view_shows_edit_user_in_htmx(
+    user_client, moderator, other_user_private_thread
+):
+    post = other_user_private_thread.first_post
+
+    create_post_edit(post=post, user="User")
+    create_post_edit(post=post, user=moderator)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(response, moderator.get_absolute_url())
+    assert_contains(response, moderator.username)
+
+
+def test_private_thread_post_edits_view_shows_edit_user_in_modal(
+    user_client, moderator, other_user_private_thread
+):
+    post = other_user_private_thread.first_post
+
+    create_post_edit(post=post, user="User")
+    create_post_edit(post=post, user=moderator)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(response, moderator.get_absolute_url())
+    assert_contains(response, moderator.username)
+
+
 def test_private_thread_post_edits_view_shows_edit_reason(
-    user_client, other_user_private_thread, post
+    user_client, other_user_private_thread
 ):
     post = other_user_private_thread.first_post
 
@@ -364,7 +439,7 @@ def test_private_thread_post_edits_view_shows_edit_reason(
 
 
 def test_private_thread_post_edits_view_shows_edit_reason_in_htmx(
-    user_client, other_user_private_thread, post
+    user_client, other_user_private_thread
 ):
     post = other_user_private_thread.first_post
 
@@ -389,7 +464,7 @@ def test_private_thread_post_edits_view_shows_edit_reason_in_htmx(
 
 
 def test_private_thread_post_edits_view_shows_edit_reason_in_modal(
-    user_client, other_user_private_thread, post
+    user_client, other_user_private_thread
 ):
     post = other_user_private_thread.first_post
 
