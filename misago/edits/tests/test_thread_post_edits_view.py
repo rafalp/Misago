@@ -381,3 +381,66 @@ def test_thread_post_edits_view_shows_empty_edit_to_anonymous_user_in_modal(
 
     assert_contains(response, "Editor")
     assert_contains(response, "No changes were made in this edit")
+
+
+def test_thread_post_edits_view_shows_edit_reason(user_client, thread, post):
+    create_post_edit(post=post, user="User")
+    create_post_edit(post=post, user="Editor", edit_reason="Lorem ipsum dolor")
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Lorem ipsum dolor")
+
+
+def test_thread_post_edits_view_shows_edit_reason_in_htmx(user_client, thread, post):
+    create_post_edit(post=post, user="User")
+    create_post_edit(post=post, user="Editor", edit_reason="Lorem ipsum dolor")
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Lorem ipsum dolor")
+
+
+def test_thread_post_edits_view_shows_edit_reason_in_modal(user_client, thread, post):
+    create_post_edit(post=post, user="User")
+    create_post_edit(post=post, user="Editor", edit_reason="Lorem ipsum dolor")
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Lorem ipsum dolor")
