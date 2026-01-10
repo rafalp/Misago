@@ -341,7 +341,7 @@ class GenericPostEditView(GenericThreadView):
 
             if request.user.is_authenticated and (
                 request.user.is_misago_admin
-                or request.user.id == new_attachment["uploader"]
+                or request.user.id == new_attachment["uploader_id"]
             ):
                 new_attachment["url"] = reverse(
                     "misago:attachment-details",

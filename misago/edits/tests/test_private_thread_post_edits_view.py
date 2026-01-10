@@ -529,8 +529,8 @@ def test_private_thread_post_edits_view_shows_post_contents_diff(
     create_post_edit(
         post=post,
         user="Editor",
-        old_content="Lorem ipsum",
-        new_content="Dolor met",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
     )
 
     response = user_client.get(
@@ -549,3 +549,51 @@ def test_private_thread_post_edits_view_shows_post_contents_diff(
     assert_contains(response, "Content changes")
     assert_contains(response, "Lorem ipsum")
     assert_contains(response, "Dolor met")
+    assert_contains(response, "Another paragraph")
+
+
+def test_private_thread_post_edits_view_shows_attachments_diff(
+    attachment_factory, text_file, user_client, other_user_private_thread
+):
+    post = other_user_private_thread.first_post
+
+    kept_attachment = attachment_factory(
+        text_file,
+        name="kept-attachment.txt",
+        post=post,
+    )
+    new_attachment = attachment_factory(
+        text_file,
+        name="new-attachment.txt",
+    )
+    deleted_attachment = attachment_factory(
+        text_file,
+        name="deleted-attachment.txt",
+        post=post,
+    )
+
+    create_post_edit(post=post, user="User")
+    create_post_edit(
+        post=post,
+        user="Editor",
+        attachments=[kept_attachment, new_attachment],
+        deleted_attachments=[deleted_attachment],
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Attachment changes")
+    assert_contains(response, "kept-attachment.txt")
+    assert_contains(response, "new-attachment.txt")
+    assert_contains(response, "deleted-attachment.txt")
