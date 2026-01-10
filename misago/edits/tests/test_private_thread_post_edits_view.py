@@ -487,3 +487,65 @@ def test_private_thread_post_edits_view_shows_edit_reason_in_modal(
 
     assert_contains(response, "Editor")
     assert_contains(response, "Lorem ipsum dolor")
+
+
+def test_private_thread_post_edits_view_shows_thread_title_diff(
+    user_client, other_user_private_thread
+):
+    post = other_user_private_thread.first_post
+
+    create_post_edit(post=post, user="User")
+    create_post_edit(
+        post=post,
+        user="Editor",
+        old_title="Lorem ipsum",
+        new_title="Dolor met",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Title changes")
+    assert_contains(response, "Lorem ipsum")
+    assert_contains(response, "Dolor met")
+
+
+def test_private_thread_post_edits_view_shows_post_contents_diff(
+    user_client, other_user_private_thread
+):
+    post = other_user_private_thread.first_post
+
+    create_post_edit(post=post, user="User")
+    create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum",
+        new_content="Dolor met",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Content changes")
+    assert_contains(response, "Lorem ipsum")
+    assert_contains(response, "Dolor met")

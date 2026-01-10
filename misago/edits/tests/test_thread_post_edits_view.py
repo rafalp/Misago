@@ -383,7 +383,7 @@ def test_thread_post_edits_view_shows_empty_edit_to_anonymous_user_in_modal(
     assert_contains(response, "No changes were made in this edit")
 
 
-def test_thread_post_edits_view_shows_edit_user(user_client, moderator, thread, post):
+def test_thread_post_edits_view_shows_editor(user_client, moderator, thread, post):
     create_post_edit(post=post, user="User")
     create_post_edit(post=post, user=moderator)
 
@@ -403,7 +403,7 @@ def test_thread_post_edits_view_shows_edit_user(user_client, moderator, thread, 
     assert_contains(response, moderator.username)
 
 
-def test_thread_post_edits_view_shows_edit_user_in_htmx(
+def test_thread_post_edits_view_shows_editor_in_htmx(
     user_client, moderator, thread, post
 ):
     create_post_edit(post=post, user="User")
@@ -426,7 +426,7 @@ def test_thread_post_edits_view_shows_edit_user_in_htmx(
     assert_contains(response, moderator.username)
 
 
-def test_thread_post_edits_view_shows_edit_user_in_modal(
+def test_thread_post_edits_view_shows_editor_in_modal(
     user_client, moderator, thread, post
 ):
     create_post_edit(post=post, user="User")
@@ -511,3 +511,57 @@ def test_thread_post_edits_view_shows_edit_reason_in_modal(user_client, thread, 
 
     assert_contains(response, "Editor")
     assert_contains(response, "Lorem ipsum dolor")
+
+
+def test_thread_post_edits_view_shows_thread_title_diff(user_client, thread, post):
+    create_post_edit(post=post, user="User")
+    create_post_edit(
+        post=post,
+        user="Editor",
+        old_title="Lorem ipsum",
+        new_title="Dolor met",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Title changes")
+    assert_contains(response, "Lorem ipsum")
+    assert_contains(response, "Dolor met")
+
+
+def test_thread_post_edits_view_shows_post_contents_diff(user_client, thread, post):
+    create_post_edit(post=post, user="User")
+    create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum",
+        new_content="Dolor met",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Content changes")
+    assert_contains(response, "Lorem ipsum")
+    assert_contains(response, "Dolor met")

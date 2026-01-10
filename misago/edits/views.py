@@ -11,7 +11,9 @@ from ..attachments.filetypes import filetypes
 from ..permissions.checkutils import check_permissions
 from ..permissions.edits import (
     check_delete_post_edit_permission,
+    check_hide_post_edit_permission,
     check_see_post_edit_history_permission,
+    check_unhide_post_edit_permission,
 )
 from ..permissions.enums import CategoryPermission
 from ..permissions.privatethreads import check_edit_private_thread_post_permission
@@ -233,26 +235,21 @@ class GenericPostEditView(GenericThreadView):
         )
 
         can_restore = False
-        if is_moderator:
-            can_restore = True
-        elif not post_edit.is_hidden:
-            with check_permissions() as can_restore:
-                self.check_restore_post_edit_permission(request, post)
-
         can_hide = False
         can_unhide = False
 
+        if not is_moderator and not post_edit.is_hidden:
+            with check_permissions() as can_restore:
+                self.check_restore_post_edit_permission(request, post)
+
         if post_edit.is_hidden:
             with check_permissions():
-                check_delete_post_edit_permission(request.user_permissions, post_edit)
+                check_hide_post_edit_permission(request.user_permissions, post_edit)
                 can_unhide = True
         else:
             with check_permissions():
-                check_delete_post_edit_permission(request.user_permissions, post_edit)
+                check_unhide_post_edit_permission(request.user_permissions, post_edit)
                 can_hide = True
-
-        with check_permissions() as can_delete:
-            check_delete_post_edit_permission(request.user_permissions, post_edit)
 
         with check_permissions() as can_delete:
             check_delete_post_edit_permission(request.user_permissions, post_edit)
@@ -448,12 +445,13 @@ class PostEditView(GenericPostEditView):
 
         thread = self.get_thread(request, thread_id)
         post = self.get_thread_post(request, thread, post_id, for_content=True)
+
         check_see_post_edit_history_permission(
             request.user_permissions, thread.category, thread, post
         )
 
         post_edit = self.get_thread_post_edit(request, post, post_edit_id)
-        self.check_permission(request, post_edit)
+        self.check_post_edit_permission(request, post_edit)
 
         if request.method == "POST":
             return self.execute_action(request, post_edit)
@@ -475,7 +473,7 @@ class PostEditView(GenericPostEditView):
             },
         )
 
-    def check_permission(self, request: HttpRequest, post_edit: PostEdit):
+    def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
         raise NotImplementedError()
 
     def execute_action(self, request: HttpRequest, post_edit: PostEdit) -> HttpResponse:
@@ -510,16 +508,17 @@ class PostEditView(GenericPostEditView):
 
 
 class PostEditHideView(PostEditView):
-    def check_permission(self, request: HttpRequest, post_edit: PostEdit):
-        pass
+    def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
+        check_hide_post_edit_permission(request.user_permissions, post_edit)
 
     def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
-        hide_post_edit(post_edit, request.user, request=request)
+        if not post_edit.is_hidden:
+            hide_post_edit(post_edit, request.user, request=request)
 
-        messages.success(
-            request,
-            pgettext("hide post edit", "Post edit hidden"),
-        )
+            messages.success(
+                request,
+                pgettext("hide post edit", "Post edit hidden"),
+            )
 
         post_edit_index = self.get_thread_post_edit_index(post_edit)
         return self.get_action_response(request, post_edit.post, post_edit_index)
@@ -536,16 +535,17 @@ class PrivateThreadPostEditHideView(PostEditHideView):
 
 
 class PostEditUnhideView(PostEditView):
-    def check_permission(self, request: HttpRequest, post_edit: PostEdit):
-        pass
+    def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
+        check_unhide_post_edit_permission(request.user_permissions, post_edit)
 
     def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
-        unhide_post_edit(post_edit, request=request)
+        if not post_edit.is_hidden:
+            unhide_post_edit(post_edit, request=request)
 
-        messages.success(
-            request,
-            pgettext("unhide post edit", "Post edit unhidden"),
-        )
+            messages.success(
+                request,
+                pgettext("unhide post edit", "Post edit unhidden"),
+            )
 
         post_edit_index = self.get_thread_post_edit_index(post_edit)
         return self.get_action_response(request, post_edit.post, post_edit_index)
@@ -564,7 +564,7 @@ class PrivateThreadPostEditUnhideView(PostEditUnhideView):
 class PostEditDeleteView(PostEditView):
     template_name = "misago/post_edit_delete/index.html"
 
-    def check_permission(self, request: HttpRequest, post_edit: PostEdit):
+    def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
         check_delete_post_edit_permission(request.user_permissions, post_edit)
 
     def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
