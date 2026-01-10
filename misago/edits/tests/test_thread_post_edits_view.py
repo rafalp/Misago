@@ -1,7 +1,8 @@
 from django.urls import reverse
 
-from ...test import assert_contains
+from ...test import assert_contains, assert_not_contains
 from ..create import create_post_edit
+from ..hide import hide_post_edit
 
 
 def test_thread_post_edits_view_shows_empty(user_client, thread, post):
@@ -611,3 +612,321 @@ def test_thread_post_edits_view_shows_attachments_diff(
     assert_contains(response, "kept-attachment.txt")
     assert_contains(response, "new-attachment.txt")
     assert_contains(response, "deleted-attachment.txt")
+
+
+def test_thread_post_edits_view_shows_hidden_post_diff_to_moderator(
+    moderator_client, thread, post
+):
+    create_post_edit(post=post, user="User")
+    post_edit = create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Edit contents hidden")
+    assert_contains(response, "Content changes")
+    assert_contains(response, "Lorem ipsum")
+    assert_contains(response, "Dolor met")
+    assert_contains(response, "Another paragraph")
+
+
+def test_thread_post_edits_view_shows_hidden_post_diff_to_moderator_in_htmx(
+    moderator_client, thread, post
+):
+    create_post_edit(post=post, user="User")
+    post_edit = create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Edit contents hidden")
+    assert_contains(response, "Content changes")
+    assert_contains(response, "Lorem ipsum")
+    assert_contains(response, "Dolor met")
+    assert_contains(response, "Another paragraph")
+
+
+def test_thread_post_edits_view_shows_hidden_post_diff_to_moderator_in_modal(
+    moderator_client, thread, post
+):
+    create_post_edit(post=post, user="User")
+    post_edit = create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Edit contents hidden")
+    assert_contains(response, "Content changes")
+    assert_contains(response, "Lorem ipsum")
+    assert_contains(response, "Dolor met")
+    assert_contains(response, "Another paragraph")
+
+
+def test_thread_post_edits_view_doesnt_show_hidden_post_diff_to_user(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user="User")
+    post_edit = create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Edit contents hidden")
+    assert_not_contains(response, "Content changes")
+    assert_not_contains(response, "Lorem ipsum")
+    assert_not_contains(response, "Dolor met")
+    assert_not_contains(response, "Another paragraph")
+
+
+def test_thread_post_edits_view_doesnt_show_hidden_post_diff_to_user_in_htmx(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user="User")
+    post_edit = create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Edit contents hidden")
+    assert_not_contains(response, "Content changes")
+    assert_not_contains(response, "Lorem ipsum")
+    assert_not_contains(response, "Dolor met")
+    assert_not_contains(response, "Another paragraph")
+
+
+def test_thread_post_edits_view_doesnt_show_hidden_post_diff_to_user_in_modal(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user="User")
+    post_edit = create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Edit contents hidden")
+    assert_not_contains(response, "Content changes")
+    assert_not_contains(response, "Lorem ipsum")
+    assert_not_contains(response, "Dolor met")
+    assert_not_contains(response, "Another paragraph")
+
+
+def test_thread_post_edits_view_doesnt_show_hidden_post_diff_to_anonymous_user(
+    thread_reply_factory, client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user="User")
+    post_edit = create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Edit contents hidden")
+    assert_not_contains(response, "Content changes")
+    assert_not_contains(response, "Lorem ipsum")
+    assert_not_contains(response, "Dolor met")
+    assert_not_contains(response, "Another paragraph")
+
+
+def test_thread_post_edits_view_doesnt_show_hidden_post_diff_to_anonymous_user_in_htmx(
+    thread_reply_factory, client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user="User")
+    post_edit = create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Edit contents hidden")
+    assert_not_contains(response, "Content changes")
+    assert_not_contains(response, "Lorem ipsum")
+    assert_not_contains(response, "Dolor met")
+    assert_not_contains(response, "Another paragraph")
+
+
+def test_thread_post_edits_view_doesnt_show_hidden_post_diff_to_anonymous_user_in_modal(
+    thread_reply_factory, client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user="User")
+    post_edit = create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Edit contents hidden")
+    assert_not_contains(response, "Content changes")
+    assert_not_contains(response, "Lorem ipsum")
+    assert_not_contains(response, "Dolor met")
+    assert_not_contains(response, "Another paragraph")

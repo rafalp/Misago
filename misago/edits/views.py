@@ -238,7 +238,9 @@ class GenericPostEditView(GenericThreadView):
         can_hide = False
         can_unhide = False
 
-        if not is_moderator and not post_edit.is_hidden:
+        if is_moderator:
+            can_restore = True
+        elif not post_edit.is_hidden:
             with check_permissions() as can_restore:
                 self.check_restore_post_edit_permission(request, post)
 
