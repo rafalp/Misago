@@ -8,6 +8,7 @@ from ..edits import (
     can_see_post_edit_count,
     check_delete_post_edit_permission,
     check_see_post_edit_history_permission,
+    check_unhide_post_edit_permission,
 )
 from ..enums import CanHideOwnPostEdits, CanSeePostEdits
 from ..models import Moderator
@@ -243,3 +244,64 @@ def test_check_delete_post_edit_permission_fails_user_with_delete_permission_for
 
     with pytest.raises(PermissionDenied):
         check_delete_post_edit_permission(permissions, post_edit)
+
+
+def test_check_unhide_post_edit_permission_passes_for_thread_post_edit_for_global_moderator(
+    user_permissions_factory, moderator, post
+):
+    post_edit = create_post_edit(post=post, user="DeletedUser")
+
+    permissions = user_permissions_factory(moderator)
+    check_unhide_post_edit_permission(permissions, post_edit)
+
+
+def test_check_unhide_post_edit_permission_passes_for_thread_post_edit_for_category_moderator(
+    user_permissions_factory, user, post
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[post.category_id],
+    )
+
+    post_edit = create_post_edit(post=post, user="DeletedUser")
+
+    permissions = user_permissions_factory(user)
+    check_unhide_post_edit_permission(permissions, post_edit)
+
+
+def test_check_unhide_post_edit_permission_passes_for_private_thread_post_edit_for_global_moderator(
+    user_permissions_factory, moderator, private_thread
+):
+    post = private_thread.first_post
+    post_edit = create_post_edit(post=post, user="DeletedUser")
+
+    permissions = user_permissions_factory(moderator)
+    check_unhide_post_edit_permission(permissions, post_edit)
+
+
+def test_check_unhide_post_edit_permission_passes_for_private_thread_post_edit_for_private_threads_moderator(
+    user_permissions_factory, user, private_thread
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
+
+    post = private_thread.first_post
+    post_edit = create_post_edit(post=post, user="DeletedUser")
+
+    permissions = user_permissions_factory(user)
+    check_unhide_post_edit_permission(permissions, post_edit)
+
+
+def test_check_unhide_post_edit_permission_fails_user(
+    user_permissions_factory, user, post
+):
+    post_edit = create_post_edit(post=post, user="DeletedUser")
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_unhide_post_edit_permission(permissions, post_edit)
