@@ -4,6 +4,7 @@ import pytest
 from django.core.exceptions import PermissionDenied
 
 from ...edits.create import create_post_edit
+from ...edits.hide import hide_post_edit
 from ..edits import (
     can_see_post_edit_count,
     check_delete_post_edit_permission,
@@ -441,6 +442,36 @@ def test_check_delete_post_edit_permission_fails_user_with_delete_permission_for
 
     post_edit = create_post_edit(post=post, user=user)
     post_edit.edited_at -= timedelta(hours=6)
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_delete_post_edit_permission(permissions, post_edit)
+
+
+def test_check_delete_post_edit_permission_fails_user_with_delete_permission_for_own_post_edit_if_it_hidden_by_other_user(
+    user_permissions_factory, user, moderator, members_group, post
+):
+    members_group.can_hide_own_post_edits = CanHideOwnPostEdits.DELETE
+    members_group.save()
+
+    post_edit = create_post_edit(post=post, user=user)
+    hide_post_edit(post_edit, moderator)
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_delete_post_edit_permission(permissions, post_edit)
+
+
+def test_check_delete_post_edit_permission_fails_user_with_delete_permission_for_own_post_edit_if_it_hidden_by_deleted_user(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_hide_own_post_edits = CanHideOwnPostEdits.DELETE
+    members_group.save()
+
+    post_edit = create_post_edit(post=post, user=user)
+    hide_post_edit(post_edit, "Moderator")
 
     permissions = user_permissions_factory(user)
 

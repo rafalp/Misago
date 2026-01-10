@@ -251,6 +251,14 @@ def _check_delete_post_edit_permission_action(
             )
         )
 
+    if post_edit.is_hidden and permissions.user.id != post_edit.hidden_by_id:
+        raise PermissionDenied(
+            pgettext(
+                "edits permission error",
+                "You can’t delete post edits hidden by other users.",
+            )
+        )
+
     time_limit = permissions.own_post_edits_hide_time_limit * 60
 
     if (
