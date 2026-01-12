@@ -2164,3 +2164,243 @@ def test_private_thread_post_edits_view_shows_hide_user_edit_option_to_user_with
             },
         ),
     )
+
+
+def test_private_thread_post_edits_view_shows_hide_deleted_user_edit_option_to_moderator(
+    thread_reply_factory, moderator_client, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster="Deleted")
+
+    create_post_edit(post=post, user="Deleted")
+    post_edit = create_post_edit(
+        post=post,
+        user="Deleted",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edit-hide",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_post_edits_view_shows_hide_deleted_user_edit_option_to_moderator_in_htmx(
+    thread_reply_factory, moderator_client, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster="Deleted")
+
+    create_post_edit(post=post, user="Deleted")
+    post_edit = create_post_edit(
+        post=post,
+        user="Deleted",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edit-hide",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_post_edits_view_shows_hide_deleted_user_edit_option_to_moderator_in_modal(
+    thread_reply_factory, moderator_client, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster="Deleted")
+
+    create_post_edit(post=post, user="Deleted")
+    post_edit = create_post_edit(
+        post=post,
+        user="Deleted",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edit-hide",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_post_edits_view_shows_hide_user_edit_option_to_moderator(
+    thread_reply_factory, moderator_client, user, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edit-hide",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_post_edits_view_shows_hide_user_edit_option_to_moderator_in_htmx(
+    thread_reply_factory, moderator_client, user, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edit-hide",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_private_thread_post_edits_view_shows_hide_user_edit_option_to_moderator_in_modal(
+    thread_reply_factory, moderator_client, user, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-post-edit-hide",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
