@@ -246,11 +246,11 @@ class GenericPostEditView(GenericThreadView):
 
         if post_edit.is_hidden:
             with check_permissions():
-                check_hide_post_edit_permission(request.user_permissions, post_edit)
+                check_unhide_post_edit_permission(request.user_permissions, post_edit)
                 can_unhide = True
         else:
             with check_permissions():
-                check_unhide_post_edit_permission(request.user_permissions, post_edit)
+                check_hide_post_edit_permission(request.user_permissions, post_edit)
                 can_hide = True
 
         with check_permissions() as can_delete:

@@ -106,7 +106,6 @@ def _check_hide_post_edit_permission_action(
         return
 
     is_user_edit = permissions.user.id and permissions.user.id == post_edit.user_id
-
     if not is_user_edit:
         raise PermissionDenied(
             pgettext(
@@ -119,7 +118,7 @@ def _check_hide_post_edit_permission_action(
         raise PermissionDenied(
             pgettext(
                 "edits permission error",
-                "You can’t not post edits.",
+                "You can’t hide post edits.",
             )
         )
 
