@@ -1899,3 +1899,495 @@ def test_thread_post_edits_view_shows_restore_hidden_edit_option_to_moderator_in
             },
         ),
     )
+
+
+def test_thread_post_edits_view_doesnt_show_hide_deleted_user_edit_option_to_anonymous_user(
+    thread_reply_factory, client, thread
+):
+    post = thread_reply_factory(thread, poster="DeletedUser")
+
+    create_post_edit(post=post, user="DeletedUser")
+    post_edit = create_post_edit(
+        post=post,
+        user="DeletedUser",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_hide_deleted_user_edit_option_to_anonymous_user_in_htmx(
+    thread_reply_factory, client, thread
+):
+    post = thread_reply_factory(thread, poster="DeletedUser")
+
+    create_post_edit(post=post, user="DeletedUser")
+    post_edit = create_post_edit(
+        post=post,
+        user="DeletedUser",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_hide_deleted_user_edit_option_to_anonymous_user_in_modal(
+    thread_reply_factory, client, other_user, thread
+):
+    post = thread_reply_factory(thread, poster=other_user)
+
+    create_post_edit(post=post, user=other_user)
+    post_edit = create_post_edit(
+        post=post,
+        user=other_user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_hide_other_user_edit_option_to_anonymous_user(
+    thread_reply_factory, client, other_user, thread
+):
+    post = thread_reply_factory(thread, poster=other_user)
+
+    create_post_edit(post=post, user=other_user)
+    post_edit = create_post_edit(
+        post=post,
+        user=other_user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_hide_other_user_edit_option_to_anonymous_user_in_htmx(
+    thread_reply_factory, client, other_user, thread
+):
+    post = thread_reply_factory(thread, poster=other_user)
+
+    create_post_edit(post=post, user=other_user)
+    post_edit = create_post_edit(
+        post=post,
+        user=other_user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_hide_other_user_edit_option_to_anonymous_user_in_modal(
+    thread_reply_factory, client, other_user, thread
+):
+    post = thread_reply_factory(thread, poster=other_user)
+
+    create_post_edit(post=post, user=other_user)
+    post_edit = create_post_edit(
+        post=post,
+        user=other_user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_deleted_user_hidden_edit_option_to_anonymous_user(
+    thread_reply_factory, client, thread
+):
+    post = thread_reply_factory(thread, poster="DeletedUser")
+
+    create_post_edit(post=post, user="DeletedUser")
+    post_edit = create_post_edit(
+        post=post,
+        user="DeletedUser",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_hide_deleted_user_hidden_edit_option_to_anonymous_user_in_htmx(
+    thread_reply_factory, client, thread
+):
+    post = thread_reply_factory(thread, poster="DeletedUser")
+
+    create_post_edit(post=post, user="DeletedUser")
+    post_edit = create_post_edit(
+        post=post,
+        user="DeletedUser",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_hide_deleted_user_hidden_edit_option_to_anonymous_user_in_modal(
+    thread_reply_factory, client, other_user, thread
+):
+    post = thread_reply_factory(thread, poster=other_user)
+
+    create_post_edit(post=post, user=other_user)
+    post_edit = create_post_edit(
+        post=post,
+        user=other_user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_hide_other_user_hidden_edit_option_to_anonymous_user(
+    thread_reply_factory, client, other_user, thread
+):
+    post = thread_reply_factory(thread, poster=other_user)
+
+    create_post_edit(post=post, user=other_user)
+    post_edit = create_post_edit(
+        post=post,
+        user=other_user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_hide_other_user_hidden_edit_option_to_anonymous_user_in_htmx(
+    thread_reply_factory, client, other_user, thread
+):
+    post = thread_reply_factory(thread, poster=other_user)
+
+    create_post_edit(post=post, user=other_user)
+    post_edit = create_post_edit(
+        post=post,
+        user=other_user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_hide_other_user_hidden_edit_option_to_anonymous_user_in_modal(
+    thread_reply_factory, client, other_user, thread
+):
+    post = thread_reply_factory(thread, poster=other_user)
+
+    create_post_edit(post=post, user=other_user)
+    post_edit = create_post_edit(
+        post=post,
+        user=other_user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, "Moderator")
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
