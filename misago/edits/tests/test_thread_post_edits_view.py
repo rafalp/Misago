@@ -1038,3 +1038,864 @@ def test_thread_post_edits_view_shows_hidden_message_for_edit_hidden_by_register
     assert_not_contains(response, "Lorem ipsum")
     assert_not_contains(response, "Dolor met")
     assert_not_contains(response, "Another paragraph")
+
+
+def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_anonymous_user_post(
+    thread_reply_factory, client, thread
+):
+    post = thread_reply_factory(thread, poster="Deleted")
+
+    create_post_edit(post=post, user="User")
+    post_edit = create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_anonymous_user_post_in_htmx(
+    thread_reply_factory, client, thread
+):
+    post = thread_reply_factory(thread, poster="Deleted")
+
+    create_post_edit(post=post, user="User")
+    post_edit = create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_anonymous_user_post_in_modal(
+    thread_reply_factory, client, thread
+):
+    post = thread_reply_factory(thread, poster="Deleted")
+
+    create_post_edit(post=post, user="User")
+    post_edit = create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_other_user_post(
+    thread_reply_factory, user_client, other_user, thread
+):
+    post = thread_reply_factory(thread, poster=other_user)
+
+    create_post_edit(post=post, user=other_user)
+    post_edit = create_post_edit(
+        post=post,
+        user=other_user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_other_user_post_in_htmx(
+    thread_reply_factory, user_client, other_user, thread
+):
+    post = thread_reply_factory(thread, poster=other_user)
+
+    create_post_edit(post=post, user=other_user)
+    post_edit = create_post_edit(
+        post=post,
+        user=other_user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_other_user_post_in_modal(
+    thread_reply_factory, user_client, other_user, thread
+):
+    post = thread_reply_factory(thread, poster=other_user)
+
+    create_post_edit(post=post, user=other_user)
+    post_edit = create_post_edit(
+        post=post,
+        user=other_user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_editable_post(
+    thread_reply_factory, user_client, user, thread
+):
+    thread.is_closed = True
+    thread.save()
+
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_editable_post_in_htmx(
+    thread_reply_factory, user_client, user, thread
+):
+    thread.is_closed = True
+    thread.save()
+
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_editable_post_in_modal(
+    thread_reply_factory, user_client, user, thread
+):
+    thread.is_closed = True
+    thread.save()
+
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_shows_restore_edit_option_to_user_editable_post(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_shows_restore_edit_option_to_user_editable_post_in_htmx(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_shows_restore_edit_option_to_user_editable_post_in_modal(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_shows_restore_edit_option_to_moderator(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_shows_restore_edit_option_to_moderator_in_htmx(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_shows_restore_edit_option_to_moderator_in_modal(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_restore_hidden_edit_option_to_user(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_restore_hidden_edit_option_to_user_in_htmx(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_doesnt_show_restore_hidden_edit_option_to_user_in_modal(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_shows_restore_hidden_edit_option_to_moderator(
+    thread_reply_factory, moderator_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, user)
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_shows_restore_hidden_edit_option_to_moderator_in_htmx(
+    thread_reply_factory, moderator_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, user)
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+
+
+def test_thread_post_edits_view_shows_restore_hidden_edit_option_to_moderator_in_modal(
+    thread_reply_factory, moderator_client, user, thread
+):
+    post = thread_reply_factory(thread, poster=user)
+
+    create_post_edit(post=post, user=user)
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum\n\nAnother paragraph",
+        new_content="Dolor met\n\nAnother paragraph",
+    )
+
+    hide_post_edit(post_edit, user)
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
