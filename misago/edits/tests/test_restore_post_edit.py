@@ -13,6 +13,7 @@ def test_restore_post_edit_restores_post(post, user):
     _, new_post_edit = restore_post_edit(post_edit, user)
 
     assert new_post_edit.id
+    assert new_post_edit.new_content == "Lorem ipsum"
 
     assert post.original == "Lorem ipsum"
     assert post.parsed == "<p>Lorem ipsum</p>"
@@ -44,6 +45,7 @@ def test_restore_post_edit_restores_post_by_deleted_user(post, user):
     _, new_post_edit = restore_post_edit(post_edit, "DeletedUser")
 
     assert new_post_edit.id
+    assert new_post_edit.new_content == "Lorem ipsum"
 
     assert post.original == "Lorem ipsum"
     assert post.parsed == "<p>Lorem ipsum</p>"
@@ -79,6 +81,7 @@ def test_restore_post_edit_without_commit_doesnt_save_post_and_post_edit(
         _, new_post_edit = restore_post_edit(post_edit, "DeletedUser", commit=False)
 
     assert not new_post_edit.id
+    assert new_post_edit.new_content == "Lorem ipsum"
 
     assert post.original == "Lorem ipsum"
     assert post.parsed == "<p>Lorem ipsum</p>"
