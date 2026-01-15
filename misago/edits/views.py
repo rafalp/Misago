@@ -383,7 +383,7 @@ class PostEditsView(GenericPostEditView):
 
         if not request.is_htmx and thread.slug != slug:
             return redirect(
-                self.get_thread_post_edits_url(post),
+                self.get_thread_post_edits_url(post, page),
                 permanent=True,
             )
 
@@ -433,7 +433,7 @@ class PrivateThreadPostEditsView(PostEditsView):
 class PostEditView(GenericPostEditView):
     post_edit_backend: PostEditViewBackend
 
-    template_name: str
+    template_name: str | None = None
 
     def dispatch(
         self,
@@ -458,6 +458,9 @@ class PostEditView(GenericPostEditView):
 
         if request.method == "POST":
             return self.execute_action(request, post_edit)
+
+        if not self.template_name:
+            raise HttpResponseNotAllowed()
 
         edit_index = self.get_thread_post_edit_index(post_edit)
 
@@ -511,6 +514,8 @@ class PostEditView(GenericPostEditView):
 
 
 class PostEditHideView(PostEditView):
+    template_name = "misago/post_edit_hide/index.html"
+
     def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
         check_hide_post_edit_permission(request.user_permissions, post_edit)
 
@@ -542,7 +547,7 @@ class PostEditUnhideView(PostEditView):
         check_unhide_post_edit_permission(request.user_permissions, post_edit)
 
     def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
-        if not post_edit.is_hidden:
+        if post_edit.is_hidden:
             unhide_post_edit(post_edit, request=request)
 
             messages.success(
@@ -593,6 +598,11 @@ class PrivateThreadPostEditDeleteView(PostEditDeleteView):
 
 
 class PostEditRestoreView(PostEditView):
+    template_name = "misago/post_edit_restore/index.html"
+
+    def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
+        self.check_restore_post_edit_permission(request, post_edit.post)
+
     def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
         restore_post_edit(post_edit, request.user, request=request)
 

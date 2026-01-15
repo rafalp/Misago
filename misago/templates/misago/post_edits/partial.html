@@ -125,10 +125,20 @@
                   </li>
                 {% endif %}
               {% elif can_unhide %}
-                <li class="dropdown-menu-item">
-                  <a href="{{ post_edit_unhide_url }}">
-                    {% translate "Unhide" context "post edit unhide btn" %}
-                  </a>
+                <li>
+                  <form
+                    class="dropdown-menu-item"
+                    action="{{ post_edit_unhide_url }}"
+                    method="post"
+                  >
+                    {% csrf_token %}
+                    <button
+                      class="btn-link"
+                      type="submit"
+                    >
+                      {% translate "Unhide" context "post edit unhide btn" %}
+                    </button>
+                  </form>
                 </li>
               {% endif %}
               {% if can_delete %}

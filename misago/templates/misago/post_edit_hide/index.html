@@ -1,0 +1,35 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_plugins %}
+
+
+{% block content %}
+<div class="page page-post-edit-hide">
+  <div class="container page-container">
+    <form action="{{ full_path }}" method="post">
+      {% csrf_token %}
+      <div class="panel panel-default panel-form">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            {% blocktranslate trimmed with edit=edit_number user=post_edit.user_name context "post edit hide confirmation" %}
+              Hide post edit #{{ post_edit_number }} by {{ user }}
+            {% endblocktranslate %}
+          </h3>
+        </div>
+        <div class="panel-body">
+          <p>
+            {% translate "Are you sure you want to hide this edit?" context "post edit hide confirmation" %}
+          </p>
+        </div>
+        <div class="panel-footer panel-footer-sticky">
+          <button class="btn btn-primary" type="submit">
+            {% translate "Hide" context "post edit hide page btn" %}
+          </button>
+          <a href="{{ post_edit_url }}" class="btn btn-default">
+            {% translate "Cancel" context "post edit hide page btn" %}
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}
