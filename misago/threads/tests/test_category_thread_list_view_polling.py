@@ -19,7 +19,7 @@ def test_category_thread_list_view_includes_polling_if_its_not_empty(
 
 
 @override_dynamic_settings(threads_lists_polling=ThreadsListsPolling.DISABLED)
-def test_category_thread_list_view_excludes_polling_for_guests_if_its_disabled(
+def test_category_thread_list_view_excludes_polling_for_anonymous_users_if_its_disabled(
     thread_factory, client, default_category
 ):
     thread_factory(default_category)
