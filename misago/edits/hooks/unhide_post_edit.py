@@ -71,7 +71,7 @@ class UnhidePostEditHookFilter(Protocol):
         post_edit: "PostEdit",
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> "PostEdit": ...
+    ): ...
 
 
 class UnhidePostEditHook(
@@ -123,7 +123,7 @@ class UnhidePostEditHook(
         post_edit: "PostEdit",
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> "PostEdit":
+    ):
         super().__call__(
             action,
             post_edit,

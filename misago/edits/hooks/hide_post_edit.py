@@ -82,7 +82,7 @@ class HidePostEditHookFilter(Protocol):
         user: Union["User", str],
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> "PostEdit": ...
+    ): ...
 
 
 class HidePostEditHook(
@@ -133,7 +133,7 @@ class HidePostEditHook(
         user: Union["User", str],
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> "PostEdit":
+    ):
         super().__call__(
             action,
             post_edit,

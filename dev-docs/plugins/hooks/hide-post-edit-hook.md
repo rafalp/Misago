@@ -21,7 +21,7 @@ def custom_hide_post_edit_filter(
     user: Union['User', str],
     commit: bool=True,
     request: HttpRequest | None=None,
-) -> 'PostEdit':
+):
     ...
 ```
 

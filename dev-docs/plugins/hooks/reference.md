@@ -51,6 +51,7 @@ Hooks instances are importable from the following Python modules:
 - [`create_post_edit_hook`](./create-post-edit-hook.md)
 - [`delete_post_edit_hook`](./delete-post-edit-hook.md)
 - [`hide_post_edit_hook`](./hide-post-edit-hook.md)
+- [`restore_post_edit_hook`](./restore-post-edit-hook.md)
 - [`unhide_post_edit_hook`](./unhide-post-edit-hook.md)
 
 

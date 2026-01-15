@@ -20,7 +20,7 @@ def custom_unhide_post_edit_filter(
     post_edit: 'PostEdit',
     commit: bool=True,
     request: HttpRequest | None=None,
-) -> 'PostEdit':
+):
     ...
 ```
 

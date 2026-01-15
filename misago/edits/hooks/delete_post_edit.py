@@ -71,7 +71,7 @@ class DeletePostEditHookFilter(Protocol):
         post_edit: "PostEdit",
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> "PostEdit": ...
+    ): ...
 
 
 class DeletePostEditHook(
@@ -117,7 +117,7 @@ class DeletePostEditHook(
         post_edit: "PostEdit",
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> "PostEdit":
+    ):
         super().__call__(
             action,
             post_edit,
