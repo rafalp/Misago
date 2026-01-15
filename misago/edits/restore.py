@@ -7,8 +7,7 @@ from django.utils import timezone
 from ..attachments.models import Attachment
 from ..core.utils import slugify
 from ..parser.parse import parse
-from ..posting.tasks import upgrade_post_content
-from ..posting.upgradepost import post_needs_content_upgrade
+from ..posting.shortcuts import save_edited_post
 from ..threads.models import Post
 from .create import create_post_edit
 from .hooks import restore_post_edit_hook
@@ -54,7 +53,7 @@ def _restore_post_edit_action(
     post.original = parsing_result.markup
     post.parsed = parsing_result.html
     post.metadata = parsing_result.metadata
-    post.set_search_document(post.thread)
+    post.set_search_document(post.thread, parsing_result.text)
 
     post.updated_at = timestamp
     post.edits = F("edits") + 1
@@ -70,18 +69,12 @@ def _restore_post_edit_action(
         new_content=new_content,
         attachments=Attachment.objects.filter(post=post).order_by("-id"),
         edited_at=timestamp,
+        commit=False,
         request=request,
     )
 
     if commit:
-        post.save()
-
-        post.set_search_vector()
-        post.save(update_fields=["search_vector"])
-
         new_post_edit.save()
-
-        if post_needs_content_upgrade(post):
-            upgrade_post_content.delay(post.id, post.sha256_checksum)
+        save_edited_post(post)
 
     return post, new_post_edit

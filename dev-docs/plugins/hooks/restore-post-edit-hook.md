@@ -116,8 +116,7 @@ The code below implements a custom filter function that sets restored post's edi
 from django.http import HttpRequest
 from misago.edits.hooks import restore_post_edit_hook
 from misago.edits.models import PostEdit
-from misago.posting.tasks import upgrade_post_content
-from misago.posting.upgradepost import post_needs_content_upgrade
+from misago.posting.shortcuts import save_edited_post
 from misago.threads.models import Post
 from misago.users.models import User
 
@@ -135,15 +134,8 @@ def restore_post_edit_record_user_ip(
     post.last_edit_reason = f"Restored from #{new_post_edit.id}"
 
     if commit:
-        post.save()
-
-        post.set_search_vector()
-        post.save(update_fields=["search_vector"])
-
         new_post_edit.save()
-
-        if post_needs_content_upgrade(post):
-            upgrade_post_content.delay(post.id, post.sha256_checksum)
+        save_edited_post(post)
 
     return post, new_post_edit
 ```

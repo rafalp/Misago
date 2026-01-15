@@ -25,6 +25,7 @@ from ..threads.views.generic import GenericThreadView
 from .delete import delete_post_edit
 from .diff import diff_text
 from .hide import hide_post_edit, unhide_post_edit
+from .restore import restore_post_edit
 from .models import PostEdit
 
 
@@ -593,6 +594,8 @@ class PrivateThreadPostEditDeleteView(PostEditDeleteView):
 
 class PostEditRestoreView(PostEditView):
     def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
+        restore_post_edit(post_edit, request.user, request=request)
+
         messages.success(
             request,
             pgettext("restore post edit", "Post contents restored"),
