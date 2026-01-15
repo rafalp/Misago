@@ -5,13 +5,15 @@ from ...test import assert_contains, assert_not_contains
 from ..models import PrivateThreadMember
 
 
-def test_private_thread_detail_view_displays_login_page_to_guests(db, client):
+def test_private_thread_detail_view_displays_login_required_page_to_anonymous_user(
+    db, client
+):
     response = client.get(
         reverse(
             "misago:private-thread", kwargs={"thread_id": 1, "slug": "private-thread"}
         )
     )
-    assert_contains(response, "Sign in to view private threads")
+    assert_contains(response, "Sign in to view private threads", status_code=401)
 
 
 def test_private_thread_detail_view_shows_error_403_to_users_without_private_threads_permission(

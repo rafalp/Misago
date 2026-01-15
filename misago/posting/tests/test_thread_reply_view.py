@@ -15,7 +15,9 @@ from ..forms import PostForm
 from ..formsets import Formset
 
 
-def test_thread_reply_view_displays_login_page_to_guests(client, thread):
+def test_thread_reply_view_displays_login_required_page_to_anonymous_user(
+    client, thread
+):
     response = client.get(
         reverse(
             "misago:thread-reply",
@@ -25,7 +27,7 @@ def test_thread_reply_view_displays_login_page_to_guests(client, thread):
             },
         )
     )
-    assert_contains(response, "Sign in to reply to threads")
+    assert_contains(response, "Sign in to reply to threads", status_code=401)
 
 
 def test_thread_reply_view_shows_error_404_if_thread_doesnt_exist(user_client):

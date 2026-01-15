@@ -21,7 +21,7 @@ from ..forms import PostForm
 from ..formsets import Formset
 
 
-def test_private_thread_edit_view_displays_login_page_to_guests(
+def test_private_thread_edit_view_displays_login_required_page_to_anonymous_user(
     client, user_private_thread
 ):
     response = client.get(
@@ -33,7 +33,7 @@ def test_private_thread_edit_view_displays_login_page_to_guests(
             },
         )
     )
-    assert_contains(response, "Sign in to edit threads")
+    assert_contains(response, "Sign in to edit threads", status_code=401)
 
 
 def test_private_thread_edit_view_shows_error_403_to_users_without_private_threads_permission(

@@ -9,6 +9,6 @@ def test_notifications_view_is_accessible_by_users(user_client):
     assert_contains(response, "enable JavaScript")
 
 
-def test_notifications_view_shows_permission_denied_page_to_guests(db, client):
+def test_notifications_view_shows_permission_denied_page_to_anonymous_users(db, client):
     response = client.get(reverse("misago:notifications"))
     assert_contains(response, "You must be signed in", status_code=403)

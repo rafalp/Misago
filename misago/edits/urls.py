@@ -1,5 +1,6 @@
 from django.urls import path
 
+from ..privatethreads.decorators import private_threads_login_required
 from .views import (
     ThreadPostEditDeleteView,
     ThreadPostEditHideView,
@@ -47,32 +48,32 @@ urlpatterns = [
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/",
-        PrivateThreadPostEditsView.as_view(),
+        private_threads_login_required(PrivateThreadPostEditsView.as_view()),
         name="private-thread-post-edits",
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:page>/",
-        PrivateThreadPostEditsView.as_view(),
+        private_threads_login_required(PrivateThreadPostEditsView.as_view()),
         name="private-thread-post-edits",
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/restore/",
-        PrivateThreadPostEditRestoreView.as_view(),
+        private_threads_login_required(PrivateThreadPostEditRestoreView.as_view()),
         name="private-thread-post-edit-restore",
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/hide/",
-        PrivateThreadPostEditHideView.as_view(),
+        private_threads_login_required(PrivateThreadPostEditHideView.as_view()),
         name="private-thread-post-edit-hide",
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/unhide/",
-        PrivateThreadPostEditUnhideView.as_view(),
+        private_threads_login_required(PrivateThreadPostEditUnhideView.as_view()),
         name="private-thread-post-edit-unhide",
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/delete/",
-        PrivateThreadPostEditDeleteView.as_view(),
+        private_threads_login_required(PrivateThreadPostEditDeleteView.as_view()),
         name="private-thread-post-edit-delete",
     ),
 ]

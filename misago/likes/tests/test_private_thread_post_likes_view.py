@@ -335,7 +335,7 @@ def test_private_thread_post_likes_view_returns_error_404_if_user_has_no_private
     assert response.status_code == 404
 
 
-def test_private_thread_post_likes_view_returns_error_403_if_user_is_anonymous(
+def test_private_thread_post_likes_view_displays_login_required_page_to_anonymous_user(
     client, private_thread
 ):
     post = private_thread.first_post
@@ -350,9 +350,7 @@ def test_private_thread_post_likes_view_returns_error_403_if_user_is_anonymous(
             },
         )
     )
-    assert_contains(
-        response, "You must be signed in to use private threads.", status_code=403
-    )
+    assert_contains(response, "Sign in to view private threads", status_code=401)
 
 
 def test_private_thread_post_likes_view_returns_error_403_if_user_cant_see_posts_likes(

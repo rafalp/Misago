@@ -17,14 +17,16 @@ from ..forms import PostForm
 from ..formsets import Formset
 
 
-def test_thread_start_view_displays_login_page_to_guests(client, default_category):
+def test_thread_start_view_displays_login_required_page_to_anonymous_user(
+    client, default_category
+):
     response = client.get(
         reverse(
             "misago:thread-start",
             kwargs={"category_id": default_category.id, "slug": default_category.slug},
         )
     )
-    assert_contains(response, "Sign in to start new thread")
+    assert_contains(response, "Sign in to start new thread", status_code=401)
 
 
 def test_thread_start_view_shows_error_404_if_category_doesnt_exist(

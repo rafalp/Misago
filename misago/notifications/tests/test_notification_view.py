@@ -87,7 +87,7 @@ def test_notification_view_returns_404_error_for_unsupported_verb_notification(
     assert response.status_code == 404
 
 
-def test_notification_view_shows_permission_denied_page_to_guests(db, client):
+def test_notification_view_shows_permission_denied_page_to_anonymous_users(db, client):
     response = client.get(reverse("misago:notification", kwargs={"notification_id": 1}))
     assert_contains(response, "You must be signed in", status_code=403)
 

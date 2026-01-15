@@ -8,7 +8,7 @@ from ...test import assert_contains, assert_not_contains
 from ...users.models import Ban
 
 
-def test_login_view_displays_login_form_to_guests(db, client):
+def test_login_view_displays_login_form_to_anonymous_users(db, client):
     response = client.get(reverse("misago:login"))
     assert_contains(response, "page-login")
     assert_contains(response, "Sign in")

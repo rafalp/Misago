@@ -45,7 +45,9 @@ def test_admin_panel_link_is_excluded_from_frontend_context_for_users(user_clien
     assert '"ADMIN_URL": "' not in response.content.decode("utf-8")
 
 
-def test_admin_panel_link_is_excluded_from_frontend_context_for_guests(db, client):
+def test_admin_panel_link_is_excluded_from_frontend_context_for_anonymous_users(
+    db, client
+):
     response = client.get("/")
     assert response.status_code == 200
     assert '"ADMIN_URL": "' not in response.content.decode("utf-8")

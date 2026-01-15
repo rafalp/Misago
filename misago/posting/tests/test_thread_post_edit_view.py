@@ -20,7 +20,7 @@ from ..forms import PostForm
 from ..formsets import Formset
 
 
-def test_thread_post_edit_view_displays_login_page_to_guests(
+def test_thread_post_edit_view_displays_login_required_page_to_anonymous_user(
     thread_reply_factory, client, thread
 ):
     post = thread_reply_factory(thread)
@@ -35,7 +35,7 @@ def test_thread_post_edit_view_displays_login_page_to_guests(
             },
         )
     )
-    assert_contains(response, "Sign in to edit posts")
+    assert_contains(response, "Sign in to edit posts", status_code=401)
 
 
 def test_thread_post_edit_view_shows_error_404_if_thread_doesnt_exist(user_client):

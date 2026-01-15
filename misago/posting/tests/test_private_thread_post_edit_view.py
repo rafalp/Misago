@@ -19,7 +19,7 @@ from ..forms import PostForm
 from ..formsets import Formset
 
 
-def test_private_thread_post_edit_view_displays_login_page_to_guests(
+def test_private_thread_post_edit_view_displays_login_required_page_to_anonymous_user(
     thread_reply_factory, client, other_user_private_thread
 ):
     post = thread_reply_factory(other_user_private_thread)
@@ -34,7 +34,7 @@ def test_private_thread_post_edit_view_displays_login_page_to_guests(
             },
         )
     )
-    assert_contains(response, "Sign in to edit posts")
+    assert_contains(response, "Sign in to edit posts", status_code=401)
 
 
 def test_private_thread_post_edit_view_shows_error_403_to_users_without_private_threads_permission(

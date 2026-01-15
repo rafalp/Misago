@@ -22,7 +22,9 @@ from ..forms import PostForm
 from ..formsets import Formset
 
 
-def test_thread_edit_view_displays_login_page_to_guests(client, user_thread):
+def test_thread_edit_view_displays_login_required_page_to_anonymous_user(
+    client, user_thread
+):
     response = client.get(
         reverse(
             "misago:thread-edit",
@@ -32,7 +34,7 @@ def test_thread_edit_view_displays_login_page_to_guests(client, user_thread):
             },
         )
     )
-    assert_contains(response, "Sign in to edit threads")
+    assert_contains(response, "Sign in to edit threads", status_code=401)
 
 
 def test_thread_edit_view_shows_error_404_to_users_without_see_category_permission(

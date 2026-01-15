@@ -34,6 +34,7 @@ def _create_login_required_decorator(f: Callable, message: Promise | str | None 
                 request,
                 message=login_message,
                 next=request.get_full_path(),
+                status=401,
             )
 
         return f(request, *args, **kwargs)

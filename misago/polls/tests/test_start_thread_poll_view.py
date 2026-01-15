@@ -67,7 +67,7 @@ def test_start_thread_poll_view_shows_error_if_user_has_no_thread_permission(
     assert response.status_code == 404
 
 
-def test_start_thread_poll_view_shows_error_for_guests(client, thread):
+def test_start_thread_poll_view_shows_error_to_anonymous_users(client, thread):
     response = client.get(
         reverse(
             "misago:thread-poll-start",

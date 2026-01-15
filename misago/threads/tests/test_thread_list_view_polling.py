@@ -20,7 +20,7 @@ def test_thread_list_view_includes_polling_if_its_not_empty(
 @override_dynamic_settings(
     index_view="categories", threads_lists_polling=ThreadsListsPolling.DISABLED
 )
-def test_thread_list_view_excludes_polling_for_guests_if_its_disabled(
+def test_thread_list_view_excludes_polling_for_anonymous_users_if_its_disabled(
     thread_factory, client, default_category
 ):
     thread_factory(default_category)
@@ -44,7 +44,7 @@ def test_thread_list_view_excludes_polling_for_authenticated_if_its_disabled(
 @override_dynamic_settings(
     index_view="categories", threads_lists_polling=ThreadsListsPolling.ENABLED_FOR_USERS
 )
-def test_thread_list_view_excludes_polling_for_guest_if_its_enabled_for_users(
+def test_thread_list_view_excludes_polling_for_anonymous_users_if_its_enabled_for_users(
     thread_factory, client, default_category
 ):
     thread_factory(default_category)

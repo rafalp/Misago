@@ -3,9 +3,9 @@ from django.urls import reverse
 from ...test import assert_contains, assert_has_success_message
 
 
-def test_account_preferences_displays_login_page_for_guests(db, client):
+def test_account_preferences_displays_login_required_page_to_anonymous_user(db, client):
     response = client.get(reverse("misago:account-preferences"))
-    assert_contains(response, "Sign in to change your settings")
+    assert_contains(response, "Sign in to change your settings", status_code=401)
 
 
 def test_account_preferences_renders_form(user_client):

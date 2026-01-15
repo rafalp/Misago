@@ -1,5 +1,6 @@
 from django.urls import path
 
+from ..privatethreads.decorators import private_threads_login_required
 from .views import (
     ThreadPostLikesView,
     ThreadPostLikeView,
@@ -33,12 +34,12 @@ urlpatterns = [
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/likes/",
-        PrivateThreadPostLikesView.as_view(),
+        private_threads_login_required(PrivateThreadPostLikesView.as_view()),
         name="private-thread-post-likes",
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/post/<int:post_id>/likes/<int:page>/",
-        PrivateThreadPostLikesView.as_view(),
+        private_threads_login_required(PrivateThreadPostLikesView.as_view()),
         name="private-thread-post-likes",
     ),
     path(
