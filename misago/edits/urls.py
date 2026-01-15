@@ -1,5 +1,6 @@
 from django.urls import path
 
+from ..auth.decorators import login_required
 from ..privatethreads.decorators import private_threads_login_required
 from .views import (
     ThreadPostEditDeleteView,
@@ -28,22 +29,22 @@ urlpatterns = [
     ),
     path(
         "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/restore/",
-        ThreadPostEditRestoreView.as_view(),
+        login_required(ThreadPostEditRestoreView.as_view()),
         name="thread-post-edit-restore",
     ),
     path(
         "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/hide/",
-        ThreadPostEditHideView.as_view(),
+        login_required(ThreadPostEditHideView.as_view()),
         name="thread-post-edit-hide",
     ),
     path(
         "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/unhide/",
-        ThreadPostEditUnhideView.as_view(),
+        login_required(ThreadPostEditUnhideView.as_view()),
         name="thread-post-edit-unhide",
     ),
     path(
         "t/<slug:slug>/<int:thread_id>/post/<int:post_id>/edits/<int:post_edit_id>/delete/",
-        ThreadPostEditDeleteView.as_view(),
+        login_required(ThreadPostEditDeleteView.as_view()),
         name="thread-post-edit-delete",
     ),
     path(
