@@ -24,8 +24,8 @@ class PostEdit(PluginDataModel):
     old_title = models.CharField(max_length=255, null=True, blank=True)
     new_title = models.CharField(max_length=255, null=True, blank=True)
 
-    old_content = models.TextField()
-    new_content = models.TextField()
+    old_content = models.TextField(null=True, blank=True)
+    new_content = models.TextField(null=True, blank=True)
     added_content = models.PositiveIntegerField(default=0)
     removed_content = models.PositiveIntegerField(default=0)
 
