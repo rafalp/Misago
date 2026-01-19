@@ -80,6 +80,56 @@ def test_thread_post_edit_restore_view_shows_confirmation_page_on_get_request(
     )
 
 
+def test_thread_post_edit_restore_view_shows_error_403_if_post_edit_cant_be_restored(
+    user_client, user, thread, user_reply
+):
+    post_edit = create_post_edit(post=user_reply, user=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": user_reply.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert_contains(
+        response,
+        "You can’t restore the post from this edit.",
+        status_code=403,
+    )
+
+
+def test_thread_post_edit_restore_view_shows_error_403_if_post_is_not_editable(
+    user_client, user, thread, user_reply
+):
+    thread.is_closed = True
+    thread.save()
+
+    post_edit = create_post_edit(
+        post=user_reply,
+        user=user,
+        old_content="Lorem ipsum",
+        new_content="Dolor met",
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-restore",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": user_reply.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert_contains(response, "This thread is locked.", status_code=403)
+
+
 def test_thread_post_edit_restore_view_shows_login_required_page_to_anonymous_user(
     client, thread, post
 ):
