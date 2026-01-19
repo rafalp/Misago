@@ -13,6 +13,7 @@ from .hooks import (
     can_see_post_edit_count_hook,
     check_delete_post_edit_permission_hook,
     check_hide_post_edit_permission_hook,
+    check_restore_post_edit_permission_hook,
     check_see_post_edit_history_permission_hook,
     check_unhide_post_edit_permission_hook,
 )
@@ -71,6 +72,53 @@ def _check_see_post_edit_history_permission_action(
             pgettext(
                 "edits permission error",
                 "You can’t see this post’s edit history.",
+            )
+        )
+
+
+def check_restore_post_edit_permission(
+    permissions: UserPermissionsProxy, post_edit: PostEdit
+):
+    check_restore_post_edit_permission_hook(
+        _check_restore_post_edit_permission_action,
+        permissions,
+        post_edit,
+    )
+
+
+def _check_restore_post_edit_permission_action(
+    permissions: UserPermissionsProxy, post_edit: PostEdit
+):
+    print(repr(post_edit.old_content))
+    if not post_edit.old_content:
+        raise PermissionDenied(
+            pgettext(
+                "edits permission error",
+                "You can’t restore the post from this edit.",
+            )
+        )
+
+    if permissions.is_global_moderator:
+        return
+
+    category = post_edit.category
+
+    if category.tree_id == CategoryTree.THREADS and permissions.is_category_moderator(
+        category.id
+    ):
+        return
+
+    if (
+        category.tree_id == CategoryTree.PRIVATE_THREADS
+        and permissions.is_private_threads_moderator
+    ):
+        return
+
+    if post_edit.is_hidden:
+        raise PermissionDenied(
+            pgettext(
+                "edits permission error",
+                "You can’t restore the post from hidden edit.",
             )
         )
 

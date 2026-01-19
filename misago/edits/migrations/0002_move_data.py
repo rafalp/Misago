@@ -11,6 +11,13 @@ def migrate_edits_data_from_threads(apps, schema_editor):
 
     queryset = LegacyPostEdit.objects.order_by("id")
     for legacy_edit in queryset.iterator(chunk_size=100):
+        old_content = None
+        new_content = None
+
+        if legacy_edit.edited_from != legacy_edit.edited_to:
+            old_content = legacy_edit.edited_from
+            new_content = legacy_edit.edited_from
+
         diff = diff_text(legacy_edit.edited_from, legacy_edit.edited_to)
         PostEdit.objects.create(
             category_id=legacy_edit.category_id,
@@ -19,8 +26,8 @@ def migrate_edits_data_from_threads(apps, schema_editor):
             user_id=legacy_edit.editor_id,
             user_name=legacy_edit.editor_name,
             user_slug=legacy_edit.editor_slug,
-            old_content=legacy_edit.edited_from,
-            new_content=legacy_edit.edited_to,
+            old_content=old_content,
+            new_content=new_content,
             added_content=diff.added,
             removed_content=diff.removed,
             edited_at=legacy_edit.edited_on,

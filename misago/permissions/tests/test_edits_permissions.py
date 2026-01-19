@@ -9,6 +9,7 @@ from ..edits import (
     can_see_post_edit_count,
     check_delete_post_edit_permission,
     check_hide_post_edit_permission,
+    check_restore_post_edit_permission,
     check_see_post_edit_history_permission,
     check_unhide_post_edit_permission,
 )
@@ -54,6 +55,57 @@ def test_can_see_post_edit_count_always_returns_false_if_user_has_no_permission(
 
     permissions = user_permissions_factory(user)
     assert not can_see_post_edit_count(permissions, default_category, thread, post)
+
+
+def test_check_restore_post_edit_permission_passes_if_user_can_see_post_edit_contents(
+    user_permissions_factory, user, user_reply
+):
+    post_edit = create_post_edit(
+        post=user_reply, user=user, old_content="Lorem ipsum", new_content="Dolor met"
+    )
+
+    permissions = user_permissions_factory(user)
+    check_restore_post_edit_permission(permissions, post_edit)
+
+
+def test_check_restore_post_edit_permission_fails_if_user_cant_see_hidden_post_edit_contents(
+    user_permissions_factory, user, user_reply
+):
+    post_edit = create_post_edit(
+        post=user_reply, user=user, old_content="Lorem ipsum", new_content="Dolor met"
+    )
+    hide_post_edit(post_edit, "Moderator")
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_restore_post_edit_permission(permissions, post_edit)
+
+
+def test_check_restore_post_edit_permission_passes_if_user_can_see_hidden_post_edit_contents(
+    user_permissions_factory, moderator, user_reply
+):
+    post_edit = create_post_edit(
+        post=user_reply,
+        user=moderator,
+        old_content="Lorem ipsum",
+        new_content="Dolor met",
+    )
+    hide_post_edit(post_edit, "Moderator")
+
+    permissions = user_permissions_factory(moderator)
+    check_restore_post_edit_permission(permissions, post_edit)
+
+
+def test_check_restore_post_edit_permission_fails_if_post_edit_has_no_contents(
+    user_permissions_factory, user, user_reply
+):
+    post_edit = create_post_edit(post=user_reply, user=user)
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_restore_post_edit_permission(permissions, post_edit)
 
 
 def test_check_see_post_edit_history_permission_always_passes_if_user_is_post_owner(

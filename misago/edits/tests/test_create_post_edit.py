@@ -94,8 +94,8 @@ def test_create_post_edit_creates_post_edit_with_unchanged_title(user, post):
     assert post_edit.edit_reason is None
     assert post_edit.old_title is None
     assert post_edit.new_title is None
-    assert post_edit.old_content == post.original
-    assert post_edit.new_content == post.original
+    assert post_edit.old_content is None
+    assert post_edit.new_content is None
     assert post_edit.added_content == 0
     assert post_edit.removed_content == 0
     assert post_edit.attachments == []
@@ -120,8 +120,8 @@ def test_create_post_edit_creates_post_edit_with_changed_title(user, post):
     assert post_edit.edit_reason is None
     assert post_edit.old_title == "Test Thread"
     assert post_edit.new_title == "Edited Thread"
-    assert post_edit.old_content == post.original
-    assert post_edit.new_content == post.original
+    assert post_edit.old_content is None
+    assert post_edit.new_content is None
     assert post_edit.added_content == 0
     assert post_edit.removed_content == 0
     assert post_edit.attachments == []

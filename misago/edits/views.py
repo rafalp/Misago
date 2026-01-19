@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.core.paginator import Page, Paginator
-from django.db import transaction
 from django.http import Http404, HttpResponse, HttpResponseNotAllowed, HttpRequest
 from django.shortcuts import redirect, render
 from django.utils import dateparse
@@ -12,6 +11,7 @@ from ..permissions.checkutils import check_permissions
 from ..permissions.edits import (
     check_delete_post_edit_permission,
     check_hide_post_edit_permission,
+    check_restore_post_edit_permission,
     check_see_post_edit_history_permission,
     check_unhide_post_edit_permission,
 )
@@ -57,7 +57,9 @@ class PostEditViewBackend:
             or None
         )
 
-    def check_restore_post_edit_permission(self, request: HttpRequest, post: Post):
+    def check_restore_post_edit_permission(
+        self, request: HttpRequest, post_edit: PostEdit
+    ):
         raise NotImplementedError()
 
     def get_attachment_permission(
@@ -116,9 +118,15 @@ class ThreadPostEditViewBackend(PostEditViewBackend):
     post_edit_unhide_url = "misago:thread-post-edit-unhide"
     post_edit_delete_url = "misago:thread-post-edit-delete"
 
-    def check_restore_post_edit_permission(self, request: HttpRequest, post: Post):
+    def check_restore_post_edit_permission(
+        self, request: HttpRequest, post_edit: PostEdit
+    ):
+        check_restore_post_edit_permission(request.user_permissions, post_edit)
         check_edit_thread_post_permission(
-            request.user_permissions, post.category, post.thread, post
+            request.user_permissions,
+            post_edit.category,
+            post_edit.thread,
+            post_edit.post,
         )
 
     def get_attachment_permission(
@@ -142,9 +150,12 @@ class PrivateThreadPostEditViewBackend(PostEditViewBackend):
     post_edit_unhide_url = "misago:private-thread-post-edit-unhide"
     post_edit_delete_url = "misago:private-thread-post-edit-delete"
 
-    def check_restore_post_edit_permission(self, request: HttpRequest, post: Post):
+    def check_restore_post_edit_permission(
+        self, request: HttpRequest, post_edit: PostEdit
+    ):
+        check_restore_post_edit_permission(request.user_permissions, post_edit)
         check_edit_private_thread_post_permission(
-            request.user_permissions, post.thread, post
+            request.user_permissions, post_edit.thread, post_edit.post
         )
 
     def get_attachment_permission(
@@ -180,8 +191,10 @@ class GenericPostEditView(GenericThreadView):
     def get_thread_post_edit_index(self, post_edit: PostEdit) -> int | None:
         return self.post_edit_backend.get_thread_post_edit_index(post_edit)
 
-    def check_restore_post_edit_permission(self, request: HttpRequest, post: Post):
-        self.post_edit_backend.check_restore_post_edit_permission(request, post)
+    def check_restore_post_edit_permission(
+        self, request: HttpRequest, post_edit: PostEdit
+    ):
+        self.post_edit_backend.check_restore_post_edit_permission(request, post_edit)
 
     def get_attachment_permission(
         self, request: HttpRequest, post: Post, attachment: dict
@@ -235,15 +248,11 @@ class GenericPostEditView(GenericThreadView):
             request.user_permissions, post_edit.thread
         )
 
-        can_restore = False
+        with check_permissions() as can_restore:
+            self.check_restore_post_edit_permission(request, post_edit)
+
         can_hide = False
         can_unhide = False
-
-        if is_moderator:
-            can_restore = True
-        elif not post_edit.is_hidden:
-            with check_permissions() as can_restore:
-                self.check_restore_post_edit_permission(request, post)
 
         if post_edit.is_hidden:
             with check_permissions():
@@ -513,6 +522,33 @@ class PostEditView(GenericPostEditView):
         return render(request, template_name, context_data)
 
 
+class PostEditRestoreView(PostEditView):
+    template_name = "misago/post_edit_restore/index.html"
+
+    def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
+        self.check_restore_post_edit_permission(request, post_edit)
+
+    def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
+        restore_post_edit(post_edit, request.user, request=request)
+
+        messages.success(
+            request,
+            pgettext("restore post edit", "Post contents restored"),
+        )
+
+        return self.get_thread_post_redirect(request, post_edit.post)
+
+
+class ThreadPostEditRestoreView(PostEditRestoreView):
+    backend = thread_backend
+    post_edit_backend = thread_post_edit_backend
+
+
+class PrivateThreadPostEditRestoreView(PostEditRestoreView):
+    backend = private_thread_backend
+    post_edit_backend = private_thread_post_edit_backend
+
+
 class PostEditHideView(PostEditView):
     template_name = "misago/post_edit_hide/index.html"
 
@@ -593,32 +629,5 @@ class ThreadPostEditDeleteView(PostEditDeleteView):
 
 
 class PrivateThreadPostEditDeleteView(PostEditDeleteView):
-    backend = private_thread_backend
-    post_edit_backend = private_thread_post_edit_backend
-
-
-class PostEditRestoreView(PostEditView):
-    template_name = "misago/post_edit_restore/index.html"
-
-    def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
-        self.check_restore_post_edit_permission(request, post_edit.post)
-
-    def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
-        restore_post_edit(post_edit, request.user, request=request)
-
-        messages.success(
-            request,
-            pgettext("restore post edit", "Post contents restored"),
-        )
-
-        return self.get_thread_post_redirect(request, post_edit.post)
-
-
-class ThreadPostEditRestoreView(PostEditRestoreView):
-    backend = thread_backend
-    post_edit_backend = thread_post_edit_backend
-
-
-class PrivateThreadPostEditRestoreView(PostEditRestoreView):
     backend = private_thread_backend
     post_edit_backend = private_thread_post_edit_backend

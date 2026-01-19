@@ -121,6 +121,7 @@ Hooks instances are importable from the following Python modules:
 - [`check_remove_private_thread_member_permission_hook`](./check-remove-private-thread-member-permission-hook.md)
 - [`check_reply_private_thread_permission_hook`](./check-reply-private-thread-permission-hook.md)
 - [`check_reply_thread_permission_hook`](./check-reply-thread-permission-hook.md)
+- [`check_restore_post_edit_permission_hook`](./check-restore-post-edit-permission-hook.md)
 - [`check_see_category_permission_hook`](./check-see-category-permission-hook.md)
 - [`check_see_post_edit_history_permission_hook`](./check-see-post-edit-history-permission-hook.md)
 - [`check_see_post_likes_permission_hook`](./check-see-post-likes-permission-hook.md)
