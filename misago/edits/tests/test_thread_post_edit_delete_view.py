@@ -537,11 +537,34 @@ def test_thread_post_edit_delete_view_shows_confirmation_page_on_get_request(
                 "post_id": post.id,
                 "post_edit_id": post_edit.id,
             },
-        )
-        + "?modal=true",
-        headers={"hx-request": "true"},
+        ),
     )
     assert_contains(response, "Are you sure you want to delete this post edit?")
+
+
+def test_thread_post_edit_restore_view_shows_error_403_if_post_edit_cant_be_deleted(
+    thread_reply_factory, user_client, user, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster=user)
+
+    post_edit = create_post_edit(post=post, user=user)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-post-edit-delete",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert_contains(
+        response,
+        "You can’t delete post edits.",
+        status_code=403,
+    )
 
 
 def test_thread_post_edit_delete_view_shows_login_required_page_to_anonymous_user(
