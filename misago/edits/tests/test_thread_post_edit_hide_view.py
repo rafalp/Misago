@@ -1,6 +1,285 @@
 from django.urls import reverse
 
+from ...permissions.enums import CanHideOwnPostEdits
 from ...test import assert_contains
+from ..create import create_post_edit
+from ..hide import hide_post_edit
+
+
+def test_thread_post_edit_hide_view_hides_post_edit_on_post(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    members_group.can_hide_own_post_edits = CanHideOwnPostEdits.HIDE
+    members_group.save()
+
+    post = thread_reply_factory(thread, poster=user)
+
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum",
+        new_content=post.original,
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread-post-edits",
+        kwargs={
+            "thread_id": thread.id,
+            "slug": thread.slug,
+            "post_id": post.id,
+            "page": 1,
+        },
+    )
+
+    post_edit.refresh_from_db()
+    assert post_edit.is_hidden
+
+
+def test_thread_post_edit_hide_view_hides_post_edit_on_post_in_htmx(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    members_group.can_hide_own_post_edits = CanHideOwnPostEdits.HIDE
+    members_group.save()
+
+    post = thread_reply_factory(thread, poster=user)
+
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum",
+        new_content=post.original,
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Edit contents hidden")
+
+    post_edit.refresh_from_db()
+    assert post_edit.is_hidden
+
+
+def test_thread_post_edit_hide_view_hides_post_edit_on_post_in_modal(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    members_group.can_hide_own_post_edits = CanHideOwnPostEdits.HIDE
+    members_group.save()
+
+    post = thread_reply_factory(thread, poster=user)
+
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum",
+        new_content=post.original,
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Edit contents hidden")
+
+    post_edit.refresh_from_db()
+    assert post_edit.is_hidden
+
+
+def test_thread_post_edit_hide_view_does_nothing_for_hidden_post_edit_on_post(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    members_group.can_hide_own_post_edits = CanHideOwnPostEdits.HIDE
+    members_group.save()
+
+    post = thread_reply_factory(thread, poster=user)
+
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum",
+        new_content=post.original,
+    )
+    hide_post_edit(post_edit, "Moderator")
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread-post-edits",
+        kwargs={
+            "thread_id": thread.id,
+            "slug": thread.slug,
+            "post_id": post.id,
+            "page": 1,
+        },
+    )
+
+    post_edit.refresh_from_db()
+    assert post_edit.is_hidden
+
+
+def test_thread_post_edit_hide_view_does_nothing_for_hidden_post_edit_on_post_in_htmx(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    members_group.can_hide_own_post_edits = CanHideOwnPostEdits.HIDE
+    members_group.save()
+
+    post = thread_reply_factory(thread, poster=user)
+
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum",
+        new_content=post.original,
+    )
+    hide_post_edit(post_edit, "Moderator")
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Edit contents hidden")
+
+    post_edit.refresh_from_db()
+    assert post_edit.is_hidden
+
+
+def test_thread_post_edit_hide_view_does_nothing_for_hidden_post_edit_on_post_in_modal(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    members_group.can_hide_own_post_edits = CanHideOwnPostEdits.HIDE
+    members_group.save()
+
+    post = thread_reply_factory(thread, poster=user)
+
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum",
+        new_content=post.original,
+    )
+    hide_post_edit(post_edit, "Moderator")
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        )
+        + "?modal=true",
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Edit contents hidden")
+
+    post_edit.refresh_from_db()
+    assert post_edit.is_hidden
+
+
+def test_thread_post_edit_hide_view_shows_confirmation_page_on_get_request(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    members_group.can_hide_own_post_edits = CanHideOwnPostEdits.DELETE
+    members_group.save()
+
+    post = thread_reply_factory(thread, poster=user)
+
+    post_edit = create_post_edit(
+        post=post,
+        user=user,
+        old_content="Lorem ipsum",
+        new_content=post.original,
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert_contains(response, "Are you sure you want to hide this edit?")
+
+
+def test_thread_post_edit_hide_view_shows_error_403_if_post_edit_cant_be_hidden(
+    thread_reply_factory, user_client, members_group, user, other_user_private_thread
+):
+    members_group.can_hide_own_post_edits = CanHideOwnPostEdits.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(other_user_private_thread, poster=user)
+
+    post_edit = create_post_edit(post=post, user=user)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-post-edit-hide",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert_contains(
+        response,
+        "You can’t hide post edits.",
+        status_code=403,
+    )
 
 
 def test_thread_post_edit_hide_view_shows_login_required_page_to_anonymous_user(
