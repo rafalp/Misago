@@ -164,7 +164,7 @@
                     hx-target="#misago-htmx-root"
                     hx-swap="outerHTML"
                     {% if not is_moderator %}
-                    hx-confirm="{% translate 'Are you sure you want to hide this post edit?' context 'post edit hide confirmation' %}"
+                    hx-confirm="{% translate 'Are you sure you want to hide this edit?' context 'post edit hide confirmation' %}"
                     {% endif %}
                   >
                     {% csrf_token %}
