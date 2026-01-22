@@ -453,9 +453,9 @@ class PostEditView(GenericPostEditView):
         post_edit_id: int,
     ) -> HttpResponse:
         if request.method not in ("GET", "POST", "HEAD"):
-            return HttpResponseNotAllowed()
+            return HttpResponseNotAllowed(["GET", "POST", "HEAD"])
         if not self.template_name and request.method != "POST":
-            raise HttpResponseNotAllowed()
+            return HttpResponseNotAllowed(["POST"])
 
         thread = self.get_thread(request, thread_id)
         post = self.get_thread_post(request, thread, post_id, for_content=True)
