@@ -26,7 +26,7 @@
     </h3>
     <ol class="edit-diff-lines">
       {% for line in content.lines %}
-        <li>
+        <li value="{{ line.number }}">
           {% if line.text.strip or line.diff %}
             <pre class="edit-diff-line edit-diff-line-{% if line.marker == '-' %}removed{% elif line.marker == '+' %}added{% else %}neutral{% endif %}">{% if line.marker == "?" %}{% for diff in line.diff %}{% if diff.marker == "-" %}<del>{{ diff.text }}</del>{% elif diff.marker == "+" %}<ins>{{ diff.text }}</ins>{% else %}{{ diff.text }}{% endif %}{% endfor %}{% else %}{{ line.text }}{% endif %}</pre>
           {% endif %}

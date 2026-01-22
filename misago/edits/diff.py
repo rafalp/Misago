@@ -24,6 +24,7 @@ def diff_text(before: str, after: str) -> TextDiff:
 
     diff_lines = merge_changed_lines(diff_lines)
     diff_lines = cleanup_lines(diff_lines)
+    diff_lines = add_lines_numbers(diff_lines)
 
     return TextDiff(
         lines=diff_lines,
@@ -218,3 +219,9 @@ def cleanup_lines(lines: list[dict]) -> list[dict]:
             new_lines.append({"marker": line["marker"], "text": line["text"]})
 
     return new_lines
+
+
+def add_lines_numbers(lines: list[dict]) -> list[dict]:
+    for i, line in enumerate(lines, 1):
+        line["number"] = i
+    return lines

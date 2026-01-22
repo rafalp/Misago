@@ -89,7 +89,6 @@ def check_restore_post_edit_permission(
 def _check_restore_post_edit_permission_action(
     permissions: UserPermissionsProxy, post_edit: PostEdit
 ):
-    print(repr(post_edit.old_content))
     if not post_edit.old_content:
         raise PermissionDenied(
             pgettext(

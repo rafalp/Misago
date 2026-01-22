@@ -5,6 +5,7 @@ def test_diff_text_diffs_same_content():
     result = diff_text("Lorem ipsum", "Lorem ipsum")
     assert result.lines == [
         {
+            "number": 1,
             "marker": None,
             "text": "Lorem ipsum",
         },
@@ -17,10 +18,12 @@ def test_diff_text_diffs_different_content():
     result = diff_text("Lorem ipsum", "Dolor met")
     assert result.lines == [
         {
+            "number": 1,
             "marker": "-",
             "text": "Lorem ipsum",
         },
         {
+            "number": 2,
             "marker": "+",
             "text": "Dolor met",
         },
@@ -33,6 +36,7 @@ def test_diff_text_diffs_removed_character():
     result = diff_text("Lorem ipsuum", "Lorem ipsum")
     assert result.lines == [
         {
+            "number": 1,
             "marker": "?",
             "diff": [
                 {
@@ -58,6 +62,7 @@ def test_diff_text_diffs_added_character():
     result = diff_text("Lorem ipum", "Lorem ipsum")
     assert result.lines == [
         {
+            "number": 1,
             "marker": "?",
             "diff": [
                 {
@@ -83,6 +88,7 @@ def test_diff_text_diffs_changed_character():
     result = diff_text("Lorem iplum", "Lorem ipsum")
     assert result.lines == [
         {
+            "number": 1,
             "marker": "?",
             "diff": [
                 {
@@ -112,6 +118,7 @@ def test_diff_text_diffs_changed_some_characters():
     result = diff_text("Lorem islum", "Lolem iplum")
     assert result.lines == [
         {
+            "number": 1,
             "marker": "?",
             "diff": [
                 {
@@ -153,6 +160,7 @@ def test_diff_text_diffs_changed_word():
     result = diff_text("Lorem ipsum dolor met", "Lorem ipsum elit met")
     assert result.lines == [
         {
+            "number": 1,
             "marker": "?",
             "diff": [
                 {
@@ -186,6 +194,7 @@ def test_diff_text_real_case_1():
 
     assert result.lines == [
         {
+            "number": 1,
             "marker": "?",
             "diff": [
                 {
@@ -215,6 +224,7 @@ def test_diff_text_real_case_2():
 
     assert result.lines == [
         {
+            "number": 1,
             "marker": "?",
             "diff": [
                 {
@@ -252,6 +262,7 @@ def test_diff_text_real_case_3():
 
     assert result.lines == [
         {
+            "number": 1,
             "marker": "?",
             "diff": [
                 {
@@ -281,6 +292,7 @@ def test_diff_text_real_case_4():
 
     assert result.lines == [
         {
+            "number": 1,
             "marker": "?",
             "diff": [
                 {
@@ -314,6 +326,7 @@ def test_diff_text_real_case_5():
 
     assert result.lines == [
         {
+            "number": 1,
             "marker": "?",
             "diff": [
                 {
