@@ -822,6 +822,157 @@ def test_thread_post_edits_view_shows_post_contents_diff(user_client, thread, po
     assert_contains(response, "Another paragraph")
 
 
+def test_thread_post_edits_view_shows_post_contents_diff_with_collapsed_hunk_at_beginning(
+    user_client, thread, post
+):
+    create_post_edit(post=post, user="User")
+    create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="\n".join(
+            [
+                "Lorem ipsum",
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+                "Integer nisl",
+            ]
+        ),
+        new_content="\n".join(
+            [
+                "Lorem ipsum",
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+            ]
+        ),
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Content changes")
+    assert_contains(response, "Lorem ipsum")
+    assert_contains(response, "Dolor met")
+
+
+def test_thread_post_edits_view_shows_post_contents_diff_with_collapsed_hunk_in_middle(
+    user_client, thread, post
+):
+    create_post_edit(post=post, user="User")
+    create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="\n".join(
+            [
+                "Lorem ipsum",
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+                "Integer nisl",
+                "Praesent ut",
+                "Nam blandit",
+                "Sed tempus",
+                "Curabitur eget",
+            ]
+        ),
+        new_content="\n".join(
+            [
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+                "Integer nisl",
+                "Praesent ut",
+                "Nam blandit",
+                "Sed tempus",
+            ]
+        ),
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Content changes")
+    assert_contains(response, "Lorem ipsum")
+    assert_contains(response, "Dolor met")
+
+
+def test_thread_post_edits_view_shows_post_contents_diff_with_collapsed_hunk_at_end(
+    user_client, thread, post
+):
+    create_post_edit(post=post, user="User")
+    create_post_edit(
+        post=post,
+        user="Editor",
+        old_content="\n".join(
+            [
+                "Lorem ipsum",
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+                "Integer nisl",
+            ]
+        ),
+        new_content="\n".join(
+            [
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+                "Integer nisl",
+            ]
+        ),
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 2,
+            },
+        ),
+    )
+
+    assert_contains(response, "Editor")
+    assert_contains(response, "Content changes")
+    assert_contains(response, "Lorem ipsum")
+    assert_contains(response, "Dolor met")
+
+
 def test_thread_post_edits_view_shows_attachments_diff(
     attachment_factory, text_file, user_client, thread, post
 ):
