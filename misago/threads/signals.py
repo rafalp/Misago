@@ -287,13 +287,18 @@ def update_usernames(sender, **kwargs):
     ThreadUpdate.objects.context_object(sender).update(context=sender.username)
 
     Post.objects.filter(poster=sender).update(poster_name=sender.username)
-
     Post.objects.filter(last_editor=sender).update(
         last_editor_name=sender.username, last_editor_slug=sender.slug
+    )
+    Post.objects.filter(hidden_by=sender).update(
+        hidden_by_name=sender.username, hidden_by_slug=sender.slug
     )
 
     PostEdit.objects.filter(user=sender).update(
         user_name=sender.username, user_slug=sender.slug
+    )
+    PostEdit.objects.filter(hidden_by=sender).update(
+        hidden_by_name=sender.username, hidden_by_slug=sender.slug
     )
     LegacyPostEdit.objects.filter(editor=sender).update(
         editor_name=sender.username, editor_slug=sender.slug

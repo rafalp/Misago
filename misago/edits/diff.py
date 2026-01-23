@@ -228,13 +228,15 @@ def add_lines_numbers(lines: list[dict]) -> list[dict]:
     return lines
 
 
-ROLLUP_MARGIN = 3  # three unedited lines around changed lines
-ROLLUP_MIN_LINES = ROLLUP_MARGIN * 2 + 1
+HUNK_MARGIN = 3  # three unedited lines around changed lines
 
 
 def collapse_hunks(lines: list[dict]) -> list[dict]:
-    # Don't do magic for too short diffs
-    if len(lines) < ROLLUP_MIN_LINES:
+    # Don't collapse hunks for too short diffs
+    if len(lines) < HUNK_MARGIN * 2 + 1:
+        return lines
+
+    if not bool(filter(lambda i: i["mark"], lines)):
         return lines
 
     new_lines: list[dict] = []
@@ -243,12 +245,12 @@ def collapse_hunks(lines: list[dict]) -> list[dict]:
 
     for line in lines:
         if line["marker"] and buffer:
-            if (not new_lines and buffer_len > ROLLUP_MARGIN + 1) or (
-                new_lines and buffer_len > ROLLUP_MARGIN * 2 + 2
+            if (not new_lines and buffer_len > HUNK_MARGIN + 1) or (
+                new_lines and buffer_len > HUNK_MARGIN * 2 + 2
             ):
                 if new_lines:
-                    new_lines += buffer[:ROLLUP_MARGIN]
-                    buffer = buffer[ROLLUP_MARGIN:]
+                    new_lines += buffer[:HUNK_MARGIN]
+                    buffer = buffer[HUNK_MARGIN:]
 
                 margin_bottom = buffer[-3:]
                 buffer = buffer[:-3]
@@ -273,9 +275,9 @@ def collapse_hunks(lines: list[dict]) -> list[dict]:
             buffer.append(line)
             buffer_len += 1
 
-    if buffer_len > ROLLUP_MARGIN + 1:
-        new_lines += buffer[:ROLLUP_MARGIN]
-        buffer = buffer[ROLLUP_MARGIN:]
+    if buffer_len > HUNK_MARGIN + 1:
+        new_lines += buffer[:HUNK_MARGIN]
+        buffer = buffer[HUNK_MARGIN:]
         new_lines.append(
             {
                 "marker": "*",

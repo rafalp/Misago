@@ -370,3 +370,209 @@ def test_diff_text_real_case_5():
     ]
     assert result.added == 1
     assert result.removed == 1
+
+
+def test_diff_text_collapses_hunk_at_beginning_of_diff():
+    result = diff_text(
+        "\n".join(
+            [
+                "Lorem ipsum",
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+                "Integer nisl",
+            ]
+        ),
+        "\n".join(
+            [
+                "Lorem ipsum",
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+            ]
+        ),
+    )
+    assert result.lines == [
+        {
+            "marker": "*",
+            "start": 1,
+            "end": 3,
+            "lines": [
+                {"number": 1, "marker": None, "text": "Lorem ipsum"},
+                {"number": 2, "marker": None, "text": "Dolor met"},
+                {"number": 3, "marker": None, "text": "Sit amet"},
+            ],
+        },
+        {"number": 4, "marker": None, "text": "Etiam rutrum"},
+        {"number": 5, "marker": None, "text": "Suspendisse dictum"},
+        {"number": 6, "marker": None, "text": "Pellentesque nec"},
+        {"number": 7, "marker": "-", "text": "Integer nisl"},
+    ]
+    assert result.added == 0
+    assert result.removed == 1
+
+
+def test_diff_text_collapses_hunk_at_end_of_diff():
+    result = diff_text(
+        "\n".join(
+            [
+                "Lorem ipsum",
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+                "Integer nisl",
+            ]
+        ),
+        "\n".join(
+            [
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+                "Integer nisl",
+            ]
+        ),
+    )
+    assert result.lines == [
+        {"number": 1, "marker": "-", "text": "Lorem ipsum"},
+        {"number": 2, "marker": None, "text": "Dolor met"},
+        {"number": 3, "marker": None, "text": "Sit amet"},
+        {"number": 4, "marker": None, "text": "Etiam rutrum"},
+        {
+            "marker": "*",
+            "start": 5,
+            "end": 7,
+            "lines": [
+                {"number": 5, "marker": None, "text": "Suspendisse dictum"},
+                {"number": 6, "marker": None, "text": "Pellentesque nec"},
+                {"number": 7, "marker": None, "text": "Integer nisl"},
+            ],
+        },
+    ]
+    assert result.added == 0
+    assert result.removed == 1
+
+
+def test_diff_text_collapses_hunks_in_middle_of_diff():
+    result = diff_text(
+        "\n".join(
+            [
+                "Lorem ipsum",
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+                "Integer nisl",
+                "Praesent ut",
+                "Nam blandit",
+                "Sed tempus",
+                "Curabitur eget",
+            ]
+        ),
+        "\n".join(
+            [
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+                "Integer nisl",
+                "Praesent ut",
+                "Nam blandit",
+                "Sed tempus",
+            ]
+        ),
+    )
+    assert result.lines == [
+        {"number": 1, "marker": "-", "text": "Lorem ipsum"},
+        {"number": 2, "marker": None, "text": "Dolor met"},
+        {"number": 3, "marker": None, "text": "Sit amet"},
+        {"number": 4, "marker": None, "text": "Etiam rutrum"},
+        {
+            "marker": "*",
+            "start": 5,
+            "end": 7,
+            "lines": [
+                {"number": 5, "marker": None, "text": "Suspendisse dictum"},
+                {"number": 6, "marker": None, "text": "Pellentesque nec"},
+                {"number": 7, "marker": None, "text": "Integer nisl"},
+            ],
+        },
+        {"number": 8, "marker": None, "text": "Praesent ut"},
+        {"number": 9, "marker": None, "text": "Nam blandit"},
+        {"number": 10, "marker": None, "text": "Sed tempus"},
+        {"number": 11, "marker": "-", "text": "Curabitur eget"},
+    ]
+    assert result.added == 0
+    assert result.removed == 2
+
+
+def test_diff_text_collapses_hunks_around_change_in_diff():
+    result = diff_text(
+        "\n".join(
+            [
+                "Lorem ipsum",
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Pellentesque nec",
+                "Integer nisl",
+                "Praesent ut",
+                "Nam blandit",
+                "Sed tempus",
+                "Curabitur eget",
+            ]
+        ),
+        "\n".join(
+            [
+                "Lorem ipsum",
+                "Dolor met",
+                "Sit amet",
+                "Etiam rutrum",
+                "Suspendisse dictum",
+                "Integer nisl",
+                "Praesent ut",
+                "Nam blandit",
+                "Sed tempus",
+                "Curabitur eget",
+            ]
+        ),
+    )
+    assert result.lines == [
+        {
+            "marker": "*",
+            "start": 1,
+            "end": 2,
+            "lines": [
+                {"number": 1, "marker": None, "text": "Lorem ipsum"},
+                {"number": 2, "marker": None, "text": "Dolor met"},
+            ],
+        },
+        {"number": 3, "marker": None, "text": "Sit amet"},
+        {"number": 4, "marker": None, "text": "Etiam rutrum"},
+        {"number": 5, "marker": None, "text": "Suspendisse dictum"},
+        {"number": 6, "marker": "-", "text": "Pellentesque nec"},
+        {"number": 7, "marker": None, "text": "Integer nisl"},
+        {"number": 8, "marker": None, "text": "Praesent ut"},
+        {"number": 9, "marker": None, "text": "Nam blandit"},
+        {
+            "marker": "*",
+            "start": 10,
+            "end": 11,
+            "lines": [
+                {"number": 10, "marker": None, "text": "Sed tempus"},
+                {"number": 11, "marker": None, "text": "Curabitur eget"},
+            ],
+        },
+    ]
+    assert result.added == 0
+    assert result.removed == 1
