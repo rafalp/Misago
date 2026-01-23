@@ -24,15 +24,51 @@
     <h3 class="edit-diff-section-title">
       {% translate "Content changes" context "edit diff section title" %}
     </h3>
-    <ol class="edit-diff-lines">
+    {% with first_line=content.lines|first last_line=content.lines|last %}
+      {% if first_line and first_line.marker != "*" %}
+        <ol class="edit-diff-lines">
+      {% endif %}
       {% for line in content.lines %}
-        <li value="{{ line.number }}">
-          {% if line.text.strip or line.diff %}
-            <pre class="edit-diff-line edit-diff-line-{% if line.marker == '-' %}removed{% elif line.marker == '+' %}added{% else %}neutral{% endif %}">{% if line.marker == "?" %}{% for diff in line.diff %}{% if diff.marker == "-" %}<del>{{ diff.text }}</del>{% elif diff.marker == "+" %}<ins>{{ diff.text }}</ins>{% else %}{{ diff.text }}{% endif %}{% endfor %}{% else %}{{ line.text }}{% endif %}</pre>
+        {% if line.marker == "*" %}
+          {% if not forloop.first %}
+            </ol>
           {% endif %}
-        </li>
+          <details class="edit-diff-hunk">
+            <summary class="edit-diff-hunk-summary">
+              <span class="edit-diff-hunk-summary-icon">
+                {% include "tabler/dots.svg" %}
+              </span>
+              <span class="edit-diff-hunk-summary-text">
+                {% blocktranslate trimmed with start=line.start end=line.end context "edit diff hunk legend" %}
+                  Show hidden lines {{ start }}–{{ end }}
+                {% endblocktranslate %}
+              </span>
+            </summary>
+            <ol class="edit-diff-lines">
+              {% for child_line in line.lines %}
+                <li value="{{ child_line.number }}">
+                  {% if child_line.text.strip or child_line.diff %}
+                    <pre class="edit-diff-line edit-diff-line-{% if child_line.marker == '-' %}removed{% elif child_line.marker == '+' %}added{% else %}neutral{% endif %}">{% if child_line.marker == "?" %}{% for diff in child_line.diff %}{% if diff.marker == "-" %}<del>{{ diff.text }}</del>{% elif diff.marker == "+" %}<ins>{{ diff.text }}</ins>{% else %}{{ diff.text }}{% endif %}{% endfor %}{% else %}{{ child_line.text }}{% endif %}</pre>
+                  {% endif %}
+                </li>
+              {% endfor%}
+            </ol>
+          </details>
+          {% if not forloop.last %}
+            <ol class="edit-diff-lines">
+          {% endif %}
+        {% else %}
+          <li value="{{ line.number }}">
+            {% if line.text.strip or line.diff %}
+              <pre class="edit-diff-line edit-diff-line-{% if line.marker == '-' %}removed{% elif line.marker == '+' %}added{% else %}neutral{% endif %}">{% if line.marker == "?" %}{% for diff in line.diff %}{% if diff.marker == "-" %}<del>{{ diff.text }}</del>{% elif diff.marker == "+" %}<ins>{{ diff.text }}</ins>{% else %}{{ diff.text }}{% endif %}{% endfor %}{% else %}{{ line.text }}{% endif %}</pre>
+            {% endif %}
+          </li>
+        {% endif %}
       {% endfor %}
-    </ol>
+      {% if last_line and last_line.marker != "*" %}
+        </ol>
+      {% endif %}
+    {% endwith %}
   </div>
 {% endif %}
 {% if attachments %}

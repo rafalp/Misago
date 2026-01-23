@@ -25,6 +25,7 @@ def diff_text(before: str, after: str) -> TextDiff:
     diff_lines = merge_changed_lines(diff_lines)
     diff_lines = cleanup_lines(diff_lines)
     diff_lines = add_lines_numbers(diff_lines)
+    diff_lines = collapse_hunks(diff_lines)
 
     return TextDiff(
         lines=diff_lines,
@@ -225,3 +226,63 @@ def add_lines_numbers(lines: list[dict]) -> list[dict]:
     for i, line in enumerate(lines, 1):
         line["number"] = i
     return lines
+
+
+ROLLUP_MARGIN = 3  # three unedited lines around changed lines
+ROLLUP_MIN_LINES = ROLLUP_MARGIN * 2 + 1
+
+
+def collapse_hunks(lines: list[dict]) -> list[dict]:
+    # Don't do magic for too short diffs
+    if len(lines) < ROLLUP_MIN_LINES:
+        return lines
+
+    new_lines: list[dict] = []
+    buffer: list[dict] = []
+    buffer_len = 0
+
+    for line in lines:
+        if line["marker"] and buffer:
+            if (not new_lines and buffer_len > ROLLUP_MARGIN + 1) or (
+                new_lines and buffer_len > ROLLUP_MARGIN * 2 + 2
+            ):
+                if new_lines:
+                    new_lines += buffer[:ROLLUP_MARGIN]
+                    buffer = buffer[ROLLUP_MARGIN:]
+
+                margin_bottom = buffer[-3:]
+                buffer = buffer[:-3]
+                new_lines.append(
+                    {
+                        "marker": "*",
+                        "start": buffer[0]["number"],
+                        "end": buffer[-1]["number"],
+                        "lines": buffer,
+                    }
+                )
+                new_lines += margin_bottom
+            else:
+                new_lines += buffer
+
+            buffer = []
+            buffer_len = 0
+
+        if line["marker"]:
+            new_lines.append(line)
+        else:
+            buffer.append(line)
+            buffer_len += 1
+
+    if buffer_len > ROLLUP_MARGIN + 1:
+        new_lines += buffer[:ROLLUP_MARGIN]
+        buffer = buffer[ROLLUP_MARGIN:]
+        new_lines.append(
+            {
+                "marker": "*",
+                "start": buffer[0]["number"],
+                "end": buffer[-1]["number"],
+                "lines": buffer,
+            }
+        )
+
+    return new_lines
