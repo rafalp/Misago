@@ -85,27 +85,51 @@
           {% endif %}
         </div>
         {% if not edit_diff.blank and show_options %}
-          <details class="dropdown dropdown-noscript">
-            <summary
-              class="post-edit-card-dropdown-toggle"
-              aria-label="{% translate 'Toggle options menu' context 'post edit options dropdown toggle' %}"
-            >
-              {% include "tabler/dots.svg" %}
-            </summary>
-            <ul class="dropdown-menu dropdown-menu-right">
-              {% if can_restore %}
-                <li class="dropdown-menu-item">
-                  <a href="{{ post_edit_restore_url }}">
-                    {% translate "Restore" context "post edit restore btn" %}
-                  </a>
-                </li>
-              {% endif %}
-              {% if can_hide %}
-                {% if is_moderator %}
+          <noscript>
+            <details class="dropdown dropdown-noscript">
+              <summary
+                class="post-edit-card-dropdown-toggle"
+                aria-label="{% translate 'Toggle options menu' context 'post edit options dropdown toggle' %}"
+              >
+                {% include "tabler/dots.svg" %}
+              </summary>
+              <ul class="dropdown-menu dropdown-menu-right">
+                {% if can_restore %}
+                  <li class="dropdown-menu-item">
+                    <a href="{{ post_edit_restore_url }}">
+                      {% translate "Restore" context "post edit restore btn" %}
+                    </a>
+                  </li>
+                {% endif %}
+                {% if can_hide %}
+                  {% if is_moderator %}
+                    <li>
+                      <form
+                        class="dropdown-menu-item"
+                        action="{{ post_edit_hide_url }}"
+                        method="post"
+                      >
+                        {% csrf_token %}
+                        <button
+                          class="btn-link"
+                          type="submit"
+                        >
+                          {% translate "Hide" context "post edit hide btn" %}
+                        </button>
+                      </form>
+                    </li>
+                  {% else %}
+                    <li class="dropdown-menu-item">
+                      <a href="{{ post_edit_hide_url }}">
+                        {% translate "Hide" context "post edit hide btn" %}
+                      </a>
+                    </li>
+                  {% endif %}
+                {% elif can_unhide %}
                   <li>
                     <form
                       class="dropdown-menu-item"
-                      action="{{ post_edit_hide_url }}"
+                      action="{{ post_edit_unhide_url }}"
                       method="post"
                     >
                       {% csrf_token %}
@@ -113,43 +137,21 @@
                         class="btn-link"
                         type="submit"
                       >
-                        {% translate "Hide" context "post edit hide btn" %}
+                        {% translate "Unhide" context "post edit unhide btn" %}
                       </button>
                     </form>
                   </li>
-                {% else %}
+                {% endif %}
+                {% if can_delete %}
                   <li class="dropdown-menu-item">
-                    <a href="{{ post_edit_hide_url }}">
-                      {% translate "Hide" context "post edit hide btn" %}
+                    <a href="{{ post_edit_delete_url }}">
+                      {% translate "Delete" context "post edit delete btn" %}
                     </a>
                   </li>
                 {% endif %}
-              {% elif can_unhide %}
-                <li>
-                  <form
-                    class="dropdown-menu-item"
-                    action="{{ post_edit_unhide_url }}"
-                    method="post"
-                  >
-                    {% csrf_token %}
-                    <button
-                      class="btn-link"
-                      type="submit"
-                    >
-                      {% translate "Unhide" context "post edit unhide btn" %}
-                    </button>
-                  </form>
-                </li>
-              {% endif %}
-              {% if can_delete %}
-                <li class="dropdown-menu-item">
-                  <a href="{{ post_edit_delete_url }}">
-                    {% translate "Delete" context "post edit delete btn" %}
-                  </a>
-                </li>
-              {% endif %}
-            </ul>
-          </details>
+              </ul>
+            </details>
+          </noscript>
           <div class="dropdown">
             <button
               type="button"
