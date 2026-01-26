@@ -25,6 +25,10 @@ from ..threads.views.generic import GenericThreadView
 from .delete import delete_post_edit
 from .diff import diff_text
 from .hide import hide_post_edit, unhide_post_edit
+from .hooks import (
+    get_private_thread_post_edits_view_context_data_hook,
+    get_thread_post_edits_view_context_data_hook,
+)
 from .restore import restore_post_edit
 from .models import PostEdit
 
@@ -65,6 +69,11 @@ class PostEditViewBackend:
     def get_attachment_permission(
         self, request: HttpRequest, post: Post, attachment: dict
     ) -> bool:
+        raise NotImplementedError()
+
+    def get_context_data_hook(
+        self, action, request: HttpRequest, post: Post, page: Page
+    ) -> dict:
         raise NotImplementedError()
 
     def get_thread_post_edit_restore_url(self, post_edit: PostEdit) -> str:
@@ -143,6 +152,11 @@ class ThreadPostEditViewBackend(PostEditViewBackend):
             in request.user_permissions.categories[CategoryPermission.ATTACHMENTS]
         )
 
+    def get_context_data_hook(
+        self, action, request: HttpRequest, post: Post, page: Page
+    ) -> dict:
+        return get_thread_post_edits_view_context_data_hook(action, request, post, page)
+
 
 class PrivateThreadPostEditViewBackend(PostEditViewBackend):
     post_edit_restore_url = "misago:private-thread-post-edit-restore"
@@ -162,6 +176,13 @@ class PrivateThreadPostEditViewBackend(PostEditViewBackend):
         self, request: HttpRequest, post: Post, attachment: dict
     ) -> bool:
         return True
+
+    def get_context_data_hook(
+        self, action, request: HttpRequest, post: Post, page: Page
+    ) -> dict:
+        return get_private_thread_post_edits_view_context_data_hook(
+            action, request, post, page
+        )
 
 
 thread_post_edit_backend = ThreadPostEditViewBackend()
@@ -218,6 +239,13 @@ class GenericPostEditView(GenericThreadView):
     def get_thread_post_edit_context_data(
         self, request: HttpRequest, post: Post, page: Page
     ) -> dict:
+        return self.post_edit_backend.get_context_data_hook(
+            self._get_thread_post_edit_context_data_action, request, post, page
+        )
+
+    def _get_thread_post_edit_context_data_action(
+        self, request: HttpRequest, post: Post, page: Page
+    ) -> dict:
         if page.object_list:
             post_edit = page.object_list[0]
             post_edit.category = post.category
@@ -239,6 +267,8 @@ class GenericPostEditView(GenericThreadView):
             "edit_number": None,
             "edit_diff": None,
             "show_options": False,
+            "post_edit_diff_plugins_top": [],
+            "post_edit_diff_plugins_bottom": [],
         }
 
         if not post_edit:

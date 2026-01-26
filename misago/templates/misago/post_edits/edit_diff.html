@@ -1,4 +1,4 @@
-{% load i18n misago_formats %}
+{% load i18n misago_component misago_formats %}
 
 {% if blank %}
   <div class="edit-diff-blankslate">
@@ -7,6 +7,9 @@
     {% endblocktranslate %}
   </div>
 {% endif %}
+{% for plugin in post_edit_diff_plugins_top %}
+  {% includecomponent plugin %}
+{% endfor %}
 {% if title %}
   <div class="edit-diff-section">
     <h3 class="edit-diff-section-title">
@@ -160,5 +163,8 @@
         </li>
       {% endfor %}
     </ul>
+    {% for plugin in post_edit_diff_plugins_bottom %}
+      {% includecomponent plugin %}
+    {% endfor %}
   </div>
 {% endif %}
