@@ -57,6 +57,27 @@ class FilesReport:
         return 0
 
 
+def main(check: bool):
+    files_content: dict[Path, str] = {}
+    files_content.update(generate_plugin_manifest_reference())
+    files_content.update(generate_hooks_reference())
+    files_content.update(generate_outlets_reference())
+    report = compare_files(files_content)
+    exit_code = report.get_exit_code()
+    if check:
+        if exit_code:
+            print_check_message(report)
+        else:
+            sys.stdout.write("Nothing to change - all files up to date")
+    else:
+        write_files(files_content)
+        sys.stdout.write(
+            f"Saved {len(report.missing_files)} new and {len(report.outdated_files)} updated files."
+        )
+
+    return exit_code
+
+
 def print_check_message(report):
     if report.outdated_files:
         sys.stderr.write("\n")
@@ -70,27 +91,6 @@ def print_check_message(report):
             sys.stderr.write(f"would create {file_name}\n")
         sys.stderr.write(f"\n{len(report.missing_files)} files would be created.\n")
     sys.stderr.write("\n")
-
-
-def main(check: bool):
-    files_content: dict[Path, str] = {}
-    files_content.update(generate_plugin_manifest_reference())
-    files_content.update(generate_hooks_reference())
-    files_content.update(generate_outlets_reference())
-    report = compare_files(files_content)
-    report_code = report.get_exit_code()
-    if check:
-        if report_code:
-            print_check_message(report)
-        else:
-            sys.stdout.write("Nothing to change - all files up to date")
-    else:
-        write_files(files_content)
-        sys.stdout.write(
-            "Saved {len(report.missing_files)} new and {len(report.outdated_files)} updated files."
-        )
-
-    return report_code
 
 
 def compare_files(files_content):
