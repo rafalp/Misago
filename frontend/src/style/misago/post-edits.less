@@ -8,6 +8,10 @@
 
 .post-edit-card-header,
 .post-edit-modal-header {
+  display: flex;
+  gap: ceil(@grid-gutter-width / 3);
+  align-items: center;
+
   padding: @panel-body-padding;
 
   background-color: @gray-50;
@@ -21,36 +25,6 @@
   &-caption {
     display: flex;
     min-width: 0;
-  }
-}
-
-.post-edit-card-header,
-.post-edit-modal-header-section {
-  display: flex;
-  gap: ceil(@grid-gutter-width / 3);
-  align-items: center;
-
-  width: 100%;
-}
-
-.post-edit-modal-header {
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-
-  @media screen and (max-width: @screen-sm-max) {
-    .post-edits-paginator {
-      margin-bottom: ceil(@grid-gutter-width / 2);
-      padding-bottom: ceil(@grid-gutter-width / 2);
-
-      border-bottom: 1px solid @gray-200;
-    }
-  }
-
-  @media screen and (min-width: @screen-md-min) {
-    flex-direction: row;
-    gap: @grid-gutter-width;
   }
 }
 
@@ -176,6 +150,11 @@
       font-weight: normal;
     }
   }
+}
+
+.post-edit-modal-body {
+  max-height: calc(100vh - 150px - 95px);
+  overflow-y: auto;
 }
 
 details[open],
