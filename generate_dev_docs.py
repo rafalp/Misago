@@ -40,12 +40,11 @@ KEEP_PLUGINS_HOOKS_PATHS = (
 
 
 @dataclass
-class Report:
+class FilesReport:
     outdated_files: list[str] = field(default_factory=list)
     missing_files: list[str] = field(default_factory=list)
 
-    @property
-    def return_code(self) -> int:
+    def get_exit_code(self) -> int:
         """Return the exit code.
 
         This considers the current state of changed files:
@@ -54,61 +53,77 @@ class Report:
         """
         if self.missing_files or self.outdated_files:
             return 1
+
         return 0
 
 
+def print_check_message(report):
+    if report.outdated_files:
+        sys.stderr.write("\n")
+        for file_name in report.outdated_files:
+            sys.stderr.write(f"would update {file_name}\n")
+        sys.stderr.write(f"\n{len(report.outdated_files)} files would be updated.\n")
+
+    if report.missing_files:
+        sys.stderr.write("\n")
+        for file_name in report.missing_files:
+            sys.stderr.write(f"would create {file_name}\n")
+        sys.stderr.write(f"\n{len(report.missing_files)} files would be created.\n")
+    sys.stderr.write("\n")
+
+
 def main(check: bool):
-    file_name, content = generate_plugin_manifest_reference()
-    files_content = {file_name: content}
+    files_content: dict[Path, str] = {}
+    files_content.update(generate_plugin_manifest_reference())
     files_content.update(generate_hooks_reference())
-    file_name, content = generate_outlets_reference()
-    files_content[file_name] = content
+    files_content.update(generate_outlets_reference())
+    report = compare_files(files_content)
+    report_code = report.get_exit_code()
     if check:
-        report = compare_files(files_content)
-        report_code = report.return_code
         if report_code:
-            print(
-                f"Dev docs report: {len(report.missing_files)} new files; {len(report.outdated_files)} outdated files."
-            )
-        return report_code
+            print_check_message(report)
+        else:
+            sys.stdout.write("Nothing to change - all files up to date")
     else:
         write_files(files_content)
+        sys.stdout.write(
+            "Saved {len(report.missing_files)} new and {len(report.outdated_files)} updated files."
+        )
+
+    return report_code
 
 
 def compare_files(files_content):
-    report = Report()
+    report = FilesReport()
     for file_path, file_content in files_content.items():
         # check if file exists
         if file_path.is_file():
             # compare content
-            with open(file_path, "r") as fp, file_content as fc:
-                if fp.read() != fc.read():
+            with open(file_path, "r") as fp:
+                if fp.read() != file_content:
                     report.outdated_files.append(file_path)
         else:
             report.missing_files.append(file_path)
+
     return report
 
 
 def write_files(files_content):
     for file_path, file_content in files_content.items():
-        with open(file_path, "w") as fp, file_content as fc:
-            fp.write(fc.read())
+        with open(file_path, "w") as fp:
+            fp.write(file_content)
 
 
 def generate_plugin_manifest_reference():
     manifest_path, manifest_attr = PLUGIN_MANIFEST.rsplit(".", 1)
     manifest_type = getattr(import_module(manifest_path), manifest_attr)
     file_name = PLUGINS_PATH / "plugin-manifest-reference.md"
-    fp = StringIO()
-    try:
-        fp.write("# Plugin manifest reference")
-        fp.write("\n\n")
-        fp.write(indent_docstring_headers(dedent(manifest_type.__doc__)).strip())
-    except Exception:
-        fp.close()
-        raise
+    file_content = StringIO()
+    file_content.write("# Plugin manifest reference")
+    file_content.write("\n\n")
+    file_content.write(indent_docstring_headers(dedent(manifest_type.__doc__)).strip())
 
-    return file_name, fp
+    return {file_name: file_content.read()}
 
 
 def generate_hooks_reference():
@@ -138,34 +153,30 @@ def generate_hooks_reference_index(hooks_data: dict[str, dict[str, ast.Module]])
             os.unlink(path)
 
     file_name = PLUGINS_HOOKS_PATH / "reference.md"
-    fp = StringIO()
-    try:
-        fp.write("# Built-in hooks reference")
-        fp.write("\n\n")
-        fp.write(
-            "This document contains a list of all standard plugin hooks existing in Misago."
-        )
-        fp.write("\n\n")
-        fp.write("Hooks instances are importable from the following Python modules:")
+    file_content = StringIO()
+    file_content.write("# Built-in hooks reference")
+    file_content.write("\n\n")
+    file_content.write(
+        "This document contains a list of all standard plugin hooks existing in Misago."
+    )
+    file_content.write("\n\n")
+    file_content.write("Hooks instances are importable from the following Python modules:")
 
-        fp.write("\n")
-        for module_name in sorted(hooks_data):
-            fp.write(f"\n- [`{module_name}`](#{slugify_name(module_name)})")
+    file_content.write("\n")
+    for module_name in sorted(hooks_data):
+        file_content.write(f"\n- [`{module_name}`](#{slugify_name(module_name)})")
 
-        for module_name, module_hooks in hooks_data.items():
-            fp.write("\n\n\n")
-            fp.write(f"## `{module_name}`")
-            fp.write("\n\n")
-            fp.write(f"`{module_name}` defines the following hooks:")
-            fp.write("\n")
+    for module_name, module_hooks in hooks_data.items():
+        file_content.write("\n\n\n")
+        file_content.write(f"## `{module_name}`")
+        file_content.write("\n\n")
+        file_content.write(f"`{module_name}` defines the following hooks:")
+        file_content.write("\n")
 
-            for module_hook in sorted(module_hooks):
-                fp.write(f"\n- [`{module_hook}`](./{slugify_name(module_hook)}.md)")
-    except Exception:
-        fp.close()
-        raise
+        for module_hook in sorted(module_hooks):
+            file_content.write(f"\n- [`{module_hook}`](./{slugify_name(module_hook)}.md)")
 
-    return file_name, fp
+    return file_name, file_content.read()
 
 
 def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.Module):
@@ -209,144 +220,140 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
         hook_docstring = parse_hook_docstring(hook_ast_docstring)
 
     file_name = PLUGINS_HOOKS_PATH / hook_filename
-    fp = StringIO()
-    try:
-        fp.write(f"# `{hook_name}`")
-        fp.write("\n\n")
+    file_content = StringIO()
+    file_content.write(f"# `{hook_name}`")
+    file_content.write("\n\n")
 
-        if hook_docstring and hook_docstring.description:
-            fp.write(hook_docstring.description)
-        elif hook_type == "ACTION":
-            fp.write(f"`{hook_name}` is an **action** hook.")
-        elif hook_type == "FILTER":
-            fp.write(f"`{hook_name}` is a **filter** hook.")
+    if hook_docstring and hook_docstring.description:
+        file_content.write(hook_docstring.description)
+    elif hook_type == "ACTION":
+        file_content.write(f"`{hook_name}` is an **action** hook.")
+    elif hook_type == "FILTER":
+        file_content.write(f"`{hook_name}` is a **filter** hook.")
 
-        fp.write("\n\n\n")
-        fp.write("## Location")
-        fp.write("\n\n")
-        fp.write(f"This hook can be imported from `{import_from}`:")
-        fp.write("\n\n")
-        fp.write("```python")
-        fp.write("\n")
-        fp.write(f"from {import_from} import {hook_name}")
-        fp.write("\n")
-        fp.write("```")
+    file_content.write("\n\n\n")
+    file_content.write("## Location")
+    file_content.write("\n\n")
+    file_content.write(f"This hook can be imported from `{import_from}`:")
+    file_content.write("\n\n")
+    file_content.write("```python")
+    file_content.write("\n")
+    file_content.write(f"from {import_from} import {hook_name}")
+    file_content.write("\n")
+    file_content.write("```")
 
-        if hook_type == "ACTION":
-            fp.write("\n\n\n")
-            fp.write("## Action")
+    if hook_type == "ACTION":
+        file_content.write("\n\n\n")
+        file_content.write("## Action")
 
-            if hook_action_ast:
-                hook_cropped = hook_name
-                if hook_cropped.endswith("_hook"):
-                    hook_cropped = hook_cropped[:-5]
+        if hook_action_ast:
+            hook_cropped = hook_name
+            if hook_cropped.endswith("_hook"):
+                hook_cropped = hook_cropped[:-5]
 
-                hook_action_signature = get_callable_class_signature(hook_action_ast)
-                if hook_action_signature:
-                    hook_action_args, hook_action_returns = hook_action_signature
-                else:
-                    hook_action_args = ""
-                    hook_action_returns = "Unknown"
-
-                fp.write("\n\n")
-                fp.write("```python")
-                fp.write("\n")
-                fp.write(
-                    f"def custom_{hook_cropped}_filter({hook_action_args}){hook_action_returns}:"
-                )
-                fp.write("\n")
-                fp.write("    ...")
-                fp.write("\n")
-                fp.write("```")
-
-                hook_action_docstring = get_class_docstring(hook_action_ast)
-                if hook_action_docstring:
-                    fp.write("\n\n")
-                    fp.write(indent_docstring_headers(hook_action_docstring, level=2))
+            hook_action_signature = get_callable_class_signature(hook_action_ast)
+            if hook_action_signature:
+                hook_action_args, hook_action_returns = hook_action_signature
             else:
-                fp.write("_This section is empty._")
+                hook_action_args = ""
+                hook_action_returns = "Unknown"
 
-        if hook_type == "FILTER":
-            fp.write("\n\n\n")
-            fp.write("## Filter")
+            file_content.write("\n\n")
+            file_content.write("```python")
+            file_content.write("\n")
+            file_content.write(
+                f"def custom_{hook_cropped}_filter({hook_action_args}){hook_action_returns}:"
+            )
+            file_content.write("\n")
+            file_content.write("    ...")
+            file_content.write("\n")
+            file_content.write("```")
 
-            if hook_filter_ast:
-                hook_cropped = hook_name
-                if hook_cropped.startswith("filter_"):
-                    hook_cropped = hook_cropped[7:]
-                if hook_cropped.endswith("_hook"):
-                    hook_cropped = hook_cropped[:-5]
+            hook_action_docstring = get_class_docstring(hook_action_ast)
+            if hook_action_docstring:
+                file_content.write("\n\n")
+                file_content.write(indent_docstring_headers(hook_action_docstring, level=2))
+        else:
+            file_content.write("_This section is empty._")
 
-                hook_filter_signature = get_callable_class_signature(hook_filter_ast)
-                if hook_filter_signature:
-                    hook_filter_args, hook_filter_returns = hook_filter_signature
-                else:
-                    hook_filter_args = ""
-                    hook_filter_returns = "Unknown"
+    if hook_type == "FILTER":
+        file_content.write("\n\n\n")
+        file_content.write("## Filter")
 
-                fp.write("\n\n")
-                fp.write("```python")
-                fp.write("\n")
-                fp.write(
-                    f"def custom_{hook_cropped}_filter({hook_filter_args}){hook_filter_returns}:"
-                )
-                fp.write("\n")
-                fp.write("    ...")
-                fp.write("\n")
-                fp.write("```")
+        if hook_filter_ast:
+            hook_cropped = hook_name
+            if hook_cropped.startswith("filter_"):
+                hook_cropped = hook_cropped[7:]
+            if hook_cropped.endswith("_hook"):
+                hook_cropped = hook_cropped[:-5]
 
-                hook_filter_docstring = get_class_docstring(hook_filter_ast)
-                if hook_filter_docstring:
-                    fp.write("\n\n")
-                    fp.write(indent_docstring_headers(hook_filter_docstring, level=2))
+            hook_filter_signature = get_callable_class_signature(hook_filter_ast)
+            if hook_filter_signature:
+                hook_filter_args, hook_filter_returns = hook_filter_signature
             else:
-                fp.write("_This section is empty._")
+                hook_filter_args = ""
+                hook_filter_returns = "Unknown"
 
-            fp.write("\n\n\n")
-            fp.write("## Action")
+            file_content.write("\n\n")
+            file_content.write("```python")
+            file_content.write("\n")
+            file_content.write(
+                f"def custom_{hook_cropped}_filter({hook_filter_args}){hook_filter_returns}:"
+            )
+            file_content.write("\n")
+            file_content.write("    ...")
+            file_content.write("\n")
+            file_content.write("```")
 
-            if hook_action_ast:
-                hook_cropped = hook_name
-                if hook_cropped.endswith("_hook"):
-                    hook_cropped = hook_cropped[:-5]
+            hook_filter_docstring = get_class_docstring(hook_filter_ast)
+            if hook_filter_docstring:
+                file_content.write("\n\n")
+                file_content.write(indent_docstring_headers(hook_filter_docstring, level=2))
+        else:
+            file_content.write("_This section is empty._")
 
-                hook_action_signature = get_callable_class_signature(hook_action_ast)
-                if hook_action_signature:
-                    hook_action_args, hook_action_returns = hook_action_signature
-                else:
-                    hook_action_args = ""
-                    hook_action_returns = "Unknown"
+        file_content.write("\n\n\n")
+        file_content.write("## Action")
 
-                fp.write("\n\n")
-                fp.write("```python")
-                fp.write("\n")
-                fp.write(
-                    f"def {hook_cropped}_action({hook_action_args}){hook_action_returns}:"
-                )
-                fp.write("\n")
-                fp.write("    ...")
-                fp.write("\n")
-                fp.write("```")
+        if hook_action_ast:
+            hook_cropped = hook_name
+            if hook_cropped.endswith("_hook"):
+                hook_cropped = hook_cropped[:-5]
 
-                hook_action_docstring = get_class_docstring(hook_action_ast)
-                if hook_action_docstring:
-                    fp.write("\n\n")
-                    fp.write(indent_docstring_headers(hook_action_docstring, level=2))
-
+            hook_action_signature = get_callable_class_signature(hook_action_ast)
+            if hook_action_signature:
+                hook_action_args, hook_action_returns = hook_action_signature
             else:
-                fp.write("_This section is empty._")
+                hook_action_args = ""
+                hook_action_returns = "Unknown"
 
-        if hook_docstring and hook_docstring.examples:
-            for example_title, example_text in hook_docstring.examples.items():
-                fp.write("\n\n\n")
-                fp.write(f"## {example_title}")
-                fp.write("\n\n")
-                fp.write(example_text)
-    except Exception:
-        fp.close()
-        raise
+            file_content.write("\n\n")
+            file_content.write("```python")
+            file_content.write("\n")
+            file_content.write(
+                f"def {hook_cropped}_action({hook_action_args}){hook_action_returns}:"
+            )
+            file_content.write("\n")
+            file_content.write("    ...")
+            file_content.write("\n")
+            file_content.write("```")
 
-    return file_name, fp
+            hook_action_docstring = get_class_docstring(hook_action_ast)
+            if hook_action_docstring:
+                file_content.write("\n\n")
+                file_content.write(indent_docstring_headers(hook_action_docstring, level=2))
+
+        else:
+            file_content.write("_This section is empty._")
+
+    if hook_docstring and hook_docstring.examples:
+        for example_title, example_text in hook_docstring.examples.items():
+            file_content.write("\n\n\n")
+            file_content.write(f"## {example_title}")
+            file_content.write("\n\n")
+            file_content.write(example_text)
+
+    return file_name, file_content.read()
 
 
 def is_class_base_hook(class_def: ast.ClassDef) -> str | None:
@@ -407,23 +414,19 @@ def generate_outlets_reference():
     outlets_dict = {outlet.name: outlet.value for outlet in outlets_enum}
 
     file_name = PLUGINS_PATH / "template-outlets-reference.md"
-    fp = StringIO()
-    try:
-        fp.write("# Built-in template outlets reference")
-        fp.write("\n\n")
-        fp.write(
-            "This document contains a list of all built-in template outlets in Misago."
-        )
-        for outlet_name, outlet_contents in outlets_dict.items():
-            fp.write("\n\n\n")
-            fp.write(f"## `{outlet_name}`")
-            fp.write("\n\n")
-            fp.write(outlet_contents)
-    except Exception:
-        fp.close()
-        raise
+    file_content = StringIO()
+    file_content.write("# Built-in template outlets reference")
+    file_content.write("\n\n")
+    file_content.write(
+        "This document contains a list of all built-in template outlets in Misago."
+    )
+    for outlet_name, outlet_contents in outlets_dict.items():
+        file_content.write("\n\n\n")
+        file_content.write(f"## `{outlet_name}`")
+        file_content.write("\n\n")
+        file_content.write(outlet_contents)
 
-    return file_name, fp
+    return {file_name: file_content.read()}
 
 
 def get_callable_class_signature(class_def: ast.ClassDef) -> tuple[str, str | None]:
@@ -633,7 +636,7 @@ def slugify_name(py_name: str) -> str:
     return py_name.replace(".", "-").replace("_", "-")
 
 
-def create_parser() -> ArgumentParser:
+def create_args_parser() -> ArgumentParser:
     parser = ArgumentParser(
         description="Script for generating some of documents in `dev-docs` from Misago's code"
     )
@@ -649,6 +652,6 @@ def create_parser() -> ArgumentParser:
 
 
 if __name__ == "__main__":
-    parser = create_parser()
+    parser = create_args_parser()
     args = parser.parse_args()
     sys.exit(main(args.check))
