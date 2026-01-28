@@ -160,7 +160,9 @@ def generate_hooks_reference_index(hooks_data: dict[str, dict[str, ast.Module]])
         "This document contains a list of all standard plugin hooks existing in Misago."
     )
     file_content.write("\n\n")
-    file_content.write("Hooks instances are importable from the following Python modules:")
+    file_content.write(
+        "Hooks instances are importable from the following Python modules:"
+    )
 
     file_content.write("\n")
     for module_name in sorted(hooks_data):
@@ -174,7 +176,9 @@ def generate_hooks_reference_index(hooks_data: dict[str, dict[str, ast.Module]])
         file_content.write("\n")
 
         for module_hook in sorted(module_hooks):
-            file_content.write(f"\n- [`{module_hook}`](./{slugify_name(module_hook)}.md)")
+            file_content.write(
+                f"\n- [`{module_hook}`](./{slugify_name(module_hook)}.md)"
+            )
 
     return file_name, file_content.read()
 
@@ -272,7 +276,9 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
             hook_action_docstring = get_class_docstring(hook_action_ast)
             if hook_action_docstring:
                 file_content.write("\n\n")
-                file_content.write(indent_docstring_headers(hook_action_docstring, level=2))
+                file_content.write(
+                    indent_docstring_headers(hook_action_docstring, level=2)
+                )
         else:
             file_content.write("_This section is empty._")
 
@@ -308,7 +314,9 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
             hook_filter_docstring = get_class_docstring(hook_filter_ast)
             if hook_filter_docstring:
                 file_content.write("\n\n")
-                file_content.write(indent_docstring_headers(hook_filter_docstring, level=2))
+                file_content.write(
+                    indent_docstring_headers(hook_filter_docstring, level=2)
+                )
         else:
             file_content.write("_This section is empty._")
 
@@ -341,7 +349,9 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
             hook_action_docstring = get_class_docstring(hook_action_ast)
             if hook_action_docstring:
                 file_content.write("\n\n")
-                file_content.write(indent_docstring_headers(hook_action_docstring, level=2))
+                file_content.write(
+                    indent_docstring_headers(hook_action_docstring, level=2)
+                )
 
         else:
             file_content.write("_This section is empty._")
