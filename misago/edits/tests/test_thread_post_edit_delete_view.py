@@ -1,7 +1,8 @@
 import pytest
 from django.urls import reverse
 
-from ...permissions.enums import CanHideOwnPostEdits
+from ...permissions.enums import CanHideOwnPostEdits, CategoryPermission
+from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
 from ..create import create_post_edit
 from ..models import PostEdit
@@ -582,3 +583,93 @@ def test_thread_post_edit_delete_view_shows_login_required_page_to_anonymous_use
         ),
     )
     assert_contains(response, "Sign in to continue", status_code=401)
+
+
+def test_thread_post_edit_delete_view_returns_error_404_if_thread_doesnt_exist(
+    user_client,
+):
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-delete",
+            kwargs={
+                "thread_id": 1,
+                "slug": "doesnt-exist",
+                "post_id": 1,
+                "post_edit_id": 1,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_post_edit_delete_view_returns_error_404_if_user_cant_see_thread_category(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    CategoryGroupPermission.objects.filter(
+        group=members_group,
+        permission=CategoryPermission.SEE,
+    ).delete()
+
+    post = thread_reply_factory(thread, poster=user)
+    post_edit = create_post_edit(post=post, user=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_post_edit_delete_view_returns_error_404_if_user_cant_browse_thread_category(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    CategoryGroupPermission.objects.filter(
+        group=members_group,
+        permission=CategoryPermission.BROWSE,
+    ).delete()
+
+    post = thread_reply_factory(thread, poster=user)
+    post_edit = create_post_edit(post=post, user=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_post_edit_delete_view_returns_error_404_if_user_cant_see_thread(
+    thread_reply_factory, user_client, user, thread
+):
+    thread.is_hidden = True
+    thread.save()
+
+    post = thread_reply_factory(thread, poster=user)
+    post_edit = create_post_edit(post=post, user=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert response.status_code == 404

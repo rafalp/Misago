@@ -78,10 +78,18 @@
     {% form_row form.group.own_threads_edit_time_limit %}
     {% form_row form.group.can_edit_own_posts %}
     {% form_row form.group.own_posts_edit_time_limit %}
+    {% form_row form.group.exempt_from_flood_control %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Post edits" context "admin group permissions form" %}</legend>
+
+    {% form_row form.group.can_see_others_post_edits %}
     {% form_row form.group.can_hide_own_post_edits %}
     {% form_row form.group.own_post_edits_hide_time_limit %}
     {% form_row form.group.own_delete_post_edits_time_limit %}
-    {% form_row form.group.exempt_from_flood_control %}
 
   </fieldset>
 </div>

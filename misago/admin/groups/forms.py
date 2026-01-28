@@ -146,6 +146,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         min_value=0,
     )
+
     can_see_others_post_edits = forms.TypedChoiceField(
         label=pgettext_lazy(
             "admin group permissions form", "Can see other users post edits"
@@ -361,6 +362,10 @@ class EditGroupForm(forms.ModelForm):
             "own_threads_edit_time_limit",
             "can_edit_own_posts",
             "own_posts_edit_time_limit",
+            "can_see_others_post_edits",
+            "can_hide_own_post_edits",
+            "own_post_edits_hide_time_limit",
+            "own_delete_post_edits_time_limit",
             "exempt_from_flood_control",
             "can_use_private_threads",
             "can_start_private_threads",

@@ -1,6 +1,7 @@
 from django.urls import reverse
 
-from ...permissions.enums import CanHideOwnPostEdits
+from ...permissions.enums import CanHideOwnPostEdits, CategoryPermission
+from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
 from ..create import create_post_edit
 from ..hide import hide_post_edit
@@ -7934,3 +7935,91 @@ def test_thread_post_edits_view_shows_delete_hidden_user_edit_option_to_moderato
             },
         ),
     )
+
+
+def test_thread_post_edits_view_returns_error_404_if_thread_doesnt_exist(user_client):
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": 1,
+                "slug": "doesnt-exist",
+                "post_id": 1,
+                "page": 1,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_post_edits_view_returns_error_404_if_user_cant_see_thread_category(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    CategoryGroupPermission.objects.filter(
+        group=members_group,
+        permission=CategoryPermission.SEE,
+    ).delete()
+
+    post = thread_reply_factory(thread, poster=user)
+    create_post_edit(post=post, user=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 1,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_post_edits_view_returns_error_404_if_user_cant_browse_thread_category(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    CategoryGroupPermission.objects.filter(
+        group=members_group,
+        permission=CategoryPermission.BROWSE,
+    ).delete()
+
+    post = thread_reply_factory(thread, poster=user)
+    create_post_edit(post=post, user=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 1,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_post_edits_view_returns_error_404_if_user_cant_see_thread(
+    thread_reply_factory, user_client, user, thread
+):
+    thread.is_hidden = True
+    thread.save()
+
+    post = thread_reply_factory(thread, poster=user)
+    create_post_edit(post=post, user=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 1,
+            },
+        ),
+    )
+    assert response.status_code == 404
