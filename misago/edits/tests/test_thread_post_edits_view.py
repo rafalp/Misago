@@ -8045,9 +8045,6 @@ def test_thread_post_edits_view_returns_error_404_if_thread_post_doesnt_exist(
 def test_thread_post_edits_view_returns_error_404_if_thread_post_belongs_to_other_thread(
     user_client, thread, other_thread
 ):
-    thread.is_hidden = True
-    thread.save()
-
     response = user_client.get(
         reverse(
             "misago:thread-post-edits",
@@ -8060,3 +8057,43 @@ def test_thread_post_edits_view_returns_error_404_if_thread_post_belongs_to_othe
         ),
     )
     assert response.status_code == 404
+
+
+def test_thread_post_edits_view_returns_error_404_if_user_cant_see_thread_post(
+    thread_reply_factory, user_client, thread
+):
+    post = thread_reply_factory(thread, is_unapproved=True)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 1,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_post_edits_view_returns_error_403_if_user_cant_see_thread_post_contents(
+    thread_reply_factory, user_client, thread
+):
+    post = thread_reply_factory(thread, is_hidden=True)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edits",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "page": 1,
+            },
+        ),
+    )
+    assert_contains(
+        response, "You can&#x27;t see this post&#x27;s contents.", status_code=403
+    )

@@ -707,3 +707,45 @@ def test_thread_post_edit_delete_view_returns_error_404_if_thread_post_belongs_t
         ),
     )
     assert response.status_code == 404
+
+
+def test_thread_post_edit_delete_view_returns_error_404_if_user_cant_see_thread_post(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, is_unapproved=True)
+    post_edit = create_post_edit(post=post, user=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_post_edit_delete_view_returns_error_403_if_user_cant_see_thread_post_contents(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread, is_hidden=True)
+    post_edit = create_post_edit(post=post, user=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert_contains(
+        response, "You can&#x27;t see this post&#x27;s contents.", status_code=403
+    )

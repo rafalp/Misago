@@ -1,3 +1,4 @@
+import pytest
 from django.urls import reverse
 
 from ...permissions.enums import CanHideOwnPostEdits
@@ -6200,3 +6201,44 @@ def test_private_thread_post_edits_view_returns_error_404_if_thread_post_belongs
         ),
     )
     assert response.status_code == 404
+
+
+@pytest.mark.xfail(reason="missing moderation perms in private threads")
+def test_private_thread_post_edits_view_returns_error_404_if_user_cant_see_thread_post(
+    thread_reply_factory, user_client, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, is_unapproved=True)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 1,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_private_thread_post_edits_view_returns_error_403_if_user_cant_see_thread_post_contents(
+    thread_reply_factory, user_client, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, is_hidden=True)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "page": 1,
+            },
+        ),
+    )
+    assert_contains(
+        response, "You can&#x27;t see this post&#x27;s contents.", status_code=403
+    )

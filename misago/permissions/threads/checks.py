@@ -268,7 +268,7 @@ def _check_see_thread_post_permission_action(
             raise PermissionDenied(
                 pgettext(
                     "threads permission error",
-                    "You can't view this post's contents.",
+                    "You can't see this post's contents.",
                 )
             )
 
