@@ -6166,3 +6166,37 @@ def test_private_thread_post_edits_view_returns_error_404_if_user_cant_see_threa
         ),
     )
     assert response.status_code == 404
+
+
+def test_private_thread_post_edits_view_returns_error_404_if_thread_post_doesnt_exist(
+    user_client, other_user_private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": 1,
+                "page": 1,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_private_thread_post_edits_view_returns_error_404_if_thread_post_belongs_to_other_thread(
+    user_client, other_user_private_thread, user_private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edits",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": user_private_thread.first_post_id,
+                "page": 1,
+            },
+        ),
+    )
+    assert response.status_code == 404

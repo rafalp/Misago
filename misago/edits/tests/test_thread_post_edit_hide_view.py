@@ -389,3 +389,37 @@ def test_thread_post_edit_hide_view_returns_error_404_if_user_cant_see_thread(
         ),
     )
     assert response.status_code == 404
+
+
+def test_thread_post_edit_hide_view_returns_error_404_if_thread_post_doesnt_exist(
+    user_client, thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": 1,
+                "post_edit_id": 1,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_post_edit_hide_view_returns_error_404_if_thread_post_belongs_to_other_thread(
+    user_client, thread, other_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-hide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": other_thread.first_post_id,
+                "post_edit_id": 1,
+            },
+        ),
+    )
+    assert response.status_code == 404
