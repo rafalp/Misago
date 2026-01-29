@@ -272,6 +272,7 @@ class PostEditsView(GenericPostEditView):
             .select_related("user", "user__group")
             .order_by("id")
         )
+
         paginator = Paginator(queryset, per_page=1)
 
         if paginator.count and (not page or page > paginator.num_pages):
