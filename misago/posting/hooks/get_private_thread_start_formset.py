@@ -45,7 +45,7 @@ class GetPrivateThreadStartFormsetHookFilter(Protocol):
     ## `action: GetPrivateThreadStartFormsetHookAction`
 
     The next function registered in this hook, either a custom function or
-    Misago’s default.
+    Misago's default.
 
     See the [action](#action) section for details.
 

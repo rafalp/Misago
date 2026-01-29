@@ -3,6 +3,48 @@ from enum import IntEnum, StrEnum
 from django.utils.translation import pgettext_lazy
 
 
+class CanSeePostEdits(IntEnum):
+    HISTORY = 2
+    COUNT = 1
+    NEVER = 0
+
+    @classmethod
+    def get_choices(cls):
+        return (
+            (
+                cls.HISTORY,
+                pgettext_lazy(
+                    "see post edits permission", "Counts and history of changes"
+                ),
+            ),
+            (
+                cls.COUNT,
+                pgettext_lazy("see post edits permission", "Count only"),
+            ),
+            (cls.NEVER, pgettext_lazy("see post edits permission", "Never")),
+        )
+
+
+class CanHideOwnPostEdits(IntEnum):
+    NEVER = 0
+    HIDE = 1
+    DELETE = 2
+
+    @classmethod
+    def get_choices(cls):
+        return (
+            (
+                cls.DELETE,
+                pgettext_lazy("hide own post edits permission", "Hide and delete"),
+            ),
+            (
+                cls.HIDE,
+                pgettext_lazy("hide own post edits permission", "Hide only"),
+            ),
+            (cls.NEVER, pgettext_lazy("hide own post edits permission", "Never")),
+        )
+
+
 class CanSeePostLikes(IntEnum):
     USERS = 2
     COUNT = 1

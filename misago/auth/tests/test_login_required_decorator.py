@@ -5,10 +5,12 @@ from ...conf.test import override_dynamic_settings
 from ...test import assert_contains, assert_not_contains
 
 
-def test_require_login_decorator_displays_login_form_to_guests(db, client):
+def test_require_login_decorator_displays_login_required_page_to_anonymous_user(
+    db, client
+):
     response = client.get(reverse("misago:account-preferences"))
-    assert_contains(response, "page-login")
-    assert_contains(response, "Sign in")
+    assert_contains(response, "page-login", status_code=401)
+    assert_contains(response, "Sign in", status_code=401)
 
 
 def test_require_login_decorator_displays_view_to_authenticated(user_client):
@@ -43,6 +45,6 @@ def test_require_login_decorator_displays_delegated_login_form_if_auth_is_delega
     db, client
 ):
     response = client.get(reverse("misago:account-preferences"))
-    assert_contains(response, "page-login")
-    assert_contains(response, "Sign in")
-    assert_contains(response, "Sign in with OAuth2")
+    assert_contains(response, "page-login", status_code=401)
+    assert_contains(response, "Sign in", status_code=401)
+    assert_contains(response, "Sign in with OAuth2", status_code=401)

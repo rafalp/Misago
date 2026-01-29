@@ -17,9 +17,11 @@ def mock_notify_on_new_private_thread(mocker):
     return mocker.patch("misago.posting.views.start.notify_on_new_private_thread")
 
 
-def test_private_thread_start_view_displays_login_page_to_guests(db, client):
+def test_private_thread_start_view_displays_login_required_page_to_anonymous_user(
+    db, client
+):
     response = client.get(reverse("misago:private-thread-start"))
-    assert_contains(response, "Sign in to start new private thread")
+    assert_contains(response, "Sign in to start new private thread", status_code=401)
 
 
 def test_private_thread_start_view_shows_error_403_to_users_without_private_threads_permission(

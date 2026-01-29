@@ -10,9 +10,9 @@ def test_account_password_returns_error_if_oauth_client_is_enabled(db, client):
     assert response.status_code == 404
 
 
-def test_account_password_displays_login_page_for_guests(db, client):
+def test_account_password_displays_login_required_page_to_anonymous_user(db, client):
     response = client.get(reverse("misago:account-password"))
-    assert_contains(response, "Sign in to change your settings")
+    assert_contains(response, "Sign in to change your settings", status_code=401)
 
 
 def test_account_password_renders_form(user_client):

@@ -1,0 +1,68 @@
+{% load i18n %}
+
+<nav
+  class="post-edits-paginator"
+  role="nav"
+  itemscope
+  itemtype="http://schema.org/SiteNavigationElement"
+  hx-target="#misago-htmx-post-edits-modal"
+  hx-swap="innerHTML{% if scroll %} show:#misago-htmx-post-edits-modal:top{% endif %}"
+>
+  {% if page.has_previous %}
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      title="{% translate 'Go to first page' context 'post edits page paginator' %}"
+      href="{{ post_edits_url }}1/?modal=true"
+      hx-get="{{ post_edits_url }}1/?modal=true"
+    >
+      <span class="material-icon">first_page</span>
+    </a>
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      rel="prev"
+      title="{% translate 'Go to previous page' context 'post edits page paginator' %}"
+      href="{{ post_edits_url }}{{ page.previous_page_number }}/?modal=true"
+      hx-get="{{ post_edits_url }}{{ page.previous_page_number }}/?modal=true"
+    >
+      <span class="material-icon">chevron_left</span>
+    </a>
+  {% else %}
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to first page' context 'post edits page paginator' %}" type="button" disabled>
+      <span class="material-icon">first_page</span>
+    </button>
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to previous page' context 'post edits page paginator' %}" type="button" disabled>
+      <span class="material-icon">chevron_left</span>
+    </button>
+  {% endif %}
+  <div class="post-edits-paginator-legend">
+    {% blocktranslate trimmed with page=page.number pages=paginator.num_pages context "thread post edits page paginator" %}
+      {{ page }} of {{ pages }}
+    {% endblocktranslate %}
+  </div>
+  {% if page.has_next %}
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      title="{% translate 'Go to next page' context 'post edits page paginator' %}"
+      rel="next"
+      href="{{ post_edits_url }}{{ page.next_page_number }}/?modal=true"
+      hx-get="{{ post_edits_url }}{{ page.next_page_number }}/?modal=true"
+    >
+      <span class="material-icon">chevron_right</span>
+    </a>
+    <a
+      class="btn btn-default btn-outline btn-icon"
+      title="{% translate 'Go to last page' context 'post edits page paginator' %}"
+      href="{{ post_edits_url }}{{ paginator.num_pages }}/?modal=true"
+      hx-get="{{ post_edits_url }}{{ paginator.num_pages }}/?modal=true"
+    >
+      <span class="material-icon">last_page</span>
+    </a>
+  {% else %}
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to next page' context 'post edits page paginator' %}" type="button" disabled>
+      <span class="material-icon">chevron_right</span>
+    </button>
+    <button class="btn btn-default btn-outline btn-icon" title="{% translate 'Go to last page' context 'post edits page paginator' %}" type="button" disabled>
+      <span class="material-icon">last_page</span>
+    </button>
+  {% endif %}
+</nav>

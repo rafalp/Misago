@@ -1,0 +1,35 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_plugins %}
+
+
+{% block content %}
+<div class="page page-post-edit-delete">
+  <div class="container page-container">
+    <form action="{{ full_path }}" method="post">
+      {% csrf_token %}
+      <div class="panel panel-default panel-form">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            {% blocktranslate trimmed with edit=edit_number user=post_edit.user_name context "post edit delete confirmation" %}
+              Delete post edit #{{ post_edit_number }} by {{ user }}
+            {% endblocktranslate %}
+          </h3>
+        </div>
+        <div class="panel-body">
+          <p>
+            {% translate "Are you sure you want to delete this edit? This action cannot be undone." context "post edit delete confirmation" %}
+          </p>
+        </div>
+        <div class="panel-footer panel-footer-sticky">
+          <button class="btn btn-primary" type="submit">
+            {% translate "Delete" context "post edit delete page btn" %}
+          </button>
+          <a href="{{ post_edit_url }}" class="btn btn-default">
+            {% translate "Cancel" context "post edit delete page btn" %}
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

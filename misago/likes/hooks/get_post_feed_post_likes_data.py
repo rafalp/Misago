@@ -8,7 +8,7 @@ from ...threads.models import Post
 
 class GetPostFeedPostLikesDataHookAction(Protocol):
     """
-    Misago function for creating the context data used to render a post’s likes
+    Misago function for creating the context data used to render a post's likes
     in the posts feed.
 
     # Arguments
@@ -27,7 +27,7 @@ class GetPostFeedPostLikesDataHookAction(Protocol):
 
     ## `likes_url: str`
 
-    URL of the post’s likes list view.
+    URL of the post's likes list view.
 
     ## `like_url: str`
 
@@ -37,7 +37,7 @@ class GetPostFeedPostLikesDataHookAction(Protocol):
 
     URL of the view used to unlike the post.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## Return value
 
@@ -82,7 +82,7 @@ class GetPostFeedPostLikesDataHookFilter(Protocol):
 
     ## `likes_url: str`
 
-    URL of the post’s likes list view.
+    URL of the post's likes list view.
 
     ## `like_url: str`
 
@@ -92,7 +92,7 @@ class GetPostFeedPostLikesDataHookFilter(Protocol):
 
     URL of the view used to unlike the post.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## Return value
 
@@ -119,7 +119,7 @@ class GetPostFeedPostLikesDataHook(
 ):
     """
     This hook allows plugins to replace or extend the logic used to create
-    the context data used to render a post’s likes in the posts feed.
+    the context data used to render a post's likes in the posts feed.
 
     # Example
 

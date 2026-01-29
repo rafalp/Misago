@@ -331,7 +331,7 @@ def test_poll_vote_view_post_vote_shows_error_403_for_user_if_they_already_voted
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
         + "?poll=vote",
     )
-    assert_contains(response, "This poll doesn’t allow vote changes.", 403)
+    assert_contains(response, "This poll doesn&#x27;t allow vote changes.", 403)
 
 
 def test_poll_vote_view_post_vote_shows_error_403_for_user_if_they_already_voted_and_vote_change_is_disabled_in_htmx(

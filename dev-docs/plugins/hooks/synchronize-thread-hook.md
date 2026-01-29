@@ -2,7 +2,7 @@
 
 This hook allows plugins to replace or extend the logic used to synchronize threads.
 
-Thread synchronization updates a thread’s reply count, the IDs and timestamps of the first and last posts, the attributes of the first and last posters, and status flags such as `has_unapproved_posts`.
+Thread synchronization updates a thread's reply count, the IDs and timestamps of the first and last posts, the attributes of the first and last posters, and status flags such as `has_unapproved_posts`.
 
 
 ## Location
@@ -53,7 +53,7 @@ A `dict` of new attributes to set on the thread.
 
 Whether the updated thread instance should be saved to the database.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`
@@ -92,7 +92,7 @@ A `dict` of new attributes to set on the thread.
 
 Whether the updated thread instance should be saved to the database.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`

@@ -23,6 +23,7 @@ from ..hooks import (
     get_private_thread_detail_view_posts_queryset_hook,
     get_private_thread_detail_view_thread_queryset_hook,
 )
+from .backend import private_thread_backend
 from .generic import PrivateThreadView
 from .members import get_private_thread_members_context_data
 
@@ -31,6 +32,8 @@ if TYPE_CHECKING:
 
 
 class PrivateThreadDetailView(DetailView, PrivateThreadView):
+    backend = private_thread_backend
+
     thread_get_members = True
     template_name: str = "misago/private_thread/index.html"
     template_partial_name: str = "misago/private_thread/partial.html"

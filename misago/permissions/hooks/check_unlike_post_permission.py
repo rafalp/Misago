@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 class CheckUnlikePostPermissionHookAction(Protocol):
     """
     Misago function used to check if a user has permission to unlike
-    a post. Raises Django’s `PermissionDenied` if they can't.
+    a post. Raises Django's `PermissionDenied` if they don't.
 
     # Arguments
 
@@ -89,7 +89,7 @@ class CheckUnlikePostPermissionHook(
 ):
     """
     This hook wraps a standard Misago function used to check if a user has permission
-    to unlike a post. Raises Django’s `PermissionDenied` if they can't.
+    to unlike a post. Raises Django's `PermissionDenied` if they don't.
 
     # Example
 

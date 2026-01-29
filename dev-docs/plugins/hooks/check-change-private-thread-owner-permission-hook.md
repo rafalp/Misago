@@ -1,6 +1,6 @@
 # `check_change_private_thread_owner_permission_hook`
 
-This hook allows plugins to extend or replace the logic for checking whether a user has permission to change a private thread’s owner.
+This hook allows plugins to extend or replace the logic for checking whether a user has permission to change a private thread's owner.
 
 
 ## Location

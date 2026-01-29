@@ -1,6 +1,6 @@
 # `can_see_post_likes_count_hook`
 
-This hook wraps a standard Misago function used to check if a user has permission to see a post’s likes count. Returns `True` if they can and `False` if they can't.
+This hook wraps a standard Misago function used to check if a user has permission to see a post's likes count. Returns `True` if they can and `False` if they don't.
 
 
 ## Location
@@ -74,7 +74,7 @@ def can_see_post_likes_count_action(
     ...
 ```
 
-Misago function used to check if a user has permission to see a post’s likes count. Returns `True` if they can and `False` if they can't.
+Misago function used to check if a user has permission to see a post's likes count. Returns `True` if they can and `False` if they don't.
 
 
 ### Arguments

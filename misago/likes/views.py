@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import transaction
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import npgettext, pgettext
@@ -99,8 +99,8 @@ class PageOutOfRangeError(Exception):
 
 class PostLikesView(View):
     template_name: str
-    template_name_partial = "misago/post_likes/partial.html"
-    template_name_modal = "misago/post_likes/modal/htmx.html"
+    partial_template_name = "misago/post_likes/partial.html"
+    modal_template_name = "misago/post_likes/modal/index.html"
 
     def get(
         self,
@@ -117,7 +117,9 @@ class PostLikesView(View):
         )
 
         if not request.is_htmx and (thread.slug != slug or page == 1):
-            return redirect(self.get_thread_url(thread), permanent=thread.slug != slug)
+            return redirect(
+                self.get_post_likes_url(thread, post), permanent=thread.slug != slug
+            )
 
         try:
             likes_data = self.get_likes_data(request, post, page)
@@ -125,6 +127,11 @@ class PostLikesView(View):
             return redirect(exc.redirect_to)
 
         if request.is_htmx:
+            if request.GET.get("modal"):
+                template_name = self.modal_template_name
+            else:
+                template_name = self.partial_template_name
+
             likes_data.update(
                 {
                     "category": thread.category,
@@ -133,7 +140,7 @@ class PostLikesView(View):
                 }
             )
 
-            return render(request, likes_data["template_name"], likes_data)
+            return render(request, template_name, likes_data)
 
         return render(
             request,
@@ -173,11 +180,6 @@ class PostLikesView(View):
 
         page_obj = paginator.get_page(page)
 
-        if is_modal:
-            template_name = self.template_name_modal
-        else:
-            template_name = self.template_name_partial
-
         if request.user.is_authenticated:
             is_liked = Like.objects.filter(post=post, user=request.user).exists()
         else:
@@ -189,7 +191,7 @@ class PostLikesView(View):
             description = None
 
         return {
-            "template_name": template_name,
+            "template_name": self.partial_template_name,
             "paginator": paginator,
             "page": page_obj,
             "is_liked": is_liked,

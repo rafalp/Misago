@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     "misago.socialauth",
     "misago.themes",
     "misago.threads",
+    "misago.edits",
     "misago.threadupdates",
 ]
 

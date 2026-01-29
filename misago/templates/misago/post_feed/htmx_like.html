@@ -53,15 +53,15 @@
 
 <div
   id="posts-feed-item-post-likes-{{ post.id }}"
-  class="posts-feed-item-post-body-likes{% if likes.is_liked %} posts-feed-item-post-body-likes-liked{% endif %} {% if likes.messages %}animation-fade-in{% else %}d-none{% endif %}"
+  class="posts-feed-item-likes{% if likes.is_liked %} posts-feed-item-likes-liked{% endif %} {% if likes.messages %}animation-fade-in{% else %}d-none{% endif %}"
   hx-swap-oob="outerHTML"
 >
   {% if likes.likes_url %}
     {% for type, message in likes.messages.items %}
       <a
         href="{{ likes.likes_url }}"
-        class="posts-feed-item-post-body-likes-message-{{ type }}"
-        hx-ext="mg-loader,mg-modal"
+        class="posts-feed-item-likes-message-{{ type }}"
+        hx-ext="mg-modal"
         hx-get="{{ likes.likes_url }}?modal=true"
         hx-target="#misago-htmx-post-likes-modal"
         mg-loader="#modal-loader"
@@ -74,7 +74,7 @@
     {% endfor %}
   {% else %}
     {% for type, message in likes.messages.items %}
-      <span class="posts-feed-item-post-body-likes-message-{{ type }}">{{ message }}</span>
+      <span class="posts-feed-item-likes-message-{{ type }}">{{ message }}</span>
     {% endfor %}
   {% endif %}
 </div>

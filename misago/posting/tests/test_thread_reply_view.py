@@ -5,6 +5,7 @@ from django.urls import reverse
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
+from ...edits.models import PostEdit
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...readtracker.models import ReadCategory
@@ -14,7 +15,9 @@ from ..forms import PostForm
 from ..formsets import Formset
 
 
-def test_thread_reply_view_displays_login_page_to_guests(client, thread):
+def test_thread_reply_view_displays_login_required_page_to_anonymous_user(
+    client, thread
+):
     response = client.get(
         reverse(
             "misago:thread-reply",
@@ -24,7 +27,7 @@ def test_thread_reply_view_displays_login_page_to_guests(client, thread):
             },
         )
     )
-    assert_contains(response, "Sign in to reply to threads")
+    assert_contains(response, "Sign in to reply to threads", status_code=401)
 
 
 def test_thread_reply_view_shows_error_404_if_thread_doesnt_exist(user_client):
@@ -505,6 +508,11 @@ def test_thread_reply_view_merges_reply_with_users_recent_post(
     )
 
     assert reply.original == "Previous message\n\nReply contents"
+
+    post_edit = PostEdit.objects.get(post=reply)
+    assert not post_edit.edit_reason
+    assert post_edit.added_content == 2
+    assert post_edit.removed_content == 0
 
 
 def test_thread_reply_view_merges_reply_with_users_recent_post_in_htmx(

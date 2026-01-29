@@ -1,6 +1,6 @@
 # `get_post_feed_post_likes_data_hook`
 
-This hook allows plugins to replace or extend the logic used to create the context data used to render a post’s likes in the posts feed.
+This hook allows plugins to replace or extend the logic used to create the context data used to render a post's likes in the posts feed.
 
 
 ## Location
@@ -56,7 +56,7 @@ The post for which to create likes context data.
 
 #### `likes_url: str`
 
-URL of the post’s likes list view.
+URL of the post's likes list view.
 
 
 #### `like_url: str`
@@ -68,7 +68,7 @@ URL of the view used to like the post.
 
 URL of the view used to unlike the post.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### Return value
@@ -90,7 +90,7 @@ def get_post_feed_post_likes_data_action(
     ...
 ```
 
-Misago function for creating the context data used to render a post’s likes in the posts feed.
+Misago function for creating the context data used to render a post's likes in the posts feed.
 
 
 ### Arguments
@@ -112,7 +112,7 @@ The post for which to create likes context data.
 
 #### `likes_url: str`
 
-URL of the post’s likes list view.
+URL of the post's likes list view.
 
 
 #### `like_url: str`
@@ -124,7 +124,7 @@ URL of the view used to like the post.
 
 URL of the view used to unlike the post.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### Return value

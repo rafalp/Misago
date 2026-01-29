@@ -1,0 +1,25 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+  {% if post_edit %}
+    {% blocktranslate trimmed with post=post_number edit=page.number context "post edits page title" %}
+      Post #{{ post }} edit #{{ edit }}
+    {% endblocktranslate %}
+  {% else %}
+    {% blocktranslate trimmed with post=post_number context "post edits page title" %}
+      Post #{{ post }} edits
+    {% endblocktranslate %}
+  {% endif %} | {{ thread }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-thread-post-edits">
+  {% include "misago/thread/header.html" %}
+  <div class="container page-container">
+    {% include partial_template_name %}
+  </div>
+</div>
+{% endblock content %}

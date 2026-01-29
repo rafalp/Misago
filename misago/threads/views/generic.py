@@ -2,7 +2,7 @@ from typing import Iterable
 
 from django.core.paginator import Paginator
 from django.db.models import QuerySet
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -21,6 +21,100 @@ from ..models import Post, Thread
 from ..nexturl import get_next_thread_url
 from ..paginator import ThreadPostsPaginator
 from ..postfeed import PostFeed, ThreadPostFeed
+from .backend import ViewBackend
+
+
+class GenericThreadView(View):
+    backend: ViewBackend
+
+    def get_thread(
+        self,
+        request: HttpRequest,
+        thread_id: int,
+        annotate_read_time: bool = False,
+        select_related: bool | Iterable[str] = ("category",),
+        for_update: bool = False,
+    ) -> Thread:
+        return self.backend.get_thread(
+            request, thread_id, annotate_read_time, select_related, for_update
+        )
+
+    def get_thread_queryset(
+        self,
+        request: HttpRequest,
+        annotate_read_time: bool = False,
+        select_related: bool | Iterable[str] = False,
+    ) -> QuerySet:
+        return self.backend.get_thread_posts_queryset(
+            request, annotate_read_time, select_related
+        )
+
+    def get_thread_posts_queryset(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        select_related: bool | Iterable[str] = False,
+        for_update: bool = False,
+    ) -> QuerySet:
+        return self.backend.get_thread_posts_queryset(
+            request, thread, select_related, for_update
+        )
+
+    def get_thread_post(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        post_id: int,
+        select_related: bool | Iterable[str] = False,
+        for_content: bool = False,
+        for_update: bool = False,
+    ) -> Post:
+        return self.backend.get_thread_post(
+            request, thread, post_id, select_related, for_content, for_update
+        )
+
+    def get_thread_post_number(self, request: HttpRequest, post: Post) -> int:
+        return self.backend.get_thread_post_number(request, post)
+
+    def get_thread_posts_paginator(
+        self,
+        request: HttpRequest,
+        queryset: QuerySet,
+    ) -> ThreadPostsPaginator:
+        return self.backend.get_thread_posts_paginator(request, queryset)
+
+    def get_thread_url(
+        self,
+        thread: Thread,
+        page: int = 1,
+    ) -> str:
+        return self.backend.get_thread_url(thread, page)
+
+    def get_thread_post_url(self, post: Post) -> str:
+        return self.backend.get_thread_post_url(post)
+
+    def get_thread_post_edits_url(
+        self,
+        post: Post,
+        page: int | None = None,
+    ) -> str:
+        return self.backend.get_thread_post_edits_url(post, page)
+
+    def get_thread_post_redirect(
+        self,
+        request: HttpRequest,
+        post: Post,
+        permanent: bool = False,
+    ) -> HttpResponse:
+        return self.backend.get_thread_post_redirect(request, post, permanent)
+
+    def get_thread_post_redirect_url(self, post: Post, page: int = 1) -> str:
+        return self.backend.get_thread_post_redirect_url(post, page)
+
+    def get_thread_moderator_permission(
+        self, request: HttpRequest, thread: Thread
+    ) -> bool:
+        return self.backend.get_thread_moderator_permission(request, thread)
 
 
 class GenericView(View):

@@ -6,6 +6,7 @@ Hooks instances are importable from the following Python modules:
 
 - [`misago.attachments.hooks`](#misago-attachments-hooks)
 - [`misago.categories.hooks`](#misago-categories-hooks)
+- [`misago.edits.hooks`](#misago-edits-hooks)
 - [`misago.likes.hooks`](#misago-likes-hooks)
 - [`misago.oauth2.hooks`](#misago-oauth2-hooks)
 - [`misago.parser.hooks`](#misago-parser-hooks)
@@ -41,6 +42,19 @@ Hooks instances are importable from the following Python modules:
 - [`get_categories_page_metatags_hook`](./get-categories-page-metatags-hook.md)
 - [`get_categories_query_values_hook`](./get-categories-query-values-hook.md)
 - [`get_category_data_hook`](./get-category-data-hook.md)
+
+
+## `misago.edits.hooks`
+
+`misago.edits.hooks` defines the following hooks:
+
+- [`create_post_edit_hook`](./create-post-edit-hook.md)
+- [`delete_post_edit_hook`](./delete-post-edit-hook.md)
+- [`get_private_thread_post_edits_view_context_data_hook`](./get-private-thread-post-edits-view-context-data-hook.md)
+- [`get_thread_post_edits_view_context_data_hook`](./get-thread-post-edits-view-context-data-hook.md)
+- [`hide_post_edit_hook`](./hide-post-edit-hook.md)
+- [`restore_post_edit_hook`](./restore-post-edit-hook.md)
+- [`unhide_post_edit_hook`](./unhide-post-edit-hook.md)
 
 
 ## `misago.likes.hooks`
@@ -80,6 +94,7 @@ Hooks instances are importable from the following Python modules:
 
 - [`build_user_category_permissions_hook`](./build-user-category-permissions-hook.md)
 - [`build_user_permissions_hook`](./build-user-permissions-hook.md)
+- [`can_see_post_edit_count_hook`](./can-see-post-edit-count-hook.md)
 - [`can_see_post_likes_count_hook`](./can-see-post-likes-count-hook.md)
 - [`can_upload_private_threads_attachments_hook`](./can-upload-private-threads-attachments-hook.md)
 - [`can_upload_threads_attachments_hook`](./can-upload-threads-attachments-hook.md)
@@ -90,6 +105,7 @@ Hooks instances are importable from the following Python modules:
 - [`check_change_private_thread_owner_permission_hook`](./check-change-private-thread-owner-permission-hook.md)
 - [`check_close_thread_poll_permission_hook`](./check-close-thread-poll-permission-hook.md)
 - [`check_delete_attachment_permission_hook`](./check-delete-attachment-permission-hook.md)
+- [`check_delete_post_edit_permission_hook`](./check-delete-post-edit-permission-hook.md)
 - [`check_delete_thread_poll_permission_hook`](./check-delete-thread-poll-permission-hook.md)
 - [`check_download_attachment_permission_hook`](./check-download-attachment-permission-hook.md)
 - [`check_edit_private_thread_permission_hook`](./check-edit-private-thread-permission-hook.md)
@@ -97,6 +113,7 @@ Hooks instances are importable from the following Python modules:
 - [`check_edit_thread_permission_hook`](./check-edit-thread-permission-hook.md)
 - [`check_edit_thread_poll_permission_hook`](./check-edit-thread-poll-permission-hook.md)
 - [`check_edit_thread_post_permission_hook`](./check-edit-thread-post-permission-hook.md)
+- [`check_hide_post_edit_permission_hook`](./check-hide-post-edit-permission-hook.md)
 - [`check_like_post_permission_hook`](./check-like-post-permission-hook.md)
 - [`check_locked_category_permission_hook`](./check-locked-category-permission-hook.md)
 - [`check_locked_private_thread_permission_hook`](./check-locked-private-thread-permission-hook.md)
@@ -106,7 +123,9 @@ Hooks instances are importable from the following Python modules:
 - [`check_remove_private_thread_member_permission_hook`](./check-remove-private-thread-member-permission-hook.md)
 - [`check_reply_private_thread_permission_hook`](./check-reply-private-thread-permission-hook.md)
 - [`check_reply_thread_permission_hook`](./check-reply-thread-permission-hook.md)
+- [`check_restore_post_edit_permission_hook`](./check-restore-post-edit-permission-hook.md)
 - [`check_see_category_permission_hook`](./check-see-category-permission-hook.md)
+- [`check_see_post_edit_history_permission_hook`](./check-see-post-edit-history-permission-hook.md)
 - [`check_see_post_likes_permission_hook`](./check-see-post-likes-permission-hook.md)
 - [`check_see_private_thread_permission_hook`](./check-see-private-thread-permission-hook.md)
 - [`check_see_private_thread_post_permission_hook`](./check-see-private-thread-post-permission-hook.md)
@@ -116,6 +135,7 @@ Hooks instances are importable from the following Python modules:
 - [`check_start_private_threads_permission_hook`](./check-start-private-threads-permission-hook.md)
 - [`check_start_thread_permission_hook`](./check-start-thread-permission-hook.md)
 - [`check_start_thread_poll_permission_hook`](./check-start-thread-poll-permission-hook.md)
+- [`check_unhide_post_edit_permission_hook`](./check-unhide-post-edit-permission-hook.md)
 - [`check_unlike_post_permission_hook`](./check-unlike-post-permission-hook.md)
 - [`check_vote_in_thread_poll_permission_hook`](./check-vote-in-thread-poll-permission-hook.md)
 - [`copy_category_permissions_hook`](./copy-category-permissions-hook.md)

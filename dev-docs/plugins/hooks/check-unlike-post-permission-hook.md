@@ -1,6 +1,6 @@
 # `check_unlike_post_permission_hook`
 
-This hook wraps a standard Misago function used to check if a user has permission to unlike a post. Raises Django’s `PermissionDenied` if they can't.
+This hook wraps a standard Misago function used to check if a user has permission to unlike a post. Raises Django's `PermissionDenied` if they don't.
 
 
 ## Location
@@ -69,7 +69,7 @@ def check_unlike_post_permission_action(
     ...
 ```
 
-Misago function used to check if a user has permission to unlike a post. Raises Django’s `PermissionDenied` if they can't.
+Misago function used to check if a user has permission to unlike a post. Raises Django's `PermissionDenied` if they don't.
 
 
 ### Arguments

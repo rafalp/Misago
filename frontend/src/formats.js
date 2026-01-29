@@ -1,12 +1,25 @@
 export const locale = window.misago_locale || "en-us"
 
 export const momentAgo = pgettext("time ago", "moment ago")
-export const momentAgoShort = pgettext("time ago", "now")
+export const soonAt = pgettext("day at time", "at %(time)s")
 export const dayAt = pgettext("day at time", "%(day)s at %(time)s")
-export const soonAt = pgettext("day at time", "Today at %(time)s")
 export const tomorrowAt = pgettext("day at time", "Tomorrow at %(time)s")
 export const yesterdayAt = pgettext("day at time", "Yesterday at %(time)s")
 
+export const momentAgoInSentence = pgettext("time ago", "a moment ago")
+export const timeInSentence = pgettext("time ago", "at %(time)s")
+export const soonAtInSentence = pgettext("day at time", "at %(time)s")
+export const dayAtInSentence = pgettext("day at time", "%(day)s at %(time)s")
+export const tomorrowAtInSentence = pgettext(
+  "day at time",
+  "tomorrow at %(time)s"
+)
+export const yesterdayAtInSentence = pgettext(
+  "day at time",
+  "yesterday at %(time)s"
+)
+
+export const momentAgoShort = pgettext("time ago", "now")
 export const minutesShort = pgettext("short minutes", "%(time)sm")
 export const hoursShort = pgettext("short hours", "%(time)sh")
 export const daysShort = pgettext("short days", "%(time)sd")
@@ -88,6 +101,54 @@ export function dateRelative(date) {
 
   if (isTomorrow(date)) {
     return tomorrowAt.replace("%(time)s", shortTime.format(date))
+  }
+
+  if (diff < 0 && absDiff < 3600 * 24 * 6) {
+    const day = weekday.format(date)
+    return formatDayAtTime(day, date)
+  }
+
+  if (now.getFullYear() == date.getFullYear()) {
+    return thisYearDate.format(date)
+  }
+
+  return otherYearDate.format(date)
+}
+
+export function dateRelativeInSentence(date) {
+  const now = new Date()
+  const diff = Math.round((date - now) / 1000)
+  const absDiff = Math.abs(diff)
+  const sign = diff < 1 ? -1 : 1
+
+  if (absDiff < 90) {
+    return momentAgoInSentence
+  }
+
+  if (absDiff < 60 * 47) {
+    const minutes = Math.round(absDiff / 60) * sign
+    return relativeNumeric.format(minutes, "minute")
+  }
+
+  if (absDiff < 3600 * 3) {
+    const hours = Math.round(absDiff / 3600) * sign
+    return relativeNumeric.format(hours, "hour")
+  }
+
+  if (isSameDay(now, date)) {
+    if (diff > 0) {
+      return soonAtInSentence.replace("%(time)s", shortTime.format(date))
+    }
+
+    return timeInSentence.replace("%(time)s", shortTime.format(date))
+  }
+
+  if (isYesterday(date)) {
+    return yesterdayAtInSentence.replace("%(time)s", shortTime.format(date))
+  }
+
+  if (isTomorrow(date)) {
+    return tomorrowAtInSentence.replace("%(time)s", shortTime.format(date))
   }
 
   if (diff < 0 && absDiff < 3600 * 24 * 6) {

@@ -8,7 +8,13 @@ from ..categories.enums import CategoryTree
 from ..categories.models import Category
 from ..users.enums import DefaultGroupId
 from ..users.models import Group
-from .enums import CanUploadAttachments, CategoryPermission
+from .enums import (
+    CanHideOwnPostEdits,
+    CanSeePostEdits,
+    CanSeePostLikes,
+    CanUploadAttachments,
+    CategoryPermission,
+)
 from .hooks import (
     build_user_category_permissions_hook,
     build_user_permissions_hook,
@@ -76,6 +82,10 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "own_threads_edit_time_limit": 0,
         "can_edit_own_posts": False,
         "own_posts_edit_time_limit": 0,
+        "can_see_others_post_edits": CanSeePostEdits.NEVER.value,
+        "can_hide_own_post_edits": CanHideOwnPostEdits.NEVER.value,
+        "own_post_edits_hide_time_limit": 0,
+        "own_delete_post_edits_time_limit": 0,
         "exempt_from_flood_control": False,
         "can_upload_attachments": CanUploadAttachments.NEVER.value,
         "attachment_storage_limit": 0,
@@ -89,8 +99,8 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "own_polls_close_time_limit": 0,
         "can_vote_in_polls": False,
         "can_like_posts": False,
-        "can_see_own_posts_likes": 0,
-        "can_see_others_posts_likes": 0,
+        "can_see_own_post_likes": CanSeePostLikes.NEVER.value,
+        "can_see_others_post_likes": CanSeePostLikes.NEVER.value,
         "can_change_username": False,
         "username_changes_limit": 0,
         "username_changes_expire": 0,
@@ -134,6 +144,26 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
             permissions,
             "own_posts_edit_time_limit",
             group.own_posts_edit_time_limit,
+        )
+        if_greater(
+            permissions,
+            "can_see_others_post_edits",
+            group.can_see_others_post_edits,
+        )
+        if_greater(
+            permissions,
+            "can_hide_own_post_edits",
+            group.can_hide_own_post_edits,
+        )
+        if_zero_or_greater(
+            permissions,
+            "own_post_edits_hide_time_limit",
+            group.own_post_edits_hide_time_limit,
+        )
+        if_zero_or_greater(
+            permissions,
+            "own_delete_post_edits_time_limit",
+            group.own_delete_post_edits_time_limit,
         )
         if_true(
             permissions,
@@ -197,13 +227,13 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         )
         if_greater(
             permissions,
-            "can_see_own_posts_likes",
-            group.can_see_own_posts_likes,
+            "can_see_own_post_likes",
+            group.can_see_own_post_likes,
         )
         if_greater(
             permissions,
-            "can_see_others_posts_likes",
-            group.can_see_others_posts_likes,
+            "can_see_others_post_likes",
+            group.can_see_others_post_likes,
         )
         if_true(
             permissions,

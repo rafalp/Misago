@@ -46,14 +46,14 @@ The post to synchronize.
 
 #### `queryset: QuerySet | None`
 
-The queryset used to fetch a post’s likes. Defaults to `Like.objects` if `None`.
+The queryset used to fetch a post's likes. Defaults to `Like.objects` if `None`.
 
 
 #### `commit: bool`
 
 Whether the updated post instance should be saved to the database.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`
@@ -85,14 +85,14 @@ The post to synchronize.
 
 #### `queryset: QuerySet | None`
 
-The queryset used to fetch a post’s likes. Defaults to `Like.objects` if `None`.
+The queryset used to fetch a post's likes. Defaults to `Like.objects` if `None`.
 
 
 #### `commit: bool`
 
 Whether the updated post instance should be saved to the database.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`

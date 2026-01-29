@@ -1,0 +1,29 @@
+{% load i18n misago_capture misago_formats %}
+
+<div class="post-edit-hidden-alert">
+  <div class="post-edit-hidden-alert-icon">
+    {% include "tabler/eye-off.svg" %}
+  </div>
+  <div class="post-edit-hidden-alert-message">
+    {% capture trimmed as hidden_by %}
+      {% if post_edit.hidden_by_id %}
+        <a
+          href="{% url 'misago:user' pk=post_edit.hidden_by_id slug=post_edit.hidden_by_slug %}"
+          class="post-edit-hidden-alert-user"
+        >{{ post_edit.hidden_by_name }}</a>
+      {% else %}
+        <span class="post-edit-hidden-alert-user">{{ post_edit.hidden_by_name }}</span>
+      {% endif %}
+    {% endcapture %}
+    {% capture trimmed as hidden_at_html %}
+      <span class="post-edit-hidden-alert-timestamp"
+        title="{{ post_edit.hidden_at|date:'DATETIME_FORMAT' }}"
+        mg-timestamp="{{ post_edit.hidden_at.isoformat }}"
+        mg-timestamp-format="sentence"
+      >{{ post_edit.hidden_at|date_relative_in_sentence }}</span>
+    {% endcapture %}
+    {% blocktrans trimmed with user=hidden_by|safe hidden_at=hidden_at_html|safe context "post edit hidden message" %}
+      Edit contents hidden by {{ user }}, {{ hidden_at }}.
+    {% endblocktrans %}
+  </div>
+</div>

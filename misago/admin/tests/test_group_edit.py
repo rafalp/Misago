@@ -21,6 +21,14 @@ def get_form_data(group: Group) -> dict:
         "group-own_threads_edit_time_limit": str(group.own_threads_edit_time_limit),
         "group-can_edit_own_posts": "1" if group.can_edit_own_posts else "",
         "group-own_posts_edit_time_limit": str(group.own_posts_edit_time_limit),
+        "group-can_see_others_post_edits": str(group.can_see_others_post_edits),
+        "group-can_hide_own_post_edits": str(group.can_hide_own_post_edits),
+        "group-own_post_edits_hide_time_limit": str(
+            group.own_post_edits_hide_time_limit
+        ),
+        "group-own_delete_post_edits_time_limit": str(
+            group.own_delete_post_edits_time_limit
+        ),
         "group-exempt_from_flood_control": (
             "1" if group.exempt_from_flood_control else ""
         ),
@@ -45,8 +53,8 @@ def get_form_data(group: Group) -> dict:
         "group-own_polls_close_time_limit": str(group.own_polls_close_time_limit),
         "group-can_vote_in_polls": "1" if group.can_vote_in_polls else "",
         "group-can_like_posts": "1" if group.can_like_posts else "",
-        "group-can_see_own_posts_likes": str(group.can_see_own_posts_likes),
-        "group-can_see_others_posts_likes": str(group.can_see_others_posts_likes),
+        "group-can_see_own_post_likes": str(group.can_see_own_post_likes),
+        "group-can_see_others_post_likes": str(group.can_see_others_post_likes),
         "group-can_change_username": "1" if group.can_change_username else "",
         "group-username_changes_limit": str(group.username_changes_limit),
         "group-username_changes_expire": str(group.username_changes_expire),

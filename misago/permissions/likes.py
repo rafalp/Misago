@@ -100,8 +100,8 @@ def _can_see_post_likes_count_action(
 ) -> bool:
     is_user_post = permissions.user.id and permissions.user.id == post.poster_id
 
-    return (is_user_post and permissions.can_see_own_posts_likes) or (
-        not is_user_post and permissions.can_see_others_posts_likes
+    return (is_user_post and permissions.can_see_own_post_likes) or (
+        not is_user_post and permissions.can_see_others_post_likes
     )
 
 
@@ -125,10 +125,10 @@ def _check_see_post_likes_permission_action(
     is_user_post = permissions.user.id and permissions.user.id == post.poster_id
 
     if (
-        is_user_post and permissions.can_see_own_posts_likes != CanSeePostLikes.USERS
+        is_user_post and permissions.can_see_own_post_likes != CanSeePostLikes.USERS
     ) or (
         not is_user_post
-        and permissions.can_see_others_posts_likes != CanSeePostLikes.USERS
+        and permissions.can_see_others_post_likes != CanSeePostLikes.USERS
     ):
         raise PermissionDenied(
             pgettext(

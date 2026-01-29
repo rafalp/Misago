@@ -1,67 +1,115 @@
 # Translation strings contextual markers style guide
 
-Contextual markers clarify how a translation string is used. They help translators and prevent collisions when identical English strings (e.g., "Reply") require different translations in other languages.
+Contextual markers clarify how a translation string is used. They help translators and prevent collisions when identical English strings (for example, “Reply”) require different translations in other languages.
 
-Every translation string in Misago must include a contextual marker. The only exception is when using a translation string that already exists in Django itself, such as the 'This value is required.' validation message.
+Every translation string in Misago should include a contextual marker, except for translation strings that already exist in Django itself, such as the “This value is required.” validation message.
 
 
-## Writing contextual markers
+## Views
 
-Misago uses the "feature" (or "view"/"form") followed by the "usage" convention for its contextual markers:
+You can use the view name as a source of context for translation messages:
 
 ```python
 class PrivateThreadMembersAddView:
+    def get_context_data(...):
+        return {
+            "members_header": pgettext(
+                "private thread add members header", "Add members"
+            ),
+        }
+
     def post(...):
-        # private thread members add (feature) + validation error (usage)
-        if not permission:
-            raise ValidationError(
-                pgettext(
-                    "private thread members add permission error",
-                    "You don't have permission to do this!"
-                )
-            )
-
-        if condition:
-            raise ValidationError(
-                pgettext(
-                    "private thread members add validation error",
-                    "You can't add more members!"
-                )
-            )
-
         messages.success(
             request,
-            # private thread members add (feature) + success message (usage)
-            pgettext("private thread members add success message", "Members added")
+            pgettext("private thread members added", "Members added")
         )
+```
 
 
-# You don't have to be too specific in field labels and help strings
+## Forms and validators
+
+For field labels and help texts, you can use the form name as the contextual marker:
+
+```python
 class UserRegisterForm:
     username = forms.CharField(
         label=pgettext_lazy("user register form", "Username"),
         help_text=pgettext_lazy(
-            "user register form help text", "New user's name. Must be unique."
+            "user register form", "New user's name. Must be unique."
         ),
     )
 ```
 
-This convention is also followed in templates:
+You can use the same context for validation errors raised in forms, but for validators use a "noun validator" context instead:
+
+```python
+class UserRegisterForm:
+    ...
+
+    def clean_username(self):
+        data = self.cleaned_data["username"]
+        if not data:
+            raise ValidationError(
+                message=pgettext(
+                    "user register form", "This user name is invalid."
+                )
+                code="invalid",
+            )
+
+
+def username_validator(data):
+    if not data:
+        raise ValidationError(
+            message=pgettext(
+                "username validator", "This user name is invalid."
+            ),
+            code="invalid",
+        )
+```
+
+Permission checks use "nouns permission error" contexts for permission errors:
+
+```python
+def check_some_post_permission(user_permissions, post):
+    if not user_permissions.is_moderator:
+        raise PermissionDenied(
+            pgettext(
+                "posts permission error", "You can't do this."
+            ),
+        )
+```
+
+
+## Templates
+
+There is no need to tie context markers in templates to views. Instead, context descriptions should match components or specific use cases.
+
+`title` and `h1` elements likely are unique to the page:
 
 ```html
 <title>
   {% translate "Make owner" context "private thread owner change page title" %}
 </title>
-<caption>
-  {% translate "Make owner" context "private thread owner change confirm title" %}
-</caption>
-<p>
-  {% translate "Change thread owner?" context "private thread owner change confirm prompt" %}
-</p>
+<div class="page-header">
+  <h1>{% translate "Make owner" context "private thread owner change page header" %}</h1>
+</div>
+```
+
+For components, context can come from the component itself:
+
+```html
+{% translate "Post edit" context "post edit card header" %}
+
+{% translate "Next page" context "post edits paginator" %}
+```
+
+For button labels, it’s good to emphasize their purpose in the context:
+
+```html
 <button>
-  {% translate "Make owner" context "private thread owner change confirm button" %}
+  {% translate "Make owner" context "change owner submit btn" %}
 </button>
 <button>
-  {% translate "Cancel" context "private thread owner change cancel button" %}
+  {% translate "Cancel" context "change owner cancel btn" %}
 </button>
 ```

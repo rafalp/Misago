@@ -182,7 +182,7 @@ def mark_thread_read(user: "User", thread: Thread, read_time: datetime):
 
 def mark_category_read(user: "User", category: Category, *, force_update: bool = False):
     if not category.last_posted_at:
-        raise ValueError("'Category.last_posted_at' can’t be 'None'")
+        raise ValueError("'Category.last_posted_at' can't be 'None'")
 
     create_row = True
 

@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 class RemovePostLikeHookAction(Protocol):
     """
     Misago function for removing a post `Like` from a user and updating the
-    post’s `likes` and `last_likes` attributes.
+    post's `likes` and `last_likes` attributes.
 
     # Arguments
 
@@ -29,7 +29,7 @@ class RemovePostLikeHookAction(Protocol):
 
     Whether the updated post instance should be saved to the database.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## `request: HttpRequest | None`
 
@@ -74,7 +74,7 @@ class RemovePostLikeHookFilter(Protocol):
 
     Whether the updated post instance should be saved to the database.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## `request: HttpRequest | None`
 
@@ -110,7 +110,7 @@ class RemovePostLikeHook(
 
     # Example
 
-    Record the historical number of the post’s likes:
+    Record the historical number of the post's likes:
 
     ```python
     from django.http import HttpRequest

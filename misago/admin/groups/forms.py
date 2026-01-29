@@ -8,7 +8,12 @@ from ...parser.html import render_tokens_to_html
 from ...parser.metadata import get_tokens_metadata
 from ...parser.plaintext import render_tokens_to_plaintext
 from ...parser.tokenizer import tokenize
-from ...permissions.enums import CanSeePostLikes, CanUploadAttachments
+from ...permissions.enums import (
+    CanHideOwnPostEdits,
+    CanSeePostEdits,
+    CanSeePostLikes,
+    CanUploadAttachments,
+)
 from ...users.models import Group, GroupDescription
 from ..forms import YesNoSwitch
 
@@ -123,7 +128,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the number of minutes after a user starts a thread during which they can still edit it. Enter zero to remove this time limit.",
+            "Enter the number of minutes after a user starts a thread during which they can still edit it. Enter 0 to remove this time limit.",
         ),
         min_value=0,
     )
@@ -137,7 +142,42 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the number of minutes after a user posts a message during which they can still edit it. Enter zero to remove this time limit.",
+            "Enter the number of minutes after a user posts a message during which they can still edit it. Enter 0 to remove this time limit.",
+        ),
+        min_value=0,
+    )
+
+    can_see_others_post_edits = forms.TypedChoiceField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Can see other users post edits"
+        ),
+        choices=CanSeePostEdits.get_choices(),
+        widget=forms.RadioSelect(),
+        coerce=int,
+    )
+    can_hide_own_post_edits = forms.TypedChoiceField(
+        label=pgettext_lazy("admin group permissions form", "Can hide own post edits"),
+        choices=CanHideOwnPostEdits.get_choices(),
+        widget=forms.RadioSelect(),
+        coerce=int,
+    )
+    own_post_edits_hide_time_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Time limit for hiding own post edits"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of minutes after a user edits a post during which they can still hide the edit record. Enter 0 to remove this time limit.",
+        ),
+        min_value=0,
+    )
+    own_delete_post_edits_time_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form", "Time limit for deleting own post edits"
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of minutes after a user edits a post during which they can still delete the edit record. Enter 0 to remove this time limit.",
         ),
         min_value=0,
     )
@@ -181,7 +221,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Maximum total storage space, in megabytes, that each member of this group can to use for their attachments. Enter zero to remove this limit.",
+            "Maximum total storage space, in megabytes, that each member of this group can to use for their attachments. Enter 0 to remove this limit.",
         ),
         min_value=0,
     )
@@ -191,7 +231,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Maximum total storage space, in megabytes, for member's attachments that have been uploaded but are not associated with any posts. Enter zero to remove this limit.",
+            "Maximum total storage space, in megabytes, for member's attachments that have been uploaded but are not associated with any posts. Enter 0 to remove this limit.",
         ),
         min_value=0,
     )
@@ -201,7 +241,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Maximum file size of an attachment in kilobytes. Enter zero to remove this limit. Note: Server and Django request body size limits will still apply.",
+            "Maximum file size of an attachment in kilobytes. Enter 0 to remove this limit. Note: Server and Django request body size limits will still apply.",
         ),
         min_value=0,
     )
@@ -227,7 +267,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the number of minutes after a user starts a poll during which they can still edit it. Enter zero to remove this time limit.",
+            "Enter the number of minutes after a user starts a poll during which they can still edit it. Enter 0 to remove this time limit.",
         ),
         min_value=0,
     )
@@ -240,7 +280,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the number of minutes after a user starts a poll during which they can still edit it. Enter zero to remove this time limit.",
+            "Enter the number of minutes after a user starts a poll during which they can still edit it. Enter 0 to remove this time limit.",
         ),
         min_value=0,
     )
@@ -254,15 +294,15 @@ class EditGroupForm(forms.ModelForm):
     can_like_posts = YesNoSwitch(
         label=pgettext_lazy("admin group permissions form", "Can like posts"),
     )
-    can_see_own_posts_likes = forms.TypedChoiceField(
+    can_see_own_post_likes = forms.TypedChoiceField(
         label=pgettext_lazy("admin group permissions form", "Can see own posts likes"),
         choices=CanSeePostLikes.get_choices(),
         widget=forms.RadioSelect(),
         coerce=int,
     )
-    can_see_others_posts_likes = forms.TypedChoiceField(
+    can_see_others_post_likes = forms.TypedChoiceField(
         label=pgettext_lazy(
-            "admin group permissions form", "Can see other users posts likes"
+            "admin group permissions form", "Can see other users post likes"
         ),
         choices=CanSeePostLikes.get_choices(),
         widget=forms.RadioSelect(),
@@ -276,7 +316,7 @@ class EditGroupForm(forms.ModelForm):
         label=pgettext_lazy("admin group permissions form", "Limit username changes"),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter zero to don't limit username changes.",
+            "Enter 0 to don't limit username changes.",
         ),
         min_value=0,
     )
@@ -286,7 +326,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the number of hours since the change after which it no longer counts towards the limit, or enter zero for old username changes to always count.",
+            "Enter the number of hours since the change after which it no longer counts towards the limit, or enter 0 for old username changes to always count.",
         ),
         min_value=0,
     )
@@ -296,7 +336,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enter the minimum time between changes in hours, or enter zero to not limit the time between changes.",
+            "Enter the minimum time between changes in hours, or enter 0 to not limit the time between changes.",
         ),
         min_value=0,
     )
@@ -322,6 +362,10 @@ class EditGroupForm(forms.ModelForm):
             "own_threads_edit_time_limit",
             "can_edit_own_posts",
             "own_posts_edit_time_limit",
+            "can_see_others_post_edits",
+            "can_hide_own_post_edits",
+            "own_post_edits_hide_time_limit",
+            "own_delete_post_edits_time_limit",
             "exempt_from_flood_control",
             "can_use_private_threads",
             "can_start_private_threads",
@@ -338,8 +382,8 @@ class EditGroupForm(forms.ModelForm):
             "own_polls_close_time_limit",
             "can_vote_in_polls",
             "can_like_posts",
-            "can_see_own_posts_likes",
-            "can_see_others_posts_likes",
+            "can_see_own_post_likes",
+            "can_see_others_post_likes",
             "can_change_username",
             "username_changes_limit",
             "username_changes_expire",

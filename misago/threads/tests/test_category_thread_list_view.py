@@ -333,7 +333,9 @@ def test_category_thread_list_view_renders_dropdown_subcategories_component(
     assert_contains(response, "dropdown-category")
 
 
-def test_category_thread_list_view_renders_empty_to_guests(client, default_category):
+def test_category_thread_list_view_renders_empty_to_anonymous_users(
+    client, default_category
+):
     response = client.get(
         reverse(
             "misago:category-thread-list",
@@ -389,7 +391,7 @@ def test_category_thread_list_view_renders_empty_to_global_moderators(
     assert_contains(response, "No threads have been started in this category yet")
 
 
-def test_category_thread_list_view_renders_empty_to_guests_in_htmx(
+def test_category_thread_list_view_renders_empty_to_anonymous_users_in_htmx(
     client, default_category
 ):
     response = client.get(
@@ -447,7 +449,7 @@ def test_category_thread_list_view_renders_empty_to_global_moderators_in_htmx(
     assert_contains(response, "No threads have been started in this category yet")
 
 
-def test_category_thread_list_view_for_child_category_renders_empty_to_guests(
+def test_category_thread_list_view_for_child_category_renders_empty_to_anonymous_users(
     client, child_category
 ):
     response = client.get(
@@ -505,7 +507,7 @@ def test_category_thread_list_view_for_child_category_renders_empty_to_global_mo
     assert_contains(response, "No threads have been started in this category yet")
 
 
-def test_category_thread_list_view_for_child_category_renders_empty_to_guests_in_htmx(
+def test_category_thread_list_view_for_child_category_renders_empty_to_anonymous_users_in_htmx(
     client, child_category
 ):
     response = client.get(

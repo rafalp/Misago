@@ -167,13 +167,13 @@
 }
 
 .posts-feed-item-attachments {
-  margin-top: @line-height-computed;
+  margin: @line-height-computed 0;
 }
 
 .posts-feed-item-attachments-header {
   margin: 0 0 floor(@line-height-computed / 2) 0;
 
-  color: @gray-dark;
+  color: @gray-700;
   font-size: @font-size-base;
   font-weight: bold;
 }
@@ -279,6 +279,23 @@
   font-size: @font-size-small;
 }
 
+.posts-feed-item-edits {
+  margin: ceil(@line-height-computed / 2) 0;
+
+  color: @gray-500;
+
+  a:link,
+  a:visited {
+    color: @gray-500;
+  }
+
+  a:hover,
+  a:active {
+    color: @gray-700;
+    text-decoration: underline;
+  }
+}
+
 .posts-feed-item-post-body-footer {
   display: flex;
   align-items: center;
@@ -293,23 +310,24 @@
 
   height: 34px;
 
-  color: @gray-500;
+  color: @gray-700;
   font-weight: 600;
 
   &,
   &:active,
   &.active,
-  &[disabled],
-  fieldset[disabled] & {
+  &[disabled] {
     background-color: transparent;
     .box-shadow(none);
   }
+
   &:hover,
   &:focus {
     color: @gray-700;
     text-decoration: none;
     background-color: @gray-100;
   }
+
   &:active {
     border-color: transparent;
     color: @gray-900;
@@ -347,7 +365,7 @@
   }
 }
 
-.posts-feed-item-post-body-likes {
+.posts-feed-item-likes {
   padding-top: floor(@line-height-computed / 2);
 
   color: @gray-500;
@@ -364,32 +382,32 @@
   }
 }
 
-.posts-feed-item-post-body-likes-message-short,
-.posts-feed-item-post-body-likes-message-medium {
+.posts-feed-item-likes-message-short,
+.posts-feed-item-likes-message-medium {
   font-size: @font-size-small;
 }
 
-.posts-feed-item-post-body-likes-message-medium,
-.posts-feed-item-post-body-likes-message-long {
+.posts-feed-item-likes-message-medium,
+.posts-feed-item-likes-message-long {
   display: none;
 }
 
 @media screen and (min-width: 500px) {
-  .posts-feed-item-post-body-likes-message-short {
+  .posts-feed-item-likes-message-short {
     display: none;
   }
 
-  .posts-feed-item-post-body-likes-message-medium {
+  .posts-feed-item-likes-message-medium {
     display: inline;
   }
 }
 
 @media screen and (min-width: 900px) {
-  .posts-feed-item-post-body-likes-message-medium {
+  .posts-feed-item-likes-message-medium {
     display: none;
   }
 
-  .posts-feed-item-post-body-likes-message-long {
+  .posts-feed-item-likes-message-long {
     display: inline;
   }
 }

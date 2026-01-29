@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 class CheckSeePostLikesPermissionHookAction(Protocol):
     """
     Misago function used to check if a user has permission to see post likes.
-    Raises Django’s `PermissionDenied` if they can't.
+    Raises Django's `PermissionDenied` if they don't.
 
     # Arguments
 
@@ -89,7 +89,7 @@ class CheckSeePostLikesPermissionHook(
 ):
     """
     This hook wraps a standard Misago function used to check if a user has permission
-    to see post likes. Raises Django’s `PermissionDenied` if they can't.
+    to see post likes. Raises Django's `PermissionDenied` if they don't.
 
     # Example
 
@@ -118,7 +118,7 @@ class CheckSeePostLikesPermissionHook(
         if post.plugin_data.get("hide_likes"):
             raise PermissionDenied(
                 pgettext(
-                    "post permission error",
+                    "likes permission error",
                     "You can't see this post's likes."
                 )
             )

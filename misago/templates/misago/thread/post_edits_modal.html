@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<div
+  id="post-edits-modal"
+  class="modal fade"
+  aria-hidden="false"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="{% translate 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" mg-modal-title></h4>
+      </div>
+      <div id="misago-htmx-post-edits-modal"></div>
+    </div>
+  </div>
+</div>

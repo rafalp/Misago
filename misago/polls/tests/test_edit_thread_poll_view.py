@@ -128,7 +128,9 @@ def test_edit_thread_poll_view_shows_error_if_user_has_no_thread_permission_in_h
     assert response.status_code == 404
 
 
-def test_edit_thread_poll_view_shows_error_for_guests(client, user_thread, user_poll):
+def test_edit_thread_poll_view_shows_error_to_anonymous_users(
+    client, user_thread, user_poll
+):
     response = client.get(
         reverse(
             "misago:thread-poll-edit",
@@ -140,7 +142,7 @@ def test_edit_thread_poll_view_shows_error_for_guests(client, user_thread, user_
     )
 
 
-def test_edit_thread_poll_view_shows_error_for_guests_in_htmx(
+def test_edit_thread_poll_view_shows_error_to_anonymous_users_in_htmx(
     client, user_thread, user_poll
 ):
     response = client.get(

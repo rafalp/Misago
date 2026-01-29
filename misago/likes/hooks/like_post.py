@@ -30,7 +30,7 @@ class LikePostHookAction(Protocol):
     Whether the new `Like` instance and the updated post instance should be
     saved to the database.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## `request: HttpRequest | None`
 
@@ -76,7 +76,7 @@ class LikePostHookFilter(Protocol):
     Whether the new `Like` instance and the updated post instance should be
     saved to the database.
 
-    Defaults to True.
+    Defaults to `True`.
 
     ## `request: HttpRequest | None`
 
@@ -106,7 +106,7 @@ class LikePostHook(
     """
     This hook allows plugins to replace or extend the logic used to like a post.
 
-    It creates a new `Like` instance and updates the post’s `likes` count and
+    It creates a new `Like` instance and updates the post's `likes` count and
     `last_likes` JSON field.
 
     # Example

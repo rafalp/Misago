@@ -2,11 +2,11 @@
 {% if is_request_htmx %}
 <title>{% blocktranslate trimmed with post=post_number context "thread post likes page title " %}
     Post #{{ post }} likes
-{% endblocktranslate %}{% if page.number > 1 %} | {% blocktranslate with page=page.number context "thread post likes page title" %}Page {{ page }}{% endblocktranslate %}{% endif %} | {{ thread }} | {{ block.super }}</title>
+{% endblocktranslate %}{% if page.number > 1 %} | {% blocktranslate with page=page.number context "thread post likes page title" %}Page {{ page }}{% endblocktranslate %}{% endif %} | {{ thread }} | {{ settings.forum_name }}</title>
 {% endif %}
 
 <div id="misago-htmx-root">
-  <div id="misago-page-scroll-target"></div>
+  <div id="misago-page-scroll-target" class="scroll-target"></div>
   {% if items %}
     <div class="post-likes-card">
       <div class="post-likes-card-header">
@@ -51,7 +51,7 @@
       </ul>
     </div>
     {% if paginator.num_pages > 1 %}
-      {% include "misago/post_likes/paginator.html" %}
+      {% include "misago/post_likes/paginator.html" with scroll=true %}
     {% endif %}
   {% else %}
     <div class="post-likes-blankslate">

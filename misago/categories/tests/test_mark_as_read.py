@@ -6,7 +6,7 @@ from ...test import assert_contains
 
 
 @override_dynamic_settings(index_view="threads")
-def test_categories_view_mark_as_read_displays_categories_for_guests(
+def test_categories_view_mark_as_read_displays_categories_to_anonymous_users(
     default_category, client
 ):
     default_category.description = "FIRST-CATEGORY-DESCRIPTION"

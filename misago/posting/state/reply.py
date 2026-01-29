@@ -1,6 +1,7 @@
 from django.db import models, transaction
 from django.http import HttpRequest
 
+from ...edits.create import create_post_edit
 from ...parser.parse import ParsingResult, parse
 from ...threads.models import Post, Thread
 from ..hooks import (
@@ -15,6 +16,7 @@ from .state import State
 class ReplyState(State):
     # True if new reply was merged with the recent post
     is_merged: bool
+    post_original: str
 
     def __init__(self, request: HttpRequest, thread: Thread, post: Post | None = None):
         super().__init__(request)
@@ -23,6 +25,7 @@ class ReplyState(State):
         self.thread = thread
         self.post = post or self.initialize_post()
         self.is_merged = bool(self.post.id)
+        self.post_original = self.post.original
 
         self.store_object_state(self.category)
         self.store_object_state(self.thread)
@@ -53,18 +56,36 @@ class ReplyState(State):
     def save_post(self):
         self.post.set_search_document(self.thread, self.parsing_result.text)
 
+        post_edits = self.post.edits
+
         if self.post.id:
             self.post.updated_at = self.timestamp
             self.post.edits = models.F("edits") + 1
             self.post.last_editor = self.user
             self.post.last_editor_name = self.user.username
             self.post.last_editor_slug = self.user.slug
+            self.post.last_edit_reason = None
+            post_edits += 1
+
+            create_post_edit(
+                post=self.post,
+                user=self.user,
+                old_content=self.post_original,
+                new_content=self.post.original,
+                attachments=self.attachments,
+                edited_at=self.timestamp,
+                request=self.request,
+            )
         else:
             # Save new post so it exists before search vector setup
             self.post.save()
 
         self.post.set_search_vector()
         self.post.save()
+
+        # Replace edits attr with integer
+        # Prevents HTMX merge reply from breaking
+        self.post.edits = post_edits
 
         self.schedule_post_content_upgrade()
 

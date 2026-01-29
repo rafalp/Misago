@@ -66,7 +66,7 @@ def test_thread_list_view_renders_dropdown_subcategories_component(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_renders_empty_to_guests(db, client):
+def test_thread_list_view_renders_empty_to_anonymous_users(db, client):
     response = client.get(reverse("misago:thread-list"))
     assert_contains(response, "No threads have been started yet")
 
@@ -98,7 +98,7 @@ def test_thread_list_view_renders_empty_to_global_moderators(moderator_client):
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_renders_empty_to_guests_in_htmx(db, client):
+def test_thread_list_view_renders_empty_to_anonymous_users_in_htmx(db, client):
     response = client.get(reverse("misago:thread-list"), headers={"hx-request": "true"})
     assert_contains(response, "No threads have been started yet")
 
@@ -136,7 +136,7 @@ def test_thread_list_view_renders_empty_to_global_moderators_in_htmx(moderator_c
 
 
 @override_dynamic_settings(index_view="threads")
-def test_thread_list_view_on_site_index_renders_empty_to_guests(db, client):
+def test_thread_list_view_on_site_index_renders_empty_to_anonymous_users(db, client):
     response = client.get(reverse("misago:index"))
     assert_contains(response, "No threads have been started yet")
 
@@ -170,7 +170,9 @@ def test_thread_list_view_on_site_index_renders_empty_to_global_moderators(
 
 
 @override_dynamic_settings(index_view="threads")
-def test_thread_list_view_on_site_index_renders_empty_to_guests_in_htmx(db, client):
+def test_thread_list_view_on_site_index_renders_empty_to_anonymous_users_in_htmx(
+    db, client
+):
     response = client.get(reverse("misago:index"), headers={"hx-request": "true"})
     assert_contains(response, "No threads have been started yet")
 

@@ -10,8 +10,8 @@ if TYPE_CHECKING:
 class CheckAccessCategoryPermissionHookAction(Protocol):
     """
     Misago function used to check if a user has permission to access a category
-    of unknown type (threads, private threads, or plugin-defined).
-    Raises Django’s `Http404` or `PermissionDenied` if they can't.
+    of any type (threads, private threads, or plugin-defined).
+    Raises Django's `Http404` or `PermissionDenied` if they don't.
 
     # Arguments
 
@@ -69,8 +69,8 @@ class CheckAccessCategoryPermissionHook(
 ):
     """
     This hook wraps a standard Misago function used to check if a user has permission
-    to access a category of unknown type (threads, private threads, or plugin-defined).
-    Raises Django’s `Http404` or `PermissionDenied` if they can't.
+    to access a category of any type (threads, private threads, or plugin-defined).
+    Raises Django's `Http404` or `PermissionDenied` if they don't.
 
     # Example
 

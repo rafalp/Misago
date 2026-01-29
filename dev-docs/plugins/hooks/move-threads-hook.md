@@ -53,7 +53,7 @@ Whether the threads' `category` field should be updated directly in the database
 
 When True, only the category column is saved. If other fields need updating, set this to False and handle updates manually.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`
@@ -94,7 +94,7 @@ Whether the threads' `category` field should be updated directly in the database
 
 When True, only the category column is saved. If other fields need updating, set this to False and handle updates manually.
 
-Defaults to True.
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None`

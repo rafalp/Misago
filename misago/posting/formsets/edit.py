@@ -6,7 +6,7 @@ from ...permissions.attachments import (
     can_upload_threads_attachments,
 )
 from ...threads.models import Post
-from ..forms import create_post_form, create_title_form
+from ..forms import create_edit_reason_form, create_post_form, create_title_form
 from ..hooks import (
     get_private_thread_edit_formset_hook,
     get_private_thread_post_edit_formset_hook,
@@ -46,6 +46,7 @@ def _get_thread_post_edit_formset_action(
             ),
         )
     )
+    formset.add_form(create_edit_reason_form(request))
     return formset
 
 
@@ -75,6 +76,7 @@ def _get_private_thread_post_edit_formset_action(
             can_upload_attachments=can_upload_attachments,
         )
     )
+    formset.add_form(create_edit_reason_form(request))
     return formset
 
 
@@ -105,6 +107,7 @@ def _get_thread_edit_formset_action(
             ),
         )
     )
+    formset.add_form(create_edit_reason_form(request))
     return formset
 
 
@@ -135,6 +138,7 @@ def _get_private_thread_edit_formset_action(
             can_upload_attachments=can_upload_attachments,
         )
     )
+    formset.add_form(create_edit_reason_form(request))
     return formset
 
 

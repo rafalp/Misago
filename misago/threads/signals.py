@@ -8,6 +8,7 @@ from django.utils.translation import pgettext
 from ..attachments.delete import delete_users_attachments
 from ..attachments.models import Attachment
 from ..categories.models import Category
+from ..edits.models import PostEdit
 from ..likes.models import Like
 from ..likes.synchronize import synchronize_post_likes
 from ..notifications.models import Notification, WatchedThread
@@ -23,7 +24,7 @@ from .anonymize import anonymize_post_last_likes
 from .models import (
     Attachment as LegacyAttachment,
     Post,
-    PostEdit,
+    PostEdit as LegacyPostEdit,
     PostLike,
     Thread,
 )
@@ -48,7 +49,7 @@ def merge_threads(sender, **kwargs):
     other_thread = kwargs["other_thread"]
 
     other_thread.post_set.update(category=sender.category, thread=sender)
-    PostEdit.objects.filter(thread=other_thread).update(
+    LegacyPostEdit.objects.filter(thread=other_thread).update(
         category=sender.category, thread=sender
     )
     PostLike.objects.filter(thread=other_thread).update(
@@ -80,6 +81,7 @@ def move_post_notifications(sender, **kwargs):
 def move_thread_content(sender, **kwargs):
     sender.post_set.update(category=sender.category)
     PostEdit.objects.filter(thread=sender).update(category=sender.category)
+    LegacyPostEdit.objects.filter(thread=sender).update(category=sender.category)
     PostLike.objects.filter(thread=sender).update(category=sender.category)
     sender.pollvote_set.update(category=sender.category)
     sender.notification_set.update(category=sender.category)
@@ -113,6 +115,8 @@ def delete_user_threads(sender, **kwargs):
     for post in liked_posts.iterator(chunk_size=50):
         synchronize_post_likes(post, Like.objects.exclude(user=sender))
 
+    PostEdit.objects.filter(user=sender).delete()
+    LegacyPostEdit.objects.filter(editor=sender).delete()
     Like.objects.filter(user=sender).delete()
 
     for thread in sender.thread_set.iterator(chunk_size=50):
@@ -178,9 +182,23 @@ def archive_user_posts(sender, archive=None, **kwargs):
 def archive_user_posts_edits(sender, archive=None, **kwargs):
     queryset = PostEdit.objects.filter(post__poster=sender)
     for post_edit in queryset.order_by("id").iterator(chunk_size=50):
+        item_name = post_edit.edited_at.strftime("%H%M%S-post-edit")
+        archive.add_text(item_name, post_edit.old_content, date=post_edit.edited_at)
+    queryset = PostEdit.objects.filter(user=sender).exclude(
+        id__in=queryset.values("id")
+    )
+    for post_edit in queryset.order_by("id").iterator(chunk_size=50):
+        item_name = post_edit.edited_at.strftime("%H%M%S-post-edit")
+        archive.add_text(item_name, post_edit.old_content, date=post_edit.edited_at)
+
+
+@receiver(archive_user_data)
+def archive_user_legacy_posts_edits(sender, archive=None, **kwargs):
+    queryset = LegacyPostEdit.objects.filter(post__poster=sender)
+    for post_edit in queryset.order_by("id").iterator(chunk_size=50):
         item_name = post_edit.edited_on.strftime("%H%M%S-post-edit")
         archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)
-    queryset = PostEdit.objects.filter(editor=sender).exclude(
+    queryset = LegacyPostEdit.objects.filter(editor=sender).exclude(
         id__in=queryset.values("id")
     )
     for post_edit in queryset.order_by("id").iterator(chunk_size=50):
@@ -269,12 +287,20 @@ def update_usernames(sender, **kwargs):
     ThreadUpdate.objects.context_object(sender).update(context=sender.username)
 
     Post.objects.filter(poster=sender).update(poster_name=sender.username)
-
     Post.objects.filter(last_editor=sender).update(
         last_editor_name=sender.username, last_editor_slug=sender.slug
     )
+    Post.objects.filter(hidden_by=sender).update(
+        hidden_by_name=sender.username, hidden_by_slug=sender.slug
+    )
 
-    PostEdit.objects.filter(editor=sender).update(
+    PostEdit.objects.filter(user=sender).update(
+        user_name=sender.username, user_slug=sender.slug
+    )
+    PostEdit.objects.filter(hidden_by=sender).update(
+        hidden_by_name=sender.username, hidden_by_slug=sender.slug
+    )
+    LegacyPostEdit.objects.filter(editor=sender).update(
         editor_name=sender.username, editor_slug=sender.slug
     )
 

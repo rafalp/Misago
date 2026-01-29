@@ -1,6 +1,6 @@
 # `check_see_post_likes_permission_hook`
 
-This hook wraps a standard Misago function used to check if a user has permission to see post likes. Raises Django’s `PermissionDenied` if they can't.
+This hook wraps a standard Misago function used to check if a user has permission to see post likes. Raises Django's `PermissionDenied` if they don't.
 
 
 ## Location
@@ -69,7 +69,7 @@ def check_see_post_likes_permission_action(
     ...
 ```
 
-Misago function used to check if a user has permission to see post likes. Raises Django’s `PermissionDenied` if they can't.
+Misago function used to check if a user has permission to see post likes. Raises Django's `PermissionDenied` if they don't.
 
 
 ### Arguments
@@ -120,7 +120,7 @@ def check_user_can_see_post_likes(
     if post.plugin_data.get("hide_likes"):
         raise PermissionDenied(
             pgettext(
-                "post permission error",
+                "likes permission error",
                 "You can't see this post's likes."
             )
         )

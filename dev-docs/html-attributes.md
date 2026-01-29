@@ -2,10 +2,27 @@
 
 Like [htmx](https://htmx.org/reference/), Misago includes a set of custom HTML attributes that template authors can use.
 
+- [`mg-confirm`](#mg-confirm)
 - [`mg-error`](#mg-error)
 - [`mg-if`](#mg-if)
 - [`mg-loader`](#mg-loader)
 - [`mg-text`](#mg-text)
+
+
+### `mg-confirm`
+
+A `form` element attribute that displays a confirmation prompt on submit:
+
+```html
+<form
+    post="..."
+    mg-confirm="Are you sure?"
+>
+    <button>Submit</button>
+</form>
+```
+
+Use this attribute instead of `hx-confirm` for form submissions that don't use HTMX.
 
 
 ### `mg-error`

@@ -28,7 +28,11 @@ class LoginView(View):
             return self.get_next_page_redirect(request, kwargs)
 
         if request.settings.enable_oauth2_client:
-            return delegated_login(request, message=kwargs.get("message"))
+            return delegated_login(
+                request,
+                message=kwargs.get("message"),
+                status=kwargs.get("status", 200),
+            )
 
         return super().dispatch(request, **kwargs)
 
@@ -79,7 +83,12 @@ class LoginView(View):
         if "next" not in kwargs:
             context["next_page_url"] = get_next_page_url(request)
 
-        return render(request, self.template_name, context)
+        return render(
+            request,
+            self.template_name,
+            context,
+            status=kwargs.get("status", 200),
+        )
 
     def is_view_disabled(self) -> bool:
         return is_misago_login_page_disabled()
@@ -88,8 +97,15 @@ class LoginView(View):
 login = LoginView.as_view()
 
 
-def delegated_login(request: HttpRequest, *, message: str | None = None):
-    return render(request, "misago/auth/delegated_page.html", {"form_header": message})
+def delegated_login(
+    request: HttpRequest, *, message: str | None = None, status: int = 200
+):
+    return render(
+        request,
+        "misago/auth/delegated_page.html",
+        {"form_header": message},
+        status=status,
+    )
 
 
 def is_misago_login_page_disabled() -> bool:

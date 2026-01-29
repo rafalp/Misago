@@ -121,28 +121,38 @@ If a view or component has both a regular and an HTMX version, you can different
 ```python
 class ThreadEditView(View):
     template_name = "thread_edit/index.html"
-    template_name_htmx = "thread_edit/partial.html"
-
-
-class ThreadMoveView(View):
-    template_name = "thread_move/index.html"
-    template_name_modal = "thread_move/modal.html"
+    partial_template_name = "thread_edit/partial.html"
+    modal_template_name = "thread_edit/modal.html"
 ```
 
 If a templates directory is shared by multiple features, you can use the suffix from the full template name:
 
 ```python
-class PrivateThreadMembersAdd(View):
+class PrivateThreadMembersAddView(View):
     template_name = "private_thread_members/add.html"
-    template_name_htmx = "private_thread_members/add_modal.html"
+    partial_template_name = "private_thread_members/add_partial.html"
+    modal_template_name = "private_thread_members/add_modal.html"
 ```
 
-If the full template includes the HTMX one, name the other template after the part of the page it represents:
+For templates that are not rendered directly, but instead are rendered from partial template, use shorter `_template` suffix instead:
 
 ```python
-class ThreadEditView(View):
-    template_name = "thread_edit/index.html"
-    template_name_htmx = "thread_edit/form.html"
+class ThreadDetailView(View):
+    template_name = "thread/index.html"
+    partial_template_name = "thread/partial.html"
+    
+    post_edits_modal_template = "thread/post_likes_modal.html"
+    post_likes_modal_template = "thread/post_likes_modal.html"
+
+    def get(self, request, *args, **kwargs):
+        return render(
+            request,
+            self.template_name,
+            {
+                "post_edits_modal_template": self.post_edits_modal_template,
+                "post_likes_modal_template": self.post_likes_modal_template,
+            }
+        )
 ```
 
 Sometimes there are many ways to organize templates. When this happens, use your best judgement.

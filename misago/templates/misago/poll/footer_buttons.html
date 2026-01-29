@@ -25,7 +25,7 @@
   </form>
 {% endif %}
 {% if allow_delete %}
-  <form action="{{ delete_url }}" method="POST" misago-confirm="{% translate 'Delete this poll?' context 'poll delete confirmation' %}">
+  <form action="{{ delete_url }}" method="POST" mg-confirm="{% translate 'Delete this poll?' context 'poll delete confirmation' %}">
     {% csrf_token %}
     <input type="hidden" name="next" value="{{ next_url }}">
     <button class="btn btn-link">

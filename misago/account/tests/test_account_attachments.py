@@ -7,9 +7,9 @@ from ...pagination.cursor import EmptyPageError
 from ...test import assert_contains, assert_not_contains
 
 
-def test_account_attachments_displays_login_page_for_guests(db, client):
+def test_account_attachments_displays_login_required_page_to_anonymous_user(db, client):
     response = client.get(reverse("misago:account-attachments"))
-    assert_contains(response, "Sign in to change your settings")
+    assert_contains(response, "Sign in to change your settings", status_code=401)
 
 
 def test_account_attachments_shows_storage_for_user_without_attachments(user_client):
@@ -265,7 +265,7 @@ def test_account_attachments_list_shows_blankslate_for_user_without_attachments(
 ):
     response = user_client.get(reverse("misago:account-attachments"))
     assert_contains(
-        response, "You haven’t uploaded any attachments, or they have been deleted."
+        response, "You haven't uploaded any attachments, or they have been deleted."
     )
 
 

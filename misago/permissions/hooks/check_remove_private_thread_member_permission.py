@@ -24,7 +24,7 @@ class CheckRemovePrivateThreadMemberPermissionHookAction(Protocol):
 
     ## `member_permissions: UserPermissionsProxy`
 
-    A proxy object with the member’s permissions.
+    A proxy object with the member's permissions.
     """
 
     def __call__(
@@ -56,7 +56,7 @@ class CheckRemovePrivateThreadMemberPermissionHookFilter(Protocol):
 
     ## `member_permissions: UserPermissionsProxy`
 
-    A proxy object with the member’s permissions.
+    A proxy object with the member's permissions.
     """
 
     def __call__(

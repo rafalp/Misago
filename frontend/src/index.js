@@ -31,8 +31,8 @@ import "./timestamps"
 
 const lightbox = new Lightbox()
 
-htmx.config.historyEnabled = true
 htmx.config.historyCacheSize = 0
+htmx.config.refreshOnHistoryMiss = true
 
 export class Misago {
   constructor() {
@@ -155,10 +155,10 @@ document.addEventListener("misago:afterUpdateMembers", () => {
   $("#add-members-modal").modal("hide")
 })
 
-// Custom misago-confirm attribute
+// Custom mg-confirm attribute
 document.addEventListener("submit", function (event) {
-  const element = event.target.closest("form[misago-confirm]")
-  if (!!element && !window.confirm(element.getAttribute("misago-confirm"))) {
+  const element = event.target.closest("form[mg-confirm]")
+  if (!!element && !window.confirm(element.getAttribute("mg-confirm"))) {
     event.preventDefault()
   }
 })

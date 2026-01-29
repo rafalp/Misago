@@ -1,3 +1,5 @@
+from unittest.mock import ANY
+
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
@@ -5,6 +7,7 @@ from django.urls import reverse
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
+from ...edits.models import PostEdit
 from ...permissions.enums import CanUploadAttachments
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
@@ -18,7 +21,7 @@ from ..forms import PostForm
 from ..formsets import Formset
 
 
-def test_private_thread_edit_view_displays_login_page_to_guests(
+def test_private_thread_edit_view_displays_login_required_page_to_anonymous_user(
     client, user_private_thread
 ):
     response = client.get(
@@ -30,7 +33,7 @@ def test_private_thread_edit_view_displays_login_page_to_guests(
             },
         )
     )
-    assert_contains(response, "Sign in to edit threads")
+    assert_contains(response, "Sign in to edit threads", status_code=401)
 
 
 def test_private_thread_edit_view_shows_error_403_to_users_without_private_threads_permission(
@@ -152,8 +155,10 @@ def test_private_thread_edit_view_displays_inline_edit_form_in_htmx(
 
 
 def test_private_thread_edit_view_updates_thread_title_and_post(
-    user_client, user_private_thread
+    user_client, user, user_private_thread
 ):
+    old_title = user_private_thread.title
+
     response = user_client.post(
         reverse(
             "misago:private-thread-edit",
@@ -181,11 +186,25 @@ def test_private_thread_edit_view_updates_thread_title_and_post(
 
     post = user_private_thread.first_post
     assert post.original == "Edited post"
+    assert post.updated_at
     assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason is None
+
+    post_edit = PostEdit.objects.get(post=post)
+    assert post_edit.old_title == old_title
+    assert post_edit.new_title == "Edited title"
+    assert post_edit.added_content == 1
+    assert post_edit.removed_content == 1
+    assert post_edit.attachments == []
+    assert post_edit.added_attachments == 0
+    assert post_edit.removed_attachments == 0
 
 
 def test_private_thread_edit_view_updates_thread_title_and_post_in_htmx(
-    user_client, user_private_thread
+    user_client, user, user_private_thread
 ):
     response = user_client.post(
         reverse(
@@ -215,11 +234,16 @@ def test_private_thread_edit_view_updates_thread_title_and_post_in_htmx(
 
     post = user_private_thread.first_post
     assert post.original == "Edited post"
+    assert post.updated_at
     assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason is None
 
 
 def test_private_thread_edit_view_updates_thread_title_and_post_inline_in_htmx(
-    user_client, user_private_thread
+    user_client, user, user_private_thread
 ):
     response = user_client.post(
         reverse(
@@ -250,7 +274,45 @@ def test_private_thread_edit_view_updates_thread_title_and_post_inline_in_htmx(
 
     post = user_private_thread.first_post
     assert post.original == "Edited post"
+    assert post.updated_at
     assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason is None
+
+
+def test_private_thread_edit_view_sets_edit_reason(
+    user_client, user, user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Edited title",
+            "posting-post-post": "Edited post",
+            "posting-edit-reason-edit_reason": "Lorem ipsum dolor met",
+        },
+    )
+    assert response.status_code == 302
+
+    post = user_private_thread.first_post
+    post.refresh_from_db()
+    assert post.original == "Edited post"
+    assert post.updated_at
+    assert post.edits == 1
+    assert post.last_editor == user
+    assert post.last_editor_name == user.username
+    assert post.last_editor_slug == user.slug
+    assert post.last_edit_reason == "Lorem ipsum dolor met"
+
+    post_edit = PostEdit.objects.get(post=post)
+    assert post_edit.edit_reason == "Lorem ipsum dolor met"
 
 
 def test_private_thread_edit_view_creates_changed_title_update_object(
@@ -551,6 +613,26 @@ def test_private_thread_edit_view_uploads_attachment_on_submit(
     assert not attachment.is_deleted
     assert attachment.name == "test.txt"
 
+    post_edit = PostEdit.objects.get(post=user_private_thread.first_post.id)
+    assert post_edit.attachments == [
+        {
+            "id": attachment.id,
+            "uploader_id": attachment.uploader_id,
+            "uploader_name": attachment.uploader_name,
+            "uploader_slug": attachment.uploader_slug,
+            "uploaded_at": ANY,
+            "name": attachment.name,
+            "slug": attachment.slug,
+            "filetype_id": attachment.filetype_id,
+            "dimensions": None,
+            "thumbnail": None,
+            "size": attachment.size,
+            "change": "+",
+        },
+    ]
+    assert post_edit.added_attachments == 1
+    assert post_edit.removed_attachments == 0
+
 
 @pytest.mark.parametrize(
     "action_name", (Formset.preview_action, PostForm.upload_action)
@@ -770,11 +852,33 @@ def test_private_thread_edit_view_associates_unused_attachment_on_submit(
         },
     )
 
+    attachment_uploaded_at = user_text_attachment.uploaded_at
+
     user_text_attachment.refresh_from_db()
     assert user_text_attachment.category_id == user_private_thread.category_id
     assert user_text_attachment.thread_id == user_private_thread.id
     assert user_text_attachment.post_id == user_private_thread.first_post_id
     assert not user_text_attachment.is_deleted
+
+    post_edit = PostEdit.objects.get(post=user_private_thread.first_post.id)
+    assert post_edit.attachments == [
+        {
+            "id": user_text_attachment.id,
+            "uploader_id": user_text_attachment.uploader_id,
+            "uploader_name": user_text_attachment.uploader_name,
+            "uploader_slug": user_text_attachment.uploader_slug,
+            "uploaded_at": attachment_uploaded_at.isoformat(),
+            "name": user_text_attachment.name,
+            "slug": user_text_attachment.slug,
+            "filetype_id": user_text_attachment.filetype_id,
+            "dimensions": None,
+            "thumbnail": None,
+            "size": user_text_attachment.size,
+            "change": "+",
+        },
+    ]
+    assert post_edit.added_attachments == 1
+    assert post_edit.removed_attachments == 0
 
 
 def test_private_thread_edit_view_adds_attachment_to_deleted_list(
@@ -895,6 +999,11 @@ def test_private_thread_edit_view_deletes_attachment_on_submit(
     assert user_text_attachment.thread_id is None
     assert user_text_attachment.post_id is None
     assert user_text_attachment.is_deleted
+
+    post_edit = PostEdit.objects.get(post=user_private_thread.first_post.id)
+    assert post_edit.attachments == []
+    assert post_edit.added_attachments == 0
+    assert post_edit.removed_attachments == 0
 
 
 def test_private_thread_edit_view_displays_associated_attachment(
@@ -1169,6 +1278,26 @@ def test_private_thread_edit_view_deletes_existing_attachment_on_submit(
     assert text_attachment.thread_id is None
     assert text_attachment.post_id is None
     assert text_attachment.is_deleted
+
+    post_edit = PostEdit.objects.get(post=user_private_thread.first_post)
+    assert post_edit.attachments == [
+        {
+            "id": text_attachment.id,
+            "uploader_id": text_attachment.uploader_id,
+            "uploader_name": text_attachment.uploader_name,
+            "uploader_slug": text_attachment.uploader_slug,
+            "uploaded_at": text_attachment.uploaded_at.isoformat(),
+            "name": text_attachment.name,
+            "slug": text_attachment.slug,
+            "filetype_id": text_attachment.filetype_id,
+            "dimensions": None,
+            "thumbnail": None,
+            "size": text_attachment.size,
+            "change": "-",
+        },
+    ]
+    assert post_edit.added_attachments == 0
+    assert post_edit.removed_attachments == 1
 
 
 @override_dynamic_settings(allowed_attachment_types=AllowedAttachments.NONE.value)

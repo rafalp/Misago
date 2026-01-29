@@ -26,7 +26,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_without_likes(
 def test_get_post_feed_post_likes_data_for_unliked_post_without_likes_for_user_without_last_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -49,7 +49,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_without_likes_for_user_w
 def test_get_post_feed_post_likes_data_for_unliked_post_without_likes_for_user_without_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -96,7 +96,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_one_like(
 def test_get_post_feed_post_likes_data_for_unliked_post_with_one_like_for_user_without_last_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -121,7 +121,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_one_like_for_user_w
 def test_get_post_feed_post_likes_data_for_unliked_post_with_one_like_for_user_without_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -166,7 +166,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_one_like(
 def test_get_post_feed_post_likes_data_for_liked_post_with_one_like_for_user_without_last_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -191,7 +191,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_one_like_for_user_wit
 def test_get_post_feed_post_likes_data_for_liked_post_with_one_like_for_user_without_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -241,7 +241,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_two_likes(
 def test_get_post_feed_post_likes_data_for_unliked_post_with_two_likes_for_user_without_last_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -267,7 +267,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_two_likes_for_user_
 def test_get_post_feed_post_likes_data_for_unliked_post_with_two_likes_for_user_without_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -318,7 +318,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_two_likes(
 def test_get_post_feed_post_likes_data_for_liked_post_with_two_likes_for_user_without_last_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -344,7 +344,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_two_likes_for_user_wi
 def test_get_post_feed_post_likes_data_for_liked_post_with_two_likes_for_user_without_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -395,7 +395,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_fifty_likes(
 def test_get_post_feed_post_likes_data_for_unliked_post_with_fifty_likes_for_user_without_last_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -421,7 +421,7 @@ def test_get_post_feed_post_likes_data_for_unliked_post_with_fifty_likes_for_use
 def test_get_post_feed_post_likes_data_for_unliked_post_with_fifty_likes_for_user_without_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -474,7 +474,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_fifty_likes(
 def test_get_post_feed_post_likes_data_for_liked_post_with_fifty_likes_for_user_without_last_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.COUNT
+    members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -502,7 +502,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_fifty_likes_for_user_
 def test_get_post_feed_post_likes_data_for_liked_post_with_fifty_likes_for_user_without_likes_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_see_others_posts_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
     members_group.save()
 
     user_permissions = user_permissions_factory(user)

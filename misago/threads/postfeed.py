@@ -4,11 +4,17 @@ from typing import Iterable
 from django.http import HttpRequest
 from django.urls import reverse
 
+from ..categories.models import Category
 from ..likes.postfeed import get_post_feed_post_likes_data
 from ..permissions.checkutils import check_permissions
+from ..permissions.edits import (
+    can_see_post_edit_count,
+    check_see_post_edit_history_permission,
+)
 from ..permissions.threads import (
     check_edit_thread_post_permission,
 )
+from ..permissions.proxy import UserPermissionsProxy
 from ..threadupdates.models import ThreadUpdate
 from ..threadupdates.actions import thread_updates_renderer
 from .hooks import (
@@ -26,6 +32,10 @@ class PostFeed:
     thread_update_template_name: str = "misago/post_feed/thread_update.html"
 
     request: HttpRequest
+    user_permissions: UserPermissionsProxy
+
+    category: Category
+    thread: Thread
     thread: Thread
     posts: list[Post]
     updates: list[ThreadUpdate]
@@ -47,6 +57,9 @@ class PostFeed:
         thread_updates: list[ThreadUpdate] | None = None,
     ):
         self.request = request
+        self.user_permissions = request.user_permissions
+
+        self.category = thread.category
         self.thread = thread
         self.posts = posts or []
         self.thread_updates = thread_updates or []
@@ -123,17 +136,9 @@ class PostFeed:
         return feed
 
     def get_post_data(self, post: Post, counter: int = 1) -> dict:
-        edit_url: str | None = None
-
-        if self.allow_edit_post(post):
-            if post.id == self.thread.first_post_id and self.allow_edit_thread:
-                edit_url = self.get_edit_thread_post_url()
-            else:
-                edit_url = self.get_edit_post_url(post)
-
         is_visible = self.is_moderator or not post.is_hidden
 
-        return {
+        data = {
             "template_name": self.post_template_name,
             "animate": post.id in self.animate_posts,
             "type": "post",
@@ -145,11 +150,37 @@ class PostFeed:
             "is_new": post.id in self.unread_posts,
             "rich_text_data": None,
             "attachments": [],
-            "edit_url": edit_url,
+            "edits": None,
+            "updated_at": post.updated_at,
+            "last_edit_reason": None,
+            "edit_url": None,
             "moderation": self.is_moderator,
             "is_hidden": post.is_hidden,
             "is_visible": is_visible,
         }
+
+        if self.allow_edit_post(post):
+            if post.id == self.thread.first_post_id and self.allow_edit_thread:
+                data["edit_url"] = self.get_edit_thread_post_url()
+            else:
+                data["edit_url"] = self.get_edit_post_url(post)
+
+        if post.edits and is_visible:
+            if can_see_post_edit_count(
+                self.user_permissions, self.category, self.thread, post
+            ):
+                data["edits"] = post.edits
+
+            with check_permissions():
+                check_see_post_edit_history_permission(
+                    self.user_permissions, self.category, self.thread, post
+                )
+                data["last_edited_at"] = post.updated_at
+                data["last_editor_name"] = post.last_editor_name
+                data["last_edit_reason"] = post.last_edit_reason
+                data["edits_url"] = self.get_post_edits_url(post)
+
+        return data
 
     def allow_edit_post(self, post: Post) -> bool:
         return False
@@ -158,6 +189,9 @@ class PostFeed:
         return None
 
     def get_edit_post_url(self, post: Post) -> str | None:
+        return None
+
+    def get_post_edits_url(self, post: Post) -> str | None:
         return None
 
     def get_post_likes_url(self, post: Post) -> str | None:
@@ -321,6 +355,16 @@ class ThreadPostFeed(PostFeed):
     def get_edit_post_url(self, post: Post) -> str | None:
         return reverse(
             "misago:thread-post-edit",
+            kwargs={
+                "thread_id": self.thread.id,
+                "slug": self.thread.slug,
+                "post_id": post.id,
+            },
+        )
+
+    def get_post_edits_url(self, post: Post) -> str | None:
+        return reverse(
+            "misago:thread-post-edits",
             kwargs={
                 "thread_id": self.thread.id,
                 "slug": self.thread.slug,

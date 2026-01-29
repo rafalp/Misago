@@ -92,7 +92,7 @@
                 class="d-js-block"
                 action="{{ item.attachment.get_delete_url }}{{ attachments.referrer }}"
                 method="post"
-                misago-confirm="{% translate 'Are you sure you want to delete this attachment? This action cannot be undone.' context 'attachment delete confirmation' %}"
+                mg-confirm="{% translate 'Are you sure you want to delete this attachment? This action cannot be undone.' context 'attachment delete confirmation' %}"
               >
                 {% csrf_token %}
                 <button class="btn btn-default btn-icon btm-sm" title="{% translate 'Delete this attachment' context 'account attachments page' %}">
@@ -105,7 +105,7 @@
       {% empty %}
         <li class="list-group-item attachment-list-blankslate">
           {% blocktranslate trimmed context "account attachments page" %}
-            You haven’t uploaded any attachments, or they have been deleted.
+            You haven't uploaded any attachments, or they have been deleted.
           {% endblocktranslate %}
         </li>
       {% endfor %}

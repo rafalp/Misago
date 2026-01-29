@@ -11,9 +11,11 @@ from ...threads.models import Thread
 from ..models import PrivateThreadMember
 
 
-def test_private_thread_list_view_displays_login_page_to_guests(db, client):
+def test_private_thread_list_view_displays_login_required_page_to_anonymous_user(
+    db, client
+):
     response = client.get(reverse("misago:private-thread-list"))
-    assert_contains(response, "Sign in to view private threads")
+    assert_contains(response, "Sign in to view private threads", status_code=401)
 
 
 def test_private_thread_list_view_shows_error_403_to_users_without_private_threads_permission(
@@ -23,7 +25,7 @@ def test_private_thread_list_view_shows_error_403_to_users_without_private_threa
     members_group.save()
 
     response = user_client.get(reverse("misago:private-thread-list"))
-    assert_contains(response, "You can&#x27;t use private threads.", 403)
+    assert_contains(response, "You can&#x27;t use private threads.", status_code=403)
 
 
 def test_private_thread_list_view_displays_start_thread_button_to_user_with_permission(

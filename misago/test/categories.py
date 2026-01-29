@@ -5,6 +5,8 @@ import pytest
 from ..acl.models import Role
 from ..attachments.models import Attachment
 from ..categories.models import Category, CategoryRole, RoleCategoryACL
+from ..edits.create import create_post_edit
+from ..edits.models import PostEdit
 from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
 from ..permissions.models import CategoryGroupPermission
@@ -42,6 +44,15 @@ def category_relations_factory(
             permission="TEST",
         )
 
+        like = Like.objects.create(
+            category=category,
+            thread=thread,
+            post=thread.first_post,
+            user=other_user,
+            user_name=other_user.username,
+            user_slug=other_user.slug,
+        )
+
         notification = Notification.objects.create(
             user=user,
             verb="TEST",
@@ -73,35 +84,7 @@ def category_relations_factory(
             voter_slug=user.slug,
         )
 
-        # TODO: uncomment this code when those two models are using new Post model
-        # post_edit = PostEdit.objects.create(
-        #     category=category,
-        #     thread=thread,
-        #     post=thread_reply,
-        #     editor=user,
-        #     editor_name=user.username,
-        #     editor_slug=user.slug,
-        #     edited_from="",
-        #     edited_to="",
-        # )
-
-        # like = PostLike.objects.create(
-        #     category=category,
-        #     thread=thread,
-        #     post=thread.first_post,
-        #     liker=other_user,
-        #     liker_name=other_user.username,
-        #     liker_slug=other_user.slug,
-        # )
-
-        like = Like.objects.create(
-            category=category,
-            thread=thread,
-            post=thread.first_post,
-            user=other_user,
-            user_name=other_user.username,
-            user_slug=other_user.slug,
-        )
+        post_edit = create_post_edit(post=thread.first_post, user=other_user)
 
         read_category = ReadCategory.objects.create(
             user=user,
@@ -129,11 +112,11 @@ def category_relations_factory(
         return CategoryRelations(
             attachment=attachment,
             category_group_permission=category_group_permission,
+            like=like,
             notification=notification,
             poll=poll,
             poll_vote=poll_vote,
-            # post_edit=post_edit,
-            like=like,
+            post_edit=post_edit,
             read_category=read_category,
             read_thread=read_thread,
             role_category_acl=role_category_acl,
@@ -151,11 +134,11 @@ def category_relations_factory(
 class CategoryRelations:
     attachment: Attachment
     category_group_permission: CategoryGroupPermission
+    like: Like
     notification: Notification
     poll: Poll
     poll_vote: PollVote
-    # post_edit: PostEdit
-    like: Like
+    post_edit: PostEdit
     read_category: ReadCategory
     read_thread: ReadThread
     role_category_acl: RoleCategoryACL
@@ -180,6 +163,10 @@ class CategoryRelations:
             """CategoryGroupPermission should be deleted when category is deleted"""
             self.category_group_permission.refresh_from_db()
 
+        with pytest.raises(Like.DoesNotExist):
+            """Like should be deleted when category is deleted"""
+            self.like.refresh_from_db()
+
         with pytest.raises(Notification.DoesNotExist):
             """Notification should be deleted when category is deleted"""
             self.notification.refresh_from_db()
@@ -192,13 +179,9 @@ class CategoryRelations:
             """PollVote should be deleted when category is deleted"""
             self.poll_vote.refresh_from_db()
 
-        # with pytest.raises(PostEdit.DoesNotExist):
-        #     """PostEdit should be deleted when category is deleted"""
-        #     self.post_edit.refresh_from_db()
-
-        with pytest.raises(Like.DoesNotExist):
-            """Like should be deleted when category is deleted"""
-            self.like.refresh_from_db()
+        with pytest.raises(PostEdit.DoesNotExist):
+            """PostEdit should be deleted when category is deleted"""
+            self.post_edit.refresh_from_db()
 
         with pytest.raises(ReadCategory.DoesNotExist):
             """ReadCategory should be deleted when category is deleted"""
@@ -243,6 +226,11 @@ class CategoryRelations:
             """CategoryGroupPermission should be deleted when category is deleted"""
             self.category_group_permission.refresh_from_db()
 
+        self.like.refresh_from_db()
+        assert (
+            self.like.category_id == new_category.id
+        ), "Like category relation was not updated"
+
         self.notification.refresh_from_db()
         assert (
             self.notification.category_id == new_category.id
@@ -258,15 +246,10 @@ class CategoryRelations:
             self.poll_vote.category_id == new_category.id
         ), "PollVote category relation was not updated"
 
-        # self.post_edit.refresh_from_db()
-        # assert (
-        #     self.post_edit.category_id == new_category.id
-        # ), "PostEdit category relation was not updated"
-
-        self.like.refresh_from_db()
+        self.post_edit.refresh_from_db()
         assert (
-            self.like.category_id == new_category.id
-        ), "Like category relation was not updated"
+            self.post_edit.category_id == new_category.id
+        ), "PostEdit category relation was not updated"
 
         with pytest.raises(ReadCategory.DoesNotExist):
             """ReadCategory should be deleted when category is deleted"""

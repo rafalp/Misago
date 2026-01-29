@@ -49,6 +49,7 @@ class Post(PluginDataModel):
     )
     last_editor_name = models.CharField(max_length=255, null=True, blank=True)
     last_editor_slug = models.SlugField(max_length=255, null=True, blank=True)
+    last_edit_reason = models.CharField(max_length=255, null=True, blank=True)
 
     hidden_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,

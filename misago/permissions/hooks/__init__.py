@@ -1,5 +1,6 @@
 from .build_user_category_permissions import build_user_category_permissions_hook
 from .build_user_permissions import build_user_permissions_hook
+from .can_see_post_edit_count import can_see_post_edit_count_hook
 from .can_see_post_likes_count import can_see_post_likes_count_hook
 from .can_upload_private_threads_attachments import (
     can_upload_private_threads_attachments_hook,
@@ -16,6 +17,9 @@ from .check_close_thread_poll_permission import check_close_thread_poll_permissi
 from .check_delete_attachment_permission import (
     check_delete_attachment_permission_hook,
 )
+from .check_delete_post_edit_permission import (
+    check_delete_post_edit_permission_hook,
+)
 from .check_delete_thread_poll_permission import (
     check_delete_thread_poll_permission_hook,
 )
@@ -31,6 +35,7 @@ from .check_edit_private_thread_post_permission import (
 from .check_edit_thread_permission import check_edit_thread_permission_hook
 from .check_edit_thread_poll_permission import check_edit_thread_poll_permission_hook
 from .check_edit_thread_post_permission import check_edit_thread_post_permission_hook
+from .check_hide_post_edit_permission import check_hide_post_edit_permission_hook
 from .check_like_post_permission import check_like_post_permission_hook
 from .check_locked_category_permission import (
     check_locked_category_permission_hook,
@@ -50,7 +55,13 @@ from .check_reply_private_thread_permission import (
     check_reply_private_thread_permission_hook,
 )
 from .check_reply_thread_permission import check_reply_thread_permission_hook
+from .check_restore_post_edit_permission import (
+    check_restore_post_edit_permission_hook,
+)
 from .check_see_category_permission import check_see_category_permission_hook
+from .check_see_post_edit_history_permission import (
+    check_see_post_edit_history_permission_hook,
+)
 from .check_see_post_likes_permission import check_see_post_likes_permission_hook
 from .check_see_private_thread_permission import (
     check_see_private_thread_permission_hook,
@@ -68,6 +79,7 @@ from .check_start_thread_permission import (
     check_start_thread_permission_hook,
 )
 from .check_start_thread_poll_permission import check_start_thread_poll_permission_hook
+from .check_unhide_post_edit_permission import check_unhide_post_edit_permission_hook
 from .check_unlike_post_permission import check_unlike_post_permission_hook
 from .check_vote_in_thread_poll_permission import (
     check_vote_in_thread_poll_permission_hook,
@@ -100,6 +112,7 @@ from .get_user_permissions import get_user_permissions_hook
 __all__ = [
     "build_user_category_permissions_hook",
     "build_user_permissions_hook",
+    "can_see_post_edit_count_hook",
     "can_see_post_likes_count_hook",
     "can_upload_private_threads_attachments_hook",
     "can_upload_threads_attachments_hook",
@@ -110,6 +123,7 @@ __all__ = [
     "check_change_private_thread_owner_permission_hook",
     "check_close_thread_poll_permission_hook",
     "check_delete_attachment_permission_hook",
+    "check_delete_post_edit_permission_hook",
     "check_delete_thread_poll_permission_hook",
     "check_download_attachment_permission_hook",
     "check_edit_private_thread_permission_hook",
@@ -117,6 +131,7 @@ __all__ = [
     "check_edit_thread_permission_hook",
     "check_edit_thread_poll_permission_hook",
     "check_edit_thread_post_permission_hook",
+    "check_hide_post_edit_permission_hook",
     "check_like_post_permission_hook",
     "check_locked_category_permission_hook",
     "check_locked_private_thread_permission_hook",
@@ -126,7 +141,9 @@ __all__ = [
     "check_remove_private_thread_member_permission_hook",
     "check_reply_private_thread_permission_hook",
     "check_reply_thread_permission_hook",
+    "check_restore_post_edit_permission_hook",
     "check_see_category_permission_hook",
+    "check_see_post_edit_history_permission_hook",
     "check_see_post_likes_permission_hook",
     "check_see_private_thread_permission_hook",
     "check_see_private_thread_post_permission_hook",
@@ -136,6 +153,7 @@ __all__ = [
     "check_start_private_threads_permission_hook",
     "check_start_thread_permission_hook",
     "check_start_thread_poll_permission_hook",
+    "check_unhide_post_edit_permission_hook",
     "check_unlike_post_permission_hook",
     "check_vote_in_thread_poll_permission_hook",
     "copy_category_permissions_hook",

@@ -1,0 +1,235 @@
+{% load i18n misago_avatars misago_component misago_formats %}
+
+{% include "misago/snackbars.html" %}
+
+<div class="post-edit-modal">
+  {% if post_edit %}
+      <div class="post-edit-modal-header">
+        {% if post_edit.user %}
+          <a
+            class="post-edit-modal-avatar"
+            href="{{ post_edit.user.get_absolute_url }}"
+          >
+            <img
+              srcset="{{ post_edit.user|avatar:64 }}"
+              src="{{ post_edit.user|avatar:32 }}"
+              alt=""
+            >
+          </a>
+        {% else %}
+          <span class="post-edit-modal-avatar">
+            <img src="{{ BLANK_AVATAR_URL }}" alt="">
+          </span>
+        {% endif %}
+        <div class="post-edit-modal-header-main">
+          <div class="post-edit-modal-header-caption">
+            <div class="post-edit-modal-username">
+              {% if post_edit.user %}
+                <a href="{{ post_edit.user.get_absolute_url }}">
+                  {{ post_edit.user.username }}
+                </a>
+              {% else %}
+                <span>{{ post_edit.user_name }}</span>
+              {% endif %}
+            </div>
+            <div class="post-edit-modal-timestamp">
+              <span class="post-edit-modal-timestamp-separator">
+                &bull;
+              </span>
+              <span
+                class="post-edit-modal-timestamp-short"
+                title="{{ post_edit.edited_at|date:'DATETIME_FORMAT' }}"
+                mg-timestamp="{{ post_edit.edited_at.isoformat }}"
+                mg-timestamp-format="short"
+              >
+                {{ post_edit.edited_at|date_relative_short }}
+              </span>
+              <span
+                class="post-edit-modal-timestamp-long"
+                title="{{ post_edit.edited_at|date:'DATETIME_FORMAT' }}"
+                mg-timestamp="{{ post_edit.edited_at.isoformat }}"
+              >
+                {{ post_edit.edited_at|date_relative }}
+              </span>
+            </div>
+          </div>
+          {% if post_edit.edit_reason %}
+            <div class="post-edit-modal-reason">
+              {{ post_edit.edit_reason }}
+            </div>
+          {% endif %}
+        </div>
+        {% if not edit_diff.blank and show_options %}
+          <noscript>
+            <details class="dropdown dropdown-noscript">
+              <summary
+                class="post-edit-modal-dropdown-toggle"
+                aria-label="{% translate 'Toggle options menu' context 'post edit options dropdown toggle' %}"
+              >
+                {% include "tabler/dots.svg" %}
+              </summary>
+              <ul class="dropdown-menu dropdown-menu-right">
+                {% if can_restore %}
+                  <li class="dropdown-menu-item">
+                    <a href="{{ post_edit_restore_url }}">
+                      {% translate "Restore" context "post edit restore btn" %}
+                    </a>
+                  </li>
+                {% endif %}
+                {% if can_hide %}
+                  {% if is_moderator %}
+                    <li>
+                      <form
+                        class="dropdown-menu-item"
+                        action="{{ post_edit_hide_url }}"
+                        method="post"
+                      >
+                        {% csrf_token %}
+                        <button
+                          class="btn-link"
+                          type="submit"
+                        >
+                          {% translate "Hide" context "post edit hide btn" %}
+                        </button>
+                      </form>
+                    </li>
+                  {% else %}
+                    <li class="dropdown-menu-item">
+                      <a href="{{ post_edit_hide_url }}">
+                        {% translate "Hide" context "post edit hide btn" %}
+                      </a>
+                    </li>
+                  {% endif %}
+                {% elif can_unhide %}
+                  <li class="dropdown-menu-item">
+                    <a href="{{ post_edit_unhide_url }}">
+                      {% translate "Unhide" context "post edit unhide btn" %}
+                    </a>
+                  </li>
+                {% endif %}
+                {% if can_delete %}
+                  <li class="dropdown-menu-item">
+                    <a href="{{ post_edit_delete_url }}">
+                      {% translate "Delete" context "post edit delete btn" %}
+                    </a>
+                  </li>
+                {% endif %}
+              </ul>
+            </details>
+          </noscript>
+          <div class="dropdown">
+            <button
+              type="button"
+              class="post-edit-modal-dropdown-toggle"
+              aria-label="{% translate 'Toggle options menu' context 'post edit options dropdown toggle' %}"
+              aria-haspopup="true"
+              aria-expanded="false"
+              data-toggle="dropdown"
+            >
+              {% include "tabler/dots.svg" %}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              {% if can_restore %}
+                <li>
+                  <form
+                    class="dropdown-menu-item"
+                    action="{{ post_edit_restore_url }}"
+                    method="post"
+                    mg-confirm="{% translate 'Are you sure you want to restore this post to before this edit? Attachments are not affected.' context 'post edit restore confirmation' %}"
+                  >
+                    {% csrf_token %}
+                    <button
+                      class="btn-link"
+                      type="submit"
+                    >
+                      {% translate "Restore" context "post edit restore btn" %}
+                    </button>
+                  </form>
+                </li>
+              {% endif %}
+              {% if can_hide %}
+                <li>
+                  <form
+                    class="dropdown-menu-item"
+                    action="{{ post_edit_hide_url }}"
+                    method="post"
+                    hx-post="{{ post_edit_hide_url }}?modal=true"
+                    hx-target="#misago-htmx-post-edits-modal"
+                    {% if not is_moderator %}
+                    hx-confirm="{% translate 'Are you sure you want to hide this edit?' context 'post edit hide confirmation' %}"
+                    {% endif %}
+                  >
+                    {% csrf_token %}
+                    <button
+                      class="btn-link"
+                      type="submit"
+                    >
+                      {% translate "Hide" context "post edit hide btn" %}
+                    </button>
+                  </form>
+                </li>
+              {% elif can_unhide %}
+                <li>
+                  <form
+                    class="dropdown-menu-item"
+                    action="{{ post_edit_unhide_url }}"
+                    method="post"
+                    hx-post="{{ post_edit_unhide_url }}?modal=true"
+                    hx-target="#misago-htmx-post-edits-modal"
+                  >
+                    {% csrf_token %}
+                    <button
+                      class="btn-link"
+                      type="submit"
+                    >
+                      {% translate "Unhide" context "post edit unhide btn" %}
+                    </button>
+                  </form>
+                </li>
+              {% endif %}
+              {% if can_delete %}
+                <li>
+                  <form
+                    class="dropdown-menu-item"
+                    action="{{ post_edit_delete_url }}"
+                    method="post"
+                    hx-post="{{ post_edit_delete_url }}?modal=true"
+                    hx-target="#misago-htmx-post-edits-modal"
+                    hx-confirm="{% translate 'Are you sure you want to delete this edit?' context 'post edit delete confirmation' %}"
+                  >
+                    {% csrf_token %}
+                    <button
+                      class="btn-link"
+                      type="submit"
+                    >
+                      {% translate "Delete" context "post edit delete btn" %}
+                    </button>
+                  </form>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+      <div class="post-edit-modal-body">
+        {% if post_edit.is_hidden %}
+          {% include "misago/post_edits/hidden_message.html" %}
+        {% endif %}
+        {% if edit_diff and edit_diff.is_visible %}
+          {% includecomponent edit_diff %}
+        {% endif %}
+      </div>
+    </div>
+    {% if paginator.num_pages > 1 %}
+      <div class="post-edit-modal-footer">
+        {% include "misago/post_edits/modal/paginator.html" with scroll=True %}
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="post-edit-modal-blankslate">
+      {% blocktrans trimmed context "post edit blankslate" %}
+        This post has no edit history.
+      {% endblocktrans %}
+    </div>
+  {% endif %}
+</div>
