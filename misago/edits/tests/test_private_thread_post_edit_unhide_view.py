@@ -486,3 +486,23 @@ def test_private_thread_post_edit_unhide_view_returns_error_403_if_user_can_see_
     assert_contains(
         response, "You can&#x27;t see this post&#x27;s edit history.", status_code=403
     )
+
+
+def test_private_thread_post_edit_unhide_view_returns_error_404_if_post_is_in_thread(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(thread)
+    post_edit = create_post_edit(post=post, user=user)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-post-edit-unhide",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert response.status_code == 404

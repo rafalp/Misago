@@ -803,3 +803,23 @@ def test_thread_post_edit_delete_view_returns_error_403_if_user_can_see_other_us
     assert_contains(
         response, "You can&#x27;t see this post&#x27;s edit history.", status_code=403
     )
+
+
+def test_thread_post_edit_delete_view_returns_error_404_if_post_is_in_thread(
+    thread_reply_factory, user_client, user, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread)
+    post_edit = create_post_edit(post=post, user=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-delete",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert response.status_code == 404
