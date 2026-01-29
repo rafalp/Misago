@@ -78,7 +78,7 @@ def remove_post_like_action(
     ...
 ```
 
-Misago function for removing a post `Like` from a user and updating the post’s `likes` and `last_likes` attributes.
+Misago function for removing a post `Like` from a user and updating the post's `likes` and `last_likes` attributes.
 
 
 ### Arguments
@@ -112,7 +112,7 @@ Returns `True` if like was deleted and `False` otherwise.
 
 ## Example
 
-Record the historical number of the post’s likes:
+Record the historical number of the post's likes:
 
 ```python
 from django.http import HttpRequest

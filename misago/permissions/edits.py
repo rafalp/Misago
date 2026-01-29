@@ -71,7 +71,7 @@ def _check_see_post_edit_history_permission_action(
         raise PermissionDenied(
             pgettext(
                 "edits permission error",
-                "You can’t see this post’s edit history.",
+                "You can't see this post's edit history.",
             )
         )
 
@@ -93,7 +93,7 @@ def _check_restore_post_edit_permission_action(
         raise PermissionDenied(
             pgettext(
                 "edits permission error",
-                "You can’t restore the post from this edit.",
+                "You can't restore the post from this edit.",
             )
         )
 
@@ -117,7 +117,7 @@ def _check_restore_post_edit_permission_action(
         raise PermissionDenied(
             pgettext(
                 "edits permission error",
-                "You can’t restore the post from hidden edit.",
+                "You can't restore the post from hidden edit.",
             )
         )
 
@@ -157,7 +157,7 @@ def _check_hide_post_edit_permission_action(
         raise PermissionDenied(
             pgettext(
                 "edits permission error",
-                "You can’t hide post edits made by other users.",
+                "You can't hide post edits made by other users.",
             )
         )
 
@@ -165,7 +165,7 @@ def _check_hide_post_edit_permission_action(
         raise PermissionDenied(
             pgettext(
                 "edits permission error",
-                "You can’t hide post edits.",
+                "You can't hide post edits.",
             )
         )
 
@@ -244,7 +244,7 @@ def _check_unhide_post_edit_permission_action(
     raise PermissionDenied(
         pgettext(
             "edits permission error",
-            "You can’t unhide hidden post edits.",
+            "You can't unhide hidden post edits.",
         )
     )
 
@@ -285,7 +285,7 @@ def _check_delete_post_edit_permission_action(
         raise PermissionDenied(
             pgettext(
                 "edits permission error",
-                "You can’t delete post edits made by other users.",
+                "You can't delete post edits made by other users.",
             )
         )
 
@@ -293,7 +293,7 @@ def _check_delete_post_edit_permission_action(
         raise PermissionDenied(
             pgettext(
                 "edits permission error",
-                "You can’t delete post edits.",
+                "You can't delete post edits.",
             )
         )
 
@@ -301,7 +301,7 @@ def _check_delete_post_edit_permission_action(
         raise PermissionDenied(
             pgettext(
                 "edits permission error",
-                "You can’t delete post edits hidden by other users.",
+                "You can't delete post edits hidden by other users.",
             )
         )
 

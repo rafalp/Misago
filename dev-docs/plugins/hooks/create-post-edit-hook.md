@@ -53,7 +53,7 @@ A `Post` instance being edited.
 
 #### `user: Union["User", str] = None`
 
-The user who performed the edit, a `User` instance or a `str` with the user’s name.
+The user who performed the edit, a `User` instance or a `str` with the user's name.
 
 
 #### `edit_reason: str | None`
@@ -143,7 +143,7 @@ A `Post` instance being edited.
 
 #### `user: Union["User", str] = None`
 
-The user who performed the edit, a `User` instance or a `str` with the user’s name.
+The user who performed the edit, a `User` instance or a `str` with the user's name.
 
 
 #### `edit_reason: str | None`
@@ -207,7 +207,7 @@ A new `PostEdit` instance.
 
 ## Example
 
-The code below implements a custom filter function that records the user’s IP address on the post edit object when it's created:
+The code below implements a custom filter function that records the user's IP address on the post edit object when it's created:
 
 ```python
 from django.http import HttpRequest

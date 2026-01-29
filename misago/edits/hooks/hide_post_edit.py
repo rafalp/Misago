@@ -21,7 +21,7 @@ class HidePostEditHookAction(Protocol):
 
     ## `user: Union["User", str] = None`
 
-    The user who hid the edit, a `User` instance or a `str` with the user’s name.
+    The user who hid the edit, a `User` instance or a `str` with the user's name.
 
     ## `commit: bool = True`
 
@@ -62,7 +62,7 @@ class HidePostEditHookFilter(Protocol):
 
     ## `user: Union["User", str] = None`
 
-    The user who hid the edit, a `User` instance or a `str` with the user’s name.
+    The user who hid the edit, a `User` instance or a `str` with the user's name.
 
     ## `commit: bool = True`
 

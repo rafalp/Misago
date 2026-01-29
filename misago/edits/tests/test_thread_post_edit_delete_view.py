@@ -1,7 +1,11 @@
 import pytest
 from django.urls import reverse
 
-from ...permissions.enums import CanHideOwnPostEdits, CategoryPermission
+from ...permissions.enums import (
+    CanHideOwnPostEdits,
+    CanSeePostEdits,
+    CategoryPermission,
+)
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
 from ..create import create_post_edit
@@ -563,7 +567,7 @@ def test_thread_post_edit_delete_view_shows_error_403_if_post_edit_cant_be_delet
     )
     assert_contains(
         response,
-        "You can’t delete post edits.",
+        "You can&#x27;t delete post edits.",
         status_code=403,
     )
 
@@ -748,4 +752,54 @@ def test_thread_post_edit_delete_view_returns_error_403_if_user_cant_see_thread_
     )
     assert_contains(
         response, "You can&#x27;t see this post&#x27;s contents.", status_code=403
+    )
+
+
+def test_thread_post_edit_delete_view_returns_error_403_if_user_cant_see_other_users_post_edits_history(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    members_group.can_see_others_post_edits = CanSeePostEdits.NEVER
+    members_group.save()
+
+    post = thread_reply_factory(thread)
+    post_edit = create_post_edit(post=post, user=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert_contains(
+        response, "You can&#x27;t see this post&#x27;s edit history.", status_code=403
+    )
+
+
+def test_thread_post_edit_delete_view_returns_error_403_if_user_can_see_other_users_post_edits_count_only(
+    thread_reply_factory, user_client, members_group, user, thread
+):
+    members_group.can_see_others_post_edits = CanSeePostEdits.COUNT
+    members_group.save()
+
+    post = thread_reply_factory(thread)
+    post_edit = create_post_edit(post=post, user=user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-post-edit-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": post.id,
+                "post_edit_id": post_edit.id,
+            },
+        ),
+    )
+    assert_contains(
+        response, "You can&#x27;t see this post&#x27;s edit history.", status_code=403
     )

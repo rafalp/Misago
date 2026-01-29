@@ -265,7 +265,7 @@ def test_account_attachments_list_shows_blankslate_for_user_without_attachments(
 ):
     response = user_client.get(reverse("misago:account-attachments"))
     assert_contains(
-        response, "You haven’t uploaded any attachments, or they have been deleted."
+        response, "You haven't uploaded any attachments, or they have been deleted."
     )
 
 

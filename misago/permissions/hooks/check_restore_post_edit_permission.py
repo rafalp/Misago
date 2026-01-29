@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 class CheckRestorePostEditPermissionHookAction(Protocol):
     """
     Misago function used to check if a user has permission to restore a post
-    from a post edit. Raises Django’s `PermissionDenied` if they don't.
+    from a post edit. Raises Django's `PermissionDenied` if they don't.
 
     # Arguments
 
@@ -69,7 +69,7 @@ class CheckRestorePostEditPermissionHook(
     """
     This hook wraps the standard Misago function used to check whether a user has
     permission to restore a post from a post edit.
-    Raises Django’s `PermissionDenied` if they don’t.
+    Raises Django's `PermissionDenied` if they don't.
 
     # Example
 
@@ -100,7 +100,7 @@ class CheckRestorePostEditPermissionHook(
             raise PermissionDenied(
                 pgettext(
                     "edits permission error",
-                    "You can’t restore the post from this edit."
+                    "You can't restore the post from this edit."
                 )
             )
     ```

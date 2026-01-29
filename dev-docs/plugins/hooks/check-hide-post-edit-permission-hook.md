@@ -1,6 +1,6 @@
 # `check_hide_post_edit_permission_hook`
 
-This hook wraps the standard Misago function used to check whether a user has permission to hide a post edit. Raises Django’s `PermissionDenied` if they don’t.
+This hook wraps the standard Misago function used to check whether a user has permission to hide a post edit. Raises Django's `PermissionDenied` if they don't.
 
 
 ## Location
@@ -54,7 +54,7 @@ def check_hide_post_edit_permission_action(
     ...
 ```
 
-Misago function used to check if a user has permission to hide a post edit. Raises Django’s `PermissionDenied` if they don't.
+Misago function used to check if a user has permission to hide a post edit. Raises Django's `PermissionDenied` if they don't.
 
 
 ### Arguments

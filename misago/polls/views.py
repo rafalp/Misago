@@ -213,7 +213,7 @@ class ThreadPollVoteView(ThreadPollView):
 
         if user_poll_votes and not poll.can_change_vote:
             raise PermissionDenied(
-                pgettext("poll vote", "This poll doesn’t allow vote changes.")
+                pgettext("poll vote", "This poll doesn't allow vote changes.")
             )
 
         user_choices = request.POST.getlist("poll_choice")

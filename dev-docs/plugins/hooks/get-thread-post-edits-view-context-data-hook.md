@@ -90,7 +90,7 @@ A Python `dict` with context data to use to `render` the post edits page.
 
 ## Example
 
-The code below implements a custom filter function that displays a template with the editor’s IP address in the `post_edit_diff_plugins_top` plugin outlet.
+The code below implements a custom filter function that displays a template with the editor's IP address in the `post_edit_diff_plugins_top` plugin outlet.
 
 ```python
 from django.core.paginator import Page

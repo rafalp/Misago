@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 class CheckDeletePostEditPermissionHookAction(Protocol):
     """
     Misago function used to check if a user has permission to delete a post edit.
-    Raises Django’s `PermissionDenied` if they don't.
+    Raises Django's `PermissionDenied` if they don't.
 
     # Arguments
 
@@ -69,7 +69,7 @@ class CheckDeletePostEditPermissionHook(
     """
     This hook wraps the standard Misago function used to check whether a user has
     permission to delete a post edit.
-    Raises Django’s `PermissionDenied` if they don’t.
+    Raises Django's `PermissionDenied` if they don't.
 
     # Example
 

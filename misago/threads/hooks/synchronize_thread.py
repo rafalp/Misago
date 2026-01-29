@@ -92,7 +92,7 @@ class SynchronizeThreadHook(
     This hook allows plugins to replace or extend the logic used to
     synchronize threads.
 
-    Thread synchronization updates a thread’s reply count, the IDs and timestamps
+    Thread synchronization updates a thread's reply count, the IDs and timestamps
     of the first and last posts, the attributes of the first and last posters,
     and status flags such as `has_unapproved_posts`.
 

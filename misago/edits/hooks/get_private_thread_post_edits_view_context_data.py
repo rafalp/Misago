@@ -93,7 +93,7 @@ class GetPrivateThreadPostEditsViewContextDataHook(
     # Example
 
     The code below implements a custom filter function that displays a template
-    with the editor’s IP address in the `post_edit_diff_plugins_top` plugin outlet.
+    with the editor's IP address in the `post_edit_diff_plugins_top` plugin outlet.
 
     ```python
     from django.core.paginator import Page

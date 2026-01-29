@@ -106,7 +106,7 @@ class LikePostHook(
     """
     This hook allows plugins to replace or extend the logic used to like a post.
 
-    It creates a new `Like` instance and updates the post’s `likes` count and
+    It creates a new `Like` instance and updates the post's `likes` count and
     `last_likes` JSON field.
 
     # Example

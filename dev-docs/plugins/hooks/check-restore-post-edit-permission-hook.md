@@ -1,6 +1,6 @@
 # `check_restore_post_edit_permission_hook`
 
-This hook wraps the standard Misago function used to check whether a user has permission to restore a post from a post edit. Raises Django’s `PermissionDenied` if they don’t.
+This hook wraps the standard Misago function used to check whether a user has permission to restore a post from a post edit. Raises Django's `PermissionDenied` if they don't.
 
 
 ## Location
@@ -54,7 +54,7 @@ def check_restore_post_edit_permission_action(
     ...
 ```
 
-Misago function used to check if a user has permission to restore a post from a post edit. Raises Django’s `PermissionDenied` if they don't.
+Misago function used to check if a user has permission to restore a post from a post edit. Raises Django's `PermissionDenied` if they don't.
 
 
 ### Arguments
@@ -97,7 +97,7 @@ def check_user_can_hide_protected_post_edit(
         raise PermissionDenied(
             pgettext(
                 "edits permission error",
-                "You can’t restore the post from this edit."
+                "You can't restore the post from this edit."
             )
         )
 ```

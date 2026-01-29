@@ -9,7 +9,7 @@
 <pre><code>https://www.youtube.com/watch?v=dQw4w9WgXcQ</code></pre>
 <p class="mt-3">
   {% blocktranslate trimmed context "formatting help" %}
-    These YouTube links won’t be replaced with a video player because they are part of a sentence:
+    These YouTube links won't be replaced with a video player because they are part of a sentence:
   {% endblocktranslate %}
 </p>
 <pre><code>{% translate "See this video: https://www.youtube.com/watch?v=dQw4w9WgXcQ" context "formatting help" %}</code></pre>
@@ -17,7 +17,7 @@
 <pre><code>{% translate "Some music videos (like https://www.youtube.com/watch?v=dQw4w9WgXcQ) are amazing!" context "formatting help" %}</code></pre>
 <p class="mt-3">
   {% blocktranslate trimmed context "formatting help" %}
-    Multiple YouTube links next to each other don’t count as a sentence and are replaced:
+    Multiple YouTube links next to each other don't count as a sentence and are replaced:
   {% endblocktranslate %}
 </p>
 <pre><code>https://www.youtube.com/watch?v=dQw4w9WgXcQ https://www.youtube.com/watch?v=YnopHCL1Jk8</code></pre>
@@ -29,7 +29,7 @@
 <pre><code>{% translate "See this video:" context "formatting help" %}<br />https://www.youtube.com/watch?v=dQw4w9WgXcQ</code></pre>
 <p class="mt-3">
   {% blocktranslate trimmed context "formatting help" %}
-    These YouTube links won’t be replaced with a video player because they are part of other syntax:
+    These YouTube links won't be replaced with a video player because they are part of other syntax:
   {% endblocktranslate %}
 </p>
 <pre><code>&lt;https://www.youtube.com/watch?v=dQw4w9WgXcQ&gt;</https:></code></pre>
@@ -37,7 +37,7 @@
 <pre><code>[url]https://www.youtube.com/watch?v=dQw4w9WgXcQ[/url]</https:></code></pre>
 <p class="mt-3">
   {% blocktranslate trimmed context "formatting help" %}
-    Those links won’t be replaced because they are part of lists:
+    Those links won't be replaced because they are part of lists:
   {% endblocktranslate %}
 </p>
 <pre><code>1. https://www.youtube.com/watch?v=dQw4w9WgXcQ</https:></code></pre>

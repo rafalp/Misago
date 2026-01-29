@@ -1,6 +1,6 @@
 # `check_see_post_edit_history_permission_hook`
 
-This hook wraps the standard Misago function used to check whether a user has permission to see a post’s edit history. Raises Django’s `PermissionDenied` if they don’t.
+This hook wraps the standard Misago function used to check whether a user has permission to see a post's edit history. Raises Django's `PermissionDenied` if they don't.
 
 
 ## Location
@@ -69,7 +69,7 @@ def check_see_post_edit_history_permission_action(
     ...
 ```
 
-Misago function used to check if a user has permission to see post edit history. Raises Django’s `PermissionDenied` if they don't.
+Misago function used to check if a user has permission to see post edit history. Raises Django's `PermissionDenied` if they don't.
 
 
 ### Arguments
@@ -96,7 +96,7 @@ A post to check permissions for.
 
 ## Example
 
-The code below implements a custom filter function that blocks a user from seeing a specific post’s edit history if it has a flag.
+The code below implements a custom filter function that blocks a user from seeing a specific post's edit history if it has a flag.
 
 ```python
 from django.core.exceptions import PermissionDenied

@@ -46,7 +46,7 @@ The post to synchronize.
 
 #### `queryset: QuerySet | None`
 
-The queryset used to fetch a post’s likes. Defaults to `Like.objects` if `None`.
+The queryset used to fetch a post's likes. Defaults to `Like.objects` if `None`.
 
 
 #### `commit: bool`
@@ -85,7 +85,7 @@ The post to synchronize.
 
 #### `queryset: QuerySet | None`
 
-The queryset used to fetch a post’s likes. Defaults to `Like.objects` if `None`.
+The queryset used to fetch a post's likes. Defaults to `Like.objects` if `None`.
 
 
 #### `commit: bool`

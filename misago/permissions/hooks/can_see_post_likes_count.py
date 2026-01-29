@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class CanSeePostsLikesCountHookAction(Protocol):
     """
-    Misago function used to check if a user has permission to see a post’s
+    Misago function used to check if a user has permission to see a post's
     likes count. Returns `True` if they can and `False` if they don't.
 
     # Arguments
@@ -99,7 +99,7 @@ class CanSeePostsLikesCountHook(
 ):
     """
     This hook wraps a standard Misago function used to check if a user has
-    permission to see a post’s likes count. Returns `True` if they can
+    permission to see a post's likes count. Returns `True` if they can
     and `False` if they don't.
 
     # Example

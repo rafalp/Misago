@@ -24,7 +24,7 @@ class CreatePostEditHookAction(Protocol):
 
     ## `user: Union["User", str] = None`
 
-    The user who performed the edit, a `User` instance or a `str` with the user’s name.
+    The user who performed the edit, a `User` instance or a `str` with the user's name.
 
     ## `edit_reason: str | None`
 
@@ -112,7 +112,7 @@ class CreatePostEditHookFilter(Protocol):
 
     ## `user: Union["User", str] = None`
 
-    The user who performed the edit, a `User` instance or a `str` with the user’s name.
+    The user who performed the edit, a `User` instance or a `str` with the user's name.
 
     ## `edit_reason: str | None`
 
@@ -189,7 +189,7 @@ class CreatePostEditHook(
 
     # Example
 
-    The code below implements a custom filter function that records the user’s IP
+    The code below implements a custom filter function that records the user's IP
     address on the post edit object when it's created:
 
     ```python

@@ -19,7 +19,7 @@ class SynchronizePostLikesHookAction(Protocol):
 
     ## `queryset: QuerySet | None`
 
-    The queryset used to fetch a post’s likes. Defaults to `Like.objects` if `None`.
+    The queryset used to fetch a post's likes. Defaults to `Like.objects` if `None`.
 
     ## `commit: bool`
 
@@ -60,7 +60,7 @@ class SynchronizePostLikesHookFilter(Protocol):
 
     ## `queryset: QuerySet | None`
 
-    The queryset used to fetch a post’s likes. Defaults to `Like.objects` if `None`.
+    The queryset used to fetch a post's likes. Defaults to `Like.objects` if `None`.
 
     ## `commit: bool`
 

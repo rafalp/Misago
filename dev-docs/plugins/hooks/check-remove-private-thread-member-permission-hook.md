@@ -46,7 +46,7 @@ The thread to check permissions for.
 
 #### `member_permissions: UserPermissionsProxy`
 
-A proxy object with the member’s permissions.
+A proxy object with the member's permissions.
 
 
 ## Action
@@ -77,7 +77,7 @@ The thread to check permissions for.
 
 #### `member_permissions: UserPermissionsProxy`
 
-A proxy object with the member’s permissions.
+A proxy object with the member's permissions.
 
 
 ## Example

@@ -44,7 +44,7 @@ A `PostEdit` instance to restore the post from.
 
 #### `user: Union["User", str] = None`
 
-The user who restored the post, a `User` instance or a `str` with the user’s name.
+The user who restored the post, a `User` instance or a `str` with the user's name.
 
 
 #### `commit: bool = True`
@@ -88,7 +88,7 @@ A `PostEdit` instance to restore the post from.
 
 #### `user: Union["User", str] = None`
 
-The user who restored the post, a `User` instance or a `str` with the user’s name.
+The user who restored the post, a `User` instance or a `str` with the user's name.
 
 
 #### `commit: bool = True`

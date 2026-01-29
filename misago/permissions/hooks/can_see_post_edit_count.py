@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class CanSeePostsEditCountHookAction(Protocol):
     """
-    Misago function used to check if a user has permission to see a post’s
+    Misago function used to check if a user has permission to see a post's
     edit count. Returns `True` if they can and `False` if they don't.
 
     # Arguments
@@ -99,7 +99,7 @@ class CanSeePostsEditCountHook(
 ):
     """
     This hook wraps a standard Misago function used to check if a user has
-    permission to see a post’s edit count. Returns `True` if they can
+    permission to see a post's edit count. Returns `True` if they can
     and `False` if they don't.
 
     # Example
