@@ -176,6 +176,9 @@ class PostFeed:
                     self.user_permissions, self.category, self.thread, post
                 )
                 data["last_edited_at"] = post.updated_at
+                data["show_last_editor"] = (
+                    post.last_editor_id and post.last_editor_id != post.poster_id
+                )
                 data["last_editor_name"] = post.last_editor_name
                 data["last_edit_reason"] = post.last_edit_reason
                 data["edits_url"] = self.get_post_edits_url(post)
