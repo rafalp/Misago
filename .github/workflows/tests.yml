@@ -51,5 +51,6 @@ jobs:
         run: |
           black --check .
           ruff misago/notifications misago/apiv2
+          python generate_dev_docs.py --check
       - name: Publish to coveralls.io
         uses: coverallsapp/github-action@v2

@@ -44,15 +44,10 @@ KEEP_PLUGINS_HOOKS_PATHS = (
 class FilesReport:
     outdated_files: list[str] = field(default_factory=list)
     missing_files: list[str] = field(default_factory=list)
+    deleted_files: list[str] = field(default_factory=list)
 
     def get_exit_code(self) -> int:
-        """Return the exit code.
-
-        This considers the current state of changed files:
-        - if any files were changed or are new return 1;
-        - otherwise return 0.
-        """
-        if self.missing_files or self.outdated_files:
+        if self.missing_files or self.outdated_files or self.deleted_files:
             return 1
 
         return 0
@@ -63,20 +58,49 @@ def main(check: bool):
     files_content.update(generate_plugin_manifest_reference())
     files_content.update(generate_hooks_reference())
     files_content.update(generate_outlets_reference())
+
     report = compare_files(files_content)
     exit_code = report.get_exit_code()
+
     if check:
         if exit_code:
             print_check_message(report)
         else:
-            sys.stdout.write("Nothing to change - all files up to date")
+            sys.stdout.write("\nNothing to change - all files up to date")
     else:
         write_files(files_content)
-        sys.stdout.write(
-            f"Saved {len(report.missing_files)} new and {len(report.outdated_files)} updated files."
-        )
+        print_completed_message(report)
 
+    sys.stdout.write("\n")
     return exit_code
+
+
+def compare_files(files_content):
+    report = FilesReport()
+
+    # Missing or updated
+    for file_path, file_content in files_content.items():
+        if file_path.is_file():
+            with open(file_path, "r") as fp:
+                if fp.read() != file_content:
+                    report.outdated_files.append(format_path(file_path))
+        else:
+            report.missing_files.append(format_path(file_path))
+
+    # Deleted
+    for path in glob(f"{PLUGINS_HOOKS_PATH}/*.md"):
+        filename = str(path).split("/")[-1].lower()
+        if filename in KEEP_PLUGINS_HOOKS_PATHS:
+            continue
+        
+        if Path(path) not in files_content:
+            report.deleted_files.append(format_path(path))
+
+    return report
+
+
+def format_path(path: Path) -> str:
+    return str(path)[len(str(BASE_PATH)) + 1:]
 
 
 def print_check_message(report):
@@ -84,32 +108,78 @@ def print_check_message(report):
         sys.stderr.write("\n")
         for file_name in report.outdated_files:
             sys.stderr.write(f"would update {file_name}\n")
-        sys.stderr.write(f"\n{len(report.outdated_files)} files would be updated.\n")
+
+        files = "file" if len(report.outdated_files) == 1 else "files"
+        sys.stderr.write(f"\n{len(report.outdated_files)} {file} would be updated.")
 
     if report.missing_files:
         sys.stderr.write("\n")
         for file_name in report.missing_files:
             sys.stderr.write(f"would create {file_name}\n")
-        sys.stderr.write(f"\n{len(report.missing_files)} files would be created.\n")
-    sys.stderr.write("\n")
+
+        files = "file" if len(report.missing_files) == 1 else "files"
+        sys.stderr.write(f"\n{len(report.missing_files)} {files} would be created.")
+
+    if report.deleted_files:
+        sys.stderr.write("\n")
+        for file_name in report.deleted_files:
+            sys.stderr.write(f"would delete {file_name}\n")
+
+        files = "file" if len(report.deleted_files) == 1 else "files"
+        sys.stderr.write(f"\n{len(report.deleted_files)} {files} would be deleted.")
 
 
-def compare_files(files_content):
-    report = FilesReport()
-    for file_path, file_content in files_content.items():
-        # check if file exists
-        if file_path.is_file():
-            # compare content
-            with open(file_path, "r") as fp:
-                if fp.read() != file_content:
-                    report.outdated_files.append(file_path)
-        else:
-            report.missing_files.append(file_path)
+def print_completed_message(report):
+    if report.outdated_files:
+        for file_name in report.outdated_files:
+            sys.stderr.write(f"updated {file_name}\n")
 
-    return report
+    if report.missing_files:
+        for file_name in report.missing_files:
+            sys.stderr.write(f"created {file_name}\n")
+
+    if report.deleted_files:
+        for file_name in report.deleted_files:
+            sys.stderr.write(f"deleted {file_name}\n")
+
+    message: list[str] = []
+
+    if report.missing_files and report.outdated_files:
+        files = "file" if len(report.outdated_files) == 1 else "files"
+        message.append(
+            f"Saved {len(report.missing_files)} new and {len(report.outdated_files)} updated {files}."
+        )
+    elif report.missing_files:
+        files = "file" if len(report.missing_files) == 1 else "files"
+        message.append(
+            f"Saved {len(report.missing_files)} new {files}."
+        )
+    elif report.outdated_files:
+        files = "file" if len(report.outdated_files) == 1 else "files"
+        message.append(
+            f"Updated {len(report.outdated_files)} {files}."
+        )
+
+    if report.deleted_files:
+        files = "file" if len(report.deleted_files) == 1 else "files"
+        message.append(
+            f"Deleted {len(report.deleted_files)} {files}."
+        )
+
+    sys.stdout.write("\n")
+
+    if message:
+        sys.stdout.write(" ".join(message))
+    else:
+        sys.stdout.write("Nothing to change - all files up to date")
 
 
 def write_files(files_content):
+    for path in glob(f"{PLUGINS_HOOKS_PATH}/*.md"):
+        filename = str(path).split("/")[-1].lower()
+        if filename not in KEEP_PLUGINS_HOOKS_PATHS:
+            os.unlink(path)
+
     for file_path, file_content in files_content.items():
         with open(file_path, "w") as fp:
             fp.write(file_content)
@@ -118,13 +188,15 @@ def write_files(files_content):
 def generate_plugin_manifest_reference():
     manifest_path, manifest_attr = PLUGIN_MANIFEST.rsplit(".", 1)
     manifest_type = getattr(import_module(manifest_path), manifest_attr)
+
     file_name = PLUGINS_PATH / "plugin-manifest-reference.md"
+
     file_content = StringIO()
     file_content.write("# Plugin manifest reference")
     file_content.write("\n\n")
     file_content.write(indent_docstring_headers(dedent(manifest_type.__doc__)).strip())
 
-    return {file_name: file_content.read()}
+    return {file_name: file_content.getvalue()}
 
 
 def generate_hooks_reference():
@@ -147,13 +219,8 @@ def generate_hooks_reference():
 
 
 def generate_hooks_reference_index(hooks_data: dict[str, dict[str, ast.Module]]):
-    # Delete old references
-    for path in glob(f"{PLUGINS_HOOKS_PATH}/*.md"):
-        filename = str(path).split("/")[-1].lower()
-        if filename not in KEEP_PLUGINS_HOOKS_PATHS:
-            os.unlink(path)
-
     file_name = PLUGINS_HOOKS_PATH / "reference.md"
+
     file_content = StringIO()
     file_content.write("# Built-in hooks reference")
     file_content.write("\n\n")
@@ -181,7 +248,7 @@ def generate_hooks_reference_index(hooks_data: dict[str, dict[str, ast.Module]])
                 f"\n- [`{module_hook}`](./{slugify_name(module_hook)}.md)"
             )
 
-    return file_name, file_content.read()
+    return file_name, file_content.getvalue()
 
 
 def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.Module):
@@ -364,7 +431,7 @@ def generate_hook_reference(import_from: str, hook_name: str, hook_module: ast.M
             file_content.write("\n\n")
             file_content.write(example_text)
 
-    return file_name, file_content.read()
+    return file_name, file_content.getvalue()
 
 
 def is_class_base_hook(class_def: ast.ClassDef) -> str | None:
@@ -425,6 +492,7 @@ def generate_outlets_reference():
     outlets_dict = {outlet.name: outlet.value for outlet in outlets_enum}
 
     file_name = PLUGINS_PATH / "template-outlets-reference.md"
+
     file_content = StringIO()
     file_content.write("# Built-in template outlets reference")
     file_content.write("\n\n")
@@ -437,7 +505,7 @@ def generate_outlets_reference():
         file_content.write("\n\n")
         file_content.write(outlet_contents)
 
-    return {file_name: file_content.read()}
+    return {file_name: file_content.getvalue()}
 
 
 def get_callable_class_signature(class_def: ast.ClassDef) -> tuple[str, str | None]:
