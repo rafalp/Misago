@@ -223,14 +223,26 @@
                       {{ last_edited_at|date_relative_in_sentence }}
                     </span>
                   {% endcapture %}
-                  {% if last_edit_reason %}
-                    {% blocktranslate trimmed with editor_name=last_editor_name edited_at=last_edited_at_html|safe reason=last_edit_reason context="post feed post edits" %}
-                      Last by {{ editor_name }}, {{ edited_at }}. Reason: {{ reason }}
-                    {% endblocktranslate %}
+                  {% if show_last_editor %}
+                    {% if last_edit_reason %}
+                      {% blocktranslate trimmed with editor_name=last_editor_name edited_at=last_edited_at_html|safe reason=last_edit_reason context="post feed post edits" %}
+                        Last by {{ editor_name }}, {{ edited_at }}. Reason: {{ reason }}
+                      {% endblocktranslate %}
+                    {% else %}
+                      {% blocktranslate trimmed with editor_name=last_editor_name edited_at=last_edited_at_html|safe context="post feed post edits" %}
+                        Last by {{ editor_name }}, {{ edited_at }}.
+                      {% endblocktranslate %}
+                    {% endif %}
                   {% else %}
-                    {% blocktranslate trimmed with editor_name=last_editor_name edited_at=last_edited_at_html|safe context="post feed post edits" %}
-                      Last by {{ editor_name }}, {{ edited_at }}.
-                    {% endblocktranslate %}
+                    {% if last_edit_reason %}
+                      {% blocktranslate trimmed with edited_at=last_edited_at_html|safe reason=last_edit_reason context="post feed post edits" %}
+                        Last {{ edited_at }}. Reason: {{ reason }}
+                      {% endblocktranslate %}
+                    {% else %}
+                      {% blocktranslate trimmed with edited_at=last_edited_at_html|safe context="post feed post edits" %}
+                        Last {{ edited_at }}.
+                      {% endblocktranslate %}
+                    {% endif %}
                   {% endif %}
                 {% endif %}
                 {% if edits_url %}
