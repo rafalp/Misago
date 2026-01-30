@@ -92,7 +92,7 @@ def compare_files(files_content):
         filename = str(path).split("/")[-1].lower()
         if filename in KEEP_PLUGINS_HOOKS_PATHS:
             continue
-        
+
         if Path(path) not in files_content:
             report.deleted_files.append(format_path(path))
 
@@ -100,7 +100,7 @@ def compare_files(files_content):
 
 
 def format_path(path: Path) -> str:
-    return str(path)[len(str(BASE_PATH)) + 1:]
+    return str(path)[len(str(BASE_PATH)) + 1 :]
 
 
 def print_check_message(report):
@@ -151,20 +151,14 @@ def print_completed_message(report):
         )
     elif report.missing_files:
         files = "file" if len(report.missing_files) == 1 else "files"
-        message.append(
-            f"Saved {len(report.missing_files)} new {files}."
-        )
+        message.append(f"Saved {len(report.missing_files)} new {files}.")
     elif report.outdated_files:
         files = "file" if len(report.outdated_files) == 1 else "files"
-        message.append(
-            f"Updated {len(report.outdated_files)} {files}."
-        )
+        message.append(f"Updated {len(report.outdated_files)} {files}.")
 
     if report.deleted_files:
         files = "file" if len(report.deleted_files) == 1 else "files"
-        message.append(
-            f"Deleted {len(report.deleted_files)} {files}."
-        )
+        message.append(f"Deleted {len(report.deleted_files)} {files}.")
 
     sys.stdout.write("\n")
 
