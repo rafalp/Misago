@@ -168,10 +168,11 @@ class Quote {
       this.renderer,
       this.postprocess
     )
+
     const quote = selection.getQuote(root)
 
     if (quote) {
-      return "\n\n" + selection.getQuote(root) + "\n\n"
+      return "\n\n" + quote + "\n\n"
     }
 
     return ""
@@ -247,20 +248,22 @@ class Quote {
 
   reply = () => {
     const form = document.getElementById("misago-htmx-quick-reply")
+    this.updateForm(form, this.quote)
+    this.clearState()
+  }
 
-    if (form && this.quote) {
-      const textarea = form.querySelector(".markup-editor-textarea")
-      if (textarea) {
-        if (textarea.value.trim()) {
-          textarea.value += this.quote
+  updateForm = (form, quote) => {
+    if (form && quote) {
+      const input = form.querySelector(".markup-editor-textarea")
+      if (input) {
+        if (input.value.trim()) {
+          input.value += quote
         } else {
-          textarea.value = this.quote.trimStart()
+          input.value = quote.trimStart()
         }
         snackbar.info(pgettext("quote toolbar", "Quote added to reply"))
       }
     }
-
-    this.clearState()
   }
 
   copyQuote = async () => {

@@ -13,6 +13,7 @@ from ..permissions.edits import (
 )
 from ..permissions.threads import (
     check_edit_thread_post_permission,
+    check_reply_thread_permission,
 )
 from ..permissions.proxy import UserPermissionsProxy
 from ..threadupdates.models import ThreadUpdate
@@ -154,12 +155,16 @@ class PostFeed:
             "updated_at": post.updated_at,
             "last_edit_reason": None,
             "edit_url": None,
+            "quote_url": None,
             "moderation": self.is_moderator,
             "is_hidden": post.is_hidden,
             "is_visible": is_visible,
         }
 
-        if self.allow_edit_post(post):
+        if self.allow_reply_thread() and is_visible:
+            data["quote_url"] = self.get_quote_post_url(post)
+
+        if self.allow_edit_post(post) and is_visible:
             if post.id == self.thread.first_post_id and self.allow_edit_thread:
                 data["edit_url"] = self.get_edit_thread_post_url()
             else:
@@ -184,6 +189,12 @@ class PostFeed:
                 data["edits_url"] = self.get_post_edits_url(post)
 
         return data
+
+    def allow_reply_thread(self) -> bool:
+        return False
+
+    def get_quote_post_url(self, post: Post) -> str | None:
+        return None
 
     def allow_edit_post(self, post: Post) -> bool:
         return False
@@ -338,6 +349,26 @@ class ThreadPostFeed(PostFeed):
             self.thread.category_id
         )
 
+    def allow_reply_thread(self) -> bool:
+        if self.request.user.is_anonymous:
+            return False
+
+        with check_permissions() as can_reply_thread:
+            check_reply_thread_permission(
+                self.request.user_permissions, self.thread.category, self.thread
+            )
+
+        return can_reply_thread
+
+    def get_quote_post_url(self, post: Post) -> str:
+        return (
+            reverse(
+                "misago:thread-reply",
+                kwargs={"thread_id": self.thread.id, "slug": self.thread.slug},
+            )
+            + f"?quote={post.id}"
+        )
+
     def allow_edit_post(self, post: Post) -> bool:
         if self.request.user.is_anonymous:
             return False
@@ -349,7 +380,7 @@ class ThreadPostFeed(PostFeed):
 
         return can_edit_post
 
-    def get_edit_thread_post_url(self) -> str | None:
+    def get_edit_thread_post_url(self) -> str:
         return reverse(
             "misago:thread-edit",
             kwargs={"thread_id": self.thread.id, "slug": self.thread.slug},

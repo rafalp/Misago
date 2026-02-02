@@ -3,6 +3,7 @@ from django.urls import reverse
 from ..permissions.checkutils import check_permissions
 from ..permissions.privatethreads import (
     check_edit_private_thread_post_permission,
+    check_reply_private_thread_permission,
 )
 from ..threads.models import Post
 from ..threads.postfeed import PostFeed
@@ -12,6 +13,23 @@ from ..threadupdates.models import ThreadUpdate
 class PrivateThreadPostFeed(PostFeed):
     def get_moderator_status(self) -> bool:
         return self.request.user_permissions.is_private_threads_moderator
+
+    def allow_reply_thread(self) -> bool:
+        with check_permissions() as can_reply_thread:
+            check_reply_private_thread_permission(
+                self.request.user_permissions, self.thread
+            )
+
+        return can_reply_thread
+
+    def get_quote_post_url(self, post: Post) -> str:
+        return (
+            reverse(
+                "misago:private-thread-reply",
+                kwargs={"thread_id": self.thread.id, "slug": self.thread.slug},
+            )
+            + f"?quote={post.id}"
+        )
 
     def allow_edit_post(self, post: Post) -> bool:
         with check_permissions() as can_edit_post:

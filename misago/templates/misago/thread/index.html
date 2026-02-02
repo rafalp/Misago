@@ -50,5 +50,9 @@
     reply: {% if reply.url %}!!document.getElementById("misago-htmx-quick-reply"){% else %}false{% endif %},
     quote: {% if user.is_authenticated %}true{% else %}false{% endif %},
   })
+
+  {% if reply.url %}
+  misago.feed.activate()
+  {% endif %}
 </script>
 {% endblock javascript %}
