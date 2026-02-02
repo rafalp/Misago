@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.core.exceptions import PermissionDenied
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -226,7 +227,12 @@ class ReplyView(View):
         if not post_id:
             return None
 
-        return self.backend.get_thread_post(request, thread, post_id, for_content=True)
+        try:
+            return self.backend.get_thread_post(
+                request, thread, post_id, for_content=True
+            )
+        except (Http404, PermissionDenied):
+            return None
 
     def is_valid(self, formset: Formset, state: ReplyState) -> bool:
         return (
