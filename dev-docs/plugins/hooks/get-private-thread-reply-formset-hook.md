@@ -19,6 +19,7 @@ def custom_get_private_thread_reply_formset_filter(
     action: GetPrivateThreadReplyFormsetHookAction,
     request: HttpRequest,
     thread: Thread,
+    initial: dict | None,
 ) -> 'PrivateThreadReplyFormset':
     ...
 ```
@@ -47,13 +48,19 @@ The `Thread` instance.
 
 ### Return value
 
+#### `initial: dict | None`
+
+A `dict` containing initial data, or `None`.
+
 A `PrivateThreadReplyFormset` instance with forms for posting a new private thread reply.
 
 
 ## Action
 
 ```python
-def get_private_thread_reply_formset_action(request: HttpRequest, thread: Thread) -> 'PrivateThreadReplyFormset':
+def get_private_thread_reply_formset_action(
+    request: HttpRequest, thread: Thread, initial: dict | None
+) -> 'PrivateThreadReplyFormset':
     ...
 ```
 
@@ -70,6 +77,11 @@ The request object.
 #### `thread: Thread`
 
 The `Thread` instance.
+
+
+#### `initial: dict | None`
+
+A `dict` containing initial data, or `None`.
 
 
 ### Return value
@@ -92,9 +104,9 @@ from .forms import SelectUserForm
 
 @get_private_thread_reply_formset_hook.append_filter
 def add_select_user_form(
-    action, request: HttpRequest, thread: Thread
+    action, request: HttpRequest, thread: Thread, initial: dict | None
 ) -> PrivateThreadReplyFormset:
-    formset = action(request, thread)
+    formset = action(request, thread, initial)
 
     if request.method == "POST":
         form = SelectUserForm(request.POST, prefix="select-user")
