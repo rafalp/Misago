@@ -6,6 +6,7 @@
   {% if htmx_swap %}
     hx-swap-oob="true"
   {% endif %}
+  mg-feed-item
 >
   <a id="post-{{ post.id }}" class="scroll-target"></a>
   <div class="posts-feed-item-post">
@@ -293,7 +294,7 @@
                     hx-disabled-elt="this"
                   >
                     <span class="material-icon">favorite</span>
-                    {% translate "Liked" context "posts feed like post" %}
+                    {% translate "Liked" context "posts feed like post btn" %}
                   </button>
                 </form>
               {% else %}
@@ -303,7 +304,7 @@
                   disabled
                 >
                   <span class="material-icon">favorite</span>
-                  {% translate "Liked" context "posts feed like post" %}
+                  {% translate "Liked" context "posts feed like post btn" %}
                 </button>
               {% endif %}
             {% endif %}
@@ -318,7 +319,17 @@
                 hx-swap="innerHTML show:#post-{{ post.id }}:top"
               >
                 <span class="material-icon">edit</span>
-                {% translate "Edit" context "posts feed edit post" %}
+                {% translate "Edit" context "posts feed edit post btn" %}
+              </a>
+            {% endif %}
+            {% if quote_url %}
+              <a
+                class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-quote"
+                href="{{ quote_url }}"
+                mg-feed-action="quote"
+              >
+                <span class="material-icon">add_box</span>
+                {% translate "Quote" context "posts feed quote post btn" %}
               </a>
             {% endif %}
           </div>

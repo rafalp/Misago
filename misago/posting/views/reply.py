@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.core.exceptions import PermissionDenied
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -19,6 +20,7 @@ from ...permissions.threads import (
     check_edit_thread_post_permission,
     check_reply_thread_permission,
 )
+from ...privatethreads.views.backend import private_thread_backend
 from ...privatethreads.views.generic import PrivateThreadView
 from ...privatethreads.redirect import redirect_to_private_thread_post
 from ...readtracker.tracker import (
@@ -31,6 +33,7 @@ from ...readtracker.threads import is_category_read
 from ...threads.models import Post, Thread
 from ...threads.prefetch import prefetch_post_feed_related_objects
 from ...threads.redirect import redirect_to_thread_post
+from ...threads.views.backend import ViewBackend, thread_backend
 from ...threads.views.generic import ThreadView
 from ..hooks import (
     get_private_thread_reply_context_data_hook,
@@ -54,6 +57,7 @@ from ..validators import validate_flood_control, validate_posted_contents
 
 
 class ReplyView(View):
+    backend: ViewBackend
     thread_annotate_read_time: bool = True
 
     template_name: str
@@ -62,7 +66,8 @@ class ReplyView(View):
 
     def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
-        formset = self.get_formset(request, thread)
+        initial_data = self.get_formset_initial_data(request, thread)
+        formset = self.get_formset(request, thread, initial_data)
         return self.render(request, thread, formset)
 
     def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
@@ -192,8 +197,42 @@ class ReplyView(View):
     ) -> ThreadReplyState:
         raise NotImplementedError()
 
-    def get_formset(self, request: HttpRequest, thread: Thread) -> Formset:
+    def get_formset(
+        self, request: HttpRequest, thread: Thread, initial: dict | None = None
+    ) -> Formset:
         raise NotImplementedError()
+
+    def get_formset_initial_data(
+        self, request: HttpRequest, thread: Thread
+    ) -> dict | None:
+        data = {}
+        if quoted_post := self.get_quoted_post(request, thread):
+            data["post"] = (
+                f"[quote={quoted_post.poster_name}, post: {quoted_post.id}]"
+                "\n"
+                f"{quoted_post.original}"
+                "\n"
+                "[/quote]"
+                "\n\n"
+            )
+
+        return data or None
+
+    def get_quoted_post(self, request: HttpRequest, thread: Thread) -> Post | None:
+        try:
+            post_id = int(request.GET.get("quote") or 0)
+        except (ValueError, TypeError):
+            return None
+
+        if not post_id:
+            return None
+
+        try:
+            return self.backend.get_thread_post(
+                request, thread, post_id, for_content=True
+            )
+        except (Http404, PermissionDenied):
+            return None
 
     def is_valid(self, formset: Formset, state: ReplyState) -> bool:
         return (
@@ -277,6 +316,8 @@ class ReplyView(View):
 
 
 class ThreadReplyView(ReplyView, ThreadView):
+    backend = thread_backend
+
     template_name: str = "misago/thread_reply/index.html"
     template_name_htmx: str = "misago/thread_reply/form.html"
 
@@ -302,8 +343,10 @@ class ThreadReplyView(ReplyView, ThreadView):
     ) -> ThreadReplyState:
         return get_reply_thread_state(request, thread, post)
 
-    def get_formset(self, request: HttpRequest, thread: Thread) -> ThreadReplyFormset:
-        return get_thread_reply_formset(request, thread)
+    def get_formset(
+        self, request: HttpRequest, thread: Thread, initial: dict | None = None
+    ) -> ThreadReplyFormset:
+        return get_thread_reply_formset(request, thread, initial)
 
     def get_context_data(
         self, request: HttpRequest, thread: Thread, formset: ThreadReplyFormset
@@ -329,6 +372,8 @@ class ThreadReplyView(ReplyView, ThreadView):
 
 
 class PrivateThreadReplyView(ReplyView, PrivateThreadView):
+    backend = private_thread_backend
+
     template_name: str = "misago/private_thread_reply/index.html"
     template_name_htmx: str = "misago/private_thread_reply/form.html"
 
@@ -355,9 +400,9 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
         return get_reply_private_thread_state(request, thread, post)
 
     def get_formset(
-        self, request: HttpRequest, thread: Thread
+        self, request: HttpRequest, thread: Thread, initial: dict | None = None
     ) -> PrivateThreadReplyFormset:
-        return get_private_thread_reply_formset(request, thread)
+        return get_private_thread_reply_formset(request, thread, initial)
 
     def get_context_data(
         self, request: HttpRequest, thread: Thread, formset: PrivateThreadReplyFormset

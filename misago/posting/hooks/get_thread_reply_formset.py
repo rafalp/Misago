@@ -24,6 +24,10 @@ class GetThreadReplyFormsetHookAction(Protocol):
 
     The `Thread` instance.
 
+    ## `initial: dict | None`
+
+    A `dict` containing initial data, or `None`.
+
     # Return value
 
     A `ThreadReplyFormset` instance with forms for posting a new thread reply.
@@ -33,6 +37,7 @@ class GetThreadReplyFormsetHookAction(Protocol):
         self,
         request: HttpRequest,
         thread: Thread,
+        initial: dict | None,
     ) -> "ThreadReplyFormset": ...
 
 
@@ -57,6 +62,10 @@ class GetThreadReplyFormsetHookFilter(Protocol):
 
     The `Thread` instance.
 
+    ## `initial: dict | None`
+
+    A `dict` containing initial data, or `None`.
+
     # Return value
 
     A `ThreadReplyFormset` instance with forms for posting a new thread reply.
@@ -67,6 +76,7 @@ class GetThreadReplyFormsetHookFilter(Protocol):
         action: GetThreadReplyFormsetHookAction,
         request: HttpRequest,
         thread: Thread,
+        initial: dict | None,
     ) -> "ThreadReplyFormset": ...
 
 
@@ -96,9 +106,9 @@ class GetThreadReplyFormsetHook(
 
     @get_thread_reply_formset_hook.append_filter
     def add_select_user_form(
-        action, request: HttpRequest, thread: Thread
+        action, request: HttpRequest, thread: Thread, initial: dict | None
     ) -> ThreadReplyFormset:
-        formset = action(request, thread)
+        formset = action(request, thread, initial)
 
         if request.method == "POST":
             form = SelectUserForm(request.POST, prefix="select-user")
@@ -117,8 +127,9 @@ class GetThreadReplyFormsetHook(
         action: GetThreadReplyFormsetHookAction,
         request: HttpRequest,
         thread: Thread,
+        initial: dict | None,
     ) -> "ThreadReplyFormset":
-        return super().__call__(action, request, thread)
+        return super().__call__(action, request, thread, initial)
 
 
 get_thread_reply_formset_hook = GetThreadReplyFormsetHook()

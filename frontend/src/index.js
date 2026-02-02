@@ -11,6 +11,7 @@ import "misago/style/index.less"
 import BulkModeration from "./BulkModeration"
 import { Mention } from "./Autocomplete"
 import { deleteElement, slideUpElement } from "./animations"
+import Feed from "./feed"
 import "./focusOn"
 import "./formValidators"
 import "./htmx-error-handler"
@@ -45,6 +46,7 @@ export class Misago {
     this.editor = editor
     this.lightbox = lightbox
     this.quote = quote
+    this.feed = new Feed()
 
     this.deleteElement = deleteElement
     this.slideUpElement = slideUpElement

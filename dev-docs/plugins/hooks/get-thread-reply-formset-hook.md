@@ -19,6 +19,7 @@ def custom_get_thread_reply_formset_filter(
     action: GetThreadReplyFormsetHookAction,
     request: HttpRequest,
     thread: Thread,
+    initial: dict | None,
 ) -> 'ThreadReplyFormset':
     ...
 ```
@@ -45,6 +46,11 @@ The request object.
 The `Thread` instance.
 
 
+#### `initial: dict | None`
+
+A `dict` containing initial data, or `None`.
+
+
 ### Return value
 
 A `ThreadReplyFormset` instance with forms for posting a new thread reply.
@@ -53,7 +59,9 @@ A `ThreadReplyFormset` instance with forms for posting a new thread reply.
 ## Action
 
 ```python
-def get_thread_reply_formset_action(request: HttpRequest, thread: Thread) -> 'ThreadReplyFormset':
+def get_thread_reply_formset_action(
+    request: HttpRequest, thread: Thread, initial: dict | None
+) -> 'ThreadReplyFormset':
     ...
 ```
 
@@ -70,6 +78,11 @@ The request object.
 #### `thread: Thread`
 
 The `Thread` instance.
+
+
+#### `initial: dict | None`
+
+A `dict` containing initial data, or `None`.
 
 
 ### Return value
@@ -92,9 +105,9 @@ from .forms import SelectUserForm
 
 @get_thread_reply_formset_hook.append_filter
 def add_select_user_form(
-    action, request: HttpRequest, thread: Thread
+    action, request: HttpRequest, thread: Thread, initial: dict | None
 ) -> ThreadReplyFormset:
-    formset = action(request, thread)
+    formset = action(request, thread, initial)
 
     if request.method == "POST":
         form = SelectUserForm(request.POST, prefix="select-user")

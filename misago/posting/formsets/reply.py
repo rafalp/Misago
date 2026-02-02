@@ -22,15 +22,15 @@ class PrivateThreadReplyFormset(Formset):
 
 
 def get_thread_reply_formset(
-    request: HttpRequest, thread: Thread
+    request: HttpRequest, thread: Thread, initial: dict | None = None
 ) -> ThreadReplyFormset:
     return get_thread_reply_formset_hook(
-        _get_thread_reply_formset_action, request, thread
+        _get_thread_reply_formset_action, request, thread, initial
     )
 
 
 def _get_thread_reply_formset_action(
-    request: HttpRequest, thread: Thread
+    request: HttpRequest, thread: Thread, initial: dict | None
 ) -> ThreadReplyFormset:
     formset = ThreadReplyFormset()
     formset.add_form(
@@ -39,21 +39,22 @@ def _get_thread_reply_formset_action(
             can_upload_attachments=can_upload_threads_attachments(
                 request.user_permissions, thread.category
             ),
+            initial=initial.get("post") if initial else None,
         )
     )
     return formset
 
 
 def get_private_thread_reply_formset(
-    request: HttpRequest, thread: Thread
+    request: HttpRequest, thread: Thread, initial: dict | None = None
 ) -> PrivateThreadReplyFormset:
     return get_private_thread_reply_formset_hook(
-        _get_private_thread_reply_formset_action, request, thread
+        _get_private_thread_reply_formset_action, request, thread, initial
     )
 
 
 def _get_private_thread_reply_formset_action(
-    request: HttpRequest, thread: Thread
+    request: HttpRequest, thread: Thread, initial: dict | None
 ) -> PrivateThreadReplyFormset:
     can_upload_attachments = False
     if request.settings.allow_private_threads_attachments:
@@ -66,6 +67,7 @@ def _get_private_thread_reply_formset_action(
         create_post_form(
             request,
             can_upload_attachments=can_upload_attachments,
+            initial=initial.get("post") if initial else None,
         )
     )
     return formset

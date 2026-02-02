@@ -220,6 +220,156 @@ def test_thread_reply_view_displays_posting_form_to_users_with_in_closed_thread_
     assert_contains(response, thread.title)
 
 
+def test_thread_reply_view_displays_posting_form_with_quoted_post(
+    thread_reply_factory, user_client, thread
+):
+    post = thread_reply_factory(
+        thread, poster="QuotedUser", original="Bread and butter"
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-reply",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+        + f"?quote={post.id}"
+    )
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
+    assert_contains(response, f"[quote=QuotedUser, post: {post.id}]")
+    assert_contains(response, post.original)
+    assert_contains(response, "[/quote]")
+
+
+def test_thread_reply_view_doesnt_init_posting_form_with_hidden_quoted_post(
+    thread_reply_factory, user_client, thread
+):
+    post = thread_reply_factory(
+        thread, poster="QuotedUser", original="Bread and butter", is_hidden=True
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-reply",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+        + f"?quote={post.id}"
+    )
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
+    assert_not_contains(response, f"[quote=QuotedUser, post: {post.id}]")
+    assert_not_contains(response, post.original)
+    assert_not_contains(response, "[/quote]")
+
+
+def test_thread_reply_view_doesnt_init_posting_form_with_invisible_quoted_post(
+    thread_reply_factory, user_client, thread
+):
+    post = thread_reply_factory(
+        thread, poster="QuotedUser", original="Bread and butter", is_unapproved=True
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-reply",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+        + f"?quote={post.id}"
+    )
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
+    assert_not_contains(response, f"[quote=QuotedUser, post: {post.id}]")
+    assert_not_contains(response, post.original)
+    assert_not_contains(response, "[/quote]")
+
+
+def test_thread_reply_view_doesnt_init_posting_form_with_other_thread_quoted_post(
+    thread_reply_factory, user_client, thread, user_thread
+):
+    post = thread_reply_factory(
+        user_thread, poster="QuotedUser", original="Bread and butter"
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-reply",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+        + f"?quote={post.id}"
+    )
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
+    assert_not_contains(response, f"[quote=QuotedUser, post: {post.id}]")
+    assert_not_contains(response, post.original)
+    assert_not_contains(response, "[/quote]")
+
+
+def test_thread_reply_view_doesnt_init_posting_form_with_non_existing_quoted_post(
+    user_client, thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:thread-reply",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+        + f"?quote={thread.last_post_id * 1000}"
+    )
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
+    assert_not_contains(response, f"[quote=User, post:")
+
+
+def test_thread_reply_view_doesnt_init_posting_form_with_invalid_quoted_post(
+    user_client, thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:thread-reply",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+        + f"?quote=invalid"
+    )
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
+    assert_not_contains(response, f"[quote=")
+
+
+def test_thread_reply_view_doesnt_init_posting_form_with_empty_quoted_post(
+    user_client, thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:thread-reply",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+        + f"?quote="
+    )
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, thread.title)
+    assert_not_contains(response, f"[quote=")
+
+
 def test_thread_reply_view_posts_new_reply(user_client, thread):
     response = user_client.post(
         reverse(
