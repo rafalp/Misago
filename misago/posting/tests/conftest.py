@@ -6,6 +6,11 @@ from ..hooks import validate_posted_contents_hook
 
 
 @pytest.fixture
+def mock_notify_on_new_thread_reply(mocker):
+    return mocker.patch("misago.posting.views.reply.notify_on_new_thread_reply")
+
+
+@pytest.fixture
 def mock_upgrade_post_content(mocker):
     return mocker.patch("misago.posting.state.state.upgrade_post_content")
 

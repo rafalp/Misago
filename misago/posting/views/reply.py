@@ -11,6 +11,7 @@ from django.views import View
 
 from ...categories.models import Category
 from ...htmx.response import htmx_redirect
+from ...notifications.tasks import notify_on_new_thread_reply
 from ...permissions.checkutils import check_permissions
 from ...permissions.privatethreads import (
     check_edit_private_thread_post_permission,
@@ -94,6 +95,8 @@ class ReplyView(View):
             return self.render(request, thread, formset)
 
         state.save()
+
+        self.post_state_save(request, state)
 
         if state.is_merged:
             messages.success(
@@ -240,6 +243,14 @@ class ReplyView(View):
             and (state.is_merged or validate_flood_control(formset, state))
             and validate_posted_contents(formset, state)
         )
+
+    def post_state_save(self, request: HttpRequest, state: ReplyState):
+        if not state.is_merged:
+            # For now new reply notifications are only triggered
+            # when completely new reply is posted.
+            # Handling merge case will likely need other solution in order to work
+            # but thats out of scope of 0.40 release.
+            notify_on_new_thread_reply.delay(state.post.id)
 
     def render(
         self,
