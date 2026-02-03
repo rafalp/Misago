@@ -269,7 +269,7 @@ def test_private_thread_reply_view_doesnt_init_posting_form_with_empty_quoted_po
 
 
 def test_private_thread_reply_view_posts_new_reply(
-    user_client, other_user_private_thread
+    user_client, other_user_private_thread, mock_notify_on_new_thread_reply
 ):
     response = user_client.post(
         reverse(
@@ -299,9 +299,11 @@ def test_private_thread_reply_view_posts_new_reply(
         + f"#post-{reply.id}"
     )
 
+    mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
+
 
 def test_private_thread_reply_view_posts_new_reply_in_htmx(
-    user_client, other_user_private_thread
+    user_client, other_user_private_thread, mock_notify_on_new_thread_reply
 ):
     response = user_client.post(
         reverse(
@@ -332,9 +334,11 @@ def test_private_thread_reply_view_posts_new_reply_in_htmx(
         + f"#post-{reply.id}"
     )
 
+    mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
+
 
 def test_private_thread_reply_view_posts_new_reply_in_quick_reply(
-    user_client, other_user_private_thread
+    user_client, other_user_private_thread, mock_notify_on_new_thread_reply
 ):
     response = user_client.post(
         reverse(
@@ -365,9 +369,11 @@ def test_private_thread_reply_view_posts_new_reply_in_quick_reply(
         + f"#post-{reply.id}"
     )
 
+    mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
+
 
 def test_private_thread_reply_view_posts_new_reply_in_quick_reply_with_htmx(
-    user_client, other_user_private_thread
+    user_client, other_user_private_thread, mock_notify_on_new_thread_reply
 ):
     response = user_client.post(
         reverse(
@@ -390,9 +396,11 @@ def test_private_thread_reply_view_posts_new_reply_in_quick_reply_with_htmx(
     assert_contains(response, f"post-{reply.id}")
     assert_contains(response, f"<p>This is a reply!</p>")
 
+    mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
+
 
 def test_private_thread_reply_view_posted_reply_in_quick_reply_with_htmx_is_read(
-    user_client, user, other_user_private_thread
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
 ):
     mark_thread_read(
         user, other_user_private_thread, other_user_private_thread.last_post.posted_at
@@ -418,6 +426,8 @@ def test_private_thread_reply_view_posted_reply_in_quick_reply_with_htmx_is_read
 
     assert_contains(response, f"post-{reply.id}")
     assert_contains(response, f"<p>This is a reply!</p>")
+
+    mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
 
     ReadCategory.objects.get(
         user=user,
@@ -654,7 +664,11 @@ def test_private_thread_reply_view_merges_reply_with_users_recent_post_in_htmx(
 
 @override_dynamic_settings(merge_concurrent_posts=0, flood_control=0)
 def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_feature_is_disabled(
-    thread_reply_factory, user, user_client, other_user_private_thread
+    thread_reply_factory,
+    user,
+    user_client,
+    other_user_private_thread,
+    mock_notify_on_new_thread_reply,
 ):
     reply = thread_reply_factory(
         other_user_private_thread, poster=user, original="Previous message"
@@ -692,6 +706,10 @@ def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_
     reply.refresh_from_db()
     assert reply.original == "Previous message"
 
+    mock_notify_on_new_thread_reply.delay.assert_called_once_with(
+        other_user_private_thread.last_post_id
+    )
+
 
 @override_dynamic_settings(flood_control=0)
 def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_in_preview(
@@ -723,7 +741,11 @@ def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_in_
 
 @override_dynamic_settings(merge_concurrent_posts=1)
 def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_too_old(
-    thread_reply_factory, user, user_client, other_user_private_thread
+    thread_reply_factory,
+    user,
+    user_client,
+    other_user_private_thread,
+    mock_notify_on_new_thread_reply,
 ):
     post = thread_reply_factory(
         other_user_private_thread,
@@ -763,9 +785,15 @@ def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_
     assert reply.id == post.id + 1
     assert reply.original == "Reply contents"
 
+    mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
+
 
 def test_private_thread_reply_view_doesnt_merge_reply_with_recent_post_if_its_by_other_user(
-    thread_reply_factory, other_user, user_client, other_user_private_thread
+    thread_reply_factory,
+    other_user,
+    user_client,
+    other_user_private_thread,
+    mock_notify_on_new_thread_reply,
 ):
     post = thread_reply_factory(
         other_user_private_thread, poster=other_user, original="Previous message"
@@ -802,10 +830,16 @@ def test_private_thread_reply_view_doesnt_merge_reply_with_recent_post_if_its_by
     assert reply.id == post.id + 1
     assert reply.original == "Reply contents"
 
+    mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
+
 
 @override_dynamic_settings(flood_control=0)
 def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_hidden(
-    thread_reply_factory, user, user_client, other_user_private_thread
+    thread_reply_factory,
+    user,
+    user_client,
+    other_user_private_thread,
+    mock_notify_on_new_thread_reply,
 ):
     post = thread_reply_factory(
         other_user_private_thread,
@@ -845,10 +879,16 @@ def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_
     assert reply.id == post.id + 1
     assert reply.original == "Reply contents"
 
+    mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
+
 
 @override_dynamic_settings(flood_control=0)
 def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_not_editable(
-    thread_reply_factory, user, user_client, other_user_private_thread
+    thread_reply_factory,
+    user,
+    user_client,
+    other_user_private_thread,
+    mock_notify_on_new_thread_reply,
 ):
     post = thread_reply_factory(
         other_user_private_thread,
@@ -887,6 +927,8 @@ def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_
 
     assert reply.id == post.id + 1
     assert reply.original == "Reply contents"
+
+    mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
 
 
 def test_private_thread_reply_view_displays_attachments_form(
@@ -948,7 +990,11 @@ def test_private_thread_reply_view_hides_attachments_form_if_user_has_no_group_p
 
 
 def test_private_thread_reply_view_uploads_attachment_on_submit(
-    user_client, user, other_user_private_thread, teardown_attachments
+    user_client,
+    user,
+    other_user_private_thread,
+    mock_notify_on_new_thread_reply,
+    teardown_attachments,
 ):
     assert not Attachment.objects.exists()
 
@@ -978,6 +1024,8 @@ def test_private_thread_reply_view_uploads_attachment_on_submit(
     assert attachment.uploader_id == user.id
     assert not attachment.is_deleted
     assert attachment.name == "test.txt"
+
+    mock_notify_on_new_thread_reply.delay.assert_called_once()
 
 
 @pytest.mark.parametrize(
@@ -1168,7 +1216,10 @@ def test_private_thread_reply_view_displays_file_attachment(
 
 
 def test_private_thread_reply_view_associates_unused_attachment_on_submit(
-    user_client, other_user_private_thread, user_text_attachment
+    user_client,
+    other_user_private_thread,
+    user_text_attachment,
+    mock_notify_on_new_thread_reply,
 ):
     response = user_client.post(
         reverse(
@@ -1192,6 +1243,8 @@ def test_private_thread_reply_view_associates_unused_attachment_on_submit(
     assert user_text_attachment.thread_id == other_user_private_thread.id
     assert user_text_attachment.post_id == other_user_private_thread.last_post_id
     assert not user_text_attachment.is_deleted
+
+    mock_notify_on_new_thread_reply.delay.assert_called_once()
 
 
 def test_private_thread_reply_view_adds_attachment_to_deleted_list(
@@ -1277,7 +1330,10 @@ def test_private_thread_reply_view_maintains_deleted_attachments_list(
 
 
 def test_private_thread_reply_view_deletes_attachment_on_submit(
-    user_client, other_user_private_thread, user_text_attachment
+    user_client,
+    other_user_private_thread,
+    user_text_attachment,
+    mock_notify_on_new_thread_reply,
 ):
     response = user_client.post(
         reverse(
@@ -1313,6 +1369,8 @@ def test_private_thread_reply_view_deletes_attachment_on_submit(
     assert user_text_attachment.thread_id is None
     assert user_text_attachment.post_id is None
     assert user_text_attachment.is_deleted
+
+    mock_notify_on_new_thread_reply.delay.assert_called_once()
 
 
 def test_private_thread_reply_view_embeds_attachments_in_preview(
