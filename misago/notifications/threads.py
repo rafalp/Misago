@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Dict, Iterable, Optional
 
+from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.translation import pgettext
 
@@ -19,11 +20,44 @@ from ..permissions.privatethreads import (
 from ..threads.models import Post, Thread
 from ..threads.threadurl import get_thread_url
 from .enums import NotificationVerb, ThreadNotifications
+from .hooks import watch_thread_hook
 from .models import Notification, WatchedThread
 from .users import notify_user
 
 if TYPE_CHECKING:
     from ..users.models import User
+
+
+def watch_thread(
+    thread: Thread,
+    user: "User",
+    send_emails: bool = True,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> WatchedThread:
+    return watch_thread_hook(
+        _watch_thread_action, thread, user, send_emails, commit, request
+    )
+
+
+def _watch_thread_action(
+    thread: Thread,
+    user: "User",
+    send_emails: bool = True,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> WatchedThread:
+    watched_thread = WatchedThread(
+        user=user,
+        category=thread.category,
+        thread=thread,
+        send_emails=send_emails,
+    )
+
+    if commit:
+        watched_thread.save()
+
+    return watched_thread
 
 
 def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:
@@ -44,6 +78,22 @@ def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:
         ).delete()
 
     return watched_thread
+
+
+def unwatch_thread(
+    thread: Thread,
+    user: "User",
+    request: HttpRequest | None = None,
+) -> bool:
+    return _unwatch_thread_action(thread, user, request)
+
+
+def _unwatch_thread_action(
+    thread: Thread,
+    user: "User",
+    request: HttpRequest | None = None,
+) -> bool:
+    return bool(WatchedThread.objects.filter(user=user, thread=thread).delete())
 
 
 def get_watched_threads(
