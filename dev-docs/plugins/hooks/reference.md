@@ -8,6 +8,7 @@ Hooks instances are importable from the following Python modules:
 - [`misago.categories.hooks`](#misago-categories-hooks)
 - [`misago.edits.hooks`](#misago-edits-hooks)
 - [`misago.likes.hooks`](#misago-likes-hooks)
+- [`misago.notifications.hooks`](#misago-notifications-hooks)
 - [`misago.oauth2.hooks`](#misago-oauth2-hooks)
 - [`misago.parser.hooks`](#misago-parser-hooks)
 - [`misago.permissions.hooks`](#misago-permissions-hooks)
@@ -65,6 +66,13 @@ Hooks instances are importable from the following Python modules:
 - [`like_post_hook`](./like-post-hook.md)
 - [`remove_post_like_hook`](./remove-post-like-hook.md)
 - [`synchronize_post_likes_hook`](./synchronize-post-likes-hook.md)
+
+
+## `misago.notifications.hooks`
+
+`misago.notifications.hooks` defines the following hooks:
+
+- [`watch_thread_hook`](./watch-thread-hook.md)
 
 
 ## `misago.oauth2.hooks`
