@@ -72,6 +72,7 @@ Hooks instances are importable from the following Python modules:
 
 `misago.notifications.hooks` defines the following hooks:
 
+- [`unwatch_thread_hook`](./unwatch-thread-hook.md)
 - [`watch_thread_hook`](./watch-thread-hook.md)
 
 

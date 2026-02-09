@@ -20,7 +20,7 @@ from ..permissions.privatethreads import (
 from ..threads.models import Post, Thread
 from ..threads.threadurl import get_thread_url
 from .enums import NotificationVerb, ThreadNotifications
-from .hooks import watch_thread_hook
+from .hooks import unwatch_thread_hook, watch_thread_hook
 from .models import Notification, WatchedThread
 from .users import notify_user
 
@@ -60,6 +60,22 @@ def _watch_thread_action(
     return watched_thread
 
 
+def unwatch_thread(
+    thread: Thread,
+    user: "User",
+    request: HttpRequest | None = None,
+) -> bool:
+    return unwatch_thread_hook(_unwatch_thread_action, thread, user, request)
+
+
+def _unwatch_thread_action(
+    thread: Thread,
+    user: "User",
+    request: HttpRequest | None = None,
+) -> bool:
+    return bool(WatchedThread.objects.filter(user=user, thread=thread).delete())
+
+
 def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:
     """Returns watched thread entry for given user and thread combo.
 
@@ -78,22 +94,6 @@ def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:
         ).delete()
 
     return watched_thread
-
-
-def unwatch_thread(
-    thread: Thread,
-    user: "User",
-    request: HttpRequest | None = None,
-) -> bool:
-    return _unwatch_thread_action(thread, user, request)
-
-
-def _unwatch_thread_action(
-    thread: Thread,
-    user: "User",
-    request: HttpRequest | None = None,
-) -> bool:
-    return bool(WatchedThread.objects.filter(user=user, thread=thread).delete())
 
 
 def get_watched_threads(

@@ -40,7 +40,7 @@ See the [action](#action) section for details.
 
 #### `thread: Thread`
 
-The post to watch.
+The thread to watch.
 
 
 #### `user: User`
@@ -92,7 +92,7 @@ Misago function for creating a new `WatchedThread` instance.
 
 #### `thread: Thread`
 
-The post to watch.
+The thread to watch.
 
 
 #### `user: User`
@@ -145,7 +145,7 @@ def record_watched_thread_user_ip(
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> WatchedThread:
-    watched_thread = action(post, user, send_emails, False, request)
+    watched_thread = action(thread, user, send_emails, False, request)
 
     watched_thread.plugin_data["user_id"] = request.user_ip
 

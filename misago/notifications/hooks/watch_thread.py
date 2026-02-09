@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Protocol, Union
+from typing import TYPE_CHECKING, Protocol
 
 from django.http import HttpRequest
 
@@ -18,7 +18,7 @@ class WatchThreadHookAction(Protocol):
 
     ## `thread: Thread`
 
-    The post to watch.
+    The thread to watch.
 
     ## `user: User`
 
@@ -70,7 +70,7 @@ class WatchThreadHookFilter(Protocol):
 
     ## `thread: Thread`
 
-    The post to watch.
+    The thread to watch.
 
     ## `user: User`
 
@@ -139,7 +139,7 @@ class WatchThreadHook(
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> WatchedThread:
-        watched_thread = action(post, user, send_emails, False, request)
+        watched_thread = action(thread, user, send_emails, False, request)
 
         watched_thread.plugin_data["user_id"] = request.user_ip
 
