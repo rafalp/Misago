@@ -1,11 +1,17 @@
+from django.db import transaction
 from django.db.models import F
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views import View
 
 from ..permissions.notifications import check_notifications_permission
+from ..privatethreads.views.backend import private_thread_backend
+from ..threads.views.backend import thread_backend
+from ..threads.views.generic import GenericThreadView
 from .exceptions import NotificationVerbError
 from .models import Notification, WatchedThread
 from .registry import registry
+from .threads import watch_thread
 
 
 def notifications(request: HttpRequest) -> HttpResponse:
@@ -76,3 +82,21 @@ def disable_email_notifications(
             "thread": watched_thread.thread,
         },
     )
+
+
+class GenericWatchView(GenericThreadView):
+    def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+
+        with transaction.atomic():
+            WatchedThread.objects.filter(user=request.user, thread=thread).delete()
+            watched_thread = watch_thread(
+                thread, request.user, send_emails=True, request=request
+            )
+
+        if request.is_htmx:
+            # Render updated thread watched partial
+            raise NotImplementedError()
+
+        # Redirect back to the `next` url
+        raise NotImplementedError
