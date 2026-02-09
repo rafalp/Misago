@@ -73,7 +73,8 @@ def _unwatch_thread_action(
     user: "User",
     request: HttpRequest | None = None,
 ) -> bool:
-    return bool(WatchedThread.objects.filter(user=user, thread=thread).delete())
+    deleted_rows, _ = WatchedThread.objects.filter(user=user, thread=thread).delete()
+    return bool(deleted_rows)
 
 
 def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:
