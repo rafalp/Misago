@@ -13,7 +13,7 @@ from django.urls import reverse
 from django.views import View
 
 from ...categories.models import Category
-from ...notifications.threads import update_watched_thread_read_time
+from ...notifications.threads import get_watched_thread, update_watched_thread_read_time
 from ...permissions.checkutils import check_permissions
 from ...permissions.polls import check_start_thread_poll_permission
 from ...permissions.threads import (
@@ -66,6 +66,7 @@ class DetailView(View):
     feed_post_template_name: str = "misago/post_feed/post.html"
     reply_error_template_name: str = "misago/thread/reply_error.html"
     reply_template_name: str = "misago/quick_reply/form.html"
+    watch_thread_template_name: str = "misago/thread/watch_thread.html"
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         try:
@@ -106,11 +107,37 @@ class DetailView(View):
         return {
             "thread": thread,
             "thread_url": self.get_thread_url(thread),
+            "watch_thread": self.get_watch_thread_data(request, thread),
             "feed": self.get_post_feed_data(request, thread, page),
             "reply": self.get_reply_context_data(request, thread),
             "post_edits_modal_template": self.backend.post_edits_modal_template,
             "post_likes_modal_template": self.backend.post_likes_modal_template,
         }
+
+    def get_watch_thread_data(
+        self, request: HttpRequest, thread: Thread
+    ) -> dict | None:
+        if request.user.is_anonymous:
+            return None
+
+        if watched_thread := get_watched_thread(request.user, thread):
+            if watched_thread.send_emails:
+                notifications = 2
+            else:
+                notifications = 1
+        else:
+            notifications = 0
+
+        return {
+            "template_name": self.watch_thread_template_name,
+            "watch_thread_url": self.get_watch_thread_url(thread),
+            "watched_with_email": notifications == 2,
+            "watched": notifications == 1,
+            "not_watched": notifications == 0,
+        }
+
+    def get_watch_thread_url(self, thread: Thread) -> str:
+        raise NotImplementedError()
 
     def get_post_feed_data(
         self, request: HttpRequest, thread: Thread, page: int | None = None
@@ -300,6 +327,11 @@ class ThreadDetailView(DetailView, ThreadView):
             context["allow_start_poll"] = allow_start_poll
 
         return context
+
+    def get_watch_thread_url(self, thread: Thread) -> str:
+        return reverse(
+            "misago:thread-watch", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
 
     def get_thread_posts_queryset(
         self, request: HttpRequest, thread: Thread

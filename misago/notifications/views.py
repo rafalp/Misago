@@ -1,17 +1,20 @@
+from django.contrib import messages
 from django.db import transaction
 from django.db.models import F
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views import View
+from django.utils.translation import pgettext
 
 from ..permissions.notifications import check_notifications_permission
 from ..privatethreads.views.backend import private_thread_backend
+from ..threads.models import Thread
 from ..threads.views.backend import thread_backend
 from ..threads.views.generic import GenericThreadView
+from .enums import ThreadNotifications
 from .exceptions import NotificationVerbError
 from .models import Notification, WatchedThread
 from .registry import registry
-from .threads import watch_thread
+from .threads import unwatch_thread, watch_thread
 
 
 def notifications(request: HttpRequest) -> HttpResponse:
@@ -84,19 +87,68 @@ def disable_email_notifications(
     )
 
 
-class GenericWatchView(GenericThreadView):
+class WatchView(GenericThreadView):
+    template_name = "misago/watch_thread/htmx.html"
+
     def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
-        with transaction.atomic():
-            WatchedThread.objects.filter(user=request.user, thread=thread).delete()
-            watched_thread = watch_thread(
-                thread, request.user, send_emails=True, request=request
-            )
+        notifications = self.get_notification_level(request)
+        if notifications:
+            if self.watch_thread(request, thread, notifications):
+                message = pgettext("thread watched", "Notifications enabled")
+                messages.success(request, message)
+        else:
+            if unwatch_thread(thread, request.user, request):
+                message = pgettext("thread unwatched", "Notifications disabled")
+                messages.info(request, message)
 
         if request.is_htmx:
-            # Render updated thread watched partial
-            raise NotImplementedError()
+            return render(
+                request,
+                self.template_name,
+                {
+                    "thread": thread,
+                    "notifications": notifications,
+                    "notifications_site_and_email": notifications
+                    == ThreadNotifications.SITE_AND_EMAIL,
+                    "notifications_site_only": notifications
+                    == ThreadNotifications.SITE_ONLY,
+                    "notifications_disabled": notifications == ThreadNotifications.NONE,
+                },
+            )
 
         # Redirect back to the `next` url
-        raise NotImplementedError
+        next_thread_url = self.get_next_thread_url(request, thread)
+        return redirect(next_thread_url)
+
+    def get_notification_level(self, request: HttpRequest) -> int | None:
+        try:
+            return ThreadNotifications(int(request.POST.get("notifications")))
+        except (ValueError, TypeError) as e:
+            return None
+
+    @transaction.atomic
+    def watch_thread(
+        self, request: HttpRequest, thread: Thread, notifications: int
+    ) -> bool:
+        updated, _ = WatchedThread.objects.filter(
+            user=request.user, thread=thread
+        ).delete()
+
+        watch_thread(
+            thread,
+            request.user,
+            send_emails=notifications == ThreadNotifications.SITE_AND_EMAIL,
+            request=request,
+        )
+
+        return not updated
+
+
+class ThreadWatchView(WatchView):
+    backend = thread_backend
+
+
+class PrivateThreadWatchView(WatchView):
+    backend = private_thread_backend

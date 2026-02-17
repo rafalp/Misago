@@ -93,6 +93,13 @@ class GenericThreadView(View):
     def get_thread_post_url(self, post: Post) -> str:
         return self.backend.get_thread_post_url(post)
 
+    def get_next_thread_url(
+        self, request: HttpRequest, thread: Thread, strip_qs: bool = False
+    ) -> str:
+        return get_next_thread_url(
+            request, thread, self.backend.thread_url_name, strip_qs
+        )
+
     def get_thread_post_edits_url(
         self,
         post: Post,

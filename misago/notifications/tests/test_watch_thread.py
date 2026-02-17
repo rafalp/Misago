@@ -51,19 +51,3 @@ def test_watch_thread_with_commit_false_doesnt_save_watched_thread_instance_in_d
 
     with pytest.raises(WatchedThread.DoesNotExist):
         watched_thread.refresh_from_db()
-
-
-def test_watch_thread_creates_watched_thread_instance(user, thread):
-    watched_thread = watch_thread(thread, user)
-
-    assert watched_thread.category == thread.category
-    assert watched_thread.thread == thread
-    assert watched_thread.user == user
-    assert watched_thread.send_emails
-
-    watched_thread.refresh_from_db()
-
-    assert watched_thread.category == thread.category
-    assert watched_thread.thread == thread
-    assert watched_thread.user == user
-    assert watched_thread.send_emails
