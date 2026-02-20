@@ -412,3 +412,37 @@ def test_private_thread_watch_view_does_nothing_for_unwatched_thread_on_post_in_
     assert_contains(response, "Watch")
 
     assert not WatchedThread.objects.exists()
+
+
+def test_private_thread_watch_view_redirects_to_next_thread_url(
+    user_client, other_user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "notifications": ThreadNotifications.NONE,
+            "next": reverse(
+                "misago:private-thread",
+                kwargs={
+                    "thread_id": other_user_private_thread.id,
+                    "slug": other_user_private_thread.slug,
+                    "page": 21,
+                },
+            ),
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={
+            "thread_id": other_user_private_thread.id,
+            "slug": other_user_private_thread.slug,
+            "page": 21,
+        },
+    )
