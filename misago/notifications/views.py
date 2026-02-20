@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import F
 from django.http import Http404, HttpRequest, HttpResponse
@@ -91,6 +92,14 @@ class WatchView(GenericThreadView):
     template_name = "misago/watch_thread/htmx.html"
 
     def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
+        if request.user.is_anonymous:
+            raise PermissionDenied(
+                pgettext(
+                    "watch thread permission error",
+                    "You must be signed in to watch threads.",
+                )
+            )
+
         thread = self.get_thread(request, thread_id)
 
         notifications = self.get_notification_level(request)

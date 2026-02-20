@@ -446,3 +446,81 @@ def test_private_thread_watch_view_redirects_to_next_thread_url(
             "page": 21,
         },
     )
+
+
+def test_private_thread_watch_view_returns_error_403_if_user_is_anonymous(
+    client, other_user_private_thread
+):
+    response = client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+    )
+    assert_contains(
+        response, "You must be signed in to watch threads.", status_code=403
+    )
+
+
+def test_private_thread_watch_view_returns_error_403_if_user_has_no_private_threads_permission(
+    user_client, members_group, other_user_private_thread
+):
+    members_group.can_use_private_threads = False
+    members_group.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+    )
+    assert_contains(response, "You can&#x27;t use private threads.", status_code=403)
+
+
+def test_private_thread_watch_view_returns_error_404_if_thread_doesnt_exist(
+    user_client,
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": 1,
+                "slug": "doesnt-exist",
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_private_thread_watch_view_returns_error_404_if_user_cant_see_thread(
+    user_client, private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": private_thread.id,
+                "slug": private_thread.slug,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_private_thread_watch_view_returns_error_404_if_its_thread(user_client, thread):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+    assert response.status_code == 404

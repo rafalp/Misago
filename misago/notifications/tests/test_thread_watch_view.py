@@ -1,5 +1,7 @@
 from django.urls import reverse
 
+from ...permissions.enums import CategoryPermission
+from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains
 from ..enums import ThreadNotifications
 from ..models import WatchedThread
@@ -310,3 +312,104 @@ def test_thread_watch_view_redirects_to_next_thread_url(user_client, thread):
         "misago:thread",
         kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 21},
     )
+
+
+def test_thread_watch_view_returns_error_403_if_user_is_anonymous(client, thread):
+    response = client.post(
+        reverse(
+            "misago:thread-watch",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+    assert_contains(
+        response, "You must be signed in to watch threads.", status_code=403
+    )
+
+
+def test_thread_watch_view_returns_error_404_if_thread_doesnt_exist(user_client):
+    response = user_client.post(
+        reverse(
+            "misago:thread-watch",
+            kwargs={
+                "thread_id": 1,
+                "slug": "doesnt-exist",
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_watch_view_returns_error_404_if_user_cant_see_thread_category(
+    user_client, members_group, user, thread
+):
+    CategoryGroupPermission.objects.filter(
+        group=members_group,
+        permission=CategoryPermission.SEE,
+    ).delete()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-watch",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_watch_view_returns_error_404_if_user_cant_browse_thread_category(
+    user_client, members_group, user, thread
+):
+    CategoryGroupPermission.objects.filter(
+        group=members_group,
+        permission=CategoryPermission.BROWSE,
+    ).delete()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-watch",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_watch_view_returns_error_404_if_user_cant_see_thread(
+    user_client, user, thread
+):
+    thread.is_hidden = True
+    thread.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-watch",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+    assert response.status_code == 404
+
+
+def test_thread_watch_view_returns_error_404_if_its_private_thread(
+    user_client, other_user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+    )
+    assert response.status_code == 404
