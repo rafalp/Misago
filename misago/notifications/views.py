@@ -134,7 +134,7 @@ class WatchView(GenericThreadView):
     def get_notification_level(self, request: HttpRequest) -> int | None:
         try:
             return ThreadNotifications(int(request.POST.get("notifications")))
-        except (ValueError, TypeError) as e:
+        except (ValueError, TypeError):
             return None
 
     @transaction.atomic
