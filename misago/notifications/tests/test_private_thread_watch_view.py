@@ -1,0 +1,414 @@
+from django.urls import reverse
+
+from ...test import assert_contains
+from ..enums import ThreadNotifications
+from ..models import WatchedThread
+from ..threads import watch_thread
+
+
+def test_private_thread_watch_view_creates_new_watched_thread_with_emails_on_post(
+    user_client, user, other_user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.SITE_AND_EMAIL},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={
+            "thread_id": other_user_private_thread.id,
+            "slug": other_user_private_thread.slug,
+        },
+    )
+
+    watched_thread = WatchedThread.objects.get(
+        user=user, thread=other_user_private_thread
+    )
+    assert watched_thread.send_emails
+
+
+def test_private_thread_watch_view_creates_new_watched_thread_with_emails_on_post_in_htmx(
+    user_client, user, other_user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.SITE_AND_EMAIL},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Watched")
+
+    watched_thread = WatchedThread.objects.get(
+        user=user, thread=other_user_private_thread
+    )
+    assert watched_thread.send_emails
+
+
+def test_private_thread_watch_view_creates_new_watched_thread_with_emails_for_watched_thread_on_post(
+    user_client, user, other_user_private_thread
+):
+    watch_thread(other_user_private_thread, user, send_emails=False)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.SITE_AND_EMAIL},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={
+            "thread_id": other_user_private_thread.id,
+            "slug": other_user_private_thread.slug,
+        },
+    )
+
+    watched_thread = WatchedThread.objects.get(
+        user=user, thread=other_user_private_thread
+    )
+    assert watched_thread.send_emails
+
+
+def test_private_thread_watch_view_creates_new_watched_thread_with_emails_for_watched_thread_on_post_in_htmx(
+    user_client, user, other_user_private_thread
+):
+    watch_thread(other_user_private_thread, user, send_emails=False)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.SITE_AND_EMAIL},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Watched")
+
+    watched_thread = WatchedThread.objects.get(
+        user=user, thread=other_user_private_thread
+    )
+    assert watched_thread.send_emails
+
+
+def test_private_thread_watch_view_creates_new_watched_thread_with_emails_for_watched_thread_with_emails_on_post(
+    user_client, user, other_user_private_thread
+):
+    watch_thread(other_user_private_thread, user, send_emails=True)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.SITE_AND_EMAIL},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={
+            "thread_id": other_user_private_thread.id,
+            "slug": other_user_private_thread.slug,
+        },
+    )
+
+    watched_thread = WatchedThread.objects.get(
+        user=user, thread=other_user_private_thread
+    )
+    assert watched_thread.send_emails
+
+
+def test_private_thread_watch_view_creates_new_watched_thread_with_emails_for_watched_thread_with_emails_on_post_in_htmx(
+    user_client, user, other_user_private_thread
+):
+    watch_thread(other_user_private_thread, user, send_emails=True)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.SITE_AND_EMAIL},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Watched")
+
+    watched_thread = WatchedThread.objects.get(
+        user=user, thread=other_user_private_thread
+    )
+    assert watched_thread.send_emails
+
+
+def test_private_thread_watch_view_creates_new_watched_thread_without_emails_on_post(
+    user_client, user, other_user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.SITE_ONLY},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={
+            "thread_id": other_user_private_thread.id,
+            "slug": other_user_private_thread.slug,
+        },
+    )
+
+    watched_thread = WatchedThread.objects.get(
+        user=user, thread=other_user_private_thread
+    )
+    assert not watched_thread.send_emails
+
+
+def test_private_thread_watch_view_creates_new_watched_thread_without_emails_on_post_in_htmx(
+    user_client, user, other_user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.SITE_ONLY},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Watched")
+
+    watched_thread = WatchedThread.objects.get(
+        user=user, thread=other_user_private_thread
+    )
+    assert not watched_thread.send_emails
+
+
+def test_private_thread_watch_view_creates_new_watched_thread_without_emails_for_watched_thread_with_emails_on_post(
+    user_client, user, other_user_private_thread
+):
+    watch_thread(other_user_private_thread, user, send_emails=True)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.SITE_ONLY},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={
+            "thread_id": other_user_private_thread.id,
+            "slug": other_user_private_thread.slug,
+        },
+    )
+
+    watched_thread = WatchedThread.objects.get(
+        user=user, thread=other_user_private_thread
+    )
+    assert not watched_thread.send_emails
+
+
+def test_private_thread_watch_view_creates_new_watched_thread_without_emails_for_watched_thread_with_emails_on_post_in_htmx(
+    user_client, user, other_user_private_thread
+):
+    watch_thread(other_user_private_thread, user, send_emails=True)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.SITE_ONLY},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Watched")
+
+    watched_thread = WatchedThread.objects.get(
+        user=user, thread=other_user_private_thread
+    )
+    assert not watched_thread.send_emails
+
+
+def test_private_thread_watch_view_creates_new_watched_thread_without_emails_for_watched_thread_on_post(
+    user_client, user, other_user_private_thread
+):
+    watch_thread(other_user_private_thread, user, send_emails=False)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.SITE_ONLY},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={
+            "thread_id": other_user_private_thread.id,
+            "slug": other_user_private_thread.slug,
+        },
+    )
+
+    watched_thread = WatchedThread.objects.get(
+        user=user, thread=other_user_private_thread
+    )
+    assert not watched_thread.send_emails
+
+
+def test_private_thread_watch_view_creates_new_watched_thread_without_emails_for_watched_thread_on_post_in_htmx(
+    user_client, user, other_user_private_thread
+):
+    watch_thread(other_user_private_thread, user, send_emails=False)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.SITE_ONLY},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Watched")
+
+    watched_thread = WatchedThread.objects.get(
+        user=user, thread=other_user_private_thread
+    )
+    assert not watched_thread.send_emails
+
+
+def test_private_thread_watch_view_deletes_watched_thread_on_post(
+    user_client, user, other_user_private_thread
+):
+    watch_thread(other_user_private_thread, user)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.NONE},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={
+            "thread_id": other_user_private_thread.id,
+            "slug": other_user_private_thread.slug,
+        },
+    )
+
+    assert not WatchedThread.objects.exists()
+
+
+def test_private_thread_watch_view_deletes_watched_thread_on_post_in_htmx(
+    user_client, user, other_user_private_thread
+):
+    watch_thread(other_user_private_thread, user)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.NONE},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Watch")
+
+    assert not WatchedThread.objects.exists()
+
+
+def test_private_thread_watch_view_does_nothing_for_unwatched_thread_on_post(
+    user_client, other_user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.NONE},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={
+            "thread_id": other_user_private_thread.id,
+            "slug": other_user_private_thread.slug,
+        },
+    )
+
+    assert not WatchedThread.objects.exists()
+
+
+def test_private_thread_watch_view_does_nothing_for_unwatched_thread_on_post_in_htmx(
+    user_client, other_user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {"notifications": ThreadNotifications.NONE},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Watch")
+
+    assert not WatchedThread.objects.exists()
