@@ -1,5 +1,6 @@
 from django.urls import reverse
 
+from ...notifications.threads import watch_thread
 from ...permissions.models import Moderator
 from ...test import assert_contains, assert_not_contains
 from ..models import PrivateThreadMember
@@ -351,6 +352,82 @@ def test_private_thread_detail_view_ignores_invalid_slug_in_htmx(
         headers={"hx-request": "true"},
     )
     assert response.status_code == 200
+
+
+def test_private_thread_detail_view_shows_watch_thread_option_to_user(
+    user_client, user_private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_shows_watched_thread(
+    user_client, user, user_private_thread
+):
+    watch_thread(user_private_thread, user, send_emails=False)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_shows_watched_thread_with_email_notifications(
+    user_client, user, user_private_thread
+):
+    watch_thread(user_private_thread, user, send_emails=True)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-watch",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+    )
 
 
 def test_private_thread_detail_view_shows_thread_members_to_thread_owner(
