@@ -12,6 +12,7 @@ from django.views import View
 from ...categories.models import Category
 from ...htmx.response import htmx_redirect
 from ...notifications.tasks import notify_on_new_thread_reply
+from ...notifications.threads import watch_replied_thread
 from ...permissions.checkutils import check_permissions
 from ...permissions.privatethreads import (
     check_edit_private_thread_post_permission,
@@ -96,7 +97,7 @@ class ReplyView(View):
 
         state.save()
 
-        self.post_state_save(request, state)
+        self.post_state_save(request, state, formset)
 
         if state.is_merged:
             messages.success(
@@ -244,7 +245,16 @@ class ReplyView(View):
             and validate_posted_contents(formset, state)
         )
 
-    def post_state_save(self, request: HttpRequest, state: ReplyState):
+    def post_state_save(
+        self, request: HttpRequest, state: ReplyState, formset: Formset
+    ):
+        formset.save(state)
+
+        watched_thread = watch_replied_thread(state.thread, state.user, request)
+        if watched_thread:
+            # TODO: update context
+            state.context["watched_thread"] = {}
+
         if not state.is_merged:
             # For now new reply notifications are only triggered
             # when completely new reply is posted.

@@ -36,6 +36,10 @@ class Formset(formset.Formset):
             if form.is_valid():
                 form.update_state(state)
 
+    def save(self, state: State):
+        for form in self.forms.values():
+            form.save(state)
+
     def add_error(self, error: ValidationError):
         self.errors.append(error)
 

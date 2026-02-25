@@ -10,6 +10,7 @@ __all__ = [
     "EditReasonForm",
     "MembersForm",
     "MultipleFileField",
+    "NotificationsForm",
     "PollForm",
     "PostForm",
     "PostingForm",
