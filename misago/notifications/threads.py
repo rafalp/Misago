@@ -20,7 +20,12 @@ from ..permissions.privatethreads import (
 from ..threads.models import Post, Thread
 from ..threads.threadurl import get_thread_url
 from .enums import NotificationVerb, ThreadNotifications
-from .hooks import unwatch_thread_hook, watch_thread_hook
+from .hooks import (
+    unwatch_thread_hook,
+    watch_replied_thread_hook,
+    watch_started_thread_hook,
+    watch_thread_hook,
+)
 from .models import Notification, WatchedThread
 from .users import notify_user
 
@@ -117,17 +122,45 @@ def get_watched_threads(
 
 
 def watch_started_thread(
-    thread: Thread, user: "User", request: HttpRequest | None = None
+    thread: Thread,
+    user: "User",
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> WatchedThread | None:
+    return watch_started_thread_hook(
+        _watch_started_thread_action, thread, user, commit, request
+    )
+
+
+def _watch_started_thread_action(
+    thread: Thread,
+    user: "User",
+    commit: bool = True,
+    request: HttpRequest | None = None,
 ) -> WatchedThread | None:
     if not user.watch_started_threads:
         return None
 
     send_emails = user.watch_started_threads == ThreadNotifications.SITE_AND_EMAIL
-    return watch_thread(thread, user, send_emails, request=request)
+    return watch_thread(thread, user, send_emails, commit, request)
 
 
 def watch_replied_thread(
-    thread: Thread, user: "User", request: HttpRequest | None = None
+    thread: Thread,
+    user: "User",
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> WatchedThread:
+    return watch_replied_thread_hook(
+        _watch_replied_thread_action, thread, user, commit, request
+    )
+
+
+def _watch_replied_thread_action(
+    thread: Thread,
+    user: "User",
+    commit: bool = True,
+    request: HttpRequest | None = None,
 ) -> WatchedThread:
     if not user.watch_replied_threads:
         return
@@ -135,7 +168,7 @@ def watch_replied_thread(
     WatchedThread.objects.filter(user=user, thread=thread).delete()
 
     send_emails = user.watch_replied_threads == ThreadNotifications.SITE_AND_EMAIL
-    return watch_thread(thread, user, send_emails, request=request)
+    return watch_thread(thread, user, send_emails, commit, request)
 
 
 def update_watched_thread_read_time(user: "User", thread: Thread, read_time: datetime):
