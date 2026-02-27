@@ -123,7 +123,7 @@ class WatchView(GenericThreadView):
             return render(
                 request,
                 self.template_name,
-                get_watched_thread_context_data(watched_thread, {"thread": thread}),
+                get_watched_thread_context_data(watched_thread),
             )
 
         # Redirect back to the `next` url
@@ -163,18 +163,17 @@ class PrivateThreadWatchView(WatchView):
 
 
 def get_watched_thread_context_data(
-    watched_thread: WatchedThread, context: dict | None = None
+    watched_thread: WatchedThread | None = None,
 ) -> dict:
-    final_context = {
+    return {
         "button_template": WATCH_THREAD_BUTTON_TEMPLATE,
         "dropdown_template": WATCH_THREAD_DROPDOWN_TEMPLATE,
         "notifications_enabled": bool(watched_thread),
-        "notifications_site_and_email": watched_thread and watched_thread.send_emails,
-        "notifications_site_only": watched_thread and not watched_thread.send_emails,
+        "notifications_site_and_email": bool(
+            watched_thread and watched_thread.send_emails
+        ),
+        "notifications_site_only": bool(
+            watched_thread and not watched_thread.send_emails
+        ),
         "notifications_disabled": not watched_thread,
     }
-
-    if context:
-        final_context.update(context)
-
-    return final_context
