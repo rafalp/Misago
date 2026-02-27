@@ -6,6 +6,8 @@ from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...edits.models import PostEdit
+from ...notifications.enums import ThreadNotifications
+from ...notifications.models import WatchedThread
 from ...permissions.enums import CanUploadAttachments
 from ...privatethreads.models import PrivateThreadMember
 from ...readtracker.models import ReadCategory
@@ -1398,6 +1400,452 @@ def test_private_thread_reply_view_embeds_attachments_in_preview(
     assert_contains_element(response, "a", href=user_image_attachment.get_details_url())
     assert_contains_element(
         response, "img", src=user_image_attachment.get_absolute_url()
+    )
+
+
+def test_private_thread_reply_view_doesnt_watch_thread_without_user_option(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.NONE
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = other_user_private_thread.post_set.last()
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert not WatchedThread.objects.exists()
+
+
+def test_private_thread_reply_view_watches_thread_with_emails_on_user_option(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_AND_EMAIL
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = other_user_private_thread.post_set.last()
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert WatchedThread.objects.get(
+        user=user,
+        thread=other_user_private_thread,
+        send_emails=True,
+    )
+
+
+def test_private_thread_reply_view_watches_thread_without_emails_on_user_option(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_ONLY
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = other_user_private_thread.post_set.last()
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert WatchedThread.objects.get(
+        user=user,
+        thread=other_user_private_thread,
+        send_emails=False,
+    )
+
+
+def test_private_thread_reply_view_doesnt_watch_thread_without_user_option_in_htmx(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.NONE
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 204
+
+    reply = other_user_private_thread.post_set.last()
+
+    assert (
+        response["hx-redirect"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert not WatchedThread.objects.exists()
+
+
+def test_private_thread_reply_view_watches_thread_with_emails_on_user_option_in_htmx(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_AND_EMAIL
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 204
+
+    reply = other_user_private_thread.post_set.last()
+
+    assert (
+        response["hx-redirect"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert WatchedThread.objects.get(
+        user=user,
+        thread=other_user_private_thread,
+        send_emails=True,
+    )
+
+
+def test_private_thread_reply_view_watches_thread_without_emails_on_user_option_in_htmx(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_ONLY
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 204
+
+    reply = other_user_private_thread.post_set.last()
+
+    assert (
+        response["hx-redirect"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert WatchedThread.objects.get(
+        user=user,
+        thread=other_user_private_thread,
+        send_emails=False,
+    )
+
+
+def test_private_thread_reply_view_doesnt_watch_thread_without_user_option_in_quick_reply(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.NONE
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = other_user_private_thread.post_set.last()
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert not WatchedThread.objects.exists()
+
+
+def test_private_thread_reply_view_watches_thread_with_emails_on_user_option_in_quick_reply(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_AND_EMAIL
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = other_user_private_thread.post_set.last()
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert WatchedThread.objects.get(
+        user=user,
+        thread=other_user_private_thread,
+        send_emails=True,
+    )
+
+
+def test_private_thread_reply_view_watches_thread_without_emails_on_user_option_in_quick_reply(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_ONLY
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = other_user_private_thread.post_set.last()
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert WatchedThread.objects.get(
+        user=user,
+        thread=other_user_private_thread,
+        send_emails=False,
+    )
+
+
+def test_private_thread_reply_view_doesnt_watch_thread_without_user_option_in_quick_reply_with_htmx(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.NONE
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "Watch")
+
+    assert not WatchedThread.objects.exists()
+
+
+def test_private_thread_reply_view_watches_thread_with_emails_on_user_option_in_quick_reply_with_htmx(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_AND_EMAIL
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Watched")
+
+    assert WatchedThread.objects.get(
+        user=user,
+        thread=other_user_private_thread,
+        send_emails=True,
+    )
+
+
+def test_private_thread_reply_view_watches_thread_without_emails_on_user_option_in_quick_reply_with_htmx(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_ONLY
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Watched")
+
+    assert WatchedThread.objects.get(
+        user=user,
+        thread=other_user_private_thread,
+        send_emails=False,
     )
 
 

@@ -597,6 +597,28 @@ def test_private_thread_start_view_deletes_attachment_on_submit(
     assert user_text_attachment.is_deleted
 
 
+def test_private_thread_start_view_embeds_attachments_in_preview(
+    user_client, user_image_attachment
+):
+    response = user_client.post(
+        reverse("misago:private-thread-start"),
+        {
+            Formset.preview_action: "true",
+            PostForm.attachment_ids_field: [str(user_image_attachment.id)],
+            "posting-title-title": "Hello world",
+            "posting-post-post": (
+                f"Attachment: <attachment={user_image_attachment.name}:{user_image_attachment.id}>"
+            ),
+        },
+    )
+    assert_contains(response, "Start new private thread")
+    assert_contains(response, "Message preview")
+    assert_contains_element(response, "a", href=user_image_attachment.get_details_url())
+    assert_contains_element(
+        response, "img", src=user_image_attachment.get_absolute_url()
+    )
+
+
 def test_private_thread_start_view_doesnt_watch_thread_without_user_option(
     user_client, user, other_user, mock_notify_on_new_private_thread
 ):
@@ -670,25 +692,3 @@ def test_private_thread_start_view_watches_thread_without_emails_on_user_option(
     )
 
     assert WatchedThread.objects.get(user=user, thread=thread, send_emails=False)
-
-
-def test_private_thread_start_view_embeds_attachments_in_preview(
-    user_client, user_image_attachment
-):
-    response = user_client.post(
-        reverse("misago:private-thread-start"),
-        {
-            Formset.preview_action: "true",
-            PostForm.attachment_ids_field: [str(user_image_attachment.id)],
-            "posting-title-title": "Hello world",
-            "posting-post-post": (
-                f"Attachment: <attachment={user_image_attachment.name}:{user_image_attachment.id}>"
-            ),
-        },
-    )
-    assert_contains(response, "Start new private thread")
-    assert_contains(response, "Message preview")
-    assert_contains_element(response, "a", href=user_image_attachment.get_details_url())
-    assert_contains_element(
-        response, "img", src=user_image_attachment.get_absolute_url()
-    )
