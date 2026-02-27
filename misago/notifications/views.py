@@ -15,6 +15,10 @@ from .enums import ThreadNotifications
 from .exceptions import NotificationVerbError
 from .models import Notification, WatchedThread
 from .registry import registry
+from .templates import (
+    WATCH_THREAD_BUTTON_TEMPLATE,
+    WATCH_THREAD_DROPDOWN_TEMPLATE,
+)
 from .threads import unwatch_thread, watch_thread
 
 
@@ -102,9 +106,12 @@ class WatchView(GenericThreadView):
 
         thread = self.get_thread(request, thread_id)
 
+        watched_thread = None
         notifications = self.get_notification_level(request)
+
         if notifications:
-            if self.watch_thread(request, thread, notifications):
+            watched_thread, created = self.watch_thread(request, thread, notifications)
+            if created:
                 message = pgettext("thread watched", "Notifications enabled")
                 messages.success(request, message)
         else:
@@ -116,15 +123,7 @@ class WatchView(GenericThreadView):
             return render(
                 request,
                 self.template_name,
-                {
-                    "thread": thread,
-                    "notifications": notifications,
-                    "notifications_site_and_email": notifications
-                    == ThreadNotifications.SITE_AND_EMAIL,
-                    "notifications_site_only": notifications
-                    == ThreadNotifications.SITE_ONLY,
-                    "notifications_disabled": notifications == ThreadNotifications.NONE,
-                },
+                get_watched_thread_context_data(watched_thread, {"thread": thread}),
             )
 
         # Redirect back to the `next` url
@@ -140,19 +139,19 @@ class WatchView(GenericThreadView):
     @transaction.atomic
     def watch_thread(
         self, request: HttpRequest, thread: Thread, notifications: int
-    ) -> bool:
-        updated, _ = WatchedThread.objects.filter(
+    ) -> tuple[WatchedThread, bool]:
+        deleted, _ = WatchedThread.objects.filter(
             user=request.user, thread=thread
         ).delete()
 
-        watch_thread(
+        watched_thread = watch_thread(
             thread,
             request.user,
             send_emails=notifications == ThreadNotifications.SITE_AND_EMAIL,
             request=request,
         )
 
-        return not updated
+        return watched_thread, not deleted
 
 
 class ThreadWatchView(WatchView):
@@ -161,3 +160,21 @@ class ThreadWatchView(WatchView):
 
 class PrivateThreadWatchView(WatchView):
     backend = private_thread_backend
+
+
+def get_watched_thread_context_data(
+    watched_thread: WatchedThread, context: dict | None = None
+) -> dict:
+    final_context = {
+        "button_template": WATCH_THREAD_BUTTON_TEMPLATE,
+        "dropdown_template": WATCH_THREAD_DROPDOWN_TEMPLATE,
+        "notifications_enabled": bool(watched_thread),
+        "notifications_site_and_email": watched_thread and watched_thread.send_emails,
+        "notifications_site_only": watched_thread and not watched_thread.send_emails,
+        "notifications_disabled": not watched_thread,
+    }
+
+    if context:
+        final_context.update(context)
+
+    return final_context

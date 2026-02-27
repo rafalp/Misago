@@ -1,7 +1,13 @@
-{% load i18n misago_component %}
+{% load i18n misago_component misago_withcontext %}
 
 {% if is_request_htmx %}
   {% include "misago/snackbars.html" %}
+  {% if watched_thread %}
+    {% withcontext watched_thread %}
+      {% include button_template %}
+      {% include dropdown_template %}
+    {% endwithcontext %}
+  {% endif %}
   {% if new_feed %}
     {% if htmx_swap %}
       {% for item in new_feed %}

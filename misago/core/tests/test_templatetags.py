@@ -1,3 +1,5 @@
+from textwrap import dedent
+
 from django.template import Context, Template
 from django.test import TestCase
 
@@ -194,3 +196,50 @@ class PageTitleTests(TestCase):
             ).strip(),
             "Lorem Ipsum (page: 3) | Some Thread",
         )
+
+
+def test_with_context_tag_updates_context_with_single_dict():
+    content = dedent(
+        """
+        {% load misago_withcontext %}
+
+        {% withcontext data %}
+            {{ lorem }}{{ ipsum }}{{ dolor }}
+        {% endwithcontext %}
+        
+        {{ lorem }}{{ ipsum }}{{ dolor }}
+        """.strip()
+    )
+
+    template = Template(content)
+    rendered_html = template.render(
+        Context({"data": {"lorem": "lorem", "ipsum": "ipsum"}})
+    ).strip()
+
+    assert rendered_html == "loremipsum"
+
+
+def test_with_context_tag_updates_context_with_multiple_dicts():
+    content = dedent(
+        """
+        {% load misago_withcontext %}
+
+        {% withcontext data data2 %}
+            {{ lorem }}{{ ipsum }}{{ dolor }}
+        {% endwithcontext %}
+        
+        {{ lorem }}{{ ipsum }}{{ dolor }}
+        """.strip()
+    )
+
+    template = Template(content)
+    rendered_html = template.render(
+        Context(
+            {
+                "data": {"lorem": "lorem"},
+                "data2": {"ipsum": "ipsum"},
+            }
+        )
+    ).strip()
+
+    assert rendered_html == "loremipsum"

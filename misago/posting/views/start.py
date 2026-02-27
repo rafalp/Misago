@@ -9,6 +9,7 @@ from ...categories.enums import CategoryTree
 from ...categories.models import Category
 from ...notifications.tasks import notify_on_new_private_thread
 from ...notifications.threads import watch_started_thread
+from ...notifications.views import get_watched_thread_context_data
 from ...permissions.categories import check_browse_category_permission
 from ...permissions.privatethreads import (
     check_private_threads_permission,
