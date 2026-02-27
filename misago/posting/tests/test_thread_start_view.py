@@ -7,6 +7,8 @@ from django.urls import reverse
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
+from ...notifications.enums import ThreadNotifications
+from ...notifications.models import WatchedThread
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...polls.enums import PublicPollsAvailability
@@ -865,6 +867,84 @@ def test_thread_start_view_starts_thread_with_poll_form_disabled(
     assert response["location"] == reverse(
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
+
+
+def test_thread_start_view_doesnt_watch_thread_without_user_option(
+    user_client, user, default_category
+):
+    user.watch_started_threads = ThreadNotifications.NONE
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert not WatchedThread.objects.exists()
+
+
+def test_thread_start_view_watches_thread_with_emails_on_user_option(
+    user_client, user, default_category
+):
+    user.watch_started_threads = ThreadNotifications.SITE_AND_EMAIL
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert WatchedThread.objects.get(user=user, thread=thread, send_emails=True)
+
+
+def test_thread_start_view_watches_thread_without_emails_on_user_option(
+    user_client, user, default_category
+):
+    user.watch_started_threads = ThreadNotifications.SITE_ONLY
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-start",
+            kwargs={"category_id": default_category.id, "slug": default_category.slug},
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert WatchedThread.objects.get(user=user, thread=thread, send_emails=False)
 
 
 def test_thread_start_view_shows_error_404_for_private_threads_category(
