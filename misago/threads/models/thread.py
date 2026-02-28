@@ -90,10 +90,19 @@ class Thread(PluginDataModel):
         blank=True,
         on_delete=models.SET_NULL,
     )
+    solution_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="+",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    solution_by_name = models.CharField(max_length=255, null=True, blank=True)
+    solution_by_slug = models.CharField(max_length=255, null=True, blank=True)
     solution_selected_at = models.DateTimeField(null=True, blank=True)
     solution_selected_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="marked_best_answer_set",
+        related_name="+",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -169,8 +178,8 @@ class Thread(PluginDataModel):
         move_thread.send(sender=self)
 
     @property
-    def has_best_answer(self):
-        return bool(self.best_answer_id)
+    def has_solution(self) -> bool:
+        return bool(self.solution_id)
 
     @property
     def replies_in_ks(self):

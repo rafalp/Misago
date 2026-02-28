@@ -225,11 +225,3 @@ class Post(PluginDataModel):
     @property
     def is_valid(self):
         return is_post_valid(self)
-
-    @property
-    def is_first_post(self):
-        return self.id == self.thread.first_post_id
-
-    @property
-    def is_best_answer(self):
-        return self.id == self.thread.best_answer_id

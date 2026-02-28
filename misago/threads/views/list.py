@@ -138,7 +138,7 @@ class ListView(View):
         if (
             thread.weight == ThreadWeight.PINNED_GLOBALLY
             or thread.is_closed
-            or thread.has_best_answer
+            or thread.has_solution
             or thread.has_poll
             or thread.is_unapproved
             or thread.is_hidden

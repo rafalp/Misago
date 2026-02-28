@@ -24,7 +24,7 @@
       <span class="material-icon">bookmark_outline</span>
     </li>
   {% endif %}
-  {% if thread.best_answer_id %}
+  {% if thread.has_solution %}
     <li
       class="thread-flag-answered"
       title="{% translate 'Answered' context 'thread flag' %}"

@@ -88,10 +88,10 @@ class PostSolutionView(PostView):
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:
-        if not thread.best_answer_id:
+        if not thread.has_solution:
             return None
 
-        return queryset.filter(id=thread.best_answer_id).first()
+        return queryset.filter(id=thread.solution_id).first()
 
 
 class PostUnapprovedView(PostView):
