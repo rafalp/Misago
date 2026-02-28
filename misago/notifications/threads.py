@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Dict, Iterable, Optional
 
+from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.translation import pgettext
 
@@ -19,11 +20,66 @@ from ..permissions.privatethreads import (
 from ..threads.models import Post, Thread
 from ..threads.threadurl import get_thread_url
 from .enums import NotificationVerb, ThreadNotifications
+from .hooks import (
+    unwatch_thread_hook,
+    watch_replied_thread_hook,
+    watch_started_thread_hook,
+    watch_thread_hook,
+)
 from .models import Notification, WatchedThread
 from .users import notify_user
 
 if TYPE_CHECKING:
     from ..users.models import User
+
+
+def watch_thread(
+    thread: Thread,
+    user: "User",
+    send_emails: bool = True,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> WatchedThread:
+    return watch_thread_hook(
+        _watch_thread_action, thread, user, send_emails, commit, request
+    )
+
+
+def _watch_thread_action(
+    thread: Thread,
+    user: "User",
+    send_emails: bool = True,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> WatchedThread:
+    watched_thread = WatchedThread(
+        user=user,
+        category=thread.category,
+        thread=thread,
+        send_emails=send_emails,
+    )
+
+    if commit:
+        watched_thread.save()
+
+    return watched_thread
+
+
+def unwatch_thread(
+    thread: Thread,
+    user: "User",
+    request: HttpRequest | None = None,
+) -> bool:
+    return unwatch_thread_hook(_unwatch_thread_action, thread, user, request)
+
+
+def _unwatch_thread_action(
+    thread: Thread,
+    user: "User",
+    request: HttpRequest | None = None,
+) -> bool:
+    deleted_rows, _ = WatchedThread.objects.filter(user=user, thread=thread).delete()
+    return bool(deleted_rows)
 
 
 def get_watched_thread(user: "User", thread: Thread) -> Optional[WatchedThread]:
@@ -65,32 +121,54 @@ def get_watched_threads(
     }
 
 
-def watch_started_thread(user: "User", thread: Thread):
-    if user.watch_started_threads:
-        WatchedThread.objects.create(
-            user=user,
-            category=thread.category,
-            thread=thread,
-            send_emails=user.watch_started_threads
-            == ThreadNotifications.SITE_AND_EMAIL,
-        )
+def watch_started_thread(
+    thread: Thread,
+    user: "User",
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> WatchedThread | None:
+    return watch_started_thread_hook(
+        _watch_started_thread_action, thread, user, commit, request
+    )
 
 
-def watch_replied_thread(user: "User", thread: Thread) -> WatchedThread | None:
+def _watch_started_thread_action(
+    thread: Thread,
+    user: "User",
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> WatchedThread | None:
+    if not user.watch_started_threads:
+        return None
+
+    send_emails = user.watch_started_threads == ThreadNotifications.SITE_AND_EMAIL
+    return watch_thread(thread, user, send_emails, commit, request)
+
+
+def watch_replied_thread(
+    thread: Thread,
+    user: "User",
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> WatchedThread:
+    return watch_replied_thread_hook(
+        _watch_replied_thread_action, thread, user, commit, request
+    )
+
+
+def _watch_replied_thread_action(
+    thread: Thread,
+    user: "User",
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> WatchedThread:
     if not user.watch_replied_threads:
         return
 
-    if WatchedThread.objects.filter(user=user, thread=thread).exists():
-        return None
+    WatchedThread.objects.filter(user=user, thread=thread).delete()
 
     send_emails = user.watch_replied_threads == ThreadNotifications.SITE_AND_EMAIL
-
-    return WatchedThread.objects.create(
-        user=user,
-        category=thread.category,
-        thread=thread,
-        send_emails=send_emails,
-    )
+    return watch_thread(thread, user, send_emails, commit, request)
 
 
 def update_watched_thread_read_time(user: "User", thread: Thread, read_time: datetime):
@@ -192,7 +270,7 @@ def notify_user_on_new_private_thread(
 
     actor_is_followed = user.is_following(actor)
 
-    watched_thread = watch_new_private_thread(user, thread, actor_is_followed)
+    watched_thread = watch_new_private_thread(thread, user, actor_is_followed)
 
     if actor_is_followed:
         notification = user.notify_new_private_threads_by_followed
@@ -259,7 +337,7 @@ def email_user_on_new_private_thread(
 
 
 def watch_new_private_thread(
-    user: "User", thread: Thread, from_followed: bool
+    thread: Thread, user: "User", from_followed: bool
 ) -> WatchedThread | None:
     if from_followed:
         notifications = user.watch_new_private_threads_by_followed
@@ -280,10 +358,8 @@ def watch_new_private_thread(
         watched_thread.save(update_fields=["read_time"])
         return watched_thread
 
-    return WatchedThread.objects.create(
-        user=user,
-        category=thread.category,
-        thread=thread,
-        send_emails=send_emails,
-        read_time=read_time,
-    )
+    watched_thread = watch_thread(thread, user, send_emails, commit=False)
+    watched_thread.read_time = read_time
+    watched_thread.save()
+
+    return watched_thread

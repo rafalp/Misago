@@ -1,6 +1,12 @@
 from django.urls import path
 
-from .views import disable_email_notifications, notification, notifications
+from .views import (
+    PrivateThreadWatchView,
+    ThreadWatchView,
+    disable_email_notifications,
+    notification,
+    notifications,
+)
 
 urlpatterns = [
     path(
@@ -12,4 +18,14 @@ urlpatterns = [
     path("notifications/", notifications, name="notifications"),
     path("notifications/unread/", notifications, name="notifications-unread"),
     path("notifications/read/", notifications, name="notifications-read"),
+    path(
+        "t/<slug:slug>/<int:thread_id>/watch/",
+        ThreadWatchView.as_view(),
+        name="thread-watch",
+    ),
+    path(
+        "p/<slug:slug>/<int:thread_id>/watch/",
+        PrivateThreadWatchView.as_view(),
+        name="private-thread-watch",
+    ),
 ]

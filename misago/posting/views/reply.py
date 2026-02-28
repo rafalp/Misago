@@ -12,6 +12,8 @@ from django.views import View
 from ...categories.models import Category
 from ...htmx.response import htmx_redirect
 from ...notifications.tasks import notify_on_new_thread_reply
+from ...notifications.threads import watch_replied_thread
+from ...notifications.views import get_watched_thread_context_data
 from ...permissions.checkutils import check_permissions
 from ...permissions.privatethreads import (
     check_edit_private_thread_post_permission,
@@ -96,7 +98,7 @@ class ReplyView(View):
 
         state.save()
 
-        self.post_state_save(request, state)
+        self.post_state_save(request, state, formset)
 
         if state.is_merged:
             messages.success(
@@ -141,13 +143,11 @@ class ReplyView(View):
         if not state.is_merged:
             feed.set_unread_posts([state.post.id])
 
-        response = self.render(
-            request,
-            thread,
-            formset,
-            feed=feed.get_feed_data(),
-            htmx_swap=state.is_merged,
-        )
+        context_data = state.context_data.copy()
+        context_data["new_feed"] = feed.get_feed_data()
+        context_data["htmx_swap"] = state.is_merged
+
+        response = self.render(request, thread, formset, extra_context=context_data)
 
         if not state.is_merged:
             self.mark_reply_as_read(request, thread, state)
@@ -244,7 +244,17 @@ class ReplyView(View):
             and validate_posted_contents(formset, state)
         )
 
-    def post_state_save(self, request: HttpRequest, state: ReplyState):
+    def post_state_save(
+        self, request: HttpRequest, state: ReplyState, formset: Formset
+    ):
+        formset.save(state)
+
+        watched_thread = watch_replied_thread(state.thread, state.user, request)
+        if watched_thread:
+            state.context_data["watched_thread"] = get_watched_thread_context_data(
+                request, watched_thread
+            )
+
         if not state.is_merged:
             # For now new reply notifications are only triggered
             # when completely new reply is posted.
@@ -258,12 +268,9 @@ class ReplyView(View):
         thread: Thread,
         formset: Formset,
         preview: ReplyState | None = None,
-        feed: list[dict] | None = None,
-        htmx_swap: bool = False,
+        extra_context: dict | None = None,
     ):
         context = self.get_context_data(request, thread, formset)
-        context["new_feed"] = feed
-        context["htmx_swap"] = htmx_swap
 
         if preview:
             related_objects = prefetch_post_feed_related_objects(
@@ -277,6 +284,9 @@ class ReplyView(View):
 
             context["preview"] = preview.post.parsed
             context["preview_rich_text_data"] = related_objects
+
+        if extra_context:
+            context.update(extra_context)
 
         if self.is_quick_reply(request):
             template_name = self.template_name_quick_reply

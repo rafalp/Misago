@@ -6,7 +6,7 @@ def test_private_thread_is_watched_with_email_notifications(user, private_thread
     user.watch_new_private_threads_by_other_users = ThreadNotifications.SITE_AND_EMAIL
     user.save()
 
-    watched_thread = watch_new_private_thread(user, private_thread, from_followed=False)
+    watched_thread = watch_new_private_thread(private_thread, user, from_followed=False)
 
     assert watched_thread.user == user
     assert watched_thread.category == private_thread.category
@@ -25,7 +25,7 @@ def test_private_thread_is_watched_without_email_notifications(user, private_thr
     user.watch_new_private_threads_by_other_users = ThreadNotifications.SITE_ONLY
     user.save()
 
-    watched_thread = watch_new_private_thread(user, private_thread, from_followed=False)
+    watched_thread = watch_new_private_thread(private_thread, user, from_followed=False)
 
     assert watched_thread.user == user
     assert watched_thread.category == private_thread.category
@@ -44,7 +44,7 @@ def test_private_thread_is_not_watched(user, private_thread):
     user.watch_new_private_threads_by_other_users = ThreadNotifications.NONE
     user.save()
 
-    watched_thread = watch_new_private_thread(user, private_thread, from_followed=False)
+    watched_thread = watch_new_private_thread(private_thread, user, from_followed=False)
     assert watched_thread is None
 
     assert not WatchedThread.objects.exists()
@@ -56,7 +56,7 @@ def test_private_thread_from_followed_is_watched_with_email_notifications(
     user.watch_new_private_threads_by_followed = ThreadNotifications.SITE_AND_EMAIL
     user.save()
 
-    watched_thread = watch_new_private_thread(user, private_thread, from_followed=True)
+    watched_thread = watch_new_private_thread(private_thread, user, from_followed=True)
 
     assert watched_thread.user == user
     assert watched_thread.category == private_thread.category
@@ -77,7 +77,7 @@ def test_private_thread_from_followed_is_watched_without_email_notifications(
     user.watch_new_private_threads_by_followed = ThreadNotifications.SITE_ONLY
     user.save()
 
-    watched_thread = watch_new_private_thread(user, private_thread, from_followed=True)
+    watched_thread = watch_new_private_thread(private_thread, user, from_followed=True)
 
     assert watched_thread.user == user
     assert watched_thread.category == private_thread.category
@@ -96,7 +96,7 @@ def test_private_thread_from_followed_is_not_watched(user, private_thread):
     user.watch_new_private_threads_by_followed = ThreadNotifications.NONE
     user.save()
 
-    watched_thread = watch_new_private_thread(user, private_thread, from_followed=True)
+    watched_thread = watch_new_private_thread(private_thread, user, from_followed=True)
     assert watched_thread is None
 
     assert not WatchedThread.objects.exists()
@@ -115,7 +115,7 @@ def test_old_watched_thread_notifications_are_not_disabled_by_new_preference(
     user.watch_new_private_threads_by_other_users = ThreadNotifications.SITE_ONLY
     user.save()
 
-    watched_thread = watch_new_private_thread(user, private_thread, from_followed=False)
+    watched_thread = watch_new_private_thread(private_thread, user, from_followed=False)
 
     assert watched_thread.id == old_watched_thread.id
     assert watched_thread.send_emails

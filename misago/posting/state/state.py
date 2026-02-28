@@ -34,6 +34,8 @@ class State:
     state: dict
     plugin_state: dict
 
+    context_data: dict
+
     def __init__(self, request: HttpRequest):
         self.request = request
         self.timestamp = timezone.now()
@@ -41,6 +43,7 @@ class State:
 
         self.state = {}
         self.plugin_state = {}
+        self.context_data = {}
 
         self.parsing_result = None
         self.attachments = []

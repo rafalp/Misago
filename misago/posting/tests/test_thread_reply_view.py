@@ -6,6 +6,8 @@ from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...edits.models import PostEdit
+from ...notifications.enums import ThreadNotifications
+from ...notifications.models import WatchedThread
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
 from ...readtracker.models import ReadCategory
@@ -1353,6 +1355,348 @@ def test_thread_reply_view_embeds_attachments_in_preview(
     assert_contains_element(
         response, "img", src=user_image_attachment.get_absolute_url()
     )
+
+
+def test_thread_reply_view_doesnt_watch_thread_without_user_option(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.NONE
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = thread.post_set.last()
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert not WatchedThread.objects.exists()
+
+
+def test_thread_reply_view_watches_thread_with_emails_on_user_option(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_AND_EMAIL
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = thread.post_set.last()
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert WatchedThread.objects.get(user=user, thread=thread, send_emails=True)
+
+
+def test_thread_reply_view_watches_thread_without_emails_on_user_option(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_ONLY
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = thread.post_set.last()
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert WatchedThread.objects.get(user=user, thread=thread, send_emails=False)
+
+
+def test_thread_reply_view_doesnt_watch_thread_without_user_option_in_htmx(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.NONE
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 204
+
+    reply = thread.post_set.last()
+
+    assert (
+        response["hx-redirect"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert not WatchedThread.objects.exists()
+
+
+def test_thread_reply_view_watches_thread_with_emails_on_user_option_in_htmx(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_AND_EMAIL
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 204
+
+    reply = thread.post_set.last()
+
+    assert (
+        response["hx-redirect"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert WatchedThread.objects.get(user=user, thread=thread, send_emails=True)
+
+
+def test_thread_reply_view_watches_thread_without_emails_on_user_option_in_htmx(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_ONLY
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 204
+
+    reply = thread.post_set.last()
+
+    assert (
+        response["hx-redirect"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert WatchedThread.objects.get(user=user, thread=thread, send_emails=False)
+
+
+def test_thread_reply_view_doesnt_watch_thread_without_user_option_in_quick_reply(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.NONE
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = thread.post_set.last()
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert not WatchedThread.objects.exists()
+
+
+def test_thread_reply_view_watches_thread_with_emails_on_user_option_in_quick_reply(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_AND_EMAIL
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = thread.post_set.last()
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert WatchedThread.objects.get(user=user, thread=thread, send_emails=True)
+
+
+def test_thread_reply_view_watches_thread_without_emails_on_user_option_in_quick_reply(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_ONLY
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = thread.post_set.last()
+
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    assert WatchedThread.objects.get(user=user, thread=thread, send_emails=False)
+
+
+def test_thread_reply_view_doesnt_watch_thread_without_user_option_in_quick_reply_with_htmx(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.NONE
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_not_contains(response, "Watch")
+
+    assert not WatchedThread.objects.exists()
+
+
+def test_thread_reply_view_watches_thread_with_emails_on_user_option_in_quick_reply_with_htmx(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_AND_EMAIL
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Watched")
+
+    assert WatchedThread.objects.get(user=user, thread=thread, send_emails=True)
+
+
+def test_thread_reply_view_watches_thread_without_emails_on_user_option_in_quick_reply_with_htmx(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_ONLY
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "Reply contents",
+            "quick_reply": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Watched")
+
+    assert WatchedThread.objects.get(user=user, thread=thread, send_emails=False)
 
 
 def test_thread_reply_view_shows_error_if_private_thread_is_accessed(

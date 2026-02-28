@@ -65,6 +65,12 @@ class PrivateThreadDetailView(DetailView, PrivateThreadView):
             request, thread, self.owner, self.members
         )
 
+    def get_watch_thread_url(self, thread: Thread) -> str:
+        return reverse(
+            "misago:private-thread-watch",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        )
+
     def get_thread_posts_queryset(
         self, request: HttpRequest, thread: Thread
     ) -> QuerySet:

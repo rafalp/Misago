@@ -1,5 +1,6 @@
 from django.urls import reverse
 
+from ...notifications.threads import watch_thread
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains, assert_not_contains
@@ -885,6 +886,102 @@ def test_thread_detail_view_ignores_invalid_slug_in_htmx(user_client, thread):
         headers={"hx-request": "true"},
     )
     assert response.status_code == 200
+
+
+def test_thread_detail_view_doesnt_show_watch_thread_option_to_anonymous_user(
+    client, thread
+):
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-watch",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_watch_thread_option_to_user(user_client, thread):
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-watch",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_watched_thread(user_client, user, thread):
+    watch_thread(thread, user, send_emails=False)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-watch",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_watched_thread_with_email_notifications(
+    user_client, user, thread
+):
+    watch_thread(thread, user, send_emails=True)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-watch",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
 
 
 def test_thread_detail_view_shows_error_404_if_private_thread_is_accessed(

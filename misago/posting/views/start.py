@@ -8,6 +8,7 @@ from django.utils.translation import pgettext
 from ...categories.enums import CategoryTree
 from ...categories.models import Category
 from ...notifications.tasks import notify_on_new_private_thread
+from ...notifications.threads import watch_started_thread
 from ...permissions.categories import check_browse_category_permission
 from ...permissions.privatethreads import (
     check_private_threads_permission,
@@ -75,7 +76,7 @@ class StartView(View):
 
         state.save()
 
-        self.post_state_save(request, state)
+        self.post_state_save(request, state, formset)
 
         messages.success(request, pgettext("thread started", "Thread started"))
 
@@ -124,8 +125,12 @@ class StartView(View):
             and validate_posted_contents(formset, state)
         )
 
-    def post_state_save(self, request: HttpRequest, state: StartState):
-        pass
+    def post_state_save(
+        self, request: HttpRequest, state: StartState, formset: Formset | TabbedFormset
+    ):
+        formset.save(state)
+
+        watch_started_thread(state.thread, state.user, request)
 
     def get_context_data(
         self, request: HttpRequest, category: Category, formset: Formset | TabbedFormset
@@ -214,7 +219,14 @@ class PrivateThreadStartView(StartView):
             kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
 
-    def post_state_save(self, request: HttpRequest, state: PrivateThreadStartState):
+    def post_state_save(
+        self,
+        request: HttpRequest,
+        state: PrivateThreadStartState,
+        formset: PrivateThreadStartFormset,
+    ):
+        super().post_state_save(request, state, formset)
+
         notify_on_new_private_thread.delay(
             state.thread.starter_id,
             state.thread.id,

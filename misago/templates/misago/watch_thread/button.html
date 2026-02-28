@@ -1,0 +1,9 @@
+{% load i18n %}
+
+<button hx-swap-oob="innerHTML:[mg-watch-thread-btn]">
+  {% if notifications_site_and_email or notifications_site_only  %}
+    {% translate "Watched" context "watch thread btn" %}
+  {% else %}
+    {% translate "Watch" context "watch thread btn" %}
+  {% endif %}
+</button>

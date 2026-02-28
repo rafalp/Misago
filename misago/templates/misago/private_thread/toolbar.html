@@ -1,4 +1,4 @@
-{% load i18n misago_plugins %}
+{% load i18n misago_component misago_plugins %}
 
 <div class="toolbar{% if top_toolbar %} toolbar-min-height{% endif %}">
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_START %}
@@ -12,6 +12,13 @@
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_BEFORE_SPACER %}
   <div class="toolbar-spacer"></div>
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_AFTER_SPACER %}
+  {% if watch_thread %}
+    <div class="toolbar-section">
+      <div class="toolbar-item">
+        {% includecomponent watch_thread %}
+      </div>
+    </div>
+  {% endif %}
   {% if top_toolbar %}
     <div class="toolbar-section">
       <div class="toolbar-item d-js-block">

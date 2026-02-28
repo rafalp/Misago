@@ -4,6 +4,7 @@ from django.utils.crypto import get_random_string
 from django.utils import timezone
 from django.urls import reverse
 
+from ..plugins.models import PluginDataModel
 
 WATCHED_THREAD_SECRET = 32
 
@@ -56,7 +57,7 @@ class Notification(models.Model):
         ]
 
 
-class WatchedThread(models.Model):
+class WatchedThread(PluginDataModel):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
@@ -71,7 +72,7 @@ class WatchedThread(models.Model):
     read_time = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        indexes = [
+        indexes = PluginDataModel.Meta.indexes + [
             models.Index(fields=["user", "-thread"]),
         ]
 

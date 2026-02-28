@@ -156,6 +156,22 @@
   }
 }
 
+.with-svg-icon {
+  display: flex !important;
+  align-items: center;
+
+  text-box: trim-both cap alphabetic;
+
+  svg {
+    width: 16px;
+    height: 16px;
+
+    &:not(:only-child) {
+      margin-right: 6px;
+    }
+  }
+}
+
 // Moderation button
 .btn-moderation {
   .button-variant(@btn-moderation-color; @btn-moderation-bg; @btn-moderation-border);

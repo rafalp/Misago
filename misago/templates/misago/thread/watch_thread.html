@@ -1,0 +1,101 @@
+{% load i18n misago_capture %}
+
+{% capture trimmed as watch_thread_dropdown %}
+<li class="dropdown-subheader user-nav-options">
+  {% translate "New reply notifications" context "watch thread btn" %}
+</li>
+<li>
+  <button
+    name="notifications"
+    value="2"
+    class="btn-link with-svg-icon"
+    type="submit"
+  >
+    {% if watched_with_email %}
+      {% include "tabler/circle-check-filled.svg" %}
+    {% else %}
+      {% include "tabler/circle.svg" %}
+    {% endif %}
+    <span>
+      {% translate "Site and e-mail" context "watch thread btn" %}
+    </span>
+  </button>
+</li>
+<li>
+  <button
+    name="notifications"
+    value="1"
+    class="btn-link with-svg-icon"
+    type="submit"
+  >
+    {% if watched %}
+      {% include "tabler/circle-check-filled.svg" %}
+    {% else %}
+      {% include "tabler/circle.svg" %}
+    {% endif %}
+    <span>
+      {% translate "Site only" context "watch thread btn" %}
+    </span>
+  </button>
+</li>
+<li>
+  <button
+    name="notifications"
+    value="0"
+    class="btn-link with-svg-icon"
+    type="submit"
+  >
+    {% if watched_with_email or watched %}
+      {% include "tabler/circle.svg" %}
+    {% else %}
+      {% include "tabler/circle-check-filled.svg" %}
+    {% endif %}
+    <span>
+      {% translate "Disabled" context "unwatch thread btn" %}
+    </span>
+  </button>
+</li>
+{% endcapture %}
+
+<form
+  action="{{ watch_thread_url }}"
+  method="POST"
+  hx-post="{{ watch_thread_url }}"
+  hx-swap="none"
+  hx-disabled-elt="find button"
+>
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ path }}">
+  <div class="dropdown d-js-block">
+    <button
+      type="button"
+      class="btn btn-default"
+      aria-label="{% translate 'Toggle options menu' context 'post edit options dropdown toggle' %}"
+      aria-haspopup="true"
+      aria-expanded="false"
+      data-toggle="dropdown"
+      mg-watch-thread-btn
+    >
+      {% if watched_with_email or watched %}
+        {% translate "Watched" context "watch thread btn" %}
+      {% else %}
+        {% translate "Watch" context "watch thread btn" %}
+      {% endif %}
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right" mg-watch-thread-dropdown>
+      {{ watch_thread_dropdown|safe }}
+    </ul>
+  </div>
+  <details class="d-js-none dropdown-noscript">
+    <summary class="btn btn-default">
+      {% if watched_with_email or watched %}
+        {% translate "Watched" context "watch thread btn" %}
+      {% else %}
+        {% translate "Watch" context "watch thread btn" %}
+      {% endif %}
+    </summary>
+    <ul class="dropdown-menu dropdown-menu-right">
+      {{ watch_thread_dropdown|safe }}
+    </ul>
+  </details>
+</form>
