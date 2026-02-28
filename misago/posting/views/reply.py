@@ -252,7 +252,7 @@ class ReplyView(View):
         watched_thread = watch_replied_thread(state.thread, state.user, request)
         if watched_thread:
             state.context_data["watched_thread"] = get_watched_thread_context_data(
-                watched_thread
+                request, watched_thread
             )
 
         if not state.is_merged:

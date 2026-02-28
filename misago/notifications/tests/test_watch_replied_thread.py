@@ -66,3 +66,16 @@ def test_watch_replied_thread_doesnt_delete_existing_watched_thread_if_option_is
 
     watched_thread = WatchedThread.objects.get(user=user, thread=old_thread)
     assert not watched_thread.send_emails
+
+
+def test_watch_replied_thread_with_commit_false_doesnt_save_watched_thread_instance_in_database(
+    django_assert_num_queries, user, thread
+):
+    user.watch_replied_threads = ThreadNotifications.SITE_AND_EMAIL
+    user.save()
+
+    with django_assert_num_queries(1):
+        watch_replied_thread(thread, user, commit=False)
+
+    with pytest.raises(WatchedThread.DoesNotExist):
+        WatchedThread.objects.get(user=user, thread=thread)

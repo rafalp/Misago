@@ -13,6 +13,7 @@ from ..threads.views.backend import thread_backend
 from ..threads.views.generic import GenericThreadView
 from .enums import ThreadNotifications
 from .exceptions import NotificationVerbError
+from .hooks import get_watched_thread_context_data_hook
 from .models import Notification, WatchedThread
 from .registry import registry
 from .templates import (
@@ -123,7 +124,7 @@ class WatchView(GenericThreadView):
             return render(
                 request,
                 self.template_name,
-                get_watched_thread_context_data(watched_thread),
+                get_watched_thread_context_data(request, watched_thread),
             )
 
         # Redirect back to the `next` url
@@ -163,6 +164,16 @@ class PrivateThreadWatchView(WatchView):
 
 
 def get_watched_thread_context_data(
+    request: HttpRequest,
+    watched_thread: WatchedThread | None = None,
+) -> dict:
+    return get_watched_thread_context_data_hook(
+        _get_watched_thread_context_data_action, request, watched_thread
+    )
+
+
+def _get_watched_thread_context_data_action(
+    request: HttpRequest,
     watched_thread: WatchedThread | None = None,
 ) -> dict:
     return {

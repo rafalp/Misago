@@ -7,7 +7,7 @@ from ..views import get_watched_thread_context_data
 
 
 def test_get_watched_thread_context_data_for_unwatched_thread():
-    context = get_watched_thread_context_data()
+    context = get_watched_thread_context_data(None)
 
     assert context == {
         "button_template": WATCH_THREAD_BUTTON_TEMPLATE,
@@ -23,7 +23,7 @@ def test_get_watched_thread_context_data_for_watched_thread_with_email_notificat
     thread, user
 ):
     watched_thread = watch_thread(thread, user, send_emails=True)
-    context = get_watched_thread_context_data(watched_thread)
+    context = get_watched_thread_context_data(None, watched_thread)
 
     assert context == {
         "button_template": WATCH_THREAD_BUTTON_TEMPLATE,
@@ -39,7 +39,7 @@ def test_get_watched_thread_context_data_for_watched_thread_without_email_notifi
     thread, user
 ):
     watched_thread = watch_thread(thread, user, send_emails=False)
-    context = get_watched_thread_context_data(watched_thread)
+    context = get_watched_thread_context_data(None, watched_thread)
 
     assert context == {
         "button_template": WATCH_THREAD_BUTTON_TEMPLATE,

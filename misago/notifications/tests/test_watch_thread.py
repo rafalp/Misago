@@ -38,7 +38,7 @@ def test_watch_thread_creates_watched_thread_instance_with_emails_disabled(
     assert not watched_thread.send_emails
 
 
-def test_watch_thread_with_commit_false_doesnt_save_watched_thread_instance_in_datatabase(
+def test_watch_thread_with_commit_false_doesnt_save_watched_thread_instance_in_database(
     django_assert_num_queries, user, thread
 ):
     with django_assert_num_queries(0):
