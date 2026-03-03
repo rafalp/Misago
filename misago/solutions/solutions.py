@@ -30,9 +30,14 @@ def _set_thread_solution_action(
     request: HttpRequest | None = None,
 ):
     thread.solution = post
-    thread.solution_by = post.poster
-    thread.solution_by_name = post.poster_name
-    thread.solution_by_slug = post.poster_slug
+
+    if post.poster:
+        thread.solution_by = post.poster
+        thread.solution_by_name = post.poster.username
+        thread.solution_by_slug = post.poster.slug
+    else:
+        thread.solution_by_name = post.poster_name
+
     thread.solution_selected_at = timezone.now()
 
     if isinstance(user, str):
