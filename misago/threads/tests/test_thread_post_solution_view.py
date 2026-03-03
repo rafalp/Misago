@@ -11,7 +11,7 @@ def test_thread_post_solution_view_returns_redirect_to_solution(
     reply = thread_reply_factory(thread)
     thread_reply_factory(thread)
 
-    thread.set_best_answer(user, reply)
+    thread.solution = reply
     thread.save()
 
     response = client.get(

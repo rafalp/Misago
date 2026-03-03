@@ -137,10 +137,10 @@ class Post(PluginDataModel):
 
         if self.is_protected:
             other_post.is_protected = True
-        if self.is_best_answer:
-            self.thread.best_answer = other_post
-        if other_post.is_best_answer:
-            self.thread.best_answer_is_protected = other_post.is_protected
+        # if self.is_best_answer:
+        #     self.thread.best_answer = other_post
+        # if other_post.is_best_answer:
+        #     self.thread.best_answer_is_protected = other_post.is_protected
 
         from ..signals import merge_post
 

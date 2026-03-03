@@ -536,7 +536,7 @@ def test_thread_list_view_displays_solved_thread(
     thread_factory, thread_reply_factory, client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user)
-    thread.best_answer = thread_reply_factory(thread)
+    thread.solution = thread_reply_factory(thread)
     thread.save()
 
     response = client.get(reverse("misago:thread-list"))
