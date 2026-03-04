@@ -90,11 +90,11 @@ class CategoryForm(forms.ModelForm):
         ),
     )
     allow_solutions = YesNoSwitch(
-        label=pgettext_lazy("admin category form", "Allow solutions"),
+        label=pgettext_lazy("admin category form", "Allow selecting solutions"),
         required=False,
         help_text=pgettext_lazy(
             "admin category form",
-            "Controls whether users can select posts as solutions.",
+            "Controls whether users can select posts as solutions to threads.",
         ),
     )
     delay_browse_check = YesNoSwitch(
