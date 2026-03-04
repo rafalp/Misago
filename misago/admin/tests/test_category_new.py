@@ -24,6 +24,7 @@ def form_data(new_data: dict) -> dict:
         "css_class": "",
         "copy_permissions": "",
         "allow_polls": True,
+        "allow_solutions": False,
         "delay_browse_check": False,
         "show_started_only": False,
         "is_closed": False,

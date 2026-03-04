@@ -48,6 +48,7 @@ def form_data(category: Category, new_data: dict | None = None) -> dict:
         "css_class": category.css_class or "",
         "copy_permissions": "",
         "allow_polls": category.allow_polls,
+        "allow_solutions": category.allow_solutions,
         "delay_browse_check": category.delay_browse_check,
         "show_started_only": category.show_started_only,
         "is_closed": category.is_closed,

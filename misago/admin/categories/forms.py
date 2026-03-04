@@ -86,7 +86,15 @@ class CategoryForm(forms.ModelForm):
         required=False,
         help_text=pgettext_lazy(
             "admin category form",
-            "Controls if users can start new polls in this category.",
+            "Controls whether users can start new polls in this category.",
+        ),
+    )
+    allow_solutions = YesNoSwitch(
+        label=pgettext_lazy("admin category form", "Allow solutions"),
+        required=False,
+        help_text=pgettext_lazy(
+            "admin category form",
+            "Controls whether users can select posts as solutions.",
         ),
     )
     delay_browse_check = YesNoSwitch(
@@ -197,6 +205,7 @@ class CategoryForm(forms.ModelForm):
             "description",
             "css_class",
             "allow_polls",
+            "allow_solutions",
             "delay_browse_check",
             "show_started_only",
             "is_closed",
