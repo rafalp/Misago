@@ -37,8 +37,8 @@ class Category(MPTTModel, PluginDataModel):
     description = models.TextField(null=True, blank=True)
     css_class = models.CharField(max_length=255, null=True, blank=True)
 
-    allow_polls = models.BooleanField(default=True)
-    allow_solutions = models.BooleanField(default=False)
+    enable_polls = models.BooleanField(default=True)
+    enable_solutions = models.BooleanField(default=False)
 
     delay_browse_check = models.BooleanField(default=False)
     show_started_only = models.BooleanField(default=False)
