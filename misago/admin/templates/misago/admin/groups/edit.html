@@ -140,6 +140,24 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
+    <legend>{% translate "Thread solutions" context "admin group permissions form" %}</legend>
+
+    <p>
+      {% blocktranslate trimmed context "admin group permissions form" %}
+        Those permissions only apply to categories with the "Allow thread solutions" option enabled.
+      {% endblocktranslate %}
+    </p>
+
+    {% form_row form.group.can_select_own_thread_solutions %}
+    {% form_row form.group.can_change_own_thread_solutions %}
+    {% form_row form.group.own_thread_solutions_change_time_limit %}
+    {% form_row form.group.can_clear_own_thread_solutions %}
+    {% form_row form.group.own_thread_solutions_clear_time_limit %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
     <legend>{% translate "Usernames" context "admin group permissions form" %}</legend>
 
     {% form_row form.group.can_change_username %}

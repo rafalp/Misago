@@ -101,6 +101,11 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "can_like_posts": False,
         "can_see_own_post_likes": CanSeePostLikes.NEVER.value,
         "can_see_others_post_likes": CanSeePostLikes.NEVER.value,
+        "can_select_own_thread_solutions": False,
+        "can_change_own_thread_solutions": False,
+        "own_thread_solutions_change_time_limit": 0,
+        "can_clear_own_thread_solutions": False,
+        "own_thread_solutions_clear_time_limit": 0,
         "can_change_username": False,
         "username_changes_limit": 0,
         "username_changes_expire": 0,
@@ -222,6 +227,11 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         )
         if_true(
             permissions,
+            "can_vote_in_polls",
+            group.can_vote_in_polls,
+        )
+        if_true(
+            permissions,
             "can_like_posts",
             group.can_like_posts,
         )
@@ -237,8 +247,28 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         )
         if_true(
             permissions,
-            "can_vote_in_polls",
-            group.can_vote_in_polls,
+            "can_select_own_thread_solutions",
+            group.can_select_own_thread_solutions,
+        )
+        if_true(
+            permissions,
+            "can_change_own_thread_solutions",
+            group.can_change_own_thread_solutions,
+        )
+        if_zero_or_greater(
+            permissions,
+            "own_thread_solutions_change_time_limit",
+            group.own_thread_solutions_change_time_limit,
+        )
+        if_true(
+            permissions,
+            "can_clear_own_thread_solutions",
+            group.can_clear_own_thread_solutions,
+        )
+        if_zero_or_greater(
+            permissions,
+            "own_thread_solutions_clear_time_limit",
+            group.own_thread_solutions_clear_time_limit,
         )
         if_true(
             permissions,

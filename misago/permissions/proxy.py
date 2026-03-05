@@ -46,6 +46,11 @@ class UserPermissionsProxy:
     can_like_posts: bool
     can_see_own_post_likes: int
     can_see_others_post_likes: int
+    can_select_own_thread_solutions: bool
+    can_change_own_thread_solutions: bool
+    own_thread_solutions_change_time_limit: int
+    can_clear_own_thread_solutions: bool
+    own_thread_solutions_clear_time_limit: int
     can_change_username: bool
     username_changes_limit: int
     username_changes_expire: int
