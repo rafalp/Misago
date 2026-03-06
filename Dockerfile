@@ -8,7 +8,7 @@ ENV IN_MISAGO_DOCKER 1
 ENV MISAGO_PLUGINS "/app/plugins"
 
 # Install env dependencies in one single command/layer
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install --no-install-recommends -y \
     vim \
     libffi-dev \
     libssl-dev \
@@ -18,23 +18,24 @@ RUN apt-get update && apt-get install -y \
     locales \
     cron \
     postgresql-client-15 \
-    gettext
+    gettext \
+    && rm -rf /var/lib/apt/lists/*
 
 # Add files and dirs for build step
-ADD dev /app/dev
-ADD requirements.txt /app/requirements.txt
-ADD plugins /app/plugins
+COPY dev /app/dev
+COPY requirements.txt /app/requirements.txt
+COPY plugins /app/plugins
 
 WORKDIR /app/
 
 # Install Misago requirements
-RUN pip install --upgrade pip && \
-    pip install -r /app/requirements.txt && \
-    pip install pip-tools
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r /app/requirements.txt && \
+    pip install --no-cache-dir pip-tools
 
 # Bootstrap plugins
 RUN ./dev bootstrap_plugins
 
 EXPOSE 8000
 
-CMD python manage.py runserver 0.0.0.0:8000 --noreload
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000", "--noreload"]
