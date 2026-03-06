@@ -99,7 +99,7 @@ class CheckClearThreadSolutionPermissionHook(
         ):
             raise PermissionDenied(
                 pgettext(
-                    "solution permission error",
+                    "solutions permission error",
                     "You can't clear this thread's solution."
                 )
             )

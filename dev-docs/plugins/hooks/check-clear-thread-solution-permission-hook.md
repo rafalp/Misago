@@ -95,7 +95,7 @@ def check_clear_thread_solution_permission(
     ):
         raise PermissionDenied(
             pgettext(
-                "solution permission error",
+                "solutions permission error",
                 "You can't clear this thread's solution."
             )
         )

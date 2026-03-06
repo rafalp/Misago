@@ -259,7 +259,7 @@ class EditGroupForm(forms.ModelForm):
         label=pgettext_lazy("admin group permissions form", "Can start polls"),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            'This permission only applies to categories with the polls option enabled.',
+            "This permission only applies to categories with the polls option enabled.",
         ),
     )
     can_edit_own_polls = YesNoSwitch(

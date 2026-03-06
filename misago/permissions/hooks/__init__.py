@@ -13,6 +13,9 @@ from .check_browse_category_permission import check_browse_category_permission_h
 from .check_change_private_thread_owner_permission import (
     check_change_private_thread_owner_permission_hook,
 )
+from .check_change_thread_solution_permission import (
+    check_change_thread_solution_permission_hook,
+)
 from .check_clear_thread_solution_permission import (
     check_clear_thread_solution_permission_hook,
 )
@@ -127,6 +130,7 @@ __all__ = [
     "check_access_thread_permission_hook",
     "check_browse_category_permission_hook",
     "check_change_private_thread_owner_permission_hook",
+    "check_change_thread_solution_permission_hook",
     "check_clear_thread_solution_permission_hook",
     "check_close_thread_poll_permission_hook",
     "check_delete_attachment_permission_hook",

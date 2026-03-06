@@ -7,10 +7,10 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class CheckSelectThreadSolutionPermissionHookAction(Protocol):
+class CheckChangeThreadSolutionPermissionHookAction(Protocol):
     """
-    Misago function used to check whether the user has permission to select
-    a post as the thread’s solution. Raises `PermissionDenied` with an error
+    Misago function used to check whether the user has permission to change
+    the thread’s solution to a new post. Raises `PermissionDenied` with an error
     message if they don't.
 
     # Arguments
@@ -31,13 +31,13 @@ class CheckSelectThreadSolutionPermissionHookAction(Protocol):
     ) -> None: ...
 
 
-class CheckSelectThreadSolutionPermissionHookFilter(Protocol):
+class CheckChangeThreadSolutionPermissionHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CheckSelectThreadSolutionPermissionHookAction`
+    ## `action: CheckChangeThreadSolutionPermissionHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -55,37 +55,37 @@ class CheckSelectThreadSolutionPermissionHookFilter(Protocol):
 
     def __call__(
         self,
-        action: CheckSelectThreadSolutionPermissionHookAction,
+        action: CheckChangeThreadSolutionPermissionHookAction,
         permissions: "UserPermissionsProxy",
         post: Post,
     ) -> None: ...
 
 
-class CheckSelectThreadSolutionPermissionHook(
+class CheckChangeThreadSolutionPermissionHook(
     FilterHook[
-        CheckSelectThreadSolutionPermissionHookAction,
-        CheckSelectThreadSolutionPermissionHookFilter,
+        CheckChangeThreadSolutionPermissionHookAction,
+        CheckChangeThreadSolutionPermissionHookFilter,
     ]
 ):
     """
     This hook wraps a standard Misago function used to check whether the user
-    has permission to select a post as the thread’s solution.
+    has permission to change the thread’s solution to a new post.
     Raises `PermissionDenied` with an error message if they don't.
 
     # Example
 
     The code below implements a custom filter function that blocks a user from
-    selecting a post as a solution if it was posted by a shadow-banned user.
+    changing thread's solution if it was selected by an admin.
 
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
-    from misago.permissions.hooks import check_select_thread_solution_permission_hook
+    from misago.permissions.hooks import check_change_thread_solution_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.threads.models import Post
 
-    @check_select_thread_solution_permission_hook.append_filter
-    def check_select_thread_solution_permission(
+    @check_change_thread_solution_permission_hook.append_filter
+    def check_change_thread_solution_permission(
         action,
         permissions: UserPermissionsProxy,
         post: Post,
@@ -93,11 +93,11 @@ class CheckSelectThreadSolutionPermissionHook(
         # Run standard permission checks
         action(permissions, post)
 
-        if post.poster and post.poster.plugin_data.get("shadow_banned"):
+        if post.thread.solution_selected_by.is_misago_admin:
             raise PermissionDenied(
                 pgettext(
                     "solutions permission error",
-                    "This post can’t be selected as the thread’s solution."
+                    "This thread’s solution can't be changed."
                 )
             )
     ```
@@ -107,11 +107,11 @@ class CheckSelectThreadSolutionPermissionHook(
 
     def __call__(
         self,
-        action: CheckSelectThreadSolutionPermissionHookAction,
+        action: CheckChangeThreadSolutionPermissionHookAction,
         permissions: "UserPermissionsProxy",
         post: Post,
     ) -> None:
         return super().__call__(action, permissions, post)
 
 
-check_select_thread_solution_permission_hook = CheckSelectThreadSolutionPermissionHook()
+check_change_thread_solution_permission_hook = CheckChangeThreadSolutionPermissionHook()
