@@ -33,10 +33,11 @@ class GenericThreadView(View):
         thread_id: int,
         annotate_read_time: bool = False,
         select_related: bool | Iterable[str] = ("category",),
+        only: Iterable[str] | None = None,
         for_update: bool = False,
     ) -> Thread:
         return self.backend.get_thread(
-            request, thread_id, annotate_read_time, select_related, for_update
+            request, thread_id, annotate_read_time, select_related, only, for_update
         )
 
     def get_thread_queryset(
@@ -54,10 +55,11 @@ class GenericThreadView(View):
         request: HttpRequest,
         thread: Thread,
         select_related: bool | Iterable[str] = False,
+        only: Iterable[str] | None = None,
         for_update: bool = False,
     ) -> QuerySet:
         return self.backend.get_thread_posts_queryset(
-            request, thread, select_related, for_update
+            request, thread, select_related, only, for_update
         )
 
     def get_thread_post(
@@ -66,11 +68,12 @@ class GenericThreadView(View):
         thread: Thread,
         post_id: int,
         select_related: bool | Iterable[str] = False,
+        only: Iterable[str] | None = None,
         for_content: bool = False,
         for_update: bool = False,
     ) -> Post:
         return self.backend.get_thread_post(
-            request, thread, post_id, select_related, for_content, for_update
+            request, thread, post_id, select_related, only, for_content, for_update
         )
 
     def get_thread_post_number(self, request: HttpRequest, post: Post) -> int:

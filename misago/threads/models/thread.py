@@ -99,6 +99,7 @@ class Thread(PluginDataModel):
     )
     solution_by_name = models.CharField(max_length=255, null=True, blank=True)
     solution_by_slug = models.CharField(max_length=255, null=True, blank=True)
+
     solution_selected_at = models.DateTimeField(null=True, blank=True)
     solution_selected_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -109,6 +110,18 @@ class Thread(PluginDataModel):
     )
     solution_selected_by_name = models.CharField(max_length=255, null=True, blank=True)
     solution_selected_by_slug = models.CharField(max_length=255, null=True, blank=True)
+
+    solution_is_locked = models.BooleanField(default=False)
+    solution_locked_at = models.DateTimeField(null=True, blank=True)
+    solution_locked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="+",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    solution_locked_by_name = models.CharField(max_length=255, null=True, blank=True)
+    solution_locked_by_slug = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         indexes = [

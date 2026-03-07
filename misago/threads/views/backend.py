@@ -35,9 +35,12 @@ class ViewBackend(ABC):
         thread_id: int,
         annotate_read_time: bool = False,
         select_related: bool | Iterable[str] = ("category",),
+        only: Iterable[str] | None = None,
         for_update: bool = False,
     ) -> Thread:
         queryset = self.get_thread_queryset(request, annotate_read_time, select_related)
+        if only:
+            queryset = queryset.only(*only)
         if for_update:
             queryset = queryset.select_for_update()
 
@@ -68,6 +71,7 @@ class ViewBackend(ABC):
         request: HttpRequest,
         thread: Thread,
         select_related: bool | Iterable[str] = False,
+        only: Iterable[str] | None = None,
         for_update: bool = False,
     ) -> QuerySet:
         queryset = Post.objects.filter(thread=thread).order_by("id")
@@ -75,6 +79,8 @@ class ViewBackend(ABC):
             queryset = queryset.select_related()
         elif select_related:
             queryset = queryset.select_related(*select_related)
+        if only:
+            queryset = queryset.only(*only)
         if for_update:
             queryset = queryset.select_for_update()
         return queryset
@@ -86,11 +92,12 @@ class ViewBackend(ABC):
         thread: Thread,
         post_id: int,
         select_related: bool | Iterable[str] = False,
+        only: Iterable[str] | None = None,
         for_content: bool = False,
         for_update: bool = False,
     ) -> Post:
         queryset = self.get_thread_posts_queryset(
-            request, thread, select_related, for_update
+            request, thread, select_related, only, for_update
         )
         try:
             post = queryset.get(id=post_id)
