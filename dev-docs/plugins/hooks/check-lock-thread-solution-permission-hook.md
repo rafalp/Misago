@@ -74,8 +74,6 @@ The thread to check permissions for.
 The code below implements a custom filter function that allows user with the special "curator" flag to lock selected solution.
 
 ```python
-from django.core.exceptions import PermissionDenied
-from django.utils.translation import pgettext
 from misago.permissions.hooks import check_lock_thread_solution_permission_hook
 from misago.permissions.proxy import UserPermissionsProxy
 from misago.threads.models import Thread
