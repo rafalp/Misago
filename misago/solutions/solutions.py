@@ -4,25 +4,25 @@ from django.http import HttpRequest
 from django.utils import timezone
 
 from ..threads.models import Post, Thread
-from .hooks import clear_thread_solution_hook, set_thread_solution_hook
+from .hooks import clear_thread_solution_hook, select_thread_solution_hook
 
 if TYPE_CHECKING:
     from ..users.models import User
 
 
-def set_thread_solution(
+def select_thread_solution(
     thread: Thread,
     post: Post,
     user: Union["User", str],
     commit: bool = True,
     request: HttpRequest | None = None,
 ):
-    set_thread_solution_hook(
-        _set_thread_solution_action, thread, post, user, commit, request
+    select_thread_solution_hook(
+        _select_thread_solution_action, thread, post, user, commit, request
     )
 
 
-def _set_thread_solution_action(
+def _select_thread_solution_action(
     thread: Thread,
     post: Post,
     user: Union["User", str],
@@ -74,6 +74,46 @@ def _clear_thread_solution_action(
     thread.solution_selected_by = None
     thread.solution_selected_by_name = None
     thread.solution_selected_by_slug = None
+
+    if commit:
+        thread.save()
+
+
+def lock_thread_solution(
+    thread: Thread,
+    user: Union["User", str],
+    commit: bool = True,
+    request: HttpRequest | None = None,
+):
+    if isinstance(user, str):
+        locked_by = None
+        locked_by_name = user
+        locked_by_slug = None
+    else:
+        locked_by = user
+        locked_by_name = user.username
+        locked_by_slug = user.slug
+
+    thread.solution_is_locked = True
+    thread.solution_locked_at = timezone.now()
+    thread.solution_locked_by = locked_by
+    thread.solution_locked_by_name = locked_by_name
+    thread.solution_locked_by_slug = locked_by_slug
+
+    if commit:
+        thread.save()
+
+
+def unlock_thread_solution(
+    thread: Thread,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+):
+    thread.solution_is_locked = False
+    thread.solution_locked_at = None
+    thread.solution_locked_by = None
+    thread.solution_locked_by_name = None
+    thread.solution_locked_by_slug = None
 
     if commit:
         thread.save()
