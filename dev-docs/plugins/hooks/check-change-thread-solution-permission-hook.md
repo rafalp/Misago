@@ -1,6 +1,6 @@
 # `check_change_thread_solution_permission_hook`
 
-This hook wraps a standard Misago function used to check whether the user has permission to change the thread’s solution to a new post. Raises `PermissionDenied` with an error message if they don't.
+This hook wraps the standard Misago function used to check whether the user has permission to change the thread’s solution to a new post. Raises `PermissionDenied` with an error message if they don't.
 
 
 ## Location
@@ -69,7 +69,7 @@ The post to check permissions for.
 
 ## Example
 
-The code below implements a custom filter function that blocks a user from changing thread's solution if it was selected by an admin.
+The code below implements a custom filter function that blocks a user from changing a thread's solution if it wasn't selected by them.
 
 ```python
 from django.core.exceptions import PermissionDenied
@@ -87,7 +87,7 @@ def check_change_thread_solution_permission(
     # Run standard permission checks
     action(permissions, post)
 
-    if post.thread.solution_selected_by.is_misago_admin:
+    if post.thread.solution_selected_by_id != permissions.user.id:
         raise PermissionDenied(
             pgettext(
                 "solutions permission error",
