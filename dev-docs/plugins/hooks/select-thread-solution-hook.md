@@ -1,6 +1,6 @@
-# `set_thread_solution_hook`
+# `select_thread_solution_hook`
 
-This hook allows plugins to replace or extend the logic used to set a post as the thread’s solution.
+This hook allows plugins to replace or extend the logic used to selecting a post as the thread’s solution.
 
 
 ## Location
@@ -8,15 +8,15 @@ This hook allows plugins to replace or extend the logic used to set a post as th
 This hook can be imported from `misago.solutions.hooks`:
 
 ```python
-from misago.solutions.hooks import set_thread_solution_hook
+from misago.solutions.hooks import select_thread_solution_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_set_thread_solution_filter(
-    action: SetThreadSolutionHookAction,
+def custom_select_thread_solution_filter(
+    action: SelectThreadSolutionHookAction,
     thread: Thread,
     post: Post,
     user: Union['User', str],
@@ -31,7 +31,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: SetThreadSolutionHookAction`
+#### `action: SelectThreadSolutionHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
@@ -68,7 +68,7 @@ The request object, or `None` if not provided.
 ## Action
 
 ```python
-def set_thread_solution_action(
+def select_thread_solution_action(
     thread: Thread,
     post: Post,
     user: Union['User', str],
@@ -78,7 +78,7 @@ def set_thread_solution_action(
     ...
 ```
 
-Misago function for setting a post as the thread’s solution.
+Misago function for selecting a post as the thread’s solution.
 
 
 ### Arguments
@@ -116,12 +116,12 @@ Record the IP address of the user who selected the solution:
 
 ```python
 from django.http import HttpRequest
-from misago.solutions.hooks import set_thread_solution_hook
+from misago.solutions.hooks import select_thread_solution_hook
 from misago.threads.models import Thread, Post
 from misago.users.models import User
 
 
-@set_thread_solution_hook.append_filter
+@select_thread_solution_hook.append_filter
 def record_solution_user_ip_address(
     action,
     thread: Thread,

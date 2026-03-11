@@ -4,7 +4,12 @@ from django.http import HttpRequest
 from django.utils import timezone
 
 from ..threads.models import Post, Thread
-from .hooks import clear_thread_solution_hook, select_thread_solution_hook
+from .hooks import (
+    clear_thread_solution_hook,
+    lock_thread_solution_hook,
+    select_thread_solution_hook,
+    unlock_thread_solution_hook,
+)
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -85,6 +90,17 @@ def lock_thread_solution(
     commit: bool = True,
     request: HttpRequest | None = None,
 ):
+    lock_thread_solution_hook(
+        _lock_thread_solution_action, thread, user, commit, request
+    )
+
+
+def _lock_thread_solution_action(
+    thread: Thread,
+    user: Union["User", str],
+    commit: bool = True,
+    request: HttpRequest | None = None,
+):
     if isinstance(user, str):
         locked_by = None
         locked_by_name = user
@@ -105,6 +121,14 @@ def lock_thread_solution(
 
 
 def unlock_thread_solution(
+    thread: Thread,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+):
+    unlock_thread_solution_hook(_unlock_thread_solution_action, thread, commit, request)
+
+
+def _unlock_thread_solution_action(
     thread: Thread,
     commit: bool = True,
     request: HttpRequest | None = None,
