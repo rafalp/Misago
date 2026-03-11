@@ -8,7 +8,9 @@ from ..threads.models import Post, Thread
 from .hooks import (
     check_change_thread_solution_permission_hook,
     check_clear_thread_solution_permission_hook,
+    check_lock_thread_solution_permission_hook,
     check_select_thread_solution_permission_hook,
+    check_unlock_thread_solution_permission_hook,
 )
 from .proxy import UserPermissionsProxy
 from .threads import (
@@ -264,3 +266,47 @@ def _check_clear_thread_solution_permission_action(
             )
             % {"minutes": minutes}
         )
+
+
+def check_lock_thread_solution_permission(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    check_lock_thread_solution_permission_hook(
+        _check_lock_thread_solution_permission_action, permissions, thread
+    )
+
+
+def _check_lock_thread_solution_permission_action(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    if permissions.is_category_moderator(thread.category_id):
+        return
+
+    raise PermissionDenied(
+        pgettext(
+            "solutions permission error",
+            "You can't lock thread solutions.",
+        )
+    )
+
+
+def check_unlock_thread_solution_permission(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    check_unlock_thread_solution_permission_hook(
+        _check_unlock_thread_solution_permission_action, permissions, thread
+    )
+
+
+def _check_unlock_thread_solution_permission_action(
+    permissions: UserPermissionsProxy, thread: Thread
+):
+    if permissions.is_category_moderator(thread.category_id):
+        return
+
+    raise PermissionDenied(
+        pgettext(
+            "solutions permission error",
+            "You can't unlock thread solutions.",
+        )
+    )

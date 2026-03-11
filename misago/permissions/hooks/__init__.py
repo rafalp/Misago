@@ -43,6 +43,9 @@ from .check_edit_thread_poll_permission import check_edit_thread_poll_permission
 from .check_edit_thread_post_permission import check_edit_thread_post_permission_hook
 from .check_hide_post_edit_permission import check_hide_post_edit_permission_hook
 from .check_like_post_permission import check_like_post_permission_hook
+from .check_lock_thread_solution_permission import (
+    check_lock_thread_solution_permission_hook,
+)
 from .check_locked_category_permission import (
     check_locked_category_permission_hook,
 )
@@ -90,6 +93,9 @@ from .check_start_thread_permission import (
 from .check_start_thread_poll_permission import check_start_thread_poll_permission_hook
 from .check_unhide_post_edit_permission import check_unhide_post_edit_permission_hook
 from .check_unlike_post_permission import check_unlike_post_permission_hook
+from .check_unlock_thread_solution_permission import (
+    check_unlock_thread_solution_permission_hook,
+)
 from .check_vote_in_thread_poll_permission import (
     check_vote_in_thread_poll_permission_hook,
 )
@@ -144,6 +150,7 @@ __all__ = [
     "check_edit_thread_post_permission_hook",
     "check_hide_post_edit_permission_hook",
     "check_like_post_permission_hook",
+    "check_lock_thread_solution_permission_hook",
     "check_locked_category_permission_hook",
     "check_locked_private_thread_permission_hook",
     "check_locked_thread_permission_hook",
@@ -167,6 +174,7 @@ __all__ = [
     "check_start_thread_poll_permission_hook",
     "check_unhide_post_edit_permission_hook",
     "check_unlike_post_permission_hook",
+    "check_unlock_thread_solution_permission_hook",
     "check_vote_in_thread_poll_permission_hook",
     "copy_category_permissions_hook",
     "copy_group_permissions_hook",
