@@ -43,6 +43,9 @@ def _check_select_thread_solution_permission_action(
     if permissions.is_category_moderator(post.category_id):
         return
 
+    check_locked_category_permission(permissions, post.category)
+    check_locked_thread_permission(permissions, post.thread)
+
     if (
         not permissions.user.is_authenticated
         or permissions.user.id != post.thread.starter_id
@@ -62,9 +65,6 @@ def _check_select_thread_solution_permission_action(
             )
         )
 
-    check_locked_category_permission(permissions, post.category)
-    check_locked_thread_permission(permissions, post.thread)
-
 
 def check_change_thread_solution_permission(
     permissions: UserPermissionsProxy, post: Post
@@ -81,11 +81,13 @@ def _check_change_thread_solution_permission_action(
 ):
     thread = post.thread
 
-    is_moderator = permissions.is_category_moderator(thread.category_id)
+    if permissions.is_category_moderator(post.category_id):
+        return
 
-    if not thread.category.enable_solutions and (
-        not is_moderator or not thread.solution_id
-    ):
+    check_locked_category_permission(permissions, post.category)
+    check_locked_thread_permission(permissions, post.thread)
+
+    if not post.category.enable_solutions:
         raise PermissionDenied(
             pgettext(
                 "solutions permission error",
@@ -93,8 +95,13 @@ def _check_change_thread_solution_permission_action(
             )
         )
 
-    if is_moderator:
-        return
+    if thread.solution_is_locked:
+        raise PermissionDenied(
+            pgettext(
+                "solutions permission error",
+                "This thread's solution is locked.",
+            )
+        )
 
     if (
         not permissions.user.is_authenticated
@@ -112,17 +119,6 @@ def _check_change_thread_solution_permission_action(
             pgettext(
                 "solutions permission error",
                 "You can't change thread solutions.",
-            )
-        )
-
-    check_locked_category_permission(permissions, post.category)
-    check_locked_thread_permission(permissions, post.thread)
-
-    if thread.solution.is_protected:
-        raise PermissionDenied(
-            pgettext(
-                "solutions permission error",
-                "This thread's solution is locked.",
             )
         )
 
@@ -181,11 +177,13 @@ def check_clear_thread_solution_permission(
 def _check_clear_thread_solution_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
-    is_moderator = permissions.is_category_moderator(thread.category_id)
+    if permissions.is_category_moderator(thread.category_id):
+        return
 
-    if not thread.category.enable_solutions and (
-        not is_moderator or not thread.solution_id
-    ):
+    check_locked_category_permission(permissions, thread.category)
+    check_locked_thread_permission(permissions, thread)
+
+    if not thread.category.enable_solutions:
         raise PermissionDenied(
             pgettext(
                 "solutions permission error",
@@ -193,8 +191,13 @@ def _check_clear_thread_solution_permission_action(
             )
         )
 
-    if is_moderator:
-        return
+    if thread.solution_is_locked:
+        raise PermissionDenied(
+            pgettext(
+                "solutions permission error",
+                "This thread's solution is locked.",
+            )
+        )
 
     if (
         not permissions.user.is_authenticated
@@ -212,17 +215,6 @@ def _check_clear_thread_solution_permission_action(
             pgettext(
                 "solutions permission error",
                 "You can't clear thread solutions",
-            )
-        )
-
-    check_locked_category_permission(permissions, thread.category)
-    check_locked_thread_permission(permissions, thread)
-
-    if thread.solution.is_protected:
-        raise PermissionDenied(
-            pgettext(
-                "solutions permission error",
-                "This thread's solution is locked.",
             )
         )
 
