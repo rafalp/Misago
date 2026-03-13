@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import pytest
 from django.core.exceptions import PermissionDenied
 
@@ -2624,6 +2626,603 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_de
 
     select_thread_solution(thread, solution, "DeletedUser")
     lock_thread_solution(thread, "Moderator")
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(anonymous_user)
+
+    with pytest.raises(PermissionDenied):
+        check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_global_moderator_for_own_thread_within_time_limit(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    moderator,
+    moderators_group,
+    default_category,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    moderators_group.own_thread_solutions_change_time_limit = 5
+    moderators_group.save()
+
+    thread = thread_factory(default_category, starter=moderator)
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, moderator)
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(moderator)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_global_moderator_for_other_user_thread_within_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    moderator,
+    other_user,
+    moderators_group,
+    default_category,
+    other_user_thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    moderators_group.own_thread_solutions_change_time_limit = 5
+    moderators_group.save()
+
+    solution = thread_reply_factory(other_user_thread)
+
+    select_thread_solution(other_user_thread, solution, other_user)
+
+    new_solution = thread_reply_factory(other_user_thread)
+
+    permissions = user_permissions_factory(moderator)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_global_moderator_for_deleted_user_thread_within_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    moderator,
+    moderators_group,
+    default_category,
+    thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    moderators_group.own_thread_solutions_change_time_limit = 5
+    moderators_group.save()
+
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, "DeletedUser")
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(moderator)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_category_moderator_for_own_thread_within_time_limit(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    category_moderator,
+    members_group,
+    default_category,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.own_thread_solutions_change_time_limit = 5
+    members_group.save()
+
+    thread = thread_factory(default_category, starter=category_moderator)
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, category_moderator)
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(category_moderator)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_category_moderator_for_other_user_thread_within_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    category_moderator,
+    other_user,
+    members_group,
+    default_category,
+    other_user_thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.own_thread_solutions_change_time_limit = 5
+    members_group.save()
+
+    solution = thread_reply_factory(other_user_thread)
+
+    select_thread_solution(other_user_thread, solution, other_user)
+
+    new_solution = thread_reply_factory(other_user_thread)
+
+    permissions = user_permissions_factory(category_moderator)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_category_moderator_for_deleted_user_thread_within_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    category_moderator,
+    members_group,
+    default_category,
+    thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.own_thread_solutions_change_time_limit = 5
+    members_group.save()
+
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, "DeletedUser")
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(category_moderator)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_user_for_own_thread_within_time_limit(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    members_group,
+    default_category,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.own_thread_solutions_change_time_limit = 5
+    members_group.save()
+
+    thread = thread_factory(default_category, starter=user)
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, user)
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(user)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_fails_for_user_for_other_user_thread_within_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    other_user,
+    members_group,
+    default_category,
+    other_user_thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.own_thread_solutions_change_time_limit = 5
+    members_group.save()
+
+    solution = thread_reply_factory(other_user_thread)
+
+    select_thread_solution(other_user_thread, solution, other_user)
+
+    new_solution = thread_reply_factory(other_user_thread)
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_fails_for_user_for_deleted_user_thread_within_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    members_group,
+    default_category,
+    thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.own_thread_solutions_change_time_limit = 5
+    members_group.save()
+
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, "DeletedUser")
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_other_user_thread_within_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    anonymous_user,
+    other_user,
+    guests_group,
+    default_category,
+    other_user_thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    guests_group.can_change_own_thread_solutions = True
+    guests_group.own_thread_solutions_change_time_limit = 5
+    guests_group.save()
+
+    solution = thread_reply_factory(other_user_thread)
+
+    select_thread_solution(other_user_thread, solution, other_user)
+
+    new_solution = thread_reply_factory(other_user_thread)
+
+    permissions = user_permissions_factory(anonymous_user)
+
+    with pytest.raises(PermissionDenied):
+        check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_deleted_user_thread_within_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    anonymous_user,
+    guests_group,
+    default_category,
+    thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    guests_group.can_change_own_thread_solutions = True
+    guests_group.own_thread_solutions_change_time_limit = 5
+    guests_group.save()
+
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, "DeletedUser")
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(anonymous_user)
+
+    with pytest.raises(PermissionDenied):
+        check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_global_moderator_for_own_thread_outside_of_time_limit(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    moderator,
+    moderators_group,
+    default_category,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    moderators_group.own_thread_solutions_change_time_limit = 5
+    moderators_group.save()
+
+    thread = thread_factory(default_category, starter=moderator)
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, moderator)
+
+    thread.solution_selected_at -= timedelta(minutes=30)
+    thread.save()
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(moderator)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_global_moderator_for_other_user_thread_outside_of_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    moderator,
+    other_user,
+    moderators_group,
+    default_category,
+    other_user_thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    moderators_group.own_thread_solutions_change_time_limit = 5
+    moderators_group.save()
+
+    solution = thread_reply_factory(other_user_thread)
+
+    select_thread_solution(other_user_thread, solution, other_user)
+
+    other_user_thread.solution_selected_at -= timedelta(minutes=30)
+    other_user_thread.save()
+
+    new_solution = thread_reply_factory(other_user_thread)
+
+    permissions = user_permissions_factory(moderator)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_global_moderator_for_deleted_user_thread_outside_of_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    moderator,
+    moderators_group,
+    default_category,
+    thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    moderators_group.own_thread_solutions_change_time_limit = 5
+    moderators_group.save()
+
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, "DeletedUser")
+
+    thread.solution_selected_at -= timedelta(minutes=30)
+    thread.save()
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(moderator)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_category_moderator_for_own_thread_outside_of_time_limit(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    category_moderator,
+    members_group,
+    default_category,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.own_thread_solutions_change_time_limit = 5
+    members_group.save()
+
+    thread = thread_factory(default_category, starter=category_moderator)
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, category_moderator)
+
+    thread.solution_selected_at -= timedelta(minutes=30)
+    thread.save()
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(category_moderator)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_category_moderator_for_other_user_thread_outside_of_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    category_moderator,
+    other_user,
+    members_group,
+    default_category,
+    other_user_thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.own_thread_solutions_change_time_limit = 5
+    members_group.save()
+
+    solution = thread_reply_factory(other_user_thread)
+
+    select_thread_solution(other_user_thread, solution, other_user)
+
+    other_user_thread.solution_selected_at -= timedelta(minutes=30)
+    other_user_thread.save()
+
+    new_solution = thread_reply_factory(other_user_thread)
+
+    permissions = user_permissions_factory(category_moderator)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_passes_for_category_moderator_for_deleted_user_thread_outside_of_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    category_moderator,
+    members_group,
+    default_category,
+    thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.own_thread_solutions_change_time_limit = 5
+    members_group.save()
+
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, "DeletedUser")
+
+    thread.solution_selected_at -= timedelta(minutes=30)
+    thread.save()
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(category_moderator)
+    check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_fails_for_user_for_own_thread_outside_of_time_limit(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    members_group,
+    default_category,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.own_thread_solutions_change_time_limit = 5
+    members_group.save()
+
+    thread = thread_factory(default_category, starter=user)
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, user)
+
+    thread.solution_selected_at -= timedelta(minutes=30)
+    thread.save()
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_fails_for_user_for_other_user_thread_outside_of_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    other_user,
+    members_group,
+    default_category,
+    other_user_thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.own_thread_solutions_change_time_limit = 5
+    members_group.save()
+
+    solution = thread_reply_factory(other_user_thread)
+
+    select_thread_solution(other_user_thread, solution, other_user)
+
+    other_user_thread.solution_selected_at -= timedelta(minutes=30)
+    other_user_thread.save()
+
+    new_solution = thread_reply_factory(other_user_thread)
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_fails_for_user_for_deleted_user_thread_outside_of_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    members_group,
+    default_category,
+    thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.own_thread_solutions_change_time_limit = 5
+    members_group.save()
+
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, "DeletedUser")
+
+    thread.solution_selected_at -= timedelta(minutes=30)
+    thread.save()
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_other_user_thread_outside_of_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    anonymous_user,
+    other_user,
+    guests_group,
+    default_category,
+    other_user_thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    guests_group.can_change_own_thread_solutions = True
+    guests_group.own_thread_solutions_change_time_limit = 5
+    guests_group.save()
+
+    solution = thread_reply_factory(other_user_thread)
+
+    select_thread_solution(other_user_thread, solution, other_user)
+
+    other_user_thread.solution_selected_at -= timedelta(minutes=30)
+    other_user_thread.save()
+
+    new_solution = thread_reply_factory(other_user_thread)
+
+    permissions = user_permissions_factory(anonymous_user)
+
+    with pytest.raises(PermissionDenied):
+        check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_deleted_user_thread_outside_of_time_limit(
+    thread_reply_factory,
+    user_permissions_factory,
+    anonymous_user,
+    guests_group,
+    default_category,
+    thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    guests_group.can_change_own_thread_solutions = True
+    guests_group.own_thread_solutions_change_time_limit = 5
+    guests_group.save()
+
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, "DeletedUser")
+
+    thread.solution_selected_at -= timedelta(minutes=30)
+    thread.save()
 
     new_solution = thread_reply_factory(thread)
 
