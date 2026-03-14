@@ -23,6 +23,7 @@ urlpatterns = [
     path("", include("misago.privatethreads.urls")),
     path("", include("misago.edits.urls")),
     path("", include("misago.likes.urls")),
+    path("", include("misago.solutions.urls")),
     path("", include("misago.threadupdates.urls")),
     path("", include("misago.notifications.urls")),
     path("", include("misago.search.urls")),
