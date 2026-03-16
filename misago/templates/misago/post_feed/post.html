@@ -188,6 +188,11 @@
       <div class="posts-feed-item-post-body">
         
         <div class="posts-feed-item-post-body-message">
+          {% if is_solution %}
+            <div style="border-radius: 3px; border: 1px solid #009900; background-color: #99cc99; padding: 4px 8px;">
+              SOLUTION ALERT
+            </div>
+          {% endif %}
           {% if is_visible %}
             <article class="posts-feed-item-post-rich-text rich-text" misago-quote-root="{% if poster %}{{ poster.username }}{% else %}{{ post.poster_name }}{% endif %}, post: {{ post.id }}" misago-lightbox-root>
               {% rich_text post.parsed rich_text_data thread=thread %}
@@ -307,6 +312,38 @@
                   {% translate "Liked" context "posts feed like post btn" %}
                 </button>
               {% endif %}
+            {% endif %}
+            {% if select_solution_url %}
+              <form
+                action="{{ select_solution_url }}"
+                method="post"
+              >
+                {% csrf_token %}
+                <button
+                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-like"
+                  type="submit"
+                  hx-disabled-elt="this"
+                >
+                  <span class="material-icon">check_circle</span>
+                  {% translate "Solution" context "posts feed select solution" %}
+                </button>
+              </form>
+            {% elif clear_solution_url %}
+              <form
+                action="{{ clear_solution_url }}"
+                method="post"
+              >
+                {% csrf_token %}
+                <input type="hidden" name="next" value="post" />
+                <button
+                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-like"
+                  type="submit"
+                  hx-disabled-elt="this"
+                >
+                  <span class="material-icon">check_circle</span>
+                  {% translate "Solution" context "posts feed select solution" %}
+                </button>
+              </form>
             {% endif %}
           </div>
           <div class="posts-feed-item-post-body-footer-right">

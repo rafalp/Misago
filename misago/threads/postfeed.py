@@ -11,6 +11,11 @@ from ..permissions.edits import (
     can_see_post_edit_count,
     check_see_post_edit_history_permission,
 )
+from ..permissions.solutions import (
+    check_select_thread_solution_permission,
+    check_change_thread_solution_permission,
+    check_clear_thread_solution_permission,
+)
 from ..permissions.threads import (
     check_edit_thread_post_permission,
     check_reply_thread_permission,
@@ -106,9 +111,21 @@ class PostFeed:
 
     def get_feed_data(self) -> list[dict]:
         feed: list[dict] = []
+
         for i, post in enumerate(self.posts):
+            if post.category_id == self.category.id:
+                post.category = self.category
+            if post.thread_id == self.thread.id:
+                post.thread = self.thread
+
             feed.append(self.get_post_data(post, i + self.counter_start + 1))
+
         for update in self.thread_updates:
+            if update.category_id == self.category.id:
+                update.category = self.category
+            if update.thread_id == self.thread.id:
+                update.thread = self.thread
+
             feed.append(self.get_thread_update_data(update))
 
         feed.sort(key=lambda item: item["ordering"])
@@ -137,6 +154,7 @@ class PostFeed:
         return feed
 
     def get_post_data(self, post: Post, counter: int = 1) -> dict:
+        is_solution = post.id == self.thread.solution_id
         is_visible = self.is_moderator or not post.is_hidden
 
         data = {
@@ -156,7 +174,10 @@ class PostFeed:
             "last_edit_reason": None,
             "edit_url": None,
             "quote_url": None,
+            "select_solution_url": None,
+            "clear_solution_url": None,
             "moderation": self.is_moderator,
+            "is_solution": is_solution,
             "is_hidden": post.is_hidden,
             "is_visible": is_visible,
         }
@@ -187,6 +208,36 @@ class PostFeed:
                 data["last_editor_name"] = post.last_editor_name
                 data["last_edit_reason"] = post.last_edit_reason
                 data["edits_url"] = self.get_post_edits_url(post)
+
+        if is_visible and not is_solution:
+            with check_permissions():
+                if self.thread.solution_id:
+                    check_change_thread_solution_permission(self.user_permissions, post)
+                else:
+                    check_select_thread_solution_permission(self.user_permissions, post)
+
+                data["select_solution_url"] = reverse(
+                    "misago:thread-solution-select",
+                    kwargs={
+                        "thread_id": self.thread.id,
+                        "slug": self.thread.slug,
+                        "post_id": post.id,
+                    },
+                )
+
+        elif is_solution:
+            with check_permissions():
+                check_clear_thread_solution_permission(
+                    self.user_permissions, self.thread
+                )
+
+                data["clear_solution_url"] = reverse(
+                    "misago:thread-solution-clear",
+                    kwargs={
+                        "thread_id": self.thread.id,
+                        "slug": self.thread.slug,
+                    },
+                )
 
         return data
 
@@ -270,9 +321,13 @@ class PostFeed:
     def set_post_related_objects(
         self, item: dict, post: Post, related_objects: dict
     ) -> None:
+        post.category = related_objects["categories"][post.category_id]
+        post.thread = related_objects["threads"][post.thread_id]
+
         item["rich_text_data"] = related_objects
 
         if post.poster_id:
+            post.poster = related_objects["users"][post.poster_id]
             item["poster"] = related_objects["users"].get(post.poster_id)
 
         embedded_attachments = post.metadata.get("attachments", [])
@@ -298,8 +353,14 @@ class PostFeed:
     def set_thread_update_related_objects(
         self, item: dict, thread_update: ThreadUpdate, related_objects: dict
     ) -> None:
+        thread_update.category = related_objects["categories"][
+            thread_update.category_id
+        ]
+        thread_update.thread = related_objects["threads"][thread_update.thread_id]
+
         if thread_update.actor_id:
-            item["actor"] = related_objects["users"].get(thread_update.actor_id)
+            thread_update.actor = related_objects["users"].get(thread_update.actor_id)
+            item["actor"] = thread_update.actor
 
         if thread_update.context_type and thread_update.context_id:
             relation_name = None

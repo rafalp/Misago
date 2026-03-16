@@ -2,8 +2,7 @@ from typing import Iterable
 
 from django.core.paginator import Paginator
 from django.db.models import QuerySet
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404
+from django.http import Http404, HttpRequest, HttpResponse
 from django.urls import reverse
 from django.views import View
 
@@ -27,16 +26,29 @@ from .backend import ViewBackend
 class GenericThreadView(View):
     backend: ViewBackend
 
+    thread_select_related: Iterable[str] | bool | None = ("category",)
+
     def get_thread(
         self,
         request: HttpRequest,
         thread_id: int,
         annotate_read_time: bool = False,
-        select_related: bool | Iterable[str] = ("category",),
+        select_related: bool | Iterable[str] | None = None,
         for_update: bool = False,
     ) -> Thread:
+        if select_related is None:
+            select_related_value = None
+        elif select_related is False:
+            select_related_value = self.thread_select_related
+        else:
+            select_related_value = select_related
+
         return self.backend.get_thread(
-            request, thread_id, annotate_read_time, select_related, for_update
+            request,
+            thread_id,
+            annotate_read_time,
+            select_related_value,
+            for_update,
         )
 
     def get_thread_queryset(
@@ -140,7 +152,10 @@ class GenericView(View):
             queryset = Thread.objects.select_for_update()
         else:
             queryset = self.get_thread_queryset(request)
-        return get_object_or_404(queryset, id=thread_id)
+        try:
+            return queryset.get(id=thread_id)
+        except Thread.DoesNotExist:
+            raise Http404()
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
         queryset = Thread.objects
@@ -174,7 +189,10 @@ class GenericView(View):
             elif self.post_select_related:
                 queryset = queryset.select_related(*self.post_select_related)
 
-        post = get_object_or_404(queryset, id=post_id)
+        try:
+            post = queryset.get(id=post_id)
+        except Post.DoesNotExist:
+            raise Http404()
 
         if self.thread_select_related and (
             self.thread_select_related is True
@@ -256,7 +274,10 @@ class GenericView(View):
         elif self.thread_update_select_related:
             queryset = queryset.select_related(*self.thread_update_select_related)
 
-        thread_update = get_object_or_404(queryset, id=thread_update_id)
+        try:
+            thread_update = queryset.get(id=thread_update_id)
+        except ThreadUpdate.DoesNotExist:
+            raise Http404()
 
         if self.thread_select_related and (
             self.thread_select_related is True

@@ -10,7 +10,7 @@ from .views import (
 
 urlpatterns = [
     path(
-        "t/<slug:slug>/<int:thread_id>/solution/select/",
+        "t/<slug:slug>/<int:thread_id>/solution/select/<int:post_id>/",
         ThreadSolutionSelectView.as_view(),
         name="thread-solution-select",
     ),
