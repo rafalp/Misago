@@ -166,9 +166,9 @@ class PostFeed:
             "counter": counter,
             "poster": None,
             "poster_name": post.poster_name,
-            "is_new": post.id in self.unread_posts,
             "rich_text_data": None,
             "attachments": [],
+            "bars": [],
             "edits": None,
             "updated_at": post.updated_at,
             "last_edit_reason": None,
@@ -177,6 +177,7 @@ class PostFeed:
             "select_solution_url": None,
             "clear_solution_url": None,
             "moderation": self.is_moderator,
+            "is_new": post.id in self.unread_posts,
             "is_solution": is_solution,
             "is_hidden": post.is_hidden,
             "is_visible": is_visible,
@@ -321,9 +322,6 @@ class PostFeed:
     def set_post_related_objects(
         self, item: dict, post: Post, related_objects: dict
     ) -> None:
-        post.category = related_objects["categories"][post.category_id]
-        post.thread = related_objects["threads"][post.thread_id]
-
         item["rich_text_data"] = related_objects
 
         if post.poster_id:
@@ -353,11 +351,6 @@ class PostFeed:
     def set_thread_update_related_objects(
         self, item: dict, thread_update: ThreadUpdate, related_objects: dict
     ) -> None:
-        thread_update.category = related_objects["categories"][
-            thread_update.category_id
-        ]
-        thread_update.thread = related_objects["threads"][thread_update.thread_id]
-
         if thread_update.actor_id:
             thread_update.actor = related_objects["users"].get(thread_update.actor_id)
             item["actor"] = thread_update.actor

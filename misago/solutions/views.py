@@ -1,5 +1,7 @@
+from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
+from django.utils.translation import pgettext
 
 from ..permissions.solutions import (
     check_change_thread_solution_permission,
@@ -8,7 +10,6 @@ from ..permissions.solutions import (
     check_select_thread_solution_permission,
     check_unlock_thread_solution_permission,
 )
-from ..threads.views.backend import thread_backend
 from ..threads.views.generic import GenericThreadView
 from .solutions import (
     clear_thread_solution,
@@ -18,36 +19,32 @@ from .solutions import (
 )
 
 
-class GenericThreadSolutionView(GenericThreadView):
-    backend = thread_backend
-
-
-class ThreadSolutionSelectView(GenericThreadSolutionView):
+class ThreadSolutionSelectView(GenericThreadView):
     def post(
         self, request: HttpRequest, slug: str, thread_id: int, post_id: int
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
         new_solution = self.get_thread_post(request, thread, post_id, for_content=True)
-        old_solution = None
 
         if thread.solution_id:
-            old_solution = self.get_thread_post(
-                request, thread, thread.solution_id, for_content=True
-            )
             check_change_thread_solution_permission(
                 request.user_permissions, new_solution
             )
+            success_message = pgettext("post solution select view", "Solution changed")
         else:
             check_select_thread_solution_permission(
                 request.user_permissions, new_solution
             )
+            success_message = pgettext("post solution select view", "Solution selected")
 
         select_thread_solution(thread, new_solution, request.user, request=request)
+
+        messages.success(request, success_message)
 
         return self.get_thread_post_redirect(request, new_solution)
 
 
-class ThreadSolutionClearView(GenericThreadSolutionView):
+class ThreadSolutionClearView(GenericThreadView):
     def post(self, request: HttpRequest, slug: str, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
@@ -57,9 +54,12 @@ class ThreadSolutionClearView(GenericThreadSolutionView):
                 request, thread, thread.solution_id, for_content=True
             )
 
-        if old_solution:
+        if thread.solution_id:
             check_clear_thread_solution_permission(request.user_permissions, thread)
             clear_thread_solution(thread, request=request)
+            messages.success(
+                request, pgettext("post solution clear view", "Solution cleared")
+            )
 
         if request.POST.get("next") == "post" and old_solution:
             return self.get_thread_post_redirect(request, old_solution)
@@ -67,7 +67,7 @@ class ThreadSolutionClearView(GenericThreadSolutionView):
         return redirect(self.get_next_thread_url(request, thread))
 
 
-class ThreadSolutionLockView(GenericThreadSolutionView):
+class ThreadSolutionLockView(GenericThreadView):
     thread_select_related = ("category", "solution")
 
     def post(self, request: HttpRequest, slug: str, thread_id: int) -> HttpResponse:
@@ -80,7 +80,7 @@ class ThreadSolutionLockView(GenericThreadSolutionView):
         return redirect(self.get_next_thread_url(request, thread))
 
 
-class ThreadSolutionUnlockView(GenericThreadSolutionView):
+class ThreadSolutionUnlockView(GenericThreadView):
     thread_select_related = ("category", "solution")
 
     def post(self, request: HttpRequest, slug: str, thread_id: int) -> HttpResponse:

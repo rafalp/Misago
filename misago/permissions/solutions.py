@@ -40,6 +40,14 @@ def _check_select_thread_solution_permission_action(
             )
         )
 
+    if not permissions.user.is_authenticated:
+        raise PermissionDenied(
+            pgettext(
+                "solutions permission error",
+                "You can't select thread solutions.",
+            )
+        )
+
     if permissions.is_category_moderator(post.category_id):
         return
 
@@ -81,6 +89,14 @@ def _check_change_thread_solution_permission_action(
 ):
     thread = post.thread
 
+    if not permissions.user.is_authenticated:
+        raise PermissionDenied(
+            pgettext(
+                "solutions permission error",
+                "You can't change thread solutions.",
+            )
+        )
+
     if permissions.is_category_moderator(post.category_id):
         return
 
@@ -103,10 +119,7 @@ def _check_change_thread_solution_permission_action(
             )
         )
 
-    if (
-        not permissions.user.is_authenticated
-        or permissions.user.id != post.thread.starter_id
-    ):
+    if permissions.user.id != post.thread.starter_id:
         raise PermissionDenied(
             pgettext(
                 "solutions permission error",
@@ -177,6 +190,14 @@ def check_clear_thread_solution_permission(
 def _check_clear_thread_solution_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
+    if not permissions.user.is_authenticated:
+        raise PermissionDenied(
+            pgettext(
+                "solutions permission error",
+                "You can't clear thread solutions.",
+            )
+        )
+
     if permissions.is_category_moderator(thread.category_id):
         return
 

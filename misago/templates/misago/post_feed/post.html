@@ -1,4 +1,4 @@
-{% load i18n misago_avatars misago_capture misago_formats misago_rich_text %}
+{% load i18n misago_avatars misago_capture misago_component misago_formats misago_rich_text %}
 
 <div
   id="posts-feed-item-post-{{ post.id }}"
@@ -188,9 +188,11 @@
       <div class="posts-feed-item-post-body">
         
         <div class="posts-feed-item-post-body-message">
-          {% if is_solution %}
-            <div style="border-radius: 3px; border: 1px solid #009900; background-color: #99cc99; padding: 4px 8px;">
-              SOLUTION ALERT
+          {% if bars %}
+            <div class="posts-feed-item-post-body-bars">
+              {% for bar in bars %}
+                {% includecomponent bar %}
+              {% endfor %}
             </div>
           {% endif %}
           {% if is_visible %}
@@ -305,7 +307,6 @@
               {% else %}
                 <button
                   class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-liked"
-                  type="submit"
                   disabled
                 >
                   <span class="material-icon">favorite</span>
@@ -320,9 +321,8 @@
               >
                 {% csrf_token %}
                 <button
-                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-like"
+                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-select-solution"
                   type="submit"
-                  hx-disabled-elt="this"
                 >
                   <span class="material-icon">check_circle</span>
                   {% translate "Solution" context "posts feed select solution" %}
@@ -336,14 +336,21 @@
                 {% csrf_token %}
                 <input type="hidden" name="next" value="post" />
                 <button
-                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-like"
+                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-clear-solution"
                   type="submit"
-                  hx-disabled-elt="this"
                 >
                   <span class="material-icon">check_circle</span>
                   {% translate "Solution" context "posts feed select solution" %}
                 </button>
               </form>
+            {% elif user.is_authenticated and user.id == thread.starter_id and is_solution %}
+              <button
+                class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-clear-solution"
+                disabled
+              >
+                <span class="material-icon">check_circle</span>
+                {% translate "Solution" context "posts feed select solution" %}
+              </button>
             {% endif %}
           </div>
           <div class="posts-feed-item-post-body-footer-right">

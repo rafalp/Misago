@@ -302,6 +302,10 @@
   justify-content: space-between;
 
   margin: 0 (@padding-base-horizontal * -1);
+
+  form {
+    display: inline-block;
+  }
 }
 
 .posts-feed-item-post-body-footer-btn {
@@ -362,6 +366,22 @@
 
   .material-icon {
     color: @pink-500;
+  }
+}
+
+.posts-feed-item-post-body-footer-btn-clear-solution {
+  &,
+  &:hover,
+  &:focus {
+    color: @gray-800;
+  }
+
+  &:active {
+    color: @gray-900;
+  }
+
+  .material-icon {
+    color: @green-600;
   }
 }
 
