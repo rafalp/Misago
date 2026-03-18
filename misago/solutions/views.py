@@ -10,6 +10,7 @@ from ..permissions.solutions import (
     check_select_thread_solution_permission,
     check_unlock_thread_solution_permission,
 )
+from ..threads.views.backend import thread_backend
 from ..threads.views.generic import GenericThreadView
 from .solutions import (
     clear_thread_solution,
@@ -19,7 +20,11 @@ from .solutions import (
 )
 
 
-class ThreadSolutionSelectView(GenericThreadView):
+class ThreadSolutionView(GenericThreadView):
+    backend = thread_backend
+
+
+class ThreadSolutionSelectView(ThreadSolutionView):
     def post(
         self, request: HttpRequest, slug: str, thread_id: int, post_id: int
     ) -> HttpResponse:
@@ -44,7 +49,7 @@ class ThreadSolutionSelectView(GenericThreadView):
         return self.get_thread_post_redirect(request, new_solution)
 
 
-class ThreadSolutionClearView(GenericThreadView):
+class ThreadSolutionClearView(ThreadSolutionView):
     def post(self, request: HttpRequest, slug: str, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
@@ -67,7 +72,7 @@ class ThreadSolutionClearView(GenericThreadView):
         return redirect(self.get_next_thread_url(request, thread))
 
 
-class ThreadSolutionLockView(GenericThreadView):
+class ThreadSolutionLockView(ThreadSolutionView):
     thread_select_related = ("category", "solution")
 
     def post(self, request: HttpRequest, slug: str, thread_id: int) -> HttpResponse:
@@ -80,7 +85,7 @@ class ThreadSolutionLockView(GenericThreadView):
         return redirect(self.get_next_thread_url(request, thread))
 
 
-class ThreadSolutionUnlockView(GenericThreadView):
+class ThreadSolutionUnlockView(ThreadSolutionView):
     thread_select_related = ("category", "solution")
 
     def post(self, request: HttpRequest, slug: str, thread_id: int) -> HttpResponse:
