@@ -19,6 +19,15 @@ def validate_thread_solution(post: Post, request: HttpRequest | None = None):
 
 
 def _validate_thread_solution_action(post: Post, request: HttpRequest | None = None):
+    if post.id == post.thread.first_post_id:
+        raise ValidationError(
+            message=pgettext(
+                "thread solution validator",
+                "Original posts can't be selected as thread solutions.",
+            ),
+            code="post_hidden",
+        )
+
     if post.is_hidden:
         raise ValidationError(
             message=pgettext(
