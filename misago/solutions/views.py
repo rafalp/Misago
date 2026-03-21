@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
@@ -18,6 +19,7 @@ from .solutions import (
     select_thread_solution,
     unlock_thread_solution,
 )
+from .validators import validate_thread_solution
 
 
 class ThreadSolutionView(GenericThreadView):
@@ -29,7 +31,10 @@ class ThreadSolutionSelectView(ThreadSolutionView):
         self, request: HttpRequest, slug: str, thread_id: int, post_id: int
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
+
         new_solution = self.get_thread_post(request, thread, post_id, for_content=True)
+        if new_solution.id == thread.solution_id:
+            return self.get_thread_post_redirect(request, new_solution)
 
         if thread.solution_id:
             check_change_thread_solution_permission(
@@ -41,6 +46,11 @@ class ThreadSolutionSelectView(ThreadSolutionView):
                 request.user_permissions, new_solution
             )
             success_message = pgettext("post solution select view", "Solution selected")
+
+        try:
+            validate_thread_solution(new_solution, request)
+        except ValidationError as error:
+            raise PermissionDenied(error.messages[0])
 
         select_thread_solution(thread, new_solution, request.user, request=request)
 

@@ -255,6 +255,7 @@ Hooks instances are importable from the following Python modules:
 - [`lock_thread_solution_hook`](./lock-thread-solution-hook.md)
 - [`select_thread_solution_hook`](./select-thread-solution-hook.md)
 - [`unlock_thread_solution_hook`](./unlock-thread-solution-hook.md)
+- [`validate_thread_solution_hook`](./validate-thread-solution-hook.md)
 
 
 ## `misago.threads.hooks`

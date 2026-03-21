@@ -21,6 +21,7 @@ from ..permissions.threads import (
     check_reply_thread_permission,
 )
 from ..permissions.proxy import UserPermissionsProxy
+from ..solutions.validators import is_valid_thread_solution
 from ..threadupdates.models import ThreadUpdate
 from ..threadupdates.actions import thread_updates_renderer
 from .hooks import (
@@ -138,17 +139,17 @@ class PostFeed:
             elif item["type"] == "thread_update":
                 previous_item = f"update-{item['thread_update'].id}"
 
-        related_objects = prefetch_post_feed_related_objects(
+        prefetched_data = prefetch_post_feed_related_objects(
             self.request.settings,
             self.request.user_permissions,
             self.posts,
-            categories=[self.thread.category],
+            categories=[self.category],
             threads=[self.thread],
             thread_updates=self.thread_updates,
         )
 
         set_post_feed_related_objects_hook(
-            self.set_post_feed_related_objects, feed, related_objects
+            self.set_post_feed_related_objects, feed, prefetched_data
         )
 
         return feed
@@ -210,7 +211,7 @@ class PostFeed:
                 data["last_edit_reason"] = post.last_edit_reason
                 data["edits_url"] = self.get_post_edits_url(post)
 
-        if is_visible and not is_solution:
+        if not is_solution and is_valid_thread_solution(post, self.request):
             with check_permissions():
                 if self.thread.solution_id:
                     check_change_thread_solution_permission(self.user_permissions, post)
