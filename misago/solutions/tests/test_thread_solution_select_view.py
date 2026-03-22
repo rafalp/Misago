@@ -138,7 +138,41 @@ def test_thread_solution_select_view_does_nothing_if_new_solution_is_same_as_cur
     assert user_thread.solution_selected_by_slug == user.slug
 
 
-def test_thread_solution_select_view_returns_error_if_post_doesn_validate(
+def test_thread_solution_select_view_returns_error_403_if_user_has_no_select_solutions_permission(
+    user_client, default_category, thread, reply
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": reply.id,
+            },
+        )
+    )
+
+    assert_contains(
+        response,
+        "You can&#x27;t select thread solutions in other users&#x27; threads.",
+        status_code=403,
+    )
+
+    thread.refresh_from_db()
+    assert thread.solution is None
+    assert thread.solution_by is None
+    assert thread.solution_by_name is None
+    assert thread.solution_by_slug is None
+    assert thread.solution_selected_at is None
+    assert thread.solution_selected_by is None
+    assert thread.solution_selected_by_name is None
+    assert thread.solution_selected_by_slug is None
+
+
+def test_thread_solution_select_view_returns_error_403_if_post_doesnt_validate(
     user_client, default_category, user_thread
 ):
     default_category.enable_solutions = True
