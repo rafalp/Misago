@@ -138,7 +138,7 @@ def test_thread_solution_select_view_does_nothing_if_new_solution_is_same_as_cur
     assert user_thread.solution_selected_by_slug == user.slug
 
 
-def test_thread_solution_select_view_returns_error_403_if_user_has_no_select_solutions_permission(
+def test_thread_solution_select_view_returns_error_403_if_user_has_no_select_solution_permission(
     user_client, default_category, thread, reply
 ):
     default_category.enable_solutions = True

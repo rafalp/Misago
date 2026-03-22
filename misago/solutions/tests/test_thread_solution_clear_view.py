@@ -192,6 +192,38 @@ def test_thread_solution_clear_view_does_nothing_if_thread_has_no_solution(
     assert user_thread.solution_selected_by_slug is None
 
 
+def test_thread_solution_clear_view_returns_error_403_if_user_has_no_clear_solution_permission(
+    user_client, default_category, other_user, thread, reply
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    select_thread_solution(thread, reply, other_user)
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-clear",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        )
+    )
+
+    assert_contains(
+        response,
+        "You can&#x27;t clear thread solutions in other users&#x27; threads.",
+        status_code=403,
+    )
+
+    thread.refresh_from_db()
+    assert thread.solution == reply
+    assert thread.solution_by is None
+    assert thread.solution_by_name == reply.poster_name
+    assert thread.solution_by_slug is None
+    assert thread.solution_selected_at
+    assert thread.solution_selected_by == other_user
+    assert thread.solution_selected_by_name == other_user.username
+    assert thread.solution_selected_by_slug == other_user.slug
+
+
 def test_thread_solution_clear_view_returns_error_404_if_thread_doesnt_exist(
     user_client,
 ):
