@@ -198,6 +198,27 @@ def test_thread_post_like_view_returns_error_404_if_user_has_no_post_permission(
     assert post.last_likes is None
 
 
+def test_thread_post_like_view_returns_error_404_if_user_has_no_post_contents_permission(
+    user_client, user, thread, post
+):
+    post.is_hidden = True
+    post.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-post-like",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
+        )
+    )
+    assert response.status_code == 403
+
+    assert not Like.objects.filter(post=post, user=user).exists()
+
+    post.refresh_from_db()
+    assert post.likes == 0
+    assert post.last_likes is None
+
+
 def test_thread_post_like_view_returns_error_403_if_user_is_anonymous(
     client, thread, post
 ):

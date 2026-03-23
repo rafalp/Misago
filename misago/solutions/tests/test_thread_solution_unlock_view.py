@@ -298,3 +298,100 @@ def test_thread_solution_unlock_view_returns_error_404_if_thread_doesnt_exist(
         )
     )
     assert response.status_code == 404
+
+
+def test_thread_solution_unlock_view_returns_error_404_if_user_has_no_category_permission(
+    user_client, user_thread
+):
+    CategoryGroupPermission.objects.filter(category=user_thread.category).delete()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-unlock",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_thread_solution_unlock_view_returns_error_404_if_user_has_no_category_permission(
+    user_client, default_category, user_thread
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    CategoryGroupPermission.objects.filter(category=user_thread.category).delete()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-unlock",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_thread_solution_unlock_view_returns_error_404_if_user_has_no_thread_permission(
+    user_client, default_category, user_thread
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    user_thread.is_hidden = True
+    user_thread.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-unlock",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_thread_solution_unlock_view_returns_error_403_if_user_is_anonymous(
+    client, default_category, moderator, other_user, thread, reply
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    select_thread_solution(thread, reply, other_user)
+    lock_thread_solution(thread, moderator)
+
+    response = client.post(
+        reverse(
+            "misago:thread-solution-unlock",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+
+    assert_contains(
+        response, "You can&#x27;t unlock thread solutions.", status_code=403
+    )
+
+
+def test_thread_solution_unlock_view_returns_error_404_thread_is_private(
+    user_client, user_private_thread
+):
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-unlock",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert response.status_code == 404

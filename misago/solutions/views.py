@@ -83,8 +83,6 @@ class ThreadSolutionClearView(ThreadSolutionView):
 
 
 class ThreadSolutionLockView(ThreadSolutionView):
-    thread_select_related = ("category", "solution")
-
     def post(self, request: HttpRequest, slug: str, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
@@ -107,8 +105,6 @@ class ThreadSolutionLockView(ThreadSolutionView):
 
 
 class ThreadSolutionUnlockView(ThreadSolutionView):
-    thread_select_related = ("category", "solution")
-
     def post(self, request: HttpRequest, slug: str, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
