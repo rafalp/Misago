@@ -88,9 +88,20 @@ class ThreadSolutionLockView(ThreadSolutionView):
     def post(self, request: HttpRequest, slug: str, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
+        if thread.solution_id:
+            thread.solution = self.get_thread_post(
+                request, thread, thread.solution_id, for_content=True
+            )
+
         if thread.solution_id and not thread.solution_is_locked:
             check_lock_thread_solution_permission(request.user_permissions, thread)
             lock_thread_solution(thread, request.user, request=request)
+            messages.success(
+                request, pgettext("post solution select view", "Solution locked")
+            )
+
+        if request.POST.get("next") == "post" and thread.solution:
+            return self.get_thread_post_redirect(request, thread.solution)
 
         return redirect(self.get_next_thread_url(request, thread))
 
@@ -101,8 +112,19 @@ class ThreadSolutionUnlockView(ThreadSolutionView):
     def post(self, request: HttpRequest, slug: str, thread_id: int) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
+        if thread.solution_id:
+            thread.solution = self.get_thread_post(
+                request, thread, thread.solution_id, for_content=True
+            )
+
         if thread.solution_id and thread.solution_is_locked:
             check_unlock_thread_solution_permission(request.user_permissions, thread)
             unlock_thread_solution(thread, request.user, request=request)
+            messages.success(
+                request, pgettext("post solution select view", "Solution unlocked")
+            )
+
+        if request.POST.get("next") == "post" and thread.solution:
+            return self.get_thread_post_redirect(request, thread.solution)
 
         return redirect(self.get_next_thread_url(request, thread))
