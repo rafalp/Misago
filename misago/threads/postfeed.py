@@ -28,7 +28,7 @@ from .hooks import (
     set_post_feed_related_objects_hook,
 )
 from .models import Post, Thread
-from .prefetch import prefetch_post_feed_related_objects
+from .prefetch import prefetch_post_feed_data
 
 
 class PostFeed:
@@ -139,7 +139,7 @@ class PostFeed:
             elif item["type"] == "thread_update":
                 previous_item = f"update-{item['thread_update'].id}"
 
-        prefetched_data = prefetch_post_feed_related_objects(
+        prefetched_data = prefetch_post_feed_data(
             self.request.settings,
             self.request.user_permissions,
             self.posts,

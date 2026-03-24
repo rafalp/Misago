@@ -34,7 +34,7 @@ from ...readtracker.tracker import (
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
 from ...threads.models import Post, Thread
-from ...threads.prefetch import prefetch_post_feed_related_objects
+from ...threads.prefetch import prefetch_post_feed_data
 from ...threads.redirect import redirect_to_thread_post
 from ...threads.views.backend import ViewBackend, thread_backend
 from ...threads.views.generic import ThreadView
@@ -273,7 +273,7 @@ class ReplyView(View):
         context = self.get_context_data(request, thread, formset)
 
         if preview:
-            related_objects = prefetch_post_feed_related_objects(
+            related_objects = prefetch_post_feed_data(
                 request.settings,
                 request.user_permissions,
                 [preview.post],

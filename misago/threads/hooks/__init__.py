@@ -1,5 +1,5 @@
-from .create_prefetch_post_feed_related_objects import (
-    create_prefetch_post_feed_related_objects_hook,
+from .create_prefetch_post_feed_data import (
+    create_prefetch_post_feed_data_hook,
 )
 from .get_category_threads_page_context_data import (
     get_category_threads_page_context_data_hook,
@@ -36,7 +36,7 @@ from .set_post_feed_related_objects import set_post_feed_related_objects_hook
 from .synchronize_thread import synchronize_thread_hook
 
 __all__ = [
-    "create_prefetch_post_feed_related_objects_hook",
+    "create_prefetch_post_feed_data_hook",
     "get_category_threads_page_context_data_hook",
     "get_category_threads_page_filters_hook",
     "get_category_threads_page_moderation_actions_hook",
