@@ -280,7 +280,7 @@ Hooks instances are importable from the following Python modules:
 - [`get_threads_page_subcategories_hook`](./get-threads-page-subcategories-hook.md)
 - [`get_threads_page_threads_hook`](./get-threads-page-threads-hook.md)
 - [`move_threads_hook`](./move-threads-hook.md)
-- [`set_post_feed_related_objects_hook`](./set-post-feed-related-objects-hook.md)
+- [`populate_post_feed_data_hook`](./populate-post-feed-data-hook.md)
 - [`synchronize_thread_hook`](./synchronize-thread-hook.md)
 
 

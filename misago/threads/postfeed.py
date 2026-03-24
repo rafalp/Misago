@@ -25,7 +25,7 @@ from ..solutions.validators import is_valid_thread_solution
 from ..threadupdates.models import ThreadUpdate
 from ..threadupdates.actions import thread_updates_renderer
 from .hooks import (
-    set_post_feed_related_objects_hook,
+    populate_post_feed_data_hook,
 )
 from .models import Post, Thread
 from .prefetch import prefetch_post_feed_data
@@ -148,8 +148,8 @@ class PostFeed:
             thread_updates=self.thread_updates,
         )
 
-        set_post_feed_related_objects_hook(
-            self.set_post_feed_related_objects, feed, prefetched_data
+        populate_post_feed_data_hook(
+            self.populate_post_feed_data, feed, prefetched_data
         )
 
         return feed
@@ -309,28 +309,24 @@ class PostFeed:
     def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return None
 
-    def set_post_feed_related_objects(
-        self, feed: list[dict], related_objects: dict
-    ) -> None:
+    def populate_post_feed_data(self, feed: list[dict], prefetched_data: dict) -> None:
         for item in feed:
             if item["type"] == "post":
-                self.set_post_related_objects(item, item["post"], related_objects)
+                self.populate_post_data(item, item["post"], prefetched_data)
             if item["type"] == "thread_update":
-                self.set_thread_update_related_objects(
-                    item, item["thread_update"], related_objects
+                self.populate_thread_update_data(
+                    item, item["thread_update"], prefetched_data
                 )
 
-    def set_post_related_objects(
-        self, item: dict, post: Post, related_objects: dict
-    ) -> None:
-        item["rich_text_data"] = related_objects
+    def populate_post_data(self, item: dict, post: Post, prefetched_data: dict) -> None:
+        item["rich_text_data"] = prefetched_data
 
         if post.poster_id:
-            post.poster = related_objects["users"][post.poster_id]
-            item["poster"] = related_objects["users"].get(post.poster_id)
+            post.poster = prefetched_data["users"][post.poster_id]
+            item["poster"] = prefetched_data["users"].get(post.poster_id)
 
         embedded_attachments = post.metadata.get("attachments", [])
-        for attachment in related_objects["attachments"].values():
+        for attachment in prefetched_data["attachments"].values():
             if (
                 attachment.post_id == post.id
                 and attachment.id not in embedded_attachments
@@ -343,17 +339,17 @@ class PostFeed:
         item["likes"] = get_post_feed_post_likes_data(
             self.request,
             post,
-            post.id in related_objects["liked_posts"],
+            post.id in prefetched_data["liked_posts"],
             self.get_post_likes_url(post),
             self.get_post_like_url(post),
             self.get_post_unlike_url(post),
         )
 
-    def set_thread_update_related_objects(
-        self, item: dict, thread_update: ThreadUpdate, related_objects: dict
+    def populate_thread_update_data(
+        self, item: dict, thread_update: ThreadUpdate, prefetched_data: dict
     ) -> None:
         if thread_update.actor_id:
-            thread_update.actor = related_objects["users"].get(thread_update.actor_id)
+            thread_update.actor = prefetched_data["users"].get(thread_update.actor_id)
             item["actor"] = thread_update.actor
 
         if thread_update.context_type and thread_update.context_id:
@@ -370,12 +366,12 @@ class PostFeed:
                 relation_name = "users"
 
             if relation_name:
-                item["context_object"] = related_objects[relation_name].get(
+                item["context_object"] = prefetched_data[relation_name].get(
                     thread_update.context_id
                 )
 
         if thread_update_data := thread_updates_renderer.render_thread_update(
-            thread_update, related_objects
+            thread_update, prefetched_data
         ):
             item.update(thread_update_data)
         else:
