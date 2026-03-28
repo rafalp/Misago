@@ -180,21 +180,71 @@
           </span>
         {% endif %}
 
-        <button class="btn btn-link btn-icon" type="button">
-          <span class="material-icon">more_horiz</span>
-        </button>
+        {% capture trimmed as dropdown_menu %}
+          <ul class="dropdown-menu dropdown-menu-right">
+            {% if lock_solution_url %}
+              <li>
+                <form action="{{ lock_solution_url }}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="post">
+                  <button class="btn btn-link dropdown-menu-btn">
+                    {% translate "Lock solution" context "post dropdown btn" %}
+                  </button>
+                </form>
+              </li>
+            {% elif unlock_solution_url %}
+              <li>
+                <form action="{{ unlock_solution_url }}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="post">
+                  <button class="btn btn-link dropdown-menu-btn">
+                    {% translate "Unlock solution" context "post dropdown btn" %}
+                  </button>
+                </form>
+              </li>
+            {% endif %}
+            {% if clear_solution_url %}
+              <li>
+                <form action="{{ clear_solution_url }}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="post">
+                  <button class="btn btn-link dropdown-menu-btn">
+                    {% translate "Clear solution" context "post dropdown btn" %}
+                  </button>
+                </form>
+              </li>
+            {% endif %}
+          </ul>
+        {% endcapture %}
+
+        <details class="dropdown-noscript d-js-none">
+          <summary
+            class="btn btn-link btn-icon"
+            aria-label="{% translate 'Open post options' context 'post dropdown btn' %}"
+          >
+            <span class="material-icon">more_horiz</span>
+          </summary>
+          {{ dropdown_menu|safe }}
+        </details>
+        <div class="dropdown d-js-block">
+          <button
+            class="btn btn-link btn-icon"
+            type="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="{% translate 'Open post options' context 'post dropdown btn' %}"
+          >
+            <span class="material-icon">more_horiz</span>
+          </button>
+          {{ dropdown_menu|safe }}
+        </div>
 
       </div>
       <div class="posts-feed-item-post-body">
-        
+
         <div class="posts-feed-item-post-body-message">
-          {% if bars %}
-            <div class="posts-feed-item-post-body-bars">
-              {% for bar in bars %}
-                {% includecomponent bar %}
-              {% endfor %}
-            </div>
-          {% endif %}
+          {% includecomponents post_body_top_components %}
           {% if is_visible %}
             <article class="posts-feed-item-post-rich-text rich-text" misago-quote-root="{% if poster %}{{ poster.username }}{% else %}{{ post.poster_name }}{% endif %}, post: {{ post.id }}" misago-lightbox-root>
               {% rich_text post.parsed rich_text_data thread=thread %}
@@ -261,6 +311,7 @@
           {% else %}
             {% translate "Hidden" context "posts feed post hidden" %}
           {% endif %}
+          {% includecomponents post_body_bottom_components %}
         </div>
 
         <div class="posts-feed-item-post-body-footer">

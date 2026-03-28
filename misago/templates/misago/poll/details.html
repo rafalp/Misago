@@ -87,14 +87,24 @@
   </div>
 {% endcapture %}
 <div class="dropdown d-js-block">
-  <button class="btn btn-link btn-icon btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+  <button
+    class="btn btn-link btn-icon btn-sm dropdown-toggle"
+    type="button"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="true"
+    aria-label="{% translate 'Open poll options' context 'poll dropdown btn' %}"
+  >
     <span class="material-icon">more_horiz</span>
   </button>
   {{ dropdown_menu|safe }}
 </div>
 <noscript>
   <details class="dropdown-noscript">
-    <summary class="btn btn-link btn-icon btn-sm">
+    <summary
+      class="btn btn-link btn-icon btn-sm"
+      aria-label="{% translate 'Open poll options' context 'poll dropdown btn' %}"
+    >
       <span class="material-icon">more_horiz</span>
     </summary>
     {{ dropdown_menu|safe }}

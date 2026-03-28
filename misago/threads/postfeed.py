@@ -12,9 +12,11 @@ from ..permissions.edits import (
     check_see_post_edit_history_permission,
 )
 from ..permissions.solutions import (
-    check_select_thread_solution_permission,
     check_change_thread_solution_permission,
     check_clear_thread_solution_permission,
+    check_lock_thread_solution_permission,
+    check_select_thread_solution_permission,
+    check_unlock_thread_solution_permission,
 )
 from ..permissions.threads import (
     check_edit_thread_post_permission,
@@ -36,6 +38,7 @@ class PostFeed:
     template_name_htmx_append: str = "misago/post_feed/htmx_append.html"
     template_name_htmx_like: str = "misago/post_feed/htmx_like.html"
     post_template_name: str = "misago/post_feed/post.html"
+    post_solution_template_name = "misago/post_feed/post_solution.html"
     thread_update_template_name: str = "misago/post_feed/thread_update.html"
 
     request: HttpRequest
@@ -155,15 +158,14 @@ class PostFeed:
         return feed
 
     def get_post_data(self, post: Post, counter: int = 1) -> dict:
-        is_solution = post.id == self.thread.solution_id
         is_visible = self.is_moderator or not post.is_hidden
 
         data = {
             "template_name": self.post_template_name,
-            "animate": post.id in self.animate_posts,
             "type": "post",
-            "ordering": post.posted_at,
             "post": post,
+            "animate": post.id in self.animate_posts,
+            "ordering": post.posted_at,
             "counter": counter,
             "poster": None,
             "poster_name": post.poster_name,
@@ -177,11 +179,15 @@ class PostFeed:
             "quote_url": None,
             "select_solution_url": None,
             "clear_solution_url": None,
+            "lock_solution_url": None,
+            "unlock_solution_url": None,
             "moderation": self.is_moderator,
             "is_new": post.id in self.unread_posts,
-            "is_solution": is_solution,
+            "is_solution": False,
             "is_hidden": post.is_hidden,
             "is_visible": is_visible,
+            "post_body_top_components": [],
+            "post_body_bottom_components": [],
         }
 
         if self.allow_reply_thread() and is_visible:
@@ -210,36 +216,6 @@ class PostFeed:
                 data["last_editor_name"] = post.last_editor_name
                 data["last_edit_reason"] = post.last_edit_reason
                 data["edits_url"] = self.get_post_edits_url(post)
-
-        if not is_solution and is_valid_thread_solution(post, self.request):
-            with check_permissions():
-                if self.thread.solution_id:
-                    check_change_thread_solution_permission(self.user_permissions, post)
-                else:
-                    check_select_thread_solution_permission(self.user_permissions, post)
-
-                data["select_solution_url"] = reverse(
-                    "misago:thread-solution-select",
-                    kwargs={
-                        "thread_id": self.thread.id,
-                        "slug": self.thread.slug,
-                        "post_id": post.id,
-                    },
-                )
-
-        elif is_solution:
-            with check_permissions():
-                check_clear_thread_solution_permission(
-                    self.user_permissions, self.thread
-                )
-
-                data["clear_solution_url"] = reverse(
-                    "misago:thread-solution-clear",
-                    kwargs={
-                        "thread_id": self.thread.id,
-                        "slug": self.thread.slug,
-                    },
-                )
 
         return data
 
@@ -344,6 +320,102 @@ class PostFeed:
             self.get_post_like_url(post),
             self.get_post_unlike_url(post),
         )
+
+        item["is_solution"] = is_solution = post.id == self.thread.solution_id
+
+        if not is_solution and is_valid_thread_solution(post, self.request):
+            with check_permissions():
+                if self.thread.solution_id:
+                    check_change_thread_solution_permission(self.user_permissions, post)
+                else:
+                    check_select_thread_solution_permission(self.user_permissions, post)
+
+                item["select_solution_url"] = reverse(
+                    "misago:thread-solution-select",
+                    kwargs={
+                        "thread_id": self.thread.id,
+                        "slug": self.thread.slug,
+                        "post_id": post.id,
+                    },
+                )
+
+        elif is_solution:
+            item["post_body_top_components"].append(
+                self.get_post_solution_data(post, prefetched_data),
+            )
+
+            with check_permissions():
+                check_clear_thread_solution_permission(
+                    self.user_permissions, self.thread
+                )
+
+                item["clear_solution_url"] = reverse(
+                    "misago:thread-solution-clear",
+                    kwargs={
+                        "thread_id": self.thread.id,
+                        "slug": self.thread.slug,
+                    },
+                )
+
+            if self.thread.solution_is_locked:
+                with check_permissions():
+                    check_unlock_thread_solution_permission(
+                        self.user_permissions, self.thread
+                    )
+
+                    item["unlock_solution_url"] = reverse(
+                        "misago:thread-solution-unlock",
+                        kwargs={
+                            "thread_id": self.thread.id,
+                            "slug": self.thread.slug,
+                        },
+                    )
+
+            else:
+                with check_permissions():
+                    check_lock_thread_solution_permission(
+                        self.user_permissions, self.thread
+                    )
+
+                    item["lock_solution_url"] = reverse(
+                        "misago:thread-solution-lock",
+                        kwargs={
+                            "thread_id": self.thread.id,
+                            "slug": self.thread.slug,
+                        },
+                    )
+
+    def get_post_solution_data(self, post: Post, prefetched_data: dict) -> None:
+        thread = self.thread
+
+        data = {
+            "template_name": self.post_solution_template_name,
+            "selected_at": thread.solution_selected_at,
+            "selected_by": None,
+            "selected_by_name": thread.solution_selected_by_name,
+            "is_locked": thread.solution_is_locked,
+            "locked_at": thread.solution_locked_at,
+            "locked_by": None,
+            "locked_by_name": thread.solution_locked_by_name,
+            "lock_url": None,
+            "unlock_url": None,
+        }
+
+        if thread.solution_selected_by_id:
+            data["selected_by"] = {
+                "id": thread.solution_selected_by_id,
+                "username": thread.solution_selected_by_name,
+                "slug": thread.solution_selected_by_slug,
+            }
+
+        if thread.solution_locked_by_id:
+            data["selected_by"] = {
+                "id": thread.solution_locked_by_id,
+                "username": thread.solution_locked_by_name,
+                "slug": thread.solution_locked_by_slug,
+            }
+
+        return data
 
     def populate_thread_update_data(
         self, item: dict, thread_update: ThreadUpdate, prefetched_data: dict
