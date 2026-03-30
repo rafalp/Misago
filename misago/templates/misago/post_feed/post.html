@@ -205,7 +205,11 @@
             {% endif %}
             {% if clear_solution_url %}
               <li>
-                <form action="{{ clear_solution_url }}" method="post">
+                <form
+                  action="{{ clear_solution_url }}"
+                  method="post"
+                  mg-confirm="{% translate 'Clear the thread solution?' context 'thread solution clear confirmation' %}"
+                >
                   {% csrf_token %}
                   <input type="hidden" name="next" value="post">
                   <button class="btn btn-link dropdown-menu-btn">
@@ -369,6 +373,9 @@
               <form
                 action="{{ select_solution_url }}"
                 method="post"
+                {% if thread.has_solution %}
+                mg-confirm="{% translate 'Change the thread solution?' context 'thread solution change confirmation' %}"
+                {% endif %}
               >
                 {% csrf_token %}
                 <button
@@ -383,6 +390,7 @@
               <form
                 action="{{ clear_solution_url }}"
                 method="post"
+                mg-confirm="{% translate 'Clear the thread solution?' context 'thread solution clear confirmation' %}"
               >
                 {% csrf_token %}
                 <input type="hidden" name="next" value="post" />

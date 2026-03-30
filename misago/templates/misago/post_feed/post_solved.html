@@ -1,0 +1,35 @@
+{% load i18n misago_capture misago_formats %}
+
+<div class="posts-feed-item-post-body-alert posts-feed-item-post-body-alert-solution">
+  <div class="posts-feed-item-post-body-alert-icon">
+    {% include "tabler/rosette-discount-check.svg" %}
+  </div>
+  <div class="posts-feed-item-post-body-alert-label">
+    {% include "tabler/rosette-discount-check.svg" %}
+    {% translate "Solved" context "post solved alert" %}
+  </div>
+  <div class="posts-feed-item-post-body-alert-message">
+    <p>
+      {% capture trimmed as solved_at %}
+        <span
+          title="{{ solved_at|date:'DATETIME_FORMAT' }}"
+          mg-timestamp="{{ solved_at.isoformat }}"
+        >{{ solved_at|date_relative }}</span>
+      {% endcapture %}
+      {% capture trimmed as solved_by_html %}
+        {% if solved_by %}
+          <a href="{% url 'misago:user' pk=solved_by.id slug=solved_by.slug %}" class="item-title">{{ solved_by.username }}</a>
+        {% else %}
+          <span class="item-title">{{ solved_by_name }}</span>
+        {% endif %}
+      {% endcapture %}
+      {% blocktranslate trimmed with solved_by=solved_by_html|safe solved_at=solved_at|safe context "post solved alert" %}
+        Solved by {{ solved_by }}, {{ solved_at }}.
+      {% endblocktranslate %}
+    </p>
+    <a href="{{ solution_url }}" class="btn posts-feed-item-post-body-alert-btn">
+      {% translate "Go to solution" context "post solved alert" %}
+      {% include "tabler/arrow-right.svg" %}
+    </a>
+  </div>
+</div>
