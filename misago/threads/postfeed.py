@@ -324,7 +324,7 @@ class PostFeed:
 
         if self.thread.solution_id and post.id == self.thread.first_post_id:
             item["post_body_bottom_components"].append(
-                self.get_post_solved_data(prefetched_data),
+                self.get_post_solved_data(),
             )
 
         item["is_solution"] = is_solution = post.id == self.thread.solution_id
@@ -347,7 +347,7 @@ class PostFeed:
 
         elif is_solution:
             item["post_body_top_components"].append(
-                self.get_post_solution_data(prefetched_data),
+                self.get_post_solution_data(),
             )
 
             with check_permissions():
@@ -391,7 +391,7 @@ class PostFeed:
                         },
                     )
 
-    def get_post_solved_data(self, prefetched_data: dict) -> dict:
+    def get_post_solved_data(self) -> dict:
         thread = self.thread
 
         data = {
@@ -414,7 +414,7 @@ class PostFeed:
 
         return data
 
-    def get_post_solution_data(self, prefetched_data: dict) -> dict:
+    def get_post_solution_data(self) -> dict:
         thread = self.thread
 
         data = {
