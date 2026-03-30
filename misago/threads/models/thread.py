@@ -90,6 +90,7 @@ class Thread(PluginDataModel):
         blank=True,
         on_delete=models.SET_NULL,
     )
+    solution_posted_at = models.DateTimeField(null=True, blank=True)
     solution_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="+",

@@ -7,6 +7,7 @@ def test_clear_thread_solution_clears_thread_solution(user, thread, other_user_r
     clear_thread_solution(thread)
 
     assert thread.solution is None
+    assert thread.solution_posted_at is None
     assert thread.solution_by is None
     assert thread.solution_by_name is None
     assert thread.solution_by_slug is None
@@ -18,6 +19,7 @@ def test_clear_thread_solution_clears_thread_solution(user, thread, other_user_r
     thread.refresh_from_db()
 
     assert thread.solution is None
+    assert thread.solution_posted_at is None
     assert thread.solution_by is None
     assert thread.solution_by_name is None
     assert thread.solution_by_slug is None
@@ -36,6 +38,7 @@ def test_clear_thread_solution_doesnt_save_changes_if_commit_is_false(
         clear_thread_solution(thread, commit=False)
 
     assert thread.solution is None
+    assert thread.solution_posted_at is None
     assert thread.solution_by is None
     assert thread.solution_by_name is None
     assert thread.solution_by_slug is None
@@ -47,6 +50,7 @@ def test_clear_thread_solution_doesnt_save_changes_if_commit_is_false(
     thread.refresh_from_db()
 
     assert thread.solution == other_user_reply
+    assert thread.solution_posted_at == other_user_reply.posted_at
     assert thread.solution_by == other_user
     assert thread.solution_by_name == other_user.username
     assert thread.solution_by_slug == other_user.slug

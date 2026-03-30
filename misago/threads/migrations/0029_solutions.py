@@ -45,6 +45,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="thread",
+            name="solution_posted_at",
+            field=models.DateTimeField(blank=True, null=True),
+        ),
+        migrations.AddField(
+            model_name="thread",
             name="solution_by",
             field=models.ForeignKey(
                 blank=True,

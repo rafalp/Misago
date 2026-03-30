@@ -23,9 +23,9 @@
           <span class="item-title">{{ selected_by_name }}</span>
         {% endif %}
       {% endcapture %}
-      {% blocktrans trimmed with selected_by=selected_by_html|safe selected_at=selected_at_html|safe context "post solution alert" %}
+      {% blocktranslate trimmed with selected_by=selected_by_html|safe selected_at=selected_at_html|safe context "post solution alert" %}
         Selected by {{ selected_by }}, {{ selected_at }}.
-      {% endblocktrans %}
+      {% endblocktranslate %}
       {% if is_locked %}
         {% capture trimmed as locked_at_html %}
           <span
@@ -40,9 +40,9 @@
             <span class="item-title">{{ locked_by_name }}</span>
           {% endif %}
         {% endcapture %}
-        {% blocktrans trimmed with locked_by=locked_by_html|safe locked_at=locked_at_html|safe context "post solution alert" %}
+        {% blocktranslate trimmed with locked_by=locked_by_html|safe locked_at=locked_at_html|safe context "post solution alert" %}
           Locked by {{ locked_by }}, {{ locked_at }}.
-        {% endblocktrans %}
+        {% endblocktranslate %}
       {% endif %}
     </p>
   </div>

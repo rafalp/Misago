@@ -32,6 +32,7 @@ def test_thread_solution_clear_view_clears_thread_solution(
 
     user_thread.refresh_from_db()
     assert user_thread.solution is None
+    assert user_thread.solution_posted_at is None
     assert user_thread.solution_by is None
     assert user_thread.solution_by_name is None
     assert user_thread.solution_by_slug is None
@@ -73,6 +74,7 @@ def test_thread_solution_clear_view_returns_redirect_to_old_solution(
 
     user_thread.refresh_from_db()
     assert user_thread.solution is None
+    assert user_thread.solution_posted_at is None
     assert user_thread.solution_by is None
     assert user_thread.solution_by_name is None
     assert user_thread.solution_by_slug is None
@@ -120,6 +122,7 @@ def test_thread_solution_clear_view_returns_redirect_to_next_url(
 
     user_thread.refresh_from_db()
     assert user_thread.solution is None
+    assert user_thread.solution_posted_at is None
     assert user_thread.solution_by is None
     assert user_thread.solution_by_name is None
     assert user_thread.solution_by_slug is None
@@ -157,6 +160,7 @@ def test_thread_solution_clear_view_returns_redirect_to_thread_for_invalid_next_
 
     user_thread.refresh_from_db()
     assert user_thread.solution is None
+    assert user_thread.solution_posted_at is None
     assert user_thread.solution_by is None
     assert user_thread.solution_by_name is None
     assert user_thread.solution_by_slug is None
@@ -183,6 +187,7 @@ def test_thread_solution_clear_view_does_nothing_if_thread_has_no_solution(
 
     user_thread.refresh_from_db()
     assert user_thread.solution is None
+    assert user_thread.solution_posted_at is None
     assert user_thread.solution_by is None
     assert user_thread.solution_by_name is None
     assert user_thread.solution_by_slug is None
@@ -215,6 +220,7 @@ def test_thread_solution_clear_view_returns_error_403_if_user_has_no_clear_solut
 
     thread.refresh_from_db()
     assert thread.solution == reply
+    assert thread.solution_posted_at == reply.posted_at
     assert thread.solution_by is None
     assert thread.solution_by_name == reply.poster_name
     assert thread.solution_by_slug is None

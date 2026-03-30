@@ -39,6 +39,7 @@ def test_thread_solution_select_view_sets_thread_solution(
 
     user_thread.refresh_from_db()
     assert user_thread.solution == solution
+    assert user_thread.solution_posted_at == solution.posted_at
     assert user_thread.solution_by == other_user
     assert user_thread.solution_by_name == other_user.username
     assert user_thread.solution_by_slug == other_user.slug
@@ -85,6 +86,7 @@ def test_thread_solution_select_view_changes_thread_solution(
 
     user_thread.refresh_from_db()
     assert user_thread.solution == new_solution
+    assert user_thread.solution_posted_at == new_solution.posted_at
     assert user_thread.solution_by == user
     assert user_thread.solution_by_name == user.username
     assert user_thread.solution_by_slug == user.slug
@@ -129,6 +131,7 @@ def test_thread_solution_select_view_does_nothing_if_new_solution_is_same_as_cur
 
     user_thread.refresh_from_db()
     assert user_thread.solution == solution
+    assert user_thread.solution_posted_at == solution.posted_at
     assert user_thread.solution_by == other_user
     assert user_thread.solution_by_name == other_user.username
     assert user_thread.solution_by_slug == other_user.slug
@@ -163,6 +166,7 @@ def test_thread_solution_select_view_returns_error_403_if_user_has_no_select_sol
 
     thread.refresh_from_db()
     assert thread.solution is None
+    assert thread.solution_posted_at is None
     assert thread.solution_by is None
     assert thread.solution_by_name is None
     assert thread.solution_by_slug is None
@@ -211,6 +215,7 @@ def test_thread_solution_select_view_returns_error_403_if_user_has_no_change_sol
 
     user_thread.refresh_from_db()
     assert user_thread.solution == old_solution
+    assert user_thread.solution_posted_at == old_solution.posted_at
     assert user_thread.solution_by == other_user
     assert user_thread.solution_by_name == other_user.username
     assert user_thread.solution_by_slug == other_user.slug
@@ -245,6 +250,7 @@ def test_thread_solution_select_view_returns_error_403_if_post_doesnt_validate(
 
     user_thread.refresh_from_db()
     assert user_thread.solution is None
+    assert user_thread.solution_posted_at is None
     assert user_thread.solution_by is None
     assert user_thread.solution_by_name is None
     assert user_thread.solution_by_slug is None

@@ -38,6 +38,7 @@ class PostFeed:
     template_name_htmx_append: str = "misago/post_feed/htmx_append.html"
     template_name_htmx_like: str = "misago/post_feed/htmx_like.html"
     post_template_name: str = "misago/post_feed/post.html"
+    post_solved_template_name: str = "misago/post_feed/post_solved.html"
     post_solution_template_name = "misago/post_feed/post_solution.html"
     thread_update_template_name: str = "misago/post_feed/thread_update.html"
 
@@ -321,6 +322,11 @@ class PostFeed:
             self.get_post_unlike_url(post),
         )
 
+        if self.thread.solution_id and post.id == self.thread.first_post_id:
+            item["post_body_bottom_components"].append(
+                self.get_post_solved_data(prefetched_data),
+            )
+
         item["is_solution"] = is_solution = post.id == self.thread.solution_id
 
         if not is_solution and is_valid_thread_solution(post, self.request):
@@ -341,7 +347,7 @@ class PostFeed:
 
         elif is_solution:
             item["post_body_top_components"].append(
-                self.get_post_solution_data(post, prefetched_data),
+                self.get_post_solution_data(prefetched_data),
             )
 
             with check_permissions():
@@ -385,7 +391,30 @@ class PostFeed:
                         },
                     )
 
-    def get_post_solution_data(self, post: Post, prefetched_data: dict) -> None:
+    def get_post_solved_data(self, prefetched_data: dict) -> dict:
+        thread = self.thread
+
+        data = {
+            "template_name": self.post_solved_template_name,
+            "solved_at": thread.solution_posted_at,
+            "solved_by": None,
+            "solved_by_name": thread.solution_by_name,
+            "solution_url": reverse(
+                "misago:thread-post-solution",
+                kwargs={"thread_id": thread.id, "slug": thread.slug},
+            ),
+        }
+
+        if thread.solution_by_id:
+            data["solved_by"] = {
+                "id": thread.solution_by_id,
+                "username": thread.solution_by_name,
+                "slug": thread.solution_by_slug,
+            }
+
+        return data
+
+    def get_post_solution_data(self, prefetched_data: dict) -> dict:
         thread = self.thread
 
         data = {

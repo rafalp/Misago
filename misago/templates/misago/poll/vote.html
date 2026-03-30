@@ -37,11 +37,11 @@
       {% if poll.max_choices > 1 or poll.duration or poll.is_public %}
         <div class="poll-info">
           {% if poll.max_choices > 1 %}
-            {% blocktrans trimmed count choices=poll.max_choices context "poll info" %}
+            {% blocktranslate trimmed count choices=poll.max_choices context "poll info" %}
               Pick up to {{ choices }} choice.
             {% plural %}
               Pick up to {{ choices }} choices.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% endif %}
           {% if poll.duration %}
             {% capture trimmed as poll_end %}
@@ -52,9 +52,9 @@
               {{ poll.ends_at|date_relative }}
               </span>
             {% endcapture %}
-            {% blocktrans trimmed with timestamp=poll_end|safe context "poll info" %}
+            {% blocktranslate trimmed with timestamp=poll_end|safe context "poll info" %}
               Voting ends on {{ timestamp }}.
-            {% endblocktrans %}
+            {% endblocktranslate %}
           {% endif %}
           {% if poll.can_change_vote %}
             {% translate "Voters can change their vote." context "poll info" %}

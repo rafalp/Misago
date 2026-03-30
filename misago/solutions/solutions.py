@@ -35,6 +35,7 @@ def _select_thread_solution_action(
     request: HttpRequest | None = None,
 ):
     thread.solution = post
+    thread.solution_posted_at = post.posted_at
 
     if post.poster:
         thread.solution_by = post.poster
@@ -72,6 +73,7 @@ def _clear_thread_solution_action(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ):
     thread.solution = None
+    thread.solution_posted_at = None
     thread.solution_by = None
     thread.solution_by_name = None
     thread.solution_by_slug = None
