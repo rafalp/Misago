@@ -201,17 +201,17 @@ bootstrap_plugins() {
 
             if [ -f $plugin_pyproject ]; then
                 echo "Installing: $plugin_pyproject"
-                pip install -e "$plugin_dir[dev]"
+                pip install --no-cache-dir -e "$plugin_dir[dev]"
             elif [ -f $plugin_requirements ]; then
                 echo "Installing: $plugin_requirements"
-                pip install -r $plugin_requirements
+                pip install --no-cache-dir -r $plugin_requirements
                 if [ -f $plugin_requirements_dev ]; then
                     echo "Installing: $plugin_requirements_dev"
-                    pip install -r $plugin_requirements_dev
+                    pip install --no-cache-dir -r $plugin_requirements_dev
                 fi
             elif [ -f $plugin_requirements_dev ]; then
                 echo "Installing: $plugin_requirements_dev"
-                pip install -r $plugin_requirements_dev
+                pip install --no-cache-dir -r $plugin_requirements_dev
             else
                 echo "Skipping plugin bootstrap for: $plugin_name"
             fi
@@ -220,7 +220,7 @@ bootstrap_plugins() {
         pip_install="$MISAGO_PLUGINS/pip-install.txt"
         if [ -f $pip_install ]; then
             echo "Installing: $pip_install"
-            pip install -r $pip_install
+            pip install --no-cache-dir -r $pip_install
         fi
     else
         echo "Skipping plugin bootstrap because plugins directory doesn't exist."
