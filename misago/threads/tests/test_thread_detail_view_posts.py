@@ -6,6 +6,7 @@ from ...conf.test import override_dynamic_settings
 from ...likes.like import like_post
 from ...permissions.enums import CanSeePostEdits, CanSeePostLikes, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
+from ...solutions.solutions import select_thread_solution, lock_thread_solution
 from ...test import assert_contains, assert_not_contains
 
 
@@ -4241,3 +4242,390 @@ def test_thread_detail_view_shows_post_with_deleted_post_quote(
 
     assert_not_contains(response, "<misago-quote")
     assert_contains(response, "rich-text-quote-btn")
+
+
+def test_thread_detail_view_shows_post_with_select_solution_button(
+    thread_reply_factory,
+    user_client,
+    default_category,
+    user_thread,
+    other_user,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    solution = thread_reply_factory(
+        user_thread, original=get_random_string(12), poster=other_user
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+    )
+    assert_contains(response, "Solution")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": solution.id,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_post_with_change_solution_button(
+    thread_reply_factory,
+    user_client,
+    default_category,
+    user_thread,
+    user,
+    other_user,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    solution = thread_reply_factory(
+        user_thread, original=get_random_string(12), poster=other_user
+    )
+    select_thread_solution(user_thread, solution, user)
+
+    new_solution = thread_reply_factory(
+        user_thread, original=get_random_string(12), poster=other_user
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+    )
+    assert_contains(response, "Solution")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": solution.id,
+            },
+        ),
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": new_solution.id,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_post_with_clear_solution_button(
+    thread_reply_factory,
+    user_client,
+    default_category,
+    user_thread,
+    user,
+    other_user,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    solution = thread_reply_factory(
+        user_thread, original=get_random_string(12), poster=other_user
+    )
+    select_thread_solution(user_thread, solution, user)
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+    )
+    assert_contains(response, "Solution")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-solution-clear",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_post_without_change_solution_button_for_user_without_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    default_category,
+    user_thread,
+    other_user,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.can_select_own_thread_solutions = False
+    members_group.save()
+
+    solution = thread_reply_factory(
+        user_thread, original=get_random_string(12), poster=other_user
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+    )
+    assert_not_contains(response, "Solution")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": solution.id,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_shows_post_with_solved_by_user_bar(
+    thread_reply_factory,
+    client,
+    other_user_thread,
+    user,
+    other_user,
+):
+    solution = thread_reply_factory(
+        other_user_thread, original=get_random_string(12), poster=user
+    )
+    select_thread_solution(other_user_thread, solution, other_user)
+
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": other_user_thread.id, "slug": other_user_thread.slug},
+        )
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-solution",
+            kwargs={
+                "thread_id": other_user_thread.id,
+                "slug": other_user_thread.slug,
+            },
+        ),
+    )
+    assert_contains(response, "Solved")
+
+
+def test_thread_detail_view_shows_post_with_solved_by_deleted_user_bar(
+    thread_reply_factory,
+    client,
+    other_user_thread,
+    other_user,
+):
+    solution = thread_reply_factory(
+        other_user_thread, original=get_random_string(12), poster="DeletedUser"
+    )
+    select_thread_solution(other_user_thread, solution, other_user)
+
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": other_user_thread.id, "slug": other_user_thread.slug},
+        )
+    )
+
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-solution",
+            kwargs={
+                "thread_id": other_user_thread.id,
+                "slug": other_user_thread.slug,
+            },
+        ),
+    )
+    assert_contains(response, "Solved")
+
+
+def test_thread_detail_view_shows_post_with_solution_bar_selected_by_user_bar(
+    thread_reply_factory,
+    client,
+    other_user_thread,
+    other_user,
+):
+    solution = thread_reply_factory(
+        other_user_thread, original=get_random_string(12), poster="DeletedUser"
+    )
+    select_thread_solution(other_user_thread, solution, other_user)
+
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": other_user_thread.id, "slug": other_user_thread.slug},
+        )
+    )
+    assert_contains(response, "Solution")
+    assert_contains(response, "Selected by")
+
+
+def test_thread_detail_view_shows_post_with_solution_bar_selected_by_deleted_user_bar(
+    thread_reply_factory,
+    client,
+    thread,
+    other_user,
+):
+    solution = thread_reply_factory(
+        thread, original=get_random_string(12), poster=other_user
+    )
+    select_thread_solution(thread, solution, "DeletedUser")
+
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        )
+    )
+    assert_contains(response, "Solution")
+    assert_contains(response, "Selected by")
+
+
+def test_thread_detail_view_shows_post_with_solution_bar_locked_by_user_bar(
+    thread_reply_factory,
+    client,
+    other_user_thread,
+    other_user,
+    moderator,
+):
+    solution = thread_reply_factory(
+        other_user_thread, original=get_random_string(12), poster="DeletedUser"
+    )
+    select_thread_solution(other_user_thread, solution, other_user)
+    lock_thread_solution(other_user_thread, moderator)
+
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": other_user_thread.id, "slug": other_user_thread.slug},
+        )
+    )
+    assert_contains(response, "Solution")
+    assert_contains(response, "Locked by")
+
+
+def test_thread_detail_view_shows_post_with_solution_bar_locked_by_deleted_user_bar(
+    thread_reply_factory,
+    client,
+    other_user_thread,
+    other_user,
+):
+    solution = thread_reply_factory(
+        other_user_thread, original=get_random_string(12), poster="DeletedUser"
+    )
+    select_thread_solution(other_user_thread, solution, other_user)
+    lock_thread_solution(other_user_thread, "DeletedModerator")
+
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": other_user_thread.id, "slug": other_user_thread.slug},
+        )
+    )
+    assert_contains(response, "Solution")
+    assert_contains(response, "Locked by")
+
+
+def test_thread_detail_view_shows_post_with_solution_bar_to_moderator(
+    thread_reply_factory,
+    moderator_client,
+    default_category,
+    other_user_thread,
+    other_user,
+    moderator,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    solution = thread_reply_factory(
+        other_user_thread, original=get_random_string(12), poster="DeletedUser"
+    )
+    select_thread_solution(other_user_thread, solution, other_user)
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": other_user_thread.id, "slug": other_user_thread.slug},
+        )
+    )
+    assert_contains(response, "Solution")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-solution-lock",
+            kwargs={"thread_id": other_user_thread.id, "slug": other_user_thread.slug},
+        ),
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-solution-clear",
+            kwargs={"thread_id": other_user_thread.id, "slug": other_user_thread.slug},
+        ),
+    )
+
+
+def test_thread_detail_view_shows_post_with_locked_solution_to_moderator(
+    thread_reply_factory,
+    moderator_client,
+    default_category,
+    other_user_thread,
+    other_user,
+    moderator,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    solution = thread_reply_factory(
+        other_user_thread, original=get_random_string(12), poster="DeletedUser"
+    )
+    select_thread_solution(other_user_thread, solution, other_user)
+    lock_thread_solution(other_user_thread, moderator)
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": other_user_thread.id, "slug": other_user_thread.slug},
+        )
+    )
+    assert_contains(response, "Solution")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-solution-unlock",
+            kwargs={"thread_id": other_user_thread.id, "slug": other_user_thread.slug},
+        ),
+    )
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-solution-clear",
+            kwargs={"thread_id": other_user_thread.id, "slug": other_user_thread.slug},
+        ),
+    )
