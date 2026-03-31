@@ -2,7 +2,6 @@ from functools import cached_property
 
 from django.db import models
 from django.db.models import Q
-from django.utils import timezone
 from django.utils.translation import pgettext_lazy
 
 from ...conf import settings

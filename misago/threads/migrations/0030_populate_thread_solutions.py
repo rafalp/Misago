@@ -20,6 +20,8 @@ def populate_thread_solution_by(apps, _):
 
 class Migration(migrations.Migration):
 
+    atomic = False
+
     dependencies = [
         ("misago_threads", "0029_solutions"),
     ]
