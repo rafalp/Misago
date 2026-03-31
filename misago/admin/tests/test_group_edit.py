@@ -55,6 +55,21 @@ def get_form_data(group: Group) -> dict:
         "group-can_like_posts": "1" if group.can_like_posts else "",
         "group-can_see_own_post_likes": str(group.can_see_own_post_likes),
         "group-can_see_others_post_likes": str(group.can_see_others_post_likes),
+        "group-can_select_own_thread_solutions": (
+            "1" if group.can_select_own_thread_solutions else ""
+        ),
+        "group-can_change_own_thread_solutions": (
+            "1" if group.can_change_own_thread_solutions else ""
+        ),
+        "group-own_thread_solutions_change_time_limit": str(
+            group.own_thread_solutions_change_time_limit
+        ),
+        "group-can_clear_own_thread_solutions": (
+            "1" if group.can_clear_own_thread_solutions else ""
+        ),
+        "group-own_thread_solutions_clear_time_limit": str(
+            group.own_thread_solutions_clear_time_limit
+        ),
         "group-can_change_username": "1" if group.can_change_username else "",
         "group-username_changes_limit": str(group.username_changes_limit),
         "group-username_changes_expire": str(group.username_changes_expire),

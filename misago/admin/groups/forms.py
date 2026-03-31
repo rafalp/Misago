@@ -257,6 +257,10 @@ class EditGroupForm(forms.ModelForm):
 
     can_start_polls = YesNoSwitch(
         label=pgettext_lazy("admin group permissions form", "Can start polls"),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "This permission only applies to categories with the polls option enabled.",
+        ),
     )
     can_edit_own_polls = YesNoSwitch(
         label=pgettext_lazy("admin group permissions form", "Can edit own polls"),
@@ -307,6 +311,45 @@ class EditGroupForm(forms.ModelForm):
         choices=CanSeePostLikes.get_choices(),
         widget=forms.RadioSelect(),
         coerce=int,
+    )
+
+    can_select_own_thread_solutions = YesNoSwitch(
+        label=pgettext_lazy(
+            "admin group permissions form", "Can select solutions in own threads"
+        ),
+    )
+    can_change_own_thread_solutions = YesNoSwitch(
+        label=pgettext_lazy(
+            "admin group permissions form", "Can change the solution in own threads"
+        ),
+    )
+    own_thread_solutions_change_time_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form",
+            "Time limit for changing the selected solution in own threads",
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of minutes after a user selects a thread solution during which they can change it. Enter 0 to remove this time limit.",
+        ),
+        min_value=0,
+    )
+    can_clear_own_thread_solutions = YesNoSwitch(
+        label=pgettext_lazy(
+            "admin group permissions form",
+            "Can clear the selected solution in own threads",
+        ),
+    )
+    own_thread_solutions_clear_time_limit = forms.IntegerField(
+        label=pgettext_lazy(
+            "admin group permissions form",
+            "Time limit for clearing the selected solution in own threads",
+        ),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enter the number of minutes after a user selects a thread solution during which they can clear it. Enter 0 to remove this time limit.",
+        ),
+        min_value=0,
     )
 
     can_change_username = YesNoSwitch(
@@ -384,6 +427,11 @@ class EditGroupForm(forms.ModelForm):
             "can_like_posts",
             "can_see_own_post_likes",
             "can_see_others_post_likes",
+            "can_select_own_thread_solutions",
+            "can_change_own_thread_solutions",
+            "own_thread_solutions_change_time_limit",
+            "can_clear_own_thread_solutions",
+            "own_thread_solutions_clear_time_limit",
             "can_change_username",
             "username_changes_limit",
             "username_changes_expire",

@@ -19,7 +19,7 @@ from ...permissions.threads import (
 from ...privatethreads.redirect import redirect_to_private_thread_post
 from ...privatethreads.views.generic import PrivateThreadView
 from ...threads.models import Post, Thread
-from ...threads.prefetch import prefetch_post_feed_related_objects
+from ...threads.prefetch import prefetch_post_feed_data
 from ...threads.redirect import redirect_to_thread_post
 from ...threads.views.generic import ThreadView
 from ..hooks import (
@@ -170,7 +170,7 @@ class EditView(View):
         context = self.get_context_data(request, post, formset)
 
         if preview:
-            related_objects = prefetch_post_feed_related_objects(
+            related_objects = prefetch_post_feed_data(
                 request.settings,
                 request.user_permissions,
                 [preview.post],

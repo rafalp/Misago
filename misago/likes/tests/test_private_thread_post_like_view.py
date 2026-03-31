@@ -1,3 +1,4 @@
+import pytest
 from django.urls import reverse
 
 from ...test import assert_contains
@@ -208,6 +209,33 @@ def test_private_thread_post_like_view_returns_error_404_if_user_has_no_private_
         ),
     )
     assert response.status_code == 404
+
+    assert not Like.objects.filter(post=post, user=user).exists()
+
+    post.refresh_from_db()
+    assert post.likes == 0
+    assert post.last_likes is None
+
+
+@pytest.mark.xfail(reason="`get_post(..., for_content=True)` not supported yet")
+def test_private_thread_post_like_view_returns_error_404_if_user_has_no_post_contents_permission(
+    thread_reply_factory, user_client, user, other_user, other_user_private_thread
+):
+    post = thread_reply_factory(
+        other_user_private_thread, poster=other_user, is_hidden=True
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-post-like",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        )
+    )
+    assert response.status_code == 403
 
     assert not Like.objects.filter(post=post, user=user).exists()
 

@@ -36,7 +36,10 @@ class Category(MPTTModel, PluginDataModel):
     color = models.CharField(max_length=7, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     css_class = models.CharField(max_length=255, null=True, blank=True)
-    allow_polls = models.BooleanField(default=True)
+
+    enable_polls = models.BooleanField(default=True)
+    enable_solutions = models.BooleanField(default=False)
+
     delay_browse_check = models.BooleanField(default=False)
     show_started_only = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
@@ -48,6 +51,7 @@ class Category(MPTTModel, PluginDataModel):
         blank=False,
         default=CategoryChildrenComponent.FULL,
     )
+
     threads = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)
     unapproved_threads = models.PositiveIntegerField(default=0)

@@ -22,8 +22,8 @@
         mg-timestamp-format="sentence"
       >{{ post_edit.hidden_at|date_relative_in_sentence }}</span>
     {% endcapture %}
-    {% blocktrans trimmed with user=hidden_by|safe hidden_at=hidden_at_html|safe context "post edit hidden message" %}
+    {% blocktranslate trimmed with user=hidden_by|safe hidden_at=hidden_at_html|safe context "post edit hidden message" %}
       Edit contents hidden by {{ user }}, {{ hidden_at }}.
-    {% endblocktrans %}
+    {% endblocktranslate %}
   </div>
 </div>

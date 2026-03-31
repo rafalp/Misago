@@ -7,7 +7,7 @@
       {% elif language %}
         {{ language }}
       {% else %}
-        {% trans "Code" context "rich text code" %}
+        {% translate "Code" context "rich text code" %}
       {% endif %}
     </div>
     {% if code %}
@@ -15,7 +15,7 @@
         type="button"
         class="rich-text-code-copy-btn d-js-block"
       >
-        {% trans "Copy" context "rich text code copy btn" %}
+        {% translate "Copy" context "rich text code copy btn" %}
       </button>
     {% endif %}
   </div>

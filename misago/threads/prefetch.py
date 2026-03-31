@@ -21,7 +21,7 @@ from ..permissions.checkutils import check_permissions
 from ..privatethreads.members import prefetch_private_thread_member_ids
 from ..threadupdates.models import ThreadUpdate
 from ..users.models import Group
-from .hooks import create_prefetch_post_feed_related_objects_hook
+from .hooks import create_prefetch_post_feed_data_hook
 from .models import Post, Thread
 
 if TYPE_CHECKING:
@@ -29,13 +29,13 @@ if TYPE_CHECKING:
 
 
 __all__ = [
-    "PrefetchPostFeedRelatedObjects",
-    "PrefetchPostFeedRelationsOperation",
-    "prefetch_post_feed_related_objects",
+    "PrefetchPostFeedData",
+    "PrefetchPostFeedDataOperation",
+    "prefetch_post_feed_data",
 ]
 
 
-def prefetch_post_feed_related_objects(
+def prefetch_post_feed_data(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
     posts: Iterable[Post],
@@ -46,8 +46,8 @@ def prefetch_post_feed_related_objects(
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> dict:
-    prefetch = create_prefetch_post_feed_related_objects_hook(
-        _create_prefetch_post_feed_related_objects_action,
+    prefetch = create_prefetch_post_feed_data_hook(
+        _create_prefetch_post_feed_data_action,
         settings,
         permissions,
         posts,
@@ -60,7 +60,7 @@ def prefetch_post_feed_related_objects(
     return prefetch()
 
 
-def _create_prefetch_post_feed_related_objects_action(
+def _create_prefetch_post_feed_data_action(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
     posts: Iterable[Post],
@@ -70,8 +70,8 @@ def _create_prefetch_post_feed_related_objects_action(
     thread_updates: Iterable[ThreadUpdate] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
-) -> "PrefetchPostFeedRelatedObjects":
-    prefetch = PrefetchPostFeedRelatedObjects(
+) -> "PrefetchPostFeedData":
+    prefetch = PrefetchPostFeedData(
         settings,
         permissions,
         categories=categories,
@@ -103,7 +103,7 @@ def _create_prefetch_post_feed_related_objects_action(
     return prefetch
 
 
-class PrefetchPostFeedRelationsOperation(Protocol):
+class PrefetchPostFeedDataOperation(Protocol):
     def __call__(
         self,
         data: dict,
@@ -113,8 +113,8 @@ class PrefetchPostFeedRelationsOperation(Protocol):
         pass
 
 
-class PrefetchPostFeedRelatedObjects:
-    operations: list[PrefetchPostFeedRelationsOperation]
+class PrefetchPostFeedData:
+    operations: list[PrefetchPostFeedDataOperation]
 
     settings: DynamicSettings
     permissions: UserPermissionsProxy
@@ -188,19 +188,19 @@ class PrefetchPostFeedRelatedObjects:
 
         return data
 
-    def __contains__(self, op: PrefetchPostFeedRelationsOperation) -> bool:
+    def __contains__(self, op: PrefetchPostFeedDataOperation) -> bool:
         return op in self.operations
 
-    def add(self, op: PrefetchPostFeedRelationsOperation):
+    def add(self, op: PrefetchPostFeedDataOperation):
         self.operations.append(op)
 
     def add_before(
         self,
-        before: PrefetchPostFeedRelationsOperation,
-        op: PrefetchPostFeedRelationsOperation,
+        op: PrefetchPostFeedDataOperation,
+        before: PrefetchPostFeedDataOperation,
     ):
         success = False
-        new_operations: list[PrefetchPostFeedRelationsOperation] = []
+        new_operations: list[PrefetchPostFeedDataOperation] = []
 
         for existing_step in self.operations:
             if existing_step == before:
@@ -217,11 +217,11 @@ class PrefetchPostFeedRelatedObjects:
 
     def add_after(
         self,
-        after: PrefetchPostFeedRelationsOperation,
-        op: PrefetchPostFeedRelationsOperation,
+        op: PrefetchPostFeedDataOperation,
+        after: PrefetchPostFeedDataOperation,
     ):
         success = False
-        new_operations: list[PrefetchPostFeedRelationsOperation] = []
+        new_operations: list[PrefetchPostFeedDataOperation] = []
 
         for existing_step in self.operations:
             new_operations.append(existing_step)

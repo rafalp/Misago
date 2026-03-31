@@ -1,0 +1,435 @@
+from django.urls import reverse
+
+from ...permissions.models import CategoryGroupPermission
+from ...test import assert_contains
+from ..solutions import select_thread_solution
+
+
+def test_thread_solution_select_view_sets_thread_solution(
+    thread_reply_factory, user_client, user, other_user, default_category, user_thread
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    solution = thread_reply_factory(user_thread, poster=other_user)
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": solution.id,
+            },
+        )
+    )
+
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+        + f"#post-{solution.id}"
+    )
+
+    user_thread.refresh_from_db()
+    assert user_thread.solution == solution
+    assert user_thread.solution_posted_at == solution.posted_at
+    assert user_thread.solution_by == other_user
+    assert user_thread.solution_by_name == other_user.username
+    assert user_thread.solution_by_slug == other_user.slug
+    assert user_thread.solution_selected_at
+    assert user_thread.solution_selected_by == user
+    assert user_thread.solution_selected_by_name == user.username
+    assert user_thread.solution_selected_by_slug == user.slug
+
+
+def test_thread_solution_select_view_changes_thread_solution(
+    thread_reply_factory, user_client, user, other_user, default_category, user_thread
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    old_solution = thread_reply_factory(user_thread, poster=other_user)
+    select_thread_solution(user_thread, old_solution, user)
+
+    new_solution = thread_reply_factory(user_thread, poster=user)
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": new_solution.id,
+            },
+        )
+    )
+
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+        + f"#post-{new_solution.id}"
+    )
+
+    user_thread.refresh_from_db()
+    assert user_thread.solution == new_solution
+    assert user_thread.solution_posted_at == new_solution.posted_at
+    assert user_thread.solution_by == user
+    assert user_thread.solution_by_name == user.username
+    assert user_thread.solution_by_slug == user.slug
+    assert user_thread.solution_selected_at
+    assert user_thread.solution_selected_by == user
+    assert user_thread.solution_selected_by_name == user.username
+    assert user_thread.solution_selected_by_slug == user.slug
+
+
+def test_thread_solution_select_view_does_nothing_if_new_solution_is_same_as_current_one(
+    thread_reply_factory, user_client, user, other_user, default_category, user_thread
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    solution = thread_reply_factory(user_thread, poster=other_user)
+    select_thread_solution(user_thread, solution, user)
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": solution.id,
+            },
+        )
+    )
+
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+        + f"#post-{solution.id}"
+    )
+
+    user_thread.refresh_from_db()
+    assert user_thread.solution == solution
+    assert user_thread.solution_posted_at == solution.posted_at
+    assert user_thread.solution_by == other_user
+    assert user_thread.solution_by_name == other_user.username
+    assert user_thread.solution_by_slug == other_user.slug
+    assert user_thread.solution_selected_at
+    assert user_thread.solution_selected_by == user
+    assert user_thread.solution_selected_by_name == user.username
+    assert user_thread.solution_selected_by_slug == user.slug
+
+
+def test_thread_solution_select_view_returns_error_403_if_user_has_no_select_solution_permission(
+    user_client, default_category, thread, reply
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "post_id": reply.id,
+            },
+        )
+    )
+
+    assert_contains(
+        response,
+        "You can&#x27;t select thread solutions in other users&#x27; threads.",
+        status_code=403,
+    )
+
+    thread.refresh_from_db()
+    assert thread.solution is None
+    assert thread.solution_posted_at is None
+    assert thread.solution_by is None
+    assert thread.solution_by_name is None
+    assert thread.solution_by_slug is None
+    assert thread.solution_selected_at is None
+    assert thread.solution_selected_by is None
+    assert thread.solution_selected_by_name is None
+    assert thread.solution_selected_by_slug is None
+
+
+def test_thread_solution_select_view_returns_error_403_if_user_has_no_change_solution_permission(
+    thread_reply_factory,
+    user_client,
+    members_group,
+    user,
+    other_user,
+    default_category,
+    user_thread,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.can_change_own_thread_solutions = False
+    members_group.save()
+
+    old_solution = thread_reply_factory(user_thread, poster=other_user)
+    select_thread_solution(user_thread, old_solution, user)
+
+    new_solution = thread_reply_factory(user_thread, poster=user)
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": new_solution.id,
+            },
+        )
+    )
+
+    assert_contains(
+        response,
+        "You can&#x27;t change thread solutions.",
+        status_code=403,
+    )
+
+    user_thread.refresh_from_db()
+    assert user_thread.solution == old_solution
+    assert user_thread.solution_posted_at == old_solution.posted_at
+    assert user_thread.solution_by == other_user
+    assert user_thread.solution_by_name == other_user.username
+    assert user_thread.solution_by_slug == other_user.slug
+    assert user_thread.solution_selected_at
+    assert user_thread.solution_selected_by == user
+    assert user_thread.solution_selected_by_name == user.username
+    assert user_thread.solution_selected_by_slug == user.slug
+
+
+def test_thread_solution_select_view_returns_error_403_if_post_doesnt_validate(
+    user_client, default_category, user_thread
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": user_thread.first_post_id,
+            },
+        )
+    )
+
+    assert_contains(
+        response,
+        "Original posts can&#x27;t be selected as thread solutions.",
+        status_code=403,
+    )
+
+    user_thread.refresh_from_db()
+    assert user_thread.solution is None
+    assert user_thread.solution_posted_at is None
+    assert user_thread.solution_by is None
+    assert user_thread.solution_by_name is None
+    assert user_thread.solution_by_slug is None
+    assert user_thread.solution_selected_at is None
+    assert user_thread.solution_selected_by is None
+    assert user_thread.solution_selected_by_name is None
+    assert user_thread.solution_selected_by_slug is None
+
+
+def test_thread_solution_select_view_returns_error_404_if_thread_doesnt_exist(
+    user_client,
+):
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={"thread_id": 100, "slug": "not-found", "post_id": 1},
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_thread_solution_select_view_returns_error_404_if_thread_post_doesnt_exist(
+    user_client, default_category, user_thread
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": user_thread.last_post_id + 1,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_thread_solution_select_view_returns_error_404_if_post_doesnt_exist_in_thread(
+    user_client, default_category, user_thread, reply
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": reply.id,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_thread_solution_select_view_returns_error_404_if_user_has_no_category_permission(
+    thread_reply_factory, user_client, other_user, default_category, user_thread
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    solution = thread_reply_factory(user_thread, poster=other_user, is_unapproved=True)
+
+    CategoryGroupPermission.objects.filter(category=user_thread.category).delete()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": solution.id,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_thread_solution_select_view_returns_error_404_if_user_has_no_thread_permission(
+    thread_reply_factory, user_client, other_user, default_category, user_thread
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    user_thread.is_hidden = True
+    user_thread.save()
+
+    solution = thread_reply_factory(user_thread, poster=other_user, is_unapproved=True)
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": solution.id,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_thread_solution_select_view_returns_error_404_if_user_has_no_post_permission(
+    thread_reply_factory, user_client, other_user, default_category, user_thread
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    solution = thread_reply_factory(user_thread, poster=other_user, is_unapproved=True)
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": solution.id,
+            },
+        )
+    )
+    assert response.status_code == 404
+
+
+def test_thread_solution_select_view_returns_error_403_if_user_has_no_post_contents_permission(
+    thread_reply_factory, user_client, other_user, default_category, user_thread
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    solution = thread_reply_factory(user_thread, poster=other_user, is_hidden=True)
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+                "post_id": solution.id,
+            },
+        )
+    )
+    assert response.status_code == 403
+
+
+def test_thread_solution_select_view_returns_error_403_if_user_is_anonymous(
+    client, default_category, thread, reply
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    response = client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": reply.id},
+        )
+    )
+
+    assert_contains(
+        response, "You can&#x27;t select thread solutions.", status_code=403
+    )
+
+
+def test_thread_solution_select_view_returns_error_404_if_post_is_in_private_thread(
+    thread_reply_factory, user_client, other_user, user_private_thread
+):
+    solution = thread_reply_factory(user_private_thread, poster=other_user)
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-solution-select",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "post_id": solution.id,
+            },
+        )
+    )
+    assert response.status_code == 404

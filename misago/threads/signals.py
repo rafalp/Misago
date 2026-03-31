@@ -277,9 +277,13 @@ def update_usernames(sender, **kwargs):
         last_poster_name=sender.username, last_poster_slug=sender.slug
     )
 
-    Thread.objects.filter(best_answer_marked_by=sender).update(
-        best_answer_marked_by_name=sender.username,
-        best_answer_marked_by_slug=sender.slug,
+    Thread.objects.filter(solution_by=sender).update(
+        solution_by_name=sender.username,
+        solution_by_slug=sender.slug,
+    )
+    Thread.objects.filter(solution_selected_by=sender).update(
+        solution_selected_by_name=sender.username,
+        solution_selected_by_slug=sender.slug,
     )
 
     ThreadUpdate.objects.filter(actor=sender).update(actor_name=sender.username)

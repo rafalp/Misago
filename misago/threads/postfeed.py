@@ -11,18 +11,26 @@ from ..permissions.edits import (
     can_see_post_edit_count,
     check_see_post_edit_history_permission,
 )
+from ..permissions.solutions import (
+    check_change_thread_solution_permission,
+    check_clear_thread_solution_permission,
+    check_lock_thread_solution_permission,
+    check_select_thread_solution_permission,
+    check_unlock_thread_solution_permission,
+)
 from ..permissions.threads import (
     check_edit_thread_post_permission,
     check_reply_thread_permission,
 )
 from ..permissions.proxy import UserPermissionsProxy
+from ..solutions.validators import is_valid_thread_solution
 from ..threadupdates.models import ThreadUpdate
 from ..threadupdates.actions import thread_updates_renderer
 from .hooks import (
-    set_post_feed_related_objects_hook,
+    populate_post_feed_data_hook,
 )
 from .models import Post, Thread
-from .prefetch import prefetch_post_feed_related_objects
+from .prefetch import prefetch_post_feed_data
 
 
 class PostFeed:
@@ -30,6 +38,8 @@ class PostFeed:
     template_name_htmx_append: str = "misago/post_feed/htmx_append.html"
     template_name_htmx_like: str = "misago/post_feed/htmx_like.html"
     post_template_name: str = "misago/post_feed/post.html"
+    post_solved_template_name: str = "misago/post_feed/post_solved.html"
+    post_solution_template_name = "misago/post_feed/post_solution.html"
     thread_update_template_name: str = "misago/post_feed/thread_update.html"
 
     request: HttpRequest
@@ -106,9 +116,21 @@ class PostFeed:
 
     def get_feed_data(self) -> list[dict]:
         feed: list[dict] = []
+
         for i, post in enumerate(self.posts):
+            if post.category_id == self.category.id:
+                post.category = self.category
+            if post.thread_id == self.thread.id:
+                post.thread = self.thread
+
             feed.append(self.get_post_data(post, i + self.counter_start + 1))
+
         for update in self.thread_updates:
+            if update.category_id == self.category.id:
+                update.category = self.category
+            if update.thread_id == self.thread.id:
+                update.thread = self.thread
+
             feed.append(self.get_thread_update_data(update))
 
         feed.sort(key=lambda item: item["ordering"])
@@ -121,17 +143,17 @@ class PostFeed:
             elif item["type"] == "thread_update":
                 previous_item = f"update-{item['thread_update'].id}"
 
-        related_objects = prefetch_post_feed_related_objects(
+        prefetched_data = prefetch_post_feed_data(
             self.request.settings,
             self.request.user_permissions,
             self.posts,
-            categories=[self.thread.category],
+            categories=[self.category],
             threads=[self.thread],
             thread_updates=self.thread_updates,
         )
 
-        set_post_feed_related_objects_hook(
-            self.set_post_feed_related_objects, feed, related_objects
+        populate_post_feed_data_hook(
+            self.populate_post_feed_data, feed, prefetched_data
         )
 
         return feed
@@ -141,24 +163,32 @@ class PostFeed:
 
         data = {
             "template_name": self.post_template_name,
-            "animate": post.id in self.animate_posts,
             "type": "post",
-            "ordering": post.posted_at,
             "post": post,
+            "animate": post.id in self.animate_posts,
+            "ordering": post.posted_at,
             "counter": counter,
             "poster": None,
             "poster_name": post.poster_name,
-            "is_new": post.id in self.unread_posts,
             "rich_text_data": None,
             "attachments": [],
+            "bars": [],
             "edits": None,
             "updated_at": post.updated_at,
             "last_edit_reason": None,
             "edit_url": None,
             "quote_url": None,
+            "select_solution_url": None,
+            "clear_solution_url": None,
+            "lock_solution_url": None,
+            "unlock_solution_url": None,
             "moderation": self.is_moderator,
+            "is_new": post.id in self.unread_posts,
+            "is_solution": False,
             "is_hidden": post.is_hidden,
             "is_visible": is_visible,
+            "post_body_top_components": [],
+            "post_body_bottom_components": [],
         }
 
         if self.allow_reply_thread() and is_visible:
@@ -256,27 +286,24 @@ class PostFeed:
     def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
         return None
 
-    def set_post_feed_related_objects(
-        self, feed: list[dict], related_objects: dict
-    ) -> None:
+    def populate_post_feed_data(self, feed: list[dict], prefetched_data: dict) -> None:
         for item in feed:
             if item["type"] == "post":
-                self.set_post_related_objects(item, item["post"], related_objects)
+                self.populate_post_data(item, item["post"], prefetched_data)
             if item["type"] == "thread_update":
-                self.set_thread_update_related_objects(
-                    item, item["thread_update"], related_objects
+                self.populate_thread_update_data(
+                    item, item["thread_update"], prefetched_data
                 )
 
-    def set_post_related_objects(
-        self, item: dict, post: Post, related_objects: dict
-    ) -> None:
-        item["rich_text_data"] = related_objects
+    def populate_post_data(self, item: dict, post: Post, prefetched_data: dict) -> None:
+        item["rich_text_data"] = prefetched_data
 
         if post.poster_id:
-            item["poster"] = related_objects["users"].get(post.poster_id)
+            post.poster = prefetched_data["users"][post.poster_id]
+            item["poster"] = prefetched_data["users"].get(post.poster_id)
 
         embedded_attachments = post.metadata.get("attachments", [])
-        for attachment in related_objects["attachments"].values():
+        for attachment in prefetched_data["attachments"].values():
             if (
                 attachment.post_id == post.id
                 and attachment.id not in embedded_attachments
@@ -289,17 +316,142 @@ class PostFeed:
         item["likes"] = get_post_feed_post_likes_data(
             self.request,
             post,
-            post.id in related_objects["liked_posts"],
+            post.id in prefetched_data["liked_posts"],
             self.get_post_likes_url(post),
             self.get_post_like_url(post),
             self.get_post_unlike_url(post),
         )
 
-    def set_thread_update_related_objects(
-        self, item: dict, thread_update: ThreadUpdate, related_objects: dict
+        if self.thread.solution_id and post.id == self.thread.first_post_id:
+            item["post_body_bottom_components"].append(
+                self.get_post_solved_data(),
+            )
+
+        item["is_solution"] = is_solution = post.id == self.thread.solution_id
+
+        if not is_solution and is_valid_thread_solution(post, self.request):
+            with check_permissions():
+                if self.thread.solution_id:
+                    check_change_thread_solution_permission(self.user_permissions, post)
+                else:
+                    check_select_thread_solution_permission(self.user_permissions, post)
+
+                item["select_solution_url"] = reverse(
+                    "misago:thread-solution-select",
+                    kwargs={
+                        "thread_id": self.thread.id,
+                        "slug": self.thread.slug,
+                        "post_id": post.id,
+                    },
+                )
+
+        elif is_solution:
+            item["post_body_top_components"].append(
+                self.get_post_solution_data(),
+            )
+
+            with check_permissions():
+                check_clear_thread_solution_permission(
+                    self.user_permissions, self.thread
+                )
+
+                item["clear_solution_url"] = reverse(
+                    "misago:thread-solution-clear",
+                    kwargs={
+                        "thread_id": self.thread.id,
+                        "slug": self.thread.slug,
+                    },
+                )
+
+            if self.thread.solution_is_locked:
+                with check_permissions():
+                    check_unlock_thread_solution_permission(
+                        self.user_permissions, self.thread
+                    )
+
+                    item["unlock_solution_url"] = reverse(
+                        "misago:thread-solution-unlock",
+                        kwargs={
+                            "thread_id": self.thread.id,
+                            "slug": self.thread.slug,
+                        },
+                    )
+
+            else:
+                with check_permissions():
+                    check_lock_thread_solution_permission(
+                        self.user_permissions, self.thread
+                    )
+
+                    item["lock_solution_url"] = reverse(
+                        "misago:thread-solution-lock",
+                        kwargs={
+                            "thread_id": self.thread.id,
+                            "slug": self.thread.slug,
+                        },
+                    )
+
+    def get_post_solved_data(self) -> dict:
+        thread = self.thread
+
+        data = {
+            "template_name": self.post_solved_template_name,
+            "solved_at": thread.solution_posted_at,
+            "solved_by": None,
+            "solved_by_name": thread.solution_by_name,
+            "solution_url": reverse(
+                "misago:thread-post-solution",
+                kwargs={"thread_id": thread.id, "slug": thread.slug},
+            ),
+        }
+
+        if thread.solution_by_id:
+            data["solved_by"] = {
+                "id": thread.solution_by_id,
+                "username": thread.solution_by_name,
+                "slug": thread.solution_by_slug,
+            }
+
+        return data
+
+    def get_post_solution_data(self) -> dict:
+        thread = self.thread
+
+        data = {
+            "template_name": self.post_solution_template_name,
+            "selected_at": thread.solution_selected_at,
+            "selected_by": None,
+            "selected_by_name": thread.solution_selected_by_name,
+            "is_locked": thread.solution_is_locked,
+            "locked_at": thread.solution_locked_at,
+            "locked_by": None,
+            "locked_by_name": thread.solution_locked_by_name,
+            "lock_url": None,
+            "unlock_url": None,
+        }
+
+        if thread.solution_selected_by_id:
+            data["selected_by"] = {
+                "id": thread.solution_selected_by_id,
+                "username": thread.solution_selected_by_name,
+                "slug": thread.solution_selected_by_slug,
+            }
+
+        if thread.solution_locked_by_id:
+            data["selected_by"] = {
+                "id": thread.solution_locked_by_id,
+                "username": thread.solution_locked_by_name,
+                "slug": thread.solution_locked_by_slug,
+            }
+
+        return data
+
+    def populate_thread_update_data(
+        self, item: dict, thread_update: ThreadUpdate, prefetched_data: dict
     ) -> None:
         if thread_update.actor_id:
-            item["actor"] = related_objects["users"].get(thread_update.actor_id)
+            thread_update.actor = prefetched_data["users"].get(thread_update.actor_id)
+            item["actor"] = thread_update.actor
 
         if thread_update.context_type and thread_update.context_id:
             relation_name = None
@@ -315,12 +467,12 @@ class PostFeed:
                 relation_name = "users"
 
             if relation_name:
-                item["context_object"] = related_objects[relation_name].get(
+                item["context_object"] = prefetched_data[relation_name].get(
                     thread_update.context_id
                 )
 
         if thread_update_data := thread_updates_renderer.render_thread_update(
-            thread_update, related_objects
+            thread_update, prefetched_data
         ):
             item.update(thread_update_data)
         else:

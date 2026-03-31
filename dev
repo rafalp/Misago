@@ -464,7 +464,11 @@ if [[ $1 ]]; then
     elif [[ $1 = "bash" ]]; then
         run_bash
     elif [[ $1 = "manage.py" ]]; then
-        run_managepy $@
+        if [[ $2 = "test" ]]; then
+            echo "'./dev manage.py test' is not supported. Use './dev test' instead"
+        else
+            run_managepy $@
+        fi
     elif [[ $1 = "run" ]]; then
         docker_run $@
     elif [[ $1 = "psql" ]]; then

@@ -1,0 +1,49 @@
+{% load i18n misago_capture misago_formats %}
+
+<div class="posts-feed-item-post-body-alert posts-feed-item-post-body-alert-solution">
+  <div class="posts-feed-item-post-body-alert-icon">
+    {% include "tabler/rosette-discount-check.svg" %}
+  </div>
+  <div class="posts-feed-item-post-body-alert-label">
+    {% include "tabler/rosette-discount-check.svg" %}
+    {% translate "Solution" context "post solution alert" %}
+  </div>
+  <div class="posts-feed-item-post-body-alert-message">
+    <p>
+      {% capture trimmed as selected_at_html %}
+        <span
+          title="{{ selected_at|date:'DATETIME_FORMAT' }}"
+          mg-timestamp="{{ selected_at.isoformat }}"
+        >{{ selected_at|date_relative }}</span>
+      {% endcapture %}
+      {% capture trimmed as selected_by_html %}
+        {% if selected_by %}
+          <a href="{% url 'misago:user' pk=selected_by.id slug=selected_by.slug %}" class="item-title">{{ selected_by.username }}</a>
+        {% else %}
+          <span class="item-title">{{ selected_by_name }}</span>
+        {% endif %}
+      {% endcapture %}
+      {% blocktranslate trimmed with selected_by=selected_by_html|safe selected_at=selected_at_html|safe context "post solution alert" %}
+        Selected by {{ selected_by }}, {{ selected_at }}.
+      {% endblocktranslate %}
+      {% if is_locked %}
+        {% capture trimmed as locked_at_html %}
+          <span
+            title="{{ locked_at|date:'DATETIME_FORMAT' }}"
+            mg-timestamp="{{ locked_at.isoformat }}"
+          >{{ locked_at|date_relative }}</span>
+        {% endcapture %}
+        {% capture trimmed as locked_by_html %}
+          {% if locked_by %}
+            <a href="{% url 'misago:user' pk=locked_by.id slug=locked_by.slug %}" class="item-title">{{ locked_by.username }}</a>
+          {% else %}
+            <span class="item-title">{{ locked_by_name }}</span>
+          {% endif %}
+        {% endcapture %}
+        {% blocktranslate trimmed with locked_by=locked_by_html|safe locked_at=locked_at_html|safe context "post solution alert" %}
+          Locked by {{ locked_by }}, {{ locked_at }}.
+        {% endblocktranslate %}
+      {% endif %}
+    </p>
+  </div>
+</div>

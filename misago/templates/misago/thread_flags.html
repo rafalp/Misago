@@ -24,12 +24,12 @@
       <span class="material-icon">bookmark_outline</span>
     </li>
   {% endif %}
-  {% if thread.best_answer_id %}
+  {% if thread.has_solution %}
     <li
       class="thread-flag-answered"
-      title="{% translate 'Answered' context 'thread flag' %}"
+      title="{% translate 'Solved' context 'thread flag' %}"
     >
-      <span class="material-icon">check_circle</span>
+      {% include "tabler/rosette-discount-check-filled.svg" %}
     </li>
   {% endif %}
   {% if thread.is_unapproved %}

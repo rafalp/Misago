@@ -2,7 +2,6 @@ from functools import cached_property
 
 from django.db import models
 from django.db.models import Q
-from django.utils import timezone
 from django.utils.translation import pgettext_lazy
 
 from ...conf import settings
@@ -83,24 +82,46 @@ class Thread(PluginDataModel):
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
 
-    best_answer = models.ForeignKey(
+    solution = models.ForeignKey(
         "misago_threads.Post",
         related_name="+",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
     )
-    best_answer_is_protected = models.BooleanField(default=False)
-    best_answer_marked_on = models.DateTimeField(null=True, blank=True)
-    best_answer_marked_by = models.ForeignKey(
+    solution_posted_at = models.DateTimeField(null=True, blank=True)
+    solution_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="marked_best_answer_set",
+        related_name="+",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
     )
-    best_answer_marked_by_name = models.CharField(max_length=255, null=True, blank=True)
-    best_answer_marked_by_slug = models.CharField(max_length=255, null=True, blank=True)
+    solution_by_name = models.CharField(max_length=255, null=True, blank=True)
+    solution_by_slug = models.CharField(max_length=255, null=True, blank=True)
+
+    solution_selected_at = models.DateTimeField(null=True, blank=True)
+    solution_selected_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="+",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    solution_selected_by_name = models.CharField(max_length=255, null=True, blank=True)
+    solution_selected_by_slug = models.CharField(max_length=255, null=True, blank=True)
+
+    solution_is_locked = models.BooleanField(default=False)
+    solution_locked_at = models.DateTimeField(null=True, blank=True)
+    solution_locked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="+",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    solution_locked_by_name = models.CharField(max_length=255, null=True, blank=True)
+    solution_locked_by_slug = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         indexes = [
@@ -170,8 +191,8 @@ class Thread(PluginDataModel):
         move_thread.send(sender=self)
 
     @property
-    def has_best_answer(self):
-        return bool(self.best_answer_id)
+    def has_solution(self) -> bool:
+        return bool(self.solution_id)
 
     @property
     def replies_in_ks(self):
@@ -228,28 +249,3 @@ class Thread(PluginDataModel):
             self.last_poster_slug = post.poster.slug
         else:
             self.last_poster_slug = slugify(post.poster_name)
-
-    def set_best_answer(self, user, post):
-        if post.thread_id != self.id:
-            raise ValueError("post to set as best answer must be in same thread")
-        if post.id == self.first_post_id:
-            raise ValueError("post to set as best answer can't be first post")
-        if post.is_hidden:
-            raise ValueError("post to set as best answer can't be hidden")
-        if post.is_unapproved:
-            raise ValueError("post to set as best answer can't be unapproved")
-
-        self.best_answer = post
-        self.best_answer_is_protected = post.is_protected
-        self.best_answer_marked_on = timezone.now()
-        self.best_answer_marked_by = user
-        self.best_answer_marked_by_name = user.username
-        self.best_answer_marked_by_slug = user.slug
-
-    def clear_best_answer(self):
-        self.best_answer = None
-        self.best_answer_is_protected = False
-        self.best_answer_marked_on = None
-        self.best_answer_marked_by = None
-        self.best_answer_marked_by_name = None
-        self.best_answer_marked_by_slug = None

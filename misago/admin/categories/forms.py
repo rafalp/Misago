@@ -81,12 +81,20 @@ class CategoryForm(forms.ModelForm):
             "Optional CSS class used to customize this category's appearance from themes.",
         ),
     )
-    allow_polls = YesNoSwitch(
-        label=pgettext_lazy("admin category form", "Allow polls"),
+    enable_polls = YesNoSwitch(
+        label=pgettext_lazy("admin category form", "Enable polls"),
         required=False,
         help_text=pgettext_lazy(
             "admin category form",
-            "Controls if users can start new polls in this category.",
+            "Controls whether users can start new polls in this category.",
+        ),
+    )
+    enable_solutions = YesNoSwitch(
+        label=pgettext_lazy("admin category form", "Enable thread solutions"),
+        required=False,
+        help_text=pgettext_lazy(
+            "admin category form",
+            "Controls whether users can select posts as thread solutions.",
         ),
     )
     delay_browse_check = YesNoSwitch(
@@ -196,7 +204,8 @@ class CategoryForm(forms.ModelForm):
             "color",
             "description",
             "css_class",
-            "allow_polls",
+            "enable_polls",
+            "enable_solutions",
             "delay_browse_check",
             "show_started_only",
             "is_closed",

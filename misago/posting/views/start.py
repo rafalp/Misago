@@ -16,7 +16,7 @@ from ...permissions.privatethreads import (
 )
 from ...permissions.threads import check_start_thread_permission
 from ...threads.models import Thread
-from ...threads.prefetch import prefetch_post_feed_related_objects
+from ...threads.prefetch import prefetch_post_feed_data
 from ..formsets import (
     Formset,
     PrivateThreadStartFormset,
@@ -94,7 +94,7 @@ class StartView(View):
 
         context = self.get_context_data(request, category, formset)
 
-        related_objects = prefetch_post_feed_related_objects(
+        related_objects = prefetch_post_feed_data(
             request.settings,
             request.user_permissions,
             [state.post],

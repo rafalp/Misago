@@ -22,6 +22,7 @@ HOOKS_MODULES = (
     "misago.polls.hooks",
     "misago.posting.hooks",
     "misago.privatethreads.hooks",
+    "misago.solutions.hooks",
     "misago.threads.hooks",
     "misago.threadupdates.hooks",
     "misago.users.hooks",
@@ -105,29 +106,33 @@ def format_path(path: Path) -> str:
 
 
 def print_check_message(report):
+    lines: list[str] = []
+
     if report.outdated_files:
-        sys.stderr.write("\n")
+        lines.append("")
         for file_name in report.outdated_files:
-            sys.stderr.write(f"would update {file_name}\n")
+            lines.append(f"would update {file_name}")
 
         files = "file" if len(report.outdated_files) == 1 else "files"
-        sys.stderr.write(f"\n{len(report.outdated_files)} {file} would be updated.")
+        lines.append(f"\n{len(report.outdated_files)} {files} would be updated.")
 
     if report.missing_files:
-        sys.stderr.write("\n")
+        lines.append("")
         for file_name in report.missing_files:
-            sys.stderr.write(f"would create {file_name}\n")
+            lines.append(f"would create {file_name}")
 
         files = "file" if len(report.missing_files) == 1 else "files"
-        sys.stderr.write(f"\n{len(report.missing_files)} {files} would be created.")
+        lines.append(f"\n{len(report.missing_files)} {files} would be created.")
 
     if report.deleted_files:
-        sys.stderr.write("\n")
+        lines.append("")
         for file_name in report.deleted_files:
-            sys.stderr.write(f"would delete {file_name}\n")
+            lines.append(f"would delete {file_name}")
 
         files = "file" if len(report.deleted_files) == 1 else "files"
-        sys.stderr.write(f"\n{len(report.deleted_files)} {files} would be deleted.")
+        lines.append(f"\n{len(report.deleted_files)} {files} would be deleted.")
+
+    sys.stderr.write("\n".join(lines))
 
 
 def print_completed_message(report):
