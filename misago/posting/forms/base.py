@@ -1,7 +1,7 @@
 from django import forms
 from django.http import HttpRequest
 
-from ..state.state import State
+from ..state.base import State
 
 
 class PostingForm(forms.Form):

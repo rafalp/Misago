@@ -1,4 +1,4 @@
-from .state import State
+from .base import State
 from .edit import (
     PostEditState,
     PrivateThreadPostEditState,

@@ -10,7 +10,7 @@ from ..hooks import (
     save_private_thread_reply_state_hook,
     save_thread_reply_state_hook,
 )
-from .state import State
+from .base import State
 
 
 class ReplyState(State):

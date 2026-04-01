@@ -7,7 +7,7 @@ from django.http import HttpRequest
 from ...collections.dicts import set_key_after, set_key_before
 from ...forms import formset
 from ..forms import MembersForm, PostForm, TitleForm
-from ..state.state import State
+from ..state.base import State
 
 
 class Formset(formset.Formset):

@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from ...parser.parse import parse
-from ..state.state import State
+from ..state.base import State
 
 
 def test_state_stores_request(user_request):

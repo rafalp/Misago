@@ -137,6 +137,52 @@ def test_post_edit_state_schedules_post_upgrade_for_post_with_code_block(
     )
 
 
+def test_post_edit_state_changes_test_returns_false_if_nothing_changed(
+    user_request, other_user_thread
+):
+    state = PostEditState(user_request, other_user_thread.first_post)
+    state.set_post_message(parse(other_user_thread.first_post.original))
+
+    assert not state.is_post_changed()
+
+
+def test_post_edit_state_changes_test_returns_true_if_thread_title_changed(
+    user_request, other_user_thread
+):
+
+    state = PostEditState(user_request, other_user_thread.first_post)
+    state.set_thread_title("New title")
+    state.set_post_message(parse(other_user_thread.first_post.original))
+
+    assert state.is_post_changed()
+
+
+def test_post_edit_state_changes_test_returns_true_if_post_contents_changed(
+    user_request, other_user_thread
+):
+    post = other_user_thread.first_post
+    post.original = "Lorem\nIpsum"
+    post.save()
+
+    state = PostEditState(user_request, other_user_thread.first_post)
+    state.set_post_message(parse("Lorem\nIpsum\nDolor"))
+
+    assert state.is_post_changed()
+
+
+def test_post_edit_state_changes_test_returns_false_if_only_new_line_characters_changed(
+    user_request, other_user_thread
+):
+    post = other_user_thread.first_post
+    post.original = "Lorem\r\nIpsum"
+    post.save()
+
+    state = PostEditState(user_request, other_user_thread.first_post)
+    state.set_post_message(parse("Lorem\nIpsum"))
+
+    assert not state.is_post_changed()
+
+
 def test_post_edit_state_save_creates_thread_update_object_for_changed_title(
     user_request, user, other_user_thread
 ):

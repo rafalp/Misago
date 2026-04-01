@@ -13,7 +13,7 @@ from ..hooks import (
     save_private_thread_start_state_hook,
     save_thread_start_state_hook,
 )
-from .state import State
+from .base import State
 
 if TYPE_CHECKING:
     from ...users.models import User
