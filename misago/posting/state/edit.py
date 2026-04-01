@@ -11,7 +11,7 @@ from ..hooks import (
     save_private_thread_post_edit_state_hook,
     save_thread_post_edit_state_hook,
 )
-from .state import State
+from .base import State
 
 
 class PostEditState(State):
@@ -50,7 +50,7 @@ class PostEditState(State):
         if self.thread_title != self.thread.title:
             return True
 
-        if self.post_original != self.post.original:
+        if self.post_original.splitlines() != self.post.original.splitlines():
             return True
 
         if self.delete_attachments:

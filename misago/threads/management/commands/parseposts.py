@@ -29,10 +29,13 @@ class Command(BaseCommand):
         for post in queryset.iterator(chunk_size=50):
             parsing_result = parse(post.original)
 
+            post.original = parsing_result.markup
             post.parsed = parsing_result.html
             post.metadata = parsing_result.metadata
             post.set_search_document(post.thread, parsing_result.text)
-            post.save(update_fields=["parsed", "metadata", "search_document"])
+            post.save(
+                update_fields=["original", "parsed", "metadata", "search_document"]
+            )
 
             post.set_search_vector()
             post.save(update_fields=["search_vector"])
