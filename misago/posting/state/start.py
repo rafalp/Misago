@@ -7,6 +7,10 @@ from ...categories.models import Category
 from ...polls.models import Poll
 from ...privatethreads.models import PrivateThreadMember
 from ...threads.checksums import update_post_checksum
+from ..approval import (
+    require_private_thread_approval,
+    require_thread_approval,
+)
 from ..hooks import (
     get_private_thread_start_state_hook,
     get_thread_start_state_hook,
@@ -29,6 +33,9 @@ class StartState(State):
 
         self.store_object_state(category)
 
+    def require_approval(self) -> bool:
+        return False
+
     @transaction.atomic()
     def save(self):
         self.thread.save()
@@ -44,6 +51,7 @@ class StartState(State):
 
     def save_thread(self):
         self.thread.first_post = self.thread.last_post = self.post
+        self.thread.is_unapproved = self.require_approval()
         self.thread.save()
 
     def save_post(self):
@@ -56,9 +64,10 @@ class StartState(State):
         self.schedule_post_content_upgrade()
 
     def save_category(self):
-        self.category.threads = models.F("threads") + 1
-        self.category.posts = models.F("posts") + 1
-        self.category.set_last_thread(self.thread)
+        if not self.thread.is_unapproved:
+            self.category.threads = models.F("threads") + 1
+            self.category.posts = models.F("posts") + 1
+            self.category.set_last_thread(self.thread)
 
         self.update_object(self.category)
 
@@ -81,6 +90,9 @@ class ThreadStartState(StartState):
     def set_poll(self, poll: Poll):
         self.poll = poll
         self.thread.has_poll = True
+
+    def require_approval(self) -> bool:
+        return require_thread_approval(self)
 
     @transaction.atomic()
     def save(self):
@@ -108,6 +120,9 @@ class PrivateThreadStartState(StartState):
 
     def set_members(self, users: list["User"]):
         self.members = users
+
+    def require_approval(self) -> bool:
+        return require_private_thread_approval(self)
 
     @transaction.atomic()
     def save(self):

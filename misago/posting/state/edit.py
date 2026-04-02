@@ -5,6 +5,10 @@ from ...edits.create import create_post_edit
 from ...threads.models import Post
 from ...threadupdates.create import create_changed_title_thread_update
 from ...threadupdates.models import ThreadUpdate
+from ..approval import (
+    require_private_thread_post_edit_approval,
+    require_thread_post_edit_approval,
+)
 from ..hooks import (
     get_private_thread_post_edit_state_hook,
     get_thread_post_edit_state_hook,
@@ -45,6 +49,9 @@ class PostEditState(State):
         self.post.last_editor_name = self.user.username
         self.post.last_editor_slug = self.user.slug
         self.post.last_edit_reason = self.edit_reason
+
+    def require_approval(self) -> bool:
+        return False
 
     def is_post_changed(self):
         if self.thread_title != self.thread.title:
@@ -130,12 +137,18 @@ class PostEditState(State):
 
 
 class ThreadPostEditState(PostEditState):
+    def require_approval(self) -> bool:
+        return require_thread_post_edit_approval(self)
+
     @transaction.atomic()
     def save(self):
         save_thread_post_edit_state_hook(self.save_action, self.request, self)
 
 
 class PrivateThreadPostEditState(PostEditState):
+    def require_approval(self) -> bool:
+        return require_private_thread_post_edit_approval(self)
+
     @transaction.atomic()
     def save(self):
         save_private_thread_post_edit_state_hook(self.save_action, self.request, self)
