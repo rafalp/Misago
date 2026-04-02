@@ -48,7 +48,8 @@ class Migration(migrations.Migration):
                     "own_delete_post_edits_time_limit",
                     models.PositiveIntegerField(default=0),
                 ),
-                ("exempt_from_flood_control", models.BooleanField(default=False)),
+                ("bypass_flood_control", models.BooleanField(default=False)),
+                ("bypass_content_approval", models.BooleanField(default=False)),
                 ("can_use_private_threads", models.BooleanField(default=False)),
                 ("can_start_private_threads", models.BooleanField(default=False)),
                 (

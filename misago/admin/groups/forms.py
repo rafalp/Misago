@@ -182,13 +182,18 @@ class EditGroupForm(forms.ModelForm):
         min_value=0,
     )
 
-    exempt_from_flood_control = YesNoSwitch(
-        label=pgettext_lazy(
-            "admin group permissions form", "Exempt from flood control"
-        ),
+    bypass_flood_control = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Bypass flood control"),
         help_text=pgettext_lazy(
             "admin group permissions form",
-            "Enable this option to disable the flood control for members of this group.",
+            "Enable this option to allow members of this group to bypass flood control.",
+        ),
+    )
+    bypass_content_approval = YesNoSwitch(
+        label=pgettext_lazy("admin group permissions form", "Bypass content approval"),
+        help_text=pgettext_lazy(
+            "admin group permissions form",
+            "Enable this option to allow members of this group to bypass content approval.",
         ),
     )
 
@@ -409,7 +414,8 @@ class EditGroupForm(forms.ModelForm):
             "can_hide_own_post_edits",
             "own_post_edits_hide_time_limit",
             "own_delete_post_edits_time_limit",
-            "exempt_from_flood_control",
+            "bypass_flood_control",
+            "bypass_content_approval",
             "can_use_private_threads",
             "can_start_private_threads",
             "private_thread_members_limit",

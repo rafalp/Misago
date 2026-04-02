@@ -29,9 +29,8 @@ def get_form_data(group: Group) -> dict:
         "group-own_delete_post_edits_time_limit": str(
             group.own_delete_post_edits_time_limit
         ),
-        "group-exempt_from_flood_control": (
-            "1" if group.exempt_from_flood_control else ""
-        ),
+        "group-bypass_flood_control": ("1" if group.bypass_flood_control else ""),
+        "group-bypass_content_approval": ("1" if group.bypass_content_approval else ""),
         "group-can_use_private_threads": "1" if group.can_use_private_threads else "",
         "group-can_start_private_threads": (
             "1" if group.can_start_private_threads else ""

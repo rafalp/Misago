@@ -86,7 +86,8 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         "can_hide_own_post_edits": CanHideOwnPostEdits.NEVER.value,
         "own_post_edits_hide_time_limit": 0,
         "own_delete_post_edits_time_limit": 0,
-        "exempt_from_flood_control": False,
+        "bypass_flood_control": False,
+        "bypass_content_approval": False,
         "can_upload_attachments": CanUploadAttachments.NEVER.value,
         "attachment_storage_limit": 0,
         "unused_attachments_storage_limit": 0,
@@ -172,8 +173,13 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         )
         if_true(
             permissions,
-            "exempt_from_flood_control",
-            group.exempt_from_flood_control,
+            "bypass_flood_control",
+            group.bypass_flood_control,
+        )
+        if_true(
+            permissions,
+            "bypass_content_approval",
+            group.bypass_content_approval,
         )
         if_greater(
             permissions,

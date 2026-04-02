@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 def require_thread_approval(state: "ThreadStartState") -> bool:
-    if state.user_permissions.is_category_moderator(state.category.id):
+    if state.user_permissions.bypass_content_approval:
         return False
 
     return state.category.require_threads_approval
@@ -23,7 +23,7 @@ def require_private_thread_approval(state: "PrivateThreadStartState") -> bool:
 
 
 def require_thread_reply_approval(state: "ThreadReplyState") -> bool:
-    if state.user_permissions.is_category_moderator(state.category.id):
+    if state.user_permissions.bypass_content_approval:
         return False
 
     return state.category.require_replies_approval
@@ -34,7 +34,7 @@ def require_private_thread_reply_approval(state: "PrivateThreadReplyState") -> b
 
 
 def require_thread_post_edit_approval(state: "ThreadPostEditState") -> bool:
-    if state.user_permissions.is_category_moderator(state.category.id):
+    if state.user_permissions.bypass_content_approval:
         return False
 
     return state.category.require_edits_approval
