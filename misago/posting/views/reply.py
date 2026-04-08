@@ -187,7 +187,7 @@ class ReplyView(View):
         if (timezone.now() - last_post.posted_at) > timedelta(minutes=merge_time):
             return False
 
-        if last_post.is_hidden:
+        if last_post.is_hidden or last_post.is_unapproved:
             return False
 
         last_post.thread = thread

@@ -208,6 +208,7 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
     title = models.CharField(max_length=255, null=True, blank=True)
 
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_NONE)
+    require_content_approval = models.BooleanField(default=False)
 
     # Controls user access to the Django site (not used by Misago)
     # This field is hardcoded in Django's admin logic, so we can't delete it.
@@ -323,6 +324,11 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
                 name="misago_user_requires_acti_part",
                 fields=["requires_activation"],
                 condition=Q(requires_activation__gt=0),
+            ),
+            models.Index(
+                name="misago_user_req_content_approv",
+                fields=["require_content_approval"],
+                condition=Q(require_content_approval=True),
             ),
             models.Index(
                 name="misago_user_is_deleting_a_part",

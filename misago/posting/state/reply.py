@@ -61,7 +61,7 @@ class ReplyState(State):
         self.save_user()
 
     def save_post(self):
-        self.post.is_unapproved = self.require_approval()
+        self.post.is_unapproved = not self.post.id and self.require_approval()
         self.post.set_search_document(self.thread, self.parsing_result.text)
 
         post_edits = self.post.edits
