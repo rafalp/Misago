@@ -402,6 +402,40 @@ def test_thread_reply_view_posts_new_reply(
     mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
 
 
+def test_thread_reply_view_posts_new_unapproved_reply(
+    user_client, user, thread, mock_notify_on_new_thread_reply
+):
+    user.require_content_approval = True
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "This is a reply!",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = thread.post_set.last()
+
+    assert reply.is_unapproved
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
+
+
 def test_thread_reply_view_posts_new_reply_in_htmx(
     user_client, thread, mock_notify_on_new_thread_reply
 ):

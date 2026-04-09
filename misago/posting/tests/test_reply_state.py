@@ -39,6 +39,7 @@ def test_reply_state_updates_thread(user_request, other_user_thread):
 
     other_user_thread.refresh_from_db()
     assert other_user_thread.replies == 1
+    assert not other_user_thread.has_unapproved_posts
     assert state.thread.last_poster == user_request.user
     assert state.thread.last_poster_name == user_request.user.username
     assert state.thread.last_poster_slug == user_request.user.slug
@@ -54,6 +55,8 @@ def test_reply_state_updates_category(user_request, other_user_thread):
     category.refresh_from_db()
     assert category.threads == 1
     assert category.posts == 2
+    assert category.unapproved_threads == 0
+    assert category.unapproved_posts == 0
     assert category.last_thread == state.thread
     assert category.last_posted_at == state.timestamp
     assert category.last_poster == user_request.user

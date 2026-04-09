@@ -9,7 +9,7 @@ def test_private_thread_reply_state_save(user_request, user_private_thread):
 
 
 def test_private_thread_reply_state_saves_unapproved_post(
-    user_request, user, default_category, other_user_private_thread
+    user_request, user, other_user_private_thread
 ):
     user.require_content_approval = True
     user.save()
@@ -33,3 +33,5 @@ def test_private_thread_reply_state_saves_unapproved_post(
     assert (
         other_user_private_thread.last_posted_at == other_user_private_thread.started_at
     )
+
+    assert state.post.is_unapproved

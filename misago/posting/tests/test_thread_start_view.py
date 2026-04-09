@@ -176,6 +176,34 @@ def test_thread_start_view_posts_new_thread(user_client, default_category):
     )
 
 
+def test_thread_start_view_posts_new_unapproved_thread(
+    user_client, user, default_category
+):
+    user.require_content_approval = True
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-start",
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert thread.is_unapproved
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+
 def test_thread_start_view_previews_new_thread(user_client, default_category):
     response = user_client.post(
         reverse(

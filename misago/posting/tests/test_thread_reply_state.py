@@ -36,3 +36,5 @@ def test_thread_reply_state_saves_unapproved_post(
     assert other_user_thread.last_poster_name == other_user_thread.starter_name
     assert other_user_thread.last_poster_slug == other_user_thread.starter_slug
     assert other_user_thread.last_posted_at == other_user_thread.started_at
+
+    assert state.post.is_unapproved

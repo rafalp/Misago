@@ -304,6 +304,44 @@ def test_private_thread_reply_view_posts_new_reply(
     mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
 
 
+def test_private_thread_reply_view_posts_new_unapproved_reply(
+    user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
+):
+    user.require_content_approval = True
+    user.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "This is a reply!",
+        },
+    )
+    assert response.status_code == 302
+
+    reply = other_user_private_thread.post_set.last()
+
+    assert reply.is_unapproved
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
+
+
 def test_private_thread_reply_view_posts_new_reply_in_htmx(
     user_client, other_user_private_thread, mock_notify_on_new_thread_reply
 ):
