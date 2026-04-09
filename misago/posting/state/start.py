@@ -64,7 +64,9 @@ class StartState(State):
         self.schedule_post_content_upgrade()
 
     def save_category(self):
-        if not self.thread.is_unapproved:
+        if self.thread.is_unapproved:
+            self.category.unapproved_threads = models.F("unapproved_threads") + 1
+        else:
             self.category.threads = models.F("threads") + 1
             self.category.posts = models.F("posts") + 1
             self.category.set_last_thread(self.thread)

@@ -98,12 +98,12 @@ class ReplyState(State):
         self.schedule_post_content_upgrade()
 
     def save_thread(self):
-        if not self.is_merged:
+        if not self.is_merged and not self.post.is_unapproved:
             self.thread.replies = models.F("replies") + 1
             if not self.post.is_unapproved:
                 self.thread.set_last_post(self.post)
 
-        if self.post.is_unapproved:
+        elif self.post.is_unapproved:
             self.thread.has_unapproved_posts = True
 
         self.update_object(self.thread)
@@ -112,6 +112,8 @@ class ReplyState(State):
         if not self.is_merged and not self.post.is_unapproved:
             self.category.posts = models.F("posts") + 1
             self.category.set_last_thread(self.thread)
+        elif self.post.is_unapproved:
+            self.category.unapproved_posts = models.F("unapproved_posts") + 1
 
         self.update_object(self.category)
 

@@ -33,3 +33,19 @@ def test_private_thread_start_state_save_adds_members_to_saved_thread(
         user=other_user,
         is_owner=False,
     )
+
+
+def test_private_thread_start_state_saves_unapproved_thread(
+    user_request, private_threads_category, user, other_user
+):
+    user.require_content_approval = True
+    user.save()
+
+    state = PrivateThreadStartState(user_request, private_threads_category)
+    state.set_thread_title("Test thread")
+    state.set_post_message(parse("Hello world"))
+    state.set_members([other_user])
+    state.save()
+
+    assert state.thread.is_unapproved
+    assert not state.post.is_unapproved
