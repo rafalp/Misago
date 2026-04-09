@@ -80,7 +80,7 @@ class MyThreadsFilter(ThreadsFilter):
 
 
 class UnapprovedThreadsFilter(ThreadsFilter):
-    name: str = pgettext_lazy("threads filter", "Unapproved threads")
+    name: str = pgettext_lazy("threads filter", "Unapproved content")
     url: str = "unapproved"
 
     request: HttpRequest

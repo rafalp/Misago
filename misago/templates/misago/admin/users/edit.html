@@ -191,6 +191,14 @@
 
   </fieldset>
 </div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% translate "Moderation" context "admin user form" %}</legend>
+
+    {% form_row form.require_content_approval %}
+
+  </fieldset>
+</div>
 {% for group in form.get_profile_fields_groups %}
   <div class="form-fieldset">
     <fieldset>

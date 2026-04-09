@@ -35,16 +35,16 @@
   {% if thread.is_unapproved %}
     <li
       class="thread-flag-unapproved"
-      title="{% translate 'Requires moderator approval' context 'thread flag' %}"
+      title="{% translate 'Unapproved' context 'thread flag' %}"
     >
-      <span class="material-icon">visibility</span>
+      {% include "tabler/shield-filled.svg" %}
     </li>
   {% elif thread.has_unapproved_posts and for_moderator %}
     <li
       class="thread-flag-unapproved"
-      title="{% translate 'Replies require moderator approval' context 'thread flag' %}"
+      title="{% translate 'Has unapproved replies' context 'thread flag' %}"
     >
-      <span class="material-icon">view_list</span>
+      {% include "tabler/shield-half.svg" %}
     </li>
   {% endif %}
   {% if thread.has_poll %}
