@@ -123,29 +123,29 @@ class PrivateThreadReplyState(ReplyState):
         save_private_thread_reply_state_hook(self.save_action, self.request, self)
 
 
-def get_reply_thread_state(
+def get_thread_reply_state(
     request: HttpRequest, thread: Thread, post: Post | None = None
 ) -> ReplyState:
     return get_thread_reply_state_hook(
-        _get_reply_thread_state_action, request, thread, post
+        _get_thread_reply_state_action, request, thread, post
     )
 
 
-def _get_reply_thread_state_action(
+def _get_thread_reply_state_action(
     request: HttpRequest, thread: Thread, post: Post | None = None
 ) -> ReplyState:
     return ReplyState(request, thread, post)
 
 
-def get_reply_private_thread_state(
+def get_private_thread_reply_state(
     request: HttpRequest, thread: Thread, post: Post | None = None
 ) -> PrivateThreadReplyState:
     return get_private_thread_reply_state_hook(
-        _get_reply_private_thread_state_action, request, thread, post
+        _get_private_thread_reply_state_action, request, thread, post
     )
 
 
-def _get_reply_private_thread_state_action(
+def _get_private_thread_reply_state_action(
     request: HttpRequest, thread: Thread, post: Post | None = None
 ) -> PrivateThreadReplyState:
     return PrivateThreadReplyState(request, thread, post)

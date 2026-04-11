@@ -10,8 +10,8 @@ from .reply import (
     ReplyState,
     PrivateThreadReplyState,
     ThreadReplyState,
-    get_reply_private_thread_state,
-    get_reply_thread_state,
+    get_private_thread_reply_state,
+    get_thread_reply_state,
 )
 from .start import (
     PrivateThreadStartState,
@@ -35,7 +35,7 @@ __all__ = [
     "get_private_thread_post_edit_state",
     "get_thread_post_edit_state",
     "get_private_thread_start_state",
-    "get_reply_private_thread_state",
-    "get_reply_thread_state",
+    "get_private_thread_reply_state",
+    "get_thread_reply_state",
     "get_thread_start_state",
 ]
