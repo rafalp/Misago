@@ -59,6 +59,9 @@ def _require_thread_reply_approval_action(state: "ThreadReplyState") -> bool:
     if state.category.require_replies_approval:
         return True
 
+    if state.thread.require_replies_approval:
+        return True
+
     return False
 
 

@@ -339,7 +339,6 @@ class PostFeed:
                 self.get_post_unapproved_data(),
             )
 
-
         item["is_solution"] = is_solution = post.id == self.thread.solution_id
 
         if not is_solution and is_valid_thread_solution(post, self.request):
