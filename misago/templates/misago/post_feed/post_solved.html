@@ -1,15 +1,12 @@
 {% load i18n misago_capture misago_formats %}
 
-<div class="posts-feed-item-post-body-alert posts-feed-item-post-body-alert-solution">
-  <div class="posts-feed-item-post-body-alert-icon">
-    {% include "tabler/rosette-discount-check.svg" %}
+<div class="status-bar status-bar-solved">
+  <div class="status-bar-icon">
+    {% include "tabler/rosette-discount-check-filled.svg" %}
   </div>
-  <div class="posts-feed-item-post-body-alert-label">
-    {% include "tabler/rosette-discount-check.svg" %}
-    {% translate "Solved" context "post solved alert" %}
-  </div>
-  <div class="posts-feed-item-post-body-alert-message">
+  <div class="status-bar-body">
     <p>
+      <strong>{% translate "Solved:" context "post solved status bar" %}</strong>
       {% capture trimmed as solved_at %}
         <span
           title="{{ solved_at|date:'DATETIME_FORMAT' }}"
@@ -23,13 +20,15 @@
           <span class="item-title">{{ solved_by_name }}</span>
         {% endif %}
       {% endcapture %}
-      {% blocktranslate trimmed with solved_by=solved_by_html|safe solved_at=solved_at|safe context "post solved alert" %}
+      {% blocktranslate trimmed with solved_by=solved_by_html|safe solved_at=solved_at|safe context "post solved status bar" %}
         Solved by {{ solved_by }}, {{ solved_at }}.
       {% endblocktranslate %}
     </p>
-    <a href="{{ solution_url }}" class="btn posts-feed-item-post-body-alert-btn">
-      {% translate "Go to solution" context "post solved alert" %}
-      {% include "tabler/arrow-right.svg" %}
-    </a>
+    <div class="status-bar-actions">
+      <a href="{{ solution_url }}" class="status-bar-btn">
+        <span>{% translate "Go to solution" context "post solved status bar" %}</span>
+        {% include "tabler/arrow-right.svg" %}
+      </a>
+    </div>
   </div>
 </div>

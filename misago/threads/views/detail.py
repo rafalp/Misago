@@ -104,7 +104,14 @@ class DetailView(View):
     def get_context_data_action(
         self, request: HttpRequest, thread: Thread, page: int | None = None
     ) -> dict:
+        if request.user.is_authenticated:
+            starter_is_current_user = request.user.id == thread.starter_id
+        else:
+            starter_is_current_user = False
+
         return {
+            "starter_is_current_user": starter_is_current_user,
+            "thread_status_bars": self.get_thread_status_bars(request, thread),
             "thread": thread,
             "thread_url": self.get_thread_url(thread),
             "watch_thread": self.get_watch_thread_data(request, thread),
@@ -113,6 +120,11 @@ class DetailView(View):
             "post_edits_modal_template": self.backend.post_edits_modal_template,
             "post_likes_modal_template": self.backend.post_likes_modal_template,
         }
+
+    def get_thread_status_bars(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[dict]:
+        return []
 
     def get_watch_thread_data(
         self, request: HttpRequest, thread: Thread
@@ -276,6 +288,12 @@ class ThreadDetailView(DetailView, ThreadView):
 
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
+    unapproved_thread_status_bar_template_name: str = (
+        "misago/thread/unapproved_thread.html"
+    )
+    unapproved_posts_status_bar_template_name: str = (
+        "misago/thread/unapproved_posts.html"
+    )
 
     def get(
         self, request: HttpRequest, thread_id: int, slug: str, page: int | None = None
@@ -327,6 +345,32 @@ class ThreadDetailView(DetailView, ThreadView):
             context["allow_start_poll"] = allow_start_poll
 
         return context
+
+    def get_thread_status_bars(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[dict]:
+        thread_status_bars = []
+
+        if thread.is_unapproved:
+            thread_status_bars.append(
+                {"template_name": self.unapproved_thread_status_bar_template_name}
+            )
+
+        if (
+            request.user_permissions.is_category_moderator(thread.category_id)
+            and thread.has_unapproved_posts
+        ):
+            thread_status_bars.append(
+                {
+                    "template_name": self.unapproved_posts_status_bar_template_name,
+                    "unapproved_post_url": reverse(
+                        "misago:thread-post-unapproved",
+                        kwargs={"thread_id": thread.id, "slug": thread.slug},
+                    ),
+                }
+            )
+
+        return thread_status_bars
 
     def get_watch_thread_url(self, thread: Thread) -> str:
         return reverse(

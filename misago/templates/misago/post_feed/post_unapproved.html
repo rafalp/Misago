@@ -1,21 +1,18 @@
 {% load i18n %}
 
-<div class="posts-feed-item-post-body-alert posts-feed-item-post-body-alert-unapproved">
-  <div class="posts-feed-item-post-body-alert-icon">
-    {% include "tabler/shield-filled.svg" %}
+<div class="status-bar status-bar-unapproved">
+  <div class="status-bar-icon">
+    {% include "tabler/shield-half.svg" %}
   </div>
-  <div class="posts-feed-item-post-body-alert-label">
-    {% include "tabler/shield-filled.svg" %}
-    {% translate "Unapproved" context "post solved alert" %}
-  </div>
-  <div class="posts-feed-item-post-body-alert-message">
+  <div class="status-bar-body">
     <p>
+      <strong>{% translate "Unapproved:" context "post unapproved status bar" %}</strong>
       {% if poster_is_current_user %}
-        {% blocktranslate trimmed context "post unapproved alert" %}
+        {% blocktranslate trimmed context "post unapproved status bar" %}
           This post will be visible to others after moderator approval.
         {% endblocktranslate %}
       {% else %}
-        {% blocktranslate trimmed context "post unapproved alert" %}
+        {% blocktranslate trimmed context "post unapproved status bar" %}
           This post is only visible to moderators and its author until approved.
         {% endblocktranslate %}
       {% endif %}
