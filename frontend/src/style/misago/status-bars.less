@@ -85,16 +85,23 @@
 
     padding: 0 6px;
 
-    border: 1px solid var(--status-bar-btn-color, @gray-300);
+    border: 1px solid color-mix(
+      in srgb,
+      var(--status-bar-btn-color, @gray-300),
+      transparent 50%
+    );
     border-radius: @border-radius-small;
 
-    font-weight: bold;
     white-space: nowrap;
 
     &,
     a&:link,
     a&:visited {
-      background-color: transparent;
+      background-color: color-mix(
+        in srgb,
+        var(--status-bar-btn-color, @gray-300),
+        transparent 90%
+      );
       color: var(--status-bar-btn-text, @gray-700);
     }
 
@@ -143,17 +150,13 @@
 .status-bar-solved {
   --status-bar-bg: @green-100;
   --status-bar-icon: @green-600;
-  --status-bar-text: @green-700;
-  --status-bar-btn-color: @green-400;
-  --status-bar-btn-text: @green-700;
+  --status-bar-btn-color: @green-300;
 }
 
 .status-bar-unapproved {
   --status-bar-bg: @orange-100;
   --status-bar-icon: @orange-600;
-  --status-bar-text: @orange-700;
-  --status-bar-btn-color: @orange-400;
-  --status-bar-btn-text: @orange-700;
+  --status-bar-btn-color: @orange-300;
 }
 
 .status-bars {
