@@ -325,6 +325,101 @@ def test_thread_detail_view_shows_user_unapproved_post_to_moderator(
     assert_contains(response, post.original)
 
 
+def test_thread_detail_view_doesnt_show_deleted_user_unapproved_post_to_anonymous_user(
+    thread_reply_factory, client, thread
+):
+    post = thread_reply_factory(
+        thread, original=get_random_string(12), is_unapproved=True
+    )
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(response, post.get_absolute_url())
+
+
+def test_thread_detail_view_doesnt_show_deleted_user_unapproved_post_to_user(
+    thread_reply_factory, user_client, thread
+):
+    post = thread_reply_factory(
+        thread, original=get_random_string(12), is_unapproved=True
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(response, post.get_absolute_url())
+
+
+def test_thread_detail_view_shows_deleted_user_unapproved_post_to_moderator(
+    thread_reply_factory, moderator_client, thread
+):
+    post = thread_reply_factory(
+        thread, original=get_random_string(12), is_unapproved=True
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(
+        response,
+        "This post is only visible to moderators and its author until approved.",
+    )
+
+
+def test_thread_detail_view_doesnt_show_user_unapproved_post_to_anonymous_user(
+    thread_reply_factory, client, other_user, thread
+):
+    post = thread_reply_factory(
+        thread, poster=other_user, original=get_random_string(12), is_unapproved=True
+    )
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(response, post.get_absolute_url())
+
+
+def test_thread_detail_view_doesnt_show_user_unapproved_post_to_other_user(
+    thread_reply_factory, user_client, other_user, thread
+):
+    post = thread_reply_factory(
+        thread, poster=other_user, original=get_random_string(12), is_unapproved=True
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_not_contains(response, post.get_absolute_url())
+
+
+def test_thread_detail_view_shows_user_unapproved_post_to_user(
+    thread_reply_factory, user_client, user, thread
+):
+    post = thread_reply_factory(
+        thread, poster=user, original=get_random_string(12), is_unapproved=True
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(
+        response, "This post will be visible to others after moderator approval."
+    )
+
+
+def test_thread_detail_view_shows_user_unapproved_post_to_moderator(
+    thread_reply_factory, moderator_client, user, thread
+):
+    post = thread_reply_factory(
+        thread, poster=user, original=get_random_string(12), is_unapproved=True
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(
+        response,
+        "This post is only visible to moderators and its author until approved.",
+    )
+
+
 def test_thread_detail_view_shows_deleted_user_hidden_post_to_anonymous_user(
     thread_reply_factory, client, thread
 ):

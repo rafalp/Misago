@@ -628,6 +628,19 @@ def test_filter_private_threads_queryset_returns_thread_for_user_who_is_member(
     assert thread in list(queryset)
 
 
+def test_filter_private_threads_queryset_returns_thread_for_moderator_who_is_member(
+    thread_factory, private_threads_category, moderator, cache_versions
+):
+    thread = thread_factory(private_threads_category)
+    PrivateThreadMember.objects.create(thread=thread, user=moderator)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert thread in list(queryset)
+
+
 def test_filter_private_threads_queryset_excludes_thread_user_is_not_member(
     thread_factory, private_threads_category, user, other_user, cache_versions
 ):
@@ -639,6 +652,87 @@ def test_filter_private_threads_queryset_excludes_thread_user_is_not_member(
         permissions, private_threads_category.thread_set
     )
     assert not queryset.exists()
+
+
+def test_filter_private_threads_queryset_excludes_thread_moderator_is_not_member(
+    thread_factory, private_threads_category, moderator, other_user, cache_versions
+):
+    thread = thread_factory(private_threads_category)
+    PrivateThreadMember.objects.create(thread=thread, user=other_user)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert not queryset.exists()
+
+
+def test_filter_private_threads_queryset_shows_unapproved_thread_to_thread_starter(
+    thread_factory, private_threads_category, user, cache_versions
+):
+    thread = thread_factory(private_threads_category, starter=user, is_unapproved=True)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert queryset.exists()
+
+
+def test_filter_private_threads_queryset_doesnt_show_unapproved_thread_to_other_user(
+    thread_factory, private_threads_category, user, other_user, cache_versions
+):
+    thread = thread_factory(
+        private_threads_category, starter=other_user, is_unapproved=True
+    )
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert not queryset.exists()
+
+
+def test_filter_private_threads_queryset_shows_unapproved_thread_to_moderator(
+    thread_factory, private_threads_category, moderator, user, cache_versions
+):
+    thread = thread_factory(private_threads_category, starter=user, is_unapproved=True)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert queryset.exists()
+
+
+def test_filter_private_threads_queryset_doesnt_show_thread_with_unapproved_posts_to_user(
+    thread_factory, private_threads_category, user, cache_versions
+):
+    thread_factory(private_threads_category, starter=user, has_unapproved_posts=True)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert not queryset.exists()
+
+
+def test_filter_private_threads_queryset_shows_thread_with_unapproved_posts_to_moderator(
+    thread_factory, private_threads_category, moderator, user, cache_versions
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert queryset.exists()
 
 
 def test_filter_private_thread_posts_queryset_returns_all_posts(

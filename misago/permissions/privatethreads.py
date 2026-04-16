@@ -1,7 +1,7 @@
 from math import ceil
 
 from django.core.exceptions import PermissionDenied
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 from django.http import Http404
 from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
@@ -378,11 +378,22 @@ def _filter_private_threads_queryset_action(
     if permissions.user.is_anonymous:
         return queryset.none()
 
+    if permissions.is_private_threads_moderator:
+        return queryset.filter(
+            Q(
+                id__in=PrivateThreadMember.objects.filter(user=permissions.user).values(
+                    "thread_id"
+                )
+            )
+            | Q(is_unapproved=True)
+            | Q(has_unapproved_posts=True)
+        )
+
     return queryset.filter(
         id__in=PrivateThreadMember.objects.filter(user=permissions.user).values(
             "thread_id"
         )
-    )
+    ).filter(Q(is_unapproved=False) | Q(starter=permissions.user))
 
 
 def filter_private_thread_posts_queryset(
