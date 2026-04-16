@@ -24,6 +24,8 @@ class ViewBackend(ABC):
     thread_url_name: str
     thread_post_url_name: str
     thread_post_edits_url_name: str
+    thread_post_unapproved_url_name: str
+    thread_post_last_url_name: str
 
     post_edits_modal_template: str = "misago/thread/post_edits_modal.html"
     post_likes_modal_template: str = "misago/thread/post_likes_modal.html"
@@ -173,6 +175,18 @@ class ViewBackend(ABC):
             },
         )
 
+    def get_thread_post_unapproved_url(self, thread: Thread) -> str:
+        return reverse(
+            self.thread_post_unapproved_url_name,
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        )
+
+    def get_thread_post_last_url(self, thread: Thread) -> str:
+        return reverse(
+            self.thread_post_last_url_name,
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        )
+
     def get_thread_post_redirect(
         self,
         request: HttpRequest,
@@ -204,6 +218,8 @@ class ThreadViewBackend(ViewBackend):
     thread_url_name: str = "misago:thread"
     thread_post_url_name: str = "misago:thread-post"
     thread_post_edits_url_name: str = "misago:thread-post-edits"
+    thread_post_unapproved_url_name: str = "misago:thread-post-unapproved"
+    thread_post_last_url_name: str = "misago:thread-post-last"
 
     def get_thread(
         self,

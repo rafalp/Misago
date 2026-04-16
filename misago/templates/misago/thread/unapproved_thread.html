@@ -6,16 +6,9 @@
   </div>
   <div class="status-bar-body">
     <p>
-      <strong>{% translate "Unapproved:" context "thread unapproved status bar" %}</strong>
-      {% if starter_is_current_user %}
-        {% blocktranslate trimmed context "thread unapproved status bar" %}
-          This post thread be visible to others after moderator approval.
-        {% endblocktranslate %}
-      {% else %}
-        {% blocktranslate trimmed context "thread unapproved status bar" %}
-          This thread is only visible to moderators and its author until approved.
-        {% endblocktranslate %}
-      {% endif %}
+      {% blocktranslate trimmed context "thread unapproved status bar" %}
+        This thread requires moderator approval before other users will see it.
+      {% endblocktranslate %}
     </p>
   </div>
 </div>
