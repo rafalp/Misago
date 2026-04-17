@@ -327,7 +327,7 @@ def test_private_thread_detail_view_doesnt_show_user_unapproved_post_to_other_us
             "misago:private-thread",
             kwargs={
                 "thread_id": other_user_private_thread.id,
-                "slug": thother_user_private_threadread.slug,
+                "slug": other_user_private_thread.slug,
             },
         )
     )
