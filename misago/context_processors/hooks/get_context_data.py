@@ -18,7 +18,7 @@ class GetContextDataHookAction(Protocol):
 
     # Return value
 
-    `True` if the new thread should require moderator approval, or `False` otherwise.
+    `dict` with context data.
     """
 
     def __call__(
@@ -60,8 +60,8 @@ class GetContextDataHook(
     FilterHook[GetContextDataHookAction, GetContextDataHookFilter]
 ):
     """
-    This hook wraps the standard function Misago uses to check if
-    a new thread should require moderator approval.
+    This hook allows plugin authors to inject custom data into the template
+    context without creating a custom context processor.
 
     # Example
 
@@ -69,25 +69,28 @@ class GetContextDataHook(
     moderator approval if it contains links and the user recently joined.
 
     ```python
-    from django.utils import timezone
-    from misago.posting.hooks import get_context_data_hook
-    from misago.posting.state import ThreadStartState
+    from django.http import HttpRequest
+    from misago.context_processors.hooks import get_context_data_hook
 
 
     @get_context_data_hook.append_filter
-    def require_thread_approval(
-        action, state: ThreadStartState
-    ) -> bool:
-        if action(state):
-            return True
+    def plugin_context_data(
+        action, request: HttpRequest
+    ) -> dict:
+        context_data = action(request)
 
-        if state.user_permissions.bypass_content_approval:
-            return False
+        # Set new keys on the context data
+        context_data["extra_key"] = "Lorem ipsum!"
 
-        return bool(
-            (timezone.now() - state.user.joined_on).total_seconds() < 72 * 3600
-            and "<a" in state.post.parsed
+        # Or include a template with extra context in a predefined slot:
+        context_data["before_body_close"].append(
+            {
+                "template_name": "my_plugin/cookie_agreement.html",
+                "api_key": "d8s9a7d98sa79dsa",
+            }
         )
+
+        return context_data
     ```
     """
 
