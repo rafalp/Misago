@@ -105,6 +105,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "misago.context_processors.metatags.default_metatags",
     "misago.context_processors.permissions.user_permissions",
     "misago.context_processors.posting.syntax_highlighting",
+    "misago.context_processors.plugins.plugins",
     "misago.acl.context_processors.user_acl",
     "misago.conf.context_processors.conf",
     "misago.conf.context_processors.og_image",

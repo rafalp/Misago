@@ -1,4 +1,4 @@
-{% load i18n static misago_absoluteurl misago_json misago_plugins %}
+{% load i18n static misago_absoluteurl misago_component misago_json misago_plugins %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE_SHORT }}">
   <head>
@@ -54,6 +54,7 @@
       window.misago_suggest_users = "{% url 'misago:suggest-users' %}"
     </script>
     {% pluginoutlet HEAD_END %}
+    {% includecomponents before_head_close %}
   </head>
   <body class="misago-{% if user.is_authenticated %}authenticated{% else %}anonymous{% endif %}{% if misago_agreement %} agreement-overlay-visible{% endif %}">
     <script type="text/javascript">
@@ -63,6 +64,7 @@
     {% include "misago/analytics.html" %}
     {% endif %}
 
+    {% includecomponents after_body_open %}
     {% pluginoutlet BODY_START %}
 
     <div id="auth-message-mount"></div>
@@ -71,15 +73,24 @@
     <div id="misago-container" {% if misago_agreement %}aria-hidden="true"{% endif %}>
       {% include "misago/ajax_loader.html" %}
       {% include "misago/jumbotron.html" %}
+
+      {% includecomponents above_navbar %}
+
       {% include "misago/navbar.html" %}
       {% include "misago/messages.html" %}
       {% include "misago/snackbars.html" with inert=True %}
+
+      {% includecomponents below_navbar %}
 
       <div id="page-mount">
         {% block content %}{% endblock content %}
       </div>
 
+      {% includecomponents above_footer %}
+
       {% include "misago/footer.html" %}
+
+      {% includecomponents below_footer %}
     </div>
     {% include "misago/auth.html" %}
 
@@ -113,5 +124,6 @@
     {% block javascript %}{% endblock javascript %}
 
     {% pluginoutlet BODY_END %}
+    {% includecomponents before_body_close %}
   </body>
 </html>
