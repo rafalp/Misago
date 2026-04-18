@@ -1,15 +1,12 @@
 {% load i18n misago_capture misago_formats %}
 
-<div class="posts-feed-item-post-body-alert posts-feed-item-post-body-alert-solution">
-  <div class="posts-feed-item-post-body-alert-icon">
-    {% include "tabler/rosette-discount-check.svg" %}
+<div class="status-bar status-bar-solution">
+  <div class="status-bar-icon">
+    {% include "tabler/rosette-discount-check-filled.svg" %}
   </div>
-  <div class="posts-feed-item-post-body-alert-label">
-    {% include "tabler/rosette-discount-check.svg" %}
-    {% translate "Solution" context "post solution alert" %}
-  </div>
-  <div class="posts-feed-item-post-body-alert-message">
+  <div class="status-bar-body">
     <p>
+      <strong>{% translate "Solution:" context "post solution status bar" %}</strong>
       {% capture trimmed as selected_at_html %}
         <span
           title="{{ selected_at|date:'DATETIME_FORMAT' }}"
@@ -23,7 +20,7 @@
           <span class="item-title">{{ selected_by_name }}</span>
         {% endif %}
       {% endcapture %}
-      {% blocktranslate trimmed with selected_by=selected_by_html|safe selected_at=selected_at_html|safe context "post solution alert" %}
+      {% blocktranslate trimmed with selected_by=selected_by_html|safe selected_at=selected_at_html|safe context "post solution status bar" %}
         Selected by {{ selected_by }}, {{ selected_at }}.
       {% endblocktranslate %}
       {% if is_locked %}
@@ -40,7 +37,7 @@
             <span class="item-title">{{ locked_by_name }}</span>
           {% endif %}
         {% endcapture %}
-        {% blocktranslate trimmed with locked_by=locked_by_html|safe locked_at=locked_at_html|safe context "post solution alert" %}
+        {% blocktranslate trimmed with locked_by=locked_by_html|safe locked_at=locked_at_html|safe context "post solution status bar" %}
           Locked by {{ locked_by }}, {{ locked_at }}.
         {% endblocktranslate %}
       {% endif %}

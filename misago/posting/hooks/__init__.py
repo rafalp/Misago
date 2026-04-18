@@ -37,6 +37,12 @@ from .get_thread_start_context_data import get_thread_start_context_data_hook
 from .get_thread_start_formset import get_thread_start_formset_hook
 from .get_thread_start_state import get_thread_start_state_hook
 from .post_needs_content_upgrade import post_needs_content_upgrade_hook
+from .require_private_thread_approval import require_private_thread_approval_hook
+from .require_private_thread_reply_approval import (
+    require_private_thread_reply_approval_hook,
+)
+from .require_thread_approval import require_thread_approval_hook
+from .require_thread_reply_approval import require_thread_reply_approval_hook
 from .save_private_thread_post_edit_state import (
     save_private_thread_post_edit_state_hook,
 )
@@ -76,6 +82,10 @@ __all__ = [
     "get_thread_start_formset_hook",
     "get_thread_start_state_hook",
     "post_needs_content_upgrade_hook",
+    "require_private_thread_approval_hook",
+    "require_private_thread_reply_approval_hook",
+    "require_thread_approval_hook",
+    "require_thread_reply_approval_hook",
     "save_private_thread_post_edit_state_hook",
     "save_private_thread_reply_state_hook",
     "save_private_thread_start_state_hook",

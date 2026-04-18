@@ -37,6 +37,8 @@ def test_start_state_save_saves_thread_and_post(user_request, default_category):
 
     assert state.thread.id
     assert state.post.id
+    assert not state.post.is_unapproved
+    assert not state.thread.is_unapproved
     assert state.post.thread == state.thread
 
 
@@ -60,6 +62,8 @@ def test_start_state_updates_category(user_request, default_category):
     default_category.refresh_from_db()
     assert default_category.threads == 1
     assert default_category.posts == 1
+    assert default_category.unapproved_threads == 0
+    assert default_category.unapproved_posts == 0
     assert default_category.last_thread == state.thread
     assert default_category.last_posted_at == state.thread.last_posted_at
     assert default_category.last_poster == state.thread.last_poster

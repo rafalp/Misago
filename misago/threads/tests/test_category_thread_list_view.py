@@ -936,7 +936,7 @@ def test_category_thread_list_view_displays_solved_thread(
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-answered")
+    assert_contains(response, "thread-flag-solved")
 
 
 def test_category_thread_list_view_displays_closed_thread(

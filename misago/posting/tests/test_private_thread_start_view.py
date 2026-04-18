@@ -123,6 +123,38 @@ def test_private_thread_start_view_posts_new_thread_using_noscript_fallback(
     )
 
 
+def test_private_thread_start_view_posts_new_unapproved_thread(
+    user_client, user, admin, moderator, other_user, mock_notify_on_new_private_thread
+):
+    user.require_content_approval = True
+    user.save()
+
+    response = user_client.post(
+        reverse("misago:private-thread-start"),
+        {
+            "posting-members-users": [
+                admin.username,
+                moderator.username,
+                other_user.username,
+            ],
+            "posting-members-users_noscript": "",
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert thread.is_unapproved
+    assert response["location"] == reverse(
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    mock_notify_on_new_private_thread.delay.assert_called_with(
+        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+    )
+
+
 def test_private_thread_start_view_previews_new_thread(user_client):
     response = user_client.post(
         reverse("misago:private-thread-start"),

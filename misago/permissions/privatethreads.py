@@ -1,7 +1,7 @@
 from math import ceil
 
 from django.core.exceptions import PermissionDenied
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 from django.http import Http404
 from django.utils import timezone
 from django.utils.translation import npgettext, pgettext
@@ -77,6 +77,11 @@ def check_see_private_thread_permission(
 def _check_see_private_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
+    if permissions.is_private_threads_moderator and (
+        thread.is_unapproved or thread.has_unapproved_posts
+    ):
+        return
+
     if permissions.user.id not in thread.private_thread_member_ids:
         raise Http404()
 
@@ -378,11 +383,22 @@ def _filter_private_threads_queryset_action(
     if permissions.user.is_anonymous:
         return queryset.none()
 
+    if permissions.is_private_threads_moderator:
+        return queryset.filter(
+            Q(
+                id__in=PrivateThreadMember.objects.filter(user=permissions.user).values(
+                    "thread_id"
+                )
+            )
+            | Q(is_unapproved=True)
+            | Q(has_unapproved_posts=True)
+        )
+
     return queryset.filter(
         id__in=PrivateThreadMember.objects.filter(user=permissions.user).values(
             "thread_id"
         )
-    )
+    ).filter(Q(is_unapproved=False) | Q(starter=permissions.user))
 
 
 def filter_private_thread_posts_queryset(
@@ -400,7 +416,13 @@ def _filter_private_thread_posts_queryset_action(
     thread: Thread,
     queryset: QuerySet,
 ) -> QuerySet:
-    return queryset
+    if permissions.is_private_threads_moderator:
+        return queryset
+
+    if permissions.user.is_authenticated:
+        return queryset.filter(Q(is_unapproved=False) | Q(poster=permissions.user))
+
+    return queryset.filter(is_unapproved=False)
 
 
 def filter_private_thread_updates_queryset(

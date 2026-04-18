@@ -33,7 +33,6 @@ def form_data(new_data: dict) -> dict:
         "children_categories_component": "full",
         "require_threads_approval": False,
         "require_replies_approval": False,
-        "require_edits_approval": False,
         "prune_started_after": "0",
         "prune_replied_after": "0",
         "archive_pruned_in": "",

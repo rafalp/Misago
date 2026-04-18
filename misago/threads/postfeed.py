@@ -40,6 +40,7 @@ class PostFeed:
     post_template_name: str = "misago/post_feed/post.html"
     post_solved_template_name: str = "misago/post_feed/post_solved.html"
     post_solution_template_name = "misago/post_feed/post_solution.html"
+    post_unapproved_template_name = "misago/post_feed/post_unapproved.html"
     thread_update_template_name: str = "misago/post_feed/thread_update.html"
 
     request: HttpRequest
@@ -161,6 +162,11 @@ class PostFeed:
     def get_post_data(self, post: Post, counter: int = 1) -> dict:
         is_visible = self.is_moderator or not post.is_hidden
 
+        if self.request.user.is_authenticated:
+            poster_is_current_user = post.poster_id == self.request.user.id
+        else:
+            poster_is_current_user = False
+
         data = {
             "template_name": self.post_template_name,
             "type": "post",
@@ -170,6 +176,7 @@ class PostFeed:
             "counter": counter,
             "poster": None,
             "poster_name": post.poster_name,
+            "poster_is_current_user": poster_is_current_user,
             "rich_text_data": None,
             "attachments": [],
             "bars": [],
@@ -327,6 +334,11 @@ class PostFeed:
                 self.get_post_solved_data(),
             )
 
+        if post.is_unapproved:
+            item["post_body_top_components"].append(
+                self.get_post_unapproved_data(),
+            )
+
         item["is_solution"] = is_solution = post.id == self.thread.solution_id
 
         if not is_solution and is_valid_thread_solution(post, self.request):
@@ -445,6 +457,9 @@ class PostFeed:
             }
 
         return data
+
+    def get_post_unapproved_data(self) -> dict:
+        return {"template_name": self.post_unapproved_template_name}
 
     def populate_thread_update_data(
         self, item: dict, thread_update: ThreadUpdate, prefetched_data: dict

@@ -19,6 +19,8 @@ class PrivateThreadViewBackend(ViewBackend):
     thread_url_name: str = "misago:private-thread"
     thread_post_url_name: str = "misago:private-thread-post"
     thread_post_edits_url_name: str = "misago:private-thread-post-edits"
+    thread_post_unapproved_url_name: str = "misago:private-thread-post-unapproved"
+    thread_post_last_url_name: str = "misago:private-thread-post-last"
 
     def get_thread(
         self,

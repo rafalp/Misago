@@ -1,0 +1,14 @@
+{% load i18n %}
+
+<div class="status-bar status-bar-unapproved">
+  <div class="status-bar-icon">
+    {% include "tabler/shield-filled.svg" %}
+  </div>
+  <div class="status-bar-body">
+    <p>
+      {% blocktranslate trimmed context "thread unapproved status bar" %}
+        This thread requires moderator approval before other users will see it.
+      {% endblocktranslate %}
+    </p>
+  </div>
+</div>

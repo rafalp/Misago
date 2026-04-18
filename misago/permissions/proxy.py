@@ -33,7 +33,8 @@ class UserPermissionsProxy:
     can_hide_own_post_edits: int
     own_post_edits_hide_time_limit: int
     own_delete_post_edits_time_limit: int
-    exempt_from_flood_control: bool
+    bypass_flood_control: bool
+    bypass_content_approval: bool
     can_upload_attachments: int
     attachment_size_limit: int
     can_always_delete_own_attachments: bool

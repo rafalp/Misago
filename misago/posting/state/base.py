@@ -11,6 +11,7 @@ from ...attachments.models import Attachment
 from ...categories.models import Category
 from ...core.utils import slugify
 from ...parser.parse import ParsingResult
+from ...permissions.proxy import UserPermissionsProxy
 from ...threads.models import Post, Thread
 from ..tasks import upgrade_post_content
 from ..upgradepost import post_needs_content_upgrade
@@ -23,6 +24,7 @@ class State:
     request: HttpRequest
     timestamp: datetime
     user: "User"
+    user_permissions: UserPermissionsProxy
 
     category: Category
     thread: Thread
@@ -40,6 +42,7 @@ class State:
         self.request = request
         self.timestamp = timezone.now()
         self.user = request.user
+        self.user_permissions = request.user_permissions
 
         self.state = {}
         self.plugin_state = {}

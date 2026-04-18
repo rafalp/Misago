@@ -171,14 +171,6 @@ class CategoryForm(forms.ModelForm):
             "All replies posted in this category will require moderator approval.",
         ),
     )
-    require_edits_approval = YesNoSwitch(
-        label=pgettext_lazy("admin category form", "Edits"),
-        required=False,
-        help_text=pgettext_lazy(
-            "admin category form",
-            "Will make all edited replies return to unapproved state for moderator to review.",
-        ),
-    )
     prune_started_after = forms.IntegerField(
         label=pgettext_lazy("admin category form", "Thread age"),
         min_value=0,
@@ -214,7 +206,6 @@ class CategoryForm(forms.ModelForm):
             "children_categories_component",
             "require_threads_approval",
             "require_replies_approval",
-            "require_edits_approval",
             "prune_started_after",
             "prune_replied_after",
             "archive_pruned_in",

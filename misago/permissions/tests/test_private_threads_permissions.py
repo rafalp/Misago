@@ -474,6 +474,48 @@ def test_check_see_private_thread_permission_fails_if_user_is_not_thread_member(
         check_see_private_thread_permission(permissions, thread)
 
 
+def test_check_see_private_thread_permission_passes_if_moderator_has_permission(
+    moderator, cache_versions, thread
+):
+    PrivateThreadMember.objects.create(thread=thread, user=moderator)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_see_private_thread_permission(permissions, thread)
+
+
+def test_check_see_private_thread_permission_fails_if_moderator_is_not_thread_member(
+    moderator, cache_versions, thread
+):
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+
+    with pytest.raises(Http404):
+        check_see_private_thread_permission(permissions, thread)
+
+
+def test_check_see_private_thread_permission_passes_for_moderator_if_thread_is_unapproved(
+    moderator, user, cache_versions, thread
+):
+    thread.is_unapproved = True
+    thread.save()
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_see_private_thread_permission(permissions, thread)
+
+
+def test_check_see_private_thread_permission_passes_for_moderator_if_thread_has_unapproved_posts(
+    moderator, user, cache_versions, thread
+):
+    thread.has_unapproved_posts = True
+    thread.save()
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_see_private_thread_permission(permissions, thread)
+
+
 def test_check_see_private_thread_post_permission_passes_if_user_has_permission(
     user, cache_versions, thread, post
 ):
@@ -628,6 +670,19 @@ def test_filter_private_threads_queryset_returns_thread_for_user_who_is_member(
     assert thread in list(queryset)
 
 
+def test_filter_private_threads_queryset_returns_thread_for_moderator_who_is_member(
+    thread_factory, private_threads_category, moderator, cache_versions
+):
+    thread = thread_factory(private_threads_category)
+    PrivateThreadMember.objects.create(thread=thread, user=moderator)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert thread in list(queryset)
+
+
 def test_filter_private_threads_queryset_excludes_thread_user_is_not_member(
     thread_factory, private_threads_category, user, other_user, cache_versions
 ):
@@ -641,7 +696,88 @@ def test_filter_private_threads_queryset_excludes_thread_user_is_not_member(
     assert not queryset.exists()
 
 
-def test_filter_private_thread_posts_queryset_returns_all_posts(
+def test_filter_private_threads_queryset_excludes_thread_moderator_is_not_member(
+    thread_factory, private_threads_category, moderator, other_user, cache_versions
+):
+    thread = thread_factory(private_threads_category)
+    PrivateThreadMember.objects.create(thread=thread, user=other_user)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert not queryset.exists()
+
+
+def test_filter_private_threads_queryset_shows_unapproved_thread_to_thread_starter(
+    thread_factory, private_threads_category, user, cache_versions
+):
+    thread = thread_factory(private_threads_category, starter=user, is_unapproved=True)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert queryset.exists()
+
+
+def test_filter_private_threads_queryset_doesnt_show_unapproved_thread_to_other_user(
+    thread_factory, private_threads_category, user, other_user, cache_versions
+):
+    thread = thread_factory(
+        private_threads_category, starter=other_user, is_unapproved=True
+    )
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert not queryset.exists()
+
+
+def test_filter_private_threads_queryset_shows_unapproved_thread_to_moderator(
+    thread_factory, private_threads_category, moderator, user, cache_versions
+):
+    thread = thread_factory(private_threads_category, starter=user, is_unapproved=True)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert queryset.exists()
+
+
+def test_filter_private_threads_queryset_doesnt_show_thread_with_unapproved_posts_to_user(
+    thread_factory, private_threads_category, user, cache_versions
+):
+    thread_factory(private_threads_category, starter=user, has_unapproved_posts=True)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert not queryset.exists()
+
+
+def test_filter_private_threads_queryset_shows_thread_with_unapproved_posts_to_moderator(
+    thread_factory, private_threads_category, moderator, user, cache_versions
+):
+    thread = thread_factory(
+        private_threads_category, starter=user, has_unapproved_posts=True
+    )
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert queryset.exists()
+
+
+def test_filter_private_thread_posts_queryset_returns_approved_posts(
     user, cache_versions, thread
 ):
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -650,3 +786,55 @@ def test_filter_private_thread_posts_queryset_returns_all_posts(
     )
 
     assert queryset.exists()
+
+
+def test_filter_private_thread_posts_queryset_returns_hidden_posts(
+    thread_reply_factory, user, cache_versions, thread
+):
+    post = thread_reply_factory(thread, is_hidden=True)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    queryset = filter_private_thread_posts_queryset(
+        permissions, thread, thread.post_set
+    )
+
+    assert post in queryset.all()
+
+
+def test_filter_private_thread_posts_queryset_excludes_unapproved_posts(
+    thread_reply_factory, user, cache_versions, thread
+):
+    post = thread_reply_factory(thread, is_unapproved=True)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    queryset = filter_private_thread_posts_queryset(
+        permissions, thread, thread.post_set
+    )
+
+    assert post not in queryset.all()
+
+
+def test_filter_private_thread_posts_queryset_returns_unapproved_posts_for_moderator(
+    thread_reply_factory, moderator, cache_versions, thread
+):
+    post = thread_reply_factory(thread, is_unapproved=True)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    queryset = filter_private_thread_posts_queryset(
+        permissions, thread, thread.post_set
+    )
+
+    assert post in queryset.all()
+
+
+def test_filter_private_thread_posts_queryset_returns_unapproved_posts_for_poster(
+    thread_reply_factory, user, cache_versions, thread
+):
+    post = thread_reply_factory(thread, poster=user, is_unapproved=True)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    queryset = filter_private_thread_posts_queryset(
+        permissions, thread, thread.post_set
+    )
+
+    assert post in queryset.all()

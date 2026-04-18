@@ -41,12 +41,14 @@ class BaseUserForm(forms.ModelForm):
 
     def clean_username(self):
         data = self.cleaned_data["username"]
-        validate_username(self.settings, data, exclude=self.instance)
+        if data != self.instance.username:
+            validate_username(self.settings, data, exclude=self.instance)
         return data
 
     def clean_email(self):
         data = self.cleaned_data["email"]
-        validate_email(data, exclude=self.instance)
+        if data != self.instance.email:
+            validate_email(data, exclude=self.instance)
         return data
 
     def clean_new_password(self):
@@ -152,6 +154,14 @@ class EditUserForm(BaseUserForm):
         ),
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
+    )
+
+    require_content_approval = YesNoSwitch(
+        label=pgettext_lazy("admin user form", "Require content approval"),
+        help_text=pgettext_lazy(
+            "admin user form",
+            "Enable this option to require moderator approval for new threads and posts by this user.",
+        ),
     )
 
     is_avatar_locked = YesNoSwitch(
@@ -279,6 +289,7 @@ class EditUserForm(BaseUserForm):
             "is_misago_root",
             "is_active",
             "is_active_staff_message",
+            "require_content_approval",
             "is_avatar_locked",
             "avatar_lock_user_message",
             "avatar_lock_staff_message",

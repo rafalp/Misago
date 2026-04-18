@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<div class="status-bar status-bar-unapproved">
+  <div class="status-bar-icon">
+    {% include "tabler/shield-half.svg" %}
+  </div>
+  <div class="status-bar-body">
+    <p>
+      {% translate "Thread contains unapproved posts." context "thread unapproved posts status bar" %}
+    </p>
+    <div class="status-bar-actions">
+      <a href="{{ unapproved_post_url }}" class="status-bar-btn">
+        <span>{% translate "Go to first post" context "thread unapproved posts status bar" %}</span>
+        {% include "tabler/arrow-right.svg" %}
+      </a>
+    </div>
+  </div>
+</div>

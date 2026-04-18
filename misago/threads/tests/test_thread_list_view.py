@@ -542,7 +542,7 @@ def test_thread_list_view_displays_solved_thread(
     response = client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-answered")
+    assert_contains(response, "thread-flag-solved")
 
 
 @override_dynamic_settings(index_view="categories")

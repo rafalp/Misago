@@ -26,7 +26,7 @@
   {% endif %}
   {% if thread.has_solution %}
     <li
-      class="thread-flag-answered"
+      class="thread-flag-solved"
       title="{% translate 'Solved' context 'thread flag' %}"
     >
       {% include "tabler/rosette-discount-check-filled.svg" %}
@@ -35,16 +35,16 @@
   {% if thread.is_unapproved %}
     <li
       class="thread-flag-unapproved"
-      title="{% translate 'Requires moderator approval' context 'thread flag' %}"
+      title="{% translate 'Unapproved' context 'thread flag' %}"
     >
-      <span class="material-icon">visibility</span>
+      {% include "tabler/shield-filled.svg" %}
     </li>
   {% elif thread.has_unapproved_posts and for_moderator %}
     <li
       class="thread-flag-unapproved"
-      title="{% translate 'Replies require moderator approval' context 'thread flag' %}"
+      title="{% translate 'Has unapproved replies' context 'thread flag' %}"
     >
-      <span class="material-icon">view_list</span>
+      {% include "tabler/shield-half.svg" %}
     </li>
   {% endif %}
   {% if thread.has_poll %}

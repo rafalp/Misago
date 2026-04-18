@@ -57,7 +57,6 @@ def form_data(category: Category, new_data: dict | None = None) -> dict:
         "children_categories_component": category.children_categories_component,
         "require_threads_approval": category.require_threads_approval,
         "require_replies_approval": category.require_replies_approval,
-        "require_edits_approval": category.require_edits_approval,
         "prune_started_after": str(category.prune_started_after),
         "prune_replied_after": str(category.prune_replied_after),
         "archive_pruned_in": str(category.archive_pruned_in or ""),

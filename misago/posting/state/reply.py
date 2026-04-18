@@ -4,6 +4,10 @@ from django.http import HttpRequest
 from ...edits.create import create_post_edit
 from ...parser.parse import ParsingResult, parse
 from ...threads.models import Post, Thread
+from ..approval import (
+    require_private_thread_reply_approval,
+    require_thread_reply_approval,
+)
 from ..hooks import (
     get_private_thread_reply_state_hook,
     get_thread_reply_state_hook,
@@ -40,6 +44,9 @@ class ReplyState(State):
 
         super().set_post_message(parsing_result)
 
+    def require_approval(self) -> bool:
+        return False
+
     @transaction.atomic()
     def save(self):
         self.save_action(self.request, self)
@@ -54,6 +61,7 @@ class ReplyState(State):
         self.save_user()
 
     def save_post(self):
+        self.post.is_unapproved = not self.post.id and self.require_approval()
         self.post.set_search_document(self.thread, self.parsing_result.text)
 
         post_edits = self.post.edits
@@ -90,16 +98,22 @@ class ReplyState(State):
         self.schedule_post_content_upgrade()
 
     def save_thread(self):
-        if not self.is_merged:
+        if not self.is_merged and not self.post.is_unapproved:
             self.thread.replies = models.F("replies") + 1
-            self.thread.set_last_post(self.post)
+            if not self.post.is_unapproved:
+                self.thread.set_last_post(self.post)
+
+        elif self.post.is_unapproved:
+            self.thread.has_unapproved_posts = True
 
         self.update_object(self.thread)
 
     def save_category(self):
-        if not self.is_merged:
+        if not self.is_merged and not self.post.is_unapproved:
             self.category.posts = models.F("posts") + 1
             self.category.set_last_thread(self.thread)
+        elif self.post.is_unapproved:
+            self.category.unapproved_posts = models.F("unapproved_posts") + 1
 
         self.update_object(self.category)
 
@@ -112,12 +126,18 @@ class ReplyState(State):
 
 
 class ThreadReplyState(ReplyState):
+    def require_approval(self) -> bool:
+        return require_thread_reply_approval(self)
+
     @transaction.atomic()
     def save(self):
         save_thread_reply_state_hook(self.save_action, self.request, self)
 
 
 class PrivateThreadReplyState(ReplyState):
+    def require_approval(self) -> bool:
+        return require_private_thread_reply_approval(self)
+
     @transaction.atomic()
     def save(self):
         save_private_thread_reply_state_hook(self.save_action, self.request, self)
@@ -125,7 +145,7 @@ class PrivateThreadReplyState(ReplyState):
 
 def get_reply_thread_state(
     request: HttpRequest, thread: Thread, post: Post | None = None
-) -> ReplyState:
+) -> ThreadReplyState:
     return get_thread_reply_state_hook(
         _get_reply_thread_state_action, request, thread, post
     )
@@ -133,8 +153,8 @@ def get_reply_thread_state(
 
 def _get_reply_thread_state_action(
     request: HttpRequest, thread: Thread, post: Post | None = None
-) -> ReplyState:
-    return ReplyState(request, thread, post)
+) -> ThreadReplyState:
+    return ThreadReplyState(request, thread, post)
 
 
 def get_reply_private_thread_state(

@@ -997,3 +997,123 @@ def test_thread_detail_view_shows_error_404_if_private_thread_is_accessed(
         ),
     )
     assert_not_contains(response, user_private_thread.title, status_code=404)
+
+
+def test_thread_detail_view_shows_unapproved_deleted_user_thread_to_moderator(
+    moderator_client, thread
+):
+    thread.is_unapproved = True
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "thread requires moderator approval")
+
+
+def test_thread_detail_view_shows_unapproved_user_thread_to_starter(
+    user_client, user_thread
+):
+    user_thread.is_unapproved = True
+    user_thread.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "thread requires moderator approval")
+
+
+def test_thread_detail_view_shows_unapproved_posts_status_bar_to_moderator(
+    moderator_client, thread
+):
+    thread.has_unapproved_posts = True
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "contains unapproved posts")
+    assert_contains(
+        response,
+        reverse(
+            "misago:thread-post-unapproved",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_unapproved_posts_status_bar_to_user(
+    user_client, thread
+):
+    thread.has_unapproved_posts = True
+    thread.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_not_contains(response, "contains unapproved posts")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-unapproved",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )
+
+
+def test_thread_detail_view_doesnt_show_unapproved_posts_status_bar_to_deleted_user(
+    client, thread
+):
+    thread.has_unapproved_posts = True
+    thread.save()
+
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_not_contains(response, "contains unapproved posts")
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:thread-post-unapproved",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        ),
+    )

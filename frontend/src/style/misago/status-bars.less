@@ -1,0 +1,169 @@
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  margin: @line-height-computed 0;
+  padding: 4px;
+
+  background-color: var(--status-bar-bg, @gray-100);
+  border-radius: @border-radius-base;
+
+  &-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    width: 28px;
+    height: 28px;
+
+    line-height: 0;
+
+    color: var(--status-bar-icon, @gray-400);
+
+    svg {
+      display: block;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  p {
+    margin: 0;
+    max-width: 100%;
+
+    overflow-wrap: break-word;
+    orphans: 3;
+
+    color: var(--status-bar-text, @gray-700);
+
+    a,
+    a:link,
+    a:visited {
+      color: var(--status-bar-link, @gray-700);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    a:focus,
+    a:hover,
+    a:active {
+      color: var(--status-bar-link, @gray-700);
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
+
+  &-body {
+    display: flex;
+    flex-direction: column;
+    gap: ceil(@grid-gutter-width / 4);
+
+    min-height: 28px;
+    width: 100%;
+    min-width: 0;
+
+    @media screen and (min-width: 400px) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: ceil(@grid-gutter-width / 2);
+    }
+  }
+
+  &-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  &-btn {
+    display: flex;
+    align-items: center;
+
+    min-height: 28px;
+
+    padding: 0 6px;
+
+    border: 1px solid
+      color-mix(
+        in srgb,
+        var(--status-bar-btn-color, @gray-300),
+        transparent 50%
+      );
+    border-radius: @border-radius-small;
+
+    white-space: nowrap;
+
+    &,
+    a&:link,
+    a&:visited {
+      background-color: transparent;
+      color: var(--status-bar-btn-text, @gray-700);
+    }
+
+    a&,
+    button& {
+      &:hover,
+      &:focus {
+        color: var(--status-bar-btn-text, @gray-700);
+        background-color: color-mix(
+          in srgb,
+          var(--status-bar-btn-color, @gray-300),
+          transparent 70%
+        );
+        text-decoration: none;
+      }
+
+      &:active {
+        color: var(--status-bar-btn-text, @gray-700);
+        background-color: color-mix(
+          in srgb,
+          var(--status-bar-btn-color, @gray-300),
+          transparent 40%
+        );
+        text-decoration: none;
+      }
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+
+      opacity: 0.8;
+    }
+
+    svg:first-child {
+      margin-right: 4px;
+    }
+
+    svg:last-child {
+      margin-left: 4px;
+    }
+  }
+}
+
+.status-bar-solution,
+.status-bar-solved {
+  --status-bar-bg: @green-100;
+  --status-bar-icon: @green-600;
+  --status-bar-btn-color: @green-300;
+}
+
+.status-bar-unapproved {
+  --status-bar-bg: @orange-100;
+  --status-bar-icon: @orange-600;
+  --status-bar-btn-color: @orange-300;
+}
+
+.status-bars {
+  margin-bottom: @line-height-computed;
+
+  .status-bar:first-child {
+    margin-top: 0;
+  }
+
+  .status-bar:last-child {
+    margin-top: 0;
+  }
+}
