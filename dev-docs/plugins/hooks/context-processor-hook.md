@@ -1,6 +1,6 @@
 # `context_processor_hook`
 
-This hook allows plugin authors to inject custom data into the template context without creating a custom context processor.
+This hook allows plugin authors to inject custom data into the template context without having to create a custom context processor.
 
 
 ## Location
@@ -33,14 +33,30 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `state: ThreadStartState`
+#### `request: HttpRequest`
 
-A `ThreadStartState` instance containing data used to create a new thread.
+The request object.
 
 
 ### Return value
 
-`True` if the new thread should require moderator approval, or `False` otherwise.
+A `dict` with context data that matches the given type:
+
+```python
+from typing import TypedDict
+
+class TemplateComponent(TypedDict, total=False):
+    template_name: str
+
+class ContextProcessorReturnValue(TypedDict, total=False):
+    before_head_close: list[TemplateComponent]
+    after_body_open: list[TemplateComponent]
+    before_body_close: list[TemplateComponent]
+    above_navbar: list[TemplateComponent]
+    below_navbar: list[TemplateComponent]
+    above_footer: list[TemplateComponent]
+    below_footer: list[TemplateComponent]
+```
 
 
 ## Action
@@ -50,19 +66,35 @@ def context_processor_action(request: HttpRequest) -> dict:
     ...
 ```
 
-A standard function that Misago uses to check if a new thread should require moderator approval.
+A standard function that Misago uses to create an empty context data dict for plugins to extend.
 
 
 ### Arguments
 
-#### `state: ThreadStartState`
+#### `request: HttpRequest`
 
-A `ThreadStartState` instance containing data used to create a new thread.
+The request object.
 
 
 ### Return value
 
-`dict` with context data.
+A `dict` with context data that matches the given type:
+
+```python
+from typing import TypedDict
+
+class TemplateComponent(TypedDict, total=False):
+    template_name: str
+
+class ContextProcessorReturnValue(TypedDict, total=False):
+    before_head_close: list[TemplateComponent]
+    after_body_open: list[TemplateComponent]
+    before_body_close: list[TemplateComponent]
+    above_navbar: list[TemplateComponent]
+    below_navbar: list[TemplateComponent]
+    above_footer: list[TemplateComponent]
+    below_footer: list[TemplateComponent]
+```
 
 
 ## Example: inject extra data into a template context
@@ -84,7 +116,7 @@ def plugin_context_data(
 ```
 
 
-## Example: include template components in the base template
+## Example: include template component in the base template
 
 ```python
 from django.http import HttpRequest
@@ -98,8 +130,6 @@ def plugin_context_data(
     context_data = action(request)
 
     if not request.session.get("cookie_agreement"):
-        # Only `template_name` key is required,
-        # other keys will be merged with included template's context
         context_data["below_footer"].append(
             {
                 "template_name": "cookie_agreement.html",
