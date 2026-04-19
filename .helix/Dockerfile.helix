@@ -1,0 +1,106 @@
+# syntax=docker/dockerfile:1
+# BuildKit frontend: required so multi-line RUN + shell heredoc is one instruction (otherwise
+# lines like "from pathlib import ..." are misparsed as Dockerfile FROM).
+FROM python:3.12-slim
+
+WORKDIR /app
+
+ENV PIP_RESOLVER_BACKTRACKING_LIMIT=100
+
+# PostgreSQL server: Misago tests require Postgres (devproject/settings.py DATABASES).
+# Helix run-tests-eval.sh must not invoke Docker; DB runs in the same container.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    git \
+    libffi-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libpq-dev \
+    libssl-dev \
+    libyaml-dev \
+    zlib1g-dev \
+    postgresql \
+    && rm -rf /var/lib/apt/lists/*
+
+# Entrypoint starts Postgres, then runs CMD (pytest or ./.helix/run-tests-eval.sh).
+# Written here so .helix/ stays limited to the three required Helix files.
+RUN python3 << 'PY'
+import pathlib
+pathlib.Path("/usr/local/bin/helix-entrypoint.sh").write_text(
+    r'''#!/bin/bash
+set -euo pipefail
+
+PG_BIN=""
+for d in /usr/lib/postgresql/*/bin; do
+  [[ -x "$d/initdb" ]] && PG_BIN="$d" && break
+done
+if [[ -z "$PG_BIN" || ! -x "$PG_BIN/initdb" ]]; then
+  echo "helix-entrypoint: PostgreSQL binaries not found under /usr/lib/postgresql" >&2
+  exit 1
+fi
+
+PGDATA="${PGDATA:-/var/lib/postgresql/helix-data}"
+export PGDATA
+mkdir -p "$PGDATA"
+chown -R postgres:postgres "$PGDATA"
+
+if [[ ! -f "$PGDATA/PG_VERSION" ]]; then
+  runuser -u postgres -- "$PG_BIN/initdb" -D "$PGDATA" --encoding=UTF8 --locale=C -A trust
+  echo "listen_addresses = '127.0.0.1'" >> "$PGDATA/postgresql.conf"
+  echo "host all all 127.0.0.1/32 trust" >> "$PGDATA/pg_hba.conf"
+fi
+
+# Idempotent: run-tests-eval may invoke pytest only after Docker ENTRYPOINT already started Postgres.
+runuser -u postgres -- "$PG_BIN/pg_ctl" -D "$PGDATA" -w -l /tmp/postgres.log start || true
+
+ready=0
+for _ in $(seq 1 120); do
+  if runuser -u postgres -- "$PG_BIN/pg_isready" -h 127.0.0.1 -p 5432; then
+    ready=1
+    break
+  fi
+  sleep 0.25
+done
+if [[ "$ready" -ne 1 ]]; then
+  echo "helix-entrypoint: PostgreSQL did not become ready in time" >&2
+  exit 1
+fi
+
+runuser -u postgres -- "$PG_BIN/psql" -d postgres -v ON_ERROR_STOP=1 -tc \
+  "SELECT 1 FROM pg_roles WHERE rolname='misago'" | grep -q 1 \
+  || runuser -u postgres -- "$PG_BIN/psql" -d postgres -v ON_ERROR_STOP=1 -c \
+     "CREATE USER misago WITH PASSWORD 'misago' SUPERUSER CREATEDB;"
+
+runuser -u postgres -- "$PG_BIN/psql" -d postgres -tc \
+  "SELECT 1 FROM pg_database WHERE datname='misago'" | grep -q 1 \
+  || runuser -u postgres -- "$PG_BIN/psql" -d postgres -c "CREATE DATABASE misago OWNER misago;"
+
+export POSTGRES_HOST=127.0.0.1
+export POSTGRES_DB=misago
+export POSTGRES_USER=misago
+export POSTGRES_PASSWORD=misago
+export POSTGRES_TEST_DB=misago_test
+
+# devproject/settings.py: PLUGINS_DIRECTORY = os.environ.get("MISAGO_PLUGINS")
+# Without this, discover_plugins returns [] and plugin tests fail (empty INSTALLED_PLUGINS).
+export MISAGO_PLUGINS=/app/plugins
+
+exec "$@"
+''',
+    encoding="utf-8",
+)
+import os
+os.chmod("/usr/local/bin/helix-entrypoint.sh", 0o755)
+PY
+
+COPY . .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+# helix: pytest may be missing when dev extras are not installed
+RUN python3 -m pip install --no-cache-dir pytest
+
+ENTRYPOINT ["/usr/local/bin/helix-entrypoint.sh"]
+# pytest.ini sets testpaths = misago (no repo-root tests/ directory)
+CMD ["pytest"]
