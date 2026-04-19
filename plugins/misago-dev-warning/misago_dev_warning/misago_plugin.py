@@ -3,7 +3,10 @@ from misago import MisagoPlugin
 
 manifest = MisagoPlugin(
     name="Dev Warning",
-    description="Displays a warning message below the site navbar for developers.",
+    description=(
+        "Displays a warning message below the site navbar about using code "
+        "from the main repository for live sites or evaluation purposes."
+    ),
     license="GNU GPL v2",
     icon="fa fa-exclamation-triangle",
     color="#f97316",
