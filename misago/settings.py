@@ -127,6 +127,9 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     # Note: keep frontend_context processor last for previous processors
     # to be able to expose data UI app via request.frontend_context
     "misago.core.context_processors.frontend_context",
+    # Keep plugins context processor last to enable
+    # plugins override other context processors
+    "misago.context_processors.plugins.plugins",
 ]
 
 MISAGO_MIDDLEWARE = [

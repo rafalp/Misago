@@ -94,6 +94,7 @@ class ErrorPageViewsTests(TestCase):
 
 def create_request(url):
     request = RequestFactory().get(url)
+    request.session = {}
     request.cache_versions = get_cache_versions()
     request.settings = DynamicSettings(request.cache_versions)
     request.user = AnonymousUser()
