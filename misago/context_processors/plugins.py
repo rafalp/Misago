@@ -1,13 +1,13 @@
 from django.http import HttpRequest
 
-from .hooks import get_context_data_hook
+from .hooks import context_processor_hook
 
 
 def plugins(request: HttpRequest) -> dict:
-    return get_context_data_hook(_get_context_data_action, request)
+    return context_processor_hook(_context_processor_action, request)
 
 
-def _get_context_data_action(request: HttpRequest) -> dict:
+def _context_processor_action(request: HttpRequest) -> dict:
     context_data = {
         "before_head_close": [],
         "after_body_open": [],

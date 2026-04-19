@@ -5,7 +5,7 @@ from django.http import HttpRequest
 from ...plugins.hooks import FilterHook
 
 
-class GetContextDataHookAction(Protocol):
+class ContextProcessorHookAction(Protocol):
     """
     A standard function that Misago uses to check if
     a new thread should require moderator approval.
@@ -27,13 +27,13 @@ class GetContextDataHookAction(Protocol):
     ) -> dict: ...
 
 
-class GetContextDataHookFilter(Protocol):
+class ContextProcessorHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetContextDataHookAction`
+    ## `action: ContextProcessorHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -51,44 +51,58 @@ class GetContextDataHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetContextDataHookAction,
+        action: ContextProcessorHookAction,
         request: HttpRequest,
     ) -> dict: ...
 
 
-class GetContextDataHook(
-    FilterHook[GetContextDataHookAction, GetContextDataHookFilter]
+class ContextProcessorHook(
+    FilterHook[ContextProcessorHookAction, ContextProcessorHookFilter]
 ):
     """
     This hook allows plugin authors to inject custom data into the template
     context without creating a custom context processor.
 
-    # Example
-
-    The code below implements a custom filter function that flags a new thread for
-    moderator approval if it contains links and the user recently joined.
+    # Example: inject extra data into a template context
 
     ```python
     from django.http import HttpRequest
-    from misago.context_processors.hooks import get_context_data_hook
+    from misago.context_processors.hooks import context_processor_hook
 
 
-    @get_context_data_hook.append_filter
+    @context_processor_hook.append_filter
     def plugin_context_data(
         action, request: HttpRequest
     ) -> dict:
         context_data = action(request)
 
-        # Set new keys on the context data
-        context_data["extra_key"] = "Lorem ipsum!"
+        context_data["my_plugin_data"] = request.my_plugin_data
 
-        # Or include a template with extra context in a predefined slot:
-        context_data["before_body_close"].append(
-            {
-                "template_name": "my_plugin/cookie_agreement.html",
-                "api_key": "d8s9a7d98sa79dsa",
-            }
-        )
+        return context_data
+    ```
+
+    # Example: include template components in the base template
+
+    ```python
+    from django.http import HttpRequest
+    from misago.context_processors.hooks import context_processor_hook
+
+
+    @context_processor_hook.append_filter
+    def plugin_context_data(
+        action, request: HttpRequest
+    ) -> dict:
+        context_data = action(request)
+
+        if not request.session.get("cookie_agreement"):
+            # Only `template_name` key is required,
+            # other keys will be merged with included template's context
+            context_data["below_footer"].append(
+                {
+                    "template_name": "cookie_agreement.html",
+                    "agreement_message:": request.settings.cookie_agreement,
+                }
+            )
 
         return context_data
     ```
@@ -98,10 +112,10 @@ class GetContextDataHook(
 
     def __call__(
         self,
-        action: GetContextDataHookAction,
+        action: ContextProcessorHookAction,
         request: HttpRequest,
     ) -> dict:
         return super().__call__(action, request)
 
 
-get_context_data_hook = GetContextDataHook()
+context_processor_hook = ContextProcessorHook()

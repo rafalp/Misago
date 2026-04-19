@@ -34,6 +34,13 @@ Like [htmx](https://htmx.org/reference/), Misago includes a set of custom HTML a
 [HTML attributes reference](./html-attributes.md)
 
 
+## Template components
+
+The Template Components feature allows programmatic control over including additional HTML in Misago templates.
+
+[Template components](./template-components.md)
+
+
 ## Plugins
 
 Misago implements a plugin system that extends [Django's existing application mechanism](https://docs.djangoproject.com/en/4.2/ref/applications/), allowing developers to customize and extend standard features.

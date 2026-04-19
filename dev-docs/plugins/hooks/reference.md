@@ -51,7 +51,7 @@ Hooks instances are importable from the following Python modules:
 
 `misago.context_processors.hooks` defines the following hooks:
 
-- [`get_context_data_hook`](./get-context-data-hook.md)
+- [`context_processor_hook`](./context-processor-hook.md)
 
 
 ## `misago.edits.hooks`

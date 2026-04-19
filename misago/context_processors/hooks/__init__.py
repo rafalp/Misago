@@ -1,3 +1,3 @@
-from .get_context_data import get_context_data_hook
+from .context_processor import context_processor_hook
 
-__all__ = ["get_context_data_hook"]
+__all__ = ["context_processor_hook"]

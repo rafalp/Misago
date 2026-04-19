@@ -105,7 +105,6 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "misago.context_processors.metatags.default_metatags",
     "misago.context_processors.permissions.user_permissions",
     "misago.context_processors.posting.syntax_highlighting",
-    "misago.context_processors.plugins.plugins",
     "misago.acl.context_processors.user_acl",
     "misago.conf.context_processors.conf",
     "misago.conf.context_processors.og_image",
@@ -128,6 +127,9 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     # Note: keep frontend_context processor last for previous processors
     # to be able to expose data UI app via request.frontend_context
     "misago.core.context_processors.frontend_context",
+    # Keep plugins context processor last to enable
+    # plugins override other context processors
+    "misago.context_processors.plugins.plugins",
 ]
 
 MISAGO_MIDDLEWARE = [
