@@ -8,6 +8,7 @@ from django.utils.translation import pgettext
 from ..attachments.delete import delete_users_attachments
 from ..attachments.models import Attachment
 from ..categories.models import Category
+from ..categories.synchronize import synchronize_category
 from ..edits.models import PostEdit
 from ..likes.models import Like
 from ..likes.synchronize import synchronize_post_likes
@@ -135,8 +136,7 @@ def delete_user_threads(sender, **kwargs):
 
     if recount_categories:
         for category in Category.objects.filter(id__in=recount_categories):
-            category.synchronize()
-            category.save()
+            synchronize_category(category)
 
 
 @receiver(archive_user_data)

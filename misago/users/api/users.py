@@ -12,6 +12,7 @@ from rest_framework.response import Response
 
 from ...acl.objectacl import add_acl_to_obj
 from ...categories.models import Category
+from ...categories.synchronize import synchronize_category
 from ...core.rest_permissions import IsAuthenticatedOrReadOnly
 from ...core.shortcuts import get_int_or_404
 from ...threads.moderation import hide_post, hide_thread
@@ -228,8 +229,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
                     categories = Category.objects.filter(id__in=categories_to_sync)
                     for category in categories.iterator():
-                        category.synchronize()
-                        category.save()
+                        synchronize_category(category)
 
                 profile.delete(anonymous_username=request.settings.anonymous_username)
                 record_user_deleted_by_staff()

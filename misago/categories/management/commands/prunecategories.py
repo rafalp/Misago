@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from ....threads.move import move_threads
 from ...models import Category
+from ...synchronize import synchronize_category
 
 
 class Command(BaseCommand):
@@ -58,8 +59,7 @@ class Command(BaseCommand):
                     synchronize_categories.append(archive)
 
         for category in synchronize_categories:
-            category.synchronize()
-            category.save()
+            synchronize_category(category)
 
         self.stdout.write(f"\n\nPruned categories: {len(pruned_categories)}")
         if pruned_categories:

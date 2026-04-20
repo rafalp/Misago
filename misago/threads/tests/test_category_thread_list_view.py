@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from ...categories.enums import CategoryChildrenComponent
 from ...categories.models import Category
+from ...categories.synchronize import synchronize_category
 from ...conf.test import override_dynamic_settings
 from ...pagination.cursor import EmptyPageError
 from ...permissions.enums import CategoryPermission
@@ -1502,8 +1503,7 @@ def test_category_thread_list_view_marks_unread_category_without_unread_threads_
             read_time=thread.last_posted_at,
         )
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     response = user_client.get(default_category.get_absolute_url())
     assert response.status_code == 200
@@ -1542,8 +1542,7 @@ def test_category_thread_list_view_marks_unread_category_with_read_entry_without
         read_time=read_thread.last_posted_at,
     )
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     response = user_client.get(default_category.get_absolute_url())
     assert response.status_code == 200
@@ -1578,8 +1577,7 @@ def test_category_thread_list_view_doesnt_mark_unread_category_with_unread_threa
         started_at=-600,
     )
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     response = user_client.get(default_category.get_absolute_url())
     assert response.status_code == 200

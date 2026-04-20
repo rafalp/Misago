@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.urls import reverse
 
+from ...categories.synchronize import synchronize_category
 from ...conf.test import override_dynamic_settings
 from ...notifications.users import notify_user
 from ...readtracker.models import ReadCategory, ReadThread
@@ -77,8 +78,7 @@ def test_thread_detail_view_marks_unread_thread_posts_on_page_as_read_for_user(
         posted_at = i * 100 * -1
         posts.append(thread_reply_factory(thread, posted_at=posted_at))
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),

@@ -103,25 +103,6 @@ class Category(MPTTModel, PluginDataModel):
         clear_acl_cache()
         return super().delete(*args, **kwargs)
 
-    def synchronize(self):
-        threads_queryset = self.thread_set.filter(is_hidden=False, is_unapproved=False)
-        self.threads = threads_queryset.count()
-
-        if self.threads:
-            replies_sum = threads_queryset.aggregate(models.Sum("replies"))
-            self.posts = self.threads + replies_sum["replies__sum"]
-        else:
-            self.posts = 0
-
-        if self.threads:
-            last_thread_qs = threads_queryset.filter(
-                is_hidden=False, is_unapproved=False
-            )
-            last_thread = last_thread_qs.order_by("-last_posted_at")[:1][0]
-            self.set_last_thread(last_thread)
-        else:
-            self.empty_last_thread()
-
     def get_absolute_url(self):
         return self.thread_type.get_category_absolute_url(self)
 

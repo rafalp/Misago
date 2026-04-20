@@ -8,12 +8,14 @@ from django.utils import timezone
 from misago.cache.enums import CacheName
 from misago.cache.versions import get_cache_versions, invalidate_cache
 from misago.categories.models import Category
+from misago.categories.synchronize import synchronize_category
 from misago.conf.dynamicsettings import DynamicSettings
 from misago.conf.models import Setting
 from misago.permissions.enums import CategoryPermission
 from misago.permissions.models import CategoryGroupPermission
 from misago.threads.checksums import update_post_checksum
 from misago.threads.models import Post, Thread
+from misago.threads.synchronize import synchronize_thread
 from misago.users.enums import DefaultGroupId
 from misago.users.models import Ban, Group, Rank
 from misago.users.setupnewuser import setup_new_user
@@ -518,9 +520,6 @@ class Command(BaseCommand):
         moderator_post.update_search_vector()
         moderator_post.save()
 
-        thread_with_states.synchronize()
-        thread_with_states.save()
-
         thread_length = settings.posts_per_page + settings.posts_per_page_orphans
         timestamp = timezone.now() - timedelta(minutes=50)
 
@@ -558,9 +557,6 @@ class Command(BaseCommand):
             post.update_search_vector()
             post.save()
 
-        thread_one_page.synchronize()
-        thread_one_page.save()
-
         thread_length = settings.posts_per_page + settings.posts_per_page_orphans + 1
 
         thread_two_pages = Thread.objects.create(
@@ -596,9 +592,6 @@ class Command(BaseCommand):
             update_post_checksum(post)
             post.update_search_vector()
             post.save()
-
-        thread_two_pages.synchronize()
-        thread_two_pages.save()
 
         thread_length = (
             (settings.posts_per_page * 2) + settings.posts_per_page_orphans + 1
@@ -638,9 +631,6 @@ class Command(BaseCommand):
             post.update_search_vector()
             post.save()
 
-        thread_three_pages.synchronize()
-        thread_three_pages.save()
-
         timestamp = timezone.now()
         posts_to_update = Post.objects.filter(id__gt=yesterday_post.id).order_by("-id")
         for post in posts_to_update.iterator():
@@ -654,10 +644,6 @@ class Command(BaseCommand):
             post.save()
 
             timestamp -= timedelta(minutes=randint(1, 10))
-
-        for thread in Thread.objects.iterator():
-            thread.synchronize()
-            thread.save()
 
         timestamp = timezone.now()
 
@@ -810,8 +796,11 @@ class Command(BaseCommand):
         readme_post.update_search_vector()
         readme_post.save()
 
-        first_category.synchronize()
-        first_category.save()
+        for thread in Thread.objects.iterator():
+            synchronize_thread(thread)
+
+        for category in Category.objects.iterator():
+            synchronize_category(category)
 
         self.stdout.write("Created demo threads.")
 
