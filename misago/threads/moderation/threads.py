@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.utils import timezone
 
+from ...categories.synchronize import synchronize_category
 from ...notifications.tasks import delete_duplicate_watched_threads
 
 __all__ = [
@@ -139,8 +140,7 @@ def unhide_thread(request, thread):
     thread.save(update_fields=["is_hidden"])
 
     if thread.pk == thread.category.last_thread_id:
-        thread.category.synchronize()
-        thread.category.save()
+        synchronize_category(thread.category)
 
     return True
 
@@ -168,8 +168,7 @@ def hide_thread(request, thread):
     thread.save(update_fields=["is_hidden"])
 
     if thread.pk == thread.category.last_thread_id:
-        thread.category.synchronize()
-        thread.category.save()
+        synchronize_category(thread.category)
 
     return True
 
@@ -178,7 +177,6 @@ def hide_thread(request, thread):
 def delete_thread(request, thread):
     thread.delete()
 
-    thread.category.synchronize()
-    thread.category.save()
+    synchronize_category(thread.category)
 
     return True

@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from django.urls import reverse
 
+from ...categories.synchronize import synchronize_category
 from ...pagination.cursor import EmptyPageError
 from ...permissions.models import Moderator
 from ...readtracker.models import ReadCategory, ReadThread
@@ -373,8 +374,7 @@ def test_private_thread_list_view_without_unread_threads_marks_category_as_read(
             read_time=thread.last_posted_at,
         )
 
-    private_threads_category.synchronize()
-    private_threads_category.save()
+    synchronize_category(private_threads_category)
 
     create_user_private_thread_memberships(user)
 
@@ -412,8 +412,7 @@ def test_private_thread_list_view_without_unread_threads_clears_user_unread_thre
             read_time=thread.last_posted_at,
         )
 
-    private_threads_category.synchronize()
-    private_threads_category.save()
+    synchronize_category(private_threads_category)
 
     create_user_private_thread_memberships(user)
 
@@ -453,8 +452,7 @@ def test_private_thread_list_view_with_read_entry_without_unread_threads_marks_c
         read_time=read_thread.last_posted_at,
     )
 
-    private_threads_category.synchronize()
-    private_threads_category.save()
+    synchronize_category(private_threads_category)
 
     create_user_private_thread_memberships(user)
 
@@ -493,8 +491,7 @@ def test_private_thread_list_view_with_unread_thread_doesnt_mark_category_as_rea
         started_at=-600,
     )
 
-    private_threads_category.synchronize()
-    private_threads_category.save()
+    synchronize_category(private_threads_category)
 
     create_user_private_thread_memberships(user)
 

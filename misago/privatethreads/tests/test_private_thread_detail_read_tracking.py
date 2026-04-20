@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.urls import reverse
 
+from ...categories.synchronize import synchronize_category
 from ...conf.test import override_dynamic_settings
 from ...notifications.users import notify_user
 from ...readtracker.models import ReadCategory, ReadThread
@@ -104,8 +105,7 @@ def test_private_thread_detail_view_marks_unread_thread_posts_on_page_as_read_fo
         posted_at = (8000 - (i * 1000)) * -1
         posts.append(thread_reply_factory(user_private_thread, posted_at=posted_at))
 
-    private_threads_category.synchronize()
-    private_threads_category.save()
+    synchronize_category(private_threads_category)
 
     response = user_client.get(
         reverse(
@@ -252,8 +252,7 @@ def test_private_thread_detail_view_doesnt_update_user_unread_threads_count_on_t
         posted_at = (8000 - (i * 1000)) * -1
         posts.append(thread_reply_factory(user_private_thread, posted_at=posted_at))
 
-    private_threads_category.synchronize()
-    private_threads_category.save()
+    synchronize_category(private_threads_category)
 
     response = user_client.get(
         reverse(

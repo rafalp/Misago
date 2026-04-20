@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 
 from ....core.management.progressbar import show_progress
 from ...models import Category
+from ...synchronize import synchronize_category
 
 
 class Command(BaseCommand):
@@ -22,8 +23,7 @@ class Command(BaseCommand):
         synchronized_count = 0
         show_progress(self, synchronized_count, categories_to_sync)
         for category in Category.objects.iterator():
-            category.synchronize()
-            category.save()
+            synchronize_category(category)
 
             synchronized_count += 1
             show_progress(self, synchronized_count, categories_to_sync)

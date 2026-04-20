@@ -12,6 +12,7 @@ from .attachments.models import Attachment
 from .attachments.filetypes import filetypes
 from .cache.enums import CacheName
 from .categories.models import Category
+from .categories.synchronize import synchronize_category
 from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
@@ -320,8 +321,7 @@ def default_category(db):
 def thread(thread_factory, default_category):
     thread = thread_factory(default_category)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -330,8 +330,7 @@ def thread(thread_factory, default_category):
 def other_thread(thread_factory, default_category):
     thread = thread_factory(default_category)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -340,8 +339,7 @@ def other_thread(thread_factory, default_category):
 def hidden_thread(thread_factory, default_category):
     thread = thread_factory(default_category, is_hidden=True)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -350,8 +348,7 @@ def hidden_thread(thread_factory, default_category):
 def unapproved_thread(thread_factory, default_category):
     thread = thread_factory(default_category, is_unapproved=True)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -369,8 +366,7 @@ def reply(thread_reply_factory, thread):
         original="I am reply",
     )
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -384,8 +380,7 @@ def hidden_reply(thread_reply_factory, thread):
         is_hidden=True,
     )
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -399,8 +394,7 @@ def unapproved_reply(thread_reply_factory, thread):
         is_unapproved=True,
     )
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -413,8 +407,7 @@ def user_reply(thread_reply_factory, thread, user):
         original="I am user reply",
     )
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -428,8 +421,7 @@ def user_hidden_reply(thread_reply_factory, thread, user):
         is_hidden=True,
     )
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -443,8 +435,7 @@ def user_unapproved_reply(thread_reply_factory, thread, user):
         is_unapproved=True,
     )
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -457,8 +448,7 @@ def other_user_reply(thread_reply_factory, thread, other_user):
         original="I am other user reply",
     )
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -472,8 +462,7 @@ def other_user_hidden_reply(thread_reply_factory, thread, other_user):
         is_hidden=True,
     )
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -487,8 +476,7 @@ def other_user_unapproved_reply(thread_reply_factory, thread, other_user):
         is_unapproved=True,
     )
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -497,8 +485,7 @@ def other_user_unapproved_reply(thread_reply_factory, thread, other_user):
 def user_thread(thread_factory, default_category, user):
     thread = thread_factory(default_category, starter=user)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -507,8 +494,7 @@ def user_thread(thread_factory, default_category, user):
 def user_hidden_thread(thread_factory, default_category, user):
     thread = thread_factory(default_category, starter=user, is_hidden=True)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -517,8 +503,7 @@ def user_hidden_thread(thread_factory, default_category, user):
 def user_unapproved_thread(thread_factory, default_category, user):
     thread = thread_factory(default_category, starter=user, is_unapproved=True)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -527,8 +512,7 @@ def user_unapproved_thread(thread_factory, default_category, user):
 def other_user_thread(thread_factory, default_category, other_user):
     thread = thread_factory(default_category, starter=other_user)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -537,8 +521,7 @@ def other_user_thread(thread_factory, default_category, other_user):
 def other_user_hidden_thread(thread_factory, default_category, other_user):
     thread = thread_factory(default_category, starter=other_user, is_hidden=True)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -547,8 +530,7 @@ def other_user_hidden_thread(thread_factory, default_category, other_user):
 def other_user_unapproved_thread(thread_factory, default_category, other_user):
     thread = thread_factory(default_category, starter=other_user, is_unapproved=True)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -557,8 +539,7 @@ def other_user_unapproved_thread(thread_factory, default_category, other_user):
 def old_thread(thread_factory, default_category):
     thread = thread_factory(default_category, started_at=-3600)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -567,8 +548,7 @@ def old_thread(thread_factory, default_category):
 def old_user_thread(thread_factory, default_category, user):
     thread = thread_factory(default_category, started_at=-3600, starter=user)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -577,8 +557,7 @@ def old_user_thread(thread_factory, default_category, user):
 def old_other_user_thread(thread_factory, default_category, other_user):
     thread = thread_factory(default_category, started_at=-3600, starter=other_user)
 
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     return thread
 
@@ -587,8 +566,7 @@ def old_other_user_thread(thread_factory, default_category, other_user):
 def old_thread_reply(thread_reply_factory, old_thread):
     reply = thread_reply_factory(old_thread)
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -597,8 +575,7 @@ def old_thread_reply(thread_reply_factory, old_thread):
 def old_thread_user_reply(thread_reply_factory, old_thread, user):
     reply = thread_reply_factory(old_thread, poster=user)
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -607,8 +584,7 @@ def old_thread_user_reply(thread_reply_factory, old_thread, user):
 def old_thread_other_user_reply(thread_reply_factory, old_thread, other_user):
     reply = thread_reply_factory(old_thread, poster=other_user)
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -617,8 +593,7 @@ def old_thread_other_user_reply(thread_reply_factory, old_thread, other_user):
 def old_user_thread_reply(thread_reply_factory, old_user_thread):
     reply = thread_reply_factory(old_user_thread)
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -627,8 +602,7 @@ def old_user_thread_reply(thread_reply_factory, old_user_thread):
 def old_user_thread_user_reply(thread_reply_factory, old_user_thread, user):
     reply = thread_reply_factory(old_user_thread, poster=user)
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -637,8 +611,7 @@ def old_user_thread_user_reply(thread_reply_factory, old_user_thread, user):
 def old_user_thread_other_user_reply(thread_reply_factory, old_user_thread, other_user):
     reply = thread_reply_factory(old_user_thread, poster=other_user)
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -647,8 +620,7 @@ def old_user_thread_other_user_reply(thread_reply_factory, old_user_thread, othe
 def old_other_user_thread_reply(thread_reply_factory, old_other_user_thread):
     reply = thread_reply_factory(old_other_user_thread)
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -657,8 +629,7 @@ def old_other_user_thread_reply(thread_reply_factory, old_other_user_thread):
 def old_other_user_thread_user_reply(thread_reply_factory, old_other_user_thread, user):
     reply = thread_reply_factory(old_other_user_thread, poster=user)
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -669,8 +640,7 @@ def old_other_user_thread_other_user_reply(
 ):
     reply = thread_reply_factory(old_other_user_thread, poster=other_user)
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -679,8 +649,7 @@ def old_other_user_thread_other_user_reply(
 def private_thread(thread_factory, private_threads_category):
     thread = thread_factory(private_threads_category)
 
-    private_threads_category.synchronize()
-    private_threads_category.save()
+    synchronize_category(private_threads_category)
 
     return thread
 
@@ -694,8 +663,7 @@ def private_thread_post(private_thread):
 def private_thread_reply(thread_reply_factory, private_thread):
     reply = thread_reply_factory(private_thread, poster="Ghost")
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -704,8 +672,7 @@ def private_thread_reply(thread_reply_factory, private_thread):
 def private_thread_user_reply(thread_reply_factory, private_thread, user):
     reply = thread_reply_factory(private_thread, poster=user)
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 
@@ -724,8 +691,7 @@ def user_private_thread(
     PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=False)
     PrivateThreadMember.objects.create(thread=thread, user=moderator, is_owner=False)
 
-    private_threads_category.synchronize()
-    private_threads_category.save()
+    synchronize_category(private_threads_category)
 
     return thread
 
@@ -744,8 +710,7 @@ def other_user_private_thread(
     PrivateThreadMember.objects.create(thread=thread, user=user, is_owner=False)
     PrivateThreadMember.objects.create(thread=thread, user=moderator, is_owner=False)
 
-    private_threads_category.synchronize()
-    private_threads_category.save()
+    synchronize_category(private_threads_category)
 
     return thread
 
@@ -754,8 +719,7 @@ def other_user_private_thread(
 def old_private_thread(thread_factory, private_threads_category):
     thread = thread_factory(private_threads_category, started_at=-3600)
 
-    private_threads_category.synchronize()
-    private_threads_category.save()
+    synchronize_category(private_threads_category)
 
     return thread
 
@@ -764,8 +728,7 @@ def old_private_thread(thread_factory, private_threads_category):
 def old_private_thread_user_reply(thread_reply_factory, old_private_thread, user):
     reply = thread_reply_factory(old_private_thread, poster=user)
 
-    reply.category.synchronize()
-    reply.category.save()
+    synchronize_category(reply.category)
 
     return reply
 

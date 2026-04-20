@@ -10,6 +10,7 @@ from ...testutils import (
     remove_category_group_permissions,
 )
 from ..models import Category
+from ..synchronize import synchronize_category
 
 
 @override_dynamic_settings(index_view="threads")
@@ -167,8 +168,7 @@ def test_categories_view_displays_category_user_thread(
     default_category, user_client, user_thread
 ):
     default_category.description = "FIRST-CATEGORY-DESCRIPTION"
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     response = user_client.get(reverse("misago:categories"))
     assert_contains(response, default_category.description)
@@ -180,8 +180,7 @@ def test_categories_view_displays_category_thread(
     default_category, user_client, thread
 ):
     default_category.description = "FIRST-CATEGORY-DESCRIPTION"
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     response = user_client.get(reverse("misago:categories"))
     assert_contains(response, default_category.description)
@@ -196,8 +195,7 @@ def test_categories_view_displays_unread_category(
     user.save()
 
     default_category.description = "FIRST-CATEGORY-DESCRIPTION"
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     response = user_client.get(reverse("misago:categories"))
     assert_contains(response, default_category.description)
@@ -211,8 +209,7 @@ def test_categories_view_displays_category_thread_if_category_allows_list_access
 ):
     default_category.delay_browse_check = True
     default_category.description = "FIRST-CATEGORY-DESCRIPTION"
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     remove_category_group_permissions(default_category, user.group)
 
@@ -232,8 +229,7 @@ def test_categories_view_excludes_category_thread_if_user_has_no_browse_permissi
     default_category, user, user_client, thread
 ):
     default_category.description = "FIRST-CATEGORY-DESCRIPTION"
-    default_category.synchronize()
-    default_category.save()
+    synchronize_category(default_category)
 
     remove_category_group_permissions(default_category, user.group)
 
