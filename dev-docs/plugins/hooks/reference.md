@@ -45,6 +45,7 @@ Hooks instances are importable from the following Python modules:
 - [`get_categories_page_metatags_hook`](./get-categories-page-metatags-hook.md)
 - [`get_categories_query_values_hook`](./get-categories-query-values-hook.md)
 - [`get_category_data_hook`](./get-category-data-hook.md)
+- [`synchronize_category_hook`](./synchronize-category-hook.md)
 
 
 ## `misago.context_processors.hooks`
