@@ -16,10 +16,6 @@ class SynchronizeThreadHookAction(Protocol):
 
     The thread to synchronize.
 
-    ## `data: dict`
-
-    A `dict` of new attributes to set on the thread.
-
     ## `commit: bool`
 
     Whether the updated thread instance should be saved to the database.
@@ -34,7 +30,6 @@ class SynchronizeThreadHookAction(Protocol):
     def __call__(
         self,
         thread: Thread,
-        data: dict,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> None: ...
@@ -57,10 +52,6 @@ class SynchronizeThreadHookFilter(Protocol):
 
     The thread to synchronize.
 
-    ## `data: dict`
-
-    A `dict` of new attributes to set on the thread.
-
     ## `commit: bool`
 
     Whether the updated thread instance should be saved to the database.
@@ -76,7 +67,6 @@ class SynchronizeThreadHookFilter(Protocol):
         self,
         action: SynchronizeThreadHookAction,
         thread: Thread,
-        data: dict,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> None: ...
@@ -110,22 +100,18 @@ class SynchronizeThreadHook(
     def record_user_who_synced_thread(
         action,
         thread: Thread,
-        data: dict,
         commit: bool = True,
         request: HttpRequest | None = None,
     ):
-        if "plugin_data" not in data:
-            data["plugin_data"] = thread.plugin_data
-
         if request:
-            data["plugin_data"]["last_synchronized"] = {
+            data.plugin_data["last_synchronized"] = {
                 "user_id": request.user.id,
                 "user_ip": request.user_ip,
             }
         else:
-            data["plugin_data"]["last_synchronized"] = None
+            data.plugin_data["last_synchronized"] = None
 
-        action(thread, data, commit, request)
+        action(thread, commit, request)
     ```
     """
 
@@ -135,14 +121,12 @@ class SynchronizeThreadHook(
         self,
         action: SynchronizeThreadHookAction,
         thread: Thread,
-        data: dict,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> None:
         return super().__call__(
             action,
             thread,
-            data,
             commit,
             request,
         )
