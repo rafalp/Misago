@@ -20,7 +20,6 @@ from misago.threads.hooks import synchronize_thread_hook
 def custom_synchronize_thread_filter(
     action: SynchronizeThreadHookAction,
     thread: Thread,
-    data: dict,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> None:
@@ -44,11 +43,6 @@ See the [action](#action) section for details.
 The thread to synchronize.
 
 
-#### `data: dict`
-
-A `dict` of new attributes to set on the thread.
-
-
 #### `commit: bool`
 
 Whether the updated thread instance should be saved to the database.
@@ -65,10 +59,7 @@ The request object, or `None` if not provided.
 
 ```python
 def synchronize_thread_action(
-    thread: Thread,
-    data: dict,
-    commit: bool=True,
-    request: HttpRequest | None=None,
+    thread: Thread, commit: bool=True, request: HttpRequest | None=None
 ) -> None:
     ...
 ```
@@ -81,11 +72,6 @@ Misago function for synchronizing a thread.
 #### `thread: Thread`
 
 The thread to synchronize.
-
-
-#### `data: dict`
-
-A `dict` of new attributes to set on the thread.
 
 
 #### `commit: bool`
@@ -114,20 +100,16 @@ from misago.threads.models import Thread
 def record_user_who_synced_thread(
     action,
     thread: Thread,
-    data: dict,
     commit: bool = True,
     request: HttpRequest | None = None,
 ):
-    if "plugin_data" not in data:
-        data["plugin_data"] = thread.plugin_data
-
     if request:
-        data["plugin_data"]["last_synchronized"] = {
+        data.plugin_data["last_synchronized"] = {
             "user_id": request.user.id,
             "user_ip": request.user_ip,
         }
     else:
-        data["plugin_data"]["last_synchronized"] = None
+        data.plugin_data["last_synchronized"] = None
 
-    action(thread, data, commit, request)
+    action(thread, commit, request)
 ```

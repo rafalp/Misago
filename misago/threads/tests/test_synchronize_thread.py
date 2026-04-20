@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from ...threadupdates.create import create_test_thread_update
 from ..synchronize import synchronize_thread
 
 
@@ -16,6 +17,31 @@ def test_synchronize_thread_updates_thread_replies(thread_reply_factory, thread)
 
     thread.refresh_from_db()
     assert thread.replies == 2
+
+
+def test_synchronize_thread_sets_has_events_flag(thread):
+    assert not thread.has_events
+
+    create_test_thread_update(thread, "Actor")
+
+    synchronize_thread(thread)
+
+    assert thread.has_events
+
+    thread.refresh_from_db()
+    assert thread.has_events
+
+
+def test_synchronize_thread_removes_has_events_flag(thread):
+    thread.has_events = True
+    thread.save()
+
+    synchronize_thread(thread)
+
+    assert not thread.has_events
+
+    thread.refresh_from_db()
+    assert not thread.has_events
 
 
 def test_synchronize_thread_sets_has_poll_flag(poll_factory, thread):
