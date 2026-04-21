@@ -29,7 +29,7 @@ def _delete_thread_poll_action(
     thread.has_poll = False
     thread.save(update_fields=["has_poll"])
 
-    return create_deleted_poll_thread_update(thread, poll, user, request)
+    return create_deleted_poll_thread_update(thread, poll, user, request=request)
 
 
 def delete_poll(poll: Poll, request: HttpRequest | None = None):

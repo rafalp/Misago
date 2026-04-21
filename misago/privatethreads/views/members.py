@@ -75,7 +75,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
             for member in new_members:
                 PrivateThreadMember.objects.create(thread=thread, user=member)
                 thread_update = create_added_member_thread_update(
-                    thread, member, self.request.user, request
+                    thread, member, self.request.user, request=request
                 )
                 thread_updates.append(thread_update)
 

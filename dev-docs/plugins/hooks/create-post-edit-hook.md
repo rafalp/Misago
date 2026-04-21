@@ -93,7 +93,7 @@ A `datetime` with the timestamp of when the edit occurred.
 Defaults to the current timestamp if `None`.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 A `bool` indicating whether the new `PostEdit` instance should be saved to the database.
 
@@ -188,7 +188,7 @@ A `datetime` with the timestamp of when the edit occurred.
 Defaults to the current timestamp if `None`.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 A `bool` indicating whether the new `PostEdit` instance should be saved to the database.
 

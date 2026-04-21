@@ -43,7 +43,7 @@ See the [action](#action) section for details.
 The thread to synchronize.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
 
@@ -74,7 +74,7 @@ Misago function for synchronizing a thread.
 The thread to synchronize.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
 

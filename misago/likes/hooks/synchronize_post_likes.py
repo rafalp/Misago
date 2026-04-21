@@ -21,7 +21,7 @@ class SynchronizePostLikesHookAction(Protocol):
 
     The queryset used to fetch a post's likes. Defaults to `Like.objects` if `None`.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
 
@@ -62,7 +62,7 @@ class SynchronizePostLikesHookFilter(Protocol):
 
     The queryset used to fetch a post's likes. Defaults to `Like.objects` if `None`.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
 

@@ -23,7 +23,7 @@ class LockThreadSolutionHookAction(Protocol):
 
     The user who locked the thread's solution.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated thread instance should be
     saved to the database.
@@ -65,7 +65,7 @@ class LockThreadSolutionHookFilter(Protocol):
 
     The user who locked the thread's solution.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated thread instance should be
     saved to the database.

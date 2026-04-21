@@ -49,7 +49,7 @@ The post to remove a like from.
 The user who's post like will be removed.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the updated post instance should be saved to the database.
 
@@ -93,7 +93,7 @@ The post to remove a like from.
 The user who's post like will be removed.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the updated post instance should be saved to the database.
 

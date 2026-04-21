@@ -16,7 +16,7 @@ class ClearThreadSolutionHookAction(Protocol):
 
     The thread to update.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated thread instance should be
     saved to the database.
@@ -53,7 +53,7 @@ class ClearThreadSolutionHookFilter(Protocol):
 
     The thread to update.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated thread instance should be
     saved to the database.

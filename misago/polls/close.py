@@ -35,7 +35,7 @@ def _close_thread_poll_action(
     if not close_poll(poll, user, request):
         return None
 
-    return create_closed_poll_thread_update(thread, user, request)
+    return create_closed_poll_thread_update(thread, user, request=request)
 
 
 def open_thread_poll(
@@ -50,7 +50,7 @@ def _open_thread_poll_action(
     if not open_poll(poll, user, request):
         return None
 
-    return create_opened_poll_thread_update(thread, user, request)
+    return create_opened_poll_thread_update(thread, user, request=request)
 
 
 def close_poll(poll: Poll, user: "User", request: HttpRequest | None = None) -> bool:

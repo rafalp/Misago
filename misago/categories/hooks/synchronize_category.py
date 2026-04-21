@@ -16,7 +16,7 @@ class SynchronizeCategoryHookAction(Protocol):
 
     The category to synchronize.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated category instance should be saved to the database.
 
@@ -52,7 +52,7 @@ class SynchronizeCategoryHookFilter(Protocol):
 
     The category to synchronize.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated category instance should be saved to the database.
 

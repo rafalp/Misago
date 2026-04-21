@@ -102,9 +102,9 @@ def _change_private_thread_owner_action(
         )
 
     if actor == new_owner:
-        return create_took_ownership_thread_update(thread, actor, request)
+        return create_took_ownership_thread_update(thread, actor, request=request)
 
-    return create_changed_owner_thread_update(thread, new_owner, actor, request)
+    return create_changed_owner_thread_update(thread, new_owner, actor, request=request)
 
 
 def remove_private_thread_member(
@@ -127,9 +127,9 @@ def _remove_private_thread_member_action(
     PrivateThreadMember.objects.filter(thread=thread, user=member).delete()
 
     if actor == member:
-        return create_left_thread_update(thread, actor, request)
+        return create_left_thread_update(thread, actor, request=request)
 
-    return create_removed_member_thread_update(thread, member, actor, request)
+    return create_removed_member_thread_update(thread, member, actor, request=request)
 
 
 def private_thread_has_members(thread: Thread) -> bool:

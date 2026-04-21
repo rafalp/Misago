@@ -49,7 +49,7 @@ The post to like.
 The user who liked the post.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the new `Like` instance and the updated post instance should be saved to the database.
 
@@ -93,7 +93,7 @@ The post to like.
 The user who liked the post.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the new `Like` instance and the updated post instance should be saved to the database.
 
