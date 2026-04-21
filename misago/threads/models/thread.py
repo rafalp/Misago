@@ -35,7 +35,7 @@ class Thread(PluginDataModel):
     slug = models.CharField(max_length=255)
     replies = models.PositiveIntegerField(default=0, db_index=True)
 
-    has_events = models.BooleanField(default=False)
+    has_updates = models.BooleanField(default=False)
     has_poll = models.BooleanField(default=False)
     has_reported_posts = models.BooleanField(default=False)
     has_open_reports = models.BooleanField(default=False)

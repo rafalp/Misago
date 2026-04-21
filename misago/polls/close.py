@@ -35,6 +35,9 @@ def _close_thread_poll_action(
     if not close_poll(poll, user, request):
         return None
 
+    thread.has_updates = True
+    thread.save(update_fields=["has_updates"])
+
     return create_closed_poll_thread_update(thread, user, request=request)
 
 
@@ -49,6 +52,9 @@ def _open_thread_poll_action(
 ) -> ThreadUpdate | None:
     if not open_poll(poll, user, request):
         return None
+
+    thread.has_updates = True
+    thread.save(update_fields=["has_updates"])
 
     return create_opened_poll_thread_update(thread, user, request=request)
 

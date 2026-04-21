@@ -42,6 +42,7 @@ def _save_thread_poll_action(
 ) -> ThreadUpdate:
     poll.save()
 
+    thread.has_updates = True
     thread.has_poll = True
     thread.save()
 

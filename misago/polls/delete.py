@@ -26,8 +26,9 @@ def _delete_thread_poll_action(
 ) -> ThreadUpdate:
     delete_poll(poll, request)
 
+    thread.has_updates = False
     thread.has_poll = False
-    thread.save(update_fields=["has_poll"])
+    thread.save(update_fields=["has_updates", "has_poll"])
 
     return create_deleted_poll_thread_update(thread, poll, user, request=request)
 

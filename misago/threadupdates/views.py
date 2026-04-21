@@ -161,6 +161,12 @@ class UpdateDeleteView:
 
     def execute_action(self, request: HttpRequest, thread_update: ThreadUpdate):
         delete_thread_update(thread_update, request)
+
+        thread.has_updates = ThreadUpdate.objects.filter(
+            thread_id=thread_update.thread_id
+        ).exists()
+        thread.has_updates.save(update_fields=["has_updates"])
+
         messages.success(request, self.success_message)
 
 
