@@ -45,4 +45,4 @@ def _save_thread_poll_action(
     thread.has_poll = True
     thread.save()
 
-    return create_started_poll_thread_update(thread, poll, user, request)
+    return create_started_poll_thread_update(thread, poll, user, request=request)

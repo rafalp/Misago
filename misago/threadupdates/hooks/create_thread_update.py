@@ -30,10 +30,6 @@ class CreateThreadUpdateHookAction(Protocol):
     The actor who performed the action: a `User` instance, a `str` with a name,
     or `None` if not available.
 
-    ## `request: HttpRequest | None = None`
-
-    The request object or `None` if not available.
-
     ## `context: str | None = None`
 
     A `str` with context, e.g., a previous thread title or the name of
@@ -49,9 +45,15 @@ class CreateThreadUpdateHookAction(Protocol):
     are only visible to moderators but can be made visible to all users.
     Defaults to `False`.
 
-    ## `plugin_data: dict`
+    ## `commit: bool = True`
 
-    A plugin data `dict` that will be saved on the `ThreadUpdate.plugin_data` attribute.
+    A `bool` indicating whether the new `ThreadUpdate` instance should be saved to the database.
+
+    Defaults to `True`.
+
+    ## `request: HttpRequest | None = None`
+
+    The request object or `None` if not available.
 
     # Return value
 
@@ -64,11 +66,11 @@ class CreateThreadUpdateHookAction(Protocol):
         action_name: str,
         actor: Union["User", None, str] = None,
         *,
-        request: HttpRequest | None = None,
         context: str | None = None,
         context_object: Model | None = None,
         is_hidden: bool = False,
-        plugin_data: dict,
+        commit: bool = True,
+        request: HttpRequest | None = None,
     ) -> "ThreadUpdate": ...
 
 
@@ -95,10 +97,6 @@ class CreateThreadUpdateHookFilter(Protocol):
     A `str` with context, e.g., a previous thread title or the name of
     `context_object`. `None` if not available or not used for this `action_name`.
 
-    ## `request: HttpRequest | None = None`
-
-    The request object or `None` if not available.
-
     ## `context: str | None = None`
 
     A `str` with context, e.g., a previous thread title or the name of
@@ -118,6 +116,10 @@ class CreateThreadUpdateHookFilter(Protocol):
 
     A plugin data `dict` that will be saved on the `ThreadUpdate.plugin_data` attribute.
 
+    ## `request: HttpRequest | None = None`
+
+    The request object or `None` if not available.
+
     # Return value
 
     A newly created `ThreadUpdate` instance.
@@ -130,11 +132,11 @@ class CreateThreadUpdateHookFilter(Protocol):
         action_name: str,
         actor: Union["User", None, str] = None,
         *,
-        request: HttpRequest | None = None,
         context: str | None = None,
         context_object: Model | None = None,
         is_hidden: bool = False,
-        plugin_data: dict,
+        commit: bool = True,
+        request: HttpRequest | None = None,
     ) -> "ThreadUpdate": ...
 
 
@@ -154,37 +156,35 @@ class CreateThreadUpdateHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.threads.hooks import create_thread_update_hook
-    from misago.threads.models import Thread, ThreadUpdate
-    from misago.users.models import User
+    from misago.threadupdates.hooks import create_thread_update_hook
+    from misago.threadupdates.models import ThreadUpdate
 
 
     @create_thread_update_hook.append_filter
     def set_actor_ip_on_thread_update(
         action,
-        thread: "Thread",
-        action_name: str,
-        actor: Union["User", None, str] = None,
-        *,
+        *args,
+        commit: bool = True,
         request: HttpRequest | None = None,
-        context: str | None = None,
-        context_object: Model | None = None,
-        is_hidden: bool = False,
-        plugin_data: dict,
+        **kwargs
     ) -> ThreadUpdate:
         if request:
             plugin_data["actor_id"] = request.user_ip
 
-        return action(
-            thread,
-            action_name,
-            actor,
+        thread_update = action(
+            *args,
+            commit=False,
             request=request,
-            context=context,
-            context_object=context_object,
-            is_hidden=is_hidden,
-            plugin_data=plugin_data,
+            **kwargs
         )
+
+        if request:
+            thread_update.plugin_data["actor_id"] = request.user_ip
+
+        if commit:
+            thread_update.save()
+
+        return thread_update
     ```
     """
 
@@ -197,22 +197,22 @@ class CreateThreadUpdateHook(
         action_name: str,
         actor: Union["User", None, str] = None,
         *,
-        request: HttpRequest | None = None,
         context: str | None = None,
         context_object: Model | None = None,
         is_hidden: bool = False,
-        plugin_data: dict,
+        commit: bool = True,
+        request: HttpRequest | None = None,
     ) -> "ThreadUpdate":
         return super().__call__(
             action,
             thread,
             action_name,
             actor,
-            request=request,
             context=context,
             context_object=context_object,
             is_hidden=is_hidden,
-            plugin_data=plugin_data,
+            commit=commit,
+            request=request,
         )
 
 

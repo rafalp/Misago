@@ -47,7 +47,7 @@ The thread to update.
 The user who locked the thread's solution.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
 
@@ -86,7 +86,7 @@ The thread to update.
 The user who locked the thread's solution.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
 

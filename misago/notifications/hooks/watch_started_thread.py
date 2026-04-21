@@ -24,7 +24,7 @@ class WatchStartedThreadHookAction(Protocol):
 
     The user who started to the thread.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the new `WatchedThread` instance should be saved to the database.
 
@@ -70,7 +70,7 @@ class WatchStartedThreadHookFilter(Protocol):
 
     The user who started to the thread.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the new `WatchedThread` instance should be saved to the database.
 

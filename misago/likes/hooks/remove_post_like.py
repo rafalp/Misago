@@ -25,7 +25,7 @@ class RemovePostLikeHookAction(Protocol):
 
     The user who's post like will be removed.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
 
@@ -70,7 +70,7 @@ class RemovePostLikeHookFilter(Protocol):
 
     The user who's post like will be removed.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
 

@@ -30,7 +30,7 @@ class WatchThreadHookAction(Protocol):
 
     Defaults to `True`,
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the new `WatchedThread` instance should be saved to the database.
 
@@ -82,7 +82,7 @@ class WatchThreadHookFilter(Protocol):
 
     Defaults to `True`,
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the new `WatchedThread` instance should be saved to the database.
 

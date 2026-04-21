@@ -16,7 +16,7 @@ class SynchronizeThreadHookAction(Protocol):
 
     The thread to synchronize.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated thread instance should be saved to the database.
 
@@ -52,7 +52,7 @@ class SynchronizeThreadHookFilter(Protocol):
 
     The thread to synchronize.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated thread instance should be saved to the database.
 

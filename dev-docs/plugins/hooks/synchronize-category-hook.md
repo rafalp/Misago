@@ -43,7 +43,7 @@ See the [action](#action) section for details.
 The category to synchronize.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the updated category instance should be saved to the database.
 
@@ -76,7 +76,7 @@ Misago function for synchronizing a category.
 The category to synchronize.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the updated category instance should be saved to the database.
 

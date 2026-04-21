@@ -41,7 +41,7 @@ See the [action](#action) section for details.
 The thread to update.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
 
@@ -72,7 +72,7 @@ Misago function used to unlock the thread’s solution.
 The thread to update.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
 

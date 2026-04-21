@@ -60,7 +60,7 @@ class CreatePostEditHookAction(Protocol):
 
     Defaults to the current timestamp if `None`.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     A `bool` indicating whether the new `PostEdit` instance should be saved to the database.
 
@@ -144,7 +144,7 @@ class CreatePostEditHookFilter(Protocol):
 
     Defaults to the current timestamp if `None`.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     A `bool` indicating whether the new `PostEdit` instance should be saved to the database.
 

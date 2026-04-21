@@ -24,7 +24,7 @@ class WatchRepliedThreadHookAction(Protocol):
 
     The user who replied to the thread.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the new `WatchedThread` instance should be saved to the database.
 
@@ -70,7 +70,7 @@ class WatchRepliedThreadHookFilter(Protocol):
 
     The user who replied to the thread.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the new `WatchedThread` instance should be saved to the database.
 

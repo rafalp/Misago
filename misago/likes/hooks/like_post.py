@@ -25,7 +25,7 @@ class LikePostHookAction(Protocol):
 
     The user who liked the post.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the new `Like` instance and the updated post instance should be
     saved to the database.
@@ -71,7 +71,7 @@ class LikePostHookFilter(Protocol):
 
     The user who liked the post.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the new `Like` instance and the updated post instance should be
     saved to the database.

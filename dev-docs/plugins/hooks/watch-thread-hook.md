@@ -55,7 +55,7 @@ Whether e-mail notifications should be enabled.
 Defaults to `True`,
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the new `WatchedThread` instance should be saved to the database.
 
@@ -107,7 +107,7 @@ Whether e-mail notifications should be enabled.
 Defaults to `True`,
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the new `WatchedThread` instance should be saved to the database.
 

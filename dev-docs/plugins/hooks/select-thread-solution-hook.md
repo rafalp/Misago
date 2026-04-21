@@ -53,7 +53,7 @@ The post to set as the solution.
 The user who selected the solution.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
 
@@ -98,7 +98,7 @@ The post to set as the solution.
 The user who selected the solution.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
 

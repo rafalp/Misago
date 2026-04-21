@@ -47,7 +47,7 @@ The iterable of threads to move.
 A `Category` to move threads to.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the threads' `category` field should be updated directly in the database using `QuerySet.update()`.
 
@@ -88,7 +88,7 @@ The iterable of threads to move.
 A `Category` to move threads to.
 
 
-#### `commit: bool`
+#### `commit: bool = True`
 
 Whether the threads' `category` field should be updated directly in the database using `QuerySet.update()`.
 

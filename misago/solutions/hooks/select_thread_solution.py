@@ -27,7 +27,7 @@ class SelectThreadSolutionHookAction(Protocol):
 
     The user who selected the solution.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated thread instance should be
     saved to the database.
@@ -74,7 +74,7 @@ class SelectThreadSolutionHookFilter(Protocol):
 
     The user who selected the solution.
 
-    ## `commit: bool`
+    ## `commit: bool = True`
 
     Whether the updated thread instance should be
     saved to the database.
