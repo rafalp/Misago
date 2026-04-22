@@ -78,6 +78,9 @@ def test_private_thread_member_remove_view_removes_thread_member(
         action=ThreadUpdateActionName.REMOVED_MEMBER,
     )
 
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.has_updates
+
 
 def test_private_thread_member_remove_view_removes_thread_member_for_moderator(
     moderator_client, user, other_user, moderator, user_private_thread
@@ -110,6 +113,9 @@ def test_private_thread_member_remove_view_removes_thread_member_for_moderator(
         thread=user_private_thread,
         action=ThreadUpdateActionName.REMOVED_MEMBER,
     )
+
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.has_updates
 
 
 def test_private_thread_member_remove_view_returns_redirect_to_next_url(

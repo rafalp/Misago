@@ -101,9 +101,6 @@ def _change_private_thread_owner_action(
             is_owner=True
         )
 
-    thread.has_updates = True
-    thread.save(update_fields=["has_updates"])
-
     if actor == new_owner:
         return create_took_ownership_thread_update(thread, actor, request=request)
 
@@ -115,7 +112,7 @@ def remove_private_thread_member(
     thread: Thread,
     member: "User",
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadUpdate | None:
     return remove_private_thread_member_hook(
         _remove_private_thread_member_action, actor, thread, member, request
     )
@@ -126,11 +123,11 @@ def _remove_private_thread_member_action(
     thread: Thread,
     member: "User",
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
-    PrivateThreadMember.objects.filter(thread=thread, user=member).delete()
+) -> ThreadUpdate | None:
+    deleted, _ = PrivateThreadMember.objects.filter(thread=thread, user=member).delete()
 
-    thread.has_updates = True
-    thread.save(update_fields=["has_updates"])
+    if not deleted:
+        return None
 
     if actor == member:
         return create_left_thread_update(thread, actor, request=request)

@@ -12,7 +12,7 @@ from ...threadupdates.create import (
 )
 
 
-def test_private_thread_detail_view_shows_thread_update_to_user(
+def test_private_thread_detail_view_doesnt_show_thread_update_to_user_if_thread_flag_is_not_set(
     user_client, user, other_user_private_thread
 ):
     thread_update = create_test_thread_update(other_user_private_thread, user)
@@ -27,7 +27,28 @@ def test_private_thread_detail_view_shows_thread_update_to_user(
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_not_contains(response, f"UPDATE [{thread_update.id}]")
+
+
+def test_private_thread_detail_view_shows_thread_update_to_user_if_thread_flag_is_set(
+    user_client, user, other_user_private_thread
+):
+    thread_update = create_test_thread_update(other_user_private_thread, user)
+
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, other_user_private_thread.title)
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
 
 
 def test_private_thread_detail_view_shows_thread_update_to_private_threads_moderator(
@@ -41,6 +62,9 @@ def test_private_thread_detail_view_shows_thread_update_to_private_threads_moder
 
     thread_update = create_test_thread_update(other_user_private_thread, user)
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = user_client.get(
         reverse(
             "misago:private-thread",
@@ -51,13 +75,16 @@ def test_private_thread_detail_view_shows_thread_update_to_private_threads_moder
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
 
 
 def test_private_thread_detail_view_shows_thread_update_to_global_moderator(
     moderator_client, user, other_user_private_thread
 ):
     thread_update = create_test_thread_update(other_user_private_thread, user)
+
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
 
     response = moderator_client.get(
         reverse(
@@ -69,13 +96,16 @@ def test_private_thread_detail_view_shows_thread_update_to_global_moderator(
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
 
 
 def test_private_thread_detail_view_shows_deleted_user_thread_update_to_user(
     user_client, other_user_private_thread
 ):
     thread_update = create_test_thread_update(other_user_private_thread, "DeletedUser")
+
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
 
     response = user_client.get(
         reverse(
@@ -87,7 +117,7 @@ def test_private_thread_detail_view_shows_deleted_user_thread_update_to_user(
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
 
 
 def test_private_thread_detail_view_shows_deleted_user_thread_update_to_private_threads_moderator(
@@ -101,6 +131,9 @@ def test_private_thread_detail_view_shows_deleted_user_thread_update_to_private_
 
     thread_update = create_test_thread_update(other_user_private_thread, "DeletedUser")
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = user_client.get(
         reverse(
             "misago:private-thread",
@@ -111,13 +144,16 @@ def test_private_thread_detail_view_shows_deleted_user_thread_update_to_private_
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
 
 
 def test_private_thread_detail_view_shows_deleted_user_thread_update_to_global_moderator(
     moderator_client, other_user_private_thread
 ):
     thread_update = create_test_thread_update(other_user_private_thread, "DeletedUser")
+
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
 
     response = moderator_client.get(
         reverse(
@@ -129,7 +165,7 @@ def test_private_thread_detail_view_shows_deleted_user_thread_update_to_global_m
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
 
 
 def test_private_thread_detail_view_doesnt_show_hidden_thread_update_to_user(
@@ -138,6 +174,9 @@ def test_private_thread_detail_view_doesnt_show_hidden_thread_update_to_user(
     thread_update = create_test_thread_update(
         other_user_private_thread, user, is_hidden=True
     )
+
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
 
     response = user_client.get(
         reverse(
@@ -149,7 +188,7 @@ def test_private_thread_detail_view_doesnt_show_hidden_thread_update_to_user(
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_not_contains(response, f"[{thread_update.id}]")
+    assert_not_contains(response, f"UPDATE [{thread_update.id}]")
 
 
 def test_private_thread_detail_view_shows_hidden_thread_update_to_category_moderator(
@@ -165,6 +204,9 @@ def test_private_thread_detail_view_shows_hidden_thread_update_to_category_moder
         other_user_private_thread, user, is_hidden=True
     )
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = user_client.get(
         reverse(
             "misago:private-thread",
@@ -175,7 +217,7 @@ def test_private_thread_detail_view_shows_hidden_thread_update_to_category_moder
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
 
 
 def test_private_thread_detail_view_shows_hidden_thread_update_to_global_moderator(
@@ -184,6 +226,9 @@ def test_private_thread_detail_view_shows_hidden_thread_update_to_global_moderat
     thread_update = create_test_thread_update(
         other_user_private_thread, user, is_hidden=True
     )
+
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
 
     response = moderator_client.get(
         reverse(
@@ -195,13 +240,16 @@ def test_private_thread_detail_view_shows_hidden_thread_update_to_global_moderat
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
 
 
 def test_private_thread_detail_view_doesnt_show_hide_thread_update_button_to_user(
     user_client, user, other_user_private_thread
 ):
     thread_update = create_test_thread_update(other_user_private_thread, user)
+
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
 
     response = user_client.get(
         reverse(
@@ -213,7 +261,7 @@ def test_private_thread_detail_view_doesnt_show_hide_thread_update_button_to_use
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
     assert_not_contains(
         response,
         reverse(
@@ -238,6 +286,9 @@ def test_private_thread_detail_view_shows_hide_thread_update_button_to_private_t
 
     thread_update = create_test_thread_update(other_user_private_thread, user)
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = user_client.get(
         reverse(
             "misago:private-thread",
@@ -248,7 +299,7 @@ def test_private_thread_detail_view_shows_hide_thread_update_button_to_private_t
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
     assert_contains(
         response,
         reverse(
@@ -267,6 +318,9 @@ def test_private_thread_detail_view_shows_hide_thread_update_button_to_global_mo
 ):
     thread_update = create_test_thread_update(other_user_private_thread, user)
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = moderator_client.get(
         reverse(
             "misago:private-thread",
@@ -277,7 +331,7 @@ def test_private_thread_detail_view_shows_hide_thread_update_button_to_global_mo
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
     assert_contains(
         response,
         reverse(
@@ -304,6 +358,9 @@ def test_private_thread_detail_view_shows_unhide_thread_update_button_to_categor
         other_user_private_thread, user, is_hidden=True
     )
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = user_client.get(
         reverse(
             "misago:private-thread",
@@ -314,7 +371,7 @@ def test_private_thread_detail_view_shows_unhide_thread_update_button_to_categor
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
     assert_contains(
         response,
         reverse(
@@ -335,6 +392,9 @@ def test_private_thread_detail_view_shows_unhide_thread_update_button_to_global_
         other_user_private_thread, user, is_hidden=True
     )
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = moderator_client.get(
         reverse(
             "misago:private-thread",
@@ -345,7 +405,7 @@ def test_private_thread_detail_view_shows_unhide_thread_update_button_to_global_
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
     assert_contains(
         response,
         reverse(
@@ -364,6 +424,9 @@ def test_private_thread_detail_view_doesnt_show_delete_thread_update_button_to_u
 ):
     thread_update = create_test_thread_update(other_user_private_thread, user)
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = user_client.get(
         reverse(
             "misago:private-thread",
@@ -374,7 +437,7 @@ def test_private_thread_detail_view_doesnt_show_delete_thread_update_button_to_u
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
     assert_not_contains(
         response,
         reverse(
@@ -399,6 +462,9 @@ def test_private_thread_detail_view_shows_delete_thread_update_button_to_categor
 
     thread_update = create_test_thread_update(other_user_private_thread, user)
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = user_client.get(
         reverse(
             "misago:private-thread",
@@ -409,7 +475,7 @@ def test_private_thread_detail_view_shows_delete_thread_update_button_to_categor
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
     assert_contains(
         response,
         reverse(
@@ -428,6 +494,9 @@ def test_private_thread_detail_view_shows_delete_thread_update_button_to_global_
 ):
     thread_update = create_test_thread_update(other_user_private_thread, user)
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = moderator_client.get(
         reverse(
             "misago:private-thread",
@@ -438,7 +507,7 @@ def test_private_thread_detail_view_shows_delete_thread_update_button_to_global_
         )
     )
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, f"[{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_update.id}]")
     assert_contains(
         response,
         reverse(
@@ -466,6 +535,9 @@ def test_private_thread_detail_view_shows_thread_updates_on_first_page(
         thread_reply_factory(other_user_private_thread)
 
     last_page_thread_update = create_test_thread_update(other_user_private_thread, user)
+
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
 
     response = user_client.get(
         reverse(
@@ -506,6 +578,9 @@ def test_private_thread_detail_view_shows_thread_updates_on_second_page(
 
     last_page_thread_update = create_test_thread_update(other_user_private_thread, user)
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = user_client.get(
         reverse(
             "misago:private-thread",
@@ -540,6 +615,9 @@ def test_private_thread_detail_view_shows_thread_updates_on_last_page(
 
     last_page_thread_update = create_test_thread_update(other_user_private_thread, user)
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = user_client.get(
         reverse(
             "misago:private-thread",
@@ -564,6 +642,9 @@ def test_private_thread_detail_view_limits_displayed_thread_updates_count(
         thread_updates.append(
             create_test_thread_update(other_user_private_thread, user)
         )
+
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
 
     response = user_client.get(
         reverse(
@@ -596,6 +677,9 @@ def test_private_thread_detail_view_displays_thread_update_with_other_category_c
 
     create_moved_thread_update(other_user_private_thread, other_category, user)
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = user_client.get(
         reverse(
             "misago:private-thread",
@@ -617,6 +701,9 @@ def test_private_thread_detail_view_displays_thread_update_with_inaccessible_oth
 
     create_moved_thread_update(other_user_private_thread, other_category, user)
 
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
+
     response = user_client.get(
         reverse(
             "misago:private-thread",
@@ -635,6 +722,9 @@ def test_private_thread_detail_view_displays_thread_update_with_other_thread_con
     user_client, user, other_user_private_thread, other_thread
 ):
     create_split_thread_update(other_user_private_thread, other_thread, user)
+
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
 
     response = user_client.get(
         reverse(
@@ -660,6 +750,9 @@ def test_private_thread_detail_view_displays_thread_update_with_inaccessible_oth
     user_client, user, other_user_private_thread, other_thread
 ):
     create_split_thread_update(other_user_private_thread, other_thread, user)
+
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
 
     other_thread.is_hidden = True
     other_thread.save()
@@ -688,6 +781,9 @@ def test_private_thread_detail_view_displays_thread_update_with_user_context(
     user_client, user, other_user, other_user_private_thread
 ):
     create_added_member_thread_update(other_user_private_thread, other_user, user)
+
+    other_user_private_thread.has_updates = True
+    other_user_private_thread.save()
 
     response = user_client.get(
         reverse(
