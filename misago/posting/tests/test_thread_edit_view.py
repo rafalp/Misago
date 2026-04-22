@@ -385,6 +385,9 @@ def test_thread_edit_view_creates_changed_title_update_object(
         context=user_thread.title,
     )
 
+    user_thread.refresh_from_db()
+    assert user_thread.has_updates
+
 
 def test_thread_edit_view_doesnt_create_changed_title_update_object_if_title_wasnt_changed(
     user_client, user_thread

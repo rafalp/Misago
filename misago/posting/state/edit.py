@@ -5,6 +5,7 @@ from ...edits.create import create_post_edit
 from ...threads.models import Post
 from ...threadupdates.create import create_changed_title_thread_update
 from ...threadupdates.models import ThreadUpdate
+from ...threadupdates.threadflag import set_thread_has_updates
 from ..hooks import (
     get_private_thread_post_edit_state_hook,
     get_thread_post_edit_state_hook,
@@ -96,6 +97,8 @@ class PostEditState(State):
             self.post.edits = post_edits + 1
 
         if self.thread_title != self.thread.title:
+            set_thread_has_updates(self.thread, commit=False)
+
             self.save_thread()
 
             if self.category.last_thread_id == self.thread.id:
