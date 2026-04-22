@@ -4,11 +4,12 @@ from django.http import HttpRequest
 from django.utils import timezone
 
 from ..threads.models import Thread
-from ..threadupdates.models import ThreadUpdate
 from ..threadupdates.create import (
     create_closed_poll_thread_update,
     create_opened_poll_thread_update,
 )
+from ..threadupdates.models import ThreadUpdate
+from ..threadupdates.threadflag import set_thread_has_updates
 from .hooks import (
     close_poll_hook,
     close_thread_poll_hook,
@@ -35,8 +36,7 @@ def _close_thread_poll_action(
     if not close_poll(poll, user, request):
         return None
 
-    thread.has_updates = True
-    thread.save(update_fields=["has_updates"])
+    set_thread_has_updates(thread)
 
     return create_closed_poll_thread_update(thread, user, request=request)
 
@@ -53,8 +53,7 @@ def _open_thread_poll_action(
     if not open_poll(poll, user, request):
         return None
 
-    thread.has_updates = True
-    thread.save(update_fields=["has_updates"])
+    set_thread_has_updates(thread)
 
     return create_opened_poll_thread_update(thread, user, request=request)
 

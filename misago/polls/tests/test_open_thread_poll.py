@@ -21,6 +21,9 @@ def test_open_thread_poll_creates_thread_update(thread, closed_poll, user):
     assert thread_update.thread == thread
     assert thread_update.actor == user
 
+    thread.refresh_from_db()
+    assert thread.has_updates
+
 
 def test_open_thread_poll_doesnt_create_thread_update_if_poll_is_already_open(
     thread, poll, user
