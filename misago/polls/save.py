@@ -5,6 +5,7 @@ from django.http import HttpRequest
 from ..threads.models import Thread
 from ..threadupdates.create import create_started_poll_thread_update
 from ..threadupdates.models import ThreadUpdate
+from ..threadupdates.threadflag import set_thread_has_updates
 from .hooks import edit_thread_poll_hook, save_thread_poll_hook
 from .models import Poll, PollVote
 
@@ -42,6 +43,7 @@ def _save_thread_poll_action(
 ) -> ThreadUpdate:
     poll.save()
 
+    thread.has_updates = True
     thread.has_poll = True
     thread.save()
 

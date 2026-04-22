@@ -6,6 +6,7 @@ from ..postgres.delete import delete_all, delete_one
 from ..threads.models import Thread
 from ..threadupdates.create import create_deleted_poll_thread_update
 from ..threadupdates.models import ThreadUpdate
+from ..threadupdates.threadflag import set_thread_has_updates
 from .hooks import delete_poll_hook, delete_thread_poll_hook
 from .models import Poll, PollVote
 
@@ -26,8 +27,10 @@ def _delete_thread_poll_action(
 ) -> ThreadUpdate:
     delete_poll(poll, request)
 
+    set_thread_has_updates(thread, commit=False)
+
     thread.has_poll = False
-    thread.save(update_fields=["has_poll"])
+    thread.save(update_fields=["has_updates", "has_poll"])
 
     return create_deleted_poll_thread_update(thread, poll, user, request=request)
 

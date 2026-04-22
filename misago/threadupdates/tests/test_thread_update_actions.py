@@ -30,6 +30,10 @@ from ..create import (
 
 def test_create_test_thread_update(client, thread, user):
     thread_update = create_test_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -38,6 +42,10 @@ def test_create_test_thread_update(client, thread, user):
 
 def test_create_test_thread_update_with_context(client, thread, user):
     thread_update = create_test_thread_update(thread, user, "LOREM IPSUM DOLOR")
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -51,6 +59,10 @@ def test_create_test_thread_update_with_context_object(
     thread_update = create_test_thread_update(
         thread, user, context_object=default_category
     )
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -59,6 +71,10 @@ def test_create_test_thread_update_with_context_object(
 
 def test_approved_thread_update(client, thread, user):
     create_approved_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -67,6 +83,10 @@ def test_approved_thread_update(client, thread, user):
 
 def test_pinned_globally_thread_update(client, thread, user):
     create_pinned_globally_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -75,6 +95,10 @@ def test_pinned_globally_thread_update(client, thread, user):
 
 def test_pinned_in_category_thread_update(client, thread, user):
     create_pinned_in_category_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -83,6 +107,10 @@ def test_pinned_in_category_thread_update(client, thread, user):
 
 def test_unpinned_thread_update(client, thread, user):
     create_unpinned_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -91,6 +119,10 @@ def test_unpinned_thread_update(client, thread, user):
 
 def test_locked_thread_update(client, thread, user):
     create_locked_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -99,6 +131,10 @@ def test_locked_thread_update(client, thread, user):
 
 def test_opened_thread_update(client, thread, user):
     create_opened_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -107,6 +143,10 @@ def test_opened_thread_update(client, thread, user):
 
 def test_moved_thread_update(client, thread, user, default_category):
     create_moved_thread_update(thread, default_category, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -122,6 +162,9 @@ def test_moved_thread_update_without_context_object(
     thread_update.clear_context_object()
     thread_update.save()
 
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -131,6 +174,10 @@ def test_moved_thread_update_without_context_object(
 
 def test_merged_thread_update(client, thread, user_thread, user):
     create_merged_thread_update(thread, user_thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -145,6 +192,9 @@ def test_merged_thread_update_without_context_object(client, thread, user_thread
     thread_update.clear_context_object()
     thread_update.save()
 
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -155,6 +205,10 @@ def test_merged_thread_update_without_context_object(client, thread, user_thread
 
 def test_split_thread_update(client, thread, user_thread, user):
     create_split_thread_update(thread, user_thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -168,6 +222,9 @@ def test_split_thread_update_without_context_object(client, thread, user_thread,
     thread_update.clear_context_object()
     thread_update.save()
 
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -177,6 +234,10 @@ def test_split_thread_update_without_context_object(client, thread, user_thread,
 
 def test_hid_thread_update(client, thread, user):
     create_hid_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -185,6 +246,10 @@ def test_hid_thread_update(client, thread, user):
 
 def test_unhid_thread_update(client, thread, user):
     create_unhid_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -193,6 +258,10 @@ def test_unhid_thread_update(client, thread, user):
 
 def test_changed_title_thread_update(client, thread, user):
     create_changed_title_thread_update(thread, "Old title", user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -202,6 +271,10 @@ def test_changed_title_thread_update(client, thread, user):
 
 def test_create_started_poll_thread_update(client, thread, poll, user):
     create_started_poll_thread_update(thread, poll, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -211,6 +284,10 @@ def test_create_started_poll_thread_update(client, thread, poll, user):
 
 def test_create_closed_poll_thread_update(client, thread, user):
     create_closed_poll_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -219,6 +296,10 @@ def test_create_closed_poll_thread_update(client, thread, user):
 
 def test_create_opened_poll_thread_update(client, thread, user):
     create_opened_poll_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -227,6 +308,10 @@ def test_create_opened_poll_thread_update(client, thread, user):
 
 def test_create_deleted_poll_thread_update(client, thread, poll, user):
     create_deleted_poll_thread_update(thread, poll, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -236,6 +321,10 @@ def test_create_deleted_poll_thread_update(client, thread, poll, user):
 
 def test_changed_owner_thread_update(client, thread, user, other_user):
     create_changed_owner_thread_update(thread, other_user, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -251,6 +340,9 @@ def test_changed_owner_thread_update_without_context_object(
     thread_update.clear_context_object()
     thread_update.save()
 
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -260,6 +352,10 @@ def test_changed_owner_thread_update_without_context_object(
 
 def test_took_ownership_thread_update(client, thread, user):
     create_took_ownership_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -268,6 +364,10 @@ def test_took_ownership_thread_update(client, thread, user):
 
 def test_joined_thread_update(client, thread, user):
     create_joined_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -276,6 +376,10 @@ def test_joined_thread_update(client, thread, user):
 
 def test_left_thread_update(client, thread, user):
     create_left_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -284,6 +388,10 @@ def test_left_thread_update(client, thread, user):
 
 def test_added_member_thread_update(client, thread, user, other_user):
     create_added_member_thread_update(thread, other_user, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -297,6 +405,9 @@ def test_invited_thread_update_without_context_object(client, thread, user, othe
     thread_update.clear_context_object()
     thread_update.save()
 
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -306,6 +417,10 @@ def test_invited_thread_update_without_context_object(client, thread, user, othe
 
 def test_removed_member_thread_update(client, thread, user, other_user):
     create_removed_member_thread_update(thread, other_user, user)
+
+    thread.has_updates = True
+    thread.save()
+
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
@@ -320,6 +435,9 @@ def test_removed_member_thread_update_without_context_object(
 
     thread_update.clear_context_object()
     thread_update.save()
+
+    thread.has_updates = True
+    thread.save()
 
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})

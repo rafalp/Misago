@@ -80,6 +80,7 @@ def test_private_thread_leave_view_removes_thread_owner(
     )
 
     user_private_thread.refresh_from_db()
+    assert user_private_thread.has_updates
 
 
 def test_private_thread_leave_view_removes_thread_member(
@@ -108,6 +109,7 @@ def test_private_thread_leave_view_removes_thread_member(
     )
 
     user_private_thread.refresh_from_db()
+    assert user_private_thread.has_updates
 
 
 def test_private_thread_leave_view_removes_thread_moderator(
@@ -136,6 +138,7 @@ def test_private_thread_leave_view_removes_thread_moderator(
     )
 
     user_private_thread.refresh_from_db()
+    assert user_private_thread.has_updates
 
 
 def test_private_thread_member_deletes_thread_when_last_member_leaves(
@@ -162,6 +165,41 @@ def test_private_thread_member_deletes_thread_when_last_member_leaves(
 
     with pytest.raises(Thread.DoesNotExist):
         user_private_thread.refresh_from_db()
+
+
+def test_private_thread_leave_view_does_nothing_if_non_member_thread_moderator_leaves(
+    moderator_client, user, other_user, moderator, user_private_thread
+):
+    user_private_thread.is_unapproved = True
+    user_private_thread.save()
+
+    PrivateThreadMember.objects.filter(user=moderator).delete()
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread-leave",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:private-thread-list")
+
+    owner, members = get_private_thread_members(user_private_thread)
+    assert owner == user
+    assert members == [user, other_user]
+
+    with pytest.raises(ThreadUpdate.DoesNotExist):
+        ThreadUpdate.objects.get(
+            actor=moderator,
+            thread=user_private_thread,
+            action=ThreadUpdateActionName.LEFT,
+        )
+
+    user_private_thread.refresh_from_db()
+    assert not user_private_thread.has_updates
 
 
 def test_private_thread_leave_view_returns_403_if_user_cant_use_private_threads(

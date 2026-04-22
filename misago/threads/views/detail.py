@@ -197,7 +197,11 @@ class DetailView(View):
 
         page_obj = paginator.get_page(page)
         posts = list(page_obj.object_list)
-        thread_updates = self.get_thread_updates(request, thread, page_obj, posts)
+
+        if thread.has_updates:
+            thread_updates = self.get_thread_updates(request, thread, page_obj, posts)
+        else:
+            thread_updates = []
 
         feed = self.get_post_feed(request, thread, posts, thread_updates)
         feed.set_counter_start(page_obj.start_index() - 1)

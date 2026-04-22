@@ -91,7 +91,7 @@ class CloseThreadsBulkModerationAction(ThreadsBulkModerationAction):
         open_threads = [thread for thread in threads if not thread.is_closed]
         updated = Thread.objects.filter(
             id__in=[thread.id for thread in open_threads]
-        ).update(is_closed=True)
+        ).update(has_updates=True, is_closed=True)
 
         if updated:
             for thread in open_threads:
@@ -115,7 +115,7 @@ class OpenThreadsBulkModerationAction(ThreadsBulkModerationAction):
         closed_threads = [thread for thread in threads if thread.is_closed]
         updated = Thread.objects.filter(
             id__in=[thread.id for thread in closed_threads]
-        ).update(is_closed=False)
+        ).update(has_updates=True, is_closed=False)
 
         if updated:
             for thread in closed_threads:

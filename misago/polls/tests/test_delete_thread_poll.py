@@ -28,3 +28,6 @@ def test_delete_thread_poll_creates_thread_update(thread, poll, user):
     assert thread_update.action == ThreadUpdateActionName.DELETED_POLL
     assert thread_update.thread == thread
     assert thread_update.actor == user
+
+    thread.refresh_from_db()
+    assert thread.has_updates

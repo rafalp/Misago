@@ -20,7 +20,7 @@ def _synchronize_thread_action(
 
     thread.replies = max(0, posts.exclude(is_unapproved=True).count() - 1)
 
-    thread.has_events = ThreadUpdate.objects.filter(thread=thread).exists()
+    thread.has_updates = ThreadUpdate.objects.filter(thread=thread).exists()
     thread.has_poll = Poll.objects.filter(thread=thread).exists()
 
     thread.has_reported_posts = False

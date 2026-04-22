@@ -56,3 +56,6 @@ def test_save_thread_poll_creates_thread_update(user, thread):
     save_thread_poll(thread, poll, user)
 
     ThreadUpdate.objects.get(thread=thread, action=ThreadUpdateActionName.STARTED_POLL)
+
+    thread.refresh_from_db()
+    assert thread.has_updates

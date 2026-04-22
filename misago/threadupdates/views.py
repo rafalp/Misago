@@ -10,6 +10,7 @@ from ..threads.views.generic import ThreadView
 from .delete import delete_thread_update
 from .hide import hide_thread_update, unhide_thread_update
 from .models import ThreadUpdate
+from .threadflag import sync_thread_has_updates
 
 
 class UpdateView:
@@ -160,7 +161,12 @@ class UpdateDeleteView:
         )
 
     def execute_action(self, request: HttpRequest, thread_update: ThreadUpdate):
+        thread = thread_update.thread
+
         delete_thread_update(thread_update, request)
+
+        sync_thread_has_updates(thread)
+
         messages.success(request, self.success_message)
 
 

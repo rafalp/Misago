@@ -112,7 +112,7 @@ def remove_private_thread_member(
     thread: Thread,
     member: "User",
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadUpdate | None:
     return remove_private_thread_member_hook(
         _remove_private_thread_member_action, actor, thread, member, request
     )
@@ -123,8 +123,11 @@ def _remove_private_thread_member_action(
     thread: Thread,
     member: "User",
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
-    PrivateThreadMember.objects.filter(thread=thread, user=member).delete()
+) -> ThreadUpdate | None:
+    deleted, _ = PrivateThreadMember.objects.filter(thread=thread, user=member).delete()
+
+    if not deleted:
+        return None
 
     if actor == member:
         return create_left_thread_update(thread, actor, request=request)

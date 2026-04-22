@@ -4,7 +4,8 @@ from django.urls import reverse
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains
-from ...threadupdates.models import ThreadUpdate
+from ..models import ThreadUpdate
+from ..create import create_test_thread_update
 
 
 def test_thread_update_delete_view_returns_404_error_for_not_found_thread(user_client):
@@ -218,6 +219,62 @@ def test_thread_update_delete_view_deletes_update_for_global_moderator(
     )
 
     assert response.status_code == 302
+
+    with pytest.raises(ThreadUpdate.DoesNotExist):
+        thread_update.refresh_from_db()
+
+
+def test_thread_update_delete_view_unsets_thread_has_updates_flag_for_last_update_deleted(
+    moderator_client, thread, thread_update
+):
+    thread.has_updates = True
+    thread.save()
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread-update-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        ),
+        {"confirm": "true"},
+    )
+
+    assert response.status_code == 302
+
+    thread.refresh_from_db()
+    assert not thread.has_updates
+
+    with pytest.raises(ThreadUpdate.DoesNotExist):
+        thread_update.refresh_from_db()
+
+
+def test_thread_update_delete_view_keeps_thread_has_updates_flag_if_other_updates_exist(
+    moderator_client, thread, thread_update
+):
+    thread.has_updates = True
+    thread.save()
+
+    create_test_thread_update(thread, "DeletedUser")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread-update-delete",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+                "thread_update_id": thread_update.id,
+            },
+        ),
+        {"confirm": "true"},
+    )
+
+    assert response.status_code == 302
+
+    thread.refresh_from_db()
+    assert thread.has_updates
 
     with pytest.raises(ThreadUpdate.DoesNotExist):
         thread_update.refresh_from_db()
