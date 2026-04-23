@@ -99,7 +99,7 @@ def check_locked_private_thread_permission(
 def _check_locked_private_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
-    if thread.is_closed and not permissions.is_private_threads_moderator:
+    if thread.is_locked and not permissions.is_private_threads_moderator:
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
@@ -263,11 +263,11 @@ def _check_edit_private_thread_post_permission_action(
             )
         )
 
-    if post.is_protected:
+    if post.is_locked:
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't edit protected posts.",
+                "You can't edit locked posts.",
             )
         )
 

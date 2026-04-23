@@ -35,7 +35,7 @@ def post_factory():
         has_open_reports: bool = False,
         is_unapproved: bool = False,
         is_hidden: bool = False,
-        is_protected: bool = False,
+        is_locked: bool = False,
     ):
         poster_obj, poster_name, _ = unpack_factory_user_arg(poster)
         last_editor_obj, last_editor_name, last_editor_slug = unpack_factory_user_arg(
@@ -72,7 +72,7 @@ def post_factory():
             has_open_reports=has_open_reports,
             is_unapproved=is_unapproved,
             is_hidden=is_hidden,
-            is_protected=is_protected,
+            is_locked=is_locked,
         )
 
     return _post_factory
@@ -97,7 +97,7 @@ def thread_reply_factory(post_factory):
         has_open_reports: bool = False,
         is_unapproved: bool = False,
         is_hidden: bool = False,
-        is_protected: bool = False,
+        is_locked: bool = False,
         commit: bool = True,
     ):
         if not parsed:
@@ -119,7 +119,7 @@ def thread_reply_factory(post_factory):
             has_open_reports=has_open_reports,
             is_unapproved=is_unapproved,
             is_hidden=is_hidden,
-            is_protected=is_protected,
+            is_locked=is_locked,
         )
 
         if post.poster:

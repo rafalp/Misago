@@ -88,10 +88,10 @@ def test_thread_detail_view_doesnt_show_reply_ui_to_anonymous_user_with_permissi
     )
 
 
-def test_thread_detail_view_doesnt_show_reply_ui_to_anonymous_user_with_permission_in_closed_thread(
+def test_thread_detail_view_doesnt_show_reply_ui_to_anonymous_user_with_permission_in_locked_thread(
     client, thread
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     response = client.get(
@@ -191,10 +191,10 @@ def test_thread_detail_view_doesnt_show_reply_ui_to_user_with_permission_in_lock
     )
 
 
-def test_thread_detail_view_doesnt_show_reply_ui_to_user_with_permission_in_closed_thread(
+def test_thread_detail_view_doesnt_show_reply_ui_to_user_with_permission_in_locked_thread(
     user_client, thread
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     response = user_client.get(
@@ -322,7 +322,7 @@ def test_thread_detail_view_shows_reply_ui_to_category_moderator_with_permission
     )
 
 
-def test_thread_detail_view_shows_reply_ui_to_category_moderator_with_permission_in_closed_thread(
+def test_thread_detail_view_shows_reply_ui_to_category_moderator_with_permission_in_locked_thread(
     user_client, user, thread
 ):
     Moderator.objects.create(
@@ -331,7 +331,7 @@ def test_thread_detail_view_shows_reply_ui_to_category_moderator_with_permission
         categories=[thread.category_id],
     )
 
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     response = user_client.get(
@@ -430,10 +430,10 @@ def test_thread_detail_view_shows_reply_ui_to_global_moderator_with_permission_i
     )
 
 
-def test_thread_detail_view_shows_reply_ui_to_global_moderator_with_permission_in_closed_thread(
+def test_thread_detail_view_shows_reply_ui_to_global_moderator_with_permission_in_locked_thread(
     moderator_client, thread
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     response = moderator_client.get(

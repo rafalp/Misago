@@ -1692,7 +1692,7 @@ def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_other_user_po
 def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_editable_post(
     thread_reply_factory, user_client, user, thread
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     post = thread_reply_factory(thread, poster=user)
@@ -1734,7 +1734,7 @@ def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_edit
 def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_editable_post_in_htmx(
     thread_reply_factory, user_client, user, thread
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     post = thread_reply_factory(thread, poster=user)
@@ -1777,7 +1777,7 @@ def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_edit
 def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_editable_post_in_modal(
     thread_reply_factory, user_client, user, thread
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     post = thread_reply_factory(thread, poster=user)

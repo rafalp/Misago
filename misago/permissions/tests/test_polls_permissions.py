@@ -112,10 +112,10 @@ def test_check_start_thread_poll_permission_passes_for_global_moderator_if_categ
     check_start_thread_poll_permission(permissions, default_category, user_thread)
 
 
-def test_check_start_thread_poll_permission_fails_for_user_if_thread_is_closed(
+def test_check_start_thread_poll_permission_fails_for_user_if_thread_is_locked(
     user, user_permissions_factory, default_category, user_thread
 ):
-    user_thread.is_closed = True
+    user_thread.is_locked = True
     user_thread.save()
 
     permissions = user_permissions_factory(user)
@@ -124,10 +124,10 @@ def test_check_start_thread_poll_permission_fails_for_user_if_thread_is_closed(
         check_start_thread_poll_permission(permissions, default_category, user_thread)
 
 
-def test_check_start_thread_poll_permission_passes_for_category_moderator_if_thread_is_closed(
+def test_check_start_thread_poll_permission_passes_for_category_moderator_if_thread_is_locked(
     category_moderator_permissions, default_category, user_thread
 ):
-    user_thread.is_closed = True
+    user_thread.is_locked = True
     user_thread.save()
 
     check_start_thread_poll_permission(
@@ -135,10 +135,10 @@ def test_check_start_thread_poll_permission_passes_for_category_moderator_if_thr
     )
 
 
-def test_check_start_thread_poll_permission_passes_for_global_moderator_if_thread_is_closed(
+def test_check_start_thread_poll_permission_passes_for_global_moderator_if_thread_is_locked(
     moderator, user_permissions_factory, default_category, user_thread
 ):
-    user_thread.is_closed = True
+    user_thread.is_locked = True
     user_thread.save()
 
     permissions = user_permissions_factory(moderator)
@@ -291,13 +291,13 @@ def test_check_edit_thread_poll_permission_passes_if_category_is_locked_for_glob
     )
 
 
-def test_check_edit_thread_poll_permission_fails_if_thread_is_closed(
+def test_check_edit_thread_poll_permission_fails_if_thread_is_locked(
     user_permissions,
     default_category,
     user_thread,
     user_poll,
 ):
-    user_thread.is_closed = True
+    user_thread.is_locked = True
     user_thread.save()
 
     with pytest.raises(PermissionDenied):
@@ -306,13 +306,13 @@ def test_check_edit_thread_poll_permission_fails_if_thread_is_closed(
         )
 
 
-def test_check_edit_thread_poll_permission_passes_for_category_moderator_if_thread_is_closed(
+def test_check_edit_thread_poll_permission_passes_for_category_moderator_if_thread_is_locked(
     category_moderator_permissions,
     default_category,
     user_thread,
     user_poll,
 ):
-    user_thread.is_closed = True
+    user_thread.is_locked = True
     user_thread.save()
 
     check_edit_thread_poll_permission(
@@ -320,13 +320,13 @@ def test_check_edit_thread_poll_permission_passes_for_category_moderator_if_thre
     )
 
 
-def test_check_edit_thread_poll_permission_passes_for_global_moderator_if_thread_is_closed(
+def test_check_edit_thread_poll_permission_passes_for_global_moderator_if_thread_is_locked(
     moderator_permissions,
     default_category,
     user_thread,
     user_poll,
 ):
-    user_thread.is_closed = True
+    user_thread.is_locked = True
     user_thread.save()
 
     check_edit_thread_poll_permission(
@@ -659,7 +659,7 @@ def test_check_close_thread_poll_permission_passes_for_global_moderator_if_categ
     )
 
 
-def test_check_close_thread_poll_permission_fails_if_thread_is_closed(
+def test_check_close_thread_poll_permission_fails_if_thread_is_locked(
     user,
     user_permissions_factory,
     members_group,
@@ -667,7 +667,7 @@ def test_check_close_thread_poll_permission_fails_if_thread_is_closed(
     user_thread,
     user_poll,
 ):
-    user_thread.is_closed = True
+    user_thread.is_locked = True
     user_thread.save()
 
     members_group.can_close_own_polls = True
@@ -681,7 +681,7 @@ def test_check_close_thread_poll_permission_fails_if_thread_is_closed(
         )
 
 
-def test_check_close_thread_poll_permission_passes_for_category_moderator_if_thread_is_closed(
+def test_check_close_thread_poll_permission_passes_for_category_moderator_if_thread_is_locked(
     category_moderator,
     user_permissions_factory,
     members_group,
@@ -689,7 +689,7 @@ def test_check_close_thread_poll_permission_passes_for_category_moderator_if_thr
     user_thread,
     user_poll,
 ):
-    user_thread.is_closed = True
+    user_thread.is_locked = True
     user_thread.save()
 
     members_group.can_close_own_polls = True
@@ -702,7 +702,7 @@ def test_check_close_thread_poll_permission_passes_for_category_moderator_if_thr
     )
 
 
-def test_check_close_thread_poll_permission_passes_for_global_moderator_if_thread_is_closed(
+def test_check_close_thread_poll_permission_passes_for_global_moderator_if_thread_is_locked(
     moderator,
     user_permissions_factory,
     moderators_group,
@@ -710,7 +710,7 @@ def test_check_close_thread_poll_permission_passes_for_global_moderator_if_threa
     user_thread,
     user_poll,
 ):
-    user_thread.is_closed = True
+    user_thread.is_locked = True
     user_thread.save()
 
     moderators_group.can_close_own_polls = True
@@ -1027,13 +1027,13 @@ def test_check_vote_in_thread_poll_permission_fails_for_global_moderator_if_cate
         )
 
 
-def test_check_vote_in_thread_poll_permission_fails_if_thread_is_closed(
+def test_check_vote_in_thread_poll_permission_fails_if_thread_is_locked(
     user_permissions,
     default_category,
     thread,
     poll,
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     with pytest.raises(PermissionDenied):
@@ -1042,13 +1042,13 @@ def test_check_vote_in_thread_poll_permission_fails_if_thread_is_closed(
         )
 
 
-def test_check_vote_in_thread_poll_permission_fails_for_category_moderator_if_thread_is_closed(
+def test_check_vote_in_thread_poll_permission_fails_for_category_moderator_if_thread_is_locked(
     category_moderator_permissions,
     default_category,
     thread,
     poll,
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     with pytest.raises(PermissionDenied):
@@ -1057,13 +1057,13 @@ def test_check_vote_in_thread_poll_permission_fails_for_category_moderator_if_th
         )
 
 
-def test_check_vote_in_thread_poll_permission_fails_for_global_moderator_if_thread_is_closed(
+def test_check_vote_in_thread_poll_permission_fails_for_global_moderator_if_thread_is_locked(
     moderator_permissions,
     default_category,
     thread,
     poll,
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     with pytest.raises(PermissionDenied):

@@ -137,7 +137,7 @@ class ListView(View):
     ) -> bool:
         if (
             thread.weight == ThreadWeight.PINNED_GLOBALLY
-            or thread.is_closed
+            or thread.is_locked
             or thread.has_solution
             or thread.has_poll
             or thread.is_unapproved

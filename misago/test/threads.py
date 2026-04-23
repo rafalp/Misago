@@ -42,7 +42,7 @@ def thread_factory(post_factory):
         weight: int = 0,
         is_unapproved: bool = False,
         is_hidden: bool = False,
-        is_closed: bool = False,
+        is_locked: bool = False,
     ):
         started_at = factory_timestamp_arg(started_at)
         if last_posted_at is None:
@@ -69,7 +69,7 @@ def thread_factory(post_factory):
             weight=weight,
             is_unapproved=is_unapproved,
             is_hidden=is_hidden,
-            is_closed=is_closed,
+            is_locked=is_locked,
         )
 
         post = post_factory(

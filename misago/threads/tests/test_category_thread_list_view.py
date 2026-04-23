@@ -940,16 +940,16 @@ def test_category_thread_list_view_displays_solved_thread(
     assert_contains(response, "thread-flag-solved")
 
 
-def test_category_thread_list_view_displays_closed_thread(
+def test_category_thread_list_view_displays_locked_thread(
     thread_factory, client, other_user, default_category
 ):
-    thread = thread_factory(default_category, starter=other_user, is_closed=True)
+    thread = thread_factory(default_category, starter=other_user, is_locked=True)
 
     response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-closed")
+    assert_contains(response, "thread-flag-locked")
 
 
 def test_category_thread_list_view_doesnt_display_thread_unapproved_posts_flag_to_anonymous_user(

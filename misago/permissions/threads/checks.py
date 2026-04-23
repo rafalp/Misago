@@ -55,7 +55,7 @@ def check_locked_thread_permission(permissions: UserPermissionsProxy, thread: Th
 def _check_locked_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
-    if thread.is_closed and not permissions.is_category_moderator(thread.category_id):
+    if thread.is_locked and not permissions.is_category_moderator(thread.category_id):
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
@@ -331,11 +331,11 @@ def _check_edit_thread_post_permission_action(
             )
         )
 
-    if post.is_protected:
+    if post.is_locked:
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "You can't edit protected posts.",
+                "You can't edit locked posts.",
             )
         )
 

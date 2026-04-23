@@ -96,12 +96,12 @@ def test_check_edit_private_thread_post_permission_fails_if_user_is_poster_out_o
         )
 
 
-def test_check_edit_private_thread_post_permission_fails_if_post_is_protected(
+def test_check_edit_private_thread_post_permission_fails_if_post_is_locked(
     user, private_thread, private_thread_user_reply, cache_versions
 ):
     PrivateThreadMember.objects.create(thread=private_thread, user=user)
 
-    private_thread_user_reply.is_protected = True
+    private_thread_user_reply.is_locked = True
     private_thread_user_reply.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -128,12 +128,12 @@ def test_check_edit_private_thread_post_permission_fails_if_post_is_hidden(
         )
 
 
-def test_check_edit_private_thread_post_permission_passes_for_global_moderator_if_post_is_protected(
+def test_check_edit_private_thread_post_permission_passes_for_global_moderator_if_post_is_locked(
     moderator, private_thread, private_thread_user_reply, cache_versions
 ):
     PrivateThreadMember.objects.create(thread=private_thread, user=moderator)
 
-    private_thread_user_reply.is_protected = True
+    private_thread_user_reply.is_locked = True
     private_thread_user_reply.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
@@ -142,7 +142,7 @@ def test_check_edit_private_thread_post_permission_passes_for_global_moderator_i
     )
 
 
-def test_check_edit_private_thread_post_permission_passes_for_private_threads_moderator_if_post_is_protected(
+def test_check_edit_private_thread_post_permission_passes_for_private_threads_moderator_if_post_is_locked(
     user, private_thread, private_thread_user_reply, cache_versions
 ):
     PrivateThreadMember.objects.create(thread=private_thread, user=user)
@@ -153,7 +153,7 @@ def test_check_edit_private_thread_post_permission_passes_for_private_threads_mo
         private_threads=True,
     )
 
-    private_thread_user_reply.is_protected = True
+    private_thread_user_reply.is_locked = True
     private_thread_user_reply.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -294,7 +294,7 @@ def test_check_locked_private_thread_permission_passes_if_thread_is_open(
 def test_check_locked_private_thread_permission_passes_if_user_is_global_moderator(
     moderator, cache_versions, thread
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
@@ -304,7 +304,7 @@ def test_check_locked_private_thread_permission_passes_if_user_is_global_moderat
 def test_check_locked_private_thread_permission_passes_if_user_is_private_threads_moderator(
     user, cache_versions, thread
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     Moderator.objects.create(
@@ -381,7 +381,7 @@ def test_check_reply_private_thread_permission_passes_global_moderator(
 def test_check_reply_private_thread_permission_fails_user_for_locked_thread(
     user, cache_versions, user_private_thread
 ):
-    user_private_thread.is_closed = True
+    user_private_thread.is_locked = True
     user_private_thread.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -393,7 +393,7 @@ def test_check_reply_private_thread_permission_fails_user_for_locked_thread(
 def test_check_reply_private_thread_permission_passes_private_threads_moderator_for_locked_thread(
     user, cache_versions, user_private_thread
 ):
-    user_private_thread.is_closed = True
+    user_private_thread.is_locked = True
     user_private_thread.save()
 
     Moderator.objects.create(
@@ -409,7 +409,7 @@ def test_check_reply_private_thread_permission_passes_private_threads_moderator_
 def test_check_reply_private_thread_permission_passes_global_moderator_for_locked_thread(
     moderator, cache_versions, user_private_thread
 ):
-    user_private_thread.is_closed = True
+    user_private_thread.is_locked = True
     user_private_thread.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)

@@ -230,12 +230,12 @@ def test_thread_post_edit_view_shows_error_403_to_users_without_locked_category_
     assert_contains(response, "This category is locked.", 403)
 
 
-def test_thread_post_edit_view_shows_error_403_to_users_without_closed_thread_permission(
+def test_thread_post_edit_view_shows_error_403_to_users_without_locked_thread_permission(
     thread_reply_factory, user_client, user, thread
 ):
     post = thread_reply_factory(thread, poster=user)
 
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     response = user_client.get(
@@ -251,10 +251,10 @@ def test_thread_post_edit_view_shows_error_403_to_users_without_closed_thread_pe
     assert_contains(response, "This thread is locked", 403)
 
 
-def test_thread_post_edit_view_shows_error_403_to_users_without_protected_post_permission(
+def test_thread_post_edit_view_shows_error_403_to_users_without_locked_post_permission(
     thread_reply_factory, user_client, user, thread
 ):
-    post = thread_reply_factory(thread, poster=user, is_protected=True)
+    post = thread_reply_factory(thread, poster=user, is_locked=True)
 
     response = user_client.get(
         reverse(
@@ -266,7 +266,7 @@ def test_thread_post_edit_view_shows_error_403_to_users_without_protected_post_p
             },
         )
     )
-    assert_contains(response, "You can&#x27;t edit protected posts.", 403)
+    assert_contains(response, "You can&#x27;t edit locked posts.", 403)
 
 
 def test_thread_post_edit_view_displays_edit_form(

@@ -123,10 +123,10 @@ def test_thread_reply_view_shows_error_403_to_users_without_locked_category_perm
     assert_contains(response, "This category is locked.", 403)
 
 
-def test_thread_reply_view_shows_error_403_to_users_without_closed_thread_permission(
+def test_thread_reply_view_shows_error_403_to_users_without_locked_thread_permission(
     user_client, thread
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     response = user_client.get(
@@ -203,10 +203,10 @@ def test_thread_reply_view_displays_posting_form_to_users_with_in_locked_categor
     assert_contains(response, thread.title)
 
 
-def test_thread_reply_view_displays_posting_form_to_users_with_in_closed_thread_permission(
+def test_thread_reply_view_displays_posting_form_to_users_with_in_locked_thread_permission(
     moderator_client, thread
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     response = moderator_client.get(
@@ -914,7 +914,7 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_not_
     thread_reply_factory, user, user_client, thread, mock_notify_on_new_thread_reply
 ):
     post = thread_reply_factory(
-        thread, poster=user, original="Previous message", is_protected=True
+        thread, poster=user, original="Previous message", is_locked=True
     )
 
     response = user_client.post(
