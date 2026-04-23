@@ -1,13 +1,13 @@
 {% load i18n %}
-{% if category.is_closed %}
+{% if category.is_locked %}
   {% if category_data.children_unread %}
-    <div class="read-status item-new" title="{% translate 'Category has unread posts (closed)' context 'category status icon' %}">
+    <div class="read-status item-new" title="{% translate 'Category has unread posts (locked)' context 'category status icon' %}">
       <span class="material-icon">
         lock
       </span>
     </div>
   {% else %}
-    <div class="read-status item-read" title="{% translate 'Category has no unread posts (closed)' context 'category status icon' %}">
+    <div class="read-status item-read" title="{% translate 'Category has no unread posts (locked)' context 'category status icon' %}">
       <span class="material-icon">
         lock
       </span>

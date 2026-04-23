@@ -209,12 +209,12 @@ def test_thread_post_edit_view_shows_error_403_to_users_who_cant_see_post_conten
     assert_contains(response, "You can&#x27;t edit hidden posts.", 403)
 
 
-def test_thread_post_edit_view_shows_error_403_to_users_without_closed_category_permission(
+def test_thread_post_edit_view_shows_error_403_to_users_without_locked_category_permission(
     thread_reply_factory, user_client, user, default_category, thread
 ):
     post = thread_reply_factory(thread, poster=user)
 
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     response = user_client.get(
@@ -227,7 +227,7 @@ def test_thread_post_edit_view_shows_error_403_to_users_without_closed_category_
             },
         )
     )
-    assert_contains(response, "This category is closed.", 403)
+    assert_contains(response, "This category is locked.", 403)
 
 
 def test_thread_post_edit_view_shows_error_403_to_users_without_closed_thread_permission(

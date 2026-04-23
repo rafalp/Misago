@@ -35,11 +35,11 @@ def check_locked_category_permission(
 def _check_locked_category_permission_action(
     permissions: UserPermissionsProxy, category: Category
 ):
-    if category.is_closed and not permissions.is_category_moderator(category.id):
+    if category.is_locked and not permissions.is_category_moderator(category.id):
         raise PermissionDenied(
             pgettext(
                 "threads permission error",
-                "This category is closed.",
+                "This category is locked.",
             )
         )
 

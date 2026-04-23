@@ -330,7 +330,7 @@ def _check_vote_in_thread_poll_permission_action(
             )
         )
 
-    if category.is_closed:
+    if category.is_locked:
         raise PermissionDenied(
             pgettext(
                 "threads permission error",

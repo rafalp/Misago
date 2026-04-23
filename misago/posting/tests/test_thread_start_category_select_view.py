@@ -429,10 +429,10 @@ def test_thread_start_category_select_view_excludes_child_category_in_htmx_if_us
     )
 
 
-def test_thread_start_category_select_view_includes_closed_category_if_user_can_post_in_it(
+def test_thread_start_category_select_view_includes_locked_category_if_user_can_post_in_it(
     user, user_client, default_category, members_group, moderators_group
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     user.set_groups(members_group, [moderators_group])
@@ -449,10 +449,10 @@ def test_thread_start_category_select_view_includes_closed_category_if_user_can_
     )
 
 
-def test_thread_start_category_select_view_includes_closed_category_in_htmx_if_user_can_post_in_it(
+def test_thread_start_category_select_view_includes_locked_category_in_htmx_if_user_can_post_in_it(
     user, user_client, default_category, members_group, moderators_group
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     user.set_groups(members_group, [moderators_group])
@@ -472,10 +472,10 @@ def test_thread_start_category_select_view_includes_closed_category_in_htmx_if_u
     )
 
 
-def test_thread_start_category_select_view_excludes_closed_category_if_user_cant_post_in_it(
+def test_thread_start_category_select_view_excludes_locked_category_if_user_cant_post_in_it(
     user_client, default_category, sibling_category
 ):
-    sibling_category.is_closed = True
+    sibling_category.is_locked = True
     sibling_category.save()
 
     response = user_client.get(reverse("misago:thread-start"))
@@ -496,10 +496,10 @@ def test_thread_start_category_select_view_excludes_closed_category_if_user_cant
     )
 
 
-def test_thread_start_category_select_view_excludes_closed_category_in_htmx_if_user_cant_post_in_it(
+def test_thread_start_category_select_view_excludes_locked_category_in_htmx_if_user_cant_post_in_it(
     user_client, default_category, sibling_category
 ):
-    sibling_category.is_closed = True
+    sibling_category.is_locked = True
     sibling_category.save()
 
     response = user_client.get(

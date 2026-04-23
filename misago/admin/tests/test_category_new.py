@@ -27,7 +27,7 @@ def form_data(new_data: dict) -> dict:
         "enable_solutions": False,
         "delay_browse_check": False,
         "show_started_only": False,
-        "is_closed": False,
+        "is_locked": False,
         "is_vanilla": False,
         "list_children_threads": True,
         "children_categories_component": "full",

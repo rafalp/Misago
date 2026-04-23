@@ -131,10 +131,10 @@ def test_thread_edit_view_shows_error_403_to_users_who_cant_edit_deleted_users_t
     assert_contains(response, "You can&#x27;t edit other users&#x27; threads.", 403)
 
 
-def test_thread_edit_view_shows_error_403_to_users_without_closed_category_permission(
+def test_thread_edit_view_shows_error_403_to_users_without_locked_categpry_permission(
     user_client, default_category, user_thread
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     response = user_client.get(
@@ -143,7 +143,7 @@ def test_thread_edit_view_shows_error_403_to_users_without_closed_category_permi
             kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
         )
     )
-    assert_contains(response, "This category is closed.", 403)
+    assert_contains(response, "This category is locked.", 403)
 
 
 def test_thread_edit_view_shows_error_403_to_users_without_closed_thread_permission(

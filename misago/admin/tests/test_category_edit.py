@@ -51,7 +51,7 @@ def form_data(category: Category, new_data: dict | None = None) -> dict:
         "enable_solutions": category.enable_solutions,
         "delay_browse_check": category.delay_browse_check,
         "show_started_only": category.show_started_only,
-        "is_closed": category.is_closed,
+        "is_locked": category.is_locked,
         "is_vanilla": category.is_vanilla,
         "list_children_threads": category.list_children_threads,
         "children_categories_component": category.children_categories_component,

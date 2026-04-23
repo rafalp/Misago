@@ -658,7 +658,7 @@ def test_check_select_thread_solution_permission_passes_for_global_moderator_for
     default_category,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     thread = thread_factory(default_category, starter=moderator)
@@ -676,7 +676,7 @@ def test_check_select_thread_solution_permission_passes_for_global_moderator_for
     other_user_thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -693,7 +693,7 @@ def test_check_select_thread_solution_permission_passes_for_global_moderator_for
     thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(thread)
@@ -710,7 +710,7 @@ def test_check_select_thread_solution_permission_passes_for_category_moderator_f
     default_category,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     thread = thread_factory(default_category, starter=category_moderator)
@@ -728,7 +728,7 @@ def test_check_select_thread_solution_permission_passes_for_category_moderator_f
     other_user_thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -745,7 +745,7 @@ def test_check_select_thread_solution_permission_passes_for_category_moderator_f
     thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(thread)
@@ -762,7 +762,7 @@ def test_check_select_thread_solution_permission_fails_for_user_for_own_thread_i
     default_category,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     thread = thread_factory(default_category, starter=user)
@@ -783,7 +783,7 @@ def test_check_select_thread_solution_permission_fails_for_user_for_other_user_t
     other_user_thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -802,7 +802,7 @@ def test_check_select_thread_solution_permission_fails_for_user_for_deleted_user
     thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(thread)
@@ -822,7 +822,7 @@ def test_check_select_thread_solution_permission_fails_for_anonymous_user_for_ot
     other_user_thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     guests_group.can_select_own_thread_solutions = True
@@ -845,7 +845,7 @@ def test_check_select_thread_solution_permission_fails_for_anonymous_user_for_de
     thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     guests_group.can_select_own_thread_solutions = True
@@ -1860,7 +1860,7 @@ def test_check_change_thread_solution_permission_passes_for_global_moderator_for
     default_category,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     thread = thread_factory(default_category, starter=moderator)
@@ -1883,7 +1883,7 @@ def test_check_change_thread_solution_permission_passes_for_global_moderator_for
     other_user_thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -1904,7 +1904,7 @@ def test_check_change_thread_solution_permission_passes_for_global_moderator_for
     thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(thread)
@@ -1925,7 +1925,7 @@ def test_check_change_thread_solution_permission_passes_for_category_moderator_f
     default_category,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     thread = thread_factory(default_category, starter=category_moderator)
@@ -1948,7 +1948,7 @@ def test_check_change_thread_solution_permission_passes_for_category_moderator_f
     other_user_thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -1969,7 +1969,7 @@ def test_check_change_thread_solution_permission_passes_for_category_moderator_f
     thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(thread)
@@ -1990,7 +1990,7 @@ def test_check_change_thread_solution_permission_fails_for_user_for_own_thread_i
     default_category,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     thread = thread_factory(default_category, starter=user)
@@ -2015,7 +2015,7 @@ def test_check_change_thread_solution_permission_fails_for_user_for_other_user_t
     other_user_thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -2038,7 +2038,7 @@ def test_check_change_thread_solution_permission_fails_for_user_for_deleted_user
     thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(thread)
@@ -2063,7 +2063,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_ot
     other_user_thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     guests_group.can_change_own_thread_solutions = True
@@ -2090,7 +2090,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_de
     thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     guests_group.can_change_own_thread_solutions = True
@@ -3943,7 +3943,7 @@ def test_check_clear_thread_solution_permission_passes_for_global_moderator_for_
     default_category,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     thread = thread_factory(default_category, starter=moderator)
@@ -3964,7 +3964,7 @@ def test_check_clear_thread_solution_permission_passes_for_global_moderator_for_
     other_user_thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -3983,7 +3983,7 @@ def test_check_clear_thread_solution_permission_passes_for_global_moderator_for_
     thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(thread)
@@ -4002,7 +4002,7 @@ def test_check_clear_thread_solution_permission_passes_for_category_moderator_fo
     default_category,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     thread = thread_factory(default_category, starter=category_moderator)
@@ -4023,7 +4023,7 @@ def test_check_clear_thread_solution_permission_passes_for_category_moderator_fo
     other_user_thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -4042,7 +4042,7 @@ def test_check_clear_thread_solution_permission_passes_for_category_moderator_fo
     thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(thread)
@@ -4061,7 +4061,7 @@ def test_check_clear_thread_solution_permission_fails_for_user_for_own_thread_in
     default_category,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     thread = thread_factory(default_category, starter=user)
@@ -4084,7 +4084,7 @@ def test_check_clear_thread_solution_permission_fails_for_user_for_other_user_th
     other_user_thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -4105,7 +4105,7 @@ def test_check_clear_thread_solution_permission_fails_for_user_for_deleted_user_
     thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     solution = thread_reply_factory(thread)
@@ -4128,7 +4128,7 @@ def test_check_clear_thread_solution_permission_fails_for_anonymous_user_for_oth
     other_user_thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     guests_group.can_clear_own_thread_solutions = True
@@ -4153,7 +4153,7 @@ def test_check_clear_thread_solution_permission_fails_for_anonymous_user_for_del
     thread,
 ):
     default_category.enable_solutions = True
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     guests_group.can_clear_own_thread_solutions = True

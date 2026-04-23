@@ -42,7 +42,7 @@ class Category(MPTTModel, PluginDataModel):
 
     delay_browse_check = models.BooleanField(default=False)
     show_started_only = models.BooleanField(default=False)
-    is_closed = models.BooleanField(default=False)
+    is_locked = models.BooleanField(default=False)
     is_vanilla = models.BooleanField(default=False)
     list_children_threads = models.BooleanField(default=True)
     children_categories_component = models.CharField(

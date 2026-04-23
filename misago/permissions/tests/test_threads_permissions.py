@@ -91,10 +91,10 @@ def test_check_edit_thread_post_permission_fails_if_user_is_poster_out_of_time_l
         )
 
 
-def test_check_edit_thread_post_permission_fails_if_category_is_closed(
+def test_check_edit_thread_post_permission_fails_if_category_is_locked(
     user, thread, user_reply, cache_versions, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -147,17 +147,17 @@ def test_check_edit_thread_post_permission_fails_if_post_is_hidden(
         )
 
 
-def test_check_edit_thread_post_permission_passes_for_global_moderator_if_category_is_closed(
+def test_check_edit_thread_post_permission_passes_for_global_moderator_if_category_is_locked(
     moderator, thread, user_reply, cache_versions, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
     check_edit_thread_post_permission(permissions, default_category, thread, user_reply)
 
 
-def test_check_edit_thread_post_permission_passes_for_category_moderator_if_category_is_closed(
+def test_check_edit_thread_post_permission_passes_for_category_moderator_if_category_is_locked(
     user, thread, reply, cache_versions, default_category
 ):
     Moderator.objects.create(
@@ -166,7 +166,7 @@ def test_check_edit_thread_post_permission_passes_for_category_moderator_if_cate
         categories=[default_category.id],
     )
 
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -351,10 +351,10 @@ def test_check_edit_thread_permission_fails_if_user_is_starter_out_of_time_limit
         check_edit_thread_permission(permissions, default_category, user_thread)
 
 
-def test_check_edit_thread_permission_fails_if_category_is_closed(
+def test_check_edit_thread_permission_fails_if_category_is_locked(
     user, user_thread, cache_versions, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -375,17 +375,17 @@ def test_check_edit_thread_permission_fails_if_thread_is_closed(
         check_edit_thread_permission(permissions, default_category, user_thread)
 
 
-def test_check_edit_thread_permission_passes_for_global_moderator_if_category_is_closed(
+def test_check_edit_thread_permission_passes_for_global_moderator_if_category_is_locked(
     moderator, user_thread, cache_versions, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
     check_edit_thread_permission(permissions, default_category, user_thread)
 
 
-def test_check_edit_thread_permission_passes_for_category_moderator_if_category_is_closed(
+def test_check_edit_thread_permission_passes_for_category_moderator_if_category_is_locked(
     user, thread, cache_versions, default_category
 ):
     Moderator.objects.create(
@@ -394,7 +394,7 @@ def test_check_edit_thread_permission_passes_for_category_moderator_if_category_
         categories=[default_category.id],
     )
 
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -469,7 +469,7 @@ def test_check_locked_category_permission_passes_if_category_is_open(
 def test_check_locked_category_permission_passes_if_user_is_global_moderator(
     moderator, cache_versions, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
@@ -479,7 +479,7 @@ def test_check_locked_category_permission_passes_if_user_is_global_moderator(
 def test_check_locked_category_permission_passes_if_user_is_category_moderator(
     user, cache_versions, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     Moderator.objects.create(
@@ -495,7 +495,7 @@ def test_check_locked_category_permission_passes_if_user_is_category_moderator(
 def test_check_locked_category_permission_fails_if_user_is_not_moderator(
     user, cache_versions, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -507,7 +507,7 @@ def test_check_locked_category_permission_fails_if_user_is_not_moderator(
 def test_check_locked_category_permission_fails_if_user_is_anonymous(
     anonymous_user, cache_versions, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
@@ -615,20 +615,20 @@ def test_check_reply_thread_permission_fails_if_anonymous_has_no_permission(
         check_reply_thread_permission(permissions, default_category, thread)
 
 
-def test_check_reply_thread_permission_in_closed_category_passes_if_user_is_global_moderator(
+def test_check_reply_thread_permission_in_locked_category_passes_if_user_is_global_moderator(
     moderator, cache_versions, default_category, thread
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
     check_reply_thread_permission(permissions, default_category, thread)
 
 
-def test_check_reply_thread_permission_in_closed_category_passes_if_user_is_category_moderator(
+def test_check_reply_thread_permission_in_locked_category_passes_if_user_is_category_moderator(
     user, cache_versions, default_category, thread
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     Moderator.objects.create(
@@ -641,10 +641,10 @@ def test_check_reply_thread_permission_in_closed_category_passes_if_user_is_cate
     check_reply_thread_permission(permissions, default_category, thread)
 
 
-def test_check_reply_thread_permission_fails_for_user_if_category_is_closed(
+def test_check_reply_thread_permission_fails_for_user_if_category_is_locked(
     user, cache_versions, default_category, thread
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -653,10 +653,10 @@ def test_check_reply_thread_permission_fails_for_user_if_category_is_closed(
         check_reply_thread_permission(permissions, default_category, thread)
 
 
-def test_check_reply_thread_permission_fails_for_anonymous_if_category_is_closed(
+def test_check_reply_thread_permission_fails_for_anonymous_if_category_is_locked(
     anonymous_user, cache_versions, default_category, thread
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
@@ -1374,7 +1374,7 @@ def test_check_start_thread_permission_fails_if_anonymous_has_no_permission(
 def test_check_start_thread_permission_passes_if_user_is_category_moderator(
     user, cache_versions, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     Moderator.objects.create(
@@ -1390,17 +1390,17 @@ def test_check_start_thread_permission_passes_if_user_is_category_moderator(
 def test_check_start_thread_permission_passes_if_user_is_global_moderator(
     moderator, cache_versions, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(moderator, cache_versions)
     check_start_thread_permission(permissions, default_category)
 
 
-def test_check_start_thread_permission_fails_for_user_if_category_is_closed(
+def test_check_start_thread_permission_fails_for_user_if_category_is_locked(
     user, cache_versions, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -1409,10 +1409,10 @@ def test_check_start_thread_permission_fails_for_user_if_category_is_closed(
         check_start_thread_permission(permissions, default_category)
 
 
-def test_check_start_thread_permission_fails_for_anonymous_if_category_is_closed(
+def test_check_start_thread_permission_fails_for_anonymous_if_category_is_locked(
     anonymous_user, cache_versions, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)

@@ -81,10 +81,10 @@ def test_category_thread_list_view_doesnt_show_start_thread_button_to_user_witho
     assert_not_contains(response, reverse("misago:thread-start"))
 
 
-def test_category_thread_list_view_hides_start_thread_button_from_user_without_permission_in_closed_category(
+def test_category_thread_list_view_hides_start_thread_button_from_user_without_permission_in_locked_category(
     user_client, default_category
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     response = user_client.get(
@@ -102,10 +102,10 @@ def test_category_thread_list_view_hides_start_thread_button_from_user_without_p
     )
 
 
-def test_category_thread_list_view_shows_start_thread_button_to_user_with_permission_in_closed_category(
+def test_category_thread_list_view_shows_start_thread_button_to_user_with_permission_in_locked_category(
     user, user_client, default_category, members_group, moderators_group
 ):
-    default_category.is_closed = True
+    default_category.is_locked = True
     default_category.save()
 
     user.set_groups(members_group, [moderators_group])

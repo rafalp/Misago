@@ -64,7 +64,7 @@
           >
             {% translate "Start new thread" context "threads list toolbar" %}
           </a>
-        {% elif category and category.is_closed %}
+        {% elif category and category.is_locked %}
           <a href="{{ start_thread_url }}" class="btn btn-default btn-block">
             <span class="text-danger">{% translate "Locked" context "threads list toolbar" %}</span>
           </a>
