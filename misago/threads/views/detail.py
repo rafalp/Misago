@@ -67,6 +67,7 @@ class DetailView(View):
     reply_error_template_name: str = "misago/thread/reply_error.html"
     reply_template_name: str = "misago/quick_reply/form.html"
     watch_thread_template_name: str = "misago/thread/watch_thread.html"
+    locked_thread_status_bar_template_name: str = "misago/thread/locked_thread.html"
     unapproved_thread_status_bar_template_name: str = (
         "misago/thread/unapproved_thread.html"
     )
@@ -132,6 +133,9 @@ class DetailView(View):
     ) -> list[dict]:
         thread_status_bars = []
 
+        if thread.is_locked:
+            thread_status_bars.append(self.get_locked_thread_status_bar_data())
+
         if thread.is_unapproved:
             thread_status_bars.append(self.get_unapproved_thread_status_bar_data())
 
@@ -142,6 +146,12 @@ class DetailView(View):
             thread_status_bars.append(self.get_unapproved_posts_status_bar_data(thread))
 
         return thread_status_bars
+
+    def get_locked_thread_status_bar_data(self) -> dict:
+        return {
+            "id": "locked_thread",
+            "template_name": self.locked_thread_status_bar_template_name,
+        }
 
     def get_unapproved_thread_status_bar_data(self) -> dict:
         return {

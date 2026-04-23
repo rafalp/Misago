@@ -1,0 +1,14 @@
+{% load i18n %}
+
+<div class="status-bar status-bar-locked">
+  <div class="status-bar-icon">
+    {% include "tabler/lock-filled.svg" %}
+  </div>
+  <div class="status-bar-body">
+    <p>
+      {% blocktranslate trimmed context "thread locked status bar" %}
+        This thread is locked.
+      {% endblocktranslate %}
+    </p>
+  </div>
+</div>

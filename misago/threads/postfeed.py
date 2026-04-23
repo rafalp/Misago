@@ -38,6 +38,7 @@ class PostFeed:
     template_name_htmx_append: str = "misago/post_feed/htmx_append.html"
     template_name_htmx_like: str = "misago/post_feed/htmx_like.html"
     post_template_name: str = "misago/post_feed/post.html"
+    post_locked_template_name: str = "misago/post_feed/post_locked.html"
     post_solved_template_name: str = "misago/post_feed/post_solved.html"
     post_solution_template_name = "misago/post_feed/post_solution.html"
     post_unapproved_template_name = "misago/post_feed/post_unapproved.html"
@@ -329,6 +330,14 @@ class PostFeed:
             self.get_post_unlike_url(post),
         )
 
+        if post.is_locked and (
+            self.is_moderator
+            or (post.poster_id and post.poster_id == self.request.user.id)
+        ):
+            item["post_body_top_components"].append(
+                self.get_post_locked_data(),
+            )
+
         if self.thread.solution_id and post.id == self.thread.first_post_id:
             item["post_body_bottom_components"].append(
                 self.get_post_solved_data(),
@@ -402,6 +411,9 @@ class PostFeed:
                             "slug": self.thread.slug,
                         },
                     )
+
+    def get_post_locked_data(self) -> dict:
+        return {"template_name": self.post_locked_template_name}
 
     def get_post_solved_data(self) -> dict:
         thread = self.thread
