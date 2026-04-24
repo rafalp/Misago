@@ -17,10 +17,7 @@ from .hooks import (
     check_vote_in_thread_poll_permission_hook,
 )
 from .proxy import UserPermissionsProxy
-from .threads import (
-    check_locked_category_permission,
-    check_locked_thread_permission,
-)
+from .threads import check_locked_thread_permission
 
 
 def check_start_poll_permission(permissions: UserPermissionsProxy):
@@ -60,7 +57,6 @@ def _check_start_thread_poll_permission_action(
     category: Category,
     thread: Thread,
 ):
-    check_locked_category_permission(permissions, category)
     check_locked_thread_permission(permissions, thread)
 
     if thread.has_poll:
@@ -97,7 +93,6 @@ def check_edit_thread_poll_permission(
 def _check_edit_thread_poll_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
 ):
-    check_locked_category_permission(permissions, category)
     check_locked_thread_permission(permissions, thread)
 
     if permissions.is_category_moderator(thread.category_id):
@@ -194,7 +189,6 @@ def check_close_thread_poll_permission(
 def _check_close_thread_poll_permission_action(
     permissions: UserPermissionsProxy, category: Category, thread: Thread, poll: Poll
 ):
-    check_locked_category_permission(permissions, category)
     check_locked_thread_permission(permissions, thread)
 
     if permissions.is_category_moderator(thread.category_id):
@@ -330,15 +324,7 @@ def _check_vote_in_thread_poll_permission_action(
             )
         )
 
-    if category.is_closed:
-        raise PermissionDenied(
-            pgettext(
-                "threads permission error",
-                "This category is locked.",
-            )
-        )
-
-    if thread.is_closed:
+    if thread.is_locked:
         raise PermissionDenied(
             pgettext(
                 "threads permission error",

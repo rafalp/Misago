@@ -1,0 +1,14 @@
+{% load i18n %}
+
+<div class="status-bar status-bar-locked">
+  <div class="status-bar-icon">
+    {% include "tabler/lock-filled.svg" %}
+  </div>
+  <div class="status-bar-body">
+    <p>
+      {% blocktranslate trimmed context "post locked status bar" %}
+        This post is only editable by moderators.
+      {% endblocktranslate %}
+    </p>
+  </div>
+</div>

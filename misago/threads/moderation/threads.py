@@ -109,22 +109,22 @@ def approve_thread(request, thread):
 
 @transaction.atomic
 def open_thread(request, thread):
-    if not thread.is_closed:
+    if not thread.is_locked:
         return False
 
-    thread.is_closed = False
-    thread.save(update_fields=["is_closed"])
+    thread.is_locked = False
+    thread.save(update_fields=["is_locked"])
 
     return True
 
 
 @transaction.atomic
 def close_thread(request, thread):
-    if thread.is_closed:
+    if thread.is_locked:
         return False
 
-    thread.is_closed = True
-    thread.save(update_fields=["is_closed"])
+    thread.is_locked = True
+    thread.save(update_fields=["is_locked"])
 
     return True
 

@@ -55,10 +55,10 @@
       <span class="material-icon">poll</span>
     </li>
   {% endif %}
-  {% if thread.is_closed %}
+  {% if thread.is_locked %}
     <li
-      class="thread-flag-closed"
-      title="{% translate 'Closed' context 'thread flag' %}"
+      class="thread-flag-locked"
+      title="{% translate 'Locked' context 'thread flag' %}"
     >
       <span class="material-icon">lock</span>
     </li>

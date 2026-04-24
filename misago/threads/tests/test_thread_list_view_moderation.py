@@ -121,13 +121,13 @@ def test_thread_list_view_executes_single_stage_moderation_action(
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": [thread.id]},
+        {"moderation": "lock", "threads": [thread.id]},
     )
     assert response.status_code == 302
     assert response["location"] == reverse("misago:thread-list")
 
     thread.refresh_from_db()
-    assert thread.is_closed
+    assert thread.is_locked
 
 
 @override_dynamic_settings(index_view="categories")
@@ -138,15 +138,15 @@ def test_thread_list_view_executes_single_stage_moderation_action_in_htmx(
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": [thread.id]},
+        {"moderation": "lock", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-closed")
+    assert_contains(response, "thread-flag-locked")
 
     thread.refresh_from_db()
-    assert thread.is_closed
+    assert thread.is_locked
 
 
 @override_dynamic_settings(index_view="categories")
@@ -214,12 +214,12 @@ def test_thread_list_view_moderation_shows_error_for_user(
 
     response = user_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": [thread.id]},
+        {"moderation": "lock", "threads": [thread.id]},
     )
     assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
-    assert not thread.is_closed
+    assert not thread.is_locked
 
 
 @override_dynamic_settings(index_view="categories")
@@ -230,13 +230,13 @@ def test_thread_list_view_moderation_shows_error_for_user_in_htmx(
 
     response = user_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": [thread.id]},
+        {"moderation": "lock", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
-    assert not thread.is_closed
+    assert not thread.is_locked
 
 
 @override_dynamic_settings(index_view="categories")
@@ -247,12 +247,12 @@ def test_thread_list_view_moderation_shows_error_for_guest(
 
     response = client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": [thread.id]},
+        {"moderation": "lock", "threads": [thread.id]},
     )
     assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
-    assert not thread.is_closed
+    assert not thread.is_locked
 
 
 @override_dynamic_settings(index_view="categories")
@@ -263,13 +263,13 @@ def test_thread_list_view_moderation_shows_error_for_guest_in_htmx(
 
     response = client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": [thread.id]},
+        {"moderation": "lock", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
-    assert not thread.is_closed
+    assert not thread.is_locked
 
 
 @override_dynamic_settings(index_view="categories")
@@ -330,7 +330,7 @@ def test_thread_list_view_shows_error_for_empty_moderation_action_in_htmx(
 def test_thread_list_view_shows_error_for_empty_threads_selection(moderator_client):
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": []},
+        {"moderation": "lock", "threads": []},
     )
     assert_contains(response, "No valid threads selected.")
 
@@ -341,7 +341,7 @@ def test_thread_list_view_shows_error_for_empty_threads_selection_in_htmx(
 ):
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": []},
+        {"moderation": "lock", "threads": []},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "No valid threads selected.")
@@ -353,7 +353,7 @@ def test_thread_list_view_shows_error_for_invalid_threads_selection(
 ):
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": "invalid"},
+        {"moderation": "lock", "threads": "invalid"},
     )
     assert_contains(response, "No valid threads selected.")
 
@@ -364,7 +364,7 @@ def test_thread_list_view_shows_error_for_invalid_threads_selection_in_htmx(
 ):
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": "invalid"},
+        {"moderation": "lock", "threads": "invalid"},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "No valid threads selected.")
@@ -376,7 +376,7 @@ def test_thread_list_view_shows_error_for_invalid_threads_ids_in_selection(
 ):
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": ["invalid"]},
+        {"moderation": "lock", "threads": ["invalid"]},
     )
     assert_contains(response, "No valid threads selected.")
 
@@ -387,7 +387,7 @@ def test_thread_list_view_shows_error_for_invalid_threads_ids_in_selection_in_ht
 ):
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": ["invalid"]},
+        {"moderation": "lock", "threads": ["invalid"]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "No valid threads selected.")
@@ -399,7 +399,7 @@ def test_thread_list_view_shows_error_for_not_existing_threads_ids_in_selection(
 ):
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": [42]},
+        {"moderation": "lock", "threads": [42]},
     )
     assert_contains(response, "No valid threads selected.")
 
@@ -410,7 +410,7 @@ def test_thread_list_view_shows_error_for_not_existing_threads_ids_in_selection_
 ):
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": [42]},
+        {"moderation": "lock", "threads": [42]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "No valid threads selected.")
@@ -429,7 +429,7 @@ def test_thread_list_view_shows_error_for_thread_in_selection_user_cant_moderate
 
     response = user_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": [thread.id]},
+        {"moderation": "lock", "threads": [thread.id]},
     )
     assert_contains(
         response,
@@ -437,7 +437,7 @@ def test_thread_list_view_shows_error_for_thread_in_selection_user_cant_moderate
     )
 
     thread.refresh_from_db()
-    assert not thread.is_closed
+    assert not thread.is_locked
 
 
 @override_dynamic_settings(index_view="categories")
@@ -453,7 +453,7 @@ def test_thread_list_view_shows_error_for_thread_in_selection_user_cant_moderate
 
     response = user_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "close", "threads": [thread.id]},
+        {"moderation": "lock", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
     assert_contains(
@@ -462,4 +462,4 @@ def test_thread_list_view_shows_error_for_thread_in_selection_user_cant_moderate
     )
 
     thread.refresh_from_db()
-    assert not thread.is_closed
+    assert not thread.is_locked

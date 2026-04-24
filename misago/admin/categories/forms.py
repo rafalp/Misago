@@ -118,14 +118,6 @@ class CategoryForm(forms.ModelForm):
             "Enabling this option will limit users access to threads in this category to only the threads they have started. Moderators will still have access to all threads.",
         ),
     )
-    is_closed = YesNoSwitch(
-        label=pgettext_lazy("admin category form", "Close category"),
-        required=False,
-        help_text=pgettext_lazy(
-            "admin category form",
-            "Only members with valid permissions can post in closed categories.",
-        ),
-    )
     is_vanilla = YesNoSwitch(
         label=pgettext_lazy("admin category form", "Make category vanilla"),
         required=False,
@@ -200,7 +192,6 @@ class CategoryForm(forms.ModelForm):
             "enable_solutions",
             "delay_browse_check",
             "show_started_only",
-            "is_closed",
             "is_vanilla",
             "list_children_threads",
             "children_categories_component",

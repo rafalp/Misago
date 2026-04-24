@@ -46,9 +46,6 @@ from .check_like_post_permission import check_like_post_permission_hook
 from .check_lock_thread_solution_permission import (
     check_lock_thread_solution_permission_hook,
 )
-from .check_locked_category_permission import (
-    check_locked_category_permission_hook,
-)
 from .check_locked_private_thread_permission import (
     check_locked_private_thread_permission_hook,
 )
@@ -151,7 +148,6 @@ __all__ = [
     "check_hide_post_edit_permission_hook",
     "check_like_post_permission_hook",
     "check_lock_thread_solution_permission_hook",
-    "check_locked_category_permission_hook",
     "check_locked_private_thread_permission_hook",
     "check_locked_thread_permission_hook",
     "check_open_thread_poll_permission_hook",

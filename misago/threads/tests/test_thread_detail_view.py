@@ -999,6 +999,112 @@ def test_thread_detail_view_shows_error_404_if_private_thread_is_accessed(
     assert_not_contains(response, user_private_thread.title, status_code=404)
 
 
+def test_thread_detail_view_shows_locked_deleted_user_thread_to_anonymous_user(
+    client, thread
+):
+    thread.is_locked = True
+    thread.save()
+
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked.")
+
+
+def test_thread_detail_view_shows_locked_deleted_user_thread_to_user(
+    user_client, thread
+):
+    thread.is_locked = True
+    thread.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked.")
+
+
+def test_thread_detail_view_shows_locked_deleted_user_thread_to_moderator(
+    moderator_client, thread
+):
+    thread.is_locked = True
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked.")
+
+
+def test_thread_detail_view_shows_locked_user_thread_to_anonymous_user(
+    client, user_thread
+):
+    user_thread.is_locked = True
+    user_thread.save()
+
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked.")
+
+
+def test_thread_detail_view_shows_locked_user_thread_to_user(user_client, user_thread):
+    user_thread.is_locked = True
+    user_thread.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked.")
+
+
+def test_thread_detail_view_shows_locked_user_thread_to_moderator(
+    moderator_client, user_thread
+):
+    user_thread.is_locked = True
+    user_thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked.")
+
+
 def test_thread_detail_view_shows_unapproved_deleted_user_thread_to_moderator(
     moderator_client, thread
 ):

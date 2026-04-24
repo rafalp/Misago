@@ -65,7 +65,7 @@ class Post(PluginDataModel):
     has_open_reports = models.BooleanField(default=False)
     is_unapproved = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
-    is_protected = models.BooleanField(default=False)
+    is_locked = models.BooleanField(default=False)
 
     is_event = models.BooleanField(default=False, db_index=True)
     event_type = models.CharField(max_length=255, null=True, blank=True)
@@ -135,12 +135,8 @@ class Post(PluginDataModel):
         other_post.parsed = str("\n").join((other_post.parsed, self.parsed))
         update_post_checksum(other_post)
 
-        if self.is_protected:
-            other_post.is_protected = True
-        # if self.is_best_answer:
-        #     self.thread.best_answer = other_post
-        # if other_post.is_best_answer:
-        #     self.thread.best_answer_is_protected = other_post.is_protected
+        if self.is_locked:
+            other_post.is_locked = True
 
         from ..signals import merge_post
 

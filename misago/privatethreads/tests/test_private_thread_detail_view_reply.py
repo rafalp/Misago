@@ -49,10 +49,10 @@ def test_private_thread_detail_view_shows_quick_reply_to_user(
     assert_contains(response, "quick_reply")
 
 
-def test_private_thread_detail_view_doesnt_show_reply_ui_to_user_in_closed_thread(
+def test_private_thread_detail_view_doesnt_show_reply_ui_to_user_in_locked_thread(
     user_client, other_user_private_thread
 ):
-    other_user_private_thread.is_closed = True
+    other_user_private_thread.is_locked = True
     other_user_private_thread.save()
 
     response = user_client.get(
@@ -90,7 +90,7 @@ def test_private_thread_detail_view_doesnt_show_quick_reply_to_user_in_thread_wi
     )
 
 
-def test_private_thread_detail_view_shows_reply_ui_to_private_threads_moderator_in_closed_thread(
+def test_private_thread_detail_view_shows_reply_ui_to_private_threads_moderator_in_locked_thread(
     user_client, user, other_user_private_thread
 ):
     Moderator.objects.create(
@@ -99,7 +99,7 @@ def test_private_thread_detail_view_shows_reply_ui_to_private_threads_moderator_
         private_threads=True,
     )
 
-    other_user_private_thread.is_closed = True
+    other_user_private_thread.is_locked = True
     other_user_private_thread.save()
 
     response = user_client.get(
@@ -162,10 +162,10 @@ def test_private_thread_detail_view_shows_reply_ui_to_private_threads_moderator_
     )
 
 
-def test_private_thread_detail_view_shows_reply_ui_to_global_moderator_in_closed_thread(
+def test_private_thread_detail_view_shows_reply_ui_to_global_moderator_in_locked_thread(
     moderator_client, other_user_private_thread
 ):
-    other_user_private_thread.is_closed = True
+    other_user_private_thread.is_locked = True
     other_user_private_thread.save()
 
     response = moderator_client.get(

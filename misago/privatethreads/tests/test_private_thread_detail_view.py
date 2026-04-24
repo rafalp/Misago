@@ -487,9 +487,66 @@ def test_private_thread_detail_view_shows_thread_members_to_moderator(
     assert_contains(response, moderator.username)
 
 
+def test_private_thread_detail_view_shows_locked_deleted_user_thread_to_user(
+    user_client, user_private_thread
+):
+    user_private_thread.starter_id = None
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked.")
+
+
+def test_private_thread_detail_view_shows_locked_user_thread_to_user(
+    user_client, user_private_thread
+):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked.")
+
+
+def test_private_thread_detail_view_shows_locked_user_thread_to_moderator(
+    moderator_client, user_private_thread
+):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked.")
+
+
 def test_private_thread_detail_view_shows_unapproved_deleted_user_thread_to_moderator(
     moderator_client, user_private_thread
 ):
+    user_private_thread.starter_id = None
+    user_private_thread.last_poster_id = None
     user_private_thread.is_unapproved = True
     user_private_thread.save()
 

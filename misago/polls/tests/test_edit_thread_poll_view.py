@@ -158,7 +158,7 @@ def test_edit_thread_poll_view_shows_error_to_anonymous_users_in_htmx(
 def test_edit_thread_poll_view_shows_error_if_user_has_no_edit_poll_permission(
     user_client, user_thread, user_poll
 ):
-    user_thread.is_closed = True
+    user_thread.is_locked = True
     user_thread.save()
 
     response = user_client.get(
@@ -173,7 +173,7 @@ def test_edit_thread_poll_view_shows_error_if_user_has_no_edit_poll_permission(
 def test_edit_thread_poll_view_shows_error_if_user_has_no_edit_poll_permission_in_htmx(
     user_client, user_thread, user_poll
 ):
-    user_thread.is_closed = True
+    user_thread.is_locked = True
     user_thread.save()
 
     response = user_client.get(

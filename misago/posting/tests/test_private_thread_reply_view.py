@@ -934,7 +934,7 @@ def test_private_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_
         other_user_private_thread,
         poster=user,
         original="Previous message",
-        is_protected=True,
+        is_locked=True,
     )
 
     response = user_client.post(

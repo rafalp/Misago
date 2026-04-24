@@ -1,13 +1,12 @@
 .status-bar {
   display: flex;
   align-items: center;
-  gap: 5px;
 
   margin: @line-height-computed 0;
-  padding: 4px;
 
   background-color: var(--status-bar-bg, @gray-100);
   border-radius: @border-radius-base;
+  overflow: hidden;
 
   &-icon {
     display: flex;
@@ -15,8 +14,8 @@
     justify-content: center;
     flex-shrink: 0;
 
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
 
     line-height: 0;
 
@@ -29,40 +28,16 @@
     }
   }
 
-  p {
-    margin: 0;
-    max-width: 100%;
-
-    overflow-wrap: break-word;
-    orphans: 3;
-
-    color: var(--status-bar-text, @gray-700);
-
-    a,
-    a:link,
-    a:visited {
-      color: var(--status-bar-link, @gray-700);
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    a:focus,
-    a:hover,
-    a:active {
-      color: var(--status-bar-link, @gray-700);
-      font-weight: bold;
-      text-decoration: underline;
-    }
-  }
-
   &-body {
     display: flex;
     flex-direction: column;
     gap: ceil(@grid-gutter-width / 4);
 
-    min-height: 28px;
+    min-height: 36px;
     width: 100%;
     min-width: 0;
+
+    background-color: var(--status-bar-body, @gray-100);
 
     @media screen and (min-width: 400px) {
       flex-direction: row;
@@ -70,11 +45,40 @@
       justify-content: space-between;
       gap: ceil(@grid-gutter-width / 2);
     }
+
+    p {
+      max-width: 100%;
+
+      margin: 0;
+      padding: 6px 12px;
+
+      overflow-wrap: break-word;
+      orphans: 3;
+
+      color: var(--status-bar-text, @gray-700);
+
+      a,
+      a:link,
+      a:visited {
+        color: var(--status-bar-link, @gray-700);
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      a:focus,
+      a:hover,
+      a:active {
+        color: var(--status-bar-link, @gray-700);
+        font-weight: bold;
+        text-decoration: underline;
+      }
+    }
   }
 
   &-actions {
     display: flex;
     align-items: center;
+    padding: 4px;
   }
 
   &-btn {
@@ -143,17 +147,20 @@
   }
 }
 
+.status-bar-locked {
+  --status-bar-bg: @thread-flag-locked-bg;
+  --status-bar-icon: @thread-flag-locked-color;
+}
+
 .status-bar-solution,
 .status-bar-solved {
-  --status-bar-bg: @green-100;
-  --status-bar-icon: @green-600;
-  --status-bar-btn-color: @green-300;
+  --status-bar-bg: @thread-flag-solved-bg;
+  --status-bar-icon: @thread-flag-solved-color;
 }
 
 .status-bar-unapproved {
-  --status-bar-bg: @orange-100;
-  --status-bar-icon: @orange-600;
-  --status-bar-btn-color: @orange-300;
+  --status-bar-bg: @thread-flag-unapproved-bg;
+  --status-bar-icon: @thread-flag-unapproved-color;
 }
 
 .status-bars {

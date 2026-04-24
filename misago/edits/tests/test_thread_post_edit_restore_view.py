@@ -108,7 +108,7 @@ def test_thread_post_edit_restore_view_shows_error_403_if_post_edit_cant_be_rest
 def test_thread_post_edit_restore_view_shows_error_403_if_post_is_not_editable(
     user_client, user, thread, user_reply
 ):
-    thread.is_closed = True
+    thread.is_locked = True
     thread.save()
 
     post_edit = create_post_edit(

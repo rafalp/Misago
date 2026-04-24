@@ -82,16 +82,16 @@ class MoveThreadsBulkModerationAction(ThreadsBulkModerationAction):
 
 
 class CloseThreadsBulkModerationAction(ThreadsBulkModerationAction):
-    id: str = "close"
-    name: str = pgettext_lazy("threads bulk moderation action", "Close")
+    id: str = "lock"
+    name: str = pgettext_lazy("threads bulk moderation action", "Lock")
 
     def __call__(
         self, request: HttpRequest, threads: list[Thread]
     ) -> ModerationBulkResult:
-        open_threads = [thread for thread in threads if not thread.is_closed]
+        open_threads = [thread for thread in threads if not thread.is_locked]
         updated = Thread.objects.filter(
             id__in=[thread.id for thread in open_threads]
-        ).update(has_updates=True, is_closed=True)
+        ).update(has_updates=True, is_locked=True)
 
         if updated:
             for thread in open_threads:
@@ -99,23 +99,23 @@ class CloseThreadsBulkModerationAction(ThreadsBulkModerationAction):
 
             messages.success(
                 request,
-                pgettext("threads bulk open", "Threads closed"),
+                pgettext("threads bulk open", "Threads locked"),
             )
 
         return self.create_bulk_result(open_threads)
 
 
 class OpenThreadsBulkModerationAction(ThreadsBulkModerationAction):
-    id: str = "open"
-    name: str = pgettext_lazy("threads bulk moderation action", "Open")
+    id: str = "unlock"
+    name: str = pgettext_lazy("threads bulk moderation action", "Unlock")
 
     def __call__(
         self, request: HttpRequest, threads: list[Thread]
     ) -> ModerationBulkResult:
-        closed_threads = [thread for thread in threads if thread.is_closed]
+        closed_threads = [thread for thread in threads if thread.is_locked]
         updated = Thread.objects.filter(
             id__in=[thread.id for thread in closed_threads]
-        ).update(has_updates=True, is_closed=False)
+        ).update(has_updates=True, is_locked=False)
 
         if updated:
             for thread in closed_threads:
@@ -123,7 +123,7 @@ class OpenThreadsBulkModerationAction(ThreadsBulkModerationAction):
 
             messages.success(
                 request,
-                pgettext("threads bulk open", "Threads opened"),
+                pgettext("threads bulk open", "Threads unlocked"),
             )
 
         return self.create_bulk_result(closed_threads)

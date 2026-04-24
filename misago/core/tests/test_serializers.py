@@ -21,7 +21,7 @@ class Serializer(serializers.ModelSerializer, MutableFields):
             "last_poster_name",
             "is_unapproved",
             "is_hidden",
-            "is_closed",
+            "is_locked",
             "weight",
         ]
 

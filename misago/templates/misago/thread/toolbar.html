@@ -35,19 +35,11 @@
         <div class="toolbar-item">
           <a
             href="{{ reply.url }}"
-            {% if thread.is_closed or category.is_closed %}
-              class="btn btn-default btn-block"
-            {% else %}
-              class="btn btn-primary btn-block"
-            {% endif %}
+            class="btn btn-primary btn-block"
             misago-scroll-to="#misago-quick-reply-scroll-target"
             misago-focus-on="#misago-htmx-quick-reply textarea"
           >
-            {% if thread.is_closed or category.is_closed %}
-              <span class="text-danger">{% translate "Reply in locked" context "thread replies toolbar" %}</span>
-            {% else %}
-              {% translate "Post reply" context "thread replies toolbar" %}
-            {% endif %}
+            {% translate "Post reply" context "thread replies toolbar" %}
           </a>
         </div>
       {% endif %}

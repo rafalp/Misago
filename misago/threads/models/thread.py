@@ -82,7 +82,7 @@ class Thread(PluginDataModel):
 
     is_unapproved = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
-    is_closed = models.BooleanField(default=False)
+    is_locked = models.BooleanField(default=False)
 
     solution = models.ForeignKey(
         "misago_threads.Post",

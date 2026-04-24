@@ -1,7 +1,6 @@
 from .checks import (
     check_edit_thread_post_permission,
     check_edit_thread_permission,
-    check_locked_category_permission,
     check_locked_thread_permission,
     check_reply_thread_permission,
     check_see_thread_permission,
@@ -22,7 +21,6 @@ __all__ = [
     "can_upload_thread_attachments",
     "check_edit_thread_post_permission",
     "check_edit_thread_permission",
-    "check_locked_category_permission",
     "check_locked_thread_permission",
     "check_reply_thread_permission",
     "check_see_thread_permission",

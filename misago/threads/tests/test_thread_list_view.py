@@ -546,15 +546,15 @@ def test_thread_list_view_displays_solved_thread(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_displays_closed_thread(
+def test_thread_list_view_displays_locked_thread(
     thread_factory, client, other_user, default_category
 ):
-    thread = thread_factory(default_category, starter=other_user, is_closed=True)
+    thread = thread_factory(default_category, starter=other_user, is_locked=True)
 
     response = client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-closed")
+    assert_contains(response, "thread-flag-locked")
 
 
 @override_dynamic_settings(index_view="categories")

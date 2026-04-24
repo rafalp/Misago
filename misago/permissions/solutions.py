@@ -13,10 +13,7 @@ from .hooks import (
     check_unlock_thread_solution_permission_hook,
 )
 from .proxy import UserPermissionsProxy
-from .threads import (
-    check_locked_category_permission,
-    check_locked_thread_permission,
-)
+from .threads import check_locked_thread_permission
 
 
 def check_select_thread_solution_permission(
@@ -51,7 +48,6 @@ def _check_select_thread_solution_permission_action(
     if permissions.is_category_moderator(post.category_id):
         return
 
-    check_locked_category_permission(permissions, post.category)
     check_locked_thread_permission(permissions, post.thread)
 
     if (
@@ -100,7 +96,6 @@ def _check_change_thread_solution_permission_action(
     if permissions.is_category_moderator(post.category_id):
         return
 
-    check_locked_category_permission(permissions, post.category)
     check_locked_thread_permission(permissions, post.thread)
 
     if not post.category.enable_solutions:
@@ -201,7 +196,6 @@ def _check_clear_thread_solution_permission_action(
     if permissions.is_category_moderator(thread.category_id):
         return
 
-    check_locked_category_permission(permissions, thread.category)
     check_locked_thread_permission(permissions, thread)
 
     if not thread.category.enable_solutions:
