@@ -147,6 +147,8 @@ def _check_edit_private_thread_permission_action(
     if permissions.is_private_threads_moderator:
         return
 
+    check_locked_private_thread_permission(permissions, thread)
+
     if thread.private_thread_owner_id != permissions.user.id:
         raise PermissionDenied(
             pgettext(
@@ -235,6 +237,8 @@ def _check_edit_private_thread_post_permission_action(
 ):
     if permissions.is_private_threads_moderator:
         return
+
+    check_locked_private_thread_permission(permissions, thread)
 
     user_id = permissions.user.id
     is_poster = user_id and post.poster_id and post.poster_id == user_id
