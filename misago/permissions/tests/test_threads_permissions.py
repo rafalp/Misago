@@ -8,7 +8,6 @@ from ..proxy import UserPermissionsProxy
 from ..threads import (
     check_edit_thread_post_permission,
     check_edit_thread_permission,
-    check_locked_category_permission,
     check_locked_thread_permission,
     check_reply_thread_permission,
     check_see_thread_permission,
@@ -91,20 +90,6 @@ def test_check_edit_thread_post_permission_fails_if_user_is_poster_out_of_time_l
         )
 
 
-def test_check_edit_thread_post_permission_fails_if_category_is_locked(
-    user, thread, user_reply, cache_versions, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(user, cache_versions)
-
-    with pytest.raises(PermissionDenied):
-        check_edit_thread_post_permission(
-            permissions, default_category, thread, user_reply
-        )
-
-
 def test_check_edit_thread_post_permission_fails_if_thread_is_locked(
     user, thread, user_reply, cache_versions, default_category
 ):
@@ -145,32 +130,6 @@ def test_check_edit_thread_post_permission_fails_if_post_is_hidden(
         check_edit_thread_post_permission(
             permissions, default_category, thread, user_reply
         )
-
-
-def test_check_edit_thread_post_permission_passes_for_global_moderator_if_category_is_locked(
-    moderator, thread, user_reply, cache_versions, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(moderator, cache_versions)
-    check_edit_thread_post_permission(permissions, default_category, thread, user_reply)
-
-
-def test_check_edit_thread_post_permission_passes_for_category_moderator_if_category_is_locked(
-    user, thread, reply, cache_versions, default_category
-):
-    Moderator.objects.create(
-        user=user,
-        is_global=False,
-        categories=[default_category.id],
-    )
-
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(user, cache_versions)
-    check_edit_thread_post_permission(permissions, default_category, thread, reply)
 
 
 def test_check_edit_thread_post_permission_passes_for_global_moderator_if_thread_is_locked(
@@ -351,18 +310,6 @@ def test_check_edit_thread_permission_fails_if_user_is_starter_out_of_time_limit
         check_edit_thread_permission(permissions, default_category, user_thread)
 
 
-def test_check_edit_thread_permission_fails_if_category_is_locked(
-    user, user_thread, cache_versions, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(user, cache_versions)
-
-    with pytest.raises(PermissionDenied):
-        check_edit_thread_permission(permissions, default_category, user_thread)
-
-
 def test_check_edit_thread_permission_fails_if_thread_is_locked(
     user, user_thread, cache_versions, default_category
 ):
@@ -373,32 +320,6 @@ def test_check_edit_thread_permission_fails_if_thread_is_locked(
 
     with pytest.raises(PermissionDenied):
         check_edit_thread_permission(permissions, default_category, user_thread)
-
-
-def test_check_edit_thread_permission_passes_for_global_moderator_if_category_is_locked(
-    moderator, user_thread, cache_versions, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(moderator, cache_versions)
-    check_edit_thread_permission(permissions, default_category, user_thread)
-
-
-def test_check_edit_thread_permission_passes_for_category_moderator_if_category_is_locked(
-    user, thread, cache_versions, default_category
-):
-    Moderator.objects.create(
-        user=user,
-        is_global=False,
-        categories=[default_category.id],
-    )
-
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(user, cache_versions)
-    check_edit_thread_permission(permissions, default_category, thread)
 
 
 def test_check_edit_thread_permission_passes_for_global_moderator_if_thread_is_locked(
@@ -457,63 +378,6 @@ def test_check_edit_thread_permission_passes_for_category_moderator_if_out_of_ti
 
     permissions = UserPermissionsProxy(user, cache_versions)
     check_edit_thread_permission(permissions, default_category, thread)
-
-
-def test_check_locked_category_permission_passes_if_category_is_open(
-    user, cache_versions, default_category
-):
-    permissions = UserPermissionsProxy(user, cache_versions)
-    check_locked_category_permission(permissions, default_category)
-
-
-def test_check_locked_category_permission_passes_if_user_is_global_moderator(
-    moderator, cache_versions, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(moderator, cache_versions)
-    check_locked_category_permission(permissions, default_category)
-
-
-def test_check_locked_category_permission_passes_if_user_is_category_moderator(
-    user, cache_versions, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    Moderator.objects.create(
-        user=user,
-        is_global=False,
-        categories=[default_category.id],
-    )
-
-    permissions = UserPermissionsProxy(user, cache_versions)
-    check_locked_category_permission(permissions, default_category)
-
-
-def test_check_locked_category_permission_fails_if_user_is_not_moderator(
-    user, cache_versions, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(user, cache_versions)
-
-    with pytest.raises(PermissionDenied):
-        check_locked_category_permission(permissions, default_category)
-
-
-def test_check_locked_category_permission_fails_if_user_is_anonymous(
-    anonymous_user, cache_versions, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
-
-    with pytest.raises(PermissionDenied):
-        check_locked_category_permission(permissions, default_category)
 
 
 def test_check_locked_thread_permission_passes_if_thread_is_open(
@@ -608,56 +472,6 @@ def test_check_reply_thread_permission_fails_if_anonymous_has_no_permission(
         group=guests_group,
         permission=CategoryPermission.REPLY,
     ).delete()
-
-    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
-
-    with pytest.raises(PermissionDenied):
-        check_reply_thread_permission(permissions, default_category, thread)
-
-
-def test_check_reply_thread_permission_in_locked_category_passes_if_user_is_global_moderator(
-    moderator, cache_versions, default_category, thread
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(moderator, cache_versions)
-    check_reply_thread_permission(permissions, default_category, thread)
-
-
-def test_check_reply_thread_permission_in_locked_category_passes_if_user_is_category_moderator(
-    user, cache_versions, default_category, thread
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    Moderator.objects.create(
-        user=user,
-        is_global=False,
-        categories=[default_category.id],
-    )
-
-    permissions = UserPermissionsProxy(user, cache_versions)
-    check_reply_thread_permission(permissions, default_category, thread)
-
-
-def test_check_reply_thread_permission_fails_for_user_if_category_is_locked(
-    user, cache_versions, default_category, thread
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(user, cache_versions)
-
-    with pytest.raises(PermissionDenied):
-        check_reply_thread_permission(permissions, default_category, thread)
-
-
-def test_check_reply_thread_permission_fails_for_anonymous_if_category_is_locked(
-    anonymous_user, cache_versions, default_category, thread
-):
-    default_category.is_locked = True
-    default_category.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
 
@@ -1364,56 +1178,6 @@ def test_check_start_thread_permission_fails_if_anonymous_has_no_permission(
         group=guests_group,
         permission=CategoryPermission.START,
     ).delete()
-
-    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
-
-    with pytest.raises(PermissionDenied):
-        check_start_thread_permission(permissions, default_category)
-
-
-def test_check_start_thread_permission_passes_if_user_is_category_moderator(
-    user, cache_versions, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    Moderator.objects.create(
-        user=user,
-        is_global=False,
-        categories=[default_category.id],
-    )
-
-    permissions = UserPermissionsProxy(user, cache_versions)
-    check_start_thread_permission(permissions, default_category)
-
-
-def test_check_start_thread_permission_passes_if_user_is_global_moderator(
-    moderator, cache_versions, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(moderator, cache_versions)
-    check_start_thread_permission(permissions, default_category)
-
-
-def test_check_start_thread_permission_fails_for_user_if_category_is_locked(
-    user, cache_versions, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    permissions = UserPermissionsProxy(user, cache_versions)
-
-    with pytest.raises(PermissionDenied):
-        check_start_thread_permission(permissions, default_category)
-
-
-def test_check_start_thread_permission_fails_for_anonymous_if_category_is_locked(
-    anonymous_user, cache_versions, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
 
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
 

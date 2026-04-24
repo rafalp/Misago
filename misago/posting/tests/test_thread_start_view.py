@@ -102,25 +102,6 @@ def test_thread_start_view_shows_error_403_to_users_without_start_threads_permis
     )
 
 
-def test_thread_start_view_shows_error_403_to_users_without_post_in_locked_category_permission(
-    user_client, default_category
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    response = user_client.get(
-        reverse(
-            "misago:thread-start",
-            kwargs={"category_id": default_category.id, "slug": default_category.slug},
-        )
-    )
-    assert_contains(
-        response,
-        "This category is locked.",
-        status_code=403,
-    )
-
-
 def test_thread_start_view_displays_posting_form(user_client, default_category):
     response = user_client.get(
         reverse(
@@ -132,25 +113,6 @@ def test_thread_start_view_displays_posting_form(user_client, default_category):
         )
     )
     assert_contains(response, "Start thread")
-    assert_contains(response, default_category.name)
-
-
-def test_thread_start_view_displays_posting_form_to_users_with_permission_to_post_in_locked_category(
-    user, user_client, default_category, members_group, moderators_group
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    user.set_groups(members_group, [moderators_group])
-    user.save()
-
-    response = user_client.get(
-        reverse(
-            "misago:thread-start",
-            kwargs={"category_id": default_category.id, "slug": default_category.slug},
-        )
-    )
-    assert_contains(response, "Start new thread")
     assert_contains(response, default_category.name)
 
 

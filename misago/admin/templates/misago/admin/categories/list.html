@@ -34,9 +34,6 @@
   <a href="{% url 'misago:admin:categories:edit' pk=item.pk %}" class="item-name small">
     {{ item }}
   </a>
-  {% if item.is_locked %}
-    <span class="fas fa-lock fa-fw text-warning" data-tooltip="top" title="{% translate 'Locked category' context 'admin categories' %}"></span>
-  {% endif %}
   {% if item.is_vanilla %}
     <span class="fas fa-ice-cream fa-fw text-info" data-tooltip="top" title="{% translate 'Vanilla category' context 'admin categories' %}"></span>
   {% endif %}

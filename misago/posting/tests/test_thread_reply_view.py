@@ -108,21 +108,6 @@ def test_thread_reply_view_shows_error_403_to_users_without_reply_category_permi
     assert_contains(response, "You can&#x27;t reply to threads in this category.", 403)
 
 
-def test_thread_reply_view_shows_error_403_to_users_without_locked_category_permission(
-    user_client, default_category, thread
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    response = user_client.get(
-        reverse(
-            "misago:thread-reply",
-            kwargs={"thread_id": thread.id, "slug": thread.slug},
-        )
-    )
-    assert_contains(response, "This category is locked.", 403)
-
-
 def test_thread_reply_view_shows_error_403_to_users_without_locked_thread_permission(
     user_client, thread
 ):
@@ -182,25 +167,6 @@ def test_thread_reply_view_displays_posting_form_to_users_with_hidden_thread_acc
     )
     assert_contains(response, "Reply to thread")
     assert_contains(response, hidden_thread.title)
-
-
-def test_thread_reply_view_displays_posting_form_to_users_with_in_locked_category_permission(
-    moderator_client, default_category, thread
-):
-    default_category.is_locked = True
-    default_category.save()
-
-    response = moderator_client.get(
-        reverse(
-            "misago:thread-reply",
-            kwargs={
-                "thread_id": thread.id,
-                "slug": thread.slug,
-            },
-        )
-    )
-    assert_contains(response, "Reply to thread")
-    assert_contains(response, thread.title)
 
 
 def test_thread_reply_view_displays_posting_form_to_users_with_in_locked_thread_permission(

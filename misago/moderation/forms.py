@@ -38,7 +38,6 @@ def get_disabled_category_choices(
             category["is_vanilla"]
             or category["id"] not in categories_browse
             or category["id"] not in categories_start
-            or (category["is_locked"] and category["id"] not in moderated_categories)
         ):
             choices.add(category["id"])
 

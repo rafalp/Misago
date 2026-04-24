@@ -199,7 +199,6 @@ def test_get_category_data_returns_dict_with_category_data(default_category):
         "css_class": default_category.css_class,
         "delay_browse_check": default_category.delay_browse_check,
         "show_started_only": default_category.show_started_only,
-        "is_locked": default_category.is_locked,
         "is_vanilla": default_category.is_vanilla,
         "url": default_category.get_absolute_url(),
         "lft": default_category.lft,

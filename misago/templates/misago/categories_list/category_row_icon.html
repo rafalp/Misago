@@ -1,30 +1,14 @@
 {% load i18n %}
-{% if category.is_locked %}
-  {% if category_data.children_unread %}
-    <div class="read-status item-new" title="{% translate 'Category has unread posts (locked)' context 'category status icon' %}">
-      <span class="material-icon">
-        lock
-      </span>
-    </div>
-  {% else %}
-    <div class="read-status item-read" title="{% translate 'Category has no unread posts (locked)' context 'category status icon' %}">
-      <span class="material-icon">
-        lock
-      </span>
-    </div>
-  {% endif %}
+{% if category_data.children_unread %}
+  <div class="read-status item-new" title="{% translate 'Category has unread posts' context 'category status icon' %}">
+    <span class="material-icon">
+      chat_bubble
+    </span>
+  </div>
 {% else %}
-  {% if category_data.children_unread %}
-    <div class="read-status item-new" title="{% translate 'Category has unread posts' context 'category status icon' %}">
-      <span class="material-icon">
-        chat_bubble
-      </span>
-    </div>
-  {% else %}
-    <div class="read-status item-read" title="{% translate 'Category has no unread posts' context 'category status icon' %}">
-      <span class="material-icon">
-        chat_bubble
-      </span>
-    </div>
-  {% endif %}
+  <div class="read-status item-read" title="{% translate 'Category has no unread posts' context 'category status icon' %}">
+    <span class="material-icon">
+      chat_bubble
+    </span>
+  </div>
 {% endif %}

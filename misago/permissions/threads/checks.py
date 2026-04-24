@@ -12,7 +12,6 @@ from ..enums import CategoryPermission
 from ..hooks import (
     check_edit_thread_permission_hook,
     check_edit_thread_post_permission_hook,
-    check_locked_category_permission_hook,
     check_locked_thread_permission_hook,
     check_reply_thread_permission_hook,
     check_see_thread_permission_hook,
@@ -20,28 +19,6 @@ from ..hooks import (
     check_start_thread_permission_hook,
 )
 from ..proxy import UserPermissionsProxy
-
-
-def check_locked_category_permission(
-    permissions: UserPermissionsProxy, category: Category
-):
-    check_locked_category_permission_hook(
-        _check_locked_category_permission_action,
-        permissions,
-        category,
-    )
-
-
-def _check_locked_category_permission_action(
-    permissions: UserPermissionsProxy, category: Category
-):
-    if category.is_locked and not permissions.is_category_moderator(category.id):
-        raise PermissionDenied(
-            pgettext(
-                "threads permission error",
-                "This category is locked.",
-            )
-        )
 
 
 def check_locked_thread_permission(permissions: UserPermissionsProxy, thread: Thread):
@@ -84,8 +61,6 @@ def _check_start_thread_permission_action(
                 "You can't start new threads in this category.",
             )
         )
-
-    check_locked_category_permission(permissions, category)
 
 
 def check_see_thread_permission(
@@ -154,7 +129,6 @@ def _check_reply_thread_permission_action(
             )
         )
 
-    check_locked_category_permission(permissions, category)
     check_locked_thread_permission(permissions, thread)
 
 
@@ -181,7 +155,6 @@ def _check_edit_thread_permission_action(
             )
         )
 
-    check_locked_category_permission(permissions, category)
     check_locked_thread_permission(permissions, thread)
 
     if permissions.is_category_moderator(thread.category_id):
@@ -298,7 +271,6 @@ def _check_edit_thread_post_permission_action(
             )
         )
 
-    check_locked_category_permission(permissions, category)
     check_locked_thread_permission(permissions, thread)
 
     if permissions.is_category_moderator(thread.category_id):

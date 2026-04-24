@@ -69,25 +69,6 @@ def test_thread_detail_view_doesnt_show_quick_reply_to_anonymous_user_without_pe
     assert_not_contains(response, "quick_reply")
 
 
-def test_thread_detail_view_doesnt_show_reply_ui_to_anonymous_user_with_permission_in_locked_category(
-    client, thread
-):
-    thread.category.is_locked = True
-    thread.category.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-
-    assert_contains(response, thread.title)
-    assert_not_contains(
-        response,
-        reverse(
-            "misago:thread-reply", kwargs={"thread_id": thread.id, "slug": thread.slug}
-        ),
-    )
-
-
 def test_thread_detail_view_doesnt_show_reply_ui_to_anonymous_user_with_permission_in_locked_thread(
     client, thread
 ):
@@ -170,25 +151,6 @@ def test_thread_detail_view_doesnt_show_quick_reply_to_user_without_permission(
 
     assert_contains(response, thread.title)
     assert_not_contains(response, "quick_reply")
-
-
-def test_thread_detail_view_doesnt_show_reply_ui_to_user_with_permission_in_locked_category(
-    user_client, thread
-):
-    thread.category.is_locked = True
-    thread.category.save()
-
-    response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-
-    assert_contains(response, thread.title)
-    assert_not_contains(
-        response,
-        reverse(
-            "misago:thread-reply", kwargs={"thread_id": thread.id, "slug": thread.slug}
-        ),
-    )
 
 
 def test_thread_detail_view_doesnt_show_reply_ui_to_user_with_permission_in_locked_thread(
@@ -297,31 +259,6 @@ def test_thread_detail_view_doesnt_show_quick_reply_to_category_moderator_withou
     assert_not_contains(response, "quick_reply")
 
 
-def test_thread_detail_view_shows_reply_ui_to_category_moderator_with_permission_in_locked_category(
-    user_client, user, thread
-):
-    Moderator.objects.create(
-        user=user,
-        is_global=False,
-        categories=[thread.category_id],
-    )
-
-    thread.category.is_locked = True
-    thread.category.save()
-
-    response = user_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-
-    assert_contains(response, thread.title)
-    assert_contains(
-        response,
-        reverse(
-            "misago:thread-reply", kwargs={"thread_id": thread.id, "slug": thread.slug}
-        ),
-    )
-
-
 def test_thread_detail_view_shows_reply_ui_to_category_moderator_with_permission_in_locked_thread(
     user_client, user, thread
 ):
@@ -409,25 +346,6 @@ def test_thread_detail_view_doesnt_show_quick_reply_to_global_moderator_without_
 
     assert_contains(response, thread.title)
     assert_not_contains(response, "quick_reply")
-
-
-def test_thread_detail_view_shows_reply_ui_to_global_moderator_with_permission_in_locked_category(
-    moderator_client, thread
-):
-    thread.category.is_locked = True
-    thread.category.save()
-
-    response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-
-    assert_contains(response, thread.title)
-    assert_contains(
-        response,
-        reverse(
-            "misago:thread-reply", kwargs={"thread_id": thread.id, "slug": thread.slug}
-        ),
-    )
 
 
 def test_thread_detail_view_shows_reply_ui_to_global_moderator_with_permission_in_locked_thread(
