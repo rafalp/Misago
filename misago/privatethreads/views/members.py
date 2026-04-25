@@ -11,6 +11,7 @@ from django.utils.translation import pgettext
 from ...notifications.tasks import notify_on_new_private_thread
 from ...permissions.privatethreads import (
     check_change_private_thread_owner_permission,
+    check_locked_private_thread_permission,
     check_remove_private_thread_member_permission,
 )
 from ...permissions.proxy import UserPermissionsProxy
@@ -108,6 +109,8 @@ class PrivateThreadMembersAddView(PrivateThreadView):
 
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
+
+        check_locked_private_thread_permission(request.user_permissions, thread)
 
         if not (
             self.get_moderator_status(request, thread)
