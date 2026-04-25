@@ -328,6 +328,8 @@ def _check_change_private_thread_owner_permission_action(
     if permissions.is_private_threads_moderator:
         return
 
+    check_locked_private_thread_permission(permissions, thread)
+
     if permissions.user.id != thread.private_thread_owner_id:
         raise PermissionDenied(
             pgettext(
@@ -357,6 +359,8 @@ def _check_remove_private_thread_member_permission_action(
 ):
     if permissions.is_private_threads_moderator:
         return
+
+    check_locked_private_thread_permission(permissions, thread)
 
     if permissions.user.id != thread.private_thread_owner_id:
         raise PermissionDenied(
