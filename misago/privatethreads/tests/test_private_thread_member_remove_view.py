@@ -335,6 +335,64 @@ def test_private_thread_member_remove_view_returns_403_if_user_is_not_thread_own
     assert_contains(response, "You can&#x27;t remove this member.", 403)
 
 
+def test_private_thread_member_remove_view_returns_403_for_user_if_thread_is_locked(
+    user_client, other_user, user_private_thread
+):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-member-remove",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "user_id": other_user.id,
+            },
+        ),
+    )
+    assert_contains(response, "This thread is locked.", 403)
+
+
+def test_private_thread_member_remove_view_removes_member_for_moderator_if_thread_is_locked(
+    moderator_client, moderator, user, other_user, user_private_thread
+):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread-member-remove",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "user_id": other_user.id,
+            },
+        ),
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={
+            "thread_id": user_private_thread.id,
+            "slug": user_private_thread.slug,
+        },
+    )
+
+    owner, members = get_private_thread_members(user_private_thread)
+    assert owner == user
+    assert members == [user, moderator]
+
+    ThreadUpdate.objects.get(
+        actor=moderator,
+        thread=user_private_thread,
+        action=ThreadUpdateActionName.REMOVED_MEMBER,
+    )
+
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.has_updates
+
+
 def test_private_thread_member_remove_view_returns_403_if_member_cant_be_removed(
     user_client, moderator, user_private_thread
 ):
