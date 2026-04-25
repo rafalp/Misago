@@ -263,3 +263,21 @@ def test_private_thread_leave_view_returns_404_if_thread_is_not_private(
         ),
     )
     assert response.status_code == 404
+
+
+def test_private_thread_leave_view_returns_403_if_thread_owner_leaves_locked_thread(
+    user_client, user, user_private_thread
+):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-leave",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked.", status_code=403)

@@ -310,6 +310,7 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
 
 
 class PrivateThreadLeaveView(PrivateThreadView):
+    thread_get_members = True
     template_name = "misago/private_thread_leave/index.html"
 
     def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
@@ -339,6 +340,14 @@ class PrivateThreadLeaveView(PrivateThreadView):
             thread.delete()
 
         return redirect(reverse("misago:private-thread-list"))
+
+    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
+        thread = super().get_thread(request, thread_id)
+
+        if self.get_owner_status(request, thread):
+            check_locked_private_thread_permission(request.user_permissions, thread)
+
+        return thread
 
 
 class PrivateThreadMembersHtmxResponse:
