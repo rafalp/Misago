@@ -146,6 +146,21 @@ def test_thread_edit_view_shows_error_403_to_users_without_locked_thread_permiss
     assert_contains(response, "This thread is locked", 403)
 
 
+def test_thread_edit_view_shows_error_403_to_users_without_locked_first_post_permission(
+    user_client, user_thread
+):
+    user_thread.first_post.is_locked = True
+    user_thread.first_post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-edit",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+    )
+    assert_contains(response, "You can&#x27;t edit locked posts.", 403)
+
+
 def test_thread_edit_view_displays_edit_form(user_client, user_thread):
     response = user_client.get(
         reverse(

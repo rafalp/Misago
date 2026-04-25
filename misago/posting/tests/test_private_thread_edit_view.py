@@ -102,6 +102,63 @@ def test_private_thread_edit_view_shows_error_403_to_users_who_cant_edit_other_u
     assert_contains(response, "You can&#x27;t edit other users&#x27; threads.", 403)
 
 
+def test_private_thread_edit_view_shows_error_403_to_users_who_cant_edit_deleted_users_threads(
+    user_client, other_user_private_thread
+):
+    other_user_private_thread.starter = None
+    other_user_private_thread.save()
+
+    other_user_private_thread.first_post.poster = None
+    other_user_private_thread.first_post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "You can&#x27;t edit other users&#x27; threads.", 403)
+
+
+def test_private_thread_edit_view_shows_error_403_to_users_without_locked_thread_permission(
+    user_client, user_private_thread
+):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked", 403)
+
+
+def test_private_thread_edit_view_shows_error_403_to_users_without_locked_first_post_permission(
+    user_client, user_private_thread
+):
+    user_private_thread.first_post.is_locked = True
+    user_private_thread.first_post.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-edit",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "You can&#x27;t edit locked posts.", 403)
+
+
 def test_private_thread_edit_view_displays_edit_form(user_client, user_private_thread):
     response = user_client.get(
         reverse(

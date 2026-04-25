@@ -190,6 +190,45 @@ def test_private_thread_post_edit_view_shows_error_403_to_users_who_cant_see_pos
     assert_contains(response, "You can&#x27;t edit hidden posts.", 403)
 
 
+def test_private_thread_post_edit_view_shows_error_403_to_users_without_locked_thread_permission(
+    thread_reply_factory, user_client, user, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster=user)
+
+    other_user_private_thread.is_locked = True
+    other_user_private_thread.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edit",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked", 403)
+
+
+def test_private_thread_post_edit_view_shows_error_403_to_users_without_locked_post_permission(
+    thread_reply_factory, user_client, user, other_user_private_thread
+):
+    post = thread_reply_factory(other_user_private_thread, poster=user, is_locked=True)
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-post-edit",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+                "post_id": post.id,
+            },
+        )
+    )
+    assert_contains(response, "You can&#x27;t edit locked posts.", 403)
+
+
 def test_private_thread_post_edit_view_displays_edit_form(
     thread_reply_factory, user_client, user, other_user_private_thread
 ):
