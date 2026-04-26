@@ -38,6 +38,13 @@ class CategoriesProxy:
             elif category["parent_id"] in children:
                 children[category["parent_id"]].append(category)
 
+        # Sort top categories by lft to maintain order
+        top_categories.sort(key=lambda c: c["lft"])
+
+        # Sort child categories by lft to maintain order
+        for child_list in children.values():
+            child_list.sort(key=lambda c: c["lft"])
+
         # Flatten menu for React.js
         menu_items: list[dict] = []
         for category in top_categories:
