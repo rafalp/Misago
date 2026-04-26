@@ -8,6 +8,7 @@ from ...conf.test import override_dynamic_settings
 from ...notifications.enums import ThreadNotifications
 from ...notifications.models import WatchedThread
 from ...permissions.enums import CanUploadAttachments
+from ...permissions.models import Moderator
 from ...test import assert_contains, assert_contains_element, assert_not_contains
 from ...threads.models import Thread
 from ..forms import PostForm
@@ -53,6 +54,29 @@ def test_private_thread_start_view_shows_error_403_to_users_without_start_privat
 def test_private_thread_start_view_displays_posting_form(user_client):
     response = user_client.get(reverse("misago:private-thread-start"))
     assert_contains(response, "Start thread")
+    assert_not_contains(response, "Lock thread")
+
+
+def test_private_thread_start_view_displays_posting_form_with_moderation_options_for_private_threads_moderator(
+    user_client, user
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
+
+    response = user_client.get(reverse("misago:private-thread-start"))
+    assert_contains(response, "Start thread")
+    assert_contains(response, "Lock thread")
+
+
+def test_private_thread_start_view_displays_posting_form_with_moderation_options_for_global_moderator(
+    moderator_client,
+):
+    response = moderator_client.get(reverse("misago:private-thread-start"))
+    assert_contains(response, "Start thread")
+    assert_contains(response, "Lock thread")
 
 
 def test_private_thread_start_view_posts_new_thread(
@@ -145,13 +169,189 @@ def test_private_thread_start_view_posts_new_unapproved_thread(
     assert response.status_code == 302
 
     thread = Thread.objects.get(slug="hello-world")
-    assert thread.is_unapproved
     assert response["location"] == reverse(
         "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
+    assert thread.is_unapproved
+
     mock_notify_on_new_private_thread.delay.assert_called_with(
         user.id, thread.id, [admin.id, moderator.id, other_user.id]
+    )
+
+
+def test_private_thread_start_view_posts_new_thread_without_moderation_options_if_user_is_not_moderator(
+    user_client, user, admin, moderator, other_user, mock_notify_on_new_private_thread
+):
+    response = user_client.post(
+        reverse("misago:private-thread-start"),
+        {
+            "posting-members-users": [
+                admin.username,
+                moderator.username,
+                other_user.username,
+            ],
+            "posting-members-users_noscript": "",
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+            "posting-moderation-is_locked": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert not thread.is_locked
+
+    mock_notify_on_new_private_thread.delay.assert_called_with(
+        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+    )
+
+
+def test_private_thread_start_view_posts_new_thread_with_moderation_options_if_user_is_private_threads_moderator(
+    user_client, user, admin, moderator, other_user, mock_notify_on_new_private_thread
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
+
+    response = user_client.post(
+        reverse("misago:private-thread-start"),
+        {
+            "posting-members-users": [
+                admin.username,
+                moderator.username,
+                other_user.username,
+            ],
+            "posting-members-users_noscript": "",
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+            "posting-moderation-is_locked": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert thread.is_locked
+
+    mock_notify_on_new_private_thread.delay.assert_called_with(
+        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+    )
+
+
+def test_private_thread_start_view_posts_new_thread_without_moderation_options_if_user_is_private_threads_moderator(
+    user_client, user, admin, moderator, other_user, mock_notify_on_new_private_thread
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
+
+    response = user_client.post(
+        reverse("misago:private-thread-start"),
+        {
+            "posting-members-users": [
+                admin.username,
+                moderator.username,
+                other_user.username,
+            ],
+            "posting-members-users_noscript": "",
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert not thread.is_locked
+
+    mock_notify_on_new_private_thread.delay.assert_called_with(
+        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+    )
+
+
+def test_private_thread_start_view_posts_new_thread_with_moderation_options_if_user_is_global_moderator(
+    moderator_client,
+    user,
+    admin,
+    moderator,
+    other_user,
+    mock_notify_on_new_private_thread,
+):
+    response = moderator_client.post(
+        reverse("misago:private-thread-start"),
+        {
+            "posting-members-users": [
+                admin.username,
+                user.username,
+                other_user.username,
+            ],
+            "posting-members-users_noscript": "",
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+            "posting-moderation-is_locked": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert thread.is_locked
+
+    mock_notify_on_new_private_thread.delay.assert_called_with(
+        moderator.id, thread.id, [admin.id, user.id, other_user.id]
+    )
+
+
+def test_private_thread_start_view_posts_new_thread_without_moderation_options_if_user_is_global_moderator(
+    moderator_client,
+    user,
+    admin,
+    moderator,
+    other_user,
+    mock_notify_on_new_private_thread,
+):
+    response = moderator_client.post(
+        reverse("misago:private-thread-start"),
+        {
+            "posting-members-users": [
+                admin.username,
+                user.username,
+                other_user.username,
+            ],
+            "posting-members-users_noscript": "",
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert not thread.is_locked
+
+    mock_notify_on_new_private_thread.delay.assert_called_with(
+        moderator.id, thread.id, [admin.id, user.id, other_user.id]
     )
 
 

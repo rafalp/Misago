@@ -10,10 +10,11 @@ from ...conf.test import override_dynamic_settings
 from ...notifications.enums import ThreadNotifications
 from ...notifications.models import WatchedThread
 from ...permissions.enums import CanUploadAttachments, CategoryPermission
-from ...permissions.models import CategoryGroupPermission
+from ...permissions.models import CategoryGroupPermission, Moderator
 from ...polls.enums import PublicPollsAvailability
 from ...polls.models import Poll
 from ...test import assert_contains, assert_contains_element, assert_not_contains
+from ...threads.enums import ThreadWeight
 from ...threads.models import Thread
 from ..forms import PostForm
 from ..formsets import Formset
@@ -115,6 +116,59 @@ def test_thread_start_view_displays_posting_form(user_client, default_category):
     assert_contains(response, "Start thread")
     assert_contains(response, default_category.name)
 
+    assert_not_contains(response, "Pin thread globally")
+    assert_not_contains(response, "Pin thread in category")
+    assert_not_contains(response, "Hide thread")
+    assert_not_contains(response, "Lock thread")
+
+
+def test_thread_start_view_displays_posting_form_with_moderation_options_for_category_moderator(
+    user_client, user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    response = user_client.get(
+        reverse(
+            "misago:thread-start",
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
+        )
+    )
+    assert_contains(response, "Start thread")
+    assert_contains(response, default_category.name)
+
+    assert_not_contains(response, "Pin thread globally")
+    assert_contains(response, "Pin thread in category")
+    assert_contains(response, "Hide thread")
+    assert_contains(response, "Lock thread")
+
+
+def test_thread_start_view_displays_posting_form_with_moderation_options_for_global_moderator(
+    moderator_client, default_category
+):
+    response = moderator_client.get(
+        reverse(
+            "misago:thread-start",
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
+        )
+    )
+    assert_contains(response, "Start thread")
+    assert_contains(response, default_category.name)
+
+    assert_contains(response, "Pin thread globally")
+    assert_contains(response, "Pin thread in category")
+    assert_contains(response, "Hide thread")
+    assert_contains(response, "Lock thread")
+
 
 def test_thread_start_view_posts_new_thread(user_client, default_category):
     response = user_client.post(
@@ -160,10 +214,207 @@ def test_thread_start_view_posts_new_unapproved_thread(
     assert response.status_code == 302
 
     thread = Thread.objects.get(slug="hello-world")
-    assert thread.is_unapproved
     assert response["location"] == reverse(
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
+
+    assert thread.is_unapproved
+
+
+def test_thread_start_view_posts_new_thread_without_moderation_options_if_user_is_not_moderator(
+    user_client, default_category
+):
+    response = user_client.post(
+        reverse(
+            "misago:thread-start",
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+            "posting-moderation-pin": "2",
+            "posting-moderation-is_locked": "true",
+            "posting-moderation-is_hidden": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert not thread.weight
+    assert not thread.is_locked
+    assert not thread.is_hidden
+
+
+def test_thread_start_view_posts_new_thread_with_moderation_options_if_user_is_category_moderator(
+    user_client, user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-start",
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+            "posting-moderation-pin_in_category": "true",
+            "posting-moderation-is_locked": "true",
+            "posting-moderation-is_hidden": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert thread.weight == ThreadWeight.PINNED_IN_CATEGORY
+    assert thread.is_locked
+    assert thread.is_hidden
+
+
+def test_thread_start_view_posts_new_thread_without_moderation_options_if_user_is_category_moderator(
+    user_client, user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-start",
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert not thread.weight
+    assert not thread.is_locked
+    assert not thread.is_hidden
+
+
+def test_thread_start_view_posts_new_thread_with_global_pin_if_user_is_category_moderator(
+    user_client, user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-start",
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+            "posting-moderation-pin": str(ThreadWeight.PINNED_GLOBALLY),
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert not thread.weight
+    assert not thread.is_locked
+    assert not thread.is_hidden
+
+
+def test_thread_start_view_posts_new_thread_with_moderation_options_if_user_is_global_moderator(
+    moderator_client, default_category
+):
+    response = moderator_client.post(
+        reverse(
+            "misago:thread-start",
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+            "posting-moderation-pin": str(ThreadWeight.PINNED_GLOBALLY.value),
+            "posting-moderation-is_locked": "true",
+            "posting-moderation-is_hidden": "true",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert thread.weight == ThreadWeight.PINNED_GLOBALLY
+    assert thread.is_locked
+    assert thread.is_hidden
+
+
+def test_thread_start_view_posts_new_thread_without_moderation_options_if_user_is_global_moderator(
+    moderator_client, default_category
+):
+    response = moderator_client.post(
+        reverse(
+            "misago:thread-start",
+            kwargs={
+                "category_id": default_category.id,
+                "slug": default_category.slug,
+            },
+        ),
+        {
+            "posting-title-title": "Hello world",
+            "posting-post-post": "How's going?",
+        },
+    )
+    assert response.status_code == 302
+
+    thread = Thread.objects.get(slug="hello-world")
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    assert not thread.weight
+    assert not thread.is_locked
+    assert not thread.is_hidden
 
 
 def test_thread_start_view_previews_new_thread(user_client, default_category):

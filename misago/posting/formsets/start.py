@@ -13,9 +13,14 @@ from ..forms import (
     create_members_form,
     create_poll_form,
     create_post_form,
+    create_private_thread_moderation_form,
+    create_thread_moderation_form,
     create_title_form,
 )
-from ..hooks import get_private_thread_start_formset_hook, get_thread_start_formset_hook
+from ..hooks import (
+    get_private_thread_start_formset_hook,
+    get_thread_start_formset_hook,
+)
 from .formset import Formset, TabbedFormset
 
 
@@ -69,6 +74,14 @@ def _get_thread_start_formset_action(
             create_poll_form(request),
         )
 
+    if request.user_permissions.is_category_moderator(category.id):
+        formset.add_form(
+            ThreadStartFormsetTabs.CONTENT,
+            create_thread_moderation_form(
+                request, request.user_permissions.is_global_moderator
+            ),
+        )
+
     return formset
 
 
@@ -98,5 +111,8 @@ def _get_private_thread_start_formset_action(
             can_upload_attachments=can_upload_attachments,
         )
     )
+
+    if request.user_permissions.is_private_threads_moderator:
+        formset.add_form(create_private_thread_moderation_form(request))
 
     return formset
