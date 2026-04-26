@@ -67,3 +67,36 @@ def create_thread_moderation_form(
         is_global_moderator=global_moderator,
         prefix=ThreadModerationForm.form_prefix,
     )
+
+
+class PrivateThreadModerationForm(PostingForm):
+    form_prefix = "posting-moderation"
+    template_name = "misago/posting/private_thread_moderation_form.html"
+
+    request: HttpRequest
+
+    is_locked = forms.BooleanField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super().__init__(*args, **kwargs)
+
+    def update_state(self, state: StartState):
+        if self.cleaned_data["is_locked"]:
+            lock_thread(state.thread, commit=False, request=self.request)
+
+
+def create_private_thread_moderation_form(
+    request: HttpRequest,
+) -> PrivateThreadModerationForm:
+    if request.method == "POST":
+        return PrivateThreadModerationForm(
+            request.POST,
+            request=request,
+            prefix=ThreadModerationForm.form_prefix,
+        )
+
+    return PrivateThreadModerationForm(
+        request=request,
+        prefix=ThreadModerationForm.form_prefix,
+    )
