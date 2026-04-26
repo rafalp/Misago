@@ -97,10 +97,47 @@ def test_private_thread_reply_view_shows_error_403_to_user_if_thread_has_no_othe
     )
 
 
+def test_private_thread_reply_view_shows_error_403_to_users_without_locked_thread_permission(
+    user_client, other_user_private_thread
+):
+    other_user_private_thread.is_locked = True
+    other_user_private_thread.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked", 403)
+
+
 def test_private_thread_reply_view_displays_posting_form(
     user_client, other_user_private_thread
 ):
     response = user_client.get(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Reply to thread")
+    assert_contains(response, other_user_private_thread.title)
+
+
+def test_private_thread_reply_view_displays_posting_form_to_users_with_in_locked_thread_permission(
+    moderator_client, other_user_private_thread
+):
+    other_user_private_thread.is_locked = True
+    other_user_private_thread.save()
+
+    response = moderator_client.get(
         reverse(
             "misago:private-thread-reply",
             kwargs={

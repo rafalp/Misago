@@ -407,7 +407,7 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
         if last_post := super().get_last_post(request, thread):
             with check_permissions() as can_edit_post:
                 check_edit_private_thread_post_permission(
-                    request.user_permissions, thread.category, last_post
+                    request.user_permissions, thread, last_post
                 )
 
             if can_edit_post:

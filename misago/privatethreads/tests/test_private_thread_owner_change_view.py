@@ -330,6 +330,61 @@ def test_private_thread_owner_change_view_returns_403_if_user_is_not_thread_owne
     assert_contains(response, "You can&#x27;t change this thread&#x27;s owner.", 403)
 
 
+def test_private_thread_owner_change_view_returns_403_for_user_if_thread_is_locked(
+    user_client, user, other_user, moderator, user_private_thread
+):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-owner-change",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "user_id": other_user.id,
+            },
+        )
+    )
+    assert_contains(response, "This thread is locked.", 403)
+
+
+def test_private_thread_owner_change_view_changes_thread_owner_for_moderator_if_thread_is_locked(
+    moderator_client, user, other_user, moderator, user_private_thread
+):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread-owner-change",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+                "user_id": other_user.id,
+            },
+        )
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={
+            "thread_id": user_private_thread.id,
+            "slug": user_private_thread.slug,
+        },
+    )
+
+    owner, members = get_private_thread_members(user_private_thread)
+    assert owner == other_user
+    assert members == [user, other_user, moderator]
+
+    ThreadUpdate.objects.get(
+        actor=moderator,
+        thread=user_private_thread,
+        action=ThreadUpdateActionName.CHANGED_OWNER,
+    )
+
+
 def test_private_thread_owner_change_view_returns_403_if_member_cant_be_made_owner(
     user_client, other_user, user_private_thread
 ):

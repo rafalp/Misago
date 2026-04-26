@@ -9,8 +9,11 @@ from django.urls import reverse
 from django.utils.translation import pgettext
 
 from ...notifications.tasks import notify_on_new_private_thread
+from ...permissions.checkutils import check_permissions
 from ...permissions.privatethreads import (
+    check_add_private_thread_members_permission,
     check_change_private_thread_owner_permission,
+    check_locked_private_thread_permission,
     check_remove_private_thread_member_permission,
 )
 from ...permissions.proxy import UserPermissionsProxy
@@ -109,16 +112,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
     def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
         thread = super().get_thread(request, thread_id)
 
-        if not (
-            self.get_moderator_status(request, thread)
-            or self.get_owner_status(request, thread)
-        ):
-            raise PermissionDenied(
-                pgettext(
-                    "private thread add members view",
-                    "You can't add members to this thread.",
-                )
-            )
+        check_add_private_thread_members_permission(request.user_permissions, thread)
 
         return thread
 
@@ -307,6 +301,7 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
 
 
 class PrivateThreadLeaveView(PrivateThreadView):
+    thread_get_members = True
     template_name = "misago/private_thread_leave/index.html"
 
     def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
@@ -336,6 +331,14 @@ class PrivateThreadLeaveView(PrivateThreadView):
             thread.delete()
 
         return redirect(reverse("misago:private-thread-list"))
+
+    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
+        thread = super().get_thread(request, thread_id)
+
+        if self.get_owner_status(request, thread):
+            check_locked_private_thread_permission(request.user_permissions, thread)
+
+        return thread
 
 
 class PrivateThreadMembersHtmxResponse:
@@ -412,13 +415,17 @@ def get_private_thread_members_context_data(
     next_url = get_next_thread_url(request, thread, "misago:private-thread")
     next_url_quoted = quote_plus(next_url)
 
-    add_members_url = (
-        reverse(
-            "misago:private-thread-members-add",
-            kwargs={"thread_id": thread.id, "slug": thread.slug},
+    add_members_url = None
+
+    with check_permissions():
+        check_add_private_thread_members_permission(request.user_permissions, thread)
+        add_members_url = (
+            reverse(
+                "misago:private-thread-members-add",
+                kwargs={"thread_id": thread.id, "slug": thread.slug},
+            )
+            + f"?next={next_url_quoted}"
         )
-        + f"?next={next_url_quoted}"
-    )
 
     return {
         "manage": manage,

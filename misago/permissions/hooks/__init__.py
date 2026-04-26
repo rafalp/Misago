@@ -9,6 +9,9 @@ from .can_upload_threads_attachments import can_upload_threads_attachments_hook
 from .check_access_category_permission import check_access_category_permission_hook
 from .check_access_post_permission import check_access_post_permission_hook
 from .check_access_thread_permission import check_access_thread_permission_hook
+from .check_add_private_thread_members_permission import (
+    check_add_private_thread_members_permission_hook,
+)
 from .check_browse_category_permission import check_browse_category_permission_hook
 from .check_change_private_thread_owner_permission import (
     check_change_private_thread_owner_permission_hook,
@@ -131,6 +134,7 @@ __all__ = [
     "check_access_category_permission_hook",
     "check_access_post_permission_hook",
     "check_access_thread_permission_hook",
+    "check_add_private_thread_members_permission_hook",
     "check_browse_category_permission_hook",
     "check_change_private_thread_owner_permission_hook",
     "check_change_thread_solution_permission_hook",

@@ -299,3 +299,63 @@ def test_private_thread_members_add_view_allows_moderators_to_add_new_members(
         )
     )
     assert_contains(response, "Add members")
+
+
+def test_private_thread_members_add_view_checks_locked_thread_permission(
+    mock_notify_on_new_private_thread, user_client, user, user_private_thread, admin
+):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"users": [admin.username]},
+    )
+    assert_contains(response, "This thread is locked.", 403)
+
+
+def test_private_thread_members_add_view_adds_new_thread_members_in_locked_thread(
+    mock_notify_on_new_private_thread,
+    moderator_client,
+    moderator,
+    user,
+    user_private_thread,
+    admin,
+):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread-members-add",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"users": [admin.username]},
+    )
+
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    )
+
+    PrivateThreadMember.objects.get(thread=user_private_thread, user=admin)
+
+    ThreadUpdate.objects.get(
+        thread=user_private_thread,
+        action=ThreadUpdateActionName.ADDED_MEMBER,
+        context=admin.username,
+    )
+
+    mock_notify_on_new_private_thread.delay.assert_called_once_with(
+        moderator.id, user_private_thread.id, [admin.id]
+    )

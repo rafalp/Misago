@@ -106,7 +106,7 @@
         <span class="material-icon private-thread-owner-icon">star</span>
         {% translate "Thread owner" context "private thread members panel" %}
       </div>
-      {% if manage %}
+      {% if manage and add_members_url %}
         <div class="panel-private-thread-members-options">
           <a
             href="{{ add_members_url }}" class="btn btn-default"
