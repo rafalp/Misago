@@ -18,7 +18,7 @@
   {% with field=form.pin_in_category %}
     <div class="checkbox">
       <label>
-        <input name="{{ field.html_name }}" type="checkbox" value="1"{% if field.data %} checked{% endif %}> {% translate "Pin thread in category" context "posting moderation form" %}
+        <input name="{{ field.html_name }}" type="checkbox" value="{{ field.value}}"{% if field.data %} checked{% endif %}> {% translate "Pin thread in category" context "posting moderation form" %}
       </label>
     </div>
   {% endwith %}
@@ -26,14 +26,14 @@
 {% with field=form.is_locked %}
   <div class="checkbox">
     <label>
-      <input name="{{ field.html_name }}" type="checkbox" value="1"{% if field.data %} checked{% endif %}> {% translate "Lock thread" context "posting moderation form" %}
+      <input name="{{ field.html_name }}" type="checkbox" value="{{ field.value}}"{% if field.data %} checked{% endif %}> {% translate "Lock thread" context "posting moderation form" %}
     </label>
   </div>
 {% endwith %}
 {% with field=form.is_hidden %}
   <div class="checkbox">
     <label>
-      <input name="{{ field.html_name }}" type="checkbox" value="1"{% if field.data %} checked{% endif %}> {% translate "Hide thread" context "posting moderation form" %}
+      <input name="{{ field.html_name }}" type="checkbox" value="{{ field.value}}"{% if field.data %} checked{% endif %}> {% translate "Hide thread" context "posting moderation form" %}
     </label>
   </div>
 {% endwith %}
