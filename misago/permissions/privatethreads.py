@@ -9,6 +9,7 @@ from django.utils.translation import npgettext, pgettext
 from ..privatethreads.models import PrivateThreadMember
 from ..threads.models import Post, Thread
 from .hooks import (
+    check_add_private_thread_members_permission_hook,
     check_change_private_thread_owner_permission_hook,
     check_edit_private_thread_permission_hook,
     check_edit_private_thread_post_permission_hook,
@@ -311,6 +312,35 @@ def _check_edit_private_thread_post_permission_action(
                 minutes,
             )
             % {"minutes": minutes}
+        )
+
+
+def check_add_private_thread_members_permission(
+    permissions: UserPermissionsProxy,
+    thread: Thread,
+):
+    check_add_private_thread_members_permission_hook(
+        _check_add_private_thread_members_permission_action,
+        permissions,
+        thread,
+    )
+
+
+def _check_add_private_thread_members_permission_action(
+    permissions: UserPermissionsProxy,
+    thread: Thread,
+):
+    if permissions.is_private_threads_moderator:
+        return
+
+    check_locked_private_thread_permission(permissions, thread)
+
+    if permissions.user.id != thread.private_thread_owner_id:
+        raise PermissionDenied(
+            pgettext(
+                "add private thread members permission error",
+                "You can't add members to this thread.",
+            )
         )
 
 

@@ -5,6 +5,7 @@ from django.http import Http404
 from ...privatethreads.models import PrivateThreadMember
 from ..models import Moderator
 from ..privatethreads import (
+    check_add_private_thread_members_permission,
     check_change_private_thread_owner_permission,
     check_edit_private_thread_post_permission,
     check_edit_private_thread_permission,
@@ -675,8 +676,107 @@ def test_check_see_private_thread_post_permission_for_hidden_post_passes_for_glo
     check_see_private_thread_post_permission(permissions, thread, user_reply)
 
 
+def test_check_add_private_thread_members_permission_fails_if_user_is_not_owner(
+    user_permissions_factory, user, other_user_private_thread
+):
+    with pytest.raises(PermissionDenied):
+        check_add_private_thread_members_permission(
+            user_permissions_factory(user),
+            other_user_private_thread,
+        )
+
+
+def test_check_add_private_thread_members_permission_passes_for_thread_owner(
+    user_permissions_factory, user, user_private_thread
+):
+    check_add_private_thread_members_permission(
+        user_permissions_factory(user),
+        user_private_thread,
+    )
+
+
+def test_check_add_private_thread_members_permission_passes_for_private_threads_moderator(
+    user_permissions_factory, user, thread
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
+
+    check_add_private_thread_members_permission(
+        user_permissions_factory(user),
+        thread,
+    )
+
+
+def test_check_add_private_thread_members_permission_passes_for_global_moderator(
+    user_permissions_factory, moderator, thread
+):
+    check_add_private_thread_members_permission(
+        user_permissions_factory(moderator),
+        thread,
+    )
+
+
+def test_check_add_private_thread_members_permission_fails_if_user_is_not_owner_for_locked_thread(
+    user_permissions_factory, user, other_user_private_thread
+):
+    other_user_private_thread.is_locked = True
+    other_user_private_thread.save()
+
+    with pytest.raises(PermissionDenied):
+        check_add_private_thread_members_permission(
+            user_permissions_factory(user),
+            other_user_private_thread,
+        )
+
+
+def test_check_add_private_thread_members_permission_fails_for_thread_owner_for_locked_thread(
+    user_permissions_factory, user, user_private_thread
+):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    with pytest.raises(PermissionDenied):
+        check_add_private_thread_members_permission(
+            user_permissions_factory(user),
+            user_private_thread,
+        )
+
+
+def test_check_add_private_thread_members_permission_passes_for_private_threads_moderator_for_locked_thread(
+    user_permissions_factory, user, thread
+):
+    thread.is_locked = True
+    thread.save()
+
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        private_threads=True,
+    )
+
+    check_add_private_thread_members_permission(
+        user_permissions_factory(user),
+        thread,
+    )
+
+
+def test_check_add_private_thread_members_permission_passes_for_global_moderator_for_locked_thread(
+    user_permissions_factory, moderator, thread
+):
+    thread.is_locked = True
+    thread.save()
+
+    check_add_private_thread_members_permission(
+        user_permissions_factory(moderator),
+        thread,
+    )
+
+
 def test_check_change_private_thread_owner_permission_passes_for_thread_owner(
-    user, user_private_thread, user_permissions_factory
+    user_permissions_factory, user, user_private_thread
 ):
     check_change_private_thread_owner_permission(
         user_permissions_factory(user),
@@ -685,7 +785,7 @@ def test_check_change_private_thread_owner_permission_passes_for_thread_owner(
 
 
 def test_check_change_private_thread_owner_permission_passes_for_moderator(
-    moderator, user_private_thread, user_permissions_factory
+    user_permissions_factory, moderator, user_private_thread
 ):
     check_change_private_thread_owner_permission(
         user_permissions_factory(moderator),
@@ -694,7 +794,7 @@ def test_check_change_private_thread_owner_permission_passes_for_moderator(
 
 
 def test_check_change_private_thread_owner_permission_fails_for_regular_member(
-    other_user, user_private_thread, user_permissions_factory
+    user_permissions_factory, other_user, user_private_thread
 ):
     with pytest.raises(PermissionDenied):
         check_change_private_thread_owner_permission(
@@ -704,7 +804,7 @@ def test_check_change_private_thread_owner_permission_fails_for_regular_member(
 
 
 def test_check_change_private_thread_owner_permission_fails_for_thread_owner_in_locked_thread(
-    user, user_private_thread, user_permissions_factory
+    user_permissions_factory, user, user_private_thread
 ):
     user_private_thread.is_locked = True
     user_private_thread.save()
@@ -717,7 +817,7 @@ def test_check_change_private_thread_owner_permission_fails_for_thread_owner_in_
 
 
 def test_check_change_private_thread_owner_permission_passes_for_moderator_in_locked_thread(
-    moderator, user_private_thread, user_permissions_factory
+    user_permissions_factory, moderator, user_private_thread
 ):
     user_private_thread.is_locked = True
     user_private_thread.save()
@@ -729,7 +829,7 @@ def test_check_change_private_thread_owner_permission_passes_for_moderator_in_lo
 
 
 def test_check_change_private_thread_owner_permission_fails_for_regular_member_in_locked_thread(
-    other_user, user_private_thread, user_permissions_factory
+    user_permissions_factory, other_user, user_private_thread
 ):
     user_private_thread.is_locked = True
     user_private_thread.save()
@@ -742,7 +842,7 @@ def test_check_change_private_thread_owner_permission_fails_for_regular_member_i
 
 
 def test_check_remove_private_thread_member_permission_passes_for_thread_owner_removing_thread_member(
-    user, other_user, user_private_thread, user_permissions_factory
+    user_permissions_factory, user, other_user, user_private_thread
 ):
     check_remove_private_thread_member_permission(
         user_permissions_factory(user),
@@ -752,7 +852,7 @@ def test_check_remove_private_thread_member_permission_passes_for_thread_owner_r
 
 
 def test_check_remove_private_thread_member_permission_passes_for_moderator_removing_thread_member(
-    moderator, other_user, user_private_thread, user_permissions_factory
+    user_permissions_factory, moderator, other_user, user_private_thread
 ):
     check_remove_private_thread_member_permission(
         user_permissions_factory(moderator),
@@ -762,7 +862,7 @@ def test_check_remove_private_thread_member_permission_passes_for_moderator_remo
 
 
 def test_check_remove_private_thread_member_permission_fails_for_thread_owner_removing_moderator(
-    user, moderator, user_private_thread, user_permissions_factory
+    user_permissions_factory, user, moderator, user_private_thread
 ):
     with pytest.raises(PermissionDenied):
         check_remove_private_thread_member_permission(
@@ -773,7 +873,7 @@ def test_check_remove_private_thread_member_permission_fails_for_thread_owner_re
 
 
 def test_check_remove_private_thread_member_permission_fails_for_thread_member(
-    user, other_user, user_private_thread, user_permissions_factory
+    user_permissions_factory, user, other_user, user_private_thread
 ):
     with pytest.raises(PermissionDenied):
         check_remove_private_thread_member_permission(
@@ -784,7 +884,7 @@ def test_check_remove_private_thread_member_permission_fails_for_thread_member(
 
 
 def test_check_remove_private_thread_member_permission_fails_for_thread_owner_removing_thread_member_in_locked_thread(
-    user, other_user, user_private_thread, user_permissions_factory
+    user_permissions_factory, user, other_user, user_private_thread
 ):
     user_private_thread.is_locked = True
     user_private_thread.save()
@@ -798,7 +898,7 @@ def test_check_remove_private_thread_member_permission_fails_for_thread_owner_re
 
 
 def test_check_remove_private_thread_member_permission_passes_for_moderator_removing_thread_member_in_locked_thread(
-    moderator, other_user, user_private_thread, user_permissions_factory
+    user_permissions_factory, moderator, other_user, user_private_thread
 ):
     check_remove_private_thread_member_permission(
         user_permissions_factory(moderator),
@@ -808,7 +908,7 @@ def test_check_remove_private_thread_member_permission_passes_for_moderator_remo
 
 
 def test_check_remove_private_thread_member_permission_fails_for_thread_owner_removing_moderator_in_locked_thread(
-    user, moderator, user_private_thread, user_permissions_factory
+    user_permissions_factory, user, moderator, user_private_thread
 ):
     with pytest.raises(PermissionDenied):
         check_remove_private_thread_member_permission(
@@ -819,7 +919,7 @@ def test_check_remove_private_thread_member_permission_fails_for_thread_owner_re
 
 
 def test_check_remove_private_thread_member_permission_fails_for_thread_member_in_locked_thread(
-    user, other_user, user_private_thread, user_permissions_factory
+    user_permissions_factory, user, other_user, user_private_thread
 ):
     with pytest.raises(PermissionDenied):
         check_remove_private_thread_member_permission(

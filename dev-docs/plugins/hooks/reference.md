@@ -123,6 +123,7 @@ Hooks instances are importable from the following Python modules:
 - [`check_access_category_permission_hook`](./check-access-category-permission-hook.md)
 - [`check_access_post_permission_hook`](./check-access-post-permission-hook.md)
 - [`check_access_thread_permission_hook`](./check-access-thread-permission-hook.md)
+- [`check_add_private_thread_members_permission_hook`](./check-add-private-thread-members-permission-hook.md)
 - [`check_browse_category_permission_hook`](./check-browse-category-permission-hook.md)
 - [`check_change_private_thread_owner_permission_hook`](./check-change-private-thread-owner-permission-hook.md)
 - [`check_change_thread_solution_permission_hook`](./check-change-thread-solution-permission-hook.md)
