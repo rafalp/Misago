@@ -1,16 +1,19 @@
+from django.http import HttpRequest
+
+from .hooks import lock_thread_hook, unlock_thread_hook
 from .models import Thread
 
 
 def lock_thread(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    return _lock_thread_action(thread, commit, request)
+    return lock_thread_hook(_lock_thread_action, thread, commit, request)
 
 
 def _lock_thread_action(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    if not thread.is_locked:
+    if thread.is_locked:
         return False
 
     thread.is_locked = True
@@ -24,13 +27,13 @@ def _lock_thread_action(
 def unlock_thread(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    return _unlock_thread_action(thread, commit, request)
+    return unlock_thread_hook(_unlock_thread_action, thread, commit, request)
 
 
 def _unlock_thread_action(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    if thread.is_locked:
+    if not thread.is_locked:
         return False
 
     thread.is_locked = False
