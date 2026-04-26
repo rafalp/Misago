@@ -8,6 +8,23 @@ class ThreadWeight(IntEnum):
     PINNED_IN_CATEGORY = 1
     PINNED_GLOBALLY = 2
 
+    @classmethod
+    def get_choices(cls):
+        return (
+            (
+                cls.NOT_PINNED,
+                pgettext_lazy("pin thread choice", "Don't pin thread"),
+            ),
+            (
+                cls.PINNED_IN_CATEGORY,
+                pgettext_lazy("pin thread choice", "Pin thread in category"),
+            ),
+            (
+                cls.PINNED_GLOBALLY,
+                pgettext_lazy("pin thread choice", "Pin thread globally"),
+            ),
+        )
+
 
 class ThreadsListsPolling(IntEnum):
     DISABLED = 0
