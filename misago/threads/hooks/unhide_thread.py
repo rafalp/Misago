@@ -92,7 +92,7 @@ class UnhideThreadHook(
 
     # Example
 
-    Register information about user who unhidden the thread
+    Register user who unhidden the thread.
 
     ```python
     from django.http import HttpRequest

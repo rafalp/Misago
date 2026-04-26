@@ -1,6 +1,6 @@
-# `lock_thread_hook`
+# `pin_thread_globally_hook`
 
-This hook allows plugins to replace or extend the logic used to lock a thread.
+This hook allows plugins to replace or extend the logic used to pin a thread globally.
 
 
 ## Location
@@ -8,15 +8,15 @@ This hook allows plugins to replace or extend the logic used to lock a thread.
 This hook can be imported from `misago.threads.hooks`:
 
 ```python
-from misago.threads.hooks import lock_thread_hook
+from misago.threads.hooks import pin_thread_globally_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_lock_thread_filter(
-    action: LockThreadHookAction,
+def custom_pin_thread_globally_filter(
+    action: PinThreadGloballyHookAction,
     thread: Thread,
     commit: bool=True,
     request: HttpRequest | None=None,
@@ -29,7 +29,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: LockThreadHookAction`
+#### `action: PinThreadGloballyHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
@@ -38,7 +38,7 @@ See the [action](#action) section for details.
 
 #### `thread: Thread`
 
-A `Thread` to lock.
+A `Thread` to pin globally.
 
 
 #### `commit: bool = True`
@@ -55,26 +55,26 @@ The request object, or `None` if not provided.
 
 ### Return value
 
-`True` if the thread was locked, `False` otherwise.
+`True` if the thread was pinned, `False` otherwise.
 
 
 ## Action
 
 ```python
-def lock_thread_action(
+def pin_thread_globally_action(
     thread: Thread, commit: bool=True, request: HttpRequest | None=None
 ) -> bool:
     ...
 ```
 
-Misago function for locking a thread.
+Misago function for pinning a thread globally.
 
 
 ### Arguments
 
 #### `thread: Thread`
 
-A `Thread` to lock.
+A `Thread` to pin globally.
 
 
 #### `commit: bool = True`
@@ -91,21 +91,21 @@ The request object, or `None` if not provided.
 
 ### Return value
 
-`True` if the thread was locked, `False` otherwise.
+`True` if the thread was pinned, `False` otherwise.
 
 
 ## Example
 
-Register user who locked the thread.
+Register user who pinned the thread.
 
 ```python
 from django.http import HttpRequest
-from misago.threads.hooks import lock_thread_hook
+from misago.threads.hooks import pin_thread_globally_hook
 from misago.threads.models import Thread
 
 
-@lock_thread_hook.append_filter
-def register_user_that_locked_thread(
+@pin_thread_globally_hook.append_filter
+def register_user_that_pinned_thread_globally(
     action,
     thread: Thread,
     commit: bool = True,
@@ -115,7 +115,7 @@ def register_user_that_locked_thread(
         return False
 
     if request:
-        thread.plugin_data["locked_by"] = request.user.id
+        thread.plugin_data["pinned_globally_by"] = request.user.id
 
     if commit:
         thread.save()

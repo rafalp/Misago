@@ -6,15 +6,15 @@ from ...plugins.hooks import FilterHook
 from ..models import Thread
 
 
-class HideThreadHookAction(Protocol):
+class UnpinThreadHookAction(Protocol):
     """
-    Misago function for hiding a thread.
+    Misago function for unpinning a thread.
 
     # Arguments
 
     ## `thread: Thread`
 
-    A `Thread` to hide.
+    A `Thread` to unpin.
 
     ## `commit: bool = True`
 
@@ -28,7 +28,7 @@ class HideThreadHookAction(Protocol):
 
     # Return value
 
-    `True` if the thread was hidden, `False` otherwise.
+    `True` if the thread was unpinned, `False` otherwise.
     """
 
     def __call__(
@@ -39,13 +39,13 @@ class HideThreadHookAction(Protocol):
     ) -> bool: ...
 
 
-class HideThreadHookFilter(Protocol):
+class UnpinThreadHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: HideThreadHookAction`
+    ## `action: UnpinThreadHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -54,7 +54,7 @@ class HideThreadHookFilter(Protocol):
 
     ## `thread: Thread`
 
-    A `Thread` to hide.
+    A `Thread` to unpin.
 
     ## `commit: bool = True`
 
@@ -68,40 +68,40 @@ class HideThreadHookFilter(Protocol):
 
     # Return value
 
-    `True` if the thread was hidden, `False` otherwise.
+    `True` if the thread was unpinned, `False` otherwise.
     """
 
     def __call__(
         self,
-        action: HideThreadHookAction,
+        action: UnpinThreadHookAction,
         thread: Thread,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
 
 
-class HideThreadHook(
+class UnpinThreadHook(
     FilterHook[
-        HideThreadHookAction,
-        HideThreadHookFilter,
+        UnpinThreadHookAction,
+        UnpinThreadHookFilter,
     ]
 ):
     """
     This hook allows plugins to replace or extend the logic used to
-    hide a thread.
+    unpin a thread.
 
     # Example
 
-    Register user who hid the thread.
+    Register user who unpinned the thread.
 
     ```python
     from django.http import HttpRequest
-    from misago.threads.hooks import hide_thread_hook
+    from misago.threads.hooks import unpin_thread_hook
     from misago.threads.models import Thread
 
 
-    @hide_thread_hook.append_filter
-    def register_user_that_hid_thread(
+    @unpin_thread_hook.append_filter
+    def register_user_that_unpinned_thread(
         action,
         thread: Thread,
         commit: bool = True,
@@ -111,7 +111,7 @@ class HideThreadHook(
             return False
 
         if request:
-            thread.plugin_data["hidden_by"] = request.user.id
+            thread.plugin_data["unpinned_by"] = request.user.id
 
         if commit:
             thread.save()
@@ -123,7 +123,7 @@ class HideThreadHook(
 
     def __call__(
         self,
-        action: HideThreadHookAction,
+        action: UnpinThreadHookAction,
         thread: Thread,
         commit: bool = True,
         request: HttpRequest | None = None,
@@ -136,4 +136,4 @@ class HideThreadHook(
         )
 
 
-hide_thread_hook = HideThreadHook()
+unpin_thread_hook = UnpinThreadHook()

@@ -92,7 +92,7 @@ class LockThreadHook(
 
     # Example
 
-    Register information about user who locked the thread
+    Register user who locked the thread.
 
     ```python
     from django.http import HttpRequest
