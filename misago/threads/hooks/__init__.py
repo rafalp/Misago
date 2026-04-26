@@ -31,10 +31,12 @@ from .get_threads_page_moderation_actions import (
 from .get_threads_page_queryset import get_threads_page_queryset_hook
 from .get_threads_page_subcategories import get_threads_page_subcategories_hook
 from .get_threads_page_threads import get_threads_page_threads_hook
+from .hide_thread import hide_thread_hook
 from .lock_thread import lock_thread_hook
 from .move_threads import move_threads_hook
 from .populate_post_feed_data import populate_post_feed_data_hook
 from .synchronize_thread import synchronize_thread_hook
+from .unhide_thread import unhide_thread_hook
 from .unlock_thread import unlock_thread_hook
 
 __all__ = [
@@ -55,9 +57,11 @@ __all__ = [
     "get_threads_page_queryset_hook",
     "get_threads_page_subcategories_hook",
     "get_threads_page_threads_hook",
+    "hide_thread_hook",
     "lock_thread_hook",
     "move_threads_hook",
     "populate_post_feed_data_hook",
     "synchronize_thread_hook",
+    "unhide_thread_hook",
     "unlock_thread_hook",
 ]

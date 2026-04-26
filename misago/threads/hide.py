@@ -1,16 +1,19 @@
+from django.http import HttpRequest
+
+from .hooks import hide_thread_hook, unhide_thread_hook
 from .models import Thread
 
 
 def hide_thread(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    return _hide_thread_action(thread, commit, request)
+    return hide_thread_hook(_hide_thread_action, thread, commit, request)
 
 
 def _hide_thread_action(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    if not thread.is_hidden:
+    if thread.is_hidden:
         return False
 
     thread.is_hidden = True
@@ -24,13 +27,13 @@ def _hide_thread_action(
 def unhide_thread(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    return _unhide_thread_action(thread, commit, request)
+    return unhide_thread_hook(_unhide_thread_action, thread, commit, request)
 
 
 def _unhide_thread_action(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    if thread.is_hidden:
+    if not thread.is_hidden:
         return False
 
     thread.is_hidden = False
