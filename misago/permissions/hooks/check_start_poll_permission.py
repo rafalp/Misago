@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, Protocol
 
+from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
@@ -43,6 +44,7 @@ class CheckStartPollPermissionHookFilter(Protocol):
         self,
         action: CheckStartPollPermissionHookAction,
         permissions: "UserPermissionsProxy",
+        category: Category
     ) -> None: ...
 
 
@@ -93,8 +95,9 @@ class CheckStartPollPermissionHook(
         self,
         action: CheckStartPollPermissionHookAction,
         permissions: "UserPermissionsProxy",
+        category: Category
     ) -> None:
-        return super().__call__(action, permissions)
+        return super().__call__(action, permissions, category)
 
 
 check_start_poll_permission_hook = CheckStartPollPermissionHook()
