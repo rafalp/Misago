@@ -11,7 +11,6 @@ from ..polls import (
     check_vote_in_thread_poll_permission,
 )
 from ..proxy import UserPermissionsProxy
-from ...categories.models import Category
 
 
 def test_check_start_thread_poll_permission_passes_if_user_has_permission(
