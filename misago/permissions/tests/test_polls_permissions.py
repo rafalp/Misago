@@ -47,7 +47,7 @@ def test_check_start_poll_permission_allows_user_to_start_polls(user, cache_vers
     check_start_poll_permission(permissions, default_category)
 
 
-def test_check_start_polls_disabled_for_category(user, cache_versions, default_category):
+def test_check_start_poll_permission_fails_if_category_disabled_polls(user, cache_versions, default_category):
     default_category.enable_polls = False
 
     permissions = UserPermissionsProxy(user, cache_versions)
