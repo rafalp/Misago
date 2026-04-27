@@ -24,7 +24,9 @@ class CheckStartPollPermissionHookAction(Protocol):
 
     """
 
-    def __call__(self, permissions: "UserPermissionsProxy", category: Category) -> None: ...
+    def __call__(
+        self, permissions: "UserPermissionsProxy", category: Category
+    ) -> None: ...
 
 
 class CheckStartPollPermissionHookFilter(Protocol):
@@ -54,7 +56,7 @@ class CheckStartPollPermissionHookFilter(Protocol):
         self,
         action: CheckStartPollPermissionHookAction,
         permissions: "UserPermissionsProxy",
-        category: Category
+        category: Category,
     ) -> None: ...
 
 
@@ -106,7 +108,7 @@ class CheckStartPollPermissionHook(
         self,
         action: CheckStartPollPermissionHookAction,
         permissions: "UserPermissionsProxy",
-        category: Category
+        category: Category,
     ) -> None:
         return super().__call__(action, permissions, category)
 

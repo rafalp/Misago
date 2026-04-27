@@ -21,10 +21,14 @@ from .threads import check_locked_thread_permission
 
 
 def check_start_poll_permission(permissions: UserPermissionsProxy, category: Category):
-    check_start_poll_permission_hook(_check_start_poll_permission_action, permissions, category)
+    check_start_poll_permission_hook(
+        _check_start_poll_permission_action, permissions, category
+    )
 
 
-def _check_start_poll_permission_action(permissions: UserPermissionsProxy, category: Category):
+def _check_start_poll_permission_action(
+    permissions: UserPermissionsProxy, category: Category
+):
 
     if not category.enable_polls:
         raise PermissionDenied(
