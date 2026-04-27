@@ -41,9 +41,35 @@ def test_check_start_thread_poll_permission_fails_if_user_has_no_permission(
         check_start_thread_poll_permission(permissions, default_category, user_thread)
 
 
-def test_check_start_poll_permission_allows_user_to_start_polls(user, cache_versions):
+def test_check_start_poll_permission_allows_user_to_start_polls(
+    user, cache_versions, default_category
+):
     permissions = UserPermissionsProxy(user, cache_versions)
-    check_start_poll_permission(permissions)
+    check_start_poll_permission(permissions, default_category)
+
+
+def test_check_start_poll_permission_fails_if_category_disabled_polls_for_user(
+    user, cache_versions, default_category
+):
+    default_category.enable_polls = False
+    default_category.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_start_poll_permission(permissions, default_category)
+
+
+def test_check_start_poll_permission_fails_if_category_disabled_polls_for_moderator(
+    moderator, cache_versions, default_category
+):
+    default_category.enable_polls = False
+    default_category.save()
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_start_poll_permission(permissions, default_category)
 
 
 def test_check_start_thread_poll_permission_fails_if_thread_has_poll(

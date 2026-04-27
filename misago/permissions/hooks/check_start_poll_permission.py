@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, Protocol
 
+from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
@@ -16,9 +17,16 @@ class CheckStartPollPermissionHookAction(Protocol):
     ## `user_permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
+
+    ## `category: Category`
+
+    A category to check permissions for.
+
     """
 
-    def __call__(self, permissions: "UserPermissionsProxy") -> None: ...
+    def __call__(
+        self, permissions: "UserPermissionsProxy", category: Category
+    ) -> None: ...
 
 
 class CheckStartPollPermissionHookFilter(Protocol):
@@ -37,12 +45,18 @@ class CheckStartPollPermissionHookFilter(Protocol):
     ## `user_permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
+
+    ## `category: Category`
+
+    A category to check permissions for.
+
     """
 
     def __call__(
         self,
         action: CheckStartPollPermissionHookAction,
         permissions: "UserPermissionsProxy",
+        category: Category,
     ) -> None: ...
 
 
@@ -66,15 +80,16 @@ class CheckStartPollPermissionHook(
     from django.core.exceptions import PermissionDenied
     from django.utils import timezone
     from django.utils.translation import pgettext
+    from misago.categories.models import Category
     from misago.permissions.hooks import check_start_poll_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
 
     @check_start_poll_permission_hook.append_filter
     def check_user_can_start_poll(
-        action, permissions: UserPermissionsProxy
+        action, permissions: UserPermissionsProxy, category: Category
     ) -> None:
         # Run standard permission checks
-        action(permissions)
+        action(permissions, category)
 
         required_account_age = timezone.now() - timedelta(days=30)
         if permissions.user.joined_on > required_account_age:
@@ -93,8 +108,9 @@ class CheckStartPollPermissionHook(
         self,
         action: CheckStartPollPermissionHookAction,
         permissions: "UserPermissionsProxy",
+        category: Category,
     ) -> None:
-        return super().__call__(action, permissions)
+        return super().__call__(action, permissions, category)
 
 
 check_start_poll_permission_hook = CheckStartPollPermissionHook()

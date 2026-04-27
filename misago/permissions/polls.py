@@ -20,11 +20,24 @@ from .proxy import UserPermissionsProxy
 from .threads import check_locked_thread_permission
 
 
-def check_start_poll_permission(permissions: UserPermissionsProxy):
-    check_start_poll_permission_hook(_check_start_poll_permission_action, permissions)
+def check_start_poll_permission(permissions: UserPermissionsProxy, category: Category):
+    check_start_poll_permission_hook(
+        _check_start_poll_permission_action, permissions, category
+    )
 
 
-def _check_start_poll_permission_action(permissions: UserPermissionsProxy):
+def _check_start_poll_permission_action(
+    permissions: UserPermissionsProxy, category: Category
+):
+
+    if not category.enable_polls:
+        raise PermissionDenied(
+            pgettext(
+                "polls permission error",
+                "You can't start polls in this category.",
+            )
+        )
+
     if permissions.user.is_anonymous:
         raise PermissionDenied(
             pgettext(
@@ -67,7 +80,7 @@ def _check_start_thread_poll_permission_action(
             )
         )
 
-    check_start_poll_permission(permissions)
+    check_start_poll_permission(permissions, category)
 
     if permissions.is_category_moderator(thread.category_id):
         return
