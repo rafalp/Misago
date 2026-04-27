@@ -20,7 +20,7 @@ class CheckStartPollPermissionHookAction(Protocol):
 
     ## `category: Category`
 
-    A category to check permission for.
+    A category to check permissions for.
 
     """
 
@@ -46,7 +46,7 @@ class CheckStartPollPermissionHookFilter(Protocol):
 
     ## `category: Category`
 
-    A category to check permission for.
+    A category to check permissions for.
 
     """
 
