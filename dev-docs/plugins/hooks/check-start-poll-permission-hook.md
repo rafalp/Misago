@@ -18,6 +18,7 @@ from misago.permissions.hooks import check_start_poll_permission_hook
 def custom_check_start_poll_permission_filter(
     action: CheckStartPollPermissionHookAction,
     permissions: 'UserPermissionsProxy',
+    category: Category,
 ) -> None:
     ...
 ```
@@ -39,10 +40,17 @@ See the [action](#action) section for details.
 A proxy object with the current user's permissions.
 
 
+#### `category: Category`
+
+A category to check permission for.
+
+
 ## Action
 
 ```python
-def check_start_poll_permission_action(permissions: 'UserPermissionsProxy') -> None:
+def check_start_poll_permission_action(
+    permissions: 'UserPermissionsProxy', category: Category
+) -> None:
     ...
 ```
 
@@ -56,6 +64,11 @@ Misago function used to check if the user has permission to start polls. Raises 
 A proxy object with the current user's permissions.
 
 
+#### `category: Category`
+
+A category to check permission for.
+
+
 ## Example
 
 Prevent a user from starting polls if their account is less than 30 days old.
@@ -66,15 +79,16 @@ from datetime import timedelta
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 from django.utils.translation import pgettext
+from misago.categories.models import Category
 from misago.permissions.hooks import check_start_poll_permission_hook
 from misago.permissions.proxy import UserPermissionsProxy
 
 @check_start_poll_permission_hook.append_filter
 def check_user_can_start_poll(
-    action, permissions: UserPermissionsProxy
+    action, permissions: UserPermissionsProxy, category: Category
 ) -> None:
     # Run standard permission checks
-    action(permissions)
+    action(permissions, category)
 
     required_account_age = timezone.now() - timedelta(days=30)
     if permissions.user.joined_on > required_account_age:
