@@ -64,6 +64,9 @@ def _get_thread_start_formset_action(
 
     with check_permissions() as can_start_poll:
         check_start_poll_permission(request.user_permissions)
+        # check if the category has globally disabled polls
+        if can_start_poll and not category.enable_polls:
+            can_start_poll = False
 
     if can_start_poll:
         formset.add_tab(
