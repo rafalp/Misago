@@ -42,7 +42,7 @@ A proxy object with the current user's permissions.
 
 #### `category: Category`
 
-A category to check permission for.
+A category to check permissions for.
 
 
 ## Action
@@ -66,7 +66,7 @@ A proxy object with the current user's permissions.
 
 #### `category: Category`
 
-A category to check permission for.
+A category to check permissions for.
 
 
 ## Example
