@@ -65,8 +65,7 @@ class Group(PluginDataModel):
 
     can_see_user_profiles = models.BooleanField(default=False)
 
-    class Meta:
-        indexes = PluginDataModel.Meta.indexes
+    class Meta(PluginDataModel.Meta):
         ordering = ["ordering"]
 
     def __str__(self) -> str:
