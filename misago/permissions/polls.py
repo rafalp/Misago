@@ -30,7 +30,7 @@ def _check_start_poll_permission_action(permissions: UserPermissionsProxy, categ
         raise PermissionDenied(
             pgettext(
                 "polls permission error",
-                "This category has polls disabled.",
+                "You can't start polls in this category.",
             )
         )
 

@@ -20,7 +20,7 @@ class CheckStartPollPermissionHookAction(Protocol):
 
     ## `category: Category`
 
-    The category object that this hook is being called from
+    A category to check permission for.
 
     """
 
@@ -46,7 +46,7 @@ class CheckStartPollPermissionHookFilter(Protocol):
 
     ## `category: Category`
 
-    The category object that this hook is being called from
+    A category to check permission for.
 
     """
 
@@ -78,9 +78,9 @@ class CheckStartPollPermissionHook(
     from django.core.exceptions import PermissionDenied
     from django.utils import timezone
     from django.utils.translation import pgettext
+    from misago.categories.models import Category
     from misago.permissions.hooks import check_start_poll_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
-    from misago.categories.models import Category
 
     @check_start_poll_permission_hook.append_filter
     def check_user_can_start_poll(
