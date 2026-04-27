@@ -17,9 +17,14 @@ class CheckStartPollPermissionHookAction(Protocol):
     ## `user_permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
+
+    ## `category: Category`
+
+    The category object that this hook is being called from
+
     """
 
-    def __call__(self, permissions: "UserPermissionsProxy") -> None: ...
+    def __call__(self, permissions: "UserPermissionsProxy", category: Category) -> None: ...
 
 
 class CheckStartPollPermissionHookFilter(Protocol):
@@ -38,6 +43,11 @@ class CheckStartPollPermissionHookFilter(Protocol):
     ## `user_permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
+
+    ## `category: Category`
+
+    The category object that this hook is being called from
+
     """
 
     def __call__(
@@ -70,13 +80,14 @@ class CheckStartPollPermissionHook(
     from django.utils.translation import pgettext
     from misago.permissions.hooks import check_start_poll_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
+    from misago.categories.models import Category
 
     @check_start_poll_permission_hook.append_filter
     def check_user_can_start_poll(
-        action, permissions: UserPermissionsProxy
+        action, permissions: UserPermissionsProxy, category: Category
     ) -> None:
         # Run standard permission checks
-        action(permissions)
+        action(permissions, category)
 
         required_account_age = timezone.now() - timedelta(days=30)
         if permissions.user.joined_on > required_account_age:
