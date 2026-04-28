@@ -88,6 +88,9 @@ class Category(MPTTModel, PluginDataModel):
 
     objects = CategoryManager()
 
+    class Meta:
+        indexes = PluginDataModel.Meta.indexes
+
     def __str__(self):
         return str(self.thread_type.get_category_name(self))
 
