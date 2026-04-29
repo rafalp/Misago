@@ -53,8 +53,8 @@ from ..state import (
     PrivateThreadReplyState,
     ReplyState,
     ThreadReplyState,
-    get_reply_private_thread_state,
-    get_reply_thread_state,
+    get_private_thread_reply_state,
+    get_thread_reply_state,
 )
 from ..validators import validate_flood_control, validate_posted_contents
 
@@ -362,7 +362,7 @@ class ThreadReplyView(ReplyView, ThreadView):
     def get_state(
         self, request: HttpRequest, thread: Thread, post: Post | None
     ) -> ThreadReplyState:
-        return get_reply_thread_state(request, thread, post)
+        return get_thread_reply_state(request, thread, post)
 
     def get_formset(
         self, request: HttpRequest, thread: Thread, initial: dict | None = None
@@ -418,7 +418,7 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
     def get_state(
         self, request: HttpRequest, thread: Thread, post: Post | None
     ) -> PrivateThreadReplyState:
-        return get_reply_private_thread_state(request, thread, post)
+        return get_private_thread_reply_state(request, thread, post)
 
     def get_formset(
         self, request: HttpRequest, thread: Thread, initial: dict | None = None
