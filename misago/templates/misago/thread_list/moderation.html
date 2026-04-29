@@ -19,7 +19,7 @@
               type="button"
               moderation-action="remove-selection"
             >
-              {% translate "Remove selection" context "moderation menu" %}
+              {% translate "Clear selection" context "moderation menu" %}
             </button>
           </li>
           <li role="separator" class="divider"></li>
@@ -31,7 +31,7 @@
                 moderation-action="{{ action.id }}"
                 moderation-multistage="{% if action.multistage %}true{% else %}false{% endif %}"
               >
-                {{ action.name }}
+                {{ action.button_label }}
               </button>
             </li>
           {% endfor %}

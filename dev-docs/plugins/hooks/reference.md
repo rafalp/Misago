@@ -276,9 +276,9 @@ Hooks instances are importable from the following Python modules:
 `misago.threads.hooks` defines the following hooks:
 
 - [`create_prefetch_post_feed_data_hook`](./create-prefetch-post-feed-data-hook.md)
+- [`get_category_threads_moderation_actions_hook`](./get-category-threads-moderation-actions-hook.md)
 - [`get_category_threads_page_context_data_hook`](./get-category-threads-page-context-data-hook.md)
 - [`get_category_threads_page_filters_hook`](./get-category-threads-page-filters-hook.md)
-- [`get_category_threads_page_moderation_actions_hook`](./get-category-threads-page-moderation-actions-hook.md)
 - [`get_category_threads_page_queryset_hook`](./get-category-threads-page-queryset-hook.md)
 - [`get_category_threads_page_subcategories_hook`](./get-category-threads-page-subcategories-hook.md)
 - [`get_category_threads_page_threads_hook`](./get-category-threads-page-threads-hook.md)
@@ -286,9 +286,9 @@ Hooks instances are importable from the following Python modules:
 - [`get_thread_replies_page_posts_queryset_hook`](./get-thread-replies-page-posts-queryset-hook.md)
 - [`get_thread_replies_page_thread_queryset_hook`](./get-thread-replies-page-thread-queryset-hook.md)
 - [`get_thread_url_hook`](./get-thread-url-hook.md)
+- [`get_threads_moderation_actions_hook`](./get-threads-moderation-actions-hook.md)
 - [`get_threads_page_context_data_hook`](./get-threads-page-context-data-hook.md)
 - [`get_threads_page_filters_hook`](./get-threads-page-filters-hook.md)
-- [`get_threads_page_moderation_actions_hook`](./get-threads-page-moderation-actions-hook.md)
 - [`get_threads_page_queryset_hook`](./get-threads-page-queryset-hook.md)
 - [`get_threads_page_subcategories_hook`](./get-threads-page-subcategories-hook.md)
 - [`get_threads_page_threads_hook`](./get-threads-page-threads-hook.md)

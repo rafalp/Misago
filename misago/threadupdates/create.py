@@ -195,7 +195,7 @@ def create_locked_thread_update(
     )
 
 
-def create_opened_thread_update(
+def create_unlocked_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
     is_hidden: bool = False,
@@ -204,7 +204,7 @@ def create_opened_thread_update(
 ) -> ThreadUpdate:
     return create_thread_update(
         thread,
-        ThreadUpdateActionName.OPENED,
+        ThreadUpdateActionName.UNLOCKED,
         actor,
         is_hidden=is_hidden,
         commit=commit,

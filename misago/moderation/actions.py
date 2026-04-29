@@ -1,0 +1,135 @@
+from typing import Optional
+
+from dataclasses import dataclass, field
+from django.forms import Form
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
+
+from ..categories.models import Category
+from ..threads.models import Post, Thread
+from ..threadupdates.models import ThreadUpdate
+
+
+class ModerationAction:
+    id: str
+    button_label: str
+
+    request: HttpRequest
+
+    def __init__(self, request: HttpRequest):
+        self.request = request
+
+    def validate(self):
+        pass
+
+    def execute(self) -> Optional["ModerationActionResult"]:
+        raise NotImplementedError("'FormMixin' subclasses must implement 'execute'")
+
+
+@dataclass(frozen=True)
+class ModerationActionResult:
+    updated_items: set[int] = field(default_factory=set)
+    deleted_items: set[int] = field(default_factory=set)
+    thread_updates: list[ThreadUpdate] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class ModerationActionTemplateResult(ModerationActionResult):
+    context: dict = field(default_factory=dict)
+
+    def update_context(self, context: dict):
+        self.context.update(context)
+
+    def render(
+        self, request: HttpRequest, template_name: str, context: dict | None
+    ) -> HttpResponse:
+        final_context = context or {}
+        final_context.update(self.context)
+        return render(request, template_name, final_context)
+
+
+class FormMixin:
+    id: str
+    button_label: str
+
+    form_name: str
+    form_class: Form
+    template_name: str
+
+    def execute(self) -> ModerationActionResult | None:
+        form = self.form_class()
+
+        if form.is_bound and form.is_valid():
+            return self.form_valid(form)
+
+        return ModerationActionTemplateResult(
+            context=self.get_context_data(form),
+        )
+
+    def get_form(self) -> Form:
+        if request.POST.get("submit_form"):
+            return self.form_class(self.request.POST, request=self.request)
+
+        return self.form_class(request=self.request)
+
+    def get_context_data(self, form: Form) -> dict:
+        return {
+            "template_name": self.template_name,
+            "form": form,
+            "form_name": form_name,
+            "button_label": getattr(self, button_label, None),
+        }
+
+    def form_valid(self, form: Form) -> ModerationActionResult | None:
+        raise NotImplementedError("'FormMixin' subclasses must implement 'form_valid'")
+
+
+class ThreadsModerationAction(ModerationAction):
+    category: Category | None
+    threads: list[Thread]
+
+    def __init__(
+        self,
+        request: HttpRequest,
+        threads: list[Thread],
+        category: Category | None = None,
+    ):
+        super().__init__(request)
+
+        self.category = Category
+        self.threads = threads
+
+
+class PostsModerationAction(ModerationAction):
+    thread: Thread
+    posts: list[Post]
+
+    def __init__(self, request: HttpRequest, thread: Thread, posts: list[Post]):
+        super().__init__(request)
+
+        self.thread = thread
+        self.posts = posts
+
+
+class ThreadModerationAction(ModerationAction):
+    category: Category | None
+    thread: Thread
+
+    def __init__(
+        self, request: HttpRequest, thread: Thread, category: Category | None = None
+    ):
+        super().__init__(request)
+
+        self.category = Category
+        self.thread = thread
+
+
+class PostModerationAction(ModerationAction):
+    thread: Thread
+    post: Post
+
+    def __init__(self, request: HttpRequest, thread: Thread, posts: Post):
+        super().__init__(request)
+
+        self.thread = thread
+        self.post = post

@@ -1,129 +1,82 @@
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.models import Category
+from ..threads.lock import lock_thread, unlock_thread
 from ..threads.models import Thread
 from ..threadupdates.create import (
     create_locked_thread_update,
-    create_opened_thread_update,
+    create_unlocked_thread_update,
 )
+from ..threadupdates.threadflag import set_thread_has_updates
+from .actions import ModerationActionResult, ThreadsModerationAction
 from .forms import MoveThreads
 from .results import ModerationResult, ModerationBulkResult, ModerationTemplateResult
 
 
-class ThreadsBulkModerationAction:
-    id: str
-    name: str
-    full_name: str | None
-    submit_btn: str | None
-    multistage: bool = False
+class LockThreadsModerationAction(ThreadsModerationAction):
+    id = "lock"
+    button_label = pgettext_lazy("threads moderation button label", "Lock")
 
-    def __call__(
-        self, request: HttpRequest, threads: list[Thread]
-    ) -> ModerationResult | None:
-        raise NotImplementedError()
+    def validate(self):
+        for thread in self.threads:
+            if not thread.is_locked:
+                return
 
-    def get_context_data(self):
-        return {
-            "id": self.id,
-            "name": str(self.name),
-            "full_name": str(getattr(self, "full_name", self.name)),
-            "submit_btn": str(getattr(self, "submit_btn", self.name)),
-        }
-
-    def create_bulk_result(self, threads: list[Thread]) -> ModerationBulkResult:
-        return ModerationBulkResult(set(thread.id for thread in threads))
-
-
-class MoveThreadsBulkModerationAction(ThreadsBulkModerationAction):
-    id: str = "move"
-    name: str = pgettext_lazy("threads bulk moderation action", "Move")
-    full_name: str = pgettext_lazy("threads bulk moderation action", "Move threads")
-    multistage: bool = True
-
-    def __call__(self, request: HttpRequest, threads: list[Thread]) -> ModerationResult:
-        if request.POST.get("confirm") == self.id:
-            form = MoveThreads(
-                request.POST,
-                threads=threads,
-                request=request,
-            )
-
-            if form.is_valid():
-                category = Category.objects.get(id=form.cleaned_data["category"])
-                result = self.execute(request, threads, category)
-                if result.updated:
-                    messages.success(
-                        request,
-                        pgettext("threads bulk open", "Threads moved"),
-                    )
-
-                return result
-        else:
-            form = MoveThreads(threads=threads, request=request)
-
-        return ModerationTemplateResult(
-            template_name="misago/moderation/move_threads.html",
-            context={"form": form},
+        raise ValidationError(
+            pgettext("threads moderation validation", "Threads are already locked.")
         )
 
-    def execute(
-        self, request: HttpRequest, threads: list[Thread], category: Category
-    ) -> ModerationBulkResult | None:
-        updated: list[Thread] = []
-        for thread in threads:
-            if thread.category_id != category.id:
-                thread.move(category)
-                thread.save()
-                updated.append(thread)
+    def execute(self) -> ModerationActionResult:
+        valid_threads = [thread for thread in self.threads if not thread.is_locked]
 
-        return self.create_bulk_result(updated)
+        for thread in valid_threads:
+            set_thread_has_updates(thread, commit=False)
+            lock_thread(thread, request=self.request)
+
+            create_locked_thread_update(thread, self.request.user, request=self.request)
+
+        messages.success(
+            self.request,
+            pgettext("threads moderation success", "Threads locked"),
+        )
+
+        return ModerationActionResult(
+            updated_items=[thread.id for thread in valid_threads]
+        )
 
 
-class CloseThreadsBulkModerationAction(ThreadsBulkModerationAction):
-    id: str = "lock"
-    name: str = pgettext_lazy("threads bulk moderation action", "Lock")
+class UnlockThreadsModerationAction(ThreadsModerationAction):
+    id = "unlock"
+    button_label = pgettext_lazy("threads moderation button label", "Unlock")
 
-    def __call__(
-        self, request: HttpRequest, threads: list[Thread]
-    ) -> ModerationBulkResult:
-        open_threads = [thread for thread in threads if not thread.is_locked]
-        updated = Thread.objects.filter(
-            id__in=[thread.id for thread in open_threads]
-        ).update(has_updates=True, is_locked=True)
+    def validate(self):
+        for thread in self.threads:
+            if thread.is_locked:
+                return
 
-        if updated:
-            for thread in open_threads:
-                create_locked_thread_update(thread, request.user, request=request)
+        raise ValidationError(
+            pgettext("threads moderation validation", "Threads are already unlocked.")
+        )
 
-            messages.success(
-                request,
-                pgettext("threads bulk open", "Threads locked"),
+    def execute(self) -> ModerationActionResult:
+        valid_threads = [thread for thread in self.threads if thread.is_locked]
+
+        for thread in valid_threads:
+            set_thread_has_updates(thread, commit=False)
+            unlock_thread(thread, request=self.request)
+
+            create_unlocked_thread_update(
+                thread, self.request.user, request=self.request
             )
 
-        return self.create_bulk_result(open_threads)
+        messages.success(
+            self.request,
+            pgettext("threads moderation success", "Threads unlocked"),
+        )
 
-
-class OpenThreadsBulkModerationAction(ThreadsBulkModerationAction):
-    id: str = "unlock"
-    name: str = pgettext_lazy("threads bulk moderation action", "Unlock")
-
-    def __call__(
-        self, request: HttpRequest, threads: list[Thread]
-    ) -> ModerationBulkResult:
-        closed_threads = [thread for thread in threads if thread.is_locked]
-        updated = Thread.objects.filter(
-            id__in=[thread.id for thread in closed_threads]
-        ).update(has_updates=True, is_locked=False)
-
-        if updated:
-            for thread in closed_threads:
-                create_opened_thread_update(thread, request.user, request=request)
-
-            messages.success(
-                request,
-                pgettext("threads bulk open", "Threads unlocked"),
-            )
-
-        return self.create_bulk_result(closed_threads)
+        return ModerationActionResult(
+            updated_items=[thread.id for thread in valid_threads]
+        )

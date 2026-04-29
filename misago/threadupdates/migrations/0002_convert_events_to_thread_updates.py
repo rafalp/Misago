@@ -7,6 +7,7 @@ from django.db import migrations
 EVENT_TYPES = {
     "pinned_locally": "pinned_in_category",
     "closed": "locked",
+    "opened": "unlocked",
     "entered_thread": "joined",
     "tookover": "took_ownership",
     "removed_owner": "removed_member",
