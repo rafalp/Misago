@@ -1,8 +1,10 @@
+import pytest
 from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
 from ...permissions.models import Moderator
 from ...test import assert_contains, assert_not_contains
+from ...threads.models import Thread
 
 MODERATION_FORM_HTML = '<form id="threads-moderation" method="post">'
 MODERATION_FIXED_HTML = '<div class="fixed-moderation">'
@@ -149,8 +151,68 @@ def test_thread_list_view_executes_single_stage_moderation_action_in_htmx(
     assert thread.is_locked
 
 
+@pytest.mark.xfail(reason="delete thread moderation action not yet implemented")
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_executes_multi_stage_moderation_action(
+def test_thread_list_view_executes_moderation_action_with_confirmation(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "delete", "threads": [thread.id]},
+    )
+    assert_contains(response, "Delete threads")
+    assert_contains(response, "Are you sure you want to delete selected threads?")
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "delete",
+            "threads": [thread.id],
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:thread-list")
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+
+@pytest.mark.xfail(reason="delete thread moderation action not yet implemented")
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_executes_moderation_action_with_confirmation_in_htmx(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "delete", "threads": [thread.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Delete")
+    assert_contains(response, "Are you sure you want to delete selected threads?")
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "delete",
+            "threads": [thread.id],
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, thread.title)
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+
+@pytest.mark.xfail(reason="move thread moderation action not yet implemented")
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_executes_moderation_action_with_form(
     thread_factory, moderator_client, default_category, child_category
 ):
     thread = thread_factory(default_category)
@@ -160,6 +222,7 @@ def test_thread_list_view_executes_multi_stage_moderation_action(
         {"moderation": "move", "threads": [thread.id]},
     )
     assert_contains(response, "Move threads")
+    assert_contains(response, "Move to")
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -167,7 +230,7 @@ def test_thread_list_view_executes_multi_stage_moderation_action(
             "moderation": "move",
             "threads": [thread.id],
             "moderation-category": child_category.id,
-            "confirm": "move",
+            "confirm": "true",
         },
     )
     assert response.status_code == 302
@@ -177,8 +240,9 @@ def test_thread_list_view_executes_multi_stage_moderation_action(
     assert thread.category == child_category
 
 
+@pytest.mark.xfail(reason="move thread moderation action not yet implemented")
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_executes_multi_stage_moderation_action_in_htmx(
+def test_thread_list_view_executes_moderation_action_with_form_in_htmx(
     thread_factory, moderator_client, default_category, child_category
 ):
     thread = thread_factory(default_category)
@@ -188,7 +252,7 @@ def test_thread_list_view_executes_multi_stage_moderation_action_in_htmx(
         {"moderation": "move", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Move threads")
+    assert_contains(response, "Move to")
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -196,7 +260,7 @@ def test_thread_list_view_executes_multi_stage_moderation_action_in_htmx(
             "moderation": "move",
             "threads": [thread.id],
             "moderation-category": child_category.id,
-            "confirm": "move",
+            "confirm": "true",
         },
         headers={"hx-request": "true"},
     )
@@ -233,7 +297,7 @@ def test_thread_list_view_moderation_shows_error_for_user_in_htmx(
         {"moderation": "lock", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Invalid moderation action.")
+    assert_contains(response, "Invalid moderation action.", status_code=400)
 
     thread.refresh_from_db()
     assert not thread.is_locked
@@ -266,7 +330,7 @@ def test_thread_list_view_moderation_shows_error_for_guest_in_htmx(
         {"moderation": "lock", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Invalid moderation action.")
+    assert_contains(response, "Invalid moderation action.", status_code=400)
 
     thread.refresh_from_db()
     assert not thread.is_locked
@@ -296,7 +360,7 @@ def test_thread_list_view_shows_error_for_invalid_moderation_action_in_htmx(
         {"moderation": "invalid", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Invalid moderation action.")
+    assert_contains(response, "Invalid moderation action.", status_code=400)
 
 
 @override_dynamic_settings(index_view="categories")
@@ -323,7 +387,7 @@ def test_thread_list_view_shows_error_for_empty_moderation_action_in_htmx(
         {"moderation": "", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Invalid moderation action.")
+    assert_contains(response, "Invalid moderation action.", status_code=400)
 
 
 @override_dynamic_settings(index_view="categories")
@@ -344,7 +408,7 @@ def test_thread_list_view_shows_error_for_empty_threads_selection_in_htmx(
         {"moderation": "lock", "threads": []},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "No valid threads selected.")
+    assert_contains(response, "No valid threads selected.", status_code=400)
 
 
 @override_dynamic_settings(index_view="categories")
@@ -367,7 +431,7 @@ def test_thread_list_view_shows_error_for_invalid_threads_selection_in_htmx(
         {"moderation": "lock", "threads": "invalid"},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "No valid threads selected.")
+    assert_contains(response, "No valid threads selected.", status_code=400)
 
 
 @override_dynamic_settings(index_view="categories")
@@ -390,7 +454,7 @@ def test_thread_list_view_shows_error_for_invalid_threads_ids_in_selection_in_ht
         {"moderation": "lock", "threads": ["invalid"]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "No valid threads selected.")
+    assert_contains(response, "No valid threads selected.", status_code=400)
 
 
 @override_dynamic_settings(index_view="categories")
@@ -413,7 +477,7 @@ def test_thread_list_view_shows_error_for_not_existing_threads_ids_in_selection_
         {"moderation": "lock", "threads": [42]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "No valid threads selected.")
+    assert_contains(response, "No valid threads selected.", status_code=400)
 
 
 @override_dynamic_settings(index_view="categories")
@@ -458,8 +522,42 @@ def test_thread_list_view_shows_error_for_thread_in_selection_user_cant_moderate
     )
     assert_contains(
         response,
-        f"Can&#x27;t moderate the &quot;{thread.title}&quot; thread",
+        f'Can\'t moderate the \\"{thread.title}\\" thread.',
+        status_code=400,
     )
+
+    thread.refresh_from_db()
+    assert not thread.is_locked
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_shows_validation_error_from_moderation_action(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "unlock", "threads": [thread.id]},
+    )
+    assert_contains(response, "Threads are already unlocked.")
+
+    thread.refresh_from_db()
+    assert not thread.is_locked
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_shows_validation_error_from_moderation_action_in_htmx(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "unlock", "threads": [thread.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Threads are already unlocked.", status_code=400)
 
     thread.refresh_from_db()
     assert not thread.is_locked

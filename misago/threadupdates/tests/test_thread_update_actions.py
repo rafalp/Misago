@@ -15,7 +15,7 @@ from ..create import (
     create_merged_thread_update,
     create_moved_thread_update,
     create_opened_poll_thread_update,
-    create_opened_thread_update,
+    create_unlocked_thread_update,
     create_pinned_globally_thread_update,
     create_pinned_in_category_thread_update,
     create_removed_member_thread_update,
@@ -129,8 +129,8 @@ def test_locked_thread_update(client, thread, user):
     assert_contains(response, "Locked thread")
 
 
-def test_opened_thread_update(client, thread, user):
-    create_opened_thread_update(thread, user)
+def test_unlocked_thread_update(client, thread, user):
+    create_unlocked_thread_update(thread, user)
 
     thread.has_updates = True
     thread.save()
@@ -138,7 +138,7 @@ def test_opened_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Opened thread")
+    assert_contains(response, "Unlocked thread")
 
 
 def test_moved_thread_update(client, thread, user, default_category):

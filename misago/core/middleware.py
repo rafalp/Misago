@@ -1,4 +1,8 @@
-from . import exceptionhandler
+from .exceptionhandler import (
+    is_misago_exception,
+    handle_misago_exception,
+    handle_misago_htmx_exception,
+)
 from .utils import is_request_to_misago
 
 
@@ -10,11 +14,14 @@ class ExceptionHandlerMiddleware:
         return self.get_response(request)
 
     def process_exception(self, request, exception):
-        request_is_to_misago = is_request_to_misago(request)
-        misago_can_handle_exception = exceptionhandler.is_misago_exception(exception)
+        if not is_request_to_misago(request):
+            return
 
-        if request_is_to_misago and misago_can_handle_exception:
-            return exceptionhandler.handle_misago_exception(request, exception)
+        if request.is_htmx and is_misago_exception(exception, True):
+            return handle_misago_htmx_exception(exception)
+
+        if is_misago_exception(exception):
+            return handle_misago_exception(request, exception)
 
 
 class FrontendContextMiddleware:

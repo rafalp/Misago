@@ -11,7 +11,7 @@ from ...users.models import AnonymousUser
 from ..middleware import ExceptionHandlerMiddleware
 
 
-def create_request():
+def create_request(is_htmx: bool = False):
     request = RequestFactory().get(reverse("misago:index"))
     request.session = {}
     request.cache_versions = get_cache_versions()
@@ -27,7 +27,7 @@ def create_request():
     request.include_frontend_context = True
     request.frontend_context = {}
     request.socialauth = {}
-    request.is_htmx = False
+    request.is_htmx = is_htmx
     return request
 
 
@@ -40,6 +40,13 @@ def test_exception_handler_middleware_returns_response_for_supported_exception(d
     middleware = ExceptionHandlerMiddleware(get_response)
     exception = Http404()
     assert middleware.process_exception(create_request(), exception)
+
+
+def test_exception_handler_middleware_returns_response_for_supported_htmx_exception(db):
+    """Middleware returns HttpResponse for supported exception"""
+    middleware = ExceptionHandlerMiddleware(get_response)
+    exception = Http404()
+    assert middleware.process_exception(create_request(is_htmx=True), exception)
 
 
 def test_exception_handler_middleware_returns_none_for_non_supported_exception(db):

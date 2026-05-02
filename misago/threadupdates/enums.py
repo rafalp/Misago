@@ -11,7 +11,7 @@ class ThreadUpdateActionName(StrEnum):
     UNPINNED = "unpinned"
 
     LOCKED = "locked"
-    OPENED = "opened"
+    UNLOCKED = "unlocked"
 
     MOVED = "moved"
 

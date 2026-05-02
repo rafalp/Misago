@@ -1,64 +1,78 @@
 {% load i18n %}
+
+
 {% if threads.moderation_actions %}
-  <div class="fixed-moderation">
-    <div class="container">
-      <div class="dropup">
-        <button
-          class="btn btn-moderation dropdown-toggle"
-          type="button"
-          id="threads-moderation-menu"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-        </button>
-        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="threads-moderation-menu">
+<div class="fixed-moderation">
+  <div class="container">
+    <div class="dropup">
+      <button
+        class="btn btn-moderation dropdown-toggle"
+        type="button"
+        id="threads-moderation-menu"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        hx-target="#misago-htmx-moderation-modal"
+        mg-error="#modal-error"
+        mg-loader="#modal-loader"
+      >
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="threads-moderation-menu">
+        <li>
+          <button
+            class="btn btn-link"
+            type="button"
+            mg-moderation-action="remove-selection"
+          >
+            {% translate "Clear selection" context "moderation menu" %}
+          </button>
+        </li>
+        <li role="separator" class="divider"></li>
+        {% for action in threads.moderation_actions %}
           <li>
             <button
               class="btn btn-link"
               type="button"
-              moderation-action="remove-selection"
+              mg-moderation-action="{{ action.id }}"{% if action.multistage %}
+              mg-moderation-multistage="true"{% endif %}{% if action.full_name %}
+              mg-moderation-full-name="{{ action.full_name }}"{% endif %}
             >
-              {% translate "Remove selection" context "moderation menu" %}
+              {{ action.button_label }}
             </button>
           </li>
-          <li role="separator" class="divider"></li>
-          {% for action in threads.moderation_actions %}
-            <li>
-              <button
-                class="btn btn-link"
-                type="button"
-                moderation-action="{{ action.id }}"
-                moderation-multistage="{% if action.multistage %}true{% else %}false{% endif %}"
-              >
-                {{ action.name }}
-              </button>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
+        {% endfor %}
+      </ul>
     </div>
   </div>
-  <div
-    id="threads-moderation-modal"
-    class="modal fade"
-    style="display: none"
-    aria-hidden="false"
-    tabindex="-1"
-  >
-    <div class="modal-dialog" role="document"></div>
+</div>
+<div
+  id="threads-moderation-modal"
+  class="modal fade"
+  style="display: none"
+  aria-hidden="false"
+  tabindex="-1"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="{% translate 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" mg-modal-title></h4>
+      </div>
+      <div id="misago-htmx-moderation-modal"></div>
+    </div>
   </div>
-  <script type="text/javascript">
-    const moderation = misago.bulkModeration({
-      menu: ".fixed-moderation",
-      form: "#threads-moderation",
-      modal: "#threads-moderation-modal",
-      actions: ".fixed-moderation ul button",
-      selection: ".threads-list input:checked",
-      button: {
-        selector: "#threads-moderation-menu",
-        text: pgettext("threads list moderation", "Moderate threads (%(number)s)"),
-      }
-    })
-  </script>
+</div>
+<script type="text/javascript">
+  const moderation = misago.bulkModeration({
+    menu: ".fixed-moderation",
+    form: "#threads-moderation",
+    modal: "#threads-moderation-modal",
+    actions: ".fixed-moderation ul button",
+    selection: ".threads-list input:checked",
+    button: {
+      selector: "#threads-moderation-menu",
+      text: pgettext("threads list moderation", "Moderate threads (%(number)s)"),
+    }
+  })
+</script>
 {% endif %}

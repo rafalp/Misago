@@ -12,7 +12,7 @@ def thread_update(user, thread):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateActionName.OPENED,
+        action=ThreadUpdateActionName.UNLOCKED,
     )
 
 
@@ -77,7 +77,7 @@ def hidden_thread_update(user, moderator, thread):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateActionName.OPENED,
+        action=ThreadUpdateActionName.UNLOCKED,
         is_hidden=True,
         hidden_by=moderator,
         hidden_by_name=moderator.username,

@@ -139,10 +139,10 @@ class LockedThreadUpdateAction(ThreadUpdateAction):
 
 
 @thread_updates_renderer.register_action
-class OpenedThreadUpdateAction(ThreadUpdateAction):
-    action = ThreadUpdateActionName.OPENED
+class UnlockedThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.UNLOCKED
     icon = "lock_open"
-    description = pgettext_lazy("thread update action description", "Opened thread")
+    description = pgettext_lazy("thread update action description", "Unlocked thread")
 
 
 @thread_updates_renderer.register_action
