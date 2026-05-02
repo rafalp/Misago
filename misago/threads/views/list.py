@@ -270,6 +270,19 @@ class ListView(View):
     ) -> ModerationActionResult:
         raise NotImplementedError()
 
+    def get_moderation_action_choices(
+        self, actions: list[ThreadsModerationAction]
+    ) -> list[dict]:
+        return [
+            {
+                "id": action.id,
+                "full_name": action.full_name or action.button_label,
+                "button_label": action.button_label,
+                "multistage": action.multistage,
+            }
+            for action in actions
+        ]
+
     def set_moderation_response_headers(
         self, request: HttpRequest, response: HttpResponse
     ):
@@ -562,7 +575,9 @@ class ThreadListView(ListView):
             "active_filter": active_filter,
             "filters": filters,
             "filters_clear_url": self.get_filters_clear_url(request),
-            "moderation_actions": self.get_moderation_action_choices(request),
+            "moderation_actions": self.get_moderation_action_choices(
+                self.get_moderation_actions(request)
+            ),
             "items": items,
             "paginator": paginator,
             "categories_component": (
@@ -665,17 +680,6 @@ class ThreadListView(ListView):
     def get_start_thread_url(self, request: HttpRequest) -> str | None:
         if request.user_permissions.categories[CategoryPermission.START]:
             return reverse("misago:thread-start")
-
-    def get_moderation_action_choices(self, request: HttpRequest) -> list[dict]:
-        return [
-            {
-                "id": action.id,
-                "full_name": action.full_name or action.button_label,
-                "button_label": action.button_label,
-                "multistage": action.multistage,
-            }
-            for action in self.get_moderation_actions(request)
-        ]
 
     def get_moderation_actions(
         self, request: HttpRequest
@@ -1028,7 +1032,9 @@ class CategoryThreadListView(ListView):
             "active_filter": active_filter,
             "filters": filters,
             "filters_clear_url": filters_base_url,
-            "moderation_actions": self.get_moderation_action_choices(request, category),
+            "moderation_actions": self.get_moderation_action_choices(
+                self.get_moderation_actions(request, category)
+            ),
             "items": items,
             "paginator": paginator,
             "categories_component": (
@@ -1152,19 +1158,6 @@ class CategoryThreadListView(ListView):
             return category.last_posted_at > category_read_time
 
         return True
-
-    def get_moderation_action_choices(
-        self, request: HttpRequest, category: Category
-    ) -> list[dict]:
-        return [
-            {
-                "id": action.id,
-                "full_name": action.full_name or action.button_label,
-                "button_label": action.button_label,
-                "multistage": action.multistage,
-            }
-            for action in self.get_moderation_actions(request, category)
-        ]
 
     def get_moderation_actions(
         self, request: HttpRequest, category: Category
