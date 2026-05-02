@@ -1,7 +1,7 @@
 import json
 
 from django.core import exceptions as django_exceptions
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
 from django.test import TestCase
 
@@ -89,12 +89,48 @@ class HandleAPIExceptionTests(TestCase):
         self.assertEqual(response.data["detail"], "Not found.")
 
 
+def test_misago_handler_handles_htmx_400_exception_with_single_message(rf):
+    request = rf.get("/", headers={"hx-request": "true"})
+    request.is_htmx = True
+
+    response = exceptionhandler.handle_misago_htmx_exception(
+        ValidationError("Validation error")
+    )
+    assert response.status_code == 400
+    assert response["content-type"] == "application/json"
+    assert json.loads(response.content) == {"error": "Validation error"}
+
+
+def test_misago_handler_handles_htmx_400_exception_with_messages_list(rf):
+    request = rf.get("/", headers={"hx-request": "true"})
+    request.is_htmx = True
+
+    response = exceptionhandler.handle_misago_htmx_exception(
+        ValidationError(["Validation error", "Other error"])
+    )
+    assert response.status_code == 400
+    assert response["content-type"] == "application/json"
+    assert json.loads(response.content) == {"error": "Validation error"}
+
+
+def test_misago_handler_handles_htmx_400_exception_with_messages_dict(rf):
+    request = rf.get("/", headers={"hx-request": "true"})
+    request.is_htmx = True
+
+    response = exceptionhandler.handle_misago_htmx_exception(
+        ValidationError({"field": ["Validation error", "Other error"]})
+    )
+    assert response.status_code == 400
+    assert response["content-type"] == "application/json"
+    assert json.loads(response.content) == {"error": "Validation error"}
+
+
 def test_misago_handler_handles_htmx_404_exception_with_message(rf):
     request = rf.get("/", headers={"hx-request": "true"})
     request.is_htmx = True
 
-    response = exceptionhandler.handle_misago_exception(
-        request, Http404("Thread not found")
+    response = exceptionhandler.handle_misago_htmx_exception(
+        Http404("Thread not found")
     )
     assert response.status_code == 404
     assert response["content-type"] == "application/json"
@@ -105,7 +141,7 @@ def test_misago_handler_handles_htmx_404_exception_without_message(rf):
     request = rf.get("/", headers={"hx-request": "true"})
     request.is_htmx = True
 
-    response = exceptionhandler.handle_misago_exception(request, Http404())
+    response = exceptionhandler.handle_misago_htmx_exception(Http404())
     assert response.status_code == 404
     assert response["content-type"] == "text/html; charset=utf-8"
     assert not response.content
@@ -115,8 +151,8 @@ def test_misago_handler_handles_htmx_403_exception_with_message(rf):
     request = rf.get("/", headers={"hx-request": "true"})
     request.is_htmx = True
 
-    response = exceptionhandler.handle_misago_exception(
-        request, PermissionDenied("Thread is closed")
+    response = exceptionhandler.handle_misago_htmx_exception(
+        PermissionDenied("Thread is closed")
     )
     assert response.status_code == 403
     assert response["content-type"] == "application/json"
@@ -127,7 +163,7 @@ def test_misago_handler_handles_htmx_403_exception_without_message(rf):
     request = rf.get("/", headers={"hx-request": "true"})
     request.is_htmx = True
 
-    response = exceptionhandler.handle_misago_exception(request, PermissionDenied())
+    response = exceptionhandler.handle_misago_htmx_exception(PermissionDenied())
     assert response.status_code == 403
     assert response["content-type"] == "text/html; charset=utf-8"
     assert not response.content

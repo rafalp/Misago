@@ -22,12 +22,20 @@ HANDLED_EXCEPTIONS = (
     Http404,
     OutdatedSlug,
     PermissionDenied,
-    ValidationError,
     SocialAuthBaseException,
 )
 
+HANDLED_HTMX_EXCEPTIONS = (
+    Http404,
+    PermissionDenied,
+    ValidationError,
+)
 
-def is_misago_exception(exception):
+
+def is_misago_exception(exception, is_htmx: bool = False):
+    if is_htmx:
+        return isinstance(exception, HANDLED_HTMX_EXCEPTIONS)
+
     return isinstance(exception, HANDLED_EXCEPTIONS)
 
 
@@ -98,20 +106,19 @@ def get_exception_handler(exception):
 
 
 def handle_misago_exception(request, exception):
-    if request.is_htmx and isinstance(exception, (Http404, PermissionDenied, ValidationError)):
-        return handle_htmx_exception(exception)
-
     handler = get_exception_handler(exception)
     return handler(request, exception)
 
 
-def handle_htmx_exception(exception: Http404 | PermissionDenied | ValidationError) -> HttpResponse:
+def handle_misago_htmx_exception(
+    exception: Http404 | PermissionDenied | ValidationError,
+) -> HttpResponse:
     if isinstance(exception, ValidationError):
         return JsonResponse({"error": str(exception.messages[0])}, status=400)
-    
+
     if isinstance(exception, PermissionDenied):
         status = 403
-    elif isinstance(exception, Http404):
+    else:
         status = 404
 
     if not exception.args:
