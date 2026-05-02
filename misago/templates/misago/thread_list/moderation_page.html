@@ -19,8 +19,9 @@
     <form method="post">
       {% csrf_token %}
       <input type="hidden" name="moderation" value="{{ moderation_action.id }}" />
+      <input type="hidden" name="confirm" value="true">
       {% for thread in selection %}
-        <input type="hidden" name="thread" value="{{ thread.id }}" />
+        <input type="hidden" name="threads" value="{{ thread.id }}" />
       {% endfor %}
 
       <div class="panel panel-default panel-form">

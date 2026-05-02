@@ -1,13 +1,15 @@
 import htmx from "htmx.org"
+import { mountTemplate } from "./template"
 
 class BulkModeration {
   constructor(options) {
-    this.menu = options.menu ? document.querySelector(options.menu) : null
-    this.form = options.form
-    this.modal = options.modal
     this.actions = document.querySelectorAll(options.actions)
-    this.selection = options.selection
     this.control = document.querySelector(options.button.selector)
+    this.form = options.form
+    this.menu = options.menu ? document.querySelector(options.menu) : null
+    this.modal = options.modal
+    this.selection = options.selection
+    this.target = options.target || "#misago-htmx-root"
     this.text = options.button.text
 
     this.update()
@@ -17,7 +19,7 @@ class BulkModeration {
 
   registerActions = () => {
     this.actions.forEach((element) => {
-      if (element.getAttribute("moderation-action") === "remove-selection") {
+      if (element.getAttribute("mg-moderation-action") === "remove-selection") {
         element.addEventListener("click", this.onRemoveSelection)
       } else {
         element.addEventListener("click", this.onAction)
@@ -37,28 +39,49 @@ class BulkModeration {
     })
 
     const target = event.target
-    data.moderation = target.getAttribute("moderation-action")
+    data.moderation = target.getAttribute("mg-moderation-action")
 
-    if (target.getAttribute("moderation-multistage") === "true") {
-      htmx
-        .ajax("POST", document.location.href, {
-          target: this.modal,
-          swap: "innerHTML",
-          values: data,
-        })
-        .then(() => {
-          $(this.modal).modal("show")
-        })
+    if (target.getAttribute("mg-moderation-multistage") === "true") {
+      const modal = document.querySelector(this.modal)
+      if (!modal) {
+        console.warn(
+          "Could not resolve the '" +
+            this.modal.selector +
+            "' element specified in the 'modal.selector' option."
+        )
+        return
+      }
+
+      const modalTitle = modal.querySelector("[mg-modal-title]")
+      if (!modalTitle) {
+        console.warn(
+          "Could not resolve the '[mg-modal-title]' child element in '" +
+            this.modal.selector +
+            "'."
+        )
+        return
+      }
+
+      modalTitle.textContent = target.getAttribute("mg-moderation-full-name")
+
+      $(modal).modal("show")
+
+      htmx.ajax("POST", document.location.href, {
+        target: this.control.getAttribute("hx-target"),
+        swap: "innerHTML",
+        source: this.control,
+        values: data,
+      })
     } else {
       htmx.ajax("POST", document.location.href, {
-        target: "#misago-htmx-root",
+        target: this.target,
         swap: "outerHTML",
         values: data,
       })
     }
   }
 
-  onRemoveSelection = (event) => {
+  onRemoveSelection = () => {
     document.querySelectorAll(this.selection).forEach((element) => {
       element.checked = false
     })

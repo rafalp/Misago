@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import (
     Http404,
     HttpResponse,
@@ -22,6 +22,7 @@ HANDLED_EXCEPTIONS = (
     Http404,
     OutdatedSlug,
     PermissionDenied,
+    ValidationError,
     SocialAuthBaseException,
 )
 
@@ -97,15 +98,22 @@ def get_exception_handler(exception):
 
 
 def handle_misago_exception(request, exception):
-    if request.is_htmx and isinstance(exception, (Http404, PermissionDenied)):
+    if request.is_htmx and isinstance(exception, (Http404, PermissionDenied, ValidationError)):
         return handle_htmx_exception(exception)
 
     handler = get_exception_handler(exception)
     return handler(request, exception)
 
 
-def handle_htmx_exception(exception: Http404 | PermissionDenied) -> HttpResponse:
-    status = status = 404 if isinstance(exception, Http404) else 403
+def handle_htmx_exception(exception: Http404 | PermissionDenied | ValidationError) -> HttpResponse:
+    if isinstance(exception, ValidationError):
+        return JsonResponse({"error": str(exception.messages[0])}, status=400)
+    
+    if isinstance(exception, PermissionDenied):
+        status = 403
+    elif isinstance(exception, Http404):
+        status = 404
+
     if not exception.args:
         return HttpResponse(status=status)
 

@@ -11,7 +11,10 @@ from ..threadupdates.models import ThreadUpdate
 
 
 class ModerationAction:
+    multistage = False
+
     id: str
+    full_name: str | None = None
     button_label: str
 
     request: HttpRequest
@@ -48,15 +51,47 @@ class ModerationActionTemplateResult(ModerationActionResult):
         return render(request, template_name, final_context)
 
 
-class FormMixin:
+class ConfirmMixin:
+    multistage = True
+
     id: str
+    full_name: str | None = None
     button_label: str
 
-    form_name: str
+    template_name: str = "misago/moderation/confirm.html"
+    confirmation_message: str
+
+    def execute(self) -> ModerationActionResult:
+        if self.request.POST.get("confirm"):
+            return self.confirmed()
+
+        return ModerationActionTemplateResult(
+            context=self.get_context_data(),
+        )
+
+    def get_context_data(self) -> dict:
+        return {
+            "template_name": self.template_name,
+            "confirmation_message": self.confirmation_message,
+            "full_name": self.full_name or self.button_label,
+            "button_label": self.button_label,
+        }
+
+    def confirmed(self) -> ModerationActionResult:
+        raise NotImplementedError("'ConfirmMixin' subclasses must implement 'confirmed' method.")
+
+
+class FormMixin:
+    multistage = True
+
+    id: str
+    full_name: str | None = None
+    button_label: str
+
     form_class: Form
     template_name: str
 
-    def execute(self) -> ModerationActionResult | None:
+    def execute(self) -> ModerationActionResult:
         form = self.form_class()
 
         if form.is_bound and form.is_valid():
@@ -67,7 +102,7 @@ class FormMixin:
         )
 
     def get_form(self) -> Form:
-        if request.POST.get("submit_form"):
+        if request.POST.get("confirm"):
             return self.form_class(self.request.POST, request=self.request)
 
         return self.form_class(request=self.request)
@@ -76,12 +111,12 @@ class FormMixin:
         return {
             "template_name": self.template_name,
             "form": form,
-            "form_name": form_name,
-            "button_label": getattr(self, button_label, None),
+            "full_name": self.full_name or self.button_label,
+            "button_label": self.button_label,
         }
 
-    def form_valid(self, form: Form) -> ModerationActionResult | None:
-        raise NotImplementedError("'FormMixin' subclasses must implement 'form_valid'")
+    def form_valid(self, form: Form) -> ModerationActionResult:
+        raise NotImplementedError("'FormMixin' subclasses must implement 'form_valid' method.")
 
 
 class ThreadsModerationAction(ModerationAction):
