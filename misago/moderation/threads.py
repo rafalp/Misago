@@ -11,7 +11,12 @@ from ..threadupdates.create import (
     create_unlocked_thread_update,
 )
 from ..threadupdates.threadflag import set_thread_has_updates
-from .actions import ModerationActionResult, ThreadsModerationAction, FormMixin, ConfirmMixin
+from .actions import (
+    ModerationActionResult,
+    ThreadsModerationAction,
+    FormMixin,
+    ConfirmMixin,
+)
 from .forms import MoveThreads
 
 
@@ -85,12 +90,14 @@ class ConfirmThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
     id = "confirm"
     full_name = "Confirm threads"
     button_label = "Confirm"
-    confirmation_message = "Are you sure you want to test this action? This can't be undone!"
+    confirmation_message = (
+        "Are you sure you want to test this action? This can't be undone!"
+    )
 
     def validate(self):
         if len(self.threads) > 3:
             raise ValidationError("This action can't be done for more than 3 threads!")
-    
+
     def confirmed(self) -> ModerationActionResult:
         messages.success(self.request, "Test completed")
 

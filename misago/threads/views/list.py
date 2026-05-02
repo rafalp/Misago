@@ -180,7 +180,7 @@ class ListView(View):
             animate_threads = int(request.GET.get(ANIMATE_NEW_THREADS))
             if animate_threads < 0:
                 raise Http404()
-        except (ValueError, typeError):
+        except (TypeError, ValueError):
             raise Http404()
 
         return {thread.id: thread.last_post_id > animate_threads for thread in threads}
@@ -264,7 +264,9 @@ class ListView(View):
 
         return redirect(current_url)
 
-    def moderate_threads(self, request: HttpRequest, kwargs: dict) -> ModerationActionResult:
+    def moderate_threads(
+        self, request: HttpRequest, kwargs: dict
+    ) -> ModerationActionResult:
         raise NotImplementedError()
 
     def set_moderation_response_headers(
@@ -319,7 +321,7 @@ class ListView(View):
         for thread_id in request.POST.getlist("threads"):
             try:
                 threads_ids.add(int(thread_id))
-            except (typeError, ValueError):
+            except (TypeError, ValueError):
                 pass
         return threads_ids
 
@@ -351,7 +353,7 @@ class ListView(View):
             if latest_post < 0:
                 raise Http404()
             return latest_post
-        except (ValueError, typeError):
+        except (TypeError, ValueError):
             raise Http404()
 
     def get_thread_pages_count(self, request: HttpRequest, thread: Thread) -> int:
@@ -433,7 +435,7 @@ class ThreadListView(ListView):
                     "moderation_action": action_obj,
                     "threads": page_threads,
                     "selection": selected_threads,
-                    "breadcrumbs": []
+                    "breadcrumbs": [],
                 }
             )
 
@@ -795,6 +797,9 @@ class CategoryThreadListView(ListView):
         selected_threads = self.get_selected_threads(request, page_threads)
 
         action_obj = action(request, selected_threads, category)
+        action_obj.validate()
+
+        result = action_obj.execute()
 
         if isinstance(result, ModerationActionTemplateResult):
             result.update_context(

@@ -129,7 +129,7 @@ def test_locked_thread_update(client, thread, user):
     assert_contains(response, "Locked thread")
 
 
-def test_opened_thread_update(client, thread, user):
+def test_unlocked_thread_update(client, thread, user):
     create_unlocked_thread_update(thread, user)
 
     thread.has_updates = True
@@ -138,7 +138,7 @@ def test_opened_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Opened thread")
+    assert_contains(response, "Unlocked thread")
 
 
 def test_moved_thread_update(client, thread, user, default_category):

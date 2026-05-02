@@ -78,7 +78,9 @@ class ConfirmMixin:
         }
 
     def confirmed(self) -> ModerationActionResult:
-        raise NotImplementedError("'ConfirmMixin' subclasses must implement 'confirmed' method.")
+        raise NotImplementedError(
+            "'ConfirmMixin' subclasses must implement 'confirmed' method."
+        )
 
 
 class FormMixin:
@@ -116,7 +118,9 @@ class FormMixin:
         }
 
     def form_valid(self, form: Form) -> ModerationActionResult:
-        raise NotImplementedError("'FormMixin' subclasses must implement 'form_valid' method.")
+        raise NotImplementedError(
+            "'FormMixin' subclasses must implement 'form_valid' method."
+        )
 
 
 class ThreadsModerationAction(ModerationAction):
