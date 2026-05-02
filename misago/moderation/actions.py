@@ -58,8 +58,8 @@ class ConfirmMixin:
     full_name: str | None = None
     button_label: str
 
-    template_name: str = "misago/moderation/confirm.html"
     confirmation_message: str
+    template_name: str = "misago/moderation/confirm.html"
 
     def execute(self) -> ModerationActionResult:
         if self.request.POST.get("confirm"):
@@ -94,20 +94,25 @@ class FormMixin:
     template_name: str
 
     def execute(self) -> ModerationActionResult:
-        form = self.form_class()
+        form_submitted = bool(self.request.POST.get("confirm"))
+        form = self.get_form(form_submitted)
 
-        if form.is_bound and form.is_valid():
+        if form_submitted and form.is_valid():
             return self.form_valid(form)
 
         return ModerationActionTemplateResult(
             context=self.get_context_data(form),
         )
 
-    def get_form(self) -> Form:
-        if request.POST.get("confirm"):
-            return self.form_class(self.request.POST, request=self.request)
+    def get_form(self, form_submitted: bool) -> Form:
+        if form_submitted:
+            return self.form_class(
+                self.request.POST,
+                request=self.request,
+                prefix="moderation",
+            )
 
-        return self.form_class(request=self.request)
+        return self.form_class(request=self.request, prefix="moderation")
 
     def get_context_data(self, form: Form) -> dict:
         return {

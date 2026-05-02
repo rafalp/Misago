@@ -37,6 +37,8 @@
 {% block modals %}
 {% if user.is_authenticated %}
   {% include "misago/category_thread_list/mark_as_read_modal.html" %}
+{% endif %}
+{% if user.is_authenticated and threads.moderation_actions %}
   {% include "misago/thread_list/moderation.html" %}
 {% endif %}
 {% endblock modals %}

@@ -5,7 +5,6 @@ from django.utils.translation import pgettext_lazy
 from ..categories.proxy import CategoriesProxy
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
-from ..threads.models import Thread
 
 
 def get_category_choices(
@@ -31,7 +30,6 @@ def get_disabled_category_choices(
 
     categories_browse = user_permissions.categories[CategoryPermission.BROWSE]
     categories_start = user_permissions.categories[CategoryPermission.START]
-    moderated_categories = user_permissions.moderated_categories
 
     for category in categories.categories_list:
         if (
@@ -44,29 +42,26 @@ def get_disabled_category_choices(
     return choices
 
 
-class MoveThreads(forms.Form):
-    threads: list[Thread]
+class MoveThreadForm(forms.Form):
     request: HttpRequest
 
     category = forms.TypedChoiceField(
-        label=pgettext_lazy("moderation move threads form", "Move to category"),
+        label=pgettext_lazy("moderation move threads form", "Move to"),
         coerce=int,
         choices=[],
     )
 
     def __init__(
         self,
-        data: dict | None = None,
-        *,
-        threads: list[Thread],
+        *args,
         request: HttpRequest,
+        **kwargs,
     ):
-        super().__init__(data, prefix="moderation")
+        self.request = request
+
+        super().__init__(*args, **kwargs)
 
         self.fields["category"].choices = get_category_choices(request.categories)
         self.disabled_choices = get_disabled_category_choices(
             request.user_permissions, request.categories
         )
-
-        self.threads = threads
-        self.request = request

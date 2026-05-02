@@ -28,8 +28,9 @@ from ...moderation.actions import (
     ThreadsModerationAction,
 )
 from ...moderation.threads import (
-    ConfirmThreadsModerationAction,
+    DeleteThreadsModerationAction,
     LockThreadsModerationAction,
+    MoveThreadsModerationAction,
     UnlockThreadsModerationAction,
 )
 from ...pagination.cursor import (
@@ -734,9 +735,10 @@ def get_threads_moderation_actions(
         return []
 
     return [
-        ConfirmThreadsModerationAction,
         LockThreadsModerationAction,
         UnlockThreadsModerationAction,
+        MoveThreadsModerationAction,
+        DeleteThreadsModerationAction,
     ]
 
 
@@ -1155,7 +1157,12 @@ class CategoryThreadListView(ListView):
         self, request: HttpRequest, category: Category
     ) -> list[dict]:
         return [
-            {"id": action.id, "button_label": action.button_label}
+            {
+                "id": action.id,
+                "full_name": action.full_name or action.button_label,
+                "button_label": action.button_label,
+                "multistage": action.multistage,
+            }
             for action in self.get_moderation_actions(request, category)
         ]
 
@@ -1269,7 +1276,8 @@ def get_category_moderation_actions(
             return []
 
     return [
-        ConfirmThreadsModerationAction,
         LockThreadsModerationAction,
         UnlockThreadsModerationAction,
+        MoveThreadsModerationAction,
+        DeleteThreadsModerationAction,
     ]

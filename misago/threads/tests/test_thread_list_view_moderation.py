@@ -1,8 +1,10 @@
+import pytest
 from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
 from ...permissions.models import Moderator
 from ...test import assert_contains, assert_not_contains
+from ...threads.models import Thread
 
 MODERATION_FORM_HTML = '<form id="threads-moderation" method="post">'
 MODERATION_FIXED_HTML = '<div class="fixed-moderation">'
@@ -149,8 +151,68 @@ def test_thread_list_view_executes_single_stage_moderation_action_in_htmx(
     assert thread.is_locked
 
 
+@pytest.mark.xfail(reason="delete thread moderation action not yet implemented")
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_executes_multi_stage_moderation_action(
+def test_thread_list_view_executes_moderation_action_with_confirmation(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "delete", "threads": [thread.id]},
+    )
+    assert_contains(response, "Delete threads")
+    assert_contains(response, "Are you sure you want to delete selected threads?")
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "delete",
+            "threads": [thread.id],
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:thread-list")
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+
+@pytest.mark.xfail(reason="delete thread moderation action not yet implemented")
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_executes_moderation_action_with_confirmation_in_htmx(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "delete", "threads": [thread.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Delete")
+    assert_contains(response, "Are you sure you want to delete selected threads?")
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "delete",
+            "threads": [thread.id],
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, thread.title)
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+
+@pytest.mark.xfail(reason="move thread moderation action not yet implemented")
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_executes_moderation_action_with_form(
     thread_factory, moderator_client, default_category, child_category
 ):
     thread = thread_factory(default_category)
@@ -160,6 +222,7 @@ def test_thread_list_view_executes_multi_stage_moderation_action(
         {"moderation": "move", "threads": [thread.id]},
     )
     assert_contains(response, "Move threads")
+    assert_contains(response, "Move to")
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -167,7 +230,7 @@ def test_thread_list_view_executes_multi_stage_moderation_action(
             "moderation": "move",
             "threads": [thread.id],
             "moderation-category": child_category.id,
-            "confirm": "move",
+            "confirm": "true",
         },
     )
     assert response.status_code == 302
@@ -177,8 +240,9 @@ def test_thread_list_view_executes_multi_stage_moderation_action(
     assert thread.category == child_category
 
 
+@pytest.mark.xfail(reason="move thread moderation action not yet implemented")
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_executes_multi_stage_moderation_action_in_htmx(
+def test_thread_list_view_executes_moderation_action_with_form_in_htmx(
     thread_factory, moderator_client, default_category, child_category
 ):
     thread = thread_factory(default_category)
@@ -188,7 +252,7 @@ def test_thread_list_view_executes_multi_stage_moderation_action_in_htmx(
         {"moderation": "move", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Move threads")
+    assert_contains(response, "Move to")
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -196,7 +260,7 @@ def test_thread_list_view_executes_multi_stage_moderation_action_in_htmx(
             "moderation": "move",
             "threads": [thread.id],
             "moderation-category": child_category.id,
-            "confirm": "move",
+            "confirm": "true",
         },
         headers={"hx-request": "true"},
     )

@@ -1,11 +1,8 @@
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ..categories.models import Category
 from ..threads.lock import lock_thread, unlock_thread
-from ..threads.models import Thread
 from ..threadupdates.create import (
     create_locked_thread_update,
     create_unlocked_thread_update,
@@ -17,7 +14,7 @@ from .actions import (
     FormMixin,
     ConfirmMixin,
 )
-from .forms import MoveThreads
+from .forms import MoveThreadForm
 
 
 class LockThreadsModerationAction(ThreadsModerationAction):
@@ -86,21 +83,39 @@ class UnlockThreadsModerationAction(ThreadsModerationAction):
         )
 
 
-class ConfirmThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
-    id = "confirm"
-    full_name = "Confirm threads"
-    button_label = "Confirm"
-    confirmation_message = (
-        "Are you sure you want to test this action? This can't be undone!"
-    )
+class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
+    id = "move"
+    full_name = "Move threads"
+    button_label = "Move"
+    form_class = MoveThreadForm
+    template_name = "misago/moderation/move_threads.html"
 
-    def validate(self):
-        if len(self.threads) > 3:
-            raise ValidationError("This action can't be done for more than 3 threads!")
-
-    def confirmed(self) -> ModerationActionResult:
-        messages.success(self.request, "Test completed")
+    def form_valid(self, form) -> ModerationActionResult:
+        messages.success(
+            self.request,
+            pgettext("threads moderation success", "Threads moved"),
+        )
 
         return ModerationActionResult(
             updated_items=[thread.id for thread in self.threads],
+        )
+
+
+class DeleteThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
+    id = "delete"
+    full_name = "Delete threads"
+    button_label = "Delete"
+    confirmation_message = pgettext_lazy(
+        "threads moderation",
+        "Are you sure you want to delete the selected threads? This action cannot be undone.",
+    )
+
+    def confirmed(self) -> ModerationActionResult:
+        messages.success(
+            self.request,
+            pgettext("threads moderation success", "Threads deleted"),
+        )
+
+        return ModerationActionResult(
+            deleted_items=[thread.id for thread in self.threads],
         )

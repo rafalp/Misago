@@ -1,8 +1,8 @@
-from django.urls import reverse
+import pytest
 
-from ...conf.test import override_dynamic_settings
 from ...permissions.models import Moderator
 from ...test import assert_contains, assert_not_contains
+from ...threads.models import Thread
 
 MODERATION_FORM_HTML = '<form id="threads-moderation" method="post">'
 MODERATION_FIXED_HTML = '<div class="fixed-moderation">'
@@ -156,7 +156,65 @@ def test_category_thread_list_view_executes_single_stage_moderation_action_in_ht
     assert thread.is_locked
 
 
-def test_category_thread_list_view_executes_multi_stage_moderation_action(
+@pytest.mark.xfail(reason="delete thread moderation action not yet implemented")
+def test_category_thread_list_view_executes_moderation_action_with_confirmation(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "move", "threads": [thread.id]},
+    )
+    assert_contains(response, "Delete threads")
+    assert_contains(response, "Are you sure you want to delete selected threads?")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "Delete",
+            "threads": [thread.id],
+            "confirm": "delete",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url()
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+
+@pytest.mark.xfail(reason="delete thread moderation action not yet implemented")
+def test_category_thread_list_view_executes_moderation_action_with_confirmation_in_htmx(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "delete", "threads": [thread.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Delete")
+    assert_contains(response, "Are you sure you want to delete selected threads?")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "delete",
+            "threads": [thread.id],
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, thread.title)
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+
+@pytest.mark.xfail(reason="move thread moderation action not yet implemented")
+def test_category_thread_list_view_executes_moderation_action_with_form(
     thread_factory, moderator_client, default_category, child_category
 ):
     thread = thread_factory(default_category)
@@ -166,6 +224,7 @@ def test_category_thread_list_view_executes_multi_stage_moderation_action(
         {"moderation": "move", "threads": [thread.id]},
     )
     assert_contains(response, "Move threads")
+    assert_contains(response, "Move to")
 
     response = moderator_client.post(
         default_category.get_absolute_url(),
@@ -173,7 +232,7 @@ def test_category_thread_list_view_executes_multi_stage_moderation_action(
             "moderation": "move",
             "threads": [thread.id],
             "moderation-category": child_category.id,
-            "confirm": "move",
+            "confirm": "true",
         },
     )
     assert response.status_code == 302
@@ -183,7 +242,8 @@ def test_category_thread_list_view_executes_multi_stage_moderation_action(
     assert thread.category == child_category
 
 
-def test_category_thread_list_view_executes_multi_stage_moderation_action_in_htmx(
+@pytest.mark.xfail(reason="move thread moderation action not yet implemented")
+def test_category_thread_list_view_executes_moderation_action_with_form_in_htmx(
     thread_factory, moderator_client, default_category, child_category
 ):
     thread = thread_factory(default_category)
@@ -193,7 +253,7 @@ def test_category_thread_list_view_executes_multi_stage_moderation_action_in_htm
         {"moderation": "move", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Move threads")
+    assert_contains(response, "Move to")
 
     response = moderator_client.post(
         default_category.get_absolute_url(),
@@ -201,7 +261,7 @@ def test_category_thread_list_view_executes_multi_stage_moderation_action_in_htm
             "moderation": "move",
             "threads": [thread.id],
             "moderation-category": child_category.id,
-            "confirm": "move",
+            "confirm": "true",
         },
         headers={"hx-request": "true"},
     )

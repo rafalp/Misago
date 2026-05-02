@@ -1,5 +1,4 @@
 import htmx from "htmx.org"
-import { mountTemplate } from "./template"
 
 class BulkModeration {
   constructor(options) {
