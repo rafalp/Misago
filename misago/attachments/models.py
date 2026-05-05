@@ -76,9 +76,8 @@ class Attachment(PluginDataModel):
 
     upload_key: str  # or missing
 
-    class Meta:
-        indexes = [
-            *PluginDataModel.Meta.indexes,
+    class Meta(PluginDataModel.Meta):
+        indexes = PluginDataModel.Meta.indexes + [
             models.Index(
                 name="misago_attachment_miss_upload",
                 fields=["upload"],

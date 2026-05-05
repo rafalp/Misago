@@ -71,7 +71,7 @@ class WatchedThread(PluginDataModel):
     created_at = models.DateTimeField(auto_now_add=True)
     read_time = models.DateTimeField(default=timezone.now)
 
-    class Meta:
+    class Meta(PluginDataModel.Meta):
         indexes = PluginDataModel.Meta.indexes + [
             models.Index(fields=["user", "-thread"]),
         ]

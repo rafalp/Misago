@@ -21,5 +21,5 @@ class Like(PluginDataModel):
 
     liked_at = models.DateTimeField(default=timezone.now)
 
-    class Meta:
+    class Meta(PluginDataModel.Meta):
         ordering = ["-id"]

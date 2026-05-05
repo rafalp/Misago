@@ -48,5 +48,5 @@ class PostEdit(PluginDataModel):
     edited_at = models.DateTimeField(default=timezone.now)
     hidden_at = models.DateTimeField(null=True, blank=True)
 
-    class Meta:
+    class Meta(PluginDataModel.Meta):
         ordering = ["-id"]

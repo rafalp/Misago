@@ -125,9 +125,8 @@ class Thread(PluginDataModel):
     solution_locked_by_name = models.CharField(max_length=255, null=True, blank=True)
     solution_locked_by_slug = models.CharField(max_length=255, null=True, blank=True)
 
-    class Meta:
-        indexes = [
-            *PluginDataModel.Meta.indexes,
+    class Meta(PluginDataModel.Meta):
+        indexes = PluginDataModel.Meta.indexes + [
             models.Index(
                 name="misago_thread_pinned_glob_part",
                 fields=["weight"],

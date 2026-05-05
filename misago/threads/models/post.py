@@ -83,9 +83,8 @@ class Post(PluginDataModel):
     search_document = models.TextField(null=True, blank=True)
     search_vector = SearchVectorField()
 
-    class Meta:
-        indexes = [
-            *PluginDataModel.Meta.indexes,
+    class Meta(PluginDataModel.Meta):
+        indexes = PluginDataModel.Meta.indexes + [
             models.Index(
                 name="misago_post_has_open_repo_part",
                 fields=["has_open_reports"],

@@ -312,9 +312,8 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
 
     objects = UserManager()
 
-    class Meta:
-        indexes = [
-            *PluginDataModel.Meta.indexes,
+    class Meta(PluginDataModel.Meta):
+        indexes = PluginDataModel.Meta.indexes + [
             models.Index(
                 name="misago_user_is_staff_part",
                 fields=["is_staff"],

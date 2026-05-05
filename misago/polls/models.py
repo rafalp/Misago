@@ -71,9 +71,8 @@ class PollVote(PluginDataModel):
 
     voted_at = models.DateTimeField(default=timezone.now)
 
-    class Meta:
-        indexes = [
-            *PluginDataModel.Meta.indexes,
+    class Meta(PluginDataModel.Meta):
+        indexes = PluginDataModel.Meta.indexes + [
             models.Index(fields=["poll", "choice_id"]),
             models.Index(fields=["poll", "voter_name"]),
         ]

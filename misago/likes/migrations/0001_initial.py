@@ -2,6 +2,8 @@
 
 from django.conf import settings
 from django.db import migrations, models
+
+import django.contrib.postgres.indexes
 import django.db.models.deletion
 import django.utils.timezone
 
@@ -67,5 +69,11 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["-id"],
             },
+        ),
+        migrations.AddIndex(
+            model_name="like",
+            index=django.contrib.postgres.indexes.GinIndex(
+                fields=["plugin_data"], name="misago_like_plugin__c3a1d7_gin"
+            ),
         ),
     ]

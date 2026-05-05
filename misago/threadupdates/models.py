@@ -62,9 +62,8 @@ class ThreadUpdate(PluginDataModel):
 
     objects = ThreadUpdateQuerySet.as_manager()
 
-    class Meta:
-        indexes = [
-            *PluginDataModel.Meta.indexes,
+    class Meta(PluginDataModel.Meta):
+        indexes = PluginDataModel.Meta.indexes + [
             models.Index(
                 name="misago_thread_update_created",
                 fields=["thread", "created_at"],
