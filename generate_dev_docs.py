@@ -14,7 +14,7 @@ HOOKS_MODULES = (
     "misago.attachments.hooks",
     "misago.categories.hooks",
     "misago.context_processors.hooks",
-    "misago.edits.hooks",
+    "misago.postedits.hooks",
     "misago.likes.hooks",
     "misago.notifications.hooks",
     "misago.oauth2.hooks",

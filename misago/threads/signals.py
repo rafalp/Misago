@@ -9,7 +9,7 @@ from ..attachments.delete import delete_users_attachments
 from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..categories.synchronize import synchronize_category
-from ..edits.models import PostEdit
+from ..postedits.models import PostEdit
 from ..likes.models import Like
 from ..likes.synchronize import synchronize_post_likes
 from ..notifications.models import Notification, WatchedThread

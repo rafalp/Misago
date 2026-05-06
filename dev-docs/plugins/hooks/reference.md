@@ -7,13 +7,13 @@ Hooks instances are importable from the following Python modules:
 - [`misago.attachments.hooks`](#misago-attachments-hooks)
 - [`misago.categories.hooks`](#misago-categories-hooks)
 - [`misago.context_processors.hooks`](#misago-context-processors-hooks)
-- [`misago.edits.hooks`](#misago-edits-hooks)
 - [`misago.likes.hooks`](#misago-likes-hooks)
 - [`misago.notifications.hooks`](#misago-notifications-hooks)
 - [`misago.oauth2.hooks`](#misago-oauth2-hooks)
 - [`misago.parser.hooks`](#misago-parser-hooks)
 - [`misago.permissions.hooks`](#misago-permissions-hooks)
 - [`misago.polls.hooks`](#misago-polls-hooks)
+- [`misago.postedits.hooks`](#misago-postedits-hooks)
 - [`misago.posting.hooks`](#misago-posting-hooks)
 - [`misago.privatethreads.hooks`](#misago-privatethreads-hooks)
 - [`misago.solutions.hooks`](#misago-solutions-hooks)
@@ -55,9 +55,9 @@ Hooks instances are importable from the following Python modules:
 - [`context_processor_hook`](./context-processor-hook.md)
 
 
-## `misago.edits.hooks`
+## `misago.postedits.hooks`
 
-`misago.edits.hooks` defines the following hooks:
+`misago.postedits.hooks` defines the following hooks:
 
 - [`create_post_edit_hook`](./create-post-edit-hook.md)
 - [`delete_post_edit_hook`](./delete-post-edit-hook.md)

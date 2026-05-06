@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Protocol
 
-from ...edits.models import PostEdit
+from ...postedits.models import PostEdit
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
