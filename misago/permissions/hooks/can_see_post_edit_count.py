@@ -15,7 +15,7 @@ class CanSeePostsEditCountHookAction(Protocol):
 
     # Arguments
 
-    ## `users: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -59,7 +59,7 @@ class CanSeePostsEditCountHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `users: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 

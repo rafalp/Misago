@@ -65,3 +65,32 @@ class MoveThreadForm(forms.Form):
         self.disabled_choices = get_disabled_category_choices(
             request.user_permissions, request.categories
         )
+
+
+class SplitPostsForm(forms.Form):
+    request: HttpRequest
+
+    category = forms.TypedChoiceField(
+        label=pgettext_lazy("moderation split posts form", "Category"),
+        coerce=int,
+        choices=[],
+    )
+    title = forms.CharField(
+        label=pgettext_lazy("moderation split posts form", "Title"),
+        max_length=255,
+    )
+
+    def __init__(
+        self,
+        *args,
+        request: HttpRequest,
+        **kwargs,
+    ):
+        self.request = request
+
+        super().__init__(*args, **kwargs)
+
+        self.fields["category"].choices = get_category_choices(request.categories)
+        self.disabled_choices = get_disabled_category_choices(
+            request.user_permissions, request.categories
+        )

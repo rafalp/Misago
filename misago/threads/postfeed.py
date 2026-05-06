@@ -57,9 +57,11 @@ class PostFeed:
     animate_thread_updates: set[int]
 
     unread_posts: set[int]
+    selected_posts: set[int]
 
     allow_edit_thread: bool
-    is_moderator: bool
+    moderation: bool
+
     counter_start: int
 
     def __init__(
@@ -81,9 +83,11 @@ class PostFeed:
         self.animate_thread_updates = set()
 
         self.unread_posts = set()
+        self.selected_posts = set()
 
         self.allow_edit_thread = False
-        self.is_moderator = self.get_moderator_status()
+        self.moderation = False
+
         self.counter_start = 0
 
     def set_animated_posts(self, ids: Iterable[int]):
@@ -95,11 +99,14 @@ class PostFeed:
     def set_unread_posts(self, ids: Iterable[int]):
         self.unread_posts = set(ids)
 
+    def set_selected_posts(self, ids: Iterable[int]):
+        self.selected_posts = set(ids)
+
     def set_counter_start(self, counter_start: int):
         self.counter_start = counter_start
 
-    def get_moderator_status(self) -> bool:
-        return False
+    def set_moderation(self, moderation: bool = False):
+        self.moderation = moderation
 
     def set_allow_edit_thread(self, allow_edit_thread: bool):
         self.allow_edit_thread = allow_edit_thread
@@ -161,7 +168,7 @@ class PostFeed:
         return feed
 
     def get_post_data(self, post: Post, counter: int = 1) -> dict:
-        is_visible = self.is_moderator or not post.is_hidden
+        is_visible = self.moderation or not post.is_hidden
 
         if self.request.user.is_authenticated:
             poster_is_current_user = post.poster_id == self.request.user.id
@@ -190,11 +197,12 @@ class PostFeed:
             "clear_solution_url": None,
             "lock_solution_url": None,
             "unlock_solution_url": None,
-            "moderation": self.is_moderator,
+            "moderation": self.moderation,
             "is_new": post.id in self.unread_posts,
             "is_solution": False,
             "is_hidden": post.is_hidden,
             "is_visible": is_visible,
+            "is_selected": post.id in self.selected_posts,
             "post_body_top_components": [],
             "post_body_bottom_components": [],
         }
@@ -260,7 +268,7 @@ class PostFeed:
         unhide_url: str | None = None
         delete_url: str | None = None
 
-        if self.is_moderator:
+        if self.moderation:
             if thread_update.is_hidden:
                 unhide_url = self.get_unhide_thread_update_url(thread_update)
             else:
@@ -282,7 +290,7 @@ class PostFeed:
             "hide_url": hide_url,
             "unhide_url": unhide_url,
             "delete_url": delete_url,
-            "moderation": self.is_moderator,
+            "moderation": self.moderation,
         }
 
     def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
@@ -331,7 +339,7 @@ class PostFeed:
         )
 
         if post.is_locked and (
-            self.is_moderator
+            self.moderation
             or (post.poster_id and post.poster_id == self.request.user.id)
         ):
             item["post_body_top_components"].append(
@@ -523,11 +531,6 @@ class PostFeed:
 
 
 class ThreadPostFeed(PostFeed):
-    def get_moderator_status(self) -> bool:
-        return self.request.user_permissions.is_category_moderator(
-            self.thread.category_id
-        )
-
     def allow_reply_thread(self) -> bool:
         if self.request.user.is_anonymous:
             return False

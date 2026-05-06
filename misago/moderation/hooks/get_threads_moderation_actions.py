@@ -2,10 +2,11 @@ from typing import TYPE_CHECKING, Protocol
 
 from django.http import HttpRequest
 
+from ...permissions.proxy import UserPermissionsProxy
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ...moderation.threads import ThreadsModerationAction
+    from ..actions import ThreadsModerationAction
 
 
 class GetThreadsModerationActionsHookAction(Protocol):
@@ -15,9 +16,13 @@ class GetThreadsModerationActionsHookAction(Protocol):
 
     # Arguments
 
-    ## `request: HttpRequest`
+    ## `permissions: UserPermissionsProxy`
 
-    The request object.
+    A proxy object with the current user's permissions.
+
+    ## `request: HttpRequest | None = None`
+
+    The request object or `None` if not available.
 
     # Return value
 
@@ -25,7 +30,9 @@ class GetThreadsModerationActionsHookAction(Protocol):
     """
 
     def __call__(
-        self, request: HttpRequest
+        self,
+        permissions: UserPermissionsProxy,
+        request: HttpRequest | None = None,
     ) -> list[type["ThreadsModerationAction"]]: ...
 
 
@@ -42,9 +49,13 @@ class GetThreadsModerationActionsHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `request: HttpRequest`
+    ## `permissions: UserPermissionsProxy`
 
-    The request object.
+    A proxy object with the current user's permissions.
+
+    ## `request: HttpRequest | None = None`
+
+    The request object or `None` if not available.
 
     # Return value
 
@@ -54,7 +65,8 @@ class GetThreadsModerationActionsHookFilter(Protocol):
     def __call__(
         self,
         action: GetThreadsModerationActionsHookAction,
-        request: HttpRequest,
+        permissions: UserPermissionsProxy,
+        request: HttpRequest | None = None,
     ) -> list[type["ThreadsModerationAction"]]: ...
 
 
@@ -81,7 +93,7 @@ class GetThreadsModerationActionsHook(
         ModerationActionResult,
         ThreadsModerationAction,
     )
-    from misago.threads.hooks import get_threads_moderation_actions_hook
+    from misago.moderation.hooks import get_threads_moderation_actions_hook
 
 
     class ShadowBanModerationAction(ThreadsModerationAction):
@@ -114,10 +126,10 @@ class GetThreadsModerationActionsHook(
 
     @get_threads_moderation_actions_hook.append_filter
     def include_custom_moderation_action(
-        action, request: HttpRequest
+        action, request: HttpRequest | None = None
     ) -> list[type[ThreadsModerationAction]]:
         moderation_actions = action(request)
-        if request.user_permissions.is_global_moderator:
+        if request.permissions.is_global_moderator:
             moderation_actions.append(ShadowBanModerationAction)
         return moderation_actions
     ```
@@ -128,9 +140,10 @@ class GetThreadsModerationActionsHook(
     def __call__(
         self,
         action: GetThreadsModerationActionsHookAction,
-        request: HttpRequest,
+        permissions: UserPermissionsProxy,
+        request: HttpRequest | None = None,
     ) -> list[type["ThreadsModerationAction"]]:
-        return super().__call__(action, request)
+        return super().__call__(action, permissions, request)
 
 
 get_threads_moderation_actions_hook = GetThreadsModerationActionsHook()

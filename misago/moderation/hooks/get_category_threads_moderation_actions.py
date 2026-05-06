@@ -3,10 +3,11 @@ from typing import TYPE_CHECKING, Protocol
 from django.http import HttpRequest
 
 from ...categories.models import Category
+from ...permissions.proxy import UserPermissionsProxy
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ...moderation.actions import ThreadsModerationAction
+    from ..actions import ThreadsModerationAction
 
 
 class GetCategoryThreadsModerationActionsHookAction(Protocol):
@@ -16,13 +17,17 @@ class GetCategoryThreadsModerationActionsHookAction(Protocol):
 
     # Arguments
 
-    ## `request: HttpRequest`
+    ## `permissions: UserPermissionsProxy`
 
-    The request object.
+    A proxy object with the current user's permissions.
 
     ## `category: Category`
 
-    A category instance.
+    A category instance to return moderation actions for.
+
+    ## `request: HttpRequest | None = None`
+
+    The request object or `None` if not available.
 
     # Return value
 
@@ -31,8 +36,9 @@ class GetCategoryThreadsModerationActionsHookAction(Protocol):
 
     def __call__(
         self,
-        request: HttpRequest,
+        permissions: UserPermissionsProxy,
         category: Category,
+        request: HttpRequest | None = None,
     ) -> list[type["ThreadsModerationAction"]]: ...
 
 
@@ -49,13 +55,17 @@ class GetCategoryThreadsModerationActionsHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `request: HttpRequest`
+    ## `permissions: UserPermissionsProxy`
 
-    The request object.
+    A proxy object with the current user's permissions.
 
     ## `category: Category`
 
-    A category instance.
+    A category instance to return moderation actions for.
+
+    ## `request: HttpRequest | None = None`
+
+    The request object or `None` if not available.
 
     # Return value
 
@@ -65,8 +75,9 @@ class GetCategoryThreadsModerationActionsHookFilter(Protocol):
     def __call__(
         self,
         action: GetCategoryThreadsModerationActionsHookAction,
-        request: HttpRequest,
+        permissions: UserPermissionsProxy,
         category: Category,
+        request: HttpRequest | None = None,
     ) -> list[type["ThreadsModerationAction"]]: ...
 
 
@@ -94,7 +105,8 @@ class GetCategoryThreadsModerationActionsHook(
         ModerationActionResult,
         ThreadsModerationAction,
     )
-    from misago.threads.hooks import get_threads_moderation_actions_hook
+    from misago.moderation.hooks import get_category_threads_moderation_actions_hook
+    from misago.permissions.proxy import UserPermissionsProxy
 
 
     class ShadowBanModerationAction(ThreadsModerationAction):
@@ -125,12 +137,15 @@ class GetCategoryThreadsModerationActionsHook(
             )
 
 
-    @get_threads_moderation_actions_hook.append_filter
+    @get_category_threads_moderation_actions_hook.append_filter
     def include_custom_moderation_action(
-        action, request: HttpRequest, category: Category
+        action,
+        permissions: UserPermissionsProxy,
+        category: Category,
+        request: HttpRequest | None = None,
     ) -> list[type[ThreadsModerationAction]]:
-        moderation_actions = action(request)
-        if request.user_permissions.is_global_moderator:
+        moderation_actions = action(category, request)
+        if request.permissions.is_global_moderator:
             moderation_actions.append(ShadowBanModerationAction)
         return moderation_actions
     ```
@@ -141,10 +156,11 @@ class GetCategoryThreadsModerationActionsHook(
     def __call__(
         self,
         action: GetCategoryThreadsModerationActionsHookAction,
-        request: HttpRequest,
+        permissions: UserPermissionsProxy,
         category: Category,
+        request: HttpRequest | None = None,
     ) -> list[type["ThreadsModerationAction"]]:
-        return super().__call__(action, request, category)
+        return super().__call__(action, permissions, category, request)
 
 
 get_category_threads_moderation_actions_hook = GetCategoryThreadsModerationActionsHook()

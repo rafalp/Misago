@@ -13,6 +13,8 @@ from django.urls import reverse
 from django.views import View
 
 from ...categories.models import Category
+from ...moderation.actions import ModerationAction, PostsModerationAction
+from ...moderation.posts import get_thread_posts_moderation_actions
 from ...notifications.threads import get_watched_thread, update_watched_thread_read_time
 from ...permissions.checkutils import check_permissions
 from ...permissions.polls import check_start_thread_poll_permission
@@ -116,6 +118,8 @@ class DetailView(View):
         else:
             starter_is_current_user = False
 
+        posts_moderation_actions = self.get_posts_moderation_actions(request, thread)
+
         return {
             "starter_is_current_user": starter_is_current_user,
             "thread_status_bars": self.get_thread_status_bars_data(request, thread),
@@ -124,6 +128,9 @@ class DetailView(View):
             "watch_thread": self.get_watch_thread_data(request, thread),
             "feed": self.get_post_feed_data(request, thread, page),
             "reply": self.get_reply_context_data(request, thread),
+            "posts_moderation_actions": self.get_moderation_action_choices(
+                posts_moderation_actions
+            ),
             "post_edits_modal_template": self.backend.post_edits_modal_template,
             "post_likes_modal_template": self.backend.post_likes_modal_template,
         }
@@ -192,7 +199,10 @@ class DetailView(View):
         raise NotImplementedError()
 
     def get_post_feed_data(
-        self, request: HttpRequest, thread: Thread, page: int | None = None
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: int | None = None,
     ) -> dict:
         queryset = self.get_thread_posts_queryset(request, thread)
         paginator = self.get_thread_posts_paginator(request, queryset)
@@ -326,6 +336,24 @@ class DetailView(View):
     ) -> ThreadReplyFormset:
         raise NotImplementedError
 
+    def get_moderation_action_choices(
+        self, actions: list[ModerationAction]
+    ) -> list[dict]:
+        return [
+            {
+                "id": action.id,
+                "full_name": action.full_name or action.button_label,
+                "button_label": action.button_label,
+                "multistage": action.multistage,
+            }
+            for action in actions
+        ]
+
+    def get_posts_moderation_actions(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[type[PostsModerationAction]]:
+        return []
+
 
 class ThreadDetailView(DetailView, ThreadView):
     backend = thread_backend
@@ -427,6 +455,13 @@ class ThreadDetailView(DetailView, ThreadView):
         self, request: HttpRequest, thread: Thread
     ) -> ThreadReplyFormset:
         return get_thread_reply_formset(request, thread)
+
+    def get_posts_moderation_actions(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[type[PostsModerationAction]]:
+        return get_thread_posts_moderation_actions(
+            request.user_permissions, thread, request
+        )
 
     def get_poll(self, request: HttpRequest, thread: Thread) -> Poll | None:
         if thread.has_poll:

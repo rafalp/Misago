@@ -28,10 +28,8 @@ from ...moderation.actions import (
     ThreadsModerationAction,
 )
 from ...moderation.threads import (
-    DeleteThreadsModerationAction,
-    LockThreadsModerationAction,
-    MoveThreadsModerationAction,
-    UnlockThreadsModerationAction,
+    get_category_threads_moderation_actions,
+    get_threads_moderation_actions,
 )
 from ...pagination.cursor import (
     CursorPaginationResult,
@@ -68,13 +66,11 @@ from ..filters import (
     UnreadThreadsFilter,
 )
 from ..hooks import (
-    get_category_threads_moderation_actions_hook,
     get_category_threads_page_context_data_hook,
     get_category_threads_page_filters_hook,
     get_category_threads_page_queryset_hook,
     get_category_threads_page_subcategories_hook,
     get_category_threads_page_threads_hook,
-    get_threads_moderation_actions_hook,
     get_threads_page_context_data_hook,
     get_threads_page_filters_hook,
     get_threads_page_queryset_hook,
@@ -575,15 +571,15 @@ class ThreadListView(ListView):
             "active_filter": active_filter,
             "filters": filters,
             "filters_clear_url": self.get_filters_clear_url(request),
-            "moderation_actions": self.get_moderation_action_choices(
-                self.get_moderation_actions(request)
-            ),
             "items": items,
             "paginator": paginator,
             "categories_component": (
                 request.settings.threads_list_item_categories_component
             ),
             "enable_polling": self.is_threads_polling_enabled(request),
+            "moderation_actions": self.get_moderation_action_choices(
+                self.get_moderation_actions(request)
+            ),
         }
 
     def get_filters_base_url(self) -> str:
@@ -684,9 +680,7 @@ class ThreadListView(ListView):
     def get_moderation_actions(
         self, request: HttpRequest
     ) -> list[type[ThreadsModerationAction]]:
-        return get_threads_moderation_actions_hook(
-            get_threads_moderation_actions, request
-        )
+        return get_threads_moderation_actions(request.user_permissions, request)
 
     def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         filters_base_url = self.get_filters_base_url()
@@ -730,20 +724,6 @@ class ThreadListView(ListView):
             return get_forum_index_metatags(request)
 
         return super().get_metatags(request, context)
-
-
-def get_threads_moderation_actions(
-    request: HttpRequest,
-) -> list[type[ThreadsModerationAction]]:
-    if not request.user_permissions.moderated_categories:
-        return []
-
-    return [
-        LockThreadsModerationAction,
-        UnlockThreadsModerationAction,
-        MoveThreadsModerationAction,
-        DeleteThreadsModerationAction,
-    ]
 
 
 class CategoryThreadListView(ListView):
@@ -1162,8 +1142,8 @@ class CategoryThreadListView(ListView):
     def get_moderation_actions(
         self, request: HttpRequest, category: Category
     ) -> list[type[ThreadsModerationAction]]:
-        return get_category_threads_moderation_actions_hook(
-            get_category_moderation_actions, request, category
+        return get_category_moderation_actions(
+            request.user_permissions, category, request
         )
 
     def raise_404_for_vanilla_category(self, category: Category, context: dict):
@@ -1253,24 +1233,3 @@ class CategoryThreadListView(ListView):
             )
 
         return metatags
-
-
-def get_category_moderation_actions(
-    request: HttpRequest, category: Category
-) -> list[type[ThreadsModerationAction]]:
-    if not request.user_permissions.is_global_moderator:
-        categories_ids = set(
-            c["id"] for c in request.categories.get_category_descendants(category.id)
-        )
-
-        if not bool(
-            request.user_permissions.moderated_categories.intersection(categories_ids)
-        ):
-            return []
-
-    return [
-        LockThreadsModerationAction,
-        UnlockThreadsModerationAction,
-        MoveThreadsModerationAction,
-        DeleteThreadsModerationAction,
-    ]

@@ -244,6 +244,12 @@
           {{ dropdown_menu|safe }}
         </div>
 
+        {% if moderation %}
+          <label class="posts-feed-item-checkbox">
+            <input type="checkbox" name="posts" form="posts-moderation" value="{{ post.id }}"{% if is_selected %} checked{% endif %}>
+          </label>
+        {% endif %}
+
       </div>
       <div class="posts-feed-item-post-body">
 

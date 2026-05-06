@@ -11,9 +11,6 @@ from ..threadupdates.models import ThreadUpdate
 
 
 class PrivateThreadPostFeed(PostFeed):
-    def get_moderator_status(self) -> bool:
-        return self.request.user_permissions.is_private_threads_moderator
-
     def allow_reply_thread(self) -> bool:
         with check_permissions() as can_reply_thread:
             check_reply_private_thread_permission(

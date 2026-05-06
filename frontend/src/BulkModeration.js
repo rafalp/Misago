@@ -5,6 +5,7 @@ class BulkModeration {
     this.actions = document.querySelectorAll(options.actions)
     this.control = document.querySelector(options.button.selector)
     this.form = options.form
+    this.field = options.field || "moderation"
     this.menu = options.menu ? document.querySelector(options.menu) : null
     this.modal = options.modal
     this.selection = options.selection
@@ -38,7 +39,7 @@ class BulkModeration {
     })
 
     const target = event.target
-    data.moderation = target.getAttribute("mg-moderation-action")
+    data[this.field] = target.getAttribute("mg-moderation-action")
 
     if (target.getAttribute("mg-moderation-multistage") === "true") {
       const modal = document.querySelector(this.modal)

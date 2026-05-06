@@ -9,6 +9,7 @@ Hooks instances are importable from the following Python modules:
 - [`misago.context_processors.hooks`](#misago-context-processors-hooks)
 - [`misago.edits.hooks`](#misago-edits-hooks)
 - [`misago.likes.hooks`](#misago-likes-hooks)
+- [`misago.moderation.hooks`](#misago-moderation-hooks)
 - [`misago.notifications.hooks`](#misago-notifications-hooks)
 - [`misago.oauth2.hooks`](#misago-oauth2-hooks)
 - [`misago.parser.hooks`](#misago-parser-hooks)
@@ -76,6 +77,16 @@ Hooks instances are importable from the following Python modules:
 - [`like_post_hook`](./like-post-hook.md)
 - [`remove_post_like_hook`](./remove-post-like-hook.md)
 - [`synchronize_post_likes_hook`](./synchronize-post-likes-hook.md)
+
+
+## `misago.moderation.hooks`
+
+`misago.moderation.hooks` defines the following hooks:
+
+- [`get_category_threads_moderation_actions_hook`](./get-category-threads-moderation-actions-hook.md)
+- [`get_private_thread_posts_moderation_actions_hook`](./get-private-thread-posts-moderation-actions-hook.md)
+- [`get_thread_posts_moderation_actions_hook`](./get-thread-posts-moderation-actions-hook.md)
+- [`get_threads_moderation_actions_hook`](./get-threads-moderation-actions-hook.md)
 
 
 ## `misago.notifications.hooks`
@@ -276,7 +287,6 @@ Hooks instances are importable from the following Python modules:
 `misago.threads.hooks` defines the following hooks:
 
 - [`create_prefetch_post_feed_data_hook`](./create-prefetch-post-feed-data-hook.md)
-- [`get_category_threads_moderation_actions_hook`](./get-category-threads-moderation-actions-hook.md)
 - [`get_category_threads_page_context_data_hook`](./get-category-threads-page-context-data-hook.md)
 - [`get_category_threads_page_filters_hook`](./get-category-threads-page-filters-hook.md)
 - [`get_category_threads_page_queryset_hook`](./get-category-threads-page-queryset-hook.md)
@@ -286,7 +296,6 @@ Hooks instances are importable from the following Python modules:
 - [`get_thread_replies_page_posts_queryset_hook`](./get-thread-replies-page-posts-queryset-hook.md)
 - [`get_thread_replies_page_thread_queryset_hook`](./get-thread-replies-page-thread-queryset-hook.md)
 - [`get_thread_url_hook`](./get-thread-url-hook.md)
-- [`get_threads_moderation_actions_hook`](./get-threads-moderation-actions-hook.md)
 - [`get_threads_page_context_data_hook`](./get-threads-page-context-data-hook.md)
 - [`get_threads_page_filters_hook`](./get-threads-page-filters-hook.md)
 - [`get_threads_page_queryset_hook`](./get-threads-page-queryset-hook.md)
