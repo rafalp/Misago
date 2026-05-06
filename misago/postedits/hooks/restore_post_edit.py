@@ -113,8 +113,8 @@ class RestorePostEditHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.edits.hooks import restore_post_edit_hook
-    from misago.edits.models import PostEdit
+    from misago.postedits.hooks import restore_post_edit_hook
+    from misago.postedits.models import PostEdit
     from misago.posting.shortcuts import save_edited_post
     from misago.threads.models import Post
     from misago.users.models import User

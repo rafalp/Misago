@@ -76,7 +76,7 @@ The code below implements a custom filter function that blocks a user from hidin
 ```python
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext
-from misago.edits.models import PostEdit
+from misago.postedits.models import PostEdit
 from misago.permissions.hooks import check_hide_post_edit_permission_hook
 from misago.permissions.proxy import UserPermissionsProxy
 

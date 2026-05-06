@@ -98,8 +98,8 @@ class GetPrivateThreadPostEditsViewContextDataHook(
     ```python
     from django.core.paginator import Page
     from django.http import HttpRequest
-    from misago.edits.hooks import get_private_thread_post_edits_view_context_data_hook
-    from misago.edits.models import PostEdit
+    from misago.postedits.hooks import get_private_thread_post_edits_view_context_data_hook
+    from misago.postedits.models import PostEdit
     from misago.threads.models import Post
 
     @get_private_thread_post_edits_view_context_data_hook.append_filter
