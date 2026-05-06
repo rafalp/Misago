@@ -92,8 +92,8 @@ The code below implements a custom filter function that records the details of t
 
 ```python
 from django.http import HttpRequest
-from misago.edits.hooks import unhide_post_edit_hook
-from misago.edits.models import PostEdit
+from misago.postedits.hooks import unhide_post_edit_hook
+from misago.postedits.models import PostEdit
 
 
 @unhide_post_edit_hook.append_filter

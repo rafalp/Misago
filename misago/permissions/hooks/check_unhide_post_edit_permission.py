@@ -80,7 +80,7 @@ class CheckUnhidePostEditPermissionHook(
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
-    from misago.edits.models import PostEdit
+    from misago.postedits.models import PostEdit
     from misago.permissions.hooks import check_unhide_post_edit_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
 
