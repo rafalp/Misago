@@ -5,10 +5,10 @@ This hook wraps a standard Misago function used to delete a `PostEdit` object.
 
 ## Location
 
-This hook can be imported from `misago.edits.hooks`:
+This hook can be imported from `misago.postedits.hooks`:
 
 ```python
-from misago.edits.hooks import delete_post_edit_hook
+from misago.postedits.hooks import delete_post_edit_hook
 ```
 
 

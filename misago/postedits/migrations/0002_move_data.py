@@ -7,7 +7,7 @@ from ..diff import diff_text
 
 def migrate_edits_data_from_threads(apps, schema_editor):
     LegacyPostEdit = apps.get_model("misago_threads", "PostEdit")
-    PostEdit = apps.get_model("misago_edits", "PostEdit")
+    PostEdit = apps.get_model("misago_postedits", "PostEdit")
 
     queryset = LegacyPostEdit.objects.order_by("id")
     for legacy_edit in queryset.iterator(chunk_size=100):
@@ -37,7 +37,7 @@ def migrate_edits_data_from_threads(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("misago_edits", "0001_initial"),
+        ("misago_postedits", "0001_initial"),
     ]
 
     atomic = False

@@ -8,7 +8,7 @@ from django.utils import timezone
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
-from ...edits.models import PostEdit
+from ...postedits.models import PostEdit
 from ...notifications.enums import ThreadNotifications
 from ...notifications.models import WatchedThread
 from ...permissions.enums import CanUploadAttachments

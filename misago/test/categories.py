@@ -5,8 +5,8 @@ import pytest
 from ..acl.models import Role
 from ..attachments.models import Attachment
 from ..categories.models import Category, CategoryRole, RoleCategoryACL
-from ..edits.create import create_post_edit
-from ..edits.models import PostEdit
+from ..postedits.create import create_post_edit
+from ..postedits.models import PostEdit
 from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
 from ..permissions.models import CategoryGroupPermission

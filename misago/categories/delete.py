@@ -6,7 +6,7 @@ from django.http import HttpRequest
 from ..attachments.delete import delete_categories_attachments
 from ..attachments.models import Attachment
 from ..categories.models import RoleCategoryACL
-from ..edits.models import PostEdit
+from ..postedits.models import PostEdit
 from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
 from ..permissions.models import CategoryGroupPermission
@@ -104,7 +104,7 @@ def _move_categories_contents(categories: list[Category], new_category: Category
     # misago.attachments
     _move_objects(Attachment, categories, new_category)
 
-    # misago.edits
+    # misago.postedits
     _move_objects(PostEdit, categories, new_category)
 
     # misago.likes
