@@ -8,7 +8,7 @@ from django.urls import reverse
 
 from ..attachments.filetypes import filetypes
 from ..permissions.checkutils import check_permissions
-from ..permissions.edits import (
+from ..permissions.postedits import (
     check_delete_post_edit_permission,
     check_hide_post_edit_permission,
     check_see_post_edit_history_permission,

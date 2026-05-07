@@ -7,7 +7,7 @@ from django.urls import reverse
 from ..categories.models import Category
 from ..likes.postfeed import get_post_feed_post_likes_data
 from ..permissions.checkutils import check_permissions
-from ..permissions.edits import (
+from ..permissions.postedits import (
     can_see_post_edit_count,
     check_see_post_edit_history_permission,
 )

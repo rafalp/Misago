@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied
 
 from ...postedits.create import create_post_edit
 from ...postedits.hide import hide_post_edit
-from ..edits import (
+from ..postedits import (
     can_see_post_edit_count,
     check_delete_post_edit_permission,
     check_hide_post_edit_permission,
