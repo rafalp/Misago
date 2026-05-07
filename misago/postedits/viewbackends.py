@@ -2,7 +2,7 @@ from django.core.paginator import Page
 from django.http import Http404, HttpRequest
 from django.urls import reverse
 
-from ..permissions.edits import check_restore_post_edit_permission
+from ..permissions.postedits import check_restore_post_edit_permission
 from ..permissions.enums import CategoryPermission
 from ..permissions.privatethreads import check_edit_private_thread_post_permission
 from ..permissions.threads import check_edit_thread_post_permission
