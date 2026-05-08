@@ -104,7 +104,9 @@ from misago.moderation.actions import (
     ModerationActionResult,
     PostsModerationAction,
 )
-from misago.moderation.hooks import get_threads_moderation_actions_hook
+from misago.moderation.hooks import (
+    get_private_thread_posts_moderation_actions_hook,
+)
 from misago.permissions.proxy import UserPermissionsProxy
 from misago.threads.models import Thread
 
@@ -114,30 +116,30 @@ class ShadowBanModerationAction(PostsModerationAction):
     button_label: "Shadow ban"
 
     def validate(self):
-        for private thread in self.threads:
-            if not private thread.plugin_data.get("shadow_banned"):
+        for post in self.posts:
+            if not post.plugin_data.get("shadow_banned"):
                 return
 
-        raise ValidationError("Threads are already shadow banned.")
+        raise ValidationError("Posts are already shadow banned.")
 
     def execute(self) -> ModerationActionResult:
-        valid_threads = [
-            private thread for private thread in self.threads
-            if not private thread.plugin_data.get("shadow_banned")
+        valid_posts = [
+            post for post in self.posts
+            if not post.plugin_data.get("shadow_banned")
         ]
 
-        for private thread in valid_threads:
-            private thread.plugin_data["shadow_banned] = True
-            private thread.save()
+        for post in valid_posts:
+         post.plugin_data["shadow_banned] = True
+         post.save()
 
-        messages.success(self.request, "Threads shadow banned")
+        messages.success(self.request, "Posts shadow banned")
 
         return ModerationActionResult(
-            updated_items=[thread.id for private thread in valid_threads]
+            updated_items=[post.id for post in valid_posts]
         )
 
 
-@get_threads_moderation_actions_hook.append_filter
+@get_private_thread_posts_moderation_actions_hook.append_filter
 def include_custom_moderation_action(
     action,
     permissions: UserPermissionsProxy,

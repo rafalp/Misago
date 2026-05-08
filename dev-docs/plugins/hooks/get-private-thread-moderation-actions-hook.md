@@ -1,6 +1,6 @@
-# `get_thread_posts_moderation_actions_hook`
+# `get_private_thread_moderation_actions_hook`
 
-This hook wraps the standard function Misago uses to retrieve available moderation actions for a thread’s posts.
+This hook wraps the standard function Misago uses to retrieve available moderation actions for a private thread.
 
 
 ## Location
@@ -8,19 +8,19 @@ This hook wraps the standard function Misago uses to retrieve available moderati
 This hook can be imported from `misago.moderation.hooks`:
 
 ```python
-from misago.moderation.hooks import get_thread_posts_moderation_actions_hook
+from misago.moderation.hooks import get_private_thread_moderation_actions_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_thread_posts_moderation_actions_filter(
-    action: GetThreadPostsModerationActionsHookAction,
+def custom_get_private_thread_moderation_actions_filter(
+    action: GetPrivateThreadModerationActionsHookAction,
     permissions: UserPermissionsProxy,
     thread: Thread,
     request: HttpRequest | None=None,
-) -> list[type['PostsModerationAction']]:
+) -> list[type['ThreadModerationAction']]:
     ...
 ```
 
@@ -29,7 +29,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetThreadPostsModerationActionsHookAction`
+#### `action: GetPrivateThreadModerationActionsHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
@@ -43,7 +43,7 @@ A proxy object with the current user's permissions.
 
 #### `thread: Thread`
 
-A thread instance to return posts moderation actions for.
+A thread instance to return moderation actions for.
 
 
 #### `request: HttpRequest | None = None`
@@ -53,21 +53,21 @@ The request object or `None` if not available.
 
 ### Return value
 
-A Python `list` with `PostsModerationAction` types.
+A Python `list` with `ThreadModerationAction` types.
 
 
 ## Action
 
 ```python
-def get_thread_posts_moderation_actions_action(
+def get_private_thread_moderation_actions_action(
     permissions: UserPermissionsProxy,
     thread: Thread,
     request: HttpRequest | None=None,
-) -> list[type['PostsModerationAction']]:
+) -> list[type['ThreadModerationAction']]:
     ...
 ```
 
-Misago function used to retrieve available moderation actions for a thread’s posts.
+Misago function used to retrieve available moderation actions for a private thread.
 
 
 ### Arguments
@@ -79,7 +79,7 @@ A proxy object with the current user's permissions.
 
 #### `thread: Thread`
 
-A thread instance to return posts moderation actions for.
+A thread instance to return moderation actions for.
 
 
 #### `request: HttpRequest | None = None`
@@ -89,7 +89,7 @@ The request object or `None` if not available.
 
 ### Return value
 
-A Python `list` with `PostsModerationAction` types.
+A Python `list` with `ThreadModerationAction` types.
 
 
 ## Example
@@ -102,48 +102,39 @@ from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from misago.moderation.actions import (
     ModerationActionResult,
-    PostsModerationAction,
+    ThreadModerationAction,
 )
-from misago.moderation.hooks import get_thread_posts_moderation_actions_hook
+from misago.moderation.hooks import get_private_thread_moderation_actions_hook
 from misago.permissions.proxy import UserPermissionsProxy
 from misago.threads.models import Thread
 
 
-class ShadowBanModerationAction(PostsModerationAction):
+class ShadowBanModerationAction(ThreadModerationAction):
     id: "shadow_ban"
     button_label: "Shadow ban"
 
     def validate(self):
-        for post in self.posts:
-            if not thread.plugin_data.get("shadow_banned"):
-                return
-
-        raise ValidationError("Posts are already shadow banned.")
+        if not self.thread.plugin_data.get("shadow_banned"):
+            raise ValidationError("Thread is already shadow banned.")
 
     def execute(self) -> ModerationActionResult:
-        valid_posts = [
-            post for post in self.posts
-            if not post.plugin_data.get("shadow_banned")
-        ]
+        self.thread.plugin_data["shadow_banned] = True
+        self.thread.save()
 
-        for post in valid_posts:
-            post.plugin_data["shadow_banned] = True
-            post.save()
-
-        messages.success(self.request, "Posts shadow banned")
+        messages.success(self.request, "Thread shadow banned")
 
         return ModerationActionResult(
-            updated_items=[post.id for post in valid_posts]
+            updated_items=[self.thread.id]
         )
 
 
-@get_thread_posts_moderation_actions_hook.append_filter
+@get_private_thread_moderation_actions_hook.append_filter
 def include_custom_moderation_action(
     action,
     permissions: UserPermissionsProxy,
     thread: Thread,
     request: HttpRequest | None = None,
-) -> list[type[PostsModerationAction]]:
+) -> list[type[ThreadModerationAction]]:
     moderation_actions = action(thread, request)
     if request.permissions.is_global_moderator:
         moderation_actions.append(ShadowBanModerationAction)

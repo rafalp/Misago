@@ -7,13 +7,13 @@ from ...plugins.hooks import FilterHook
 from ...threads.models import Thread
 
 if TYPE_CHECKING:
-    from ..actions import PostsModerationAction
+    from ..actions import ThreadModerationAction
 
 
-class GetPrivateThreadPostsModerationActionsHookAction(Protocol):
+class GetPrivateThreadModerationActionsHookAction(Protocol):
     """
     Misago function used to retrieve available moderation actions
-    for a private thread’s posts.
+    for a private thread.
 
     # Arguments
 
@@ -23,7 +23,7 @@ class GetPrivateThreadPostsModerationActionsHookAction(Protocol):
 
     ## `thread: Thread`
 
-    A private thread instance to return posts moderation actions for.
+    A thread instance to return moderation actions for.
 
     ## `request: HttpRequest | None = None`
 
@@ -31,7 +31,7 @@ class GetPrivateThreadPostsModerationActionsHookAction(Protocol):
 
     # Return value
 
-    A Python `list` with `PostsModerationAction` types.
+    A Python `list` with `ThreadModerationAction` types.
     """
 
     def __call__(
@@ -39,16 +39,16 @@ class GetPrivateThreadPostsModerationActionsHookAction(Protocol):
         permissions: UserPermissionsProxy,
         thread: Thread,
         request: HttpRequest | None = None,
-    ) -> list[type["PostsModerationAction"]]: ...
+    ) -> list[type["ThreadModerationAction"]]: ...
 
 
-class GetPrivateThreadPostsModerationActionsHookFilter(Protocol):
+class GetPrivateThreadModerationActionsHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetPrivateThreadPostsModerationActionsHookAction`
+    ## `action: GetPrivateThreadModerationActionsHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -61,7 +61,7 @@ class GetPrivateThreadPostsModerationActionsHookFilter(Protocol):
 
     ## `thread: Thread`
 
-    A private thread instance to return posts moderation actions for.
+    A thread instance to return moderation actions for.
 
     ## `request: HttpRequest | None = None`
 
@@ -69,27 +69,27 @@ class GetPrivateThreadPostsModerationActionsHookFilter(Protocol):
 
     # Return value
 
-    A Python `list` with `PostsModerationAction` types.
+    A Python `list` with `ThreadModerationAction` types.
     """
 
     def __call__(
         self,
-        action: GetPrivateThreadPostsModerationActionsHookAction,
+        action: GetPrivateThreadModerationActionsHookAction,
         permissions: UserPermissionsProxy,
         thread: Thread,
         request: HttpRequest | None = None,
-    ) -> list[type["PostsModerationAction"]]: ...
+    ) -> list[type["ThreadModerationAction"]]: ...
 
 
-class GetPrivateThreadPostsModerationActionsHook(
+class GetPrivateThreadModerationActionsHook(
     FilterHook[
-        GetPrivateThreadPostsModerationActionsHookAction,
-        GetPrivateThreadPostsModerationActionsHookFilter,
+        GetPrivateThreadModerationActionsHookAction,
+        GetPrivateThreadModerationActionsHookFilter,
     ]
 ):
     """
     This hook wraps the standard function Misago uses to retrieve available
-    moderation actions for a private thread’s posts.
+    moderation actions for a private thread.
 
     # Example
 
@@ -102,50 +102,39 @@ class GetPrivateThreadPostsModerationActionsHook(
     from django.http import HttpRequest
     from misago.moderation.actions import (
         ModerationActionResult,
-        PostsModerationAction,
+        ThreadModerationAction,
     )
-    from misago.moderation.hooks import (
-        get_private_thread_posts_moderation_actions_hook,
-    )
+    from misago.moderation.hooks import get_private_thread_moderation_actions_hook
     from misago.permissions.proxy import UserPermissionsProxy
     from misago.threads.models import Thread
 
 
-    class ShadowBanModerationAction(PostsModerationAction):
+    class ShadowBanModerationAction(ThreadModerationAction):
         id: "shadow_ban"
         button_label: "Shadow ban"
 
         def validate(self):
-            for post in self.posts:
-                if not post.plugin_data.get("shadow_banned"):
-                    return
-
-            raise ValidationError("Posts are already shadow banned.")
+            if not self.thread.plugin_data.get("shadow_banned"):
+                raise ValidationError("Thread is already shadow banned.")
 
         def execute(self) -> ModerationActionResult:
-            valid_posts = [
-                post for post in self.posts
-                if not post.plugin_data.get("shadow_banned")
-            ]
+            self.thread.plugin_data["shadow_banned] = True
+            self.thread.save()
 
-            for post in valid_posts:
-             post.plugin_data["shadow_banned] = True
-             post.save()
-
-            messages.success(self.request, "Posts shadow banned")
+            messages.success(self.request, "Thread shadow banned")
 
             return ModerationActionResult(
-                updated_items=[post.id for post in valid_posts]
+                updated_items=[self.thread.id]
             )
 
 
-    @get_private_thread_posts_moderation_actions_hook.append_filter
+    @get_private_thread_moderation_actions_hook.append_filter
     def include_custom_moderation_action(
         action,
         permissions: UserPermissionsProxy,
         thread: Thread,
         request: HttpRequest | None = None,
-    ) -> list[type[PostsModerationAction]]:
+    ) -> list[type[ThreadModerationAction]]:
         moderation_actions = action(thread, request)
         if request.permissions.is_global_moderator:
             moderation_actions.append(ShadowBanModerationAction)
@@ -157,14 +146,12 @@ class GetPrivateThreadPostsModerationActionsHook(
 
     def __call__(
         self,
-        action: GetPrivateThreadPostsModerationActionsHookAction,
+        action: GetPrivateThreadModerationActionsHookAction,
         permissions: UserPermissionsProxy,
         thread: Thread,
         request: HttpRequest | None = None,
-    ) -> list[type["PostsModerationAction"]]:
+    ) -> list[type["ThreadModerationAction"]]:
         return super().__call__(action, permissions, thread, request)
 
 
-get_private_thread_posts_moderation_actions_hook = (
-    GetPrivateThreadPostsModerationActionsHook()
-)
+get_private_thread_moderation_actions_hook = GetPrivateThreadModerationActionsHook()

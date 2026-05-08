@@ -84,7 +84,11 @@ Hooks instances are importable from the following Python modules:
 `misago.moderation.hooks` defines the following hooks:
 
 - [`get_category_threads_moderation_actions_hook`](./get-category-threads-moderation-actions-hook.md)
+- [`get_private_thread_moderation_actions_hook`](./get-private-thread-moderation-actions-hook.md)
+- [`get_private_thread_post_moderation_actions_hook`](./get-private-thread-post-moderation-actions-hook.md)
 - [`get_private_thread_posts_moderation_actions_hook`](./get-private-thread-posts-moderation-actions-hook.md)
+- [`get_thread_moderation_actions_hook`](./get-thread-moderation-actions-hook.md)
+- [`get_thread_post_moderation_actions_hook`](./get-thread-post-moderation-actions-hook.md)
 - [`get_thread_posts_moderation_actions_hook`](./get-thread-posts-moderation-actions-hook.md)
 - [`get_threads_moderation_actions_hook`](./get-threads-moderation-actions-hook.md)
 
