@@ -223,14 +223,14 @@ class DetailView(View):
         else:
             thread_updates = []
 
-        feed = self.get_post_feed(request, thread, posts, thread_updates)
-        feed.set_counter_start(page_obj.start_index() - 1)
+        post_feed = self.get_post_feed(request, thread, posts, thread_updates)
+        post_feed.set_counter_start(page_obj.start_index() - 1)
 
         unread = get_unread_posts(request, thread, posts)
-        feed.set_unread_posts(unread)
+        post_feed.set_unread_posts(unread)
 
         allow_edit_thread = self.allow_edit_thread(request, thread)
-        feed.set_allow_edit_thread(allow_edit_thread)
+        post_feed.set_allow_edit_thread(allow_edit_thread)
 
         if unread:
             self.update_thread_read_time(request, thread, posts[-1].posted_at)
@@ -238,7 +238,7 @@ class DetailView(View):
         if request.user.is_authenticated and request.user.unread_notifications:
             self.read_user_notifications(request.user, posts)
 
-        return feed.get_context_data({"paginator": page_obj})
+        return post_feed.get_context_data({"paginator": page_obj})
 
     def get_thread_updates(
         self,

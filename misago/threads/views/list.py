@@ -1142,7 +1142,7 @@ class CategoryThreadListView(ListView):
     def get_moderation_actions(
         self, request: HttpRequest, category: Category
     ) -> list[type[ThreadsModerationAction]]:
-        return get_category_moderation_actions(
+        return get_category_threads_moderation_actions(
             request.user_permissions, category, request
         )
 
