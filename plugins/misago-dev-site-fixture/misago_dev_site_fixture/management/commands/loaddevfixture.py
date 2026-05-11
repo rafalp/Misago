@@ -225,6 +225,7 @@ class Command(BaseCommand):
 
         timestamp = timezone.now()
 
+<<<<<<< HEAD
         threads = [
             ThreadData(
                 category=first_category,
@@ -630,6 +631,384 @@ class Command(BaseCommand):
             timestamps = sorted(
                 timezone.now() - timedelta(minutes=randint(0, 600))
                 for _ in range(thread_length)
+=======
+        first_category = (
+            Category.objects.filter(tree_id=root.tree_id, level__gt=root.level)
+            .order_by("lft")
+            .first()
+        )
+
+        previous_year_timestamp = timestamp.replace(
+            year=timestamp.year - 1,
+            month=randint(1, 10),
+            day=randint(1, 28),
+            hour=randint(0, 23),
+            minute=randint(0, 59),
+            second=randint(0, 59),
+        )
+
+        previous_year_thread = Thread.objects.create(
+            category=first_category,
+            title="Thread with last activity from previous year",
+            slug="thread-with-last-activity-from-previous-year",
+            started_at=previous_year_timestamp,
+            last_posted_at=previous_year_timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+        previous_year_post = Post.objects.create(
+            category=first_category,
+            thread=previous_year_thread,
+            poster=None,
+            poster_name="Misago",
+            posted_at=previous_year_timestamp,
+            updated_at=previous_year_timestamp,
+        )
+
+        previous_year_thread.first_post = previous_year_thread.last_post = (
+            previous_year_post
+        )
+        previous_year_thread.save()
+
+        previous_year_post.original = (
+            "This thread shows timestamps for content from another year."
+        )
+
+        previous_year_post.parsed = (
+            "<p>This thread shows timestamps for content from another year.</p>"
+        )
+
+        previous_year_post.search_document = previous_year_post.original
+
+        update_post_checksum(previous_year_post)
+        previous_year_post.set_search_vector()
+        previous_year_post.save()
+
+        current_year_timestamp = timestamp.replace(
+            month=randint(1, timestamp.month),
+            day=randint(1, 28),
+            hour=randint(0, 23),
+            minute=randint(0, 59),
+            second=randint(0, 59),
+        )
+
+        current_year_thread = Thread.objects.create(
+            category=first_category,
+            title="Thread with last activity from current year",
+            slug="thread-with-last-activity-from-current-year",
+            started_at=current_year_timestamp,
+            last_posted_at=current_year_timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+        current_year_post = Post.objects.create(
+            category=first_category,
+            thread=current_year_thread,
+            poster=None,
+            poster_name="Misago",
+            posted_at=current_year_timestamp,
+            updated_at=current_year_timestamp,
+        )
+
+        current_year_thread.first_post = current_year_thread.last_post = (
+            current_year_post
+        )
+        current_year_thread.save()
+
+        current_year_post.original = (
+            "This thread shows timestamps for content from current year."
+        )
+
+        current_year_post.parsed = (
+            "<p>This thread shows timestamps for content from current year.</p>"
+        )
+
+        current_year_post.search_document = current_year_post.original
+
+        update_post_checksum(current_year_post)
+        current_year_post.set_search_vector()
+        current_year_post.save()
+
+        current_week_timestamp = timestamp.replace(
+            hour=randint(0, 23),
+            minute=randint(0, 59),
+            second=randint(0, 59),
+        ) - timedelta(days=3)
+
+        current_week_thread = Thread.objects.create(
+            category=first_category,
+            title="Thread with last activity from current week",
+            slug="thread-with-last-activity-from-current-week",
+            started_at=current_week_timestamp,
+            last_posted_at=current_week_timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+        current_week_post = Post.objects.create(
+            category=first_category,
+            thread=current_week_thread,
+            poster=None,
+            poster_name="Misago",
+            posted_at=current_week_timestamp,
+            updated_at=current_week_timestamp,
+        )
+
+        current_week_thread.first_post = current_week_thread.last_post = (
+            current_week_post
+        )
+        current_week_thread.save()
+
+        current_week_post.original = (
+            "This thread shows timestamps for content from current week."
+        )
+
+        current_week_post.parsed = (
+            "<p>This thread shows timestamps for content from current week.</p>"
+        )
+
+        current_week_post.search_document = current_week_post.original
+
+        update_post_checksum(current_week_post)
+        current_week_post.set_search_vector()
+        current_week_post.save()
+
+        yesterday_timestamp = timestamp.replace(
+            hour=randint(0, 15),
+            minute=randint(0, 59),
+            second=randint(0, 59),
+        ) - timedelta(days=1)
+
+        yesterday_thread = Thread.objects.create(
+            category=first_category,
+            title="Thread with last activity from yesterday",
+            slug="thread-with-last-activity-from-yesterday-week",
+            started_at=yesterday_timestamp,
+            last_posted_at=yesterday_timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+        yesterday_post = Post.objects.create(
+            category=first_category,
+            thread=yesterday_thread,
+            poster=None,
+            poster_name="Misago",
+            posted_at=yesterday_timestamp,
+            updated_at=yesterday_timestamp,
+        )
+
+        yesterday_thread.first_post = yesterday_thread.last_post = yesterday_post
+        yesterday_thread.save()
+
+        yesterday_post.original = (
+            "This thread shows timestamps for content from yesterday."
+        )
+
+        yesterday_post.parsed = (
+            "<p>This thread shows timestamps for content from yesterday.</p>"
+        )
+
+        yesterday_post.search_document = yesterday_post.original
+
+        update_post_checksum(yesterday_post)
+        yesterday_post.set_search_vector()
+        yesterday_post.save()
+
+        timestamp = timezone.now() - timedelta(minutes=randint(50, 60))
+
+        thread_with_states = Thread.objects.create(
+            category=first_category,
+            title="Different post states",
+            slug="different-post-states",
+            started_at=timestamp,
+            last_posted_at=timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+
+        default_post = Post.objects.create(
+            category=first_category,
+            thread=thread_with_states,
+            poster=user,
+            poster_name=user.username,
+            posted_at=timestamp,
+            updated_at=timestamp,
+        )
+
+        default_post.original = "Post in a default state."
+        default_post.parsed = "<p>Post in a default state.</p>"
+        default_post.search_document = default_post.original
+
+        update_post_checksum(default_post)
+        default_post.set_search_vector()
+        default_post.save()
+
+        timestamp = timezone.now() - timedelta(minutes=randint(40, 50))
+
+        guest_post = Post.objects.create(
+            category=first_category,
+            thread=thread_with_states,
+            poster=None,
+            poster_name="DeletedUser",
+            posted_at=timestamp,
+            updated_at=timestamp,
+        )
+
+        guest_post.original = "Post by a deleted user."
+        guest_post.parsed = "<p>Post by a deleted user.</p>"
+        guest_post.search_document = guest_post.original
+
+        update_post_checksum(guest_post)
+        guest_post.set_search_vector()
+        guest_post.save()
+
+        timestamp = timezone.now() - timedelta(minutes=randint(30, 40))
+
+        hidden_post = Post.objects.create(
+            category=first_category,
+            thread=thread_with_states,
+            poster=other_user,
+            poster_name=other_user.username,
+            posted_at=timestamp,
+            updated_at=timestamp,
+            is_hidden=True,
+        )
+
+        hidden_post.original = "Hidden post."
+        hidden_post.parsed = "<p>Hidden post.</p>"
+        hidden_post.search_document = hidden_post.original
+
+        update_post_checksum(hidden_post)
+        hidden_post.set_search_vector()
+        hidden_post.save()
+
+        timestamp = timezone.now() - timedelta(minutes=randint(20, 30))
+
+        unapproved_post = Post.objects.create(
+            category=first_category,
+            thread=thread_with_states,
+            poster=user,
+            poster_name=user.username,
+            posted_at=timestamp,
+            updated_at=timestamp,
+            is_hidden=True,
+        )
+
+        unapproved_post.original = "Unapproved post."
+        unapproved_post.parsed = "<p>Unapproved post.</p>"
+        unapproved_post.search_document = unapproved_post.original
+
+        update_post_checksum(unapproved_post)
+        unapproved_post.set_search_vector()
+        unapproved_post.save()
+
+        timestamp = timezone.now() - timedelta(minutes=randint(10, 20))
+
+        locked_post = Post.objects.create(
+            category=first_category,
+            thread=thread_with_states,
+            poster=banned_user,
+            poster_name=banned_user.username,
+            posted_at=timestamp,
+            updated_at=timestamp,
+            is_locked=True,
+        )
+
+        locked_post.original = "Locked post by a banned user."
+        locked_post.parsed = "<p>Locked post by a banned user.</p>"
+        locked_post.search_document = locked_post.original
+
+        update_post_checksum(locked_post)
+        locked_post.set_search_vector()
+        locked_post.save()
+
+        edited_post = Post.objects.create(
+            category=first_category,
+            thread=thread_with_states,
+            poster=user,
+            poster_name=user.username,
+            posted_at=timezone.now() - timedelta(minutes=randint(5, 10)),
+            updated_at=timezone.now() - timedelta(minutes=randint(1, 5)),
+            edits=42,
+            last_editor=moderator,
+            last_editor_name=moderator.username,
+            last_editor_slug=moderator.slug,
+        )
+
+        edited_post.original = "Edited post."
+        edited_post.parsed = "<p>Edited post.</p>"
+        edited_post.search_document = edited_post.original
+
+        update_post_checksum(edited_post)
+        edited_post.set_search_vector()
+        edited_post.save()
+
+        timestamp = timezone.now() - timedelta(minutes=randint(1, 5))
+
+        moderator_post = Post.objects.create(
+            category=first_category,
+            thread=thread_with_states,
+            poster=moderator,
+            poster_name=moderator.username,
+            posted_at=timestamp,
+            updated_at=timestamp,
+        )
+
+        moderator_post.original = "Post by a moderator."
+        moderator_post.parsed = "<p>Post by a moderator.</p>"
+        moderator_post.search_document = moderator_post.original
+
+        update_post_checksum(moderator_post)
+        moderator_post.set_search_vector()
+        moderator_post.save()
+
+        thread_length = settings.posts_per_page + settings.posts_per_page_orphans
+        timestamp = timezone.now() - timedelta(minutes=50)
+
+        thread_one_page = Thread.objects.create(
+            category=first_category,
+            title="Thread with max-length single page",
+            slug="thread-with-max-length-single-page",
+            started_at=timestamp,
+            last_posted_at=timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+
+        for i in range(thread_length):
+            timestamp += timedelta(minutes=randint(0, 3))
+
+            post = Post.objects.create(
+                category=first_category,
+                thread=thread_one_page,
+                poster=None,
+                poster_name="Poster",
+                posted_at=timestamp,
+                updated_at=timestamp,
+>>>>>>> 0ea9b7926 (Add yes/no/never permission option)
             )
 
             thread_data = ThreadData(
@@ -639,6 +1018,7 @@ class Command(BaseCommand):
             )
             threads.append(thread_data)
 
+<<<<<<< HEAD
             for i, timestamp in enumerate(timestamps, 1):
                 thread_data.posts.append(
                     PostData(
@@ -664,12 +1044,33 @@ class Command(BaseCommand):
         create_thread_with_specified_length(
             (settings.posts_per_page * 4) + settings.posts_per_page_orphans + 1,
             "Thread with five pages",
+=======
+            update_post_checksum(post)
+            post.set_search_vector()
+            post.save()
+
+        thread_length = settings.posts_per_page + settings.posts_per_page_orphans + 1
+
+        thread_two_pages = Thread.objects.create(
+            category=first_category,
+            title="Thread with two pages",
+            slug="thread-with-two-pages",
+            started_at=timestamp,
+            last_posted_at=timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+>>>>>>> 0ea9b7926 (Add yes/no/never permission option)
         )
 
         # Order threads posts
         for thread in threads:
             thread.posts = sorted(thread.posts, key=lambda p: p.posted_at)
 
+<<<<<<< HEAD
         # Order threads
         threads = sorted(threads, key=lambda t: t.posts[0].posted_at)
 
@@ -692,11 +1093,21 @@ class Command(BaseCommand):
                 is_hidden=thread_data.is_hidden,
                 is_unapproved=thread_data.is_unapproved,
                 is_locked=thread_data.is_locked,
+=======
+            post = Post.objects.create(
+                category=first_category,
+                thread=thread_two_pages,
+                poster=None,
+                poster_name="Poster",
+                posted_at=timestamp,
+                updated_at=timestamp,
+>>>>>>> 0ea9b7926 (Add yes/no/never permission option)
             )
 
             for post_data in thread_data.posts:
                 threads_posts.append((post_data, thread))
 
+<<<<<<< HEAD
         # Order posts
         posts_and_threads = sorted(threads_posts, key=lambda i: i[0].posted_at)
 
@@ -708,6 +1119,59 @@ class Command(BaseCommand):
             else:
                 poster = post_data.poster
                 poster_name = poster.username
+=======
+            update_post_checksum(post)
+            post.set_search_vector()
+            post.save()
+
+        thread_length = (
+            (settings.posts_per_page * 2) + settings.posts_per_page_orphans + 1
+        )
+
+        thread_three_pages = Thread.objects.create(
+            category=first_category,
+            title="Thread with three pages",
+            slug="thread-with-three-pages",
+            started_at=timestamp,
+            last_posted_at=timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+
+        for i in range(thread_length):
+            timestamp += timedelta(minutes=randint(0, 3))
+
+            post = Post.objects.create(
+                category=first_category,
+                thread=thread_three_pages,
+                poster=None,
+                poster_name="Poster",
+                posted_at=timestamp,
+                updated_at=timestamp,
+            )
+
+            post.original = f"Post no. {i + 1}"
+            post.parsed = f"<p>Post no. {i + 1}</p>"
+            post.search_document = post.original
+
+            update_post_checksum(post)
+            post.set_search_vector()
+            post.save()
+
+        timestamp = timezone.now()
+        posts_to_update = Post.objects.filter(id__gt=yesterday_post.id).order_by("-id")
+        for post in posts_to_update.iterator():
+            if post.updated_at == post.posted_at:
+                post.posted_at = timestamp
+                post.updated_at = post.posted_at
+            else:
+                post.posted_at = timestamp
+                post.updated_at = timestamp + timedelta(minutes=randint(1, 10))
+>>>>>>> 0ea9b7926 (Add yes/no/never permission option)
 
             hidden_at = None
             hidden_by = None
@@ -750,6 +1214,162 @@ class Command(BaseCommand):
             post.set_search_vector()
             post.save()
 
+<<<<<<< HEAD
+=======
+            timestamp -= timedelta(minutes=randint(1, 10))
+
+        timestamp = timezone.now()
+
+        readme_thread = Thread.objects.create(
+            category=first_category,
+            title="Welcome to the Misago Dev Fixture! Read me first!",
+            slug="welcome-to-the-misago-dev-fixture-read-me-first",
+            started_at=timestamp,
+            last_posted_at=timestamp,
+            starter=None,
+            starter_name="Misago",
+            starter_slug="misago",
+            last_poster=None,
+            last_poster_name="Misago",
+            last_poster_slug="misago",
+        )
+        readme_post = Post.objects.create(
+            category=first_category,
+            thread=readme_thread,
+            poster=None,
+            poster_name="Misago",
+            posted_at=timestamp,
+            updated_at=timestamp,
+        )
+
+        readme_thread.first_post = readme_thread.last_post = readme_post
+        readme_thread.save()
+
+        readme_post.original = dedent(
+            """
+            This Misago site was pre-populated with some initial data to make starting development easier:
+
+            - Example categories hierarchy
+            - Threads with activity from different dates
+            - Moderator account
+            - Two regular user accounts
+            - Banned user account
+
+            ## Extra user accounts
+
+            In addition to the default "Admin" account, the following accounts are available:
+
+            ### Moderator
+
+            Global moderator.
+
+            - Username: `Moderator`
+            - Email: `moderator@example.com`
+            - Password: `password`
+
+            ### User
+
+            Regular user.
+
+            - Username: `User`
+            - Email: `user@example.com`
+            - Password: `password`
+
+            ### Other user
+
+            Another regular user.
+
+            - Username: `OtherUser`
+            - Email: `other@example.com`
+            - Password: `password`
+
+            ### Banned user
+
+            Permanently banned user.
+
+            - Username: `Banned`
+            - Email: `banned@example.com`
+            - Password: `password`
+            """
+        ).strip()
+
+        readme_post.parsed = (
+            "<p>This Misago site was pre-populated with some initial data to make starting development easier:</p>"
+            "<ul>"
+            "<li>Example categories hierarchy</li>"
+            "<li>Threads with activity from different dates</li>"
+            "<li>Moderator account</li>"
+            "<li>Two regular user accounts</li>"
+            "<li>Banned user account</li>"
+            "</ul>"
+            "<h2>Extra user accounts</h2>"
+            "<p>In addition to the default &quot;Admin&quot; account, the following accounts are available:</p>"
+            "<h3>Moderator</h3>"
+            "<p>Global moderator.</p>"
+            "<ul>"
+            "<li>Username: <code>Moderator</code></li>"
+            "<li>Email: <code>moderator@example.com</code></li>"
+            "<li>Password: <code>password</code></li>"
+            "</ul>"
+            "<h3>User</h3>"
+            "<p>Regular user.</p>"
+            "<ul>"
+            "<li>Username: <code>User</code></li>"
+            "<li>Email: <code>user@example.com</code></li>"
+            "<li>Password: <code>password</code></li>"
+            "</ul>"
+            "<h3>Other user</h3>"
+            "<p>Another regular user.</p>"
+            "<ul>"
+            "<li>Username: <code>OtherUser</code></li>"
+            "<li>Email: <code>other@example.com</code></li>"
+            "<li>Password: <code>password</code></li>"
+            "</ul>"
+            "<h3>Banned user</h3>"
+            "<p>Permanently banned user.</p>"
+            "<ul>"
+            "<li>Username: <code>Banned</code></li>"
+            "<li>Email: <code>banned@example.com</code></li>"
+            "<li>Password: <code>password</code></li>"
+            "</ul>"
+        ).strip()
+
+        readme_post.search_document = (
+            "This Misago site was pre-populated with some initial data to make starting development easier: "
+            "- Example categories hierarchy "
+            "- Threads with activity from different dates "
+            "- Moderator account "
+            "- Two regular user accounts "
+            "- Banned user account "
+            "## Extra user accounts "
+            'In addition to the default "Admin" account, the following accounts are available: '
+            "### Moderator "
+            "Global moderator. "
+            "- Username: `Moderator` "
+            "- Email: `moderator@example.com` "
+            "- Password: `password` "
+            "### User "
+            "Regular user. "
+            "- Username: `User` "
+            "- Email: `user@example.com` "
+            "- Password: `password` "
+            "### Other user "
+            "Another regular user. "
+            "- Username: `OtherUser` "
+            "- Email: `other@example.com` "
+            "- Password: `password` "
+            "### Banned user "
+            "Permanently banned user. "
+            "- Username: `Banned` "
+            "- Email: `banned@example.com` "
+            "- Password: `password`"
+        ).strip()
+
+        update_post_checksum(readme_post)
+        readme_post.set_search_vector()
+        readme_post.save()
+
+>>>>>>> 0ea9b7926 (Add yes/no/never permission option)
         for thread in Thread.objects.iterator():
             synchronize_thread(thread)
 

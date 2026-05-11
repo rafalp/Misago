@@ -369,22 +369,61 @@
     <label for="" class="control-label">
       Switch:
     </label>
-    <div class="controls control-yesno-switch ">
+    <div class="controls control-radioselect ">
       
   
     
   
+    <div class="controls control-yesno">
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_field" value="1" id="id_yes_no_field_0" disabled>
+          Yes
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_field" value="0" id="id_yes_no_field_1" disabled checked>
+          No
+        </label>
+      
+    </div>
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_disabled_yes_no_never_field_is_rendered
+  '''
+  <div class="form-group" id="_group">
+    <label for="" class="control-label">
+      Permission:
+    </label>
+    <div class="controls control-radioselect ">
+      
+  
     
-      <label class="radio">
-        <input type="radio" name="yesno_field" value="1" class="yesno-switch" id="id_yesno_field_0" disabled>
-        Yes
-      </label>
-    
-      <label class="radio">
-        <input type="radio" name="yesno_field" value="0" class="yesno-switch" id="id_yesno_field_1" disabled checked>
-        No
-      </label>
-    
+  
+    <div class="controls control-yesnonever">
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_0" disabled>
+          Yes
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_1" disabled>
+          No
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_2" disabled>
+          Never
+        </label>
+      
+    </div>
   
   
       
@@ -673,22 +712,24 @@
     <label for="" class="control-label">
       Switch:
     </label>
-    <div class="controls control-yesno-switch ">
+    <div class="controls control-radioselect ">
       
   
     
   
-    
-      <label class="radio">
-        <input type="radio" name="yesno_field" value="1" class="yesno-switch" id="id_yesno_field_0" required>
-        Yes
-      </label>
-    
-      <label class="radio">
-        <input type="radio" name="yesno_field" value="0" class="yesno-switch" id="id_yesno_field_1" required checked>
-        No
-      </label>
-    
+    <div class="controls control-yesno">
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_field" value="1" id="id_yes_no_field_0" required>
+          Yes
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_field" value="0" id="id_yes_no_field_1" required checked>
+          No
+        </label>
+      
+    </div>
   
   
       
@@ -703,22 +744,172 @@
     <label for="" class="control-label">
       Switch:
     </label>
-    <div class="controls control-yesno-switch ">
+    <div class="controls control-radioselect ">
       
   
     
   
+    <div class="controls control-yesno">
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_field" value="1" id="id_yes_no_field_0" required checked>
+          Yes
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_field" value="0" id="id_yes_no_field_1" required>
+          No
+        </label>
+      
+    </div>
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_yes_no_never_field_is_rendered
+  '''
+  <div class="form-group" id="_group">
+    <label for="" class="control-label">
+      Permission:
+    </label>
+    <div class="controls control-radioselect ">
+      
+  
     
-      <label class="radio">
-        <input type="radio" name="yesno_field" value="1" class="yesno-switch" id="id_yesno_field_0" required checked>
-        Yes
-      </label>
+  
+    <div class="controls control-yesnonever">
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_0" required>
+          Yes
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_1" required>
+          No
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_2" required>
+          Never
+        </label>
+      
+    </div>
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_yes_no_never_field_with_never_value_is_rendered
+  '''
+  <div class="form-group" id="_group">
+    <label for="" class="control-label">
+      Permission:
+    </label>
+    <div class="controls control-radioselect ">
+      
+  
     
-      <label class="radio">
-        <input type="radio" name="yesno_field" value="0" class="yesno-switch" id="id_yesno_field_1" required>
-        No
-      </label>
+  
+    <div class="controls control-yesnonever">
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_0" required>
+          Yes
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_1" required>
+          No
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_2" required checked>
+          Never
+        </label>
+      
+    </div>
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_yes_no_never_field_with_no_value_is_rendered
+  '''
+  <div class="form-group" id="_group">
+    <label for="" class="control-label">
+      Permission:
+    </label>
+    <div class="controls control-radioselect ">
+      
+  
     
+  
+    <div class="controls control-yesnonever">
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_0" required>
+          Yes
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_1" required checked>
+          No
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_2" required>
+          Never
+        </label>
+      
+    </div>
+  
+  
+      
+      
+    </div>
+  </div>
+  '''
+# ---
+# name: test_row_with_yes_no_never_field_with_yes_value_is_rendered
+  '''
+  <div class="form-group" id="_group">
+    <label for="" class="control-label">
+      Permission:
+    </label>
+    <div class="controls control-radioselect ">
+      
+  
+    
+  
+    <div class="controls control-yesnonever">
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_0" required checked>
+          Yes
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_1" required>
+          No
+        </label>
+      
+        <label class="radio">
+          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_2" required>
+          Never
+        </label>
+      
+    </div>
   
   
       

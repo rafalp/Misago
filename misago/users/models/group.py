@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import pgettext
 
+from ...permissions.enums import PermissionValue
 from ...plugins.models import PluginDataModel
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
@@ -22,7 +23,7 @@ class Group(PluginDataModel):
 
     can_edit_own_threads = models.BooleanField(default=False)
     own_threads_edit_time_limit = models.PositiveIntegerField(default=0)
-    can_edit_own_posts = models.BooleanField(default=False)
+    can_edit_own_posts = models.PositiveIntegerField(default=PermissionValue.NO)
     own_posts_edit_time_limit = models.PositiveIntegerField(default=0)
     can_see_others_post_edits = models.PositiveIntegerField(default=0)
     can_hide_own_post_edits = models.PositiveIntegerField(default=0)

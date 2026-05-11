@@ -2,7 +2,7 @@ from django import forms
 from django.db.models import Q
 from django.utils.translation import pgettext_lazy
 
-from ...admin.forms import YesNoSwitch
+from ...admin.forms import YesNoField
 from ..models import Agreement
 from .utils import disable_agreement, set_agreement_as_active
 
@@ -20,7 +20,7 @@ class AgreementForm(forms.ModelForm):
         ),
         required=False,
     )
-    is_active = YesNoSwitch(
+    is_active = YesNoField(
         label=pgettext_lazy("admin agreement form", "Active for its type"),
         help_text=pgettext_lazy(
             "admin agreement form",

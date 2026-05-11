@@ -1,19 +1,18 @@
 import re
-from typing import Any, Iterable, Type
 
 from django.core.validators import RegexValidator
-from django.db.models import AutoField, CharField, Model
+from django.db.models import CharField
 from django.forms import (
     CharField,
     DateTimeField,
     RadioSelect,
     TypedChoiceField,
-    TypedMultipleChoiceField,
     ValidationError,
 )
 from django.utils.translation import pgettext_lazy
 
 from ..core.utils import parse_iso8601_string
+from ..permissions.enums import PermissionValue
 
 
 def ColorField(**kwargs):
@@ -55,7 +54,7 @@ class IsoDateTimeField(DateTimeField):
             raise ValidationError(self.error_messages["invalid"], code="invalid")
 
 
-class YesNoSwitchBase(TypedChoiceField):
+class YesNoFieldBase(TypedChoiceField):
     def prepare_value(self, value):
         """normalize bools to binary 1/0 so field works on them too"""
         if value in (True, "True", "true", 1, "1"):
@@ -66,13 +65,24 @@ class YesNoSwitchBase(TypedChoiceField):
         return self.prepare_value(value)
 
 
-def YesNoSwitch(**kwargs):
+def YesNoField(**kwargs):
     yes_label = kwargs.pop("yes_label", pgettext_lazy("admin yesno switch", "Yes"))
     no_label = kwargs.pop("no_label", pgettext_lazy("admin yesno switch", "No"))
 
-    return YesNoSwitchBase(
+    return YesNoFieldBase(
         coerce=int,
         choices=[(1, yes_label), (0, no_label)],
-        widget=RadioSelect(attrs={"class": "yesno-switch"}),
-        **kwargs,
+        widget=RadioSelect,
+        **kwargs
     )
+
+
+class YesNoNeverField(TypedChoiceField):
+    def __init__(self, *args, **kwargs):
+        return super().__init__(
+            *args,
+            coerce=int,
+            choices=PermissionValue.get_choices(),
+            widget=RadioSelect,
+            **kwargs
+        )

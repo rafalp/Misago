@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ....admin.forms import IsoDateTimeField, YesNoSwitch
+from ....admin.forms import IsoDateTimeField, YesNoField
 from ...models import Ban
 
 User = get_user_model()
@@ -14,7 +14,7 @@ class BanForm(forms.ModelForm):
         coerce=int,
         choices=Ban.CHOICES,
     )
-    registration_only = YesNoSwitch(
+    registration_only = YesNoField(
         label=pgettext_lazy("admin ban form", "Restrict this ban to registrations"),
         help_text=pgettext_lazy(
             "admin ban form",

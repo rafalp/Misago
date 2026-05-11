@@ -89,6 +89,20 @@ class CanUploadAttachments(IntEnum):
         )
 
 
+class PermissionValue(IntEnum):
+    YES = 2
+    NO = 1
+    NEVER = 0
+
+    @classmethod
+    def get_choices(cls):
+        return (
+            (cls.YES, pgettext_lazy("permission value", "Yes")),
+            (cls.NO, pgettext_lazy("permission value", "No")),
+            (cls.NEVER, pgettext_lazy("permission value", "Never")),
+        )
+
+
 class CategoryPermission(StrEnum):
     SEE = "see"
     BROWSE = "browse"
