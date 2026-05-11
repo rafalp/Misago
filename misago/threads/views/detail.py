@@ -13,7 +13,11 @@ from django.urls import reverse
 from django.views import View
 
 from ...categories.models import Category
-from ...moderation.actions import ModerationAction, PostsModerationAction
+from ...moderation.actions import (
+    ModerationAction,
+    ModerationActionTemplateResult,
+    PostsModerationAction,
+)
 from ...moderation.posts import get_thread_posts_moderation_actions
 from ...moderation.thread import get_thread_moderation_actions
 from ...notifications.threads import get_watched_thread, update_watched_thread_read_time
@@ -39,9 +43,9 @@ from ...readtracker.tracker import (
 from ...readtracker.threads import is_category_read
 from ...threadupdates.models import ThreadUpdate
 from ..hooks import (
-    get_thread_replies_page_context_data_hook,
-    get_thread_replies_page_posts_queryset_hook,
-    get_thread_replies_page_thread_queryset_hook,
+    get_thread_detail_view_context_data_hook,
+    get_thread_detail_view_posts_queryset_hook,
+    get_thread_detail_view_thread_queryset_hook,
 )
 from ..models import Post, Thread
 from ..paginator import ThreadPostsPaginator
@@ -97,7 +101,7 @@ class DetailView(View):
         if not request.is_htmx and (thread.slug != slug or page == 1):
             return redirect(self.get_thread_url(thread), permanent=thread.slug != slug)
 
-        context = self.get_context_data(request, thread, page, **kwargs)
+        context = self.get_context_data(request, thread, page, kwargs)
 
         if request.is_htmx:
             template_name = self.template_partial_name
@@ -162,17 +166,17 @@ class DetailView(View):
         self,
         request: HttpRequest,
         thread: Thread,
-        page: int | None = None,
-        **kwargs,
+        page: int | None,
+        kwargs: dict,
     ) -> dict:
-        return self.get_context_data_action(request, thread, page, **kwargs)
+        return self.get_context_data_action(request, thread, page, kwargs)
 
     def get_context_data_action(
         self,
         request: HttpRequest,
         thread: Thread,
-        page: int | None = None,
-        **kwargs,
+        page: int | None,
+        kwargs: dict,
     ) -> dict:
         if request.user.is_authenticated:
             starter_is_current_user = request.user.id == thread.starter_id
@@ -187,7 +191,7 @@ class DetailView(View):
             "thread": thread,
             "thread_url": self.get_thread_url(thread),
             "watch_thread": self.get_watch_thread_data(request, thread),
-            "feed": self.get_post_feed_data(request, thread, page),
+            "feed": self.get_post_feed_data(request, thread, page, kwargs),
             "reply": self.get_reply_context_data(request, thread),
             "posts_moderation_actions": self.get_moderation_action_choices(
                 posts_moderation_actions
@@ -263,7 +267,8 @@ class DetailView(View):
         self,
         request: HttpRequest,
         thread: Thread,
-        page: int | None = None,
+        page: int | None,
+        kwargs,
     ) -> dict:
         queryset = self.get_thread_posts_queryset(request, thread)
         paginator = self.get_thread_posts_paginator(request, queryset)
@@ -286,6 +291,9 @@ class DetailView(View):
 
         post_feed = self.get_post_feed(request, thread, posts, thread_updates)
         post_feed.set_counter_start(page_obj.start_index() - 1)
+
+        if animate_posts := kwargs.get("updated_posts"):
+            post_feed.set_animated_posts(animate_posts)
 
         unread = get_unread_posts(request, thread, posts)
         post_feed.set_unread_posts(unread)
@@ -441,21 +449,29 @@ class ThreadDetailView(DetailView, ThreadView):
         return super().post(request, thread_id, slug, page)
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
-        return get_thread_replies_page_thread_queryset_hook(
+        return get_thread_detail_view_thread_queryset_hook(
             super().get_thread_queryset, request
         )
 
     def get_context_data(
-        self, request: HttpRequest, thread: Thread, page: int | None = None
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: int | None,
+        kwargs: dict,
     ) -> dict:
-        return get_thread_replies_page_context_data_hook(
-            self.get_context_data_action, request, thread, page
+        return get_thread_detail_view_context_data_hook(
+            self.get_context_data_action, request, thread, page, kwargs
         )
 
     def get_context_data_action(
-        self, request: HttpRequest, thread: Thread, page: int | None = None
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: int | None,
+        kwargs: dict,
     ) -> dict:
-        context = super().get_context_data_action(request, thread, page)
+        context = super().get_context_data_action(request, thread, page, kwargs)
 
         context.update(
             {
@@ -490,7 +506,7 @@ class ThreadDetailView(DetailView, ThreadView):
     def get_thread_posts_queryset(
         self, request: HttpRequest, thread: Thread
     ) -> QuerySet:
-        return get_thread_replies_page_posts_queryset_hook(
+        return get_thread_detail_view_posts_queryset_hook(
             super().get_thread_posts_queryset, request, thread
         )
 

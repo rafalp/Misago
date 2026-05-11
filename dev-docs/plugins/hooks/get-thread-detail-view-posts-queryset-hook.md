@@ -1,6 +1,6 @@
-# `get_thread_replies_page_posts_queryset_hook`
+# `get_thread_detail_view_posts_queryset_hook`
 
-This hook wraps the standard function that Misago uses to get a queryset with posts to display on the thread replies page.
+This hook wraps the standard function that Misago uses to get a queryset with posts to display on the thread detail view.
 
 This hook should be used only to add new joins with `select_related`. To filter posts, use the `filter_thread_posts_queryset` hook instead.
 
@@ -10,15 +10,15 @@ This hook should be used only to add new joins with `select_related`. To filter 
 This hook can be imported from `misago.threads.hooks`:
 
 ```python
-from misago.threads.hooks import get_thread_replies_page_posts_queryset_hook
+from misago.threads.hooks import get_thread_detail_view_posts_queryset_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_thread_replies_page_posts_queryset_filter(
-    action: GetThreadRepliesPagePostsQuerysetHookAction,
+def custom_get_thread_detail_view_posts_queryset_filter(
+    action: GetThreadDetailViewPostsQuerysetHookAction,
     request: HttpRequest,
     thread: Thread,
 ) -> QuerySet:
@@ -30,7 +30,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetThreadRepliesPagePostsQuerysetHookAction`
+#### `action: GetThreadDetailViewPostsQuerysetHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
@@ -44,17 +44,17 @@ The request object.
 
 ### Return value
 
-An unfiltered `QuerySet` instance to use to get posts displayed on the thread replies page.
+An unfiltered `QuerySet` instance to use to get posts displayed on the thread detail view.
 
 
 ## Action
 
 ```python
-def get_thread_replies_page_posts_queryset_action(request: HttpRequest, thread: Thread) -> QuerySet:
+def get_thread_detail_view_posts_queryset_action(request: HttpRequest, thread: Thread) -> QuerySet:
     ...
 ```
 
-Misago function used to get a queryset used to get posts displayed on the thread replies page.
+Misago function used to get a queryset used to get posts displayed on the thread detail view.
 
 
 ### Arguments
@@ -71,7 +71,7 @@ A `Thread` instance.
 
 ### Return value
 
-An unfiltered `QuerySet` instance to use to get posts displayed on the thread replies page.
+An unfiltered `QuerySet` instance to use to get posts displayed on the thread detail view.
 
 
 ## Example
@@ -80,11 +80,11 @@ The code below implements a custom filter function that joins plugin's table wit
 
 ```python
 from django.http import HttpRequest
-from misago.threads.hooks import get_thread_replies_page_posts_queryset_hook
+from misago.threads.hooks import get_thread_detail_view_posts_queryset_hook
 from misago.threads.models import Thread
 
 
-@get_thread_replies_page_posts_queryset_hook.append_filter
+@get_thread_detail_view_posts_queryset_hook.append_filter
 def select_related_plugin_data(
     action, request: HttpRequest, thread: Thread
 ):

@@ -6,10 +6,10 @@ from ...plugins.hooks import FilterHook
 from ..models import Thread
 
 
-class GetThreadRepliesPageContextDataHookAction(Protocol):
+class GetThreadDetailViewContextDataHookAction(Protocol):
     """
     Misago function used to get the template context data
-    for the thread replies page.
+    for the thread detail view.
 
     # Arguments
 
@@ -21,30 +21,35 @@ class GetThreadRepliesPageContextDataHookAction(Protocol):
 
     A `Thread` instance.
 
-    ## `page: int | None = None`
+    ## `page: int | None`
 
     An `int` with page number or `None`.
 
+    ## `kwargs: dict`
+
+    A Python `dict` with view's keyword arguments.
+
     # Return value
 
-    A Python `dict` with context data to use to `render` the thread replies page.
+    A Python `dict` with context data to use to `render` the thread detail view.
     """
 
     def __call__(
         self,
         request: HttpRequest,
         thread: Thread,
-        page: int | None = None,
+        page: int | None,
+        kwargs: dict,
     ) -> dict: ...
 
 
-class GetThreadRepliesPageContextDataHookFilter(Protocol):
+class GetThreadDetailViewContextDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetThreadRepliesPageContextDataHookAction`
+    ## `action: GetThreadDetailViewContextDataHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -63,49 +68,55 @@ class GetThreadRepliesPageContextDataHookFilter(Protocol):
 
     An `int` with page number or `None`.
 
+    ## `kwargs: dict`
+
+    A Python `dict` with view's keyword arguments.
+
     # Return value
 
-    A Python `dict` with context data to use to `render` the thread replies page.
+    A Python `dict` with context data to use to `render` the thread detail view.
     """
 
     def __call__(
         self,
-        action: GetThreadRepliesPageContextDataHookAction,
+        action: GetThreadDetailViewContextDataHookAction,
         request: HttpRequest,
         thread: Thread,
-        page: int | None = None,
+        page: int | None,
+        kwargs: dict,
     ) -> dict: ...
 
 
-class GetThreadRepliesPageContextDataHook(
+class GetThreadDetailViewContextDataHook(
     FilterHook[
-        GetThreadRepliesPageContextDataHookAction,
-        GetThreadRepliesPageContextDataHookFilter,
+        GetThreadDetailViewContextDataHookAction,
+        GetThreadDetailViewContextDataHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses to get
-    the template context data for the thread replies page.
+    the template context data for the thread detail view.
 
     # Example
 
     The code below implements a custom filter function that adds custom context
-    data to the thread replies page:
+    data to the thread detail view:
 
     ```python
     from django.http import HttpRequest
-    from misago.threads.hooks import get_thread_replies_page_context_data_hook
+    from misago.threads.hooks import get_thread_detail_view_context_data_hook
     from misago.threads.models import Thread
 
 
-    @get_thread_replies_page_context_data_hook.append_filter
+    @get_thread_detail_view_context_data_hook.append_filter
     def include_custom_context(
         action,
         request: HttpRequest,
         thread: dict,
-        page: int | None = None,
+        page: int | None,
+        kwargs: dict,
     ) -> dict:
-        context = action(request, thread, page)
+        context = action(request, thread, page, kwargs)
 
         context["plugin_data"] = "..."
 
@@ -117,14 +128,15 @@ class GetThreadRepliesPageContextDataHook(
 
     def __call__(
         self,
-        action: GetThreadRepliesPageContextDataHookAction,
+        action: GetThreadDetailViewContextDataHookAction,
         request: HttpRequest,
         thread: Thread,
-        page: int | None = None,
+        page: int | None,
+        kwargs: dict,
     ) -> dict:
-        return super().__call__(action, request, thread, page)
+        return super().__call__(action, request, thread, page, kwargs)
 
 
-get_thread_replies_page_context_data_hook = GetThreadRepliesPageContextDataHook(
+get_thread_detail_view_context_data_hook = GetThreadDetailViewContextDataHook(
     cache=False
 )

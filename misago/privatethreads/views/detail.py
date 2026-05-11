@@ -44,16 +44,24 @@ class PrivateThreadDetailView(DetailView, PrivateThreadView):
         )
 
     def get_context_data(
-        self, request: HttpRequest, thread: Thread, page: int | None = None
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: int | None,
+        kwargs: dict,
     ) -> dict:
         return get_private_thread_detail_view_context_data_hook(
-            self.get_context_data_action, request, thread, page
+            self.get_context_data_action, request, thread, page, kwargs
         )
 
     def get_context_data_action(
-        self, request: HttpRequest, thread: Thread, page: int | None = None
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: int | None,
+        kwargs: dict,
     ) -> dict:
-        context = super().get_context_data_action(request, thread, page)
+        context = super().get_context_data_action(request, thread, page, kwargs)
         context["members"] = self.get_thread_members_context_data(request, thread)
 
         return context

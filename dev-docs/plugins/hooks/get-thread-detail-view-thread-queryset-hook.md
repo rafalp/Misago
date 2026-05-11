@@ -1,6 +1,6 @@
-# `get_thread_replies_page_thread_queryset_hook`
+# `get_thread_detail_view_thread_queryset_hook`
 
-This hook wraps the standard function that Misago uses to get a queryset used to get a thread for the thread replies page.
+This hook wraps the standard function that Misago uses to get a queryset used to get a thread for the thread detail view.
 
 
 ## Location
@@ -8,15 +8,15 @@ This hook wraps the standard function that Misago uses to get a queryset used to
 This hook can be imported from `misago.threads.hooks`:
 
 ```python
-from misago.threads.hooks import get_thread_replies_page_thread_queryset_hook
+from misago.threads.hooks import get_thread_detail_view_thread_queryset_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_get_thread_replies_page_thread_queryset_filter(
-    action: GetThreadRepliesPageThreadQuerysetHookAction,
+def custom_get_thread_detail_view_thread_queryset_filter(
+    action: GetThreadDetailViewThreadQuerysetHookAction,
     request: HttpRequest,
 ) -> QuerySet:
     ...
@@ -27,7 +27,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: GetThreadRepliesPageThreadQuerysetHookAction`
+#### `action: GetThreadDetailViewThreadQuerysetHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
@@ -47,11 +47,11 @@ A `QuerySet` instance to use in the `get_object_or_404` call.
 ## Action
 
 ```python
-def get_thread_replies_page_thread_queryset_action(request: HttpRequest) -> QuerySet:
+def get_thread_detail_view_thread_queryset_action(request: HttpRequest) -> QuerySet:
     ...
 ```
 
-Misago function used to get a queryset used to get a thread for the thread replies page.
+Misago function used to get a queryset used to get a thread for the thread detail view.
 
 
 ### Arguments
@@ -72,10 +72,10 @@ The code below implements a custom filter function that joins plugin's table wit
 
 ```python
 from django.http import HttpRequest
-from misago.threads.hooks import get_thread_replies_page_thread_queryset_hook
+from misago.threads.hooks import get_thread_detail_view_thread_queryset_hook
 
 
-@get_thread_replies_page_thread_queryset_hook.append_filter
+@get_thread_detail_view_thread_queryset_hook.append_filter
 def select_related_plugin_data(action, request: HttpRequest):
     queryset = action(request)
     return queryset.select_related("plugin")
