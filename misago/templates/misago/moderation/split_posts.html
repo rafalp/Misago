@@ -1,6 +1,17 @@
 {% load i18n misago_forms %}
 
 <div class="form-group">
+  {% with field=form.title %}
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {{ field.label }}:
+    </label>
+    <input class="form-control" type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" maxlength="255" required>
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+  {% endwith %}
+</div>
+<div class="form-group">
   {% with field=form.category %}
     <label class="control-label" for="{{ field.id_for_label }}">
       {{ field.label }}:
