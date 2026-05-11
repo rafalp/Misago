@@ -10,7 +10,7 @@ from django.utils.translation import pgettext_lazy
 from ...acl import algebra
 from ...acl.decorators import return_boolean
 from ...acl.models import Role
-from ...admin.forms import YesNoSwitch
+from ...admin.forms import YesNoField
 from ..bans import get_user_ban
 
 __all__ = [
@@ -32,21 +32,21 @@ __all__ = [
 class PermissionsForm(forms.Form):
     legend = pgettext_lazy("users moderation permission", "Users moderation")
 
-    can_rename_users = YesNoSwitch(
+    can_rename_users = YesNoField(
         label=pgettext_lazy("users moderation permission", "Can rename users")
     )
-    can_moderate_avatars = YesNoSwitch(
+    can_moderate_avatars = YesNoField(
         label=pgettext_lazy("users moderation permission", "Can moderate avatars")
     )
-    can_moderate_signatures = YesNoSwitch(
+    can_moderate_signatures = YesNoField(
         label=pgettext_lazy("users moderation permission", "Can moderate signatures")
     )
-    can_moderate_profile_details = YesNoSwitch(
+    can_moderate_profile_details = YesNoField(
         label=pgettext_lazy(
             "users moderation permission", "Can moderate profile details"
         )
     )
-    can_ban_users = YesNoSwitch(
+    can_ban_users = YesNoField(
         label=pgettext_lazy("users moderation permission", "Can ban users")
     )
     max_ban_length = forms.IntegerField(
@@ -60,7 +60,7 @@ class PermissionsForm(forms.Form):
         min_value=0,
         initial=0,
     )
-    can_lift_bans = YesNoSwitch(
+    can_lift_bans = YesNoField(
         label=pgettext_lazy("users moderation permission", "Can lift bans")
     )
     max_lifted_ban_length = forms.IntegerField(

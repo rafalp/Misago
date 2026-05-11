@@ -1,7 +1,7 @@
 from django import forms, template
 from django.utils.html import format_html_join
 
-from ..forms import YesNoSwitchBase
+from ..forms import YesNoFieldBase, YesNoNeverField
 
 register = template.Library()
 
@@ -91,8 +91,13 @@ def render_bool_attrs(attrs):
 
 
 @register.filter
-def is_yesno_switch_field(field):
-    return isinstance(field.field, YesNoSwitchBase)
+def is_yes_no_field(field):
+    return isinstance(field.field, YesNoFieldBase)
+
+
+@register.filter
+def is_yes_no_never_field(field):
+    return isinstance(field.field, YesNoNeverField)
 
 
 @register.filter

@@ -2,14 +2,16 @@ import pytest
 from django import forms
 from django.template import Context, Template, TemplateSyntaxError
 
-from ..forms import YesNoSwitch
+from ...permissions.enums import PermissionValue
+from ..forms import YesNoField, YesNoNeverField
 from ..templatetags.misago_admin_form import (
     get_field_image_dimensions,
     is_multiple_choice_field,
     is_radio_select_field,
     is_select_field,
     is_textarea_field,
-    is_yesno_switch_field,
+    is_yes_no_field,
+    is_yes_no_never_field,
     render_attrs,
     render_bool_attrs,
 )
@@ -38,7 +40,8 @@ class Form(forms.Form):
     multiple_select_field = forms.MultipleChoiceField(
         label="Rank", choices=(("r", "Red"), ("g", "Green"), ("b", "Blue"))
     )
-    yesno_field = YesNoSwitch(label="Switch")
+    yes_no_field = YesNoField(label="Switch")
+    yes_no_never_field = YesNoNeverField(label="Permission")
     image_width = forms.IntegerField(label="Dimensions", help_text="I am a help text.")
     image_height = forms.IntegerField()
     image_field = forms.ImageField(label="Image!", help_text="I am a help text.")
@@ -348,28 +351,66 @@ def test_row_with_textarea_field_with_value_is_rendered(snapshot):
 
 
 def test_for_yes_no_field_filter_returns_true(form):
-    assert is_yesno_switch_field(form["yesno_field"])
+    assert is_yes_no_field(form["yes_no_field"])
 
 
 def test_for_non_yes_no_field_filter_returns_false(form):
-    assert not is_yesno_switch_field(form["text_field"])
+    assert not is_yes_no_field(form["text_field"])
 
 
 def test_row_with_yes_no_field_is_rendered(snapshot):
-    html = render("{% form_row form.yesno_field %}")
+    html = render("{% form_row form.yes_no_field %}")
     assert snapshot == html
 
 
 def test_row_with_disabled_yes_no_field_is_rendered(snapshot):
     form = Form()
-    form.fields["yesno_field"].disabled = True
-    html = render("{% form_row form.yesno_field %}", form)
+    form.fields["yes_no_field"].disabled = True
+    html = render("{% form_row form.yes_no_field %}", form)
     assert snapshot == html
 
 
 def test_row_with_yes_no_field_with_value_is_rendered(snapshot):
-    form = Form({"yesno_field": True})
-    html = render("{% form_row form.yesno_field %}", form)
+    form = Form({"yes_no_field": True})
+    html = render("{% form_row form.yes_no_field %}", form)
+    assert snapshot == html
+
+
+def test_for_yes_no_never_field_filter_returns_true(form):
+    assert is_yes_no_never_field(form["yes_no_never_field"])
+
+
+def test_for_non_yes_no_never_field_filter_returns_false(form):
+    assert not is_yes_no_never_field(form["text_field"])
+
+
+def test_row_with_yes_no_never_field_is_rendered(snapshot):
+    html = render("{% form_row form.yes_no_never_field %}")
+    assert snapshot == html
+
+
+def test_row_with_disabled_yes_no_never_field_is_rendered(snapshot):
+    form = Form()
+    form.fields["yes_no_never_field"].disabled = True
+    html = render("{% form_row form.yes_no_never_field %}", form)
+    assert snapshot == html
+
+
+def test_row_with_yes_no_never_field_with_yes_value_is_rendered(snapshot):
+    form = Form({"yes_no_never_field": PermissionValue.YES})
+    html = render("{% form_row form.yes_no_never_field %}", form)
+    assert snapshot == html
+
+
+def test_row_with_yes_no_never_field_with_no_value_is_rendered(snapshot):
+    form = Form({"yes_no_never_field": PermissionValue.NO})
+    html = render("{% form_row form.yes_no_never_field %}", form)
+    assert snapshot == html
+
+
+def test_row_with_yes_no_never_field_with_never_value_is_rendered(snapshot):
+    form = Form({"yes_no_never_field": PermissionValue.NEVER})
+    html = render("{% form_row form.yes_no_never_field %}", form)
     assert snapshot == html
 
 

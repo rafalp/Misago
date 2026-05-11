@@ -5,7 +5,7 @@ from ...categories.enums import CategoryTree
 from ...categories.models import Category
 from ...permissions.models import Moderator
 from ...users.models import Group
-from ..forms import YesNoSwitch
+from ..forms import YesNoField
 
 
 class NewModeratorModalForm(forms.Form):
@@ -39,7 +39,7 @@ class NewModeratorModalForm(forms.Form):
 
 
 class ModeratorForm(forms.ModelForm):
-    is_global = YesNoSwitch(
+    is_global = YesNoField(
         label=pgettext_lazy("admin moderators form", "Is global moderator"),
         help_text=pgettext_lazy(
             "admin moderators form",
@@ -51,7 +51,7 @@ class ModeratorForm(forms.ModelForm):
         coerce=int,
         required=False,
     )
-    private_threads = YesNoSwitch(
+    private_threads = YesNoField(
         label=pgettext_lazy("admin moderators form", "Is private threads moderator"),
     )
 

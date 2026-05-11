@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import pgettext_lazy
 
-from ....admin.forms import YesNoSwitch
+from ....admin.forms import YesNoField
 from .base import SettingsForm
 
 
@@ -62,7 +62,7 @@ class CaptchaSettingsForm(SettingsForm):
         required=False,
     )
 
-    enable_stop_forum_spam = YesNoSwitch(
+    enable_stop_forum_spam = YesNoField(
         label=pgettext_lazy(
             "admin captcha settings form",
             "Validate new registrations against SFS database",

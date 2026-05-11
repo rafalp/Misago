@@ -3,13 +3,13 @@ from django.utils.translation import pgettext_lazy
 
 from ..acl import algebra
 from ..acl.models import Role
-from ..admin.forms import YesNoSwitch
+from ..admin.forms import YesNoField
 
 
 class PermissionsForm(forms.Form):
     legend = pgettext_lazy("search permission", "Search")
 
-    can_search = YesNoSwitch(
+    can_search = YesNoField(
         label=pgettext_lazy("search permission", "Can search site"), initial=1
     )
 

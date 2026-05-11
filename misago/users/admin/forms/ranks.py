@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ....acl.models import Role
-from ....admin.forms import YesNoSwitch
+from ....admin.forms import YesNoField
 from ....core.validators import validate_sluggable
 from ...models import Rank
 
@@ -54,7 +54,7 @@ class RankForm(forms.ModelForm):
             "Optional css class added to content belonging to this rank owner.",
         ),
     )
-    is_tab = YesNoSwitch(
+    is_tab = YesNoField(
         label=pgettext_lazy("admin rank form", "Give rank dedicated tab on users list"),
         required=False,
         help_text=pgettext_lazy(

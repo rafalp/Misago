@@ -3,7 +3,7 @@ from django.utils.translation import pgettext_lazy
 
 from ...acl import algebra
 from ...acl.models import Role
-from ...admin.forms import YesNoSwitch
+from ...admin.forms import YesNoField
 
 
 class PermissionsForm(forms.Form):
@@ -27,16 +27,16 @@ class PermissionsForm(forms.Form):
         min_value=0,
         initial=0,
     )
-    can_have_signature = YesNoSwitch(
+    can_have_signature = YesNoField(
         label=pgettext_lazy("users accounts permission", "Can have signature")
     )
-    allow_signature_links = YesNoSwitch(
+    allow_signature_links = YesNoField(
         label=pgettext_lazy("users accounts permission", "Can put links in signature")
     )
-    allow_signature_images = YesNoSwitch(
+    allow_signature_images = YesNoField(
         label=pgettext_lazy("users accounts permission", "Can put images in signature")
     )
-    allow_signature_blocks = YesNoSwitch(
+    allow_signature_blocks = YesNoField(
         label=pgettext_lazy(
             "users accounts permission", "Can use text blocks in signature"
         ),
