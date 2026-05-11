@@ -7,11 +7,11 @@
   hx-swap="innerHTML"
 >
   {% csrf_token %}
-  <input type="hidden" name="moderation" value="{{ moderation_action.id }}" />
+  <input type="hidden" name="{{ moderation_type }}" value="{{ moderation_action.id }}" />
   <input type="hidden" name="confirm" value="true">
   <input type="hidden" name="success-hx-target" value="#misago-htmx-root">
   <input type="hidden" name="success-hx-swap" value="outerHTML">
-  {% for thread in selection %}
+  {% for post in selection %}
     <input type="hidden" name="posts" value="{{ post.id }}" />
   {% endfor %}
   <div class="modal-body">

@@ -10,16 +10,25 @@ from django.http import (
 )
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.translation import pgettext
 from django.views import View
 
 from ...categories.models import Category
 from ...moderation.actions import (
     ModerationAction,
+    ModerationActionResult,
     ModerationActionTemplateResult,
+    PostModerationAction,
     PostsModerationAction,
+    ThreadModerationAction,
 )
 from ...moderation.posts import get_thread_posts_moderation_actions
 from ...moderation.thread import get_thread_moderation_actions
+from ...moderation.views import (
+    get_moderation_action,
+    get_moderation_action_choices,
+    set_moderation_response_headers,
+)
 from ...notifications.threads import get_watched_thread, update_watched_thread_read_time
 from ...permissions.checkutils import check_permissions
 from ...permissions.polls import check_start_thread_poll_permission
@@ -71,6 +80,8 @@ class DetailView(View):
     template_partial_name: str
     feed_template_name: str = "misago/post_feed/index.html"
     feed_post_template_name: str = "misago/post_feed/post.html"
+    moderation_page_template_name: str
+    moderation_modal_template_name: str
     reply_error_template_name: str = "misago/thread/reply_error.html"
     reply_template_name: str = "misago/quick_reply/form.html"
     watch_thread_template_name: str = "misago/thread/watch_thread.html"
@@ -125,17 +136,17 @@ class DetailView(View):
         return self.get(request, thread_id, slug, page)
 
     def dispatch_posts_moderation(
-        self, request: HttpRequest, kwargs: dict
+        self, request: HttpRequest, thread_id: int, slug: str, page: int | None
     ) -> HttpResponse:
         try:
             current_url = request.get_full_path()
-            result = self.moderate_posts(request, kwargs)
+            result = self.moderate_posts(request, thread_id, slug, page)
         except ValidationError as e:
             if request.is_htmx:
                 raise
 
             messages.error(request, e.message)
-            return self.get(request, **kwargs)
+            return self.get(request, thread_id, slug, page)
 
         if isinstance(result, ModerationActionTemplateResult):
             if request.is_htmx:
@@ -146,21 +157,85 @@ class DetailView(View):
             return result.render(
                 request,
                 template_name,
-                {
-                    "is_index": kwargs.get("is_index", False),
-                    "cancel_url": current_url,
-                },
+                {"cancel_url": current_url},
             )
 
         if request.is_htmx:
+            kwargs = {}
             if result.updated_items:
-                kwargs["animate"] = result.updated_items
+                kwargs["updated_posts"] = result.updated_items
 
-            response = self.get(request, **kwargs)
-            self.set_moderation_response_headers(request, response)
+            response = self.get(request, thread_id, slug, page, **kwargs)
+            set_moderation_response_headers(request, response)
             return response
 
         return redirect(current_url)
+
+    def moderate_posts(
+        self, request: HttpRequest, thread_id: int, slug: str, page: int | None
+    ) -> ModerationActionResult:
+        thread = self.get_thread(request, thread_id)
+
+        actions = self.get_posts_moderation_actions(request, thread)
+        action: PostsModerationAction = get_moderation_action(
+            actions, request.POST["posts_moderation"]
+        )
+
+        page_obj = self.get_thread_posts_page(request, thread, page)
+        page_posts = list(page_obj.object_list)
+        selected_posts = self.get_selected_posts(request, page_posts)
+
+        action_obj = action(request, thread, selected_posts)
+        action_obj.validate()
+
+        result = action_obj.execute()
+
+        if isinstance(result, ModerationActionTemplateResult):
+            result.update_context(
+                {
+                    "moderation_action": action_obj,
+                    "moderation_type": "posts_moderation",
+                    "posts": page_posts,
+                    "selection": selected_posts,
+                    "breadcrumbs": [],
+                }
+            )
+
+        return result
+
+    def get_thread_moderation_actions(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[type[ThreadModerationAction]]:
+        return get_thread_moderation_actions(request.user_permissions, thread, request)
+
+    def get_posts_moderation_actions(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[type[PostsModerationAction]]:
+        return get_thread_posts_moderation_actions(
+            request.user_permissions, thread, request
+        )
+
+    def get_selected_posts(
+        self, request: HttpRequest, posts: list[Post]
+    ) -> list[Thread]:
+        posts_id = self.get_selected_posts_ids(request)
+        selection: list[Post] = [post for post in posts if post.id in posts_id]
+
+        if not selection:
+            raise ValidationError(
+                pgettext("posts moderation error", "No valid posts selected."),
+            )
+
+        return selection
+
+    def get_selected_posts_ids(self, request: HttpRequest) -> set[int]:
+        posts_id: set[int] = set()
+        for post_id in request.POST.getlist("posts"):
+            try:
+                posts_id.add(int(post_id))
+            except (TypeError, ValueError):
+                pass
+        return posts_id
 
     def get_context_data(
         self,
@@ -193,7 +268,7 @@ class DetailView(View):
             "watch_thread": self.get_watch_thread_data(request, thread),
             "feed": self.get_post_feed_data(request, thread, page, kwargs),
             "reply": self.get_reply_context_data(request, thread),
-            "posts_moderation_actions": self.get_moderation_action_choices(
+            "posts_moderation_actions": get_moderation_action_choices(
                 posts_moderation_actions
             ),
             "post_edits_modal_template": self.backend.post_edits_modal_template,
@@ -270,18 +345,7 @@ class DetailView(View):
         page: int | None,
         kwargs,
     ) -> dict:
-        queryset = self.get_thread_posts_queryset(request, thread)
-        paginator = self.get_thread_posts_paginator(request, queryset)
-
-        if page and page > paginator.num_pages:
-            if not request.is_htmx:
-                raise PageOutOfRangeError(
-                    self.get_thread_url(thread, paginator.num_pages)
-                )
-
-            page = paginator.num_pages
-
-        page_obj = paginator.get_page(page)
+        page_obj = self.get_thread_posts_page(request, thread, page)
         posts = list(page_obj.object_list)
 
         if thread.has_updates:
@@ -294,6 +358,9 @@ class DetailView(View):
 
         if animate_posts := kwargs.get("updated_posts"):
             post_feed.set_animated_posts(animate_posts)
+
+        if selected_posts := self.get_selected_posts_ids(request):
+            post_feed.set_selected_posts(selected_posts)
 
         unread = get_unread_posts(request, thread, posts)
         post_feed.set_unread_posts(unread)
@@ -308,6 +375,25 @@ class DetailView(View):
             self.read_user_notifications(request.user, posts)
 
         return post_feed.get_context_data({"paginator": page_obj})
+
+    def get_thread_posts_page(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: int | None,
+    ):
+        queryset = self.get_thread_posts_queryset(request, thread)
+        paginator = self.get_thread_posts_paginator(request, queryset)
+
+        if page and page > paginator.num_pages:
+            if not request.is_htmx:
+                raise PageOutOfRangeError(
+                    self.get_thread_url(thread, paginator.num_pages)
+                )
+
+            page = paginator.num_pages
+
+        return paginator.get_page(page)
 
     def get_thread_updates(
         self,
@@ -405,39 +491,28 @@ class DetailView(View):
     ) -> ThreadReplyFormset:
         raise NotImplementedError
 
-    def get_moderation_action_choices(
-        self, actions: list[ModerationAction]
-    ) -> list[dict]:
-        return [
-            {
-                "id": action.id,
-                "full_name": action.full_name or action.button_label,
-                "button_label": action.button_label,
-                "multistage": action.multistage,
-            }
-            for action in actions
-        ]
-
-    def get_posts_moderation_actions(
-        self, request: HttpRequest, thread: Thread
-    ) -> list[type[PostsModerationAction]]:
-        return []
-
 
 class ThreadDetailView(DetailView, ThreadView):
     backend = thread_backend
 
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
+    moderation_page_template_name: str = "misago/thread/moderation_page.html"
+    moderation_modal_template_name: str = "misago/thread/moderation_modal.html"
 
     def get(
-        self, request: HttpRequest, thread_id: int, slug: str, page: int | None = None
+        self,
+        request: HttpRequest,
+        thread_id: int,
+        slug: str,
+        page: int | None = None,
+        **kwargs,
     ) -> HttpResponse:
         if request.is_htmx:
             if poll_response := dispatch_thread_poll_view(request, thread_id):
                 return poll_response
 
-        return super().get(request, thread_id, slug, page)
+        return super().get(request, thread_id, slug, page, **kwargs)
 
     def post(
         self, request: HttpRequest, thread_id: int, slug: str, page: int | None = None
@@ -447,6 +522,18 @@ class ThreadDetailView(DetailView, ThreadView):
                 return poll_response
 
         return super().post(request, thread_id, slug, page)
+
+    def get_thread_moderation_actions(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[type[ThreadModerationAction]]:
+        return get_thread_moderation_actions(request.user_permissions, thread, request)
+
+    def get_posts_moderation_actions(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[type[PostsModerationAction]]:
+        return get_thread_posts_moderation_actions(
+            request.user_permissions, thread, request
+        )
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
         return get_thread_detail_view_thread_queryset_hook(
@@ -476,10 +563,8 @@ class ThreadDetailView(DetailView, ThreadView):
         context.update(
             {
                 "category": thread.category,
-                "thread_moderation_actions": self.get_moderation_action_choices(
-                    get_thread_moderation_actions(
-                        request.user_permissions, thread, request
-                    )
+                "thread_moderation_actions": get_moderation_action_choices(
+                    self.get_thread_moderation_actions(request, thread)
                 ),
             }
         )
@@ -541,13 +626,6 @@ class ThreadDetailView(DetailView, ThreadView):
         self, request: HttpRequest, thread: Thread
     ) -> ThreadReplyFormset:
         return get_thread_reply_formset(request, thread)
-
-    def get_posts_moderation_actions(
-        self, request: HttpRequest, thread: Thread
-    ) -> list[type[PostsModerationAction]]:
-        return get_thread_posts_moderation_actions(
-            request.user_permissions, thread, request
-        )
 
     def get_poll(self, request: HttpRequest, thread: Thread) -> Poll | None:
         if thread.has_poll:

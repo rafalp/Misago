@@ -93,7 +93,8 @@ class LockPostsModerationAction(PostsModerationAction):
         valid_posts = [post for post in self.posts if not post.is_locked]
 
         for post in valid_posts:
-            pass
+            post.is_locked = True
+            post.save()
 
         messages.success(
             self.request,
@@ -122,7 +123,8 @@ class UnlockPostsModerationAction(PostsModerationAction):
         valid_posts = [post for post in self.posts if post.is_locked]
 
         for post in valid_posts:
-            pass
+            post.is_locked = False
+            post.save()
 
         messages.success(
             self.request,

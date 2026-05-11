@@ -3,6 +3,11 @@
 {% if is_request_htmx %}
 <title>{{ thread }}{% if feed.paginator.number > 1 %} | {% blocktranslate with page=feed.paginator.number context "thread page title" %}Page {{ page }}{% endblocktranslate %}{% endif %} | {{ settings.forum_name }}</title>
 {% endif %}
+
+{% if is_request_htmx %}
+  {% include "misago/snackbars.html" %}
+{% endif %}
+
 <div id="misago-htmx-root">
   {% if thread_status_bars %}
     <div id="misago-htmx-thread-status" class="status-bars">
