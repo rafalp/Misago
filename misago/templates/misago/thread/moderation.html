@@ -1,5 +1,22 @@
 {% load i18n %}
 
+<div
+  id="moderation-modal"
+  class="modal fade"
+  style="display: none"
+  aria-hidden="false"
+  tabindex="-1"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="{% translate 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" mg-modal-title></h4>
+      </div>
+      <div id="misago-htmx-moderation-modal"></div>
+    </div>
+  </div>
+</div>
 
 {% if posts_moderation_actions %}
 <div class="fixed-moderation">
@@ -42,23 +59,6 @@
           </li>
         {% endfor %}
       </ul>
-    </div>
-  </div>
-</div>
-<div
-  id="moderation-modal"
-  class="modal fade"
-  style="display: none"
-  aria-hidden="false"
-  tabindex="-1"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="{% translate 'Close' context 'modal' %}"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" mg-modal-title></h4>
-      </div>
-      <div id="misago-htmx-moderation-modal"></div>
     </div>
   </div>
 </div>

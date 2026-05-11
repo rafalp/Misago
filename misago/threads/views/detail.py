@@ -1,12 +1,12 @@
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from django.core.exceptions import PermissionDenied
+from django.contrib import messages
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import QuerySet
 from django.http import (
     HttpRequest,
     HttpResponse,
-    HttpResponseNotAllowed,
 )
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -15,6 +15,7 @@ from django.views import View
 from ...categories.models import Category
 from ...moderation.actions import ModerationAction, PostsModerationAction
 from ...moderation.posts import get_thread_posts_moderation_actions
+from ...moderation.thread import get_thread_moderation_actions
 from ...notifications.threads import get_watched_thread, update_watched_thread_read_time
 from ...permissions.checkutils import check_permissions
 from ...permissions.polls import check_start_thread_poll_permission
@@ -84,14 +85,19 @@ class DetailView(View):
             return redirect(exc.redirect_to)
 
     def get(
-        self, request: HttpRequest, thread_id: int, slug: str, page: int | None = None
+        self,
+        request: HttpRequest,
+        thread_id: int,
+        slug: str,
+        page: int | None = None,
+        **kwargs,
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
         if not request.is_htmx and (thread.slug != slug or page == 1):
             return redirect(self.get_thread_url(thread), permanent=thread.slug != slug)
 
-        context = self.get_context_data(request, thread, page)
+        context = self.get_context_data(request, thread, page, **kwargs)
 
         if request.is_htmx:
             template_name = self.template_partial_name
@@ -103,15 +109,70 @@ class DetailView(View):
     def post(
         self, request: HttpRequest, thread_id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
-        return HttpResponseNotAllowed(["GET", "POST"])
+        if "thread_moderation" in request.POST:
+            return self.dispatch_thread_moderation(request, thread_id, slug, page)
+
+        if "post_moderation" in request.POST:
+            return self.dispatch_post_moderation(request, thread_id, slug, page)
+
+        if "posts_moderation" in request.POST:
+            return self.dispatch_posts_moderation(request, thread_id, slug, page)
+
+        return self.get(request, thread_id, slug, page)
+
+    def dispatch_posts_moderation(
+        self, request: HttpRequest, kwargs: dict
+    ) -> HttpResponse:
+        try:
+            current_url = request.get_full_path()
+            result = self.moderate_posts(request, kwargs)
+        except ValidationError as e:
+            if request.is_htmx:
+                raise
+
+            messages.error(request, e.message)
+            return self.get(request, **kwargs)
+
+        if isinstance(result, ModerationActionTemplateResult):
+            if request.is_htmx:
+                template_name = self.moderation_modal_template_name
+            else:
+                template_name = self.moderation_page_template_name
+
+            return result.render(
+                request,
+                template_name,
+                {
+                    "is_index": kwargs.get("is_index", False),
+                    "cancel_url": current_url,
+                },
+            )
+
+        if request.is_htmx:
+            if result.updated_items:
+                kwargs["animate"] = result.updated_items
+
+            response = self.get(request, **kwargs)
+            self.set_moderation_response_headers(request, response)
+            return response
+
+        return redirect(current_url)
 
     def get_context_data(
-        self, request: HttpRequest, thread: Thread, page: int | None = None
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: int | None = None,
+        **kwargs,
     ) -> dict:
-        return self.get_context_data_action(request, thread, page)
+        return self.get_context_data_action(request, thread, page, **kwargs)
 
     def get_context_data_action(
-        self, request: HttpRequest, thread: Thread, page: int | None = None
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: int | None = None,
+        **kwargs,
     ) -> dict:
         if request.user.is_authenticated:
             starter_is_current_user = request.user.id == thread.starter_id
@@ -396,7 +457,16 @@ class ThreadDetailView(DetailView, ThreadView):
     ) -> dict:
         context = super().get_context_data_action(request, thread, page)
 
-        context["category"] = thread.category
+        context.update(
+            {
+                "category": thread.category,
+                "thread_moderation_actions": self.get_moderation_action_choices(
+                    get_thread_moderation_actions(
+                        request.user_permissions, thread, request
+                    )
+                ),
+            }
+        )
 
         poll = self.get_poll(request, thread)
         if poll:

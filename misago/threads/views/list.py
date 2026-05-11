@@ -225,7 +225,7 @@ class ListView(View):
             for category_id in categories_ids
         )
 
-    def post_moderation(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
+    def dispatch_moderation(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         try:
             current_url = request.get_full_path()
             result = self.moderate_threads(request, kwargs)
@@ -411,7 +411,7 @@ class ThreadListView(ListView):
             return self.post_mark_as_read(request, kwargs)
 
         if "moderation" in request.POST:
-            return self.post_moderation(request, kwargs)
+            return self.dispatch_moderation(request, kwargs)
 
         return self.get(request, **kwargs)
 
@@ -738,7 +738,7 @@ class CategoryThreadListView(ListView):
             return self.post_mark_as_read(request, kwargs)
 
         if "moderation" in request.POST:
-            return self.post_moderation(request, kwargs)
+            return self.dispatch_moderation(request, kwargs)
 
         return self.get(request, **kwargs)
 

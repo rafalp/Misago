@@ -43,8 +43,8 @@
   {% include post_edits_modal_template %}
   {% include post_likes_modal_template %}
 
-  {% if user.is_authenticated and posts_moderation_actions %}
-    {% include "misago/thread/posts_moderation.html" %}
+  {% if thread_moderation_actions or posts_moderation_actions %}
+    {% include "misago/thread/moderation.html" %}
   {% endif %}
 {% endblock modals %}
 
