@@ -3,6 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
 from ...privatethreads.models import PrivateThreadMember
+from ..enums import PermissionValue
 from ..models import Moderator
 from ..privatethreads import (
     check_add_private_thread_members_permission,
@@ -52,7 +53,7 @@ def test_check_edit_private_thread_post_permission_fails_if_user_has_no_edit_per
 ):
     PrivateThreadMember.objects.create(thread=private_thread, user=user)
 
-    user.group.can_edit_own_posts = False
+    user.group.can_edit_own_posts = PermissionValue.NO
     user.group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)

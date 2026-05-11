@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.utils.translation import npgettext, pgettext, pgettext_lazy
 
 from ....acl.models import Role
-from ....admin.forms import IsoDateTimeField, YesNoSwitch
+from ....admin.forms import IsoDateTimeField, YesNoField
 from ....notifications.threads import ThreadNotifications
 from ....search.filter_queryset import filter_queryset
 from ...enums import DefaultGroupId, UserNewPrivateThreadsPreference
@@ -130,7 +130,7 @@ class EditUserForm(BaseUserForm):
         required=False,
     )
 
-    is_misago_root = YesNoSwitch(
+    is_misago_root = YesNoField(
         label=pgettext_lazy("admin user form", "Is root administrator"),
         help_text=pgettext_lazy(
             "admin user form",
@@ -139,7 +139,7 @@ class EditUserForm(BaseUserForm):
         disabled=True,
     )
 
-    is_active = YesNoSwitch(
+    is_active = YesNoField(
         label=pgettext_lazy("admin user form", "Is active"),
         help_text=pgettext_lazy(
             "admin user form",
@@ -156,7 +156,7 @@ class EditUserForm(BaseUserForm):
         required=False,
     )
 
-    require_content_approval = YesNoSwitch(
+    require_content_approval = YesNoField(
         label=pgettext_lazy("admin user form", "Require content approval"),
         help_text=pgettext_lazy(
             "admin user form",
@@ -164,7 +164,7 @@ class EditUserForm(BaseUserForm):
         ),
     )
 
-    is_avatar_locked = YesNoSwitch(
+    is_avatar_locked = YesNoField(
         label=pgettext_lazy("admin user form", "Lock avatar changes"),
         help_text=pgettext_lazy(
             "admin user form",
@@ -195,7 +195,7 @@ class EditUserForm(BaseUserForm):
         widget=forms.Textarea(attrs={"rows": 3}),
         required=False,
     )
-    is_signature_locked = YesNoSwitch(
+    is_signature_locked = YesNoField(
         label=pgettext_lazy("admin user form", "Lock signature changes"),
         help_text=pgettext_lazy(
             "admin user form",
@@ -221,7 +221,7 @@ class EditUserForm(BaseUserForm):
         required=False,
     )
 
-    is_hiding_presence = YesNoSwitch(
+    is_hiding_presence = YesNoField(
         label=pgettext_lazy("admin user form", "Hides presence")
     )
 

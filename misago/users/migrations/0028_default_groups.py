@@ -7,6 +7,7 @@ from ...permissions.enums import (
     CanSeePostEdits,
     CanSeePostLikes,
     CanUploadAttachments,
+    PermissionValue,
 )
 from ...permissions.permissionsid import get_permissions_id
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
@@ -33,7 +34,7 @@ def create_default_groups(apps, schema_editor):
                 # Permissions
                 can_edit_own_threads=True,
                 own_threads_edit_time_limit=0,
-                can_edit_own_posts=True,
+                can_edit_own_posts=PermissionValue.YES,
                 own_posts_edit_time_limit=0,
                 can_see_others_post_edits=CanSeePostEdits.HISTORY,
                 can_hide_own_post_edits=CanHideOwnPostEdits.DELETE,
@@ -76,7 +77,7 @@ def create_default_groups(apps, schema_editor):
                 # Permissions
                 can_edit_own_threads=True,
                 own_threads_edit_time_limit=0,
-                can_edit_own_posts=True,
+                can_edit_own_posts=PermissionValue.YES,
                 own_posts_edit_time_limit=0,
                 can_see_others_post_edits=CanSeePostEdits.HISTORY,
                 can_hide_own_post_edits=CanHideOwnPostEdits.DELETE,
@@ -116,7 +117,7 @@ def create_default_groups(apps, schema_editor):
                 # Permissions
                 can_edit_own_threads=True,
                 own_threads_edit_time_limit=0,
-                can_edit_own_posts=True,
+                can_edit_own_posts=PermissionValue.YES,
                 own_posts_edit_time_limit=0,
                 can_see_others_post_edits=CanSeePostEdits.HISTORY,
                 can_hide_own_post_edits=CanHideOwnPostEdits.HIDE,

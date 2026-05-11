@@ -8,7 +8,7 @@ from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...edits.models import PostEdit
-from ...permissions.enums import CanUploadAttachments
+from ...permissions.enums import CanUploadAttachments, PermissionValue
 from ...test import (
     assert_contains,
     assert_contains_element,
@@ -115,7 +115,7 @@ def test_private_thread_post_edit_view_shows_error_403_to_users_who_cant_edit_po
 ):
     post = thread_reply_factory(other_user_private_thread, poster=user)
 
-    members_group.can_edit_own_posts = False
+    members_group.can_edit_own_posts = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(

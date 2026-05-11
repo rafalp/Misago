@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import pgettext_lazy
 
-from ....admin.forms import YesNoSwitch
+from ....admin.forms import YesNoField
 from ....forumindex.views import index_views
 from .base import SettingsForm
 
@@ -116,12 +116,12 @@ class GeneralSettingsForm(SettingsForm):
         label=pgettext_lazy("admin general settings form", "Delete image"),
         required=False,
     )
-    og_image_avatar_on_profile = YesNoSwitch(
+    og_image_avatar_on_profile = YesNoField(
         label=pgettext_lazy(
             "admin general settings form", "Replace image with avatar on user profiles"
         )
     )
-    og_image_avatar_on_thread = YesNoSwitch(
+    og_image_avatar_on_thread = YesNoField(
         label=pgettext_lazy(
             "admin general settings form", "Replace image with avatar on threads"
         )
@@ -145,7 +145,7 @@ class GeneralSettingsForm(SettingsForm):
         required=False,
     )
 
-    show_admin_panel_link_in_ui = YesNoSwitch(
+    show_admin_panel_link_in_ui = YesNoField(
         label=pgettext_lazy(
             "admin general settings form",
             "Display the link to the Admin Control Panel in the administrator's user menu",

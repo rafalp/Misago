@@ -1,7 +1,11 @@
 import pytest
 from django.urls import reverse
 
-from ...permissions.enums import CanHideOwnPostEdits, CanSeePostEdits
+from ...permissions.enums import (
+    CanHideOwnPostEdits,
+    CanSeePostEdits,
+    PermissionValue,
+)
 from ...test import assert_contains, assert_not_contains
 from ..create import create_post_edit
 from ..hide import hide_post_edit
@@ -1433,7 +1437,7 @@ def test_private_thread_post_edits_view_doesnt_show_restore_edit_option_to_other
 def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_editable_post(
     thread_reply_factory, user_client, user, members_group, other_user_private_thread
 ):
-    members_group.can_edit_own_posts = False
+    members_group.can_edit_own_posts = PermissionValue.NO
     members_group.save()
 
     post = thread_reply_factory(other_user_private_thread, poster=user)
@@ -1475,7 +1479,7 @@ def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_edit
 def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_editable_post_in_htmx(
     thread_reply_factory, user_client, user, members_group, other_user_private_thread
 ):
-    members_group.can_edit_own_posts = False
+    members_group.can_edit_own_posts = PermissionValue.NO
     members_group.save()
 
     post = thread_reply_factory(other_user_private_thread, poster=user)
@@ -1518,7 +1522,7 @@ def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_edit
 def test_thread_post_edits_view_doesnt_show_restore_edit_option_to_user_non_editable_post_in_modal(
     thread_reply_factory, user_client, user, members_group, other_user_private_thread
 ):
-    members_group.can_edit_own_posts = False
+    members_group.can_edit_own_posts = PermissionValue.NO
     members_group.save()
 
     post = thread_reply_factory(other_user_private_thread, poster=user)

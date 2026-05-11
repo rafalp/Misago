@@ -190,8 +190,8 @@ class Command(BaseCommand):
             category=first_category,
             title="Thread with last activity from previous year",
             slug="thread-with-last-activity-from-previous-year",
-            started_on=previous_year_timestamp,
-            last_post_on=previous_year_timestamp,
+            started_at=previous_year_timestamp,
+            last_posted_at=previous_year_timestamp,
             starter=None,
             starter_name="Misago",
             starter_slug="misago",
@@ -204,8 +204,8 @@ class Command(BaseCommand):
             thread=previous_year_thread,
             poster=None,
             poster_name="Misago",
-            posted_on=previous_year_timestamp,
-            updated_on=previous_year_timestamp,
+            posted_at=previous_year_timestamp,
+            updated_at=previous_year_timestamp,
         )
 
         previous_year_thread.first_post = previous_year_thread.last_post = (
@@ -224,7 +224,7 @@ class Command(BaseCommand):
         previous_year_post.search_document = previous_year_post.original
 
         update_post_checksum(previous_year_post)
-        previous_year_post.update_search_vector()
+        previous_year_post.set_search_vector()
         previous_year_post.save()
 
         current_year_timestamp = timestamp.replace(
@@ -239,8 +239,8 @@ class Command(BaseCommand):
             category=first_category,
             title="Thread with last activity from current year",
             slug="thread-with-last-activity-from-current-year",
-            started_on=current_year_timestamp,
-            last_post_on=current_year_timestamp,
+            started_at=current_year_timestamp,
+            last_posted_at=current_year_timestamp,
             starter=None,
             starter_name="Misago",
             starter_slug="misago",
@@ -253,8 +253,8 @@ class Command(BaseCommand):
             thread=current_year_thread,
             poster=None,
             poster_name="Misago",
-            posted_on=current_year_timestamp,
-            updated_on=current_year_timestamp,
+            posted_at=current_year_timestamp,
+            updated_at=current_year_timestamp,
         )
 
         current_year_thread.first_post = current_year_thread.last_post = (
@@ -273,7 +273,7 @@ class Command(BaseCommand):
         current_year_post.search_document = current_year_post.original
 
         update_post_checksum(current_year_post)
-        current_year_post.update_search_vector()
+        current_year_post.set_search_vector()
         current_year_post.save()
 
         current_week_timestamp = timestamp.replace(
@@ -286,8 +286,8 @@ class Command(BaseCommand):
             category=first_category,
             title="Thread with last activity from current week",
             slug="thread-with-last-activity-from-current-week",
-            started_on=current_week_timestamp,
-            last_post_on=current_week_timestamp,
+            started_at=current_week_timestamp,
+            last_posted_at=current_week_timestamp,
             starter=None,
             starter_name="Misago",
             starter_slug="misago",
@@ -300,8 +300,8 @@ class Command(BaseCommand):
             thread=current_week_thread,
             poster=None,
             poster_name="Misago",
-            posted_on=current_week_timestamp,
-            updated_on=current_week_timestamp,
+            posted_at=current_week_timestamp,
+            updated_at=current_week_timestamp,
         )
 
         current_week_thread.first_post = current_week_thread.last_post = (
@@ -320,7 +320,7 @@ class Command(BaseCommand):
         current_week_post.search_document = current_week_post.original
 
         update_post_checksum(current_week_post)
-        current_week_post.update_search_vector()
+        current_week_post.set_search_vector()
         current_week_post.save()
 
         yesterday_timestamp = timestamp.replace(
@@ -333,8 +333,8 @@ class Command(BaseCommand):
             category=first_category,
             title="Thread with last activity from yesterday",
             slug="thread-with-last-activity-from-yesterday-week",
-            started_on=yesterday_timestamp,
-            last_post_on=yesterday_timestamp,
+            started_at=yesterday_timestamp,
+            last_posted_at=yesterday_timestamp,
             starter=None,
             starter_name="Misago",
             starter_slug="misago",
@@ -347,8 +347,8 @@ class Command(BaseCommand):
             thread=yesterday_thread,
             poster=None,
             poster_name="Misago",
-            posted_on=yesterday_timestamp,
-            updated_on=yesterday_timestamp,
+            posted_at=yesterday_timestamp,
+            updated_at=yesterday_timestamp,
         )
 
         yesterday_thread.first_post = yesterday_thread.last_post = yesterday_post
@@ -365,7 +365,7 @@ class Command(BaseCommand):
         yesterday_post.search_document = yesterday_post.original
 
         update_post_checksum(yesterday_post)
-        yesterday_post.update_search_vector()
+        yesterday_post.set_search_vector()
         yesterday_post.save()
 
         timestamp = timezone.now() - timedelta(minutes=randint(50, 60))
@@ -374,8 +374,8 @@ class Command(BaseCommand):
             category=first_category,
             title="Different post states",
             slug="different-post-states",
-            started_on=timestamp,
-            last_post_on=timestamp,
+            started_at=timestamp,
+            last_posted_at=timestamp,
             starter=None,
             starter_name="Misago",
             starter_slug="misago",
@@ -389,8 +389,8 @@ class Command(BaseCommand):
             thread=thread_with_states,
             poster=user,
             poster_name=user.username,
-            posted_on=timestamp,
-            updated_on=timestamp,
+            posted_at=timestamp,
+            updated_at=timestamp,
         )
 
         default_post.original = "Post in a default state."
@@ -398,7 +398,7 @@ class Command(BaseCommand):
         default_post.search_document = default_post.original
 
         update_post_checksum(default_post)
-        default_post.update_search_vector()
+        default_post.set_search_vector()
         default_post.save()
 
         timestamp = timezone.now() - timedelta(minutes=randint(40, 50))
@@ -408,8 +408,8 @@ class Command(BaseCommand):
             thread=thread_with_states,
             poster=None,
             poster_name="DeletedUser",
-            posted_on=timestamp,
-            updated_on=timestamp,
+            posted_at=timestamp,
+            updated_at=timestamp,
         )
 
         guest_post.original = "Post by a deleted user."
@@ -417,7 +417,7 @@ class Command(BaseCommand):
         guest_post.search_document = guest_post.original
 
         update_post_checksum(guest_post)
-        guest_post.update_search_vector()
+        guest_post.set_search_vector()
         guest_post.save()
 
         timestamp = timezone.now() - timedelta(minutes=randint(30, 40))
@@ -427,8 +427,8 @@ class Command(BaseCommand):
             thread=thread_with_states,
             poster=other_user,
             poster_name=other_user.username,
-            posted_on=timestamp,
-            updated_on=timestamp,
+            posted_at=timestamp,
+            updated_at=timestamp,
             is_hidden=True,
         )
 
@@ -437,7 +437,7 @@ class Command(BaseCommand):
         hidden_post.search_document = hidden_post.original
 
         update_post_checksum(hidden_post)
-        hidden_post.update_search_vector()
+        hidden_post.set_search_vector()
         hidden_post.save()
 
         timestamp = timezone.now() - timedelta(minutes=randint(20, 30))
@@ -447,8 +447,8 @@ class Command(BaseCommand):
             thread=thread_with_states,
             poster=user,
             poster_name=user.username,
-            posted_on=timestamp,
-            updated_on=timestamp,
+            posted_at=timestamp,
+            updated_at=timestamp,
             is_hidden=True,
         )
 
@@ -457,7 +457,7 @@ class Command(BaseCommand):
         unapproved_post.search_document = unapproved_post.original
 
         update_post_checksum(unapproved_post)
-        unapproved_post.update_search_vector()
+        unapproved_post.set_search_vector()
         unapproved_post.save()
 
         timestamp = timezone.now() - timedelta(minutes=randint(10, 20))
@@ -467,9 +467,9 @@ class Command(BaseCommand):
             thread=thread_with_states,
             poster=banned_user,
             poster_name=banned_user.username,
-            posted_on=timestamp,
-            updated_on=timestamp,
-            is_protected=True,
+            posted_at=timestamp,
+            updated_at=timestamp,
+            is_locked=True,
         )
 
         locked_post.original = "Locked post by a banned user."
@@ -477,7 +477,7 @@ class Command(BaseCommand):
         locked_post.search_document = locked_post.original
 
         update_post_checksum(locked_post)
-        locked_post.update_search_vector()
+        locked_post.set_search_vector()
         locked_post.save()
 
         edited_post = Post.objects.create(
@@ -485,8 +485,8 @@ class Command(BaseCommand):
             thread=thread_with_states,
             poster=user,
             poster_name=user.username,
-            posted_on=timezone.now() - timedelta(minutes=randint(5, 10)),
-            updated_on=timezone.now() - timedelta(minutes=randint(1, 5)),
+            posted_at=timezone.now() - timedelta(minutes=randint(5, 10)),
+            updated_at=timezone.now() - timedelta(minutes=randint(1, 5)),
             edits=42,
             last_editor=moderator,
             last_editor_name=moderator.username,
@@ -498,7 +498,7 @@ class Command(BaseCommand):
         edited_post.search_document = edited_post.original
 
         update_post_checksum(edited_post)
-        edited_post.update_search_vector()
+        edited_post.set_search_vector()
         edited_post.save()
 
         timestamp = timezone.now() - timedelta(minutes=randint(1, 5))
@@ -508,8 +508,8 @@ class Command(BaseCommand):
             thread=thread_with_states,
             poster=moderator,
             poster_name=moderator.username,
-            posted_on=timestamp,
-            updated_on=timestamp,
+            posted_at=timestamp,
+            updated_at=timestamp,
         )
 
         moderator_post.original = "Post by a moderator."
@@ -517,7 +517,7 @@ class Command(BaseCommand):
         moderator_post.search_document = moderator_post.original
 
         update_post_checksum(moderator_post)
-        moderator_post.update_search_vector()
+        moderator_post.set_search_vector()
         moderator_post.save()
 
         thread_length = settings.posts_per_page + settings.posts_per_page_orphans
@@ -527,8 +527,8 @@ class Command(BaseCommand):
             category=first_category,
             title="Thread with max-length single page",
             slug="thread-with-max-length-single-page",
-            started_on=timestamp,
-            last_post_on=timestamp,
+            started_at=timestamp,
+            last_posted_at=timestamp,
             starter=None,
             starter_name="Misago",
             starter_slug="misago",
@@ -545,8 +545,8 @@ class Command(BaseCommand):
                 thread=thread_one_page,
                 poster=None,
                 poster_name="Poster",
-                posted_on=timestamp,
-                updated_on=timestamp,
+                posted_at=timestamp,
+                updated_at=timestamp,
             )
 
             post.original = f"Post no. {i + 1}"
@@ -554,7 +554,7 @@ class Command(BaseCommand):
             post.search_document = post.original
 
             update_post_checksum(post)
-            post.update_search_vector()
+            post.set_search_vector()
             post.save()
 
         thread_length = settings.posts_per_page + settings.posts_per_page_orphans + 1
@@ -563,8 +563,8 @@ class Command(BaseCommand):
             category=first_category,
             title="Thread with two pages",
             slug="thread-with-two-pages",
-            started_on=timestamp,
-            last_post_on=timestamp,
+            started_at=timestamp,
+            last_posted_at=timestamp,
             starter=None,
             starter_name="Misago",
             starter_slug="misago",
@@ -581,8 +581,8 @@ class Command(BaseCommand):
                 thread=thread_two_pages,
                 poster=None,
                 poster_name="Poster",
-                posted_on=timestamp,
-                updated_on=timestamp,
+                posted_at=timestamp,
+                updated_at=timestamp,
             )
 
             post.original = f"Post no. {i + 1}"
@@ -590,7 +590,7 @@ class Command(BaseCommand):
             post.search_document = post.original
 
             update_post_checksum(post)
-            post.update_search_vector()
+            post.set_search_vector()
             post.save()
 
         thread_length = (
@@ -601,8 +601,8 @@ class Command(BaseCommand):
             category=first_category,
             title="Thread with three pages",
             slug="thread-with-three-pages",
-            started_on=timestamp,
-            last_post_on=timestamp,
+            started_at=timestamp,
+            last_posted_at=timestamp,
             starter=None,
             starter_name="Misago",
             starter_slug="misago",
@@ -619,8 +619,8 @@ class Command(BaseCommand):
                 thread=thread_three_pages,
                 poster=None,
                 poster_name="Poster",
-                posted_on=timestamp,
-                updated_on=timestamp,
+                posted_at=timestamp,
+                updated_at=timestamp,
             )
 
             post.original = f"Post no. {i + 1}"
@@ -628,18 +628,18 @@ class Command(BaseCommand):
             post.search_document = post.original
 
             update_post_checksum(post)
-            post.update_search_vector()
+            post.set_search_vector()
             post.save()
 
         timestamp = timezone.now()
         posts_to_update = Post.objects.filter(id__gt=yesterday_post.id).order_by("-id")
         for post in posts_to_update.iterator():
-            if post.updated_on == post.posted_on:
-                post.posted_on = timestamp
-                post.updated_on = post.posted_on
+            if post.updated_at == post.posted_at:
+                post.posted_at = timestamp
+                post.updated_at = post.posted_at
             else:
-                post.posted_on = timestamp
-                post.updated_on = timestamp + timedelta(minutes=randint(1, 10))
+                post.posted_at = timestamp
+                post.updated_at = timestamp + timedelta(minutes=randint(1, 10))
 
             post.save()
 
@@ -651,8 +651,8 @@ class Command(BaseCommand):
             category=first_category,
             title="Welcome to the Misago Dev Fixture! Read me first!",
             slug="welcome-to-the-misago-dev-fixture-read-me-first",
-            started_on=timestamp,
-            last_post_on=timestamp,
+            started_at=timestamp,
+            last_posted_at=timestamp,
             starter=None,
             starter_name="Misago",
             starter_slug="misago",
@@ -665,8 +665,8 @@ class Command(BaseCommand):
             thread=readme_thread,
             poster=None,
             poster_name="Misago",
-            posted_on=timestamp,
-            updated_on=timestamp,
+            posted_at=timestamp,
+            updated_at=timestamp,
         )
 
         readme_thread.first_post = readme_thread.last_post = readme_post
@@ -793,7 +793,7 @@ class Command(BaseCommand):
         ).strip()
 
         update_post_checksum(readme_post)
-        readme_post.update_search_vector()
+        readme_post.set_search_vector()
         readme_post.save()
 
         for thread in Thread.objects.iterator():

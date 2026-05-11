@@ -19,9 +19,99 @@
   @extend .mt-1;
 }
 
-// Include extra horizontal space between yes/no options
-.control-yesno-switch .radio + .radio {
-  @extend .ml-3;
+// Include extra horizontal space between yes/no/never options
+.control-yesno, .control-yesnonever {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+
+  .radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin: 0;
+
+    padding: $btn-padding-y-sm $btn-padding-x;
+
+    border-radius: $border-radius-sm;
+
+    &, input {
+      cursor: pointer;
+    }
+  }
+}
+
+.control-yesno .radio {
+  background-color: $gray-100;
+  border: 1px solid $gray-200;
+
+  &:hover, &:focus {
+    background-color: $gray-200;
+    border-color: $gray-300;
+  }
+
+  &:has(:checked) {
+    &, &:hover, &:focus {
+      background-color: $primary;
+      border-color: darken($primary, 10);
+      color: #fff;
+    }
+  }
+}
+
+.control-yesnonever .radio {
+  background-color: #fff7ed;
+  border: 1px solid darken(#fff7ed, 10);
+
+  &:hover, &:focus {
+    background-color: #fed7aa;
+    border-color: darken(#fed7aa, 10);
+  }
+
+  &:has(:checked) {
+    &, &:hover, &:focus {
+      background-color: #d97706;
+      border-color: darken(#d97706, 10);
+      color: #fff;
+    }
+  }
+
+  &:first-child {
+    background-color: #f7fee7;
+    border-color: darken(#f7fee7, 10);
+
+    &:hover, &:focus {
+      background-color: #d9f99d;
+      border-color: darken(#d9f99d, 10);
+    }
+
+    &:has(:checked) {
+      &, &:hover, &:focus {
+        background-color: #65a30d;
+        border-color: darken(#65a30d, 10);
+        color: #fff;
+      }
+    }
+  }
+
+  &:last-child {
+    background-color: #fef2f2;
+    border-color: darken(#fef2f2, 10);
+
+    &:hover, &:focus {
+      background-color: #fecaca;
+      border-color: darken(#fecaca, 10);
+    }
+
+    &:has(:checked) {
+      &, &:hover, &:focus {
+        background-color: #ef4444;
+        border-color: darken(#ef4444, 10);
+        color: #fff;
+      }
+    }
+  }
 }
 
 // Date/time picker controls

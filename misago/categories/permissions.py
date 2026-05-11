@@ -5,17 +5,17 @@ from django.utils.translation import pgettext_lazy
 
 from ..acl import algebra
 from ..acl.decorators import return_boolean
-from ..admin.forms import YesNoSwitch
+from ..admin.forms import YesNoField
 from .models import Category, CategoryRole, RoleCategoryACL
 
 
 class PermissionsForm(forms.Form):
     legend = pgettext_lazy("categories permission", "Category access")
 
-    can_see = YesNoSwitch(
+    can_see = YesNoField(
         label=pgettext_lazy("categories permission", "Can see category")
     )
-    can_browse = YesNoSwitch(
+    can_browse = YesNoField(
         label=pgettext_lazy("categories permission", "Can see category contents")
     )
 

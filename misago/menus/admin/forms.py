@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import pgettext_lazy
 
-from ...admin.forms import YesNoSwitch
+from ...admin.forms import YesNoField
 from ..models import MenuItem
 from ..cache import clear_menus_cache
 
@@ -29,7 +29,7 @@ class MenuItemForm(forms.ModelForm):
         ),
         required=False,
     )
-    target_blank = YesNoSwitch(
+    target_blank = YesNoField(
         label=pgettext_lazy("admin menu item form", "Open this link in new window"),
         help_text=pgettext_lazy(
             "admin menu item form",

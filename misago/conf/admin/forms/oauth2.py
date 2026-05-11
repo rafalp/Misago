@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import messages
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ....admin.forms import YesNoSwitch
+from ....admin.forms import YesNoField
 from .base import SettingsForm
 
 OAUTH2_OPTIONAL_FIELDS = (
@@ -39,7 +39,7 @@ class OAuth2SettingsForm(SettingsForm):
         "oauth2_json_avatar_path",
     ]
 
-    enable_oauth2_client = YesNoSwitch(
+    enable_oauth2_client = YesNoField(
         label=pgettext_lazy("admin oauth2 settings form", "Enable OAuth2 client"),
         help_text=pgettext_lazy(
             "admin oauth2 settings form",
@@ -174,7 +174,7 @@ class OAuth2SettingsForm(SettingsForm):
         required=False,
     )
 
-    oauth2_send_welcome_email = YesNoSwitch(
+    oauth2_send_welcome_email = YesNoField(
         label=pgettext_lazy(
             "admin oauth2 settings form",
             "Send a welcoming e-mail to users on their first sign-ons",
@@ -206,7 +206,7 @@ class OAuth2SettingsForm(SettingsForm):
         max_length=200,
         required=False,
     )
-    oauth2_enable_pkce = YesNoSwitch(
+    oauth2_enable_pkce = YesNoField(
         label=pgettext_lazy("admin oauth2 settings form", "Enable OAuth2 PKCE"),
         help_text=pgettext_lazy(
             "admin oauth2 settings form",

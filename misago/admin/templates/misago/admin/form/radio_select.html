@@ -1,11 +1,22 @@
 {% load misago_admin_form %}
-{% if field|is_yesno_switch_field %}
-  {% for option in widget|get_options %}
-    <label class="radio">
-      <input type="{{ option.type }}" name="{{ option.name }}"{% if option.value != None %} value="{{ option.value|stringformat:'s' }}"{% endif %} {% render_attrs option.attrs %} {% render_bool_attrs option.attrs %}>
-      {{ option.label }}
-    </label>
-  {% endfor %}
+{% if field|is_yes_no_field %}
+  <div class="controls control-yesno">
+    {% for option in widget|get_options %}
+      <label class="radio">
+        <input type="{{ option.type }}" name="{{ option.name }}"{% if option.value != None %} value="{{ option.value|stringformat:'s' }}"{% endif %} {% render_attrs option.attrs %} {% render_bool_attrs option.attrs %}>
+        {{ option.label }}
+      </label>
+    {% endfor %}
+  </div>
+{% elif field|is_yes_no_never_field %}
+  <div class="controls control-yesnonever">
+    {% for option in widget|get_options %}
+      <label class="radio">
+        <input type="{{ option.type }}" name="{{ option.name }}"{% if option.value != None %} value="{{ option.value|stringformat:'s' }}"{% endif %} {% render_attrs option.attrs %} {% render_bool_attrs option.attrs %}>
+        {{ option.label }}
+      </label>
+    {% endfor %}
+  </div>
 {% else %}
   {% for option in widget|get_options %}
     <div class="form-check">

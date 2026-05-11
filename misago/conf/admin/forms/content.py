@@ -3,7 +3,7 @@ from django.conf import settings as dj_settings
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ....admin.forms import YesNoSwitch
+from ....admin.forms import YesNoField
 from ....attachments.enums import AllowedAttachments, AttachmentTypeRestriction
 from ....attachments.storage import get_total_unused_attachments_size
 from ....categories.enums import CategoryChildrenComponent
@@ -218,7 +218,7 @@ class ContentSettingsForm(SettingsForm):
             choices=AttachmentTypeRestriction.get_choices(),
         ),
     )
-    allow_private_threads_attachments = YesNoSwitch(
+    allow_private_threads_attachments = YesNoField(
         label=pgettext_lazy(
             "admin oauth2 settings form",
             "Allow uploading attachments in private threads",

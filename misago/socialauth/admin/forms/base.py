@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import gettext, pgettext_lazy
 
-from ....admin.forms import ColorField, YesNoSwitch
+from ....admin.forms import ColorField, YesNoField
 from ...models import SocialAuthProvider
 from ..ordering import get_next_free_order
 
@@ -15,7 +15,7 @@ class ProviderForm(forms.ModelForm):
         label=pgettext_lazy("admin social auth provider form", "Button color"),
         required=False,
     )
-    is_active = YesNoSwitch(
+    is_active = YesNoField(
         label=pgettext_lazy("admin social auth provider form", "Enable this provider")
     )
 
@@ -41,7 +41,7 @@ class ProviderForm(forms.ModelForm):
 
 
 class OAuthProviderForm(ProviderForm):
-    associate_by_email = YesNoSwitch(
+    associate_by_email = YesNoField(
         label=pgettext_lazy(
             "admin social auth provider form", "Associate existing users by email"
         ),
