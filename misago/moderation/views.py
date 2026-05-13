@@ -32,12 +32,6 @@ def get_moderation_action_choices(actions: list[ModerationAction]) -> list[dict]
 
 
 def set_moderation_response_headers(request: HttpRequest, response: HttpResponse):
-    _set_moderation_response_headers_action(request, response)
-
-
-def _set_moderation_response_headers_action(
-    request: HttpRequest, response: HttpResponse
-):
     response.headers["hx-trigger"] = "misago:afterModeration"
     if request.POST.get("success-hx-target"):
         response.headers["hx-retarget"] = request.POST["success-hx-target"]
