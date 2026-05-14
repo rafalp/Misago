@@ -43,9 +43,7 @@ class PrivateThreadViewBackend(ViewBackend):
             request, thread_id, annotate_read_time, select_related, for_update
         )
         if select_members:
-            owner, members = get_private_thread_members(thread)
-            thread.owner_cache = owner
-            thread.members_cache = members
+            get_private_thread_members(thread)
 
         check_see_private_thread_permission(request.user_permissions, thread)
         return thread

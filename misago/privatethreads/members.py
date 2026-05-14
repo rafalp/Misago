@@ -71,8 +71,10 @@ def get_private_thread_members(thread: Thread) -> tuple[Optional["User"], list["
     thread.private_thread_member_ids = []
 
     if owner:
+        thread.private_thread_owner = owner
         thread.private_thread_owner_id = owner.id
     if members:
+        thread.private_thread_members = members
         thread.private_thread_member_ids = [member.id for member in members]
 
     return owner, members

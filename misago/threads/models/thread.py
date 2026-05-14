@@ -1,4 +1,5 @@
 from functools import cached_property
+from typing import TYPE_CHECKING, Optional
 
 from django.db import models
 from django.db.models import Q
@@ -7,7 +8,9 @@ from django.utils.translation import pgettext_lazy
 from ...conf import settings
 from ...core.utils import slugify
 from ...plugins.models import PluginDataModel
-from ...polls.models import Poll
+
+if TYPE_CHECKING:
+    from ...users.models import User
 
 
 class Thread(PluginDataModel):
@@ -201,11 +204,25 @@ class Thread(PluginDataModel):
         return "%sK" % round(self.replies / 1000, 0)
 
     @cached_property
+    def private_thread_owner(self) -> Optional["User"]:
+        raise RuntimeError(
+            "'Thread.private_thread_owner' can't be accessed before calling "
+            "'get_private_thread_members' on the thread to populate it."
+        )
+
+    @cached_property
     def private_thread_owner_id(self) -> int | None:
         return (
             self.privatethreadmember_set.filter(is_owner=True)
             .values_list("user_id", flat=True)
             .first()
+        )
+
+    @cached_property
+    def private_thread_members(self) -> list["User"]:
+        raise RuntimeError(
+            "'Thread.private_thread_members' can't be accessed before calling "
+            "'get_private_thread_members' on the thread to populate it."
         )
 
     @cached_property

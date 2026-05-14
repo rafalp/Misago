@@ -38,6 +38,7 @@ class GenericThreadView(View):
         annotate_read_time: bool = False,
         select_related: bool | Iterable[str] | None = None,
         for_update: bool = False,
+        **kwargs,
     ) -> Thread:
         if select_related is None:
             select_related_value = None
@@ -52,6 +53,7 @@ class GenericThreadView(View):
             annotate_read_time,
             select_related_value,
             for_update,
+            **kwargs,
         )
 
     def get_thread_queryset(
@@ -59,9 +61,10 @@ class GenericThreadView(View):
         request: HttpRequest,
         annotate_read_time: bool = False,
         select_related: bool | Iterable[str] = False,
+        **kwargs,
     ) -> QuerySet:
         return self.backend.get_thread_queryset(
-            request, annotate_read_time, select_related
+            request, annotate_read_time, select_related, **kwargs
         )
 
     def get_posts_queryset(
@@ -70,9 +73,10 @@ class GenericThreadView(View):
         thread: Thread,
         select_related: bool | Iterable[str] = False,
         for_update: bool = False,
+        **kwargs,
     ) -> QuerySet:
         return self.backend.get_posts_queryset(
-            request, thread, select_related, for_update
+            request, thread, select_related, for_update, **kwargs
         )
 
     def get_post(
@@ -83,9 +87,10 @@ class GenericThreadView(View):
         select_related: bool | Iterable[str] = False,
         for_content: bool = False,
         for_update: bool = False,
+        **kwargs,
     ) -> Post:
         return self.backend.get_post(
-            request, thread, post_id, select_related, for_content, for_update
+            request, thread, post_id, select_related, for_content, for_update, **kwargs
         )
 
     def get_post_number(self, request: HttpRequest, post: Post) -> int:
