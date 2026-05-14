@@ -17,11 +17,16 @@
       <div class="toolbar-item">
         {% includecomponent watch_thread %}
       </div>
+      {% if thread_moderation_actions and bottom_toolbar %}
+        <div class="toolbar-item">
+          {% include "misago/thread/thread_moderation.html" with moderation_actions=thread_moderation_actions %}
+        </div>
+      {% endif %}
     </div>
   {% endif %}
   {% if top_toolbar %}
     <div class="toolbar-section flex-order-last-xs">
-      {% if allow_start_poll and top_toolbar %}
+      {% if allow_start_poll %}
         <div class="toolbar-item">
           <a
             href="{% url 'misago:thread-poll-start' thread_id=thread.id slug=thread.slug %}"
@@ -31,7 +36,7 @@
           </a>
         </div>
       {% endif %}
-      {% if reply.url and top_toolbar %}
+      {% if reply.url %}
         <div class="toolbar-item">
           <a
             href="{{ reply.url }}"
@@ -41,6 +46,11 @@
           >
             {% translate "Post reply" context "thread replies toolbar" %}
           </a>
+        </div>
+      {% endif %}
+      {% if thread_moderation_actions %}
+        <div class="toolbar-item">
+          {% include "misago/thread/thread_moderation.html" with moderation_actions=thread_moderation_actions %}
         </div>
       {% endif %}
     </div>

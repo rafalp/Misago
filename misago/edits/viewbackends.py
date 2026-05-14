@@ -24,7 +24,9 @@ class PostEditViewBackend:
     post_edit_unhide_url: str
     post_edit_delete_url: str
 
-    def get_thread_post_edit(
+    # Querysets and DB getters
+
+    def get_post_edit(
         self, request: HttpRequest, post: Post, post_edit_id: int
     ) -> PostEdit:
         try:
@@ -36,11 +38,13 @@ class PostEditViewBackend:
         except PostEdit.DoesNotExist:
             raise Http404()
 
-    def get_thread_post_edit_index(self, post_edit: PostEdit) -> int | None:
+    def get_post_edit_index(self, post_edit: PostEdit) -> int | None:
         return (
             PostEdit.objects.filter(post=post_edit.post, id__lte=post_edit.id).count()
             or None
         )
+
+    # Permission checks
 
     def check_restore_post_edit_permission(
         self, request: HttpRequest, post_edit: PostEdit
@@ -57,7 +61,7 @@ class PostEditViewBackend:
     ) -> dict:
         raise NotImplementedError()
 
-    def get_thread_post_edit_restore_url(self, post_edit: PostEdit) -> str:
+    def get_post_edit_restore_url(self, post_edit: PostEdit) -> str:
         return reverse(
             self.post_edit_restore_url,
             kwargs={
@@ -68,7 +72,7 @@ class PostEditViewBackend:
             },
         )
 
-    def get_thread_post_edit_hide_url(self, post_edit: PostEdit) -> str:
+    def get_post_edit_hide_url(self, post_edit: PostEdit) -> str:
         return reverse(
             self.post_edit_hide_url,
             kwargs={
@@ -79,7 +83,7 @@ class PostEditViewBackend:
             },
         )
 
-    def get_thread_post_edit_unhide_url(self, post_edit: PostEdit) -> str:
+    def get_post_edit_unhide_url(self, post_edit: PostEdit) -> str:
         return reverse(
             self.post_edit_unhide_url,
             kwargs={
@@ -90,7 +94,7 @@ class PostEditViewBackend:
             },
         )
 
-    def get_thread_post_edit_delete_url(self, post_edit: PostEdit) -> str:
+    def get_post_edit_delete_url(self, post_edit: PostEdit) -> str:
         return reverse(
             self.post_edit_delete_url,
             kwargs={

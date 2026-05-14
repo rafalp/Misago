@@ -1,0 +1,21 @@
+{% load misago_component %}
+
+{% include "misago/snackbars.html" %}
+
+<div id="misago-htmx-thread-status" hx-swap-oob="innerHTML">
+  {% if status_bars %}
+    <div class="status-bars">
+      {% includecomponents status_bars %}
+    </div>
+  {% endif %}
+</div>
+
+{% if thread_updates %}
+<div hx-swap-oob="beforeend:.posts-feed-inner">
+  {% includecomponents thread_updates %}
+</div>
+{% endif %}
+
+{% if moderation_actions %}
+{% include "misago/thread/thread_moderation.html" with swap_oob=True %}
+{% endif %}

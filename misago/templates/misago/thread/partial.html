@@ -9,11 +9,13 @@
 {% endif %}
 
 <div id="misago-htmx-root">
-  {% if thread_status_bars %}
-    <div id="misago-htmx-thread-status" class="status-bars">
-      {% includecomponents thread_status_bars %}
-    </div>
-  {% endif %}
+  <div id="misago-htmx-thread-status">
+    {% if thread_status_bars %}
+      <div class="status-bars">
+        {% includecomponents thread_status_bars %}
+      </div>
+    {% endif %}
+  </div>
   {% include "misago/thread/toolbar.html" with top_toolbar=True bottom_toolbar=False %}
   {% includecomponent feed %}
   {% include "misago/thread/toolbar.html" with top_toolbar=False bottom_toolbar=True %}

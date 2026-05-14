@@ -52,7 +52,7 @@ class PrivateThreadListView(ListView):
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
         if "mark_as_read" in request.POST:
-            return self.post_mark_as_read(request, kwargs)
+            return self.dispatch_mark_as_read(request, kwargs)
 
         return self.get(request, **kwargs)
 

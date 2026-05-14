@@ -32,9 +32,9 @@ class ThreadSolutionSelectView(ThreadSolutionView):
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
-        new_solution = self.get_thread_post(request, thread, post_id, for_content=True)
+        new_solution = self.get_post(request, thread, post_id, for_content=True)
         if new_solution.id == thread.solution_id:
-            return self.get_thread_post_redirect(request, new_solution)
+            return self.get_post_redirect(request, new_solution)
 
         if thread.solution_id:
             check_change_thread_solution_permission(
@@ -56,7 +56,7 @@ class ThreadSolutionSelectView(ThreadSolutionView):
 
         messages.success(request, success_message)
 
-        return self.get_thread_post_redirect(request, new_solution)
+        return self.get_post_redirect(request, new_solution)
 
 
 class ThreadSolutionClearView(ThreadSolutionView):
@@ -65,7 +65,7 @@ class ThreadSolutionClearView(ThreadSolutionView):
 
         old_solution = None
         if thread.solution_id:
-            old_solution = self.get_thread_post(
+            old_solution = self.get_post(
                 request, thread, thread.solution_id, for_content=True
             )
 
@@ -77,7 +77,7 @@ class ThreadSolutionClearView(ThreadSolutionView):
             )
 
         if request.POST.get("next") == "post" and old_solution:
-            return self.get_thread_post_redirect(request, old_solution)
+            return self.get_post_redirect(request, old_solution)
 
         return redirect(self.get_next_thread_url(request, thread))
 
@@ -87,7 +87,7 @@ class ThreadSolutionLockView(ThreadSolutionView):
         thread = self.get_thread(request, thread_id)
 
         if thread.solution_id:
-            thread.solution = self.get_thread_post(
+            thread.solution = self.get_post(
                 request, thread, thread.solution_id, for_content=True
             )
 
@@ -99,7 +99,7 @@ class ThreadSolutionLockView(ThreadSolutionView):
             )
 
         if request.POST.get("next") == "post" and thread.solution:
-            return self.get_thread_post_redirect(request, thread.solution)
+            return self.get_post_redirect(request, thread.solution)
 
         return redirect(self.get_next_thread_url(request, thread))
 
@@ -109,7 +109,7 @@ class ThreadSolutionUnlockView(ThreadSolutionView):
         thread = self.get_thread(request, thread_id)
 
         if thread.solution_id:
-            thread.solution = self.get_thread_post(
+            thread.solution = self.get_post(
                 request, thread, thread.solution_id, for_content=True
             )
 
@@ -121,6 +121,6 @@ class ThreadSolutionUnlockView(ThreadSolutionView):
             )
 
         if request.POST.get("next") == "post" and thread.solution:
-            return self.get_thread_post_redirect(request, thread.solution)
+            return self.get_post_redirect(request, thread.solution)
 
         return redirect(self.get_next_thread_url(request, thread))

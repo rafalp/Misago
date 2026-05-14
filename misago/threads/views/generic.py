@@ -11,6 +11,7 @@ from ...permissions.threads import (
     filter_thread_posts_queryset,
     filter_thread_updates_queryset,
 )
+from ...permissions.proxy import UserPermissionsProxy
 from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,
@@ -27,6 +28,8 @@ class GenericThreadView(View):
     backend: ViewBackend
 
     thread_select_related: Iterable[str] | bool | None = ("category",)
+
+    # Querysets and DB getters
 
     def get_thread(
         self,
@@ -57,22 +60,22 @@ class GenericThreadView(View):
         annotate_read_time: bool = False,
         select_related: bool | Iterable[str] = False,
     ) -> QuerySet:
-        return self.backend.get_thread_posts_queryset(
+        return self.backend.get_thread_queryset(
             request, annotate_read_time, select_related
         )
 
-    def get_thread_posts_queryset(
+    def get_posts_queryset(
         self,
         request: HttpRequest,
         thread: Thread,
         select_related: bool | Iterable[str] = False,
         for_update: bool = False,
     ) -> QuerySet:
-        return self.backend.get_thread_posts_queryset(
+        return self.backend.get_posts_queryset(
             request, thread, select_related, for_update
         )
 
-    def get_thread_post(
+    def get_post(
         self,
         request: HttpRequest,
         thread: Thread,
@@ -81,19 +84,55 @@ class GenericThreadView(View):
         for_content: bool = False,
         for_update: bool = False,
     ) -> Post:
-        return self.backend.get_thread_post(
+        return self.backend.get_post(
             request, thread, post_id, select_related, for_content, for_update
         )
 
-    def get_thread_post_number(self, request: HttpRequest, post: Post) -> int:
-        return self.backend.get_thread_post_number(request, post)
+    def get_post_number(self, request: HttpRequest, post: Post) -> int:
+        return self.backend.get_post_number(request, post)
 
-    def get_thread_posts_paginator(
+    # Thread utils
+
+    def get_breadcrumbs(
+        self, request: HttpRequest, thread: Thread, full: bool = True
+    ) -> list[dict]:
+        return self.backend.get_breadcrumbs(request, thread, full)
+
+    def has_moderator_permission(
+        self, user_permissions: UserPermissionsProxy, thread: Thread
+    ) -> bool:
+        return self.backend.has_moderator_permission(user_permissions, thread)
+
+    # Post utils
+
+    def get_post_feed(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        posts: list[Post],
+        thread_updates: list[ThreadUpdate] | None = None,
+    ) -> PostFeed:
+        return self.backend.get_post_feed(request, thread, posts, thread_updates)
+
+    def get_posts_paginator(
         self,
         request: HttpRequest,
         queryset: QuerySet,
     ) -> ThreadPostsPaginator:
-        return self.backend.get_thread_posts_paginator(request, queryset)
+        return self.backend.get_posts_paginator(request, queryset)
+
+    def get_post_redirect(
+        self,
+        request: HttpRequest,
+        post: Post,
+        permanent: bool = False,
+    ) -> HttpResponse:
+        return self.backend.get_post_redirect(request, post, permanent)
+
+    # URLs
+
+    def get_thread_parent_url(self, request: HttpRequest, thread: Thread) -> str:
+        return self.backend.get_thread_parent_url(request, thread)
 
     def get_thread_url(
         self,
@@ -102,9 +141,6 @@ class GenericThreadView(View):
     ) -> str:
         return self.backend.get_thread_url(thread, page)
 
-    def get_thread_post_url(self, post: Post) -> str:
-        return self.backend.get_thread_post_url(post)
-
     def get_next_thread_url(
         self, request: HttpRequest, thread: Thread, strip_qs: bool = False
     ) -> str:
@@ -112,28 +148,24 @@ class GenericThreadView(View):
             request, thread, self.backend.thread_url_name, strip_qs
         )
 
-    def get_thread_post_edits_url(
+    def get_post_url(self, post: Post) -> str:
+        return self.backend.get_post_url(post)
+
+    def get_post_edits_url(
         self,
         post: Post,
         page: int | None = None,
     ) -> str:
-        return self.backend.get_thread_post_edits_url(post, page)
+        return self.backend.get_post_edits_url(post, page)
 
-    def get_thread_post_redirect(
-        self,
-        request: HttpRequest,
-        post: Post,
-        permanent: bool = False,
-    ) -> HttpResponse:
-        return self.backend.get_thread_post_redirect(request, post, permanent)
+    def get_post_unapproved_url(self, thread: Thread) -> str:
+        return self.backend.get_post_unapproved_url(thread)
 
-    def get_thread_post_redirect_url(self, post: Post, page: int = 1) -> str:
-        return self.backend.get_thread_post_redirect_url(post, page)
+    def get_post_last_url(self, thread: Thread) -> str:
+        return self.backend.get_post_last_url(thread)
 
-    def get_thread_moderator_permission(
-        self, request: HttpRequest, thread: Thread
-    ) -> bool:
-        return self.backend.get_thread_moderator_permission(request, thread)
+    def get_post_redirect_url(self, post: Post, page: int = 1) -> str:
+        return self.backend.get_post_last_url(post, page)
 
 
 class GenericView(View):
@@ -168,19 +200,17 @@ class GenericView(View):
             return queryset.select_related(*self.thread_select_related)
         return queryset
 
-    def get_thread_posts_queryset(
-        self, request: HttpRequest, thread: Thread
-    ) -> QuerySet:
+    def get_posts_queryset(self, request: HttpRequest, thread: Thread) -> QuerySet:
         return thread.post_set.order_by("id")
 
-    def get_thread_post(
+    def get_post(
         self,
         request: HttpRequest,
         thread: Thread,
         post_id: int,
         for_update: bool = False,
     ) -> Post:
-        queryset = self.get_thread_posts_queryset(request, thread)
+        queryset = self.get_posts_queryset(request, thread)
         if for_update:
             queryset = queryset.select_for_update()
         else:
@@ -204,7 +234,7 @@ class GenericView(View):
 
         return post
 
-    def get_thread_posts_paginator(
+    def get_posts_paginator(
         self,
         request: HttpRequest,
         queryset: QuerySet,
@@ -224,10 +254,8 @@ class GenericView(View):
     ) -> PostFeed:
         raise NotImplementedError()
 
-    def get_thread_post_number(
-        self, request: HttpRequest, thread: Thread, post: Post
-    ) -> int:
-        queryset = self.get_thread_posts_queryset(request, thread)
+    def get_post_number(self, request: HttpRequest, thread: Thread, post: Post) -> int:
+        queryset = self.get_posts_queryset(request, thread)
         return queryset.filter(id__lte=post.id).count()
 
     def get_thread_url(self, thread: Thread, page: int | None = None) -> str:
@@ -243,7 +271,7 @@ class GenericView(View):
             kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
 
-    def get_thread_post_url(self, thread: Thread, post: Post) -> str:
+    def get_post_url(self, thread: Thread, post: Post) -> str:
         return reverse(
             self.thread_post_url_name,
             kwargs={"thread_id": thread.id, "slug": thread.slug, "post_id": post.id},
@@ -305,10 +333,8 @@ class ThreadView(GenericView):
         check_see_thread_permission(request.user_permissions, thread.category, thread)
         return thread
 
-    def get_thread_posts_queryset(
-        self, request: HttpRequest, thread: Thread
-    ) -> QuerySet:
-        queryset = super().get_thread_posts_queryset(request, thread)
+    def get_posts_queryset(self, request: HttpRequest, thread: Thread) -> QuerySet:
+        queryset = super().get_posts_queryset(request, thread)
         return filter_thread_posts_queryset(request.user_permissions, thread, queryset)
 
     def get_thread_updates_queryset(

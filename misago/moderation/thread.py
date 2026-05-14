@@ -4,7 +4,13 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..permissions.proxy import UserPermissionsProxy
+from ..threads.lock import lock_thread, unlock_thread
 from ..threads.models import Thread
+from ..threadupdates.create import (
+    create_locked_thread_update,
+    create_unlocked_thread_update,
+)
+from ..threadupdates.threadflag import set_thread_has_updates
 from .actions import (
     ModerationActionResult,
     ThreadModerationAction,
@@ -36,9 +42,14 @@ def _get_thread_moderation_actions_action(
     if not user_permissions.is_category_moderator(thread.category_id):
         return []
 
-    return [
-        LockThreadModerationAction,
-        UnlockThreadModerationAction,
+    actions = []
+
+    if thread.is_locked:
+        actions.append(UnlockThreadModerationAction)
+    else:
+        actions.append(LockThreadModerationAction)
+
+    return actions + [
         MoveThreadModerationAction,
         DeleteThreadModerationAction,
     ]
@@ -62,9 +73,14 @@ def _get_private_thread_moderation_actions_action(
     if not user_permissions.is_private_threads_moderator:
         return []
 
-    return [
-        LockThreadModerationAction,
-        UnlockThreadModerationAction,
+    actions = []
+
+    if thread.is_locked:
+        actions.append(UnlockThreadModerationAction)
+    else:
+        actions.append(LockThreadModerationAction)
+
+    return actions + [
         MoveThreadModerationAction,
         DeleteThreadModerationAction,
     ]

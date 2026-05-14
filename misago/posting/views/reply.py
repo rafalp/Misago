@@ -134,7 +134,7 @@ class ReplyView(View):
         feed.set_animated_posts([state.post.id])
 
         counter_start = (
-            self.get_thread_posts_queryset(request, state.thread)
+            self.get_posts_queryset(request, state.thread)
             .filter(id__lt=state.post.id)
             .count()
         )
@@ -160,7 +160,7 @@ class ReplyView(View):
         # Is thread (excluding last reply) read?
         read_time = get_thread_read_time(request, thread)
         thread_is_read = not (
-            self.get_thread_posts_queryset(request, thread)
+            self.get_posts_queryset(request, thread)
             .exclude(id=state.post.id)
             .filter(posted_at__gt=read_time)
             .exists()
@@ -179,7 +179,7 @@ class ReplyView(View):
         if not merge_time:
             return None
 
-        last_post = self.get_thread_posts_queryset(request, thread).last()
+        last_post = self.get_posts_queryset(request, thread).last()
 
         if last_post.poster_id != request.user.id:
             return None
@@ -231,9 +231,7 @@ class ReplyView(View):
             return None
 
         try:
-            return self.backend.get_thread_post(
-                request, thread, post_id, for_content=True
-            )
+            return self.backend.get_post(request, thread, post_id, for_content=True)
         except (Http404, PermissionDenied):
             return None
 

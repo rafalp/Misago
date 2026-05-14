@@ -1,0 +1,31 @@
+{% load i18n misago_capture %}
+
+<form class="thread-moderation" method="post" hx-post="{{ path }}" {% if swap_oob %}hx-swap-oob="innerHTML:.thread-moderation"{% else %}hx-swap="none"{% endif %}>
+  {% csrf_token %}
+  <div class="dropdown d-js-block">
+    <button
+      type="button"
+      class="btn btn-default btn-icon"
+      aria-label="{% translate 'Moderate thread' context 'post edit options dropdown toggle' %}"
+      aria-haspopup="true"
+      aria-expanded="false"
+      data-toggle="dropdown"
+    >
+      <span class="material-icon">more_horiz</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right" mg-watch-thread-dropdown>
+      {% for action in moderation_actions %}
+        <li>
+          <button
+            type="submit"
+            class="btn-link"
+            name="thread_moderation"
+            value="{{ action.id }}"
+          >
+            {{ action.button_label }}
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</form>

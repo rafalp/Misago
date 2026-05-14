@@ -400,7 +400,7 @@ class ThreadListView(ListView):
     ) -> ModerationActionResult:
         actions = self.get_moderation_actions(request)
         action: ThreadsModerationAction = get_moderation_action(
-            actions, request["moderation"]
+            actions, request.POST["moderation"]
         )
 
         page_threads = self.get_threads(request, kwargs)
@@ -750,7 +750,7 @@ class CategoryThreadListView(ListView):
 
         actions = self.get_moderation_actions(request, category)
         action: ThreadsModerationAction = get_moderation_action(
-            actions, request["moderation"]
+            actions, request.POST["moderation"]
         )
 
         page_threads = self.get_threads(request, category, kwargs)

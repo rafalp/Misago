@@ -79,11 +79,9 @@ class PrivateThreadDetailView(DetailView, PrivateThreadView):
             kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
 
-    def get_thread_posts_queryset(
-        self, request: HttpRequest, thread: Thread
-    ) -> QuerySet:
+    def get_posts_queryset(self, request: HttpRequest, thread: Thread) -> QuerySet:
         return get_private_thread_detail_view_posts_queryset_hook(
-            super().get_thread_posts_queryset, request, thread
+            super().get_posts_queryset, request, thread
         )
 
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:

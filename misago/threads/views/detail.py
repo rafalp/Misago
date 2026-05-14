@@ -85,6 +85,9 @@ class DetailView(View):
     reply_error_template_name: str = "misago/thread/reply_error.html"
     reply_template_name: str = "misago/quick_reply/form.html"
     watch_thread_template_name: str = "misago/thread/watch_thread.html"
+    thread_moderation_htmx_template_name: str = (
+        "misago/thread/thread_moderation_htmx.html"
+    )
     locked_thread_status_bar_template_name: str = "misago/thread/locked_thread.html"
     unapproved_thread_status_bar_template_name: str = (
         "misago/thread/unapproved_thread.html"
@@ -135,11 +138,94 @@ class DetailView(View):
 
         return self.get(request, thread_id, slug, page)
 
+    def dispatch_thread_moderation(
+        self, request: HttpRequest, thread_id: int, slug: str, page: int | None
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+
+        try:
+            result = self.moderate_thread(request, thread)
+        except ValidationError as e:
+            if request.is_htmx:
+                raise
+
+            messages.error(request, e.message)
+            return self.get(request, thread_id, slug, page)
+
+        current_url = request.get_full_path()
+
+        if isinstance(result, ModerationActionTemplateResult):
+            if request.is_htmx:
+                template_name = self.moderation_modal_template_name
+            else:
+                template_name = self.moderation_page_template_name
+
+            return result.render(
+                request,
+                template_name,
+                {"cancel_url": current_url},
+            )
+
+        if not request.is_htmx:
+            if thread.id in result.deleted_items:
+                # TODO: on delete redirect to threads list
+                raise NotImplementedError()
+
+            return redirect(current_url)
+
+        if thread.id in result.deleted_items:
+            # TODO: on delete redirect to threads list
+            raise NotImplementedError()
+
+        context_data = {
+            # TODO: header
+            # bottom breadcrumbs
+            "status_bars": self.get_thread_status_bars_data(request, thread),
+            "moderation_actions": get_moderation_action_choices(
+                self.get_thread_moderation_actions(request, thread),
+            ),
+        }
+
+        if thread_updates := result.thread_updates:
+            post_feed = self.get_post_feed(request, thread, [], thread_updates)
+            post_feed.set_animated_thread_updates(
+                [update.id for update in thread_updates]
+            )
+            context_data["thread_updates"] = post_feed.get_context_data()["items"]
+
+        response = render(
+            request, self.thread_moderation_htmx_template_name, context_data
+        )
+        set_moderation_response_headers(request, response)
+
+        return response
+
+    def moderate_thread(self, request: HttpRequest, thread: Thread) -> HttpResponse:
+        actions = self.get_thread_moderation_actions(request, thread)
+        action: ThreadModerationAction = get_moderation_action(
+            actions, request.POST["thread_moderation"]
+        )
+
+        action_obj = action(request, thread)
+        action_obj.validate()
+
+        result = action_obj.execute()
+
+        if isinstance(result, ModerationActionTemplateResult):
+            result.update_context(
+                {
+                    "moderation_action": action_obj,
+                    "moderation_type": "thread_moderation",
+                    "breadcrumbs": [],
+                }
+            )
+
+        return result
+
     def dispatch_posts_moderation(
         self, request: HttpRequest, thread_id: int, slug: str, page: int | None
     ) -> HttpResponse:
         try:
-            current_url = request.get_full_path()
             result = self.moderate_posts(request, thread_id, slug, page)
         except ValidationError as e:
             if request.is_htmx:
@@ -147,6 +233,8 @@ class DetailView(View):
 
             messages.error(request, e.message)
             return self.get(request, thread_id, slug, page)
+
+        current_url = request.get_full_path()
 
         if isinstance(result, ModerationActionTemplateResult):
             if request.is_htmx:
@@ -181,7 +269,7 @@ class DetailView(View):
             actions, request.POST["posts_moderation"]
         )
 
-        page_obj = self.get_thread_posts_page(request, thread, page)
+        page_obj = self.get_posts_page(request, thread, page)
         page_posts = list(page_obj.object_list)
         selected_posts = self.get_selected_posts(request, page_posts)
 
@@ -310,7 +398,7 @@ class DetailView(View):
         return {
             "id": "unapproved_posts",
             "template_name": self.unapproved_posts_status_bar_template_name,
-            "unapproved_post_url": self.backend.get_thread_post_unapproved_url(thread),
+            "unapproved_post_url": self.backend.get_post_unapproved_url(thread),
         }
 
     def get_watch_thread_data(
@@ -345,7 +433,7 @@ class DetailView(View):
         page: int | None,
         kwargs,
     ) -> dict:
-        page_obj = self.get_thread_posts_page(request, thread, page)
+        page_obj = self.get_posts_page(request, thread, page)
         posts = list(page_obj.object_list)
 
         if thread.has_updates:
@@ -376,14 +464,14 @@ class DetailView(View):
 
         return post_feed.get_context_data({"paginator": page_obj})
 
-    def get_thread_posts_page(
+    def get_posts_page(
         self,
         request: HttpRequest,
         thread: Thread,
         page: int | None,
     ):
-        queryset = self.get_thread_posts_queryset(request, thread)
-        paginator = self.get_thread_posts_paginator(request, queryset)
+        queryset = self.get_posts_queryset(request, thread)
+        paginator = self.get_posts_paginator(request, queryset)
 
         if page and page > paginator.num_pages:
             if not request.is_htmx:
@@ -588,11 +676,9 @@ class ThreadDetailView(DetailView, ThreadView):
             "misago:thread-watch", kwargs={"thread_id": thread.id, "slug": thread.slug}
         )
 
-    def get_thread_posts_queryset(
-        self, request: HttpRequest, thread: Thread
-    ) -> QuerySet:
+    def get_posts_queryset(self, request: HttpRequest, thread: Thread) -> QuerySet:
         return get_thread_detail_view_posts_queryset_hook(
-            super().get_thread_posts_queryset, request, thread
+            super().get_posts_queryset, request, thread
         )
 
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:

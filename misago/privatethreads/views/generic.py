@@ -48,10 +48,8 @@ class PrivateThreadView(GenericView):
         check_see_private_thread_permission(request.user_permissions, thread)
         return thread
 
-    def get_thread_posts_queryset(
-        self, request: HttpRequest, thread: Thread
-    ) -> QuerySet:
-        queryset = super().get_thread_posts_queryset(request, thread)
+    def get_posts_queryset(self, request: HttpRequest, thread: Thread) -> QuerySet:
+        queryset = super().get_posts_queryset(request, thread)
         return filter_private_thread_posts_queryset(
             request.user_permissions, thread, queryset
         )

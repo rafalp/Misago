@@ -65,7 +65,7 @@ class EditView(View):
         post_id: int | None = None,
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
-        post = self.get_thread_post(request, thread, post_id or thread.first_post_id)
+        post = self.get_post(request, thread, post_id or thread.first_post_id)
         formset = self.get_formset(request, post)
         return self.render(request, post, formset)
 
@@ -77,7 +77,7 @@ class EditView(View):
         post_id: int | None = None,
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
-        post = self.get_thread_post(request, thread, post_id or thread.first_post_id)
+        post = self.get_post(request, thread, post_id or thread.first_post_id)
         state = self.get_state(request, post)
 
         # Short-circuit post handler if "cancel" button was pressed
@@ -140,7 +140,7 @@ class EditView(View):
 
         if state.post.id != state.thread.first_post_id:
             counter_start = (
-                self.get_thread_posts_queryset(request, state.thread)
+                self.get_posts_queryset(request, state.thread)
                 .filter(id__lt=state.post.id)
                 .count()
             )
@@ -220,10 +220,8 @@ class ThreadPostEditView(EditView, ThreadView):
     template_name: str = "misago/thread_post_edit/index.html"
     template_name_htmx: str = "misago/thread_post_edit/form.html"
 
-    def get_thread_post(
-        self, request: HttpRequest, thread: Thread, post_id: int
-    ) -> Post:
-        post = super().get_thread_post(request, thread, post_id)
+    def get_post(self, request: HttpRequest, thread: Thread, post_id: int) -> Post:
+        post = super().get_post(request, thread, post_id)
         check_edit_thread_post_permission(
             request.user_permissions, post.category, post.thread, post
         )
@@ -252,10 +250,8 @@ class PrivateThreadPostEditView(EditView, PrivateThreadView):
     template_name: str = "misago/private_thread_post_edit/index.html"
     template_name_htmx: str = "misago/private_thread_post_edit/form.html"
 
-    def get_thread_post(
-        self, request: HttpRequest, thread: Thread, post_id: int
-    ) -> Post:
-        post = super().get_thread_post(request, thread, post_id)
+    def get_post(self, request: HttpRequest, thread: Thread, post_id: int) -> Post:
+        post = super().get_post(request, thread, post_id)
         check_edit_private_thread_post_permission(
             request.user_permissions, post.thread, post
         )
