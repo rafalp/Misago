@@ -59,7 +59,7 @@ from ..hooks import (
 from ..models import Post, Thread
 from ..paginator import ThreadPostsPaginator
 from .backend import ViewBackend, thread_backend
-from .generic import ThreadView
+from .generic import ThreadView, GenericThreadView
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -72,10 +72,9 @@ class PageOutOfRangeError(Exception):
         self.redirect_to = redirect_to
 
 
-class DetailView(View):
+class DetailView(GenericThreadView):
     backend: ViewBackend
 
-    thread_annotate_read_time: bool = True
     template_name: str
     template_partial_name: str
     feed_template_name: str = "misago/post_feed/index.html"
@@ -95,6 +94,8 @@ class DetailView(View):
     unapproved_posts_status_bar_template_name: str = (
         "misago/thread/unapproved_posts.html"
     )
+
+    # Dispatch
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         try:
@@ -128,23 +129,30 @@ class DetailView(View):
         self, request: HttpRequest, thread_id: int, slug: str, page: int | None = None
     ) -> HttpResponse:
         if "thread_moderation" in request.POST:
-            return self.dispatch_thread_moderation(request, thread_id, slug, page)
+            return self.handle_thread_moderation(request, thread_id, slug, page)
 
         if "post_moderation" in request.POST:
-            return self.dispatch_post_moderation(request, thread_id, slug, page)
+            return self.handle_post_moderation(request, thread_id, slug, page)
 
         if "posts_moderation" in request.POST:
-            return self.dispatch_posts_moderation(request, thread_id, slug, page)
+            return self.handle_posts_moderation(request, thread_id, slug, page)
 
         return self.get(request, thread_id, slug, page)
 
-    def dispatch_thread_moderation(
+    # View overrides
+
+    def get_thread(self, *args, **kwargs) -> Thread:
+        return super().get_thread(*args, annotate_read_time=True, **kwargs)
+
+    # Moderation
+
+    def handle_thread_moderation(
         self, request: HttpRequest, thread_id: int, slug: str, page: int | None
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
         try:
-            result = self.moderate_thread(request, thread)
+            result = self.execute_thread_moderation_action(request, thread)
         except ValidationError as e:
             if request.is_htmx:
                 raise
@@ -200,7 +208,9 @@ class DetailView(View):
 
         return response
 
-    def moderate_thread(self, request: HttpRequest, thread: Thread) -> HttpResponse:
+    def execute_thread_moderation_action(
+        self, request: HttpRequest, thread: Thread
+    ) -> HttpResponse:
         actions = self.get_thread_moderation_actions(request, thread)
         action: ThreadModerationAction = get_moderation_action(
             actions, request.POST["thread_moderation"]
@@ -222,11 +232,13 @@ class DetailView(View):
 
         return result
 
-    def dispatch_posts_moderation(
+    def handle_posts_moderation(
         self, request: HttpRequest, thread_id: int, slug: str, page: int | None
     ) -> HttpResponse:
         try:
-            result = self.moderate_posts(request, thread_id, slug, page)
+            result = self.execute_posts_moderation_action(
+                request, thread_id, slug, page
+            )
         except ValidationError as e:
             if request.is_htmx:
                 raise
@@ -259,7 +271,7 @@ class DetailView(View):
 
         return redirect(current_url)
 
-    def moderate_posts(
+    def execute_posts_moderation_action(
         self, request: HttpRequest, thread_id: int, slug: str, page: int | None
     ) -> ModerationActionResult:
         thread = self.get_thread(request, thread_id)
@@ -324,6 +336,8 @@ class DetailView(View):
             except (TypeError, ValueError):
                 pass
         return posts_id
+
+    # Context data
 
     def get_context_data(
         self,
@@ -423,9 +437,6 @@ class DetailView(View):
             "not_watched": notifications == 0,
         }
 
-    def get_watch_thread_url(self, thread: Thread) -> str:
-        raise NotImplementedError()
-
     def get_post_feed_data(
         self,
         request: HttpRequest,
@@ -499,8 +510,29 @@ class DetailView(View):
             )
         return list(reversed(queryset[: request.settings.thread_updates_per_page]))
 
-    def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
-        return False
+    def get_reply_context_data(self, request: HttpRequest, thread: Thread) -> dict:
+        try:
+            self.check_reply_thread_permission(request, thread)
+        except PermissionDenied as exc:
+            return {
+                "permission": False,
+                "template_name": self.reply_error_template_name,
+                "error": exc,
+            }
+
+        return {
+            "permission": True,
+            "template_name": self.reply_template_name,
+            "formset": self.get_reply_formset(request, thread),
+            "url": self.get_reply_url(request, thread),
+        }
+
+    def get_reply_formset(
+        self, request: HttpRequest, thread: Thread
+    ) -> ThreadReplyFormset:
+        raise NotImplementedError
+
+    # Read tracker
 
     def update_thread_read_time(
         self,
@@ -551,42 +583,32 @@ class DetailView(View):
                 user.unread_notifications = new_unread_notifications
                 user.save(update_fields=["unread_notifications"])
 
-    def get_reply_context_data(self, request: HttpRequest, thread: Thread) -> dict:
-        try:
-            self.check_reply_thread_permission(request, thread)
-        except PermissionDenied as exc:
-            return {
-                "permission": False,
-                "template_name": self.reply_error_template_name,
-                "error": exc,
-            }
+    # Permissions
 
-        return {
-            "permission": True,
-            "template_name": self.reply_template_name,
-            "formset": self.get_reply_formset(request, thread),
-            "url": self.get_reply_url(request, thread),
-        }
+    def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:
+        return False
 
     def check_reply_thread_permission(self, request: HttpRequest, thread: Thread):
+        raise NotImplementedError()
+
+    # Urls
+
+    def get_watch_thread_url(self, thread: Thread) -> str:
         raise NotImplementedError()
 
     def get_reply_url(self, request: HttpRequest, thread: Thread) -> str:
         raise NotImplementedError()
 
-    def get_reply_formset(
-        self, request: HttpRequest, thread: Thread
-    ) -> ThreadReplyFormset:
-        raise NotImplementedError
 
-
-class ThreadDetailView(DetailView, ThreadView):
+class ThreadDetailView(DetailView):
     backend = thread_backend
 
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
     moderation_page_template_name: str = "misago/thread/moderation_page.html"
     moderation_modal_template_name: str = "misago/thread/moderation_modal.html"
+
+    # Dispatch
 
     def get(
         self,
@@ -610,6 +632,8 @@ class ThreadDetailView(DetailView, ThreadView):
                 return poll_response
 
         return super().post(request, thread_id, slug, page)
+
+    # Moderation
 
     def get_thread_moderation_actions(
         self, request: HttpRequest, thread: Thread

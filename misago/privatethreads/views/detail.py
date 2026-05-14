@@ -24,19 +24,22 @@ from ..hooks import (
     get_private_thread_detail_view_thread_queryset_hook,
 )
 from .backend import private_thread_backend
-from .generic import PrivateThreadView
 from .members import get_private_thread_members_context_data
 
 if TYPE_CHECKING:
     from ...users.models import User
 
 
-class PrivateThreadDetailView(DetailView, PrivateThreadView):
+class PrivateThreadDetailView(DetailView):
     backend = private_thread_backend
 
-    thread_get_members = True
     template_name: str = "misago/private_thread/index.html"
     template_partial_name: str = "misago/private_thread/partial.html"
+
+    # View overrides
+
+    def get_thread(self, *args, **kwargs) -> Thread:
+        return super().get_thread(*args, select_members=True, **kwargs)
 
     def get_thread_queryset(self, request: HttpRequest) -> Thread:
         return get_private_thread_detail_view_thread_queryset_hook(
@@ -70,7 +73,7 @@ class PrivateThreadDetailView(DetailView, PrivateThreadView):
         self, request: HttpRequest, thread: Thread
     ) -> dict:
         return get_private_thread_members_context_data(
-            request, thread, self.owner, self.members
+            request, thread, thread.private_thread_owner, thread.private_thread_members
         )
 
     def get_watch_thread_url(self, thread: Thread) -> str:

@@ -10,6 +10,7 @@ from ...permissions.privatethreads import (
     check_see_private_thread_permission,
     check_see_private_thread_post_permission,
     filter_private_thread_posts_queryset,
+    filter_private_thread_updates_queryset,
 )
 from ...permissions.proxy import UserPermissionsProxy
 from ...threads.models import Post, Thread
@@ -32,6 +33,7 @@ class PrivateThreadViewBackend(ViewBackend):
         self,
         request: HttpRequest,
         thread_id: int,
+        *,
         annotate_read_time: bool = False,
         select_related: bool | Iterable[str] = ("category",),
         select_members: bool = False,
@@ -40,24 +42,35 @@ class PrivateThreadViewBackend(ViewBackend):
         check_private_threads_permission(request.user_permissions)
 
         thread = super().get_thread(
-            request, thread_id, annotate_read_time, select_related, for_update
+            request,
+            thread_id,
+            annotate_read_time=annotate_read_time,
+            select_related=select_related,
+            for_update=for_update,
         )
+
         if select_members:
             get_private_thread_members(thread)
 
         check_see_private_thread_permission(request.user_permissions, thread)
+
         return thread
 
     def get_posts_queryset(
         self,
         request: HttpRequest,
         thread: Thread,
+        *,
         select_related: bool | Iterable[str] = False,
         for_update: bool = False,
     ) -> QuerySet:
         queryset = super().get_posts_queryset(
-            request, thread, select_related, for_update
+            request,
+            thread,
+            select_related=select_related,
+            for_update=for_update,
         )
+
         return filter_private_thread_posts_queryset(
             request.user_permissions, thread, queryset
         )
@@ -67,18 +80,36 @@ class PrivateThreadViewBackend(ViewBackend):
         request: HttpRequest,
         thread: Thread,
         post_id: int,
+        *,
         select_related: bool | Iterable[str] = False,
         for_content: bool = False,
         for_update: bool = False,
     ) -> Post:
         post = super().get_post(
-            request, thread, post_id, select_related, for_content, for_update
+            request,
+            thread,
+            post_id,
+            select_related=select_related,
+            for_content=for_content,
+            for_update=for_update,
         )
+
         if for_content:
             check_see_private_thread_post_permission(
                 request.user_permissions, thread, post
             )
+
         return post
+
+    def get_thread_updates_queryset(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+    ) -> QuerySet:
+        queryset = super().get_thread_updates_queryset(request, thread)
+        return filter_private_thread_updates_queryset(
+            request.user_permissions, thread, queryset
+        )
 
     # Thread utils
 
@@ -125,7 +156,7 @@ class PrivateThreadViewBackend(ViewBackend):
     ) -> PrivateThreadPostFeed:
         post_feed = PrivateThreadPostFeed(request, thread, posts, thread_updates)
 
-        if self.has_moderator_permission(request, thread):
+        if self.has_moderator_permission(request.user_permissions, thread):
             post_feed.set_moderation(True)
 
         return post_feed

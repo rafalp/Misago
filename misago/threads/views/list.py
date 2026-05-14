@@ -200,10 +200,10 @@ class ListView(View):
             "solution_post_url": reverse("misago:thread-post-solution", kwargs=kwargs),
         }
 
-    def dispatch_mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
+    def handle_mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         current_url = request.get_full_path()
         if request.user.is_authenticated:
-            if response := self.mark_as_read(request, kwargs):
+            if response := self.mark_threads_as_read(request, kwargs):
                 return response
 
         if request.is_htmx:
@@ -211,7 +211,9 @@ class ListView(View):
 
         return redirect(current_url)
 
-    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
+    def mark_threads_as_read(
+        self, request: HttpRequest, kwargs: dict
+    ) -> HttpResponse | None:
         raise NotImplementedError()
 
     @transaction.atomic
@@ -230,16 +232,17 @@ class ListView(View):
             for category_id in categories_ids
         )
 
-    def dispatch_moderation(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
+    def handle_moderation(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         try:
-            current_url = request.get_full_path()
-            result = self.moderate_threads(request, kwargs)
+            result = self.execute_moderation_action(request, kwargs)
         except ValidationError as e:
             if request.is_htmx:
                 raise
 
             messages.error(request, e.message)
             return self.get(request, **kwargs)
+
+        current_url = request.get_full_path()
 
         if isinstance(result, ModerationActionTemplateResult):
             if request.is_htmx:
@@ -266,7 +269,7 @@ class ListView(View):
 
         return redirect(current_url)
 
-    def moderate_threads(
+    def execute_moderation_action(
         self, request: HttpRequest, kwargs: dict
     ) -> ModerationActionResult:
         raise NotImplementedError()
@@ -378,14 +381,16 @@ class ThreadListView(ListView):
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
         if "mark_as_read" in request.POST:
-            return self.dispatch_mark_as_read(request, kwargs)
+            return self.handle_mark_as_read(request, kwargs)
 
         if "moderation" in request.POST:
-            return self.dispatch_moderation(request, kwargs)
+            return self.handle_moderation(request, kwargs)
 
         return self.get(request, **kwargs)
 
-    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
+    def mark_threads_as_read(
+        self, request: HttpRequest, kwargs: dict
+    ) -> HttpResponse | None:
         if not request.POST.get("confirm"):
             return render(request, self.mark_as_read_template_name)
 
@@ -395,7 +400,7 @@ class ThreadListView(ListView):
             request, pgettext("mark threads as read", "Threads marked as read")
         )
 
-    def moderate_threads(
+    def execute_moderation_action(
         self, request: HttpRequest, kwargs: dict
     ) -> ModerationActionResult:
         actions = self.get_moderation_actions(request)
@@ -707,14 +712,16 @@ class CategoryThreadListView(ListView):
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
         if "mark_as_read" in request.POST:
-            return self.dispatch_mark_as_read(request, kwargs)
+            return self.handle_mark_as_read(request, kwargs)
 
         if "moderation" in request.POST:
-            return self.dispatch_moderation(request, kwargs)
+            return self.handle_moderation(request, kwargs)
 
         return self.get(request, **kwargs)
 
-    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
+    def mark_threads_as_read(
+        self, request: HttpRequest, kwargs: dict
+    ) -> HttpResponse | None:
         category = self.get_category(request, kwargs)
 
         if not request.POST.get("confirm"):
@@ -743,7 +750,7 @@ class CategoryThreadListView(ListView):
             request, pgettext("mark threads as read", "Category marked as read")
         )
 
-    def moderate_threads(
+    def execute_moderation_action(
         self, request: HttpRequest, kwargs: dict
     ) -> ModerationActionResult:
         category = self.get_category(request, kwargs)

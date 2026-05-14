@@ -12,6 +12,7 @@ from ...permissions.threads import (
     check_see_thread_permission,
     check_see_thread_post_permission,
     filter_thread_posts_queryset,
+    filter_thread_updates_queryset,
 )
 from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
@@ -40,6 +41,7 @@ class ViewBackend(ABC):
         self,
         request: HttpRequest,
         thread_id: int,
+        *,
         annotate_read_time: bool = False,
         select_related: bool | Iterable[str] = ("category",),
         for_update: bool = False,
@@ -92,11 +94,17 @@ class ViewBackend(ABC):
         request: HttpRequest,
         thread: Thread,
         post_id: int,
+        *,
         select_related: bool | Iterable[str] = False,
         for_content: bool = False,
         for_update: bool = False,
     ) -> Post:
-        queryset = self.get_posts_queryset(request, thread, select_related, for_update)
+        queryset = self.get_posts_queryset(
+            request,
+            thread,
+            select_related=select_related,
+            for_update=for_update,
+        )
         try:
             post = queryset.get(id=post_id)
             if Thread.category.is_cached(thread):
@@ -109,6 +117,32 @@ class ViewBackend(ABC):
     def get_post_number(self, request: HttpRequest, post: Post) -> int:
         queryset = self.get_posts_queryset(request, post.thread).filter(id__lte=post.id)
         return queryset.count()
+
+    def get_thread_updates_queryset(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+    ) -> QuerySet:
+        return ThreadUpdate.objects.filter(thread=thread).order_by("-id")
+
+    def get_thread_update(
+        self, request: HttpRequest, thread: Thread, thread_update_id: int
+    ) -> ThreadUpdate:
+        queryset = self.get_thread_updates_queryset(request, thread)
+        if self.thread_update_select_related is True:
+            queryset = queryset.select_related()
+        elif self.thread_update_select_related:
+            queryset = queryset.select_related(*self.thread_update_select_related)
+
+        try:
+            thread_update = queryset.get(id=thread_update_id)
+        except ThreadUpdate.DoesNotExist:
+            raise Http404()
+
+        thread_update.category = thread.category
+        thread_update.thread = thread
+
+        return thread_update
 
     # Thread utils
 
@@ -254,25 +288,36 @@ class ThreadViewBackend(ViewBackend):
         self,
         request: HttpRequest,
         thread_id: int,
+        *,
         annotate_read_time: bool = False,
         select_related: bool | Iterable[str] = ("category",),
         for_update: bool = False,
     ) -> Thread:
         thread = super().get_thread(
-            request, thread_id, annotate_read_time, select_related, for_update
+            request,
+            thread_id,
+            annotate_read_time=annotate_read_time,
+            select_related=select_related,
+            for_update=for_update,
         )
+
         check_see_thread_permission(request.user_permissions, thread.category, thread)
+
         return thread
 
     def get_posts_queryset(
         self,
         request: HttpRequest,
         thread: Thread,
+        *,
         select_related: bool | Iterable[str] = False,
         for_update: bool = False,
     ) -> QuerySet:
         queryset = super().get_posts_queryset(
-            request, thread, select_related, for_update
+            request,
+            thread,
+            select_related=select_related,
+            for_update=for_update,
         )
         return filter_thread_posts_queryset(request.user_permissions, thread, queryset)
 
@@ -281,18 +326,36 @@ class ThreadViewBackend(ViewBackend):
         request: HttpRequest,
         thread: Thread,
         post_id: int,
+        *,
         select_related: bool | Iterable[str] = False,
         for_content: bool = False,
         for_update: bool = False,
     ) -> Post:
         post = super().get_post(
-            request, thread, post_id, select_related, for_content, for_update
+            request,
+            thread,
+            post_id,
+            select_related=select_related,
+            for_content=for_content,
+            for_update=for_update,
         )
+
         if for_content:
             check_see_thread_post_permission(
                 request.user_permissions, thread.category, thread, post
             )
+
         return post
+
+    def get_thread_updates_queryset(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+    ) -> QuerySet:
+        queryset = super().get_thread_updates_queryset(request, thread)
+        return filter_thread_updates_queryset(
+            request.user_permissions, thread, queryset
+        )
 
     # Thread utils
 

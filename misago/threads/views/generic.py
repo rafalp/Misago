@@ -27,56 +27,57 @@ from .backend import ViewBackend
 class GenericThreadView(View):
     backend: ViewBackend
 
-    thread_select_related: Iterable[str] | bool | None = ("category",)
-
     # Querysets and DB getters
 
     def get_thread(
         self,
         request: HttpRequest,
         thread_id: int,
+        *,
         annotate_read_time: bool = False,
         select_related: bool | Iterable[str] | None = None,
         for_update: bool = False,
         **kwargs,
     ) -> Thread:
-        if select_related is None:
-            select_related_value = None
-        elif select_related is False:
-            select_related_value = self.thread_select_related
-        else:
-            select_related_value = select_related
-
         return self.backend.get_thread(
             request,
             thread_id,
-            annotate_read_time,
-            select_related_value,
-            for_update,
+            annotate_read_time=annotate_read_time,
+            select_related=select_related,
+            for_update=for_update,
             **kwargs,
         )
 
     def get_thread_queryset(
         self,
         request: HttpRequest,
+        *,
         annotate_read_time: bool = False,
         select_related: bool | Iterable[str] = False,
         **kwargs,
     ) -> QuerySet:
         return self.backend.get_thread_queryset(
-            request, annotate_read_time, select_related, **kwargs
+            request,
+            annotate_read_time=annotate_read_time,
+            select_related=select_related,
+            **kwargs,
         )
 
     def get_posts_queryset(
         self,
         request: HttpRequest,
         thread: Thread,
+        *,
         select_related: bool | Iterable[str] = False,
         for_update: bool = False,
         **kwargs,
     ) -> QuerySet:
         return self.backend.get_posts_queryset(
-            request, thread, select_related, for_update, **kwargs
+            request,
+            thread,
+            select_related=select_related,
+            for_update=for_update,
+            **kwargs,
         )
 
     def get_post(
@@ -84,17 +85,34 @@ class GenericThreadView(View):
         request: HttpRequest,
         thread: Thread,
         post_id: int,
+        *,
         select_related: bool | Iterable[str] = False,
         for_content: bool = False,
         for_update: bool = False,
         **kwargs,
     ) -> Post:
         return self.backend.get_post(
-            request, thread, post_id, select_related, for_content, for_update, **kwargs
+            request,
+            thread,
+            post_id,
+            select_related=select_related,
+            for_content=for_content,
+            for_update=for_update,
+            **kwargs,
         )
 
     def get_post_number(self, request: HttpRequest, post: Post) -> int:
         return self.backend.get_post_number(request, post)
+
+    def get_thread_updates_queryset(
+        self, request: HttpRequest, thread: Thread
+    ) -> QuerySet:
+        return self.backend.get_thread_updates_queryset(request, thread)
+
+    def get_thread_update(
+        self, request: HttpRequest, thread: Thread, thread_update_id: int
+    ) -> ThreadUpdate:
+        return self.backend.get_thread_update(request, thread, thread_update_id)
 
     # Thread utils
 

@@ -205,10 +205,7 @@ class Thread(PluginDataModel):
 
     @cached_property
     def private_thread_owner(self) -> Optional["User"]:
-        raise RuntimeError(
-            "'Thread.private_thread_owner' can't be accessed before calling "
-            "'get_private_thread_members' on the thread to populate it."
-        )
+        return None
 
     @cached_property
     def private_thread_owner_id(self) -> int | None:
@@ -220,10 +217,7 @@ class Thread(PluginDataModel):
 
     @cached_property
     def private_thread_members(self) -> list["User"]:
-        raise RuntimeError(
-            "'Thread.private_thread_members' can't be accessed before calling "
-            "'get_private_thread_members' on the thread to populate it."
-        )
+        return []
 
     @cached_property
     def private_thread_member_ids(self) -> list[int]:

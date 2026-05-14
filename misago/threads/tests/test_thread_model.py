@@ -1,5 +1,3 @@
-import pytest
-
 from ...privatethreads.members import get_private_thread_members
 from ...privatethreads.models import PrivateThreadMember
 
@@ -57,14 +55,13 @@ def test_thread_private_thread_owner_property_returns_populated_thread_owner(
     assert thread.private_thread_owner == other_user
 
 
-def test_thread_private_thread_owner_property_raises_error_if_accessed_without_populating(
+def test_thread_private_thread_owner_property_returns_none_if_accessed_without_populating(
     thread, user, other_user
 ):
     PrivateThreadMember.objects.create(thread=thread, user=user)
     PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
 
-    with pytest.raises(RuntimeError):
-        thread.private_thread_owner
+    assert thread.private_thread_owner is None
 
 
 def test_thread_private_thread_members_property_returns_populated_members_list(
@@ -78,14 +75,13 @@ def test_thread_private_thread_members_property_returns_populated_members_list(
     assert thread.private_thread_members == [user, other_user]
 
 
-def test_thread_private_thread_members_property_raises_error_if_accessed_without_populating(
+def test_thread_private_thread_members_property_returns_empty_list_if_accessed_without_populating(
     thread, user, other_user
 ):
     PrivateThreadMember.objects.create(thread=thread, user=user)
     PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
 
-    with pytest.raises(RuntimeError):
-        thread.private_thread_members
+    assert thread.private_thread_members == []
 
 
 def test_thread_private_thread_member_ids_property_returns_list_of_private_thread_member_ids(

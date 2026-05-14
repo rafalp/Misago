@@ -52,11 +52,13 @@ class PrivateThreadListView(ListView):
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
         if "mark_as_read" in request.POST:
-            return self.dispatch_mark_as_read(request, kwargs)
+            return self.handle_mark_as_read(request, kwargs)
 
         return self.get(request, **kwargs)
 
-    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
+    def mark_threads_as_read(
+        self, request: HttpRequest, kwargs: dict
+    ) -> HttpResponse | None:
         if not request.POST.get("confirm"):
             return render(
                 request,
