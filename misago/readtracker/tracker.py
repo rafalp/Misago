@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Iterable
 
 from django.http import HttpRequest
 from django.db.models import FilteredRelation, OuterRef, Q
+from django.utils import timezone
 
 from ..categories.models import Category
 from ..threads.models import Post, Thread
@@ -185,18 +186,19 @@ def mark_category_read(user: "User", category: Category, *, force_update: bool =
         raise ValueError("'Category.last_posted_at' can't be 'None'")
 
     create_row = True
+    read_time = timezone.now()
 
     if force_update or getattr(category, "user_readcategory", None):
         create_row = not ReadCategory.objects.filter(
             user=user,
             category=category,
-        ).update(read_time=category.last_posted_at)
+        ).update(read_time=read_time)
 
     if create_row:
         ReadCategory.objects.create(
             user=user,
             category=category,
-            read_time=category.last_posted_at,
+            read_time=read_time,
         )
 
     ReadThread.objects.filter(user=user, category=category).delete()

@@ -1,6 +1,8 @@
 from datetime import timedelta
+from unittest.mock import patch
 
 from django.urls import reverse
+from django.utils import timezone
 
 from ...categories.synchronize import synchronize_category
 from ...conf.test import override_dynamic_settings
@@ -32,22 +34,26 @@ def test_private_thread_detail_view_marks_category_as_read_for_user(
     private_threads_category.last_posted_at = user_private_thread.last_posted_at
     private_threads_category.save()
 
-    response = user_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        ),
-    )
+    category_read_time = timezone.now()
+    with patch(
+        "misago.readtracker.tracker.timezone.now", return_value=category_read_time
+    ):
+        response = user_client.get(
+            reverse(
+                "misago:private-thread",
+                kwargs={
+                    "thread_id": user_private_thread.id,
+                    "slug": user_private_thread.slug,
+                },
+            ),
+        )
     assert_contains(response, user_private_thread.title)
 
     assert not ReadThread.objects.exists()
     ReadCategory.objects.get(
         user=user,
         category=private_threads_category,
-        read_time=private_threads_category.last_posted_at,
+        read_time=category_read_time,
     )
 
 

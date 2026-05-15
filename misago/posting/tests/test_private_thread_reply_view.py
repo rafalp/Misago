@@ -1,6 +1,9 @@
+from unittest.mock import patch
+
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
+from django.utils import timezone
 
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
@@ -479,24 +482,30 @@ def test_private_thread_reply_view_posts_new_reply_in_quick_reply_with_htmx(
 def test_private_thread_reply_view_posted_reply_in_quick_reply_with_htmx_is_read(
     user_client, user, other_user_private_thread, mock_notify_on_new_thread_reply
 ):
+
     mark_thread_read(
         user, other_user_private_thread, other_user_private_thread.last_post.posted_at
     )
 
-    response = user_client.post(
-        reverse(
-            "misago:private-thread-reply",
-            kwargs={
-                "thread_id": other_user_private_thread.id,
-                "slug": other_user_private_thread.slug,
+    category_read_time = timezone.now()
+    with patch(
+        "misago.readtracker.tracker.timezone.now", return_value=category_read_time
+    ):
+        response = user_client.post(
+            reverse(
+                "misago:private-thread-reply",
+                kwargs={
+                    "thread_id": other_user_private_thread.id,
+                    "slug": other_user_private_thread.slug,
+                },
+            ),
+            {
+                "posting-post-post": "This is a reply!",
+                "quick_reply": "true",
             },
-        ),
-        {
-            "posting-post-post": "This is a reply!",
-            "quick_reply": "true",
-        },
-        headers={"hx-request": "true"},
-    )
+            headers={"hx-request": "true"},
+        )
+
     assert response.status_code == 200
 
     reply = other_user_private_thread.post_set.last()
@@ -509,7 +518,7 @@ def test_private_thread_reply_view_posted_reply_in_quick_reply_with_htmx_is_read
     ReadCategory.objects.get(
         user=user,
         category=other_user_private_thread.category,
-        read_time=reply.posted_at,
+        read_time=category_read_time,
     )
 
 
