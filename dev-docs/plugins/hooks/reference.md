@@ -55,19 +55,6 @@ Hooks instances are importable from the following Python modules:
 - [`context_processor_hook`](./context-processor-hook.md)
 
 
-## `misago.postedits.hooks`
-
-`misago.postedits.hooks` defines the following hooks:
-
-- [`create_post_edit_hook`](./create-post-edit-hook.md)
-- [`delete_post_edit_hook`](./delete-post-edit-hook.md)
-- [`get_private_thread_post_edits_view_context_data_hook`](./get-private-thread-post-edits-view-context-data-hook.md)
-- [`get_thread_post_edits_view_context_data_hook`](./get-thread-post-edits-view-context-data-hook.md)
-- [`hide_post_edit_hook`](./hide-post-edit-hook.md)
-- [`restore_post_edit_hook`](./restore-post-edit-hook.md)
-- [`unhide_post_edit_hook`](./unhide-post-edit-hook.md)
-
-
 ## `misago.likes.hooks`
 
 `misago.likes.hooks` defines the following hooks:
@@ -197,6 +184,19 @@ Hooks instances are importable from the following Python modules:
 - [`save_thread_poll_hook`](./save-thread-poll-hook.md)
 - [`validate_poll_choices_hook`](./validate-poll-choices-hook.md)
 - [`validate_poll_question_hook`](./validate-poll-question-hook.md)
+
+
+## `misago.postedits.hooks`
+
+`misago.postedits.hooks` defines the following hooks:
+
+- [`create_post_edit_hook`](./create-post-edit-hook.md)
+- [`delete_post_edit_hook`](./delete-post-edit-hook.md)
+- [`get_private_thread_post_edits_view_context_data_hook`](./get-private-thread-post-edits-view-context-data-hook.md)
+- [`get_thread_post_edits_view_context_data_hook`](./get-thread-post-edits-view-context-data-hook.md)
+- [`hide_post_edit_hook`](./hide-post-edit-hook.md)
+- [`restore_post_edit_hook`](./restore-post-edit-hook.md)
+- [`unhide_post_edit_hook`](./unhide-post-edit-hook.md)
 
 
 ## `misago.posting.hooks`
