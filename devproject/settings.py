@@ -176,9 +176,16 @@ LOGIN_URL = "misago:login"
 
 LOGOUT_URL = "misago:logout"
 
-MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
-] + MISAGO_MIDDLEWARE
+MIDDLEWARE = (
+    [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        "devproject.middleware.response_time_middleware",
+    ]
+    + MISAGO_MIDDLEWARE
+    + [
+        "devproject.middleware.view_time_middleware",
+    ]
+)
 
 ROOT_URLCONF = "devproject.urls"
 
@@ -345,13 +352,6 @@ EMAIL_HOST = "mailpit"
 EMAIL_PORT = "1025"
 
 DEFAULT_FROM_EMAIL = "Misago <misago@example.com>"
-
-
-# Set response header with the request processing time
-
-MIDDLEWARE = [
-    "devproject.middleware.time_middleware",
-] + MIDDLEWARE
 
 
 # Display debug toolbar if IN_MISAGO_DOCKER enviroment var is set to "1"
