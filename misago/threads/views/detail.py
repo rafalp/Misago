@@ -332,6 +332,10 @@ class DetailView(GenericThreadView):
 
         post_feed = self.get_post_feed(request, thread, [post])
         post_feed.set_animated_posts(result.updated_items)
+
+        if post.id != thread.first_post_id:
+            post_feed.set_counter_start(self.get_post_number(request, post) - 1)
+
         context_data["update_posts"] = post_feed.get_feed_data()
 
         response = render(request, self.moderation_partial_template_name, context_data)
