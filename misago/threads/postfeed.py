@@ -6,6 +6,9 @@ from django.urls import reverse
 
 from ..categories.models import Category
 from ..likes.postfeed import get_post_feed_post_likes_data
+from ..moderation.actions import PostModerationAction
+from ..moderation.post import get_thread_post_moderation_actions
+from ..moderation.views import get_moderation_action_choices
 from ..permissions.checkutils import check_permissions
 from ..permissions.edits import (
     can_see_post_edit_count,
@@ -35,7 +38,6 @@ from .prefetch import prefetch_post_feed_data
 
 class PostFeed:
     template_name: str = "misago/post_feed/index.html"
-    template_name_htmx_append: str = "misago/post_feed/htmx_append.html"
     template_name_htmx_like: str = "misago/post_feed/htmx_like.html"
     post_template_name: str = "misago/post_feed/post.html"
     post_locked_template_name: str = "misago/post_feed/post_locked.html"
@@ -114,7 +116,6 @@ class PostFeed:
     def get_context_data(self, context: dict | None = None) -> dict:
         context_data = {
             "template_name": self.template_name,
-            "template_name_htmx_append": self.template_name_htmx_append,
             "items": self.get_feed_data(),
         }
 
@@ -198,6 +199,7 @@ class PostFeed:
             "lock_solution_url": None,
             "unlock_solution_url": None,
             "moderation": self.moderation,
+            "moderation_actions": [],
             "is_new": post.id in self.unread_posts,
             "is_solution": False,
             "is_hidden": post.is_hidden,
@@ -329,6 +331,10 @@ class PostFeed:
         if item["attachments"]:
             item["attachments"].sort(reverse=True, key=lambda a: a.id)
 
+        item["moderation_actions"] = get_moderation_action_choices(
+            self.get_post_moderation_actions(post)
+        )
+
         item["likes"] = get_post_feed_post_likes_data(
             self.request,
             post,
@@ -419,6 +425,9 @@ class PostFeed:
                             "slug": self.thread.slug,
                         },
                     )
+
+    def get_post_moderation_actions(self, post: Post) -> list[PostModerationAction]:
+        return []
 
     def get_post_locked_data(self) -> dict:
         return {"template_name": self.post_locked_template_name}
@@ -561,6 +570,11 @@ class ThreadPostFeed(PostFeed):
             )
 
         return can_edit_post
+
+    def get_post_moderation_actions(self, post: Post) -> list[PostModerationAction]:
+        return get_thread_post_moderation_actions(
+            self.user_permissions, post, self.request
+        )
 
     def get_edit_thread_post_url(self) -> str:
         return reverse(

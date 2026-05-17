@@ -8,12 +8,7 @@
 
 
 {% block content %}
-<div class="page page-threads">
-  {% if is_index %}
-    {% include "misago/index_header.html" %}
-  {% else %}
-    {% include "misago/thread_list/header.html" %}
-  {% endif %}
+<div class="page page-thread">
   <div class="container page-container">
 
     <form method="post">
@@ -23,7 +18,9 @@
       {% for post in selection %}
         <input type="hidden" name="threads" value="{{ post.id }}" />
       {% endfor %}
-
+      {% if moderation_type == "post_moderation" and post %}
+        <input type="hidden" name="post" value="{{ post.id }}" />
+      {% endif %}
       <div class="panel panel-default panel-form">
         <div class="panel-heading">
           <h3 class="panel-title">

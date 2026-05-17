@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import QuerySet
 from django.http import (
+    Http404,
     HttpRequest,
     HttpResponse,
 )
@@ -22,6 +23,7 @@ from ...moderation.actions import (
     PostsModerationAction,
     ThreadModerationAction,
 )
+from ...moderation.post import get_thread_post_moderation_actions
 from ...moderation.posts import get_thread_posts_moderation_actions
 from ...moderation.thread import get_thread_moderation_actions
 from ...moderation.views import (
@@ -82,9 +84,7 @@ class DetailView(GenericThreadView):
     reply_error_template_name: str = "misago/thread/reply_error.html"
     reply_template_name: str = "misago/quick_reply/form.html"
     watch_thread_template_name: str = "misago/thread/watch_thread.html"
-    thread_moderation_htmx_template_name: str = (
-        "misago/thread/thread_moderation_htmx.html"
-    )
+    moderation_partial_template_name: str = "misago/thread/moderation_partial.html"
     locked_thread_status_bar_template_name: str = "misago/thread/locked_thread.html"
     unapproved_thread_status_bar_template_name: str = (
         "misago/thread/unapproved_thread.html"
@@ -158,26 +158,20 @@ class DetailView(GenericThreadView):
             messages.error(request, e.message)
             return self.get(request, thread_id, slug, page)
 
-        current_url = request.get_full_path()
-
         if isinstance(result, ModerationActionTemplateResult):
             if request.is_htmx:
                 template_name = self.moderation_modal_template_name
             else:
                 template_name = self.moderation_page_template_name
 
-            return result.render(
-                request,
-                template_name,
-                {"cancel_url": current_url},
-            )
+            return result.render(request, template_name)
 
         if not request.is_htmx:
             if thread.id in result.deleted_items:
                 # TODO: on delete redirect to threads list
                 raise NotImplementedError()
 
-            return redirect(current_url)
+            return redirect(request.get_full_path())
 
         if thread.id in result.deleted_items:
             # TODO: on delete redirect to threads list
@@ -199,9 +193,7 @@ class DetailView(GenericThreadView):
             )
             context_data["thread_updates"] = post_feed.get_context_data()["items"]
 
-        response = render(
-            request, self.thread_moderation_htmx_template_name, context_data
-        )
+        response = render(request, self.moderation_partial_template_name, context_data)
         set_moderation_response_headers(request, response)
 
         return response
@@ -224,7 +216,9 @@ class DetailView(GenericThreadView):
                 {
                     "moderation_action": action_obj,
                     "moderation_type": "thread_moderation",
-                    "breadcrumbs": [],
+                    "category": thread.category,
+                    "thread": thread,
+                    "breadcrumbs": self.get_breadcrumbs(request, thread),
                 }
             )
 
@@ -233,10 +227,10 @@ class DetailView(GenericThreadView):
     def handle_posts_moderation(
         self, request: HttpRequest, thread_id: int, slug: str, page: int | None
     ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+
         try:
-            result = self.execute_posts_moderation_action(
-                request, thread_id, slug, page
-            )
+            result = self.execute_posts_moderation_action(request, thread, page)
         except ValidationError as e:
             if request.is_htmx:
                 raise
@@ -244,19 +238,13 @@ class DetailView(GenericThreadView):
             messages.error(request, e.message)
             return self.get(request, thread_id, slug, page)
 
-        current_url = request.get_full_path()
-
         if isinstance(result, ModerationActionTemplateResult):
             if request.is_htmx:
                 template_name = self.moderation_modal_template_name
             else:
                 template_name = self.moderation_page_template_name
 
-            return result.render(
-                request,
-                template_name,
-                {"cancel_url": current_url},
-            )
+            return result.render(request, template_name)
 
         if request.is_htmx:
             kwargs = {}
@@ -267,13 +255,11 @@ class DetailView(GenericThreadView):
             set_moderation_response_headers(request, response)
             return response
 
-        return redirect(current_url)
+        return redirect(request.get_full_path())
 
     def execute_posts_moderation_action(
-        self, request: HttpRequest, thread_id: int, slug: str, page: int | None
+        self, request: HttpRequest, thread: Thread, page: int | None
     ) -> ModerationActionResult:
-        thread = self.get_thread(request, thread_id)
-
         actions = self.get_posts_moderation_actions(request, thread)
         action: PostsModerationAction = get_moderation_action(
             actions, request.POST["posts_moderation"]
@@ -293,9 +279,89 @@ class DetailView(GenericThreadView):
                 {
                     "moderation_action": action_obj,
                     "moderation_type": "posts_moderation",
+                    "category": thread.category,
+                    "thread": thread,
                     "posts": page_posts,
                     "selection": selected_posts,
-                    "breadcrumbs": [],
+                    "breadcrumbs": self.get_breadcrumbs(request, thread),
+                    "cancel_url": request.get_full_path(),
+                }
+            )
+
+        return result
+
+    def handle_post_moderation(
+        self, request: HttpRequest, thread_id: int, slug: str, page: int | None
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+
+        try:
+            post = self.get_selected_post(request, thread)
+            result = self.execute_post_moderation_action(request, thread, post)
+        except ValidationError as e:
+            if request.is_htmx:
+                raise
+
+            messages.error(request, e.message)
+            return self.get(request, thread_id, slug, page)
+
+        if isinstance(result, ModerationActionTemplateResult):
+            if request.is_htmx:
+                template_name = self.moderation_modal_template_name
+            else:
+                template_name = self.moderation_page_template_name
+
+            return result.render(request, template_name)
+
+        if not request.is_htmx:
+            if result.deleted_items:
+                raise NotImplementedError()
+
+            return self.get_post_redirect(request, post)
+
+        if result.deleted_items:
+            # TODO: handle removed posts
+            pass
+
+        context_data = {
+            "status_bars": self.get_thread_status_bars_data(request, thread),
+            "moderation_actions": get_moderation_action_choices(
+                self.get_thread_moderation_actions(request, thread),
+            ),
+        }
+
+        post_feed = self.get_post_feed(request, thread, [post])
+        post_feed.set_animated_posts(result.updated_items)
+        context_data["update_posts"] = post_feed.get_feed_data()
+
+        response = render(request, self.moderation_partial_template_name, context_data)
+        set_moderation_response_headers(request, response)
+
+        return response
+
+    def execute_post_moderation_action(
+        self, request: HttpRequest, thread: Thread, post: Post
+    ) -> ModerationActionResult:
+        actions = self.get_post_moderation_actions(request, post)
+        action: PostModerationAction = get_moderation_action(
+            actions, request.POST["post_moderation"]
+        )
+
+        action_obj = action(request, thread, post)
+        action_obj.validate()
+
+        result = action_obj.execute()
+
+        if isinstance(result, ModerationActionTemplateResult):
+            result.update_context(
+                {
+                    "moderation_action": action_obj,
+                    "moderation_type": "post_moderation",
+                    "category": thread.category,
+                    "thread": thread,
+                    "post": post,
+                    "breadcrumbs": self.get_breadcrumbs(request, thread),
+                    "cancel_url": self.get_post_url(post),
                 }
             )
 
@@ -304,18 +370,19 @@ class DetailView(GenericThreadView):
     def get_thread_moderation_actions(
         self, request: HttpRequest, thread: Thread
     ) -> list[type[ThreadModerationAction]]:
-        return get_thread_moderation_actions(request.user_permissions, thread, request)
+        raise NotImplementedError()
 
     def get_posts_moderation_actions(
         self, request: HttpRequest, thread: Thread
     ) -> list[type[PostsModerationAction]]:
-        return get_thread_posts_moderation_actions(
-            request.user_permissions, thread, request
-        )
+        raise NotImplementedError()
 
-    def get_selected_posts(
-        self, request: HttpRequest, posts: list[Post]
-    ) -> list[Thread]:
+    def get_post_moderation_actions(
+        self, request: HttpRequest, post: Post
+    ) -> list[type[PostModerationAction]]:
+        raise NotImplementedError()
+
+    def get_selected_posts(self, request: HttpRequest, posts: list[Post]) -> list[Post]:
         posts_id = self.get_selected_posts_ids(request)
         selection: list[Post] = [post for post in posts if post.id in posts_id]
 
@@ -334,6 +401,15 @@ class DetailView(GenericThreadView):
             except (TypeError, ValueError):
                 pass
         return posts_id
+
+    def get_selected_post(self, request: HttpRequest, thread: Thread) -> Post:
+        try:
+            post_id = request.POST.get("post")
+            return self.get_post(request, thread, post_id)
+        except (TypeError, ValueError, Http404):
+            raise ValidationError(
+                pgettext("posts moderation error", "No valid posts selected."),
+            )
 
     # Context data
 
@@ -643,6 +719,13 @@ class ThreadDetailView(DetailView):
     ) -> list[type[PostsModerationAction]]:
         return get_thread_posts_moderation_actions(
             request.user_permissions, thread, request
+        )
+
+    def get_post_moderation_actions(
+        self, request: HttpRequest, post: Post
+    ) -> list[type[PostModerationAction]]:
+        return get_thread_post_moderation_actions(
+            request.user_permissions, post, request
         )
 
     def get_context_data(

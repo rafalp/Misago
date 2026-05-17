@@ -73,7 +73,7 @@ function preventDefault(event) {
 }
 
 htmx.onLoad(function () {
-  document.querySelectorAll("[mg-modal]").forEach(function (element) {
+  document.querySelectorAll("a[mg-modal]").forEach(function (element) {
     element.addEventListener("click", preventDefault)
   })
 })

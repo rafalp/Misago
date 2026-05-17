@@ -380,17 +380,11 @@ class ThreadViewBackend(ViewBackend):
             breadcrumbs.append(
                 {
                     "type": "category",
-                    "label": category["label"],
-                    "short_label": category["label"],
+                    "label": category["name"],
+                    "short_label": category["short_name"],
                     "color": category["color"],
                     "css_class": category["css_class"],
-                    "url": reverse(
-                        "misago:category",
-                        kwargs={
-                            "category_id": category["id"],
-                            "slug": category["slug"],
-                        },
-                    ),
+                    "url": category["url"],
                 }
             )
 

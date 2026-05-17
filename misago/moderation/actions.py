@@ -44,10 +44,14 @@ class ModerationActionTemplateResult(ModerationActionResult):
         self.context.update(context)
 
     def render(
-        self, request: HttpRequest, template_name: str, context: dict | None
+        self, request: HttpRequest, template_name: str, context: dict | None = None
     ) -> HttpResponse:
-        final_context = context or {}
-        final_context.update(self.context)
+        if context:
+            final_context = context
+            final_context.update(self.context)
+        else:
+            final_context = self.context
+
         return render(request, template_name, final_context)
 
 
@@ -172,7 +176,7 @@ class PostModerationAction(ModerationAction):
     thread: Thread
     post: Post
 
-    def __init__(self, request: HttpRequest, thread: Thread, posts: Post):
+    def __init__(self, request: HttpRequest, thread: Thread, post: Post):
         super().__init__(request)
 
         self.thread = thread

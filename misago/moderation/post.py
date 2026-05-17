@@ -39,12 +39,20 @@ def _get_thread_post_moderation_actions_action(
     if not user_permissions.is_category_moderator(post.category_id):
         return []
 
-    return [
-        LockPostModerationAction,
-        UnlockPostModerationAction,
-        SplitPostModerationAction,
-        DeletePostModerationAction,
-    ]
+    actions = []
+
+    if post.is_locked:
+        actions.append(UnlockPostModerationAction)
+    else:
+        actions.append(LockPostModerationAction)
+
+    if post.id != post.thread.first_post_id:
+        actions += [
+            SplitPostModerationAction,
+            DeletePostModerationAction,
+        ]
+
+    return actions
 
 
 def get_private_thread_post_moderation_actions(
@@ -68,12 +76,19 @@ def _get_private_thread_post_moderation_actions_action(
     if not user_permissions.is_private_threads_moderator:
         return []
 
-    return [
-        LockPostModerationAction,
-        UnlockPostModerationAction,
-        SplitPostModerationAction,
-        DeletePostModerationAction,
-    ]
+    actions = []
+
+    if post.is_locked:
+        actions.append(UnlockPostModerationAction)
+    else:
+        actions.append(LockPostModerationAction)
+
+    if post.id != post.thread.first_post_id:
+        actions += [
+            DeletePostModerationAction,
+        ]
+
+    return actions
 
 
 class LockPostModerationAction(PostModerationAction):
@@ -88,6 +103,9 @@ class LockPostModerationAction(PostModerationAction):
 
     def execute(self) -> ModerationActionResult:
         post = self.post
+
+        post.is_locked = True
+        post.save()
 
         messages.success(
             self.request,
@@ -112,6 +130,9 @@ class UnlockPostModerationAction(PostModerationAction):
     def execute(self) -> ModerationActionResult:
         post = self.post
 
+        post.is_locked = False
+        post.save()
+
         messages.success(
             self.request,
             pgettext("post moderation success", "Post unlocked"),
@@ -128,6 +149,15 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
     button_label = "Split"
     form_class = SplitPostsForm
     template_name = "misago/moderation/split_post.html"
+
+    def validate(self):
+        if self.post.id == self.thread.first_post_id:
+            raise ValidationError(
+                pgettext(
+                    "post moderation validation",
+                    "The first post in a thread can't be moved.",
+                )
+            )
 
     def form_valid(self, form) -> ModerationActionResult:
         post = self.post
