@@ -3,7 +3,9 @@ from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
+from ..categories.tasks import synchronize_categories
 from ..permissions.proxy import UserPermissionsProxy
+from ..threads.delete import delete_post
 from ..threads.models import Post
 from .actions import (
     ModerationActionResult,
@@ -11,6 +13,7 @@ from .actions import (
     FormMixin,
     ConfirmMixin,
 )
+from ..threads.synchronize import synchronize_thread
 from .forms import SplitPostsForm
 from .hooks import (
     get_private_thread_post_moderation_actions_hook,
@@ -183,6 +186,10 @@ class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
 
     def confirmed(self) -> ModerationActionResult:
         post = self.post
+
+        delete_post(post)
+        synchronize_thread(self.thread)
+        synchronize_categories.delay([post.category_id])
 
         messages.success(
             self.request,

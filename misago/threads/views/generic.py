@@ -90,9 +90,17 @@ class GenericThreadView(View):
         return self.backend.get_post_number(request, post)
 
     def get_thread_updates_queryset(
-        self, request: HttpRequest, thread: Thread
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        *,
+        select_related: bool | Iterable[str] = False,
     ) -> QuerySet:
-        return self.backend.get_thread_updates_queryset(request, thread)
+        return self.backend.get_thread_updates_queryset(
+            request,
+            thread,
+            select_related=select_related,
+        )
 
     def get_thread_update(
         self,

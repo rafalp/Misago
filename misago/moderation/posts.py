@@ -3,8 +3,11 @@ from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
+from ..categories.tasks import synchronize_categories
 from ..permissions.proxy import UserPermissionsProxy
+from ..threads.delete import delete_post
 from ..threads.models import Thread
+from ..threads.synchronize import synchronize_thread
 from .actions import (
     ModerationActionResult,
     PostsModerationAction,
@@ -143,6 +146,16 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
     form_class = SplitPostsForm
     template_name = "misago/moderation/split_posts.html"
 
+    def validate(self):
+        for post in self.posts:
+            if post.id == self.thread.first_post:
+                raise ValidationError(
+                    pgettext(
+                        "post moderation validation",
+                        "The first post in a thread can't be split.",
+                    )
+                )
+
     def form_valid(self, form) -> ModerationActionResult:
         messages.success(
             self.request,
@@ -163,7 +176,23 @@ class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
         "Are you sure you want to delete the selected posts? This action cannot be undone.",
     )
 
+    def validate(self):
+        for post in self.posts:
+            if post.id == self.thread.first_post:
+                raise ValidationError(
+                    pgettext(
+                        "post moderation validation",
+                        "The first post in a thread can't be deleted.",
+                    )
+                )
+
     def confirmed(self) -> ModerationActionResult:
+        for post in self.posts:
+            delete_post(post)
+
+        synchronize_thread(self.thread)
+        synchronize_categories.delay([post.category_id])
+
         messages.success(
             self.request,
             pgettext("posts moderation success", "Posts deleted"),

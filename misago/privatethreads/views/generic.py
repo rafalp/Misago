@@ -55,17 +55,9 @@ class PrivateThreadView(GenericView):
         )
 
     def get_thread_updates_queryset(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        *,
-        select_related: bool | Iterable[str] = False,
+        self, request: HttpRequest, thread: Thread
     ) -> QuerySet:
-        queryset = super().get_thread_updates_queryset(
-            request,
-            thread,
-            select_related=select_related,
-        )
+        queryset = super().get_thread_updates_queryset(request, thread)
         return filter_private_thread_updates_queryset(
             request.user_permissions, thread, queryset
         )
