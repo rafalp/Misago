@@ -41,11 +41,6 @@ class PrivateThreadDetailView(DetailView):
     def get_thread(self, *args, **kwargs) -> Thread:
         return super().get_thread(*args, select_members=True, **kwargs)
 
-    def get_thread_queryset(self, request: HttpRequest) -> Thread:
-        return get_private_thread_detail_view_thread_queryset_hook(
-            super().get_thread_queryset, request
-        )
-
     def get_context_data(
         self,
         request: HttpRequest,

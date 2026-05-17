@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Iterable, Optional
 
 from django.db.models import QuerySet
 from django.http import HttpRequest
@@ -58,8 +58,14 @@ class PrivateThreadView(GenericView):
         self,
         request: HttpRequest,
         thread: Thread,
+        *,
+        select_related: bool | Iterable[str] = False,
     ) -> QuerySet:
-        queryset = super().get_thread_updates_queryset(request, thread)
+        queryset = super().get_thread_updates_queryset(
+            request,
+            thread,
+            select_related=select_related,
+        )
         return filter_private_thread_updates_queryset(
             request.user_permissions, thread, queryset
         )

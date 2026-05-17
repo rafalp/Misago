@@ -58,8 +58,8 @@ from ..hooks import (
 )
 from ..models import Post, Thread
 from ..paginator import ThreadPostsPaginator
-from .backend import ViewBackend, thread_backend
-from .generic import ThreadView, GenericThreadView
+from .backend import thread_backend
+from .generic import GenericThreadView
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -73,8 +73,6 @@ class PageOutOfRangeError(Exception):
 
 
 class DetailView(GenericThreadView):
-    backend: ViewBackend
-
     template_name: str
     template_partial_name: str
     feed_template_name: str = "misago/post_feed/index.html"
@@ -645,11 +643,6 @@ class ThreadDetailView(DetailView):
     ) -> list[type[PostsModerationAction]]:
         return get_thread_posts_moderation_actions(
             request.user_permissions, thread, request
-        )
-
-    def get_thread_queryset(self, request: HttpRequest) -> Thread:
-        return get_thread_detail_view_thread_queryset_hook(
-            super().get_thread_queryset, request
         )
 
     def get_context_data(

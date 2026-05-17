@@ -105,8 +105,14 @@ class PrivateThreadViewBackend(ViewBackend):
         self,
         request: HttpRequest,
         thread: Thread,
+        *,
+        select_related: bool | Iterable[str] = False,
     ) -> QuerySet:
-        queryset = super().get_thread_updates_queryset(request, thread)
+        queryset = super().get_thread_updates_queryset(
+            request,
+            thread,
+            select_related=select_related,
+        )
         return filter_private_thread_updates_queryset(
             request.user_permissions, thread, queryset
         )

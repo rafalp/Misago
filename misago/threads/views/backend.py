@@ -46,21 +46,6 @@ class ViewBackend(ABC):
         select_related: bool | Iterable[str] = ("category",),
         for_update: bool = False,
     ) -> Thread:
-        queryset = self.get_thread_queryset(request, annotate_read_time, select_related)
-        if for_update:
-            queryset = queryset.select_for_update()
-
-        try:
-            return queryset.get(id=thread_id)
-        except Thread.DoesNotExist:
-            raise Http404()
-
-    def get_thread_queryset(
-        self,
-        request: HttpRequest,
-        annotate_read_time: bool = False,
-        select_related: bool | Iterable[str] = False,
-    ) -> QuerySet:
         queryset = Thread.objects
         if annotate_read_time:
             queryset = threads_annotate_user_readcategory_time(queryset, request.user)
@@ -69,7 +54,13 @@ class ViewBackend(ABC):
             queryset = queryset.select_related()
         elif select_related:
             queryset = queryset.select_related(*select_related)
-        return queryset
+        if for_update:
+            queryset = queryset.select_for_update()
+
+        try:
+            return queryset.get(id=thread_id)
+        except Thread.DoesNotExist:
+            raise Http404()
 
     @abstractmethod
     def get_posts_queryset(
@@ -122,18 +113,27 @@ class ViewBackend(ABC):
         self,
         request: HttpRequest,
         thread: Thread,
+        *,
+        select_related: bool | Iterable[str] = False,
     ) -> QuerySet:
-        return ThreadUpdate.objects.filter(thread=thread).order_by("-id")
+        queryset = ThreadUpdate.objects.filter(thread=thread).order_by("-id")
+        if select_related is True:
+            queryset = queryset.select_related()
+        elif select_related:
+            queryset = queryset.select_related(*select_related)
+        return queryset
 
     def get_thread_update(
-        self, request: HttpRequest, thread: Thread, thread_update_id: int
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        thread_update_id: int,
+        *,
+        select_related: bool | Iterable[str] = False,
     ) -> ThreadUpdate:
-        queryset = self.get_thread_updates_queryset(request, thread)
-        if self.thread_update_select_related is True:
-            queryset = queryset.select_related()
-        elif self.thread_update_select_related:
-            queryset = queryset.select_related(*self.thread_update_select_related)
-
+        queryset = self.get_thread_updates_queryset(
+            request, thread, select_related=select_related
+        )
         try:
             thread_update = queryset.get(id=thread_update_id)
         except ThreadUpdate.DoesNotExist:
@@ -351,8 +351,14 @@ class ThreadViewBackend(ViewBackend):
         self,
         request: HttpRequest,
         thread: Thread,
+        *,
+        select_related: bool | Iterable[str] = False,
     ) -> QuerySet:
-        queryset = super().get_thread_updates_queryset(request, thread)
+        queryset = super().get_thread_updates_queryset(
+            request,
+            thread,
+            select_related=select_related,
+        )
         return filter_thread_updates_queryset(
             request.user_permissions, thread, queryset
         )

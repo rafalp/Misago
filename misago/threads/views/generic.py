@@ -48,21 +48,6 @@ class GenericThreadView(View):
             **kwargs,
         )
 
-    def get_thread_queryset(
-        self,
-        request: HttpRequest,
-        *,
-        annotate_read_time: bool = False,
-        select_related: bool | Iterable[str] = False,
-        **kwargs,
-    ) -> QuerySet:
-        return self.backend.get_thread_queryset(
-            request,
-            annotate_read_time=annotate_read_time,
-            select_related=select_related,
-            **kwargs,
-        )
-
     def get_posts_queryset(
         self,
         request: HttpRequest,
@@ -110,9 +95,19 @@ class GenericThreadView(View):
         return self.backend.get_thread_updates_queryset(request, thread)
 
     def get_thread_update(
-        self, request: HttpRequest, thread: Thread, thread_update_id: int
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        thread_update_id: int,
+        *,
+        select_related: bool | Iterable[str] = False,
     ) -> ThreadUpdate:
-        return self.backend.get_thread_update(request, thread, thread_update_id)
+        return self.backend.get_thread_update(
+            request,
+            thread,
+            thread_update_id,
+            select_related=select_related,
+        )
 
     # Thread utils
 
