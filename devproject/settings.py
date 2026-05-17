@@ -347,6 +347,13 @@ EMAIL_PORT = "1025"
 DEFAULT_FROM_EMAIL = "Misago <misago@example.com>"
 
 
+# Set response header with the request processing time
+
+MIDDLEWARE = [
+    "devproject.middleware.time_middleware",
+] + MIDDLEWARE
+
+
 # Display debug toolbar if IN_MISAGO_DOCKER enviroment var is set to "1"
 
 DEBUG_TOOLBAR_CONFIG = {
