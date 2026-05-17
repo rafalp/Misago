@@ -6,6 +6,14 @@ from django.http import HttpRequest
 from django.urls import reverse
 
 from ...categories.models import Category
+from ...moderation.actions import (
+    PostModerationAction,
+    PostsModerationAction,
+    ThreadModerationAction,
+)
+from ...moderation.post import get_private_thread_post_moderation_actions
+from ...moderation.posts import get_private_thread_posts_moderation_actions
+from ...moderation.thread import get_private_thread_moderation_actions
 from ...permissions.checkutils import check_permissions
 from ...permissions.privatethreads import (
     check_edit_private_thread_permission,
@@ -16,7 +24,7 @@ from ...posting.formsets import (
     get_private_thread_reply_formset,
 )
 from ...readtracker.privatethreads import unread_private_threads_exist
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ...threads.views.detail import DetailView
 from ..hooks import (
     get_private_thread_detail_view_context_data_hook,
@@ -40,6 +48,29 @@ class PrivateThreadDetailView(DetailView):
 
     def get_thread(self, *args, **kwargs) -> Thread:
         return super().get_thread(*args, select_members=True, **kwargs)
+
+    # Moderation
+
+    def get_thread_moderation_actions(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[type[ThreadModerationAction]]:
+        return get_private_thread_moderation_actions(
+            request.user_permissions, thread, request
+        )
+
+    def get_posts_moderation_actions(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[type[PostsModerationAction]]:
+        return get_private_thread_posts_moderation_actions(
+            request.user_permissions, thread, request
+        )
+
+    def get_post_moderation_actions(
+        self, request: HttpRequest, post: Post
+    ) -> list[type[PostModerationAction]]:
+        return get_private_thread_post_moderation_actions(
+            request.user_permissions, post, request
+        )
 
     def get_context_data(
         self,

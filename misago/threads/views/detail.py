@@ -16,7 +16,6 @@ from django.views import View
 
 from ...categories.models import Category
 from ...moderation.actions import (
-    ModerationAction,
     ModerationActionResult,
     ModerationActionTemplateResult,
     PostModerationAction,
