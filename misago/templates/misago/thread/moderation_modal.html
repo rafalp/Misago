@@ -9,7 +9,12 @@
   {% csrf_token %}
   <input type="hidden" name="{{ moderation_type }}" value="{{ moderation_action.id }}" />
   <input type="hidden" name="confirm" value="true">
-  <input type="hidden" name="success-hx-swap" value="none">
+  {% if moderation_type == "posts_moderation" %}
+    <input type="hidden" name="success-hx-target" value="#misago-htmx-root">
+    <input type="hidden" name="success-hx-swap" value="outerHTML">
+  {% else %}
+    <input type="hidden" name="success-hx-swap" value="none">
+  {% endif %}
   {% for post in selection %}
     <input type="hidden" name="posts" value="{{ post.id }}" />
   {% endfor %}
