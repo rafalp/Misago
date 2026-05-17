@@ -38,7 +38,7 @@ from .prefetch import prefetch_post_feed_data
 
 class PostFeed:
     template_name: str = "misago/post_feed/index.html"
-    template_name_htmx_like: str = "misago/post_feed/htmx_like.html"
+    htmx_like_template_name: str = "misago/post_feed/htmx_like.html"
     post_template_name: str = "misago/post_feed/post.html"
     post_locked_template_name: str = "misago/post_feed/post_locked.html"
     post_solved_template_name: str = "misago/post_feed/post_solved.html"
@@ -526,7 +526,7 @@ class PostFeed:
 
     def get_like_context_data(self, post: Post, is_liked: bool) -> dict:
         return {
-            "template_name": self.template_name_htmx_like,
+            "template_name": self.htmx_like_template_name,
             "post": post,
             "likes": get_post_feed_post_likes_data(
                 self.request,
