@@ -42,10 +42,6 @@ def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
         is_deleted=True,
     )
 
-    delete_all(DeprecatedAttachment, thread_id=thread.id)
-    delete_all(DeprecatedPostEdit, thread_id=thread.id)
-    delete_all(DeprecatedPostLike, thread_id=thread.id)
-
     delete_all(Like, thread_id=thread.id)
     delete_all(Notification, thread_id=thread.id)
     delete_all(PostEdit, thread_id=thread.id)
@@ -72,10 +68,6 @@ def _delete_post_action(post: Post, request: HttpRequest | None = None):
         post=None,
         is_deleted=True,
     )
-
-    delete_all(DeprecatedAttachment, post_id=post.id)
-    delete_all(DeprecatedPostEdit, post_id=post.id)
-    delete_all(DeprecatedPostLike, post_id=post.id)
 
     delete_all(Like, post_id=post.id)
     delete_all(Notification, post_id=post.id)
