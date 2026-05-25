@@ -170,16 +170,15 @@ class DetailView(GenericThreadView):
 
             return result.render(request, template_name)
 
-        if not request.is_htmx:
-            if thread.id in result.deleted_items:
-                # TODO: on delete redirect to threads list
-                raise NotImplementedError()
-
-            return redirect(request.get_full_path())
-
         if thread.id in result.deleted_items:
-            # TODO: on delete redirect to threads list
-            raise NotImplementedError()
+            parent_url = self.get_thread_parent_url(request, thread)
+            if not request.is_htmx:
+                return redirect(parent_url)
+
+            response = HttpResponse(status=201)
+            response.headers["hx-redirect"] = parent_url
+            set_moderation_response_headers(request, response)
+            return response
 
         context_data = {
             # TODO: header

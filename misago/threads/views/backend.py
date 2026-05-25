@@ -424,7 +424,7 @@ class ThreadViewBackend(ViewBackend):
 
     def get_thread_parent_url(self, request: HttpRequest, thread: Thread) -> str:
         return reverse(
-            "misago:category",
+            "misago:category-thread-list",
             kwargs={
                 "category_id": thread.category_id,
                 "slug": thread.category.slug,

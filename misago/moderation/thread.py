@@ -4,6 +4,8 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..permissions.proxy import UserPermissionsProxy
+from ..categories.tasks import synchronize_categories
+from ..threads.delete import delete_thread
 from ..threads.lock import lock_thread, unlock_thread
 from ..threads.models import Thread
 from ..threadupdates.create import (
@@ -177,7 +179,11 @@ class DeleteThreadModerationAction(ConfirmMixin, ThreadModerationAction):
     )
 
     def confirmed(self) -> ModerationActionResult:
-        thread = self.thread
+        thread_id = self.thread.id
+        category_id = self.thread.category_id
+
+        delete_thread(self.thread, self.request)
+        synchronize_categories.delay([category_id])
 
         messages.success(
             self.request,
@@ -185,5 +191,5 @@ class DeleteThreadModerationAction(ConfirmMixin, ThreadModerationAction):
         )
 
         return ModerationActionResult(
-            deleted_items=[thread.id],
+            deleted_items=[thread_id],
         )

@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from ..attachments.models import Attachment
 from ..edits.models import PostEdit
 from ..likes.models import Like
-from ..notifications.models import Notification
+from ..notifications.models import Notification, WatchedThread
 from ..privatethreads.models import PrivateThreadMember
 from ..postgres.delete import delete_all, delete_one
 from ..readtracker.models import ReadThread
@@ -48,6 +48,7 @@ def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
     delete_all(PrivateThreadMember, thread_id=thread.id)
     delete_all(ReadThread, thread_id=thread.id)
     delete_all(ThreadUpdate, thread_id=thread.id)
+    delete_all(WatchedThread, thread_id=thread.id)
 
     delete_all(Post, thread_id=thread.id)
 
