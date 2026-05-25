@@ -81,13 +81,13 @@ def _delete_post_action(post: Post, request: HttpRequest | None = None):
     delete_all(Notification, post_id=post.id)
     delete_all(PostEdit, post_id=post.id)
 
-    save_thread_fields = list()
+    save_thread_fields = set()
     if thread.first_post_id == post.id:
         thread.first_post = None
-        save_thread_fields.append("first_post")
+        save_thread_fields.add("first_post")
     if thread.last_post_id == post.id:
         thread.last_post = None
-        save_thread_fields.append("last_post")
+        save_thread_fields.add("last_post")
     if save_thread_fields:
         thread.save(update_fields=save_thread_fields)
 
