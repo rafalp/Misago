@@ -9,7 +9,7 @@
 
 {% block content %}
 <div class="page page-thread">
-  {% include "misago/private_thread/header.html" %}
+  {% includecomponent header %}
   <div class="container page-container">
 
     {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_START %}
@@ -39,6 +39,7 @@
     {% endif %}
 
     {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_END %}
+    {% includecomponent footer %}
 
   </div>
 </div>

@@ -43,6 +43,10 @@ class PrivateThreadDetailView(DetailView):
 
     template_name: str = "misago/private_thread/index.html"
     template_partial_name: str = "misago/private_thread/partial.html"
+    header_template_name: str = "misago/private_thread/header.html"
+    meta_bar_template_name: str = "misago/thread/meta_bar.html"
+    footer_template_name: str = "misago/thread/footer.html"
+    breadcrumbs_template_name: str = "misago/thread/breadcrumbs.html"
 
     # View overrides
 

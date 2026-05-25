@@ -11,13 +11,13 @@
 </div>
 
 {% if header %}
-<div id="misago-htmx-thread-header" hx-swap-oob="outerHTML">
+<div id="misago-htmx-header" hx-swap-oob="outerHTML">
   {% includecomponents header %}
 </div>
 {% endif %}
 
 {% if footer %}
-<div id="misago-htmx-thread-footer" hx-swap-oob="outerHTML">
+<div id="misago-htmx-footer" hx-swap-oob="outerHTML">
   {% includecomponents footer %}
 </div>
 {% endif %}

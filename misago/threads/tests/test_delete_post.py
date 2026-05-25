@@ -86,7 +86,7 @@ def test_delete_post_deletes_thread_post_notification(user, thread, reply):
         notification.refresh_from_db()
 
 
-def test_delete_post_marks_attachemtns_for_deletion(thread, reply, text_attachment):
+def test_delete_post_marks_attachments_for_deletion(thread, reply, text_attachment):
     text_attachment.associate_with_post(reply)
     text_attachment.save()
 

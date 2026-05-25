@@ -5,9 +5,9 @@
 {% endif %}
 
 <div id="misago-htmx-root">
-  {% if thread_status_bars %}
-    <div id="misago-htmx-thread-status" class="status-bars">
-      {% includecomponents thread_status_bars %}
+  {% if status_bars %}
+    <div id="misago-htmx-status-bars" class="status-bars">
+      {% includecomponents status_bars %}
     </div>
   {% endif %}
   {% include "misago/private_thread/toolbar.html" with top_toolbar=True bottom_toolbar=False %}

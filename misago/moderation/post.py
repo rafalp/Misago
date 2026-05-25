@@ -176,7 +176,7 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
 
 
 class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
-    replace_view = True
+    swap_root = True
 
     id = "delete"
     full_name = "Delete post"

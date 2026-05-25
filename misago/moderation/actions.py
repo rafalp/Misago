@@ -12,7 +12,7 @@ from ..threadupdates.models import ThreadUpdate
 
 class ModerationAction:
     multistage = False
-    replace_view = False
+    swap_root = False
 
     id: str
     full_name: str | None = None
@@ -134,7 +134,7 @@ class FormMixin:
 
 
 class ThreadsModerationAction(ModerationAction):
-    replace_view = True
+    swap_root = True
 
     category: Category | None
     threads: list[Thread]
@@ -152,7 +152,7 @@ class ThreadsModerationAction(ModerationAction):
 
 
 class PostsModerationAction(ModerationAction):
-    replace_view = True
+    swap_root = True
 
     thread: Thread
     posts: list[Post]

@@ -77,10 +77,10 @@ class PageOutOfRangeError(Exception):
 class DetailView(GenericThreadView):
     template_name: str
     template_partial_name: str
-    header_template_name: str = "misago/thread/header.html"
-    meta_bar_template_name: str = "misago/thread/meta_bar.html"
-    footer_template_name: str = "misago/thread/footer.html"
-    breadcrumbs_template_name: str = "misago/thread/breadcrumbs.html"
+    header_template_name: str
+    meta_bar_template_name: str
+    footer_template_name: str
+    breadcrumbs_template_name: str
     feed_template_name: str = "misago/post_feed/index.html"
     feed_post_template_name: str = "misago/post_feed/post.html"
     moderation_page_template_name: str
@@ -734,6 +734,10 @@ class ThreadDetailView(DetailView):
 
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
+    header_template_name: str = "misago/thread/header.html"
+    meta_bar_template_name: str = "misago/thread/meta_bar.html"
+    footer_template_name: str = "misago/thread/footer.html"
+    breadcrumbs_template_name: str = "misago/thread/breadcrumbs.html"
     moderation_page_template_name: str = "misago/thread/moderation_page.html"
     moderation_modal_template_name: str = "misago/thread/moderation_modal.html"
 

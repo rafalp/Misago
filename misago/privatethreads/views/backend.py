@@ -130,7 +130,7 @@ class PrivateThreadViewBackend(ViewBackend):
             },
             {
                 "type": "private_threads",
-                "url": reverse("misago:private-threads"),
+                "url": reverse("misago:private-thread-list"),
                 "label": pgettext("breadcrumb label", "Private threads"),
             },
         ]
@@ -170,7 +170,7 @@ class PrivateThreadViewBackend(ViewBackend):
     # URLs
 
     def get_thread_parent_url(self, request: HttpRequest, thread: Thread) -> str:
-        return reverse("misago:private-threads")
+        return reverse("misago:private-thread-list")
 
 
 private_thread_backend = PrivateThreadViewBackend()

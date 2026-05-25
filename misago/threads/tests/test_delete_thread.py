@@ -7,6 +7,7 @@ from ...likes.models import Like
 from ...notifications.models import Notification, WatchedThread
 from ...notifications.threads import watch_thread
 from ...notifications.users import notify_user
+from ...polls.models import Poll, PollVote
 from ..delete import delete_thread
 from ..models import Post, Thread
 
@@ -53,6 +54,27 @@ def test_delete_thread_deletes_category_last_thread(
 
     default_category.refresh_from_db()
     assert default_category.last_thread is None
+
+
+def test_delete_thread_deletes_thread_poll_with_votes(
+    poll_factory, poll_vote_factory, thread, reply
+):
+    poll = poll_factory(thread)
+    poll_vote = poll_vote_factory(poll, "OtherUser", "choice2")
+
+    delete_thread(thread)
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
+
+    with pytest.raises(Poll.DoesNotExist):
+        poll.refresh_from_db()
+
+    with pytest.raises(PollVote.DoesNotExist):
+        poll_vote.refresh_from_db()
 
 
 def test_delete_thread_deletes_thread_post_like(thread, reply):
@@ -137,7 +159,7 @@ def test_delete_thread_deletes_thread_watch(user, thread, reply):
         watched_thread.refresh_from_db()
 
 
-def test_delete_thread_marks_attachemtns_for_deletion(thread, reply, text_attachment):
+def test_delete_thread_marks_attachments_for_deletion(thread, reply, text_attachment):
     text_attachment.associate_with_post(reply)
     text_attachment.save()
 
