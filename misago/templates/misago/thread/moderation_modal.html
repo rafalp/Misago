@@ -9,7 +9,7 @@
   {% csrf_token %}
   <input type="hidden" name="{{ moderation_type }}" value="{{ moderation_action.id }}" />
   <input type="hidden" name="confirm" value="true">
-  {% if moderation_type == "posts_moderation" %}
+  {% if moderation_action.replace_view %}
     <input type="hidden" name="success-hx-target" value="#misago-htmx-root">
     <input type="hidden" name="success-hx-swap" value="outerHTML">
   {% else %}

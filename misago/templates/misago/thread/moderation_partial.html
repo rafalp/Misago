@@ -2,13 +2,25 @@
 
 {% include "misago/snackbars.html" %}
 
-<div id="misago-htmx-thread-status" hx-swap-oob="innerHTML">
+<div id="misago-htmx-status-bars" hx-swap-oob="innerHTML">
   {% if status_bars %}
     <div class="status-bars">
       {% includecomponents status_bars %}
     </div>
   {% endif %}
 </div>
+
+{% if header %}
+<div id="misago-htmx-thread-header" hx-swap-oob="outerHTML">
+  {% includecomponents header %}
+</div>
+{% endif %}
+
+{% if footer %}
+<div id="misago-htmx-thread-footer" hx-swap-oob="outerHTML">
+  {% includecomponents footer %}
+</div>
+{% endif %}
 
 {% if thread_updates %}
 <div hx-swap-oob="beforeend:.posts-feed-inner">

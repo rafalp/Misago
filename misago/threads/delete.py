@@ -5,8 +5,9 @@ from ..attachments.models import Attachment
 from ..edits.models import PostEdit
 from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
-from ..privatethreads.models import PrivateThreadMember
+from ..polls.models import Poll, PollVote
 from ..postgres.delete import delete_all, delete_one
+from ..privatethreads.models import PrivateThreadMember
 from ..readtracker.models import ReadThread
 from ..threadupdates.models import ThreadUpdate
 from .hooks import delete_post_hook, delete_thread_hook
@@ -41,6 +42,9 @@ def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
         post=None,
         is_deleted=True,
     )
+
+    delete_all(PollVote, thread_id=thread.id)
+    delete_all(Poll, thread_id=thread.id)
 
     delete_all(Like, thread_id=thread.id)
     delete_all(Notification, thread_id=thread.id)

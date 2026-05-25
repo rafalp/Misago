@@ -176,6 +176,8 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
 
 
 class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
+    replace_view = True
+
     id = "delete"
     full_name = "Delete post"
     button_label = "Delete"
@@ -183,6 +185,15 @@ class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
         "post moderation",
         "Are you sure you want to delete the selected post? This action cannot be undone.",
     )
+
+    def validate(self):
+        if self.post.id == self.thread.first_post_id:
+            raise ValidationError(
+                pgettext(
+                    "post moderation validation",
+                    "The first post in a thread can't be deleted.",
+                )
+            )
 
     def confirmed(self) -> ModerationActionResult:
         post = self.post

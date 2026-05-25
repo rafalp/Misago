@@ -178,7 +178,7 @@ class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
 
     def validate(self):
         for post in self.posts:
-            if post.id == self.thread.first_post:
+            if post.id == self.thread.first_post_id:
                 raise ValidationError(
                     pgettext(
                         "post moderation validation",
@@ -191,7 +191,7 @@ class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
             delete_post(post)
 
         synchronize_thread(self.thread)
-        synchronize_categories.delay([post.category_id])
+        synchronize_categories.delay([self.thread.category_id])
 
         messages.success(
             self.request,

@@ -249,11 +249,13 @@ class DetailView(GenericThreadView):
             return result.render(request, template_name)
 
         if request.is_htmx:
-            kwargs = {}
-            if result.updated_items:
-                kwargs["updated_posts"] = result.updated_items
-
-            response = self.get(request, thread_id, slug, page, **kwargs)
+            response = self.get(
+                request,
+                thread_id,
+                slug,
+                page,
+                updated_posts=result.updated_items,
+            )
             set_moderation_response_headers(request, response)
             return response
 
@@ -314,15 +316,17 @@ class DetailView(GenericThreadView):
 
             return result.render(request, template_name)
 
-        if not request.is_htmx:
-            if result.deleted_items:
-                raise NotImplementedError()
-
-            return self.get_post_redirect(request, post)
-
         if result.deleted_items:
-            # TODO: handle removed posts
-            pass
+            if not request.is_htmx:
+                return redirect(request.get_full_path())
+
+            response = self.get(request, thread_id, slug, page)
+            set_moderation_response_headers(request, response)
+
+            return response
+
+        if not request.is_htmx:
+            return self.get_post_redirect(request, post)
 
         context_data = {
             "status_bars": self.get_thread_status_bars_data(request, thread),

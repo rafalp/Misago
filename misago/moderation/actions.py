@@ -12,6 +12,7 @@ from ..threadupdates.models import ThreadUpdate
 
 class ModerationAction:
     multistage = False
+    replace_view = False
 
     id: str
     full_name: str | None = None
@@ -133,6 +134,8 @@ class FormMixin:
 
 
 class ThreadsModerationAction(ModerationAction):
+    replace_view = True
+
     category: Category | None
     threads: list[Thread]
 
@@ -149,6 +152,8 @@ class ThreadsModerationAction(ModerationAction):
 
 
 class PostsModerationAction(ModerationAction):
+    replace_view = True
+
     thread: Thread
     posts: list[Post]
 
