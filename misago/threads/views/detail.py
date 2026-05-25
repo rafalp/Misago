@@ -15,6 +15,7 @@ from django.utils.translation import pgettext
 from django.views import View
 
 from ...categories.models import Category
+from ...metadata import TextMetaData
 from ...moderation.actions import (
     ModerationActionResult,
     ModerationActionTemplateResult,
@@ -76,6 +77,10 @@ class PageOutOfRangeError(Exception):
 class DetailView(GenericThreadView):
     template_name: str
     template_partial_name: str
+    header_template_name: str = "misago/thread/header.html"
+    meta_bar_template_name: str = "misago/thread/meta_bar.html"
+    footer_template_name: str = "misago/thread/footer.html"
+    breadcrumbs_template_name: str = "misago/thread/breadcrumbs.html"
     feed_template_name: str = "misago/post_feed/index.html"
     feed_post_template_name: str = "misago/post_feed/post.html"
     moderation_page_template_name: str
@@ -215,11 +220,10 @@ class DetailView(GenericThreadView):
                 {
                     "moderation_action": action_obj,
                     "moderation_type": "thread_moderation",
-                    "category": thread.category,
-                    "thread": thread,
-                    "breadcrumbs": self.get_breadcrumbs(request, thread),
                 }
             )
+
+            result.update_context(self.get_base_context_data(request, thread))
 
         return result
 
@@ -278,14 +282,13 @@ class DetailView(GenericThreadView):
                 {
                     "moderation_action": action_obj,
                     "moderation_type": "posts_moderation",
-                    "category": thread.category,
-                    "thread": thread,
                     "posts": page_posts,
                     "selection": selected_posts,
-                    "breadcrumbs": self.get_breadcrumbs(request, thread),
                     "cancel_url": request.get_full_path(),
                 }
             )
+
+            result.update_context(self.get_base_context_data(request, thread))
 
         return result
 
@@ -432,26 +435,72 @@ class DetailView(GenericThreadView):
         page: int | None,
         kwargs: dict,
     ) -> dict:
+        posts_moderation_actions = self.get_posts_moderation_actions(request, thread)
+        context = self.get_base_context_data(request, thread)
+
+        context.update(
+            {
+                "watch_thread": self.get_watch_thread_data(request, thread),
+                "feed": self.get_post_feed_data(request, thread, page, kwargs),
+                "reply": self.get_reply_context_data(request, thread),
+                "posts_moderation_actions": get_moderation_action_choices(
+                    posts_moderation_actions
+                ),
+                "post_edits_modal_template": self.backend.post_edits_modal_template,
+                "post_likes_modal_template": self.backend.post_likes_modal_template,
+            }
+        )
+
+        return context
+
+    def get_base_context_data(self, request: HttpRequest, thread: Thread):
         if request.user.is_authenticated:
             starter_is_current_user = request.user.id == thread.starter_id
         else:
             starter_is_current_user = False
 
-        posts_moderation_actions = self.get_posts_moderation_actions(request, thread)
+        meta_bar = {
+            "id": "meta_bar",
+            "template_name": self.meta_bar_template_name,
+            "items": [
+                TextMetaData(
+                    id="first",
+                    icon="tabler/shield.svg",
+                    text="Hello world!",
+                ),
+                TextMetaData(
+                    id="second",
+                    icon="tabler/rosette-discount-check.svg",
+                    text="How's going?",
+                ),
+            ],
+        }
+
+        breadcrumbs = {
+            "id": "breadcrumbs",
+            "template_name": self.breadcrumbs_template_name,
+            "items": self.get_breadcrumbs(request, thread, full=False),
+        }
+        header = {
+            "id": "header",
+            "template_name": self.header_template_name,
+            "header": thread.title,
+            "meta_bar": meta_bar,
+            "breadcrumbs": breadcrumbs,
+        }
+        footer = {
+            "id": "footer",
+            "template_name": self.footer_template_name,
+            "breadcrumbs": breadcrumbs,
+        }
 
         return {
             "starter_is_current_user": starter_is_current_user,
-            "thread_status_bars": self.get_thread_status_bars_data(request, thread),
+            "header": header,
+            "footer": footer,
+            "status_bars": self.get_thread_status_bars_data(request, thread),
             "thread": thread,
             "thread_url": self.get_thread_url(thread),
-            "watch_thread": self.get_watch_thread_data(request, thread),
-            "feed": self.get_post_feed_data(request, thread, page, kwargs),
-            "reply": self.get_reply_context_data(request, thread),
-            "posts_moderation_actions": get_moderation_action_choices(
-                posts_moderation_actions
-            ),
-            "post_edits_modal_template": self.backend.post_edits_modal_template,
-            "post_likes_modal_template": self.backend.post_likes_modal_template,
         }
 
     def get_thread_status_bars_data(

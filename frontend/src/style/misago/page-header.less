@@ -19,3 +19,33 @@
 
   overflow-wrap: anywhere;
 }
+
+.page-header-meta-bar {
+  width: 100%;
+  overflow: auto;
+
+  margin: @line-height-computed 0 (@grid-gutter-width * -1) 0;
+  padding: 0;
+
+  list-style: none;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    float: left;
+
+    min-height: 24px;
+    margin: 0 ceil(@grid-gutter-width / 2) ceil(@grid-gutter-width / 2) 0;
+
+    svg {
+      margin-right: 4px;
+
+      width: 24px;
+      height: 24px;
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+}

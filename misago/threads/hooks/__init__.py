@@ -1,6 +1,8 @@
 from .create_prefetch_post_feed_data import (
     create_prefetch_post_feed_data_hook,
 )
+from .delete_post import delete_post_hook
+from .delete_thread import delete_thread_hook
 from .get_category_threads_page_context_data import (
     get_category_threads_page_context_data_hook,
 )
@@ -38,6 +40,8 @@ from .unpin_thread import unpin_thread_hook
 
 __all__ = [
     "create_prefetch_post_feed_data_hook",
+    "delete_post_hook",
+    "delete_thread_hook",
     "get_category_threads_page_context_data_hook",
     "get_category_threads_page_filters_hook",
     "get_category_threads_page_queryset_hook",

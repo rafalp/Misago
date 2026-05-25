@@ -1,8 +1,15 @@
+from django.db import transaction
+from django.http import HttpRequest
+
 from ..attachments.models import Attachment
 from ..edits.models import PostEdit
 from ..likes.models import Like
 from ..notifications.models import Notification
+from ..privatethreads.models import PrivateThreadMember
 from ..postgres.delete import delete_all, delete_one
+from ..readtracker.models import ReadThread
+from ..threadupdates.models import ThreadUpdate
+from .hooks import delete_post_hook, delete_thread_hook
 from .models import (
     Attachment as DeprecatedAttachment,
     Post,
@@ -12,22 +19,67 @@ from .models import (
 )
 
 
-def delete_thread(thread: Thread):
+@transaction.atomic
+def delete_thread(thread: Thread, request: HttpRequest | None = None):
+    delete_thread_hook(_delete_thread_action, thread, request)
+
+
+def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
+    category = thread.category
+
+    if category.last_thread_id == thread.id:
+        category.last_thread = None
+        category.save(update_fields=["last_thread"])
+
+    thread.first_post = None
+    thread.last_post = None
+    thread.save(update_fields=["first_post", "last_post"])
+
+    Attachment.objects.filter(thread=thread).update(
+        category=None,
+        thread=None,
+        post=None,
+        is_deleted=True,
+    )
+
+    delete_all(DeprecatedAttachment, thread_id=thread.id)
+    delete_all(DeprecatedPostEdit, thread_id=thread.id)
+    delete_all(DeprecatedPostLike, thread_id=thread.id)
+
+    delete_all(Like, thread_id=thread.id)
+    delete_all(Notification, thread_id=thread.id)
+    delete_all(PostEdit, thread_id=thread.id)
+    delete_all(PrivateThreadMember, thread_id=thread.id)
+    delete_all(ReadThread, thread_id=thread.id)
+    delete_all(ThreadUpdate, thread_id=thread.id)
+
+    delete_all(Post, thread_id=thread.id)
+
     delete_one(thread)
 
 
-def delete_post(post: Post):
+@transaction.atomic
+def delete_post(post: Post, request: HttpRequest | None = None):
+    delete_post_hook(_delete_post_action, post, request)
+
+
+def _delete_post_action(post: Post, request: HttpRequest | None = None):
     thread = post.thread
+
+    Attachment.objects.filter(post=post).update(
+        category=None,
+        thread=None,
+        post=None,
+        is_deleted=True,
+    )
 
     delete_all(DeprecatedAttachment, post_id=post.id)
     delete_all(DeprecatedPostEdit, post_id=post.id)
     delete_all(DeprecatedPostLike, post_id=post.id)
 
-    delete_all(PostEdit, post_id=post.id)
     delete_all(Like, post_id=post.id)
     delete_all(Notification, post_id=post.id)
-
-    Attachment.objects.filter(post=post).update(post=None)
+    delete_all(PostEdit, post_id=post.id)
 
     save_thread_fields = list()
     if thread.first_post_id == post.id:

@@ -1,0 +1,24 @@
+<ul class="breadcrumbs hidden-xs">
+  {% for item in items %}
+    <li class="breadcrumbs-item">
+      <a href="{{ item.url }}">
+        {% if forloop.first %}
+          <span class="material-icon">chevron_right</span>
+        {% else %}
+          <span class="material-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>label</span>
+        {% endif %}
+        <span class="breadcrumbs-item-name">{{ item.label }}</span>
+      </a>
+    </li>
+  {% endfor %}
+</ul>
+<ul class="breadcrumbs breadcrumbs-compact">
+  {% with item=items|last %}
+    <li class="breadcrumbs-item">
+      <a href="{{ item.url }}">
+        <span class="material-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>label</span>
+        <span class="breadcrumbs-item-name">{{ item.label }}</span>
+      </a>
+    </li>
+  {% endwith %}
+</ul>
