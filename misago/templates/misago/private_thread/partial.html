@@ -5,11 +5,9 @@
 {% endif %}
 
 <div id="misago-htmx-root">
-  {% if status_bars %}
-    <div id="misago-htmx-status-bars" class="status-bars">
-      {% includecomponents status_bars %}
-    </div>
-  {% endif %}
+  <div id="misago-htmx-status-bars">
+    {% includecomponent status_bars %}
+  </div>
   {% include "misago/private_thread/toolbar.html" with top_toolbar=True bottom_toolbar=False %}
   {% includecomponent feed %}
   {% include "misago/private_thread/toolbar.html" with top_toolbar=False bottom_toolbar=True %}

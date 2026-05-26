@@ -3,22 +3,18 @@
 {% include "misago/snackbars.html" %}
 
 <div id="misago-htmx-status-bars" hx-swap-oob="innerHTML">
-  {% if status_bars %}
-    <div class="status-bars">
-      {% includecomponents status_bars %}
-    </div>
-  {% endif %}
+  {% includecomponent status_bars %}
 </div>
 
 {% if header %}
-<div id="misago-htmx-header" hx-swap-oob="outerHTML">
-  {% includecomponents header %}
+<div id="misago-htmx-header" hx-swap-oob="innerHTML">
+  {% includecomponent header %}
 </div>
 {% endif %}
 
 {% if footer %}
-<div id="misago-htmx-footer" hx-swap-oob="outerHTML">
-  {% includecomponents footer %}
+<div id="misago-htmx-footer" hx-swap-oob="innerHTML">
+  {% includecomponent footer %}
 </div>
 {% endif %}
 

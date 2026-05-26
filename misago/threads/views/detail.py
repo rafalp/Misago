@@ -12,7 +12,6 @@ from django.http import (
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import pgettext
-from django.views import View
 
 from ...categories.models import Category
 from ...metadata import TextMetaData
@@ -53,10 +52,10 @@ from ...readtracker.tracker import (
 )
 from ...readtracker.threads import is_category_read
 from ...threadupdates.models import ThreadUpdate
+from ..breadcrumbs import get_category_breadcrumbs, get_thread_breadcrumbs
 from ..hooks import (
     get_thread_detail_view_context_data_hook,
     get_thread_detail_view_posts_queryset_hook,
-    get_thread_detail_view_thread_queryset_hook,
 )
 from ..models import Post, Thread
 from ..paginator import ThreadPostsPaginator
@@ -88,7 +87,9 @@ class DetailView(GenericThreadView):
     reply_error_template_name: str = "misago/thread/reply_error.html"
     reply_template_name: str = "misago/quick_reply/form.html"
     watch_thread_template_name: str = "misago/thread/watch_thread.html"
-    moderation_partial_template_name: str = "misago/thread/moderation_partial.html"
+    moderation_result_template_name: str = "misago/thread/moderation_result.html"
+
+    status_bars_template_name: str = "misago/thread/status_bars.html"
     locked_thread_status_bar_template_name: str = "misago/thread/locked_thread.html"
     unapproved_thread_status_bar_template_name: str = (
         "misago/thread/unapproved_thread.html"
@@ -180,14 +181,10 @@ class DetailView(GenericThreadView):
             set_moderation_response_headers(request, response)
             return response
 
-        context_data = {
-            # TODO: header
-            # bottom breadcrumbs
-            "status_bars": self.get_thread_status_bars_data(request, thread),
-            "moderation_actions": get_moderation_action_choices(
-                self.get_thread_moderation_actions(request, thread),
-            ),
-        }
+        context_data = self.get_base_context_data(request, thread)
+        context_data["moderation_actions"] = get_moderation_action_choices(
+            self.get_thread_moderation_actions(request, thread),
+        )
 
         if thread_updates := result.thread_updates:
             post_feed = self.get_post_feed(request, thread, [], thread_updates)
@@ -196,7 +193,7 @@ class DetailView(GenericThreadView):
             )
             context_data["thread_updates"] = post_feed.get_context_data()["items"]
 
-        response = render(request, self.moderation_partial_template_name, context_data)
+        response = render(request, self.moderation_result_template_name, context_data)
         set_moderation_response_headers(request, response)
 
         return response
@@ -328,22 +325,16 @@ class DetailView(GenericThreadView):
         if not request.is_htmx:
             return self.get_post_redirect(request, post)
 
-        context_data = {
-            "status_bars": self.get_thread_status_bars_data(request, thread),
-            "moderation_actions": get_moderation_action_choices(
-                self.get_thread_moderation_actions(request, thread),
-            ),
-        }
-
         post_feed = self.get_post_feed(request, thread, [post])
         post_feed.set_animated_posts(result.updated_items)
 
         if post.id != thread.first_post_id:
             post_feed.set_counter_start(self.get_post_number(request, post) - 1)
 
+        context_data = self.get_base_context_data(request, thread)
         context_data["update_posts"] = post_feed.get_feed_data()
 
-        response = render(request, self.moderation_partial_template_name, context_data)
+        response = render(request, self.moderation_result_template_name, context_data)
         set_moderation_response_headers(request, response)
 
         return response
@@ -369,7 +360,7 @@ class DetailView(GenericThreadView):
                     "category": thread.category,
                     "thread": thread,
                     "post": post,
-                    "breadcrumbs": self.get_breadcrumbs(request, thread),
+                    "breadcrumbs": self.get_thread_breadcrumbs(request, thread),
                     "cancel_url": self.get_post_url(post),
                 }
             )
@@ -471,17 +462,21 @@ class DetailView(GenericThreadView):
                     icon="tabler/shield.svg",
                     text="Hello world!",
                 ),
-                TextMetaData(
-                    id="second",
-                    icon="tabler/rosette-discount-check.svg",
-                    text="How's going?",
-                ),
             ],
         }
 
+        if thread.is_locked:
+            meta_bar["items"].append(
+                TextMetaData(
+                    id="locked",
+                    icon="tabler/lock.svg",
+                    text="Locked",
+                )
+            )
+
         breadcrumbs = {
             "id": "breadcrumbs",
-            "template_name": self.breadcrumbs_template_name,
+            "template_name": "misago/category_breadcrumbs.html",
             "items": self.get_breadcrumbs(request, thread, full=False),
         }
         header = {
@@ -506,24 +501,26 @@ class DetailView(GenericThreadView):
             "thread_url": self.get_thread_url(thread),
         }
 
-    def get_thread_status_bars_data(
-        self, request: HttpRequest, thread: Thread
-    ) -> list[dict]:
-        thread_status_bars = []
+    def get_thread_status_bars_data(self, request: HttpRequest, thread: Thread) -> dict:
+        items = []
 
         if thread.is_locked:
-            thread_status_bars.append(self.get_locked_thread_status_bar_data())
+            items.append(self.get_locked_thread_status_bar_data())
 
         if thread.is_unapproved:
-            thread_status_bars.append(self.get_unapproved_thread_status_bar_data())
+            items.append(self.get_unapproved_thread_status_bar_data())
 
         if (
             request.user_permissions.is_category_moderator(thread.category_id)
             and thread.has_unapproved_posts
         ):
-            thread_status_bars.append(self.get_unapproved_posts_status_bar_data(thread))
+            items.append(self.get_unapproved_posts_status_bar_data(thread))
 
-        return thread_status_bars
+        return {
+            "id": "status_bars",
+            "template_name": self.status_bars_template_name,
+            "items": items,
+        }
 
     def get_locked_thread_status_bar_data(self) -> dict:
         return {
@@ -829,6 +826,11 @@ class ThreadDetailView(DetailView):
             context["allow_start_poll"] = allow_start_poll
 
         return context
+
+    def get_thread_breadcrumbs(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[dict]:
+        return get_thread_breadcrumbs(request, thread)
 
     def get_watch_thread_url(self, thread: Thread) -> str:
         return reverse(

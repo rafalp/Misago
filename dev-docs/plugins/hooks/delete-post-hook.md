@@ -79,8 +79,8 @@ Delete plugin objects related to this post.
 ```python
 from django.http import HttpRequest
 from misago.postgres.delete import delete_all
-from misago.posts.hooks import delete_post_hook
-from misago.posts.models import Post
+from misago.threads.hooks import delete_post_hook
+from misago.threads.models import Post
 from my_plugin.models import PostBoost
 
 

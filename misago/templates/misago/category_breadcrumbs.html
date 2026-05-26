@@ -1,0 +1,41 @@
+<ul class="breadcrumbs breadcrumbs-full">
+  {% for item in items %}
+    <li class="breadcrumbs-item">
+      <a href="{{ item.url }}">
+        <span class="breadcrumbs-item-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>
+          {% if item.icon %}
+            {% include item.icon %}
+          {% elif forloop.first %}
+            {% include "tabler/home-filled.svg" %}
+          {% else %}
+            {% include "tabler/label-filled.svg" %}
+          {% endif %}
+        </span>
+        <span class="breadcrumbs-item-name">{{ item.label }}</span>
+      </a>
+    </li>
+  {% endfor %}
+</ul>
+<ul class="breadcrumbs breadcrumbs-compact">
+  {% with item=items|last %}
+    <li class="breadcrumbs-item">
+      <a href="{{ item.url }}">
+        {% if items|length > 1 %}
+          <span class="breadcrumbs-item-icon">
+            {% include "tabler/chevron-left.svg" %}
+          </span>
+        {% endif %}
+        <span class="breadcrumbs-item-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>
+          {% if item.icon %}
+            {% include item.icon %}
+          {% elif items|length == 1 %}
+            {% include "tabler/home-filled.svg" %}
+          {% else %}
+            {% include "tabler/label-filled.svg" %}
+          {% endif %}
+        </span>
+        <span class="breadcrumbs-item-name">{{ item.label }}</span>
+      </a>
+    </li>
+  {% endwith %}
+</ul>

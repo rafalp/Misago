@@ -10,11 +10,7 @@
 
 <div id="misago-htmx-root">
   <div id="misago-htmx-status-bars">
-    {% if status_bars %}
-      <div class="status-bars">
-        {% includecomponents status_bars %}
-      </div>
-    {% endif %}
+    {% includecomponent status_bars %}
   </div>
   {% include "misago/thread/toolbar.html" with top_toolbar=True bottom_toolbar=False %}
   {% includecomponent feed %}
