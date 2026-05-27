@@ -1,6 +1,6 @@
 <ul class="breadcrumbs breadcrumbs-full">
   {% for item in items %}
-    <li class="breadcrumbs-item">
+    <li class="breadcrumbs-item{% if item.css_class %} breadcrumbs-item-{{ item.css_class }}{% endif %}">
       <a href="{{ item.url }}">
         <span class="breadcrumbs-item-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>
           {% if item.icon %}
@@ -18,7 +18,7 @@
 </ul>
 <ul class="breadcrumbs breadcrumbs-compact">
   {% with item=items|last %}
-    <li class="breadcrumbs-item">
+    <li class="breadcrumbs-item{% if item.css_class %} breadcrumbs-item-{{ item.css_class }}{% endif %}">
       <a href="{{ item.url }}">
         {% if items|length > 1 %}
           <span class="breadcrumbs-item-icon">

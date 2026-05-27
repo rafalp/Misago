@@ -46,6 +46,13 @@ The request object.
 The `Category` to retrieve breadcrumbs for.
 
 
+#### `include_category: bool = False`
+
+Include `category` as the last breadcrumb.
+
+Defaults to `False`.
+
+
 ### Return value
 
 A list of `dict`s representing the category's breadcrumbs.
@@ -93,8 +100,8 @@ Include extra data in a category's breadcrumbs:
 
 ```python
 from django.http import HttpRequest
-from misago.categorys.hooks import get_category_breadcrumbs_hook
-from misago.categorys.models import Category
+from misago.categories.models import Category
+from misago.threads.hooks import get_category_breadcrumbs_hook
 
 
 @get_category_breadcrumbs_hook.append_filter

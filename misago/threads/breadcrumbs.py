@@ -26,15 +26,15 @@ def _get_category_breadcrumbs_action(
         }
     ]
 
-    for category in request.categories.get_category_path(category.id, include_category):
+    for item in request.categories.get_category_path(category.id, include_category):
         items.append(
             {
                 "type": "category",
-                "label": category["name"],
-                "short_label": category["short_name"],
-                "color": category["color"],
-                "css_class": category["css_class"],
-                "url": category["url"],
+                "label": item["name"],
+                "short_label": item["short_name"],
+                "color": item["color"],
+                "css_class": item["css_class"],
+                "url": item["url"],
             }
         )
 
@@ -58,15 +58,15 @@ def _get_thread_breadcrumbs_action(request: HttpRequest, thread: Thread) -> list
         }
     ]
 
-    for category in request.categories.get_category_path(category.id, True):
+    for item in request.categories.get_category_path(thread.category_id, True):
         items.append(
             {
                 "type": "category",
-                "label": category["name"],
-                "short_label": category["short_name"],
-                "color": category["color"],
-                "css_class": category["css_class"],
-                "url": category["url"],
+                "label": item["name"],
+                "short_label": item["short_name"],
+                "color": item["color"],
+                "css_class": item["css_class"],
+                "url": item["url"],
             }
         )
 

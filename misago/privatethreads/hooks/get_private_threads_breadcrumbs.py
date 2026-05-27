@@ -6,9 +6,9 @@ from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 
-class GetCategoryBreadcrumbsHookAction(Protocol):
+class GetPrivateThreadsBreadcrumbsHookAction(Protocol):
     """
-    Misago function for retrieving a category's breadcrumbs.
+    Misago function for retrieving a private threads's breadcrumbs.
 
     # Arguments
 
@@ -20,12 +20,6 @@ class GetCategoryBreadcrumbsHookAction(Protocol):
 
     The `Category` to retrieve breadcrumbs for.
 
-    ## `include_category: bool = False`
-
-    Include `category` as the last breadcrumb.
-
-    Defaults to `False`.
-
     # Return value
 
     A list of `dict`s representing the category's breadcrumbs.
@@ -35,17 +29,16 @@ class GetCategoryBreadcrumbsHookAction(Protocol):
         self,
         request: HttpRequest,
         category: Category,
-        include_category: bool = False,
     ) -> list[dict]: ...
 
 
-class GetCategoryBreadcrumbsHookFilter(Protocol):
+class GetPrivateThreadsBreadcrumbsHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetCategoryBreadcrumbsHookAction`
+    ## `action: GetPrivateThreadsBreadcrumbsHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -60,12 +53,6 @@ class GetCategoryBreadcrumbsHookFilter(Protocol):
 
     The `Category` to retrieve breadcrumbs for.
 
-    ## `include_category: bool = False`
-
-    Include `category` as the last breadcrumb.
-
-    Defaults to `False`.
-
     # Return value
 
     A list of `dict`s representing the category's breadcrumbs.
@@ -73,43 +60,38 @@ class GetCategoryBreadcrumbsHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetCategoryBreadcrumbsHookAction,
+        action: GetPrivateThreadsBreadcrumbsHookAction,
         request: HttpRequest,
         category: Category,
-        include_category: bool = False,
     ) -> list[dict]: ...
 
 
-class GetCategoryBreadcrumbsHook(
+class GetPrivateThreadsBreadcrumbsHook(
     FilterHook[
-        GetCategoryBreadcrumbsHookAction,
-        GetCategoryBreadcrumbsHookFilter,
+        GetPrivateThreadsBreadcrumbsHookAction,
+        GetPrivateThreadsBreadcrumbsHookFilter,
     ]
 ):
     """
     This hook allows plugins to replace or extend the logic used to
-    retrieve a category's breadcrumbs.
+    retrieve the private threads list breadcrumbs.
 
     # Example
 
-    Include extra data in a category's breadcrumbs:
+    Include extra data in the private threads list breadcrumbs:
 
     ```python
     from django.http import HttpRequest
+    from misago.privatethreads.hooks import get_private_threads_breadcrumbs_hook
     from misago.categories.models import Category
-    from misago.threads.hooks import get_category_breadcrumbs_hook
 
 
-    @get_category_breadcrumbs_hook.append_filter
-    def set_category_breadcrumb_icon(
-        action,
-        request: HttpRequest,
-        category: Category,
-        include_category: bool = False,
+    @get_private_threads_breadcrumbs_hook.append_filter
+    def set_private_threads_breadcrumb_icon(
+        action, request: HttpRequest, category: Category
     ) -> list[dict]:
-        breadcrumbs = action(request, category, include_category)
-        if include_category and category.is_locked:
-            breadcrumbs[-1]["icon"] = "tabler/lock.svg"
+        breadcrumbs = action(request, category)
+        breadcrumbs[0]["icon"] = "tabler/lock.svg"
         return breadcrumbs
     """
 
@@ -117,12 +99,11 @@ class GetCategoryBreadcrumbsHook(
 
     def __call__(
         self,
-        action: GetCategoryBreadcrumbsHookAction,
+        action: GetPrivateThreadsBreadcrumbsHookAction,
         request: HttpRequest,
         category: Category,
-        include_category: bool = False,
     ) -> list[dict]:
-        return super().__call__(action, request, category, include_category)
+        return super().__call__(action, request, category)
 
 
-get_category_breadcrumbs_hook = GetCategoryBreadcrumbsHook()
+get_private_threads_breadcrumbs_hook = GetPrivateThreadsBreadcrumbsHook()
