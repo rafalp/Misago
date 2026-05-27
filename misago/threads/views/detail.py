@@ -181,10 +181,7 @@ class DetailView(GenericThreadView):
             set_moderation_response_headers(request, response)
             return response
 
-        context_data = self.get_base_context_data(request, thread)
-        context_data["moderation_actions"] = get_moderation_action_choices(
-            self.get_thread_moderation_actions(request, thread),
-        )
+        context_data = self.get_moderation_result_data(request, thread)
 
         if thread_updates := result.thread_updates:
             post_feed = self.get_post_feed(request, thread, [], thread_updates)
@@ -213,10 +210,15 @@ class DetailView(GenericThreadView):
 
         if isinstance(result, ModerationActionTemplateResult):
             result.update_context(
-                {
-                    "moderation_action": action_obj,
-                    "moderation_type": "thread_moderation",
-                }
+                self.get_moderation_page_data(
+                    request,
+                    thread,
+                    {
+                        "moderation_action": action_obj,
+                        "moderation_type": "thread_moderation",
+                        "cancel_url": request.get_full_path(),
+                    },
+                )
             )
 
             result.update_context(self.get_base_context_data(request, thread))
@@ -277,13 +279,17 @@ class DetailView(GenericThreadView):
 
         if isinstance(result, ModerationActionTemplateResult):
             result.update_context(
-                {
-                    "moderation_action": action_obj,
-                    "moderation_type": "posts_moderation",
-                    "posts": page_posts,
-                    "selection": selected_posts,
-                    "cancel_url": request.get_full_path(),
-                }
+                self.get_moderation_page_data(
+                    request,
+                    thread,
+                    {
+                        "moderation_action": action_obj,
+                        "moderation_type": "posts_moderation",
+                        "posts": page_posts,
+                        "selection": selected_posts,
+                        "cancel_url": request.get_full_path(),
+                    },
+                )
             )
 
             result.update_context(self.get_base_context_data(request, thread))
@@ -331,7 +337,7 @@ class DetailView(GenericThreadView):
         if post.id != thread.first_post_id:
             post_feed.set_counter_start(self.get_post_number(request, post) - 1)
 
-        context_data = self.get_base_context_data(request, thread)
+        context_data = self.get_moderation_result_data(request, thread)
         context_data["update_posts"] = post_feed.get_feed_data()
 
         response = render(request, self.moderation_result_template_name, context_data)
@@ -354,15 +360,16 @@ class DetailView(GenericThreadView):
 
         if isinstance(result, ModerationActionTemplateResult):
             result.update_context(
-                {
-                    "moderation_action": action_obj,
-                    "moderation_type": "post_moderation",
-                    "category": thread.category,
-                    "thread": thread,
-                    "post": post,
-                    "breadcrumbs": self.get_thread_breadcrumbs(request, thread),
-                    "cancel_url": self.get_post_url(post),
-                }
+                self.get_moderation_page_data(
+                    request,
+                    thread,
+                    {
+                        "moderation_action": action_obj,
+                        "moderation_type": "post_moderation",
+                        "post": post,
+                        "cancel_url": self.get_post_url(post),
+                    },
+                )
             )
 
         return result
@@ -411,6 +418,44 @@ class DetailView(GenericThreadView):
                 pgettext("posts moderation error", "No valid posts selected."),
             )
 
+    def get_moderation_page_data(
+        self, request: HttpRequest, thread: Thread, context: dict
+    ) -> dict:
+        return self.get_moderation_page_data_action(request, thread, context)
+
+    def get_moderation_page_data_action(
+        self, request: HttpRequest, thread: Thread, context: dict
+    ) -> dict:
+        final_context = {
+            "breadcrumbs": self.get_thread_breadcrumbs(request, thread),
+            "category": thread.category,
+            "thread": thread,
+            "extra_components": [],
+        }
+        final_context.update(context)
+        return final_context
+
+    def get_moderation_result_data(self, request: HttpRequest, thread: Thread) -> dict:
+        return self.get_moderation_result_data_action(request, thread)
+
+    def get_moderation_result_data_action(
+        self, request: HttpRequest, thread: Thread
+    ) -> dict:
+        breadcrumbs = self.get_category_breadcrumbs(
+            request, thread.category, include_category=True
+        )
+        shared_context = {"breadcrumbs": breadcrumbs}
+
+        return {
+            "moderation_actions": get_moderation_action_choices(
+                self.get_thread_moderation_actions(request, thread)
+            ),
+            "header": self.get_header_data(request, thread, shared_context),
+            "footer": self.get_footer_data(request, thread, shared_context),
+            "status_bars": self.get_thread_status_bars_data(request, thread),
+            "extra_components": [],
+        }
+
     # Context data
 
     def get_context_data(
@@ -430,28 +475,40 @@ class DetailView(GenericThreadView):
         kwargs: dict,
     ) -> dict:
         posts_moderation_actions = self.get_posts_moderation_actions(request, thread)
-        context = self.get_base_context_data(request, thread)
 
-        context.update(
-            {
-                "watch_thread": self.get_watch_thread_data(request, thread),
-                "feed": self.get_post_feed_data(request, thread, page, kwargs),
-                "reply": self.get_reply_context_data(request, thread),
-                "posts_moderation_actions": get_moderation_action_choices(
-                    posts_moderation_actions
-                ),
-                "post_edits_modal_template": self.backend.post_edits_modal_template,
-                "post_likes_modal_template": self.backend.post_likes_modal_template,
-            }
-        )
-
-        return context
-
-    def get_base_context_data(self, request: HttpRequest, thread: Thread):
         if request.user.is_authenticated:
             starter_is_current_user = request.user.id == thread.starter_id
         else:
             starter_is_current_user = False
+
+        breadcrumbs = self.get_category_breadcrumbs(
+            request, thread.category, include_category=True
+        )
+        shared_context = {"breadcrumbs": breadcrumbs}
+
+        return {
+            "starter_is_current_user": starter_is_current_user,
+            "header": self.get_header_data(request, thread, shared_context),
+            "footer": self.get_footer_data(request, thread, shared_context),
+            "status_bars": self.get_thread_status_bars_data(request, thread),
+            "thread": thread,
+            "thread_url": self.get_thread_url(thread),
+            "watch_thread": self.get_watch_thread_data(request, thread),
+            "feed": self.get_post_feed_data(request, thread, page, kwargs),
+            "reply": self.get_reply_context_data(request, thread),
+            "posts_moderation_actions": get_moderation_action_choices(
+                posts_moderation_actions
+            ),
+            "post_edits_modal_template": self.backend.post_edits_modal_template,
+            "post_likes_modal_template": self.backend.post_likes_modal_template,
+        }
+
+    def get_header_data(
+        self, request: HttpRequest, thread: Thread, context: dict | None
+    ) -> dict:
+        from random import randint
+
+        dice_roll = randint(1, 6)
 
         meta_bar = {
             "id": "meta_bar",
@@ -459,8 +516,8 @@ class DetailView(GenericThreadView):
             "items": [
                 TextMetaData(
                     id="first",
-                    icon="tabler/shield.svg",
-                    text="Hello world!",
+                    icon=f"tabler/dice-{dice_roll}.svg",
+                    text=f"Dice roll: {dice_roll}",
                 ),
             ],
         }
@@ -474,32 +531,30 @@ class DetailView(GenericThreadView):
                 )
             )
 
-        breadcrumbs = {
-            "id": "breadcrumbs",
-            "template_name": "misago/category_breadcrumbs.html",
-            "items": self.get_breadcrumbs(request, thread, full=False),
-        }
-        header = {
+        final_context = {
             "id": "header",
             "template_name": self.header_template_name,
             "header": thread.title,
             "meta_bar": meta_bar,
-            "breadcrumbs": breadcrumbs,
-        }
-        footer = {
-            "id": "footer",
-            "template_name": self.footer_template_name,
-            "breadcrumbs": breadcrumbs,
         }
 
-        return {
-            "starter_is_current_user": starter_is_current_user,
-            "header": header,
-            "footer": footer,
-            "status_bars": self.get_thread_status_bars_data(request, thread),
-            "thread": thread,
-            "thread_url": self.get_thread_url(thread),
+        if context:
+            final_context.update(context)
+
+        return final_context
+
+    def get_footer_data(
+        self, request: HttpRequest, thread: Thread, context: dict | None
+    ) -> dict:
+        final_context = {
+            "id": "footer",
+            "template_name": self.footer_template_name,
         }
+
+        if context:
+            final_context.update(context)
+
+        return final_context
 
     def get_thread_status_bars_data(self, request: HttpRequest, thread: Thread) -> dict:
         items = []

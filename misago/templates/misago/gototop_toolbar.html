@@ -1,5 +1,12 @@
-{% load i18n %}
+{% load i18n misago_component %}
 <div class="toolbar toolbar-over-footer">
+  {% if breadcrumbs %}
+    <div class="toolbar-section hidden-xs">
+      <div class="toolbar-item">
+        {% includecomponent breadcrumbs %}
+      </div>
+    </div>
+  {% endif %}
   <div class="toolbar-spacer"></div>
   <div class="toolbar-section">
     <div class="toolbar-item">

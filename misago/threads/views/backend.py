@@ -5,8 +5,8 @@ from django.db.models import QuerySet
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.utils.translation import pgettext
 
+from ...categories.models import Category
 from ...permissions.proxy import UserPermissionsProxy
 from ...permissions.threads import (
     check_see_thread_permission,
@@ -19,6 +19,7 @@ from ...readtracker.tracker import (
     threads_select_related_user_readthread,
 )
 from ...threadupdates.models import ThreadUpdate
+from ..breadcrumbs import get_category_breadcrumbs, get_thread_breadcrumbs
 from ..models import Post, Thread
 from ..paginator import ThreadPostsPaginator
 from ..postfeed import PostFeed, ThreadPostFeed
@@ -147,9 +148,16 @@ class ViewBackend(ABC):
     # Thread utils
 
     @abstractmethod
-    def get_breadcrumbs(
-        self, request: HttpRequest, thread: Thread, full: bool = True
-    ) -> list[dict]:
+    def get_category_breadcrumbs(
+        self,
+        request: HttpRequest,
+        category: Category,
+        include_category: bool = False,
+    ) -> dict:
+        pass
+
+    @abstractmethod
+    def get_thread_breadcrumbs(self, request: HttpRequest, thread: Thread) -> dict:
         pass
 
     @abstractmethod
@@ -365,39 +373,16 @@ class ThreadViewBackend(ViewBackend):
 
     # Thread utils
 
-    def get_breadcrumbs(
-        self, request: HttpRequest, thread: Thread, full: bool = True
-    ) -> list[dict]:
-        breadcrumbs = [
-            {
-                "type": "home",
-                "label": pgettext("breadcrumb label", "Home"),
-                "url": reverse("misago:index"),
-            },
-        ]
+    def get_category_breadcrumbs(
+        self,
+        request: HttpRequest,
+        category: Category,
+        include_category: bool = False,
+    ) -> dict:
+        return get_category_breadcrumbs(request, category, include_category)
 
-        for category in request.categories.get_category_path(thread.category_id):
-            breadcrumbs.append(
-                {
-                    "type": "category",
-                    "label": category["name"],
-                    "short_label": category["short_name"],
-                    "color": category["color"],
-                    "css_class": category["css_class"],
-                    "url": category["url"],
-                }
-            )
-
-        if full:
-            breadcrumbs.append(
-                {
-                    "type": "thread",
-                    "label": thread.title,
-                    "url": self.get_thread_url(thread),
-                }
-            )
-
-        return breadcrumbs
+    def get_thread_breadcrumbs(self, request: HttpRequest, thread: Thread) -> dict:
+        return get_thread_breadcrumbs(request, thread)
 
     def has_moderator_permission(
         self, user_permissions: UserPermissionsProxy, thread: Thread

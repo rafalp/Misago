@@ -6,6 +6,7 @@ from django.http import Http404, HttpRequest, HttpResponse
 from django.urls import reverse
 from django.views import View
 
+from ...categories.models import Category
 from ...permissions.threads import (
     check_see_thread_permission,
     filter_thread_posts_queryset,
@@ -119,10 +120,18 @@ class GenericThreadView(View):
 
     # Thread utils
 
-    def get_breadcrumbs(
-        self, request: HttpRequest, thread: Thread, full: bool = True
-    ) -> list[dict]:
-        return self.backend.get_breadcrumbs(request, thread, full)
+    def get_category_breadcrumbs(
+        self,
+        request: HttpRequest,
+        category: Category,
+        include_category: bool = False,
+    ) -> dict:
+        return self.backend.get_category_breadcrumbs(
+            request, category, include_category
+        )
+
+    def get_thread_breadcrumbs(self, request: HttpRequest, thread: Thread) -> dict:
+        return self.backend.get_thread_breadcrumbs(request, thread)
 
     def has_moderator_permission(
         self, user_permissions: UserPermissionsProxy, thread: Thread

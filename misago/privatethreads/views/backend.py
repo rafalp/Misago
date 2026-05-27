@@ -3,8 +3,8 @@ from typing import Iterable
 from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.urls import reverse
-from django.utils.translation import pgettext
 
+from ...categories.models import Category
 from ...permissions.privatethreads import (
     check_private_threads_permission,
     check_see_private_thread_permission,
@@ -16,6 +16,10 @@ from ...permissions.proxy import UserPermissionsProxy
 from ...threads.models import Post, Thread
 from ...threads.views.backend import ViewBackend
 from ...threadupdates.models import ThreadUpdate
+from ..breadcrumbs import (
+    get_private_thread_breadcrumbs,
+    get_private_threads_breadcrumbs,
+)
 from ..members import get_private_thread_members
 from ..postfeed import PrivateThreadPostFeed
 
@@ -119,32 +123,16 @@ class PrivateThreadViewBackend(ViewBackend):
 
     # Thread utils
 
-    def get_breadcrumbs(
-        self, request: HttpRequest, thread: Thread, full: bool = True
-    ) -> list[dict]:
-        breadcrumbs = [
-            {
-                "type": "home",
-                "url": reverse("misago:index"),
-                "label": pgettext("breadcrumb label", "Home"),
-            },
-            {
-                "type": "private_threads",
-                "url": reverse("misago:private-thread-list"),
-                "label": pgettext("breadcrumb label", "Private threads"),
-            },
-        ]
+    def get_category_breadcrumbs(
+        self,
+        request: HttpRequest,
+        category: Category,
+        include_category: bool = False,
+    ) -> dict:
+        return get_private_threads_breadcrumbs(request, category)
 
-        if full:
-            breadcrumbs.append(
-                {
-                    "type": "thread",
-                    "url": self.get_thread_url(thread),
-                    "label": thread.title,
-                }
-            )
-
-        return breadcrumbs
+    def get_thread_breadcrumbs(self, request: HttpRequest, thread: Thread) -> dict:
+        return get_private_thread_breadcrumbs(request, thread)
 
     def has_moderator_permission(
         self, user_permissions: UserPermissionsProxy, thread: Thread

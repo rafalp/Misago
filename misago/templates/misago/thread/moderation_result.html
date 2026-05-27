@@ -18,12 +18,6 @@
 </div>
 {% endif %}
 
-{% if thread_updates %}
-<div hx-swap-oob="beforeend:.posts-feed-inner">
-  {% includecomponents thread_updates %}
-</div>
-{% endif %}
-
 {% if moderation_actions %}
 {% include "misago/thread/thread_moderation.html" with swap_oob=True %}
 {% endif %}
@@ -33,3 +27,11 @@
     {% includecomponents update_posts %}
   {% endwith %}
 {% endif %}
+
+{% if thread_updates %}
+<div hx-swap-oob="beforeend:.posts-feed-inner">
+  {% includecomponents thread_updates %}
+</div>
+{% endif %}
+
+{% includecomponents extra_components %}

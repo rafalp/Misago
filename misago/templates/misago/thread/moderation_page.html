@@ -3,13 +3,14 @@
 
 
 {% block title %}
-  {{ moderation_action.full_name }} | {% translate "Threads" context "threads page" %} | {{ block.super }}
+  {{ moderation_action.full_name }} | {{ thread.title }} | {{ block.super }}
 {% endblock title %}
 
 
 {% block content %}
 <div class="page page-thread">
   <div class="container page-container">
+    {% includecomponent breadcrumbs %}
 
     <form method="post">
       {% csrf_token %}

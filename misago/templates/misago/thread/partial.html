@@ -6,6 +6,12 @@
 
 {% if is_request_htmx %}
   {% include "misago/snackbars.html" %}
+  <div id="misago-htmx-header" hx-swap-oob="innerHTML">
+    {% includecomponent header %}
+  </div>
+  <div id="misago-htmx-footer" hx-swap-oob="innerHTML">
+    {% includecomponent footer %}
+  </div>
 {% endif %}
 
 <div id="misago-htmx-root">
