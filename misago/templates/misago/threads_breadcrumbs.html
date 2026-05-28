@@ -10,10 +10,8 @@
         <span class="breadcrumbs-item-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>
           {% if item.icon %}
             {% include item.icon %}
-          {% elif forloop.first %}
-            {% include "tabler/inbox.svg" %}
           {% else %}
-            {% include "tabler/label-filled.svg" %}
+            {% include "tabler/home-filled.svg" %}
           {% endif %}
         </span>
         <span class="breadcrumbs-item-name">{{ item.label }}</span>
@@ -29,7 +27,11 @@
           {% include "tabler/chevron-left.svg" %}
         </span>
         <span class="breadcrumbs-item-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>
-          {% include "tabler/label-filled.svg" %}
+          {% if item.icon %}
+            {% include item.icon %}
+          {% else %}
+            {% include "tabler/home-filled.svg" %}
+          {% endif %}
         </span>
         <span class="breadcrumbs-item-name">{{ item.label }}</span>
       </a>

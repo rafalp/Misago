@@ -2,7 +2,7 @@
   {% for item in items %}
     {% if not forloop.first %}
       <li class="breadcrumbs-separator">
-        {% include "tabler/chevron-right.svg" %}
+        {% include "tabler/breadcrumbs-separator.svg" %}
       </li>
     {% endif %}
     <li class="breadcrumbs-item{% if item.css_class %} breadcrumbs-item-{{ item.css_class }}{% endif %}">
