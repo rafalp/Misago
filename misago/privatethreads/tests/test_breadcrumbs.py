@@ -6,10 +6,8 @@ from ..breadcrumbs import (
 )
 
 
-def test_get_private_threads_breadcrumbs_returns_private_threads_list_breadcrumbs(
-    private_threads_category,
-):
-    data = get_private_threads_breadcrumbs(None, private_threads_category)
+def test_get_private_threads_breadcrumbs_returns_private_threads_list_breadcrumbs():
+    data = get_private_threads_breadcrumbs(None)
 
     assert data == {
         "id": "breadcrumbs",

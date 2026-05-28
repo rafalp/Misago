@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n misago_component %}
 
 
 {% block content %}
@@ -10,7 +10,7 @@
         <div class="page-header-banner page-header-banner-category">
           <div class="page-header-banner-bg-image">
             <div class="page-header-banner-bg-overlay">
-              {% include "misago/category_thread_list/breadcrumbs.html" %}
+              {% includecomponent breadcrumbs %}
               <h1>{{ category.name }}</h1>
             </div>
           </div>

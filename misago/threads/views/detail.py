@@ -52,7 +52,7 @@ from ...readtracker.tracker import (
 )
 from ...readtracker.threads import is_category_read
 from ...threadupdates.models import ThreadUpdate
-from ..breadcrumbs import get_category_breadcrumbs, get_thread_breadcrumbs
+from ..breadcrumbs import get_thread_breadcrumbs
 from ..hooks import (
     get_thread_detail_view_context_data_hook,
     get_thread_detail_view_posts_queryset_hook,
@@ -441,9 +441,7 @@ class DetailView(GenericThreadView):
     def get_moderation_result_data_action(
         self, request: HttpRequest, thread: Thread
     ) -> dict:
-        breadcrumbs = self.get_category_breadcrumbs(
-            request, thread.category, include_category=True
-        )
+        breadcrumbs = self.get_category_breadcrumbs(request, thread.category)
         shared_context = {"breadcrumbs": breadcrumbs}
 
         return {
@@ -481,9 +479,7 @@ class DetailView(GenericThreadView):
         else:
             starter_is_current_user = False
 
-        breadcrumbs = self.get_category_breadcrumbs(
-            request, thread.category, include_category=True
-        )
+        breadcrumbs = self.get_category_breadcrumbs(request, thread.category)
         shared_context = {"breadcrumbs": breadcrumbs}
 
         return {

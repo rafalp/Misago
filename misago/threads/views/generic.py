@@ -121,14 +121,9 @@ class GenericThreadView(View):
     # Thread utils
 
     def get_category_breadcrumbs(
-        self,
-        request: HttpRequest,
-        category: Category,
-        include_category: bool = False,
+        self, request: HttpRequest, category: Category
     ) -> dict:
-        return self.backend.get_category_breadcrumbs(
-            request, category, include_category
-        )
+        return self.backend.get_category_breadcrumbs(request, category)
 
     def get_thread_breadcrumbs(self, request: HttpRequest, thread: Thread) -> dict:
         return self.backend.get_thread_breadcrumbs(request, thread)

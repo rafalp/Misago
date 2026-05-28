@@ -2,13 +2,12 @@ from typing import Protocol
 
 from django.http import HttpRequest
 
-from ...categories.models import Category
 from ...plugins.hooks import FilterHook
 
 
 class GetPrivateThreadsBreadcrumbsHookAction(Protocol):
     """
-    Misago function for retrieving a private threads's breadcrumbs.
+    Misago function for retrieving the breadcrumbs for the private threads list.
 
     # Arguments
 
@@ -16,20 +15,12 @@ class GetPrivateThreadsBreadcrumbsHookAction(Protocol):
 
     The request object.
 
-    ## `category: Category`
-
-    The `Category` to retrieve breadcrumbs for.
-
     # Return value
 
-    A list of `dict`s representing the category's breadcrumbs.
+    A `dict` with a breadcrumbs template component.
     """
 
-    def __call__(
-        self,
-        request: HttpRequest,
-        category: Category,
-    ) -> list[dict]: ...
+    def __call__(self, request: HttpRequest) -> dict: ...
 
 
 class GetPrivateThreadsBreadcrumbsHookFilter(Protocol):
@@ -49,21 +40,16 @@ class GetPrivateThreadsBreadcrumbsHookFilter(Protocol):
 
     The request object.
 
-    ## `category: Category`
-
-    The `Category` to retrieve breadcrumbs for.
-
     # Return value
 
-    A list of `dict`s representing the category's breadcrumbs.
+    A `dict` with a breadcrumbs template component.
     """
 
     def __call__(
         self,
         action: GetPrivateThreadsBreadcrumbsHookAction,
         request: HttpRequest,
-        category: Category,
-    ) -> list[dict]: ...
+    ) -> dict: ...
 
 
 class GetPrivateThreadsBreadcrumbsHook(
@@ -74,24 +60,23 @@ class GetPrivateThreadsBreadcrumbsHook(
 ):
     """
     This hook allows plugins to replace or extend the logic used to
-    retrieve the private threads list breadcrumbs.
+    retrieve the breadcrumbs for the private threads list.
 
     # Example
 
-    Include extra data in the private threads list breadcrumbs:
+    Change the icon used for the private threads list breadcrumb:
 
     ```python
     from django.http import HttpRequest
     from misago.privatethreads.hooks import get_private_threads_breadcrumbs_hook
-    from misago.categories.models import Category
 
 
     @get_private_threads_breadcrumbs_hook.append_filter
     def set_private_threads_breadcrumb_icon(
-        action, request: HttpRequest, category: Category
-    ) -> list[dict]:
+        action, request: HttpRequest
+    ) -> dict:
         breadcrumbs = action(request, category)
-        breadcrumbs[0]["icon"] = "tabler/lock.svg"
+        breadcrumbs["items"][-1]["icon"] = "tabler/lock.svg"
         return breadcrumbs
     """
 
@@ -101,9 +86,8 @@ class GetPrivateThreadsBreadcrumbsHook(
         self,
         action: GetPrivateThreadsBreadcrumbsHookAction,
         request: HttpRequest,
-        category: Category,
-    ) -> list[dict]:
-        return super().__call__(action, request, category)
+    ) -> dict:
+        return super().__call__(action, request)
 
 
 get_private_threads_breadcrumbs_hook = GetPrivateThreadsBreadcrumbsHook()

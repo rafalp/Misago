@@ -20,7 +20,7 @@ def custom_get_category_breadcrumbs_filter(
     request: HttpRequest,
     category: Category,
     include_category: bool=False,
-) -> list[dict]:
+) -> dict:
     ...
 ```
 
@@ -55,7 +55,7 @@ Defaults to `False`.
 
 ### Return value
 
-A list of `dict`s representing the category's breadcrumbs.
+A `dict` with a breadcrumbs template component.
 
 
 ## Action
@@ -63,7 +63,7 @@ A list of `dict`s representing the category's breadcrumbs.
 ```python
 def get_category_breadcrumbs_action(
     request: HttpRequest, category: Category, include_category: bool=False
-) -> list[dict]:
+) -> dict:
     ...
 ```
 
@@ -91,12 +91,12 @@ Defaults to `False`.
 
 ### Return value
 
-A list of `dict`s representing the category's breadcrumbs.
+A `dict` with a breadcrumbs template component.
 
 
 ## Example
 
-Include extra data in a category's breadcrumbs:
+Change the icon used for the category breadcrumb:
 
 ```python
 from django.http import HttpRequest
@@ -110,7 +110,7 @@ def set_category_breadcrumb_icon(
     request: HttpRequest,
     category: Category,
     include_category: bool = False,
-) -> list[dict]:
+) -> dict:
     breadcrumbs = action(request, category, include_category)
     if include_category and category.is_locked:
         breadcrumbs[-1]["icon"] = "tabler/lock.svg"

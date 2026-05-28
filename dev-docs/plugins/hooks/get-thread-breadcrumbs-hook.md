@@ -19,7 +19,7 @@ def custom_get_thread_breadcrumbs_filter(
     action: GetThreadBreadcrumbsHookAction,
     request: HttpRequest,
     thread: Thread,
-) -> list[dict]:
+) -> dict:
     ...
 ```
 
@@ -47,13 +47,13 @@ The `Thread` to retrieve breadcrumbs for.
 
 ### Return value
 
-A list of `dict`s representing the thread's breadcrumbs.
+A `dict` with a breadcrumbs template component.
 
 
 ## Action
 
 ```python
-def get_thread_breadcrumbs_action(request: HttpRequest, thread: Thread) -> list[dict]:
+def get_thread_breadcrumbs_action(request: HttpRequest, thread: Thread) -> dict:
     ...
 ```
 
@@ -74,12 +74,12 @@ The `Thread` to retrieve breadcrumbs for.
 
 ### Return value
 
-A list of `dict`s representing the thread's breadcrumbs.
+A `dict` with a breadcrumbs template component.
 
 
 ## Example
 
-Include extra data in a thread's breadcrumbs:
+Change the icon used for the thread breadcrumb:
 
 ```python
 from django.http import HttpRequest
@@ -90,8 +90,8 @@ from misago.threads.models import Thread
 @get_thread_breadcrumbs_hook.append_filter
 def set_thread_breadcrumb_icon(
     action, request: HttpRequest, thread: Thread
-) -> list[dict]:
+) -> dict:
     breadcrumbs = action(request, thread)
     if thread.is_locked:
-        breadcrumbs[-1]["icon"] = "tabler/lock.svg"
+        breadcrumbs["items"][-1]["icon"] = "tabler/lock.svg"
     return breadcrumbs

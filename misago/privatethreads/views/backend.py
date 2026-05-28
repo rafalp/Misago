@@ -124,12 +124,9 @@ class PrivateThreadViewBackend(ViewBackend):
     # Thread utils
 
     def get_category_breadcrumbs(
-        self,
-        request: HttpRequest,
-        category: Category,
-        include_category: bool = False,
+        self, request: HttpRequest, category: Category
     ) -> dict:
-        return get_private_threads_breadcrumbs(request, category)
+        return get_private_threads_breadcrumbs(request)
 
     def get_thread_breadcrumbs(self, request: HttpRequest, thread: Thread) -> dict:
         return get_private_thread_breadcrumbs(request, thread)

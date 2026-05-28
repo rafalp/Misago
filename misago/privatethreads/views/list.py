@@ -32,6 +32,7 @@ from ...threads.filters import (
 )
 from ...threads.models import Thread
 from ...threads.views.list import ListView
+from ..breadcrumbs import get_private_threads_breadcrumbs
 from ..hooks import (
     get_private_thread_list_context_data_hook,
     get_private_thread_list_filters_hook,
@@ -63,7 +64,7 @@ class PrivateThreadListView(ListView):
             return render(
                 request,
                 self.mark_as_read_template_name,
-                {},
+                {"breadcrumbs": get_private_threads_breadcrumbs(request)},
             )
 
         category = self.get_category(request, kwargs)

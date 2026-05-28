@@ -1,6 +1,6 @@
 # `get_private_threads_breadcrumbs_hook`
 
-This hook allows plugins to replace or extend the logic used to retrieve the private threads list breadcrumbs.
+This hook allows plugins to replace or extend the logic used to retrieve the breadcrumbs for the private threads list.
 
 
 ## Location
@@ -16,10 +16,8 @@ from misago.privatethreads.hooks import get_private_threads_breadcrumbs_hook
 
 ```python
 def custom_get_private_threads_breadcrumbs_filter(
-    action: GetPrivateThreadsBreadcrumbsHookAction,
-    request: HttpRequest,
-    category: Category,
-) -> list[dict]:
+    action: GetPrivateThreadsBreadcrumbsHookAction, request: HttpRequest
+) -> dict:
     ...
 ```
 
@@ -40,24 +38,19 @@ See the [action](#action) section for details.
 The request object.
 
 
-#### `category: Category`
-
-The `Category` to retrieve breadcrumbs for.
-
-
 ### Return value
 
-A list of `dict`s representing the category's breadcrumbs.
+A `dict` with a breadcrumbs template component.
 
 
 ## Action
 
 ```python
-def get_private_threads_breadcrumbs_action(request: HttpRequest, category: Category) -> list[dict]:
+def get_private_threads_breadcrumbs_action(request: HttpRequest) -> dict:
     ...
 ```
 
-Misago function for retrieving a private threads's breadcrumbs.
+Misago function for retrieving the breadcrumbs for the private threads list.
 
 
 ### Arguments
@@ -67,30 +60,24 @@ Misago function for retrieving a private threads's breadcrumbs.
 The request object.
 
 
-#### `category: Category`
-
-The `Category` to retrieve breadcrumbs for.
-
-
 ### Return value
 
-A list of `dict`s representing the category's breadcrumbs.
+A `dict` with a breadcrumbs template component.
 
 
 ## Example
 
-Include extra data in the private threads list breadcrumbs:
+Change the icon used for the private threads list breadcrumb:
 
 ```python
 from django.http import HttpRequest
 from misago.privatethreads.hooks import get_private_threads_breadcrumbs_hook
-from misago.categories.models import Category
 
 
 @get_private_threads_breadcrumbs_hook.append_filter
 def set_private_threads_breadcrumb_icon(
-    action, request: HttpRequest, category: Category
-) -> list[dict]:
+    action, request: HttpRequest
+) -> dict:
     breadcrumbs = action(request, category)
-    breadcrumbs[0]["icon"] = "tabler/lock.svg"
+    breadcrumbs["items"][-1]["icon"] = "tabler/lock.svg"
     return breadcrumbs

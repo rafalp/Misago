@@ -22,14 +22,14 @@ class GetThreadBreadcrumbsHookAction(Protocol):
 
     # Return value
 
-    A list of `dict`s representing the private thread's breadcrumbs.
+    A `dict` with a breadcrumbs template component.
     """
 
     def __call__(
         self,
         request: HttpRequest,
         thread: Thread,
-    ) -> list[dict]: ...
+    ) -> dict: ...
 
 
 class GetThreadBreadcrumbsHookFilter(Protocol):
@@ -55,7 +55,7 @@ class GetThreadBreadcrumbsHookFilter(Protocol):
 
     # Return value
 
-    A list of `dict`s representing the private thread's breadcrumbs.
+    A `dict` with a breadcrumbs template component.
     """
 
     def __call__(
@@ -63,7 +63,7 @@ class GetThreadBreadcrumbsHookFilter(Protocol):
         action: GetThreadBreadcrumbsHookAction,
         request: HttpRequest,
         thread: Thread,
-    ) -> list[dict]: ...
+    ) -> dict: ...
 
 
 class GetThreadBreadcrumbsHook(
@@ -78,7 +78,7 @@ class GetThreadBreadcrumbsHook(
 
     # Example
 
-    Include extra data in a private thread's breadcrumbs:
+    Change the icon used for the private thread breadcrumb:
 
     ```python
     from django.http import HttpRequest
@@ -89,10 +89,10 @@ class GetThreadBreadcrumbsHook(
     @get_private_thread_breadcrumbs_hook.append_filter
     def set_private_thread_breadcrumb_icon(
         action, request: HttpRequest, thread: Thread
-    ) -> list[dict]:
+    ) -> dict:
         breadcrumbs = action(request, thread)
         if thread.is_locked:
-            breadcrumbs[-1]["icon"] = "tabler/lock.svg"
+            breadcrumbs["items"][-1]["icon"] = "tabler/lock.svg"
         return breadcrumbs
     """
 
@@ -103,7 +103,7 @@ class GetThreadBreadcrumbsHook(
         action: GetThreadBreadcrumbsHookAction,
         request: HttpRequest,
         thread: Thread,
-    ) -> list[dict]:
+    ) -> dict:
         return super().__call__(action, request, thread)
 
 

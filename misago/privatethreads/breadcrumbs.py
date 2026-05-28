@@ -10,31 +10,27 @@ from .hooks import (
 )
 
 
-def get_private_threads_breadcrumbs(
-    request: HttpRequest, category: Category
-) -> list[dict]:
+def get_private_threads_breadcrumbs(request: HttpRequest) -> dict:
     return get_private_threads_breadcrumbs_hook(
-        _get_private_threads_breadcrumbs_action, request, category
+        _get_private_threads_breadcrumbs_action, request
     )
 
 
-def _get_private_threads_breadcrumbs_action(
-    request: HttpRequest, category: Category
-) -> list[dict]:
+def _get_private_threads_breadcrumbs_action(request: HttpRequest) -> dict:
     return {
         "id": "breadcrumbs",
         "template_name": "misago/private_threads_breadcrumbs.html",
         "items": [
             {
                 "type": "private_threads",
-                "label": pgettext("index breadcrumb", "Private threads"),
+                "label": pgettext("breadcrumb", "Private threads"),
                 "url": reverse("misago:private-thread-list"),
             },
         ],
     }
 
 
-def get_private_thread_breadcrumbs(request: HttpRequest, thread: Thread) -> list[dict]:
+def get_private_thread_breadcrumbs(request: HttpRequest, thread: Thread) -> dict:
     return get_private_thread_breadcrumbs_hook(
         _get_private_thread_breadcrumbs_action, request, thread
     )
@@ -42,14 +38,14 @@ def get_private_thread_breadcrumbs(request: HttpRequest, thread: Thread) -> list
 
 def _get_private_thread_breadcrumbs_action(
     request: HttpRequest, thread: Thread
-) -> list[dict]:
+) -> dict:
     return {
         "id": "breadcrumbs",
         "template_name": "misago/private_thread_breadcrumbs.html",
         "items": [
             {
                 "type": "private_threads",
-                "label": pgettext("index breadcrumb", "Private threads"),
+                "label": pgettext("breadcrumb", "Private threads"),
                 "url": reverse("misago:private-thread-list"),
             },
             {

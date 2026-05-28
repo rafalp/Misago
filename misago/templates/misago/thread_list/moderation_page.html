@@ -9,12 +9,9 @@
 
 {% block content %}
 <div class="page page-threads">
-  {% if is_index %}
-    {% include "misago/index_header.html" %}
-  {% else %}
-    {% include "misago/thread_list/header.html" %}
-  {% endif %}
   <div class="container page-container">
+
+    {% includecomponent breadcrumbs %}
 
     <form method="post">
       {% csrf_token %}

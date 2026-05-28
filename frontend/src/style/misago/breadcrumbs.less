@@ -9,12 +9,28 @@
   margin-bottom: @line-height-computed / 2;
 }
 
+.breadcrumbs-separator {
+  display: inline-block;
+
+  margin: 0 @breadcrumbs-gutter;
+  padding: 0;
+
+  list-style: none;
+
+  color: @breadcrumbs-separator;
+
+  svg {
+    height: 16px;
+    width: 16px;
+  }
+}
+
 .breadcrumbs-item {
   display: inline-block;
 
   max-width: 100%;
 
-  margin: 0 ceil(@grid-gutter-width / 2) @line-height-computed / 2 0;
+  margin: 0 0 (@line-height-computed / 2) 0;
   padding: 0;
 
   list-style: none;

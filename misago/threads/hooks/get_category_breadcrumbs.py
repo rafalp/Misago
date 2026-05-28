@@ -28,7 +28,7 @@ class GetCategoryBreadcrumbsHookAction(Protocol):
 
     # Return value
 
-    A list of `dict`s representing the category's breadcrumbs.
+    A `dict` with a breadcrumbs template component.
     """
 
     def __call__(
@@ -36,7 +36,7 @@ class GetCategoryBreadcrumbsHookAction(Protocol):
         request: HttpRequest,
         category: Category,
         include_category: bool = False,
-    ) -> list[dict]: ...
+    ) -> dict: ...
 
 
 class GetCategoryBreadcrumbsHookFilter(Protocol):
@@ -68,7 +68,7 @@ class GetCategoryBreadcrumbsHookFilter(Protocol):
 
     # Return value
 
-    A list of `dict`s representing the category's breadcrumbs.
+    A `dict` with a breadcrumbs template component.
     """
 
     def __call__(
@@ -77,7 +77,7 @@ class GetCategoryBreadcrumbsHookFilter(Protocol):
         request: HttpRequest,
         category: Category,
         include_category: bool = False,
-    ) -> list[dict]: ...
+    ) -> dict: ...
 
 
 class GetCategoryBreadcrumbsHook(
@@ -92,7 +92,7 @@ class GetCategoryBreadcrumbsHook(
 
     # Example
 
-    Include extra data in a category's breadcrumbs:
+    Change the icon used for the category breadcrumb:
 
     ```python
     from django.http import HttpRequest
@@ -106,7 +106,7 @@ class GetCategoryBreadcrumbsHook(
         request: HttpRequest,
         category: Category,
         include_category: bool = False,
-    ) -> list[dict]:
+    ) -> dict:
         breadcrumbs = action(request, category, include_category)
         if include_category and category.is_locked:
             breadcrumbs[-1]["icon"] = "tabler/lock.svg"
@@ -121,7 +121,7 @@ class GetCategoryBreadcrumbsHook(
         request: HttpRequest,
         category: Category,
         include_category: bool = False,
-    ) -> list[dict]:
+    ) -> dict:
         return super().__call__(action, request, category, include_category)
 
 

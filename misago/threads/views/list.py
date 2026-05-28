@@ -59,6 +59,7 @@ from ...readtracker.tracker import (
     mark_category_read,
 )
 from ...readtracker.models import ReadCategory, ReadThread
+from ..breadcrumbs import get_category_breadcrumbs, get_threads_breadcrumbs
 from ..enums import (
     ThreadsListsPolling,
     ThreadWeight,
@@ -392,7 +393,11 @@ class ThreadListView(ListView):
         self, request: HttpRequest, kwargs: dict
     ) -> HttpResponse | None:
         if not request.POST.get("confirm"):
-            return render(request, self.mark_as_read_template_name)
+            return render(
+                request,
+                self.mark_as_read_template_name,
+                {"breadcrumbs": get_threads_breadcrumbs(request)},
+            )
 
         categories_ids = list(request.categories.categories)
         self.read_categories(request.user, categories_ids)
@@ -422,7 +427,7 @@ class ThreadListView(ListView):
                     "moderation_action": action_obj,
                     "threads": page_threads,
                     "selection": selected_threads,
-                    "breadcrumbs": [],
+                    "breadcrumbs": get_threads_breadcrumbs(request),
                 }
             )
 
@@ -730,8 +735,8 @@ class CategoryThreadListView(ListView):
                 self.mark_as_read_template_name,
                 {
                     "category": category,
-                    "breadcrumbs": request.categories.get_category_path(
-                        category.id, include_self=False
+                    "breadcrumbs": get_category_breadcrumbs(
+                        request, category, include_category=True
                     ),
                 },
             )
@@ -775,8 +780,8 @@ class CategoryThreadListView(ListView):
                     "category": category,
                     "threads": page_threads,
                     "selection": selected_threads,
-                    "breadcrumbs": request.categories.get_category_path(
-                        category.id, include_self=False
+                    "breadcrumbs": get_category_breadcrumbs(
+                        request, category, include_category=True
                     ),
                 }
             )
@@ -803,14 +808,12 @@ class CategoryThreadListView(ListView):
         else:
             threads = None
 
-        path = request.categories.get_category_path(category.id, include_self=False)
-
         context = {
             "template_name_htmx": self.template_name_htmx,
             "category": category,
             "subcategories": self.get_subcategories(request, category),
             "threads": threads,
-            "breadcrumbs": path,
+            "breadcrumbs": get_category_breadcrumbs(request, category),
             "pagination_url": self.get_pagination_url(category, kwargs),
             "start_thread_url": self.get_start_thread_url(request, category),
         }

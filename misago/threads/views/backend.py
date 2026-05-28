@@ -149,10 +149,7 @@ class ViewBackend(ABC):
 
     @abstractmethod
     def get_category_breadcrumbs(
-        self,
-        request: HttpRequest,
-        category: Category,
-        include_category: bool = False,
+        self, request: HttpRequest, category: Category
     ) -> dict:
         pass
 
@@ -377,9 +374,8 @@ class ThreadViewBackend(ViewBackend):
         self,
         request: HttpRequest,
         category: Category,
-        include_category: bool = False,
     ) -> dict:
-        return get_category_breadcrumbs(request, category, include_category)
+        return get_category_breadcrumbs(request, category, include_category=True)
 
     def get_thread_breadcrumbs(self, request: HttpRequest, thread: Thread) -> dict:
         return get_thread_breadcrumbs(request, thread)

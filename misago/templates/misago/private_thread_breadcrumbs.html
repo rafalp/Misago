@@ -1,5 +1,10 @@
 <ul class="breadcrumbs breadcrumbs-full">
   {% for item in items %}
+    {% if not forloop.first %}
+      <li class="breadcrumbs-separator">
+        {% include "tabler/chevron-right.svg" %}
+      </li>
+    {% endif %}
     <li class="breadcrumbs-item{% if item.css_class %} breadcrumbs-item-{{ item.css_class }}{% endif %}">
       <a href="{{ item.url }}">
         <span class="breadcrumbs-item-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>
