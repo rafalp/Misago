@@ -17,6 +17,11 @@
       <div class="toolbar-item">
         {% includecomponent watch_thread %}
       </div>
+      {% if not user_is_member and thread_moderation_actions and bottom_toolbar %}
+        <div class="toolbar-item">
+          {% include "misago/moderation_thread/dropdown.html" with moderation_actions=thread_moderation_actions %}
+        </div>
+      {% endif %}
     </div>
   {% endif %}
   {% if top_toolbar %}
@@ -51,7 +56,7 @@
         </div>
       {% endif %}
     </div>
-  {% else %}
+  {% elif user_is_member %}
     <div class="toolbar-section">
       <div class="toolbar-item">
         <form

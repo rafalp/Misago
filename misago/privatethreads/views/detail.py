@@ -105,6 +105,7 @@ class PrivateThreadDetailView(DetailView):
         context.update(
             {
                 "members": self.get_thread_members_context_data(request, thread),
+                "user_is_member": request.user in thread.private_thread_members,
                 "thread_moderation_actions": get_moderation_action_choices(
                     self.get_thread_moderation_actions(request, thread)
                 ),
