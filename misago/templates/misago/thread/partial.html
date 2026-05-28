@@ -22,6 +22,6 @@
   {% includecomponent feed %}
   {% include "misago/thread/toolbar.html" with top_toolbar=False bottom_toolbar=True %}
   {% if posts_moderation_actions %}
-    {% include "misago/thread/posts_moderation_form.html" with moderation_actions=posts_moderation_actions %}
+    {% include "misago/moderation_thread/posts_form.html" with moderation_actions=posts_moderation_actions %}
   {% endif %}
 </div>

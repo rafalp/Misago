@@ -19,7 +19,7 @@
       </div>
       {% if thread_moderation_actions and bottom_toolbar %}
         <div class="toolbar-item">
-          {% include "misago/thread/thread_moderation.html" with moderation_actions=thread_moderation_actions %}
+          {% include "misago/moderation_thread/dropdown.html" with moderation_actions=thread_moderation_actions %}
         </div>
       {% endif %}
     </div>
@@ -52,7 +52,7 @@
       {% endif %}
       {% if thread_moderation_actions %}
         <div class="toolbar-item">
-          {% include "misago/thread/thread_moderation.html" with moderation_actions=thread_moderation_actions %}
+          {% include "misago/moderation_thread/dropdown.html" with moderation_actions=thread_moderation_actions %}
         </div>
       {% endif %}
     </div>

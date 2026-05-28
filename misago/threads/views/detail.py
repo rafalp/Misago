@@ -80,9 +80,7 @@ class DetailView(GenericThreadView):
     header_template_name: str
     meta_bar_template_name: str = "misago/thread/meta_bar.html"
     footer_template_name: str
-    moderation_modal_template_name: str = "misago/thread/moderation_modal.html"
-    moderation_page_template_name: str = "misago/thread/moderation_page.html"
-    moderation_result_template_name: str = "misago/thread/moderation_result.html"
+
     reply_error_template_name: str = "misago/thread/reply_error.html"
     reply_template_name: str = "misago/quick_reply/form.html"
     watch_thread_template_name: str = "misago/thread/watch_thread.html"
@@ -95,6 +93,10 @@ class DetailView(GenericThreadView):
     unapproved_posts_status_bar_template_name: str = (
         "misago/thread/unapproved_posts.html"
     )
+
+    moderation_modal_template_name: str = "misago/moderation_thread/modal.html"
+    moderation_page_template_name: str = "misago/moderation_thread/page.html"
+    moderation_result_template_name: str = "misago/moderation_thread/result.html"
 
     # Dispatch
 

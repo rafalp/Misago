@@ -47,8 +47,6 @@ class PrivateThreadDetailView(DetailView):
     header_template_name: str = "misago/private_thread/header.html"
     meta_bar_template_name: str = "misago/thread/meta_bar.html"
     footer_template_name: str = "misago/thread/footer.html"
-    moderation_page_template_name: str = "misago/thread/moderation_page.html"
-    moderation_modal_template_name: str = "misago/thread/moderation_modal.html"
 
     # View overrides
 
