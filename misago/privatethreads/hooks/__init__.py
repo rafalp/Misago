@@ -12,6 +12,9 @@ from .get_private_thread_detail_view_thread_queryset import (
 from .get_private_thread_list_context_data import (
     get_private_thread_list_context_data_hook,
 )
+from .get_private_thread_detail_view_moderation_result_data import (
+    get_private_thread_detail_view_moderation_result_data_hook,
+)
 from .get_private_thread_list_filters import get_private_thread_list_filters_hook
 from .get_private_thread_list_queryset import get_private_thread_list_queryset_hook
 from .get_private_thread_list_threads import get_private_thread_list_threads_hook
@@ -27,6 +30,7 @@ __all__ = [
     "get_private_thread_detail_view_posts_queryset_hook",
     "get_private_thread_detail_view_thread_queryset_hook",
     "get_private_thread_list_context_data_hook",
+    "get_private_thread_detail_view_moderation_result_data_hook",
     "get_private_thread_list_filters_hook",
     "get_private_thread_list_queryset_hook",
     "get_private_thread_list_threads_hook",

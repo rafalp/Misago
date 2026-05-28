@@ -114,7 +114,7 @@ class GetPrivateThreadDetailViewContextDataHook(
     def include_custom_context(
         action,
         request: HttpRequest,
-        thread: dict,
+        thread: Thread,
         page: int | None,
     ) -> dict:
         context = action(request, thread, page)

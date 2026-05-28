@@ -1,20 +1,18 @@
 {% load i18n misago_component %}
 
-<div id="misago-htmx-footer">
-  <div class="toolbar toolbar-over-footer">
-    <div class="toolbar-section hidden-xs">
-      <div class="toolbar-item">
-        {% includecomponent breadcrumbs %}
-      </div>
+<div class="toolbar toolbar-over-footer">
+  <div class="toolbar-section hidden-xs">
+    <div class="toolbar-item">
+      {% includecomponent breadcrumbs %}
     </div>
-    <div class="toolbar-spacer"></div>
-    <div class="toolbar-section">
-      <div class="toolbar-item">
-        <a href="#" class="btn btn-muted btn-block">
-          <span class="material-icon">arrow_upward</span>
-          {% translate "Go to top" context "go up button" %}
-        </a>
-      </div>
+  </div>
+  <div class="toolbar-spacer"></div>
+  <div class="toolbar-section">
+    <div class="toolbar-item">
+      <a href="#" class="btn btn-muted btn-block">
+        <span class="material-icon">arrow_upward</span>
+        {% translate "Go to top" context "go up button" %}
+      </a>
     </div>
   </div>
 </div>

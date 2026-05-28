@@ -9,7 +9,9 @@
 
 {% block content %}
 <div class="page page-thread">
-  {% includecomponent header %}
+  <div id="misago-htmx-header">
+    {% includecomponent header %}
+  </div>
   <div class="container page-container">
 
     {% pluginoutlet THREAD_REPLIES_PAGE_START %}
@@ -27,8 +29,10 @@
     {% endif %}
 
     {% pluginoutlet THREAD_REPLIES_PAGE_END %}
-    {% includecomponent footer %}
 
+    <div id="misago-htmx-footer">
+      {% includecomponent footer %}
+    </div>
   </div>
 </div>
 {% endblock content %}

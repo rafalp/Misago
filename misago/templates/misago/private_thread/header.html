@@ -1,18 +1,16 @@
 {% load i18n misago_component %}
 
-<div id="misago-htmx-header">
-  <div class="container page-header-container">
-    <div class="page-header page-header-private-thread">
-      <div class="page-header-bg-image">
-        <div class="page-header-bg-overlay">
-          <div class="page-header-image"></div>
-          <div class="page-header-banner page-header-banner-private-thread">
-            <div class="page-header-banner-bg-image">
-              <div class="page-header-banner-bg-overlay">
-                {% includecomponent breadcrumbs %}
-                <h1>{{ header }}</h1>
-                {% includecomponent meta_bar %}
-              </div>
+<div class="container page-header-container">
+  <div class="page-header page-header-private-thread">
+    <div class="page-header-bg-image">
+      <div class="page-header-bg-overlay">
+        <div class="page-header-image"></div>
+        <div class="page-header-banner page-header-banner-private-thread">
+          <div class="page-header-banner-bg-image">
+            <div class="page-header-banner-bg-overlay">
+              {% includecomponent breadcrumbs %}
+              <h1>{{ header }}</h1>
+              {% includecomponent meta_bar %}
             </div>
           </div>
         </div>

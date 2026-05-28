@@ -17,6 +17,9 @@ from .get_thread_breadcrumbs import get_thread_breadcrumbs_hook
 from .get_thread_detail_view_context_data import (
     get_thread_detail_view_context_data_hook,
 )
+from .get_thread_detail_view_moderation_result_data import (
+    get_thread_detail_view_moderation_result_data_hook,
+)
 from .get_thread_detail_view_posts_queryset import (
     get_thread_detail_view_posts_queryset_hook,
 )
@@ -53,6 +56,7 @@ __all__ = [
     "get_category_threads_page_threads_hook",
     "get_thread_breadcrumbs_hook",
     "get_thread_detail_view_context_data_hook",
+    "get_thread_detail_view_moderation_result_data_hook",
     "get_thread_detail_view_posts_queryset_hook",
     "get_thread_detail_view_thread_queryset_hook",
     "get_thread_url_hook",

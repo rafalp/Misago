@@ -14,6 +14,7 @@ from ...moderation.actions import (
 from ...moderation.post import get_private_thread_post_moderation_actions
 from ...moderation.posts import get_private_thread_posts_moderation_actions
 from ...moderation.thread import get_private_thread_moderation_actions
+from ...moderation.views import get_moderation_action_choices
 from ...permissions.checkutils import check_permissions
 from ...permissions.privatethreads import (
     check_edit_private_thread_permission,
@@ -28,8 +29,8 @@ from ...threads.models import Post, Thread
 from ...threads.views.detail import DetailView
 from ..hooks import (
     get_private_thread_detail_view_context_data_hook,
+    get_private_thread_detail_view_moderation_result_data_hook,
     get_private_thread_detail_view_posts_queryset_hook,
-    get_private_thread_detail_view_thread_queryset_hook,
 )
 from .backend import private_thread_backend
 from .members import get_private_thread_members_context_data
@@ -46,7 +47,8 @@ class PrivateThreadDetailView(DetailView):
     header_template_name: str = "misago/private_thread/header.html"
     meta_bar_template_name: str = "misago/thread/meta_bar.html"
     footer_template_name: str = "misago/thread/footer.html"
-    breadcrumbs_template_name: str = "misago/thread/breadcrumbs.html"
+    moderation_page_template_name: str = "misago/thread/moderation_page.html"
+    moderation_modal_template_name: str = "misago/thread/moderation_modal.html"
 
     # View overrides
 
@@ -76,6 +78,13 @@ class PrivateThreadDetailView(DetailView):
             request.user_permissions, post, request
         )
 
+    def get_moderation_result_data(self, request: HttpRequest, thread: Thread) -> dict:
+        return get_private_thread_detail_view_moderation_result_data_hook(
+            self.get_moderation_result_data_action, request, thread
+        )
+
+    # Context data
+
     def get_context_data(
         self,
         request: HttpRequest,
@@ -95,7 +104,14 @@ class PrivateThreadDetailView(DetailView):
         kwargs: dict,
     ) -> dict:
         context = super().get_context_data_action(request, thread, page, kwargs)
-        context["members"] = self.get_thread_members_context_data(request, thread)
+        context.update(
+            {
+                "members": self.get_thread_members_context_data(request, thread),
+                "thread_moderation_actions": get_moderation_action_choices(
+                    self.get_thread_moderation_actions(request, thread)
+                ),
+            }
+        )
 
         return context
 

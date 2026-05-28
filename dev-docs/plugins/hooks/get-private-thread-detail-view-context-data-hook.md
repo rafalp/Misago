@@ -115,7 +115,7 @@ from misago.threads.models import Thread
 def include_custom_context(
     action,
     request: HttpRequest,
-    thread: dict,
+    thread: Thread,
     page: int | None,
 ) -> dict:
     context = action(request, thread, page)

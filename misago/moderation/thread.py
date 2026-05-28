@@ -83,7 +83,6 @@ def _get_private_thread_moderation_actions_action(
         actions.append(LockThreadModerationAction)
 
     return actions + [
-        MoveThreadModerationAction,
         DeleteThreadModerationAction,
     ]
 

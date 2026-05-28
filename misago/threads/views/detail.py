@@ -55,6 +55,7 @@ from ...threadupdates.models import ThreadUpdate
 from ..breadcrumbs import get_thread_breadcrumbs
 from ..hooks import (
     get_thread_detail_view_context_data_hook,
+    get_thread_detail_view_moderation_result_data_hook,
     get_thread_detail_view_posts_queryset_hook,
 )
 from ..models import Post, Thread
@@ -77,17 +78,14 @@ class DetailView(GenericThreadView):
     template_name: str
     template_partial_name: str
     header_template_name: str
-    meta_bar_template_name: str
+    meta_bar_template_name: str = "misago/thread/meta_bar.html"
     footer_template_name: str
-    breadcrumbs_template_name: str
-    feed_template_name: str = "misago/post_feed/index.html"
-    feed_post_template_name: str = "misago/post_feed/post.html"
-    moderation_page_template_name: str
-    moderation_modal_template_name: str
+    moderation_modal_template_name: str = "misago/thread/moderation_modal.html"
+    moderation_page_template_name: str = "misago/thread/moderation_page.html"
+    moderation_result_template_name: str = "misago/thread/moderation_result.html"
     reply_error_template_name: str = "misago/thread/reply_error.html"
     reply_template_name: str = "misago/quick_reply/form.html"
     watch_thread_template_name: str = "misago/thread/watch_thread.html"
-    moderation_result_template_name: str = "misago/thread/moderation_result.html"
 
     status_bars_template_name: str = "misago/thread/status_bars.html"
     locked_thread_status_bar_template_name: str = "misago/thread/locked_thread.html"
@@ -210,18 +208,14 @@ class DetailView(GenericThreadView):
 
         if isinstance(result, ModerationActionTemplateResult):
             result.update_context(
-                self.get_moderation_page_data(
-                    request,
-                    thread,
-                    {
-                        "moderation_action": action_obj,
-                        "moderation_type": "thread_moderation",
-                        "cancel_url": request.get_full_path(),
-                    },
-                )
+                {
+                    "moderation_action": action_obj,
+                    "moderation_type": "thread_moderation",
+                    "breadcrumbs": self.get_thread_breadcrumbs(request, thread),
+                    "thread": thread,
+                    "cancel_url": request.get_full_path(),
+                }
             )
-
-            result.update_context(self.get_base_context_data(request, thread))
 
         return result
 
@@ -279,20 +273,16 @@ class DetailView(GenericThreadView):
 
         if isinstance(result, ModerationActionTemplateResult):
             result.update_context(
-                self.get_moderation_page_data(
-                    request,
-                    thread,
-                    {
-                        "moderation_action": action_obj,
-                        "moderation_type": "posts_moderation",
-                        "posts": page_posts,
-                        "selection": selected_posts,
-                        "cancel_url": request.get_full_path(),
-                    },
-                )
+                {
+                    "moderation_action": action_obj,
+                    "moderation_type": "posts_moderation",
+                    "breadcrumbs": self.get_thread_breadcrumbs(request, thread),
+                    "thread": thread,
+                    "posts": page_posts,
+                    "selection": selected_posts,
+                    "cancel_url": request.get_full_path(),
+                },
             )
-
-            result.update_context(self.get_base_context_data(request, thread))
 
         return result
 
@@ -360,16 +350,14 @@ class DetailView(GenericThreadView):
 
         if isinstance(result, ModerationActionTemplateResult):
             result.update_context(
-                self.get_moderation_page_data(
-                    request,
-                    thread,
-                    {
-                        "moderation_action": action_obj,
-                        "moderation_type": "post_moderation",
-                        "post": post,
-                        "cancel_url": self.get_post_url(post),
-                    },
-                )
+                {
+                    "moderation_action": action_obj,
+                    "moderation_type": "post_moderation",
+                    "breadcrumbs": self.get_thread_breadcrumbs(request, thread),
+                    "thread": thread,
+                    "post": post,
+                    "cancel_url": self.get_post_url(post),
+                },
             )
 
         return result
@@ -417,23 +405,6 @@ class DetailView(GenericThreadView):
             raise ValidationError(
                 pgettext("posts moderation error", "No valid posts selected."),
             )
-
-    def get_moderation_page_data(
-        self, request: HttpRequest, thread: Thread, context: dict
-    ) -> dict:
-        return self.get_moderation_page_data_action(request, thread, context)
-
-    def get_moderation_page_data_action(
-        self, request: HttpRequest, thread: Thread, context: dict
-    ) -> dict:
-        final_context = {
-            "breadcrumbs": self.get_thread_breadcrumbs(request, thread),
-            "category": thread.category,
-            "thread": thread,
-            "extra_components": [],
-        }
-        final_context.update(context)
-        return final_context
 
     def get_moderation_result_data(self, request: HttpRequest, thread: Thread) -> dict:
         return self.get_moderation_result_data_action(request, thread)
@@ -783,11 +754,7 @@ class ThreadDetailView(DetailView):
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"
     header_template_name: str = "misago/thread/header.html"
-    meta_bar_template_name: str = "misago/thread/meta_bar.html"
     footer_template_name: str = "misago/thread/footer.html"
-    breadcrumbs_template_name: str = "misago/thread/breadcrumbs.html"
-    moderation_page_template_name: str = "misago/thread/moderation_page.html"
-    moderation_modal_template_name: str = "misago/thread/moderation_modal.html"
 
     # Dispatch
 
@@ -834,6 +801,13 @@ class ThreadDetailView(DetailView):
         return get_thread_post_moderation_actions(
             request.user_permissions, post, request
         )
+
+    def get_moderation_result_data(self, request: HttpRequest, thread: Thread) -> dict:
+        return get_thread_detail_view_moderation_result_data_hook(
+            self.get_moderation_result_data_action, request, thread
+        )
+
+    # Context data
 
     def get_context_data(
         self,

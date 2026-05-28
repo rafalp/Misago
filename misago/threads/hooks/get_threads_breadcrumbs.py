@@ -75,7 +75,7 @@ class GetThreadsBreadcrumbsHook(
     def set_threads_breadcrumb_icon(
         action, request: HttpRequest
     ) -> dict:
-        breadcrumbs = action(request, category)
+        breadcrumbs = action(request)
         breadcrumbs["items"][-1]["icon"] = "tabler/lock.svg"
         return breadcrumbs
     """
