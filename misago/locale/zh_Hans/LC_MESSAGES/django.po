@@ -6,15 +6,16 @@
 # Translators:
 # HAHA WA, 2025
 # eternitygod, 2025
+# Rafał Pitoń <kontakt@rpiton.com>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-15 09:26+0000\n"
+"POT-Creation-Date: 2026-05-29 21:51+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
-"Last-Translator: eternitygod, 2025\n"
+"Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/misago/teams/65369/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7361,7 +7362,7 @@ msgstr "要更新的一个或多个帖子未找到。"
 msgctxt "posts api"
 msgid "No more than %(limit)s post can be updated at a single time."
 msgid_plural "No more than %(limit)s posts can be updated at a single time."
-msgstr[0] "一次最多只能更新%(limit)s条帖子（已选择%(show_value)s条）。"
+msgstr[0] "一次最多只能更新%(limit)s条帖子。"
 
 #: threads/api/postendpoints/split.py:13
 msgctxt "posts api"
