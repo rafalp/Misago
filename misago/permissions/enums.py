@@ -90,9 +90,9 @@ class CanUploadAttachments(IntEnum):
 
 
 class PermissionValue(IntEnum):
-    YES = 2
-    NO = 1
-    NEVER = 0
+    YES = 1
+    NO = 0
+    NEVER = 2
 
     @classmethod
     def get_choices(cls):
