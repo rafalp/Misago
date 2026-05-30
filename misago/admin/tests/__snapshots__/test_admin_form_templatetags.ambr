@@ -409,17 +409,17 @@
     <div class="controls control-yesnonever">
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_0" disabled>
+          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_0" disabled>
           Yes
         </label>
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_1" disabled>
+          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_1" disabled>
           No
         </label>
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_2" disabled>
+          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_2" disabled>
           Never
         </label>
       
@@ -784,17 +784,17 @@
     <div class="controls control-yesnonever">
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_0" required>
+          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_0" required>
           Yes
         </label>
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_1" required>
+          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_1" required>
           No
         </label>
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_2" required>
+          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_2" required>
           Never
         </label>
       
@@ -821,17 +821,17 @@
     <div class="controls control-yesnonever">
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_0" required>
+          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_0" required>
           Yes
         </label>
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_1" required>
+          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_1" required>
           No
         </label>
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_2" required checked>
+          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_2" required checked>
           Never
         </label>
       
@@ -858,17 +858,17 @@
     <div class="controls control-yesnonever">
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_0" required>
+          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_0" required>
           Yes
         </label>
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_1" required checked>
+          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_1" required checked>
           No
         </label>
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_2" required>
+          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_2" required>
           Never
         </label>
       
@@ -895,17 +895,17 @@
     <div class="controls control-yesnonever">
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_0" required checked>
+          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_0" required checked>
           Yes
         </label>
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="1" id="id_yes_no_never_field_1" required>
+          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_1" required>
           No
         </label>
       
         <label class="radio">
-          <input type="radio" name="yes_no_never_field" value="0" id="id_yes_no_never_field_2" required>
+          <input type="radio" name="yes_no_never_field" value="2" id="id_yes_no_never_field_2" required>
           Never
         </label>
       
