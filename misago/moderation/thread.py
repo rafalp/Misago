@@ -158,6 +158,14 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
     def form_valid(self, form) -> ModerationActionResult:
         thread = self.thread
 
+        old_category = self.category
+        new_category = form.cleaned_data["category"]
+
+        thread.category = new_category
+        thread.save()
+
+        synchronize_categories.delay([old_category.id, new_category.id])
+
         messages.success(
             self.request,
             pgettext("thread moderation success", "Thread moved"),

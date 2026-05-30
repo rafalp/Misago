@@ -181,6 +181,9 @@ class DetailView(GenericThreadView):
             set_moderation_response_headers(request, response)
             return response
 
+        if not request.is_htmx:
+            return redirect(request.get_full_path())
+
         context_data = self.get_moderation_result_data(request, thread)
 
         if thread_updates := result.thread_updates:
@@ -243,18 +246,18 @@ class DetailView(GenericThreadView):
 
             return result.render(request, template_name)
 
-        if request.is_htmx:
-            response = self.get(
-                request,
-                thread_id,
-                slug,
-                page,
-                updated_posts=result.updated_items,
-            )
-            set_moderation_response_headers(request, response)
-            return response
+        if not request.is_htmx:
+            return redirect(request.get_full_path())
 
-        return redirect(request.get_full_path())
+        response = self.get(
+            request,
+            thread_id,
+            slug,
+            page,
+            updated_posts=result.updated_items,
+        )
+        set_moderation_response_headers(request, response)
+        return response
 
     def execute_posts_moderation_action(
         self, request: HttpRequest, thread: Thread, page: int | None
