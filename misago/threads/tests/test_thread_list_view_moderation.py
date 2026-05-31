@@ -424,6 +424,27 @@ def test_thread_list_view_shows_validation_error_from_moderation_action_in_htmx(
 
 
 @override_dynamic_settings(index_view="categories")
+def test_thread_list_view_shows_error_for_missing_threads_selection(moderator_client):
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "lock"},
+    )
+    assert_contains(response, "No valid threads selected.")
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_shows_error_for_missing_threads_selection_in_htmx(
+    moderator_client,
+):
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "lock"},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "No valid threads selected.", status_code=400)
+
+
+@override_dynamic_settings(index_view="categories")
 def test_thread_list_view_shows_error_for_empty_threads_selection(moderator_client):
     response = moderator_client.post(
         reverse("misago:thread-list"),
