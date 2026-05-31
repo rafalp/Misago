@@ -116,7 +116,7 @@ def test_thread_list_view_shows_disabled_threads_checkboxes_to_other_category_mo
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_executes_single_stage_moderation_action(
+def test_thread_list_view_executes_moderation_action(
     thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category)
@@ -133,7 +133,7 @@ def test_thread_list_view_executes_single_stage_moderation_action(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_executes_single_stage_moderation_action_in_htmx(
+def test_thread_list_view_executes_moderation_action_in_htmx(
     thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category)

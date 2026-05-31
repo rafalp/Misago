@@ -154,12 +154,14 @@ class ThreadsModerationAction(ModerationAction):
 class PostsModerationAction(ModerationAction):
     swap_root = True
 
+    category: Category | None
     thread: Thread
     posts: list[Post]
 
     def __init__(self, request: HttpRequest, thread: Thread, posts: list[Post]):
         super().__init__(request)
 
+        self.category = thread.category
         self.thread = thread
         self.posts = posts
 

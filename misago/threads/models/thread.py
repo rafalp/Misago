@@ -70,6 +70,7 @@ class Thread(PluginDataModel):
         blank=True,
         on_delete=models.SET_NULL,
     )
+    # TODO: delete this field
     last_post_is_event = models.BooleanField(default=False)
     last_poster = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -78,9 +79,11 @@ class Thread(PluginDataModel):
         blank=True,
         on_delete=models.SET_NULL,
     )
+    # TODO: make those fields required
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
 
+    # TODO: use enum
     weight = models.PositiveIntegerField(default=WEIGHT_DEFAULT)
 
     is_unapproved = models.BooleanField(default=False, db_index=True)

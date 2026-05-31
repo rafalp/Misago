@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
+from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.delete import delete_post
@@ -161,6 +162,45 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
             self.request,
             pgettext("posts moderation success", "Posts were split into a new thread."),
         )
+
+        if form.cleaned_data["category"] == self.category.id:
+            new_category = self.category
+            sync_categories_ids = [new_category.id]
+        else:
+            new_category = Category.objects.get(id=form.cleaned_data["category"])
+            sync_categories_ids = [self.category.id, new_category.id]
+
+        from misago.core.utils import slugify
+
+        first_post = self.posts[0]
+        if first_post.poster:
+            poster_username = first_post.post.username
+            poster_slug = first_post.post.slug
+        else:
+            poster_username = first_post.poster_name
+            poster_slug = slugify(first_post.poster_name)
+
+        new_thread = Thread.objects.create(
+            category=new_category,
+            title=form.cleaned_data["title"],
+            slug=slugify(form.cleaned_data["title"]),
+            started_at=first_post.posted_at,
+            last_posted_at=first_post.posted_at,
+            first_post=first_post,
+            last_post=first_post,
+            starter_name=poster_username,
+            starter_slug=poster_slug,
+            last_poster_name=poster_username,
+            last_poster_slug=poster_slug,
+        )
+
+        for post in self.posts:
+            post.category = new_category
+            post.thread = new_thread
+            post.save()
+
+        synchronize_thread(new_thread, request=self.request)
+        synchronize_categories.delay(sync_categories_ids)
 
         return ModerationActionResult(
             deleted_items=[post.id for post in self.posts],
