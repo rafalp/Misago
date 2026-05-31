@@ -21,9 +21,13 @@ class GetPrivateThreadDetailViewContextDataHookAction(Protocol):
 
     A `Thread` instance.
 
-    ## `page: int | None = None`
+    ## `page: int | None`
 
     An `int` with page number or `None`.
+
+    ## `kwargs: dict`
+
+    A Python `dict` with view's keyword arguments.
 
     # Return value
 
@@ -35,7 +39,8 @@ class GetPrivateThreadDetailViewContextDataHookAction(Protocol):
         self,
         request: HttpRequest,
         thread: Thread,
-        page: int | None = None,
+        page: int | None,
+        kwargs: dict,
     ) -> dict: ...
 
 
@@ -60,9 +65,13 @@ class GetPrivateThreadDetailViewContextDataHookFilter(Protocol):
 
     A `Thread` instance.
 
-    ## `page: int | None = None`
+    ## `page: int | None`
 
     An `int` with page number or `None`.
+
+    ## `kwargs: dict`
+
+    A Python `dict` with view's keyword arguments.
 
     # Return value
 
@@ -75,7 +84,8 @@ class GetPrivateThreadDetailViewContextDataHookFilter(Protocol):
         action: GetPrivateThreadDetailViewContextDataHookAction,
         request: HttpRequest,
         thread: Thread,
-        page: int | None = None,
+        page: int | None,
+        kwargs: dict,
     ) -> dict: ...
 
 
@@ -104,8 +114,8 @@ class GetPrivateThreadDetailViewContextDataHook(
     def include_custom_context(
         action,
         request: HttpRequest,
-        thread: dict,
-        page: int | None = None,
+        thread: Thread,
+        page: int | None,
     ) -> dict:
         context = action(request, thread, page)
 
@@ -122,9 +132,10 @@ class GetPrivateThreadDetailViewContextDataHook(
         action: GetPrivateThreadDetailViewContextDataHookAction,
         request: HttpRequest,
         thread: Thread,
-        page: int | None = None,
+        page: int | None,
+        kwargs: dict,
     ) -> dict:
-        return super().__call__(action, request, thread, page)
+        return super().__call__(action, request, thread, page, kwargs)
 
 
 get_private_thread_detail_view_context_data_hook = (

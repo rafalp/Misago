@@ -4,13 +4,24 @@
 <title>{{ thread }}{% if feed.paginator.number > 1 %} | {% blocktranslate with page=feed.paginator.number context "thread page title" %}Page {{ page }}{% endblocktranslate %}{% endif %} | {% translate "Private threads" context "private threads page" %} | {{ settings.forum_name }}</title>
 {% endif %}
 
+{% if is_request_htmx %}
+  {% include "misago/snackbars.html" %}
+  <div id="misago-htmx-header" hx-swap-oob="innerHTML">
+    {% includecomponent header %}
+  </div>
+  <div id="misago-htmx-footer" hx-swap-oob="innerHTML">
+    {% includecomponent footer %}
+  </div>
+{% endif %}
+
 <div id="misago-htmx-root">
-  {% if thread_status_bars %}
-    <div id="misago-htmx-thread-status" class="status-bars">
-      {% includecomponents thread_status_bars %}
-    </div>
-  {% endif %}
+  <div id="misago-htmx-status-bars">
+    {% includecomponent status_bars %}
+  </div>
   {% include "misago/private_thread/toolbar.html" with top_toolbar=True bottom_toolbar=False %}
   {% includecomponent feed %}
   {% include "misago/private_thread/toolbar.html" with top_toolbar=False bottom_toolbar=True %}
+  {% if posts_moderation_actions %}
+    {% include "misago/moderation_thread/posts_form.html" with moderation_actions=posts_moderation_actions %}
+  {% endif %}
 </div>

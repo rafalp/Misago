@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Union
 
 from django.db.models import F
 
@@ -13,16 +13,26 @@ if TYPE_CHECKING:
 def notify_user(
     user: "User",
     verb: str,
-    actor: Optional["User"] = None,
+    actor: Optional[Union["User", str]] = None,
     category: Optional[Category] = None,
     thread: Optional[Thread] = None,
     post: Optional[Post] = None,
 ) -> Notification:
+    if isinstance(actor, str):
+        actor_obj = None
+        actor_name = actor
+    elif actor:
+        actor_obj = actor
+        actor_name = actor.username
+    else:
+        actor_obj = None
+        actor_name = None
+
     notification = Notification.objects.create(
         user=user,
         verb=verb,
-        actor=actor,
-        actor_name=actor.username if actor else None,
+        actor=actor_obj,
+        actor_name=actor_name,
         category=category,
         thread=thread,
         thread_title=thread.title if thread else None,

@@ -3,46 +3,116 @@
 .breadcrumbs {
   display: block;
 
+  max-width: 100%;
+
   padding: 0;
   margin-bottom: @line-height-computed / 2;
 }
 
+.breadcrumbs-separator {
+  display: inline-block;
+
+  margin: 0 @breadcrumbs-gutter;
+  padding: 0;
+
+  list-style: none;
+
+  color: @breadcrumbs-separator;
+
+  svg {
+    height: 16px;
+    width: 16px;
+  }
+}
+
 .breadcrumbs-item {
   display: inline-block;
-  margin-right: @breadcrumbs-gutter;
-  margin-bottom: @line-height-computed / 2;
+
+  max-width: 100%;
+
+  margin: 0 0 (@line-height-computed / 2) 0;
   padding: 0;
+
   list-style: none;
-  white-space: nowrap;
+
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 .breadcrumbs-item a {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+
+  min-width: 0;
+  height: 18px;
+
   text-decoration: none;
+
+  .breadcrumbs-item-name {
+    min-width: 0;
+
+    overflow: hidden;
+
+    color: @breadcrumbs-color;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   &,
   &:visited {
-    color: @breadcrumbs-color;
+    .breadcrumbs-item-name {
+      color: @breadcrumbs-color;
+    }
+
+    .breadcrumbs-item-icon {
+      color: @breadcrumbs-icon;
+    }
   }
 
   &:hover,
   &:focus {
-    color: @breadcrumbs-color-hover;
+    outline: 0;
+    box-shadow: none;
 
     .breadcrumbs-item-name {
+      color: @breadcrumbs-color-hover;
       text-decoration: underline;
+    }
+
+    .breadcrumbs-item-icon {
+      color: @breadcrumbs-icon-hover;
     }
   }
 
   &:active {
-    color: @breadcrumbs-color-active;
+    .breadcrumbs-item-name {
+      color: @breadcrumbs-color-active;
+    }
+
+    .breadcrumbs-item-icon {
+      color: @breadcrumbs-icon-active;
+    }
   }
 }
 
-.breadcrumbs-item .material-icon {
+.breadcrumbs-item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   margin-right: 4px;
+  height: 16px;
+  width: 16px;
+
+  font-size: 16px;
+  line-height: 16px;
+
+  svg {
+    height: 16px;
+    width: 16px;
+  }
 }
 
 // Fix breadcrumbs displayed in toolbar
@@ -61,8 +131,8 @@
   display: none;
 }
 
-@media screen and (max-width: @screen-xs-max) {
-  .breadcrumbs {
+@media screen and (max-width: 500px) {
+  .breadcrumbs-full {
     display: none;
   }
 

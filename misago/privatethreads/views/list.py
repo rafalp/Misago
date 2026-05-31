@@ -32,6 +32,7 @@ from ...threads.filters import (
 )
 from ...threads.models import Thread
 from ...threads.views.list import ListView
+from ..breadcrumbs import get_private_threads_breadcrumbs
 from ..hooks import (
     get_private_thread_list_context_data_hook,
     get_private_thread_list_filters_hook,
@@ -52,16 +53,18 @@ class PrivateThreadListView(ListView):
 
     def post(self, request: HttpRequest, **kwargs) -> HttpResponse:
         if "mark_as_read" in request.POST:
-            return self.post_mark_as_read(request, kwargs)
+            return self.handle_mark_as_read(request, kwargs)
 
         return self.get(request, **kwargs)
 
-    def mark_as_read(self, request: HttpRequest, kwargs: dict) -> HttpResponse | None:
+    def mark_threads_as_read(
+        self, request: HttpRequest, kwargs: dict
+    ) -> HttpResponse | None:
         if not request.POST.get("confirm"):
             return render(
                 request,
                 self.mark_as_read_template_name,
-                {},
+                {"breadcrumbs": get_private_threads_breadcrumbs(request)},
             )
 
         category = self.get_category(request, kwargs)

@@ -176,9 +176,16 @@ LOGIN_URL = "misago:login"
 
 LOGOUT_URL = "misago:logout"
 
-MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
-] + MISAGO_MIDDLEWARE
+MIDDLEWARE = (
+    [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        "devproject.middleware.response_time_middleware",
+    ]
+    + MISAGO_MIDDLEWARE
+    + [
+        "devproject.middleware.view_time_middleware",
+    ]
+)
 
 ROOT_URLCONF = "devproject.urls"
 

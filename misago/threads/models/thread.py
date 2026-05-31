@@ -1,4 +1,5 @@
 from functools import cached_property
+from typing import TYPE_CHECKING, Optional
 
 from django.db import models
 from django.db.models import Q
@@ -7,7 +8,9 @@ from django.utils.translation import pgettext_lazy
 from ...conf import settings
 from ...core.utils import slugify
 from ...plugins.models import PluginDataModel
-from ...polls.models import Poll
+
+if TYPE_CHECKING:
+    from ...users.models import User
 
 
 class Thread(PluginDataModel):
@@ -67,6 +70,7 @@ class Thread(PluginDataModel):
         blank=True,
         on_delete=models.SET_NULL,
     )
+    # TODO: delete this field
     last_post_is_event = models.BooleanField(default=False)
     last_poster = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -75,9 +79,11 @@ class Thread(PluginDataModel):
         blank=True,
         on_delete=models.SET_NULL,
     )
+    # TODO: make those fields required
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
 
+    # TODO: use enum
     weight = models.PositiveIntegerField(default=WEIGHT_DEFAULT)
 
     is_unapproved = models.BooleanField(default=False, db_index=True)
@@ -200,12 +206,20 @@ class Thread(PluginDataModel):
         return "%sK" % round(self.replies / 1000, 0)
 
     @cached_property
+    def private_thread_owner(self) -> Optional["User"]:
+        return None
+
+    @cached_property
     def private_thread_owner_id(self) -> int | None:
         return (
             self.privatethreadmember_set.filter(is_owner=True)
             .values_list("user_id", flat=True)
             .first()
         )
+
+    @cached_property
+    def private_thread_members(self) -> list["User"]:
+        return []
 
     @cached_property
     def private_thread_member_ids(self) -> list[int]:

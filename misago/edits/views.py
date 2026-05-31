@@ -45,13 +45,13 @@ class GenericPostEditView(GenericThreadView):
     def edit_diff_template_name(self) -> str:
         return self.post_edit_backend.edit_diff_template_name
 
-    def get_thread_post_edit(
+    def get_post_edit(
         self, request: HttpRequest, post: Post, post_edit_id: int
     ) -> PostEdit:
-        return self.post_edit_backend.get_thread_post_edit(request, post, post_edit_id)
+        return self.post_edit_backend.get_post_edit(request, post, post_edit_id)
 
-    def get_thread_post_edit_index(self, post_edit: PostEdit) -> int | None:
-        return self.post_edit_backend.get_thread_post_edit_index(post_edit)
+    def get_post_edit_index(self, post_edit: PostEdit) -> int | None:
+        return self.post_edit_backend.get_post_edit_index(post_edit)
 
     def check_restore_post_edit_permission(
         self, request: HttpRequest, post_edit: PostEdit
@@ -65,26 +65,26 @@ class GenericPostEditView(GenericThreadView):
             request, post, attachment
         )
 
-    def get_thread_post_edit_restore_url(self, post_edit: PostEdit) -> str:
-        return self.post_edit_backend.get_thread_post_edit_restore_url(post_edit)
+    def get_post_edit_restore_url(self, post_edit: PostEdit) -> str:
+        return self.post_edit_backend.get_post_edit_restore_url(post_edit)
 
-    def get_thread_post_edit_hide_url(self, post_edit: PostEdit) -> str:
-        return self.post_edit_backend.get_thread_post_edit_hide_url(post_edit)
+    def get_post_edit_hide_url(self, post_edit: PostEdit) -> str:
+        return self.post_edit_backend.get_post_edit_hide_url(post_edit)
 
-    def get_thread_post_edit_unhide_url(self, post_edit: PostEdit) -> str:
-        return self.post_edit_backend.get_thread_post_edit_unhide_url(post_edit)
+    def get_post_edit_unhide_url(self, post_edit: PostEdit) -> str:
+        return self.post_edit_backend.get_post_edit_unhide_url(post_edit)
 
-    def get_thread_post_edit_delete_url(self, post_edit: PostEdit) -> str:
-        return self.post_edit_backend.get_thread_post_edit_delete_url(post_edit)
+    def get_post_edit_delete_url(self, post_edit: PostEdit) -> str:
+        return self.post_edit_backend.get_post_edit_delete_url(post_edit)
 
-    def get_thread_post_edit_context_data(
+    def get_post_edit_context_data(
         self, request: HttpRequest, post: Post, page: Page
     ) -> dict:
         return self.post_edit_backend.get_context_data_hook(
-            self._get_thread_post_edit_context_data_action, request, post, page
+            self._get_post_edit_context_data_action, request, post, page
         )
 
-    def _get_thread_post_edit_context_data_action(
+    def _get_post_edit_context_data_action(
         self, request: HttpRequest, post: Post, page: Page
     ) -> dict:
         if page.object_list:
@@ -99,9 +99,9 @@ class GenericPostEditView(GenericThreadView):
             "category": post.category,
             "thread": post.thread,
             "post": post,
-            "post_number": self.get_thread_post_number(request, post),
-            "post_url": self.get_thread_post_url(post),
-            "post_edits_url": self.get_thread_post_edits_url(post),
+            "post_number": self.get_post_number(request, post),
+            "post_url": self.get_post_url(post),
+            "post_edits_url": self.get_post_edits_url(post),
             "paginator": page.paginator,
             "page": page,
             "post_edit": post_edit,
@@ -115,7 +115,7 @@ class GenericPostEditView(GenericThreadView):
         if not post_edit:
             return context
 
-        is_moderator = self.get_thread_moderator_permission(
+        is_moderator = self.has_moderator_permission(
             request.user_permissions, post_edit.thread
         )
 
@@ -147,12 +147,10 @@ class GenericPostEditView(GenericThreadView):
                 "can_hide": can_hide,
                 "can_unhide": can_unhide,
                 "can_delete": can_delete,
-                "post_edit_restore_url": self.get_thread_post_edit_restore_url(
-                    post_edit
-                ),
-                "post_edit_hide_url": self.get_thread_post_edit_hide_url(post_edit),
-                "post_edit_unhide_url": self.get_thread_post_edit_unhide_url(post_edit),
-                "post_edit_delete_url": self.get_thread_post_edit_delete_url(post_edit),
+                "post_edit_restore_url": self.get_post_edit_restore_url(post_edit),
+                "post_edit_hide_url": self.get_post_edit_hide_url(post_edit),
+                "post_edit_unhide_url": self.get_post_edit_unhide_url(post_edit),
+                "post_edit_delete_url": self.get_post_edit_delete_url(post_edit),
             }
         )
 
@@ -166,7 +164,7 @@ class GenericPostEditView(GenericThreadView):
         if not post_edit:
             return None
 
-        is_moderator = self.get_thread_moderator_permission(
+        is_moderator = self.has_moderator_permission(
             request.user_permissions, post_edit.thread
         )
 
@@ -255,7 +253,7 @@ class PostEditsView(GenericPostEditView):
         page: int | None = None,
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
-        post = self.get_thread_post(request, thread, post_id, for_content=True)
+        post = self.get_post(request, thread, post_id, for_content=True)
 
         check_see_post_edit_history_permission(
             request.user_permissions, thread.category, thread, post
@@ -263,7 +261,7 @@ class PostEditsView(GenericPostEditView):
 
         if not request.is_htmx and thread.slug != slug:
             return redirect(
-                self.get_thread_post_edits_url(post, page),
+                self.get_post_edits_url(post, page),
                 permanent=True,
             )
 
@@ -276,14 +274,14 @@ class PostEditsView(GenericPostEditView):
         paginator = Paginator(queryset, per_page=1)
 
         if paginator.count and (not page or page > paginator.num_pages):
-            redirect_url = self.get_thread_post_edits_url(post, paginator.num_pages)
+            redirect_url = self.get_post_edits_url(post, paginator.num_pages)
             if request.GET.get("modal"):
                 redirect_url += "?modal=true"
             return redirect(redirect_url)
 
         page_obj = paginator.get_page(page or 1)
 
-        context_data = self.get_thread_post_edit_context_data(request, post, page_obj)
+        context_data = self.get_post_edit_context_data(request, post, page_obj)
 
         if request.is_htmx:
             if request.GET.get("modal"):
@@ -330,19 +328,19 @@ class PostEditView(GenericPostEditView):
             return HttpResponseNotAllowed(["POST"])
 
         thread = self.get_thread(request, thread_id)
-        post = self.get_thread_post(request, thread, post_id, for_content=True)
+        post = self.get_post(request, thread, post_id, for_content=True)
 
         check_see_post_edit_history_permission(
             request.user_permissions, thread.category, thread, post
         )
 
-        post_edit = self.get_thread_post_edit(request, post, post_edit_id)
+        post_edit = self.get_post_edit(request, post, post_edit_id)
         self.check_post_edit_permission(request, post_edit)
 
         if request.method == "POST":
             return self.execute_action(request, post_edit)
 
-        edit_index = self.get_thread_post_edit_index(post_edit)
+        edit_index = self.get_post_edit_index(post_edit)
 
         return render(
             request,
@@ -351,11 +349,11 @@ class PostEditView(GenericPostEditView):
                 "category": thread.category,
                 "thread": thread,
                 "post": post,
-                "post_number": self.get_thread_post_number(request, post),
+                "post_number": self.get_post_number(request, post),
                 "post_edit": post_edit,
-                "post_url": self.get_thread_post_url(post),
+                "post_url": self.get_post_url(post),
                 "post_edit_number": edit_index,
-                "post_edit_url": self.get_thread_post_edits_url(post, edit_index),
+                "post_edit_url": self.get_post_edits_url(post, edit_index),
             },
         )
 
@@ -378,7 +376,7 @@ class PostEditView(GenericPostEditView):
 
         if not request.is_htmx:
             return redirect(
-                self.get_thread_post_edits_url(post, min(paginator.num_pages, page))
+                self.get_post_edits_url(post, min(paginator.num_pages, page))
             )
 
         if request.GET.get("modal"):
@@ -386,7 +384,7 @@ class PostEditView(GenericPostEditView):
         else:
             template_name = self.partial_template_name
 
-        context_data = self.get_thread_post_edit_context_data(
+        context_data = self.get_post_edit_context_data(
             request, post, paginator.get_page(page)
         )
 
@@ -407,7 +405,7 @@ class PostEditRestoreView(PostEditView):
             pgettext("restore post edit", "Post contents restored"),
         )
 
-        return self.get_thread_post_redirect(request, post_edit.post)
+        return self.get_post_redirect(request, post_edit.post)
 
 
 class ThreadPostEditRestoreView(PostEditRestoreView):
@@ -435,7 +433,7 @@ class PostEditHideView(PostEditView):
                 pgettext("hide post edit", "Post edit hidden"),
             )
 
-        post_edit_index = self.get_thread_post_edit_index(post_edit)
+        post_edit_index = self.get_post_edit_index(post_edit)
         return self.get_action_response(request, post_edit.post, post_edit_index)
 
 
@@ -462,7 +460,7 @@ class PostEditUnhideView(PostEditView):
                 pgettext("unhide post edit", "Post edit unhidden"),
             )
 
-        post_edit_index = self.get_thread_post_edit_index(post_edit)
+        post_edit_index = self.get_post_edit_index(post_edit)
         return self.get_action_response(request, post_edit.post, post_edit_index)
 
 
@@ -483,7 +481,7 @@ class PostEditDeleteView(PostEditView):
         check_delete_post_edit_permission(request.user_permissions, post_edit)
 
     def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
-        post_edit_index = self.get_thread_post_edit_index(post_edit)
+        post_edit_index = self.get_post_edit_index(post_edit)
         delete_post_edit(post_edit, request=request)
 
         messages.success(

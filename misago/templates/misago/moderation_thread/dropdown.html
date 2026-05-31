@@ -1,0 +1,69 @@
+{% load i18n misago_capture %}
+
+<div class="dropdown d-js-block">
+  <button
+    type="button"
+    class="btn btn-default btn-icon"
+    aria-label="{% translate 'Moderate thread' context 'thread moderation dropdown toggle' %}"
+    aria-haspopup="true"
+    aria-expanded="false"
+    data-toggle="dropdown"
+  >
+    <span class="material-icon">more_horiz</span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right"{% if swap_oob %} hx-swap-oob="innerHTML:[mg-thread-moderation]"{% endif %} mg-thread-moderation>
+    {% for action in moderation_actions %}
+      <li>
+        <form
+          method="post"
+          hx-post="{{ full_path }}"
+          {% if action.multistage %}
+          hx-ext="mg-modal"
+          hx-target="#misago-htmx-moderation-modal"
+          mg-loader="#modal-loader"
+          mg-error="#modal-error"
+          mg-modal="#moderation-modal"
+          mg-modal-title="{{ action.full_name }}"
+          {% endif %}
+        >
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="btn btn-link dropdown-menu-btn"
+            name="thread_moderation"
+            value="{{ action.id }}"
+          >
+            {{ action.button_label }}
+          </button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+<noscript>
+  <details class="dropdown dropdown-noscript">
+    <summary
+      class="btn btn-default btn-icon"
+      aria-label="{% translate 'Moderate thread' context 'thread moderation dropdown toggle' %}"
+    >
+      <span class="material-icon">more_horiz</span>
+    </summary>
+    <ul class="dropdown-menu dropdown-menu-right">
+      {% for action in moderation_actions %}
+        <li>
+          <form method="post">
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="btn btn-link dropdown-menu-btn"
+              name="thread_moderation"
+              value="{{ action.id }}"
+            >
+              {{ action.button_label }}
+            </button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  </details>
+</noscript>

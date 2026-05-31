@@ -56,6 +56,29 @@ def test_notify_user_sets_actor_on_notification(user, other_user):
     assert db_notification.post is None
 
 
+def test_notify_user_sets_deleted_actor_on_notification(user, other_user):
+    notification = notify_user(user, "TEST", actor="DeletedUser")
+    assert notification
+    assert notification.user == user
+    assert notification.verb == "TEST"
+    assert notification.actor is None
+    assert notification.actor_name == "DeletedUser"
+    assert notification.category is None
+    assert notification.thread is None
+    assert notification.thread_title is None
+    assert notification.post is None
+
+    db_notification = Notification.objects.get(id=notification.id)
+    assert db_notification.user == user
+    assert db_notification.verb == "TEST"
+    assert db_notification.actor is None
+    assert db_notification.actor_name == "DeletedUser"
+    assert db_notification.category is None
+    assert db_notification.thread is None
+    assert db_notification.thread_title is None
+    assert db_notification.post is None
+
+
 def test_notify_user_sets_category_on_notification(user, default_category):
     notification = notify_user(user, "TEST", category=default_category)
     assert notification

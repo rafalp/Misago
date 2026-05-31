@@ -4,10 +4,9 @@
 
 {% block content %}
 <div class="page {% block page-class %}{% endblock page-class %}">
-  {% block header %}
-  {% endblock header %}
-
   <div class="container page-container">
+
+    {% includecomponent breadcrumbs required=False %}
 
     <form method="post">
       {% csrf_token %}

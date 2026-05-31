@@ -19,7 +19,8 @@ def custom_get_private_thread_detail_view_context_data_filter(
     action: GetPrivateThreadDetailViewContextDataHookAction,
     request: HttpRequest,
     thread: Thread,
-    page: int | None=None,
+    page: int | None,
+    kwargs: dict,
 ) -> dict:
     ...
 ```
@@ -46,9 +47,14 @@ The request object.
 A `Thread` instance.
 
 
-#### `page: int | None = None`
+#### `page: int | None`
 
 An `int` with page number or `None`.
+
+
+#### `kwargs: dict`
+
+A Python `dict` with view's keyword arguments.
 
 
 ### Return value
@@ -60,7 +66,7 @@ A Python `dict` with context data to use to `render` the private thread detail v
 
 ```python
 def get_private_thread_detail_view_context_data_action(
-    request: HttpRequest, thread: Thread, page: int | None=None
+    request: HttpRequest, thread: Thread, page: int | None, kwargs: dict
 ) -> dict:
     ...
 ```
@@ -80,9 +86,14 @@ The request object.
 A `Thread` instance.
 
 
-#### `page: int | None = None`
+#### `page: int | None`
 
 An `int` with page number or `None`.
+
+
+#### `kwargs: dict`
+
+A Python `dict` with view's keyword arguments.
 
 
 ### Return value
@@ -104,8 +115,8 @@ from misago.threads.models import Thread
 def include_custom_context(
     action,
     request: HttpRequest,
-    thread: dict,
-    page: int | None = None,
+    thread: Thread,
+    page: int | None,
 ) -> dict:
     context = action(request, thread, page)
 

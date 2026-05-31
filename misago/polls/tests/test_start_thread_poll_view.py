@@ -77,7 +77,7 @@ def test_start_thread_poll_view_shows_error_to_anonymous_users(client, thread):
     assert_contains(response, "You must be signed in to start polls.", 403)
 
 
-def test_start_thread_poll_view_shows_error_for_user_without_permission(
+def test_start_thread_poll_view_shows_error_to_user_without_permission(
     user_client, thread
 ):
     response = user_client.get(
@@ -91,7 +91,7 @@ def test_start_thread_poll_view_shows_error_for_user_without_permission(
     )
 
 
-def test_start_thread_poll_view_shows_error_for_user_with_permission_if_thread_has_poll(
+def test_start_thread_poll_view_shows_error_to_user_with_permission_if_thread_has_poll(
     user_client, user_thread, user_poll
 ):
     response = user_client.get(

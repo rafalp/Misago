@@ -1,5 +1,7 @@
 from django.urls import reverse
 
+from ..moderation.actions import PostModerationAction
+from ..moderation.post import get_private_thread_post_moderation_actions
 from ..permissions.checkutils import check_permissions
 from ..permissions.privatethreads import (
     check_edit_private_thread_post_permission,
@@ -11,9 +13,6 @@ from ..threadupdates.models import ThreadUpdate
 
 
 class PrivateThreadPostFeed(PostFeed):
-    def get_moderator_status(self) -> bool:
-        return self.request.user_permissions.is_private_threads_moderator
-
     def allow_reply_thread(self) -> bool:
         with check_permissions() as can_reply_thread:
             check_reply_private_thread_permission(
@@ -38,6 +37,11 @@ class PrivateThreadPostFeed(PostFeed):
             )
 
         return can_edit_post
+
+    def get_post_moderation_actions(self, post: Post) -> list[PostModerationAction]:
+        return get_private_thread_post_moderation_actions(
+            self.user_permissions, post, self.request
+        )
 
     def get_edit_thread_post_url(self) -> str | None:
         return reverse(

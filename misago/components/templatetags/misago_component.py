@@ -21,7 +21,13 @@ def includecomponents(context, data):
 
 
 @register.simple_tag(takes_context=True)
-def includecomponent(context, data):
+def includecomponent(context, data, required=True):
+    if not data:
+        if required:
+            raise ValueError("Component is required")
+
+        return ""
+
     component_context = context.flatten()
     component_context.update(data)
     template = get_template(data["template_name"])

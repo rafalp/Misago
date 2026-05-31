@@ -150,7 +150,7 @@ document.addEventListener("htmx:load", activateEditors)
 
 // Hide moderation modal
 document.addEventListener("misago:afterModeration", () => {
-  $("#threads-moderation-modal").modal("hide")
+  $("#moderation-modal").modal("hide")
 })
 
 document.addEventListener("misago:afterUpdateMembers", () => {

@@ -9,7 +9,6 @@
 
 {% block content %}
 <div class="page page-thread page-start-poll">
-  {% include "misago/thread/header.html" %}
   <div class="container page-container">
     <form 
       action="{% url 'misago:thread-poll-edit' thread_id=thread.id slug=thread.slug %}" method="post"

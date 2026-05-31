@@ -5,10 +5,10 @@ This hook wraps the standard function that Misago uses to get available moderati
 
 ## Location
 
-This hook can be imported from `misago.threads.hooks`:
+This hook can be imported from `misago.moderation.hooks`:
 
 ```python
-from misago.threads.hooks import get_category_threads_moderation_actions_hook
+from misago.moderation.hooks import get_category_threads_moderation_actions_hook
 ```
 
 
@@ -17,8 +17,9 @@ from misago.threads.hooks import get_category_threads_moderation_actions_hook
 ```python
 def custom_get_category_threads_moderation_actions_filter(
     action: GetCategoryThreadsModerationActionsHookAction,
-    request: HttpRequest,
+    permissions: UserPermissionsProxy,
     category: Category,
+    request: HttpRequest | None=None,
 ) -> list[type['ThreadsModerationAction']]:
     ...
 ```
@@ -35,14 +36,19 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `request: HttpRequest`
+#### `permissions: UserPermissionsProxy`
 
-The request object.
+A proxy object with the current user's permissions.
 
 
 #### `category: Category`
 
-A category instance.
+A category instance to return moderation actions for.
+
+
+#### `request: HttpRequest | None = None`
+
+The request object or `None` if not available.
 
 
 ### Return value
@@ -53,7 +59,11 @@ A Python `list` with `ThreadsModerationAction` types.
 ## Action
 
 ```python
-def get_category_threads_moderation_actions_action(request: HttpRequest, category: Category) -> list[type['ThreadsModerationAction']]:
+def get_category_threads_moderation_actions_action(
+    permissions: UserPermissionsProxy,
+    category: Category,
+    request: HttpRequest | None=None,
+) -> list[type['ThreadsModerationAction']]:
     ...
 ```
 
@@ -62,14 +72,19 @@ Misago function used to get available moderation actions for a category's thread
 
 ### Arguments
 
-#### `request: HttpRequest`
+#### `permissions: UserPermissionsProxy`
 
-The request object.
+A proxy object with the current user's permissions.
 
 
 #### `category: Category`
 
-A category instance.
+A category instance to return moderation actions for.
+
+
+#### `request: HttpRequest | None = None`
+
+The request object or `None` if not available.
 
 
 ### Return value
@@ -90,7 +105,8 @@ from misago.moderation.actions import (
     ModerationActionResult,
     ThreadsModerationAction,
 )
-from misago.threads.hooks import get_threads_moderation_actions_hook
+from misago.moderation.hooks import get_category_threads_moderation_actions_hook
+from misago.permissions.proxy import UserPermissionsProxy
 
 
 class ShadowBanModerationAction(ThreadsModerationAction):
@@ -121,12 +137,15 @@ class ShadowBanModerationAction(ThreadsModerationAction):
         )
 
 
-@get_threads_moderation_actions_hook.append_filter
+@get_category_threads_moderation_actions_hook.append_filter
 def include_custom_moderation_action(
-    action, request: HttpRequest, category: Category
+    action,
+    permissions: UserPermissionsProxy,
+    category: Category,
+    request: HttpRequest | None = None,
 ) -> list[type[ThreadsModerationAction]]:
-    moderation_actions = action(request)
-    if request.user_permissions.is_global_moderator:
+    moderation_actions = action(category, request)
+    if request.permissions.is_global_moderator:
         moderation_actions.append(ShadowBanModerationAction)
     return moderation_actions
 ```

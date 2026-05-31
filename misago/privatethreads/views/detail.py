@@ -6,6 +6,15 @@ from django.http import HttpRequest
 from django.urls import reverse
 
 from ...categories.models import Category
+from ...moderation.actions import (
+    PostModerationAction,
+    PostsModerationAction,
+    ThreadModerationAction,
+)
+from ...moderation.post import get_private_thread_post_moderation_actions
+from ...moderation.posts import get_private_thread_posts_moderation_actions
+from ...moderation.thread import get_private_thread_moderation_actions
+from ...moderation.views import get_moderation_action_choices
 from ...permissions.checkutils import check_permissions
 from ...permissions.privatethreads import (
     check_edit_private_thread_permission,
@@ -16,45 +25,92 @@ from ...posting.formsets import (
     get_private_thread_reply_formset,
 )
 from ...readtracker.privatethreads import unread_private_threads_exist
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ...threads.views.detail import DetailView
 from ..hooks import (
     get_private_thread_detail_view_context_data_hook,
+    get_private_thread_detail_view_moderation_result_data_hook,
     get_private_thread_detail_view_posts_queryset_hook,
-    get_private_thread_detail_view_thread_queryset_hook,
 )
 from .backend import private_thread_backend
-from .generic import PrivateThreadView
 from .members import get_private_thread_members_context_data
 
 if TYPE_CHECKING:
     from ...users.models import User
 
 
-class PrivateThreadDetailView(DetailView, PrivateThreadView):
+class PrivateThreadDetailView(DetailView):
     backend = private_thread_backend
 
-    thread_get_members = True
     template_name: str = "misago/private_thread/index.html"
     template_partial_name: str = "misago/private_thread/partial.html"
+    header_template_name: str = "misago/private_thread/header.html"
+    meta_bar_template_name: str = "misago/thread/meta_bar.html"
+    footer_template_name: str = "misago/thread/footer.html"
 
-    def get_thread_queryset(self, request: HttpRequest) -> Thread:
-        return get_private_thread_detail_view_thread_queryset_hook(
-            super().get_thread_queryset, request
+    # View overrides
+
+    def get_thread(self, *args, **kwargs) -> Thread:
+        return super().get_thread(*args, select_members=True, **kwargs)
+
+    # Moderation
+
+    def get_thread_moderation_actions(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[type[ThreadModerationAction]]:
+        return get_private_thread_moderation_actions(
+            request.user_permissions, thread, request
         )
 
+    def get_posts_moderation_actions(
+        self, request: HttpRequest, thread: Thread
+    ) -> list[type[PostsModerationAction]]:
+        return get_private_thread_posts_moderation_actions(
+            request.user_permissions, thread, request
+        )
+
+    def get_post_moderation_actions(
+        self, request: HttpRequest, post: Post
+    ) -> list[type[PostModerationAction]]:
+        return get_private_thread_post_moderation_actions(
+            request.user_permissions, post, request
+        )
+
+    def get_moderation_result_data(self, request: HttpRequest, thread: Thread) -> dict:
+        return get_private_thread_detail_view_moderation_result_data_hook(
+            self.get_moderation_result_data_action, request, thread
+        )
+
+    # Context data
+
     def get_context_data(
-        self, request: HttpRequest, thread: Thread, page: int | None = None
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: int | None,
+        kwargs: dict,
     ) -> dict:
         return get_private_thread_detail_view_context_data_hook(
-            self.get_context_data_action, request, thread, page
+            self.get_context_data_action, request, thread, page, kwargs
         )
 
     def get_context_data_action(
-        self, request: HttpRequest, thread: Thread, page: int | None = None
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        page: int | None,
+        kwargs: dict,
     ) -> dict:
-        context = super().get_context_data_action(request, thread, page)
-        context["members"] = self.get_thread_members_context_data(request, thread)
+        context = super().get_context_data_action(request, thread, page, kwargs)
+        context.update(
+            {
+                "members": self.get_thread_members_context_data(request, thread),
+                "user_is_member": request.user in thread.private_thread_members,
+                "thread_moderation_actions": get_moderation_action_choices(
+                    self.get_thread_moderation_actions(request, thread)
+                ),
+            }
+        )
 
         return context
 
@@ -62,7 +118,7 @@ class PrivateThreadDetailView(DetailView, PrivateThreadView):
         self, request: HttpRequest, thread: Thread
     ) -> dict:
         return get_private_thread_members_context_data(
-            request, thread, self.owner, self.members
+            request, thread, thread.private_thread_owner, thread.private_thread_members
         )
 
     def get_watch_thread_url(self, thread: Thread) -> str:
@@ -71,11 +127,9 @@ class PrivateThreadDetailView(DetailView, PrivateThreadView):
             kwargs={"thread_id": thread.id, "slug": thread.slug},
         )
 
-    def get_thread_posts_queryset(
-        self, request: HttpRequest, thread: Thread
-    ) -> QuerySet:
+    def get_posts_queryset(self, request: HttpRequest, thread: Thread) -> QuerySet:
         return get_private_thread_detail_view_posts_queryset_hook(
-            super().get_thread_posts_queryset, request, thread
+            super().get_posts_queryset, request, thread
         )
 
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:

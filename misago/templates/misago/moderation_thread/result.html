@@ -1,0 +1,37 @@
+{% load misago_component %}
+
+{% include "misago/snackbars.html" %}
+
+<div id="misago-htmx-status-bars" hx-swap-oob="innerHTML">
+  {% includecomponent status_bars %}
+</div>
+
+{% if header %}
+<div id="misago-htmx-header" hx-swap-oob="innerHTML">
+  {% includecomponent header %}
+</div>
+{% endif %}
+
+{% if footer %}
+<div id="misago-htmx-footer" hx-swap-oob="innerHTML">
+  {% includecomponent footer %}
+</div>
+{% endif %}
+
+{% if moderation_actions %}
+{% include "misago/moderation_thread/dropdown.html" with swap_oob=True %}
+{% endif %}
+
+{% if update_posts %}
+  {% with htmx_swap=True %}
+    {% includecomponents update_posts %}
+  {% endwith %}
+{% endif %}
+
+{% if thread_updates %}
+<div hx-swap-oob="beforeend:.posts-feed-inner">
+  {% includecomponents thread_updates %}
+</div>
+{% endif %}
+
+{% includecomponents extra_components %}

@@ -1,7 +1,10 @@
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
+from ..categories.models import Category
+from ..permissions.proxy import UserPermissionsProxy
 from ..threads.lock import lock_thread, unlock_thread
 from ..threadupdates.create import (
     create_locked_thread_update,
@@ -15,6 +18,63 @@ from .actions import (
     ConfirmMixin,
 )
 from .forms import MoveThreadForm
+from .hooks import (
+    get_category_threads_moderation_actions_hook,
+    get_threads_moderation_actions_hook,
+)
+
+
+def get_threads_moderation_actions(
+    user_permissions: UserPermissionsProxy,
+    request: HttpRequest | None = None,
+) -> list[type[ThreadsModerationAction]]:
+    return get_threads_moderation_actions_hook(
+        _get_threads_moderation_actions_action, user_permissions, request
+    )
+
+
+def _get_threads_moderation_actions_action(
+    user_permissions: UserPermissionsProxy,
+    request: HttpRequest | None = None,
+) -> list[type[ThreadsModerationAction]]:
+    if not user_permissions.moderated_categories:
+        return []
+
+    return [
+        LockThreadsModerationAction,
+        UnlockThreadsModerationAction,
+        MoveThreadsModerationAction,
+        DeleteThreadsModerationAction,
+    ]
+
+
+def get_category_threads_moderation_actions(
+    user_permissions: UserPermissionsProxy,
+    category: Category,
+    request: HttpRequest | None = None,
+) -> list[type[ThreadsModerationAction]]:
+    return get_category_threads_moderation_actions_hook(
+        _get_category_threads_moderation_actions_action,
+        user_permissions,
+        category,
+        request,
+    )
+
+
+def _get_category_threads_moderation_actions_action(
+    user_permissions: UserPermissionsProxy,
+    category: Category,
+    request: HttpRequest | None = None,
+) -> list[type[ThreadsModerationAction]]:
+    if not user_permissions.is_category_moderator(category.id):
+        return []
+
+    return [
+        LockThreadsModerationAction,
+        UnlockThreadsModerationAction,
+        MoveThreadsModerationAction,
+        DeleteThreadsModerationAction,
+    ]
 
 
 class LockThreadsModerationAction(ThreadsModerationAction):

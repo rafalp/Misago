@@ -9,7 +9,9 @@
 
 {% block content %}
 <div class="page page-thread">
-  {% include "misago/private_thread/header.html" %}
+  <div id="misago-htmx-header">
+    {% includecomponent header %}
+  </div>
   <div class="container page-container">
 
     {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_START %}
@@ -40,6 +42,9 @@
 
     {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_END %}
 
+    <div id="misago-htmx-footer">
+      {% includecomponent footer %}
+    </div>
   </div>
 </div>
 {% endblock content %}
@@ -53,9 +58,14 @@
   {% if members.manage %}
       {% include "misago/private_thread/members_add_modal.html" %}
   {% endif %}
+
   {% include "misago/lightbox/index.html" %}
   {% include post_edits_modal_template %}
   {% include post_likes_modal_template %}
+
+  {% if thread_moderation_actions or posts_moderation_actions %}
+    {% include "misago/moderation_thread/floating_ui.html" %}
+  {% endif %}
 {% endblock modals %}
 
 

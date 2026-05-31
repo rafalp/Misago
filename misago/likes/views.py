@@ -27,7 +27,7 @@ class PostLikeView(View):
         thread = self.get_thread(request, thread_id)
 
         with transaction.atomic():
-            post = self.get_thread_post(request, thread, post_id, for_update=True)
+            post = self.get_post(request, thread, post_id, for_update=True)
             check_like_post_permission(
                 request.user_permissions, thread.category, thread, post
             )
@@ -41,9 +41,7 @@ class PostLikeView(View):
 
         post_feed = self.get_post_feed(request, thread, [])
         context_data = post_feed.get_like_context_data(post, True)
-        context_data["post_number"] = self.get_thread_post_number(
-            self.request, thread, post
-        )
+        context_data["post_number"] = self.get_post_number(self.request, thread, post)
 
         return render(request, context_data["template_name"], context_data)
 
@@ -63,7 +61,7 @@ class PostUnlikeView(View):
         thread = self.get_thread(request, thread_id)
 
         with transaction.atomic():
-            post = self.get_thread_post(request, thread, post_id, for_update=True)
+            post = self.get_post(request, thread, post_id, for_update=True)
             check_unlike_post_permission(
                 request.user_permissions, thread.category, thread, post
             )
@@ -75,9 +73,7 @@ class PostUnlikeView(View):
 
         post_feed = self.get_post_feed(request, thread, [])
         context_data = post_feed.get_like_context_data(post, False)
-        context_data["post_number"] = self.get_thread_post_number(
-            self.request, thread, post
-        )
+        context_data["post_number"] = self.get_post_number(self.request, thread, post)
 
         return render(request, context_data["template_name"], context_data)
 
@@ -111,7 +107,7 @@ class PostLikesView(View):
         page: int | None = None,
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
-        post = self.get_thread_post(request, thread, post_id)
+        post = self.get_post(request, thread, post_id)
         check_see_post_likes_permission(
             request.user_permissions, thread.category, thread, post
         )
@@ -149,10 +145,10 @@ class PostLikesView(View):
                 "category": thread.category,
                 "thread": thread,
                 "post": post,
-                "post_number": self.get_thread_post_number(request, thread, post),
+                "post_number": self.get_post_number(request, thread, post),
                 "likes": likes_data,
                 "thread_url": self.get_thread_url(thread),
-                "post_url": self.get_thread_post_url(thread, post),
+                "post_url": self.get_post_url(thread, post),
             },
         )
 

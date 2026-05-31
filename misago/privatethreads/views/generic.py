@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Iterable, Optional
 
 from django.db.models import QuerySet
 from django.http import HttpRequest
@@ -48,18 +48,14 @@ class PrivateThreadView(GenericView):
         check_see_private_thread_permission(request.user_permissions, thread)
         return thread
 
-    def get_thread_posts_queryset(
-        self, request: HttpRequest, thread: Thread
-    ) -> QuerySet:
-        queryset = super().get_thread_posts_queryset(request, thread)
+    def get_posts_queryset(self, request: HttpRequest, thread: Thread) -> QuerySet:
+        queryset = super().get_posts_queryset(request, thread)
         return filter_private_thread_posts_queryset(
             request.user_permissions, thread, queryset
         )
 
     def get_thread_updates_queryset(
-        self,
-        request: HttpRequest,
-        thread: Thread,
+        self, request: HttpRequest, thread: Thread
     ) -> QuerySet:
         queryset = super().get_thread_updates_queryset(request, thread)
         return filter_private_thread_updates_queryset(
@@ -73,7 +69,12 @@ class PrivateThreadView(GenericView):
         posts: list[Post],
         thread_updates: list[ThreadUpdate] | None = None,
     ) -> PostFeed:
-        return PrivateThreadPostFeed(request, thread, posts, thread_updates)
+        post_feed = PrivateThreadPostFeed(request, thread, posts, thread_updates)
+
+        if self.get_moderator_status(request, thread):
+            post_feed.set_moderation(True)
+
+        return post_feed
 
     def get_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_private_threads_moderator

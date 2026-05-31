@@ -1,0 +1,50 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_component %}
+
+
+{% block title %}
+  {{ moderation_action.full_name }} | {{ thread.title }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block content %}
+<div class="page page-thread">
+  <div class="container page-container">
+
+    {% includecomponent breadcrumbs %}
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="{{ moderation_type }}" value="{{ moderation_action.id }}" />
+      <input type="hidden" name="confirm" value="true">
+      {% for post in selection %}
+        <input type="hidden" name="threads" value="{{ post.id }}" />
+      {% endfor %}
+      {% if moderation_type == "post_moderation" and post %}
+        <input type="hidden" name="post" value="{{ post.id }}" />
+      {% endif %}
+      <div class="panel panel-default panel-form">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            {{ moderation_action.full_name }}
+          </h3>
+        </div>
+        <div class="panel-body">
+          {% include template_name %}
+        </div>
+        <div class="panel-footer panel-footer-sticky">
+          <button class="btn btn-primary" type="submit">
+            {{ moderation_action.button_label }}
+          </button>
+          <a href="{{ cancel_url }}" class="btn btn-default">
+            {% translate "Cancel" context "thread moderation" %}
+          </a>
+        </div>
+      </div>
+    </form>
+
+    {% include "misago/gototop_toolbar.html" %}
+
+  </div>
+</div>
+{% endblock content %}

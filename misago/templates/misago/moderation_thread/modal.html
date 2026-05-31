@@ -1,0 +1,33 @@
+{% load i18n %}
+
+<form
+  method="post"
+  hx-post="{{ full_path }}"
+  hx-target="#misago-htmx-moderation-modal"
+  hx-swap="innerHTML"
+>
+  {% csrf_token %}
+  <input type="hidden" name="{{ moderation_type }}" value="{{ moderation_action.id }}" />
+  <input type="hidden" name="confirm" value="true">
+  {% if moderation_action.swap_root %}
+    <input type="hidden" name="success-hx-target" value="#misago-htmx-root">
+    <input type="hidden" name="success-hx-swap" value="outerHTML">
+  {% else %}
+    <input type="hidden" name="success-hx-swap" value="none">
+  {% endif %}
+  {% for post in selection %}
+    <input type="hidden" name="posts" value="{{ post.id }}" />
+  {% endfor %}
+  {% if moderation_type == "post_moderation" and post %}
+    <input type="hidden" name="post" value="{{ post.id }}" />
+  {% endif %}
+  <div class="modal-body">
+    {% include template_name %}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+      {% translate "Cancel" context "thread moderation" %}
+    </button>
+    <button class="btn btn-primary">{{ moderation_action.button_label }}</button>
+  </div>
+</form>

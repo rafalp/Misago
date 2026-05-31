@@ -1,0 +1,38 @@
+<ul class="breadcrumbs breadcrumbs-full">
+  {% for item in items %}
+    {% if not forloop.first %}
+      <li class="breadcrumbs-separator">
+        {% include "tabler/breadcrumbs-separator.svg" %}
+      </li>
+    {% endif %}
+    <li class="breadcrumbs-item{% if item.css_class %} breadcrumbs-item-{{ item.css_class }}{% endif %}">
+      <a href="{{ item.url }}">
+        <span class="breadcrumbs-item-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>
+          {% if item.icon %}
+            {% include item.icon %}
+          {% elif forloop.first %}
+            {% include "tabler/inbox.svg" %}
+          {% else %}
+            {% include "tabler/label-filled.svg" %}
+          {% endif %}
+        </span>
+        <span class="breadcrumbs-item-name">{{ item.label }}</span>
+      </a>
+    </li>
+  {% endfor %}
+</ul>
+<ul class="breadcrumbs breadcrumbs-compact">
+  {% with item=items|last %}
+    <li class="breadcrumbs-item{% if item.css_class %} breadcrumbs-item-{{ item.css_class }}{% endif %}">
+      <a href="{{ item.url }}">
+        <span class="breadcrumbs-item-icon">
+          {% include "tabler/chevron-left.svg" %}
+        </span>
+        <span class="breadcrumbs-item-icon"{% if item.color %} style="color: {{ item.color }};"{% endif %}>
+          {% include "tabler/label-filled.svg" %}
+        </span>
+        <span class="breadcrumbs-item-name">{{ item.label }}</span>
+      </a>
+    </li>
+  {% endwith %}
+</ul>

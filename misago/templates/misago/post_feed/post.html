@@ -218,6 +218,34 @@
                 </form>
               </li>
             {% endif %}
+            {% if moderation_actions %}
+              {% if lock_solution_url or unlock_solution_url or clear_solution_url %}
+                <li role="separator" class="divider"></li>
+              {% endif %}
+              {% for action in moderation_actions %}
+                <li>
+                  <form
+                    method="post"
+                    hx-post="{{ full_path }}"
+                    {% if action.multistage %}
+                    hx-ext="mg-modal"
+                    hx-target="#misago-htmx-moderation-modal"
+                    mg-loader="#modal-loader"
+                    mg-error="#modal-error"
+                    mg-modal="#moderation-modal"
+                    mg-modal-title="{{ action.full_name }}"
+                    {% endif %}
+                  >
+                    {% csrf_token %}
+                    <input type="hidden" name="post_moderation" value="{{ action.id }}">
+                    <input type="hidden" name="post" value="{{ post.id }}">
+                    <button class="btn btn-link dropdown-menu-btn">
+                      {{ action.button_label }}
+                    </button>
+                  </form>
+                </li>
+              {% endfor %}
+            {% endif %}
           </ul>
         {% endcapture %}
 
@@ -243,6 +271,12 @@
           </button>
           {{ dropdown_menu|safe }}
         </div>
+
+        {% if moderation %}
+          <label class="posts-feed-item-checkbox">
+            <input type="checkbox" name="posts" form="posts-moderation" value="{{ post.id }}"{% if is_selected %} checked{% endif %}>
+          </label>
+        {% endif %}
 
       </div>
       <div class="posts-feed-item-post-body">

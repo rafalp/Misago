@@ -1,7 +1,5 @@
-{% load i18n %}
+{% load i18n misago_component %}
 
-
-{% block content %}
 <div class="container page-header-container">
   <div class="page-header page-header-thread">
     <div class="page-header-bg-image">
@@ -10,7 +8,9 @@
         <div class="page-header-banner page-header-banner-thread">
           <div class="page-header-banner-bg-image">
             <div class="page-header-banner-bg-overlay">
-              <h1>{{ thread }}</h1>
+              {% includecomponent breadcrumbs %}
+              <h1>{{ header }}</h1>
+              {% includecomponent meta_bar %}
             </div>
           </div>
         </div>
@@ -18,4 +18,3 @@
     </div>
   </div>
 </div>
-{% endblock content %}

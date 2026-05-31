@@ -371,10 +371,10 @@ class PrivateThreadMembersHtmxResponse:
             self.request, self.thread, self.owner, self.members
         )
         if self.thread_updates:
-            context["feed"] = self.get_feed_context()
+            context["thread_updates"] = self.get_post_feed_data()
         return context
 
-    def get_feed_context(self):
+    def get_post_feed_data(self):
         post_feed = PrivateThreadPostFeed(
             self.request, self.thread, [], self.thread_updates
         )
@@ -383,7 +383,7 @@ class PrivateThreadMembersHtmxResponse:
             [thread_update.id for thread_update in self.thread_updates]
         )
 
-        return post_feed.get_context_data()
+        return post_feed.get_feed_data()
 
     def render(
         self, context: dict | None = None, headers: dict | None = None

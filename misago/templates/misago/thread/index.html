@@ -9,7 +9,9 @@
 
 {% block content %}
 <div class="page page-thread">
-  {% include "misago/thread/header.html" %}
+  <div id="misago-htmx-header">
+    {% includecomponent header %}
+  </div>
   <div class="container page-container">
 
     {% pluginoutlet THREAD_REPLIES_PAGE_START %}
@@ -28,6 +30,9 @@
 
     {% pluginoutlet THREAD_REPLIES_PAGE_END %}
 
+    <div id="misago-htmx-footer">
+      {% includecomponent footer %}
+    </div>
   </div>
 </div>
 {% endblock content %}
@@ -38,9 +43,14 @@
     {% include "misago/posting/markup_editor_modals.html" %}
     {% include "misago/posting/attachment_templates.html" %}
   {% endif %}
+
   {% include "misago/lightbox/index.html" %}
   {% include post_edits_modal_template %}
   {% include post_likes_modal_template %}
+
+  {% if thread_moderation_actions or posts_moderation_actions %}
+    {% include "misago/moderation_thread/floating_ui.html" %}
+  {% endif %}
 {% endblock modals %}
 
 

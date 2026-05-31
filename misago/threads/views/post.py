@@ -26,9 +26,9 @@ class PostView(View):
         self, request: HttpRequest, thread_id: int, slug: str, **kwargs
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
-        queryset = self.get_thread_posts_queryset(request, thread)
+        queryset = self.get_posts_queryset(request, thread)
         post = self.get_post(request, thread, queryset, kwargs)
-        paginator = self.get_thread_posts_paginator(request, queryset)
+        paginator = self.get_posts_paginator(request, queryset)
 
         if post:
             post_id = post.id

@@ -309,7 +309,7 @@ class UpdateThreadPollView(ThreadPollView):
         if thread_update:
             post_feed = ThreadPostFeed(request, thread, [], [thread_update])
             post_feed.set_animated_thread_updates([thread_update.id])
-            context["feed"] = post_feed.get_context_data()
+            context["thread_updates"] = post_feed.get_feed_data()
 
         if context["allow_vote"] and not user_poll_votes:
             template_name = PollTemplate.VOTE_HTMX

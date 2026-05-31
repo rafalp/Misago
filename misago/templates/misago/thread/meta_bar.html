@@ -1,0 +1,20 @@
+{% load misago_component %}
+
+{% if items %}
+  <ul class="page-header-meta-bar">
+    {% for item in items %}
+      {% if item.template_name %}
+        {% includecomponent item %}
+      {% elif item.type == "text" %}
+        <li class="page-header-meta-item{% if item.id %} page-header-meta-item-{{ item.id }}{% endif %}"{% if item.title %} title="{{ item.title }}"{% endif %}>
+          {% if item.icon %}
+            {% include item.icon %}
+          {% endif %}
+          <span  class="page-header-meta-item-text">
+            {{ item.text }}
+          </span>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endif %}

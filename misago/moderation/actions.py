@@ -12,6 +12,7 @@ from ..threadupdates.models import ThreadUpdate
 
 class ModerationAction:
     multistage = False
+    swap_root = False
 
     id: str
     full_name: str | None = None
@@ -44,10 +45,14 @@ class ModerationActionTemplateResult(ModerationActionResult):
         self.context.update(context)
 
     def render(
-        self, request: HttpRequest, template_name: str, context: dict | None
+        self, request: HttpRequest, template_name: str, context: dict | None = None
     ) -> HttpResponse:
-        final_context = context or {}
-        final_context.update(self.context)
+        if context:
+            final_context = context
+            final_context.update(self.context)
+        else:
+            final_context = self.context
+
         return render(request, template_name, final_context)
 
 
@@ -129,6 +134,8 @@ class FormMixin:
 
 
 class ThreadsModerationAction(ModerationAction):
+    swap_root = True
+
     category: Category | None
     threads: list[Thread]
 
@@ -145,35 +152,39 @@ class ThreadsModerationAction(ModerationAction):
 
 
 class PostsModerationAction(ModerationAction):
+    swap_root = True
+
+    category: Category
     thread: Thread
     posts: list[Post]
 
     def __init__(self, request: HttpRequest, thread: Thread, posts: list[Post]):
         super().__init__(request)
 
+        self.category = thread.category
         self.thread = thread
         self.posts = posts
 
 
 class ThreadModerationAction(ModerationAction):
-    category: Category | None
+    category: Category
     thread: Thread
 
-    def __init__(
-        self, request: HttpRequest, thread: Thread, category: Category | None = None
-    ):
+    def __init__(self, request: HttpRequest, thread: Thread):
         super().__init__(request)
 
-        self.category = Category
+        self.category = thread.category
         self.thread = thread
 
 
 class PostModerationAction(ModerationAction):
+    category: Category
     thread: Thread
     post: Post
 
-    def __init__(self, request: HttpRequest, thread: Thread, posts: Post):
+    def __init__(self, request: HttpRequest, thread: Thread, post: Post):
         super().__init__(request)
 
+        self.category = thread.category
         self.thread = thread
         self.post = post
