@@ -1048,3 +1048,204 @@ def test_thread_detail_view_executes_destructive_post_moderation_action_with_con
 
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_to_user(
+    user_client, thread, reply
+):
+    response = user_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "lock", "post": reply.id},
+    )
+    assert_contains(response, "Invalid moderation action.")
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_to_user_in_htmx(
+    user_client, thread, reply
+):
+    response = user_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "lock", "post": reply.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Invalid moderation action.", status_code=400)
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_to_guest(
+    client, thread, reply
+):
+    response = client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "lock", "post": reply.id},
+    )
+    assert_contains(response, "Invalid moderation action.")
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_to_guest_in_htmx(
+    client, thread, reply
+):
+    response = client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "lock", "post": reply.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Invalid moderation action.", status_code=400)
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_invalid_moderation_action(
+    moderator_client, thread, reply
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "invalid", "post": reply.id},
+    )
+    assert_contains(response, "Invalid moderation action.")
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_invalid_moderation_action_in_htmx(
+    moderator_client, thread, reply
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "invalid", "post": reply.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Invalid moderation action.", status_code=400)
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_empty_moderation_action(
+    moderator_client, thread, reply
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "", "post": reply.id},
+    )
+    assert_contains(response, "Invalid moderation action.")
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_empty_moderation_action_in_htmx(
+    moderator_client, thread, reply
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "", "post": reply.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Invalid moderation action.", status_code=400)
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_missing_post_selection(
+    moderator_client, thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock"},
+    )
+    assert_contains(response, "No valid posts selected.")
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_missing_post_selection_in_htmx(
+    moderator_client, thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock"},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "No valid posts selected.", status_code=400)
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_empty_post_selection(
+    moderator_client, thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock", "post": ""},
+    )
+    assert_contains(response, "No valid posts selected.")
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_empty_post_selection_in_htmx(
+    moderator_client, thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock", "post": ""},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "No valid posts selected.", status_code=400)
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_invalid_post_selection(
+    moderator_client, thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock", "post": "invalid"},
+    )
+    assert_contains(response, "No valid posts selected.")
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_invalid_post_selection_in_htmx(
+    moderator_client, thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock", "post": "invalid"},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "No valid posts selected.", status_code=400)
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_not_existing_post_id_in_selection(
+    moderator_client, thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock", "post": thread.last_post_id + 1},
+    )
+    assert_contains(response, "No valid posts selected.")
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_not_existing_post_id_in_selection_in_htmx(
+    moderator_client, thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock", "post": thread.last_post_id + 1},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "No valid posts selected.", status_code=400)
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_other_thread_post_id_in_selection(
+    moderator_client, thread, user_thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock", "post": user_thread.last_post_id},
+    )
+    assert_contains(response, "No valid posts selected.")
+
+
+def test_thread_detail_view_post_moderation_action_shows_error_for_other_thread_post_id_in_selection_in_htmx(
+    moderator_client, thread, user_thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock", "post": user_thread.last_post_id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "No valid posts selected.", status_code=400)
