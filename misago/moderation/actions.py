@@ -154,7 +154,7 @@ class ThreadsModerationAction(ModerationAction):
 class PostsModerationAction(ModerationAction):
     swap_root = True
 
-    category: Category | None
+    category: Category
     thread: Thread
     posts: list[Post]
 
@@ -167,7 +167,7 @@ class PostsModerationAction(ModerationAction):
 
 
 class ThreadModerationAction(ModerationAction):
-    category: Category | None
+    category: Category
     thread: Thread
 
     def __init__(self, request: HttpRequest, thread: Thread):
@@ -178,11 +178,13 @@ class ThreadModerationAction(ModerationAction):
 
 
 class PostModerationAction(ModerationAction):
+    category: Category
     thread: Thread
     post: Post
 
     def __init__(self, request: HttpRequest, thread: Thread, post: Post):
         super().__init__(request)
 
+        self.category = thread.category
         self.thread = thread
         self.post = post

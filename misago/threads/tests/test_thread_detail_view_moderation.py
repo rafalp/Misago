@@ -909,3 +909,142 @@ def test_thread_detail_view_executes_post_moderation_action_in_htmx(
 
     reply.refresh_from_db()
     assert reply.is_locked
+
+
+def test_thread_detail_view_executes_post_moderation_action_with_form(
+    mocker, moderator_client, child_category, thread, reply
+):
+    mock_synchronize_categories = mocker.patch(
+        "misago.moderation.post.synchronize_categories"
+    )
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "split", "post": [reply.id]},
+    )
+    assert_contains(response, "Split post into a new thread")
+    assert_contains(response, "Category")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "split",
+            "post": [reply.id],
+            "moderation-category": child_category.id,
+            "moderation-title": "New thread",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    mock_synchronize_categories.delay.assert_called_once_with(
+        [thread.category_id, child_category.id]
+    )
+
+    reply.refresh_from_db()
+    assert reply.category == child_category
+    assert reply.thread != thread
+
+
+def test_thread_detail_view_executes_post_moderation_action_with_form_in_htmx(
+    mocker, moderator_client, child_category, thread, reply
+):
+    mock_synchronize_categories = mocker.patch(
+        "misago.moderation.post.synchronize_categories"
+    )
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "split", "post": [reply.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Category")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "split",
+            "post": [reply.id],
+            "moderation-category": child_category.id,
+            "moderation-title": "New thread",
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Post was split into a new thread.")
+
+    mock_synchronize_categories.delay.assert_called_once_with(
+        [thread.category_id, child_category.id]
+    )
+
+    reply.refresh_from_db()
+    assert reply.category == child_category
+    assert reply.thread == Thread.objects.get(
+        slug="new-thread", category=child_category
+    )
+
+
+def test_thread_detail_view_executes_destructive_post_moderation_action_with_confirmation(
+    mocker, moderator_client, thread, reply
+):
+    mock_synchronize_categories = mocker.patch(
+        "misago.moderation.post.synchronize_categories"
+    )
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "delete", "post": reply.id},
+    )
+    assert_contains(response, "Are you sure you want to delete the selected post?")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "delete",
+            "post": reply.id,
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    mock_synchronize_categories.delay.assert_called_once_with([thread.category_id])
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
+
+
+def test_thread_detail_view_executes_destructive_post_moderation_action_with_confirmation_in_htmx(
+    mocker, moderator_client, thread, reply
+):
+    mock_synchronize_categories = mocker.patch(
+        "misago.moderation.post.synchronize_categories"
+    )
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "delete", "post": reply.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Are you sure you want to delete the selected post?")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "delete",
+            "post": reply.id,
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Post deleted")
+
+    mock_synchronize_categories.delay.assert_called_once_with([thread.category_id])
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
