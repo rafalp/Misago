@@ -995,3 +995,57 @@ def test_private_thread_detail_view_posts_moderation_action_shows_error_for_othe
         headers={"hx-request": "true"},
     )
     assert_contains(response, "No valid posts selected.", status_code=400)
+
+
+def test_private_thread_detail_view_executes_post_moderation_action(
+    thread_reply_factory, moderator_client, user_private_thread
+):
+    reply = thread_reply_factory(user_private_thread, poster="DeletedUser")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"post_moderation": "lock", "post": reply.id},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert reply.is_locked
+
+
+def test_private_thread_detail_view_executes_post_moderation_action_in_htmx(
+    thread_reply_factory, moderator_client, user_private_thread
+):
+    reply = thread_reply_factory(user_private_thread, poster="DeletedUser")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"post_moderation": "lock", "post": reply.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Post locked")
+
+    reply.refresh_from_db()
+    assert reply.is_locked

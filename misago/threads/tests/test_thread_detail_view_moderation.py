@@ -875,3 +875,37 @@ def test_thread_detail_view_posts_moderation_action_shows_error_for_other_thread
         headers={"hx-request": "true"},
     )
     assert_contains(response, "No valid posts selected.", status_code=400)
+
+
+def test_thread_detail_view_executes_post_moderation_action(
+    moderator_client, thread, reply
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "lock", "post": reply.id},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert reply.is_locked
+
+
+def test_thread_detail_view_executes_post_moderation_action_in_htmx(
+    moderator_client, thread, reply
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "lock", "post": reply.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Post locked")
+
+    reply.refresh_from_db()
+    assert reply.is_locked
