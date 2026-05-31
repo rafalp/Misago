@@ -4,6 +4,7 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..permissions.proxy import UserPermissionsProxy
+from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
 from ..threads.delete import delete_thread
 from ..threads.lock import lock_thread, unlock_thread
@@ -91,12 +92,6 @@ class LockThreadModerationAction(ThreadModerationAction):
     id = "lock"
     button_label = pgettext_lazy("thread moderation button label", "Lock")
 
-    def validate(self):
-        if self.thread.is_locked:
-            raise ValidationError(
-                pgettext("thread moderation validation", "Thread is already locked.")
-            )
-
     def execute(self) -> ModerationActionResult:
         thread = self.thread
 
@@ -121,12 +116,6 @@ class LockThreadModerationAction(ThreadModerationAction):
 class UnlockThreadModerationAction(ThreadModerationAction):
     id = "unlock"
     button_label = pgettext_lazy("thread moderation button label", "Unlock")
-
-    def validate(self):
-        if not self.thread.is_locked:
-            raise ValidationError(
-                pgettext("thread moderation validation", "Thread is already unlocked.")
-            )
 
     def execute(self) -> ModerationActionResult:
         thread = self.thread
@@ -159,7 +148,7 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
         thread = self.thread
 
         old_category = self.category
-        new_category = form.cleaned_data["category"]
+        new_category = Category.objects.get(id=form.cleaned_data["category"])
 
         thread.category = new_category
         thread.save()

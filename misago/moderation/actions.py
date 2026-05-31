@@ -168,12 +168,10 @@ class ThreadModerationAction(ModerationAction):
     category: Category | None
     thread: Thread
 
-    def __init__(
-        self, request: HttpRequest, thread: Thread, category: Category | None = None
-    ):
+    def __init__(self, request: HttpRequest, thread: Thread):
         super().__init__(request)
 
-        self.category = Category
+        self.category = thread.category
         self.thread = thread
 
 
