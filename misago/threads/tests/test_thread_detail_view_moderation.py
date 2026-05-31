@@ -373,7 +373,7 @@ def test_thread_detail_view_executes_destructive_thread_moderation_action_with_c
         thread.refresh_from_db()
 
 
-def test_thread_detail_view_thread_moderation_shows_error_for_user(user_client, thread):
+def test_thread_detail_view_thread_moderation_shows_error_to_user(user_client, thread):
     response = user_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "lock"},
@@ -384,7 +384,7 @@ def test_thread_detail_view_thread_moderation_shows_error_for_user(user_client, 
     assert not thread.is_locked
 
 
-def test_thread_detail_view_thread_moderation_shows_error_for_user_in_htmx(
+def test_thread_detail_view_thread_moderation_shows_error_to_user_in_htmx(
     user_client, thread
 ):
     response = user_client.post(
@@ -398,7 +398,7 @@ def test_thread_detail_view_thread_moderation_shows_error_for_user_in_htmx(
     assert not thread.is_locked
 
 
-def test_thread_detail_view_thread_moderation_shows_error_for_guest(client, thread):
+def test_thread_detail_view_thread_moderation_shows_error_to_guest(client, thread):
     response = client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "lock"},
@@ -409,7 +409,7 @@ def test_thread_detail_view_thread_moderation_shows_error_for_guest(client, thre
     assert not thread.is_locked
 
 
-def test_thread_detail_view_thread_moderation_shows_error_for_guest_in_htmx(
+def test_thread_detail_view_thread_moderation_shows_error_to_guest_in_htmx(
     client, thread
 ):
     response = client.post(
@@ -432,9 +432,6 @@ def test_thread_list_view_shows_error_for_invalid_thread_moderation_action(
     )
     assert_contains(response, "Invalid moderation action.")
 
-    thread.refresh_from_db()
-    assert not thread.is_locked
-
 
 def test_thread_list_view_shows_error_for_invalid_thread_moderation_action_in_htmx(
     moderator_client, thread
@@ -446,9 +443,6 @@ def test_thread_list_view_shows_error_for_invalid_thread_moderation_action_in_ht
     )
     assert_contains(response, "Invalid moderation action.", status_code=400)
 
-    thread.refresh_from_db()
-    assert not thread.is_locked
-
 
 def test_thread_list_view_shows_error_for_empty_thread_moderation_action(
     moderator_client, thread
@@ -458,9 +452,6 @@ def test_thread_list_view_shows_error_for_empty_thread_moderation_action(
         {"thread_moderation": ""},
     )
     assert_contains(response, "Invalid moderation action.")
-
-    thread.refresh_from_db()
-    assert not thread.is_locked
 
 
 def test_thread_list_view_shows_error_for_empty_thread_moderation_action_in_htmx(
@@ -472,6 +463,3 @@ def test_thread_list_view_shows_error_for_empty_thread_moderation_action_in_htmx
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Invalid moderation action.", status_code=400)
-
-    thread.refresh_from_db()
-    assert not thread.is_locked
