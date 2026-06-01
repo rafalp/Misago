@@ -1,7 +1,7 @@
 from django.core.cache import cache
 
-from . import SETTINGS_CACHE
 from ..cache.versions import invalidate_cache
+from . import SETTINGS_CACHE
 
 
 def get_settings_cache(cache_versions):

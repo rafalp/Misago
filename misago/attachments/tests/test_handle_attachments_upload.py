@@ -2,8 +2,8 @@ import pytest
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from ...permissions.proxy import UserPermissionsProxy
 from ...conf.test import override_dynamic_settings
+from ...permissions.proxy import UserPermissionsProxy
 from ..enums import AttachmentTypeRestriction
 from ..upload import handle_attachments_upload
 

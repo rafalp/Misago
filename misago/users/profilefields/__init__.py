@@ -7,10 +7,8 @@ from django.utils.module_loading import import_string
 from django.utils.translation import gettext
 
 from ...conf import settings
-
 from .basefields import *
 from .serializers import serialize_profilefields_data
-
 
 logger = logging.getLogger("misago.users.ProfileFields")
 

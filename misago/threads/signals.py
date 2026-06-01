@@ -24,10 +24,14 @@ from ..users.signals import (
 from .anonymize import anonymize_post_last_likes
 from .models import (
     Attachment as LegacyAttachment,
+)
+from .models import (
     Post,
-    PostEdit as LegacyPostEdit,
     PostLike,
     Thread,
+)
+from .models import (
+    PostEdit as LegacyPostEdit,
 )
 from .synchronize import synchronize_thread
 

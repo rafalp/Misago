@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_users", "0032_rename_private_threads_preference"),
     ]

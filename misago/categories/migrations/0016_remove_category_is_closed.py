@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_categories", "0015_remove_category_require_edits_approval"),
     ]

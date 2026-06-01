@@ -3,18 +3,17 @@ from django.urls import path
 from ..auth.decorators import login_required
 from ..privatethreads.decorators import private_threads_login_required
 from .views import (
-    ThreadPostEditDeleteView,
-    ThreadPostEditHideView,
-    ThreadPostEditRestoreView,
-    ThreadPostEditUnhideView,
-    ThreadPostEditsView,
     PrivateThreadPostEditDeleteView,
     PrivateThreadPostEditHideView,
     PrivateThreadPostEditRestoreView,
-    PrivateThreadPostEditUnhideView,
     PrivateThreadPostEditsView,
+    PrivateThreadPostEditUnhideView,
+    ThreadPostEditDeleteView,
+    ThreadPostEditHideView,
+    ThreadPostEditRestoreView,
+    ThreadPostEditsView,
+    ThreadPostEditUnhideView,
 )
-
 
 urlpatterns = [
     path(

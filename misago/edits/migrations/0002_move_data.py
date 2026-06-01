@@ -35,7 +35,6 @@ def migrate_edits_data_from_threads(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_edits", "0001_initial"),
     ]

@@ -1,6 +1,6 @@
-from django.urls import path
 from django.contrib import admin as djadmin
 from django.contrib.auth import get_user_model
+from django.urls import path
 from django.utils.translation import pgettext_lazy
 
 from .djangoadmin import UserAdminModel

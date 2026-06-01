@@ -14,12 +14,12 @@ from ..permissions.polls import (
     check_start_thread_poll_permission,
     check_vote_in_thread_poll_permission,
 )
-from ..threads.postfeed import ThreadPostFeed
+from ..polls.models import Poll
 from ..threads.models import Thread
 from ..threads.nexturl import get_next_thread_url
+from ..threads.postfeed import ThreadPostFeed
 from ..threads.views.generic import ThreadView
 from ..threadupdates.models import ThreadUpdate
-from ..polls.models import Poll
 from .close import close_thread_poll, open_thread_poll
 from .delete import delete_thread_poll
 from .enums import PollTemplate, PublicPollsAvailability

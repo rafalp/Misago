@@ -6,7 +6,6 @@ from ..operations import DeleteSetting
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_conf", "0017_add_new_attachments_settings"),
     ]

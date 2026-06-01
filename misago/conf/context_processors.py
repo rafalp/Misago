@@ -6,9 +6,9 @@ from django.urls import reverse
 from django.utils.translation import get_language
 
 import misago
+
 from ..auth.loginurl import get_login_url
 from . import settings
-
 
 # Simple but hard to guess version signature for current Misago version
 # Used to cache-bust django-i18n.js URL in the browser

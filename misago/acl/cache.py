@@ -1,7 +1,7 @@
 from django.core.cache import cache
 
-from . import ACL_CACHE
 from ..cache.versions import invalidate_cache
+from . import ACL_CACHE
 
 
 def get_acl_cache(user, cache_versions):

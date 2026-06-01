@@ -57,7 +57,6 @@ from .validate_post import validate_post_hook
 from .validate_posted_contents import validate_posted_contents_hook
 from .validate_thread_title import validate_thread_title_hook
 
-
 __all__ = [
     "get_private_thread_edit_context_data_hook",
     "get_private_thread_edit_formset_hook",

@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.db import models
-from django.utils.crypto import get_random_string
-from django.utils import timezone
 from django.urls import reverse
+from django.utils import timezone
+from django.utils.crypto import get_random_string
 
 from ..plugins.models import PluginDataModel
 

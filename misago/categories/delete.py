@@ -15,6 +15,8 @@ from ..postgres.delete import delete_all
 from ..readtracker.models import ReadCategory, ReadThread
 from ..threads.models import (
     Attachment as LegacyAttachment,
+)
+from ..threads.models import (
     Post,
     Thread,
 )

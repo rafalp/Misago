@@ -2,8 +2,8 @@ import pytest
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
-from ..generic import check_access_category_permission
 from ..enums import CategoryPermission
+from ..generic import check_access_category_permission
 from ..models import CategoryGroupPermission
 from ..proxy import UserPermissionsProxy
 

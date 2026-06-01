@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains
-from ..solutions import select_thread_solution, lock_thread_solution
+from ..solutions import lock_thread_solution, select_thread_solution
 
 
 def test_thread_solution_lock_view_locks_thread_solution(

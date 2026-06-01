@@ -21,7 +21,6 @@ def remove_setting(apps, _):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_conf", "0012_add_oauth2_pkce_settings"),
     ]

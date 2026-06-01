@@ -23,7 +23,7 @@ def _shorten_url_action(url: str) -> str:
     if len(url) <= URL_LENGTH_LIMIT:
         return url
 
-    return f"{url[:URL_HEAD_LENGTH]}...{url[URL_TAIL_LENGTH * -1:]}"
+    return f"{url[:URL_HEAD_LENGTH]}...{url[URL_TAIL_LENGTH * -1 :]}"
 
 
 INDEX_FILE_NAMES = ("index.php", "index.html", "index.htm")

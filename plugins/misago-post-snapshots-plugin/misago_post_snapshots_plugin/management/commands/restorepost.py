@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+
 from misago.threads.models import Post
 
 from ...models import PostSnapshot

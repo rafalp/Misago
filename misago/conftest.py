@@ -1,5 +1,5 @@
-import random
 import os
+import random
 from datetime import timedelta
 
 import pytest
@@ -8,8 +8,8 @@ from django.utils import timezone
 
 from .acl import ACL_CACHE, useracl
 from .admin.auth import authorize_admin
-from .attachments.models import Attachment
 from .attachments.filetypes import filetypes
+from .attachments.models import Attachment
 from .cache.enums import CacheName
 from .categories.models import Category
 from .categories.synchronize import synchronize_category
@@ -32,11 +32,11 @@ from .test import (
     teardown_attachments,
 )
 from .test.categories import category_relations_factory
-from .test.time import *
 from .test.polls import *
 from .test.posts import *
 from .test.threads import thread_factory, thread_relations_factory
 from .test.threadupdates import *
+from .test.time import *
 from .test.userpermissions import *
 from .themes import THEME_CACHE
 from .threads.models import Thread

@@ -6,8 +6,8 @@ from ...categories.proxy import CategoriesProxy
 from ...conf.test import override_dynamic_settings
 from ..breadcrumbs import (
     get_category_breadcrumbs,
-    get_threads_breadcrumbs,
     get_thread_breadcrumbs,
+    get_threads_breadcrumbs,
 )
 
 

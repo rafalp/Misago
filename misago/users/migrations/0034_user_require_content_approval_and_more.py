@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_users", "0033_rename_last_posted_on_user_last_posted_at"),
     ]

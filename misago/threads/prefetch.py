@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING, Iterable, Protocol
 
 from django.conf import settings as dj_settings
-from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
 from ..attachments.models import Attachment
@@ -11,13 +11,13 @@ from ..categories.models import Category
 from ..conf.dynamicsettings import DynamicSettings
 from ..likes.models import Like
 from ..permissions.attachments import check_download_attachment_permission
+from ..permissions.checkutils import check_permissions
 from ..permissions.generic import (
     check_access_category_permission,
     check_access_post_permission,
     check_access_thread_permission,
 )
 from ..permissions.proxy import UserPermissionsProxy
-from ..permissions.checkutils import check_permissions
 from ..privatethreads.members import prefetch_private_thread_member_ids
 from ..threadupdates.models import ThreadUpdate
 from ..users.models import Group

@@ -45,12 +45,12 @@ from ...posting.formsets import (
     ThreadReplyFormset,
     get_thread_reply_formset,
 )
+from ...readtracker.threads import is_category_read
 from ...readtracker.tracker import (
     get_unread_posts,
     mark_category_read,
     mark_thread_read,
 )
-from ...readtracker.threads import is_category_read
 from ...threadupdates.models import ThreadUpdate
 from ..breadcrumbs import get_thread_breadcrumbs
 from ..hooks import (

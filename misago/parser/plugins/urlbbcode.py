@@ -1,6 +1,6 @@
 from markdown_it import MarkdownIt
-from markdown_it.rules_inline.state_inline import StateInline
 from markdown_it.common.utils import unescapeAll
+from markdown_it.rules_inline.state_inline import StateInline
 
 
 def url_bbcode_plugin(md: MarkdownIt):

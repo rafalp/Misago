@@ -5,10 +5,9 @@ from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CanUploadAttachments
-from ..serialize import serialize_attachment
-
 from ..enums import AllowedAttachments
 from ..models import Attachment
+from ..serialize import serialize_attachment
 
 upload_url = reverse("misago:attachments-upload")
 

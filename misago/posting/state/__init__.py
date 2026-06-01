@@ -7,8 +7,8 @@ from .edit import (
     get_thread_post_edit_state,
 )
 from .reply import (
-    ReplyState,
     PrivateThreadReplyState,
+    ReplyState,
     ThreadReplyState,
     get_private_thread_reply_state,
     get_thread_reply_state,

@@ -2,9 +2,9 @@
 
 from django.db import migrations, models
 
+from ...core.utils import slugify
 from ..filename import clean_filename
 from ..filetypes import filetypes
-from ...core.utils import slugify
 
 
 def populate_attachments_slugs(apps, _):

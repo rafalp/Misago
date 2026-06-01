@@ -6,7 +6,6 @@ from ..operations import CreateSetting
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_conf", "0014_add_threads_lists_settings"),
     ]

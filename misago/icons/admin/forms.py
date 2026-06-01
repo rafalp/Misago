@@ -1,10 +1,9 @@
 from io import BytesIO
 
-
-from PIL import Image
 from django import forms
 from django.core.files.base import ContentFile
 from django.utils.translation import pgettext_lazy
+from PIL import Image
 
 from ...core.utils import get_file_hash
 from ...core.validators import validate_image_square

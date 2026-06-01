@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.http import Http404, HttpRequest, HttpResponse
-from django.views import View
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import pgettext
+from django.views import View
 
 from ...categories.enums import CategoryTree
 from ...categories.models import Category

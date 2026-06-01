@@ -9,7 +9,6 @@ def delete_events(apps, _):
 
 
 class Migration(migrations.Migration):
-
     atomic = False
 
     dependencies = [

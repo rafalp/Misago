@@ -207,7 +207,7 @@ def update_link(state: ParsingState) -> bool:
 
     elif label_attachments:
         state.result += label_markup
-        state.result += f" <{state.source[url[0] + 1:url[1] - 1]}>"
+        state.result += f" <{state.source[url[0] + 1 : url[1] - 1]}>"
 
     elif url_attachment:
         state.result += f"{label_markup} "
@@ -428,7 +428,6 @@ def search_attachments(source: str) -> list[int]:
 
 
 class Migration(migrations.Migration):
-
     atomic = False
 
     dependencies = [

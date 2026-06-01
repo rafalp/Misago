@@ -3,7 +3,6 @@
 from django.conf import settings
 from django.db import migrations
 
-
 EVENT_TYPES = {
     "pinned_locally": "pinned_in_category",
     "closed": "locked",
@@ -81,7 +80,6 @@ def get_context_id_from_url(url: str) -> int:
 
 
 class Migration(migrations.Migration):
-
     atomic = False
 
     dependencies = [

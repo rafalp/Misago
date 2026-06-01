@@ -2,7 +2,7 @@ import pytest
 
 from ..enums import CategoryTree
 from ..models import Category
-from ..treeid import get_category_tree_id, _get_category_tree_id_from_db
+from ..treeid import _get_category_tree_id_from_db, get_category_tree_id
 
 
 def test_get_category_tree_id_returns_threads_tree_id_for_category(default_category):

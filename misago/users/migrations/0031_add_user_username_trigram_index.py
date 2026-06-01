@@ -6,7 +6,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_users", "0030_remove_user_subscribe_to_replied_threads_and_more"),
     ]

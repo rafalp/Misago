@@ -1,8 +1,8 @@
 from django.urls import reverse
 from django.utils.translation import pgettext_lazy
 
-from . import ThreadType
 from ...categories import PRIVATE_THREADS_ROOT_NAME
+from . import ThreadType
 
 
 class PrivateThread(ThreadType):

@@ -1,7 +1,7 @@
 from .exceptionhandler import (
-    is_misago_exception,
     handle_misago_exception,
     handle_misago_htmx_exception,
+    is_misago_exception,
 )
 from .utils import is_request_to_misago
 

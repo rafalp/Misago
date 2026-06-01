@@ -1,6 +1,5 @@
 from misago import MisagoPlugin
 
-
 manifest = MisagoPlugin(
     name="Post Snapshots",
     description="Creates snapshots for post contents.",

@@ -1,7 +1,7 @@
 from django.db import migrations
 
-from .. import SOCIALAUTH_CACHE
 from ...cache.operations import StartCacheVersioning
+from .. import SOCIALAUTH_CACHE
 
 
 class Migration(migrations.Migration):

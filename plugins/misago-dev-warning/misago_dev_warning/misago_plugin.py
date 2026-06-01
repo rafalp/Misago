@@ -1,6 +1,5 @@
 from misago import MisagoPlugin
 
-
 manifest = MisagoPlugin(
     name="Dev Warning",
     description=(

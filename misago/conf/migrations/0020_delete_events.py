@@ -6,7 +6,6 @@ from ..operations import DeleteSetting
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_conf", "0019_add_thread_updates_settings"),
     ]

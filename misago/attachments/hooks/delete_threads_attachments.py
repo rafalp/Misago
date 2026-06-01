@@ -2,8 +2,8 @@ from typing import Iterable, Protocol, Union
 
 from django.http import HttpRequest
 
-from ...threads.models import Thread
 from ...plugins.hooks import FilterHook
+from ...threads.models import Thread
 
 
 class DeleteThreadsAttachmentsHookAction(Protocol):

@@ -1,10 +1,9 @@
 from io import BytesIO
 
 import pytest
-from PIL import Image
-
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
+from PIL import Image
 
 from ... import settings
 from ...models import Setting

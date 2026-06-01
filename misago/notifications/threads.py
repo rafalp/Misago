@@ -12,11 +12,11 @@ from ..permissions.generic import (
     check_access_post_permission,
     filter_accessible_thread_posts,
 )
-from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.privatethreads import (
     check_private_threads_permission,
     check_see_private_thread_permission,
 )
+from ..permissions.proxy import UserPermissionsProxy
 from ..threads.models import Post, Thread
 from ..threads.threadurl import get_thread_url
 from .enums import NotificationVerb, ThreadNotifications

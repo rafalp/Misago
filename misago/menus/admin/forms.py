@@ -2,8 +2,8 @@ from django import forms
 from django.utils.translation import pgettext_lazy
 
 from ...admin.forms import YesNoSwitch
-from ..models import MenuItem
 from ..cache import clear_menus_cache
+from ..models import MenuItem
 
 
 class MenuItemForm(forms.ModelForm):

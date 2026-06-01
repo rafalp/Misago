@@ -1,6 +1,5 @@
 from misago import MisagoPlugin
 
-
 manifest = MisagoPlugin(
     name="Dev Site Fixture",
     description="Populates development sites with some initial data.",

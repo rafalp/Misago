@@ -5,7 +5,6 @@ from django.utils import timezone
 from ..core.utils import slugify
 from ..users.models import User
 
-
 FactoryTimestampArg = datetime | timedelta | int | None
 FactoryUserArg = User | str | None
 

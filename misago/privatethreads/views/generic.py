@@ -9,9 +9,9 @@ from ...permissions.privatethreads import (
     filter_private_thread_posts_queryset,
     filter_private_thread_updates_queryset,
 )
-from ...threads.views.generic import GenericView
 from ...threads.models import Post, Thread
 from ...threads.postfeed import PostFeed
+from ...threads.views.generic import GenericView
 from ...threadupdates.models import ThreadUpdate
 from ..members import get_private_thread_members
 from ..postfeed import PrivateThreadPostFeed

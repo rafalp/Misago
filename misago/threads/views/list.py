@@ -1,6 +1,6 @@
 import re
 from math import ceil
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -13,8 +13,8 @@ from django.utils import timezone
 from django.utils.translation import pgettext
 from django.views import View
 
-from ...categories.enums import CategoryChildrenComponent, CategoryTree
 from ...categories.components import get_categories_data, get_subcategories_data
+from ...categories.enums import CategoryChildrenComponent, CategoryTree
 from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
 from ...metatags.metatag import MetaTag
@@ -49,16 +49,16 @@ from ...permissions.threads import (
     ThreadsQuerysetFilter,
     check_start_thread_permission,
 )
+from ...readtracker.models import ReadCategory, ReadThread
 from ...readtracker.threads import is_category_read
 from ...readtracker.tracker import (
     categories_select_related_user_readcategory,
     get_category_read_time,
     get_unread_threads,
+    mark_category_read,
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,
-    mark_category_read,
 )
-from ...readtracker.models import ReadCategory, ReadThread
 from ..breadcrumbs import get_category_breadcrumbs, get_threads_breadcrumbs
 from ..enums import (
     ThreadsListsPolling,

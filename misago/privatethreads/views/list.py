@@ -20,9 +20,9 @@ from ...readtracker.tracker import (
     categories_select_related_user_readcategory,
     get_category_read_time,
     get_unread_threads,
+    mark_category_read,
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,
-    mark_category_read,
 )
 from ...threads.filters import (
     MyThreadsFilter,

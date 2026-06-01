@@ -1,8 +1,7 @@
-from typing_extensions import TYPE_CHECKING
-
 from django import forms
 from django.http import HttpRequest
 from django.utils.translation import pgettext
+from typing_extensions import TYPE_CHECKING
 
 from ..categories.models import Category
 from ..threads.models import Thread

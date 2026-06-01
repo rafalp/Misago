@@ -5,8 +5,8 @@ from django.utils.translation import pgettext
 from ..categories.models import Category
 from ..threads.models import Thread
 from .hooks import (
-    get_private_threads_breadcrumbs_hook,
     get_private_thread_breadcrumbs_hook,
+    get_private_threads_breadcrumbs_hook,
 )
 
 

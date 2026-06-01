@@ -1,4 +1,4 @@
-from . import store, gravatar, downloaded, dynamic, gallery, uploaded
+from . import downloaded, dynamic, gallery, gravatar, store, uploaded
 from .default import set_default_avatar, set_default_avatar_from_url
 
 __all__ = [

@@ -50,12 +50,12 @@ def test_bbcode_block_rule_matches_last_closing_block(parse_to_html):
 
 def test_bbcode_block_rule_parses_single_line_block_with_spaces_prefix(parse_to_html):
     html = parse_to_html("paragraph\n  [quote]text[/quote]")
-    assert html == ("<p>paragraph</p>" "\n<misago-quote>\n<p>text</p>\n</misago-quote>")
+    assert html == ("<p>paragraph</p>\n<misago-quote>\n<p>text</p>\n</misago-quote>")
 
 
 def test_bbcode_block_rule_parses_single_line_block_with_spaces_suffix(parse_to_html):
     html = parse_to_html("[quote]text[/quote]    \nparagraph")
-    assert html == ("<misago-quote>\n<p>text</p>\n</misago-quote>" "\n<p>paragraph</p>")
+    assert html == ("<misago-quote>\n<p>text</p>\n</misago-quote>\n<p>paragraph</p>")
 
 
 def test_bbcode_block_rule_dosenst_parse_single_line_block_preceded_by_other_characters(

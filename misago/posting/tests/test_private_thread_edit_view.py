@@ -9,14 +9,14 @@ from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...edits.models import PostEdit
 from ...permissions.enums import CanUploadAttachments
-from ...threadupdates.enums import ThreadUpdateActionName
-from ...threadupdates.models import ThreadUpdate
 from ...test import (
     assert_contains,
     assert_contains_element,
     assert_not_contains,
     assert_not_contains_element,
 )
+from ...threadupdates.enums import ThreadUpdateActionName
+from ...threadupdates.models import ThreadUpdate
 from ..forms import PostForm
 from ..formsets import Formset
 

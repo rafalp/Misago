@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.utils.translation import pgettext_lazy
 
 from ...admin.views import generic
-from ..models import MenuItem
 from ..cache import clear_menus_cache
+from ..models import MenuItem
 from .forms import MenuItemForm
 from .ordering import get_next_free_order
 

@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import serializers
 
-from . import RankSerializer
 from ...core.serializers import MutableFields
+from . import RankSerializer
 
 User = get_user_model()
 

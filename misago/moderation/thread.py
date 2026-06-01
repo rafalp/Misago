@@ -3,9 +3,9 @@ from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ..permissions.proxy import UserPermissionsProxy
 from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
+from ..permissions.proxy import UserPermissionsProxy
 from ..threads.delete import delete_thread
 from ..threads.lock import lock_thread, unlock_thread
 from ..threads.models import Thread
@@ -15,10 +15,10 @@ from ..threadupdates.create import (
 )
 from ..threadupdates.threadflag import set_thread_has_updates
 from .actions import (
+    ConfirmMixin,
+    FormMixin,
     ModerationActionResult,
     ThreadModerationAction,
-    FormMixin,
-    ConfirmMixin,
 )
 from .forms import MoveThreadForm
 from .hooks import (

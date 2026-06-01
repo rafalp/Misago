@@ -1,8 +1,8 @@
 from io import BytesIO
 
 import pytest
-from PIL import Image
 from django.urls import reverse
+from PIL import Image
 
 
 @pytest.fixture

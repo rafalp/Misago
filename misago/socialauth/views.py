@@ -6,8 +6,8 @@ from django.utils.translation import pgettext
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from social_core.actions import do_auth, do_complete
-from social_django.views import _do_login
 from social_django.utils import load_strategy
+from social_django.views import _do_login
 
 
 def get_provider_from_request(request, backend):
@@ -59,7 +59,7 @@ def complete(request, backend, *args, **kwargs):
         redirect_name=REDIRECT_FIELD_NAME,
         request=request,
         *args,
-        **kwargs
+        **kwargs,
     )
 
 

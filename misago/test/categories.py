@@ -151,12 +151,12 @@ class CategoryRelations:
     def assert_relations_deleted(self):
         self.attachment.refresh_from_db()
         assert self.attachment.is_deleted, "Attachment should be marked for deletion"
-        assert (
-            not self.attachment.category
-        ), "Attachment category relation should be removed"
-        assert (
-            not self.attachment.thread
-        ), "Attachment thread relation should be removed"
+        assert not self.attachment.category, (
+            "Attachment category relation should be removed"
+        )
+        assert not self.attachment.thread, (
+            "Attachment thread relation should be removed"
+        )
         assert not self.attachment.post, "Attachment post relation should be removed"
 
         with pytest.raises(CategoryGroupPermission.DoesNotExist):
@@ -218,73 +218,73 @@ class CategoryRelations:
     def assert_relations_moved(self, new_category: Category):
         self.attachment.refresh_from_db()
         assert not self.attachment.is_deleted, "Attachment was marked for deletion"
-        assert (
-            self.attachment.category_id == new_category.id
-        ), "Attachment category relation was not updated"
+        assert self.attachment.category_id == new_category.id, (
+            "Attachment category relation was not updated"
+        )
 
         with pytest.raises(CategoryGroupPermission.DoesNotExist):
             """CategoryGroupPermission should be deleted when category is deleted"""
             self.category_group_permission.refresh_from_db()
 
         self.like.refresh_from_db()
-        assert (
-            self.like.category_id == new_category.id
-        ), "Like category relation was not updated"
+        assert self.like.category_id == new_category.id, (
+            "Like category relation was not updated"
+        )
 
         self.notification.refresh_from_db()
-        assert (
-            self.notification.category_id == new_category.id
-        ), "Notification category relation was not updated"
+        assert self.notification.category_id == new_category.id, (
+            "Notification category relation was not updated"
+        )
 
         self.poll.refresh_from_db()
-        assert (
-            self.poll.category_id == new_category.id
-        ), "Poll category relation was not updated"
+        assert self.poll.category_id == new_category.id, (
+            "Poll category relation was not updated"
+        )
 
         self.poll_vote.refresh_from_db()
-        assert (
-            self.poll_vote.category_id == new_category.id
-        ), "PollVote category relation was not updated"
+        assert self.poll_vote.category_id == new_category.id, (
+            "PollVote category relation was not updated"
+        )
 
         self.post_edit.refresh_from_db()
-        assert (
-            self.post_edit.category_id == new_category.id
-        ), "PostEdit category relation was not updated"
+        assert self.post_edit.category_id == new_category.id, (
+            "PostEdit category relation was not updated"
+        )
 
         with pytest.raises(ReadCategory.DoesNotExist):
             """ReadCategory should be deleted when category is deleted"""
             self.read_category.refresh_from_db()
 
         self.read_thread.refresh_from_db()
-        assert (
-            self.read_thread.category_id == new_category.id
-        ), "ReadThread category relation was not updated"
+        assert self.read_thread.category_id == new_category.id, (
+            "ReadThread category relation was not updated"
+        )
 
         with pytest.raises(RoleCategoryACL.DoesNotExist):
             """RoleCategoryACL should be deleted when category is deleted"""
             self.role_category_acl.refresh_from_db()
 
         self.thread.refresh_from_db()
-        assert (
-            self.thread.category_id == new_category.id
-        ), "Thread category relation was not updated"
+        assert self.thread.category_id == new_category.id, (
+            "Thread category relation was not updated"
+        )
 
         self.thread_first_post.refresh_from_db()
-        assert (
-            self.thread_first_post.category_id == new_category.id
-        ), "Thread's first post's category relation was not updated"
+        assert self.thread_first_post.category_id == new_category.id, (
+            "Thread's first post's category relation was not updated"
+        )
 
         self.thread_reply.refresh_from_db()
-        assert (
-            self.thread_reply.category_id == new_category.id
-        ), "Thread reply's category relation was not updated"
+        assert self.thread_reply.category_id == new_category.id, (
+            "Thread reply's category relation was not updated"
+        )
 
         self.thread_update.refresh_from_db()
-        assert (
-            self.thread_update.category_id == new_category.id
-        ), "ThreadUpdate category relation was not updated"
+        assert self.thread_update.category_id == new_category.id, (
+            "ThreadUpdate category relation was not updated"
+        )
 
         self.watched_thread.refresh_from_db()
-        assert (
-            self.watched_thread.category_id == new_category.id
-        ), "WatchedThread category relation was not updated"
+        assert self.watched_thread.category_id == new_category.id, (
+            "WatchedThread category relation was not updated"
+        )

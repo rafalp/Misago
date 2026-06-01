@@ -5,8 +5,8 @@ from ..parser.highlighter import highlight_syntax
 from ..threads.models import Post
 from .hooks import (
     post_needs_content_upgrade_hook,
-    upgrade_post_content_hook,
     upgrade_post_code_blocks_hook,
+    upgrade_post_content_hook,
 )
 
 

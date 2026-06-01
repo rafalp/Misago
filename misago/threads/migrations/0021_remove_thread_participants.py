@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_threads", "0020_remove_poll_poll_vote_related_names"),
     ]

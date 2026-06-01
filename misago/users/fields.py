@@ -5,8 +5,8 @@ from django.contrib.auth import get_user_model
 from django.db.models import QuerySet
 from django.utils.translation import npgettext_lazy, pgettext_lazy
 
-from ..forms.widgets import ListInput
 from ..core.utils import slugify
+from ..forms.widgets import ListInput
 
 if TYPE_CHECKING:
     from ..users.models import User

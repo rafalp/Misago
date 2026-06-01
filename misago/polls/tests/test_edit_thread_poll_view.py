@@ -274,7 +274,7 @@ def test_edit_thread_poll_view_validates_poll_question(
     }
 
     for choice in user_poll.choices:
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
 
     response = user_client.post(
         reverse(
@@ -299,7 +299,7 @@ def test_edit_thread_poll_view_validates_edited_poll_choices_are_required(
     }
 
     for choice in user_poll.choices:
-        data[f'choices_edit[{choice["id"]}]'] = ""
+        data[f"choices_edit[{choice['id']}]"] = ""
 
     response = user_client.post(
         reverse(
@@ -322,7 +322,7 @@ def test_edit_thread_poll_view_edits_poll_question(user_client, user_thread, use
     }
 
     for choice in user_poll.choices:
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
 
     response = user_client.post(
         reverse(
@@ -350,7 +350,7 @@ def test_edit_thread_poll_view_renames_existing_choices(
     }
 
     for votes, choice in enumerate(user_poll.choices):
-        data[f'choices_edit[{choice["id"]}]'] = "Edited " + choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = "Edited " + choice["name"]
         choice["votes"] = votes
 
     user_poll.save()
@@ -395,7 +395,7 @@ def test_edit_thread_poll_view_deletes_choice(user_client, user_thread, user_pol
     }
 
     for votes, choice in enumerate(user_poll.choices):
-        data[f'choices_edit[{choice["id"]}]'] = "Edited " + choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = "Edited " + choice["name"]
         choice["votes"] = votes
 
     user_poll.save()
@@ -440,7 +440,7 @@ def test_edit_thread_poll_view_deletes_choice_votes(
     deleted_vote = poll_vote_factory(user_poll, user, "choice2")
 
     for votes, choice in enumerate(user_poll.choices):
-        data[f'choices_edit[{choice["id"]}]'] = "Edited " + choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = "Edited " + choice["name"]
         choice["votes"] = votes
 
     user_poll.votes = 3
@@ -487,7 +487,7 @@ def test_edit_thread_poll_view_adds_new_choices(user_client, user_thread, user_p
     }
 
     for votes, choice in enumerate(user_poll.choices):
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
         choice["votes"] = votes
 
     user_poll.save()
@@ -544,7 +544,7 @@ def test_edit_thread_poll_view_adds_new_choices_using_noscript_ui(
     }
 
     for votes, choice in enumerate(user_poll.choices):
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
         choice["votes"] = votes
 
     user_poll.save()
@@ -601,7 +601,7 @@ def test_edit_thread_poll_view_defaults_to_new_choices_if_both_new_and_new_noscr
     }
 
     for votes, choice in enumerate(user_poll.choices):
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
         choice["votes"] = votes
 
     user_poll.save()
@@ -659,9 +659,9 @@ def test_edit_thread_poll_view_changes_deletes_and_adds_poll_choices(
 
     for votes, choice in enumerate(user_poll.choices):
         if votes == 1:
-            data[f'choices_edit[{choice["id"]}]'] = "Edited " + choice["name"]
+            data[f"choices_edit[{choice['id']}]"] = "Edited " + choice["name"]
         else:
-            data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+            data[f"choices_edit[{choice['id']}]"] = choice["name"]
 
         choice["votes"] = votes
 
@@ -709,7 +709,7 @@ def test_edit_thread_poll_view_edits_poll_max_choices(
     }
 
     for choice in user_poll.choices:
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
 
     response = user_client.post(
         reverse(
@@ -737,7 +737,7 @@ def test_edit_thread_poll_view_overrides_max_choices_with_poll_choices_number(
     }
 
     for choice in user_poll.choices:
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
 
     response = user_client.post(
         reverse(
@@ -764,7 +764,7 @@ def test_edit_thread_poll_view_enables_vote_change(user_client, user_thread, use
     }
 
     for choice in user_poll.choices:
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
 
     response = user_client.post(
         reverse(
@@ -795,7 +795,7 @@ def test_edit_thread_poll_view_disables_vote_change(
     }
 
     for choice in user_poll.choices:
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
 
     response = user_client.post(
         reverse(
@@ -823,7 +823,7 @@ def test_edit_thread_poll_view_returns_redirect_to_thread_on_save(
     }
 
     for choice in user_poll.choices:
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
 
     response = user_client.post(
         reverse(
@@ -859,7 +859,7 @@ def test_edit_thread_poll_view_returns_redirect_to_next_url_if_its_valid(
     }
 
     for choice in user_poll.choices:
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
 
     response = user_client.post(
         reverse(
@@ -889,7 +889,7 @@ def test_edit_thread_poll_view_returns_redirect_to_thread_if_next_url_is_invalid
     }
 
     for choice in user_poll.choices:
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
 
     response = user_client.post(
         reverse(
@@ -918,7 +918,7 @@ def test_edit_thread_poll_view_returns_vote_form_after_save_in_htmx_if_user_can_
     }
 
     for choice in user_poll.choices:
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
 
     response = user_client.post(
         reverse(
@@ -945,7 +945,7 @@ def test_edit_thread_poll_view_returns_results_after_save_in_htmx_if_user_alread
     }
 
     for choice in user_poll.choices:
-        data[f'choices_edit[{choice["id"]}]'] = choice["name"]
+        data[f"choices_edit[{choice['id']}]"] = choice["name"]
 
     poll_vote_factory(user_poll, user, user_poll.choices[0]["id"])
 

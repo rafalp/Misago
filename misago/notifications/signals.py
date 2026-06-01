@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
-from django.dispatch import receiver
 from django.db.models import Q
 from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 from ..users.signals import (
     anonymize_user_data,
@@ -9,8 +9,8 @@ from ..users.signals import (
     delete_user_content,
     username_changed,
 )
-from .registry import registry
 from .models import Notification, WatchedThread
+from .registry import registry
 
 
 @receiver(archive_user_data)

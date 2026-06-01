@@ -13,9 +13,15 @@ from ..threadupdates.models import ThreadUpdate
 from .hooks import delete_post_hook, delete_thread_hook
 from .models import (
     Attachment as DeprecatedAttachment,
+)
+from .models import (
     Post,
     Thread,
+)
+from .models import (
     PostEdit as DeprecatedPostEdit,
+)
+from .models import (
     PostLike as DeprecatedPostLike,
 )
 

@@ -10,10 +10,10 @@ from ..threads.delete import delete_post
 from ..threads.models import Thread
 from ..threads.synchronize import synchronize_thread
 from .actions import (
+    ConfirmMixin,
+    FormMixin,
     ModerationActionResult,
     PostsModerationAction,
-    FormMixin,
-    ConfirmMixin,
 )
 from .forms import SplitPostsForm
 from .hooks import (

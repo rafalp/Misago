@@ -5,8 +5,8 @@ from django.db import IntegrityError, models
 from django.utils import timezone
 from django.utils.translation import pgettext_lazy
 
-from .. import BANS_CACHE
 from ...cache.versions import invalidate_cache
+from .. import BANS_CACHE
 
 
 class BansManager(models.Manager):

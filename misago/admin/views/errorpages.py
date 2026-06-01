@@ -1,8 +1,9 @@
-from django.shortcuts import redirect, render as dj_render
+from django.shortcuts import redirect
+from django.shortcuts import render as dj_render
 
-from . import get_protected_namespace, protected_admin_view, render
 from ...core.utils import get_exception_message
 from ..auth import is_admin_authorized, update_admin_authorization
+from . import get_protected_namespace, protected_admin_view, render
 
 
 # Magic error page used by admin

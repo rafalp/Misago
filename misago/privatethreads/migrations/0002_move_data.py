@@ -28,7 +28,6 @@ def migrate_private_thread_members(apps, _):
 
 
 class Migration(migrations.Migration):
-
     atomic = False
 
     dependencies = [

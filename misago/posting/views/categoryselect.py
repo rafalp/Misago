@@ -1,9 +1,9 @@
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, HttpResponse
-from django.views import View
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import pgettext
+from django.views import View
 
 from ...categories.models import Category
 from ...permissions.checkutils import check_permissions

@@ -8,8 +8,8 @@ from ...categories.synchronize import synchronize_category
 from ...conf.test import override_dynamic_settings
 from ...notifications.users import notify_user
 from ...readtracker.models import ReadCategory, ReadThread
-from ...threads.models import Thread
 from ...test import assert_contains
+from ...threads.models import Thread
 
 
 def update_thread_timestamp(thread: Thread, seconds: int):

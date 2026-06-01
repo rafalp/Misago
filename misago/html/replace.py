@@ -2,7 +2,6 @@ import html
 import re
 from functools import wraps
 
-
 REGEX_CACHE = {}
 ELEMENT_RE_TPL = r"\<E(?P<args>.*?)\>(?P<children>.*?)\</E\>"
 VOID_ELEMENT_RE_TPL = r"\<E(?P<args>.*?)\/?\>"
