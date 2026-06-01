@@ -37,8 +37,8 @@ jobs:
           pip install -e .
       - name: Linters
         run: |
-          ruff check misago plugins
-          ruff format misago plugins --check
+          ruff check devproject misago plugins
+          ruff format devproject misago plugins --check
           python generate_dev_docs.py --check
       - name: Pytest
         env:

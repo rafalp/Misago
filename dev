@@ -477,7 +477,7 @@ if [[ $1 ]]; then
     elif [[ $1 = "psql_in_docker" ]]; then
         psql_in_docker
     elif [[ $1 = "ruff" ]]; then
-        docker compose run --rm misago bash -c "ruff check misago plugins --fix && ruff format misago plugins"
+        docker compose run --rm misago bash -c "ruff check devproject misago plugins --fix && ruff format devproject misago plugins"
     elif [[ $1 = "loaddevfixture" ]]; then
         docker compose run --rm misago python manage.py loaddevfixture
     elif [[ $1 = "fakedata" ]]; then
