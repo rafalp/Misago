@@ -1,4 +1,4 @@
-# noqa
+# ruff: noqa
 from .ban import *
 from .moderation import *
 from .rank import *
