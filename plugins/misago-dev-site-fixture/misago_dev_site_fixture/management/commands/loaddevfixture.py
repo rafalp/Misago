@@ -1,5 +1,6 @@
-from datetime import timedelta
-from random import randint
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from random import choice, randint
 from textwrap import dedent
 
 from django.contrib.auth import get_user_model
@@ -12,6 +13,7 @@ from misago.categories.models import Category
 from misago.categories.synchronize import synchronize_category
 from misago.conf.dynamicsettings import DynamicSettings
 from misago.conf.models import Setting
+from misago.core.utils import slugify
 from misago.permissions.enums import CategoryPermission
 from misago.permissions.models import CategoryGroupPermission
 from misago.threads.checksums import update_post_checksum
@@ -24,6 +26,48 @@ from misago.users.setupnewuser import setup_new_user
 User = get_user_model()
 
 
+@dataclass
+class ThreadData:
+    category: Category
+    title: str
+    posts: list["PostData"]
+    weight: int = 0
+    is_hidden: bool = False
+    is_unapproved: bool = False
+    is_locked: bool = False
+
+
+@dataclass
+class PostData:
+    poster: str
+    posted_at: datetime
+    original: str
+    parsed: str
+    is_locked: bool = False
+    is_hidden: bool = False
+    is_unapproved: bool = False
+    hidden_by: str | None = None
+
+
+DELETED_USER_NAMES = (
+    "DeletedUser",
+    "Ghost",
+    "Mokujin",
+    "Bob",
+    "Alice",
+    "Daniel",
+    "Christoph",
+    "Ava",
+    "Eve",
+    "Cloud",
+    "032MedicantBias",
+)
+
+
+def random_deleted_user() -> str:
+    return choice(DELETED_USER_NAMES)
+
+
 class Command(BaseCommand):
     help = "Populates the database with test data."
 
@@ -34,7 +78,10 @@ class Command(BaseCommand):
 
         root = Category.objects.root_category()
 
-        Category.objects.filter(slug="first-category").update(color="#0ea5e9")
+        first_category = Category.objects.get(slug="first-category")
+
+        first_category.color = "#0ea5e9"
+        first_category.save()
 
         second_category = Category(
             name="Second category",
@@ -164,6 +211,12 @@ class Command(BaseCommand):
         banned_user.update_acl_key()
         setup_new_user(settings, banned_user)
 
+        def random_registered_user():
+            return choice((moderator, user, other_user))
+
+        def random_user():
+            return choice([moderator, user, other_user] + list(DELETED_USER_NAMES))
+
         Ban.objects.create(check_type=Ban.USERNAME, banned_value="Banned")
 
         invalidate_cache(CacheName.BANS)
@@ -172,630 +225,530 @@ class Command(BaseCommand):
 
         timestamp = timezone.now()
 
-        first_category = (
-            Category.objects.filter(tree_id=root.tree_id, level__gt=root.level)
-            .order_by("lft")
-            .first()
-        )
-
-        previous_year_timestamp = timestamp.replace(
-            year=timestamp.year - 1,
-            month=randint(1, 10),
-            day=randint(1, 28),
-            hour=randint(0, 23),
-            minute=randint(0, 59),
-            second=randint(0, 59),
-        )
-
-        previous_year_thread = Thread.objects.create(
-            category=first_category,
-            title="Thread with last activity from previous year",
-            slug="thread-with-last-activity-from-previous-year",
-            started_at=previous_year_timestamp,
-            last_posted_at=previous_year_timestamp,
-            starter=None,
-            starter_name="Misago",
-            starter_slug="misago",
-            last_poster=None,
-            last_poster_name="Misago",
-            last_poster_slug="misago",
-        )
-        previous_year_post = Post.objects.create(
-            category=first_category,
-            thread=previous_year_thread,
-            poster=None,
-            poster_name="Misago",
-            posted_at=previous_year_timestamp,
-            updated_at=previous_year_timestamp,
-        )
-
-        previous_year_thread.first_post = previous_year_thread.last_post = (
-            previous_year_post
-        )
-        previous_year_thread.save()
-
-        previous_year_post.original = (
-            "This thread shows timestamps for content from another year."
-        )
-
-        previous_year_post.parsed = (
-            "<p>This thread shows timestamps for content from another year.</p>"
-        )
-
-        previous_year_post.search_document = previous_year_post.original
-
-        update_post_checksum(previous_year_post)
-        previous_year_post.set_search_vector()
-        previous_year_post.save()
-
-        current_year_timestamp = timestamp.replace(
-            month=randint(1, timestamp.month),
-            day=randint(1, 28),
-            hour=randint(0, 23),
-            minute=randint(0, 59),
-            second=randint(0, 59),
-        )
-
-        current_year_thread = Thread.objects.create(
-            category=first_category,
-            title="Thread with last activity from current year",
-            slug="thread-with-last-activity-from-current-year",
-            started_at=current_year_timestamp,
-            last_posted_at=current_year_timestamp,
-            starter=None,
-            starter_name="Misago",
-            starter_slug="misago",
-            last_poster=None,
-            last_poster_name="Misago",
-            last_poster_slug="misago",
-        )
-        current_year_post = Post.objects.create(
-            category=first_category,
-            thread=current_year_thread,
-            poster=None,
-            poster_name="Misago",
-            posted_at=current_year_timestamp,
-            updated_at=current_year_timestamp,
-        )
-
-        current_year_thread.first_post = current_year_thread.last_post = (
-            current_year_post
-        )
-        current_year_thread.save()
-
-        current_year_post.original = (
-            "This thread shows timestamps for content from current year."
-        )
-
-        current_year_post.parsed = (
-            "<p>This thread shows timestamps for content from current year.</p>"
-        )
-
-        current_year_post.search_document = current_year_post.original
-
-        update_post_checksum(current_year_post)
-        current_year_post.set_search_vector()
-        current_year_post.save()
-
-        current_week_timestamp = timestamp.replace(
-            hour=randint(0, 23),
-            minute=randint(0, 59),
-            second=randint(0, 59),
-        ) - timedelta(days=3)
-
-        current_week_thread = Thread.objects.create(
-            category=first_category,
-            title="Thread with last activity from current week",
-            slug="thread-with-last-activity-from-current-week",
-            started_at=current_week_timestamp,
-            last_posted_at=current_week_timestamp,
-            starter=None,
-            starter_name="Misago",
-            starter_slug="misago",
-            last_poster=None,
-            last_poster_name="Misago",
-            last_poster_slug="misago",
-        )
-        current_week_post = Post.objects.create(
-            category=first_category,
-            thread=current_week_thread,
-            poster=None,
-            poster_name="Misago",
-            posted_at=current_week_timestamp,
-            updated_at=current_week_timestamp,
-        )
-
-        current_week_thread.first_post = current_week_thread.last_post = (
-            current_week_post
-        )
-        current_week_thread.save()
-
-        current_week_post.original = (
-            "This thread shows timestamps for content from current week."
-        )
-
-        current_week_post.parsed = (
-            "<p>This thread shows timestamps for content from current week.</p>"
-        )
-
-        current_week_post.search_document = current_week_post.original
-
-        update_post_checksum(current_week_post)
-        current_week_post.set_search_vector()
-        current_week_post.save()
-
-        yesterday_timestamp = timestamp.replace(
-            hour=randint(0, 15),
-            minute=randint(0, 59),
-            second=randint(0, 59),
-        ) - timedelta(days=1)
-
-        yesterday_thread = Thread.objects.create(
-            category=first_category,
-            title="Thread with last activity from yesterday",
-            slug="thread-with-last-activity-from-yesterday-week",
-            started_at=yesterday_timestamp,
-            last_posted_at=yesterday_timestamp,
-            starter=None,
-            starter_name="Misago",
-            starter_slug="misago",
-            last_poster=None,
-            last_poster_name="Misago",
-            last_poster_slug="misago",
-        )
-        yesterday_post = Post.objects.create(
-            category=first_category,
-            thread=yesterday_thread,
-            poster=None,
-            poster_name="Misago",
-            posted_at=yesterday_timestamp,
-            updated_at=yesterday_timestamp,
-        )
-
-        yesterday_thread.first_post = yesterday_thread.last_post = yesterday_post
-        yesterday_thread.save()
-
-        yesterday_post.original = (
-            "This thread shows timestamps for content from yesterday."
-        )
-
-        yesterday_post.parsed = (
-            "<p>This thread shows timestamps for content from yesterday.</p>"
-        )
-
-        yesterday_post.search_document = yesterday_post.original
-
-        update_post_checksum(yesterday_post)
-        yesterday_post.set_search_vector()
-        yesterday_post.save()
-
-        timestamp = timezone.now() - timedelta(minutes=randint(50, 60))
-
-        thread_with_states = Thread.objects.create(
-            category=first_category,
-            title="Different post states",
-            slug="different-post-states",
-            started_at=timestamp,
-            last_posted_at=timestamp,
-            starter=None,
-            starter_name="Misago",
-            starter_slug="misago",
-            last_poster=None,
-            last_poster_name="Misago",
-            last_poster_slug="misago",
-        )
-
-        default_post = Post.objects.create(
-            category=first_category,
-            thread=thread_with_states,
-            poster=user,
-            poster_name=user.username,
-            posted_at=timestamp,
-            updated_at=timestamp,
-        )
-
-        default_post.original = "Post in a default state."
-        default_post.parsed = "<p>Post in a default state.</p>"
-        default_post.search_document = default_post.original
-
-        update_post_checksum(default_post)
-        default_post.set_search_vector()
-        default_post.save()
-
-        timestamp = timezone.now() - timedelta(minutes=randint(40, 50))
-
-        guest_post = Post.objects.create(
-            category=first_category,
-            thread=thread_with_states,
-            poster=None,
-            poster_name="DeletedUser",
-            posted_at=timestamp,
-            updated_at=timestamp,
-        )
-
-        guest_post.original = "Post by a deleted user."
-        guest_post.parsed = "<p>Post by a deleted user.</p>"
-        guest_post.search_document = guest_post.original
-
-        update_post_checksum(guest_post)
-        guest_post.set_search_vector()
-        guest_post.save()
-
-        timestamp = timezone.now() - timedelta(minutes=randint(30, 40))
-
-        hidden_post = Post.objects.create(
-            category=first_category,
-            thread=thread_with_states,
-            poster=other_user,
-            poster_name=other_user.username,
-            posted_at=timestamp,
-            updated_at=timestamp,
-            is_hidden=True,
-        )
-
-        hidden_post.original = "Hidden post."
-        hidden_post.parsed = "<p>Hidden post.</p>"
-        hidden_post.search_document = hidden_post.original
-
-        update_post_checksum(hidden_post)
-        hidden_post.set_search_vector()
-        hidden_post.save()
-
-        timestamp = timezone.now() - timedelta(minutes=randint(20, 30))
-
-        unapproved_post = Post.objects.create(
-            category=first_category,
-            thread=thread_with_states,
-            poster=user,
-            poster_name=user.username,
-            posted_at=timestamp,
-            updated_at=timestamp,
-            is_hidden=True,
-        )
-
-        unapproved_post.original = "Unapproved post."
-        unapproved_post.parsed = "<p>Unapproved post.</p>"
-        unapproved_post.search_document = unapproved_post.original
-
-        update_post_checksum(unapproved_post)
-        unapproved_post.set_search_vector()
-        unapproved_post.save()
-
-        timestamp = timezone.now() - timedelta(minutes=randint(10, 20))
-
-        locked_post = Post.objects.create(
-            category=first_category,
-            thread=thread_with_states,
-            poster=banned_user,
-            poster_name=banned_user.username,
-            posted_at=timestamp,
-            updated_at=timestamp,
-            is_locked=True,
-        )
-
-        locked_post.original = "Locked post by a banned user."
-        locked_post.parsed = "<p>Locked post by a banned user.</p>"
-        locked_post.search_document = locked_post.original
-
-        update_post_checksum(locked_post)
-        locked_post.set_search_vector()
-        locked_post.save()
-
-        edited_post = Post.objects.create(
-            category=first_category,
-            thread=thread_with_states,
-            poster=user,
-            poster_name=user.username,
-            posted_at=timezone.now() - timedelta(minutes=randint(5, 10)),
-            updated_at=timezone.now() - timedelta(minutes=randint(1, 5)),
-            edits=42,
-            last_editor=moderator,
-            last_editor_name=moderator.username,
-            last_editor_slug=moderator.slug,
-        )
-
-        edited_post.original = "Edited post."
-        edited_post.parsed = "<p>Edited post.</p>"
-        edited_post.search_document = edited_post.original
-
-        update_post_checksum(edited_post)
-        edited_post.set_search_vector()
-        edited_post.save()
-
-        timestamp = timezone.now() - timedelta(minutes=randint(1, 5))
-
-        moderator_post = Post.objects.create(
-            category=first_category,
-            thread=thread_with_states,
-            poster=moderator,
-            poster_name=moderator.username,
-            posted_at=timestamp,
-            updated_at=timestamp,
-        )
-
-        moderator_post.original = "Post by a moderator."
-        moderator_post.parsed = "<p>Post by a moderator.</p>"
-        moderator_post.search_document = moderator_post.original
-
-        update_post_checksum(moderator_post)
-        moderator_post.set_search_vector()
-        moderator_post.save()
-
-        thread_length = settings.posts_per_page + settings.posts_per_page_orphans
-        timestamp = timezone.now() - timedelta(minutes=50)
-
-        thread_one_page = Thread.objects.create(
-            category=first_category,
-            title="Thread with max-length single page",
-            slug="thread-with-max-length-single-page",
-            started_at=timestamp,
-            last_posted_at=timestamp,
-            starter=None,
-            starter_name="Misago",
-            starter_slug="misago",
-            last_poster=None,
-            last_poster_name="Misago",
-            last_poster_slug="misago",
-        )
-
-        for i in range(thread_length):
-            timestamp += timedelta(minutes=randint(0, 3))
-
-            post = Post.objects.create(
+        threads = [
+            ThreadData(
                 category=first_category,
-                thread=thread_one_page,
-                poster=None,
-                poster_name="Poster",
-                posted_at=timestamp,
-                updated_at=timestamp,
+                title="Thread with last activity from previous year",
+                posts=[
+                    PostData(
+                        poster=random_deleted_user(),
+                        posted_at=timezone.now().replace(
+                            year=timestamp.year - 1,
+                            month=randint(1, 10),
+                            day=randint(1, 28),
+                            hour=randint(0, 23),
+                            minute=randint(0, 59),
+                            second=randint(0, 59),
+                        ),
+                        original="This thread shows timestamps for content from another year.",
+                        parsed=(
+                            "<p>This thread shows timestamps for content from another year.</p>"
+                        ),
+                    )
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Thread with last activity from current year",
+                posts=[
+                    PostData(
+                        poster=random_deleted_user(),
+                        posted_at=timezone.now().replace(
+                            month=randint(1, timestamp.month),
+                            day=randint(1, 28),
+                            hour=randint(0, 23),
+                            minute=randint(0, 59),
+                            second=randint(0, 59),
+                        ),
+                        original="This thread shows timestamps for content from current year.",
+                        parsed=(
+                            "<p>This thread shows timestamps for content from current year.</p>"
+                        ),
+                    )
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Thread with last activity from current week",
+                posts=[
+                    PostData(
+                        poster=random_deleted_user(),
+                        posted_at=(
+                            timezone.now().replace(
+                                hour=randint(0, 23),
+                                minute=randint(0, 59),
+                                second=randint(0, 59),
+                            )
+                            - timedelta(days=3)
+                        ),
+                        original="This thread shows timestamps for content from current week.",
+                        parsed=(
+                            "<p>This thread shows timestamps for content from current week.</p>"
+                        ),
+                    )
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Thread with last activity from yesterday",
+                posts=[
+                    PostData(
+                        poster=random_deleted_user(),
+                        posted_at=timezone.now() - timedelta(hours=24),
+                        original="This thread shows timestamps for content from yesterday.",
+                        parsed=(
+                            "<p>This thread shows timestamps for content from yesterday.</p>"
+                        ),
+                    )
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Thread with activity by different users",
+                posts=[
+                    PostData(
+                        poster=moderator,
+                        posted_at=timezone.now()
+                        - timedelta(minutes=(60 * 3) + randint(0, 59)),
+                        original="Post by a moderator.",
+                        parsed="<p>Post by a moderator.</p>",
+                    ),
+                    PostData(
+                        poster=user,
+                        posted_at=timezone.now()
+                        - timedelta(minutes=(60 * 2) + randint(0, 59)),
+                        original="Post by a registered user.",
+                        parsed="<p>Post by a registered user.</p>",
+                    ),
+                    PostData(
+                        poster=banned_user,
+                        posted_at=timezone.now()
+                        - timedelta(minutes=60 + randint(0, 59)),
+                        original="Post by a banned user.",
+                        parsed="<p>Post by a banned user.</p>",
+                    ),
+                    PostData(
+                        poster=random_deleted_user(),
+                        posted_at=timezone.now() - timedelta(minutes=randint(0, 59)),
+                        original="Post by a deleted user.",
+                        parsed="<p>Post by a deleted user.</p>",
+                    ),
+                    PostData(
+                        poster=other_user,
+                        posted_at=timezone.now()
+                        - timedelta(minutes=(60 * 2) + randint(0, 59)),
+                        original="Post by an other registered user.",
+                        parsed="<p>Post by an other registered user.</p>",
+                    ),
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Pinned thread",
+                weight=2,
+                posts=[
+                    PostData(
+                        poster=moderator,
+                        posted_at=timezone.now() - timedelta(minutes=randint(0, 600)),
+                        original="This thread is globally pinned.",
+                        parsed="<p>This thread is globally pinned.</p>",
+                    ),
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Thread pinned in a category",
+                weight=1,
+                posts=[
+                    PostData(
+                        poster=moderator,
+                        posted_at=timezone.now() - timedelta(minutes=randint(0, 600)),
+                        original="This thread is pinned in a category.",
+                        parsed="<p>This thread is pinned in a category.</p>",
+                    ),
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Hidden thread",
+                is_hidden=True,
+                posts=[
+                    PostData(
+                        poster=user,
+                        posted_at=timezone.now() - timedelta(minutes=randint(0, 600)),
+                        original="This thread is hidden.",
+                        parsed="<p>This thread is hidden.</p>",
+                    ),
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Unapproved thread",
+                is_unapproved=True,
+                posts=[
+                    PostData(
+                        poster=user,
+                        posted_at=timezone.now() - timedelta(minutes=randint(0, 600)),
+                        original="This thread is unapproved.",
+                        parsed="<p>This thread is unapproved.</p>",
+                    ),
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Locked thread",
+                is_locked=True,
+                posts=[
+                    PostData(
+                        poster=user,
+                        posted_at=timezone.now() - timedelta(minutes=randint(0, 600)),
+                        original="This thread is locked.",
+                        parsed="<p>This thread is locked.</p>",
+                    ),
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Thread with different posts states",
+                posts=[
+                    PostData(
+                        poster=user,
+                        posted_at=timezone.now()
+                        - timedelta(minutes=400 - randint(0, 59)),
+                        original="This post is locked.",
+                        parsed="<p>This post is locked.</p>",
+                        is_locked=True,
+                    ),
+                    PostData(
+                        poster="JohnDoe",
+                        posted_at=timezone.now()
+                        - timedelta(minutes=300 - randint(0, 59)),
+                        original="This post is hidden by deleted user.",
+                        parsed="<p>This post is hidden by deleted user.</p>",
+                        is_hidden=True,
+                        hidden_by="JohnDoe",
+                    ),
+                    PostData(
+                        poster=other_user,
+                        posted_at=timezone.now()
+                        - timedelta(minutes=200 - randint(0, 59)),
+                        original="This post is hidden by the moderator.",
+                        parsed="<p>This post is hidden by the moderator.</p>",
+                        is_hidden=True,
+                        hidden_by=moderator,
+                    ),
+                    PostData(
+                        poster=user,
+                        posted_at=timezone.now() - timedelta(minutes=randint(0, 59)),
+                        original="This post is unapproved.",
+                        parsed="<p>This post is unapproved.</p>",
+                        is_unapproved=True,
+                    ),
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Deleted users discussion",
+                posts=[
+                    PostData(
+                        poster=random_deleted_user(),
+                        posted_at=timezone.now()
+                        - timedelta(minutes=300 + randint(0, 60)),
+                        original="Thread by a deleted user.",
+                        parsed="<p>Thread by a deleted user.</p>",
+                    ),
+                    PostData(
+                        poster=random_deleted_user(),
+                        posted_at=timezone.now()
+                        - timedelta(minutes=100 + randint(0, 60)),
+                        original="Reply by a deleted user.",
+                        parsed="<p>Reply by a deleted user.</p>",
+                    ),
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Thread replied by a deleted user",
+                posts=[
+                    PostData(
+                        poster=random_registered_user(),
+                        posted_at=timezone.now()
+                        - timedelta(minutes=300 + randint(0, 60)),
+                        original="Thread by a registered user.",
+                        parsed="<p>Thread by a registered user.</p>",
+                    ),
+                    PostData(
+                        poster=random_deleted_user(),
+                        posted_at=timezone.now()
+                        - timedelta(minutes=100 + randint(0, 60)),
+                        original="Reply by a deleted user.",
+                        parsed="<p>Reply by a deleted user.</p>",
+                    ),
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Thread started by a deleted user",
+                posts=[
+                    PostData(
+                        poster=random_deleted_user(),
+                        posted_at=timezone.now()
+                        - timedelta(minutes=300 + randint(0, 60)),
+                        original="Thread by a deleted user.",
+                        parsed="<p>Thread by a deleted user.</p>",
+                    ),
+                    PostData(
+                        poster=random_registered_user(),
+                        posted_at=timezone.now()
+                        - timedelta(minutes=100 + randint(0, 60)),
+                        original="Reply by a registered user.",
+                        parsed="<p>Reply by a registered user.</p>",
+                    ),
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Users thread",
+                posts=[
+                    PostData(
+                        poster=random_deleted_user(),
+                        posted_at=timezone.now()
+                        - timedelta(minutes=300 + randint(0, 60)),
+                        original="Original post.",
+                        parsed="<p>Original post.</p>",
+                    ),
+                    PostData(
+                        poster=random_deleted_user(),
+                        posted_at=timezone.now()
+                        - timedelta(minutes=100 + randint(0, 60)),
+                        original="Example reply.",
+                        parsed="<p>Example reply.</p>",
+                    ),
+                ],
+            ),
+            ThreadData(
+                category=first_category,
+                title="Welcome to the Misago Dev Fixture! Read me first!",
+                weight=2,
+                posts=[
+                    PostData(
+                        poster="Misago",
+                        posted_at=timezone.now(),
+                        original=dedent(
+                            """
+                            This Misago site was pre-populated with some initial data to make starting development easier:
+
+                            - Example categories hierarchy
+                            - Threads with activity from different dates
+                            - Moderator account
+                            - Two regular user accounts
+                            - Banned user account
+
+                            ## Extra user accounts
+
+                            In addition to the default "Admin" account, the following accounts are available:
+
+                            ### Moderator
+
+                            Global moderator.
+
+                            - Username: `Moderator`
+                            - Email: `moderator@example.com`
+                            - Password: `password`
+
+                            ### User
+
+                            Regular user.
+
+                            - Username: `User`
+                            - Email: `user@example.com`
+                            - Password: `password`
+
+                            ### Other user
+
+                            Another regular user.
+
+                            - Username: `OtherUser`
+                            - Email: `other@example.com`
+                            - Password: `password`
+
+                            ### Banned user
+
+                            Permanently banned user.
+
+                            - Username: `Banned`
+                            - Email: `banned@example.com`
+                            - Password: `password`
+                            """
+                        ).strip(),
+                        parsed=(
+                            "<p>This Misago site was pre-populated with some initial data to make starting development easier:</p>"
+                            "<ul>"
+                            "<li>Example categories hierarchy</li>"
+                            "<li>Threads with activity from different dates</li>"
+                            "<li>Moderator account</li>"
+                            "<li>Two regular user accounts</li>"
+                            "<li>Banned user account</li>"
+                            "</ul>"
+                            "<h2>Extra user accounts</h2>"
+                            "<p>In addition to the default &quot;Admin&quot; account, the following accounts are available:</p>"
+                            "<h3>Moderator</h3>"
+                            "<p>Global moderator.</p>"
+                            "<ul>"
+                            "<li>Username: <code>Moderator</code></li>"
+                            "<li>Email: <code>moderator@example.com</code></li>"
+                            "<li>Password: <code>password</code></li>"
+                            "</ul>"
+                            "<h3>User</h3>"
+                            "<p>Regular user.</p>"
+                            "<ul>"
+                            "<li>Username: <code>User</code></li>"
+                            "<li>Email: <code>user@example.com</code></li>"
+                            "<li>Password: <code>password</code></li>"
+                            "</ul>"
+                            "<h3>Other user</h3>"
+                            "<p>Another regular user.</p>"
+                            "<ul>"
+                            "<li>Username: <code>OtherUser</code></li>"
+                            "<li>Email: <code>other@example.com</code></li>"
+                            "<li>Password: <code>password</code></li>"
+                            "</ul>"
+                            "<h3>Banned user</h3>"
+                            "<p>Permanently banned user.</p>"
+                            "<ul>"
+                            "<li>Username: <code>Banned</code></li>"
+                            "<li>Email: <code>banned@example.com</code></li>"
+                            "<li>Password: <code>password</code></li>"
+                            "</ul>"
+                        ).strip(),
+                    ),
+                ],
+            ),
+        ]
+
+        def create_thread_with_specified_length(thread_length: int, title: str):
+            timestamps = sorted(
+                timezone.now() - timedelta(minutes=randint(0, 600))
+                for _ in range(thread_length)
             )
 
-            post.original = f"Post no. {i + 1}"
-            post.parsed = f"<p>Post no. {i + 1}</p>"
-            post.search_document = post.original
+            thread_data = ThreadData(
+                category=first_category,
+                title=title,
+                posts=[],
+            )
+            threads.append(thread_data)
 
-            update_post_checksum(post)
-            post.set_search_vector()
-            post.save()
+            for i, timestamp in enumerate(timestamps, 1):
+                thread_data.posts.append(
+                    PostData(
+                        poster=random_user(),
+                        posted_at=timestamp,
+                        original=f"Post no. {i}",
+                        parsed=f"<p>Post no. {i}</p>",
+                    )
+                )
 
-        thread_length = settings.posts_per_page + settings.posts_per_page_orphans + 1
-
-        thread_two_pages = Thread.objects.create(
-            category=first_category,
-            title="Thread with two pages",
-            slug="thread-with-two-pages",
-            started_at=timestamp,
-            last_posted_at=timestamp,
-            starter=None,
-            starter_name="Misago",
-            starter_slug="misago",
-            last_poster=None,
-            last_poster_name="Misago",
-            last_poster_slug="misago",
+        create_thread_with_specified_length(
+            settings.posts_per_page + settings.posts_per_page_orphans,
+            "Thread with max-length single page",
+        )
+        create_thread_with_specified_length(
+            settings.posts_per_page + settings.posts_per_page_orphans + 1,
+            "Thread with two pages",
+        )
+        create_thread_with_specified_length(
+            (settings.posts_per_page * 2) + settings.posts_per_page_orphans + 1,
+            "Thread with three pages",
+        )
+        create_thread_with_specified_length(
+            (settings.posts_per_page * 4) + settings.posts_per_page_orphans + 1,
+            "Thread with five pages",
         )
 
-        for i in range(thread_length):
-            timestamp += timedelta(minutes=randint(0, 3))
+        # Order threads posts
+        for thread in threads:
+            thread.posts = sorted(thread.posts, key=lambda p: p.posted_at)
 
-            post = Post.objects.create(
-                category=first_category,
-                thread=thread_two_pages,
-                poster=None,
-                poster_name="Poster",
-                posted_at=timestamp,
-                updated_at=timestamp,
+        # Order threads
+        threads = sorted(threads, key=lambda t: t.posts[0].posted_at)
+
+        # Create threads
+        threads_posts = []
+        for thread_data in threads:
+            thread = Thread.objects.create(
+                category=thread_data.category,
+                title=thread_data.title,
+                slug=slugify(thread_data.title),
+                started_at=thread_data.posts[0].posted_at,
+                last_posted_at=thread_data.posts[-1].posted_at,
+                starter=None,
+                starter_name="Misago",
+                starter_slug="misago",
+                last_poster=None,
+                last_poster_name="Misago",
+                last_poster_slug="misago",
+                weight=thread_data.weight,
+                is_hidden=thread_data.is_hidden,
+                is_unapproved=thread_data.is_unapproved,
+                is_locked=thread_data.is_locked,
             )
 
-            post.original = f"Post no. {i + 1}"
-            post.parsed = f"<p>Post no. {i + 1}</p>"
-            post.search_document = post.original
+            for post_data in thread_data.posts:
+                threads_posts.append((post_data, thread))
 
-            update_post_checksum(post)
-            post.set_search_vector()
-            post.save()
+        # Order posts
+        posts_and_threads = sorted(threads_posts, key=lambda i: i[0].posted_at)
 
-        thread_length = (
-            (settings.posts_per_page * 2) + settings.posts_per_page_orphans + 1
-        )
-
-        thread_three_pages = Thread.objects.create(
-            category=first_category,
-            title="Thread with three pages",
-            slug="thread-with-three-pages",
-            started_at=timestamp,
-            last_posted_at=timestamp,
-            starter=None,
-            starter_name="Misago",
-            starter_slug="misago",
-            last_poster=None,
-            last_poster_name="Misago",
-            last_poster_slug="misago",
-        )
-
-        for i in range(thread_length):
-            timestamp += timedelta(minutes=randint(0, 3))
-
-            post = Post.objects.create(
-                category=first_category,
-                thread=thread_three_pages,
-                poster=None,
-                poster_name="Poster",
-                posted_at=timestamp,
-                updated_at=timestamp,
-            )
-
-            post.original = f"Post no. {i + 1}"
-            post.parsed = f"<p>Post no. {i + 1}</p>"
-            post.search_document = post.original
-
-            update_post_checksum(post)
-            post.set_search_vector()
-            post.save()
-
-        timestamp = timezone.now()
-        posts_to_update = Post.objects.filter(id__gt=yesterday_post.id).order_by("-id")
-        for post in posts_to_update.iterator():
-            if post.updated_at == post.posted_at:
-                post.posted_at = timestamp
-                post.updated_at = post.posted_at
+        # Create threads posts
+        for post_data, thread in posts_and_threads:
+            if isinstance(post_data.poster, str):
+                poster = None
+                poster_name = post_data.poster
             else:
-                post.posted_at = timestamp
-                post.updated_at = timestamp + timedelta(minutes=randint(1, 10))
+                poster = post_data.poster
+                poster_name = poster.username
 
+            hidden_at = None
+            hidden_by = None
+            hidden_by_name = None
+            hidden_by_slug = None
+
+            if post_data.is_hidden:
+                hidden_at = min(
+                    post_data.posted_at + timedelta(minutes=randint(10, 80)),
+                    timezone.now(),
+                )
+
+                if isinstance(post_data.hidden_by, str):
+                    hidden_by = None
+                    hidden_by_name = post_data.hidden_by
+                    hidden_by_slug = slugify(post_data.hidden_by)
+                else:
+                    hidden_by = post_data.hidden_by
+                    hidden_by_name = hidden_by.username
+                    hidden_by_slug = hidden_by.slug
+
+            post = Post.objects.create(
+                category=thread.category,
+                thread=thread,
+                poster=poster,
+                poster_name=poster_name,
+                posted_at=post_data.posted_at,
+                original=post_data.original,
+                parsed=post_data.parsed,
+                is_locked=post_data.is_locked,
+                is_hidden=post_data.is_hidden,
+                is_unapproved=post_data.is_unapproved,
+                hidden_at=hidden_at,
+                hidden_by=hidden_by,
+                hidden_by_name=hidden_by_name,
+                hidden_by_slug=hidden_by_slug,
+            )
+
+            post.set_search_document(thread, post_data.original)
+            post.set_search_vector()
             post.save()
-
-            timestamp -= timedelta(minutes=randint(1, 10))
-
-        timestamp = timezone.now()
-
-        readme_thread = Thread.objects.create(
-            category=first_category,
-            title="Welcome to the Misago Dev Fixture! Read me first!",
-            slug="welcome-to-the-misago-dev-fixture-read-me-first",
-            started_at=timestamp,
-            last_posted_at=timestamp,
-            starter=None,
-            starter_name="Misago",
-            starter_slug="misago",
-            last_poster=None,
-            last_poster_name="Misago",
-            last_poster_slug="misago",
-        )
-        readme_post = Post.objects.create(
-            category=first_category,
-            thread=readme_thread,
-            poster=None,
-            poster_name="Misago",
-            posted_at=timestamp,
-            updated_at=timestamp,
-        )
-
-        readme_thread.first_post = readme_thread.last_post = readme_post
-        readme_thread.save()
-
-        readme_post.original = dedent(
-            """
-            This Misago site was pre-populated with some initial data to make starting development easier:
-
-            - Example categories hierarchy
-            - Threads with activity from different dates
-            - Moderator account
-            - Two regular user accounts
-            - Banned user account
-
-            ## Extra user accounts
-
-            In addition to the default "Admin" account, the following accounts are available:
-
-            ### Moderator
-
-            Global moderator.
-
-            - Username: `Moderator`
-            - Email: `moderator@example.com`
-            - Password: `password`
-
-            ### User
-
-            Regular user.
-
-            - Username: `User`
-            - Email: `user@example.com`
-            - Password: `password`
-
-            ### Other user
-
-            Another regular user.
-
-            - Username: `OtherUser`
-            - Email: `other@example.com`
-            - Password: `password`
-
-            ### Banned user
-
-            Permanently banned user.
-
-            - Username: `Banned`
-            - Email: `banned@example.com`
-            - Password: `password`
-            """
-        ).strip()
-
-        readme_post.parsed = (
-            "<p>This Misago site was pre-populated with some initial data to make starting development easier:</p>"
-            "<ul>"
-            "<li>Example categories hierarchy</li>"
-            "<li>Threads with activity from different dates</li>"
-            "<li>Moderator account</li>"
-            "<li>Two regular user accounts</li>"
-            "<li>Banned user account</li>"
-            "</ul>"
-            "<h2>Extra user accounts</h2>"
-            "<p>In addition to the default &quot;Admin&quot; account, the following accounts are available:</p>"
-            "<h3>Moderator</h3>"
-            "<p>Global moderator.</p>"
-            "<ul>"
-            "<li>Username: <code>Moderator</code></li>"
-            "<li>Email: <code>moderator@example.com</code></li>"
-            "<li>Password: <code>password</code></li>"
-            "</ul>"
-            "<h3>User</h3>"
-            "<p>Regular user.</p>"
-            "<ul>"
-            "<li>Username: <code>User</code></li>"
-            "<li>Email: <code>user@example.com</code></li>"
-            "<li>Password: <code>password</code></li>"
-            "</ul>"
-            "<h3>Other user</h3>"
-            "<p>Another regular user.</p>"
-            "<ul>"
-            "<li>Username: <code>OtherUser</code></li>"
-            "<li>Email: <code>other@example.com</code></li>"
-            "<li>Password: <code>password</code></li>"
-            "</ul>"
-            "<h3>Banned user</h3>"
-            "<p>Permanently banned user.</p>"
-            "<ul>"
-            "<li>Username: <code>Banned</code></li>"
-            "<li>Email: <code>banned@example.com</code></li>"
-            "<li>Password: <code>password</code></li>"
-            "</ul>"
-        ).strip()
-
-        readme_post.search_document = (
-            "This Misago site was pre-populated with some initial data to make starting development easier: "
-            "- Example categories hierarchy "
-            "- Threads with activity from different dates "
-            "- Moderator account "
-            "- Two regular user accounts "
-            "- Banned user account "
-            "## Extra user accounts "
-            'In addition to the default "Admin" account, the following accounts are available: '
-            "### Moderator "
-            "Global moderator. "
-            "- Username: `Moderator` "
-            "- Email: `moderator@example.com` "
-            "- Password: `password` "
-            "### User "
-            "Regular user. "
-            "- Username: `User` "
-            "- Email: `user@example.com` "
-            "- Password: `password` "
-            "### Other user "
-            "Another regular user. "
-            "- Username: `OtherUser` "
-            "- Email: `other@example.com` "
-            "- Password: `password` "
-            "### Banned user "
-            "Permanently banned user. "
-            "- Username: `Banned` "
-            "- Email: `banned@example.com` "
-            "- Password: `password`"
-        ).strip()
-
-        update_post_checksum(readme_post)
-        readme_post.set_search_vector()
-        readme_post.save()
 
         for thread in Thread.objects.iterator():
             synchronize_thread(thread)
