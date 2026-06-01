@@ -34,7 +34,7 @@ def media_is_image(image):
 def save_image(theme, image):
     try:
         img = Image.open(image.file)
-    except Exception:  # pylint: disable=broad-except
+    except Exception:
         return
     else:
         width, height = img.size

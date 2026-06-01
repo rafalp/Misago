@@ -41,7 +41,7 @@ SUPPORTED_THREAD_ROUTES = {
 }
 
 
-def get_thread_id_from_url(request, url):  # pylint: disable=too-many-return-statements
+def get_thread_id_from_url(request, url):
     clean_url = str(url).strip()
     url_bits = urlparse(clean_url)
 

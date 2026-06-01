@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     help = "Prunes categories"
 
-    def handle(self, *args, **options):  # pylint: disable=too-many-branches
+    def handle(self, *args, **options):
         now = timezone.now()
         synchronize_categories = []
         pruned_categories = []

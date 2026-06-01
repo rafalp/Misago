@@ -153,7 +153,6 @@ class Post(PluginDataModel):
 
     @property
     def attachments(self):
-        # pylint: disable=access-member-before-definition
         if hasattr(self, "_hydrated_attachments_cache"):
             return self._hydrated_attachments_cache
 

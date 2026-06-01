@@ -27,7 +27,7 @@ def validate_uploaded_file(settings, uploaded_file):
             temporary_file_path = Path(uploaded_file.temporary_file_path())
             if temporary_file_path.exists():
                 temporary_file_path.unlink()
-        except Exception:  # pylint: disable=broad-except
+        except Exception:
             pass
         raise e
 

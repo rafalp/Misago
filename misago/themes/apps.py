@@ -7,5 +7,4 @@ class MisagoThemesConfig(AppConfig):
     verbose_name = "Misago Theming"
 
     def ready(self):
-        # pylint: disable=unused-import
         from .admin import tasks

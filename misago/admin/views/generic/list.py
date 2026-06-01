@@ -58,7 +58,7 @@ class ListView(AdminView):
     def get_queryset(self):
         return self.get_model().objects.all()
 
-    def dispatch(self, request, *args, **kwargs):  # pylint: disable=too-many-branches, too-many-locals
+    def dispatch(self, request, *args, **kwargs):
         mass_actions_list = self.mass_actions or []
         extra_actions_list = self.extra_actions or []
 
@@ -255,12 +255,12 @@ class ListView(AdminView):
                 return methods.get(method)
 
     def clean_ordering(self, new_ordering):
-        for order_by, _ in self.ordering:  # pylint: disable=not-an-iterable
+        for order_by, _ in self.ordering:
             if order_by == new_ordering:
                 return order_by
 
     def set_ordering_in_context(self, context, method):
-        for order_by, name in self.ordering:  # pylint: disable=not-an-iterable
+        for order_by, name in self.ordering:
             order_as_dict = {
                 "type": "desc" if order_by[0] == "-" else "asc",
                 "order_by": order_by,
@@ -303,7 +303,7 @@ class ListView(AdminView):
             return action_callable(request, action_queryset)
 
     def select_mass_action(self, action):
-        for definition in self.mass_actions:  # pylint: disable=not-an-iterable
+        for definition in self.mass_actions:
             if definition["action"] == action:
                 return definition
         raise MassActionError(pgettext_lazy("admin lists", "Action is not allowed."))
