@@ -1,7 +1,7 @@
 from typing import Iterable, Type
 
-from django.http import HttpRequest
 from django.db.models import Model
+from django.http import HttpRequest
 
 from ..attachments.models import Attachment
 from ..categories.models import Category

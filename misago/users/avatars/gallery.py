@@ -4,8 +4,8 @@ from pathlib import Path
 from django.core.files.base import ContentFile
 from PIL import Image
 
-from . import store
 from ...conf import settings
+from . import store
 
 DEFAULT_GALLERY = "__default__"
 

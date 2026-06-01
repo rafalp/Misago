@@ -73,9 +73,7 @@ class Command(BaseCommand):
         self.stdin = options.get("stdin", sys.stdin)  # Used for testing
         return super().execute(*args, **options)
 
-    def handle(
-        self, *args, **options
-    ):  # pylint: disable=too-many-branches, too-many-locals
+    def handle(self, *args, **options):  # pylint: disable=too-many-branches, too-many-locals
         username = options.get("username")
         email = options.get("email")
         password = options.get("password")

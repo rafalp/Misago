@@ -11,7 +11,8 @@ def paginate(
     allow_explicit_first_page=False,
     paginator=None,
 ):
-    from django.core.paginator import Paginator, EmptyPage, InvalidPage
+    from django.core.paginator import EmptyPage, InvalidPage, Paginator
+
     from .exceptions import ExplicitFirstPage
 
     if page in (1, "1") and not allow_explicit_first_page:

@@ -22,7 +22,6 @@ def update_polls_choices(apps, _):
 
 
 class Migration(migrations.Migration):
-
     atomic = False
 
     dependencies = [

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from functools import cached_property
-from typing import TYPE_CHECKING, Any, TypedDict, Sequence
+from typing import TYPE_CHECKING, Any, Sequence, TypedDict
 
 from django.conf import settings
 from django.forms import Field

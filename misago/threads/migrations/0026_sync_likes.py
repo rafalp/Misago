@@ -29,7 +29,6 @@ def populate_last_likes(apps, _):
 
 
 class Migration(migrations.Migration):
-
     atomic = False
 
     dependencies = [

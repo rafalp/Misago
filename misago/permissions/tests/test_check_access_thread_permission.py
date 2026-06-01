@@ -1,8 +1,8 @@
 import pytest
 from django.http import Http404
 
-from ..generic import check_access_thread_permission
 from ..enums import CategoryPermission
+from ..generic import check_access_thread_permission
 from ..models import CategoryGroupPermission, Moderator
 from ..proxy import UserPermissionsProxy
 

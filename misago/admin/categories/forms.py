@@ -5,7 +5,7 @@ from django.utils.translation import pgettext, pgettext_lazy
 from mptt.forms import TreeNodeChoiceField, TreeNodeMultipleChoiceField
 
 from ...admin.forms import YesNoSwitch
-from ...categories.enums import CategoryTree, CategoryChildrenComponent
+from ...categories.enums import CategoryChildrenComponent, CategoryTree
 from ...categories.models import Category
 from ...core.validators import validate_color_hex, validate_sluggable
 

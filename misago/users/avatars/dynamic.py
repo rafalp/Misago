@@ -3,8 +3,8 @@ import os
 from django.utils.module_loading import import_string
 from PIL import Image, ImageColor, ImageDraw, ImageFont
 
-from . import store
 from ...conf import settings
+from . import store
 
 COLOR_WHEEL = (
     "#d32f2f",

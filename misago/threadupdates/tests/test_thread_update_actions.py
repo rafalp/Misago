@@ -15,7 +15,6 @@ from ..create import (
     create_merged_thread_update,
     create_moved_thread_update,
     create_opened_poll_thread_update,
-    create_unlocked_thread_update,
     create_pinned_globally_thread_update,
     create_pinned_in_category_thread_update,
     create_removed_member_thread_update,
@@ -24,6 +23,7 @@ from ..create import (
     create_test_thread_update,
     create_took_ownership_thread_update,
     create_unhid_thread_update,
+    create_unlocked_thread_update,
     create_unpinned_thread_update,
 )
 

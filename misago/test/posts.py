@@ -1,7 +1,6 @@
 import html
 
 import pytest
-
 from django.utils.crypto import get_random_string
 
 from ..core.utils import slugify

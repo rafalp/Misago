@@ -8,7 +8,6 @@ from .views import (
     attachments_upload,
 )
 
-
 urlpatterns = [
     path(
         "a/upload/",

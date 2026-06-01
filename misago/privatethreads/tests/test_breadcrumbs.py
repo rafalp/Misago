@@ -1,8 +1,8 @@
 from django.urls import reverse
 
 from ..breadcrumbs import (
-    get_private_threads_breadcrumbs,
     get_private_thread_breadcrumbs,
+    get_private_threads_breadcrumbs,
 )
 
 

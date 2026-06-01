@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from django.http import HttpRequest
 from django.db.models import F, Q
+from django.http import HttpRequest
 
 from ..categories.models import Category
 from ..permissions.privatethreads import filter_private_threads_queryset

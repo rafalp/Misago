@@ -8,10 +8,10 @@ from django.utils import timezone
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
-from ...postedits.models import PostEdit
 from ...notifications.enums import ThreadNotifications
 from ...notifications.models import WatchedThread
 from ...permissions.enums import CanUploadAttachments
+from ...postedits.models import PostEdit
 from ...privatethreads.models import PrivateThreadMember
 from ...readtracker.models import ReadCategory
 from ...readtracker.tracker import mark_thread_read

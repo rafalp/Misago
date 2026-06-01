@@ -18,10 +18,10 @@ from ...permissions.privatethreads import (
 )
 from ...permissions.proxy import UserPermissionsProxy
 from ...threads.models import Thread
+from ...threads.nexturl import get_next_thread_url
 from ...threadupdates.create import create_added_member_thread_update
 from ...threadupdates.models import ThreadUpdate
 from ...threadupdates.threadflag import set_thread_has_updates
-from ...threads.nexturl import get_next_thread_url
 from ..forms import MembersAddForm
 from ..members import (
     change_private_thread_owner,

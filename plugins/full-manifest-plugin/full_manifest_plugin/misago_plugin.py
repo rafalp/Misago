@@ -1,6 +1,5 @@
 from misago import MisagoPlugin
 
-
 manifest = MisagoPlugin(
     name="Example plugin with complete manifest",
     description="This plugin has all fields in its manifest filled in.",

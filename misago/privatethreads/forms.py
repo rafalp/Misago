@@ -26,7 +26,7 @@ class MembersAddForm(forms.Form):
         request: HttpRequest,
         owner: Optional["User"],
         members: list["User"],
-        **kwargs
+        **kwargs,
     ):
         self.request = request
         self.owner = owner

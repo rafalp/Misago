@@ -1,13 +1,13 @@
 import pytest
 
-from ...postedits.create import create_post_edit
-from ...postedits.models import PostEdit
 from ...likes.like import like_post
 from ...likes.models import Like
 from ...notifications.models import Notification, WatchedThread
 from ...notifications.threads import watch_thread
 from ...notifications.users import notify_user
 from ...polls.models import Poll, PollVote
+from ...postedits.create import create_post_edit
+from ...postedits.models import PostEdit
 from ..delete import delete_thread
 from ..models import Post, Thread
 

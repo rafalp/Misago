@@ -1,7 +1,7 @@
 import io
 
-from PIL import Image
 from django.core.files.images import ImageFile
+from PIL import Image
 
 from ...core.utils import get_file_hash
 

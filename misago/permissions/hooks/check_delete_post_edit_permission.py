@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Protocol
 
-from ...postedits.models import PostEdit
 from ...plugins.hooks import FilterHook
+from ...postedits.models import PostEdit
 
 if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy

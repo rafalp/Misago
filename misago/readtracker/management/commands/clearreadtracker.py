@@ -1,8 +1,8 @@
 from django.core.management.base import BaseCommand
 
 from ....conf.shortcuts import get_dynamic_settings
-from ...readtime import get_default_read_time
 from ...models import ReadCategory, ReadThread
+from ...readtime import get_default_read_time
 
 
 class Command(BaseCommand):

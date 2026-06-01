@@ -20,8 +20,8 @@ from .privatethreads import (
 )
 from .proxy import UserPermissionsProxy
 from .threads import (
-    check_see_thread_post_permission,
     check_see_thread_permission,
+    check_see_thread_post_permission,
     filter_thread_posts_queryset,
 )
 

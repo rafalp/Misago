@@ -5,8 +5,8 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
 from django.test import TestCase
 
-from .. import exceptionhandler
 from ...users.models import Ban
+from .. import exceptionhandler
 from ..exceptions import Banned
 
 INVALID_EXCEPTIONS = [

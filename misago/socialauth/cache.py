@@ -1,7 +1,7 @@
 from django.core.cache import cache
 
-from . import SOCIALAUTH_CACHE
 from ..cache.versions import invalidate_cache
+from . import SOCIALAUTH_CACHE
 
 
 def get_socialauth_cache(cache_versions):

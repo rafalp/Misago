@@ -1,6 +1,5 @@
 from itertools import product
 
-
 from ...categories.proxy import CategoriesProxy
 from ...threads.enums import ThreadWeight
 from ...threads.models import Thread

@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.core.paginator import Page, Paginator
-from django.http import HttpResponse, HttpResponseNotAllowed, HttpRequest
+from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils import dateparse
 from django.utils.translation import pgettext
-from django.urls import reverse
 
 from ..attachments.filetypes import filetypes
 from ..permissions.checkutils import check_permissions
@@ -21,8 +21,8 @@ from ..threads.views.generic import GenericThreadView
 from .delete import delete_post_edit
 from .diff import diff_text
 from .hide import hide_post_edit, unhide_post_edit
-from .restore import restore_post_edit
 from .models import PostEdit
+from .restore import restore_post_edit
 from .viewbackends import (
     PostEditViewBackend,
     private_thread_post_edit_backend,

@@ -1,7 +1,7 @@
 from itertools import product
 
-from ...threads.models import Thread
 from ...threads.enums import ThreadWeight
+from ...threads.models import Thread
 
 
 def test_category_threads_queryset_includes_category_with_see_and_browse_permission(

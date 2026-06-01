@@ -4,10 +4,10 @@ from django.utils.translation import pgettext_lazy
 from .views import (
     AnalyticsSettingsView,
     CaptchaSettingsView,
+    ContentSettingsView,
     GeneralSettingsView,
     NotificationsSettingsView,
     OAuth2SettingsView,
-    ContentSettingsView,
     UsersSettingsView,
     index,
 )

@@ -1,9 +1,9 @@
 from typing import Any, Dict, Optional
 
 from django.http import HttpRequest
-from django.urls import reverse, NoReverseMatch
-from django.utils.translation import get_language
 from django.shortcuts import render as dj_render
+from django.urls import NoReverseMatch, reverse
+from django.utils.translation import get_language
 
 from ...conf import settings
 from ...core.momentjs import get_locale_url

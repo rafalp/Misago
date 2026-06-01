@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_threads", "0023_populate_post_hidden_at_updated_at"),
     ]

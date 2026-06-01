@@ -1,5 +1,5 @@
-from django.urls import reverse
 from django.test import override_settings
+from django.urls import reverse
 
 from ..loginurl import get_login_url
 

@@ -2,7 +2,6 @@ from django.urls import path
 
 from .views import settings, validate
 
-
 urlpatterns = [
     path("", settings.index, name="account-settings"),
     path(

@@ -7,8 +7,8 @@ from ..models import Moderator
 from ..privatethreads import (
     check_add_private_thread_members_permission,
     check_change_private_thread_owner_permission,
-    check_edit_private_thread_post_permission,
     check_edit_private_thread_permission,
+    check_edit_private_thread_post_permission,
     check_locked_private_thread_permission,
     check_private_threads_permission,
     check_remove_private_thread_member_permission,

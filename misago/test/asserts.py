@@ -5,9 +5,9 @@ from django.contrib.messages.constants import ERROR, INFO, SUCCESS, WARNING
 
 
 def assert_status_code(response, status_code):
-    assert (
-        response.status_code == status_code
-    ), f"unexpected status code: {response.status_code} (expected: {status_code})"
+    assert response.status_code == status_code, (
+        f"unexpected status code: {response.status_code} (expected: {status_code})"
+    )
 
 
 def assert_contains(response, string, status_code=200):

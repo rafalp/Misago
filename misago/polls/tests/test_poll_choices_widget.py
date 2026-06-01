@@ -1,4 +1,4 @@
-from ..fields import PollChoicesWidget, PollChoicesValue
+from ..fields import PollChoicesValue, PollChoicesWidget
 
 
 def test_poll_choices_widget_get_context_without_value():

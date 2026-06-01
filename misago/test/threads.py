@@ -5,13 +5,13 @@ from django.utils.crypto import get_random_string
 
 from ..attachments.models import Attachment
 from ..categories.models import Category
+from ..core.utils import slugify
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
 from ..readtracker.models import ReadThread
 from ..threads.models import Post, Thread
 from ..threadupdates.create import create_test_thread_update
 from ..threadupdates.models import ThreadUpdate
-from ..core.utils import slugify
 from .utils import (
     FactoryTimestampArg,
     FactoryUserArg,

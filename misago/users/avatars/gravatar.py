@@ -3,8 +3,8 @@ from io import BytesIO
 import requests
 from PIL import Image
 
-from . import store
 from ...conf import settings
+from . import store
 
 GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?s=%s&d=404"
 

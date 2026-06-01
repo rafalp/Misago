@@ -1,8 +1,8 @@
 from typing import Protocol
 
-from PIL.Image import Image
 from django.core.files.uploadedfile import UploadedFile
 from django.http import HttpRequest
+from PIL.Image import Image
 
 from ...plugins.hooks import FilterHook
 

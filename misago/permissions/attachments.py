@@ -19,7 +19,7 @@ from .privatethreads import (
     check_see_private_thread_post_permission,
 )
 from .proxy import UserPermissionsProxy
-from .threads import check_see_thread_post_permission, check_see_thread_permission
+from .threads import check_see_thread_permission, check_see_thread_post_permission
 
 __all__ = [
     "AttachmentsPermissions",

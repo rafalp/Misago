@@ -14,6 +14,7 @@ from ..permissions.postedits import (
     can_see_post_edit_count,
     check_see_post_edit_history_permission,
 )
+from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.solutions import (
     check_change_thread_solution_permission,
     check_clear_thread_solution_permission,
@@ -25,10 +26,9 @@ from ..permissions.threads import (
     check_edit_thread_post_permission,
     check_reply_thread_permission,
 )
-from ..permissions.proxy import UserPermissionsProxy
 from ..solutions.validators import is_valid_thread_solution
-from ..threadupdates.models import ThreadUpdate
 from ..threadupdates.actions import thread_updates_renderer
+from ..threadupdates.models import ThreadUpdate
 from .hooks import (
     populate_post_feed_data_hook,
 )

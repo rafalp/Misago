@@ -57,9 +57,10 @@ def test_oauth2_login_url_is_created_with_pkce(dynamic_settings):
         build_absolute_uri=lambda url: f"http://mysite.com{url or ''}",
     )
 
-    with patch(
-        "misago.oauth2.client.get_code_challenge", return_value=code_challenge
-    ), patch("misago.oauth2.client.token_urlsafe", return_value=code_verifier):
+    with (
+        patch("misago.oauth2.client.get_code_challenge", return_value=code_challenge),
+        patch("misago.oauth2.client.token_urlsafe", return_value=code_verifier),
+    ):
         login_url = create_login_url(request)
 
     # State set in session?

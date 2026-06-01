@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 
-from ....test import assert_contains, assert_not_contains, assert_has_error_message
+from ....test import assert_contains, assert_has_error_message, assert_not_contains
 
 
 @pytest.fixture

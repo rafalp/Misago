@@ -7,7 +7,6 @@ from .views import (
     ThreadSolutionUnlockView,
 )
 
-
 urlpatterns = [
     path(
         "t/<slug:slug>/<int:thread_id>/solution/select/<int:post_id>/",

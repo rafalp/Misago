@@ -1,6 +1,6 @@
 from math import ceil
 
-from django.core.paginator import Paginator, Page
+from django.core.paginator import Page, Paginator
 
 
 class ThreadPostsPaginator(Paginator):

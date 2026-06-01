@@ -82,7 +82,7 @@ def test_upgrade_post_code_blocks_skips_upgrade_if_metadata_flag_is_false(post):
     upgrade_post_code_blocks(post)
 
     post.refresh_from_db()
-    assert post.parsed == ('<misago-code syntax="python">' "add(1, 2)" "</misago-code>")
+    assert post.parsed == ('<misago-code syntax="python">add(1, 2)</misago-code>')
     assert post.metadata == {}
 
 
@@ -93,5 +93,5 @@ def test_upgrade_post_code_blocks_skips_upgrade_if_metadata_flag_is_not_set(post
     upgrade_post_code_blocks(post)
 
     post.refresh_from_db()
-    assert post.parsed == ('<misago-code syntax="python">' "add(1, 2)" "</misago-code>")
+    assert post.parsed == ('<misago-code syntax="python">add(1, 2)</misago-code>')
     assert post.metadata == {}

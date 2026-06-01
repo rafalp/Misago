@@ -6,15 +6,17 @@ from django.http import HttpRequest
 from ..attachments.delete import delete_categories_attachments
 from ..attachments.models import Attachment
 from ..categories.models import RoleCategoryACL
-from ..postedits.models import PostEdit
 from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
 from ..permissions.models import CategoryGroupPermission
 from ..polls.models import Poll, PollVote
+from ..postedits.models import PostEdit
 from ..postgres.delete import delete_all
 from ..readtracker.models import ReadCategory, ReadThread
 from ..threads.models import (
     Attachment as LegacyAttachment,
+)
+from ..threads.models import (
     Post,
     Thread,
 )

@@ -58,9 +58,7 @@ class ListView(AdminView):
     def get_queryset(self):
         return self.get_model().objects.all()
 
-    def dispatch(
-        self, request, *args, **kwargs
-    ):  # pylint: disable=too-many-branches, too-many-locals
+    def dispatch(self, request, *args, **kwargs):  # pylint: disable=too-many-branches, too-many-locals
         mass_actions_list = self.mass_actions or []
         extra_actions_list = self.extra_actions or []
 

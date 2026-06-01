@@ -1,11 +1,11 @@
 import pytest
 
-from ...postedits.create import create_post_edit
-from ...postedits.models import PostEdit
 from ...likes.like import like_post
 from ...likes.models import Like
 from ...notifications.models import Notification
 from ...notifications.users import notify_user
+from ...postedits.create import create_post_edit
+from ...postedits.models import PostEdit
 from ..delete import delete_post
 from ..models import Post
 

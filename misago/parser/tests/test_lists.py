@@ -6,9 +6,7 @@ def test_tight_ordered_list_items_have_tight_flag(parse_to_tokens):
 
 def test_tight_ordered_list_has_css_class(parse_to_html):
     html = parse_to_html("1. Tight list")
-    assert html == (
-        '<ol class="rich-text-list-tight">' "\n<li>Tight list</li>" "\n</ol>"
-    )
+    assert html == ('<ol class="rich-text-list-tight">\n<li>Tight list</li>\n</ol>')
 
 
 def test_loose_ordered_list_items_have_tight_flag(parse_to_tokens):
@@ -40,9 +38,7 @@ def test_tight_bullet_list_items_have_tight_flag(parse_to_tokens):
 
 def test_tight_bullet_list_has_css_class(parse_to_html):
     html = parse_to_html("- Tight list")
-    assert html == (
-        '<ul class="rich-text-list-tight">' "\n<li>Tight list</li>" "\n</ul>"
-    )
+    assert html == ('<ul class="rich-text-list-tight">\n<li>Tight list</li>\n</ul>')
 
 
 def test_loose_bullet_list_items_have_tight_flag(parse_to_tokens):

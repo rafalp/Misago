@@ -114,7 +114,7 @@ def test_attachment_in_single_line_quote(parse_to_html):
 
 def test_attachment_in_table_cell(parse_to_html):
     html = parse_to_html(
-        "| file | upload |" "\n| - | - |" "\n| image | <attachment=image.png:12> |"
+        "| file | upload |\n| - | - |\n| image | <attachment=image.png:12> |"
     )
     assert html == (
         '<div class="rich-text-table-container" misago-rich-text="table-container">'

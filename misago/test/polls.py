@@ -11,7 +11,6 @@ from .utils import (
     unpack_factory_user_arg,
 )
 
-
 CHOICES = (
     "Yes",
     "Nope",

@@ -5,7 +5,7 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ...admin.views import generic
 from ..cache import clear_theme_cache
-from ..models import Theme, Css
+from ..models import Css, Theme
 from .css import move_css_down, move_css_up
 from .exporter import export_theme
 from .forms import (

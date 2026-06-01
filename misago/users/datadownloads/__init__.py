@@ -5,9 +5,7 @@ from django.utils import timezone
 from ...conf import settings
 from ..models import DataDownload
 from ..signals import archive_user_data
-
 from .dataarchive import DataArchive
-
 
 STATUS_REQUEST = (DataDownload.STATUS_PENDING, DataDownload.STATUS_PROCESSING)
 

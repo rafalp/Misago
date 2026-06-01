@@ -10,11 +10,11 @@ from django.utils.translation import pgettext
 
 from ..metatags.metatags import get_forum_index_metatags
 from ..readtracker.models import ReadCategory, ReadThread
+from .components import get_categories_data
 from .hooks import (
     get_categories_page_component_hook,
     get_categories_page_metatags_hook,
 )
-from .components import get_categories_data
 
 if TYPE_CHECKING:
     from ..users.models import User

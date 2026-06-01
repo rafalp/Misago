@@ -2,8 +2,8 @@ import pytest
 
 from ..enums import NotificationVerb
 from ..exceptions import NotificationVerbError
-from ..registry import NotificationRegistry, registry
 from ..models import Notification
+from ..registry import NotificationRegistry, registry
 
 
 @pytest.fixture

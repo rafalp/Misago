@@ -120,9 +120,7 @@ class UsersList(UserAdmin, generic.ListView):
                 pgettext("admin users", "Selected users accounts have been activated."),
             )
 
-    def action_ban(
-        self, request, users
-    ):  # pylint: disable=too-many-locals, too-many-nested-blocks, too-many-branches
+    def action_ban(self, request, users):  # pylint: disable=too-many-locals, too-many-nested-blocks, too-many-branches
         users = users.order_by("slug")
         for user in users:
             if user.is_staff:

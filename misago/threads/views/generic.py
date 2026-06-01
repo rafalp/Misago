@@ -7,12 +7,12 @@ from django.urls import reverse
 from django.views import View
 
 from ...categories.models import Category
+from ...permissions.proxy import UserPermissionsProxy
 from ...permissions.threads import (
     check_see_thread_permission,
     filter_thread_posts_queryset,
     filter_thread_updates_queryset,
 )
-from ...permissions.proxy import UserPermissionsProxy
 from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,

@@ -12,10 +12,10 @@ from ..threadupdates.create import (
 )
 from ..threadupdates.threadflag import set_thread_has_updates
 from .actions import (
+    ConfirmMixin,
+    FormMixin,
     ModerationActionResult,
     ThreadsModerationAction,
-    FormMixin,
-    ConfirmMixin,
 )
 from .forms import MoveThreadForm
 from .hooks import (
