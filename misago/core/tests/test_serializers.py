@@ -16,7 +16,6 @@ class Serializer(serializers.ModelSerializer, MutableFields):
             "has_unapproved_posts",
             "started_at",
             "last_posted_at",
-            "last_post_is_event",
             "last_post",
             "last_poster_name",
             "is_unapproved",

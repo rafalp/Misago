@@ -67,10 +67,6 @@ class Post(PluginDataModel):
     is_hidden = models.BooleanField(default=False)
     is_locked = models.BooleanField(default=False)
 
-    is_event = models.BooleanField(default=False, db_index=True)
-    event_type = models.CharField(max_length=255, null=True, blank=True)
-    event_context = models.JSONField(null=True, blank=True)
-
     likes = models.PositiveIntegerField(default=0)
     last_likes = models.JSONField(null=True, blank=True)
 
