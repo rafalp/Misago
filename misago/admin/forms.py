@@ -73,7 +73,7 @@ def YesNoField(**kwargs):
         coerce=int,
         choices=[(1, yes_label), (0, no_label)],
         widget=RadioSelect,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -84,5 +84,5 @@ class YesNoNeverField(TypedChoiceField):
             coerce=int,
             choices=PermissionValue.get_choices(),
             widget=RadioSelect,
-            **kwargs
+            **kwargs,
         )

@@ -22,7 +22,7 @@ from .hooks import (
     get_user_permissions_hook,
 )
 from .models import CategoryGroupPermission
-from .rules import zero_or_greater, yes_no_never
+from .rules import yes_no_never, zero_or_greater
 
 if TYPE_CHECKING:
     from ..users.models import User
