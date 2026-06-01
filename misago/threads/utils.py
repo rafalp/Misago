@@ -2,35 +2,6 @@ from urllib.parse import urlparse
 
 from django.urls import Resolver404, resolve
 
-from .models import PostLike
-
-
-def add_categories_to_items(root_category, categories, items):
-    categories_dict = {}
-    for category in categories:
-        categories_dict[category.id] = category
-        if category.parent_id:
-            category.parent = categories_dict[category.parent_id]
-
-    for item in items:
-        item.category = categories_dict[item.category_id]
-
-
-def add_likes_to_posts(user, posts):
-    if user.is_anonymous:
-        return
-
-    posts_map = {}
-    for post in posts:
-        posts_map[post.id] = post
-        post.is_liked = False
-
-    queryset = PostLike.objects.filter(liker=user, post_id__in=posts_map.keys())
-
-    for like in queryset.values("post_id"):
-        posts_map[like["post_id"]].is_liked = True
-
-
 SUPPORTED_THREAD_ROUTES = {
     "misago:thread": "thread_id",
     "misago:thread-post": "thread_id",

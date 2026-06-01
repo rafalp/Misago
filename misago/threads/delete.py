@@ -11,19 +11,7 @@ from ..privatethreads.models import PrivateThreadMember
 from ..readtracker.models import ReadThread
 from ..threadupdates.models import ThreadUpdate
 from .hooks import delete_post_hook, delete_thread_hook
-from .models import (
-    Attachment as DeprecatedAttachment,
-)
-from .models import (
-    Post,
-    Thread,
-)
-from .models import (
-    PostEdit as DeprecatedPostEdit,
-)
-from .models import (
-    PostLike as DeprecatedPostLike,
-)
+from .models import Post, Thread
 
 
 @transaction.atomic
