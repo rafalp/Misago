@@ -4,8 +4,8 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import pgettext
 from PIL import Image
 
-from . import store
 from ...conf import settings
+from . import store
 
 ALLOWED_EXTENSIONS = (".gif", ".png", ".jpg", ".jpeg")
 ALLOWED_MIME_TYPES = ("image/gif", "image/jpeg", "image/png", "image/mpo")
@@ -27,7 +27,7 @@ def validate_uploaded_file(settings, uploaded_file):
             temporary_file_path = Path(uploaded_file.temporary_file_path())
             if temporary_file_path.exists():
                 temporary_file_path.unlink()
-        except Exception:  # pylint: disable=broad-except
+        except Exception:
             pass
         raise e
 

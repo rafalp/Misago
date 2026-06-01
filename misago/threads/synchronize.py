@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 
-from ..polls.models import Poll
 from ..core.utils import slugify
+from ..polls.models import Poll
 from ..threadupdates.models import ThreadUpdate
 from .hooks import synchronize_thread_hook
 from .models import Post, Thread

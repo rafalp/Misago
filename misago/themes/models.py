@@ -5,9 +5,9 @@ from mptt.models import MPTTModel, TreeForeignKey
 from .uploadto import (
     generate_theme_dirname,
     upload_build_css_to,
-    upload_source_css_to,
-    upload_media_to,
     upload_media_thumbnail_to,
+    upload_media_to,
+    upload_source_css_to,
 )
 
 

@@ -4,9 +4,9 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.core import mail
 
-from ... import BANS_CACHE
 from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains, assert_has_error_message, assert_not_contains
+from ... import BANS_CACHE
 from ...datadownloads import request_user_data_download
 from ...enums import DefaultGroupId
 from ...models import Ban, DataDownload, DeletedUser

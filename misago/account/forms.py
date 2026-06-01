@@ -3,9 +3,9 @@ from functools import cached_property
 from typing import Any
 
 from django import forms
-from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import PermissionDenied
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..permissions.accounts import check_delete_own_account_permission

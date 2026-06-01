@@ -2,10 +2,10 @@ from django.db import transaction
 from django.http import HttpRequest
 
 from ..attachments.models import Attachment
-from ..postedits.models import PostEdit
 from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
+from ..postedits.models import PostEdit
 from ..postgres.delete import delete_all, delete_one
 from ..privatethreads.models import PrivateThreadMember
 from ..readtracker.models import ReadThread
@@ -13,9 +13,15 @@ from ..threadupdates.models import ThreadUpdate
 from .hooks import delete_post_hook, delete_thread_hook
 from .models import (
     Attachment as DeprecatedAttachment,
+)
+from .models import (
     Post,
     Thread,
+)
+from .models import (
     PostEdit as DeprecatedPostEdit,
+)
+from .models import (
     PostLike as DeprecatedPostLike,
 )
 

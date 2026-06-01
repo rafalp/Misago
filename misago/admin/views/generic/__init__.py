@@ -1,7 +1,4 @@
-from .mixin import AdminBaseMixin
 from .base import AdminView
-from .list import ListView, MassActionError
-from .ordering import OrderingView
 from .formsbuttons import (
     ButtonView,
     FormView,
@@ -9,6 +6,9 @@ from .formsbuttons import (
     PermissionsFormView,
     TargetedView,
 )
+from .list import ListView, MassActionError
+from .mixin import AdminBaseMixin
+from .ordering import OrderingView
 
 __all__ = [
     "AdminBaseMixin",

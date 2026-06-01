@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.checks import register, Critical
+from django.core.checks import Critical, register
 
 SUPPORTED_ENGINES = [
     "django.db.backends.postgresql",

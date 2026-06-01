@@ -7,7 +7,6 @@ from markdown_it.token import Token
 
 from .hooks import render_tokens_to_plaintext_hook
 
-
 RendererPlaintextRule = Callable[["StatePlaintext"], bool]
 
 

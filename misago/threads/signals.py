@@ -9,11 +9,11 @@ from ..attachments.delete import delete_users_attachments
 from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..categories.synchronize import synchronize_category
-from ..postedits.models import PostEdit
 from ..likes.models import Like
 from ..likes.synchronize import synchronize_post_likes
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
+from ..postedits.models import PostEdit
 from ..threadupdates.models import ThreadUpdate
 from ..users.signals import (
     anonymize_user_data,
@@ -24,10 +24,14 @@ from ..users.signals import (
 from .anonymize import anonymize_post_last_likes
 from .models import (
     Attachment as LegacyAttachment,
+)
+from .models import (
     Post,
-    PostEdit as LegacyPostEdit,
     PostLike,
     Thread,
+)
+from .models import (
+    PostEdit as LegacyPostEdit,
 )
 from .synchronize import synchronize_thread
 

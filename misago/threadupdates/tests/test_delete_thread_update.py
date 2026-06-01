@@ -1,7 +1,7 @@
 import pytest
 
-from ..models import ThreadUpdate
 from ..delete import delete_thread_update
+from ..models import ThreadUpdate
 
 
 def test_delete_thread_deletes_thread_update(thread_update):

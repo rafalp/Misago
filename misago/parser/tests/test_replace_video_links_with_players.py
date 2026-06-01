@@ -89,7 +89,7 @@ def test_youtube_link_doesnt_break_inline_bbcode(parse_to_html):
 
 def test_youtube_link_with_paragraph_text_around(parse_to_html):
     html = parse_to_html(
-        "Lorem ipsum" "\nhttps://www.youtube.com/watch?v=QzfXag4r7Vo" "\nDolor met"
+        "Lorem ipsum\nhttps://www.youtube.com/watch?v=QzfXag4r7Vo\nDolor met"
     )
     assert html == (
         "<p>Lorem ipsum</p>"

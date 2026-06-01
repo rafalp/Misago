@@ -3,9 +3,9 @@ from typing import Iterable
 
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
-from django.views import View
 from django.shortcuts import redirect, render
 from django.utils.translation import pgettext
+from django.views import View
 
 from ...htmx.response import htmx_redirect
 from ...permissions.privatethreads import (
@@ -22,12 +22,6 @@ from ...threads.models import Post, Thread
 from ...threads.prefetch import prefetch_post_feed_data
 from ...threads.redirect import redirect_to_thread_post
 from ...threads.views.generic import ThreadView
-from ..hooks import (
-    get_private_thread_edit_context_data_hook,
-    get_private_thread_post_edit_context_data_hook,
-    get_thread_edit_context_data_hook,
-    get_thread_post_edit_context_data_hook,
-)
 from ..formsets import (
     Formset,
     PrivateThreadEditFormset,
@@ -38,6 +32,12 @@ from ..formsets import (
     get_private_thread_post_edit_formset,
     get_thread_edit_formset,
     get_thread_post_edit_formset,
+)
+from ..hooks import (
+    get_private_thread_edit_context_data_hook,
+    get_private_thread_post_edit_context_data_hook,
+    get_thread_edit_context_data_hook,
+    get_thread_post_edit_context_data_hook,
 )
 from ..state import (
     PostEditState,

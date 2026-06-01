@@ -1,8 +1,6 @@
 from django.db.models import QuerySet
 from django.http import HttpRequest
 
-from .generic import PrivateThreadView
-
 from ...categories.enums import CategoryTree
 from ...threads.models import Post, Thread
 from ...threads.redirect import redirect_to_post

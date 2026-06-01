@@ -46,16 +46,14 @@ def test_code_bbcode_with_quoted_syntax_arg(parse_to_html):
 def test_code_bbcode_with_info_and_syntax_arg(parse_to_html):
     html = parse_to_html('[code=lorem; syntax=php]\nhello("world")\n[/code]')
     assert html == (
-        '<misago-code info="lorem" syntax="php">hello(&quot;world&quot;)'
-        "</misago-code>"
+        '<misago-code info="lorem" syntax="php">hello(&quot;world&quot;)</misago-code>'
     )
 
 
 def test_code_bbcode_with_quoted_info_and_syntax_arg(parse_to_html):
     html = parse_to_html('[code="lorem; syntax=php"]\nhello("world")\n[/code]')
     assert html == (
-        '<misago-code info="lorem" syntax="php">hello(&quot;world&quot;)'
-        "</misago-code>"
+        '<misago-code info="lorem" syntax="php">hello(&quot;world&quot;)</misago-code>'
     )
 
 
@@ -97,12 +95,12 @@ def test_code_bbcode_single_line_strips_whitespace(parse_to_html):
 def test_code_bbcode_between_paragraphs(parse_to_html):
     html = parse_to_html("paragraph1\n[code]\nhello()\n[/code]\nparagraph2")
     assert html == (
-        "<p>paragraph1</p>" "\n<misago-code>hello()</misago-code>" "\n<p>paragraph2</p>"
+        "<p>paragraph1</p>\n<misago-code>hello()</misago-code>\n<p>paragraph2</p>"
     )
 
 
 def test_code_bbcode_single_line_between_paragraphs(parse_to_html):
     html = parse_to_html("paragraph1\n[code]hello()[/code]\nparagraph2")
     assert html == (
-        "<p>paragraph1</p>" "\n<misago-code>hello()</misago-code>" "\n<p>paragraph2</p>"
+        "<p>paragraph1</p>\n<misago-code>hello()</misago-code>\n<p>paragraph2</p>"
     )

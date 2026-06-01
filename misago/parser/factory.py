@@ -6,8 +6,8 @@ from markdown_it.utils import PresetType
 from .hooks import create_parser_hook
 from .plugins import (
     attachment_plugin,
-    code_plugin,
     code_bbcode_plugin,
+    code_plugin,
     fence_plugin,
     formatting_bbcode_plugin,
     hr_bbcode_plugin,

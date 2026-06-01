@@ -1,6 +1,6 @@
+from dataclasses import dataclass, field
 from typing import Optional
 
-from dataclasses import dataclass, field
 from django.forms import Form
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render

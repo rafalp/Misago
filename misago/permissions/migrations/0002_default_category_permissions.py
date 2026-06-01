@@ -5,7 +5,6 @@ from django.db import migrations
 from ...users.enums import DefaultGroupId
 from ..enums import CategoryPermission
 
-
 CATEGORY_PERMISSIONS = (
     CategoryPermission.SEE,
     CategoryPermission.BROWSE,

@@ -6,7 +6,6 @@ from django.utils.translation import pgettext_lazy
 
 from ..menus.menu import BoundMenuItem, Menu
 
-
 main_menu = Menu()
 
 main_menu.add_item(

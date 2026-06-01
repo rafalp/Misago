@@ -1,7 +1,6 @@
 from django.urls import include, path
 
 from ...core.views import home_redirect
-
 from ..views import (
     activation,
     auth,

@@ -1,14 +1,14 @@
 from datetime import datetime
 from typing import TYPE_CHECKING, Iterable
 
-from django.http import HttpRequest
 from django.db.models import FilteredRelation, OuterRef, Q
+from django.http import HttpRequest
 from django.utils import timezone
 
 from ..categories.models import Category
 from ..threads.models import Post, Thread
-from .readtime import get_default_read_time
 from .models import ReadCategory, ReadThread
+from .readtime import get_default_read_time
 
 if TYPE_CHECKING:
     from ..users.models import User

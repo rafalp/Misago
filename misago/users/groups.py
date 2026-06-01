@@ -9,8 +9,8 @@ from .hooks import (
     create_group_hook,
     delete_group_hook,
     set_default_group_hook,
-    update_group_hook,
     update_group_description_hook,
+    update_group_hook,
 )
 from .models import Group, GroupDescription
 from .tasks import remove_group_from_users_groups_ids

@@ -10,7 +10,6 @@ from ....users.deletesrecord import record_user_deleted_by_self
 from ....users.test import create_test_user
 from ..analytics import cumulate_data
 
-
 test_query = gql(
     """
         query getAnalytics($span: Int!) {

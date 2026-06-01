@@ -5,10 +5,10 @@ from django.utils.translation import pgettext
 from rest_framework import status
 from rest_framework.response import Response
 
-from ... import avatars
 from ....conf import settings
 from ....core.decorators import require_dict_data
 from ....core.utils import format_plaintext_for_html
+from ... import avatars
 from ...models import AvatarGallery
 from ...serializers import ModerateAvatarSerializer
 

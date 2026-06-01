@@ -2,8 +2,8 @@ import re
 
 import markdown
 from markdown.extensions.attr_list import AttrListExtension
-from markdown.extensions.fenced_code import FencedBlockPreprocessor
 from markdown.extensions.codehilite import CodeHilite, CodeHiliteExtension
+from markdown.extensions.fenced_code import FencedBlockPreprocessor
 from markdown.serializers import _escape_attrib_html
 
 
@@ -96,7 +96,7 @@ class CodeBlockPreprocessor(FencedBlockPreprocessor):
                     code = f"<pre{id_attr}{class_attr}><code{lang_attr}{kv_pairs}>{code}</code></pre>"
 
                 placeholder = self.md.htmlStash.store(code)
-                text = f"{text[:m.start()]}\n{placeholder}\n{text[m.end():]}"
+                text = f"{text[: m.start()]}\n{placeholder}\n{text[m.end() :]}"
             else:
                 break
         return text.split("\n")

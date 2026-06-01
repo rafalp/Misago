@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view
 from social_core.backends.github import GithubOAuth2
 from social_core.exceptions import AuthFailed, NotAllowedToDisconnect, WrongBackend
 
-from .. import errorpages
 from ...users.models import Ban
+from .. import errorpages
 from ..decorators import require_POST
 from ..exceptions import Banned, SocialAuthBanned, SocialAuthFailed
 from ..shortcuts import paginate, paginated_response, validate_slug

@@ -1,6 +1,7 @@
 from django.urls import reverse
-from ...models import Setting
+
 from ....test import assert_contains, assert_has_error_message
+from ...models import Setting
 
 
 def test_oauth2_can_be_enabled(admin_client):

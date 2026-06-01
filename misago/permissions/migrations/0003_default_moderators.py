@@ -4,7 +4,6 @@ from django.db import migrations
 
 from ...users.enums import DefaultGroupId
 
-
 DEFAULT_MODERATOR_GROUPS = (DefaultGroupId.ADMINS, DefaultGroupId.MODERATORS)
 
 

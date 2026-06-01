@@ -9,7 +9,8 @@ from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.utils.translation import gettext as _, pgettext, pgettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import pgettext, pgettext_lazy
 from django.views import View
 from django.views.decorators.debug import sensitive_post_parameters
 
@@ -34,6 +35,11 @@ from ...users.models import DataDownload
 from ...users.online.tracker import clear_tracking
 from ...users.tasks import delete_user
 from ...users.validators import validate_email
+from ..emailchange import (
+    EmailChangeTokenError,
+    create_email_change_token,
+    read_email_change_token,
+)
 from ..forms import (
     AccountDeleteForm,
     AccountDetailsForm,
@@ -43,11 +49,6 @@ from ..forms import (
     AccountUsernameForm,
     notifications_preferences,
     watching_preferences,
-)
-from ..emailchange import (
-    EmailChangeTokenError,
-    create_email_change_token,
-    read_email_change_token,
 )
 from ..menus import account_settings_menu
 

@@ -5,8 +5,8 @@ from django.http import HttpRequest
 from django.utils import timezone
 
 from ..attachments.models import Attachment
-from ..threads.models import Post
 from ..core.utils import slugify
+from ..threads.models import Post
 from .diff import diff_text
 from .hooks import create_post_edit_hook
 from .models import PostEdit

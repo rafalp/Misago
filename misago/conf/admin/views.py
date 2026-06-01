@@ -8,10 +8,10 @@ from ..models import Setting
 from .forms import (
     AnalyticsSettingsForm,
     CaptchaSettingsForm,
+    ContentSettingsForm,
     GeneralSettingsForm,
     NotificationsSettingsForm,
     OAuth2SettingsForm,
-    ContentSettingsForm,
     UsersSettingsForm,
 )
 

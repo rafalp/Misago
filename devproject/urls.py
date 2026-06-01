@@ -27,7 +27,6 @@ from misago import __released__, __version__
 from misago.plugins.urlpatterns import discover_plugins_urlpatterns
 from misago.users.forms.auth import AdminAuthenticationForm
 
-
 # Cache key for django-i18n.js view that invalidates cache when
 # Misago version, release status or language code changes
 misago_i18n_cache_key = (

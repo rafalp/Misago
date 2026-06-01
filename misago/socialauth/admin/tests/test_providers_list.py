@@ -1,6 +1,5 @@
 from django.urls import reverse
 
-
 admin_link = reverse("misago:admin:settings:socialauth:index")
 
 

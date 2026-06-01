@@ -3,7 +3,7 @@ from celery import shared_task
 from requests.exceptions import RequestException
 
 from ..cache import clear_theme_cache
-from ..models import Theme, Css
+from ..models import Css, Theme
 from .css import get_theme_media_map, rebuild_css
 
 

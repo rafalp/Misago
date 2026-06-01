@@ -1,11 +1,11 @@
 from io import BytesIO
 
-from PIL import Image, UnidentifiedImageError
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 from django.http import HttpRequest
 from django.utils import timezone
 from django.utils.translation import pgettext
+from PIL import Image, UnidentifiedImageError
 
 from ..core.utils import slugify
 from .filename import clean_filename, trim_filename

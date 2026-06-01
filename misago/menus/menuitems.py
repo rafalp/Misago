@@ -1,4 +1,4 @@
-from .cache import set_menus_cache, get_menus_cache
+from .cache import get_menus_cache, set_menus_cache
 from .models import MenuItem
 
 

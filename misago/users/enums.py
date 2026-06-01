@@ -2,7 +2,6 @@ from enum import IntEnum
 
 from django.utils.translation import pgettext_lazy
 
-
 CUSTOM_GROUP_ID_START = 100
 
 

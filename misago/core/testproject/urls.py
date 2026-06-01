@@ -1,15 +1,14 @@
-from django.urls import include, path
-
 from django.conf import settings
 from django.contrib import admin  # Setup Django admin to work with Misago auth
+from django.urls import include, path
 from django.utils import timezone
 from django.views.decorators.cache import cache_page
 from django.views.decorators.http import last_modified
 from django.views.i18n import JavaScriptCatalog
 
-from . import views
 from ...plugins.urlpatterns import discover_plugins_urlpatterns
 from ...users.forms.auth import AdminAuthenticationForm
+from . import views
 
 admin.autodiscover()
 admin.site.login_form = AdminAuthenticationForm

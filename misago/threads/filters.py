@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from django.http import HttpRequest
 from django.db.models import F, Q, QuerySet
+from django.http import HttpRequest
 from django.utils.translation import pgettext_lazy
 
 from ..readtracker.models import ReadCategory, ReadThread

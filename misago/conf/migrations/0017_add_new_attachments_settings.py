@@ -7,7 +7,6 @@ from ..operations import CreateSetting
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_conf", "0016_add_flood_control_setting"),
     ]

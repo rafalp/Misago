@@ -5,7 +5,6 @@ from django.db import migrations
 from ...notifications.threads import ThreadNotifications
 from ..hydrators import dehydrate_value
 
-
 settings = [
     {
         "setting": "watch_started_threads",

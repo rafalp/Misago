@@ -19,7 +19,7 @@ class SimpleBBCodePattern(SimpleTagPattern):
     Case insensitive simple BBCode
     """
 
-    def __init__(self, bbcode, tag=None):  # pylint: disable=super-init-not-called
+    def __init__(self, bbcode, tag=None):
         self.pattern = r"(\[%s\](.*?)\[/%s\])" % (bbcode, bbcode)
         self.compiled_re = re.compile(
             "^(.*?)%s(.*?)$" % self.pattern, re.DOTALL | re.UNICODE | re.IGNORECASE

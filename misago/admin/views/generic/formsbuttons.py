@@ -23,9 +23,7 @@ class TargetedView(AdminView):
             messages.error(request, self.message_404)
             return redirect(self.root_link)
 
-        error = self.check_permissions(  # pylint: disable=assignment-from-no-return
-            request, target
-        )
+        error = self.check_permissions(request, target)
         if error:
             messages.error(request, error)
             return redirect(self.root_link)
@@ -111,9 +109,7 @@ class ModelFormView(FormView):
         form = self.get_form(form_class, request, target)
 
         if request.method == "POST" and form.is_valid():
-            response = self.handle_form(  # pylint: disable=assignment-from-no-return
-                form, request, target
-            )
+            response = self.handle_form(form, request, target)
             if response:
                 return response
             if "stay" in request.POST:

@@ -1,4 +1,3 @@
-# pylint: disable=keyword-arg-before-vararg
 import json
 
 from django.contrib.auth import get_user_model
@@ -215,7 +214,7 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
                 form.cleaned_data["username"],
                 form.cleaned_data["email"],
                 joined_from_ip=request.user_ip,
-                **activation_kwargs
+                **activation_kwargs,
             )
             setup_new_user(settings, new_user)
         except IntegrityError:

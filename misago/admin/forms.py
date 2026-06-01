@@ -1,6 +1,7 @@
 import re
 from typing import Any, Iterable, Type
 
+from django.core.validators import RegexValidator
 from django.db.models import AutoField, CharField, Model
 from django.forms import (
     CharField,
@@ -10,7 +11,6 @@ from django.forms import (
     TypedMultipleChoiceField,
     ValidationError,
 )
-from django.core.validators import RegexValidator
 from django.utils.translation import pgettext_lazy
 
 from ..core.utils import parse_iso8601_string
@@ -28,7 +28,7 @@ def ColorField(**kwargs):
                 ),
             )
         ],
-        **kwargs
+        **kwargs,
     )
 
 
@@ -74,5 +74,5 @@ def YesNoSwitch(**kwargs):
         coerce=int,
         choices=[(1, yes_label), (0, no_label)],
         widget=RadioSelect(attrs={"class": "yesno-switch"}),
-        **kwargs
+        **kwargs,
     )

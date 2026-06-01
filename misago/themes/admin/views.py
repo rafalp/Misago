@@ -5,7 +5,7 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ...admin.views import generic
 from ..cache import clear_theme_cache
-from ..models import Theme, Css
+from ..models import Css, Theme
 from .css import move_css_down, move_css_up
 from .exporter import export_theme
 from .forms import (
@@ -166,9 +166,7 @@ class UploadThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
     form_class = None
 
     def action(self, request, theme):
-        form = self.form_class(  # pylint: disable=not-callable
-            request.POST, request.FILES, instance=theme
-        )
+        form = self.form_class(request.POST, request.FILES, instance=theme)
 
         if not form.is_valid():
             if form.cleaned_data.get("assets"):
@@ -245,10 +243,7 @@ class ThemeCssAdmin(ThemeAssetsAdmin, generic.TargetedView):
             messages.error(request, self.message_404)
             return redirect(self.root_link)
 
-        error = self.check_permissions(  # pylint: disable=assignment-from-no-return
-            request, theme
-        )
-        if error:
+        if error := self.check_permissions(request, theme):
             messages.error(request, error)
             return redirect(self.root_link)
 
@@ -307,9 +302,7 @@ class ThemeCssFormAdmin(ThemeCssAdmin, generic.ModelFormView):
         form = self.get_form(self.form_class, request, theme, css)
 
         if request.method == "POST" and form.is_valid():
-            response = self.handle_form(  # pylint: disable=assignment-from-no-return
-                form, request, theme, css
-            )
+            response = self.handle_form(form, request, theme, css)
             if response:
                 return response
             if "stay" in request.POST:

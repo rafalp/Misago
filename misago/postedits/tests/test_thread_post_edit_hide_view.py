@@ -1,6 +1,5 @@
 from django.urls import reverse
 
-
 from ...permissions.enums import (
     CanHideOwnPostEdits,
     CanSeePostEdits,

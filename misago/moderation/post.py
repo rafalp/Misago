@@ -8,13 +8,13 @@ from ..categories.tasks import synchronize_categories
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.delete import delete_post
 from ..threads.models import Post, Thread
+from ..threads.synchronize import synchronize_thread
 from .actions import (
+    ConfirmMixin,
+    FormMixin,
     ModerationActionResult,
     PostModerationAction,
-    FormMixin,
-    ConfirmMixin,
 )
-from ..threads.synchronize import synchronize_thread
 from .forms import SplitPostsForm
 from .hooks import (
     get_private_thread_post_moderation_actions_hook,

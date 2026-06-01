@@ -15,8 +15,8 @@ from ...attachments.validators import validate_post_attachments_limit
 from ...parser.parse import ParsingResult, parse
 from ..state import State
 from ..validators import validate_post
-from .base import PostingForm
 from .attachments import MultipleFileField
+from .base import PostingForm
 
 
 class PostForm(PostingForm):

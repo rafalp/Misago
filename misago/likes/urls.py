@@ -2,14 +2,13 @@ from django.urls import path
 
 from ..privatethreads.decorators import private_threads_login_required
 from .views import (
-    ThreadPostLikesView,
-    ThreadPostLikeView,
-    ThreadPostUnlikeView,
     PrivateThreadPostLikesView,
     PrivateThreadPostLikeView,
     PrivateThreadPostUnlikeView,
+    ThreadPostLikesView,
+    ThreadPostLikeView,
+    ThreadPostUnlikeView,
 )
-
 
 urlpatterns = [
     path(

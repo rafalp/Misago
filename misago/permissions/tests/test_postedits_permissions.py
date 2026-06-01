@@ -5,6 +5,8 @@ from django.core.exceptions import PermissionDenied
 
 from ...postedits.create import create_post_edit
 from ...postedits.hide import hide_post_edit
+from ..enums import CanHideOwnPostEdits, CanSeePostEdits
+from ..models import Moderator
 from ..postedits import (
     can_see_post_edit_count,
     check_delete_post_edit_permission,
@@ -13,8 +15,6 @@ from ..postedits import (
     check_see_post_edit_history_permission,
     check_unhide_post_edit_permission,
 )
-from ..enums import CanHideOwnPostEdits, CanSeePostEdits
-from ..models import Moderator
 
 
 def test_can_see_post_edit_count_always_returns_true_if_user_is_post_owner(

@@ -6,7 +6,6 @@ from ..operations import CreateSetting
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_conf", "0015_add_merge_concurrent_posts_setting"),
     ]

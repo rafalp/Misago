@@ -3,8 +3,12 @@ from typing import Optional, Union
 
 from django.contrib.auth.models import (
     AbstractBaseUser,
-    AnonymousUser as DjangoAnonymousUser,
     PermissionsMixin,
+)
+from django.contrib.auth.models import (
+    AnonymousUser as DjangoAnonymousUser,
+)
+from django.contrib.auth.models import (
     UserManager as BaseUserManager,
 )
 from django.contrib.postgres.fields import ArrayField, HStoreField
@@ -22,7 +26,8 @@ from ...core.utils import slugify
 from ...notifications.enums import ThreadNotifications
 from ...permissions.permissionsid import get_permissions_id
 from ...plugins.models import PluginDataModel
-from ..avatars import store as avatars_store, delete_avatar
+from ..avatars import delete_avatar
+from ..avatars import store as avatars_store
 from ..enums import DefaultGroupId, UserNewPrivateThreadsPreference
 from ..signatures import is_user_signature_valid
 from ..utils import hash_email
@@ -444,9 +449,9 @@ class User(AbstractBaseUser, PluginDataModel, PermissionsMixin):
         # by Django's ORM. I am unable to reproduce this, but in case when this
         # bug occurs, this code branch will print extra information about it
         if not isinstance(self.profile_fields, dict):
+            from django.contrib.postgres.signals import get_hstore_oids
             from django.db import connections
             from django.db.backends.signals import connection_created
-            from django.contrib.postgres.signals import get_hstore_oids
 
             receivers = ", ".join([str(r[1]()) for r in connection_created.receivers])
             dead_receivers = "TRUE" if connection_created._dead_receivers else "FALSE"

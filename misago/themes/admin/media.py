@@ -1,7 +1,7 @@
 import io
 
-from PIL import Image
 from django.core.files.images import ImageFile
+from PIL import Image
 
 from ...core.utils import get_file_hash
 
@@ -34,7 +34,7 @@ def media_is_image(image):
 def save_image(theme, image):
     try:
         img = Image.open(image.file)
-    except Exception:  # pylint: disable=broad-except
+    except Exception:
         return
     else:
         width, height = img.size

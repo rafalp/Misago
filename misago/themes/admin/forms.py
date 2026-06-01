@@ -6,8 +6,8 @@ from django.utils.translation import pgettext, pgettext_lazy
 from mptt.forms import TreeNodeChoiceField
 
 from ...core.utils import get_file_hash
-from ..models import Theme, Css
-from .css import css_needs_rebuilding, create_css, get_next_css_order
+from ..models import Css, Theme
+from .css import create_css, css_needs_rebuilding, get_next_css_order
 from .media import create_media
 from .validators import validate_css_name, validate_css_name_is_available
 

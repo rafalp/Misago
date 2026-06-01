@@ -10,8 +10,8 @@ from django.views.decorators.debug import sensitive_post_parameters
 
 from ..core.exceptions import Banned
 from ..users.forms.auth import AuthenticationForm
-from .nextpage import clean_next_page_url, get_next_page_url
 from .loginurl import get_login_url
+from .nextpage import clean_next_page_url, get_next_page_url
 
 
 class LoginView(View):

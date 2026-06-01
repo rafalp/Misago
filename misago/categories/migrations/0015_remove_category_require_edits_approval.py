@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_categories", "0014_rename_last_post_on_category_last_posted_at"),
     ]

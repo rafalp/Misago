@@ -6,7 +6,6 @@ from django.utils.translation import pgettext_lazy
 from ..categories.views import index as categories
 from ..threads.views.list import ThreadListView
 
-
 IndexView = Tuple[str, callable]
 
 

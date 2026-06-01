@@ -14,9 +14,9 @@ from ..hooks import (
     filter_thread_updates_queryset_hook,
     get_category_threads_category_query_hook,
     get_category_threads_pinned_category_query_hook,
+    get_category_threads_query_hook,
     get_threads_category_query_hook,
     get_threads_pinned_category_query_hook,
-    get_category_threads_query_hook,
     get_threads_query_orm_filter_hook,
 )
 from ..proxy import UserPermissionsProxy

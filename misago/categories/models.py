@@ -8,7 +8,7 @@ from ..conf import settings
 from ..core.utils import slugify
 from ..plugins.models import PluginDataModel
 from ..threads.threadtypes import trees_map
-from .enums import CategoryTree, CategoryChildrenComponent
+from .enums import CategoryChildrenComponent, CategoryTree
 
 
 class CategoryManager(TreeManager):

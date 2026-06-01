@@ -4,7 +4,6 @@ from django.utils.translation import pgettext_lazy
 
 from ..menus.menu import Menu
 
-
 account_settings_menu = Menu()
 
 account_settings_menu.add_item(

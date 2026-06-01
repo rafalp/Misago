@@ -39,7 +39,6 @@ def migrate_threads_subscriptions(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     atomic = False
 
     dependencies = [

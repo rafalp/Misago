@@ -16,7 +16,6 @@ from .views.post import (
     PrivateThreadPostView,
 )
 
-
 urlpatterns = [
     path(
         "private/",

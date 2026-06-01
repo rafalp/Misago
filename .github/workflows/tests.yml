@@ -35,6 +35,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e .
+      - name: Linters
+        run: |
+          ruff check devproject misago plugins
+          ruff format devproject misago plugins --check
+          python generate_dev_docs.py --check
       - name: Pytest
         env:
           DJANGO_SETTINGS_MODULE: devproject.test_settings
@@ -47,10 +52,5 @@ jobs:
         run: |
           python manage.py makemigrations --check
           pytest --cov=misago
-      - name: Linters
-        run: |
-          black --check .
-          ruff misago/notifications misago/apiv2
-          python generate_dev_docs.py --check
       - name: Publish to coveralls.io
         uses: coverallsapp/github-action@v2

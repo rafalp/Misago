@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("misago_threads", "0027_remove_post_edit_related_names"),
     ]

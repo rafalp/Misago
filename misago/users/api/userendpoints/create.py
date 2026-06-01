@@ -6,8 +6,8 @@ from django.views.decorators.csrf import csrf_protect
 from rest_framework import status
 from rest_framework.response import Response
 
-from ... import captcha
 from ....legal.models import Agreement
+from ... import captcha
 from ...forms.register import RegisterForm
 from ...registration import (
     get_registration_result_json,
@@ -57,7 +57,7 @@ def create_endpoint(request):
             form.cleaned_data["email"],
             form.cleaned_data["password"],
             joined_from_ip=request.user_ip,
-            **activation_kwargs
+            **activation_kwargs,
         )
     except IntegrityError:
         return Response(

@@ -11,7 +11,7 @@ class MisagoUsersConfig(AppConfig):
 
     def ready(self):
         from . import signals as _
-        from .admin import tasks  # pylint: disable=unused-import
+        from .admin import tasks
 
         self.register_default_users_list_pages()
         self.register_default_user_profile_pages()

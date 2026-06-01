@@ -4,7 +4,6 @@ import pytest
 
 from ...attachments.models import Attachment
 
-
 # migration_module = import_module(
 #     "misago.threads.migrations.0018_update_attachments_markup"
 # )

@@ -5,9 +5,7 @@ from django.utils import timezone
 from ...conf import settings
 from ..models import DataDownload
 from ..signals import archive_user_data
-
 from .dataarchive import DataArchive
-
 
 STATUS_REQUEST = (DataDownload.STATUS_PENDING, DataDownload.STATUS_PROCESSING)
 
@@ -37,7 +35,7 @@ def prepare_user_data_download(download, expires_in, logger=None):
             download.save()
             # todo: send an e-mail with download link
             return True
-        except Exception as error:  # pylint: disable=broad-except
+        except Exception as error:
             if logger:
                 logger.exception(error, exc_info=error)
             return False

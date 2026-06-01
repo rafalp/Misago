@@ -1,5 +1,5 @@
-from PIL import Image, UnidentifiedImageError
 from django.core.management.base import BaseCommand, CommandError
+from PIL import Image, UnidentifiedImageError
 
 from ....conf.dynamicsettings import DynamicSettings
 from ....conf.shortcuts import get_dynamic_settings
@@ -46,7 +46,7 @@ class Command(BaseCommand):
                 self.process_attachment(settings, attachment)
             except FileNotFoundError:
                 self.stderr.write(
-                    f"#{attachment.id}: {attachment.name} " "-> file not found"
+                    f"#{attachment.id}: {attachment.name} -> file not found"
                 )
             except UnidentifiedImageError:
                 self.stderr.write(

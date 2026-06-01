@@ -4,11 +4,12 @@
 FROM python:3.12-bookworm
 
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 ENV IN_MISAGO_DOCKER 1
 ENV MISAGO_PLUGINS "/app/plugins"
 
 # Install env dependencies in one single command/layer
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --allow-unauthenticated \
     vim \
     libffi-dev \
     libssl-dev \
@@ -23,8 +24,8 @@ RUN apt-get update && apt-get install -y \
 
 # Add files and dirs for build step
 COPY dev /app/dev
-COPY requirements.txt /app/requirements.txt
 COPY plugins /app/plugins
+COPY requirements.txt /app/requirements.txt
 
 WORKDIR /app/
 

@@ -102,13 +102,13 @@ class ChoiceProfileField(ProfileField):
 
     def get_input_json(self, request, user):
         choices = []
-        for key, choice in self.get_choices():  # pylint: disable=not-an-iterable
+        for key, choice in self.get_choices():
             choices.append({"value": key, "label": choice})
 
         return {"type": "select", "choices": choices}
 
     def get_value_display_data(self, request, user, value):
-        for key, name in self.get_choices():  # pylint: disable=not-an-iterable
+        for key, name in self.get_choices():
             if key == value:
                 return {"text": str(name)}
 
@@ -116,7 +116,7 @@ class ChoiceProfileField(ProfileField):
         """custom search implementation for choice fields"""
         q_obj = Q(**{"profile_fields__%s__contains" % self.fieldname: criteria})
 
-        for key, choice in self.get_choices():  # pylint: disable=not-an-iterable
+        for key, choice in self.get_choices():
             if key and criteria.lower() in str(choice).lower():
                 q_obj = q_obj | Q(**{"profile_fields__%s" % self.fieldname: key})
 

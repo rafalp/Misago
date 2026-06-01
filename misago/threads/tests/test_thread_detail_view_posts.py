@@ -1,12 +1,12 @@
-from django.utils.crypto import get_random_string
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 
 from ...conf.test import override_dynamic_settings
 from ...likes.like import like_post
 from ...permissions.enums import CanSeePostEdits, CanSeePostLikes, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
-from ...solutions.solutions import select_thread_solution, lock_thread_solution
+from ...solutions.solutions import lock_thread_solution, select_thread_solution
 from ...test import assert_contains, assert_not_contains
 
 

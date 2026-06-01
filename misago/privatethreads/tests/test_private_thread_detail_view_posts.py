@@ -1,6 +1,6 @@
-from django.utils.crypto import get_random_string
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 
 from ...conf.test import override_dynamic_settings
 from ...likes.like import like_post

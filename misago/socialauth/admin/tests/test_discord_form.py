@@ -3,7 +3,6 @@ from django.urls import reverse
 
 from ...models import SocialAuthProvider
 
-
 admin_link = reverse("misago:admin:settings:socialauth:edit", kwargs={"pk": "discord"})
 
 

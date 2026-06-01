@@ -135,8 +135,8 @@ class EditPollChoicesWidget(PollChoicesWidget):
             choices.append(
                 {
                     "id": choice_id,
-                    "edit_name": f'{edit_attrs["name"]}[{choice_id}]',
-                    "delete_name": f'{delete_attrs["name"]}',
+                    "edit_name": f"{edit_attrs['name']}[{choice_id}]",
+                    "delete_name": f"{delete_attrs['name']}",
                     "value": choice_name,
                     "checked": choice_id in delete,
                 }

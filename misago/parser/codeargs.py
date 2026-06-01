@@ -4,7 +4,6 @@ from markdown_it.common.utils import unescapeAll
 
 from .pygments import PYGMENTS_LANGUAGES
 
-
 CODE_ARGS = re.compile(r"^(?P<info>.+)[;,] *syntax[:=] *(?P<syntax>.+) *$")
 
 

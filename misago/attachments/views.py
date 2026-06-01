@@ -5,10 +5,10 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.module_loading import import_string
 from django.utils.translation import pgettext
 from django.views import View
-from django.urls import reverse
 
 from ..core.exceptions import OutdatedSlug
 from ..permissions.attachments import (

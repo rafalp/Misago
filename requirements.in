@@ -1,6 +1,5 @@
 ariadne
 ariadne_django
-black
 celery[redis]
 coveralls
 django~=4.2
