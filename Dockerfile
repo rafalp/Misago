@@ -8,7 +8,7 @@ ENV IN_MISAGO_DOCKER 1
 ENV MISAGO_PLUGINS "/app/plugins"
 
 # Install env dependencies in one single command/layer
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --allow-unauthenticated \
     vim \
     libffi-dev \
     libssl-dev \
