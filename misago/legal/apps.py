@@ -7,4 +7,4 @@ class MisagoLegalConfig(AppConfig):
     verbose_name = "Misago Legal"
 
     def ready(self):
-        from . import signals as _
+        from . import signals

@@ -399,12 +399,6 @@ psql_in_docker() {
     PGPASSWORD=$POSTGRES_PASSWORD psql --username $POSTGRES_USER --host $POSTGRES_HOST $POSTGRES_DB
 }
 
-ruff_in_docker() {
-    require_in_docker
-    ruff check misago plugins -fix
-    ruff format misago plugins
-}
-
 # Shortcut for creating small dev forum
 create_fake_data() {
     docker compose run --rm misago python manage.py createfakecategories 7
@@ -483,9 +477,7 @@ if [[ $1 ]]; then
     elif [[ $1 = "psql_in_docker" ]]; then
         psql_in_docker
     elif [[ $1 = "ruff" ]]; then
-        docker compose run --rm --no-deps misago ./dev ruff
-    elif [[ $1 = "ruff_in_docker" ]]; then
-        ruff_in_docker
+        docker compose run --rm misago bash -c "ruff check misago plugins --fix && ruff format misago plugins"
     elif [[ $1 = "loaddevfixture" ]]; then
         docker compose run --rm misago python manage.py loaddevfixture
     elif [[ $1 = "fakedata" ]]; then

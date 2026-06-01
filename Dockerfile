@@ -22,9 +22,10 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Add files and dirs for build step
+COPY .ruff.toml /app/.ruff.toml
 COPY dev /app/dev
-COPY requirements.txt /app/requirements.txt
 COPY plugins /app/plugins
+COPY requirements.txt /app/requirements.txt
 
 WORKDIR /app/
 

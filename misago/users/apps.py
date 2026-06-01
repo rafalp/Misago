@@ -10,7 +10,7 @@ class MisagoUsersConfig(AppConfig):
     verbose_name = "Misago Users"
 
     def ready(self):
-        from . import signals as _
+        from . import signals
         from .admin import tasks  # pylint: disable=unused-import
 
         self.register_default_users_list_pages()

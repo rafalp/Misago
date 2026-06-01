@@ -7,4 +7,4 @@ class MisagoThreadsConfig(AppConfig):
     verbose_name = "Misago Threads"
 
     def ready(self):
-        from . import signals as _
+        from . import signals
