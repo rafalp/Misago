@@ -22,17 +22,7 @@ from ..users.signals import (
     username_changed,
 )
 from .anonymize import anonymize_post_last_likes
-from .models import (
-    Attachment as LegacyAttachment,
-)
-from .models import (
-    Post,
-    PostLike,
-    Thread,
-)
-from .models import (
-    PostEdit as LegacyPostEdit,
-)
+from .models import Post, Thread
 from .synchronize import synchronize_thread
 
 delete_post = Signal()
@@ -54,12 +44,6 @@ def merge_threads(sender, **kwargs):
     other_thread = kwargs["other_thread"]
 
     other_thread.post_set.update(category=sender.category, thread=sender)
-    LegacyPostEdit.objects.filter(thread=other_thread).update(
-        category=sender.category, thread=sender
-    )
-    PostLike.objects.filter(thread=other_thread).update(
-        category=sender.category, thread=sender
-    )
 
     other_thread.notification_set.update(
         category=sender.category,
@@ -86,8 +70,6 @@ def move_post_notifications(sender, **kwargs):
 def move_thread_content(sender, **kwargs):
     sender.post_set.update(category=sender.category)
     PostEdit.objects.filter(thread=sender).update(category=sender.category)
-    LegacyPostEdit.objects.filter(thread=sender).update(category=sender.category)
-    PostLike.objects.filter(thread=sender).update(category=sender.category)
     sender.pollvote_set.update(category=sender.category)
     sender.notification_set.update(category=sender.category)
     sender.watchedthread_set.update(category=sender.category)
@@ -121,7 +103,6 @@ def delete_user_threads(sender, **kwargs):
         synchronize_post_likes(post, Like.objects.exclude(user=sender))
 
     PostEdit.objects.filter(user=sender).delete()
-    LegacyPostEdit.objects.filter(editor=sender).delete()
     Like.objects.filter(user=sender).delete()
 
     for thread in sender.thread_set.iterator(chunk_size=50):
@@ -155,27 +136,6 @@ def archive_user_attachments(sender, archive=None, **kwargs):
 
 
 @receiver(archive_user_data)
-def archive_user_legacy_attachments(sender, archive=None, **kwargs):
-    queryset = sender.attachment_set.order_by("id")
-    for attachment in queryset.iterator(chunk_size=50):
-        archive.add_model_file(
-            attachment.file,
-            prefix=attachment.uploaded_on.strftime("%H%M%S-legacy-file"),
-            date=attachment.uploaded_on,
-        )
-        archive.add_model_file(
-            attachment.image,
-            prefix=attachment.uploaded_on.strftime("%H%M%S-legacy-image"),
-            date=attachment.uploaded_on,
-        )
-        archive.add_model_file(
-            attachment.thumbnail,
-            prefix=attachment.uploaded_on.strftime("%H%M%S-legacy-thumbnail"),
-            date=attachment.uploaded_on,
-        )
-
-
-@receiver(archive_user_data)
 def archive_user_posts(sender, archive=None, **kwargs):
     for post in sender.post_set.order_by("id").iterator(chunk_size=50):
         item_name = post.posted_at.strftime("%H%M%S-post")
@@ -194,20 +154,6 @@ def archive_user_posts_edits(sender, archive=None, **kwargs):
     for post_edit in queryset.order_by("id").iterator(chunk_size=50):
         item_name = post_edit.edited_at.strftime("%H%M%S-post-edit")
         archive.add_text(item_name, post_edit.old_content, date=post_edit.edited_at)
-
-
-@receiver(archive_user_data)
-def archive_user_legacy_posts_edits(sender, archive=None, **kwargs):
-    queryset = LegacyPostEdit.objects.filter(post__poster=sender)
-    for post_edit in queryset.order_by("id").iterator(chunk_size=50):
-        item_name = post_edit.edited_on.strftime("%H%M%S-post-edit")
-        archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)
-    queryset = LegacyPostEdit.objects.filter(editor=sender).exclude(
-        id__in=queryset.values("id")
-    )
-    for post_edit in queryset.order_by("id").iterator(chunk_size=50):
-        item_name = post_edit.edited_on.strftime("%H%M%S-post-edit")
-        archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)
 
 
 @receiver(archive_user_data)
@@ -267,7 +213,11 @@ def anonymize_user_in_thread_updates(sender, **kwargs):
 
 @receiver([anonymize_user_data])
 def anonymize_user_in_likes(sender, **kwargs):
-    for post in sender.liked_post_set.iterator(chunk_size=50):
+    queryset = Post.objects.filter(
+        id__in=Like.objects.filter(user=sender).values("post_id")
+    ).order_by("-id")
+
+    for post in queryset.iterator(chunk_size=50):
         anonymize_post_last_likes(sender, post)
 
 
@@ -308,9 +258,6 @@ def update_usernames(sender, **kwargs):
     PostEdit.objects.filter(hidden_by=sender).update(
         hidden_by_name=sender.username, hidden_by_slug=sender.slug
     )
-    LegacyPostEdit.objects.filter(editor=sender).update(
-        editor_name=sender.username, editor_slug=sender.slug
-    )
 
     Like.objects.filter(user=sender).update(
         user_name=sender.username, user_slug=sender.slug
@@ -329,9 +276,6 @@ def update_usernames(sender, **kwargs):
             post.save(update_fields=["last_likes"])
 
     Attachment.objects.filter(uploader=sender).update(
-        uploader_name=sender.username, uploader_slug=sender.slug
-    )
-    LegacyAttachment.objects.filter(uploader=sender).update(
         uploader_name=sender.username, uploader_slug=sender.slug
     )
 

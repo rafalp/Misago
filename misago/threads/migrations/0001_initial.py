@@ -4,8 +4,6 @@ from django.conf import settings
 from django.contrib.postgres.search import SearchVectorField
 from django.db import migrations, models
 
-import misago.threads.models.attachment
-
 
 class Migration(migrations.Migration):
     initial = True
@@ -398,30 +396,15 @@ class Migration(migrations.Migration):
                 ("size", models.PositiveIntegerField(default=0, db_index=True)),
                 (
                     "thumbnail",
-                    models.ImageField(
-                        max_length=255,
-                        blank=True,
-                        null=True,
-                        upload_to=misago.threads.models.attachment.upload_to,
-                    ),
+                    models.ImageField(max_length=255, blank=True, null=True),
                 ),
                 (
                     "image",
-                    models.ImageField(
-                        max_length=255,
-                        blank=True,
-                        null=True,
-                        upload_to=misago.threads.models.attachment.upload_to,
-                    ),
+                    models.ImageField(max_length=255, blank=True, null=True),
                 ),
                 (
                     "file",
-                    models.FileField(
-                        max_length=255,
-                        blank=True,
-                        null=True,
-                        upload_to=misago.threads.models.attachment.upload_to,
-                    ),
+                    models.FileField(max_length=255, blank=True, null=True),
                 ),
                 (
                     "post",

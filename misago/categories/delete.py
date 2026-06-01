@@ -13,13 +13,7 @@ from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
 from ..postgres.delete import delete_all
 from ..readtracker.models import ReadCategory, ReadThread
-from ..threads.models import (
-    Attachment as LegacyAttachment,
-)
-from ..threads.models import (
-    Post,
-    Thread,
-)
+from ..threads.models import Post, Thread
 from ..threadupdates.models import ThreadUpdate
 from .hooks import delete_categories_hook
 from .models import Category
@@ -146,8 +140,6 @@ def _delete_categories_contents(
 
     delete_all(Notification, category_id=categories)
     delete_all(WatchedThread, category_id=categories)
-
-    LegacyAttachment.objects.filter(post__category__in=categories).update(post=None)
 
     Thread.objects.filter(post__category__in=categories).update(
         first_post=None, last_post=None

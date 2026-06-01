@@ -4,7 +4,6 @@ from django.http import Http404
 from ...acl.objectacl import add_acl_to_obj
 from ...categories.models import Category
 from ...core.cursorpagination import get_page
-from ...threads.utils import add_categories_to_items
 
 
 class UserThreads:
@@ -34,8 +33,6 @@ class UserThreads:
 
         for post in posts:
             threads.append(post.thread)
-
-        add_categories_to_items(root_category, threads_categories, posts + threads)
 
         add_acl_to_obj(request.user_acl, threads)
         add_acl_to_obj(request.user_acl, posts)

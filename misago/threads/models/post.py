@@ -74,12 +74,6 @@ class Post(PluginDataModel):
     likes = models.PositiveIntegerField(default=0)
     last_likes = models.JSONField(null=True, blank=True)
 
-    liked_by = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name="liked_post_set",
-        through="misago_threads.PostLike",
-    )
-
     search_document = models.TextField(null=True, blank=True)
     search_vector = SearchVectorField()
 
