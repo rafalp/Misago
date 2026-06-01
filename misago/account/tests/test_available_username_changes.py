@@ -64,7 +64,7 @@ def test_get_available_username_changes_counts_user_name_changes_to_the_limit(us
 
     assert options.can_change_username
     assert options.unlimited is False
-    assert options.changes_left is 1
+    assert options.changes_left == 1
     assert options.next_change is None
 
 
@@ -82,7 +82,7 @@ def test_get_available_username_changes_counts_recent_name_changes_to_the_limit(
 
     assert options.can_change_username
     assert options.unlimited is False
-    assert options.changes_left is 1
+    assert options.changes_left == 1
     assert options.next_change is None
 
 
@@ -104,7 +104,7 @@ def test_get_available_username_changes_doesnt_count_expired_name_changes_to_the
 
     assert options.can_change_username
     assert options.unlimited is False
-    assert options.changes_left is 2
+    assert options.changes_left == 2
     assert options.next_change is None
 
 
@@ -123,7 +123,7 @@ def test_get_available_username_changes_doesnt_count_user_name_changes_by_other_
 
     assert options.can_change_username
     assert options.unlimited is False
-    assert options.changes_left is 2
+    assert options.changes_left == 2
     assert options.next_change is None
 
 
