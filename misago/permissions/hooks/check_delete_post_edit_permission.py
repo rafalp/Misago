@@ -79,9 +79,9 @@ class CheckDeletePostEditPermissionHook(
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
-    from misago.postedits.models import PostEdit
     from misago.permissions.hooks import check_delete_post_edit_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
+    from misago.postedits.models import PostEdit
 
     @check_delete_post_edit_permission_hook.append_filter
     def check_user_can_delete_protected_post_edit(

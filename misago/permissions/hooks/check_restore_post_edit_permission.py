@@ -79,9 +79,9 @@ class CheckRestorePostEditPermissionHook(
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
-    from misago.postedits.models import PostEdit
     from misago.permissions.hooks import check_restore_post_edit_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
+    from misago.postedits.models import PostEdit
 
     @check_restore_post_edit_permission_hook.append_filter
     def check_user_can_hide_protected_post_edit(
