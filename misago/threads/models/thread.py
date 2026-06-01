@@ -70,8 +70,6 @@ class Thread(PluginDataModel):
         blank=True,
         on_delete=models.SET_NULL,
     )
-    # TODO: delete this field
-    last_post_is_event = models.BooleanField(default=False)
     last_poster = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="last_poster_set",
