@@ -7,10 +7,10 @@ from ...plugins.hooks import FilterHook
 from ...threads.models import Post
 
 
-class GetThreadPostEditsViewContextDataHookAction(Protocol):
+class GetPrivateThreadPostEditsViewContextDataHookAction(Protocol):
     """
     Misago function used to get the template context data
-    for the thread post edits page.
+    for the private thread post edits page.
 
     # Arguments
 
@@ -40,13 +40,13 @@ class GetThreadPostEditsViewContextDataHookAction(Protocol):
     ) -> dict: ...
 
 
-class GetThreadPostEditsViewContextDataHookFilter(Protocol):
+class GetPrivateThreadPostEditsViewContextDataHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: GetThreadPostEditsViewContextDataHookAction`
+    ## `action: GetPrivateThreadPostEditsViewContextDataHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -73,22 +73,22 @@ class GetThreadPostEditsViewContextDataHookFilter(Protocol):
 
     def __call__(
         self,
-        action: GetThreadPostEditsViewContextDataHookAction,
+        action: GetPrivateThreadPostEditsViewContextDataHookAction,
         request: HttpRequest,
         post: Post,
         page: Page,
     ) -> dict: ...
 
 
-class GetThreadPostEditsViewContextDataHook(
+class GetPrivateThreadPostEditsViewContextDataHook(
     FilterHook[
-        GetThreadPostEditsViewContextDataHookAction,
-        GetThreadPostEditsViewContextDataHookFilter,
+        GetPrivateThreadPostEditsViewContextDataHookAction,
+        GetPrivateThreadPostEditsViewContextDataHookFilter,
     ]
 ):
     """
     This hook wraps a standard Misago function used to get the template context
-    data for the thread post edits page.
+    data for the private thread post edits page.
 
     # Example
 
@@ -98,11 +98,11 @@ class GetThreadPostEditsViewContextDataHook(
     ```python
     from django.core.paginator import Page
     from django.http import HttpRequest
-    from misago.edits.hooks import get_thread_post_edits_view_context_data_hook
-    from misago.edits.models import PostEdit
+    from misago.postedits.hooks import get_private_thread_post_edits_view_context_data_hook
+    from misago.postedits.models import PostEdit
     from misago.threads.models import Post
 
-    @get_thread_post_edits_view_context_data_hook.append_filter
+    @get_private_thread_post_edits_view_context_data_hook.append_filter
     def set_thread_post_edits_view_editor_ip_address(
         action,
         request: HttpRequest,
@@ -128,7 +128,7 @@ class GetThreadPostEditsViewContextDataHook(
 
     def __call__(
         self,
-        action: GetThreadPostEditsViewContextDataHookAction,
+        action: GetPrivateThreadPostEditsViewContextDataHookAction,
         request: HttpRequest,
         post: Post,
         page: Page,
@@ -136,6 +136,6 @@ class GetThreadPostEditsViewContextDataHook(
         return super().__call__(action, request, post, page)
 
 
-get_thread_post_edits_view_context_data_hook = GetThreadPostEditsViewContextDataHook(
-    cache=False
+get_private_thread_post_edits_view_context_data_hook = (
+    GetPrivateThreadPostEditsViewContextDataHook(cache=False)
 )

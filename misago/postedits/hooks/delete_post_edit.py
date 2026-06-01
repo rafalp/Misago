@@ -8,19 +8,19 @@ if TYPE_CHECKING:
     from ..models import PostEdit
 
 
-class UnhidePostEditHookAction(Protocol):
+class DeletePostEditHookAction(Protocol):
     """
-    Misago function used to unhide a `PostEdit` object.
+    Misago function used to delete a `PostEdit` object.
 
     # Arguments
 
     ## `post_edit: PostEdit`
 
-    A `PostEdit` instance to unhide.
+    A `PostEdit` instance to delete.
 
     ## `commit: bool = True`
 
-    A `bool` indicating whether the updated `PostEdit` instance should be saved to the database.
+    A `bool` indicating whether the `PostEdit` instance should be deleted from the database.
 
     Defaults to `True`.
 
@@ -37,13 +37,13 @@ class UnhidePostEditHookAction(Protocol):
     ): ...
 
 
-class UnhidePostEditHookFilter(Protocol):
+class DeletePostEditHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: UnhidePostEditHookAction`
+    ## `action: DeletePostEditHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -52,11 +52,11 @@ class UnhidePostEditHookFilter(Protocol):
 
     ## `post_edit: PostEdit`
 
-    A `PostEdit` instance to unhide.
+    A `PostEdit` instance to delete.
 
     ## `commit: bool = True`
 
-    A `bool` indicating whether the updated `PostEdit` instance should be saved to the database.
+    A `bool` indicating whether the `PostEdit` instance should be deleted from the database.
 
     Defaults to `True`.
 
@@ -67,51 +67,45 @@ class UnhidePostEditHookFilter(Protocol):
 
     def __call__(
         self,
-        action: UnhidePostEditHookAction,
+        action: DeletePostEditHookAction,
         post_edit: "PostEdit",
         commit: bool = True,
         request: HttpRequest | None = None,
     ): ...
 
 
-class UnhidePostEditHook(
+class DeletePostEditHook(
     FilterHook[
-        UnhidePostEditHookAction,
-        UnhidePostEditHookFilter,
+        DeletePostEditHookAction,
+        DeletePostEditHookFilter,
     ]
 ):
     """
-    This hook wraps a standard Misago function used to unhide a `PostEdit` object.
+    This hook wraps a standard Misago function used to delete a `PostEdit` object.
 
     # Example
 
-    The code below implements a custom filter function that records the details
-    of the user who unhid the edit:
+    The code below implements a custom filter function that records
+    a number of deleted post edits:
 
     ```python
     from django.http import HttpRequest
-    from misago.edits.hooks import unhide_post_edit_hook
-    from misago.edits.models import PostEdit
+    from misago.postedits.hooks import delete_post_edit_hook
+    from misago.postedits.models import PostEdit
 
 
-    @unhide_post_edit_hook.append_filter
-    def unhide_post_edit_record_user(
+    @delete_post_edit_hook.append_filter
+    def count_post_edit_deletions(
         action,
         post_edit: PostEdit,
         commit: bool = True,
         request: HttpRequest | None = None,
     ):
-        action(post_edit, False, request)
+        post = post_edit.post
+        action(post_edit, commit, request)
 
-        if request:
-            post_edit.plugin_data.update({
-                "unhidden_by_user_id": request.user.id,
-                "unhidden_by_user_name": request.user.username,
-                "inhidden_by_ip": request.user_ip,
-            })
-
-        if commit:
-            post_edit.save()
+        post.plugin_data.setdefault("deleted_edits", 0) += 1
+        post.save(update_fields=["plugin_data"])
     ```
     """
 
@@ -119,7 +113,7 @@ class UnhidePostEditHook(
 
     def __call__(
         self,
-        action: UnhidePostEditHookAction,
+        action: DeletePostEditHookAction,
         post_edit: "PostEdit",
         commit: bool = True,
         request: HttpRequest | None = None,
@@ -132,4 +126,4 @@ class UnhidePostEditHook(
         )
 
 
-unhide_post_edit_hook = UnhidePostEditHook()
+delete_post_edit_hook = DeletePostEditHook()

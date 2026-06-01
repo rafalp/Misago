@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Protocol
 
-from ...edits.models import PostEdit
+from ...postedits.models import PostEdit
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
@@ -79,9 +79,9 @@ class CheckHidePostEditPermissionHook(
     ```python
     from django.core.exceptions import PermissionDenied
     from django.utils.translation import pgettext
-    from misago.edits.models import PostEdit
     from misago.permissions.hooks import check_hide_post_edit_permission_hook
     from misago.permissions.proxy import UserPermissionsProxy
+    from misago.postedits.models import PostEdit
 
     @check_hide_post_edit_permission_hook.append_filter
     def check_user_can_hide_protected_post_edit(

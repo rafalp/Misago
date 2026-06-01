@@ -10,7 +10,7 @@ from ..moderation.actions import PostModerationAction
 from ..moderation.post import get_thread_post_moderation_actions
 from ..moderation.views import get_moderation_action_choices
 from ..permissions.checkutils import check_permissions
-from ..permissions.edits import (
+from ..permissions.postedits import (
     can_see_post_edit_count,
     check_see_post_edit_history_permission,
 )

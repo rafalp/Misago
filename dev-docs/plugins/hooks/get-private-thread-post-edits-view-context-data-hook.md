@@ -5,10 +5,10 @@ This hook wraps a standard Misago function used to get the template context data
 
 ## Location
 
-This hook can be imported from `misago.edits.hooks`:
+This hook can be imported from `misago.postedits.hooks`:
 
 ```python
-from misago.edits.hooks import get_private_thread_post_edits_view_context_data_hook
+from misago.postedits.hooks import get_private_thread_post_edits_view_context_data_hook
 ```
 
 
@@ -95,8 +95,8 @@ The code below implements a custom filter function that displays a template with
 ```python
 from django.core.paginator import Page
 from django.http import HttpRequest
-from misago.edits.hooks import get_private_thread_post_edits_view_context_data_hook
-from misago.edits.models import PostEdit
+from misago.postedits.hooks import get_private_thread_post_edits_view_context_data_hook
+from misago.postedits.models import PostEdit
 from misago.threads.models import Post
 
 @get_private_thread_post_edits_view_context_data_hook.append_filter

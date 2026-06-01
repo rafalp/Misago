@@ -6,7 +6,7 @@ from django.utils.translation import npgettext, pgettext
 
 from ..categories.enums import CategoryTree
 from ..categories.models import Category
-from ..edits.models import PostEdit
+from ..postedits.models import PostEdit
 from ..threads.models import Post, Thread
 from .enums import CanHideOwnPostEdits, CanSeePostEdits
 from .hooks import (

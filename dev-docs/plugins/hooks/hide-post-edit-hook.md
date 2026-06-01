@@ -5,10 +5,10 @@ This hook wraps a standard Misago function used to hide a `PostEdit` object.
 
 ## Location
 
-This hook can be imported from `misago.edits.hooks`:
+This hook can be imported from `misago.postedits.hooks`:
 
 ```python
-from misago.edits.hooks import hide_post_edit_hook
+from misago.postedits.hooks import hide_post_edit_hook
 ```
 
 
@@ -104,8 +104,8 @@ The code below implements a custom filter function that records the user's IP ad
 
 ```python
 from django.http import HttpRequest
-from misago.edits.hooks import hide_post_edit_hook
-from misago.edits.models import PostEdit
+from misago.postedits.hooks import hide_post_edit_hook
+from misago.postedits.models import PostEdit
 from misago.users.models import User
 
 

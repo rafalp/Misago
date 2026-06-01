@@ -1,7 +1,7 @@
 from django.db import models, transaction
 from django.http import HttpRequest
 
-from ...edits.create import create_post_edit
+from ...postedits.create import create_post_edit
 from ...parser.parse import ParsingResult, parse
 from ...threads.models import Post, Thread
 from ..approval import (

@@ -2,7 +2,7 @@ from django.db import transaction
 from django.http import HttpRequest
 
 from ..attachments.models import Attachment
-from ..edits.models import PostEdit
+from ..postedits.models import PostEdit
 from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
