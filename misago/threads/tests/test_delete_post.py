@@ -1,7 +1,7 @@
 import pytest
 
-from ...edits.create import create_post_edit
-from ...edits.models import PostEdit
+from ...postedits.create import create_post_edit
+from ...postedits.models import PostEdit
 from ...likes.like import like_post
 from ...likes.models import Like
 from ...notifications.models import Notification
