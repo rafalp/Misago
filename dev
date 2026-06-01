@@ -102,7 +102,7 @@ intro() {
     echo "    ${BOLD}bash${NORMAL}              starts bash session inside running Misago container."
     echo "    ${BOLD}run${NORMAL}               runs \"docker compose run --rm misago\"."
     echo "    ${BOLD}psql${NORMAL}              runs psql connected to development database."
-    echo "    ${BOLD}pyfmt${NORMAL}             runs isort + black on python code."
+    echo "    ${BOLD}ruff${NORMAL}              runs \"ruff format\" and \"ruff check --fix\" on the python code."
     echo "    ${BOLD}loaddevfixture${NORMAL}    populates database with pre-made data for dev."
     echo "    ${BOLD}fakedata${NORMAL}          populates database with generated testing data."
     echo "    ${BOLD}fakebigdata${NORMAL}       populates database with LARGE amount of geerated testing data."
@@ -394,6 +394,7 @@ run_psql() {
 
 # Docker part of psql shortcut
 psql_in_docker() {
+    require_in_docker
     wait_for_db
     PGPASSWORD=$POSTGRES_PASSWORD psql --username $POSTGRES_USER --host $POSTGRES_HOST $POSTGRES_DB
 }
@@ -475,9 +476,8 @@ if [[ $1 ]]; then
         run_psql
     elif [[ $1 = "psql_in_docker" ]]; then
         psql_in_docker
-    elif [[ $1 = "pyfmt" ]]; then
-        isort -rc misago
-        black devproject misago
+    elif [[ $1 = "ruff" ]]; then
+        docker compose run --rm misago bash -c "ruff check misago plugins --fix && ruff format misago plugins"
     elif [[ $1 = "loaddevfixture" ]]; then
         docker compose run --rm misago python manage.py loaddevfixture
     elif [[ $1 = "fakedata" ]]; then
