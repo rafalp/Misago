@@ -106,7 +106,7 @@ class Migration(migrations.Migration):
         migrations.AddIndex(
             model_name="postedit",
             index=django.contrib.postgres.indexes.GinIndex(
-                fields=["plugin_data"], name="misago_edit_plugin__7827ec_gin"
+                fields=["plugin_data"], name="misago_post_plugin__59ca89_gin"
             ),
         ),
     ]
