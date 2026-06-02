@@ -7,7 +7,7 @@ from ..categories.models import Category
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.enums import ThreadPinned
 from ..threads.lock import lock_thread, unlock_thread
-from ..threads.pin import pin_thread_globally, pin_thread_in_category, unpin_thread
+from ..threads.pin import pin_thread, unpin_thread
 from ..threadupdates.create import (
     create_locked_thread_update,
     create_pinned_globally_thread_update,
@@ -105,7 +105,7 @@ class PinGloballyThreadModerationAction(ThreadsModerationAction):
 
         for thread in valid_threads:
             set_thread_has_updates(thread, commit=False)
-            lock_thread(thread, request=self.request)
+            pin_thread(thread, everywhere=True, request=self.request)
 
             create_locked_thread_update(thread, self.request.user, request=self.request)
 

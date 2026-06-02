@@ -4,6 +4,7 @@ from ...notifications.threads import watch_thread
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains, assert_not_contains
+from ..enums import ThreadPinned
 
 
 def test_thread_detail_view_shows_error_404_if_thread_doesnt_exist(user_client):
@@ -596,7 +597,7 @@ def test_thread_detail_view_shows_deleted_user_thread_pinned_in_category_to_anon
     default_category.show_started_only = True
     default_category.save()
 
-    thread = thread_factory(default_category, weight=1)
+    thread = thread_factory(default_category, pinned=ThreadPinned.CATEGORY)
 
     response = client.get(
         reverse(
@@ -616,7 +617,7 @@ def test_thread_detail_view_shows_deleted_user_thread_pinned_everywhere_to_anony
     default_category.show_started_only = True
     default_category.save()
 
-    thread = thread_factory(default_category, weight=2)
+    thread = thread_factory(default_category, pinned=ThreadPinned.EVERYWHERE)
 
     response = client.get(
         reverse(
@@ -687,7 +688,7 @@ def test_thread_detail_view_shows_user_own_thread_in_show_started_only(
 def test_thread_detail_view_shows_deleted_user_thread_pinned_in_category_to_user_in_show_started_only(
     thread_factory, user_client, default_category
 ):
-    thread = thread_factory(default_category, weight=1)
+    thread = thread_factory(default_category, pinned=ThreadPinned.CATEGORY)
 
     default_category.show_started_only = True
     default_category.set_last_thread(thread)
@@ -708,7 +709,7 @@ def test_thread_detail_view_shows_deleted_user_thread_pinned_in_category_to_user
 def test_thread_detail_view_shows_deleted_user_thread_pinned_everywhere_to_user_in_show_started_only(
     thread_factory, user_client, default_category
 ):
-    thread = thread_factory(default_category, weight=2)
+    thread = thread_factory(default_category, pinned=ThreadPinned.EVERYWHERE)
 
     default_category.show_started_only = True
     default_category.set_last_thread(thread)
@@ -729,7 +730,9 @@ def test_thread_detail_view_shows_deleted_user_thread_pinned_everywhere_to_user_
 def test_thread_detail_view_shows_other_user_thread_pinned_in_category_to_user_in_show_started_only(
     thread_factory, user_client, other_user, default_category
 ):
-    thread = thread_factory(default_category, starter=other_user, weight=1)
+    thread = thread_factory(
+        default_category, starter=other_user, pinned=ThreadPinned.CATEGORY
+    )
 
     default_category.show_started_only = True
     default_category.set_last_thread(thread)
@@ -750,7 +753,9 @@ def test_thread_detail_view_shows_other_user_thread_pinned_in_category_to_user_i
 def test_thread_detail_view_shows_other_user_thread_pinned_everywhere_to_user_in_show_started_only(
     thread_factory, user_client, other_user, default_category
 ):
-    thread = thread_factory(default_category, starter=other_user, weight=2)
+    thread = thread_factory(
+        default_category, starter=other_user, pinned=ThreadPinned.EVERYWHERE
+    )
 
     default_category.show_started_only = True
     default_category.set_last_thread(thread)

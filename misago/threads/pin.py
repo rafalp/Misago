@@ -2,50 +2,36 @@ from django.http import HttpRequest
 
 from .enums import ThreadPinned
 from .hooks import (
-    pin_thread_globally_hook,
-    pin_thread_in_category_hook,
+    pin_thread_hook,
     unpin_thread_hook,
 )
 from .models import Thread
 
 
-def pin_thread_globally(
-    thread: Thread, commit: bool = True, request: HttpRequest | None = None
+def pin_thread(
+    thread: Thread,
+    everywhere: bool = False,
+    commit: bool = True,
+    request: HttpRequest | None = None,
 ) -> bool:
-    return pin_thread_globally_hook(
-        _pin_thread_globally_action, thread, commit, request
-    )
+    return pin_thread_hook(_pin_thread_action, thread, everywhere, commit, request)
 
 
-def _pin_thread_globally_action(
-    thread: Thread, commit: bool = True, request: HttpRequest | None = None
+def _pin_thread_action(
+    thread: Thread,
+    everywhere: bool = False,
+    commit: bool = True,
+    request: HttpRequest | None = None,
 ) -> bool:
-    if thread.pinned == ThreadPinned.EVERYWHERE:
+    if everywhere:
+        value = ThreadPinned.EVERYWHERE
+    else:
+        value = ThreadPinned.CATEGORY
+
+    if thread.pinned == value:
         return False
 
-    thread.pinned = ThreadPinned.EVERYWHERE
-
-    if commit:
-        thread.save()
-
-    return True
-
-
-def pin_thread_in_category(
-    thread: Thread, commit: bool = True, request: HttpRequest | None = None
-) -> bool:
-    return pin_thread_in_category_hook(
-        _pin_thread_in_category_action, thread, commit, request
-    )
-
-
-def _pin_thread_in_category_action(
-    thread: Thread, commit: bool = True, request: HttpRequest | None = None
-) -> bool:
-    if thread.pinned == ThreadPinned.CATEGORY:
-        return False
-
-    thread.pinned = ThreadPinned.CATEGORY
+    thread.pinned = value
 
     if commit:
         thread.save()

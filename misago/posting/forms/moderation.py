@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from ...threads.enums import ThreadPinned
 from ...threads.hide import hide_thread
 from ...threads.lock import lock_thread
-from ...threads.pin import pin_thread_globally, pin_thread_in_category
+from ...threads.pin import pin_thread
 from ..state import StartState
 from .base import PostingForm
 
@@ -45,9 +45,14 @@ class ThreadModerationForm(PostingForm):
             self.cleaned_data.get("pin_in_category")
             or self.cleaned_data.get("pin") == ThreadPinned.CATEGORY
         ):
-            pin_thread_in_category(state.thread, commit=False, request=self.request)
+            pin_thread(state.thread, commit=False, request=self.request)
         elif self.cleaned_data.get("pin") == ThreadPinned.EVERYWHERE:
-            pin_thread_globally(state.thread, commit=False, request=self.request)
+            pin_thread(
+                state.thread,
+                everywhere=True,
+                commit=False,
+                request=self.request,
+            )
 
 
 def create_thread_moderation_form(
