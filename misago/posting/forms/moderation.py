@@ -1,6 +1,5 @@
 from django import forms
 from django.http import HttpRequest
-from django.utils.translation import pgettext_lazy
 
 from ...threads.enums import ThreadPinned
 from ...threads.hide import hide_thread

@@ -20,10 +20,10 @@ def pin_thread_globally(
 def _pin_thread_globally_action(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    if thread.weight == ThreadPinned.EVERYWHERE:
+    if thread.pinned == ThreadPinned.EVERYWHERE:
         return False
 
-    thread.weight = ThreadPinned.EVERYWHERE
+    thread.pinned = ThreadPinned.EVERYWHERE
 
     if commit:
         thread.save()
@@ -42,10 +42,10 @@ def pin_thread_in_category(
 def _pin_thread_in_category_action(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    if thread.weight == ThreadPinned.CATEGORY:
+    if thread.pinned == ThreadPinned.CATEGORY:
         return False
 
-    thread.weight = ThreadPinned.CATEGORY
+    thread.pinned = ThreadPinned.CATEGORY
 
     if commit:
         thread.save()
@@ -62,10 +62,10 @@ def unpin_thread(
 def _unpin_thread_action(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    if thread.weight == ThreadPinned.NONE:
+    if thread.pinned == ThreadPinned.NONE:
         return False
 
-    thread.weight = ThreadPinned.NONE
+    thread.pinned = ThreadPinned.NONE
 
     if commit:
         thread.save()

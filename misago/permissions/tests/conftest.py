@@ -3,6 +3,7 @@ import pytest
 from ...categories.enums import CategoryTree
 from ...categories.models import Category
 from ...categories.proxy import CategoriesProxy
+from ...threads.enums import ThreadPinned
 from ...users.test import create_test_user
 from ..enums import CategoryPermission
 from ..models import CategoryGroupPermission, Moderator
@@ -301,12 +302,20 @@ def category_thread(thread_factory, category):
 
 @pytest.fixture
 def category_pinned_thread(thread_factory, category):
-    return thread_factory(category, title="Category Pinned Thread", weight=1)
+    return thread_factory(
+        category,
+        title="Category Pinned Thread",
+        pinned=ThreadPinned.CATEGORY,
+    )
 
 
 @pytest.fixture
-def category_pinned_globally_thread(thread_factory, category):
-    return thread_factory(category, title="Category Global Thread", weight=2)
+def category_pinned_everywhere_thread(thread_factory, category):
+    return thread_factory(
+        category,
+        title="Category Global Thread",
+        pinned=ThreadPinned.EVERYWHERE,
+    )
 
 
 @pytest.fixture
@@ -316,12 +325,20 @@ def child_category_thread(thread_factory, child_category):
 
 @pytest.fixture
 def child_category_pinned_thread(thread_factory, child_category):
-    return thread_factory(child_category, title="Child Pinned Thread", weight=1)
+    return thread_factory(
+        child_category,
+        title="Child Pinned Thread",
+        pinned=ThreadPinned.CATEGORY,
+    )
 
 
 @pytest.fixture
-def child_category_pinned_globally_thread(thread_factory, child_category):
-    return thread_factory(child_category, title="Child Global Thread", weight=2)
+def child_category_pinned_everywhere_thread(thread_factory, child_category):
+    return thread_factory(
+        child_category,
+        title="Child Global Thread",
+        pinned=ThreadPinned.EVERYWHERE,
+    )
 
 
 @pytest.fixture
@@ -331,12 +348,20 @@ def sibling_category_thread(thread_factory, sibling_category):
 
 @pytest.fixture
 def sibling_category_pinned_thread(thread_factory, sibling_category):
-    return thread_factory(sibling_category, title="Sibling Pinned Thread", weight=1)
+    return thread_factory(
+        sibling_category,
+        title="Sibling Pinned Thread",
+        pinned=ThreadPinned.CATEGORY,
+    )
 
 
 @pytest.fixture
-def sibling_category_pinned_globally_thread(thread_factory, sibling_category):
-    return thread_factory(sibling_category, title="Sibling Global Thread", weight=2)
+def sibling_category_pinned_everywhere_thread(thread_factory, sibling_category):
+    return thread_factory(
+        sibling_category,
+        title="Sibling Global Thread",
+        pinned=ThreadPinned.EVERYWHERE,
+    )
 
 
 @pytest.fixture

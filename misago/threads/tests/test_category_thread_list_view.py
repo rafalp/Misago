@@ -811,7 +811,7 @@ def test_category_thread_list_view_displays_thread_without_flags(
     assert_not_contains(response, "thread-flags")
 
 
-def test_category_thread_list_view_displays_globally_pinned_thread(
+def test_category_thread_list_view_displays_thread_pinned_everywhere(
     thread_factory, client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, weight=2)
@@ -823,7 +823,7 @@ def test_category_thread_list_view_displays_globally_pinned_thread(
     assert_contains(response, "thread-flag-pinned-globally")
 
 
-def test_category_thread_list_view_displays_globally_pinned_thread_from_other_category(
+def test_category_thread_list_view_displays_thread_pinned_everywhere_from_other_category(
     thread_factory, client, guests_group, other_user, default_category, sibling_category
 ):
     CategoryGroupPermission.objects.create(
@@ -846,7 +846,7 @@ def test_category_thread_list_view_displays_globally_pinned_thread_from_other_ca
     assert_contains(response, "thread-flag-pinned-globally")
 
 
-def test_category_thread_list_view_displays_locally_pinned_thread(
+def test_category_thread_list_view_displays_thread_pinned_in_category(
     thread_factory, client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, weight=1)
@@ -1155,7 +1155,7 @@ def test_category_thread_list_view_displays_user_own_thread_to_user_if_show_star
     assert_contains(response, thread.title)
 
 
-def test_category_thread_list_view_displays_globally_pinned_thread_to_anonymous_user_if_show_started_only_is_enabled(
+def test_category_thread_list_view_displays_thread_pinned_everywhere_to_anonymous_user_if_show_started_only_is_enabled(
     thread_factory, client, default_category
 ):
     default_category.show_started_only = True
@@ -1168,7 +1168,7 @@ def test_category_thread_list_view_displays_globally_pinned_thread_to_anonymous_
     assert_contains(response, thread.title)
 
 
-def test_category_thread_list_view_displays_globally_pinned_thread_to_user_if_show_started_only_is_enabled(
+def test_category_thread_list_view_displays_thread_pinned_everywhere_to_user_if_show_started_only_is_enabled(
     thread_factory, user_client, default_category
 ):
     default_category.show_started_only = True

@@ -116,7 +116,7 @@ def test_thread_start_view_displays_posting_form(user_client, default_category):
     assert_contains(response, "Start thread")
     assert_contains(response, default_category.name)
 
-    assert_not_contains(response, "Pin thread globally")
+    assert_not_contains(response, "Pin thread everywhere")
     assert_not_contains(response, "Pin thread in category")
     assert_not_contains(response, "Hide thread")
     assert_not_contains(response, "Lock thread")
@@ -143,7 +143,7 @@ def test_thread_start_view_displays_posting_form_with_moderation_options_for_cat
     assert_contains(response, "Start thread")
     assert_contains(response, default_category.name)
 
-    assert_not_contains(response, "Pin thread globally")
+    assert_not_contains(response, "Pin thread everywhere")
     assert_contains(response, "Pin thread in category")
     assert_contains(response, "Hide thread")
     assert_contains(response, "Lock thread")
@@ -164,7 +164,7 @@ def test_thread_start_view_displays_posting_form_with_moderation_options_for_glo
     assert_contains(response, "Start thread")
     assert_contains(response, default_category.name)
 
-    assert_contains(response, "Pin thread globally")
+    assert_contains(response, "Pin thread everywhere")
     assert_contains(response, "Pin thread in category")
     assert_contains(response, "Hide thread")
     assert_contains(response, "Lock thread")
@@ -235,7 +235,7 @@ def test_thread_start_view_posts_new_thread_without_moderation_options_if_user_i
         {
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
-            "posting-moderation-pin": "2",
+            "posting-moderation-pin": str(ThreadPinned.EVERYWHERE.value),
             "posting-moderation-is_locked": "true",
             "posting-moderation-is_hidden": "true",
         },
@@ -247,7 +247,7 @@ def test_thread_start_view_posts_new_thread_without_moderation_options_if_user_i
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
-    assert not thread.weight
+    assert not thread.pinned
     assert not thread.is_locked
     assert not thread.is_hidden
 
@@ -284,7 +284,7 @@ def test_thread_start_view_posts_new_thread_with_moderation_options_if_user_is_c
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
-    assert thread.weight == ThreadPinned.CATEGORY
+    assert thread.pinned == ThreadPinned.CATEGORY
     assert thread.is_locked
     assert thread.is_hidden
 
@@ -318,12 +318,12 @@ def test_thread_start_view_posts_new_thread_without_moderation_options_if_user_i
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
-    assert not thread.weight
+    assert not thread.pinned
     assert not thread.is_locked
     assert not thread.is_hidden
 
 
-def test_thread_start_view_posts_new_thread_with_global_pin_if_user_is_category_moderator(
+def test_thread_start_view_posts_new_thread_without_pinning_everywhere_if_user_is_category_moderator(
     user_client, user, default_category
 ):
     Moderator.objects.create(
@@ -343,7 +343,7 @@ def test_thread_start_view_posts_new_thread_with_global_pin_if_user_is_category_
         {
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
-            "posting-moderation-pin": str(ThreadPinned.EVERYWHERE),
+            "posting-moderation-pin": str(ThreadPinned.EVERYWHERE.value),
         },
     )
     assert response.status_code == 302
@@ -353,7 +353,7 @@ def test_thread_start_view_posts_new_thread_with_global_pin_if_user_is_category_
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
-    assert not thread.weight
+    assert not thread.pinned
     assert not thread.is_locked
     assert not thread.is_hidden
 
@@ -384,7 +384,7 @@ def test_thread_start_view_posts_new_thread_with_moderation_options_if_user_is_g
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
-    assert thread.weight == ThreadPinned.EVERYWHERE
+    assert thread.pinned == ThreadPinned.EVERYWHERE
     assert thread.is_locked
     assert thread.is_hidden
 
@@ -412,7 +412,7 @@ def test_thread_start_view_posts_new_thread_without_moderation_options_if_user_i
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
-    assert not thread.weight
+    assert not thread.pinned
     assert not thread.is_locked
     assert not thread.is_hidden
 

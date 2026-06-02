@@ -87,7 +87,7 @@ def _check_see_thread_permission_action(
 
         if (
             category.show_started_only
-            and not thread.weight
+            and not thread.pinned
             and (
                 thread.starter_id is None
                 or permissions.user.is_anonymous

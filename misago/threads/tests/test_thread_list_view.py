@@ -453,7 +453,7 @@ def test_thread_list_view_displays_thread_without_flags(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_displays_globally_pinned_thread(
+def test_thread_list_view_displays_thread_pinned_everywhere(
     thread_factory, client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, weight=2)
@@ -761,7 +761,7 @@ def test_thread_list_view_displays_user_own_thread_to_user_if_category_show_star
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_displays_globally_pinned_thread_to_anonymous_user_if_category_show_started_only_is_enabled(
+def test_thread_list_view_displays_thread_pinned_everywhere_to_anonymous_user_if_category_show_started_only_is_enabled(
     thread_factory, client, default_category
 ):
     default_category.show_started_only = True
@@ -774,7 +774,7 @@ def test_thread_list_view_displays_globally_pinned_thread_to_anonymous_user_if_c
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_displays_globally_pinned_thread_to_user_if_category_show_started_only_is_enabled(
+def test_thread_list_view_displays_thread_pinned_everywhere_to_user_if_category_show_started_only_is_enabled(
     thread_factory, user_client, default_category
 ):
     default_category.show_started_only = True

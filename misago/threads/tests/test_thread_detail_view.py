@@ -590,7 +590,7 @@ def test_thread_detail_view_shows_error_404_to_anonymous_user_for_user_thread_in
     assert response.status_code == 404
 
 
-def test_thread_detail_view_shows_deleted_user_category_pinned_thread_to_anonymous_user_in_show_started_only(
+def test_thread_detail_view_shows_deleted_user_thread_pinned_in_category_to_anonymous_user_in_show_started_only(
     thread_factory, client, default_category
 ):
     default_category.show_started_only = True
@@ -610,7 +610,7 @@ def test_thread_detail_view_shows_deleted_user_category_pinned_thread_to_anonymo
     assert_contains(response, thread.title)
 
 
-def test_thread_detail_view_shows_deleted_user_globally_pinned_thread_to_anonymous_user_in_show_started_only(
+def test_thread_detail_view_shows_deleted_user_thread_pinned_everywhere_to_anonymous_user_in_show_started_only(
     thread_factory, client, default_category
 ):
     default_category.show_started_only = True
@@ -684,7 +684,7 @@ def test_thread_detail_view_shows_user_own_thread_in_show_started_only(
     assert_contains(response, user_thread.title)
 
 
-def test_thread_detail_view_shows_deleted_user_category_pinned_thread_to_user_in_show_started_only(
+def test_thread_detail_view_shows_deleted_user_thread_pinned_in_category_to_user_in_show_started_only(
     thread_factory, user_client, default_category
 ):
     thread = thread_factory(default_category, weight=1)
@@ -705,7 +705,7 @@ def test_thread_detail_view_shows_deleted_user_category_pinned_thread_to_user_in
     assert_contains(response, thread.title)
 
 
-def test_thread_detail_view_shows_deleted_user_globally_pinned_thread_to_user_in_show_started_only(
+def test_thread_detail_view_shows_deleted_user_thread_pinned_everywhere_to_user_in_show_started_only(
     thread_factory, user_client, default_category
 ):
     thread = thread_factory(default_category, weight=2)
@@ -726,7 +726,7 @@ def test_thread_detail_view_shows_deleted_user_globally_pinned_thread_to_user_in
     assert_contains(response, thread.title)
 
 
-def test_thread_detail_view_shows_other_user_category_pinned_thread_to_user_in_show_started_only(
+def test_thread_detail_view_shows_other_user_thread_pinned_in_category_to_user_in_show_started_only(
     thread_factory, user_client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, weight=1)
@@ -747,7 +747,7 @@ def test_thread_detail_view_shows_other_user_category_pinned_thread_to_user_in_s
     assert_contains(response, thread.title)
 
 
-def test_thread_detail_view_shows_other_user_globally_pinned_thread_to_user_in_show_started_only(
+def test_thread_detail_view_shows_other_user_thread_pinned_everywhere_to_user_in_show_started_only(
     thread_factory, user_client, other_user, default_category
 ):
     thread = thread_factory(default_category, starter=other_user, weight=2)
