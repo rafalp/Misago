@@ -112,9 +112,9 @@ class Thread(PluginDataModel):
     class Meta(PluginDataModel.Meta):
         indexes = PluginDataModel.Meta.indexes + [
             models.Index(
-                name="misago_thread_pin_global_part",
+                name="misago_thread_pin_everywh_part",
                 fields=["pinned"],
-                condition=Q(pinned=ThreadPinned.GLOBAL.value),
+                condition=Q(pinned=ThreadPinned.EVERYWHERE.value),
             ),
             models.Index(
                 name="misago_thread_pin_categor_part",
@@ -127,9 +127,9 @@ class Thread(PluginDataModel):
                 condition=Q(pinned=ThreadPinned.NONE.value),
             ),
             models.Index(
-                name="misago_thread_not_global_part",
+                name="misago_thread_not_everywh_part",
                 fields=["pinned"],
-                condition=Q(pinned__lt=ThreadPinned.GLOBAL.value),
+                condition=Q(pinned__lt=ThreadPinned.EVERYWHERE.value),
             ),
             models.Index(
                 name="misago_thread_has_reporte_part",

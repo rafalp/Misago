@@ -6,7 +6,7 @@ from django.utils.translation import pgettext_lazy
 class ThreadPinned(IntEnum):
     NONE = 0
     CATEGORY = 1
-    GLOBAL = 2
+    EVERYWHERE = 2
 
     @classmethod
     def get_choices(cls):
@@ -20,8 +20,8 @@ class ThreadPinned(IntEnum):
                 pgettext_lazy("pin thread choice", "Pin thread in category"),
             ),
             (
-                cls.GLOBAL,
-                pgettext_lazy("pin thread choice", "Pin thread globally"),
+                cls.EVERYWHERE,
+                pgettext_lazy("pin thread choice", "Pin thread everywhere"),
             ),
         )
 

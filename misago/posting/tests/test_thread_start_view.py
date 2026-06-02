@@ -343,7 +343,7 @@ def test_thread_start_view_posts_new_thread_with_global_pin_if_user_is_category_
         {
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
-            "posting-moderation-pin": str(ThreadPinned.GLOBAL),
+            "posting-moderation-pin": str(ThreadPinned.EVERYWHERE),
         },
     )
     assert response.status_code == 302
@@ -372,7 +372,7 @@ def test_thread_start_view_posts_new_thread_with_moderation_options_if_user_is_g
         {
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
-            "posting-moderation-pin": str(ThreadPinned.GLOBAL.value),
+            "posting-moderation-pin": str(ThreadPinned.EVERYWHERE.value),
             "posting-moderation-is_locked": "true",
             "posting-moderation-is_hidden": "true",
         },
@@ -384,7 +384,7 @@ def test_thread_start_view_posts_new_thread_with_moderation_options_if_user_is_g
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
-    assert thread.weight == ThreadPinned.GLOBAL
+    assert thread.weight == ThreadPinned.EVERYWHERE
     assert thread.is_locked
     assert thread.is_hidden
 

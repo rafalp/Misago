@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import migrations
 
 EVENT_TYPES = {
+    "pinned_globally": "pinned_everywhere",
     "pinned_locally": "pinned_category",
     "closed": "locked",
     "opened": "unlocked",

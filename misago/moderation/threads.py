@@ -93,7 +93,7 @@ class PinGloballyThreadModerationAction(ThreadsModerationAction):
 
     def validate(self):
         for thread in self.threads:
-            if thread.pinned != ThreadPinned.GLOBAL:
+            if thread.pinned != ThreadPinned.EVERYWHERE:
                 return
 
         raise ValidationError(

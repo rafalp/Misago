@@ -140,7 +140,7 @@ def assert_queryset_contains(user, category, thread_category, thread):
             "contains a thread from the child category "
         )
 
-    if thread.weight == ThreadPinned.GLOBAL:
+    if thread.weight == ThreadPinned.EVERYWHERE:
         raise AssertionError("queryset result contains a globally pinned thread")
 
     if user.id and (user.slug == "moderator" or user.slug == "categorymoderator"):
@@ -205,7 +205,7 @@ def assert_queryset_not_contains(user, category, thread_category, thread):
     ):
         return
 
-    if thread.weight == ThreadPinned.GLOBAL:
+    if thread.weight == ThreadPinned.EVERYWHERE:
         return
 
     if thread.weight == ThreadPinned.CATEGORY and category == thread_category:
@@ -363,7 +363,7 @@ def assert_pinned_queryset_contains(user, category, thread_category, thread):
             "pinned queryset result contains a thread that is not pinned"
         )
 
-    if category != thread_category and thread.weight != ThreadPinned.GLOBAL:
+    if category != thread_category and thread.weight != ThreadPinned.EVERYWHERE:
         raise AssertionError(
             "pinned queryset result contains a thread from other category "
             "that is not globally pinned"
@@ -394,7 +394,7 @@ def assert_pinned_queryset_not_contains(user, category, thread_category, thread)
     if thread.weight == ThreadPinned.NONE:
         return
 
-    if category != thread_category and thread.weight != ThreadPinned.GLOBAL:
+    if category != thread_category and thread.weight != ThreadPinned.EVERYWHERE:
         return
 
     if user.is_authenticated and (

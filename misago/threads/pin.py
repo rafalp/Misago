@@ -20,10 +20,10 @@ def pin_thread_globally(
 def _pin_thread_globally_action(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    if thread.weight == ThreadPinned.GLOBAL:
+    if thread.weight == ThreadPinned.EVERYWHERE:
         return False
 
-    thread.weight = ThreadPinned.GLOBAL
+    thread.weight = ThreadPinned.EVERYWHERE
 
     if commit:
         thread.save()

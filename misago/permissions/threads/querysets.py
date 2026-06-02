@@ -394,13 +394,13 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.ALL_PINNED_GLOBALLY:
         return Q(
             category_id__in=categories,
-            weight=ThreadPinned.GLOBAL,
+            weight=ThreadPinned.EVERYWHERE,
         )
 
     if query == CategoryThreadsQuery.ALL_PINNED_CATEGORY:
         return Q(
             category_id__in=categories,
-            weight=ThreadPinned.GLOBAL,
+            weight=ThreadPinned.EVERYWHERE,
         )
 
     if query == CategoryThreadsQuery.ALL_NOT_PINNED:
@@ -412,7 +412,7 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.ALL_NOT_PINNED_GLOBALLY:
         return Q(
             category_id__in=categories,
-            weight__lt=ThreadPinned.GLOBAL,
+            weight__lt=ThreadPinned.EVERYWHERE,
         )
 
     if query == CategoryThreadsQuery.ANON:
@@ -433,7 +433,7 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.ANON_PINNED_GLOBALLY:
         return Q(
             category_id__in=categories,
-            weight=ThreadPinned.GLOBAL,
+            weight=ThreadPinned.EVERYWHERE,
             is_hidden=False,
             is_unapproved=False,
         )
@@ -457,7 +457,7 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.ANON_NOT_PINNED_GLOBALLY:
         return Q(
             category_id__in=categories,
-            weight__lt=ThreadPinned.GLOBAL,
+            weight__lt=ThreadPinned.EVERYWHERE,
             is_hidden=False,
             is_unapproved=False,
         )
@@ -482,7 +482,7 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.USER_PINNED_GLOBALLY:
         return Q(
             category_id__in=categories,
-            weight=ThreadPinned.GLOBAL,
+            weight=ThreadPinned.EVERYWHERE,
             is_hidden=False,
         ) & Q(
             Q(is_unapproved=False) | Q(starter_id=user_id),
@@ -509,7 +509,7 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.USER_NOT_PINNED_GLOBALLY:
         return Q(
             category_id__in=categories,
-            weight__lt=ThreadPinned.GLOBAL,
+            weight__lt=ThreadPinned.EVERYWHERE,
             is_hidden=False,
         ) & Q(
             Q(is_unapproved=False) | Q(starter_id=user_id),
@@ -526,7 +526,7 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.USER_STARTED_PINNED_GLOBALLY:
         return Q(
             category_id__in=categories,
-            weight=ThreadPinned.GLOBAL,
+            weight=ThreadPinned.EVERYWHERE,
             is_hidden=False,
             starter_id=user_id,
         )

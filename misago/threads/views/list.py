@@ -138,7 +138,7 @@ class ListView(View):
         category: Category | None = None,
     ) -> bool:
         if (
-            thread.weight == ThreadPinned.GLOBAL
+            thread.weight == ThreadPinned.EVERYWHERE
             or thread.is_locked
             or thread.has_solution
             or thread.has_poll

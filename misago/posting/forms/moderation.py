@@ -47,7 +47,7 @@ class ThreadModerationForm(PostingForm):
             or self.cleaned_data.get("pin") == ThreadPinned.CATEGORY
         ):
             pin_thread_in_category(state.thread, commit=False, request=self.request)
-        elif self.cleaned_data.get("pin") == ThreadPinned.GLOBAL:
+        elif self.cleaned_data.get("pin") == ThreadPinned.EVERYWHERE:
             pin_thread_globally(state.thread, commit=False, request=self.request)
 
 

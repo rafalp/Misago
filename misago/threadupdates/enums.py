@@ -6,7 +6,7 @@ class ThreadUpdateActionName(StrEnum):
 
     APPROVED = "approved"
 
-    PINNED_GLOBALLY = "pinned_globally"
+    PINNED_EVERYWHERE = "pinned_everywhere"
     PINNED_CATEGORY = "pinned_category"
     UNPINNED = "unpinned"
 

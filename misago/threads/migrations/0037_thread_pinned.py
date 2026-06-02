@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
             index=models.Index(
                 condition=models.Q(("pinned", 2)),
                 fields=["pinned"],
-                name="misago_thread_pin_global_part",
+                name="misago_thread_pin_everywh_part",
             ),
         ),
         migrations.AddIndex(
@@ -59,7 +59,7 @@ class Migration(migrations.Migration):
             index=models.Index(
                 condition=models.Q(("pinned__lt", 2)),
                 fields=["pinned"],
-                name="misago_thread_not_global_part",
+                name="misago_thread_not_everywh_part",
             ),
         ),
     ]
