@@ -5,10 +5,15 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.models import Category
 from ..permissions.proxy import UserPermissionsProxy
+from ..threads.enums import ThreadPinned
 from ..threads.lock import lock_thread, unlock_thread
+from ..threads.pin import pin_thread_globally, pin_thread_in_category, unpin_thread
 from ..threadupdates.create import (
     create_locked_thread_update,
+    create_pinned_globally_thread_update,
+    create_pinned_in_category_thread_update,
     create_unlocked_thread_update,
+    create_unpinned_thread_update,
 )
 from ..threadupdates.threadflag import set_thread_has_updates
 from .actions import (
@@ -39,6 +44,11 @@ def _get_threads_moderation_actions_action(
 ) -> list[type[ThreadsModerationAction]]:
     if not user_permissions.moderated_categories:
         return []
+
+    actions = []
+
+    if user_permissions.is_global_moderator:
+        actions.append()
 
     return [
         LockThreadsModerationAction,
@@ -75,6 +85,38 @@ def _get_category_threads_moderation_actions_action(
         MoveThreadsModerationAction,
         DeleteThreadsModerationAction,
     ]
+
+
+class PinGloballyThreadModerationAction(ThreadsModerationAction):
+    id = "pin_globally"
+    button_label = pgettext_lazy("threads moderation button label", "Pin globally")
+
+    def validate(self):
+        for thread in self.threads:
+            if thread.pinned != ThreadPinned.GLOBAL:
+                return
+
+        raise ValidationError(
+            pgettext("threads moderation validation", "Threads are already locked.")
+        )
+
+    def execute(self) -> ModerationActionResult:
+        valid_threads = [thread for thread in self.threads if not thread.is_locked]
+
+        for thread in valid_threads:
+            set_thread_has_updates(thread, commit=False)
+            lock_thread(thread, request=self.request)
+
+            create_locked_thread_update(thread, self.request.user, request=self.request)
+
+        messages.success(
+            self.request,
+            pgettext("threads moderation success", "Threads locked"),
+        )
+
+        return ModerationActionResult(
+            updated_items=[thread.id for thread in valid_threads],
+        )
 
 
 class LockThreadsModerationAction(ThreadsModerationAction):

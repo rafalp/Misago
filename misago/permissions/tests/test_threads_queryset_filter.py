@@ -1,7 +1,7 @@
 from itertools import product
 
 from ...categories.proxy import CategoriesProxy
-from ...threads.enums import ThreadWeight
+from ...threads.enums import ThreadPinned
 from ...threads.models import Thread
 from ..proxy import UserPermissionsProxy
 from ..threads import filter_category_threads_queryset
@@ -142,7 +142,7 @@ def check_thread_visibility(
 
 
 def assert_queryset_contains(user, category, thread):
-    if thread.weight == ThreadWeight.PINNED_GLOBALLY:
+    if thread.weight == ThreadPinned.GLOBAL:
         raise AssertionError(f"queryset result contains a globally pinned thread")
 
     if user.id and (user.slug == "moderator" or user.slug == "categorymoderator"):
@@ -162,7 +162,7 @@ def assert_queryset_contains(user, category, thread):
     if (
         user.is_anonymous
         and category.show_started_only
-        and thread.weight != ThreadWeight.PINNED_IN_CATEGORY
+        and thread.weight != ThreadPinned.CATEGORY
     ):
         raise AssertionError(
             "queryset result for an anonymous user and category with "
@@ -188,7 +188,7 @@ def assert_queryset_contains(user, category, thread):
 
 
 def assert_queryset_not_contains(user, category, thread):
-    if thread.weight == ThreadWeight.PINNED_GLOBALLY:
+    if thread.weight == ThreadPinned.GLOBAL:
         return
 
     if user.is_authenticated and (
@@ -353,7 +353,7 @@ def check_pinned_thread_visibility(
 
 
 def assert_pinned_queryset_contains(user, category, thread):
-    if thread.weight != ThreadWeight.PINNED_GLOBALLY:
+    if thread.weight != ThreadPinned.GLOBAL:
         raise AssertionError(
             "pinned queryset result contains a thread that's not pinned globally"
         )
@@ -380,7 +380,7 @@ def assert_pinned_queryset_contains(user, category, thread):
 
 
 def assert_pinned_queryset_not_contains(user, category, thread):
-    if thread.weight != ThreadWeight.PINNED_GLOBALLY:
+    if thread.weight != ThreadPinned.GLOBAL:
         return
 
     if user.is_authenticated and (

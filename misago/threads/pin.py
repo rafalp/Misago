@@ -1,6 +1,6 @@
 from django.http import HttpRequest
 
-from .enums import ThreadWeight
+from .enums import ThreadPinned
 from .hooks import (
     pin_thread_globally_hook,
     pin_thread_in_category_hook,
@@ -20,10 +20,10 @@ def pin_thread_globally(
 def _pin_thread_globally_action(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    if thread.weight == ThreadWeight.PINNED_GLOBALLY:
+    if thread.weight == ThreadPinned.GLOBAL:
         return False
 
-    thread.weight = ThreadWeight.PINNED_GLOBALLY
+    thread.weight = ThreadPinned.GLOBAL
 
     if commit:
         thread.save()
@@ -42,10 +42,10 @@ def pin_thread_in_category(
 def _pin_thread_in_category_action(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    if thread.weight == ThreadWeight.PINNED_IN_CATEGORY:
+    if thread.weight == ThreadPinned.CATEGORY:
         return False
 
-    thread.weight = ThreadWeight.PINNED_IN_CATEGORY
+    thread.weight = ThreadPinned.CATEGORY
 
     if commit:
         thread.save()
@@ -62,10 +62,10 @@ def unpin_thread(
 def _unpin_thread_action(
     thread: Thread, commit: bool = True, request: HttpRequest | None = None
 ) -> bool:
-    if thread.weight == ThreadWeight.NOT_PINNED:
+    if thread.weight == ThreadPinned.NONE:
         return False
 
-    thread.weight = ThreadWeight.NOT_PINNED
+    thread.weight = ThreadPinned.NONE
 
     if commit:
         thread.save()

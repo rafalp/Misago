@@ -136,7 +136,7 @@ def create_pinned_globally_thread_update(
 ) -> ThreadUpdate:
     return create_thread_update(
         thread,
-        ThreadUpdateActionName.PINNED_GLOBALLY,
+        ThreadUpdateActionName.PIN_GLOBALLY,
         actor,
         is_hidden=is_hidden,
         commit=commit,
@@ -153,7 +153,7 @@ def create_pinned_in_category_thread_update(
 ) -> ThreadUpdate:
     return create_thread_update(
         thread,
-        ThreadUpdateActionName.PINNED_IN_CATEGORY,
+        ThreadUpdateActionName.CATEGORY,
         actor,
         is_hidden=is_hidden,
         commit=commit,

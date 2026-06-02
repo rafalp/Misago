@@ -61,8 +61,8 @@ from ...readtracker.tracker import (
 )
 from ..breadcrumbs import get_category_breadcrumbs, get_threads_breadcrumbs
 from ..enums import (
+    ThreadPinned,
     ThreadsListsPolling,
-    ThreadWeight,
 )
 from ..filters import (
     MyThreadsFilter,
@@ -138,7 +138,7 @@ class ListView(View):
         category: Category | None = None,
     ) -> bool:
         if (
-            thread.weight == ThreadWeight.PINNED_GLOBALLY
+            thread.weight == ThreadPinned.GLOBAL
             or thread.is_locked
             or thread.has_solution
             or thread.has_poll
@@ -147,7 +147,7 @@ class ListView(View):
         ):
             return True
 
-        if thread.weight == ThreadWeight.PINNED_IN_CATEGORY and (
+        if thread.weight == ThreadPinned.CATEGORY and (
             (category and category.id == thread.category_id) or for_moderator
         ):
             return True

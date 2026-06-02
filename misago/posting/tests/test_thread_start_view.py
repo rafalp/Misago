@@ -14,7 +14,7 @@ from ...permissions.models import CategoryGroupPermission, Moderator
 from ...polls.enums import PublicPollsAvailability
 from ...polls.models import Poll
 from ...test import assert_contains, assert_contains_element, assert_not_contains
-from ...threads.enums import ThreadWeight
+from ...threads.enums import ThreadPinned
 from ...threads.models import Thread
 from ..forms import PostForm
 from ..formsets import Formset
@@ -284,7 +284,7 @@ def test_thread_start_view_posts_new_thread_with_moderation_options_if_user_is_c
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
-    assert thread.weight == ThreadWeight.PINNED_IN_CATEGORY
+    assert thread.weight == ThreadPinned.CATEGORY
     assert thread.is_locked
     assert thread.is_hidden
 
@@ -343,7 +343,7 @@ def test_thread_start_view_posts_new_thread_with_global_pin_if_user_is_category_
         {
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
-            "posting-moderation-pin": str(ThreadWeight.PINNED_GLOBALLY),
+            "posting-moderation-pin": str(ThreadPinned.GLOBAL),
         },
     )
     assert response.status_code == 302
@@ -372,7 +372,7 @@ def test_thread_start_view_posts_new_thread_with_moderation_options_if_user_is_g
         {
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
-            "posting-moderation-pin": str(ThreadWeight.PINNED_GLOBALLY.value),
+            "posting-moderation-pin": str(ThreadPinned.GLOBAL.value),
             "posting-moderation-is_locked": "true",
             "posting-moderation-is_hidden": "true",
         },
@@ -384,7 +384,7 @@ def test_thread_start_view_posts_new_thread_with_moderation_options_if_user_is_g
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
-    assert thread.weight == ThreadWeight.PINNED_GLOBALLY
+    assert thread.weight == ThreadPinned.GLOBAL
     assert thread.is_locked
     assert thread.is_hidden
 

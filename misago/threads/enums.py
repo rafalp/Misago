@@ -3,24 +3,24 @@ from enum import IntEnum
 from django.utils.translation import pgettext_lazy
 
 
-class ThreadWeight(IntEnum):
-    NOT_PINNED = 0
-    PINNED_IN_CATEGORY = 1
-    PINNED_GLOBALLY = 2
+class ThreadPinned(IntEnum):
+    NONE = 0
+    CATEGORY = 1
+    GLOBAL = 2
 
     @classmethod
     def get_choices(cls):
         return (
             (
-                cls.NOT_PINNED,
+                cls.NONE,
                 pgettext_lazy("pin thread choice", "Don't pin thread"),
             ),
             (
-                cls.PINNED_IN_CATEGORY,
+                cls.CATEGORY,
                 pgettext_lazy("pin thread choice", "Pin thread in category"),
             ),
             (
-                cls.PINNED_GLOBALLY,
+                cls.GLOBAL,
                 pgettext_lazy("pin thread choice", "Pin thread globally"),
             ),
         )
