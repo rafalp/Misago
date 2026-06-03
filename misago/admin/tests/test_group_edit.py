@@ -17,7 +17,7 @@ def get_form_data(group: Group) -> dict:
         "group-user_title": group.user_title or "",
         "group-is_page": "1" if group.is_page else "",
         "group-is_hidden": "1" if group.is_hidden else "",
-        "group-can_edit_own_threads": "1" if group.can_edit_own_threads else "",
+        "group-can_edit_own_threads": str(group.can_edit_own_threads),
         "group-own_threads_edit_time_limit": str(group.own_threads_edit_time_limit),
         "group-can_edit_own_posts": str(group.can_edit_own_posts),
         "group-own_posts_edit_time_limit": str(group.own_posts_edit_time_limit),
