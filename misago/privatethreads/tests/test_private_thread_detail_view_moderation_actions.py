@@ -83,7 +83,7 @@ def test_private_thread_detail_view_executes_hide_thread_moderation_action(
 ):
     response = moderator_client.post(
         reverse(
-            "misago:thread",
+            "misago:private-thread",
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,

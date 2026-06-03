@@ -79,11 +79,19 @@ def _check_see_private_thread_permission_action(
     permissions: UserPermissionsProxy, thread: Thread
 ):
     if permissions.is_private_threads_moderator and (
-        thread.is_unapproved or thread.has_unapproved_posts
+        thread.is_hidden or thread.is_unapproved or thread.has_unapproved_posts
     ):
         return
 
     if permissions.user.id not in thread.private_thread_member_ids:
+        raise Http404()
+
+    if thread.is_hidden:
+        raise Http404()
+
+    if thread.is_unapproved and (
+        not thread.starter_id or permissions.user.id != thread.starter_id
+    ):
         raise Http404()
 
 
@@ -428,6 +436,7 @@ def _filter_private_threads_queryset_action(
                     "thread_id"
                 )
             )
+            | Q(is_hidden=True)
             | Q(is_unapproved=True)
             | Q(has_unapproved_posts=True)
         )
@@ -435,7 +444,8 @@ def _filter_private_threads_queryset_action(
     return queryset.filter(
         id__in=PrivateThreadMember.objects.filter(user=permissions.user).values(
             "thread_id"
-        )
+        ),
+        is_hidden=False,
     ).filter(Q(is_unapproved=False) | Q(starter=permissions.user))
 
 
