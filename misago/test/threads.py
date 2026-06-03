@@ -9,6 +9,7 @@ from ..core.utils import slugify
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
 from ..readtracker.models import ReadThread
+from ..threads.enums import ThreadPinned
 from ..threads.models import Post, Thread
 from ..threadupdates.create import create_test_thread_update
 from ..threadupdates.models import ThreadUpdate
@@ -39,7 +40,7 @@ def thread_factory(post_factory):
         last_posted_at: FactoryTimestampArg = None,
         starter: FactoryUserArg = "Starter",
         last_poster: FactoryUserArg = None,
-        weight: int = 0,
+        pinned: ThreadPinned = ThreadPinned.NONE,
         is_unapproved: bool = False,
         is_hidden: bool = False,
         is_locked: bool = False,
@@ -66,7 +67,7 @@ def thread_factory(post_factory):
             has_hidden_posts=has_hidden_posts,
             started_at=started_at,
             last_posted_at=last_posted_at,
-            weight=weight,
+            pinned=pinned,
             is_unapproved=is_unapproved,
             is_hidden=is_hidden,
             is_locked=is_locked,

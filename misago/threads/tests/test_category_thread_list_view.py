@@ -12,6 +12,7 @@ from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
 from ...readtracker.models import ReadCategory, ReadThread
 from ...test import assert_contains, assert_not_contains
+from ..enums import ThreadPinned
 
 
 def test_category_thread_list_view_returns_error_404_if_category_doesnt_exist(
@@ -811,19 +812,23 @@ def test_category_thread_list_view_displays_thread_without_flags(
     assert_not_contains(response, "thread-flags")
 
 
-def test_category_thread_list_view_displays_globally_pinned_thread(
+def test_category_thread_list_view_displays_thread_pinned_everywhere(
     thread_factory, client, other_user, default_category
 ):
-    thread = thread_factory(default_category, starter=other_user, weight=2)
+    thread = thread_factory(
+        default_category,
+        starter=other_user,
+        pinned=ThreadPinned.EVERYWHERE,
+    )
 
     response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-pinned-globally")
+    assert_contains(response, "thread-flag-pinned-everywhere")
 
 
-def test_category_thread_list_view_displays_globally_pinned_thread_from_other_category(
+def test_category_thread_list_view_displays_thread_pinned_everywhere_from_other_category(
     thread_factory, client, guests_group, other_user, default_category, sibling_category
 ):
     CategoryGroupPermission.objects.create(
@@ -837,49 +842,65 @@ def test_category_thread_list_view_displays_globally_pinned_thread_from_other_ca
         permission=CategoryPermission.BROWSE,
     )
 
-    thread = thread_factory(sibling_category, starter=other_user, weight=2)
+    thread = thread_factory(
+        sibling_category,
+        starter=other_user,
+        pinned=ThreadPinned.EVERYWHERE,
+    )
 
     response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-pinned-globally")
+    assert_contains(response, "thread-flag-pinned-everywhere")
 
 
-def test_category_thread_list_view_displays_locally_pinned_thread(
+def test_category_thread_list_view_displays_thread_pinned_in_category(
     thread_factory, client, other_user, default_category
 ):
-    thread = thread_factory(default_category, starter=other_user, weight=1)
+    thread = thread_factory(
+        default_category,
+        starter=other_user,
+        pinned=ThreadPinned.CATEGORY,
+    )
 
     response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-pinned-locally")
+    assert_contains(response, "thread-flag-pinned-category")
 
 
 def test_category_thread_list_view_doesnt_display_thread_pinned_in_child_category_flag_to_anonymous_user(
     thread_factory, client, other_user, default_category, child_category
 ):
-    thread = thread_factory(child_category, starter=other_user, weight=1)
+    thread = thread_factory(
+        child_category,
+        starter=other_user,
+        pinned=ThreadPinned.CATEGORY,
+    )
 
     response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-pinned-locally-elsewhere")
+    assert_not_contains(response, "thread-flag-pinned-category-elsewhere")
 
 
 def test_category_thread_list_view_doesnt_display_thread_pinned_in_child_category_flag_to_user(
     thread_factory, user_client, other_user, default_category, child_category
 ):
-    thread = thread_factory(child_category, starter=other_user, weight=1)
+    thread = thread_factory(
+        child_category,
+        starter=other_user,
+        pinned=ThreadPinned.CATEGORY,
+    )
 
     response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-pinned-locally-elsewhere")
+    assert_not_contains(response, "thread-flag-pinned-category-elsewhere")
 
 
 def test_category_thread_list_view_displays_thread_pinned_in_child_category_flag_to_category_moderator(
@@ -891,25 +912,33 @@ def test_category_thread_list_view_displays_thread_pinned_in_child_category_flag
         categories=[child_category.id],
     )
 
-    thread = thread_factory(child_category, starter=other_user, weight=1)
+    thread = thread_factory(
+        child_category,
+        starter=other_user,
+        pinned=ThreadPinned.CATEGORY,
+    )
 
     response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-pinned-locally-elsewhere")
+    assert_contains(response, "thread-flag-pinned-category-elsewhere")
 
 
 def test_category_thread_list_view_displays_thread_pinned_in_child_category_flag_to_global_moderator(
     thread_factory, moderator_client, other_user, default_category, child_category
 ):
-    thread = thread_factory(child_category, starter=other_user, weight=1)
+    thread = thread_factory(
+        child_category,
+        starter=other_user,
+        pinned=ThreadPinned.CATEGORY,
+    )
 
     response = moderator_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-pinned-locally-elsewhere")
+    assert_contains(response, "thread-flag-pinned-category-elsewhere")
 
 
 def test_category_thread_list_view_displays_thread_with_poll(
@@ -1155,26 +1184,32 @@ def test_category_thread_list_view_displays_user_own_thread_to_user_if_show_star
     assert_contains(response, thread.title)
 
 
-def test_category_thread_list_view_displays_globally_pinned_thread_to_anonymous_user_if_show_started_only_is_enabled(
+def test_category_thread_list_view_displays_thread_pinned_everywhere_to_anonymous_user_if_show_started_only_is_enabled(
     thread_factory, client, default_category
 ):
     default_category.show_started_only = True
     default_category.save()
 
-    thread = thread_factory(default_category, weight=2)
+    thread = thread_factory(
+        default_category,
+        pinned=ThreadPinned.EVERYWHERE,
+    )
 
     response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
 
 
-def test_category_thread_list_view_displays_globally_pinned_thread_to_user_if_show_started_only_is_enabled(
+def test_category_thread_list_view_displays_thread_pinned_everywhere_to_user_if_show_started_only_is_enabled(
     thread_factory, user_client, default_category
 ):
     default_category.show_started_only = True
     default_category.save()
 
-    thread = thread_factory(default_category, weight=2)
+    thread = thread_factory(
+        default_category,
+        pinned=ThreadPinned.EVERYWHERE,
+    )
 
     response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
@@ -1187,7 +1222,10 @@ def test_category_thread_list_view_displays_category_pinned_thread_to_anonymous_
     default_category.show_started_only = True
     default_category.save()
 
-    thread = thread_factory(default_category, weight=1)
+    thread = thread_factory(
+        default_category,
+        pinned=ThreadPinned.CATEGORY,
+    )
 
     response = client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)
@@ -1200,7 +1238,10 @@ def test_category_thread_list_view_displays_category_pinned_thread_to_user_if_sh
     default_category.show_started_only = True
     default_category.save()
 
-    thread = thread_factory(default_category, weight=1)
+    thread = thread_factory(
+        default_category,
+        pinned=ThreadPinned.CATEGORY,
+    )
 
     response = user_client.get(default_category.get_absolute_url())
     assert_contains(response, default_category.name)

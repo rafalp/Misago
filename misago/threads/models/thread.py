@@ -3,36 +3,17 @@ from typing import TYPE_CHECKING, Optional
 
 from django.db import models
 from django.db.models import Q
-from django.utils.translation import pgettext_lazy
 
 from ...conf import settings
 from ...core.utils import slugify
 from ...plugins.models import PluginDataModel
+from ..enums import ThreadPinned
 
 if TYPE_CHECKING:
     from ...users.models import User
 
 
 class Thread(PluginDataModel):
-    WEIGHT_DEFAULT = 0
-    WEIGHT_PINNED = 1
-    WEIGHT_GLOBAL = 2
-
-    WEIGHT_CHOICES = [
-        (
-            WEIGHT_DEFAULT,
-            pgettext_lazy("thread weight choice", "Not pinned"),
-        ),
-        (
-            WEIGHT_PINNED,
-            pgettext_lazy("thread weight choice", "Pinned in category"),
-        ),
-        (
-            WEIGHT_GLOBAL,
-            pgettext_lazy("thread weight choice", "Pinned globally"),
-        ),
-    ]
-
     category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
@@ -81,8 +62,7 @@ class Thread(PluginDataModel):
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
 
-    # TODO: use enum
-    weight = models.PositiveIntegerField(default=WEIGHT_DEFAULT)
+    pinned = models.PositiveIntegerField(default=ThreadPinned.NONE.value)
 
     is_unapproved = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
@@ -132,24 +112,24 @@ class Thread(PluginDataModel):
     class Meta(PluginDataModel.Meta):
         indexes = PluginDataModel.Meta.indexes + [
             models.Index(
-                name="misago_thread_pinned_glob_part",
-                fields=["weight"],
-                condition=Q(weight=2),
+                name="misago_thread_pin_everywh_part",
+                fields=["pinned"],
+                condition=Q(pinned=ThreadPinned.EVERYWHERE.value),
             ),
             models.Index(
-                name="misago_thread_pinned_loca_part",
-                fields=["weight"],
-                condition=Q(weight=1),
+                name="misago_thread_pin_categor_part",
+                fields=["pinned"],
+                condition=Q(pinned=ThreadPinned.CATEGORY.value),
             ),
             models.Index(
                 name="misago_thread_not_pinned_part",
-                fields=["weight"],
-                condition=Q(weight=0),
+                fields=["pinned"],
+                condition=Q(pinned=ThreadPinned.NONE.value),
             ),
             models.Index(
-                name="misago_thread_not_global_part",
-                fields=["weight"],
-                condition=Q(weight__lt=2),
+                name="misago_thread_not_everywh_part",
+                fields=["pinned"],
+                condition=Q(pinned__lt=ThreadPinned.EVERYWHERE.value),
             ),
             models.Index(
                 name="misago_thread_has_reporte_part",

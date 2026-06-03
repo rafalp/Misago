@@ -1,0 +1,178 @@
+from ...test import assert_contains
+from ...threadupdates.enums import ThreadUpdateActionName
+from ...threadupdates.models import ThreadUpdate
+from ..enums import ThreadPinned
+
+
+def test_category_thread_list_view_pin_everywhere_moderation_action_pins_unpinned_thread(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "pin_everywhere", "threads": [thread.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url()
+
+    thread.refresh_from_db()
+    assert thread.pinned == ThreadPinned.EVERYWHERE
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.PINNED_EVERYWHERE,
+    )
+
+
+def test_category_thread_list_view_pin_everywhere_moderation_action_pins_pinned_category_thread(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category, pinned=ThreadPinned.CATEGORY)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "pin_everywhere", "threads": [thread.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url()
+
+    thread.refresh_from_db()
+    assert thread.pinned == ThreadPinned.EVERYWHERE
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.PINNED_EVERYWHERE,
+    )
+
+
+def test_category_thread_list_view_pin_everywhere_moderation_action_validates_threads(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category, pinned=ThreadPinned.EVERYWHERE)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "pin_everywhere", "threads": [thread.id]},
+    )
+    assert_contains(response, "Threads are already pinned.")
+
+    assert not ThreadUpdate.objects.exists()
+
+
+def test_category_thread_list_view_pin_category_moderation_action_pins_unpinned_thread(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "pin_category", "threads": [thread.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url()
+
+    thread.refresh_from_db()
+    assert thread.pinned == ThreadPinned.CATEGORY
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.PINNED_CATEGORY,
+    )
+
+
+def test_category_thread_list_view_pin_category_moderation_action_pins_pinned_everywhere_thread(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category, pinned=ThreadPinned.EVERYWHERE)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "pin_category", "threads": [thread.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url()
+
+    thread.refresh_from_db()
+    assert thread.pinned == ThreadPinned.CATEGORY
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.PINNED_CATEGORY,
+    )
+
+
+def test_category_thread_list_view_pin_category_moderation_action_validates_threads(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category, pinned=ThreadPinned.CATEGORY)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "pin_category", "threads": [thread.id]},
+    )
+    assert_contains(response, "Threads are already pinned.")
+
+    assert not ThreadUpdate.objects.exists()
+
+
+def test_category_thread_list_view_unpin_moderation_action_unpins_pinned_everywhere_thread(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category, pinned=ThreadPinned.EVERYWHERE)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "unpin", "threads": [thread.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url()
+
+    thread.refresh_from_db()
+    assert thread.pinned == ThreadPinned.NONE
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.UNPINNED,
+    )
+
+
+def test_category_thread_list_view_unpin_moderation_action_unpins_pinned_category_thread(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category, pinned=ThreadPinned.CATEGORY)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "unpin", "threads": [thread.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url()
+
+    thread.refresh_from_db()
+    assert thread.pinned == ThreadPinned.NONE
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.UNPINNED,
+    )
+
+
+def test_category_thread_list_view_unpin_moderation_action_validates_threads(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "unpin", "threads": [thread.id]},
+    )
+    assert_contains(response, "Threads are already unpinned.")
+
+    assert not ThreadUpdate.objects.exists()

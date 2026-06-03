@@ -2,7 +2,7 @@ from typing import Iterable
 
 from django.db.models import Q, QuerySet
 
-from ...threads.enums import ThreadWeight
+from ...threads.enums import ThreadPinned
 from ...threads.models import Thread
 from ..enums import (
     CategoryPermission,
@@ -232,21 +232,21 @@ def _get_threads_category_query_action(
     permissions: UserPermissionsProxy, category: dict
 ) -> str | list[str] | None:
     if permissions.is_category_moderator(category["id"]):
-        return CategoryThreadsQuery.ALL_NOT_PINNED_GLOBALLY
+        return CategoryThreadsQuery.ALL_NOT_PINNED_EVERYWHERE
 
     if category["show_started_only"]:
         if permissions.user.is_authenticated:
             return [
-                CategoryThreadsQuery.USER_PINNED_IN_CATEGORY,
+                CategoryThreadsQuery.USER_PINNED_CATEGORY,
                 CategoryThreadsQuery.USER_STARTED_NOT_PINNED,
             ]
 
-        return CategoryThreadsQuery.ANON_PINNED_IN_CATEGORY
+        return CategoryThreadsQuery.ANON_PINNED_CATEGORY
 
     if permissions.user.is_authenticated:
-        return CategoryThreadsQuery.USER_NOT_PINNED_GLOBALLY
+        return CategoryThreadsQuery.USER_NOT_PINNED_EVERYWHERE
 
-    return CategoryThreadsQuery.ANON_NOT_PINNED_GLOBALLY
+    return CategoryThreadsQuery.ANON_NOT_PINNED_EVERYWHERE
 
 
 def get_threads_pinned_category_query(
@@ -261,12 +261,12 @@ def _get_threads_pinned_category_query_action(
     permissions: UserPermissionsProxy, category: dict
 ) -> str | list[str] | None:
     if permissions.is_category_moderator(category["id"]):
-        return CategoryThreadsQuery.ALL_PINNED_GLOBALLY
+        return CategoryThreadsQuery.ALL_PINNED_EVERYWHERE
 
     if permissions.user.is_authenticated:
-        return CategoryThreadsQuery.USER_PINNED_GLOBALLY
+        return CategoryThreadsQuery.USER_PINNED_EVERYWHERE
 
-    return CategoryThreadsQuery.ANON_PINNED_GLOBALLY
+    return CategoryThreadsQuery.ANON_PINNED_EVERYWHERE
 
 
 def get_category_threads_category_query(
@@ -290,7 +290,7 @@ def _get_category_threads_category_query_action(
         if context == CategoryQueryContext.CURRENT:
             return CategoryThreadsQuery.ALL_NOT_PINNED
 
-        return CategoryThreadsQuery.ALL_NOT_PINNED_GLOBALLY
+        return CategoryThreadsQuery.ALL_NOT_PINNED_EVERYWHERE
 
     if category["show_started_only"]:
         if context == CategoryQueryContext.CURRENT:
@@ -301,11 +301,11 @@ def _get_category_threads_category_query_action(
 
         if permissions.user.is_authenticated:
             return [
-                CategoryThreadsQuery.USER_PINNED_IN_CATEGORY,
+                CategoryThreadsQuery.USER_PINNED_CATEGORY,
                 CategoryThreadsQuery.USER_STARTED_NOT_PINNED,
             ]
 
-        return CategoryThreadsQuery.ANON_PINNED_IN_CATEGORY
+        return CategoryThreadsQuery.ANON_PINNED_CATEGORY
 
     if context == CategoryQueryContext.CURRENT:
         if permissions.user.is_authenticated:
@@ -314,9 +314,9 @@ def _get_category_threads_category_query_action(
         return CategoryThreadsQuery.ANON_NOT_PINNED
 
     if permissions.user.is_authenticated:
-        return CategoryThreadsQuery.USER_NOT_PINNED_GLOBALLY
+        return CategoryThreadsQuery.USER_NOT_PINNED_EVERYWHERE
 
-    return CategoryThreadsQuery.ANON_NOT_PINNED_GLOBALLY
+    return CategoryThreadsQuery.ANON_NOT_PINNED_EVERYWHERE
 
 
 def get_category_threads_pinned_category_query(
@@ -337,18 +337,18 @@ def _get_category_threads_pinned_category_query_action(
         if context == CategoryQueryContext.CURRENT:
             return CategoryThreadsQuery.ALL_PINNED
 
-        return CategoryThreadsQuery.ALL_PINNED_GLOBALLY
+        return CategoryThreadsQuery.ALL_PINNED_EVERYWHERE
 
     if permissions.user.is_authenticated:
         if context == CategoryQueryContext.CURRENT:
             return CategoryThreadsQuery.USER_PINNED
 
-        return CategoryThreadsQuery.USER_PINNED_GLOBALLY
+        return CategoryThreadsQuery.USER_PINNED_EVERYWHERE
 
     if context == CategoryQueryContext.CURRENT:
         return CategoryThreadsQuery.ANON_PINNED
 
-    return CategoryThreadsQuery.ANON_PINNED_GLOBALLY
+    return CategoryThreadsQuery.ANON_PINNED_EVERYWHERE
 
 
 def _or_q(q: Iterable[Q]):
@@ -388,31 +388,31 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.ALL_PINNED:
         return Q(
             category_id__in=categories,
-            weight__gt=ThreadWeight.NOT_PINNED,
+            pinned__gt=ThreadPinned.NONE,
         )
 
-    if query == CategoryThreadsQuery.ALL_PINNED_GLOBALLY:
+    if query == CategoryThreadsQuery.ALL_PINNED_EVERYWHERE:
         return Q(
             category_id__in=categories,
-            weight=ThreadWeight.PINNED_GLOBALLY,
+            pinned=ThreadPinned.EVERYWHERE,
         )
 
-    if query == CategoryThreadsQuery.ALL_PINNED_IN_CATEGORY:
+    if query == CategoryThreadsQuery.ALL_PINNED_CATEGORY:
         return Q(
             category_id__in=categories,
-            weight=ThreadWeight.PINNED_GLOBALLY,
+            pinned=ThreadPinned.EVERYWHERE,
         )
 
     if query == CategoryThreadsQuery.ALL_NOT_PINNED:
         return Q(
             category_id__in=categories,
-            weight=ThreadWeight.NOT_PINNED,
+            pinned=ThreadPinned.NONE,
         )
 
-    if query == CategoryThreadsQuery.ALL_NOT_PINNED_GLOBALLY:
+    if query == CategoryThreadsQuery.ALL_NOT_PINNED_EVERYWHERE:
         return Q(
             category_id__in=categories,
-            weight__lt=ThreadWeight.PINNED_GLOBALLY,
+            pinned__lt=ThreadPinned.EVERYWHERE,
         )
 
     if query == CategoryThreadsQuery.ANON:
@@ -425,23 +425,23 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.ANON_PINNED:
         return Q(
             category_id__in=categories,
-            weight__gt=ThreadWeight.NOT_PINNED,
+            pinned__gt=ThreadPinned.NONE,
             is_hidden=False,
             is_unapproved=False,
         )
 
-    if query == CategoryThreadsQuery.ANON_PINNED_GLOBALLY:
+    if query == CategoryThreadsQuery.ANON_PINNED_EVERYWHERE:
         return Q(
             category_id__in=categories,
-            weight=ThreadWeight.PINNED_GLOBALLY,
+            pinned=ThreadPinned.EVERYWHERE,
             is_hidden=False,
             is_unapproved=False,
         )
 
-    if query == CategoryThreadsQuery.ANON_PINNED_IN_CATEGORY:
+    if query == CategoryThreadsQuery.ANON_PINNED_CATEGORY:
         return Q(
             category_id__in=categories,
-            weight=ThreadWeight.PINNED_IN_CATEGORY,
+            pinned=ThreadPinned.CATEGORY,
             is_hidden=False,
             is_unapproved=False,
         )
@@ -449,15 +449,15 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.ANON_NOT_PINNED:
         return Q(
             category_id__in=categories,
-            weight=ThreadWeight.NOT_PINNED,
+            pinned=ThreadPinned.NONE,
             is_hidden=False,
             is_unapproved=False,
         )
 
-    if query == CategoryThreadsQuery.ANON_NOT_PINNED_GLOBALLY:
+    if query == CategoryThreadsQuery.ANON_NOT_PINNED_EVERYWHERE:
         return Q(
             category_id__in=categories,
-            weight__lt=ThreadWeight.PINNED_GLOBALLY,
+            pinned__lt=ThreadPinned.EVERYWHERE,
             is_hidden=False,
             is_unapproved=False,
         )
@@ -473,25 +473,25 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.USER_PINNED:
         return Q(
             category_id__in=categories,
-            weight__gt=ThreadWeight.NOT_PINNED,
+            pinned__gt=ThreadPinned.NONE,
             is_hidden=False,
         ) & Q(
             Q(is_unapproved=False) | Q(starter_id=user_id),
         )
 
-    if query == CategoryThreadsQuery.USER_PINNED_GLOBALLY:
+    if query == CategoryThreadsQuery.USER_PINNED_EVERYWHERE:
         return Q(
             category_id__in=categories,
-            weight=ThreadWeight.PINNED_GLOBALLY,
+            pinned=ThreadPinned.EVERYWHERE,
             is_hidden=False,
         ) & Q(
             Q(is_unapproved=False) | Q(starter_id=user_id),
         )
 
-    if query == CategoryThreadsQuery.USER_PINNED_IN_CATEGORY:
+    if query == CategoryThreadsQuery.USER_PINNED_CATEGORY:
         return Q(
             category_id__in=categories,
-            weight=ThreadWeight.PINNED_IN_CATEGORY,
+            pinned=ThreadPinned.CATEGORY,
             is_hidden=False,
         ) & Q(
             Q(is_unapproved=False) | Q(starter_id=user_id),
@@ -500,16 +500,16 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.USER_NOT_PINNED:
         return Q(
             category_id__in=categories,
-            weight=ThreadWeight.NOT_PINNED,
+            pinned=ThreadPinned.NONE,
             is_hidden=False,
         ) & Q(
             Q(is_unapproved=False) | Q(starter_id=user_id),
         )
 
-    if query == CategoryThreadsQuery.USER_NOT_PINNED_GLOBALLY:
+    if query == CategoryThreadsQuery.USER_NOT_PINNED_EVERYWHERE:
         return Q(
             category_id__in=categories,
-            weight__lt=ThreadWeight.PINNED_GLOBALLY,
+            pinned__lt=ThreadPinned.EVERYWHERE,
             is_hidden=False,
         ) & Q(
             Q(is_unapproved=False) | Q(starter_id=user_id),
@@ -518,23 +518,23 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.USER_STARTED_PINNED:
         return Q(
             category_id__in=categories,
-            weight__gt=ThreadWeight.NOT_PINNED,
+            pinned__gt=ThreadPinned.NONE,
             is_hidden=False,
             starter_id=user_id,
         )
 
-    if query == CategoryThreadsQuery.USER_STARTED_PINNED_GLOBALLY:
+    if query == CategoryThreadsQuery.USER_STARTED_PINNED_EVERYWHERE:
         return Q(
             category_id__in=categories,
-            weight=ThreadWeight.PINNED_GLOBALLY,
+            pinned=ThreadPinned.EVERYWHERE,
             is_hidden=False,
             starter_id=user_id,
         )
 
-    if query == CategoryThreadsQuery.USER_STARTED_PINNED_IN_CATEGORY:
+    if query == CategoryThreadsQuery.USER_STARTED_PINNED_CATEGORY:
         return Q(
             category_id__in=categories,
-            weight=ThreadWeight.PINNED_IN_CATEGORY,
+            pinned=ThreadPinned.CATEGORY,
             is_hidden=False,
             starter_id=user_id,
         )
@@ -542,7 +542,7 @@ def _get_threads_query_orm_filter_action(
     if query == CategoryThreadsQuery.USER_STARTED_NOT_PINNED:
         return Q(
             category_id__in=categories,
-            weight=ThreadWeight.NOT_PINNED,
+            pinned=ThreadPinned.NONE,
             is_hidden=False,
             starter_id=user_id,
         )

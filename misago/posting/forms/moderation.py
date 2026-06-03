@@ -1,11 +1,10 @@
 from django import forms
 from django.http import HttpRequest
-from django.utils.translation import pgettext_lazy
 
-from ...threads.enums import ThreadWeight
+from ...threads.enums import ThreadPinned
 from ...threads.hide import hide_thread
 from ...threads.lock import lock_thread
-from ...threads.pin import pin_thread_globally, pin_thread_in_category
+from ...threads.pin import pin_thread
 from ..state import StartState
 from .base import PostingForm
 
@@ -27,10 +26,10 @@ class ThreadModerationForm(PostingForm):
 
         if is_global_moderator:
             self.fields["pin"] = forms.TypedChoiceField(
-                choices=ThreadWeight.get_choices(),
+                choices=ThreadPinned.get_choices(),
                 coerce=int,
                 required=False,
-                initial=ThreadWeight.NOT_PINNED,
+                initial=ThreadPinned.NONE,
             )
         else:
             self.fields["pin_in_category"] = forms.BooleanField(required=False)
@@ -44,11 +43,16 @@ class ThreadModerationForm(PostingForm):
 
         if (
             self.cleaned_data.get("pin_in_category")
-            or self.cleaned_data.get("pin") == ThreadWeight.PINNED_IN_CATEGORY
+            or self.cleaned_data.get("pin") == ThreadPinned.CATEGORY
         ):
-            pin_thread_in_category(state.thread, commit=False, request=self.request)
-        elif self.cleaned_data.get("pin") == ThreadWeight.PINNED_GLOBALLY:
-            pin_thread_globally(state.thread, commit=False, request=self.request)
+            pin_thread(state.thread, commit=False, request=self.request)
+        elif self.cleaned_data.get("pin") == ThreadPinned.EVERYWHERE:
+            pin_thread(
+                state.thread,
+                everywhere=True,
+                commit=False,
+                request=self.request,
+            )
 
 
 def create_thread_moderation_form(

@@ -204,7 +204,6 @@ def test_private_thread_reply_view_doesnt_init_posting_form_with_hidden_quoted_p
     assert_not_contains(response, "[/quote]")
 
 
-@pytest.mark.xfail(reason="unapproved posts visible in private threads")
 def test_private_thread_reply_view_doesnt_init_posting_form_with_invisible_quoted_post(
     thread_reply_factory, user_client, other_user_private_thread
 ):

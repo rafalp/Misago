@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
@@ -7,11 +6,16 @@ from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.delete import delete_thread
+from ..threads.enums import ThreadPinned
 from ..threads.lock import lock_thread, unlock_thread
 from ..threads.models import Thread
+from ..threads.pin import pin_thread, unpin_thread
 from ..threadupdates.create import (
     create_locked_thread_update,
+    create_pinned_category_thread_update,
+    create_pinned_everywhere_thread_update,
     create_unlocked_thread_update,
+    create_unpinned_thread_update,
 )
 from ..threadupdates.threadflag import set_thread_has_updates
 from .actions import (
@@ -46,6 +50,18 @@ def _get_thread_moderation_actions_action(
         return []
 
     actions = []
+
+    if (
+        user_permissions.is_global_moderator
+        and thread.pinned != ThreadPinned.EVERYWHERE
+    ):
+        actions.append(PinEverywhereThreadModerationAction)
+
+    if thread.pinned != ThreadPinned.CATEGORY:
+        actions.append(PinCategoryThreadModerationAction)
+
+    if thread.pinned:
+        actions.append(UnpinThreadModerationAction)
 
     if thread.is_locked:
         actions.append(UnlockThreadModerationAction)
@@ -86,6 +102,81 @@ def _get_private_thread_moderation_actions_action(
     return actions + [
         DeleteThreadModerationAction,
     ]
+
+
+class PinEverywhereThreadModerationAction(ThreadModerationAction):
+    id = "pin_everywhere"
+    button_label = pgettext_lazy("thread moderation button label", "Pin everywhere")
+
+    def execute(self) -> ModerationActionResult:
+        thread = self.thread
+
+        set_thread_has_updates(thread, commit=False)
+        pin_thread(thread, everywhere=True, request=self.request)
+
+        thread_update = create_pinned_everywhere_thread_update(
+            thread, self.request.user, request=self.request
+        )
+
+        messages.success(
+            self.request,
+            pgettext("thread moderation success", "Thread pinned everywhere"),
+        )
+
+        return ModerationActionResult(
+            updated_items=[thread.id],
+            thread_updates=[thread_update],
+        )
+
+
+class PinCategoryThreadModerationAction(ThreadModerationAction):
+    id = "pin_category"
+    button_label = pgettext_lazy("thread moderation button label", "Pin in category")
+
+    def execute(self) -> ModerationActionResult:
+        thread = self.thread
+
+        set_thread_has_updates(thread, commit=False)
+        pin_thread(thread, everywhere=False, request=self.request)
+
+        thread_update = create_pinned_category_thread_update(
+            thread, self.request.user, request=self.request
+        )
+
+        messages.success(
+            self.request,
+            pgettext("thread moderation success", "Thread pinned in category"),
+        )
+
+        return ModerationActionResult(
+            updated_items=[thread.id],
+            thread_updates=[thread_update],
+        )
+
+
+class UnpinThreadModerationAction(ThreadModerationAction):
+    id = "unpin"
+    button_label = pgettext_lazy("thread moderation button label", "Unpin")
+
+    def execute(self) -> ModerationActionResult:
+        thread = self.thread
+
+        set_thread_has_updates(thread, commit=False)
+        unpin_thread(thread, request=self.request)
+
+        thread_update = create_unpinned_thread_update(
+            thread, self.request.user, request=self.request
+        )
+
+        messages.success(
+            self.request,
+            pgettext("thread moderation success", "Thread unpinned"),
+        )
+
+        return ModerationActionResult(
+            updated_items=[thread.id],
+            thread_updates=[thread_update],
+        )
 
 
 class LockThreadModerationAction(ThreadModerationAction):

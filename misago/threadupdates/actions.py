@@ -107,17 +107,17 @@ class ApprovedThreadUpdateAction(ThreadUpdateAction):
 
 
 @thread_updates_renderer.register_action
-class PinnedGloballyThreadUpdateAction(ThreadUpdateAction):
-    action = ThreadUpdateActionName.PINNED_GLOBALLY
+class PinnedEverywhereThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.PINNED_EVERYWHERE
     icon = "bookmark"
     description = pgettext_lazy(
-        "thread update action description", "Pinned thread globally"
+        "thread update action description", "Pinned thread everywhere"
     )
 
 
 @thread_updates_renderer.register_action
-class PinnedInCategoryThreadUpdateAction(ThreadUpdateAction):
-    action = ThreadUpdateActionName.PINNED_IN_CATEGORY
+class PinnedCategoryThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.PINNED_CATEGORY
     icon = "bookmark_outline"
     description = pgettext_lazy(
         "thread update action description", "Pinned thread in category"

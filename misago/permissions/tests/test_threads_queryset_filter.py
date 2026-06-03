@@ -1,7 +1,7 @@
 from itertools import product
 
 from ...categories.proxy import CategoriesProxy
-from ...threads.enums import ThreadWeight
+from ...threads.enums import ThreadPinned
 from ...threads.models import Thread
 from ..proxy import UserPermissionsProxy
 from ..threads import filter_category_threads_queryset
@@ -99,7 +99,7 @@ def test_threads_queryset_filter(
         (category, child_category),
         (False, True),
         (anonymous_user, user, other_user),
-        (0, 1, 2),
+        (ThreadPinned.NONE, ThreadPinned.CATEGORY, ThreadPinned.EVERYWHERE),
         (False, True),
         (False, True),
     )
@@ -115,7 +115,7 @@ def check_thread_visibility(
     category,
     started_only,
     starter,
-    thread_weight,
+    thread_pinned,
     thread_unapproved,
     thread_hidden,
 ):
@@ -126,7 +126,7 @@ def check_thread_visibility(
     thread = thread_factory(
         category,
         starter=starter if starter.is_authenticated else "Anon",
-        weight=thread_weight,
+        pinned=thread_pinned,
         is_unapproved=thread_unapproved,
         is_hidden=thread_hidden,
     )
@@ -142,8 +142,8 @@ def check_thread_visibility(
 
 
 def assert_queryset_contains(user, category, thread):
-    if thread.weight == ThreadWeight.PINNED_GLOBALLY:
-        raise AssertionError(f"queryset result contains a globally pinned thread")
+    if thread.pinned == ThreadPinned.EVERYWHERE:
+        raise AssertionError(f"queryset result contains a thread pinned everywhere")
 
     if user.id and (user.slug == "moderator" or user.slug == "categorymoderator"):
         return
@@ -162,7 +162,7 @@ def assert_queryset_contains(user, category, thread):
     if (
         user.is_anonymous
         and category.show_started_only
-        and thread.weight != ThreadWeight.PINNED_IN_CATEGORY
+        and thread.pinned != ThreadPinned.CATEGORY
     ):
         raise AssertionError(
             "queryset result for an anonymous user and category with "
@@ -178,7 +178,7 @@ def assert_queryset_contains(user, category, thread):
     if (
         user.is_authenticated
         and category.show_started_only
-        and not thread.weight
+        and not thread.pinned
         and thread.starter_id != user.id
     ):
         raise AssertionError(
@@ -188,7 +188,7 @@ def assert_queryset_contains(user, category, thread):
 
 
 def assert_queryset_not_contains(user, category, thread):
-    if thread.weight == ThreadWeight.PINNED_GLOBALLY:
+    if thread.pinned == ThreadPinned.EVERYWHERE:
         return
 
     if user.is_authenticated and (
@@ -220,20 +220,20 @@ def assert_queryset_not_contains(user, category, thread):
 
 def test_threads_pinned_queryset_includes_category_with_see_and_browse_permission(
     threads_filter_factory,
-    category_pinned_globally_thread,
+    category_pinned_everywhere_thread,
     category_members_see_permission,
     category_members_browse_permission,
     user,
 ):
     threads_filter = threads_filter_factory(user)
     queryset = threads_filter.filter_pinned(Thread.objects)
-    assert category_pinned_globally_thread in queryset
+    assert category_pinned_everywhere_thread in queryset
 
 
 def test_threads_pinned_queryset_includes_category_with_see_permission_and_delay_browse(
     threads_filter_factory,
     category,
-    category_pinned_globally_thread,
+    category_pinned_everywhere_thread,
     category_members_see_permission,
     user,
 ):
@@ -242,12 +242,12 @@ def test_threads_pinned_queryset_includes_category_with_see_permission_and_delay
 
     threads_filter = threads_filter_factory(user)
     queryset = threads_filter.filter_pinned(Thread.objects)
-    assert category_pinned_globally_thread in queryset
+    assert category_pinned_everywhere_thread in queryset
 
 
 def test_threads_pinned_queryset_excludes_category_without_any_permissions(
     threads_filter_factory,
-    category_pinned_globally_thread,
+    category_pinned_everywhere_thread,
     user,
 ):
     threads_filter = threads_filter_factory(user)
@@ -257,7 +257,7 @@ def test_threads_pinned_queryset_excludes_category_without_any_permissions(
 
 def test_threads_pinned_queryset_excludes_category_with_only_see_permission(
     threads_filter_factory,
-    category_pinned_globally_thread,
+    category_pinned_everywhere_thread,
     category_members_see_permission,
     user,
 ):
@@ -268,8 +268,8 @@ def test_threads_pinned_queryset_excludes_category_with_only_see_permission(
 
 def test_threads_pinned_queryset_combines_multiple_categories_with_see_and_browse_permission(
     threads_filter_factory,
-    category_pinned_globally_thread,
-    child_category_pinned_globally_thread,
+    category_pinned_everywhere_thread,
+    child_category_pinned_everywhere_thread,
     category_members_see_permission,
     category_members_browse_permission,
     child_category_members_see_permission,
@@ -278,8 +278,8 @@ def test_threads_pinned_queryset_combines_multiple_categories_with_see_and_brows
 ):
     threads_filter = threads_filter_factory(user)
     queryset = threads_filter.filter_pinned(Thread.objects)
-    assert category_pinned_globally_thread in queryset
-    assert child_category_pinned_globally_thread in queryset
+    assert category_pinned_everywhere_thread in queryset
+    assert child_category_pinned_everywhere_thread in queryset
 
 
 def test_threads_queryset_filter_pinned(
@@ -310,7 +310,7 @@ def test_threads_queryset_filter_pinned(
         (category, child_category),
         (False, True),
         (anonymous_user, user, other_user),
-        (0, 1, 2),
+        (ThreadPinned.NONE, ThreadPinned.CATEGORY, ThreadPinned.EVERYWHERE),
         (False, True),
         (False, True),
     )
@@ -326,7 +326,7 @@ def check_pinned_thread_visibility(
     category,
     started_only,
     starter,
-    thread_weight,
+    thread_pinned,
     thread_unapproved,
     thread_hidden,
 ):
@@ -337,7 +337,7 @@ def check_pinned_thread_visibility(
     thread = thread_factory(
         category,
         starter=starter if starter.is_authenticated else "Anon",
-        weight=thread_weight,
+        pinned=thread_pinned,
         is_unapproved=thread_unapproved,
         is_hidden=thread_hidden,
     )
@@ -353,9 +353,9 @@ def check_pinned_thread_visibility(
 
 
 def assert_pinned_queryset_contains(user, category, thread):
-    if thread.weight != ThreadWeight.PINNED_GLOBALLY:
+    if thread.pinned != ThreadPinned.EVERYWHERE:
         raise AssertionError(
-            "pinned queryset result contains a thread that's not pinned globally"
+            "pinned queryset result contains a thread that's not pinned everywhere"
         )
 
     if user.id and (user.slug == "moderator" or user.slug == "categorymoderator"):
@@ -380,7 +380,7 @@ def assert_pinned_queryset_contains(user, category, thread):
 
 
 def assert_pinned_queryset_not_contains(user, category, thread):
-    if thread.weight != ThreadWeight.PINNED_GLOBALLY:
+    if thread.pinned != ThreadPinned.EVERYWHERE:
         return
 
     if user.is_authenticated and (
@@ -430,7 +430,7 @@ def test_filter_category_threads_queryset(
         (moderator, category_moderator, anonymous_user, user, other_user),
         (False, True),
         (anonymous_user, user, other_user),
-        (0, 1, 2),
+        (ThreadPinned.NONE, ThreadPinned.CATEGORY, ThreadPinned.EVERYWHERE),
         (False, True),
         (False, True),
     )
@@ -448,7 +448,7 @@ def check_category_thread_visibility(
     user,
     started_only,
     starter,
-    thread_weight,
+    thread_pinned,
     thread_unapproved,
     thread_hidden,
 ):
@@ -462,7 +462,7 @@ def check_category_thread_visibility(
     thread = thread_factory(
         category,
         starter=starter if starter.is_authenticated else "Anon",
-        weight=thread_weight,
+        pinned=thread_pinned,
         is_unapproved=thread_unapproved,
         is_hidden=thread_hidden,
     )

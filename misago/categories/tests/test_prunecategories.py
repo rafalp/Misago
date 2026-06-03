@@ -1,13 +1,10 @@
-from datetime import timedelta
 from io import StringIO
 
 import pytest
 from django.core import management
-from django.utils import timezone
 
 from ...threads.models import Thread
 from ..management.commands import prunecategories
-from ..models import Category
 
 
 def call_command():
