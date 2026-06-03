@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
+from ....threads.enums import ThreadPinned
 from ....threads.move import move_threads
 from ...models import Category
 from ...synchronize import synchronize_category
@@ -30,7 +31,7 @@ class Command(BaseCommand):
             archive = category.archive_pruned_in
             pruned_threads = 0
 
-            threads_qs = category.thread_set.filter(weight=0)
+            threads_qs = category.thread_set.filter(pinned=ThreadPinned.NONE)
 
             if category.prune_started_after:
                 cutoff = now - timedelta(days=category.prune_started_after)

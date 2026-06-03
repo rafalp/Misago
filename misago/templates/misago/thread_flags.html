@@ -1,24 +1,24 @@
 {% load i18n %}
 
 <ul class="thread-flags">
-  {% if thread.weight == 2 %}
+  {% if thread.pinned == 2 %}
     <li
-      class="thread-flag-pinned-globally"
-      title="{% translate 'Pinned globally' context 'thread flag' %}"
+      class="thread-flag-pinned-everywhere"
+      title="{% translate 'Pinned everywhere' context 'thread flag' %}"
     >
       <span class="material-icon">bookmark</span>
     </li>
   {% endif %}
-  {% if thread.weight == 1 and category and thread.category_id == category.id %}
+  {% if thread.pinned == 1 and category and thread.category_id == category.id %}
     <li
-      class="thread-flag-pinned-locally"
+      class="thread-flag-pinned-category"
       title="{% translate 'Pinned in a category' context 'thread flag' %}"
     >
       <span class="material-icon">bookmark_outline</span>
     </li>
-  {% elif thread.weight == 1 and for_moderator %}
+  {% elif thread.pinned == 1 and for_moderator %}
     <li
-      class="thread-flag-pinned-locally-elsewhere"
+      class="thread-flag-pinned-category-elsewhere"
       title="{% translate 'Pinned in a category, but not on this list' context 'thread flag' %}"
     >
       <span class="material-icon">bookmark_outline</span>

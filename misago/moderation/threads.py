@@ -10,8 +10,8 @@ from ..threads.lock import lock_thread, unlock_thread
 from ..threads.pin import pin_thread, unpin_thread
 from ..threadupdates.create import (
     create_locked_thread_update,
-    create_pinned_globally_thread_update,
-    create_pinned_in_category_thread_update,
+    create_pinned_category_thread_update,
+    create_pinned_everywhere_thread_update,
     create_unlocked_thread_update,
     create_unpinned_thread_update,
 )
@@ -48,9 +48,11 @@ def _get_threads_moderation_actions_action(
     actions = []
 
     if user_permissions.is_global_moderator:
-        actions.append()
+        actions.append(PinEverywhereThreadsModerationAction)
 
-    return [
+    return actions + [
+        PinCategoryThreadsModerationAction,
+        UnpinThreadsModerationAction,
         LockThreadsModerationAction,
         UnlockThreadsModerationAction,
         MoveThreadsModerationAction,
@@ -87,9 +89,9 @@ def _get_category_threads_moderation_actions_action(
     ]
 
 
-class PinGloballyThreadModerationAction(ThreadsModerationAction):
-    id = "pin_globally"
-    button_label = pgettext_lazy("threads moderation button label", "Pin globally")
+class PinEverywhereThreadsModerationAction(ThreadsModerationAction):
+    id = "pin_everywhere"
+    button_label = pgettext_lazy("threads moderation button label", "Pin everywhere")
 
     def validate(self):
         for thread in self.threads:
@@ -97,21 +99,97 @@ class PinGloballyThreadModerationAction(ThreadsModerationAction):
                 return
 
         raise ValidationError(
-            pgettext("threads moderation validation", "Threads are already locked.")
+            pgettext("threads moderation validation", "Threads are already pinned.")
         )
 
     def execute(self) -> ModerationActionResult:
-        valid_threads = [thread for thread in self.threads if not thread.is_locked]
+        valid_threads = [
+            thread
+            for thread in self.threads
+            if thread.pinned != ThreadPinned.EVERYWHERE
+        ]
 
         for thread in valid_threads:
             set_thread_has_updates(thread, commit=False)
             pin_thread(thread, everywhere=True, request=self.request)
 
-            create_locked_thread_update(thread, self.request.user, request=self.request)
+            create_pinned_everywhere_thread_update(
+                thread, self.request.user, request=self.request
+            )
 
         messages.success(
             self.request,
-            pgettext("threads moderation success", "Threads locked"),
+            pgettext("threads moderation success", "Threads pinned"),
+        )
+
+        return ModerationActionResult(
+            updated_items=[thread.id for thread in valid_threads],
+        )
+
+
+class PinCategoryThreadsModerationAction(ThreadsModerationAction):
+    id = "pin_category"
+    button_label = pgettext_lazy("threads moderation button label", "Pin in category")
+
+    def validate(self):
+        for thread in self.threads:
+            if thread.pinned != ThreadPinned.CATEGORY:
+                return
+
+        raise ValidationError(
+            pgettext("threads moderation validation", "Threads are already pinned.")
+        )
+
+    def execute(self) -> ModerationActionResult:
+        valid_threads = [
+            thread for thread in self.threads if thread.pinned != ThreadPinned.CATEGORY
+        ]
+
+        for thread in valid_threads:
+            set_thread_has_updates(thread, commit=False)
+            pin_thread(thread, everywhere=False, request=self.request)
+
+            create_pinned_category_thread_update(
+                thread, self.request.user, request=self.request
+            )
+
+        messages.success(
+            self.request,
+            pgettext("threads moderation success", "Threads pinned"),
+        )
+
+        return ModerationActionResult(
+            updated_items=[thread.id for thread in valid_threads],
+        )
+
+
+class UnpinThreadsModerationAction(ThreadsModerationAction):
+    id = "unpin"
+    button_label = pgettext_lazy("threads moderation button label", "Unpin")
+
+    def validate(self):
+        for thread in self.threads:
+            if thread.pinned:
+                return
+
+        raise ValidationError(
+            pgettext("threads moderation validation", "Threads are already unpinned.")
+        )
+
+    def execute(self) -> ModerationActionResult:
+        valid_threads = [thread for thread in self.threads if not thread.pinned]
+
+        for thread in valid_threads:
+            set_thread_has_updates(thread, commit=False)
+            pin_thread(thread, everywhere=True, request=self.request)
+
+            create_unpinned_thread_update(
+                thread, self.request.user, request=self.request
+            )
+
+        messages.success(
+            self.request,
+            pgettext("threads moderation success", "Threads unpinned"),
         )
 
         return ModerationActionResult(

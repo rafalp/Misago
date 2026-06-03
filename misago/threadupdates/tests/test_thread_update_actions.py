@@ -15,8 +15,8 @@ from ..create import (
     create_merged_thread_update,
     create_moved_thread_update,
     create_opened_poll_thread_update,
-    create_pinned_globally_thread_update,
-    create_pinned_in_category_thread_update,
+    create_pinned_category_thread_update,
+    create_pinned_everywhere_thread_update,
     create_removed_member_thread_update,
     create_split_thread_update,
     create_started_poll_thread_update,
@@ -81,8 +81,8 @@ def test_approved_thread_update(client, thread, user):
     assert_contains(response, "Approved thread")
 
 
-def test_pinned_globally_thread_update(client, thread, user):
-    create_pinned_globally_thread_update(thread, user)
+def test_pinned_everywhere_thread_update(client, thread, user):
+    create_pinned_everywhere_thread_update(thread, user)
 
     thread.has_updates = True
     thread.save()
@@ -90,11 +90,11 @@ def test_pinned_globally_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Pinned thread globally")
+    assert_contains(response, "Pinned thread everywhere")
 
 
-def test_pinned_in_category_thread_update(client, thread, user):
-    create_pinned_in_category_thread_update(thread, user)
+def test_pinned_category_thread_update(client, thread, user):
+    create_pinned_category_thread_update(thread, user)
 
     thread.has_updates = True
     thread.save()

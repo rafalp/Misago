@@ -127,7 +127,7 @@ def create_approved_thread_update(
     )
 
 
-def create_pinned_globally_thread_update(
+def create_pinned_everywhere_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
     is_hidden: bool = False,
@@ -136,7 +136,7 @@ def create_pinned_globally_thread_update(
 ) -> ThreadUpdate:
     return create_thread_update(
         thread,
-        ThreadUpdateActionName.PIN_GLOBALLY,
+        ThreadUpdateActionName.PINNED_EVERYWHERE,
         actor,
         is_hidden=is_hidden,
         commit=commit,
@@ -144,7 +144,7 @@ def create_pinned_globally_thread_update(
     )
 
 
-def create_pinned_in_category_thread_update(
+def create_pinned_category_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
     is_hidden: bool = False,
@@ -153,7 +153,7 @@ def create_pinned_in_category_thread_update(
 ) -> ThreadUpdate:
     return create_thread_update(
         thread,
-        ThreadUpdateActionName.CATEGORY,
+        ThreadUpdateActionName.PINNED_CATEGORY,
         actor,
         is_hidden=is_hidden,
         commit=commit,

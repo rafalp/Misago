@@ -21,7 +21,7 @@ class Serializer(serializers.ModelSerializer, MutableFields):
             "is_unapproved",
             "is_hidden",
             "is_locked",
-            "weight",
+            "pinned",
         ]
 
 
@@ -47,7 +47,7 @@ def test_mutable_fields_serialized_subset_fields(thread_factory, default_categor
 def test_mutable_fields_serialized_exclude_fields(thread_factory, default_category):
     thread = thread_factory(default_category)
 
-    kept_fields = ["id", "title", "weight"]
+    kept_fields = ["id", "title", "pinned"]
     removed_fields = list(set(Serializer.Meta.fields) - set(kept_fields))
 
     serializer = Serializer.exclude_fields(*removed_fields)
@@ -59,7 +59,7 @@ def test_mutable_fields_serialized_exclude_fields(thread_factory, default_catego
     assert serialized_thread == {
         "id": thread.id,
         "title": thread.title,
-        "weight": thread.weight,
+        "pinned": thread.pinned,
     }
 
 
