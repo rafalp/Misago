@@ -8,6 +8,8 @@ EVENT_TYPES = {
     "pinned_locally": "pinned_category",
     "closed": "locked",
     "opened": "unlocked",
+    "hid": "hidden",
+    "unhid": "unhidden",
     "entered_thread": "joined",
     "tookover": "took_ownership",
     "removed_owner": "removed_member",

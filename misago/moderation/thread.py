@@ -7,13 +7,16 @@ from ..categories.tasks import synchronize_categories
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.delete import delete_thread
 from ..threads.enums import ThreadPinned
+from ..threads.hide import hide_thread, unhide_thread
 from ..threads.lock import lock_thread, unlock_thread
 from ..threads.models import Thread
 from ..threads.pin import pin_thread, unpin_thread
 from ..threadupdates.create import (
+    create_hidden_thread_update,
     create_locked_thread_update,
     create_pinned_category_thread_update,
     create_pinned_everywhere_thread_update,
+    create_unhidden_thread_update,
     create_unlocked_thread_update,
     create_unpinned_thread_update,
 )
@@ -24,7 +27,7 @@ from .actions import (
     ModerationActionResult,
     ThreadModerationAction,
 )
-from .forms import MoveThreadForm
+from .forms import HideForm, MoveThreadForm
 from .hooks import (
     get_private_thread_moderation_actions_hook,
     get_thread_moderation_actions_hook,
@@ -68,6 +71,11 @@ def _get_thread_moderation_actions_action(
     else:
         actions.append(LockThreadModerationAction)
 
+    if thread.is_hidden:
+        actions.append(UnhideThreadModerationAction)
+    else:
+        actions.append(HideThreadModerationAction)
+
     return actions + [
         MoveThreadModerationAction,
         DeleteThreadModerationAction,
@@ -99,6 +107,11 @@ def _get_private_thread_moderation_actions_action(
     else:
         actions.append(LockThreadModerationAction)
 
+    if thread.is_hidden:
+        actions.append(UnhideThreadModerationAction)
+    else:
+        actions.append(HideThreadModerationAction)
+
     return actions + [
         DeleteThreadModerationAction,
     ]
@@ -109,24 +122,22 @@ class PinEverywhereThreadModerationAction(ThreadModerationAction):
     button_label = pgettext_lazy("thread moderation button label", "Pin everywhere")
 
     def execute(self) -> ModerationActionResult:
+        request = self.request
         thread = self.thread
 
         set_thread_has_updates(thread, commit=False)
-        pin_thread(thread, everywhere=True, request=self.request)
+        pin_thread(thread, everywhere=True, request=request)
 
         thread_update = create_pinned_everywhere_thread_update(
-            thread, self.request.user, request=self.request
+            thread, request.user, request=request
         )
 
         messages.success(
-            self.request,
+            request,
             pgettext("thread moderation success", "Thread pinned everywhere"),
         )
 
-        return ModerationActionResult(
-            updated_items=[thread.id],
-            thread_updates=[thread_update],
-        )
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
 
 
 class PinCategoryThreadModerationAction(ThreadModerationAction):
@@ -134,24 +145,22 @@ class PinCategoryThreadModerationAction(ThreadModerationAction):
     button_label = pgettext_lazy("thread moderation button label", "Pin in category")
 
     def execute(self) -> ModerationActionResult:
+        request = self.request
         thread = self.thread
 
         set_thread_has_updates(thread, commit=False)
-        pin_thread(thread, everywhere=False, request=self.request)
+        pin_thread(thread, everywhere=False, request=request)
 
         thread_update = create_pinned_category_thread_update(
-            thread, self.request.user, request=self.request
+            thread, request.user, request=request
         )
 
         messages.success(
-            self.request,
+            request,
             pgettext("thread moderation success", "Thread pinned in category"),
         )
 
-        return ModerationActionResult(
-            updated_items=[thread.id],
-            thread_updates=[thread_update],
-        )
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
 
 
 class UnpinThreadModerationAction(ThreadModerationAction):
@@ -159,24 +168,22 @@ class UnpinThreadModerationAction(ThreadModerationAction):
     button_label = pgettext_lazy("thread moderation button label", "Unpin")
 
     def execute(self) -> ModerationActionResult:
+        request = self.request
         thread = self.thread
 
         set_thread_has_updates(thread, commit=False)
-        unpin_thread(thread, request=self.request)
+        unpin_thread(thread, request=request)
 
         thread_update = create_unpinned_thread_update(
-            thread, self.request.user, request=self.request
+            thread, request.user, request=request
         )
 
         messages.success(
-            self.request,
+            request,
             pgettext("thread moderation success", "Thread unpinned"),
         )
 
-        return ModerationActionResult(
-            updated_items=[thread.id],
-            thread_updates=[thread_update],
-        )
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
 
 
 class LockThreadModerationAction(ThreadModerationAction):
@@ -184,24 +191,22 @@ class LockThreadModerationAction(ThreadModerationAction):
     button_label = pgettext_lazy("thread moderation button label", "Lock")
 
     def execute(self) -> ModerationActionResult:
+        request = self.request
         thread = self.thread
 
         set_thread_has_updates(thread, commit=False)
-        lock_thread(thread, request=self.request)
+        lock_thread(thread, request=request)
 
         thread_update = create_locked_thread_update(
-            thread, self.request.user, request=self.request
+            thread, request.user, request=request
         )
 
         messages.success(
-            self.request,
+            request,
             pgettext("thread moderation success", "Thread locked"),
         )
 
-        return ModerationActionResult(
-            updated_items=[thread.id],
-            thread_updates=[thread_update],
-        )
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
 
 
 class UnlockThreadModerationAction(ThreadModerationAction):
@@ -209,23 +214,75 @@ class UnlockThreadModerationAction(ThreadModerationAction):
     button_label = pgettext_lazy("thread moderation button label", "Unlock")
 
     def execute(self) -> ModerationActionResult:
+        request = self.request
         thread = self.thread
 
         set_thread_has_updates(thread, commit=False)
-        unlock_thread(thread, request=self.request)
+        unlock_thread(thread, request=request)
 
         thread_update = create_unlocked_thread_update(
-            thread, self.request.user, request=self.request
+            thread, request.user, request=request
+        )
+
+        messages.success(
+            request,
+            pgettext("thread moderation success", "Thread unlocked"),
+        )
+
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
+
+
+class HideThreadModerationAction(FormMixin, ThreadModerationAction):
+    id = "hide"
+    full_name = pgettext_lazy("thread moderation action name", "Hide thread")
+    button_label = pgettext_lazy("thread moderation button label", "Hide")
+    form_class = HideForm
+    template_name = "misago/moderation/hide.html"
+
+    def form_valid(self, form) -> ModerationActionResult:
+        request = self.request
+        thread = self.thread
+
+        set_thread_has_updates(thread, commit=False)
+        hide_thread(
+            thread, request.user, form.cleaned_data["hidden_reason"], request=request
+        )
+
+        thread_update = create_hidden_thread_update(
+            thread, request.user, request=request
+        )
+
+        synchronize_categories.delay([thread.category_id])
+
+        messages.success(
+            self.request,
+            pgettext("thread moderation success", "Thread hidden"),
+        )
+
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
+
+
+class UnhideThreadModerationAction(ThreadModerationAction):
+    id = "unhide"
+    button_label = pgettext_lazy("thread moderation button label", "Unhide")
+
+    def execute(self) -> ModerationActionResult:
+        request = self.request
+        thread = self.thread
+
+        set_thread_has_updates(thread, commit=False)
+        unhide_thread(thread, request=request)
+
+        thread_update = create_unhidden_thread_update(
+            thread, request.user, request=request
         )
 
         messages.success(
             self.request,
-            pgettext("thread moderation success", "Thread unlocked"),
+            pgettext("thread moderation success", "Thread unhidden"),
         )
 
-        return ModerationActionResult(
-            updated_items=[thread.id], thread_updates=[thread_update]
-        )
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
 
 
 class MoveThreadModerationAction(FormMixin, ThreadModerationAction):

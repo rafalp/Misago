@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<div class="form-group">
+  {% with field=form.hidden_reason %}
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Reason for hiding:" context "moderation hide form" %}
+    </label>
+    <input class="form-control" type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" maxlength="{{ field.maxlength }}">
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+    <p class="help-block">
+      {% translate "Short explanation for why this content was hidden. Optional." context "moderation hide form" %}
+    </p>
+  {% endwith %}
+</div>
