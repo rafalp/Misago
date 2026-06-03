@@ -241,7 +241,7 @@ def test_hidden_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Hid thread")
+    assert_contains(response, "Hidden thread")
 
 
 def test_unhidden_thread_update(client, thread, user):
@@ -253,7 +253,7 @@ def test_unhidden_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Unhid thread")
+    assert_contains(response, "Unhidden thread")
 
 
 def test_changed_title_thread_update(client, thread, user):
