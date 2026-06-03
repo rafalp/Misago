@@ -81,7 +81,14 @@ def _get_category_threads_moderation_actions_action(
     if not user_permissions.is_category_moderator(category.id):
         return []
 
-    return [
+    actions = []
+
+    if user_permissions.is_global_moderator:
+        actions.append(PinEverywhereThreadsModerationAction)
+
+    return actions + [
+        PinCategoryThreadsModerationAction,
+        UnpinThreadsModerationAction,
         LockThreadsModerationAction,
         UnlockThreadsModerationAction,
         MoveThreadsModerationAction,
@@ -177,7 +184,7 @@ class UnpinThreadsModerationAction(ThreadsModerationAction):
         )
 
     def execute(self) -> ModerationActionResult:
-        valid_threads = [thread for thread in self.threads if not thread.pinned]
+        valid_threads = [thread for thread in self.threads if thread.pinned]
 
         for thread in valid_threads:
             set_thread_has_updates(thread, commit=False)
