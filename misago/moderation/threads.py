@@ -119,7 +119,7 @@ class PinEverywhereThreadsModerationAction(ThreadsModerationAction):
 
         messages.success(
             self.request,
-            pgettext("threads moderation success", "Threads pinned"),
+            pgettext("threads moderation success", "Threads pinned everywhere"),
         )
 
         return ModerationActionResult(
@@ -155,7 +155,7 @@ class PinCategoryThreadsModerationAction(ThreadsModerationAction):
 
         messages.success(
             self.request,
-            pgettext("threads moderation success", "Threads pinned"),
+            pgettext("threads moderation success", "Threads pinned in category"),
         )
 
         return ModerationActionResult(
@@ -181,7 +181,7 @@ class UnpinThreadsModerationAction(ThreadsModerationAction):
 
         for thread in valid_threads:
             set_thread_has_updates(thread, commit=False)
-            pin_thread(thread, everywhere=True, request=self.request)
+            unpin_thread(thread, request=self.request)
 
             create_unpinned_thread_update(
                 thread, self.request.user, request=self.request
