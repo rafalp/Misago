@@ -87,6 +87,7 @@ class DetailView(GenericThreadView):
 
     status_bars_template_name: str = "misago/thread/status_bars.html"
     locked_thread_status_bar_template_name: str = "misago/thread/locked_thread.html"
+    hidden_thread_status_bar_template_name: str = "misago/thread/hidden_thread.html"
     unapproved_thread_status_bar_template_name: str = (
         "misago/thread/unapproved_thread.html"
     )
@@ -426,7 +427,7 @@ class DetailView(GenericThreadView):
             ),
             "header": self.get_header_data(request, thread, shared_context),
             "footer": self.get_footer_data(request, thread, shared_context),
-            "status_bars": self.get_thread_status_bars_data(request, thread),
+            "status_bars": self.get_thread_status_bars(request, thread),
             "extra_components": [],
         }
 
@@ -462,7 +463,7 @@ class DetailView(GenericThreadView):
             "starter_is_current_user": starter_is_current_user,
             "header": self.get_header_data(request, thread, shared_context),
             "footer": self.get_footer_data(request, thread, shared_context),
-            "status_bars": self.get_thread_status_bars_data(request, thread),
+            "status_bars": self.get_thread_status_bars(request, thread),
             "thread": thread,
             "thread_url": self.get_thread_url(thread),
             "watch_thread": self.get_watch_thread_data(request, thread),
@@ -528,20 +529,23 @@ class DetailView(GenericThreadView):
 
         return final_context
 
-    def get_thread_status_bars_data(self, request: HttpRequest, thread: Thread) -> dict:
+    def get_thread_status_bars(self, request: HttpRequest, thread: Thread) -> dict:
         items = []
 
         if thread.is_locked:
-            items.append(self.get_locked_thread_status_bar_data())
+            items.append(self.get_locked_thread_status_bar())
+
+        if thread.is_hidden:
+            items.append(self.get_hidden_thread_status_bar(thread))
 
         if thread.is_unapproved:
-            items.append(self.get_unapproved_thread_status_bar_data())
+            items.append(self.get_unapproved_thread_status_bar())
 
         if (
             request.user_permissions.is_category_moderator(thread.category_id)
             and thread.has_unapproved_posts
         ):
-            items.append(self.get_unapproved_posts_status_bar_data(thread))
+            items.append(self.get_unapproved_posts_status_bar(thread))
 
         return {
             "id": "status_bars",
@@ -549,19 +553,30 @@ class DetailView(GenericThreadView):
             "items": items,
         }
 
-    def get_locked_thread_status_bar_data(self) -> dict:
+    def get_locked_thread_status_bar(self) -> dict:
         return {
             "id": "locked_thread",
             "template_name": self.locked_thread_status_bar_template_name,
         }
 
-    def get_unapproved_thread_status_bar_data(self) -> dict:
+    def get_hidden_thread_status_bar(self, thread: Thread) -> dict:
+        return {
+            "id": "hidden_thread",
+            "template_name": self.hidden_thread_status_bar_template_name,
+            "hidden_at": thread.hidden_at,
+            "hidden_by_id": thread.hidden_by_id,
+            "hidden_by_name": thread.hidden_by_name,
+            "hidden_by_slug": thread.hidden_by_slug,
+            "hidden_reason": thread.hidden_reason,
+        }
+
+    def get_unapproved_thread_status_bar(self) -> dict:
         return {
             "id": "unapproved_thread",
             "template_name": self.unapproved_thread_status_bar_template_name,
         }
 
-    def get_unapproved_posts_status_bar_data(self, thread: Thread) -> dict:
+    def get_unapproved_posts_status_bar(self, thread: Thread) -> dict:
         return {
             "id": "unapproved_posts",
             "template_name": self.unapproved_posts_status_bar_template_name,

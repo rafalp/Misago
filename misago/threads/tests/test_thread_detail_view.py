@@ -1,4 +1,5 @@
 from django.urls import reverse
+from django.utils import timezone
 
 from ...notifications.threads import watch_thread
 from ...permissions.enums import CategoryPermission
@@ -1110,6 +1111,284 @@ def test_thread_detail_view_shows_locked_user_thread_to_moderator(
     assert_contains(response, "This thread is locked.")
 
 
+def test_thread_detail_view_shows_hidden_deleted_user_thread_to_moderator(
+    moderator_client, thread
+):
+    thread.is_hidden = True
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+
+
+def test_thread_detail_view_shows_hidden_user_thread_to_moderator(
+    moderator_client, user_thread
+):
+    user_thread.is_hidden = True
+    user_thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+
+
+def test_thread_detail_view_shows_hidden_thread_with_hidden_at_timestamp_to_moderator(
+    moderator_client, thread
+):
+    thread.is_hidden = True
+    thread.hidden_at = timezone.now()
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+
+
+def test_thread_detail_view_shows_hidden_thread_with_hidden_at_timestamp_with_reason_to_moderator(
+    moderator_client, thread
+):
+    thread.is_hidden = True
+    thread.hidden_at = timezone.now()
+    thread.hidden_reason = "Lorem ipsum"
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
+def test_thread_detail_view_shows_hidden_by_deleted_user_thread_with_hidden_at_timestamp_to_moderator(
+    moderator_client, thread
+):
+    thread.is_hidden = True
+    thread.hidden_at = timezone.now()
+    thread.hidden_by_name = "DeletedUser"
+    thread.hidden_by_slug = "deleteduser"
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+
+
+def test_thread_detail_view_shows_hidden_by_user_thread_with_hidden_at_timestamp_to_moderator(
+    moderator_client, thread, other_user
+):
+    thread.is_hidden = True
+    thread.hidden_at = timezone.now()
+    thread.hidden_by = other_user
+    thread.hidden_by_name = other_user.username
+    thread.hidden_by_slug = other_user.slug
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+
+
+def test_thread_detail_view_shows_hidden_by_deleted_user_thread_with_hidden_at_timestamp_and_reason_to_moderator(
+    moderator_client, thread
+):
+    thread.is_hidden = True
+    thread.hidden_at = timezone.now()
+    thread.hidden_by_name = "DeletedUser"
+    thread.hidden_by_slug = "deleteduser"
+    thread.hidden_reason = "Lorem ipsum"
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "DeletedUser")
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
+def test_thread_detail_view_shows_hidden_by_user_thread_with_hidden_at_timestamp_and_reason_to_moderator(
+    moderator_client, thread, other_user
+):
+    thread.is_hidden = True
+    thread.hidden_at = timezone.now()
+    thread.hidden_by = other_user
+    thread.hidden_by_name = other_user.username
+    thread.hidden_by_slug = other_user.slug
+    thread.hidden_reason = "Lorem ipsum"
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
+def test_thread_detail_view_shows_hidden_by_deleted_user_thread_to_moderator(
+    moderator_client, thread
+):
+    thread.is_hidden = True
+    thread.hidden_by_name = "DeletedUser"
+    thread.hidden_by_slug = "deleteduser"
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "DeletedUser")
+
+
+def test_thread_detail_view_shows_hidden_by_user_thread_to_moderator(
+    moderator_client, thread, other_user
+):
+    thread.is_hidden = True
+    thread.hidden_by = other_user
+    thread.hidden_by_name = other_user.username
+    thread.hidden_by_slug = other_user.slug
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+    assert_contains(response, other_user.username)
+
+
+def test_thread_detail_view_shows_hidden_by_deleted_user_thread_with_reason_to_moderator(
+    moderator_client, thread
+):
+    thread.is_hidden = True
+    thread.hidden_by_name = "DeletedUser"
+    thread.hidden_by_slug = "deleteduser"
+    thread.hidden_reason = "Lorem ipsum"
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "DeletedUser")
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
+def test_thread_detail_view_shows_hidden_by_user_thread_with_reason_to_moderator(
+    moderator_client, thread, other_user
+):
+    thread.is_hidden = True
+    thread.hidden_by = other_user
+    thread.hidden_by_name = other_user.username
+    thread.hidden_by_slug = other_user.slug
+    thread.hidden_reason = "Lorem ipsum"
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
+def test_thread_detail_view_shows_hidden_thread_with_reason_to_moderator(
+    moderator_client, thread
+):
+    thread.is_hidden = True
+    thread.hidden_reason = "Lorem ipsum"
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
 def test_thread_detail_view_shows_unapproved_deleted_user_thread_to_moderator(
     moderator_client, thread
 ):
@@ -1125,7 +1404,7 @@ def test_thread_detail_view_shows_unapproved_deleted_user_thread_to_moderator(
             },
         )
     )
-    assert_contains(response, "thread requires moderator approval")
+    assert_contains(response, "Thread requires moderator approval")
 
 
 def test_thread_detail_view_shows_unapproved_user_thread_to_starter(
@@ -1143,7 +1422,25 @@ def test_thread_detail_view_shows_unapproved_user_thread_to_starter(
             },
         )
     )
-    assert_contains(response, "thread requires moderator approval")
+    assert_contains(response, "Thread requires moderator approval")
+
+
+def test_thread_detail_view_shows_unapproved_user_thread_to_moderator(
+    moderator_client, user_thread
+):
+    user_thread.is_unapproved = True
+    user_thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": user_thread.id,
+                "slug": user_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Thread requires moderator approval")
 
 
 def test_thread_detail_view_shows_unapproved_posts_status_bar_to_moderator(
