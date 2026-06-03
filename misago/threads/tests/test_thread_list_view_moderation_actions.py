@@ -307,6 +307,7 @@ def test_thread_list_view_hide_moderation_action_hides_threads(
     assert thread.hidden_by_name == moderator.username
     assert thread.hidden_by_slug == moderator.slug
     assert thread.hidden_reason == "Lorem ipsum"
+    assert thread.has_updates
 
     ThreadUpdate.objects.get(
         thread=thread,
@@ -353,6 +354,7 @@ def test_thread_list_view_unhide_moderation_action_unhides_threads(
     assert thread.hidden_by_name is None
     assert thread.hidden_by_slug is None
     assert thread.hidden_reason is None
+    assert thread.has_updates
 
     ThreadUpdate.objects.get(
         thread=thread,

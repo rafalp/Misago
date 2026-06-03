@@ -277,6 +277,8 @@ class UnhideThreadModerationAction(ThreadModerationAction):
             thread, request.user, request=request
         )
 
+        synchronize_categories.delay([thread.category_id])
+
         messages.success(
             self.request,
             pgettext("thread moderation success", "Thread unhidden"),
