@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "last_editor_slug",
-                    models.SlugField(max_length=255, null=True, blank=True),
+                    models.CharField(max_length=255, null=True, blank=True),
                 ),
                 (
                     "hidden_by",
@@ -59,7 +59,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "hidden_by_slug",
-                    models.SlugField(max_length=255, null=True, blank=True),
+                    models.CharField(max_length=255, null=True, blank=True),
                 ),
                 ("hidden_on", models.DateTimeField(default=django.utils.timezone.now)),
                 ("has_reports", models.BooleanField(default=False)),

@@ -48,7 +48,7 @@ class Post(PluginDataModel):
         related_name="+",
     )
     last_editor_name = models.CharField(max_length=255, null=True, blank=True)
-    last_editor_slug = models.SlugField(max_length=255, null=True, blank=True)
+    last_editor_slug = models.CharField(max_length=255, null=True, blank=True)
     last_edit_reason = models.CharField(max_length=255, null=True, blank=True)
 
     hidden_by = models.ForeignKey(
@@ -59,7 +59,7 @@ class Post(PluginDataModel):
         related_name="+",
     )
     hidden_by_name = models.CharField(max_length=255, null=True, blank=True)
-    hidden_by_slug = models.SlugField(max_length=255, null=True, blank=True)
+    hidden_by_slug = models.CharField(max_length=255, null=True, blank=True)
 
     has_reports = models.BooleanField(default=False)
     has_open_reports = models.BooleanField(default=False)
