@@ -51,7 +51,7 @@ def test_mutable_fields_serialized_exclude_fields(thread_factory, default_catego
     removed_fields = list(set(Serializer.Meta.fields) - set(kept_fields))
 
     serializer = Serializer.exclude_fields(*removed_fields)
-    assert serializer.__name__ == "SerializerIdTitleWeightSubset"
+    assert serializer.__name__ == "SerializerIdTitlePinnedSubset"
     assert serializer.Meta.fields == kept_fields
     assert Serializer.Meta.fields != serializer.Meta.fields
 
