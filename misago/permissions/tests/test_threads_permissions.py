@@ -277,7 +277,7 @@ def test_check_edit_thread_permission_fails_if_user_has_no_start_permission(
 def test_check_edit_thread_permission_fails_if_user_has_no_edit_permission(
     user, user_thread, cache_versions, default_category
 ):
-    user.group.can_edit_own_threads = False
+    user.group.can_edit_own_threads = PermissionValue.NEVER
     user.group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)

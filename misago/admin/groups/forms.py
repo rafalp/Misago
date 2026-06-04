@@ -119,7 +119,7 @@ class EditGroupForm(forms.ModelForm):
 
     # Permissions
 
-    can_edit_own_threads = YesNoField(
+    can_edit_own_threads = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can edit own threads"),
     )
     own_threads_edit_time_limit = forms.IntegerField(

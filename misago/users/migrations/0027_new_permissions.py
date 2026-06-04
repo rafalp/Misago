@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ("is_hidden", models.BooleanField(default=False)),
                 ("is_default", models.BooleanField(default=False)),
                 ("ordering", models.PositiveIntegerField(default=0)),
-                ("can_edit_own_threads", models.BooleanField(default=False)),
+                ("can_edit_own_threads", models.PositiveIntegerField(default=0)),
                 ("own_threads_edit_time_limit", models.PositiveIntegerField(default=0)),
                 ("can_edit_own_posts", models.PositiveIntegerField(default=0)),
                 ("own_posts_edit_time_limit", models.PositiveIntegerField(default=0)),
