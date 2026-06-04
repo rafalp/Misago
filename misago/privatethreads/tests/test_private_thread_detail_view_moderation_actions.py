@@ -172,3 +172,52 @@ def test_private_thread_detail_view_executes_unhide_thread_moderation_action(
     mock_synchronize_categories.delay.assert_called_once_with(
         [user_private_thread.category_id]
     )
+
+
+def test_private_thread_detail_view_executes_approve_thread_moderation_action(
+    mocker,
+    moderator_client,
+    user,
+    other_user,
+    moderator,
+    user_private_thread,
+    mock_synchronize_categories,
+):
+    mock_notify_on_new_private_thread = mocker.patch(
+        "misago.moderation.thread.notify_on_new_private_thread"
+    )
+
+    user_private_thread.is_unapproved = True
+    user_private_thread.save()
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"thread_moderation": "approve"},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    )
+
+    user_private_thread.refresh_from_db()
+    assert not user_private_thread.is_unapproved
+    assert user_private_thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=user_private_thread,
+        action=ThreadUpdateActionName.APPROVED,
+    )
+
+    mock_synchronize_categories.delay.assert_called_once_with(
+        [user_private_thread.category_id]
+    )
+    mock_notify_on_new_private_thread.delay.assert_called_once_with(
+        user.id, user_private_thread.id, [other_user.id, moderator.id]
+    )
