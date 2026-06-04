@@ -8,7 +8,7 @@ from ..attachments import (
     check_delete_attachment_permission,
     check_download_attachment_permission,
 )
-from ..enums import CanUploadAttachments, CategoryPermission
+from ..enums import CanUploadAttachments, CategoryPermission, PermissionValue
 from ..models import CategoryGroupPermission, Moderator
 from ..proxy import UserPermissionsProxy
 
@@ -259,7 +259,7 @@ def test_check_download_attachment_permission_fails_user_without_private_threads
     text_attachment.associate_with_post(user_private_thread.first_post)
     text_attachment.save()
 
-    members_group.can_use_private_threads = False
+    members_group.can_use_private_threads = PermissionValue.NO
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)

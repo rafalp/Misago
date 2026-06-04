@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from ...permissions.enums import CategoryPermission
+from ...permissions.enums import CategoryPermission, PermissionValue
 from ...permissions.models import CategoryGroupPermission
 
 
@@ -42,7 +42,7 @@ def test_post_view_returns_error_404_if_user_cant_see_thread_post(
 def test_post_view_returns_error_404_if_user_cant_use_private_threads(
     thread_reply_factory, user_client, members_group, user_private_thread
 ):
-    members_group.can_use_private_threads = False
+    members_group.can_use_private_threads = PermissionValue.NO
     members_group.save()
 
     reply = thread_reply_factory(user_private_thread)
