@@ -76,7 +76,7 @@ PERMISSION_RULES = {
     "can_use_private_threads": any,
     "can_start_private_threads": any,
     "private_thread_members_limit": max,
-    "can_edit_own_threads": any,
+    "can_edit_own_threads": yes_no_never,
     "own_threads_edit_time_limit": zero_or_greater,
     "can_edit_own_posts": yes_no_never,
     "own_posts_edit_time_limit": zero_or_greater,
@@ -181,7 +181,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
             group.private_thread_members_limit
         )
         groups_permissions["can_edit_own_threads"].add(group.can_edit_own_threads)
-        if group.can_edit_own_threads:
+        if group.can_edit_own_threads == PermissionValue.YES:
             groups_permissions["own_threads_edit_time_limit"].add(
                 group.own_threads_edit_time_limit
             )

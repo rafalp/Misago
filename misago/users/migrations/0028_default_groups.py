@@ -32,7 +32,7 @@ def create_default_groups(apps, schema_editor):
                 is_page=True,
                 ordering=0,
                 # Permissions
-                can_edit_own_threads=True,
+                can_edit_own_threads=PermissionValue.YES,
                 own_threads_edit_time_limit=0,
                 can_edit_own_posts=PermissionValue.YES,
                 own_posts_edit_time_limit=0,
@@ -75,7 +75,7 @@ def create_default_groups(apps, schema_editor):
                 is_page=True,
                 ordering=1,
                 # Permissions
-                can_edit_own_threads=True,
+                can_edit_own_threads=PermissionValue.YES,
                 own_threads_edit_time_limit=0,
                 can_edit_own_posts=PermissionValue.YES,
                 own_posts_edit_time_limit=0,
@@ -115,7 +115,7 @@ def create_default_groups(apps, schema_editor):
                 is_default=True,
                 ordering=2,
                 # Permissions
-                can_edit_own_threads=True,
+                can_edit_own_threads=PermissionValue.YES,
                 own_threads_edit_time_limit=0,
                 can_edit_own_posts=PermissionValue.YES,
                 own_posts_edit_time_limit=0,

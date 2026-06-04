@@ -268,7 +268,7 @@ def test_check_edit_private_thread_permission_passes_if_user_is_poster_in_time_l
 def test_check_edit_private_thread_permission_fails_if_user_has_no_edit_permission(
     user, user_private_thread, cache_versions
 ):
-    user.group.can_edit_own_threads = False
+    user.group.can_edit_own_threads = PermissionValue.NO
     user.group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -280,7 +280,7 @@ def test_check_edit_private_thread_permission_fails_if_user_has_no_edit_permissi
 def test_check_edit_private_thread_permission_fails_if_user_is_not_thread_owner(
     user, other_user_private_thread, cache_versions
 ):
-    user.group.can_edit_own_threads = False
+    user.group.can_edit_own_threads = PermissionValue.NO
     user.group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
