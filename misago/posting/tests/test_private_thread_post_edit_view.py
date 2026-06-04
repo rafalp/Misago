@@ -42,7 +42,7 @@ def test_private_thread_post_edit_view_shows_error_403_to_users_without_private_
 ):
     post = thread_reply_factory(other_user_private_thread)
 
-    members_group.can_use_private_threads = False
+    members_group.can_use_private_threads = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(

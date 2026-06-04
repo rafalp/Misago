@@ -197,7 +197,7 @@ class EditGroupForm(forms.ModelForm):
         ),
     )
 
-    can_use_private_threads = YesNoField(
+    can_use_private_threads = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can use private threads"),
     )
     can_start_private_threads = YesNoField(

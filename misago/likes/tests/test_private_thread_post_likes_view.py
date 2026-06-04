@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from ...permissions.enums import CanSeePostLikes
+from ...permissions.enums import CanSeePostLikes, PermissionValue
 from ...test import assert_contains, assert_not_contains
 from ..like import like_post
 
@@ -269,7 +269,7 @@ def test_private_thread_post_likes_view_displays_last_page_from_out_of_range_las
 def test_private_thread_post_likes_view_returns_error_403_if_user_has_no_private_threads_permission(
     user_client, members_group, user_private_thread
 ):
-    members_group.can_use_private_threads = False
+    members_group.can_use_private_threads = PermissionValue.NO
     members_group.save()
 
     post = user_private_thread.first_post

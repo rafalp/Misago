@@ -429,7 +429,7 @@ def test_check_private_threads_permission_passes_if_user_has_permission(
 def test_check_private_threads_permission_fails_if_user_has_no_permission(
     user, members_group, cache_versions
 ):
-    members_group.can_use_private_threads = False
+    members_group.can_use_private_threads = PermissionValue.NO
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)

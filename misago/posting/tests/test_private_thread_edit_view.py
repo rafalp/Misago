@@ -39,7 +39,7 @@ def test_private_thread_edit_view_displays_login_required_page_to_anonymous_user
 def test_private_thread_edit_view_shows_error_403_to_users_without_private_threads_permission(
     user_client, members_group, user_private_thread
 ):
-    members_group.can_use_private_threads = False
+    members_group.can_use_private_threads = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(

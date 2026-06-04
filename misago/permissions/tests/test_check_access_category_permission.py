@@ -2,7 +2,7 @@ import pytest
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
-from ..enums import CategoryPermission
+from ..enums import CategoryPermission, PermissionValue
 from ..generic import check_access_category_permission
 from ..models import CategoryGroupPermission
 from ..proxy import UserPermissionsProxy
@@ -38,7 +38,7 @@ def test_check_access_category_permission_passes_user_with_permission_to_use_pri
 def test_check_access_category_permission_fails_user_without_private_threads_permission(
     user, members_group, cache_versions, private_threads_category
 ):
-    members_group.can_use_private_threads = False
+    members_group.can_use_private_threads = PermissionValue.NO
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
