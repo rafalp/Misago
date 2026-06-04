@@ -36,6 +36,23 @@ class ModerationActionResult:
     deleted_items: set[int] = field(default_factory=set)
     thread_updates: list[ThreadUpdate] = field(default_factory=list)
 
+    @classmethod
+    def from_updated_thread(
+        cls, thread: Thread, thread_update: ThreadUpdate | None
+    ) -> "ModerationActionResult":
+        if thread_update:
+            return cls(updated_items=[thread.id], thread_updates=[thread_update])
+
+        return cls(updated_items=[thread.id])
+
+    @classmethod
+    def from_updated_threads(cls, threads: list[Thread]) -> "ModerationActionResult":
+        return cls(updated_items=[thread.id for thread in threads])
+
+    @classmethod
+    def from_deleted_threads(cls, threads: list[Thread]) -> "ModerationActionResult":
+        return cls(deleted_items=[thread.id for thread in threads])
+
 
 @dataclass(frozen=True)
 class ModerationActionTemplateResult(ModerationActionResult):

@@ -18,8 +18,8 @@ class ThreadUpdateActionName(StrEnum):
     MERGED = "merged"
     SPLIT = "split"
 
-    HID = "hid"
-    UNHID = "unhid"
+    HIDDEN = "hidden"
+    UNHIDDEN = "unhidden"
 
     CHANGED_TITLE = "changed_title"
 

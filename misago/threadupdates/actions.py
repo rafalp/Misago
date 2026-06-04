@@ -173,17 +173,17 @@ class SplitThreadUpdateAction(ThreadContextThreadUpdateAction):
 
 
 @thread_updates_renderer.register_action
-class HidThreadUpdateAction(ThreadUpdateAction):
-    action = ThreadUpdateActionName.HID
+class HiddenThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.HIDDEN
     icon = "visibility_off"
-    description = pgettext_lazy("thread update action description", "Hid thread")
+    description = pgettext_lazy("thread update action description", "Hidden thread")
 
 
 @thread_updates_renderer.register_action
-class UnhidThreadUpdateAction(ThreadUpdateAction):
-    action = ThreadUpdateActionName.UNHID
+class UnhiddenThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.UNHIDDEN
     icon = "visibility"
-    description = pgettext_lazy("thread update action description", "Unhid thread")
+    description = pgettext_lazy("thread update action description", "Unhidden thread")
 
 
 @thread_updates_renderer.register_action

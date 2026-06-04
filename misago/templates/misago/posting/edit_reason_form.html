@@ -9,6 +9,8 @@
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}
-    <p class="help-block">{% translate "Short explanation of why this post was edited. Optional." context "posting edit reason form" %}</p>
+    <p class="help-block">
+      {% translate "Short explanation of why this post was edited. Optional." context "posting edit reason form" %}
+    </p>
   </div>
 {% endwith %}

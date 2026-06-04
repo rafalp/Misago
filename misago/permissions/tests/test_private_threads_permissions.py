@@ -575,6 +575,46 @@ def test_check_see_private_thread_permission_fails_if_user_is_not_thread_member(
         check_see_private_thread_permission(permissions, thread)
 
 
+def test_check_see_private_thread_permission_fails_user_if_thread_is_hidden(
+    user, cache_versions, thread
+):
+    thread.is_hidden = True
+    thread.save()
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_see_private_thread_permission(permissions, thread)
+
+
+def test_check_see_private_thread_permission_passes_user_if_their_thread_is_unapproved(
+    user, cache_versions, user_thread
+):
+    user_thread.is_unapproved = True
+    user_thread.save()
+
+    PrivateThreadMember.objects.create(thread=user_thread, user=user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    check_see_private_thread_permission(permissions, user_thread)
+
+
+def test_check_see_private_thread_permission_fails_user_if_other_user_thread_is_unapproved(
+    user, cache_versions, thread
+):
+    thread.is_unapproved = True
+    thread.save()
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(Http404):
+        check_see_private_thread_permission(permissions, thread)
+
+
 def test_check_see_private_thread_permission_passes_if_moderator_has_permission(
     moderator, cache_versions, thread
 ):
@@ -591,6 +631,18 @@ def test_check_see_private_thread_permission_fails_if_moderator_is_not_thread_me
 
     with pytest.raises(Http404):
         check_see_private_thread_permission(permissions, thread)
+
+
+def test_check_see_private_thread_permission_passes_for_moderator_if_thread_is_hidden(
+    moderator, user, cache_versions, thread
+):
+    thread.is_hidden = True
+    thread.save()
+
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    check_see_private_thread_permission(permissions, thread)
 
 
 def test_check_see_private_thread_permission_passes_for_moderator_if_thread_is_unapproved(
@@ -991,6 +1043,47 @@ def test_filter_private_threads_queryset_excludes_thread_moderator_is_not_member
         permissions, private_threads_category.thread_set
     )
     assert not queryset.exists()
+
+
+def test_filter_private_threads_queryset_excludes_hidden_thread_started_by_user(
+    thread_factory, private_threads_category, user, cache_versions
+):
+    thread = thread_factory(private_threads_category, starter=user, is_hidden=True)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert not queryset.exists()
+
+
+def test_filter_private_threads_queryset_excludes_hidden_thread_started_by_other_user(
+    thread_factory, private_threads_category, user, other_user, cache_versions
+):
+    thread = thread_factory(
+        private_threads_category, starter=other_user, is_hidden=True
+    )
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert not queryset.exists()
+
+
+def test_filter_private_threads_queryset_shows_hidden_thread_to_moderator(
+    thread_factory, private_threads_category, moderator, user, cache_versions
+):
+    thread = thread_factory(private_threads_category, starter=user, is_hidden=True)
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+
+    permissions = UserPermissionsProxy(moderator, cache_versions)
+    queryset = filter_private_threads_queryset(
+        permissions, private_threads_category.thread_set
+    )
+    assert queryset.exists()
 
 
 def test_filter_private_threads_queryset_shows_unapproved_thread_to_thread_starter(

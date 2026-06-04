@@ -39,7 +39,7 @@ class ThreadModerationForm(PostingForm):
             lock_thread(state.thread, commit=False, request=self.request)
 
         if self.cleaned_data["is_hidden"]:
-            hide_thread(state.thread, commit=False, request=self.request)
+            hide_thread(state.thread, state.user, commit=False, request=self.request)
 
         if (
             self.cleaned_data.get("pin_in_category")

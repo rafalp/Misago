@@ -272,7 +272,7 @@ def create_split_thread_update(
     )
 
 
-def create_hid_thread_update(
+def create_hidden_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
     is_hidden: bool = False,
@@ -281,7 +281,7 @@ def create_hid_thread_update(
 ) -> ThreadUpdate:
     return create_thread_update(
         thread,
-        ThreadUpdateActionName.HID,
+        ThreadUpdateActionName.HIDDEN,
         actor,
         is_hidden=is_hidden,
         commit=commit,
@@ -289,7 +289,7 @@ def create_hid_thread_update(
     )
 
 
-def create_unhid_thread_update(
+def create_unhidden_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
     is_hidden: bool = False,
@@ -298,7 +298,7 @@ def create_unhid_thread_update(
 ) -> ThreadUpdate:
     return create_thread_update(
         thread,
-        ThreadUpdateActionName.UNHID,
+        ThreadUpdateActionName.UNHIDDEN,
         actor,
         is_hidden=is_hidden,
         commit=commit,

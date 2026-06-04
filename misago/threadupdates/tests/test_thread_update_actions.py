@@ -8,7 +8,7 @@ from ..create import (
     create_changed_title_thread_update,
     create_closed_poll_thread_update,
     create_deleted_poll_thread_update,
-    create_hid_thread_update,
+    create_hidden_thread_update,
     create_joined_thread_update,
     create_left_thread_update,
     create_locked_thread_update,
@@ -22,7 +22,7 @@ from ..create import (
     create_started_poll_thread_update,
     create_test_thread_update,
     create_took_ownership_thread_update,
-    create_unhid_thread_update,
+    create_unhidden_thread_update,
     create_unlocked_thread_update,
     create_unpinned_thread_update,
 )
@@ -232,8 +232,8 @@ def test_split_thread_update_without_context_object(client, thread, user_thread,
     assert_contains(response, user_thread.title)
 
 
-def test_hid_thread_update(client, thread, user):
-    create_hid_thread_update(thread, user)
+def test_hidden_thread_update(client, thread, user):
+    create_hidden_thread_update(thread, user)
 
     thread.has_updates = True
     thread.save()
@@ -241,11 +241,11 @@ def test_hid_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Hid thread")
+    assert_contains(response, "Hidden thread")
 
 
-def test_unhid_thread_update(client, thread, user):
-    create_unhid_thread_update(thread, user)
+def test_unhidden_thread_update(client, thread, user):
+    create_unhidden_thread_update(thread, user)
 
     thread.has_updates = True
     thread.save()
@@ -253,7 +253,7 @@ def test_unhid_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Unhid thread")
+    assert_contains(response, "Unhidden thread")
 
 
 def test_changed_title_thread_update(client, thread, user):

@@ -42,6 +42,15 @@ def get_disabled_category_choices(
     return choices
 
 
+class HideForm(forms.Form):
+    request: HttpRequest
+
+    hidden_reason = forms.CharField(max_length=255, required=False)
+
+    def __init__(self, *args, request: HttpRequest, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
 class MoveThreadForm(forms.Form):
     request: HttpRequest
 
@@ -51,12 +60,7 @@ class MoveThreadForm(forms.Form):
         choices=[],
     )
 
-    def __init__(
-        self,
-        *args,
-        request: HttpRequest,
-        **kwargs,
-    ):
+    def __init__(self, *args, request: HttpRequest, **kwargs):
         self.request = request
 
         super().__init__(*args, **kwargs)
