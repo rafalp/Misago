@@ -223,3 +223,30 @@ def test_thread_detail_view_executes_unhide_thread_moderation_action(
     )
 
     mock_synchronize_categories.delay.assert_called_once_with([thread.category_id])
+
+
+def test_thread_detail_view_executes_approve_thread_moderation_action(
+    moderator_client, thread, mock_synchronize_categories
+):
+    thread.is_unapproved = True
+    thread.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"thread_moderation": "approve"},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert not thread.is_unapproved
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.APPROVED,
+    )
+
+    mock_synchronize_categories.delay.assert_called_once_with([thread.category_id])

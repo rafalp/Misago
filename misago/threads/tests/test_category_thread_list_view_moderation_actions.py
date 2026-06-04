@@ -361,3 +361,43 @@ def test_category_thread_list_view_unhide_moderation_action_validates_threads(
     assert not ThreadUpdate.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
+
+
+def test_category_thread_list_view_approve_moderation_action_approves_threads(
+    thread_factory, moderator_client, default_category, mock_synchronize_categories
+):
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "approve", "threads": [thread.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url()
+
+    thread.refresh_from_db()
+    assert not thread.is_unapproved
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.APPROVED,
+    )
+
+    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
+
+
+def test_category_thread_list_view_approve_moderation_action_validates_threads(
+    thread_factory, moderator_client, default_category, mock_synchronize_categories
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "approve", "threads": [thread.id]},
+    )
+    assert_contains(response, "Threads are already approved.")
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_synchronize_categories.delay.assert_not_called()
