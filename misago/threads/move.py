@@ -1,4 +1,4 @@
-from typing import Iterable, Type
+from typing import Type
 
 from django.db.models import Model
 from django.http import HttpRequest
@@ -9,50 +9,48 @@ from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
 from ..readtracker.models import ReadThread
 from ..threadupdates.models import ThreadUpdate
-from .hooks import move_threads_hook
+from .hooks import move_thread_hook
 from .models import Post, Thread
 
 
-def move_threads(
-    threads: Iterable[Thread] | Thread,
+def move_thread(
+    thread: Thread,
+    new_category: Category,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> bool:
+    return move_thread_hook(_move_thread_action, thread, new_category, commit, request)
+
+
+def _move_thread_action(
+    thread: Thread,
     new_category: Category,
     commit: bool = True,
     request: HttpRequest | None = None,
 ):
-    if isinstance(threads, Thread):
-        threads = [threads]
+    if thread.category_id == new_category.id:
+        return False
 
-    move_threads_hook(_move_threads_action, threads, new_category, commit, request)
+    thread.category = new_category
 
-
-def _move_threads_action(
-    threads: Iterable[Thread],
-    new_category: Category,
-    commit: bool = True,
-    request: HttpRequest | None = None,
-):
-    for thread in threads:
-        thread.category = new_category
+    _update_thread_relation(Attachment, thread, new_category)
+    _update_thread_relation(Notification, thread, new_category)
+    _update_thread_relation(Post, thread, new_category)
+    _update_thread_relation(Poll, thread, new_category)
+    _update_thread_relation(PollVote, thread, new_category)
+    _update_thread_relation(ReadThread, thread, new_category)
+    _update_thread_relation(ThreadUpdate, thread, new_category)
+    _update_thread_relation(WatchedThread, thread, new_category)
 
     if commit:
-        # We skip loop with `thread.save` for performance reasons
-        Thread.objects.filter(
-            id__in=[thread.id for thread in threads],
-        ).update(category=new_category)
+        thread.save()
 
-    _update_threads_relations(Attachment, threads, new_category)
-    _update_threads_relations(Notification, threads, new_category)
-    _update_threads_relations(Post, threads, new_category)
-    _update_threads_relations(Poll, threads, new_category)
-    _update_threads_relations(PollVote, threads, new_category)
-    _update_threads_relations(ReadThread, threads, new_category)
-    _update_threads_relations(ThreadUpdate, threads, new_category)
-    _update_threads_relations(WatchedThread, threads, new_category)
+    return True
 
 
-def _update_threads_relations(
+def _update_thread_relation(
     model: Type[Model],
-    threads: Iterable[Thread],
+    thread: Thread,
     new_category: Category,
 ):
-    model.objects.filter(thread__in=threads).update(category=new_category)
+    model.objects.filter(thread=thread).update(category=new_category)
