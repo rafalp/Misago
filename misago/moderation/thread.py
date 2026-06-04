@@ -4,7 +4,10 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
+from ..notifications.tasks import notify_on_new_private_thread
 from ..permissions.proxy import UserPermissionsProxy
+from ..privatethreads.members import prefetch_private_thread_member_ids
+from ..threads.approve import approve_thread
 from ..threads.delete import delete_thread
 from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
@@ -12,6 +15,7 @@ from ..threads.lock import lock_thread, unlock_thread
 from ..threads.models import Thread
 from ..threads.pin import pin_thread, unpin_thread
 from ..threadupdates.create import (
+    create_approved_thread_update,
     create_hidden_thread_update,
     create_locked_thread_update,
     create_pinned_category_thread_update,
@@ -76,6 +80,9 @@ def _get_thread_moderation_actions_action(
     else:
         actions.append(HideThreadModerationAction)
 
+    if thread.is_unapproved:
+        actions.append(ApproveThreadModerationAction)
+
     return actions + [
         MoveThreadModerationAction,
         DeleteThreadModerationAction,
@@ -111,6 +118,9 @@ def _get_private_thread_moderation_actions_action(
         actions.append(UnhideThreadModerationAction)
     else:
         actions.append(HideThreadModerationAction)
+
+    if thread.is_unapproved:
+        actions.append(ApprovePrivateThreadModerationAction)
 
     return actions + [
         DeleteThreadModerationAction,
@@ -285,6 +295,48 @@ class UnhideThreadModerationAction(ThreadModerationAction):
         )
 
         return ModerationActionResult.from_updated_thread(thread, thread_update)
+
+
+class ApproveThreadModerationAction(ThreadModerationAction):
+    id = "approve"
+    button_label = pgettext_lazy("thread moderation button label", "Approve")
+
+    def execute(self) -> ModerationActionResult:
+        request = self.request
+        thread = self.thread
+
+        set_thread_has_updates(thread, commit=False)
+        approve_thread(thread, request=request)
+
+        thread_update = create_approved_thread_update(
+            thread, request.user, request=request
+        )
+
+        self.send_notifications()
+
+        synchronize_categories.delay([thread.category_id])
+
+        messages.success(
+            self.request,
+            pgettext("thread moderation success", "Thread approved"),
+        )
+
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
+
+    def send_notifications(self):
+        pass
+
+
+class ApprovePrivateThreadModerationAction(ApproveThreadModerationAction):
+    def send_notifications(self):
+        thread = self.thread
+
+        prefetch_private_thread_member_ids([thread])
+        member_ids = thread.private_thread_member_ids
+        if thread.starter_id in member_ids:
+            member_ids.remove(thread.starter_id)
+
+        notify_on_new_private_thread.delay(thread.starter_id, thread.id, member_ids)
 
 
 class MoveThreadModerationAction(FormMixin, ThreadModerationAction):

@@ -6,11 +6,13 @@ from django.utils.translation import pgettext, pgettext_lazy
 from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
 from ..permissions.proxy import UserPermissionsProxy
+from ..threads.approve import approve_thread
 from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
 from ..threads.lock import lock_thread, unlock_thread
 from ..threads.pin import pin_thread, unpin_thread
 from ..threadupdates.create import (
+    create_approved_thread_update,
     create_hidden_thread_update,
     create_locked_thread_update,
     create_pinned_category_thread_update,
@@ -61,6 +63,7 @@ def _get_threads_moderation_actions_action(
         UnlockThreadsModerationAction,
         HideThreadsModerationAction,
         UnhideThreadsModerationAction,
+        ApproveThreadsModerationAction,
         MoveThreadsModerationAction,
         DeleteThreadsModerationAction,
     ]
@@ -99,6 +102,7 @@ def _get_category_threads_moderation_actions_action(
         UnlockThreadsModerationAction,
         HideThreadsModerationAction,
         UnhideThreadsModerationAction,
+        ApproveThreadsModerationAction,
         MoveThreadsModerationAction,
         DeleteThreadsModerationAction,
     ]
@@ -256,7 +260,6 @@ class UnlockThreadsModerationAction(ThreadsModerationAction):
         for thread in threads:
             set_thread_has_updates(thread, commit=False)
             unlock_thread(thread, request=request)
-
             create_unlocked_thread_update(thread, request.user, request=request)
 
         messages.success(
@@ -292,7 +295,6 @@ class HideThreadsModerationAction(FormMixin, ThreadsModerationAction):
         for thread in threads:
             set_thread_has_updates(thread, commit=False)
             hide_thread(thread, request.user, hidden_reason, request=request)
-
             create_hidden_thread_update(thread, request.user, request=request)
 
         synchronize_categories.delay(categories)
@@ -326,7 +328,6 @@ class UnhideThreadsModerationAction(ThreadsModerationAction):
         for thread in threads:
             set_thread_has_updates(thread, commit=False)
             unhide_thread(thread, request=request)
-
             create_unhidden_thread_update(thread, request.user, request=request)
 
         synchronize_categories.delay(categories)
@@ -334,6 +335,40 @@ class UnhideThreadsModerationAction(ThreadsModerationAction):
         messages.success(
             request,
             pgettext("threads moderation success", "Threads unhidden"),
+        )
+
+        return ModerationActionResult.from_updated_threads(threads)
+
+
+class ApproveThreadsModerationAction(ThreadsModerationAction):
+    id = "approve"
+    full_name = pgettext_lazy("threads moderation action name", "Approve threads")
+    button_label = pgettext_lazy("threads moderation button label", "Approve")
+
+    def validate(self):
+        for thread in self.threads:
+            if thread.is_unapproved:
+                return
+
+        raise ValidationError(
+            pgettext("threads moderation validation", "Threads are already approved.")
+        )
+
+    def execute(self) -> ModerationActionResult:
+        request = self.request
+        threads = [thread for thread in self.threads if thread.is_unapproved]
+        categories = list(set(thread.category_id for thread in threads))
+
+        for thread in threads:
+            set_thread_has_updates(thread, commit=False)
+            approve_thread(thread, request=request)
+            create_approved_thread_update(thread, request.user, request=request)
+
+        synchronize_categories.delay(categories)
+
+        messages.success(
+            request,
+            pgettext("threads moderation success", "Threads approved"),
         )
 
         return ModerationActionResult.from_updated_threads(threads)
