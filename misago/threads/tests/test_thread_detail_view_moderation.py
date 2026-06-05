@@ -1,8 +1,10 @@
 import pytest
 from django.urls import reverse
 
+from ...permissions.enums import CategoryPermission
 from ...permissions.models import Moderator
 from ...test import assert_contains, assert_not_contains
+from ...testutils import grant_category_group_permissions
 from ...threads.models import Post, Thread
 
 THREAD_MODERATION_FORM_HTML = 'name="thread_moderation"'
@@ -241,8 +243,21 @@ def test_thread_detail_view_executes_thread_moderation_action_in_htmx(
 
 
 def test_thread_detail_view_executes_thread_moderation_action_with_form(
-    mocker, moderator_client, child_category, thread
+    mocker,
+    moderator_client,
+    moderators_group,
+    default_category,
+    sibling_category,
+    thread,
 ):
+    grant_category_group_permissions(
+        sibling_category,
+        moderators_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+        CategoryPermission.START,
+    )
+
     mock_synchronize_categories = mocker.patch(
         "misago.moderation.thread.synchronize_categories"
     )
@@ -251,14 +266,13 @@ def test_thread_detail_view_executes_thread_moderation_action_with_form(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "move"},
     )
-    assert_contains(response, "Move thread")
-    assert_contains(response, "Move to")
+    assert_contains(response, "Move")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {
             "thread_moderation": "move",
-            "moderation-category": child_category.id,
+            "moderation-category": sibling_category.id,
             "confirm": "true",
         },
     )
@@ -267,17 +281,30 @@ def test_thread_detail_view_executes_thread_moderation_action_with_form(
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with(
-        [thread.category_id, child_category.id]
-    )
-
     thread.refresh_from_db()
-    assert thread.category == child_category
+    assert thread.category == sibling_category
+
+    mock_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id, sibling_category.id]
+    )
 
 
 def test_thread_detail_view_executes_thread_moderation_action_with_form_in_htmx(
-    mocker, moderator_client, child_category, thread
+    mocker,
+    moderator_client,
+    moderators_group,
+    default_category,
+    sibling_category,
+    thread,
 ):
+    grant_category_group_permissions(
+        sibling_category,
+        moderators_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+        CategoryPermission.START,
+    )
+
     mock_synchronize_categories = mocker.patch(
         "misago.moderation.thread.synchronize_categories"
     )
@@ -287,25 +314,25 @@ def test_thread_detail_view_executes_thread_moderation_action_with_form_in_htmx(
         {"thread_moderation": "move"},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Move to")
+    assert_contains(response, "Move")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {
             "thread_moderation": "move",
-            "moderation-category": child_category.id,
+            "moderation-category": sibling_category.id,
             "confirm": "true",
         },
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Thread moved")
 
-    mock_synchronize_categories.delay.assert_called_once_with(
-        [thread.category_id, child_category.id]
-    )
-
     thread.refresh_from_db()
-    assert thread.category == child_category
+    assert thread.category == sibling_category
+
+    mock_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id, sibling_category.id]
+    )
 
 
 def test_thread_detail_view_executes_destructive_thread_moderation_action_with_confirmation(

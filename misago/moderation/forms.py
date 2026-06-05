@@ -91,7 +91,7 @@ class SplitPostsForm(forms.Form):
 
         super().__init__(*args, **kwargs)
 
-        self.fields["category"].choices = get_category_choices(request.categories)
+        self.fields["category"].choices = request.categories.get_choices()
         self.disabled_choices = get_disallowed_category_choices(
             request.user_permissions, request.categories
         )
