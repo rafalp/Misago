@@ -109,3 +109,12 @@ class CategoriesProxy:
 
         self._threads_paths[thread_category_id] = path
         return path
+
+    def get_choices(self, include_empty: bool = False) -> list[tuple[int, str]]:
+        choices: list[tuple[int, str]] = []
+        if include_empty:
+            choices.append(("", ""))
+        for category in self.categories_list:
+            prefix = "⭢ " * category["level"]
+            choices.append((category["id"], f"{prefix}{category['name']}"))
+        return choices

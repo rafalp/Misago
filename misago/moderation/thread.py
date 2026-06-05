@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import notify_on_new_private_thread
 from ..permissions.proxy import UserPermissionsProxy
@@ -346,14 +345,26 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
     full_name = pgettext_lazy("thread moderation action name", "Move thread")
     button_label = pgettext_lazy("thread moderation button label", "Move")
     form_class = MoveThreadForm
-    template_name = "misago/moderation/move_thread.html"
+    template_name = "misago/moderation/move.html"
+
+    def get_form(self, form_submitted: bool):
+        kwargs = {
+            "request": self.request,
+            "prefix": self.form_prefix,
+            "disallowed_categories": [self.thread.category_id],
+        }
+
+        if form_submitted:
+            return self.form_class(self.request.POST, **kwargs)
+
+        return self.form_class(**kwargs)
 
     def form_valid(self, form) -> ModerationActionResult:
         request = self.request
         thread = self.thread
 
         old_category = self.category
-        new_category = Category.objects.get(id=form.cleaned_data["category"])
+        new_category = form.cleaned_data["category"]
 
         set_thread_has_updates(thread, commit=False)
         move_thread(thread, new_category, request=request)

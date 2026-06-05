@@ -1,42 +1,23 @@
 from django import forms
 from django.http import HttpRequest
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import pgettext, pgettext_lazy
 
+from ..categories.models import Category
 from ..categories.proxy import CategoriesProxy
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
 
 
-def get_category_choices(
-    categories: CategoriesProxy, *, allow_empty: bool = True
-) -> list[tuple[int, str]]:
-    choices: list[tuple[int, str]] = []
-    if allow_empty:
-        choices.append(
-            ("", pgettext_lazy("moderation form empty_category", "Select category"))
-        )
-
-    for category in categories.categories_list:
-        prefix = " → " * category["level"]
-        choices.append((category["id"], prefix + category["name"]))
-    return choices
-
-
-def get_disabled_category_choices(
+def get_disallowed_category_choices(
     user_permissions: UserPermissionsProxy,
     categories: CategoriesProxy,
 ) -> set[int]:
     choices: set[int] = set()
 
-    categories_browse = user_permissions.categories[CategoryPermission.BROWSE]
     categories_start = user_permissions.categories[CategoryPermission.START]
 
     for category in categories.categories_list:
-        if (
-            category["is_vanilla"]
-            or category["id"] not in categories_browse
-            or category["id"] not in categories_start
-        ):
+        if category["is_vanilla"] or category["id"] not in categories_start:
             choices.add(category["id"])
 
     return choices
@@ -54,21 +35,37 @@ class HideForm(forms.Form):
 class MoveThreadForm(forms.Form):
     request: HttpRequest
 
-    category = forms.TypedChoiceField(
-        label=pgettext_lazy("moderation move threads form", "Move to"),
-        coerce=int,
-        choices=[],
-    )
+    category = forms.TypedChoiceField(coerce=int, choices=[])
+    disallowed_categories: set[int]
 
     def __init__(self, *args, request: HttpRequest, **kwargs):
         self.request = request
 
+        self.disallowed_categories = set(kwargs.pop("disallowed_categories") or [])
+        self.disallowed_categories.update(
+            get_disallowed_category_choices(
+                request.user_permissions, request.categories
+            )
+        )
+
         super().__init__(*args, **kwargs)
 
-        self.fields["category"].choices = get_category_choices(request.categories)
-        self.disabled_choices = get_disabled_category_choices(
-            request.user_permissions, request.categories
-        )
+        self.fields["category"].choices = request.categories.get_choices()
+
+    def clean_category(self):
+        data = self.cleaned_data["category"]
+        if data in self.disallowed_categories:
+            raise forms.ValidationError(
+                message=pgettext("moderation move thread form", "Invalid choice."),
+                code="invalid",
+            )
+        return data
+
+    def clean(self):
+        data = super().clean()
+        if data.get("category"):
+            data["category"] = Category.objects.get(id=data["category"])
+        return data
 
 
 class SplitPostsForm(forms.Form):
@@ -95,6 +92,6 @@ class SplitPostsForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields["category"].choices = get_category_choices(request.categories)
-        self.disabled_choices = get_disabled_category_choices(
+        self.disabled_choices = get_disallowed_category_choices(
             request.user_permissions, request.categories
         )

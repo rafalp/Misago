@@ -1,7 +1,7 @@
 {% load i18n %}
 
-<div class="form-group">
-  {% with field=form.hidden_reason %}
+{% with field=form.hidden_reason %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label class="control-label" for="{{ field.id_for_label }}">
       {% translate "Reason for hiding:" context "moderation hide form" %}
     </label>
@@ -12,5 +12,5 @@
     <p class="help-block">
       {% translate "Short explanation for why this content was hidden. Optional." context "moderation hide form" %}
     </p>
-  {% endwith %}
-</div>
+  </div>
+{% endwith %}

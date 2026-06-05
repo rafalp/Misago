@@ -1,6 +1,8 @@
 import pytest
 
+from ...permissions.enums import CategoryPermission
 from ...test import assert_contains
+from ...testutils import grant_category_group_permissions
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
 from ..enums import ThreadPinned
@@ -397,6 +399,208 @@ def test_category_thread_list_view_approve_moderation_action_validates_threads(
         {"moderation": "approve", "threads": [thread.id]},
     )
     assert_contains(response, "Threads are already approved.")
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_synchronize_categories.delay.assert_not_called()
+
+
+def test_category_thread_list_view_move_moderation_action_moves_threads(
+    thread_factory,
+    moderator_client,
+    moderators_group,
+    default_category,
+    sibling_category,
+    mock_synchronize_categories,
+):
+    grant_category_group_permissions(
+        sibling_category,
+        moderators_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+        CategoryPermission.START,
+    )
+
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "move", "threads": [thread.id]},
+    )
+    assert_contains(response, "Move threads")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "move",
+            "threads": [thread.id],
+            "moderation-category": sibling_category.id,
+            "confirm": True,
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url()
+
+    thread.refresh_from_db()
+    assert thread.category == sibling_category
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.MOVED,
+    )
+
+    mock_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id, sibling_category.id]
+    )
+
+
+def test_category_thread_list_view_move_moderation_action_validates_category_value(
+    thread_factory, moderator_client, default_category, mock_synchronize_categories
+):
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "move", "threads": [thread.id]},
+    )
+    assert_contains(response, "Move threads")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "move",
+            "threads": [thread.id],
+            "moderation-category": "invalid",
+            "confirm": True,
+        },
+    )
+    assert_contains(response, "Select a valid choice.")
+
+    thread.refresh_from_db()
+    assert thread.category == default_category
+    assert not thread.has_updates
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_synchronize_categories.delay.assert_not_called()
+
+
+def test_category_thread_list_view_move_moderation_action_validates_category_permission(
+    thread_factory,
+    moderator_client,
+    moderators_group,
+    default_category,
+    sibling_category,
+    mock_synchronize_categories,
+):
+    grant_category_group_permissions(
+        sibling_category,
+        moderators_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "move", "threads": [thread.id]},
+    )
+    assert_contains(response, "Move threads")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "move",
+            "threads": [thread.id],
+            "moderation-category": sibling_category.id,
+            "confirm": True,
+        },
+    )
+    assert_contains(response, "Invalid choice.")
+
+    thread.refresh_from_db()
+    assert thread.category == default_category
+    assert not thread.has_updates
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_synchronize_categories.delay.assert_not_called()
+
+
+def test_category_thread_list_view_move_moderation_action_validates_category_type(
+    thread_factory,
+    moderator_client,
+    moderators_group,
+    default_category,
+    sibling_category,
+    mock_synchronize_categories,
+):
+    grant_category_group_permissions(
+        sibling_category,
+        moderators_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+        CategoryPermission.START,
+    )
+
+    sibling_category.is_vanilla = True
+    sibling_category.save()
+
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "move", "threads": [thread.id]},
+    )
+    assert_contains(response, "Move threads")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "move",
+            "threads": [thread.id],
+            "moderation-category": sibling_category.id,
+            "confirm": True,
+        },
+    )
+    assert_contains(response, "Invalid choice.")
+
+    thread.refresh_from_db()
+    assert thread.category == default_category
+    assert not thread.has_updates
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_synchronize_categories.delay.assert_not_called()
+
+
+def test_category_thread_list_view_move_moderation_action_validates_category_is_new(
+    thread_factory, moderator_client, default_category, mock_synchronize_categories
+):
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "move", "threads": [thread.id]},
+    )
+    assert_contains(response, "Move threads")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "move",
+            "threads": [thread.id],
+            "moderation-category": default_category.id,
+            "confirm": True,
+        },
+    )
+    assert_contains(response, "Invalid choice.")
+
+    thread.refresh_from_db()
+    assert thread.category == default_category
+    assert not thread.has_updates
 
     assert not ThreadUpdate.objects.exists()
 

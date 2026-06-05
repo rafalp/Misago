@@ -113,6 +113,7 @@ class FormMixin:
     button_label: str
 
     form_class: Form
+    form_prefix: str = "moderation"
     template_name: str
 
     def execute(self) -> ModerationActionResult:
@@ -131,10 +132,10 @@ class FormMixin:
             return self.form_class(
                 self.request.POST,
                 request=self.request,
-                prefix="moderation",
+                prefix=self.form_prefix,
             )
 
-        return self.form_class(request=self.request, prefix="moderation")
+        return self.form_class(request=self.request, prefix=self.form_prefix)
 
     def get_context_data(self, form: Form) -> dict:
         return {

@@ -381,22 +381,29 @@ class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
     full_name = pgettext_lazy("threads moderation action name", "Move threads")
     button_label = pgettext_lazy("threads moderation button label", "Move")
     form_class = MoveThreadForm
-    template_name = "misago/moderation/move_threads.html"
+    template_name = "misago/moderation/move.html"
+
+    def get_form(self, form_submitted: bool):
+        kwargs = {
+            "request": self.request,
+            "prefix": self.form_prefix,
+        }
+
+        threads_categories = set(thread.category_id for thread in self.threads)
+        if len(threads_categories) == 1:
+            kwargs["disallowed_categories"] = threads_categories
+
+        if form_submitted:
+            return self.form_class(self.request.POST, **kwargs)
+
+        return self.form_class(**kwargs)
 
     def form_valid(self, form) -> ModerationActionResult:
         request = self.request
-        new_category = Category.objects.get(id=form.cleaned_data["category"])
+        new_category = form.cleaned_data["category"]
         threads = [
             thread for thread in self.threads if thread.category_id != new_category.id
         ]
-
-        if not threads:
-            raise ValidationError(
-                pgettext(
-                    "threads moderation validation",
-                    "Threads are already in the category.",
-                )
-            )
 
         categories = set()
         categories.add(new_category.id)
