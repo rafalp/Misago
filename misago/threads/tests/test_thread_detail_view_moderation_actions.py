@@ -2,7 +2,7 @@ import pytest
 from django.urls import reverse
 
 from ...permissions.enums import CategoryPermission
-from ...test import assert_contains
+from ...test import SAME_ITEMS, assert_contains
 from ...testutils import grant_category_group_permissions
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
@@ -302,7 +302,7 @@ def test_thread_detail_view_move_moderation_action_moves_threads(
     )
 
     mock_synchronize_categories.delay.assert_called_once_with(
-        [default_category.id, sibling_category.id]
+        SAME_ITEMS([default_category.id, sibling_category.id])
     )
 
 

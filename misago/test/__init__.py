@@ -17,8 +17,10 @@ from .files import (
     IMAGE_SMALL,
     TEXT_FILE,
 )
+from .mock import SAME_ITEMS
 
 __all__ = [
+    "SAME_ITEMS",
     "IMAGE_INVALID",
     "IMAGE_LARGE",
     "IMAGE_SMALL",
