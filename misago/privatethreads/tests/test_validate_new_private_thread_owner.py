@@ -1,6 +1,7 @@
 import pytest
 from django.core.exceptions import ValidationError
 
+from ...permissions.enums import PermissionValue
 from ...permissions.proxy import UserPermissionsProxy
 from ...users.bans import ban_user
 from ...users.enums import UserNewPrivateThreadsPreference
@@ -49,7 +50,7 @@ def test_validate_new_private_thread_owner_fails_for_user_without_private_thread
 def test_validate_new_private_thread_owner_fails_for_user_without_start_private_threads_permission(
     user, other_user, members_group, cache_versions
 ):
-    members_group.can_start_private_threads = False
+    members_group.can_start_private_threads = PermissionValue.NO
     members_group.save()
 
     with pytest.raises(ValidationError) as exc_info:

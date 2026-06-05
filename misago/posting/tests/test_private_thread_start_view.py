@@ -40,7 +40,7 @@ def test_private_thread_start_view_shows_error_403_to_users_without_private_thre
 def test_private_thread_start_view_shows_error_403_to_users_without_start_private_threads_permission(
     user_client, members_group
 ):
-    members_group.can_start_private_threads = False
+    members_group.can_start_private_threads = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(reverse("misago:private-thread-start"))
