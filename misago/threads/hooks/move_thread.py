@@ -1,4 +1,4 @@
-from typing import Iterable, Protocol
+from typing import Protocol
 
 from django.http import HttpRequest
 
@@ -7,147 +7,154 @@ from ...plugins.hooks import FilterHook
 from ..models import Thread
 
 
-class MoveThreadsHookAction(Protocol):
+class MoveThreadHookAction(Protocol):
     """
-    Misago function for moving threads to a new category.
+    Misago function for moving a thread to a new category.
 
     # Arguments
 
-    ## `threads: Iterable[Thread]`
+    ## `thread: Thread`
 
-    The iterable of threads to move.
+    A `Thread` to move.
 
-    ## `new_category: category`
+    ## `new_category: Category`
 
-    A `Category` to move threads to.
+    The `Category` to move the thread to.
 
     ## `commit: bool = True`
 
-    Whether the threads' `category` field should be updated directly in
-    the database using `QuerySet.update()`.
-
-    When True, only the category column is saved. If other fields need updating,
-    set this to False and handle updates manually.
+    Whether the updated thread instance should be saved to the database.
 
     Defaults to `True`.
+
+    The thread's related objects are always updated,
+    even if this option is set to `False`.
 
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
+
+    # Return value
+
+    `True` if the thread was moved, `False` otherwise.
     """
 
     def __call__(
         self,
-        threads: Iterable[Thread],
+        thread: Thread,
         new_category: Category,
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> None: ...
+    ) -> bool: ...
 
 
-class MoveThreadsHookFilter(Protocol):
+class MoveThreadHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: MoveThreadsHookAction`
+    ## `action: MoveThreadHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
 
     See the [action](#action) section for details.
 
-    ## `threads: Iterable[Thread]`
+    ## `thread: Thread`
 
-    The iterable of threads to move.
+    A `Thread` to move.
 
-    ## `new_category: category`
+    ## `new_category: Category`
 
-    A `Category` to move threads to.
+    The `Category` to move the thread to.
 
     ## `commit: bool = True`
 
-    Whether the threads' `category` field should be updated directly in
-    the database using `QuerySet.update()`.
-
-    When True, only the category column is saved. If other fields need updating,
-    set this to False and handle updates manually.
+    Whether the updated thread instance should be saved to the database.
 
     Defaults to `True`.
+
+    The thread's related objects are always updated,
+    even if this option is set to `False`.
 
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
+
+    # Return value
+
+    `True` if the thread was moved, `False` otherwise.
     """
 
     def __call__(
         self,
-        action: MoveThreadsHookAction,
-        threads: Iterable[Thread],
+        action: MoveThreadHookAction,
+        thread: Thread,
         new_category: Category,
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> None: ...
+    ) -> bool: ...
 
 
-class MoveThreadsHook(
+class MoveThreadHook(
     FilterHook[
-        MoveThreadsHookAction,
-        MoveThreadsHookFilter,
+        MoveThreadHookAction,
+        MoveThreadHookFilter,
     ]
 ):
     """
     This hook allows plugins to replace or extend the logic used to
-    move threads to a new category.
+    move a thread to a new category.
 
     # Example
 
-    Update `category` attribute on plugin model:
+    Move plugin models associated with the thread along with it:
 
     ```python
-    from typing import Iterable
-
     from django.http import HttpRequest
     from misago.categories.models import Category
-    from misago.threads.hooks import move_threads_hook
+    from misago.threads.hooks import move_thread_hook
     from misago.threads.models import Thread
 
     from .models import PluginModel
 
 
-    @move_threads_hook.append_filter
+    @move_thread_hook.append_filter
     def move_plugin_models_to_new_category(
         action,
-        threads: Iterable[Thread],
+        thread: Thread,
         new_category: Category,
         commit: bool = True,
         request: HttpRequest | None = None,
     ):
-        action(thread, data, commit, request)
+        if not action(thread, new_category, commit, request):
+            return False
 
         PluginModel.objects.filter(
-            thread__in=threads
+            thread=thread
         ).update(category=new_category)
+
+        return True
     """
 
     __slots__ = FilterHook.__slots__
 
     def __call__(
         self,
-        action: MoveThreadsHookAction,
-        threads: Iterable[Thread],
+        action: MoveThreadHookAction,
+        thread: Thread,
         new_category: Category,
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> None:
+    ) -> bool:
         return super().__call__(
             action,
-            threads,
+            thread,
             new_category,
             commit,
             request,
         )
 
 
-move_threads_hook = MoveThreadsHook()
+move_thread_hook = MoveThreadHook()

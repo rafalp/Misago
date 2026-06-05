@@ -36,7 +36,7 @@ from .get_threads_page_subcategories import get_threads_page_subcategories_hook
 from .get_threads_page_threads import get_threads_page_threads_hook
 from .hide_thread import hide_thread_hook
 from .lock_thread import lock_thread_hook
-from .move_threads import move_threads_hook
+from .move_thread import move_thread_hook
 from .pin_thread import pin_thread_hook
 from .populate_post_feed_data import populate_post_feed_data_hook
 from .synchronize_thread import synchronize_thread_hook
@@ -69,7 +69,7 @@ __all__ = [
     "get_threads_page_threads_hook",
     "hide_thread_hook",
     "lock_thread_hook",
-    "move_threads_hook",
+    "move_thread_hook",
     "pin_thread_hook",
     "populate_post_feed_data_hook",
     "synchronize_thread_hook",

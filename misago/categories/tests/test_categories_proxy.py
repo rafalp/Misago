@@ -544,3 +544,24 @@ def test_categories_proxy_returns_sibling_category_thread_path_from_child_catego
     assert categories.get_thread_categories(sibling_category.id, child_category.id) == [
         get_category_data_dict(sibling_category),
     ]
+
+
+def test_categories_proxy_returns_category_choices(
+    root_category, default_category, user, cache_versions
+):
+    user_permissions = UserPermissionsProxy(user, cache_versions)
+    categories = CategoriesProxy(user_permissions, cache_versions)
+    assert categories.get_choices() == [
+        (default_category.id, default_category.name),
+    ]
+
+
+def test_categories_proxy_returns_category_choices_with_empty_choice(
+    default_category, user, cache_versions
+):
+    user_permissions = UserPermissionsProxy(user, cache_versions)
+    categories = CategoriesProxy(user_permissions, cache_versions)
+    assert categories.get_choices(True) == [
+        ("", ""),
+        (default_category.id, default_category.name),
+    ]

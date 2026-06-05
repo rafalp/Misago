@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from ....threads.enums import ThreadPinned
-from ....threads.move import move_threads
+from ....threads.move import move_thread
 from ...models import Category
 from ...synchronize import synchronize_category
 
@@ -38,7 +38,7 @@ class Command(BaseCommand):
                 prune_qs = threads_qs.filter(started_at__lte=cutoff)
                 for thread in prune_qs.iterator(chunk_size=50):
                     if archive:
-                        move_threads(thread, archive)
+                        move_thread(thread, archive)
                     else:
                         thread.delete()
                     pruned_threads += 1
@@ -48,7 +48,7 @@ class Command(BaseCommand):
                 prune_qs = threads_qs.filter(last_posted_at__lte=cutoff)
                 for thread in prune_qs.iterator(chunk_size=50):
                     if archive:
-                        move_threads(thread, archive)
+                        move_thread(thread, archive)
                     else:
                         thread.delete()
                     pruned_threads += 1

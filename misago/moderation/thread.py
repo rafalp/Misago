@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import notify_on_new_private_thread
 from ..permissions.proxy import UserPermissionsProxy
@@ -13,11 +12,13 @@ from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
 from ..threads.lock import lock_thread, unlock_thread
 from ..threads.models import Thread
+from ..threads.move import move_thread
 from ..threads.pin import pin_thread, unpin_thread
 from ..threadupdates.create import (
     create_approved_thread_update,
     create_hidden_thread_update,
     create_locked_thread_update,
+    create_moved_thread_update,
     create_pinned_category_thread_update,
     create_pinned_everywhere_thread_update,
     create_unhidden_thread_update,
@@ -341,19 +342,35 @@ class ApprovePrivateThreadModerationAction(ApproveThreadModerationAction):
 
 class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
     id = "move"
-    full_name = "Move thread"
-    button_label = "Move"
+    full_name = pgettext_lazy("thread moderation action name", "Move thread")
+    button_label = pgettext_lazy("thread moderation button label", "Move")
     form_class = MoveThreadForm
-    template_name = "misago/moderation/move_thread.html"
+    template_name = "misago/moderation/move.html"
+
+    def get_form(self, form_submitted: bool):
+        kwargs = {
+            "request": self.request,
+            "prefix": self.form_prefix,
+            "disallowed_categories": [self.thread.category_id],
+        }
+
+        if form_submitted:
+            return self.form_class(self.request.POST, **kwargs)
+
+        return self.form_class(**kwargs)
 
     def form_valid(self, form) -> ModerationActionResult:
+        request = self.request
         thread = self.thread
 
         old_category = self.category
-        new_category = Category.objects.get(id=form.cleaned_data["category"])
+        new_category = form.cleaned_data["category"]
 
-        thread.category = new_category
-        thread.save()
+        set_thread_has_updates(thread, commit=False)
+        move_thread(thread, new_category, request=request)
+        thread_update = create_moved_thread_update(
+            thread, old_category, request.user, request=request
+        )
 
         synchronize_categories.delay([old_category.id, new_category.id])
 
@@ -362,9 +379,7 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
             pgettext("thread moderation success", "Thread moved"),
         )
 
-        return ModerationActionResult(
-            updated_items=[thread.id],
-        )
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
 
 
 class DeleteThreadModerationAction(ConfirmMixin, ThreadModerationAction):

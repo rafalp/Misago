@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.db.models import prefetch_related_objects
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
@@ -10,11 +11,13 @@ from ..threads.approve import approve_thread
 from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
 from ..threads.lock import lock_thread, unlock_thread
+from ..threads.move import move_thread
 from ..threads.pin import pin_thread, unpin_thread
 from ..threadupdates.create import (
     create_approved_thread_update,
     create_hidden_thread_update,
     create_locked_thread_update,
+    create_moved_thread_update,
     create_pinned_category_thread_update,
     create_pinned_everywhere_thread_update,
     create_unhidden_thread_update,
@@ -342,7 +345,6 @@ class UnhideThreadsModerationAction(ThreadsModerationAction):
 
 class ApproveThreadsModerationAction(ThreadsModerationAction):
     id = "approve"
-    full_name = pgettext_lazy("threads moderation action name", "Approve threads")
     button_label = pgettext_lazy("threads moderation button label", "Approve")
 
     def validate(self):
@@ -376,12 +378,50 @@ class ApproveThreadsModerationAction(ThreadsModerationAction):
 
 class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
     id = "move"
-    full_name = "Move threads"
-    button_label = "Move"
+    full_name = pgettext_lazy("threads moderation action name", "Move threads")
+    button_label = pgettext_lazy("threads moderation button label", "Move")
     form_class = MoveThreadForm
-    template_name = "misago/moderation/move_threads.html"
+    template_name = "misago/moderation/move.html"
+
+    def get_form(self, form_submitted: bool):
+        kwargs = {
+            "request": self.request,
+            "prefix": self.form_prefix,
+        }
+
+        threads_categories = set(thread.category_id for thread in self.threads)
+        if len(threads_categories) == 1:
+            kwargs["disallowed_categories"] = threads_categories
+
+        if form_submitted:
+            return self.form_class(self.request.POST, **kwargs)
+
+        return self.form_class(**kwargs)
 
     def form_valid(self, form) -> ModerationActionResult:
+        request = self.request
+        new_category = form.cleaned_data["category"]
+        threads = [
+            thread for thread in self.threads if thread.category_id != new_category.id
+        ]
+
+        categories = set()
+        categories.add(new_category.id)
+
+        prefetch_related_objects(threads, "category")
+
+        for thread in threads:
+            old_category = thread.category
+            categories.add(old_category.id)
+
+            set_thread_has_updates(thread, commit=False)
+            move_thread(thread, new_category, request=request)
+            create_moved_thread_update(
+                thread, old_category, request.user, request=request
+            )
+
+        synchronize_categories.delay(list(categories))
+
         messages.success(
             self.request,
             pgettext("threads moderation success", "Threads moved"),
