@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from ...categories.synchronize import synchronize_category
 from ...pagination.cursor import EmptyPageError
+from ...permissions.enums import PermissionValue
 from ...permissions.models import Moderator
 from ...readtracker.models import ReadCategory, ReadThread
 from ...test import assert_contains, assert_not_contains
@@ -39,7 +40,7 @@ def test_private_thread_list_view_displays_start_thread_button_to_user_with_perm
 def test_private_thread_list_view_hides_start_thread_button_from_user_without_permission(
     user, user_client
 ):
-    user.group.can_start_private_threads = False
+    user.group.can_start_private_threads = PermissionValue.NO
     user.group.save()
 
     response = user_client.get(reverse("misago:private-thread-list"))

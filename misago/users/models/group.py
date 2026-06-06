@@ -33,7 +33,7 @@ class Group(PluginDataModel):
     bypass_content_approval = models.BooleanField(default=False)
 
     can_use_private_threads = models.PositiveIntegerField(default=PermissionValue.NO)
-    can_start_private_threads = models.BooleanField(default=False)
+    can_start_private_threads = models.PositiveIntegerField(default=PermissionValue.NO)
     private_thread_members_limit = models.PositiveIntegerField(default=1)
 
     can_upload_attachments = models.PositiveIntegerField(default=0)
