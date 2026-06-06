@@ -32,9 +32,7 @@ def get_form_data(group: Group) -> dict:
         "group-bypass_flood_control": ("1" if group.bypass_flood_control else ""),
         "group-bypass_content_approval": ("1" if group.bypass_content_approval else ""),
         "group-can_use_private_threads": str(group.can_use_private_threads),
-        "group-can_start_private_threads": (
-            "1" if group.can_start_private_threads else ""
-        ),
+        "group-can_start_private_threads": str(group.can_start_private_threads),
         "group-private_thread_members_limit": str(group.private_thread_members_limit),
         "group-can_upload_attachments": str(group.can_upload_attachments),
         "group-attachment_storage_limit": str(group.attachment_storage_limit),

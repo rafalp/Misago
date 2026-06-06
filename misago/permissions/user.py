@@ -73,8 +73,8 @@ def build_user_permissions(user: Union["User", AnonymousUser]) -> dict:
 if_true = lambda x: bool(max())
 
 PERMISSION_RULES = {
-    "can_use_private_threads": any,
-    "can_start_private_threads": any,
+    "can_use_private_threads": yes_no_never,
+    "can_start_private_threads": yes_no_never,
     "private_thread_members_limit": max,
     "can_edit_own_threads": yes_no_never,
     "own_threads_edit_time_limit": zero_or_greater,
