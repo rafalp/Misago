@@ -30,7 +30,7 @@ class Group(PluginDataModel):
     own_post_edits_hide_time_limit = models.PositiveIntegerField(default=0)
     own_delete_post_edits_time_limit = models.PositiveIntegerField(default=0)
     bypass_flood_control = models.PositiveIntegerField(default=PermissionValue.NO)
-    bypass_content_approval = models.BooleanField(default=False)
+    bypass_content_approval = models.PositiveIntegerField(default=PermissionValue.NO)
 
     can_use_private_threads = models.PositiveIntegerField(default=PermissionValue.NO)
     can_start_private_threads = models.PositiveIntegerField(default=PermissionValue.NO)

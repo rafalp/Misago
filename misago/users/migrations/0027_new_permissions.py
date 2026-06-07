@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
                     models.PositiveIntegerField(default=0),
                 ),
                 ("bypass_flood_control", models.PositiveIntegerField(default=0)),
-                ("bypass_content_approval", models.BooleanField(default=False)),
+                ("bypass_content_approval", models.PositiveIntegerField(default=0)),
                 ("can_use_private_threads", models.PositiveIntegerField(default=0)),
                 ("can_start_private_threads", models.PositiveIntegerField(default=0)),
                 (

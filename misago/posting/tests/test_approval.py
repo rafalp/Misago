@@ -1,3 +1,4 @@
+from ...permissions.enums import PermissionValue
 from ..approval import (
     require_private_thread_approval,
     require_private_thread_reply_approval,
@@ -42,7 +43,7 @@ def test_require_thread_approval_returns_true_for_user_requiring_approval(
 def test_require_thread_approval_returns_false_for_category_requiring_threads_approval_and_user_bypass_approval(
     members_group, user_request, default_category
 ):
-    members_group.bypass_content_approval = True
+    members_group.bypass_content_approval = PermissionValue.YES
     members_group.save()
 
     default_category.require_threads_approval = True
@@ -55,7 +56,7 @@ def test_require_thread_approval_returns_false_for_category_requiring_threads_ap
 def test_require_thread_approval_returns_true_for_user_requiring_approval_with_bypass_approval(
     members_group, user_request, user, default_category
 ):
-    members_group.bypass_content_approval = True
+    members_group.bypass_content_approval = PermissionValue.YES
     members_group.save()
 
     user.require_content_approval = True
@@ -105,7 +106,7 @@ def test_require_thread_reply_approval_returns_true_for_user_requiring_approval(
 def test_require_thread_reply_approval_returns_false_for_category_requiring_threads_approval_and_user_bypass_approval(
     members_group, user_request, thread
 ):
-    members_group.bypass_content_approval = True
+    members_group.bypass_content_approval = PermissionValue.YES
     members_group.save()
 
     thread.category.require_replies_approval = True
@@ -118,7 +119,7 @@ def test_require_thread_reply_approval_returns_false_for_category_requiring_thre
 def test_require_thread_reply_approval_returns_false_for_thread_requiring_threads_approval_and_user_bypass_approval(
     members_group, user_request, thread
 ):
-    members_group.bypass_content_approval = True
+    members_group.bypass_content_approval = PermissionValue.YES
     members_group.save()
 
     thread.require_replies_approval = True
@@ -131,7 +132,7 @@ def test_require_thread_reply_approval_returns_false_for_thread_requiring_thread
 def test_require_thread_reply_approval_returns_true_for_user_requiring_approval_with_bypass_approval(
     members_group, user_request, user, thread
 ):
-    members_group.bypass_content_approval = True
+    members_group.bypass_content_approval = PermissionValue.YES
     members_group.save()
 
     user.require_content_approval = True
@@ -161,7 +162,7 @@ def test_require_private_thread_approval_returns_true_for_user_requiring_approva
 def test_require_private_thread_approval_returns_true_for_user_requiring_approval_with_bypass_approval(
     members_group, user_request, user, private_threads_category
 ):
-    members_group.bypass_content_approval = True
+    members_group.bypass_content_approval = PermissionValue.YES
     members_group.save()
 
     user.require_content_approval = True
@@ -191,7 +192,7 @@ def test_require_private_thread_reply_approval_returns_true_for_user_requiring_a
 def test_require_private_thread_reply_approval_returns_true_for_user_requiring_approval_with_bypass_approval(
     members_group, user_request, user, other_user_private_thread
 ):
-    members_group.bypass_content_approval = True
+    members_group.bypass_content_approval = PermissionValue.YES
     members_group.save()
 
     user.require_content_approval = True
