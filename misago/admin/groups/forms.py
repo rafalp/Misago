@@ -182,7 +182,7 @@ class EditGroupForm(forms.ModelForm):
         min_value=0,
     )
 
-    bypass_flood_control = YesNoField(
+    bypass_flood_control = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Bypass flood control"),
         help_text=pgettext_lazy(
             "admin group permissions form",
