@@ -4,8 +4,8 @@ import pytest
 from django.core.exceptions import ValidationError
 
 from ...conf.test import override_dynamic_settings
-from ..floodcontrol import flood_control
 from ...permissions.enums import PermissionValue
+from ..floodcontrol import flood_control
 
 
 def test_flood_control_passes_user_without_posts(user_request):
