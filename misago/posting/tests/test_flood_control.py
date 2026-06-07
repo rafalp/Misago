@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 
 from ...conf.test import override_dynamic_settings
 from ..floodcontrol import flood_control
+from ...permissions.enums import PermissionValue
 
 
 def test_flood_control_passes_user_without_posts(user_request):
@@ -38,7 +39,7 @@ def test_flood_control_passes_user_if_their_last_post_is_old(user_request, user_
 def test_flood_control_passes_user_if_they_bypass_flood_control(
     user_request, user_reply, members_group
 ):
-    members_group.bypass_flood_control = True
+    members_group.bypass_flood_control = PermissionValue.YES
     members_group.save()
 
     flood_control(user_request)

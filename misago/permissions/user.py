@@ -84,7 +84,7 @@ PERMISSION_RULES = {
     "can_hide_own_post_edits": max,
     "own_post_edits_hide_time_limit": zero_or_greater,
     "own_delete_post_edits_time_limit": zero_or_greater,
-    "bypass_flood_control": any,
+    "bypass_flood_control": yes_no_never,
     "bypass_content_approval": any,
     "can_upload_attachments": max,
     "attachment_storage_limit": zero_or_greater,
