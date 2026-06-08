@@ -8,6 +8,7 @@ from ...testutils import grant_category_group_permissions
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
 from ..enums import ThreadPinned
+from ..models import Thread
 
 
 @pytest.fixture
@@ -706,3 +707,33 @@ def test_thread_list_view_move_moderation_action_validates_category_is_new(
     assert not ThreadUpdate.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_delete_moderation_action_deletes_threads(
+    thread_factory, moderator_client, default_category, mock_synchronize_categories
+):
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "delete", "threads": [thread.id]},
+    )
+    assert_contains(response, "Delete threads")
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "delete",
+            "threads": [thread.id],
+            "confirm": "true",
+        },
+    )
+
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:thread-list")
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])

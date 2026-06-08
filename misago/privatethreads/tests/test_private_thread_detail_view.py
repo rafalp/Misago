@@ -879,6 +879,42 @@ def test_private_thread_detail_view_shows_unapproved_user_thread_to_moderator(
     assert_contains(response, "Thread requires moderator approval")
 
 
+def test_private_thread_detail_view_shows_requires_reply_approval_status_bar_to_moderator(
+    moderator_client, user_private_thread
+):
+    user_private_thread.require_reply_approval = True
+    user_private_thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "New replies to this thread require moderator approval")
+
+
+def test_private_thread_detail_view_shows_requires_reply_approval_status_bar_to_user(
+    user_client, user_private_thread
+):
+    user_private_thread.require_reply_approval = True
+    user_private_thread.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "New replies to this thread require moderator approval")
+
+
 def test_private_thread_detail_view_shows_unapproved_posts_status_bar_to_moderator(
     moderator_client, user_private_thread
 ):

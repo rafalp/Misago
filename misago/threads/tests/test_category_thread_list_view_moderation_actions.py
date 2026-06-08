@@ -6,6 +6,7 @@ from ...testutils import grant_category_group_permissions
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
 from ..enums import ThreadPinned
+from ..models import Thread
 
 
 @pytest.fixture
@@ -281,7 +282,7 @@ def test_category_thread_list_view_hide_moderation_action_hides_threads(
             "moderation": "hide",
             "threads": [thread.id],
             "moderation-hidden_reason": "Lorem ipsum",
-            "confirm": True,
+            "confirm": "true",
         },
     )
     assert response.status_code == 302
@@ -507,7 +508,7 @@ def test_category_thread_list_view_move_moderation_action_moves_threads(
             "moderation": "move",
             "threads": [thread.id],
             "moderation-category": sibling_category.id,
-            "confirm": True,
+            "confirm": "true",
         },
     )
     assert response.status_code == 302
@@ -544,7 +545,7 @@ def test_category_thread_list_view_move_moderation_action_validates_category_val
             "moderation": "move",
             "threads": [thread.id],
             "moderation-category": "invalid",
-            "confirm": True,
+            "confirm": "true",
         },
     )
     assert_contains(response, "Select a valid choice.")
@@ -587,7 +588,7 @@ def test_category_thread_list_view_move_moderation_action_validates_category_per
             "moderation": "move",
             "threads": [thread.id],
             "moderation-category": sibling_category.id,
-            "confirm": True,
+            "confirm": "true",
         },
     )
     assert_contains(response, "Invalid choice.")
@@ -634,7 +635,7 @@ def test_category_thread_list_view_move_moderation_action_validates_category_typ
             "moderation": "move",
             "threads": [thread.id],
             "moderation-category": sibling_category.id,
-            "confirm": True,
+            "confirm": "true",
         },
     )
     assert_contains(response, "Invalid choice.")
@@ -665,7 +666,7 @@ def test_category_thread_list_view_move_moderation_action_validates_category_is_
             "moderation": "move",
             "threads": [thread.id],
             "moderation-category": default_category.id,
-            "confirm": True,
+            "confirm": "true",
         },
     )
     assert_contains(response, "Invalid choice.")
@@ -677,3 +678,32 @@ def test_category_thread_list_view_move_moderation_action_validates_category_is_
     assert not ThreadUpdate.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
+
+
+def test_category_thread_list_view_delete_moderation_action_deletes_threads(
+    thread_factory, moderator_client, default_category, mock_synchronize_categories
+):
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "delete", "threads": [thread.id]},
+    )
+    assert_contains(response, "Delete threads")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "delete",
+            "threads": [thread.id],
+            "confirm": "true",
+        },
+    )
+
+    assert response.status_code == 302
+    assert response["location"] == default_category.get_absolute_url()
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])

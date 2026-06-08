@@ -12,6 +12,7 @@ from ..threads.approve import (
     remove_thread_reply_approval,
     require_thread_reply_approval,
 )
+from ..threads.delete import delete_thread
 from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
 from ..threads.lock import lock_thread, unlock_thread
@@ -530,6 +531,16 @@ class DeleteThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
     )
 
     def confirmed(self) -> ModerationActionResult:
+        request = self.request
+
+        categories = set()
+
+        for thread in self.threads:
+            categories.add(thread.category_id)
+            delete_thread(thread, request=request)
+
+        synchronize_categories.delay(list(categories))
+
         messages.success(
             self.request,
             pgettext("threads moderation success", "Threads deleted"),

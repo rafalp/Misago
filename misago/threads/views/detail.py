@@ -88,6 +88,9 @@ class DetailView(GenericThreadView):
     status_bars_template_name: str = "misago/thread/status_bars.html"
     locked_thread_status_bar_template_name: str = "misago/thread/locked_thread.html"
     hidden_thread_status_bar_template_name: str = "misago/thread/hidden_thread.html"
+    require_reply_approval_status_bar_template_name = (
+        "misago/thread/require_reply_approval.html"
+    )
     unapproved_thread_status_bar_template_name: str = (
         "misago/thread/unapproved_thread.html"
     )
@@ -541,6 +544,9 @@ class DetailView(GenericThreadView):
         if thread.is_unapproved:
             items.append(self.get_unapproved_thread_status_bar())
 
+        if thread.require_reply_approval:
+            items.append(self.get_require_reply_approval_thread_status_bar())
+
         if (
             request.user_permissions.is_category_moderator(thread.category_id)
             and thread.has_unapproved_posts
@@ -574,6 +580,12 @@ class DetailView(GenericThreadView):
         return {
             "id": "unapproved_thread",
             "template_name": self.unapproved_thread_status_bar_template_name,
+        }
+
+    def get_require_reply_approval_thread_status_bar(self) -> dict:
+        return {
+            "id": "require_reply_approval",
+            "template_name": self.require_reply_approval_status_bar_template_name,
         }
 
     def get_unapproved_posts_status_bar(self, thread: Thread) -> dict:

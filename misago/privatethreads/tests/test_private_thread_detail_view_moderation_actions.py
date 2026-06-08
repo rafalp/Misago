@@ -2,6 +2,7 @@ import pytest
 from django.urls import reverse
 
 from ...test import assert_contains
+from ...threads.models import Thread
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
 
@@ -105,7 +106,7 @@ def test_private_thread_detail_view_executes_hide_thread_moderation_action(
         {
             "thread_moderation": "hide",
             "moderation-hidden_reason": "Lorem ipsum",
-            "confirm": True,
+            "confirm": "true",
         },
     )
     assert response.status_code == 302
@@ -281,4 +282,43 @@ def test_private_thread_detail_view_executes_remove_reply_approval_thread_modera
     ThreadUpdate.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.REMOVED_REPLY_APPROVAL,
+    )
+
+
+def test_private_thread_detail_view_executes_delete_thread_moderation_action(
+    moderator_client, user_private_thread, mock_synchronize_categories
+):
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"thread_moderation": "delete", "thread": user_private_thread.id},
+    )
+    assert_contains(response, "Delete thread")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "thread_moderation": "delete",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:private-thread-list")
+
+    with pytest.raises(Thread.DoesNotExist):
+        user_private_thread.refresh_from_db()
+
+    mock_synchronize_categories.delay.assert_called_once_with(
+        [user_private_thread.category_id]
     )
