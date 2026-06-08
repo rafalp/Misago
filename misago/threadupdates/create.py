@@ -110,23 +110,6 @@ def create_test_thread_update(
     )
 
 
-def create_approved_thread_update(
-    thread: Thread,
-    actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
-    commit: bool = True,
-    request: HttpRequest | None = None,
-) -> ThreadUpdate:
-    return create_thread_update(
-        thread,
-        ThreadUpdateActionName.APPROVED,
-        actor,
-        is_hidden=is_hidden,
-        commit=commit,
-        request=request,
-    )
-
-
 def create_pinned_everywhere_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
@@ -212,6 +195,91 @@ def create_unlocked_thread_update(
     )
 
 
+def create_hidden_thread_update(
+    thread: Thread,
+    actor: Union["User", str, None] = None,
+    is_hidden: bool = False,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    return create_thread_update(
+        thread,
+        ThreadUpdateActionName.HIDDEN,
+        actor,
+        is_hidden=is_hidden,
+        commit=commit,
+        request=request,
+    )
+
+
+def create_unhidden_thread_update(
+    thread: Thread,
+    actor: Union["User", str, None] = None,
+    is_hidden: bool = False,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    return create_thread_update(
+        thread,
+        ThreadUpdateActionName.UNHIDDEN,
+        actor,
+        is_hidden=is_hidden,
+        commit=commit,
+        request=request,
+    )
+
+
+def create_approved_thread_update(
+    thread: Thread,
+    actor: Union["User", str, None] = None,
+    is_hidden: bool = False,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    return create_thread_update(
+        thread,
+        ThreadUpdateActionName.APPROVED,
+        actor,
+        is_hidden=is_hidden,
+        commit=commit,
+        request=request,
+    )
+
+
+def create_required_reply_approval_thread_update(
+    thread: Thread,
+    actor: Union["User", str, None] = None,
+    is_hidden: bool = False,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    return create_thread_update(
+        thread,
+        ThreadUpdateActionName.REQUIRED_REPLY_APPROVAL,
+        actor,
+        is_hidden=is_hidden,
+        commit=commit,
+        request=request,
+    )
+
+
+def create_removed_reply_approval_thread_update(
+    thread: Thread,
+    actor: Union["User", str, None] = None,
+    is_hidden: bool = False,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    return create_thread_update(
+        thread,
+        ThreadUpdateActionName.REMOVED_REPLY_APPROVAL,
+        actor,
+        is_hidden=is_hidden,
+        commit=commit,
+        request=request,
+    )
+
+
 def create_moved_thread_update(
     thread: Thread,
     old_category: Category,
@@ -266,40 +334,6 @@ def create_split_thread_update(
         actor,
         context=other_thread.title,
         context_object=other_thread,
-        is_hidden=is_hidden,
-        commit=commit,
-        request=request,
-    )
-
-
-def create_hidden_thread_update(
-    thread: Thread,
-    actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
-    commit: bool = True,
-    request: HttpRequest | None = None,
-) -> ThreadUpdate:
-    return create_thread_update(
-        thread,
-        ThreadUpdateActionName.HIDDEN,
-        actor,
-        is_hidden=is_hidden,
-        commit=commit,
-        request=request,
-    )
-
-
-def create_unhidden_thread_update(
-    thread: Thread,
-    actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
-    commit: bool = True,
-    request: HttpRequest | None = None,
-) -> ThreadUpdate:
-    return create_thread_update(
-        thread,
-        ThreadUpdateActionName.UNHIDDEN,
-        actor,
         is_hidden=is_hidden,
         commit=commit,
         request=request,

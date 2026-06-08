@@ -24,6 +24,8 @@ from ..threadupdates.create import (
     create_moved_thread_update,
     create_pinned_category_thread_update,
     create_pinned_everywhere_thread_update,
+    create_removed_reply_approval_thread_update,
+    create_required_reply_approval_thread_update,
     create_unhidden_thread_update,
     create_unlocked_thread_update,
     create_unpinned_thread_update,
@@ -412,7 +414,9 @@ class RequireThreadsReplyApprovalModerationAction(ThreadsModerationAction):
             set_thread_has_updates(thread, commit=False)
             require_thread_reply_approval(thread, request=request)
 
-            create_locked_thread_update(thread, request.user, request=request)
+            create_required_reply_approval_thread_update(
+                thread, request.user, request=request
+            )
 
         messages.success(
             request,
@@ -448,7 +452,9 @@ class RemoveThreadsReplyApprovalModerationAction(ThreadsModerationAction):
             set_thread_has_updates(thread, commit=False)
             remove_thread_reply_approval(thread, request=request)
 
-            create_locked_thread_update(thread, request.user, request=request)
+            create_removed_reply_approval_thread_update(
+                thread, request.user, request=request
+            )
 
         messages.success(
             request,

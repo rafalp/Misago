@@ -90,7 +90,7 @@ class UserContextThreadUpdateAction(ThreadUpdateAction):
 @thread_updates_renderer.register_action
 class TestThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.TEST
-    icon = "bug_report"
+    icon = "tabler/bug.svg"
 
     def get_description(self, update: ThreadUpdate, data: dict | None = None) -> str:
         if update.context:
@@ -100,64 +100,94 @@ class TestThreadUpdateAction(ThreadUpdateAction):
 
 
 @thread_updates_renderer.register_action
-class ApprovedThreadUpdateAction(ThreadUpdateAction):
-    action = ThreadUpdateActionName.APPROVED
-    icon = "verified_user"
-    description = pgettext_lazy("thread update action description", "Approved thread")
-
-
-@thread_updates_renderer.register_action
 class PinnedEverywhereThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.PINNED_EVERYWHERE
-    icon = "bookmark"
-    description = pgettext_lazy(
-        "thread update action description", "Pinned thread everywhere"
-    )
+    icon = "tabler/pin-filled.svg"
+    description = pgettext_lazy("thread update action description", "Pinned everywhere")
 
 
 @thread_updates_renderer.register_action
 class PinnedCategoryThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.PINNED_CATEGORY
-    icon = "bookmark_outline"
+    icon = "tabler/pin.svg"
     description = pgettext_lazy(
-        "thread update action description", "Pinned thread in category"
+        "thread update action description", "Pinned in category"
     )
 
 
 @thread_updates_renderer.register_action
 class UnpinnedCategoryThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.UNPINNED
-    icon = "radio_button_unchecked"
-    description = pgettext_lazy("thread update action description", "Unpinned thread")
+    icon = "tabler/pinned-off.svg"
+    description = pgettext_lazy("thread update action description", "Unpinned")
 
 
 @thread_updates_renderer.register_action
 class LockedThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.LOCKED
-    icon = "lock_outline"
-    description = pgettext_lazy("thread update action description", "Locked thread")
+    icon = "tabler/lock.svg"
+    description = pgettext_lazy("thread update action description", "Locked")
 
 
 @thread_updates_renderer.register_action
 class UnlockedThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.UNLOCKED
-    icon = "lock_open"
-    description = pgettext_lazy("thread update action description", "Unlocked thread")
+    icon = "tabler/lock-open.svg"
+    description = pgettext_lazy("thread update action description", "Unlocked")
+
+
+@thread_updates_renderer.register_action
+class HiddenThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.HIDDEN
+    icon = "tabler/eye-off.svg"
+    description = pgettext_lazy("thread update action description", "Hidden")
+
+
+@thread_updates_renderer.register_action
+class UnhiddenThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.UNHIDDEN
+    icon = "tabler/eye.svg"
+    description = pgettext_lazy("thread update action description", "Unhidden")
+
+
+@thread_updates_renderer.register_action
+class ApprovedThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.APPROVED
+    icon = "tabler/checkbox.svg"
+    description = pgettext_lazy("thread update action description", "Approved")
+
+
+@thread_updates_renderer.register_action
+class RequiredReplyApprovalThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.REQUIRED_REPLY_APPROVAL
+    icon = "tabler/player-pause-filled.svg"
+    description = pgettext_lazy(
+        "thread update action description", "Required reply approval"
+    )
+
+
+@thread_updates_renderer.register_action
+class RemovedReplyApprovalThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.REMOVED_REPLY_APPROVAL
+    icon = "tabler/player-pause.svg"
+    description = pgettext_lazy(
+        "thread update action description", "Removed reply approval"
+    )
 
 
 @thread_updates_renderer.register_action
 class MovedThreadUpdateAction(CategoryContextThreadUpdateAction):
     action = ThreadUpdateActionName.MOVED
-    icon = "arrow_forward"
+    icon = "tabler/arrow-right.svg"
     description = pgettext_lazy(
-        "thread update action description", "Moved thread from %(context)s"
+        "thread update action description", "Moved from %(context)s"
     )
 
 
 @thread_updates_renderer.register_action
 class MergedThreadUpdateAction(ThreadContextThreadUpdateAction):
     action = ThreadUpdateActionName.MERGED
-    icon = "call_merge"
+    icon = "tabler/arrows-join-2.svg"
     description = pgettext_lazy(
         "thread update action description", "Merged %(context)s with this thread"
     )
@@ -166,39 +196,25 @@ class MergedThreadUpdateAction(ThreadContextThreadUpdateAction):
 @thread_updates_renderer.register_action
 class SplitThreadUpdateAction(ThreadContextThreadUpdateAction):
     action = ThreadUpdateActionName.SPLIT
-    icon = "call_split"
+    icon = "tabler/arrows-split-2.svg"
     description = pgettext_lazy(
         "thread update action description", "Split this thread from %(context)s"
     )
 
 
 @thread_updates_renderer.register_action
-class HiddenThreadUpdateAction(ThreadUpdateAction):
-    action = ThreadUpdateActionName.HIDDEN
-    icon = "visibility_off"
-    description = pgettext_lazy("thread update action description", "Hidden thread")
-
-
-@thread_updates_renderer.register_action
-class UnhiddenThreadUpdateAction(ThreadUpdateAction):
-    action = ThreadUpdateActionName.UNHIDDEN
-    icon = "visibility"
-    description = pgettext_lazy("thread update action description", "Unhidden thread")
-
-
-@thread_updates_renderer.register_action
 class ChangedTitleThreadUpdateAction(TextContextThreadUpdateAction):
     action = ThreadUpdateActionName.CHANGED_TITLE
-    icon = "edit"
+    icon = "tabler/pencil.svg"
     description = pgettext_lazy(
-        "thread update action description", "Changed thread title from %(context)s"
+        "thread update action description", "Changed title from %(context)s"
     )
 
 
 @thread_updates_renderer.register_action
 class StartedPollThreadUpdateAction(TextContextThreadUpdateAction):
     action = ThreadUpdateActionName.STARTED_POLL
-    icon = "poll"
+    icon = "tabler/chart-bar.svg"
     description = pgettext_lazy(
         "thread update action description", "Started poll: %(context)s"
     )
@@ -207,21 +223,21 @@ class StartedPollThreadUpdateAction(TextContextThreadUpdateAction):
 @thread_updates_renderer.register_action
 class ClosedPollThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.CLOSED_POLL
-    icon = "poll"
+    icon = "tabler/chart-bar.svg"
     description = pgettext_lazy("thread update action description", "Closed poll")
 
 
 @thread_updates_renderer.register_action
 class OpenedPollThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.OPENED_POLL
-    icon = "poll"
+    icon = "tabler/chart-bar.svg"
     description = pgettext_lazy("thread update action description", "Opened poll")
 
 
 @thread_updates_renderer.register_action
 class DeletedPollThreadUpdateAction(TextContextThreadUpdateAction):
     action = ThreadUpdateActionName.DELETED_POLL
-    icon = "poll"
+    icon = "tabler/chart-bar.svg"
     description = pgettext_lazy(
         "thread update action description", "Deleted poll: %(context)s"
     )
@@ -230,46 +246,44 @@ class DeletedPollThreadUpdateAction(TextContextThreadUpdateAction):
 @thread_updates_renderer.register_action
 class TookOwnershipThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.TOOK_OWNERSHIP
-    icon = "people"
-    description = pgettext_lazy(
-        "thread update action description", "Took thread ownership"
-    )
+    icon = "tabler/user.svg"
+    description = pgettext_lazy("thread update action description", "Took ownership")
 
 
 @thread_updates_renderer.register_action
 class ChangedOwnerThreadUpdateAction(UserContextThreadUpdateAction):
     action = ThreadUpdateActionName.CHANGED_OWNER
-    icon = "people"
+    icon = "tabler/user.svg"
     description = pgettext_lazy(
-        "thread update action description", "Changed thread owner to %(context)s"
+        "thread update action description", "Changed owner to %(context)s"
     )
 
 
 @thread_updates_renderer.register_action
 class JoinedThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.JOINED
-    icon = "person_add"
-    description = pgettext_lazy("thread update action description", "Joined thread")
+    icon = "tabler/user.svg"
+    description = pgettext_lazy("thread update action description", "Joined")
 
 
 @thread_updates_renderer.register_action
 class LeftThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.LEFT
-    icon = "close"
-    description = pgettext_lazy("thread update action description", "Left thread")
+    icon = "tabler/user-off.svg"
+    description = pgettext_lazy("thread update action description", "Left")
 
 
 @thread_updates_renderer.register_action
 class AddedMemberThreadUpdateAction(UserContextThreadUpdateAction):
     action = ThreadUpdateActionName.ADDED_MEMBER
-    icon = "person_add"
+    icon = "tabler/user.svg"
     description = pgettext_lazy("thread update action description", "Added %(context)s")
 
 
 @thread_updates_renderer.register_action
 class RemovedMemberThreadUpdateAction(UserContextThreadUpdateAction):
     action = ThreadUpdateActionName.REMOVED_MEMBER
-    icon = "block"
+    icon = "tabler/user-off.svg"
     description = pgettext_lazy(
         "thread update action description", "Removed %(context)s"
     )

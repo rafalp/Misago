@@ -4,8 +4,6 @@ from enum import StrEnum
 class ThreadUpdateActionName(StrEnum):
     TEST = "test"
 
-    APPROVED = "approved"
-
     PINNED_EVERYWHERE = "pinned_everywhere"
     PINNED_CATEGORY = "pinned_category"
     UNPINNED = "unpinned"
@@ -13,13 +11,17 @@ class ThreadUpdateActionName(StrEnum):
     LOCKED = "locked"
     UNLOCKED = "unlocked"
 
+    HIDDEN = "hidden"
+    UNHIDDEN = "unhidden"
+
+    APPROVED = "approved"
+    REQUIRED_REPLY_APPROVAL = "required_reply_approval"
+    REMOVED_REPLY_APPROVAL = "removed_reply_approval"
+
     MOVED = "moved"
 
     MERGED = "merged"
     SPLIT = "split"
-
-    HIDDEN = "hidden"
-    UNHIDDEN = "unhidden"
 
     CHANGED_TITLE = "changed_title"
 

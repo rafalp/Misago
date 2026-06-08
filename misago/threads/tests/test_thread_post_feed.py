@@ -323,7 +323,7 @@ def test_post_feed_sets_action_data_in_thread_update_data(
     feed_data = post_feed.get_context_data()
 
     assert feed_data["items"][1]["thread_update"] == thread_update
-    assert feed_data["items"][1]["icon"] == "lock_open"
+    assert feed_data["items"][1]["icon"] == "tabler/lock-open.svg"
     assert feed_data["items"][1]["description"] == "Unlocked thread"
 
 
