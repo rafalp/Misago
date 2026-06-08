@@ -189,7 +189,7 @@ class EditGroupForm(forms.ModelForm):
             "Enable this option to allow members of this group to bypass flood control.",
         ),
     )
-    bypass_content_approval = YesNoField(
+    bypass_content_approval = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Bypass content approval"),
         help_text=pgettext_lazy(
             "admin group permissions form",
