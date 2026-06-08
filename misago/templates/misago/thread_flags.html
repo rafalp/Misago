@@ -47,6 +47,14 @@
       {% include "tabler/shield-half.svg" %}
     </li>
   {% endif %}
+  {% if thread.require_reply_approval and for_moderator %}
+    <li
+      class="thread-flag-requires-reply-approval"
+      title="{% translate 'Requires reply approval' context 'thread flag' %}"
+    >
+      {% include "tabler/player-pause-filled.svg" %}
+    </li>
+  {% endif %}
   {% if thread.has_poll %}
     <li
       class="thread-flag-poll"

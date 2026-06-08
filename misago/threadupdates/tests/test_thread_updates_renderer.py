@@ -12,15 +12,15 @@ from ..renderer import thread_updates_renderer
 def test_thread_updates_renderer_renders_simple_action(thread, user):
     thread_update = create_approved_thread_update(thread, user)
     data = thread_updates_renderer.render_thread_update(thread_update, {})
-    assert data == {"description": "Approved thread", "icon": "verified_user"}
+    assert data == {"description": "Approved", "icon": "tabler/checkbox.svg"}
 
 
 def test_thread_updates_renderer_renders_action_with_text_context(thread, user):
     thread_update = create_changed_title_thread_update(thread, "Old title", user)
     data = thread_updates_renderer.render_thread_update(thread_update, {})
     assert data == {
-        "description": "Changed thread title from <em>Old title</em>",
-        "icon": "edit",
+        "description": "Changed title from <em>Old title</em>",
+        "icon": "tabler/pencil.svg",
     }
 
 
@@ -33,9 +33,9 @@ def test_thread_updates_renderer_renders_action_with_category_context(
     )
     assert data == {
         "description": (
-            f'Moved thread from <a href="{default_category.get_absolute_url()}">First category</a>'
+            f'Moved from <a href="{default_category.get_absolute_url()}">First category</a>'
         ),
-        "icon": "arrow_forward",
+        "icon": "tabler/arrow-right.svg",
     }
 
 
@@ -50,8 +50,8 @@ def test_thread_updates_renderer_renders_action_with_deleted_category_context(
         thread_update, {"categories": {}}
     )
     assert data == {
-        "description": "Moved thread from <em>First category</em>",
-        "icon": "arrow_forward",
+        "description": "Moved from <em>First category</em>",
+        "icon": "tabler/arrow-right.svg",
     }
 
 
@@ -63,8 +63,8 @@ def test_thread_updates_renderer_renders_action_with_not_found_category_context(
         thread_update, {"categories": {}}
     )
     assert data == {
-        "description": "Moved thread from <em>First category</em>",
-        "icon": "arrow_forward",
+        "description": "Moved from <em>First category</em>",
+        "icon": "tabler/arrow-right.svg",
     }
 
 
@@ -82,7 +82,7 @@ def test_thread_updates_renderer_renders_action_with_thread_context(
     thread_url = get_thread_url(other_thread, default_category)
     assert data == {
         "description": f'Split this thread from <a href="{thread_url}">{other_thread.title}</a>',
-        "icon": "call_split",
+        "icon": "tabler/arrows-split-2.svg",
     }
 
 
@@ -95,7 +95,7 @@ def test_thread_updates_renderer_renders_action_with_not_found_thread_category(
     )
     assert data == {
         "description": f"Split this thread from <em>{other_thread.title}</em>",
-        "icon": "call_split",
+        "icon": "tabler/arrows-split-2.svg",
     }
 
 
@@ -109,7 +109,7 @@ def test_thread_updates_renderer_renders_action_with_deleted_thread_context(
     data = thread_updates_renderer.render_thread_update(thread_update, {"threads": {}})
     assert data == {
         "description": f"Split this thread from <em>{other_thread.title}</em>",
-        "icon": "call_split",
+        "icon": "tabler/arrows-split-2.svg",
     }
 
 
@@ -120,7 +120,7 @@ def test_thread_updates_renderer_renders_action_with_not_found_thread_context(
     data = thread_updates_renderer.render_thread_update(thread_update, {"threads": {}})
     assert data == {
         "description": f"Split this thread from <em>{other_thread.title}</em>",
-        "icon": "call_split",
+        "icon": "tabler/arrows-split-2.svg",
     }
 
 
@@ -135,7 +135,7 @@ def test_thread_updates_renderer_renders_action_with_user_context(
         "description": (
             f'Added <a href="{other_user.get_absolute_url()}">Other_User</a>'
         ),
-        "icon": "person_add",
+        "icon": "tabler/user.svg",
     }
 
 
@@ -147,7 +147,10 @@ def test_thread_updates_renderer_renders_action_with_deleted_user_context(
     thread_update.save()
 
     data = thread_updates_renderer.render_thread_update(thread_update, {"users": {}})
-    assert data == {"description": "Added <em>Other_User</em>", "icon": "person_add"}
+    assert data == {
+        "description": "Added <em>Other_User</em>",
+        "icon": "tabler/user.svg",
+    }
 
 
 def test_thread_updates_renderer_renders_action_with_not_found_user_context(
@@ -155,7 +158,10 @@ def test_thread_updates_renderer_renders_action_with_not_found_user_context(
 ):
     thread_update = create_added_member_thread_update(thread, other_user, user)
     data = thread_updates_renderer.render_thread_update(thread_update, {"users": {}})
-    assert data == {"description": "Added <em>Other_User</em>", "icon": "person_add"}
+    assert data == {
+        "description": "Added <em>Other_User</em>",
+        "icon": "tabler/user.svg",
+    }
 
 
 def test_thread_updates_renderer_returns_none_for_unsupported_action(thread, user):

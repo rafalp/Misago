@@ -27,7 +27,7 @@ def _require_thread_approval_action(state: "ThreadStartState") -> bool:
     if state.user_permissions.bypass_content_approval:
         return False
 
-    if state.category.require_threads_approval:
+    if state.category.require_thread_approval:
         return True
 
     return False
@@ -56,10 +56,10 @@ def _require_thread_reply_approval_action(state: "ThreadReplyState") -> bool:
     if state.user_permissions.bypass_content_approval:
         return False
 
-    if state.category.require_replies_approval:
+    if state.category.require_reply_approval:
         return True
 
-    if state.thread.require_replies_approval:
+    if state.thread.require_reply_approval:
         return True
 
     return False

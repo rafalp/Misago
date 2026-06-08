@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name="thread",
-            name="require_replies_approval",
+            name="require_reply_approval",
             field=models.BooleanField(default=False),
         ),
     ]

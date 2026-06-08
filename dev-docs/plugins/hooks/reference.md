@@ -320,6 +320,8 @@ Hooks instances are importable from the following Python modules:
 - [`move_thread_hook`](./move-thread-hook.md)
 - [`pin_thread_hook`](./pin-thread-hook.md)
 - [`populate_post_feed_data_hook`](./populate-post-feed-data-hook.md)
+- [`remove_thread_reply_approval_hook`](./remove-thread-reply-approval-hook.md)
+- [`require_thread_reply_approval_hook`](./require-thread-reply-approval-hook.md)
 - [`synchronize_thread_hook`](./synchronize-thread-hook.md)
 - [`unhide_thread_hook`](./unhide-thread-hook.md)
 - [`unlock_thread_hook`](./unlock-thread-hook.md)

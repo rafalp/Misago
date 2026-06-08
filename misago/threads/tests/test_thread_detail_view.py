@@ -1443,6 +1443,60 @@ def test_thread_detail_view_shows_unapproved_user_thread_to_moderator(
     assert_contains(response, "Thread requires moderator approval")
 
 
+def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_moderator(
+    moderator_client, thread
+):
+    thread.require_reply_approval = True
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "New replies to this thread require moderator approval")
+
+
+def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_user(
+    user_client, thread
+):
+    thread.require_reply_approval = True
+    thread.save()
+
+    response = user_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "New replies to this thread require moderator approval")
+
+
+def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_anonymous_user(
+    client, thread
+):
+    thread.require_reply_approval = True
+    thread.save()
+
+    response = client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "New replies to this thread require moderator approval")
+
+
 def test_thread_detail_view_shows_unapproved_posts_status_bar_to_moderator(
     moderator_client, thread
 ):
@@ -1499,7 +1553,7 @@ def test_thread_detail_view_doesnt_show_unapproved_posts_status_bar_to_user(
     )
 
 
-def test_thread_detail_view_doesnt_show_unapproved_posts_status_bar_to_deleted_user(
+def test_thread_detail_view_doesnt_show_unapproved_posts_status_bar_to_anonymous_user(
     client, thread
 ):
     thread.has_unapproved_posts = True

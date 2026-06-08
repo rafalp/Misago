@@ -18,6 +18,8 @@ from ..create import (
     create_pinned_category_thread_update,
     create_pinned_everywhere_thread_update,
     create_removed_member_thread_update,
+    create_removed_reply_approval_thread_update,
+    create_required_reply_approval_thread_update,
     create_split_thread_update,
     create_started_poll_thread_update,
     create_test_thread_update,
@@ -69,18 +71,6 @@ def test_create_test_thread_update_with_context_object(
     assert_contains(response, f"UPDATE [{thread_update.id}]")
 
 
-def test_approved_thread_update(client, thread, user):
-    create_approved_thread_update(thread, user)
-
-    thread.has_updates = True
-    thread.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, "Approved thread")
-
-
 def test_pinned_everywhere_thread_update(client, thread, user):
     create_pinned_everywhere_thread_update(thread, user)
 
@@ -90,7 +80,7 @@ def test_pinned_everywhere_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Pinned thread everywhere")
+    assert_contains(response, "Pinned everywhere")
 
 
 def test_pinned_category_thread_update(client, thread, user):
@@ -102,7 +92,7 @@ def test_pinned_category_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Pinned thread in category")
+    assert_contains(response, "Pinned in category")
 
 
 def test_unpinned_thread_update(client, thread, user):
@@ -114,7 +104,7 @@ def test_unpinned_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Unpinned thread")
+    assert_contains(response, "Unpinned")
 
 
 def test_locked_thread_update(client, thread, user):
@@ -126,7 +116,7 @@ def test_locked_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Locked thread")
+    assert_contains(response, "Locked")
 
 
 def test_unlocked_thread_update(client, thread, user):
@@ -138,7 +128,67 @@ def test_unlocked_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Unlocked thread")
+    assert_contains(response, "Unlocked")
+
+
+def test_hidden_thread_update(client, thread, user):
+    create_hidden_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Hidden")
+
+
+def test_unhidden_thread_update(client, thread, user):
+    create_unhidden_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Unhidden")
+
+
+def test_approved_thread_update(client, thread, user):
+    create_approved_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Approved")
+
+
+def test_required_reply_approval_thread_update(client, thread, user):
+    create_required_reply_approval_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Required reply approval")
+
+
+def test_removed_reply_approval_thread_update(client, thread, user):
+    create_removed_reply_approval_thread_update(thread, user)
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Removed reply approval")
 
 
 def test_moved_thread_update(client, thread, user, default_category):
@@ -150,7 +200,7 @@ def test_moved_thread_update(client, thread, user, default_category):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Moved thread from")
+    assert_contains(response, "Moved from")
     assert_contains(response, default_category.name)
 
 
@@ -168,7 +218,7 @@ def test_moved_thread_update_without_context_object(
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Moved thread from")
+    assert_contains(response, "Moved from")
     assert_contains(response, default_category.name)
 
 
@@ -232,30 +282,6 @@ def test_split_thread_update_without_context_object(client, thread, user_thread,
     assert_contains(response, user_thread.title)
 
 
-def test_hidden_thread_update(client, thread, user):
-    create_hidden_thread_update(thread, user)
-
-    thread.has_updates = True
-    thread.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, "Hidden thread")
-
-
-def test_unhidden_thread_update(client, thread, user):
-    create_unhidden_thread_update(thread, user)
-
-    thread.has_updates = True
-    thread.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, "Unhidden thread")
-
-
 def test_changed_title_thread_update(client, thread, user):
     create_changed_title_thread_update(thread, "Old title", user)
 
@@ -265,7 +291,7 @@ def test_changed_title_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Changed thread title from")
+    assert_contains(response, "Changed title from")
     assert_contains(response, "Old title")
 
 
@@ -328,7 +354,7 @@ def test_changed_owner_thread_update(client, thread, user, other_user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Changed thread owner to")
+    assert_contains(response, "Changed owner to")
     assert_contains(response, other_user.username)
 
 
@@ -346,7 +372,7 @@ def test_changed_owner_thread_update_without_context_object(
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Changed thread owner to")
+    assert_contains(response, "Changed owner to")
     assert_contains(response, other_user.username)
 
 
@@ -359,7 +385,7 @@ def test_took_ownership_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Took thread ownership")
+    assert_contains(response, "Took ownership")
 
 
 def test_joined_thread_update(client, thread, user):
@@ -371,7 +397,7 @@ def test_joined_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Joined thread")
+    assert_contains(response, "Joined")
 
 
 def test_left_thread_update(client, thread, user):
@@ -383,7 +409,7 @@ def test_left_thread_update(client, thread, user):
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
-    assert_contains(response, "Left thread")
+    assert_contains(response, "Left")
 
 
 def test_added_member_thread_update(client, thread, user, other_user):

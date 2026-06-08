@@ -19,10 +19,10 @@ def test_require_thread_approval_returns_false_for_non_moderated_user(
     assert not require_thread_approval(state)
 
 
-def test_require_thread_approval_returns_true_for_category_requiring_threads_approval(
+def test_require_thread_approval_returns_true_for_category_requiring_thread_approval(
     user_request, default_category
 ):
-    default_category.require_threads_approval = True
+    default_category.require_thread_approval = True
     default_category.save()
 
     state = ThreadStartState(user_request, default_category)
@@ -39,13 +39,13 @@ def test_require_thread_approval_returns_true_for_user_requiring_approval(
     assert require_thread_approval(state)
 
 
-def test_require_thread_approval_returns_false_for_category_requiring_threads_approval_and_user_bypass_approval(
+def test_require_thread_approval_returns_false_for_category_requiring_thread_approval_and_user_bypass_approval(
     members_group, user_request, default_category
 ):
     members_group.bypass_content_approval = True
     members_group.save()
 
-    default_category.require_threads_approval = True
+    default_category.require_thread_approval = True
     default_category.save()
 
     state = ThreadStartState(user_request, default_category)
@@ -72,20 +72,20 @@ def test_require_thread_reply_approval_returns_false_for_non_moderated_user(
     assert not require_thread_reply_approval(state)
 
 
-def test_require_thread_reply_approval_returns_true_for_category_requiring_replies_approval(
+def test_require_thread_reply_approval_returns_true_for_category_requiring_reply_approval(
     user_request, thread
 ):
-    thread.category.require_replies_approval = True
+    thread.category.require_reply_approval = True
     thread.category.save()
 
     state = ThreadReplyState(user_request, thread)
     assert require_thread_reply_approval(state)
 
 
-def test_require_thread_reply_approval_returns_true_for_thread_requiring_replies_approval(
+def test_require_thread_reply_approval_returns_true_for_thread_requiring_reply_approval(
     user_request, thread
 ):
-    thread.require_replies_approval = True
+    thread.require_reply_approval = True
     thread.save()
 
     state = ThreadReplyState(user_request, thread)
@@ -102,26 +102,26 @@ def test_require_thread_reply_approval_returns_true_for_user_requiring_approval(
     assert require_thread_reply_approval(state)
 
 
-def test_require_thread_reply_approval_returns_false_for_category_requiring_threads_approval_and_user_bypass_approval(
+def test_require_thread_reply_approval_returns_false_for_category_requiring_thread_approval_and_user_bypass_approval(
     members_group, user_request, thread
 ):
     members_group.bypass_content_approval = True
     members_group.save()
 
-    thread.category.require_replies_approval = True
+    thread.category.require_reply_approval = True
     thread.category.save()
 
     state = ThreadReplyState(user_request, thread)
     assert not require_thread_reply_approval(state)
 
 
-def test_require_thread_reply_approval_returns_false_for_thread_requiring_threads_approval_and_user_bypass_approval(
+def test_require_thread_reply_approval_returns_false_for_thread_requiring_thread_approval_and_user_bypass_approval(
     members_group, user_request, thread
 ):
     members_group.bypass_content_approval = True
     members_group.save()
 
-    thread.require_replies_approval = True
+    thread.require_reply_approval = True
     thread.save()
 
     state = ThreadReplyState(user_request, thread)

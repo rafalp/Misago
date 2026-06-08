@@ -13,4 +13,14 @@ class Migration(migrations.Migration):
             model_name="category",
             name="require_edits_approval",
         ),
+        migrations.RenameField(
+            model_name="category",
+            old_name="require_threads_approval",
+            new_name="require_thread_approval",
+        ),
+        migrations.RenameField(
+            model_name="category",
+            old_name="require_replies_approval",
+            new_name="require_reply_approval",
+        ),
     ]

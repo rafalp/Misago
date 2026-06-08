@@ -1055,6 +1055,80 @@ def test_category_thread_list_view_doesnt_display_own_thread_unapproved_posts_fl
     assert_not_contains(response, "thread-flag-unapproved")
 
 
+def test_category_thread_list_view_doesnt_display_thread_requires_reply_approval_flag_to_anonymous_user(
+    thread_factory, client, other_user, default_category
+):
+    thread = thread_factory(
+        default_category, starter=other_user, require_reply_approval=True
+    )
+
+    response = client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
+    assert_not_contains(response, "thread-flag-requires-reply-approval")
+
+
+def test_category_thread_list_view_doesnt_display_thread_requires_reply_approval_flag_to_user(
+    thread_factory, user_client, other_user, default_category
+):
+    thread = thread_factory(
+        default_category, starter=other_user, require_reply_approval=True
+    )
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
+    assert_not_contains(response, "thread-flag-requires-reply-approval")
+
+
+def test_category_thread_list_view_displays_thread_requires_reply_approval_flag_to_category_moderator(
+    thread_factory, user_client, user, other_user, default_category
+):
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    thread = thread_factory(
+        default_category, starter=other_user, require_reply_approval=True
+    )
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-requires-reply-approval")
+
+
+def test_category_thread_list_view_displays_thread_requires_reply_approval_flag_to_global_moderator(
+    thread_factory, moderator_client, other_user, default_category
+):
+    thread = thread_factory(
+        default_category, starter=other_user, require_reply_approval=True
+    )
+
+    response = moderator_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_contains(response, "thread-flags")
+    assert_contains(response, "thread-flag-requires-reply-approval")
+
+
+def test_category_thread_list_view_doesnt_display_own_thread_requires_reply_approval_flag_to_user(
+    thread_factory, user_client, user, default_category
+):
+    thread = thread_factory(default_category, starter=user, require_reply_approval=True)
+
+    response = user_client.get(default_category.get_absolute_url())
+    assert_contains(response, default_category.name)
+    assert_contains(response, thread.title)
+    assert_not_contains(response, "thread-flags")
+    assert_not_contains(response, "thread-flag-requires-reply-approval")
+
+
 def test_category_thread_list_view_doesnt_display_deleted_user_thread_to_anonymous_user_if_show_started_only_is_enabled(
     thread_factory, client, default_category
 ):

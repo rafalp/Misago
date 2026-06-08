@@ -6,7 +6,11 @@ from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import notify_on_new_private_thread
 from ..permissions.proxy import UserPermissionsProxy
 from ..privatethreads.members import prefetch_private_thread_member_ids
-from ..threads.approve import approve_thread
+from ..threads.approve import (
+    approve_thread,
+    remove_thread_reply_approval,
+    require_thread_reply_approval,
+)
 from ..threads.delete import delete_thread
 from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
@@ -21,6 +25,8 @@ from ..threadupdates.create import (
     create_moved_thread_update,
     create_pinned_category_thread_update,
     create_pinned_everywhere_thread_update,
+    create_removed_reply_approval_thread_update,
+    create_required_reply_approval_thread_update,
     create_unhidden_thread_update,
     create_unlocked_thread_update,
     create_unpinned_thread_update,
@@ -84,6 +90,11 @@ def _get_thread_moderation_actions_action(
     if thread.is_unapproved:
         actions.append(ApproveThreadModerationAction)
 
+    if thread.require_reply_approval:
+        actions.append(RemoveThreadReplyApprovalModerationAction)
+    else:
+        actions.append(RequireThreadReplyApprovalModerationAction)
+
     return actions + [
         MoveThreadModerationAction,
         DeleteThreadModerationAction,
@@ -122,6 +133,11 @@ def _get_private_thread_moderation_actions_action(
 
     if thread.is_unapproved:
         actions.append(ApprovePrivateThreadModerationAction)
+
+    if thread.require_reply_approval:
+        actions.append(RemoveThreadReplyApprovalModerationAction)
+    else:
+        actions.append(RequireThreadReplyApprovalModerationAction)
 
     return actions + [
         DeleteThreadModerationAction,
@@ -338,6 +354,56 @@ class ApprovePrivateThreadModerationAction(ApproveThreadModerationAction):
             member_ids.remove(thread.starter_id)
 
         notify_on_new_private_thread.delay(thread.starter_id, thread.id, member_ids)
+
+
+class RequireThreadReplyApprovalModerationAction(ThreadModerationAction):
+    id = "require_reply_approval"
+    button_label = pgettext_lazy(
+        "thread moderation button label", "Require reply approval"
+    )
+
+    def execute(self) -> ModerationActionResult:
+        request = self.request
+        thread = self.thread
+
+        set_thread_has_updates(thread, commit=False)
+        require_thread_reply_approval(thread, request=request)
+
+        thread_update = create_required_reply_approval_thread_update(
+            thread, request.user, request=request
+        )
+
+        messages.success(
+            self.request,
+            pgettext("thread moderation success", "Reply approval required"),
+        )
+
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
+
+
+class RemoveThreadReplyApprovalModerationAction(ThreadModerationAction):
+    id = "remove_reply_approval"
+    button_label = pgettext_lazy(
+        "thread moderation button label", "Remove reply approval"
+    )
+
+    def execute(self) -> ModerationActionResult:
+        request = self.request
+        thread = self.thread
+
+        set_thread_has_updates(thread, commit=False)
+        remove_thread_reply_approval(thread, request=request)
+
+        thread_update = create_removed_reply_approval_thread_update(
+            thread, request.user, request=request
+        )
+
+        messages.success(
+            self.request,
+            pgettext("thread moderation success", "Reply approval removed"),
+        )
+
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
 
 
 class MoveThreadModerationAction(FormMixin, ThreadModerationAction):

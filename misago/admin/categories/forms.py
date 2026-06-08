@@ -147,7 +147,7 @@ class CategoryForm(forms.ModelForm):
             choices=CategoryChildrenComponent.get_category_choices(),
         ),
     )
-    require_threads_approval = YesNoSwitch(
+    require_thread_approval = YesNoSwitch(
         label=pgettext_lazy("admin category form", "Threads"),
         required=False,
         help_text=pgettext_lazy(
@@ -155,7 +155,7 @@ class CategoryForm(forms.ModelForm):
             "All threads started in this category will require moderator approval.",
         ),
     )
-    require_replies_approval = YesNoSwitch(
+    require_reply_approval = YesNoSwitch(
         label=pgettext_lazy("admin category form", "Replies"),
         required=False,
         help_text=pgettext_lazy(
@@ -195,8 +195,8 @@ class CategoryForm(forms.ModelForm):
             "is_vanilla",
             "list_children_threads",
             "children_categories_component",
-            "require_threads_approval",
-            "require_replies_approval",
+            "require_thread_approval",
+            "require_reply_approval",
             "prune_started_after",
             "prune_replied_after",
             "archive_pruned_in",
