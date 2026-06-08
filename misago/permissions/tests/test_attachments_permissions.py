@@ -437,7 +437,7 @@ def test_check_delete_attachment_permission_fails_uploader_without_permission_fo
     user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
-    members_group.can_always_delete_own_attachments = False
+    members_group.can_always_delete_own_attachments = PermissionValue.NO
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -554,7 +554,7 @@ def test_check_delete_attachment_permission_fails_uploader_without_permission_fo
     user_text_attachment.associate_with_post(private_thread.first_post)
     user_text_attachment.save()
 
-    members_group.can_always_delete_own_attachments = False
+    members_group.can_always_delete_own_attachments = PermissionValue.NO
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)

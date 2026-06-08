@@ -40,8 +40,8 @@ def get_form_data(group: Group) -> dict:
             group.unused_attachments_storage_limit
         ),
         "group-attachment_size_limit": str(group.attachment_size_limit),
-        "group-can_always_delete_own_attachments": (
-            "1" if group.can_always_delete_own_attachments else ""
+        "group-can_always_delete_own_attachments": str(
+            group.can_always_delete_own_attachments
         ),
         "group-can_start_polls": "1" if group.can_start_polls else "",
         "group-can_edit_own_polls": "1" if group.can_edit_own_polls else "",
