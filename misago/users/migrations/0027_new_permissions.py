@@ -65,7 +65,7 @@ class Migration(migrations.Migration):
                 ("attachment_size_limit", models.PositiveIntegerField(default=1000)),
                 (
                     "can_always_delete_own_attachments",
-                    models.BooleanField(default=False),
+                    models.PositiveIntegerField(default=0),
                 ),
                 ("can_start_polls", models.BooleanField(default=False)),
                 ("can_edit_own_polls", models.BooleanField(default=False)),
