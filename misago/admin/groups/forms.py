@@ -250,7 +250,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         min_value=0,
     )
-    can_always_delete_own_attachments = YesNoField(
+    can_always_delete_own_attachments = YesNoNeverField(
         label=pgettext_lazy(
             "admin group permissions form", "Can always delete own attachments"
         ),

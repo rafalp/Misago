@@ -40,7 +40,9 @@ class Group(PluginDataModel):
     attachment_storage_limit = models.PositiveIntegerField(default=512)
     unused_attachments_storage_limit = models.PositiveIntegerField(default=64)
     attachment_size_limit = models.PositiveIntegerField(default=1000)
-    can_always_delete_own_attachments = models.BooleanField(default=False)
+    can_always_delete_own_attachments = models.PositiveIntegerField(
+        default=PermissionValue.NO
+    )
 
     can_start_polls = models.BooleanField(default=False)
     can_edit_own_polls = models.BooleanField(default=False)
