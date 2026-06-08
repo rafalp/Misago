@@ -295,6 +295,7 @@ Hooks instances are importable from the following Python modules:
 
 - [`approve_thread_hook`](./approve-thread-hook.md)
 - [`create_prefetch_post_feed_data_hook`](./create-prefetch-post-feed-data-hook.md)
+- [`create_thread_hook`](./create-thread-hook.md)
 - [`delete_post_hook`](./delete-post-hook.md)
 - [`delete_thread_hook`](./delete-thread-hook.md)
 - [`get_category_breadcrumbs_hook`](./get-category-breadcrumbs-hook.md)

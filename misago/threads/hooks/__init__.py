@@ -2,6 +2,7 @@ from .approve_thread import approve_thread_hook
 from .create_prefetch_post_feed_data import (
     create_prefetch_post_feed_data_hook,
 )
+from .create_thread import create_thread_hook
 from .delete_post import delete_post_hook
 from .delete_thread import delete_thread_hook
 from .get_category_breadcrumbs import get_category_breadcrumbs_hook
@@ -49,6 +50,7 @@ from .unpin_thread import unpin_thread_hook
 __all__ = [
     "approve_thread_hook",
     "create_prefetch_post_feed_data_hook",
+    "create_thread_hook",
     "delete_post_hook",
     "delete_thread_hook",
     "get_category_breadcrumbs_hook",
