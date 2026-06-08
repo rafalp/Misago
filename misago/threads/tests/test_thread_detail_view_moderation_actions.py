@@ -254,6 +254,53 @@ def test_thread_detail_view_executes_approve_thread_moderation_action(
     mock_synchronize_categories.delay.assert_called_once_with([thread.category_id])
 
 
+def test_thread_detail_view_executes_require_reply_approval_thread_moderation_action(
+    moderator_client, thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"thread_moderation": "require_reply_approval"},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert thread.require_reply_approval
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.REQUIRED_REPLY_APPROVAL,
+    )
+
+
+def test_thread_detail_view_executes_remove_reply_approval_thread_moderation_action(
+    moderator_client, thread
+):
+    thread.require_reply_approval = True
+    thread.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"thread_moderation": "remove_reply_approval"},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert not thread.require_reply_approval
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.REMOVED_REPLY_APPROVAL,
+    )
+
+
 def test_thread_detail_view_move_moderation_action_moves_threads(
     thread_factory,
     moderator_client,
