@@ -155,6 +155,9 @@ class ListView(View):
         if for_moderator and thread.has_unapproved_posts:
             return True
 
+        if for_moderator and thread.require_reply_approval:
+            return True
+
         return False
 
     def get_threads_users(self, request: HttpRequest, threads: list[Thread]) -> dict:

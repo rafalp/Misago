@@ -90,9 +90,12 @@ def _get_thread_moderation_actions_action(
     if thread.is_unapproved:
         actions.append(ApproveThreadModerationAction)
 
+    if thread.require_reply_approval:
+        actions.append(RemoveThreadReplyApprovalModerationAction)
+    else:
+        actions.append(RequireThreadReplyApprovalModerationAction)
+
     return actions + [
-        RequireThreadReplyApprovalModerationAction,
-        RemoveThreadReplyApprovalModerationAction,
         MoveThreadModerationAction,
         DeleteThreadModerationAction,
     ]
@@ -131,9 +134,12 @@ def _get_private_thread_moderation_actions_action(
     if thread.is_unapproved:
         actions.append(ApprovePrivateThreadModerationAction)
 
+    if thread.require_reply_approval:
+        actions.append(RemoveThreadReplyApprovalModerationAction)
+    else:
+        actions.append(RequireThreadReplyApprovalModerationAction)
+
     return actions + [
-        RequireThreadReplyApprovalModerationAction,
-        RemoveThreadReplyApprovalModerationAction,
         DeleteThreadModerationAction,
     ]
 
