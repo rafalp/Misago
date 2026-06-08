@@ -7,7 +7,11 @@ from django.utils.translation import pgettext, pgettext_lazy
 from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
 from ..permissions.proxy import UserPermissionsProxy
-from ..threads.approve import approve_thread
+from ..threads.approve import (
+    approve_thread,
+    remove_thread_reply_approval,
+    require_thread_reply_approval,
+)
 from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
 from ..threads.lock import lock_thread, unlock_thread
@@ -67,6 +71,8 @@ def _get_threads_moderation_actions_action(
         HideThreadsModerationAction,
         UnhideThreadsModerationAction,
         ApproveThreadsModerationAction,
+        RequireThreadsReplyApprovalModerationAction,
+        RemoveThreadsReplyApprovalModerationAction,
         MoveThreadsModerationAction,
         DeleteThreadsModerationAction,
     ]
@@ -106,6 +112,8 @@ def _get_category_threads_moderation_actions_action(
         HideThreadsModerationAction,
         UnhideThreadsModerationAction,
         ApproveThreadsModerationAction,
+        RequireThreadsReplyApprovalModerationAction,
+        RemoveThreadsReplyApprovalModerationAction,
         MoveThreadsModerationAction,
         DeleteThreadsModerationAction,
     ]
@@ -371,6 +379,80 @@ class ApproveThreadsModerationAction(ThreadsModerationAction):
         messages.success(
             request,
             pgettext("threads moderation success", "Threads approved"),
+        )
+
+        return ModerationActionResult.from_updated_threads(threads)
+
+
+class RequireThreadsReplyApprovalModerationAction(ThreadsModerationAction):
+    id = "require_reply_approval"
+    button_label = pgettext_lazy(
+        "threads moderation button label", "Require reply approval"
+    )
+
+    def validate(self):
+        for thread in self.threads:
+            if not thread.require_reply_approval:
+                return
+
+        raise ValidationError(
+            pgettext(
+                "threads moderation validation",
+                "Threads already require reply approval.",
+            )
+        )
+
+    def execute(self) -> ModerationActionResult:
+        request = self.request
+        threads = [
+            thread for thread in self.threads if not thread.require_reply_approval
+        ]
+
+        for thread in threads:
+            set_thread_has_updates(thread, commit=False)
+            require_thread_reply_approval(thread, request=request)
+
+            create_locked_thread_update(thread, request.user, request=request)
+
+        messages.success(
+            request,
+            pgettext("threads moderation success", "Reply approval required"),
+        )
+
+        return ModerationActionResult.from_updated_threads(threads)
+
+
+class RemoveThreadsReplyApprovalModerationAction(ThreadsModerationAction):
+    id = "remove_reply_approval"
+    button_label = pgettext_lazy(
+        "threads moderation button label", "Remove reply approval"
+    )
+
+    def validate(self):
+        for thread in self.threads:
+            if thread.require_reply_approval:
+                return
+
+        raise ValidationError(
+            pgettext(
+                "threads moderation validation",
+                "Threads already don't require reply approval.",
+            )
+        )
+
+    def execute(self) -> ModerationActionResult:
+        request = self.request
+        threads = [thread for thread in self.threads if thread.require_reply_approval]
+
+        for thread in threads:
+            set_thread_has_updates(thread, commit=False)
+            remove_thread_reply_approval(thread, request=request)
+
+            create_locked_thread_update(thread, request.user, request=request)
+
+        messages.success(
+            request,
+            pgettext("threads moderation success", "Reply approval removed"),
         )
 
         return ModerationActionResult.from_updated_threads(threads)

@@ -6,7 +6,11 @@ from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import notify_on_new_private_thread
 from ..permissions.proxy import UserPermissionsProxy
 from ..privatethreads.members import prefetch_private_thread_member_ids
-from ..threads.approve import approve_thread
+from ..threads.approve import (
+    approve_thread,
+    remove_thread_reply_approval,
+    require_thread_reply_approval,
+)
 from ..threads.delete import delete_thread
 from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
@@ -85,6 +89,8 @@ def _get_thread_moderation_actions_action(
         actions.append(ApproveThreadModerationAction)
 
     return actions + [
+        RequireThreadReplyApprovalModerationAction,
+        RemoveThreadReplyApprovalModerationAction,
         MoveThreadModerationAction,
         DeleteThreadModerationAction,
     ]
@@ -124,6 +130,8 @@ def _get_private_thread_moderation_actions_action(
         actions.append(ApprovePrivateThreadModerationAction)
 
     return actions + [
+        RequireThreadReplyApprovalModerationAction,
+        RemoveThreadReplyApprovalModerationAction,
         DeleteThreadModerationAction,
     ]
 
@@ -340,7 +348,7 @@ class ApprovePrivateThreadModerationAction(ApproveThreadModerationAction):
         notify_on_new_private_thread.delay(thread.starter_id, thread.id, member_ids)
 
 
-class RequireThreadRepliesApprovalModerationAction(ThreadModerationAction):
+class RequireThreadReplyApprovalModerationAction(ThreadModerationAction):
     id = "require_reply_approval"
     button_label = pgettext_lazy(
         "thread moderation button label", "Require reply approval"
@@ -351,17 +359,40 @@ class RequireThreadRepliesApprovalModerationAction(ThreadModerationAction):
         thread = self.thread
 
         set_thread_has_updates(thread, commit=False)
-        unhide_thread(thread, request=request)
+        require_thread_reply_approval(thread, request=request)
 
         thread_update = create_unhidden_thread_update(
             thread, request.user, request=request
         )
 
-        synchronize_categories.delay([thread.category_id])
+        messages.success(
+            self.request,
+            pgettext("thread moderation success", "Reply approval required"),
+        )
+
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
+
+
+class RemoveThreadReplyApprovalModerationAction(ThreadModerationAction):
+    id = "remove_reply_approval"
+    button_label = pgettext_lazy(
+        "thread moderation button label", "Remove reply approval"
+    )
+
+    def execute(self) -> ModerationActionResult:
+        request = self.request
+        thread = self.thread
+
+        set_thread_has_updates(thread, commit=False)
+        remove_thread_reply_approval(thread, request=request)
+
+        thread_update = create_unhidden_thread_update(
+            thread, request.user, request=request
+        )
 
         messages.success(
             self.request,
-            pgettext("thread moderation success", "Thread unhidden"),
+            pgettext("thread moderation success", "Reply approval removed"),
         )
 
         return ModerationActionResult.from_updated_thread(thread, thread_update)
