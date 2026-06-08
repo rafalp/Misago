@@ -6,16 +6,15 @@ from ...plugins.hooks import FilterHook
 from ..models import Thread
 
 
-class RemoveThreadRepliesApprovalHookAction(Protocol):
+class RequireThreadReplyApprovalHookAction(Protocol):
     """
-    Misago function for removing the requirement
-    for approval of all new replies in a thread.
+    Misago function for making all new replies in a thread require approval.
 
     # Arguments
 
     ## `thread: Thread`
 
-    A `Thread` to remove reply approval from.
+    A `Thread` to require reply approval for.
 
     ## `commit: bool = True`
 
@@ -40,22 +39,26 @@ class RemoveThreadRepliesApprovalHookAction(Protocol):
     ) -> bool: ...
 
 
-class RemoveThreadRepliesApprovalHookFilter(Protocol):
+class RequireThreadReplyApprovalHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: RemoveThreadRepliesApprovalHookAction`
+    ## `action: RequireThreadReplyApprovalHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
 
     See the [action](#action) section for details.
 
+    Misago function for making all new replies in a thread require approval.
+
+    # Arguments
+
     ## `thread: Thread`
 
-    A `Thread` to remove reply approval from.
+    A `Thread` to require reply approval for.
 
     ## `commit: bool = True`
 
@@ -74,35 +77,35 @@ class RemoveThreadRepliesApprovalHookFilter(Protocol):
 
     def __call__(
         self,
-        action: RemoveThreadRepliesApprovalHookAction,
+        action: RequireThreadReplyApprovalHookAction,
         thread: Thread,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
 
 
-class RemoveThreadRepliesApprovalHook(
+class RequireThreadReplyApprovalHook(
     FilterHook[
-        RemoveThreadRepliesApprovalHookAction,
-        RemoveThreadRepliesApprovalHookFilter,
+        RequireThreadReplyApprovalHookAction,
+        RequireThreadReplyApprovalHookFilter,
     ]
 ):
     """
-    This hook allows plugins to replace or extend the logic used to remove
-    the requirement for approval of new replies in a thread.
+    This hook allows plugins to replace or extend the logic used to make all
+    new replies in a thread require approval
 
     # Example
 
-    Register user who approved the thread.
+    Register user who enabled the approval of new replies in a thread.
 
     ```python
     from django.http import HttpRequest
-    from misago.threads.hooks import remove_thread_replies_approval_hook
+    from misago.threads.hooks import require_thread_reply_approval_hook
     from misago.threads.models import Thread
 
 
-    @remove_thread_replies_approval_hook.append_filter
-    def register_user_that_removed_require_thread_replies_approval(
+    @require_thread_reply_approval_hook.append_filter
+    def register_user_that_set_require_thread_reply_approval(
         action,
         thread: Thread,
         commit: bool = True,
@@ -112,7 +115,7 @@ class RemoveThreadRepliesApprovalHook(
             return False
 
         if request:
-            thread.plugin_data["removed_require_replies_approval"] = request.user.id
+            thread.plugin_data["set_require_reply_approval"] = request.user.id
 
         if commit:
             thread.save()
@@ -124,7 +127,7 @@ class RemoveThreadRepliesApprovalHook(
 
     def __call__(
         self,
-        action: RemoveThreadRepliesApprovalHookAction,
+        action: RequireThreadReplyApprovalHookAction,
         thread: Thread,
         commit: bool = True,
         request: HttpRequest | None = None,
@@ -137,4 +140,4 @@ class RemoveThreadRepliesApprovalHook(
         )
 
 
-remove_thread_replies_approval_hook = RemoveThreadRepliesApprovalHook()
+require_thread_reply_approval_hook = RequireThreadReplyApprovalHook()

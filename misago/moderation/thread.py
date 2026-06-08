@@ -340,6 +340,33 @@ class ApprovePrivateThreadModerationAction(ApproveThreadModerationAction):
         notify_on_new_private_thread.delay(thread.starter_id, thread.id, member_ids)
 
 
+class RequireThreadRepliesApprovalModerationAction(ThreadModerationAction):
+    id = "require_reply_approval"
+    button_label = pgettext_lazy(
+        "thread moderation button label", "Require reply approval"
+    )
+
+    def execute(self) -> ModerationActionResult:
+        request = self.request
+        thread = self.thread
+
+        set_thread_has_updates(thread, commit=False)
+        unhide_thread(thread, request=request)
+
+        thread_update = create_unhidden_thread_update(
+            thread, request.user, request=request
+        )
+
+        synchronize_categories.delay([thread.category_id])
+
+        messages.success(
+            self.request,
+            pgettext("thread moderation success", "Thread unhidden"),
+        )
+
+        return ModerationActionResult.from_updated_thread(thread, thread_update)
+
+
 class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
     id = "move"
     full_name = pgettext_lazy("thread moderation action name", "Move thread")

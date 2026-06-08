@@ -26,7 +26,7 @@ class Thread(PluginDataModel):
     has_unapproved_posts = models.BooleanField(default=False)
     has_hidden_posts = models.BooleanField(default=False)
 
-    require_replies_approval = models.BooleanField(default=False)
+    require_reply_approval = models.BooleanField(default=False)
 
     started_at = models.DateTimeField(db_index=True)
     last_posted_at = models.DateTimeField(db_index=True)

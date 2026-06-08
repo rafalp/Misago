@@ -5,7 +5,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("misago_threads", "0031_thread_require_replies_approval"),
+        ("misago_threads", "0031_thread_require_reply_approval"),
     ]
 
     operations = [

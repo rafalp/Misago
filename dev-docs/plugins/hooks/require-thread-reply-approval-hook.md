@@ -1,14 +1,14 @@
 # `require_thread_reply_approval_hook`
 
-This hook wraps the standard function Misago uses to check if a new thread reply should require moderator approval.
+This hook allows plugins to replace or extend the logic used to make all new replies in a thread require approval
 
 
 ## Location
 
-This hook can be imported from `misago.posting.hooks`:
+This hook can be imported from `misago.threads.hooks`:
 
 ```python
-from misago.posting.hooks import require_thread_reply_approval_hook
+from misago.threads.hooks import require_thread_reply_approval_hook
 ```
 
 
@@ -17,7 +17,9 @@ from misago.posting.hooks import require_thread_reply_approval_hook
 ```python
 def custom_require_thread_reply_approval_filter(
     action: RequireThreadReplyApprovalHookAction,
-    state: 'ThreadReplyState',
+    thread: Thread,
+    commit: bool=True,
+    request: HttpRequest | None=None,
 ) -> bool:
     ...
 ```
@@ -33,61 +35,93 @@ Next function registered in this hook, either a custom function or Misago's stan
 
 See the [action](#action) section for details.
 
+Misago function for making all new replies in a thread require approval.
 
-#### `state: ThreadReplyState`
 
-A `ThreadReplyState` instance containing data used to create a new thread reply.
+### Arguments
+
+#### `thread: Thread`
+
+A `Thread` to require reply approval for.
+
+
+#### `commit: bool = True`
+
+Whether the updated thread instance should be saved to the database.
+
+Defaults to `True`.
+
+
+#### `request: HttpRequest | None`
+
+The request object, or `None` if not provided.
 
 
 ### Return value
 
-`True` if the new thread reply should require moderator approval, or `False` otherwise.
+`True` if the thread was updated, `False` otherwise.
 
 
 ## Action
 
 ```python
-def require_thread_reply_approval_action(state: 'ThreadReplyState') -> bool:
+def require_thread_reply_approval_action(
+    thread: Thread, commit: bool=True, request: HttpRequest | None=None
+) -> bool:
     ...
 ```
 
-A standard function that Misago uses to check if a new thread should require moderator approval.
+Misago function for making all new replies in a thread require approval.
 
 
 ### Arguments
 
-#### `state: ThreadReplyState`
+#### `thread: Thread`
 
-A `ThreadReplyState` instance containing data used to create a new thread reply.
+A `Thread` to require reply approval for.
+
+
+#### `commit: bool = True`
+
+Whether the updated thread instance should be saved to the database.
+
+Defaults to `True`.
+
+
+#### `request: HttpRequest | None`
+
+The request object, or `None` if not provided.
 
 
 ### Return value
 
-`True` if the new thread reply should require moderator approval, or `False` otherwise.
+`True` if the thread was updated, `False` otherwise.
 
 
 ## Example
 
-The code below implements a custom filter function that flags a new thread reply for moderator approval if it contains links and the user recently joined.
+Register user who enabled the approval of new replies in a thread.
 
 ```python
-from django.utils import timezone
-from misago.posting.hooks import require_thread_reply_approval_hook
-from misago.posting.state import ThreadReplyState
+from django.http import HttpRequest
+from misago.threads.hooks import require_thread_reply_approval_hook
+from misago.threads.models import Thread
 
 
 @require_thread_reply_approval_hook.append_filter
-def require_thread_reply_approval(
-    action, state: ThreadReplyState
+def register_user_that_set_require_thread_reply_approval(
+    action,
+    thread: Thread,
+    commit: bool = True,
+    request: HttpRequest | None = None,
 ) -> bool:
-    if action(state):
-        return True
-
-    if state.user_permissions.bypass_content_approval:
+    if not action(thread, commit=False, request=request):
         return False
 
-    return bool(
-        (timezone.now() - state.user.joined_on).total_seconds() < 72 * 3600
-        and "<a" in state.post.parsed
-    )
-```
+    if request:
+        thread.plugin_data["set_require_reply_approval"] = request.user.id
+
+    if commit:
+        thread.save()
+
+    return True

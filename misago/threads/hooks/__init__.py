@@ -39,8 +39,8 @@ from .lock_thread import lock_thread_hook
 from .move_thread import move_thread_hook
 from .pin_thread import pin_thread_hook
 from .populate_post_feed_data import populate_post_feed_data_hook
-from .remove_thread_replies_approval import remove_thread_replies_approval_hook
-from .require_thread_replies_approval import require_thread_replies_approval_hook
+from .remove_thread_reply_approval import remove_thread_reply_approval_hook
+from .require_thread_reply_approval import require_thread_reply_approval_hook
 from .synchronize_thread import synchronize_thread_hook
 from .unhide_thread import unhide_thread_hook
 from .unlock_thread import unlock_thread_hook
@@ -74,8 +74,8 @@ __all__ = [
     "move_thread_hook",
     "pin_thread_hook",
     "populate_post_feed_data_hook",
-    "remove_thread_replies_approval_hook",
-    "require_thread_replies_approval_hook",
+    "remove_thread_reply_approval_hook",
+    "require_thread_reply_approval_hook",
     "synchronize_thread_hook",
     "unhide_thread_hook",
     "unlock_thread_hook",
