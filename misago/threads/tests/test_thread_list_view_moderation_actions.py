@@ -426,6 +426,82 @@ def test_thread_list_view_approve_moderation_action_validates_threads(
 
 
 @override_dynamic_settings(index_view="categories")
+def test_thread_list_view_require_reply_approval_moderation_action_requires_threads_reply_approval(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "require_reply_approval", "threads": [thread.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:thread-list")
+
+    thread.refresh_from_db()
+    assert thread.require_reply_approval
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.REQUIRED_REPLY_APPROVAL,
+    )
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_require_reply_approval_moderation_action_validates_threads(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category, require_reply_approval=True)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "require_reply_approval", "threads": [thread.id]},
+    )
+    assert_contains(response, "Threads already require reply approval.")
+
+    assert not ThreadUpdate.objects.exists()
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_remove_reply_approval_moderation_action_removes_threads_reply_approval(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category, require_reply_approval=True)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "remove_reply_approval", "threads": [thread.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:thread-list")
+
+    thread.refresh_from_db()
+    assert not thread.require_reply_approval
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.REMOVED_REPLY_APPROVAL,
+    )
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_remove_reply_approval_moderation_action_validates_threads(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "remove_reply_approval", "threads": [thread.id]},
+    )
+    assert_contains(response, "Threads already don&#x27;t require reply approval.")
+
+    assert not ThreadUpdate.objects.exists()
+
+
+@override_dynamic_settings(index_view="categories")
 def test_thread_list_view_move_moderation_action_moves_threads(
     thread_factory,
     moderator_client,

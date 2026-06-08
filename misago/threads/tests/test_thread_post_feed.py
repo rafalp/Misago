@@ -324,7 +324,7 @@ def test_post_feed_sets_action_data_in_thread_update_data(
 
     assert feed_data["items"][1]["thread_update"] == thread_update
     assert feed_data["items"][1]["icon"] == "tabler/lock-open.svg"
-    assert feed_data["items"][1]["description"] == "Unlocked thread"
+    assert feed_data["items"][1]["description"] == "Unlocked"
 
 
 def test_post_feed_marks_thread_update_as_animated(
