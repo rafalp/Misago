@@ -30,7 +30,7 @@ def get_form_data(group: Group) -> dict:
             group.own_delete_post_edits_time_limit
         ),
         "group-bypass_flood_control": str(group.bypass_flood_control),
-        "group-bypass_content_approval": ("1" if group.bypass_content_approval else ""),
+        "group-bypass_content_approval": str(group.bypass_content_approval),
         "group-can_use_private_threads": str(group.can_use_private_threads),
         "group-can_start_private_threads": str(group.can_start_private_threads),
         "group-private_thread_members_limit": str(group.private_thread_members_limit),
