@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.urls import reverse
 
+from ...permissions.enums import PermissionValue
 from ...test import assert_contains, assert_not_contains
 
 
@@ -55,7 +56,7 @@ def test_thread_detail_view_doesnt_show_start_poll_button_to_user_with_permissio
 def test_thread_detail_view_doesnt_show_start_poll_button_to_thread_starter_without_permission(
     user_client, members_group, user_thread
 ):
-    members_group.can_start_polls = False
+    members_group.can_start_polls = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(

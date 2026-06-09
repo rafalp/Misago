@@ -43,7 +43,7 @@ def get_form_data(group: Group) -> dict:
         "group-can_always_delete_own_attachments": str(
             group.can_always_delete_own_attachments
         ),
-        "group-can_start_polls": "1" if group.can_start_polls else "",
+        "group-can_start_polls": str(group.can_start_polls),
         "group-can_edit_own_polls": "1" if group.can_edit_own_polls else "",
         "group-own_polls_edit_time_limit": str(group.own_polls_edit_time_limit),
         "group-can_close_own_polls": "1" if group.can_close_own_polls else "",
