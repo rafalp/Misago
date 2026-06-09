@@ -44,7 +44,7 @@ class Group(PluginDataModel):
         default=PermissionValue.NO
     )
 
-    can_start_polls = models.BooleanField(default=False)
+    can_start_polls = models.PositiveIntegerField(default=PermissionValue.NO)
     can_edit_own_polls = models.BooleanField(default=False)
     own_polls_edit_time_limit = models.PositiveIntegerField(default=0)
     can_close_own_polls = models.BooleanField(default=False)

@@ -1,6 +1,7 @@
 import pytest
 from django.core.exceptions import PermissionDenied
 
+from ..enums import PermissionValue
 from ..polls import (
     check_close_thread_poll_permission,
     check_delete_thread_poll_permission,
@@ -32,7 +33,19 @@ def test_check_start_thread_poll_permission_fails_if_user_is_anonymous(
 def test_check_start_thread_poll_permission_fails_if_user_has_no_permission(
     user, members_group, user_permissions_factory, default_category, user_thread
 ):
-    members_group.can_start_polls = False
+    members_group.can_start_polls = PermissionValue.NO
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_start_thread_poll_permission(permissions, default_category, user_thread)
+
+
+def test_check_start_thread_poll_permission_fails_if_user_has_never_permission(
+    user, members_group, user_permissions_factory, default_category, user_thread
+):
+    members_group.can_start_polls = PermissionValue.NEVER
     members_group.save()
 
     permissions = user_permissions_factory(user)

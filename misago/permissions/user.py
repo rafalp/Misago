@@ -91,7 +91,7 @@ PERMISSION_RULES = {
     "unused_attachments_storage_limit": zero_or_greater,
     "attachment_size_limit": zero_or_greater,
     "can_always_delete_own_attachments": yes_no_never,
-    "can_start_polls": any,
+    "can_start_polls": yes_no_never,
     "can_edit_own_polls": any,
     "own_polls_edit_time_limit": zero_or_greater,
     "can_close_own_polls": any,
