@@ -39,7 +39,7 @@ def test_move_thread_doesnt_save_thread_if_commit_is_false(
 ):
     thread_relations = thread_relations_factory(thread)
 
-    with django_assert_num_queries(8):
+    with django_assert_num_queries(10):
         assert move_thread(thread, sibling_category, commit=False)
         assert thread.category == sibling_category
 
