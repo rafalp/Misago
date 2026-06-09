@@ -157,7 +157,7 @@ class CreateThreadHook(
 
     # Example
 
-    Record user who triggered the thread creation:
+    Record metadata about thread's creation:
 
     ```python
     from django.http import HttpRequest
@@ -166,8 +166,6 @@ class CreateThreadHook(
     from misago.threads.enums import ThreadPinned
     from misago.threads.hooks import create_thread_hook
     from misago.threads.models import Thread
-
-    from .models import PluginModel
 
 
     @create_thread_hook.append_filter
@@ -192,7 +190,7 @@ class CreateThreadHook(
             request=request,
         )
 
-        thread.plugin_data["created_at"] = timezone.now()
+        thread.plugin_data["created_at"] = str(timezone.now())
         if request:
             thread.plugin_data["creator_id"] = request.user.id
 

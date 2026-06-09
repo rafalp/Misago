@@ -5,6 +5,7 @@ from ..categories.models import Category
 from ..core.utils import slugify
 from .enums import ThreadPinned
 from .hide import hide_thread
+from .hooks import create_thread_hook
 from .lock import lock_thread
 from .models import Thread
 from .pin import pin_thread
@@ -20,7 +21,7 @@ def create_thread(
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Thread:
-    return hook(
+    return create_thread_hook(
         _create_thread_action,
         category,
         title,
