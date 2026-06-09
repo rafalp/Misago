@@ -9,7 +9,11 @@ from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...notifications.enums import ThreadNotifications
 from ...notifications.models import WatchedThread
-from ...permissions.enums import CanUploadAttachments, CategoryPermission
+from ...permissions.enums import (
+    CanUploadAttachments,
+    CategoryPermission,
+    PermissionValue,
+)
 from ...permissions.models import CategoryGroupPermission, Moderator
 from ...polls.enums import PublicPollsAvailability
 from ...polls.models import Poll
@@ -969,7 +973,7 @@ def test_thread_start_view_displays_poll_form(user_client, default_category):
 def test_thread_start_view_hides_poll_form_for_user_without_permission(
     user_client, members_group, default_category
 ):
-    members_group.can_start_polls = False
+    members_group.can_start_polls = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(
@@ -1089,7 +1093,7 @@ def test_thread_start_view_starts_thread_with_poll(user_client, user, default_ca
 def test_thread_start_view_starts_thread_with_poll_form_disabled(
     user_client, members_group, default_category
 ):
-    members_group.can_start_polls = False
+    members_group.can_start_polls = PermissionValue.NO
     members_group.save()
 
     response = user_client.post(

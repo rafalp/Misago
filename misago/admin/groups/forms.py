@@ -260,7 +260,7 @@ class EditGroupForm(forms.ModelForm):
         ),
     )
 
-    can_start_polls = YesNoField(
+    can_start_polls = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can start polls"),
         help_text=pgettext_lazy(
             "admin group permissions form",
