@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models import Model
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
@@ -6,6 +7,7 @@ from ..categories.models import Category
 from ..categories.proxy import CategoriesProxy
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
+from ..threads.enums import ThreadPinned
 
 
 def get_disallowed_category_choices(
@@ -66,6 +68,39 @@ class MoveThreadForm(forms.Form):
         if data.get("category"):
             data["category"] = Category.objects.get(id=data["category"])
         return data
+
+
+class MergeThreadsForm(forms.Form):
+    request: HttpRequest
+
+    category = forms.TypedChoiceField(coerce=int, choices=[])
+    title = forms.CharField(max_length=255)
+    is_locked = forms.BooleanField(required=False)
+    is_hidden = forms.BooleanField(required=False)
+
+    disallowed_categories: set[int]
+
+    def __init__(
+        self,
+        *args,
+        request: HttpRequest,
+        conflicts: dict[str, list[Model]],
+        **kwargs,
+    ):
+        self.request = request
+        self.conflicts = conflicts
+
+        super().__init__(*args, **kwargs)
+
+        self.fields["category"].choices = request.categories.get_choices()
+        self.disallowed_categories = get_disallowed_category_choices(
+            request.user_permissions, request.categories
+        )
+
+        if request.user_permissions.is_global_moderator:
+            self.fields["pin"] = forms.TypedChoiceField(
+                coerce=int, choices=ThreadPinned.get_choices()
+            )
 
 
 class SplitPostsForm(forms.Form):

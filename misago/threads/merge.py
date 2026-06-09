@@ -1,11 +1,19 @@
 from typing import Iterable
 
 from django.db.models import Model
+from django.forms import Form
 from django.http import HttpRequest
 
-from ..polls.models import Poll
+from ..attachments.models import Attachment
+from ..likes.models import Like
+from ..notifications.models import Notification, WatchedThread
+from ..polls.models import Poll, PollVote
+from ..postedits.models import PostEdit
+from ..postgres.delete import delete_all, delete_one
+from ..readtracker.models import ReadThread
+from ..threadupdates.models import ThreadUpdate
 from .hooks import get_thread_merge_conflicts_hook
-from .models import Thread
+from .models import Post, Thread
 
 
 def get_thread_merge_conflicts(
@@ -33,3 +41,101 @@ def _get_thread_merge_conflicts_action(
         conflicts["solution"] = sorted(solution, key=lambda t: t.id)
 
     return conflicts
+
+
+def set_thread_merge_form_conflicts_fields(
+    form: Form, conflicts: dict[str, list[Model]], request: HttpRequest | None = None
+):
+    pass
+
+
+def _set_thread_merge_form_conflicts_fields_action(
+    form: Form, conflicts: dict[str, list[Model]], request: HttpRequest | None = None
+):
+    pass
+
+
+def merge_threads(
+    new_thread: Thread,
+    threads: Iterable[Thread],
+    conflicts: dict[str, Model],
+    *,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> Thread:
+    return hook(
+        _merge_threads_action,
+        new_thread,
+        threads,
+        conflicts,
+        commit=commit,
+        request=request,
+    )
+
+
+def _merge_threads_action(
+    new_thread: Thread,
+    threads: Iterable[Thread],
+    conflicts: dict[str, Model],
+    *,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> Thread:
+    new_category = new_thread.category
+
+    if poll := conflicts.get("poll"):
+        poll.category = new_category
+        poll.thread = new_thread
+        poll.save()
+
+        PollVote.objects.filter(poll=poll).update(
+            thread=new_thread, category=new_category
+        )
+
+    if solution := conflicts.get("solution"):
+        new_thread.solution_id = solution.solution_id
+        new_thread.solution_posted_at = solution.solution_posted_at
+        new_thread.solution_by_id = solution.solution_by_id
+        new_thread.solution_by_name = solution.solution_by_name
+        new_thread.solution_by_slug = solution.solution_by_slug
+        new_thread.solution_selected_at = solution.solution_selected_at
+        new_thread.solution_selected_by_id = solution.solution_selected_by_id
+        new_thread.solution_selected_by_name = solution.solution_selected_by_name
+        new_thread.solution_selected_by_slug = solution.solution_selected_by_slug
+
+    for thread in threads:
+        if thread == new_thread:
+            continue
+
+        Attachment.objects.filter(thread=thread).update(
+            thread=new_thread, category=new_category
+        )
+        Like.objects.filter(thread=thread).update(
+            thread=new_thread, category=new_category
+        )
+        Notification.objects.filter(thread=thread).update(
+            thread=new_thread, category=new_category
+        )
+        Post.objects.filter(thread=thread).update(
+            thread=new_thread, category=new_category
+        )
+        PostEdit.objects.filter(thread=thread).update(
+            thread=new_thread, category=new_category
+        )
+        ThreadUpdate.objects.filter(thread=thread).update(
+            thread=new_thread, category=new_category
+        )
+        WatchedThread.objects.filter(thread=thread).update(
+            thread=new_thread, category=new_category
+        )
+
+        delete_all(Poll, thread=thread)
+        delete_all(PollVote, thread=thread)
+        delete_all(ReadThread, thread=thread)
+
+        delete_one(thread)
+
+    if commit:
+        new_thread.save()
+
+    return new_thread

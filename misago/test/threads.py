@@ -6,8 +6,12 @@ from django.utils.crypto import get_random_string
 from ..attachments.models import Attachment
 from ..categories.models import Category
 from ..core.utils import slugify
+from ..likes.like import like_post
+from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
+from ..postedits.create import create_post_edit
+from ..postedits.models import PostEdit
 from ..readtracker.models import ReadThread
 from ..threads.enums import ThreadPinned
 from ..threads.models import Post, Thread
@@ -108,6 +112,8 @@ def thread_relations_factory(user, other_user):
     def _thread_relations_factory(thread: Thread) -> "ThreadRelations":
         post = thread.first_post
 
+        post_edit = create_post_edit(post=thread.first_post, user=other_user)
+
         attachment = Attachment.objects.create(
             category=thread.category,
             thread=thread,
@@ -117,6 +123,8 @@ def thread_relations_factory(user, other_user):
             name="filename.txt",
             slug="filename-txt",
         )
+
+        like = like_post(post, other_user)
 
         notification = Notification.objects.create(
             user=user,
@@ -165,10 +173,12 @@ def thread_relations_factory(user, other_user):
 
         return ThreadRelations(
             attachment=attachment,
+            like=like,
             notification=notification,
             poll=poll,
             poll_vote=poll_vote,
             post=post,
+            post_edit=post_edit,
             read_thread=read_thread,
             thread_update=thread_update,
             watched_thread=watched_thread,
@@ -180,10 +190,12 @@ def thread_relations_factory(user, other_user):
 @dataclass(frozen=True)
 class ThreadRelations:
     attachment: Attachment
+    like: Like
     notification: Notification
     poll: Poll
     poll_vote: PollVote
     post: Post
+    post_edit: PostEdit
     read_thread: ReadThread
     thread_update: ThreadUpdate
     watched_thread: WatchedThread
@@ -191,6 +203,9 @@ class ThreadRelations:
     def assert_category(self, category: Category):
         self.attachment.refresh_from_db()
         assert self.attachment.category_id == category.id
+
+        self.like.refresh_from_db()
+        assert self.like.category_id == category.id
 
         self.notification.refresh_from_db()
         assert self.notification.category_id == category.id
@@ -206,6 +221,9 @@ class ThreadRelations:
 
         self.post.refresh_from_db()
         assert self.post.category_id == category.id
+
+        self.post_edit.refresh_from_db()
+        assert self.post_edit.category_id == category.id
 
         self.thread_update.refresh_from_db()
         assert self.thread_update.category_id == category.id

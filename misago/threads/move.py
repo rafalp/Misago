@@ -1,12 +1,11 @@
-from typing import Type
-
-from django.db.models import Model
 from django.http import HttpRequest
 
 from ..attachments.models import Attachment
 from ..categories.models import Category
+from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
+from ..postedits.models import PostEdit
 from ..readtracker.models import ReadThread
 from ..threadupdates.models import ThreadUpdate
 from .hooks import move_thread_hook
@@ -33,24 +32,18 @@ def _move_thread_action(
 
     thread.category = new_category
 
-    _update_thread_relation(Attachment, thread, new_category)
-    _update_thread_relation(Notification, thread, new_category)
-    _update_thread_relation(Post, thread, new_category)
-    _update_thread_relation(Poll, thread, new_category)
-    _update_thread_relation(PollVote, thread, new_category)
-    _update_thread_relation(ReadThread, thread, new_category)
-    _update_thread_relation(ThreadUpdate, thread, new_category)
-    _update_thread_relation(WatchedThread, thread, new_category)
+    Attachment.objects.filter(thread=thread).update(category=new_category)
+    Like.objects.filter(thread=thread).update(category=new_category)
+    Notification.objects.filter(thread=thread).update(category=new_category)
+    Post.objects.filter(thread=thread).update(category=new_category)
+    PostEdit.objects.filter(thread=thread).update(category=new_category)
+    Poll.objects.filter(thread=thread).update(category=new_category)
+    PollVote.objects.filter(thread=thread).update(category=new_category)
+    ReadThread.objects.filter(thread=thread).update(category=new_category)
+    ThreadUpdate.objects.filter(thread=thread).update(category=new_category)
+    WatchedThread.objects.filter(thread=thread).update(category=new_category)
 
     if commit:
         thread.save()
 
     return True
-
-
-def _update_thread_relation(
-    model: Type[Model],
-    thread: Thread,
-    new_category: Category,
-):
-    model.objects.filter(thread=thread).update(category=new_category)
