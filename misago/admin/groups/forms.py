@@ -293,7 +293,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         min_value=0,
     )
-    can_vote_in_polls = YesNoField(
+    can_vote_in_polls = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can vote in polls"),
         help_text=pgettext_lazy(
             "admin group permissions form", "Users can always vote in their own polls."

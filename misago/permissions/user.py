@@ -96,7 +96,7 @@ PERMISSION_RULES = {
     "own_polls_edit_time_limit": zero_or_greater,
     "can_close_own_polls": any,
     "own_polls_close_time_limit": zero_or_greater,
-    "can_vote_in_polls": any,
+    "can_vote_in_polls": yes_no_never,
     "can_like_posts": any,
     "can_see_own_post_likes": max,
     "can_see_others_post_likes": max,

@@ -49,7 +49,7 @@ class Group(PluginDataModel):
     own_polls_edit_time_limit = models.PositiveIntegerField(default=0)
     can_close_own_polls = models.BooleanField(default=False)
     own_polls_close_time_limit = models.PositiveIntegerField(default=0)
-    can_vote_in_polls = models.BooleanField(default=False)
+    can_vote_in_polls = models.PositiveIntegerField(default=PermissionValue.NO)
 
     can_like_posts = models.BooleanField(default=False)
     can_see_own_post_likes = models.PositiveIntegerField(default=0)
