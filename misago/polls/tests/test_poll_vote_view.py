@@ -1,5 +1,6 @@
 from django.urls import reverse
 
+from ...permissions.enums import PermissionValue
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_has_error_message, assert_not_contains
 from ..votes import get_user_poll_votes
@@ -106,7 +107,7 @@ def test_poll_vote_view_doesnt_show_for_guest_if_they_have_no_permission(
 def test_poll_vote_view_doesnt_show_for_user_if_they_have_no_permission(
     user_client, members_group, thread, poll
 ):
-    members_group.can_vote_in_polls = False
+    members_group.can_vote_in_polls = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(
@@ -213,7 +214,7 @@ def test_poll_vote_view_post_vote_shows_error_404_for_user_if_thread_has_no_poll
 def test_poll_vote_view_post_vote_shows_error_403_for_user_if_they_have_no_permission(
     user_client, members_group, thread, poll
 ):
-    members_group.can_vote_in_polls = False
+    members_group.can_vote_in_polls = PermissionValue.NO
     members_group.save()
 
     response = user_client.post(

@@ -870,7 +870,26 @@ def test_check_vote_in_thread_poll_permission_fails_if_user_has_no_permission(
     thread,
     poll,
 ):
-    members_group.can_vote_in_polls = False
+    members_group.can_vote_in_polls = PermissionValue.NO
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_vote_in_thread_poll_permission(
+            permissions, default_category, thread, poll
+        )
+
+
+def test_check_vote_in_thread_poll_permission_fails_if_user_has_never_permission(
+    user,
+    user_permissions_factory,
+    members_group,
+    default_category,
+    thread,
+    poll,
+):
+    members_group.can_vote_in_polls = PermissionValue.NEVER
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -889,7 +908,7 @@ def test_check_vote_in_thread_poll_permission_fails_if_category_moderator_has_no
     thread,
     poll,
 ):
-    members_group.can_vote_in_polls = False
+    members_group.can_vote_in_polls = PermissionValue.NO
     members_group.save()
 
     permissions = user_permissions_factory(category_moderator)
@@ -908,7 +927,7 @@ def test_check_vote_in_thread_poll_permission_fails_if_global_moderator_has_no_p
     thread,
     poll,
 ):
-    moderators_group.can_vote_in_polls = False
+    moderators_group.can_vote_in_polls = PermissionValue.NO
     moderators_group.save()
 
     permissions = user_permissions_factory(moderator)
