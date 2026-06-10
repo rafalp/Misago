@@ -1,7 +1,7 @@
 import pytest
 from django.core.exceptions import PermissionDenied
 
-from ..enums import CanSeePostLikes
+from ..enums import CanSeePostLikes, PermissionValue
 from ..likes import (
     can_see_post_likes_count,
     check_like_post_permission,
@@ -29,7 +29,19 @@ def test_check_like_post_permission_fails_if_user_is_anonymous(
 def test_check_like_post_permission_fails_if_user_has_no_permission(
     user, members_group, user_permissions_factory, default_category, thread, post
 ):
-    members_group.can_like_posts = False
+    members_group.can_like_posts = PermissionValue.NO
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_like_post_permission(permissions, default_category, thread, post)
+
+
+def test_check_like_post_permission_fails_if_user_has_never_permission(
+    user, members_group, user_permissions_factory, default_category, thread, post
+):
+    members_group.can_like_posts = PermissionValue.NEVER
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -57,7 +69,7 @@ def test_check_unlike_post_permission_fails_if_user_is_anonymous(
 def test_check_unlike_post_permission_fails_if_user_has_no_permission(
     user, members_group, user_permissions_factory, default_category, thread, post
 ):
-    members_group.can_like_posts = False
+    members_group.can_like_posts = PermissionValue.NO
     members_group.save()
 
     permissions = user_permissions_factory(user)

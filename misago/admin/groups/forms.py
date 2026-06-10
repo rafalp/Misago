@@ -300,7 +300,7 @@ class EditGroupForm(forms.ModelForm):
         ),
     )
 
-    can_like_posts = YesNoField(
+    can_like_posts = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can like posts"),
     )
     can_see_own_post_likes = forms.TypedChoiceField(

@@ -4,7 +4,12 @@ from django.utils.crypto import get_random_string
 
 from ...conf.test import override_dynamic_settings
 from ...likes.like import like_post
-from ...permissions.enums import CanSeePostEdits, CanSeePostLikes, CategoryPermission
+from ...permissions.enums import (
+    CanSeePostEdits,
+    CanSeePostLikes,
+    CategoryPermission,
+    PermissionValue,
+)
 from ...permissions.models import CategoryGroupPermission
 from ...solutions.lock import lock_thread_solution
 from ...solutions.select import select_thread_solution
@@ -3610,7 +3615,7 @@ def test_thread_detail_view_doesnt_show_like_button_to_anonymous_user(
     guests_group,
     thread,
 ):
-    guests_group.can_like_posts = True
+    guests_group.can_like_posts = PermissionValue.YES
     guests_group.save()
 
     post = thread_reply_factory(thread)
@@ -3634,7 +3639,7 @@ def test_thread_detail_view_doesnt_show_unlike_button_to_anonymous_user(
     guests_group,
     thread,
 ):
-    guests_group.can_like_posts = True
+    guests_group.can_like_posts = PermissionValue.YES
     guests_group.save()
 
     post = thread_reply_factory(thread)
@@ -3679,7 +3684,7 @@ def test_thread_detail_view_doesnt_show_like_button_to_user_without_permission(
     user_client,
     thread,
 ):
-    members_group.can_like_posts = False
+    members_group.can_like_posts = PermissionValue.NO
     members_group.save()
 
     post = thread_reply_factory(thread)
@@ -3748,7 +3753,7 @@ def test_thread_detail_view_doesnt_show_unlike_button_to_user_without_permission
     user,
     thread,
 ):
-    members_group.can_like_posts = False
+    members_group.can_like_posts = PermissionValue.NO
     members_group.save()
 
     post = thread_reply_factory(thread)

@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from ...permissions.enums import CanSeePostLikes
+from ...permissions.enums import CanSeePostLikes, PermissionValue
 from ..like import like_post
 from ..postfeed import get_post_feed_post_likes_data
 
@@ -530,7 +530,7 @@ def test_get_post_feed_post_likes_data_for_liked_post_with_fifty_likes_for_user_
 def test_get_post_feed_post_likes_data_hides_like_and_unlike_url_if_user_has_no_like_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_like_posts = False
+    members_group.can_like_posts = PermissionValue.NO
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
@@ -553,7 +553,7 @@ def test_get_post_feed_post_likes_data_hides_like_and_unlike_url_if_user_has_no_
 def test_get_post_feed_post_likes_data_hides_like_and_unlike_url_for_liked_post_if_user_has_no_like_permission(
     user_permissions_factory, user, members_group, post
 ):
-    members_group.can_like_posts = False
+    members_group.can_like_posts = PermissionValue.NO
     members_group.save()
 
     user_permissions = user_permissions_factory(user)
