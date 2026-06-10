@@ -94,7 +94,7 @@ PERMISSION_RULES = {
     "can_start_polls": yes_no_never,
     "can_edit_own_polls": yes_no_never,
     "own_polls_edit_time_limit": zero_or_greater,
-    "can_close_own_polls": any,
+    "can_close_own_polls": yes_no_never,
     "own_polls_close_time_limit": zero_or_greater,
     "can_vote_in_polls": any,
     "can_like_posts": any,
@@ -223,7 +223,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
                 group.own_polls_edit_time_limit
             )
         groups_permissions["can_close_own_polls"].add(group.can_close_own_polls)
-        if group.can_close_own_polls:
+        if group.can_close_own_polls == PermissionValue.YES:
             groups_permissions["own_polls_close_time_limit"].add(
                 group.own_polls_close_time_limit
             )
