@@ -168,7 +168,26 @@ def test_check_edit_thread_poll_permission_fails_if_user_has_no_permission(
     user_thread,
     user_poll,
 ):
-    members_group.can_edit_own_polls = False
+    members_group.can_edit_own_polls = PermissionValue.NO
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_poll_permission(
+            permissions, default_category, user_thread, user_poll
+        )
+
+
+def test_check_edit_thread_poll_permission_fails_if_user_has_never_permission(
+    user,
+    user_permissions_factory,
+    members_group,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    members_group.can_edit_own_polls = PermissionValue.NEVER
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -186,7 +205,7 @@ def test_check_edit_thread_poll_permission_passes_category_moderator(
     user_thread,
     user_poll,
 ):
-    members_group.can_edit_own_polls = False
+    members_group.can_edit_own_polls = PermissionValue.NO
     members_group.save()
 
     check_edit_thread_poll_permission(
@@ -201,7 +220,7 @@ def test_check_edit_thread_poll_permission_passes_global_moderator(
     user_thread,
     user_poll,
 ):
-    moderators_group.can_edit_own_polls = False
+    moderators_group.can_edit_own_polls = PermissionValue.NO
     moderators_group.save()
 
     check_edit_thread_poll_permission(

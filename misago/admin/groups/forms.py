@@ -267,7 +267,7 @@ class EditGroupForm(forms.ModelForm):
             "This permission only applies to categories with the polls option enabled.",
         ),
     )
-    can_edit_own_polls = YesNoField(
+    can_edit_own_polls = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can edit own polls"),
     )
     own_polls_edit_time_limit = forms.IntegerField(

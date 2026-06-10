@@ -92,7 +92,7 @@ PERMISSION_RULES = {
     "attachment_size_limit": zero_or_greater,
     "can_always_delete_own_attachments": yes_no_never,
     "can_start_polls": yes_no_never,
-    "can_edit_own_polls": any,
+    "can_edit_own_polls": yes_no_never,
     "own_polls_edit_time_limit": zero_or_greater,
     "can_close_own_polls": any,
     "own_polls_close_time_limit": zero_or_greater,
@@ -218,7 +218,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         )
         groups_permissions["can_start_polls"].add(group.can_start_polls)
         groups_permissions["can_edit_own_polls"].add(group.can_edit_own_polls)
-        if group.can_edit_own_polls:
+        if group.can_edit_own_polls == PermissionValue.YES:
             groups_permissions["own_polls_edit_time_limit"].add(
                 group.own_polls_edit_time_limit
             )
