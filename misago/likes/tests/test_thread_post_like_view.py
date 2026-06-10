@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 
+from ...permissions.enums import PermissionValue
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains
 from ..like import like_post
@@ -242,7 +243,7 @@ def test_thread_post_like_view_returns_error_403_if_user_is_anonymous(
 def test_thread_post_like_view_returns_error_403_if_user_cant_like_posts(
     user_client, user, members_group, thread, post
 ):
-    members_group.can_like_posts = False
+    members_group.can_like_posts = PermissionValue.NO
     members_group.save()
 
     response = user_client.post(

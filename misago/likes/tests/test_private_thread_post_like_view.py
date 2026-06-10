@@ -274,7 +274,7 @@ def test_private_thread_post_like_view_returns_error_403_if_user_is_anonymous(
 def test_private_thread_post_like_view_returns_error_404_if_user_cant_like_posts(
     user_client, user, members_group, other_user_private_thread
 ):
-    members_group.can_like_posts = False
+    members_group.can_like_posts = PermissionValue.NO
     members_group.save()
 
     post = other_user_private_thread.first_post
