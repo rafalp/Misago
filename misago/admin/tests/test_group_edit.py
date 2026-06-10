@@ -46,7 +46,7 @@ def get_form_data(group: Group) -> dict:
         "group-can_start_polls": str(group.can_start_polls),
         "group-can_edit_own_polls": str(group.can_edit_own_polls),
         "group-own_polls_edit_time_limit": str(group.own_polls_edit_time_limit),
-        "group-can_close_own_polls": "1" if group.can_close_own_polls else "",
+        "group-can_close_own_polls": str(group.can_close_own_polls),
         "group-own_polls_close_time_limit": str(group.own_polls_close_time_limit),
         "group-can_vote_in_polls": "1" if group.can_vote_in_polls else "",
         "group-can_like_posts": "1" if group.can_like_posts else "",

@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
                 ("can_start_polls", models.PositiveIntegerField(default=0)),
                 ("can_edit_own_polls", models.PositiveIntegerField(default=0)),
                 ("own_polls_edit_time_limit", models.PositiveIntegerField(default=0)),
-                ("can_close_own_polls", models.BooleanField(default=False)),
+                ("can_close_own_polls", models.PositiveIntegerField(default=0)),
                 ("own_polls_close_time_limit", models.PositiveIntegerField(default=0)),
                 ("can_vote_in_polls", models.BooleanField(default=False)),
                 ("can_like_posts", models.BooleanField(default=False)),

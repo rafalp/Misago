@@ -280,7 +280,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         min_value=0,
     )
-    can_close_own_polls = YesNoField(
+    can_close_own_polls = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can close own polls"),
     )
     own_polls_close_time_limit = forms.IntegerField(
