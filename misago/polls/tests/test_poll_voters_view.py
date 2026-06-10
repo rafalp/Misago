@@ -1,6 +1,7 @@
 from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
+from ...permissions.enums import PermissionValue
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
 from ..enums import PublicPollsAvailability
@@ -272,7 +273,7 @@ def test_poll_voters_doesnt_show_vote_button_to_user_who_has_no_permission(
     poll.is_public = True
     poll.save()
 
-    members_group.can_vote_in_polls = False
+    members_group.can_vote_in_polls = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(
@@ -289,7 +290,7 @@ def test_poll_voters_doesnt_show_vote_button_to_user_who_has_no_permission_in_ht
     poll.is_public = True
     poll.save()
 
-    members_group.can_vote_in_polls = False
+    members_group.can_vote_in_polls = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(
