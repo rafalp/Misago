@@ -11,6 +11,8 @@ from ...postedits.models import PostEdit
 from ...readtracker.models import ReadThread
 from ...readtracker.tracker import mark_thread_read
 from ...solutions.thread import select_thread_solution
+from ...threadupdates.create import create_test_thread_update
+from ...threadupdates.models import ThreadUpdate
 from ..delete import delete_thread
 from ..models import Post, Thread
 
@@ -161,20 +163,6 @@ def test_delete_thread_deletes_thread_post_notification(user, thread, reply):
         notification.refresh_from_db()
 
 
-def test_delete_thread_deletes_read_thread(user, thread, reply):
-    read_thread = mark_thread_read(user, thread, reply.posted_at)
-
-    delete_thread(thread)
-
-    with pytest.raises(Thread.DoesNotExist):
-        thread.refresh_from_db()
-
-    with pytest.raises(Post.DoesNotExist):
-        reply.refresh_from_db()
-
-    assert not ReadThread.objects.exists()
-
-
 def test_delete_thread_deletes_thread_watch(user, thread, reply):
     watched_thread = watch_thread(thread, user)
 
@@ -188,6 +176,29 @@ def test_delete_thread_deletes_thread_watch(user, thread, reply):
 
     with pytest.raises(WatchedThread.DoesNotExist):
         watched_thread.refresh_from_db()
+
+
+def test_delete_thread_deletes_read_thread(user, thread, reply):
+    mark_thread_read(user, thread, reply.posted_at)
+
+    delete_thread(thread)
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
+
+    assert not ReadThread.objects.exists()
+
+
+def test_delete_thread_deletes_thread_updates(user, thread, reply):
+    thread_update = create_test_thread_update(thread, "DeletedUser")
+
+    delete_thread(thread)
+
+    with pytest.raises(ThreadUpdate.DoesNotExist):
+        thread_update.refresh_from_db()
 
 
 def test_delete_thread_marks_attachments_for_deletion(thread, reply, text_attachment):

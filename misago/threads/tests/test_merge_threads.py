@@ -1,8 +1,14 @@
 import pytest
 
 from ...categories.synchronize import synchronize_category
+from ...likes.like import like_post
+from ...notifications.users import notify_user
 from ...polls.models import Poll, PollVote
+from ...postedits.create import create_post_edit
+from ...readtracker.models import ReadThread
+from ...readtracker.tracker import mark_thread_read
 from ...solutions.thread import select_thread_solution
+from ...threadupdates.create import create_test_thread_update
 from ..create import create_thread
 from ..merge import get_thread_merge_conflicts, merge_threads
 from ..models import Thread
@@ -132,6 +138,20 @@ def test_merge_threads_keeps_new_thread_solution(
     assert new_thread.solution == new_thread_solution
 
 
+def test_merge_threads_merges_attachments(
+    sibling_category, thread, user_thread, other_user_thread, text_attachment
+):
+    text_attachment.associate_with_post(thread.first_post)
+    text_attachment.save()
+
+    new_thread = create_thread(sibling_category, "Merged thread")
+    merge_threads(new_thread, [thread, user_thread, other_user_thread], {})
+
+    text_attachment.refresh_from_db()
+    assert text_attachment.category == sibling_category
+    assert text_attachment.thread == new_thread
+
+
 def test_merge_threads_merges_poll_with_votes(
     poll_factory,
     poll_vote_factory,
@@ -152,7 +172,6 @@ def test_merge_threads_merges_poll_with_votes(
     )
 
     new_thread = create_thread(sibling_category, "Merged thread")
-
     merge_threads(
         new_thread,
         [thread, user_thread, other_user_thread],
@@ -178,6 +197,178 @@ def test_merge_threads_merges_poll_with_votes(
 
     with pytest.raises(PollVote.DoesNotExist):
         other_user_thread_poll_vote.refresh_from_db()
+
+
+def test_merge_threads_merges_likes(
+    sibling_category, thread, user_thread, other_user_thread
+):
+    thread_like = like_post(thread.first_post, "Bob")
+    user_thread_like = like_post(user_thread.first_post, "Alice")
+    other_user_thread_like = like_post(other_user_thread.first_post, "Jogn")
+
+    new_thread = create_thread(sibling_category, "Merged thread")
+    merge_threads(new_thread, [thread, user_thread, other_user_thread], {})
+
+    thread_like.refresh_from_db()
+    assert thread_like.category == sibling_category
+    assert thread_like.thread == new_thread
+
+    user_thread_like.refresh_from_db()
+    assert user_thread_like.category == sibling_category
+    assert user_thread_like.thread == new_thread
+
+    other_user_thread_like.refresh_from_db()
+    assert other_user_thread_like.category == sibling_category
+    assert other_user_thread_like.thread == new_thread
+
+
+def test_merge_threads_merges_post_edits(
+    sibling_category, thread, user_thread, other_user_thread
+):
+    thread_post_edit = create_post_edit(
+        post=thread.first_post,
+        user="DeletedUser",
+        old_content="Lorem",
+        new_content="Ipsum",
+    )
+    user_thread_post_edit = create_post_edit(
+        post=user_thread.first_post,
+        user="DeletedUser",
+        old_content="Lorem",
+        new_content="Ipsum",
+    )
+    other_user_thread_post_edit = create_post_edit(
+        post=other_user_thread.first_post,
+        user="DeletedUser",
+        old_content="Lorem",
+        new_content="Ipsum",
+    )
+
+    new_thread = create_thread(sibling_category, "Merged thread")
+    merge_threads(new_thread, [thread, user_thread, other_user_thread], {})
+
+    thread_post_edit.refresh_from_db()
+    assert thread_post_edit.category == sibling_category
+    assert thread_post_edit.thread == new_thread
+
+    user_thread_post_edit.refresh_from_db()
+    assert user_thread_post_edit.category == sibling_category
+    assert user_thread_post_edit.thread == new_thread
+
+    other_user_thread_post_edit.refresh_from_db()
+    assert other_user_thread_post_edit.category == sibling_category
+    assert other_user_thread_post_edit.thread == new_thread
+
+
+def test_merge_threads_merges_thread_notifications(
+    user, sibling_category, thread, user_thread, other_user_thread
+):
+    thread_notification = notify_user(
+        user, "TEST", "DeletedUser", thread.category, thread
+    )
+    user_thread_notification = notify_user(
+        user, "TEST", "DeletedUser", user_thread.category, user_thread
+    )
+    other_user_thread_notification = notify_user(
+        user, "TEST", "DeletedUser", other_user_thread.category, other_user_thread
+    )
+
+    new_thread = create_thread(sibling_category, "Merged thread")
+    merge_threads(new_thread, [thread, user_thread, other_user_thread], {})
+
+    thread_notification.refresh_from_db()
+    assert thread_notification.category == sibling_category
+    assert thread_notification.thread == new_thread
+
+    user_thread_notification.refresh_from_db()
+    assert user_thread_notification.category == sibling_category
+    assert user_thread_notification.thread == new_thread
+
+    other_user_thread_notification.refresh_from_db()
+    assert other_user_thread_notification.category == sibling_category
+    assert other_user_thread_notification.thread == new_thread
+
+
+def test_merge_threads_merges_thread_post_notifications(
+    user, sibling_category, thread, user_thread, other_user_thread
+):
+    thread_notification = notify_user(
+        user,
+        "TEST",
+        "DeletedUser",
+        thread.category,
+        thread,
+        thread.first_post,
+    )
+    user_thread_notification = notify_user(
+        user,
+        "TEST",
+        "DeletedUser",
+        user_thread.category,
+        user_thread,
+        user_thread.first_post,
+    )
+    other_user_thread_notification = notify_user(
+        user,
+        "TEST",
+        "DeletedUser",
+        other_user_thread.category,
+        other_user_thread,
+        other_user_thread.first_post,
+    )
+
+    new_thread = create_thread(sibling_category, "Merged thread")
+    merge_threads(new_thread, [thread, user_thread, other_user_thread], {})
+
+    thread_notification.refresh_from_db()
+    assert thread_notification.category == sibling_category
+    assert thread_notification.thread == new_thread
+
+    user_thread_notification.refresh_from_db()
+    assert user_thread_notification.category == sibling_category
+    assert user_thread_notification.thread == new_thread
+
+    other_user_thread_notification.refresh_from_db()
+    assert other_user_thread_notification.category == sibling_category
+    assert other_user_thread_notification.thread == new_thread
+
+
+def test_merge_threads_deletes_thread_reads(
+    user, sibling_category, thread, user_thread, other_user_thread
+):
+    mark_thread_read(user, thread, thread.last_posted_at)
+    mark_thread_read(user, user_thread, user_thread.last_posted_at)
+    mark_thread_read(user, other_user_thread, other_user_thread.last_posted_at)
+
+    new_thread = create_thread(sibling_category, "Merged thread")
+    merge_threads(new_thread, [thread, user_thread, other_user_thread], {})
+
+    assert not ReadThread.objects.exists()
+
+
+def test_merge_threads_merges_thread_updates(
+    sibling_category, thread, user_thread, other_user_thread
+):
+    thread_update = create_test_thread_update(thread, "DeletedUser")
+    user_thread_update = create_test_thread_update(user_thread, "DeletedUser")
+    other_user_thread_update = create_test_thread_update(
+        other_user_thread, "DeletedUser"
+    )
+
+    new_thread = create_thread(sibling_category, "Merged thread")
+    merge_threads(new_thread, [thread, user_thread, other_user_thread], {})
+
+    thread_update.refresh_from_db()
+    assert thread_update.category == sibling_category
+    assert thread_update.thread == new_thread
+
+    user_thread_update.refresh_from_db()
+    assert user_thread_update.category == sibling_category
+    assert user_thread_update.thread == new_thread
+
+    other_user_thread_update.refresh_from_db()
+    assert other_user_thread_update.category == sibling_category
+    assert other_user_thread_update.thread == new_thread
 
 
 def test_merge_threads_deletes_old_threads(
