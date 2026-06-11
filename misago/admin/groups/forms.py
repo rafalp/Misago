@@ -339,7 +339,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         min_value=0,
     )
-    can_clear_own_thread_solutions = YesNoField(
+    can_clear_own_thread_solutions = YesNoNeverField(
         label=pgettext_lazy(
             "admin group permissions form",
             "Can clear the selected solution in own threads",

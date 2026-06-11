@@ -84,7 +84,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "can_clear_own_thread_solutions",
-                    models.BooleanField(default=False),
+                    models.PositiveIntegerField(default=0),
                 ),
                 (
                     "own_thread_solutions_clear_time_limit",
