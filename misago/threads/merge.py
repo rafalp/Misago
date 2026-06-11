@@ -1,8 +1,9 @@
 from typing import Iterable
 
+from django import forms
 from django.db.models import Model
-from django.forms import Form
 from django.http import HttpRequest
+from django.utils.translation import pgettext
 
 from ..attachments.models import Attachment
 from ..likes.models import Like
@@ -48,19 +49,53 @@ def hook(action, *args, **kwargs):
 
 
 def set_thread_merge_form_fields(
-    form: Form, conflicts: dict[str, list[Model]], request: HttpRequest | None = None
+    form: forms.Form,
+    conflicts: dict[str, list[Model]],
+    request: HttpRequest | None = None,
 ):
     hook(_set_thread_merge_form_fields_action, form, conflicts, request)
 
 
 def _set_thread_merge_form_fields_action(
-    form: Form, conflicts: dict[str, list[Model]], request: HttpRequest | None = None
+    form: forms.Form,
+    conflicts: dict[str, list[Model]],
+    request: HttpRequest | None = None,
 ):
-    pass
+    if "poll" in conflicts:
+        form.conflicts_fields.append("poll")
+        form.fields["poll"] = forms.TypedChoiceField(
+            label=pgettext("thread merge poll conflict", "Poll"),
+            help_text=pgettext(
+                "thread merge poll conflict",
+                "Select poll to keep in the merged thread. Other polls will be deleted.",
+            ),
+            coerce=int,
+            choices=[
+                (poll.id, f"{poll.question} ({poll.thread.title})")
+                for poll in conflicts["poll"]
+            ],
+        )
+
+    if "solution" in conflicts:
+        form.conflicts_fields.append("solution")
+        form.fields["poll"] = forms.TypedChoiceField(
+            label=pgettext("thread merge solution conflict", "Solution"),
+            help_text=pgettext(
+                "thread merge solution conflict",
+                "Select a solution to use in the merged thread. Other solutions will be unmarked. The selected solution can be changed later.",
+            ),
+            coerce=int,
+            choices=[
+                (thread.id, f"{thread.title}")
+                for thread in conflicts["solution"].items()
+            ],
+        )
 
 
 def get_thread_merge_form_conflict_resolutions(
-    form: Form, conflicts: dict[str, list[Model]], request: HttpRequest | None = None
+    form: forms.Form,
+    conflicts: dict[str, list[Model]],
+    request: HttpRequest | None = None,
 ) -> dict[str, Model]:
     return hook(
         _get_thread_merge_form_conflict_resolutions_action, form, conflicts, request
@@ -68,9 +103,15 @@ def get_thread_merge_form_conflict_resolutions(
 
 
 def _get_thread_merge_form_conflict_resolutions_action(
-    form: Form, conflicts: dict[str, list[Model]], request: HttpRequest | None = None
+    form: forms.Form,
+    conflicts: dict[str, list[Model]],
+    request: HttpRequest | None = None,
 ) -> dict[str, Model]:
-    pass
+    resolutions: dict[str, Model] = {}
+    for conflict, objects in conflicts.items():
+        choices = {obj.id: obj for obj in objects}
+        resolutions[conflict] = choices[form.cleaned_data[conflict]]
+    return resolutions
 
 
 def merge_threads(
@@ -152,12 +193,12 @@ def _merge_threads_action(
         delete_all(Poll, thread=thread)
         delete_all(ReadThread, thread=thread)
 
-        delete_one(thread)
-
         category = thread.category
         if category.last_thread_id == thread.id:
             category.last_thread = None
             category.save(update_fields=["last_thread"])
+
+        delete_one(thread)
 
     new_thread.save()
 

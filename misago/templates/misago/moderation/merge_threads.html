@@ -28,6 +28,26 @@
     {% endfor %}
   </div>
 {% endwith %}
+{% for field in form.get_conflicts_fields %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {{ field.label }}:
+    </label>
+    <select class="form-control" name="{{ field.html_name }}" id="{{ field.id_for_label }}" required>
+      {% for choice in field.subwidgets %}
+        <option value="{{ choice.data.value }}"{{ choice|selectedhtml }}>
+          {{ choice.choice_label }}
+        </option>
+      {% endfor %}
+    </select>
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+    {% if field.help_text %}
+      <p class="help-block">{{ field.help_text }}</p>
+    {% endif %}
+  </div>
+{% endfor %}
 <div class="form-group">
   <div class="control-label">
     {% translate "Options:" context "moderation merge threads form" %}

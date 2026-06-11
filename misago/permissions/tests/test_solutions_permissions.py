@@ -3,7 +3,7 @@ from datetime import timedelta
 import pytest
 from django.core.exceptions import PermissionDenied
 
-from ...solutions.solutions import lock_thread_solution, select_thread_solution
+from ...solutions.thread import lock_thread_solution, select_thread_solution
 from ..solutions import (
     check_change_thread_solution_permission,
     check_clear_thread_solution_permission,

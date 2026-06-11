@@ -1,4 +1,4 @@
-from ..solutions import clear_thread_solution, select_thread_solution
+from ..thread import clear_thread_solution, select_thread_solution
 
 
 def test_clear_thread_solution_clears_thread_solution(user, thread, other_user_reply):

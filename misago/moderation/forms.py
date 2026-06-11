@@ -7,7 +7,12 @@ from ..categories.models import Category
 from ..categories.proxy import CategoriesProxy
 from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
+from ..posting.validators import validate_thread_title
 from ..threads.enums import ThreadPinned
+from ..threads.merge import (
+    get_thread_merge_form_conflict_resolutions,
+    set_thread_merge_form_fields,
+)
 
 
 def get_disallowed_category_choices(
@@ -72,6 +77,7 @@ class MoveThreadForm(forms.Form):
 
 class MergeThreadsForm(forms.Form):
     request: HttpRequest
+    conflicts: dict[str, list[Model]]
 
     category = forms.TypedChoiceField(coerce=int, choices=[])
     title = forms.CharField(max_length=255)
@@ -79,6 +85,7 @@ class MergeThreadsForm(forms.Form):
     is_hidden = forms.BooleanField(required=False)
 
     disallowed_categories: set[int]
+    conflicts_fields: list[str]
 
     def __init__(
         self,
@@ -90,6 +97,8 @@ class MergeThreadsForm(forms.Form):
         self.request = request
         self.conflicts = conflicts
 
+        self.conflicts_fields = []
+
         super().__init__(*args, **kwargs)
 
         self.fields["category"].choices = request.categories.get_choices()
@@ -99,8 +108,37 @@ class MergeThreadsForm(forms.Form):
 
         if request.user_permissions.is_global_moderator:
             self.fields["pin"] = forms.TypedChoiceField(
-                coerce=int, choices=ThreadPinned.get_choices()
+                coerce=int,
+                choices=ThreadPinned.get_choices(),
+                initial=ThreadPinned.NONE,
+                required=False,
             )
+
+        set_thread_merge_form_fields(self, conflicts, request)
+
+    def get_conflicts_fields(self):
+        return [self[field_name] for field_name in self.conflicts_fields]
+
+    def get_conflicts_resolutions(self):
+        return get_thread_merge_form_conflict_resolutions(
+            self, self.conflicts, self.request
+        )
+
+    def clean_title(self):
+        data = self.cleaned_data["title"]
+        validate_thread_title(
+            data,
+            self.request.settings.thread_title_length_min,
+            self.request.settings.thread_title_length_max,
+            self.request,
+        )
+        return data
+
+    def clean(self):
+        data = super().clean()
+        if data.get("category"):
+            data["category"] = Category.objects.get(id=data["category"])
+        return data
 
 
 class SplitPostsForm(forms.Form):

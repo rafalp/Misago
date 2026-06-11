@@ -1,4 +1,4 @@
-from ..solutions import select_thread_solution
+from ..thread import select_thread_solution
 
 
 def test_select_thread_solution_sets_thread_solution_by_user(

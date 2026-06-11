@@ -8,6 +8,7 @@ from ...notifications.users import notify_user
 from ...polls.models import Poll, PollVote
 from ...postedits.create import create_post_edit
 from ...postedits.models import PostEdit
+from ...solutions.thread import select_thread_solution
 from ..delete import delete_thread
 from ..models import Post, Thread
 
@@ -23,6 +24,20 @@ def test_delete_thread_deletes_thread(thread, post):
 
 
 def test_delete_thread_deletes_thread_with_reply(thread, post, reply):
+    delete_thread(thread)
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+    with pytest.raises(Post.DoesNotExist):
+        post.refresh_from_db()
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
+
+
+def test_delete_thread_deletes_thread_with_solution(thread, post, reply):
+    select_thread_solution(thread, reply, "DeletedUser")
     delete_thread(thread)
 
     with pytest.raises(Thread.DoesNotExist):

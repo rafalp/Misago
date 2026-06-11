@@ -1,4 +1,4 @@
-from ..solutions import (
+from ..thread import (
     lock_thread_solution,
     select_thread_solution,
     unlock_thread_solution,

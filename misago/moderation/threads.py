@@ -12,17 +12,20 @@ from ..threads.approve import (
     remove_thread_reply_approval,
     require_thread_reply_approval,
 )
+from ..threads.create import create_thread
 from ..threads.delete import delete_thread
 from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
 from ..threads.lock import lock_thread, unlock_thread
-from ..threads.merge import get_thread_merge_conflicts
+from ..threads.merge import get_thread_merge_conflicts, merge_threads
 from ..threads.move import move_thread
 from ..threads.pin import pin_thread, unpin_thread
+from ..threads.synchronize import synchronize_thread
 from ..threadupdates.create import (
     create_approved_thread_update,
     create_hidden_thread_update,
     create_locked_thread_update,
+    create_merged_thread_update,
     create_moved_thread_update,
     create_pinned_category_thread_update,
     create_pinned_everywhere_thread_update,
@@ -519,9 +522,7 @@ class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
             pgettext("threads moderation success", "Threads moved"),
         )
 
-        return ModerationActionResult(
-            updated_items=[thread.id for thread in self.threads],
-        )
+        return ModerationActionResult.from_updated_threads(threads)
 
 
 class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
@@ -558,9 +559,7 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
     def form_valid(self, form) -> ModerationActionResult:
         request = self.request
         new_category = form.cleaned_data["category"]
-        threads = [
-            thread for thread in self.threads if thread.category_id != new_category.id
-        ]
+        threads = self.threads
 
         categories = set()
         categories.add(new_category.id)
@@ -568,25 +567,35 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
         prefetch_related_objects(threads, "category")
 
         for thread in threads:
-            old_category = thread.category
-            categories.add(old_category.id)
+            categories.add(thread.category_id)
 
-            set_thread_has_updates(thread, commit=False)
-            move_thread(thread, new_category, request=request)
-            create_moved_thread_update(
-                thread, old_category, request.user, request=request
+        conflicts = form.get_conflicts_resolutions()
+        new_thread = create_thread(
+            new_category,
+            form.cleaned_data["title"],
+            pinned=form.cleaned_data["pin"],
+            is_locked=form.cleaned_data["is_locked"],
+            is_hidden=form.cleaned_data["is_hidden"],
+            request=request,
+        )
+
+        merge_threads(new_thread, threads, conflicts, request)
+
+        for thread in threads:
+            create_merged_thread_update(
+                new_thread, thread, self.request.user, request=request
             )
+
+        synchronize_thread(new_thread, request=request)
 
         synchronize_categories.delay(list(categories))
 
         messages.success(
             self.request,
-            pgettext("threads moderation success", "Threads moved"),
+            pgettext("threads moderation success", "Threads merged"),
         )
 
-        return ModerationActionResult(
-            updated_items=[thread.id for thread in self.threads],
-        )
+        return ModerationActionResult.from_deleted_threads(threads)
 
 
 class DeleteThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
