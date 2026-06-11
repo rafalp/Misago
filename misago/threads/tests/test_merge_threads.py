@@ -1,11 +1,11 @@
 import pytest
 
 from ...categories.synchronize import synchronize_category
+from ...polls.models import Poll, PollVote
 from ...solutions.thread import select_thread_solution
 from ..create import create_thread
 from ..merge import get_thread_merge_conflicts, merge_threads
 from ..models import Thread
-from ..synchronize import synchronize_thread
 
 
 def test_get_thread_merge_conflicts_returns_no_conflicts(thread, user_thread):
@@ -106,7 +106,7 @@ def test_merge_threads_merges_threads_solutions(
     assert new_thread.solution == user_thread_solution
 
 
-def test_merge_threads_keeps_dst_thread_solution(
+def test_merge_threads_keeps_new_thread_solution(
     thread_reply_factory, sibling_category, thread, user_thread, other_user_thread
 ):
     thread_solution = thread_reply_factory(thread, poster="PosterA")
@@ -130,6 +130,54 @@ def test_merge_threads_keeps_dst_thread_solution(
 
     new_thread.refresh_from_db()
     assert new_thread.solution == new_thread_solution
+
+
+def test_merge_threads_merges_poll_with_votes(
+    poll_factory,
+    poll_vote_factory,
+    sibling_category,
+    thread,
+    user_thread,
+    other_user_thread,
+):
+    thread_poll = poll_factory(thread)
+    thread_poll_vote = poll_vote_factory(thread_poll, "OtherUser", "choice2")
+
+    user_thread_poll = poll_factory(user_thread)
+    user_thread_poll_vote = poll_vote_factory(user_thread_poll, "OtherUser", "choice2")
+
+    other_user_thread_poll = poll_factory(other_user_thread)
+    other_user_thread_poll_vote = poll_vote_factory(
+        other_user_thread_poll, "OtherUser", "choice2"
+    )
+
+    new_thread = create_thread(sibling_category, "Merged thread")
+
+    merge_threads(
+        new_thread,
+        [thread, user_thread, other_user_thread],
+        {"poll": user_thread_poll},
+    )
+
+    user_thread_poll.refresh_from_db()
+    assert user_thread_poll.category == sibling_category
+    assert user_thread_poll.thread == new_thread
+
+    user_thread_poll_vote.refresh_from_db()
+    assert user_thread_poll_vote.category == sibling_category
+    assert user_thread_poll_vote.thread == new_thread
+
+    with pytest.raises(Poll.DoesNotExist):
+        thread_poll.refresh_from_db()
+
+    with pytest.raises(PollVote.DoesNotExist):
+        thread_poll_vote.refresh_from_db()
+
+    with pytest.raises(Poll.DoesNotExist):
+        other_user_thread_poll.refresh_from_db()
+
+    with pytest.raises(PollVote.DoesNotExist):
+        other_user_thread_poll_vote.refresh_from_db()
 
 
 def test_merge_threads_deletes_old_threads(

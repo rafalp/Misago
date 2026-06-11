@@ -8,6 +8,8 @@ from ...notifications.users import notify_user
 from ...polls.models import Poll, PollVote
 from ...postedits.create import create_post_edit
 from ...postedits.models import PostEdit
+from ...readtracker.models import ReadThread
+from ...readtracker.tracker import mark_thread_read
 from ...solutions.thread import select_thread_solution
 from ..delete import delete_thread
 from ..models import Post, Thread
@@ -157,6 +159,20 @@ def test_delete_thread_deletes_thread_post_notification(user, thread, reply):
 
     with pytest.raises(Notification.DoesNotExist):
         notification.refresh_from_db()
+
+
+def test_delete_thread_deletes_read_thread(user, thread, reply):
+    read_thread = mark_thread_read(user, thread, reply.posted_at)
+
+    delete_thread(thread)
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
+
+    assert not ReadThread.objects.exists()
 
 
 def test_delete_thread_deletes_thread_watch(user, thread, reply):
