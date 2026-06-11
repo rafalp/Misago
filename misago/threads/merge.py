@@ -154,6 +154,11 @@ def _merge_threads_action(
 
         delete_one(thread)
 
+        category = thread.category
+        if category.last_thread_id == thread.id:
+            category.last_thread = None
+            category.save(update_fields=["last_thread"])
+
     new_thread.save()
 
     return new_thread
