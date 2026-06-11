@@ -1102,7 +1102,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_ot
     default_category.enable_solutions = False
     default_category.save()
 
-    guests_group.can_change_own_thread_solutions = True
+    guests_group.can_change_own_thread_solutions = PermissionValue.YES
     guests_group.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -1128,7 +1128,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_de
     default_category.enable_solutions = False
     default_category.save()
 
-    guests_group.can_change_own_thread_solutions = True
+    guests_group.can_change_own_thread_solutions = PermissionValue.YES
     guests_group.save()
 
     solution = thread_reply_factory(thread)
@@ -1345,7 +1345,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_ot
     default_category.enable_solutions = True
     default_category.save()
 
-    guests_group.can_change_own_thread_solutions = True
+    guests_group.can_change_own_thread_solutions = PermissionValue.YES
     guests_group.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -1371,7 +1371,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_de
     default_category.enable_solutions = True
     default_category.save()
 
-    guests_group.can_change_own_thread_solutions = True
+    guests_group.can_change_own_thread_solutions = PermissionValue.YES
     guests_group.save()
 
     solution = thread_reply_factory(thread)
@@ -1397,7 +1397,7 @@ def test_check_change_thread_solution_permission_passes_for_global_moderator_wit
     default_category.enable_solutions = True
     default_category.save()
 
-    moderators_group.can_change_own_thread_solutions = False
+    moderators_group.can_change_own_thread_solutions = PermissionValue.NO
     moderators_group.save()
 
     thread = thread_factory(default_category, starter=moderator)
@@ -1423,7 +1423,7 @@ def test_check_change_thread_solution_permission_passes_for_global_moderator_wit
     default_category.enable_solutions = True
     default_category.save()
 
-    moderators_group.can_change_own_thread_solutions = False
+    moderators_group.can_change_own_thread_solutions = PermissionValue.NO
     moderators_group.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -1447,7 +1447,7 @@ def test_check_change_thread_solution_permission_passes_for_global_moderator_wit
     default_category.enable_solutions = True
     default_category.save()
 
-    moderators_group.can_change_own_thread_solutions = False
+    moderators_group.can_change_own_thread_solutions = PermissionValue.NO
     moderators_group.save()
 
     solution = thread_reply_factory(thread)
@@ -1471,7 +1471,7 @@ def test_check_change_thread_solution_permission_passes_for_category_moderator_w
     default_category.enable_solutions = True
     default_category.save()
 
-    members_group.can_change_own_thread_solutions = False
+    members_group.can_change_own_thread_solutions = PermissionValue.NO
     members_group.save()
 
     thread = thread_factory(default_category, starter=category_moderator)
@@ -1497,7 +1497,7 @@ def test_check_change_thread_solution_permission_passes_for_category_moderator_w
     default_category.enable_solutions = True
     default_category.save()
 
-    members_group.can_change_own_thread_solutions = False
+    members_group.can_change_own_thread_solutions = PermissionValue.NO
     members_group.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -1521,7 +1521,7 @@ def test_check_change_thread_solution_permission_passes_for_category_moderator_w
     default_category.enable_solutions = True
     default_category.save()
 
-    members_group.can_change_own_thread_solutions = False
+    members_group.can_change_own_thread_solutions = PermissionValue.NO
     members_group.save()
 
     solution = thread_reply_factory(thread)
@@ -1545,7 +1545,34 @@ def test_check_change_thread_solution_permission_fails_for_user_without_permissi
     default_category.enable_solutions = True
     default_category.save()
 
-    members_group.can_change_own_thread_solutions = False
+    members_group.can_change_own_thread_solutions = PermissionValue.NO
+    members_group.save()
+
+    thread = thread_factory(default_category, starter=user)
+    solution = thread_reply_factory(thread)
+
+    select_thread_solution(thread, solution, user)
+
+    new_solution = thread_reply_factory(thread)
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_change_thread_solution_permission(permissions, new_solution)
+
+
+def test_check_change_thread_solution_permission_fails_for_user_with_never_permission_for_own_thread(
+    thread_factory,
+    thread_reply_factory,
+    user_permissions_factory,
+    user,
+    members_group,
+    default_category,
+):
+    default_category.enable_solutions = True
+    default_category.save()
+
+    members_group.can_change_own_thread_solutions = PermissionValue.NEVER
     members_group.save()
 
     thread = thread_factory(default_category, starter=user)
@@ -1573,7 +1600,7 @@ def test_check_change_thread_solution_permission_fails_for_user_without_permissi
     default_category.enable_solutions = True
     default_category.save()
 
-    members_group.can_change_own_thread_solutions = False
+    members_group.can_change_own_thread_solutions = PermissionValue.NO
     members_group.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -1599,7 +1626,7 @@ def test_check_change_thread_solution_permission_fails_for_user_without_permissi
     default_category.enable_solutions = True
     default_category.save()
 
-    members_group.can_change_own_thread_solutions = False
+    members_group.can_change_own_thread_solutions = PermissionValue.NO
     members_group.save()
 
     solution = thread_reply_factory(thread)
@@ -1626,7 +1653,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_withou
     default_category.enable_solutions = True
     default_category.save()
 
-    guests_group.can_change_own_thread_solutions = False
+    guests_group.can_change_own_thread_solutions = PermissionValue.NO
     guests_group.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -1652,7 +1679,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_withou
     default_category.enable_solutions = True
     default_category.save()
 
-    guests_group.can_change_own_thread_solutions = False
+    guests_group.can_change_own_thread_solutions = PermissionValue.NO
     guests_group.save()
 
     solution = thread_reply_factory(thread)
@@ -1894,7 +1921,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_ot
     other_user_thread.is_locked = True
     other_user_thread.save()
 
-    guests_group.can_change_own_thread_solutions = True
+    guests_group.can_change_own_thread_solutions = PermissionValue.YES
     guests_group.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -1923,7 +1950,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_de
     thread.is_locked = True
     thread.save()
 
-    guests_group.can_change_own_thread_solutions = True
+    guests_group.can_change_own_thread_solutions = PermissionValue.YES
     guests_group.save()
 
     solution = thread_reply_factory(thread)
@@ -2151,7 +2178,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_ot
     default_category.enable_solutions = True
     default_category.save()
 
-    guests_group.can_change_own_thread_solutions = True
+    guests_group.can_change_own_thread_solutions = PermissionValue.YES
     guests_group.save()
 
     solution = thread_reply_factory(other_user_thread)
@@ -2178,7 +2205,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_de
     default_category.enable_solutions = True
     default_category.save()
 
-    guests_group.can_change_own_thread_solutions = True
+    guests_group.can_change_own_thread_solutions = PermissionValue.YES
     guests_group.save()
 
     solution = thread_reply_factory(thread)
@@ -2432,7 +2459,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_ot
     default_category.enable_solutions = True
     default_category.save()
 
-    guests_group.can_change_own_thread_solutions = True
+    guests_group.can_change_own_thread_solutions = PermissionValue.YES
     guests_group.own_thread_solutions_change_time_limit = 5
     guests_group.save()
 
@@ -2459,7 +2486,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_de
     default_category.enable_solutions = True
     default_category.save()
 
-    guests_group.can_change_own_thread_solutions = True
+    guests_group.can_change_own_thread_solutions = PermissionValue.YES
     guests_group.own_thread_solutions_change_time_limit = 5
     guests_group.save()
 
@@ -2742,7 +2769,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_ot
     default_category.enable_solutions = True
     default_category.save()
 
-    guests_group.can_change_own_thread_solutions = True
+    guests_group.can_change_own_thread_solutions = PermissionValue.YES
     guests_group.own_thread_solutions_change_time_limit = 5
     guests_group.save()
 
@@ -2772,7 +2799,7 @@ def test_check_change_thread_solution_permission_fails_for_anonymous_user_for_de
     default_category.enable_solutions = True
     default_category.save()
 
-    guests_group.can_change_own_thread_solutions = True
+    guests_group.can_change_own_thread_solutions = PermissionValue.YES
     guests_group.own_thread_solutions_change_time_limit = 5
     guests_group.save()
 

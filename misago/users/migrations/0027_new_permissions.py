@@ -80,7 +80,10 @@ class Migration(migrations.Migration):
                     "can_select_own_thread_solutions",
                     models.PositiveIntegerField(default=0),
                 ),
-                ("can_change_own_thread_solutions", models.BooleanField(default=False)),
+                (
+                    "can_change_own_thread_solutions",
+                    models.PositiveIntegerField(default=0),
+                ),
                 (
                     "own_thread_solutions_change_time_limit",
                     models.PositiveIntegerField(default=0),

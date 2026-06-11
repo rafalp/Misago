@@ -27,7 +27,7 @@ class NewGroupForm(forms.ModelForm):
         label=pgettext_lazy("admin group form", "Copy permissions from"),
         help_text=pgettext_lazy(
             "admin group form",
-            "You can speed up a new group setup process by copying its permissions from another group. Aadministrator and moderator permissions are not copied.",
+            "You can speed up a new group setup process by copying its permissions from another group. Administrator and moderator permissions are not copied.",
         ),
         queryset=Group.objects,
         required=False,
@@ -323,7 +323,7 @@ class EditGroupForm(forms.ModelForm):
             "admin group permissions form", "Can select solutions in own threads"
         ),
     )
-    can_change_own_thread_solutions = YesNoField(
+    can_change_own_thread_solutions = YesNoNeverField(
         label=pgettext_lazy(
             "admin group permissions form", "Can change the solution in own threads"
         ),
