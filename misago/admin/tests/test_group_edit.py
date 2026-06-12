@@ -71,7 +71,7 @@ def get_form_data(group: Group) -> dict:
         "group-username_changes_limit": str(group.username_changes_limit),
         "group-username_changes_expire": str(group.username_changes_expire),
         "group-username_changes_span": str(group.username_changes_span),
-        "group-can_see_user_profiles": "1" if group.can_see_user_profiles else "",
+        "group-can_see_user_profiles": str(group.can_see_user_profiles),
     }
 
 
