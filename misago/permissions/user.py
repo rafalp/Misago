@@ -103,7 +103,7 @@ PERMISSION_RULES = {
     "can_select_own_thread_solutions": yes_no_never,
     "can_change_own_thread_solutions": yes_no_never,
     "own_thread_solutions_change_time_limit": zero_or_greater,
-    "can_clear_own_thread_solutions": any,
+    "can_clear_own_thread_solutions": yes_no_never,
     "own_thread_solutions_clear_time_limit": zero_or_greater,
     "can_change_username": any,
     "username_changes_limit": zero_or_greater,
@@ -246,7 +246,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         groups_permissions["can_clear_own_thread_solutions"].add(
             group.can_clear_own_thread_solutions
         )
-        if group.can_clear_own_thread_solutions:
+        if group.can_clear_own_thread_solutions == PermissionValue.YES:
             groups_permissions["own_thread_solutions_clear_time_limit"].add(
                 group.own_thread_solutions_clear_time_limit
             )

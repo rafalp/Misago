@@ -61,8 +61,8 @@ def get_form_data(group: Group) -> dict:
         "group-own_thread_solutions_change_time_limit": str(
             group.own_thread_solutions_change_time_limit
         ),
-        "group-can_clear_own_thread_solutions": (
-            "1" if group.can_clear_own_thread_solutions else ""
+        "group-can_clear_own_thread_solutions": str(
+            group.can_clear_own_thread_solutions
         ),
         "group-own_thread_solutions_clear_time_limit": str(
             group.own_thread_solutions_clear_time_limit
