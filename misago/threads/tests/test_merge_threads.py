@@ -2,6 +2,7 @@ import pytest
 
 from ...categories.synchronize import synchronize_category
 from ...likes.like import like_post
+from ...notifications.threads import watch_thread
 from ...notifications.users import notify_user
 from ...polls.models import Poll, PollVote
 from ...postedits.create import create_post_edit
@@ -287,6 +288,29 @@ def test_merge_threads_merges_thread_notifications(
     other_user_thread_notification.refresh_from_db()
     assert other_user_thread_notification.category == sibling_category
     assert other_user_thread_notification.thread == new_thread
+
+
+def test_merge_threads_merges_watched_threads(
+    user, sibling_category, thread, user_thread, other_user_thread
+):
+    watched_thread = watch_thread(thread, user)
+    watched_user_thread = watch_thread(user_thread, user)
+    watched_other_user_thread = watch_thread(other_user_thread, user)
+
+    new_thread = create_thread(sibling_category, "Merged thread")
+    merge_threads(new_thread, [thread, user_thread, other_user_thread], {})
+
+    watched_thread.refresh_from_db()
+    assert watched_thread.category == sibling_category
+    assert watched_thread.thread == new_thread
+
+    watched_user_thread.refresh_from_db()
+    assert watched_user_thread.category == sibling_category
+    assert watched_user_thread.thread == new_thread
+
+    watched_other_user_thread.refresh_from_db()
+    assert watched_other_user_thread.category == sibling_category
+    assert watched_other_user_thread.thread == new_thread
 
 
 def test_merge_threads_merges_thread_post_notifications(

@@ -13,7 +13,7 @@ from ..postedits.models import PostEdit
 from ..postgres.delete import delete_all, delete_one
 from ..readtracker.models import ReadThread
 from ..threadupdates.models import ThreadUpdate
-from .hooks import get_thread_merge_conflicts_hook
+from .hooks import get_thread_merge_conflicts_hook, merge_threads_hook
 from .models import Post, Thread
 
 
@@ -115,14 +115,14 @@ def _get_thread_merge_form_conflict_resolutions_action(
 
 
 def merge_threads(
-    new_thread: Thread,
+    target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
     request: HttpRequest | None = None,
 ) -> Thread:
-    return hook(
+    return merge_threads_hook(
         _merge_threads_action,
-        new_thread,
+        target,
         threads,
         conflicts,
         request,
@@ -130,76 +130,69 @@ def merge_threads(
 
 
 def _merge_threads_action(
-    new_thread: Thread,
+    target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
     request: HttpRequest | None = None,
 ) -> Thread:
-    new_category = new_thread.category
+    new_category = target.category
 
     poll = conflicts.get("poll")
-    if poll and poll.thread_id != new_thread.id:
-        if new_thread.has_poll:
-            delete_all(PollVote, thread=new_thread)
-            delete_all(Poll, thread=new_thread)
+    if poll and poll.thread_id != target.id:
+        if target.has_poll:
+            delete_all(PollVote, thread=target)
+            delete_all(Poll, thread=target)
 
         poll.category = new_category
-        poll.thread = new_thread
+        poll.thread = target
         poll.save()
 
-        PollVote.objects.filter(poll=poll).update(
-            thread=new_thread, category=new_category
-        )
+        PollVote.objects.filter(poll=poll).update(thread=target, category=new_category)
 
     solution = conflicts.get("solution")
-    if solution and solution != new_thread:
-        new_thread.solution_id = solution.solution_id
-        new_thread.solution_posted_at = solution.solution_posted_at
-        new_thread.solution_by_id = solution.solution_by_id
-        new_thread.solution_by_name = solution.solution_by_name
-        new_thread.solution_by_slug = solution.solution_by_slug
-        new_thread.solution_selected_at = solution.solution_selected_at
-        new_thread.solution_selected_by_id = solution.solution_selected_by_id
-        new_thread.solution_selected_by_name = solution.solution_selected_by_name
-        new_thread.solution_selected_by_slug = solution.solution_selected_by_slug
+    if solution and solution != target:
+        target.solution_id = solution.solution_id
+        target.solution_posted_at = solution.solution_posted_at
+        target.solution_by_id = solution.solution_by_id
+        target.solution_by_name = solution.solution_by_name
+        target.solution_by_slug = solution.solution_by_slug
+        target.solution_selected_at = solution.solution_selected_at
+        target.solution_selected_by_id = solution.solution_selected_by_id
+        target.solution_selected_by_name = solution.solution_selected_by_name
+        target.solution_selected_by_slug = solution.solution_selected_by_slug
 
     for thread in threads:
-        if thread == new_thread:
-            continue
-
-        Attachment.objects.filter(thread=thread).update(
-            thread=new_thread, category=new_category
-        )
-        Like.objects.filter(thread=thread).update(
-            thread=new_thread, category=new_category
-        )
-        Notification.objects.filter(thread=thread).update(
-            thread=new_thread, category=new_category
-        )
-        Post.objects.filter(thread=thread).update(
-            thread=new_thread, category=new_category
-        )
-        PostEdit.objects.filter(thread=thread).update(
-            thread=new_thread, category=new_category
-        )
-        ThreadUpdate.objects.filter(thread=thread).update(
-            thread=new_thread, category=new_category
-        )
-        WatchedThread.objects.filter(thread=thread).update(
-            thread=new_thread, category=new_category
-        )
-
-        delete_all(PollVote, thread=thread)
-        delete_all(Poll, thread=thread)
-        delete_all(ReadThread, thread=thread)
-
         category = thread.category
         if category.last_thread_id == thread.id:
             category.last_thread = None
             category.save(update_fields=["last_thread"])
 
-        delete_one(thread)
+    Attachment.objects.filter(thread__in=threads).update(
+        thread=target, category=new_category
+    )
+    Like.objects.filter(thread__in=threads).update(thread=target, category=new_category)
+    Notification.objects.filter(thread__in=threads).update(
+        thread=target, category=new_category
+    )
+    Post.objects.filter(thread__in=threads).update(thread=target, category=new_category)
+    PostEdit.objects.filter(thread__in=threads).update(
+        thread=target, category=new_category
+    )
+    ThreadUpdate.objects.filter(thread__in=threads).update(
+        thread=target, category=new_category
+    )
+    WatchedThread.objects.filter(thread__in=threads).update(
+        thread=target, category=new_category
+    )
 
-    new_thread.save()
+    thread_ids = [thread.id for thread in threads]
 
-    return new_thread
+    delete_all(PollVote, thread=thread_ids)
+    delete_all(Poll, thread=thread_ids)
+    delete_all(ReadThread, thread=thread_ids)
+
+    delete_all(Thread, id=thread_ids)
+
+    target.save()
+
+    return target

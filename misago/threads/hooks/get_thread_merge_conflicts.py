@@ -1,13 +1,10 @@
-from typing import TYPE_CHECKING, Iterable, Protocol
+from typing import Iterable, Protocol
 
 from django.db.models import Model
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
 from ..models import Thread
-
-if TYPE_CHECKING:
-    from ...users.models import User
 
 
 class GetThreadMergeConflictsHookAction(Protocol):
