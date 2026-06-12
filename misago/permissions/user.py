@@ -109,7 +109,7 @@ PERMISSION_RULES = {
     "username_changes_limit": zero_or_greater,
     "username_changes_expire": zero_or_greater,
     "username_changes_span": zero_or_greater,
-    "can_see_user_profiles": any,
+    "can_see_user_profiles": yes_no_never,
 }
 
 PERMISSION_DEFAULTS = {

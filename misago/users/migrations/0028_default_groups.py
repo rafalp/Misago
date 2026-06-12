@@ -62,7 +62,7 @@ def create_default_groups(apps, schema_editor):
                 can_change_own_thread_solutions=PermissionValue.YES,
                 can_clear_own_thread_solutions=PermissionValue.YES,
                 can_change_username=True,
-                can_see_user_profiles=True,
+                can_see_user_profiles=PermissionValue.YES,
             ),
             Group(
                 id=DefaultGroupId.MODERATORS,
@@ -105,7 +105,7 @@ def create_default_groups(apps, schema_editor):
                 can_change_own_thread_solutions=PermissionValue.YES,
                 can_clear_own_thread_solutions=PermissionValue.YES,
                 can_change_username=True,
-                can_see_user_profiles=True,
+                can_see_user_profiles=PermissionValue.YES,
             ),
             Group(
                 id=DefaultGroupId.MEMBERS,
@@ -146,7 +146,7 @@ def create_default_groups(apps, schema_editor):
                 username_changes_limit=5,
                 username_changes_expire=4,
                 username_changes_span=1,
-                can_see_user_profiles=True,
+                can_see_user_profiles=PermissionValue.YES,
             ),
             Group(
                 id=DefaultGroupId.GUESTS,
@@ -157,7 +157,7 @@ def create_default_groups(apps, schema_editor):
                 # Permissions
                 can_see_others_post_edits=CanSeePostEdits.HISTORY,
                 can_see_others_post_likes=CanSeePostLikes.USERS,
-                can_see_user_profiles=True,
+                can_see_user_profiles=PermissionValue.YES,
             ),
         ]
     )

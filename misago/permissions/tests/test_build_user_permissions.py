@@ -1,31 +1,31 @@
-from ..enums import CategoryPermission
+from ..enums import CategoryPermission, PermissionValue
 from ..user import build_user_permissions
 
 
 def test_build_user_permissions_builds_user_permissions(user):
     permissions = build_user_permissions(user)
-    assert permissions["can_see_user_profiles"]
+    assert permissions["can_see_user_profiles"] is True
 
 
 def test_build_user_permissions_builds_user_permissions_from_multiple_groups(
     user, members_group, custom_group
 ):
-    members_group.can_see_user_profiles = False
+    members_group.can_see_user_profiles = PermissionValue.NO
     members_group.save()
 
-    custom_group.can_see_user_profiles = True
+    custom_group.can_see_user_profiles = PermissionValue.YES
     custom_group.save()
 
     user.set_groups(members_group, [custom_group])
     user.save()
 
     permissions = build_user_permissions(user)
-    assert permissions["can_see_user_profiles"]
+    assert permissions["can_see_user_profiles"] is True
 
 
 def test_build_user_permissions_builds_anonymous_user_permissions(db, anonymous_user):
     permissions = build_user_permissions(anonymous_user)
-    assert permissions["can_see_user_profiles"]
+    assert permissions["can_see_user_profiles"] is True
 
 
 def test_build_user_permissions_builds_user_category_permissions(

@@ -1,18 +1,19 @@
 import pytest
 
 from ..copy import copy_group_permissions
+from ..enums import PermissionValue
 from ..models import CategoryGroupPermission
 
 
 def test_copy_group_permissions_copies_group_permissions(members_group, custom_group):
-    assert not custom_group.can_see_user_profiles
+    assert custom_group.can_see_user_profiles == PermissionValue.NO
 
     copy_group_permissions(members_group, custom_group)
 
-    assert custom_group.can_see_user_profiles
+    assert custom_group.can_see_user_profiles == PermissionValue.YES
 
     custom_group.refresh_from_db()
-    assert custom_group.can_see_user_profiles
+    assert custom_group.can_see_user_profiles == PermissionValue.YES
 
 
 def test_copy_group_permissions_copies_category_permission(
