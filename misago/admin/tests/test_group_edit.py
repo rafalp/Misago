@@ -52,11 +52,11 @@ def get_form_data(group: Group) -> dict:
         "group-can_like_posts": str(group.can_like_posts),
         "group-can_see_own_post_likes": str(group.can_see_own_post_likes),
         "group-can_see_others_post_likes": str(group.can_see_others_post_likes),
-        "group-can_select_own_thread_solutions": (
-            "1" if group.can_select_own_thread_solutions else ""
+        "group-can_select_own_thread_solutions": str(
+            group.can_select_own_thread_solutions
         ),
-        "group-can_change_own_thread_solutions": (
-            "1" if group.can_change_own_thread_solutions else ""
+        "group-can_change_own_thread_solutions": str(
+            group.can_change_own_thread_solutions
         ),
         "group-own_thread_solutions_change_time_limit": str(
             group.own_thread_solutions_change_time_limit
