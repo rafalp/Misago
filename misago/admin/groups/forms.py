@@ -389,7 +389,7 @@ class EditGroupForm(forms.ModelForm):
         min_value=0,
     )
 
-    can_see_user_profiles = YesNoField(
+    can_see_user_profiles = YesNoNeverField(
         label=pgettext_lazy(
             "admin group permissions form", "Can see other users' profiles"
         ),

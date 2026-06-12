@@ -100,7 +100,7 @@ class Migration(migrations.Migration):
                 ("username_changes_limit", models.PositiveIntegerField(default=0)),
                 ("username_changes_expire", models.PositiveIntegerField(default=0)),
                 ("username_changes_span", models.PositiveIntegerField(default=0)),
-                ("can_see_user_profiles", models.BooleanField(default=False)),
+                ("can_see_user_profiles", models.PositiveIntegerField(default=0)),
                 ("plugin_data", models.JSONField(default=dict)),
             ],
             options={"ordering": ["ordering"]},

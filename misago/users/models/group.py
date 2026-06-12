@@ -72,7 +72,7 @@ class Group(PluginDataModel):
     username_changes_expire = models.PositiveIntegerField(default=0)
     username_changes_span = models.PositiveIntegerField(default=0)
 
-    can_see_user_profiles = models.BooleanField(default=False)
+    can_see_user_profiles = models.PositiveIntegerField(default=PermissionValue.NO)
 
     class Meta(PluginDataModel.Meta):
         ordering = ["ordering"]
