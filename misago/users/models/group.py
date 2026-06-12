@@ -67,7 +67,7 @@ class Group(PluginDataModel):
     )
     own_thread_solutions_clear_time_limit = models.PositiveIntegerField(default=0)
 
-    can_change_username = models.BooleanField(default=False)
+    can_change_username = models.PositiveIntegerField(default=PermissionValue.NO)
     username_changes_limit = models.PositiveIntegerField(default=0)
     username_changes_expire = models.PositiveIntegerField(default=0)
     username_changes_span = models.PositiveIntegerField(default=0)

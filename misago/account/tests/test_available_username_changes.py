@@ -3,12 +3,13 @@ from datetime import timedelta
 
 from django.utils import timezone
 
+from ...permissions.enums import PermissionValue
 from ..namechanges import get_available_username_changes
 
 
 @dataclass
 class Permissions:
-    can_change_username: bool = False
+    can_change_username: int = PermissionValue.NO
     username_changes_limit: int = 0
     username_changes_expire: int = 0
     username_changes_span: int = 0
@@ -17,7 +18,20 @@ class Permissions:
 def test_get_available_username_changes_doesnt_allow_name_change_if_no_permission(user):
     options = get_available_username_changes(user, Permissions())
 
-    assert not options.can_change_username
+    assert options.can_change_username is False
+    assert options.unlimited is False
+    assert options.changes_left == 0
+    assert options.next_change is None
+
+
+def test_get_available_username_changes_doesnt_allow_name_change_if_never_permission(
+    user,
+):
+    options = get_available_username_changes(
+        user, Permissions(can_change_username=PermissionValue.NEVER)
+    )
+
+    assert options.can_change_username is False
     assert options.unlimited is False
     assert options.changes_left == 0
     assert options.next_change is None
@@ -27,10 +41,10 @@ def test_get_available_username_changes_allows_unlimited_name_changes_without_wa
     user,
 ):
     options = get_available_username_changes(
-        user, Permissions(can_change_username=True)
+        user, Permissions(can_change_username=PermissionValue.YES)
     )
 
-    assert options.can_change_username
+    assert options.can_change_username is True
     assert options.unlimited is True
     assert options.changes_left is None
     assert options.next_change is None
@@ -42,10 +56,10 @@ def test_get_available_username_changes_allows_unlimited_name_changes_without_wa
     user.set_username("Bob", user)
 
     options = get_available_username_changes(
-        user, Permissions(can_change_username=True)
+        user, Permissions(can_change_username=PermissionValue.YES)
     )
 
-    assert options.can_change_username
+    assert options.can_change_username is True
     assert options.unlimited is True
     assert options.changes_left is None
     assert options.next_change is None
@@ -57,12 +71,12 @@ def test_get_available_username_changes_counts_user_name_changes_to_the_limit(us
     options = get_available_username_changes(
         user,
         Permissions(
-            can_change_username=True,
+            can_change_username=PermissionValue.YES,
             username_changes_limit=2,
         ),
     )
 
-    assert options.can_change_username
+    assert options.can_change_username is True
     assert options.unlimited is False
     assert options.changes_left is 1
     assert options.next_change is None
@@ -74,13 +88,13 @@ def test_get_available_username_changes_counts_recent_name_changes_to_the_limit(
     options = get_available_username_changes(
         user,
         Permissions(
-            can_change_username=True,
+            can_change_username=PermissionValue.YES,
             username_changes_limit=2,
             username_changes_expire=1,
         ),
     )
 
-    assert options.can_change_username
+    assert options.can_change_username is True
     assert options.unlimited is False
     assert options.changes_left is 1
     assert options.next_change is None
@@ -96,13 +110,13 @@ def test_get_available_username_changes_doesnt_count_expired_name_changes_to_the
     options = get_available_username_changes(
         user,
         Permissions(
-            can_change_username=True,
+            can_change_username=PermissionValue.YES,
             username_changes_limit=2,
             username_changes_expire=1,
         ),
     )
 
-    assert options.can_change_username
+    assert options.can_change_username is True
     assert options.unlimited is False
     assert options.changes_left is 2
     assert options.next_change is None
@@ -116,12 +130,12 @@ def test_get_available_username_changes_doesnt_count_user_name_changes_by_other_
     options = get_available_username_changes(
         user,
         Permissions(
-            can_change_username=True,
+            can_change_username=PermissionValue.YES,
             username_changes_limit=2,
         ),
     )
 
-    assert options.can_change_username
+    assert options.can_change_username is True
     assert options.unlimited is False
     assert options.changes_left is 2
     assert options.next_change is None
@@ -133,12 +147,12 @@ def test_get_available_username_changes_includes_span_in_next_change(user):
     options = get_available_username_changes(
         user,
         Permissions(
-            can_change_username=True,
+            can_change_username=PermissionValue.YES,
             username_changes_span=1,
         ),
     )
 
-    assert not options.can_change_username
+    assert options.can_change_username is False
     assert options.unlimited is True
     assert options.changes_left is None
     assert options.next_change > change.changed_on
@@ -152,12 +166,12 @@ def test_get_available_username_changes_includes_span_in_past_next_change(user):
     options = get_available_username_changes(
         user,
         Permissions(
-            can_change_username=True,
+            can_change_username=PermissionValue.YES,
             username_changes_span=1,
         ),
     )
 
-    assert options.can_change_username
+    assert options.can_change_username is True
     assert options.unlimited is True
     assert options.changes_left is None
     assert options.next_change > change.changed_on
@@ -172,12 +186,12 @@ def test_get_available_username_changes_prevents_change_if_limit_is_met(
     options = get_available_username_changes(
         user,
         Permissions(
-            can_change_username=True,
+            can_change_username=PermissionValue.YES,
             username_changes_limit=1,
         ),
     )
 
-    assert not options.can_change_username
+    assert options.can_change_username is False
     assert options.unlimited is False
     assert options.changes_left == 0
     assert options.next_change is None
@@ -192,12 +206,12 @@ def test_get_available_username_changes_prevents_change_if_limit_is_exceeded(
     options = get_available_username_changes(
         user,
         Permissions(
-            can_change_username=True,
+            can_change_username=PermissionValue.YES,
             username_changes_limit=1,
         ),
     )
 
-    assert not options.can_change_username
+    assert options.can_change_username is False
     assert options.unlimited is False
     assert options.changes_left == 0
     assert options.next_change is None
@@ -217,14 +231,14 @@ def test_get_available_username_changes_next_change_is_expiration_if_greater(
     options = get_available_username_changes(
         user,
         Permissions(
-            can_change_username=True,
+            can_change_username=PermissionValue.YES,
             username_changes_limit=2,
             username_changes_expire=6,
             username_changes_span=1,
         ),
     )
 
-    assert not options.can_change_username
+    assert options.can_change_username is False
     assert options.unlimited is False
     assert options.changes_left == 0
     assert options.next_change > first_change.changed_on
@@ -244,14 +258,14 @@ def test_get_available_username_changes_next_change_is_span_if_greater(
     options = get_available_username_changes(
         user,
         Permissions(
-            can_change_username=True,
+            can_change_username=PermissionValue.YES,
             username_changes_limit=2,
             username_changes_expire=3,
             username_changes_span=5,
         ),
     )
 
-    assert not options.can_change_username
+    assert options.can_change_username is False
     assert options.unlimited is False
     assert options.changes_left == 0
     assert options.next_change > second_change.changed_on
