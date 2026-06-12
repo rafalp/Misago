@@ -318,7 +318,7 @@ class EditGroupForm(forms.ModelForm):
         coerce=int,
     )
 
-    can_select_own_thread_solutions = YesNoField(
+    can_select_own_thread_solutions = YesNoNeverField(
         label=pgettext_lazy(
             "admin group permissions form", "Can select solutions in own threads"
         ),

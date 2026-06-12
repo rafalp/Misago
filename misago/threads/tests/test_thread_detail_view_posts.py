@@ -4561,7 +4561,7 @@ def test_thread_detail_view_shows_post_without_change_solution_button_for_user_w
     default_category.enable_solutions = True
     default_category.save()
 
-    members_group.can_select_own_thread_solutions = False
+    members_group.can_select_own_thread_solutions = PermissionValue.NO
     members_group.save()
 
     solution = thread_reply_factory(
