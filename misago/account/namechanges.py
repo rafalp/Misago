@@ -3,8 +3,6 @@ from datetime import datetime, timedelta
 
 from django.utils import timezone
 
-from misago.permissions.enums import PermissionValue
-
 
 @dataclass
 class AvailableUsernameChanges:
@@ -21,7 +19,7 @@ class AvailableUsernameChanges:
 
 
 def get_available_username_changes(user, permissions) -> AvailableUsernameChanges:
-    if permissions.can_change_username in (PermissionValue.NEVER, PermissionValue.NO):
+    if not permissions.can_change_username:
         return AvailableUsernameChanges(
             unlimited=False,
             changes_left=0,
