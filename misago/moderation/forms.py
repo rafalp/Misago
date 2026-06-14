@@ -10,8 +10,7 @@ from ..permissions.proxy import UserPermissionsProxy
 from ..posting.validators import validate_thread_title
 from ..threads.enums import ThreadPinned
 from ..threads.merge import (
-    get_thread_merge_form_conflict_resolutions,
-    set_thread_merge_form_fields,
+    get_thread_merge_form_fields,
 )
 
 
@@ -75,7 +74,36 @@ class MoveThreadForm(forms.Form):
         return data
 
 
-class MergeThreadsForm(forms.Form):
+class MergeForm(forms.Form):
+    conflicts: dict[str, list[Model]]
+
+    def __init__(
+        self,
+        *args,
+        request: HttpRequest,
+        conflicts: dict[str, list[Model]],
+        **kwargs,
+    ):
+        self.request = request
+        self.conflicts = conflicts
+
+        super().__init__(*args, **kwargs)
+
+        self.fields.update(get_thread_merge_form_fields(self, conflicts, request))
+
+    @property
+    def conflicts_fields(self):
+        return [self[field_name] for field_name in self.conflicts]
+
+    def get_conflicts_resolutions(self):
+        resolutions: dict[str, Model] = {}
+        for conflict, objects in self.conflicts.items():
+            choices = {obj.id: obj for obj in objects}
+            resolutions[conflict] = choices[self.cleaned_data[conflict]]
+        return resolutions
+
+
+class MergeThreadsForm(MergeForm):
     request: HttpRequest
     conflicts: dict[str, list[Model]]
 
@@ -94,12 +122,7 @@ class MergeThreadsForm(forms.Form):
         conflicts: dict[str, list[Model]],
         **kwargs,
     ):
-        self.request = request
-        self.conflicts = conflicts
-
-        self.conflicts_fields = []
-
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, request=request, conflicts=conflicts, **kwargs)
 
         self.fields["category"].choices = request.categories.get_choices()
         self.disallowed_categories = get_disallowed_category_choices(
@@ -113,16 +136,6 @@ class MergeThreadsForm(forms.Form):
                 initial=ThreadPinned.NONE,
                 required=False,
             )
-
-        set_thread_merge_form_fields(self, conflicts, request)
-
-    def get_conflicts_fields(self):
-        return [self[field_name] for field_name in self.conflicts_fields]
-
-    def get_conflicts_resolutions(self):
-        return get_thread_merge_form_conflict_resolutions(
-            self, self.conflicts, self.request
-        )
 
     def clean_title(self):
         data = self.cleaned_data["title"]

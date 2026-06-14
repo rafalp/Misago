@@ -28,7 +28,7 @@
     {% endfor %}
   </div>
 {% endwith %}
-{% for field in form.get_conflicts_fields %}
+{% for field in form.conflicts_fields %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label class="control-label" for="{{ field.id_for_label }}">
       {{ field.label }}:

@@ -29,6 +29,7 @@ from .get_thread_detail_view_thread_queryset import (
     get_thread_detail_view_thread_queryset_hook,
 )
 from .get_thread_merge_conflicts import get_thread_merge_conflicts_hook
+from .get_thread_merge_form_fields import get_thread_merge_form_fields_hook
 from .get_thread_url import get_thread_url_hook
 from .get_threads_breadcrumbs import get_threads_breadcrumbs_hook
 from .get_threads_page_context_data import get_threads_page_context_data_hook
@@ -67,6 +68,7 @@ __all__ = [
     "get_thread_detail_view_posts_queryset_hook",
     "get_thread_detail_view_thread_queryset_hook",
     "get_thread_merge_conflicts_hook",
+    "get_thread_merge_form_fields_hook",
     "get_thread_url_hook",
     "get_threads_breadcrumbs_hook",
     "get_threads_page_context_data_hook",

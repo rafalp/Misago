@@ -310,6 +310,7 @@ Hooks instances are importable from the following Python modules:
 - [`get_thread_detail_view_posts_queryset_hook`](./get-thread-detail-view-posts-queryset-hook.md)
 - [`get_thread_detail_view_thread_queryset_hook`](./get-thread-detail-view-thread-queryset-hook.md)
 - [`get_thread_merge_conflicts_hook`](./get-thread-merge-conflicts-hook.md)
+- [`get_thread_merge_form_fields_hook`](./get-thread-merge-form-fields-hook.md)
 - [`get_thread_url_hook`](./get-thread-url-hook.md)
 - [`get_threads_breadcrumbs_hook`](./get-threads-breadcrumbs-hook.md)
 - [`get_threads_page_context_data_hook`](./get-threads-page-context-data-hook.md)

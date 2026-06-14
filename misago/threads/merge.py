@@ -10,10 +10,14 @@ from ..likes.models import Like
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
-from ..postgres.delete import delete_all, delete_one
+from ..postgres.delete import delete_all
 from ..readtracker.models import ReadThread
 from ..threadupdates.models import ThreadUpdate
-from .hooks import get_thread_merge_conflicts_hook, merge_threads_hook
+from .hooks import (
+    get_thread_merge_conflicts_hook,
+    get_thread_merge_form_fields_hook,
+    merge_threads_hook,
+)
 from .models import Post, Thread
 
 
@@ -44,26 +48,23 @@ def _get_thread_merge_conflicts_action(
     return conflicts
 
 
-def hook(action, *args, **kwargs):
-    return action(*args, **kwargs)
-
-
-def set_thread_merge_form_fields(
-    form: forms.Form,
+def get_thread_merge_form_fields(
     conflicts: dict[str, list[Model]],
     request: HttpRequest | None = None,
-):
-    hook(_set_thread_merge_form_fields_action, form, conflicts, request)
+) -> dict[str, forms.Field]:
+    return get_thread_merge_form_fields_hook(
+        _get_thread_merge_form_fields_action, conflicts, request
+    )
 
 
-def _set_thread_merge_form_fields_action(
-    form: forms.Form,
+def _get_thread_merge_form_fields_action(
     conflicts: dict[str, list[Model]],
     request: HttpRequest | None = None,
-):
+) -> dict[str, forms.Field]:
+    fields: dict[str, forms.Field] = []
+
     if "poll" in conflicts:
-        form.conflicts_fields.append("poll")
-        form.fields["poll"] = forms.TypedChoiceField(
+        fields["poll"] = forms.TypedChoiceField(
             label=pgettext("thread merge poll conflict", "Poll"),
             help_text=pgettext(
                 "thread merge poll conflict",
@@ -77,8 +78,7 @@ def _set_thread_merge_form_fields_action(
         )
 
     if "solution" in conflicts:
-        form.conflicts_fields.append("solution")
-        form.fields["poll"] = forms.TypedChoiceField(
+        fields["solution"] = forms.TypedChoiceField(
             label=pgettext("thread merge solution conflict", "Solution"),
             help_text=pgettext(
                 "thread merge solution conflict",
@@ -91,27 +91,7 @@ def _set_thread_merge_form_fields_action(
             ],
         )
 
-
-def get_thread_merge_form_conflict_resolutions(
-    form: forms.Form,
-    conflicts: dict[str, list[Model]],
-    request: HttpRequest | None = None,
-) -> dict[str, Model]:
-    return hook(
-        _get_thread_merge_form_conflict_resolutions_action, form, conflicts, request
-    )
-
-
-def _get_thread_merge_form_conflict_resolutions_action(
-    form: forms.Form,
-    conflicts: dict[str, list[Model]],
-    request: HttpRequest | None = None,
-) -> dict[str, Model]:
-    resolutions: dict[str, Model] = {}
-    for conflict, objects in conflicts.items():
-        choices = {obj.id: obj for obj in objects}
-        resolutions[conflict] = choices[form.cleaned_data[conflict]]
-    return resolutions
+    return fields
 
 
 def merge_threads(
