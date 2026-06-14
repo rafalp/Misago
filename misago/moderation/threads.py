@@ -6,6 +6,7 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
+from ..notifications.tasks import delete_duplicate_watched_threads
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.approve import (
     approve_thread,
@@ -589,6 +590,7 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
         synchronize_thread(new_thread, request=request)
 
         synchronize_categories.delay(list(categories))
+        delete_duplicate_watched_threads.delay(new_thread.id)
 
         messages.success(
             self.request,
