@@ -89,7 +89,7 @@ class GetThreadMergeConflictsHook(
     from typing import Iterable
 
     from django.db.models import Model
-    from django.forms import
+    from django.forms import Field
     from django.http import HttpRequest
     from django.utils.translation import pgettext
     from misago.threads.hooks import get_thread_merge_form_fields_hook
