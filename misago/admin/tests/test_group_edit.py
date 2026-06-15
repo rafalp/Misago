@@ -67,7 +67,7 @@ def get_form_data(group: Group) -> dict:
         "group-own_thread_solutions_clear_time_limit": str(
             group.own_thread_solutions_clear_time_limit
         ),
-        "group-can_change_username": "1" if group.can_change_username else "",
+        "group-can_change_username": str(group.can_change_username),
         "group-username_changes_limit": str(group.username_changes_limit),
         "group-username_changes_expire": str(group.username_changes_expire),
         "group-username_changes_span": str(group.username_changes_span),

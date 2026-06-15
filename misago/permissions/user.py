@@ -105,7 +105,7 @@ PERMISSION_RULES = {
     "own_thread_solutions_change_time_limit": zero_or_greater,
     "can_clear_own_thread_solutions": yes_no_never,
     "own_thread_solutions_clear_time_limit": zero_or_greater,
-    "can_change_username": any,
+    "can_change_username": yes_no_never,
     "username_changes_limit": zero_or_greater,
     "username_changes_expire": zero_or_greater,
     "username_changes_span": zero_or_greater,
@@ -251,7 +251,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
                 group.own_thread_solutions_clear_time_limit
             )
         groups_permissions["can_change_username"].add(group.can_change_username)
-        if group.can_change_username:
+        if group.can_change_username == PermissionValue.YES:
             groups_permissions["username_changes_limit"].add(
                 group.username_changes_limit
             )

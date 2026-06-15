@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
 from ...pagination.cursor import EmptyPageError
+from ...permissions.enums import PermissionValue
 from ...test import assert_contains, assert_has_success_message, assert_not_contains
 
 
@@ -64,7 +65,7 @@ def test_account_username_form_validates_username(user_client, admin, user):
 
 
 def test_account_username_form_validates_username_change_permission(user_client, user):
-    user.group.can_change_username = False
+    user.group.can_change_username = PermissionValue.NO
     user.group.save()
 
     response = user_client.post(
@@ -109,7 +110,7 @@ def test_account_username_renders_message_about_unlimited_username_changes(
 def test_account_username_renders_message_about_username_changes_disabled(
     user_client, user
 ):
-    user.group.can_change_username = False
+    user.group.can_change_username = PermissionValue.NO
     user.group.save()
 
     response = user_client.get(reverse("misago:account-username"))

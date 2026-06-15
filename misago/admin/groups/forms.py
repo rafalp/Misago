@@ -357,7 +357,7 @@ class EditGroupForm(forms.ModelForm):
         min_value=0,
     )
 
-    can_change_username = YesNoField(
+    can_change_username = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can change username"),
     )
     username_changes_limit = forms.IntegerField(

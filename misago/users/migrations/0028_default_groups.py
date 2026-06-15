@@ -61,7 +61,7 @@ def create_default_groups(apps, schema_editor):
                 can_select_own_thread_solutions=PermissionValue.YES,
                 can_change_own_thread_solutions=PermissionValue.YES,
                 can_clear_own_thread_solutions=PermissionValue.YES,
-                can_change_username=True,
+                can_change_username=PermissionValue.YES,
                 can_see_user_profiles=PermissionValue.YES,
             ),
             Group(
@@ -104,7 +104,7 @@ def create_default_groups(apps, schema_editor):
                 can_select_own_thread_solutions=PermissionValue.YES,
                 can_change_own_thread_solutions=PermissionValue.YES,
                 can_clear_own_thread_solutions=PermissionValue.YES,
-                can_change_username=True,
+                can_change_username=PermissionValue.YES,
                 can_see_user_profiles=PermissionValue.YES,
             ),
             Group(
@@ -142,7 +142,7 @@ def create_default_groups(apps, schema_editor):
                 can_select_own_thread_solutions=PermissionValue.YES,
                 can_change_own_thread_solutions=PermissionValue.YES,
                 can_clear_own_thread_solutions=PermissionValue.YES,
-                can_change_username=True,
+                can_change_username=PermissionValue.YES,
                 username_changes_limit=5,
                 username_changes_expire=4,
                 username_changes_span=1,
