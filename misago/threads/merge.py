@@ -61,9 +61,9 @@ def _get_thread_merge_form_fields_action(
     conflicts: dict[str, list[Model]],
     request: HttpRequest | None = None,
 ) -> dict[str, forms.Field]:
-    fields: dict[str, forms.Field] = []
+    fields: dict[str, forms.Field] = {}
 
-    if "poll" in conflicts:
+    if "poll" in conflicts and len(conflicts["poll"]) > 1:
         fields["poll"] = forms.TypedChoiceField(
             label=pgettext("thread merge poll conflict", "Poll"),
             help_text=pgettext(
@@ -77,7 +77,7 @@ def _get_thread_merge_form_fields_action(
             ],
         )
 
-    if "solution" in conflicts:
+    if "solution" in conflicts and len(conflicts["solution"]) > 1:
         fields["solution"] = forms.TypedChoiceField(
             label=pgettext("thread merge solution conflict", "Solution"),
             help_text=pgettext(
@@ -86,8 +86,7 @@ def _get_thread_merge_form_fields_action(
             ),
             coerce=int,
             choices=[
-                (thread.id, f"{thread.title}")
-                for thread in conflicts["solution"].items()
+                (thread.id, f"{thread.title}") for thread in conflicts["solution"]
             ],
         )
 

@@ -98,8 +98,11 @@ class MergeForm(forms.Form):
     def get_conflicts_resolutions(self):
         resolutions: dict[str, Model] = {}
         for conflict, objects in self.conflicts.items():
-            choices = {obj.id: obj for obj in objects}
-            resolutions[conflict] = choices[self.cleaned_data[conflict]]
+            if len(objects) > 1:
+                choices = {obj.id: obj for obj in objects}
+                resolutions[conflict] = choices[self.cleaned_data[conflict]]
+            else:
+                return objects[0]
         return resolutions
 
 

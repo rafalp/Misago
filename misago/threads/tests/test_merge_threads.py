@@ -11,7 +11,11 @@ from ...readtracker.tracker import mark_thread_read
 from ...solutions.thread import select_thread_solution
 from ...threadupdates.create import create_test_thread_update
 from ..create import create_thread
-from ..merge import get_thread_merge_conflicts, merge_threads
+from ..merge import (
+    get_thread_merge_conflicts,
+    get_thread_merge_form_fields,
+    merge_threads,
+)
 from ..models import Thread
 
 
@@ -66,6 +70,48 @@ def test_get_thread_merge_conflicts_returns_single_solution(
     assert conflicts == {
         "solution": [user_thread],
     }
+
+
+def test_get_thread_merge_form_fields_returns_poll_select_for_multiple_polls(
+    poll_factory, thread, user_thread
+):
+    thread_poll = poll_factory(thread)
+    user_thread_poll = poll_factory(user_thread)
+
+    fields = get_thread_merge_form_fields({"poll": [thread_poll, user_thread_poll]})
+    assert fields["poll"]
+
+
+def test_get_thread_merge_form_fields_doesnt_return_poll_select_for_single_poll(
+    poll_factory, thread
+):
+    thread_poll = poll_factory(thread)
+
+    fields = get_thread_merge_form_fields({"poll": [thread_poll]})
+    assert "poll" not in fields
+
+
+def test_get_thread_merge_form_fields_returns_solution_select_for_multiple_solutions(
+    thread_reply_factory, thread, user_thread
+):
+    thread_solution = thread_reply_factory(thread, poster="DeletedUser")
+    user_thread_solution = thread_reply_factory(user_thread, poster="DeletedUser")
+
+    select_thread_solution(thread, thread_solution, "John")
+    select_thread_solution(user_thread, user_thread_solution, "Bob")
+
+    fields = get_thread_merge_form_fields({"solution": [thread, user_thread]})
+    assert fields["solution"]
+
+
+def test_get_thread_merge_form_fields_doesnt_return_solution_select_for_single_solution(
+    thread_reply_factory, thread
+):
+    thread_solution = thread_reply_factory(thread, poster="DeletedUser")
+    select_thread_solution(thread, thread_solution, "John")
+
+    fields = get_thread_merge_form_fields({"solution": [thread]})
+    assert "solution" not in fields
 
 
 def test_merge_threads_merges_threads_posts(
