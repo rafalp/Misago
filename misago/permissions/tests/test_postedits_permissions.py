@@ -50,6 +50,16 @@ def test_can_see_post_edit_count_always_returns_true_if_user_has_history_permiss
 def test_can_see_post_edit_count_always_returns_false_if_user_has_no_permission(
     user_permissions_factory, user, members_group, default_category, thread, post
 ):
+    members_group.can_see_others_post_edits = CanSeePostEdits.NO
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+    assert not can_see_post_edit_count(permissions, default_category, thread, post)
+
+
+def test_can_see_post_edit_count_always_returns_false_if_user_has_never_permission(
+    user_permissions_factory, user, members_group, default_category, thread, post
+):
     members_group.can_see_others_post_edits = CanSeePostEdits.NEVER
     members_group.save()
 

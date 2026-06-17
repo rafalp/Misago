@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import pgettext
 
-from ...permissions.enums import PermissionValue
+from ...permissions.enums import PermissionValue, CanSeePostEdits
 from ...plugins.models import PluginDataModel
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
@@ -25,7 +25,7 @@ class Group(PluginDataModel):
     own_threads_edit_time_limit = models.PositiveIntegerField(default=0)
     can_edit_own_posts = models.PositiveIntegerField(default=PermissionValue.NO)
     own_posts_edit_time_limit = models.PositiveIntegerField(default=0)
-    can_see_others_post_edits = models.PositiveIntegerField(default=0)
+    can_see_others_post_edits = models.PositiveIntegerField(default=CanSeePostEdits.NO)
     can_hide_own_post_edits = models.PositiveIntegerField(default=0)
     own_post_edits_hide_time_limit = models.PositiveIntegerField(default=0)
     own_delete_post_edits_time_limit = models.PositiveIntegerField(default=0)
