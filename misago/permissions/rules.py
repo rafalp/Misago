@@ -1,6 +1,6 @@
 from typing import Any, Iterable
 
-from .enums import CanSeePostEdits, PermissionValue
+from .enums import CanHideOwnPostEdits, CanSeePostEdits, PermissionValue
 
 
 def yes_no_never(permissions: Iterable[PermissionValue]) -> bool:
@@ -20,4 +20,10 @@ def zero_or_greater(permissions: Iterable[int]) -> int:
 def can_see_post_edits(permissions: Iterable[CanSeePostEdits]) -> int:
     if CanSeePostEdits.NEVER in permissions:
         return CanSeePostEdits.NO
+    return max(permissions)
+
+
+def can_hide_own_post_edits(permissions: Iterable[CanHideOwnPostEdits]) -> int:
+    if CanHideOwnPostEdits.NEVER in permissions:
+        return CanHideOwnPostEdits.NO
     return max(permissions)

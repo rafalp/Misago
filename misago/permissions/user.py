@@ -22,7 +22,12 @@ from .hooks import (
     get_user_permissions_hook,
 )
 from .models import CategoryGroupPermission
-from .rules import can_see_post_edits, yes_no_never, zero_or_greater
+from .rules import (
+    can_hide_own_post_edits,
+    can_see_post_edits,
+    yes_no_never,
+    zero_or_greater,
+)
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -81,7 +86,7 @@ PERMISSION_RULES = {
     "can_edit_own_posts": yes_no_never,
     "own_posts_edit_time_limit": zero_or_greater,
     "can_see_others_post_edits": can_see_post_edits,
-    "can_hide_own_post_edits": max,
+    "can_hide_own_post_edits": can_hide_own_post_edits,
     "own_post_edits_hide_time_limit": zero_or_greater,
     "own_delete_post_edits_time_limit": zero_or_greater,
     "bypass_flood_control": yes_no_never,
