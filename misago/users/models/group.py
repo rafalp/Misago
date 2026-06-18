@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import pgettext
 
-from ...permissions.enums import PermissionValue, CanSeePostEdits
+from ...permissions.enums import CanSeePostEdits, PermissionValue
 from ...plugins.models import PluginDataModel
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
