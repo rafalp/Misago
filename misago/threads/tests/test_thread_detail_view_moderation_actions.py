@@ -354,6 +354,36 @@ def test_thread_detail_view_executes_move_thread_moderation_action(
     )
 
 
+def test_thread_detail_view_move_moderation_action_requires_category(
+    thread_factory, moderator_client, default_category, mock_synchronize_categories
+):
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"thread_moderation": "move", "thread": thread.id},
+    )
+    assert_contains(response, "Move thread")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "thread_moderation": "move",
+            "thread": thread.id,
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "This field is required.")
+
+    thread.refresh_from_db()
+    assert thread.category == default_category
+    assert not thread.has_updates
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_synchronize_categories.delay.assert_not_called()
+
+
 def test_thread_detail_view_move_moderation_action_validates_category_value(
     thread_factory, moderator_client, default_category, mock_synchronize_categories
 ):
@@ -417,7 +447,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_permission
             "confirm": "true",
         },
     )
-    assert_contains(response, "Invalid choice.")
+    assert_contains(response, "Select a valid choice.")
 
     thread.refresh_from_db()
     assert thread.category == default_category
@@ -464,7 +494,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_type(
             "confirm": "true",
         },
     )
-    assert_contains(response, "Invalid choice.")
+    assert_contains(response, "Select a valid choice.")
 
     thread.refresh_from_db()
     assert thread.category == default_category
@@ -495,7 +525,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_is_new(
             "confirm": "true",
         },
     )
-    assert_contains(response, "Invalid choice.")
+    assert_contains(response, "Select a valid choice.")
 
     thread.refresh_from_db()
     assert thread.category == default_category

@@ -62,7 +62,9 @@ class MoveThreadForm(forms.Form):
         data = self.cleaned_data["category"]
         if data in self.disallowed_categories:
             raise forms.ValidationError(
-                message=pgettext("moderation move thread form", "Invalid choice."),
+                message=pgettext(
+                    "moderation form category validation", "Select a valid choice."
+                ),
                 code="invalid",
             )
         return data
@@ -89,11 +91,15 @@ class MergeForm(forms.Form):
 
         super().__init__(*args, **kwargs)
 
-        self.fields.update(get_thread_merge_form_fields(self, conflicts, request))
+        self.fields.update(get_thread_merge_form_fields(conflicts, request))
 
     @property
     def conflicts_fields(self):
-        return [self[field_name] for field_name in self.conflicts]
+        return [
+            self[field_name]
+            for field_name, choices in self.conflicts.items()
+            if len(choices) > 1
+        ]
 
     def get_conflicts_resolutions(self):
         resolutions: dict[str, Model] = {}
@@ -102,7 +108,7 @@ class MergeForm(forms.Form):
                 choices = {obj.id: obj for obj in objects}
                 resolutions[conflict] = choices[self.cleaned_data[conflict]]
             else:
-                return objects[0]
+                resolutions[conflict] = objects[0]
         return resolutions
 
 
@@ -139,6 +145,17 @@ class MergeThreadsForm(MergeForm):
                 initial=ThreadPinned.NONE,
                 required=False,
             )
+
+    def clean_category(self):
+        data = self.cleaned_data["category"]
+        if data in self.disallowed_categories:
+            raise forms.ValidationError(
+                message=pgettext(
+                    "moderation form category validation", "Select a valid choice."
+                ),
+                code="invalid",
+            )
+        return data
 
     def clean_title(self):
         data = self.cleaned_data["title"]
