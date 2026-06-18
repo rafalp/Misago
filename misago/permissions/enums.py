@@ -4,9 +4,10 @@ from django.utils.translation import pgettext_lazy
 
 
 class CanSeePostEdits(IntEnum):
-    HISTORY = 2
-    COUNT = 1
-    NEVER = 0
+    HISTORY = 3
+    COUNT = 2
+    NO = 0
+    NEVER = 1
 
     @classmethod
     def get_choices(cls):
@@ -21,6 +22,7 @@ class CanSeePostEdits(IntEnum):
                 cls.COUNT,
                 pgettext_lazy("see post edits permission", "Count only"),
             ),
+            (cls.NO, pgettext_lazy("see post edits permission", "No")),
             (cls.NEVER, pgettext_lazy("see post edits permission", "Never")),
         )
 
