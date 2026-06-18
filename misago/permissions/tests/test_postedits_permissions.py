@@ -252,10 +252,24 @@ def test_check_hide_post_edit_permission_passes_user_with_hide_permission_for_ow
     check_hide_post_edit_permission(permissions, post_edit)
 
 
-def test_check_hide_post_edit_permission_fails_user_without_hide_permission_for_own_post_edit(
+def test_check_hide_post_edit_permission_fails_user_with_never_hide_permission_for_own_post_edit(
     user_permissions_factory, user, members_group, post
 ):
     members_group.can_hide_own_post_edits = CanHideOwnPostEdits.NEVER
+    members_group.save()
+
+    post_edit = create_post_edit(post=post, user=user)
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_hide_post_edit_permission(permissions, post_edit)
+
+
+def test_check_hide_post_edit_permission_fails_user_with_no_hide_permission_for_own_post_edit(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_hide_own_post_edits = CanHideOwnPostEdits.NO
     members_group.save()
 
     post_edit = create_post_edit(post=post, user=user)
