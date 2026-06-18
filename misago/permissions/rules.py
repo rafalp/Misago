@@ -17,7 +17,7 @@ def zero_or_greater(permissions: Iterable[int]) -> int:
     return max(permissions)
 
 
-def can_see_post_edits(permissions: Iterable[int]) -> int:
+def can_see_post_edits(permissions: Iterable[CanSeePostEdits]) -> int:
     if CanSeePostEdits.NEVER in permissions:
         return CanSeePostEdits.NO
     return max(permissions)
