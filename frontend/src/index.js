@@ -7,7 +7,7 @@ import "cropit"
 import "jquery-caret"
 import OrderedList from "misago/utils/ordered-list"
 import "misago/style/index.less"
-import {startLiveTimestamps} from "./liveTimestamps"
+import { startLiveTimestamps } from "./liveTimestamps"
 
 export class Misago {
   constructor() {
