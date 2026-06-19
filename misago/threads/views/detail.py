@@ -16,6 +16,7 @@ from django.utils.translation import pgettext
 from ...categories.models import Category
 from ...metadata import TextMetaData
 from ...moderation.actions import (
+    ModerationActionRedirectResult,
     ModerationActionResult,
     ModerationActionTemplateResult,
     PostModerationAction,
@@ -174,6 +175,15 @@ class DetailView(GenericThreadView):
                 template_name = self.moderation_page_template_name
 
             return result.render(request, template_name)
+
+        if isinstance(result.redirect_to):
+            if not request.is_htmx:
+                return redirect(result.redirect_to)
+
+            response = HttpResponse(status=201)
+            response.headers["hx-redirect"] = result.redirect_to
+            set_moderation_response_headers(request, response)
+            return response
 
         if thread.id in result.deleted_items:
             parent_url = self.get_thread_parent_url(request, thread)

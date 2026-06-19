@@ -1,0 +1,33 @@
+{% load i18n misago_forms %}
+
+{% with field=form.other_thread %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Link to the other thread:" context "moderation merge thread form" %}
+    </label>
+    <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" required />
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endwith %}
+{% with field=form.direction %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Merge direction:" context "moderation merge thread form" %}
+    </label>
+    <div class="form-control-choices">
+      {% for choice in field.subwidgets %}
+        <div class="radio">
+          <label>
+            <input type="radio" name="{{ field.html_name }}" value="{{ choice.data.value }}"{{ choice|checkedhtml }}>
+            {{ choice.choice_label }}
+          </label>
+        </div>
+      {% endfor %}
+    </div>
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endwith %}

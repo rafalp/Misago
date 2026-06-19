@@ -1,6 +1,10 @@
+import urllib
+
 from django import forms
+from django.core.exceptions import PermissionDenied
 from django.db.models import Model
-from django.http import HttpRequest
+from django.http import Http404, HttpRequest
+from django.urls import Resolver404, resolve
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.models import Category
@@ -9,9 +13,8 @@ from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
 from ..posting.validators import validate_thread_title
 from ..threads.enums import ThreadPinned
-from ..threads.merge import (
-    get_thread_merge_form_fields,
-)
+from ..threads.merge import get_thread_merge_form_fields
+from ..threads.models import Thread
 
 
 def get_disallowed_category_choices(
@@ -172,6 +175,89 @@ class MergeThreadsForm(MergeForm):
         if data.get("category"):
             data["category"] = Category.objects.get(id=data["category"])
         return data
+
+
+class MergeThreadForm(forms.Form):
+    request: HttpRequest
+    thread: Thread
+
+    other_thread = forms.CharField(max_length=500)
+    direction = forms.ChoiceField(
+        choices=(
+            (
+                "other",
+                pgettext(
+                    "moderation form thread merge direction", "Keep the other thread"
+                ),
+            ),
+            (
+                "this",
+                pgettext("moderation form thread merge direction", "Keep this thread"),
+            ),
+        ),
+        initial="other",
+        widget=forms.RadioSelect,
+    )
+
+    thread_urls = ("misago:thread",)
+
+    def __init__(self, *args, request: HttpRequest, thread: Thread, **kwargs):
+        self.request = request
+        self.thread = thread
+
+        super().__init__(*args, **kwargs)
+
+    def clean_other_thread(self):
+        data = self.cleaned_data["other_thread"]
+
+        try:
+            parsed_url = urllib.parse.urlsplit(data)
+        except ValueError:
+            parsed_url = None
+
+        if not parsed_url or not parsed_url.netloc or not parsed_url.path:
+            raise forms.ValidationError("Parser error")
+
+        try:
+            resolved_url = resolve(parsed_url.path)
+        except Resolver404:
+            raise forms.ValidationError("Resolver error")
+
+        url_name = resolved_url.url_name
+        if resolved_url.namespaces:
+            namespace = ":".join(resolved_url.namespaces)
+            url_name = f"{namespace}:{url_name}"
+
+        if url_name not in self.thread_urls:
+            raise forms.ValidationError("URL error")
+
+        try:
+            thread_id = int(resolved_url.kwargs.get("thread_id"))
+        except (TypeError, ValueError):
+            thread_id = None
+
+        if not thread_id:
+            raise forms.ValidationError("Thread ID error")
+        if thread_id == self.thread.id:
+            raise forms.ValidationError("Can't merge thread with itself")
+
+        return self.get_other_thread(thread_id)
+
+    def get_other_thread(self, thread_id: int):
+        from ..threads.views.backend import thread_backend
+
+        try:
+            thread = thread_backend.get_thread(self.request, thread_id)
+        except (Http404, PermissionDenied):
+            raise forms.ValidationError("Thread doesn't exist or can't see it")
+
+        is_moderator = thread_backend.has_moderator_permission(
+            self.request.user_permissions, thread
+        )
+        if not is_moderator:
+            raise forms.ValidationError("Must be moderator")
+
+        return thread
 
 
 class SplitPostsForm(forms.Form):

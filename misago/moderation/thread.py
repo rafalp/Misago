@@ -3,7 +3,10 @@ from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.tasks import synchronize_categories
-from ..notifications.tasks import notify_on_new_private_thread
+from ..notifications.tasks import (
+    delete_duplicate_watched_threads,
+    notify_on_new_private_thread,
+)
 from ..permissions.proxy import UserPermissionsProxy
 from ..privatethreads.members import prefetch_private_thread_member_ids
 from ..threads.approve import (
@@ -15,13 +18,16 @@ from ..threads.delete import delete_thread
 from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
 from ..threads.lock import lock_thread, unlock_thread
+from ..threads.merge import merge_threads
 from ..threads.models import Thread
 from ..threads.move import move_thread
 from ..threads.pin import pin_thread, unpin_thread
+from ..threads.synchronize import synchronize_thread
 from ..threadupdates.create import (
     create_approved_thread_update,
     create_hidden_thread_update,
     create_locked_thread_update,
+    create_merged_thread_update,
     create_moved_thread_update,
     create_pinned_category_thread_update,
     create_pinned_everywhere_thread_update,
@@ -38,7 +44,7 @@ from .actions import (
     ModerationActionResult,
     ThreadModerationAction,
 )
-from .forms import HideForm, MoveThreadForm
+from .forms import HideForm, MergeThreadForm, MoveThreadForm
 from .hooks import (
     get_private_thread_moderation_actions_hook,
     get_thread_moderation_actions_hook,
@@ -97,6 +103,7 @@ def _get_thread_moderation_actions_action(
 
     return actions + [
         MoveThreadModerationAction,
+        MergeThreadModerationAction,
         DeleteThreadModerationAction,
     ]
 
@@ -446,6 +453,69 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
         )
 
         return ModerationActionResult.from_updated_thread(thread, thread_update)
+
+
+class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
+    id = "merge"
+    full_name = pgettext_lazy("thread moderation action name", "Merge thread")
+    button_label = pgettext_lazy("thread moderation button label", "Merge")
+    form_class = MergeThreadForm
+    template_name = "misago/moderation/merge_thread.html"
+
+    def get_form(self, form_submitted: bool):
+        kwargs = {
+            "request": self.request,
+            "prefix": self.form_prefix,
+            "thread": self.thread,
+        }
+
+        if form_submitted:
+            return self.form_class(self.request.POST, **kwargs)
+
+        return self.form_class(**kwargs)
+
+    def form_valid(self, form) -> ModerationActionResult:
+        request = self.request
+        thread = self.thread
+        other_thread = form.cleaned_data["other_thread"]
+
+        categories = [thread.category_id]
+        if thread.category_id != other_thread.category_id:
+            categories.append(other_thread.category_id)
+
+        if form.cleaned_data["direction"] == "other":
+            final_thread = other_thread
+            merge_threads(other_thread, [thread], {}, request)
+
+            create_merged_thread_update(
+                other_thread, thread, self.request.user, request=request
+            )
+        else:
+            final_thread = thread
+            merge_threads(thread, [other_thread], {}, request)
+
+            create_merged_thread_update(
+                thread, other_thread, self.request.user, request=request
+            )
+
+        synchronize_thread(final_thread, request=request)
+
+        synchronize_categories.delay(list(categories))
+        delete_duplicate_watched_threads.delay(final_thread.id)
+
+        messages.success(
+            self.request,
+            pgettext("thread moderation success", "Threads merged"),
+        )
+
+        return ModerationActionResult(
+            redirect=self.get_redirect_url(final_thread),
+        )
+
+    def get_redirect_url(self, thread: Thread) -> str:
+        from ..threads.views.backend import thread_backend
+
+        return thread_backend.get_post_redirect_url(thread.last_post)
 
 
 class DeleteThreadModerationAction(ConfirmMixin, ThreadModerationAction):
