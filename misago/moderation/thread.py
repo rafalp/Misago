@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.forms import Form
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
@@ -18,7 +19,7 @@ from ..threads.delete import delete_thread
 from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
 from ..threads.lock import lock_thread, unlock_thread
-from ..threads.merge import merge_threads
+from ..threads.merge import get_thread_merge_conflicts, merge_threads
 from ..threads.models import Thread
 from ..threads.move import move_thread
 from ..threads.pin import pin_thread, unpin_thread
@@ -42,9 +43,10 @@ from .actions import (
     ConfirmMixin,
     FormMixin,
     ModerationActionResult,
+    ModerationActionTemplateResult,
     ThreadModerationAction,
 )
-from .forms import HideForm, MergeThreadForm, MoveThreadForm
+from .forms import HideForm, MergeForm, MergeThreadForm, MoveThreadForm
 from .hooks import (
     get_private_thread_moderation_actions_hook,
     get_thread_moderation_actions_hook,
@@ -462,6 +464,9 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
     form_class = MergeThreadForm
     template_name = "misago/moderation/merge_thread.html"
 
+    conflicts_form_class = MergeForm
+    conflicts_template_name = "misago/moderation/merge_thread_conflicts.html"
+
     def get_form(self, form_submitted: bool):
         kwargs = {
             "request": self.request,
@@ -479,20 +484,41 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
         thread = self.thread
         other_thread = form.cleaned_data["other_thread"]
 
+        conflicts = get_thread_merge_conflicts([thread, other_thread], request)
+        resolutions = {}
+
+        handle_conflicts = any([len(conflict) > 1 for conflict in conflicts.values()])
+        if handle_conflicts:
+            if request.POST.get("confirm_conflicts"):
+                conflicts_form = self.conflicts_form_class(
+                    request.POST, request=request, conflicts=conflicts
+                )
+
+                if conflicts_form.is_valid():
+                    resolutions = conflicts_form.get_conflicts_resolutions()
+                else:
+                    return self.get_conflicts_form_result(form, conflicts_form)
+
+            else:
+                conflicts_form = self.conflicts_form_class(
+                    request=request, conflicts=conflicts
+                )
+                return self.get_conflicts_form_result(form, conflicts_form)
+
         categories = [thread.category_id]
         if thread.category_id != other_thread.category_id:
             categories.append(other_thread.category_id)
 
         if form.cleaned_data["direction"] == "other":
             final_thread = other_thread
-            merge_threads(other_thread, [thread], {}, request)
+            merge_threads(other_thread, [thread], resolutions, request)
 
             create_merged_thread_update(
                 other_thread, thread, self.request.user, request=request
             )
         else:
             final_thread = thread
-            merge_threads(thread, [other_thread], {}, request)
+            merge_threads(thread, [other_thread], resolutions, request)
 
             create_merged_thread_update(
                 thread, other_thread, self.request.user, request=request
@@ -508,9 +534,27 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
             pgettext("thread moderation success", "Threads merged"),
         )
 
+        return self.get_result(final_thread)
+
+    def get_conflicts_form_result(self, merge_form: Form, conflicts_form: Form):
+        return ModerationActionTemplateResult(
+            context={
+                "template_name": self.conflicts_template_name,
+                "merge_form": merge_form,
+                "conflicts_form": conflicts_form,
+            },
+        )
+
+    def get_result(self, final_thread: Thread) -> ModerationActionResult:
+        reload = False
+        redirect_to = self.get_redirect_url(final_thread)
+
+        if final_thread == self.thread:
+            reload = self.request.path == redirect_to[: redirect_to.rindex("/") + 1]
+
         return ModerationActionResult(
-            reload=form.cleaned_data["direction"] == "this",
-            redirect_to=self.get_redirect_url(final_thread),
+            reload=reload,
+            redirect_to=redirect_to,
         )
 
     def get_redirect_url(self, thread: Thread) -> str:

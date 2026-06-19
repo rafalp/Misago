@@ -216,12 +216,32 @@ class MergeThreadForm(forms.Form):
             parsed_url = None
 
         if not parsed_url or not parsed_url.netloc or not parsed_url.path:
-            raise forms.ValidationError("Parser error")
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form merge thread validation", "Enter a valid link."
+                ),
+                code="invalid",
+            )
+
+        if parsed_url.netloc != self.request.get_host():
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form merge thread validation",
+                    "Enter a link to this site.",
+                ),
+                code="invalid",
+            )
 
         try:
             resolved_url = resolve(parsed_url.path)
         except Resolver404:
-            raise forms.ValidationError("Resolver error")
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form merge thread validation",
+                    "Enter a link to this site.",
+                ),
+                code="invalid",
+            )
 
         url_name = resolved_url.url_name
         if resolved_url.namespaces:
@@ -229,7 +249,13 @@ class MergeThreadForm(forms.Form):
             url_name = f"{namespace}:{url_name}"
 
         if url_name not in self.thread_urls:
-            raise forms.ValidationError("URL error")
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form merge thread validation",
+                    "This link does not point to a valid thread.",
+                ),
+                code="invalid",
+            )
 
         try:
             thread_id = int(resolved_url.kwargs.get("thread_id"))
@@ -237,9 +263,21 @@ class MergeThreadForm(forms.Form):
             thread_id = None
 
         if not thread_id:
-            raise forms.ValidationError("Thread ID error")
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form merge thread validation",
+                    "This link does not point to a valid thread.",
+                ),
+                code="invalid",
+            )
         if thread_id == self.thread.id:
-            raise forms.ValidationError("Can't merge thread with itself")
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form merge thread validation",
+                    "This link does not point to a valid thread.",
+                ),
+                code="invalid",
+            )
 
         return self.get_other_thread(thread_id)
 
@@ -248,14 +286,26 @@ class MergeThreadForm(forms.Form):
 
         try:
             thread = thread_backend.get_thread(self.request, thread_id)
-        except (Http404, PermissionDenied):
-            raise forms.ValidationError("Thread doesn't exist or can't see it")
+        except (Http404, PermissionDenied) as exc:
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form merge thread validation",
+                    "This thread doesn't exist or you don't have permission to see it.",
+                ),
+                code="invalid",
+            )
 
         is_moderator = thread_backend.has_moderator_permission(
             self.request.user_permissions, thread
         )
         if not is_moderator:
-            raise forms.ValidationError("Must be moderator")
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form merge thread validation",
+                    "You can't moderate the other thread.",
+                ),
+                code="permission_denied",
+            )
 
         return thread
 

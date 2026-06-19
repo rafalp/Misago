@@ -175,6 +175,7 @@ class DetailView(GenericThreadView):
 
             return result.render(request, template_name)
 
+        # todo: create an util for those responses
         if result.reload:
             if not request.is_htmx:
                 return redirect(request.get_full_path())
