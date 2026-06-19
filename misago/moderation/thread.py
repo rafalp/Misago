@@ -509,7 +509,8 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
         )
 
         return ModerationActionResult(
-            redirect=self.get_redirect_url(final_thread),
+            reload=form.cleaned_data["direction"] == "this",
+            redirect_to=self.get_redirect_url(final_thread),
         )
 
     def get_redirect_url(self, thread: Thread) -> str:

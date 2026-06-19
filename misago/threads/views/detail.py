@@ -16,7 +16,6 @@ from django.utils.translation import pgettext
 from ...categories.models import Category
 from ...metadata import TextMetaData
 from ...moderation.actions import (
-    ModerationActionRedirectResult,
     ModerationActionResult,
     ModerationActionTemplateResult,
     PostModerationAction,
@@ -176,7 +175,16 @@ class DetailView(GenericThreadView):
 
             return result.render(request, template_name)
 
-        if isinstance(result.redirect_to):
+        if result.reload:
+            if not request.is_htmx:
+                return redirect(request.get_full_path())
+
+            response = HttpResponse(status=201)
+            response.headers["hx-refresh"] = "true"
+            set_moderation_response_headers(request, response)
+            return response
+
+        if result.redirect_to:
             if not request.is_htmx:
                 return redirect(result.redirect_to)
 
