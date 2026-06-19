@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 21:51+0000\n"
+"POT-Creation-Date: 2026-06-19 18:37+0000\n"
 "PO-Revision-Date: 2023-07-01 08:52+0000\n"
 "Last-Translator: Rolf T. Meles, 2026\n"
 "Language-Team: German (https://app.transifex.com/misago/teams/65369/de/)\n"
@@ -1523,7 +1523,7 @@ msgstr "Keine Aktivierung erforderlich"
 #: conf/admin/forms/users.py:52
 msgctxt "admin users account activation field choice"
 msgid "Activation token sent to user e-mail"
-msgstr "Aktivierungs-Token wurde an die Benutzer-E-Mailadresse gesendet"
+msgstr "Aktivierungs-Token per E-Mail an Nutzer senden"
 
 #: conf/admin/forms/users.py:59
 msgctxt "admin users account activation field choice"
@@ -2574,7 +2574,7 @@ msgstr ""
 
 #: socialauth/admin/forms/base.py:59 socialauth/admin/forms/base.py:61
 msgid "This field is required."
-msgstr "Dieses Feld ist ein Pflichtfeld."
+msgstr "Dies ist ein Pflichtfeld."
 
 #: socialauth/admin/forms/facebook.py:9
 msgctxt "admin social auth facebook form"
@@ -6045,7 +6045,7 @@ msgstr "Benachrichtigungen öffnen"
 #: templates/misago/navbar.html:62
 msgctxt "navbar"
 msgid "Open your options"
-msgstr "Ihre Einstellungen öffnen"
+msgstr "Ihre Optionen öffnen"
 
 #: templates/misago/navbar.html:68 templates/misago/navbar.html:72
 msgctxt "cta"
@@ -6150,7 +6150,7 @@ msgstr "Neuen Bestätigungslink anfordern."
 #: templates/misago/options/noscript.html:21
 msgctxt "change options page"
 msgid "Change your options"
-msgstr "Ihre Einstellungen ändern"
+msgstr "Ihre Optionen ändern"
 
 #: templates/misago/options/noscript.html:49
 msgctxt "change options page"
@@ -6161,7 +6161,7 @@ msgstr "JavaScript aktivieren"
 msgctxt "change options page"
 msgid "You need to enable JavaScript in your browser to change your options."
 msgstr ""
-"Sie müssen JavaScript in Ihrem Browser aktivieren, um Ihre Einstellungen zu "
+"Sie müssen JavaScript in Ihrem Browser aktivieren, um Ihre Optionen zu "
 "ändern."
 
 #: templates/misago/options/noscript.html:58
@@ -6450,7 +6450,7 @@ msgstr "Konto deaktiviert"
 #, python-format
 msgctxt "user profile page header"
 msgid "Joined %(joined_on)s"
-msgstr "Beigetreten am %(joined_on)s"
+msgstr "Beigetreten %(joined_on)s"
 
 #: templates/misago/profile/header.html:77
 msgctxt "user profile page header"
@@ -6738,7 +6738,7 @@ msgstr "Thread wurde verborgen."
 #: templates/misago/thread/posts/event/index.html:86
 msgctxt "thread event"
 msgid "Took thread over."
-msgstr "Thread übernommen."
+msgstr "Hat den Thread übernommen."
 
 #: templates/misago/thread/posts/event/index.html:88
 msgctxt "thread event"
@@ -7183,7 +7183,7 @@ msgstr "Beiträge nach Beliebtheit"
 #: templates/misago/userslists/active_posters.html:139
 msgctxt "active posters list item"
 msgid "Total posts"
-msgstr "Gesamtzahl der Beiträge"
+msgstr "Alle Beiträge"
 
 #: templates/misago/userslists/base.html:5
 #: templates/misago/userslists/base.html:18
@@ -7755,7 +7755,7 @@ msgstr ""
 #: threads/admin/forms.py:137
 msgctxt "admin attachment type form"
 msgid "This field is required."
-msgstr "Dieses Feld ist ein Pflichtfeld."
+msgstr "Dies ist ein Pflichtfeld."
 
 #: threads/admin/views/attachments.py:15
 msgctxt "admin attachments"
@@ -10779,7 +10779,7 @@ msgid ""
 "Automatically watch private threads that the user was invited to by users "
 "they are following"
 msgstr ""
-"Private Threads automatisch verfolgen, zu denen der Nutzer von Nutzern, "
+"Private Threads automatisch beobachten, zu denen der Nutzer von Nutzern, "
 "denen er folgt, eingeladen wurde"
 
 #: users/admin/forms.py:218
@@ -10789,7 +10789,7 @@ msgid ""
 "users"
 msgstr ""
 "Private Threads, zu denen der Nutzer von anderen Nutzern eingeladen wurde, "
-"automatisch verfolgen"
+"automatisch beobachten"
 
 #: users/admin/forms.py:226
 msgctxt "admin user form"
@@ -11859,7 +11859,7 @@ msgstr "Sie können nicht die Daten-Downloads anderer Benutzer sehen."
 #: users/apps.py:26
 msgctxt "user options page"
 msgid "Forum options"
-msgstr "Forumeinstellungen"
+msgstr "Forenoptionen"
 
 #: users/apps.py:32
 msgctxt "user options page"
