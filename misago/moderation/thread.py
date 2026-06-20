@@ -489,10 +489,14 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
 
         handle_conflicts = any([len(conflict) > 1 for conflict in conflicts.values()])
         if handle_conflicts:
+            form_kwargs = {
+                "request": request,
+                "prefix": self.form_prefix,
+                "conflicts": conflicts,
+            }
+
             if request.POST.get("confirm_conflicts"):
-                conflicts_form = self.conflicts_form_class(
-                    request.POST, request=request, conflicts=conflicts
-                )
+                conflicts_form = self.conflicts_form_class(request.POST, **form_kwargs)
 
                 if conflicts_form.is_valid():
                     resolutions = conflicts_form.get_conflicts_resolutions()
@@ -500,10 +504,13 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
                     return self.get_conflicts_form_result(form, conflicts_form)
 
             else:
-                conflicts_form = self.conflicts_form_class(
-                    request=request, conflicts=conflicts
-                )
+                conflicts_form = self.conflicts_form_class(**form_kwargs)
                 return self.get_conflicts_form_result(form, conflicts_form)
+
+        else:
+            resolutions = {
+                conflict: choices[0] for conflict, choices in conflicts.items()
+            }
 
         categories = [thread.category_id]
         if thread.category_id != other_thread.category_id:

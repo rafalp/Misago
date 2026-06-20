@@ -199,7 +199,19 @@ class MergeThreadForm(forms.Form):
         widget=forms.RadioSelect,
     )
 
-    thread_urls = ("misago:thread",)
+    thread_urls = (
+        "misago:thread",
+        "misago:thread-post",
+        "misago:thread-post-last",
+        "misago:thread-post-unapproved",
+        "misago:thread-post-unread",
+        "misago:thread-post-solution",
+        "misago:thread-post-edit",
+        "misago:thread-post-edits",
+        "misago:thread-post-likes",
+        "misago:thread-reply",
+        "misago:thread-edit",
+    )
 
     def __init__(self, *args, request: HttpRequest, thread: Thread, **kwargs):
         self.request = request
@@ -215,7 +227,7 @@ class MergeThreadForm(forms.Form):
         except ValueError:
             parsed_url = None
 
-        if not parsed_url or not parsed_url.netloc or not parsed_url.path:
+        if not parsed_url or not parsed_url.netloc or not parsed_url.path.strip("/"):
             raise forms.ValidationError(
                 pgettext(
                     "moderation form merge thread validation", "Enter a valid link."
@@ -252,7 +264,7 @@ class MergeThreadForm(forms.Form):
             raise forms.ValidationError(
                 pgettext(
                     "moderation form merge thread validation",
-                    "This link does not point to a valid thread.",
+                    "This link doesn't point to a valid thread.",
                 ),
                 code="invalid",
             )
@@ -260,21 +272,19 @@ class MergeThreadForm(forms.Form):
         try:
             thread_id = int(resolved_url.kwargs.get("thread_id"))
         except (TypeError, ValueError):
-            thread_id = None
-
-        if not thread_id:
             raise forms.ValidationError(
                 pgettext(
                     "moderation form merge thread validation",
-                    "This link does not point to a valid thread.",
+                    "This link doesn't point to a valid thread.",
                 ),
                 code="invalid",
             )
+
         if thread_id == self.thread.id:
             raise forms.ValidationError(
                 pgettext(
                     "moderation form merge thread validation",
-                    "This link does not point to a valid thread.",
+                    "This link doesn't point to a different thread.",
                 ),
                 code="invalid",
             )
@@ -290,7 +300,7 @@ class MergeThreadForm(forms.Form):
             raise forms.ValidationError(
                 pgettext(
                     "moderation form merge thread validation",
-                    "This thread doesn't exist or you don't have permission to see it.",
+                    "Thread doesn't exist or you don't have permission to see it.",
                 ),
                 code="invalid",
             )

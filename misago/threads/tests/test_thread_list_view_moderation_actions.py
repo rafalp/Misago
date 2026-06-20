@@ -1101,7 +1101,6 @@ def test_thread_list_view_merge_moderation_action_validates_category_permission(
 def test_thread_list_view_merge_moderation_action_validates_category_type(
     moderator_client,
     moderators_group,
-    default_category,
     sibling_category,
     thread,
     other_thread,
