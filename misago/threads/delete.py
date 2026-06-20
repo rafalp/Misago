@@ -28,7 +28,8 @@ def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
 
     thread.first_post = None
     thread.last_post = None
-    thread.save(update_fields=["first_post", "last_post"])
+    thread.solution = None
+    thread.save(update_fields=["first_post", "last_post", "solution"])
 
     Attachment.objects.filter(thread=thread).update(
         category=None,

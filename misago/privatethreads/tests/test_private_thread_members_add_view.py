@@ -172,7 +172,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_htmx(
 
 
 def test_private_thread_members_add_view_returns_redirect_to_next_thread_url(
-    mock_notify_on_new_private_thread, user, user_client, user_private_thread, admin
+    mock_notify_on_new_private_thread, user_client, user_private_thread, admin
 ):
     next_url = (
         reverse(
@@ -204,7 +204,7 @@ def test_private_thread_members_add_view_returns_redirect_to_next_thread_url(
 
 
 def test_private_thread_members_add_view_returns_redirect_to_default_thread_url_if_next_url_is_invalid(
-    mock_notify_on_new_private_thread, user, user_client, user_private_thread, admin
+    mock_notify_on_new_private_thread, user_client, user_private_thread, admin
 ):
     response = user_client.post(
         reverse(

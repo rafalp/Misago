@@ -6,22 +6,27 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
+from ..notifications.tasks import delete_duplicate_watched_threads
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.approve import (
     approve_thread,
     remove_thread_reply_approval,
     require_thread_reply_approval,
 )
+from ..threads.create import create_thread
 from ..threads.delete import delete_thread
 from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
 from ..threads.lock import lock_thread, unlock_thread
+from ..threads.merge import get_thread_merge_conflicts, merge_threads
 from ..threads.move import move_thread
 from ..threads.pin import pin_thread, unpin_thread
+from ..threads.synchronize import synchronize_thread
 from ..threadupdates.create import (
     create_approved_thread_update,
     create_hidden_thread_update,
     create_locked_thread_update,
+    create_merged_thread_update,
     create_moved_thread_update,
     create_pinned_category_thread_update,
     create_pinned_everywhere_thread_update,
@@ -35,10 +40,10 @@ from ..threadupdates.threadflag import set_thread_has_updates
 from .actions import (
     ConfirmMixin,
     FormMixin,
-    ModerationActionResult,
+    ModerationResult,
     ThreadsModerationAction,
 )
-from .forms import HideForm, MoveThreadForm
+from .forms import HideForm, MergeThreadsForm, MoveThreadForm
 from .hooks import (
     get_category_threads_moderation_actions_hook,
     get_threads_moderation_actions_hook,
@@ -77,6 +82,7 @@ def _get_threads_moderation_actions_action(
         RequireThreadsReplyApprovalModerationAction,
         RemoveThreadsReplyApprovalModerationAction,
         MoveThreadsModerationAction,
+        MergeThreadsModerationAction,
         DeleteThreadsModerationAction,
     ]
 
@@ -118,6 +124,7 @@ def _get_category_threads_moderation_actions_action(
         RequireThreadsReplyApprovalModerationAction,
         RemoveThreadsReplyApprovalModerationAction,
         MoveThreadsModerationAction,
+        MergeThreadsModerationAction,
         DeleteThreadsModerationAction,
     ]
 
@@ -135,7 +142,7 @@ class PinEverywhereThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation validation", "Threads are already pinned.")
         )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         threads = [
             thread
@@ -156,7 +163,7 @@ class PinEverywhereThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads pinned everywhere"),
         )
 
-        return ModerationActionResult.from_updated_threads(threads)
+        return ModerationResult.from_updated_threads(threads)
 
 
 class PinCategoryThreadsModerationAction(ThreadsModerationAction):
@@ -172,7 +179,7 @@ class PinCategoryThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation validation", "Threads are already pinned.")
         )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         threads = [
             thread for thread in self.threads if thread.pinned != ThreadPinned.CATEGORY
@@ -189,7 +196,7 @@ class PinCategoryThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads pinned in category"),
         )
 
-        return ModerationActionResult.from_updated_threads(threads)
+        return ModerationResult.from_updated_threads(threads)
 
 
 class UnpinThreadsModerationAction(ThreadsModerationAction):
@@ -205,7 +212,7 @@ class UnpinThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation validation", "Threads are already unpinned.")
         )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         threads = [thread for thread in self.threads if thread.pinned]
 
@@ -220,7 +227,7 @@ class UnpinThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads unpinned"),
         )
 
-        return ModerationActionResult.from_updated_threads(threads)
+        return ModerationResult.from_updated_threads(threads)
 
 
 class LockThreadsModerationAction(ThreadsModerationAction):
@@ -236,7 +243,7 @@ class LockThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation validation", "Threads are already locked.")
         )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         threads = [thread for thread in self.threads if not thread.is_locked]
 
@@ -251,7 +258,7 @@ class LockThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads locked"),
         )
 
-        return ModerationActionResult.from_updated_threads(threads)
+        return ModerationResult.from_updated_threads(threads)
 
 
 class UnlockThreadsModerationAction(ThreadsModerationAction):
@@ -267,7 +274,7 @@ class UnlockThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation validation", "Threads are already unlocked.")
         )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         threads = [thread for thread in self.threads if thread.is_locked]
 
@@ -281,7 +288,7 @@ class UnlockThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads unlocked"),
         )
 
-        return ModerationActionResult.from_updated_threads(threads)
+        return ModerationResult.from_updated_threads(threads)
 
 
 class HideThreadsModerationAction(FormMixin, ThreadsModerationAction):
@@ -300,7 +307,7 @@ class HideThreadsModerationAction(FormMixin, ThreadsModerationAction):
             pgettext("threads moderation validation", "Threads are already hidden.")
         )
 
-    def form_valid(self, form) -> ModerationActionResult:
+    def form_valid(self, form) -> ModerationResult:
         request = self.request
         threads = [thread for thread in self.threads if not thread.is_hidden]
         hidden_reason = form.cleaned_data["hidden_reason"]
@@ -318,7 +325,7 @@ class HideThreadsModerationAction(FormMixin, ThreadsModerationAction):
             pgettext("thread moderation success", "Thread hidden"),
         )
 
-        return ModerationActionResult.from_updated_threads(threads)
+        return ModerationResult.from_updated_threads(threads)
 
 
 class UnhideThreadsModerationAction(ThreadsModerationAction):
@@ -334,7 +341,7 @@ class UnhideThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation validation", "Threads are already unhidden.")
         )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         threads = [thread for thread in self.threads if thread.is_hidden]
         categories = list(set(thread.category_id for thread in threads))
@@ -351,7 +358,7 @@ class UnhideThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads unhidden"),
         )
 
-        return ModerationActionResult.from_updated_threads(threads)
+        return ModerationResult.from_updated_threads(threads)
 
 
 class ApproveThreadsModerationAction(ThreadsModerationAction):
@@ -367,7 +374,7 @@ class ApproveThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation validation", "Threads are already approved.")
         )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         threads = [thread for thread in self.threads if thread.is_unapproved]
         categories = list(set(thread.category_id for thread in threads))
@@ -384,7 +391,7 @@ class ApproveThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads approved"),
         )
 
-        return ModerationActionResult.from_updated_threads(threads)
+        return ModerationResult.from_updated_threads(threads)
 
 
 class RequireThreadsReplyApprovalModerationAction(ThreadsModerationAction):
@@ -405,7 +412,7 @@ class RequireThreadsReplyApprovalModerationAction(ThreadsModerationAction):
             )
         )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         threads = [
             thread for thread in self.threads if not thread.require_reply_approval
@@ -424,7 +431,7 @@ class RequireThreadsReplyApprovalModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Reply approval required"),
         )
 
-        return ModerationActionResult.from_updated_threads(threads)
+        return ModerationResult.from_updated_threads(threads)
 
 
 class RemoveThreadsReplyApprovalModerationAction(ThreadsModerationAction):
@@ -445,7 +452,7 @@ class RemoveThreadsReplyApprovalModerationAction(ThreadsModerationAction):
             )
         )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         threads = [thread for thread in self.threads if thread.require_reply_approval]
 
@@ -462,7 +469,7 @@ class RemoveThreadsReplyApprovalModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Reply approval removed"),
         )
 
-        return ModerationActionResult.from_updated_threads(threads)
+        return ModerationResult.from_updated_threads(threads)
 
 
 class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
@@ -487,7 +494,7 @@ class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
 
         return self.form_class(**kwargs)
 
-    def form_valid(self, form) -> ModerationActionResult:
+    def form_valid(self, form) -> ModerationResult:
         request = self.request
         new_category = form.cleaned_data["category"]
         threads = [
@@ -516,9 +523,81 @@ class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
             pgettext("threads moderation success", "Threads moved"),
         )
 
-        return ModerationActionResult(
-            updated_items=[thread.id for thread in self.threads],
+        return ModerationResult.from_updated_threads(threads)
+
+
+class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
+    id = "merge"
+    full_name = pgettext_lazy("threads moderation action name", "Merge threads")
+    button_label = pgettext_lazy("threads moderation button label", "Merge")
+    form_class = MergeThreadsForm
+    template_name = "misago/moderation/merge_threads.html"
+
+    def validate(self):
+        if len(self.threads) < 2:
+            raise ValidationError(
+                pgettext(
+                    "threads moderation validation",
+                    "Select at least two threads to merge.",
+                )
+            )
+
+    def get_form(self, form_submitted: bool):
+        kwargs = {
+            "request": self.request,
+            "prefix": self.form_prefix,
+            "conflicts": get_thread_merge_conflicts(self.threads, self.request),
+            "initial": {
+                "category": self.threads[0].category_id,
+            },
+        }
+
+        if form_submitted:
+            return self.form_class(self.request.POST, **kwargs)
+
+        return self.form_class(**kwargs)
+
+    def form_valid(self, form) -> ModerationResult:
+        request = self.request
+        new_category = form.cleaned_data["category"]
+        threads = self.threads
+
+        categories = set()
+        categories.add(new_category.id)
+
+        prefetch_related_objects(threads, "category")
+
+        for thread in threads:
+            categories.add(thread.category_id)
+
+        conflicts = form.get_conflicts_resolutions()
+        new_thread = create_thread(
+            new_category,
+            form.cleaned_data["title"],
+            pinned=form.cleaned_data["pin"],
+            is_locked=form.cleaned_data["is_locked"],
+            is_hidden=form.cleaned_data["is_hidden"],
+            request=request,
         )
+
+        merge_threads(new_thread, threads, conflicts, request)
+
+        for thread in threads:
+            create_merged_thread_update(
+                new_thread, thread, self.request.user, request=request
+            )
+
+        synchronize_thread(new_thread, request=request)
+
+        synchronize_categories.delay(list(categories))
+        delete_duplicate_watched_threads.delay(new_thread.id)
+
+        messages.success(
+            self.request,
+            pgettext("threads moderation success", "Threads merged"),
+        )
+
+        return ModerationResult.from_deleted_threads(threads)
 
 
 class DeleteThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
@@ -530,7 +609,7 @@ class DeleteThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
         "Are you sure you want to delete the selected threads? This action cannot be undone.",
     )
 
-    def confirmed(self) -> ModerationActionResult:
+    def confirmed(self) -> ModerationResult:
         request = self.request
 
         categories = set()
@@ -546,6 +625,6 @@ class DeleteThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
             pgettext("threads moderation success", "Threads deleted"),
         )
 
-        return ModerationActionResult(
+        return ModerationResult(
             deleted_items=[thread.id for thread in self.threads],
         )

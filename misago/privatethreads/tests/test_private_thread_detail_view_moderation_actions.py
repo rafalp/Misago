@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 
-from ...test import assert_contains
+from ...test import UNORDERED, assert_contains
 from ...threads.models import Thread
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
@@ -220,7 +220,7 @@ def test_private_thread_detail_view_executes_approve_thread_moderation_action(
         [user_private_thread.category_id]
     )
     mock_notify_on_new_private_thread.delay.assert_called_once_with(
-        user.id, user_private_thread.id, [other_user.id, moderator.id]
+        user.id, user_private_thread.id, UNORDERED([other_user.id, moderator.id])
     )
 
 

@@ -17,10 +17,10 @@ from .files import (
     IMAGE_SMALL,
     TEXT_FILE,
 )
-from .mock import SAME_ITEMS
+from .mock import UNORDERED
 
 __all__ = [
-    "SAME_ITEMS",
+    "UNORDERED",
     "IMAGE_INVALID",
     "IMAGE_LARGE",
     "IMAGE_SMALL",

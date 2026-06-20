@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Iterable, Union
 
 from django.db.models import Model
 from django.http import HttpRequest

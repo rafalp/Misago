@@ -101,7 +101,7 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest
 from misago.moderation.actions import (
-    ModerationActionResult,
+    ModerationResult,
     PostsModerationAction,
 )
 from misago.moderation.hooks import get_thread_posts_moderation_actions_hook
@@ -120,7 +120,7 @@ class ShadowBanModerationAction(PostsModerationAction):
 
         raise ValidationError("Posts are already shadow banned.")
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         valid_posts = [
             post for post in self.posts
             if not post.plugin_data.get("shadow_banned")
@@ -132,7 +132,7 @@ class ShadowBanModerationAction(PostsModerationAction):
 
         messages.success(self.request, "Posts shadow banned")
 
-        return ModerationActionResult(
+        return ModerationResult(
             updated_items=[post.id for post in valid_posts]
         )
 

@@ -102,7 +102,7 @@ class GetCategoryThreadsModerationActionsHook(
     from django.http import HttpRequest
     from misago.category.models import Category
     from misago.moderation.actions import (
-        ModerationActionResult,
+        ModerationResult,
         ThreadsModerationAction,
     )
     from misago.moderation.hooks import get_category_threads_moderation_actions_hook
@@ -120,7 +120,7 @@ class GetCategoryThreadsModerationActionsHook(
 
             raise ValidationError("Threads are already shadow banned.")
 
-        def execute(self) -> ModerationActionResult:
+        def execute(self) -> ModerationResult:
             valid_threads = [
                 thread for thread in self.threads
                 if not thread.plugin_data.get("shadow_banned")
@@ -132,7 +132,7 @@ class GetCategoryThreadsModerationActionsHook(
 
             messages.success(self.request, "Threads shadow banned")
 
-            return ModerationActionResult(
+            return ModerationResult(
                 updated_items=[thread.id for thread in valid_threads]
             )
 

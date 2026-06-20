@@ -2,6 +2,7 @@ from .approve_thread import approve_thread_hook
 from .create_prefetch_post_feed_data import (
     create_prefetch_post_feed_data_hook,
 )
+from .create_thread import create_thread_hook
 from .delete_post import delete_post_hook
 from .delete_thread import delete_thread_hook
 from .get_category_breadcrumbs import get_category_breadcrumbs_hook
@@ -27,6 +28,8 @@ from .get_thread_detail_view_posts_queryset import (
 from .get_thread_detail_view_thread_queryset import (
     get_thread_detail_view_thread_queryset_hook,
 )
+from .get_thread_merge_conflicts import get_thread_merge_conflicts_hook
+from .get_thread_merge_form_fields import get_thread_merge_form_fields_hook
 from .get_thread_url import get_thread_url_hook
 from .get_threads_breadcrumbs import get_threads_breadcrumbs_hook
 from .get_threads_page_context_data import get_threads_page_context_data_hook
@@ -36,6 +39,7 @@ from .get_threads_page_subcategories import get_threads_page_subcategories_hook
 from .get_threads_page_threads import get_threads_page_threads_hook
 from .hide_thread import hide_thread_hook
 from .lock_thread import lock_thread_hook
+from .merge_threads import merge_threads_hook
 from .move_thread import move_thread_hook
 from .pin_thread import pin_thread_hook
 from .populate_post_feed_data import populate_post_feed_data_hook
@@ -49,6 +53,7 @@ from .unpin_thread import unpin_thread_hook
 __all__ = [
     "approve_thread_hook",
     "create_prefetch_post_feed_data_hook",
+    "create_thread_hook",
     "delete_post_hook",
     "delete_thread_hook",
     "get_category_breadcrumbs_hook",
@@ -62,6 +67,8 @@ __all__ = [
     "get_thread_detail_view_moderation_result_data_hook",
     "get_thread_detail_view_posts_queryset_hook",
     "get_thread_detail_view_thread_queryset_hook",
+    "get_thread_merge_conflicts_hook",
+    "get_thread_merge_form_fields_hook",
     "get_thread_url_hook",
     "get_threads_breadcrumbs_hook",
     "get_threads_page_context_data_hook",
@@ -71,6 +78,7 @@ __all__ = [
     "get_threads_page_threads_hook",
     "hide_thread_hook",
     "lock_thread_hook",
+    "merge_threads_hook",
     "move_thread_hook",
     "pin_thread_hook",
     "populate_post_feed_data_hook",

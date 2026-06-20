@@ -16,8 +16,8 @@ from django.utils.translation import pgettext
 from ...categories.models import Category
 from ...metadata import TextMetaData
 from ...moderation.actions import (
-    ModerationActionResult,
     ModerationActionTemplateResult,
+    ModerationResult,
     PostModerationAction,
     PostsModerationAction,
     ThreadModerationAction,
@@ -28,6 +28,7 @@ from ...moderation.thread import get_thread_moderation_actions
 from ...moderation.views import (
     get_moderation_action,
     get_moderation_action_choices,
+    get_moderation_result_response,
     set_moderation_response_headers,
 )
 from ...notifications.threads import get_watched_thread, update_watched_thread_read_time
@@ -175,6 +176,9 @@ class DetailView(GenericThreadView):
 
             return result.render(request, template_name)
 
+        if response := get_moderation_result_response(request, result):
+            return response
+
         if thread.id in result.deleted_items:
             parent_url = self.get_thread_parent_url(request, thread)
             if not request.is_htmx:
@@ -250,6 +254,9 @@ class DetailView(GenericThreadView):
 
             return result.render(request, template_name)
 
+        if response := get_moderation_result_response(request, result):
+            return response
+
         if not request.is_htmx:
             return redirect(request.get_full_path())
 
@@ -265,7 +272,7 @@ class DetailView(GenericThreadView):
 
     def execute_posts_moderation_action(
         self, request: HttpRequest, thread: Thread, page: int | None
-    ) -> ModerationActionResult:
+    ) -> ModerationResult:
         actions = self.get_posts_moderation_actions(request, thread)
         action: PostsModerationAction = get_moderation_action(
             actions, request.POST["posts_moderation"]
@@ -327,6 +334,9 @@ class DetailView(GenericThreadView):
 
             return response
 
+        if response := get_moderation_result_response(request, result):
+            return response
+
         if not request.is_htmx:
             return self.get_post_redirect(request, post)
 
@@ -346,7 +356,7 @@ class DetailView(GenericThreadView):
 
     def execute_post_moderation_action(
         self, request: HttpRequest, thread: Thread, post: Post
-    ) -> ModerationActionResult:
+    ) -> ModerationResult:
         actions = self.get_post_moderation_actions(request, post)
         action: PostModerationAction = get_moderation_action(
             actions, request.POST["post_moderation"]

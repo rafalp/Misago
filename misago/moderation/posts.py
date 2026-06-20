@@ -12,7 +12,7 @@ from ..threads.synchronize import synchronize_thread
 from .actions import (
     ConfirmMixin,
     FormMixin,
-    ModerationActionResult,
+    ModerationResult,
     PostsModerationAction,
 )
 from .forms import SplitPostsForm
@@ -93,7 +93,7 @@ class LockPostsModerationAction(PostsModerationAction):
             pgettext("posts moderation validation", "Posts are already locked.")
         )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         valid_posts = [post for post in self.posts if not post.is_locked]
 
         for post in valid_posts:
@@ -105,7 +105,7 @@ class LockPostsModerationAction(PostsModerationAction):
             pgettext("posts moderation success", "Posts locked"),
         )
 
-        return ModerationActionResult(
+        return ModerationResult(
             updated_items=[post.id for post in valid_posts],
         )
 
@@ -123,7 +123,7 @@ class UnlockPostsModerationAction(PostsModerationAction):
             pgettext("posts moderation validation", "Posts are already unlocked.")
         )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         valid_posts = [post for post in self.posts if post.is_locked]
 
         for post in valid_posts:
@@ -135,7 +135,7 @@ class UnlockPostsModerationAction(PostsModerationAction):
             pgettext("posts moderation success", "Posts unlocked"),
         )
 
-        return ModerationActionResult(
+        return ModerationResult(
             updated_items=[post.id for post in valid_posts],
         )
 
@@ -157,7 +157,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
                     )
                 )
 
-    def form_valid(self, form) -> ModerationActionResult:
+    def form_valid(self, form) -> ModerationResult:
         messages.success(
             self.request,
             pgettext("posts moderation success", "Posts were split into a new thread."),
@@ -202,7 +202,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
         synchronize_thread(new_thread, request=self.request)
         synchronize_categories.delay(sync_categories_ids)
 
-        return ModerationActionResult(
+        return ModerationResult(
             deleted_items=[post.id for post in self.posts],
         )
 
@@ -226,7 +226,7 @@ class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
                     )
                 )
 
-    def confirmed(self) -> ModerationActionResult:
+    def confirmed(self) -> ModerationResult:
         for post in self.posts:
             delete_post(post)
 
@@ -238,6 +238,6 @@ class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
             pgettext("posts moderation success", "Posts deleted"),
         )
 
-        return ModerationActionResult(
+        return ModerationResult(
             deleted_items=[post.id for post in self.posts],
         )

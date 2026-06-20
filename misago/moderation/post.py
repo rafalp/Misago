@@ -12,7 +12,7 @@ from ..threads.synchronize import synchronize_thread
 from .actions import (
     ConfirmMixin,
     FormMixin,
-    ModerationActionResult,
+    ModerationResult,
     PostModerationAction,
 )
 from .forms import SplitPostsForm
@@ -105,7 +105,7 @@ class LockPostModerationAction(PostModerationAction):
                 pgettext("post moderation validation", "Post is already locked.")
             )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         post = self.post
 
         post.is_locked = True
@@ -116,7 +116,7 @@ class LockPostModerationAction(PostModerationAction):
             pgettext("post moderation success", "Post locked"),
         )
 
-        return ModerationActionResult(
+        return ModerationResult(
             updated_items=[post.id],
         )
 
@@ -131,7 +131,7 @@ class UnlockPostModerationAction(PostModerationAction):
                 pgettext("post moderation validation", "Post is already unlocked.")
             )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         post = self.post
 
         post.is_locked = False
@@ -142,7 +142,7 @@ class UnlockPostModerationAction(PostModerationAction):
             pgettext("post moderation success", "Post unlocked"),
         )
 
-        return ModerationActionResult(
+        return ModerationResult(
             updated_items=[post.id],
         )
 
@@ -154,7 +154,7 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
     form_class = SplitPostsForm
     template_name = "misago/moderation/split_post.html"
 
-    def form_valid(self, form) -> ModerationActionResult:
+    def form_valid(self, form) -> ModerationResult:
         post = self.post
 
         if form.cleaned_data["category"] == self.category.id:
@@ -199,7 +199,7 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
             pgettext("post moderation success", "Post was split into a new thread."),
         )
 
-        return ModerationActionResult(
+        return ModerationResult(
             deleted_items=[post.id],
         )
 
@@ -224,7 +224,7 @@ class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
                 )
             )
 
-    def confirmed(self) -> ModerationActionResult:
+    def confirmed(self) -> ModerationResult:
         post = self.post
 
         delete_post(post)
@@ -236,6 +236,6 @@ class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
             pgettext("post moderation success", "Post deleted"),
         )
 
-        return ModerationActionResult(
+        return ModerationResult(
             deleted_items=[post.id],
         )

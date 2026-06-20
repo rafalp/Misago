@@ -3,6 +3,7 @@ from logging import getLogger
 from celery import shared_task
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.db.models import Count
 
 from ..cache.versions import get_cache_versions
 from ..conf.dynamicsettings import DynamicSettings
@@ -90,28 +91,33 @@ def notify_on_new_private_thread(
 
 @shared_task(serializer="json")
 def delete_duplicate_watched_threads(thread_id: int):
-    # Merge send emails preference for watched threads
-    email_notifications_users_ids = WatchedThread.objects.filter(
-        thread_id=thread_id,
-        send_emails=True,
-    ).values("user_id")
-
-    WatchedThread.objects.filter(
-        thread_id=thread_id,
-        send_emails=False,
-        user_id__in=email_notifications_users_ids,
-    ).update(send_emails=True)
-
-    # Delete duplicate watched threads
-    kept_watched_threads_ids = (
+    queryset = (
         WatchedThread.objects.filter(
             thread_id=thread_id,
+            user_id__in=(
+                WatchedThread.objects.filter(
+                    thread_id=thread_id,
+                )
+                .values("user_id")
+                .annotate(entries=Count("user_id"))
+                .filter(entries__gt=1)
+                .values("user_id")
+            ),
         )
-        .order_by("user_id", "-read_time")
+        .order_by("user_id", "-read_time", "-id")
         .distinct("user_id")
-        .values("id")
     )
 
-    WatchedThread.objects.filter(thread_id=thread_id).exclude(
-        id__in=kept_watched_threads_ids
-    ).delete()
+    for watched_thread in queryset.iterator():
+        if not watched_thread.send_emails:
+            watched_thread.send_emails = WatchedThread.objects.filter(
+                thread_id=thread_id, user_id=watched_thread.user_id, send_emails=True
+            ).exists()
+
+            if watched_thread.send_emails:
+                watched_thread.save()
+
+        WatchedThread.objects.filter(
+            thread_id=thread_id,
+            user_id=watched_thread.user_id,
+        ).exclude(id=watched_thread.id).delete()

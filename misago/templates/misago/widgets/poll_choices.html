@@ -1,5 +1,5 @@
 {% load i18n %}
-<ol class="form-control-poll-choices{% if not widget.edit %} d-js-block{% endif %}" max-choices="{{ widget.attrs.max_choices }}" m-poll-choices-control>
+<ol class="form-control-poll-choices{% if not widget.edit %} d-js-flex{% endif %}" max-choices="{{ widget.attrs.max_choices }}" m-poll-choices-control>
   {% if widget.choices %}
     {% with field=widget.choices %}
       {% for choice in field %}

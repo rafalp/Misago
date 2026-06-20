@@ -13,7 +13,7 @@ from ..permissions.solutions import (
 )
 from ..threads.views.backend import thread_backend
 from ..threads.views.generic import GenericThreadView
-from .solutions import (
+from .thread import (
     clear_thread_solution,
     lock_thread_solution,
     select_thread_solution,

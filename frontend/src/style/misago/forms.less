@@ -40,3 +40,20 @@
     line-height: @font-size-large * 5;
   }
 }
+
+// Make any element with label class look like label
+.control-label {
+  font-weight: bold;
+}
+
+// Space items in form control choices evenly
+.form-control-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .checkbox,
+  .radio {
+    margin: 0;
+  }
+}

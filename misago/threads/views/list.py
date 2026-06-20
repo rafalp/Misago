@@ -23,8 +23,8 @@ from ...metatags.metatags import (
     get_forum_index_metatags,
 )
 from ...moderation.actions import (
-    ModerationActionResult,
     ModerationActionTemplateResult,
+    ModerationResult,
     ThreadsModerationAction,
 )
 from ...moderation.threads import (
@@ -34,6 +34,7 @@ from ...moderation.threads import (
 from ...moderation.views import (
     get_moderation_action,
     get_moderation_action_choices,
+    get_moderation_result_response,
     set_moderation_response_headers,
 )
 from ...pagination.cursor import (
@@ -263,6 +264,9 @@ class ListView(View):
                 },
             )
 
+        if response := get_moderation_result_response(request, result):
+            return response
+
         if request.is_htmx:
             if result.updated_items:
                 kwargs["animate"] = result.updated_items
@@ -275,7 +279,7 @@ class ListView(View):
 
     def execute_moderation_action(
         self, request: HttpRequest, kwargs: dict
-    ) -> ModerationActionResult:
+    ) -> ModerationResult:
         raise NotImplementedError()
 
     def get_selected_threads(self, request: HttpRequest, threads: dict) -> list[Thread]:
@@ -410,7 +414,7 @@ class ThreadListView(ListView):
 
     def execute_moderation_action(
         self, request: HttpRequest, kwargs: dict
-    ) -> ModerationActionResult:
+    ) -> ModerationResult:
         actions = self.get_moderation_actions(request)
         action: ThreadsModerationAction = get_moderation_action(
             actions, request.POST["moderation"]
@@ -760,7 +764,7 @@ class CategoryThreadListView(ListView):
 
     def execute_moderation_action(
         self, request: HttpRequest, kwargs: dict
-    ) -> ModerationActionResult:
+    ) -> ModerationResult:
         category = self.get_category(request, kwargs)
 
         actions = self.get_moderation_actions(request, category)

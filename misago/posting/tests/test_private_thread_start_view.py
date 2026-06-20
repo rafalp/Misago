@@ -9,7 +9,12 @@ from ...notifications.enums import ThreadNotifications
 from ...notifications.models import WatchedThread
 from ...permissions.enums import CanUploadAttachments
 from ...permissions.models import Moderator
-from ...test import assert_contains, assert_contains_element, assert_not_contains
+from ...test import (
+    UNORDERED,
+    assert_contains,
+    assert_contains_element,
+    assert_not_contains,
+)
 from ...threads.models import Thread
 from ..forms import PostForm
 from ..formsets import Formset
@@ -110,7 +115,7 @@ def test_private_thread_start_view_posts_new_thread(
     assert other_user.id in thread.private_thread_member_ids
 
     mock_notify_on_new_private_thread.delay.assert_called_with(
-        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+        user.id, thread.id, UNORDERED([admin.id, moderator.id, other_user.id])
     )
 
 
@@ -143,7 +148,7 @@ def test_private_thread_start_view_posts_new_thread_using_noscript_fallback(
     assert other_user.id in thread.private_thread_member_ids
 
     mock_notify_on_new_private_thread.delay.assert_called_with(
-        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+        user.id, thread.id, UNORDERED([admin.id, moderator.id, other_user.id])
     )
 
 
@@ -176,7 +181,7 @@ def test_private_thread_start_view_posts_new_unapproved_thread(
     assert thread.is_unapproved
 
     mock_notify_on_new_private_thread.delay.assert_called_with(
-        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+        user.id, thread.id, UNORDERED([admin.id, moderator.id, other_user.id])
     )
 
 
@@ -207,7 +212,7 @@ def test_private_thread_start_view_posts_new_thread_without_moderation_options_i
     assert not thread.is_locked
 
     mock_notify_on_new_private_thread.delay.assert_called_with(
-        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+        user.id, thread.id, UNORDERED([admin.id, moderator.id, other_user.id])
     )
 
 
@@ -244,7 +249,7 @@ def test_private_thread_start_view_posts_new_thread_with_moderation_options_if_u
     assert thread.is_locked
 
     mock_notify_on_new_private_thread.delay.assert_called_with(
-        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+        user.id, thread.id, UNORDERED([admin.id, moderator.id, other_user.id])
     )
 
 
@@ -280,7 +285,7 @@ def test_private_thread_start_view_posts_new_thread_without_moderation_options_i
     assert not thread.is_locked
 
     mock_notify_on_new_private_thread.delay.assert_called_with(
-        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+        user.id, thread.id, UNORDERED([admin.id, moderator.id, other_user.id])
     )
 
 
@@ -316,7 +321,7 @@ def test_private_thread_start_view_posts_new_thread_with_moderation_options_if_u
     assert thread.is_locked
 
     mock_notify_on_new_private_thread.delay.assert_called_with(
-        moderator.id, thread.id, [admin.id, user.id, other_user.id]
+        moderator.id, thread.id, UNORDERED([admin.id, user.id, other_user.id])
     )
 
 
@@ -351,7 +356,7 @@ def test_private_thread_start_view_posts_new_thread_without_moderation_options_i
     assert not thread.is_locked
 
     mock_notify_on_new_private_thread.delay.assert_called_with(
-        moderator.id, thread.id, [admin.id, user.id, other_user.id]
+        moderator.id, thread.id, UNORDERED([admin.id, user.id, other_user.id])
     )
 
 

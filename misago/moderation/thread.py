@@ -1,9 +1,13 @@
 from django.contrib import messages
+from django.forms import Form
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.tasks import synchronize_categories
-from ..notifications.tasks import notify_on_new_private_thread
+from ..notifications.tasks import (
+    delete_duplicate_watched_threads,
+    notify_on_new_private_thread,
+)
 from ..permissions.proxy import UserPermissionsProxy
 from ..privatethreads.members import prefetch_private_thread_member_ids
 from ..threads.approve import (
@@ -15,13 +19,16 @@ from ..threads.delete import delete_thread
 from ..threads.enums import ThreadPinned
 from ..threads.hide import hide_thread, unhide_thread
 from ..threads.lock import lock_thread, unlock_thread
+from ..threads.merge import get_thread_merge_conflicts, merge_threads
 from ..threads.models import Thread
 from ..threads.move import move_thread
 from ..threads.pin import pin_thread, unpin_thread
+from ..threads.synchronize import synchronize_thread
 from ..threadupdates.create import (
     create_approved_thread_update,
     create_hidden_thread_update,
     create_locked_thread_update,
+    create_merged_thread_update,
     create_moved_thread_update,
     create_pinned_category_thread_update,
     create_pinned_everywhere_thread_update,
@@ -35,10 +42,11 @@ from ..threadupdates.threadflag import set_thread_has_updates
 from .actions import (
     ConfirmMixin,
     FormMixin,
-    ModerationActionResult,
+    ModerationActionTemplateResult,
+    ModerationResult,
     ThreadModerationAction,
 )
-from .forms import HideForm, MoveThreadForm
+from .forms import HideForm, MergeForm, MergeThreadForm, MoveThreadForm
 from .hooks import (
     get_private_thread_moderation_actions_hook,
     get_thread_moderation_actions_hook,
@@ -97,6 +105,7 @@ def _get_thread_moderation_actions_action(
 
     return actions + [
         MoveThreadModerationAction,
+        MergeThreadModerationAction,
         DeleteThreadModerationAction,
     ]
 
@@ -148,7 +157,7 @@ class PinEverywhereThreadModerationAction(ThreadModerationAction):
     id = "pin_everywhere"
     button_label = pgettext_lazy("thread moderation button label", "Pin everywhere")
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         thread = self.thread
 
@@ -164,14 +173,14 @@ class PinEverywhereThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread pinned everywhere"),
         )
 
-        return ModerationActionResult.from_updated_thread(thread, thread_update)
+        return ModerationResult.from_updated_thread(thread, thread_update)
 
 
 class PinCategoryThreadModerationAction(ThreadModerationAction):
     id = "pin_category"
     button_label = pgettext_lazy("thread moderation button label", "Pin in category")
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         thread = self.thread
 
@@ -187,14 +196,14 @@ class PinCategoryThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread pinned in category"),
         )
 
-        return ModerationActionResult.from_updated_thread(thread, thread_update)
+        return ModerationResult.from_updated_thread(thread, thread_update)
 
 
 class UnpinThreadModerationAction(ThreadModerationAction):
     id = "unpin"
     button_label = pgettext_lazy("thread moderation button label", "Unpin")
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         thread = self.thread
 
@@ -210,14 +219,14 @@ class UnpinThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread unpinned"),
         )
 
-        return ModerationActionResult.from_updated_thread(thread, thread_update)
+        return ModerationResult.from_updated_thread(thread, thread_update)
 
 
 class LockThreadModerationAction(ThreadModerationAction):
     id = "lock"
     button_label = pgettext_lazy("thread moderation button label", "Lock")
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         thread = self.thread
 
@@ -233,14 +242,14 @@ class LockThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread locked"),
         )
 
-        return ModerationActionResult.from_updated_thread(thread, thread_update)
+        return ModerationResult.from_updated_thread(thread, thread_update)
 
 
 class UnlockThreadModerationAction(ThreadModerationAction):
     id = "unlock"
     button_label = pgettext_lazy("thread moderation button label", "Unlock")
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         thread = self.thread
 
@@ -256,7 +265,7 @@ class UnlockThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread unlocked"),
         )
 
-        return ModerationActionResult.from_updated_thread(thread, thread_update)
+        return ModerationResult.from_updated_thread(thread, thread_update)
 
 
 class HideThreadModerationAction(FormMixin, ThreadModerationAction):
@@ -266,7 +275,7 @@ class HideThreadModerationAction(FormMixin, ThreadModerationAction):
     form_class = HideForm
     template_name = "misago/moderation/hide.html"
 
-    def form_valid(self, form) -> ModerationActionResult:
+    def form_valid(self, form) -> ModerationResult:
         request = self.request
         thread = self.thread
 
@@ -286,14 +295,14 @@ class HideThreadModerationAction(FormMixin, ThreadModerationAction):
             pgettext("thread moderation success", "Thread hidden"),
         )
 
-        return ModerationActionResult.from_updated_thread(thread, thread_update)
+        return ModerationResult.from_updated_thread(thread, thread_update)
 
 
 class UnhideThreadModerationAction(ThreadModerationAction):
     id = "unhide"
     button_label = pgettext_lazy("thread moderation button label", "Unhide")
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         thread = self.thread
 
@@ -311,14 +320,14 @@ class UnhideThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread unhidden"),
         )
 
-        return ModerationActionResult.from_updated_thread(thread, thread_update)
+        return ModerationResult.from_updated_thread(thread, thread_update)
 
 
 class ApproveThreadModerationAction(ThreadModerationAction):
     id = "approve"
     button_label = pgettext_lazy("thread moderation button label", "Approve")
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         thread = self.thread
 
@@ -338,7 +347,7 @@ class ApproveThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread approved"),
         )
 
-        return ModerationActionResult.from_updated_thread(thread, thread_update)
+        return ModerationResult.from_updated_thread(thread, thread_update)
 
     def send_notifications(self):
         pass
@@ -362,7 +371,7 @@ class RequireThreadReplyApprovalModerationAction(ThreadModerationAction):
         "thread moderation button label", "Require reply approval"
     )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         thread = self.thread
 
@@ -378,7 +387,7 @@ class RequireThreadReplyApprovalModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Reply approval required"),
         )
 
-        return ModerationActionResult.from_updated_thread(thread, thread_update)
+        return ModerationResult.from_updated_thread(thread, thread_update)
 
 
 class RemoveThreadReplyApprovalModerationAction(ThreadModerationAction):
@@ -387,7 +396,7 @@ class RemoveThreadReplyApprovalModerationAction(ThreadModerationAction):
         "thread moderation button label", "Remove reply approval"
     )
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         request = self.request
         thread = self.thread
 
@@ -403,7 +412,7 @@ class RemoveThreadReplyApprovalModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Reply approval removed"),
         )
 
-        return ModerationActionResult.from_updated_thread(thread, thread_update)
+        return ModerationResult.from_updated_thread(thread, thread_update)
 
 
 class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
@@ -425,7 +434,7 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
 
         return self.form_class(**kwargs)
 
-    def form_valid(self, form) -> ModerationActionResult:
+    def form_valid(self, form) -> ModerationResult:
         request = self.request
         thread = self.thread
 
@@ -445,7 +454,120 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
             pgettext("thread moderation success", "Thread moved"),
         )
 
-        return ModerationActionResult.from_updated_thread(thread, thread_update)
+        return ModerationResult.from_updated_thread(thread, thread_update)
+
+
+class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
+    id = "merge"
+    full_name = pgettext_lazy("thread moderation action name", "Merge thread")
+    button_label = pgettext_lazy("thread moderation button label", "Merge")
+    form_class = MergeThreadForm
+    template_name = "misago/moderation/merge_thread.html"
+
+    conflicts_form_class = MergeForm
+    conflicts_template_name = "misago/moderation/merge_thread_conflicts.html"
+
+    def get_form(self, form_submitted: bool):
+        kwargs = {
+            "request": self.request,
+            "prefix": self.form_prefix,
+            "thread": self.thread,
+        }
+
+        if form_submitted:
+            return self.form_class(self.request.POST, **kwargs)
+
+        return self.form_class(**kwargs)
+
+    def form_valid(self, form) -> ModerationResult:
+        request = self.request
+        thread = self.thread
+        other_thread = form.cleaned_data["other_thread"]
+
+        conflicts = get_thread_merge_conflicts([thread, other_thread], request)
+        resolutions = {}
+
+        handle_conflicts = any([len(conflict) > 1 for conflict in conflicts.values()])
+        if handle_conflicts:
+            form_kwargs = {
+                "request": request,
+                "prefix": self.form_prefix,
+                "conflicts": conflicts,
+            }
+
+            if request.POST.get("confirm_conflicts"):
+                conflicts_form = self.conflicts_form_class(request.POST, **form_kwargs)
+
+                if conflicts_form.is_valid():
+                    resolutions = conflicts_form.get_conflicts_resolutions()
+                else:
+                    return self.get_conflicts_form_result(form, conflicts_form)
+
+            else:
+                conflicts_form = self.conflicts_form_class(**form_kwargs)
+                return self.get_conflicts_form_result(form, conflicts_form)
+
+        else:
+            resolutions = {
+                conflict: choices[0] for conflict, choices in conflicts.items()
+            }
+
+        categories = [thread.category_id]
+        if thread.category_id != other_thread.category_id:
+            categories.append(other_thread.category_id)
+
+        if form.cleaned_data["direction"] == "other":
+            final_thread = other_thread
+            merge_threads(other_thread, [thread], resolutions, request)
+
+            create_merged_thread_update(
+                other_thread, thread, self.request.user, request=request
+            )
+        else:
+            final_thread = thread
+            merge_threads(thread, [other_thread], resolutions, request)
+
+            create_merged_thread_update(
+                thread, other_thread, self.request.user, request=request
+            )
+
+        synchronize_thread(final_thread, request=request)
+
+        synchronize_categories.delay(list(categories))
+        delete_duplicate_watched_threads.delay(final_thread.id)
+
+        messages.success(
+            self.request,
+            pgettext("thread moderation success", "Threads merged"),
+        )
+
+        return self.get_result(final_thread)
+
+    def get_conflicts_form_result(self, merge_form: Form, conflicts_form: Form):
+        return ModerationActionTemplateResult(
+            context={
+                "template_name": self.conflicts_template_name,
+                "merge_form": merge_form,
+                "conflicts_form": conflicts_form,
+            },
+        )
+
+    def get_result(self, final_thread: Thread) -> ModerationResult:
+        refresh = False
+        redirect_to = self.get_redirect_url(final_thread)
+
+        if final_thread == self.thread:
+            refresh = self.request.path == redirect_to[: redirect_to.rindex("/") + 1]
+
+        return ModerationResult(
+            refresh=refresh,
+            redirect_to=redirect_to,
+        )
+
+    def get_redirect_url(self, thread: Thread) -> str:
+        from ..threads.views.backend import thread_backend
+
+        return thread_backend.get_post_redirect_url(thread.last_post)
 
 
 class DeleteThreadModerationAction(ConfirmMixin, ThreadModerationAction):
@@ -457,7 +579,7 @@ class DeleteThreadModerationAction(ConfirmMixin, ThreadModerationAction):
         "Are you sure you want to delete this thread? This action cannot be undone.",
     )
 
-    def confirmed(self) -> ModerationActionResult:
+    def confirmed(self) -> ModerationResult:
         thread_id = self.thread.id
         category_id = self.thread.category_id
 
@@ -469,6 +591,6 @@ class DeleteThreadModerationAction(ConfirmMixin, ThreadModerationAction):
             pgettext("thread moderation success", "Thread deleted"),
         )
 
-        return ModerationActionResult(
+        return ModerationResult(
             deleted_items=[thread_id],
         )
