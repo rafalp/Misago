@@ -5,7 +5,7 @@ from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
 from ...polls.models import Poll
 from ...solutions.thread import select_thread_solution
-from ...test import SAME_ITEMS, assert_contains
+from ...test import UNORDERED, assert_contains
 from ...testutils import grant_category_group_permissions
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
@@ -357,7 +357,7 @@ def test_thread_detail_view_executes_move_thread_moderation_action(
     )
 
     mock_synchronize_categories.delay.assert_called_once_with(
-        SAME_ITEMS([default_category.id, sibling_category.id])
+        UNORDERED([default_category.id, sibling_category.id])
     )
 
 

@@ -3,7 +3,7 @@ import pytest
 from ...permissions.enums import CategoryPermission
 from ...polls.models import Poll
 from ...solutions.thread import select_thread_solution
-from ...test import SAME_ITEMS, assert_contains, assert_not_contains
+from ...test import UNORDERED, assert_contains, assert_not_contains
 from ...testutils import grant_category_group_permissions
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
@@ -531,7 +531,7 @@ def test_category_thread_list_view_move_moderation_action_moves_threads(
     )
 
     mock_synchronize_categories.delay.assert_called_once_with(
-        SAME_ITEMS([default_category.id, sibling_category.id])
+        UNORDERED([default_category.id, sibling_category.id])
     )
 
 

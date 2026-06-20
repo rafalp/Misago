@@ -1,11 +1,11 @@
 from typing import Iterable
 
 
-class SAME_ITEMS:
+class UNORDERED:
     value: Iterable
 
-    def __init__(self, value: Iterable):
-        self.value = sorted(value)
+    def __init__(self, values: Iterable):
+        self.value = sorted(values)
 
     def __eq__(self, value: Iterable):
         return self.value == sorted(value)
