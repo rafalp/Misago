@@ -16,8 +16,8 @@ from django.utils.translation import pgettext
 from ...categories.models import Category
 from ...metadata import TextMetaData
 from ...moderation.actions import (
-    ModerationActionResult,
     ModerationActionTemplateResult,
+    ModerationResult,
     PostModerationAction,
     PostsModerationAction,
     ThreadModerationAction,
@@ -272,7 +272,7 @@ class DetailView(GenericThreadView):
 
     def execute_posts_moderation_action(
         self, request: HttpRequest, thread: Thread, page: int | None
-    ) -> ModerationActionResult:
+    ) -> ModerationResult:
         actions = self.get_posts_moderation_actions(request, thread)
         action: PostsModerationAction = get_moderation_action(
             actions, request.POST["posts_moderation"]
@@ -356,7 +356,7 @@ class DetailView(GenericThreadView):
 
     def execute_post_moderation_action(
         self, request: HttpRequest, thread: Thread, post: Post
-    ) -> ModerationActionResult:
+    ) -> ModerationResult:
         actions = self.get_post_moderation_actions(request, post)
         action: PostModerationAction = get_moderation_action(
             actions, request.POST["post_moderation"]

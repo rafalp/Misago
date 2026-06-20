@@ -26,12 +26,12 @@ class ModerationAction:
     def validate(self):
         pass
 
-    def execute(self) -> Optional["ModerationActionResult"]:
+    def execute(self) -> Optional["ModerationResult"]:
         raise NotImplementedError("'FormMixin' subclasses must implement 'execute'")
 
 
 @dataclass(frozen=True)
-class ModerationActionResult:
+class ModerationResult:
     updated_items: set[int] = field(default_factory=set)
     deleted_items: set[int] = field(default_factory=set)
     thread_updates: list[ThreadUpdate] = field(default_factory=list)
@@ -42,23 +42,23 @@ class ModerationActionResult:
     @classmethod
     def from_updated_thread(
         cls, thread: Thread, thread_update: ThreadUpdate | None
-    ) -> "ModerationActionResult":
+    ) -> "ModerationResult":
         if thread_update:
             return cls(updated_items=[thread.id], thread_updates=[thread_update])
 
         return cls(updated_items=[thread.id])
 
     @classmethod
-    def from_updated_threads(cls, threads: list[Thread]) -> "ModerationActionResult":
+    def from_updated_threads(cls, threads: list[Thread]) -> "ModerationResult":
         return cls(updated_items=[thread.id for thread in threads])
 
     @classmethod
-    def from_deleted_threads(cls, threads: list[Thread]) -> "ModerationActionResult":
+    def from_deleted_threads(cls, threads: list[Thread]) -> "ModerationResult":
         return cls(deleted_items=[thread.id for thread in threads])
 
 
 @dataclass(frozen=True)
-class ModerationActionTemplateResult(ModerationActionResult):
+class ModerationActionTemplateResult(ModerationResult):
     context: dict = field(default_factory=dict)
 
     def update_context(self, context: dict):
@@ -86,7 +86,7 @@ class ConfirmMixin:
     confirmation_message: str
     template_name: str = "misago/moderation/confirm.html"
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         if self.request.POST.get("confirm"):
             return self.confirmed()
 
@@ -102,7 +102,7 @@ class ConfirmMixin:
             "button_label": self.button_label,
         }
 
-    def confirmed(self) -> ModerationActionResult:
+    def confirmed(self) -> ModerationResult:
         raise NotImplementedError(
             "'ConfirmMixin' subclasses must implement 'confirmed' method."
         )
@@ -119,7 +119,7 @@ class FormMixin:
     form_prefix: str = "moderation"
     template_name: str
 
-    def execute(self) -> ModerationActionResult:
+    def execute(self) -> ModerationResult:
         form_submitted = bool(self.request.POST.get("confirm"))
         form = self.get_form(form_submitted)
 
@@ -148,7 +148,7 @@ class FormMixin:
             "button_label": self.button_label,
         }
 
-    def form_valid(self, form: Form) -> ModerationActionResult:
+    def form_valid(self, form: Form) -> ModerationResult:
         raise NotImplementedError(
             "'FormMixin' subclasses must implement 'form_valid' method."
         )

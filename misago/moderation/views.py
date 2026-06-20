@@ -5,7 +5,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.utils.translation import pgettext
 
-from .actions import ModerationAction, ModerationActionResult
+from .actions import ModerationAction, ModerationResult
 
 
 def get_moderation_action(
@@ -33,7 +33,7 @@ def get_moderation_action_choices(actions: list[ModerationAction]) -> list[dict]
 
 
 def get_moderation_result_response(
-    request: HttpRequest, result: ModerationActionResult
+    request: HttpRequest, result: ModerationResult
 ) -> HttpResponse | None:
     if result.refresh:
         if not request.is_htmx:

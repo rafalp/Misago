@@ -23,8 +23,8 @@ from ...metatags.metatags import (
     get_forum_index_metatags,
 )
 from ...moderation.actions import (
-    ModerationActionResult,
     ModerationActionTemplateResult,
+    ModerationResult,
     ThreadsModerationAction,
 )
 from ...moderation.threads import (
@@ -279,7 +279,7 @@ class ListView(View):
 
     def execute_moderation_action(
         self, request: HttpRequest, kwargs: dict
-    ) -> ModerationActionResult:
+    ) -> ModerationResult:
         raise NotImplementedError()
 
     def get_selected_threads(self, request: HttpRequest, threads: dict) -> list[Thread]:
@@ -414,7 +414,7 @@ class ThreadListView(ListView):
 
     def execute_moderation_action(
         self, request: HttpRequest, kwargs: dict
-    ) -> ModerationActionResult:
+    ) -> ModerationResult:
         actions = self.get_moderation_actions(request)
         action: ThreadsModerationAction = get_moderation_action(
             actions, request.POST["moderation"]
@@ -764,7 +764,7 @@ class CategoryThreadListView(ListView):
 
     def execute_moderation_action(
         self, request: HttpRequest, kwargs: dict
-    ) -> ModerationActionResult:
+    ) -> ModerationResult:
         category = self.get_category(request, kwargs)
 
         actions = self.get_moderation_actions(request, category)
