@@ -28,6 +28,7 @@ from ...moderation.thread import get_thread_moderation_actions
 from ...moderation.views import (
     get_moderation_action,
     get_moderation_action_choices,
+    get_moderation_result_response,
     set_moderation_response_headers,
 )
 from ...notifications.threads import get_watched_thread, update_watched_thread_read_time
@@ -175,23 +176,7 @@ class DetailView(GenericThreadView):
 
             return result.render(request, template_name)
 
-        # todo: create an util for those responses
-        if result.reload:
-            if not request.is_htmx:
-                return redirect(request.get_full_path())
-
-            response = HttpResponse(status=201)
-            response.headers["hx-refresh"] = "true"
-            set_moderation_response_headers(request, response)
-            return response
-
-        if result.redirect_to:
-            if not request.is_htmx:
-                return redirect(result.redirect_to)
-
-            response = HttpResponse(status=201)
-            response.headers["hx-redirect"] = result.redirect_to
-            set_moderation_response_headers(request, response)
+        if response := get_moderation_result_response(request, result):
             return response
 
         if thread.id in result.deleted_items:
@@ -269,6 +254,9 @@ class DetailView(GenericThreadView):
 
             return result.render(request, template_name)
 
+        if response := get_moderation_result_response(request, result):
+            return response
+
         if not request.is_htmx:
             return redirect(request.get_full_path())
 
@@ -344,6 +332,9 @@ class DetailView(GenericThreadView):
             response = self.get(request, thread_id, slug, page)
             set_moderation_response_headers(request, response)
 
+            return response
+
+        if response := get_moderation_result_response(request, result):
             return response
 
         if not request.is_htmx:

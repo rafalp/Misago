@@ -593,6 +593,63 @@ def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_o
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(other_thread.id)
 
 
+def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_other_in_htmx(
+    moderator_client,
+    default_category,
+    thread,
+    other_thread,
+    mock_synchronize_categories,
+    mock_delete_duplicate_watched_threads,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"thread_moderation": "merge"},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Merge")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "thread_moderation": "merge",
+            "moderation-other_thread": "http://testserver"
+            + reverse(
+                "misago:thread",
+                kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
+            ),
+            "moderation-direction": "other",
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 201
+    assert (
+        response["hx-redirect"]
+        == reverse(
+            "misago:thread",
+            kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
+        )
+        + f"#post-{other_thread.last_post_id}"
+    )
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
+
+    other_thread.refresh_from_db()
+    assert other_thread.replies == 1
+
+    assert (
+        ThreadUpdate.objects.filter(
+            thread=other_thread,
+            action=ThreadUpdateActionName.MERGED,
+        ).count()
+        == 1
+    )
+
+    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
+    mock_delete_duplicate_watched_threads.delay.assert_called_once_with(other_thread.id)
+
+
 def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_current(
     moderator_client,
     default_category,
@@ -624,6 +681,56 @@ def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_cur
     assert response["location"] == reverse(
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
+
+    with pytest.raises(Thread.DoesNotExist):
+        other_thread.refresh_from_db()
+
+    thread.refresh_from_db()
+    assert thread.replies == 1
+
+    assert (
+        ThreadUpdate.objects.filter(
+            thread=thread,
+            action=ThreadUpdateActionName.MERGED,
+        ).count()
+        == 1
+    )
+
+    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
+    mock_delete_duplicate_watched_threads.delay.assert_called_once_with(thread.id)
+
+
+def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_current_in_htmx(
+    moderator_client,
+    default_category,
+    thread,
+    other_thread,
+    mock_synchronize_categories,
+    mock_delete_duplicate_watched_threads,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"thread_moderation": "merge"},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Merge")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "thread_moderation": "merge",
+            "moderation-other_thread": "http://testserver"
+            + reverse(
+                "misago:thread",
+                kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
+            ),
+            "moderation-direction": "this",
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 201
+    assert response["hx-refresh"] == "true"
 
     with pytest.raises(Thread.DoesNotExist):
         other_thread.refresh_from_db()

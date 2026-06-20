@@ -553,14 +553,14 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
         )
 
     def get_result(self, final_thread: Thread) -> ModerationActionResult:
-        reload = False
+        refresh = False
         redirect_to = self.get_redirect_url(final_thread)
 
         if final_thread == self.thread:
-            reload = self.request.path == redirect_to[: redirect_to.rindex("/") + 1]
+            refresh = self.request.path == redirect_to[: redirect_to.rindex("/") + 1]
 
         return ModerationActionResult(
-            reload=reload,
+            refresh=refresh,
             redirect_to=redirect_to,
         )
 

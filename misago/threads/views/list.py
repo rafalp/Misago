@@ -34,6 +34,7 @@ from ...moderation.threads import (
 from ...moderation.views import (
     get_moderation_action,
     get_moderation_action_choices,
+    get_moderation_result_response,
     set_moderation_response_headers,
 )
 from ...pagination.cursor import (
@@ -262,6 +263,9 @@ class ListView(View):
                     "cancel_url": current_url,
                 },
             )
+
+        if response := get_moderation_result_response(request, result):
+            return response
 
         if request.is_htmx:
             if result.updated_items:

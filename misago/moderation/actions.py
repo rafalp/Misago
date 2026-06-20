@@ -36,7 +36,7 @@ class ModerationActionResult:
     deleted_items: set[int] = field(default_factory=set)
     thread_updates: list[ThreadUpdate] = field(default_factory=list)
 
-    reload: bool = False
+    refresh: bool = False
     redirect_to: str | None = None
 
     @classmethod
