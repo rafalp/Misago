@@ -115,7 +115,7 @@ def test_private_thread_start_view_posts_new_thread(
     assert other_user.id in thread.private_thread_member_ids
 
     mock_notify_on_new_private_thread.delay.assert_called_with(
-        user.id, thread.id, [admin.id, moderator.id, other_user.id]
+        user.id, thread.id, UNORDERED([admin.id, moderator.id, other_user.id])
     )
 
 
@@ -321,7 +321,7 @@ def test_private_thread_start_view_posts_new_thread_with_moderation_options_if_u
     assert thread.is_locked
 
     mock_notify_on_new_private_thread.delay.assert_called_with(
-        moderator.id, thread.id, [admin.id, user.id, other_user.id]
+        moderator.id, thread.id, UNORDERED([admin.id, user.id, other_user.id])
     )
 
 
