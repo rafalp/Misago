@@ -10,7 +10,7 @@ from ...postedits.create import create_post_edit
 from ...postedits.models import PostEdit
 from ...readtracker.models import ReadThread
 from ...readtracker.tracker import mark_thread_read
-from ...solutions.thread import select_thread_solution
+from ...solutions.select import select_thread_solution
 from ...threadupdates.create import create_test_thread_update
 from ...threadupdates.models import ThreadUpdate
 from ..delete import delete_thread
