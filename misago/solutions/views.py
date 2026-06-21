@@ -13,12 +13,8 @@ from ..permissions.solutions import (
 )
 from ..threads.views.backend import thread_backend
 from ..threads.views.generic import GenericThreadView
-from .thread import (
-    clear_thread_solution,
-    lock_thread_solution,
-    select_thread_solution,
-    unlock_thread_solution,
-)
+from .lock import lock_thread_solution, unlock_thread_solution
+from .select import clear_thread_solution, select_thread_solution
 from .validators import validate_thread_solution
 
 

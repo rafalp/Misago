@@ -2,7 +2,7 @@ import pytest
 
 from ...permissions.enums import CategoryPermission
 from ...polls.models import Poll
-from ...solutions.thread import select_thread_solution
+from ...solutions.select import select_thread_solution
 from ...test import UNORDERED, assert_contains, assert_not_contains
 from ...testutils import grant_category_group_permissions
 from ...threadupdates.enums import ThreadUpdateActionName

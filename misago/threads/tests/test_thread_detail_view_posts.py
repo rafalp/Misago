@@ -6,7 +6,8 @@ from ...conf.test import override_dynamic_settings
 from ...likes.like import like_post
 from ...permissions.enums import CanSeePostEdits, CanSeePostLikes, CategoryPermission
 from ...permissions.models import CategoryGroupPermission
-from ...solutions.thread import lock_thread_solution, select_thread_solution
+from ...solutions.lock import lock_thread_solution
+from ...solutions.select import select_thread_solution
 from ...test import assert_contains, assert_not_contains
 
 
