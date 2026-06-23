@@ -467,6 +467,82 @@ def test_oauth2_complete_view_includes_extra_headers_in_user_request(
 
 @responses.activate
 @override_dynamic_settings(**TEST_SETTINGS)
+def test_oauth2_complete_view_matches_existing_user_by_email(
+    user, client, dynamic_settings, mailoutbox
+):
+    assert dynamic_settings.enable_oauth2_client is True
+
+    code_grant = "12345grant"
+    session_state = "12345state"
+    access_token = "12345token"
+
+    session = client.session
+    session[SESSION_STATE] = session_state
+    session.save()
+
+    responses.post(
+        "https://example.com/oauth2/token",
+        json={
+            "token": {
+                "bearer": access_token,
+            },
+        },
+        match=[
+            urlencoded_params_matcher(
+                {
+                    "grant_type": "authorization_code",
+                    "client_id": "oauth2_client_id",
+                    "client_secret": "oauth2_client_secret",
+                    "redirect_uri": "http://testserver/oauth2/complete/",
+                    "code": code_grant,
+                },
+            ),
+        ],
+    )
+
+    responses.post(
+        "https://example.com/oauth2/user",
+        json={
+            "id": 1234,
+            "profile": {
+                "name": "John Doe",
+                "email": user.email,
+            },
+        },
+        match=[
+            header_matcher({"Authorization": f"Bearer {access_token}"}),
+        ],
+    )
+
+    response = client.get(
+        "%s?state=%s&code=%s"
+        % (
+            reverse("misago:oauth2-complete"),
+            session_state,
+            code_grant,
+        )
+    )
+
+    assert response.status_code == 302
+
+    # User is updated
+    user.refresh_from_db()
+    assert user.username == "John_Doe"
+    assert user.slug == "john-doe"
+
+    # User is authenticated
+    auth_api = client.get(reverse("misago:api:auth")).json()
+    assert auth_api["id"] == user.id
+
+    # User welcome e-mail is not sent
+    assert len(mailoutbox) == 0
+
+    # User subject is created
+    Subject.objects.get(sub="1234", user=user)
+
+
+@responses.activate
+@override_dynamic_settings(**TEST_SETTINGS)
 def test_oauth2_complete_view_updates_existing_user(
     user, client, dynamic_settings, mailoutbox
 ):
@@ -779,9 +855,11 @@ def test_oauth2_complete_view_returns_error_400_if_user_email_was_invalid(
 @responses.activate
 @override_dynamic_settings(**TEST_SETTINGS)
 def test_oauth2_complete_view_returns_error_400_if_user_data_causes_integrity_error(
-    user, client, dynamic_settings
+    user, other_user, client, dynamic_settings
 ):
     assert dynamic_settings.enable_oauth2_client is True
+
+    Subject.objects.create(sub="1234", user=other_user)
 
     code_grant = "12345grant"
     session_state = "12345state"

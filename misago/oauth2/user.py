@@ -15,9 +15,12 @@ def get_user_from_data(request, user_data, user_data_raw):
     if not user_data["id"]:
         raise OAuth2UserIdNotProvidedError()
 
+    subject_exists = False
     user = get_user_by_subject(user_data["id"])
-    if not user and user_data["email"]:
-        user = get_user_by_email(user_data["id"], user_data["email"])
+    if user:
+        subject_exists = True
+    elif user_data["email"]:
+        user = get_user_by_email(user_data["email"])
 
     created = not bool(user)
 
@@ -29,13 +32,15 @@ def get_user_from_data(request, user_data, user_data_raw):
                 user = create_new_user(request, cleaned_data)
             else:
                 update_existing_user(user, cleaned_data)
+            if not subject_exists:
+                create_user_subject(user, user_data)
     except IntegrityError as error:
         raise_validation_error_from_integrity_error(error)
 
     return user, created
 
 
-def get_user_by_subject(user_id):
+def get_user_by_subject(user_id: str):
     try:
         subject = Subject.objects.select_related("user", "user__ban_cache").get(
             sub=user_id
@@ -47,10 +52,12 @@ def get_user_by_subject(user_id):
         return None
 
 
-def get_user_by_email(user_id, user_email):
+def get_user_by_email(user_email: str):
     try:
         user = User.objects.get_by_email(user_email)
-        Subject.objects.create(sub=user_id, user=user)
+        if Subject.objects.filter(user=user).exists():
+            return None
+        return user
     except User.DoesNotExist:
         return None
 
@@ -68,7 +75,6 @@ def create_new_user(request, user_data):
     )
 
     setup_new_user(request.settings, user, avatar_url=user_data["avatar"])
-    Subject.objects.create(sub=user_data["id"], user=user)
 
     return user
 
@@ -86,6 +92,10 @@ def update_existing_user(user, user_data):
 
     if save_changes:
         user.save()
+
+
+def create_user_subject(user, user_data: dict[str]) -> Subject:
+    return Subject.objects.create(sub=user_data["id"], user=user)
 
 
 def raise_validation_error_from_integrity_error(error):

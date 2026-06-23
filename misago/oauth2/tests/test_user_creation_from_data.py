@@ -95,6 +95,8 @@ def test_user_is_created_with_admin_activation_from_valid_data(db, dynamic_setti
 def test_user_name_conflict_during_creation_from_valid_data_is_handled(
     user, dynamic_settings, disable_user_data_filters
 ):
+    Subject.objects.create(sub="4321", user=user)
+
     with pytest.raises(OAuth2UserDataValidationError) as excinfo:
         get_user_from_data(
             Mock(settings=dynamic_settings, user_ip="83.0.0.1"),
@@ -112,9 +114,9 @@ def test_user_name_conflict_during_creation_from_valid_data_is_handled(
     ]
 
 
-def test_user_email_conflict_during_creation_from_valid_data_is_handled(
-    user, dynamic_settings
-):
+def test_user_email_conflict_from_valid_data_is_handled(user, dynamic_settings):
+    Subject.objects.create(sub="4321", user=user)
+
     with pytest.raises(OAuth2UserDataValidationError) as excinfo:
         get_user_from_data(
             Mock(settings=dynamic_settings, user_ip="83.0.0.1"),
