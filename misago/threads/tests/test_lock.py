@@ -1,4 +1,4 @@
-from ..lock import lock_thread, unlock_thread
+from ..lock import lock_post, lock_thread, unlock_post, unlock_thread
 
 
 def test_lock_thread_locks_thread(thread):
@@ -64,3 +64,66 @@ def test_unlock_thread_doesnt_save_thread_if_commit_is_false(
 
     thread.refresh_from_db()
     assert thread.is_locked
+
+
+def test_lock_post_locks_post(post):
+    assert lock_post(post)
+    assert post.is_locked
+
+    post.refresh_from_db()
+    assert post.is_locked
+
+
+def test_lock_post_doesnt_lock_locked_post(django_assert_num_queries, post):
+    post.is_locked = True
+    post.save()
+
+    with django_assert_num_queries(0):
+        assert not lock_post(post)
+        assert post.is_locked
+
+    post.refresh_from_db()
+    assert post.is_locked
+
+
+def test_lock_post_doesnt_save_post_if_commit_is_false(django_assert_num_queries, post):
+    with django_assert_num_queries(0):
+        assert lock_post(post, commit=False)
+        assert post.is_locked
+
+    post.refresh_from_db()
+    assert not post.is_locked
+
+
+def test_unlock_post_unlocks_post(post):
+    post.is_locked = True
+    post.save()
+
+    assert unlock_post(post)
+    assert not post.is_locked
+
+    post.refresh_from_db()
+    assert not post.is_locked
+
+
+def test_unlock_post_doesnt_unlock_unlocked_post(django_assert_num_queries, post):
+    with django_assert_num_queries(0):
+        assert not unlock_post(post)
+        assert not post.is_locked
+
+    post.refresh_from_db()
+    assert not post.is_locked
+
+
+def test_unlock_post_doesnt_save_post_if_commit_is_false(
+    django_assert_num_queries, post
+):
+    post.is_locked = True
+    post.save()
+
+    with django_assert_num_queries(0):
+        assert unlock_post(post, commit=False)
+        assert not post.is_locked
+
+    post.refresh_from_db()
+    assert post.is_locked
