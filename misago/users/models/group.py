@@ -1,7 +1,12 @@
 from django.db import models
 from django.utils.translation import pgettext
 
-from ...permissions.enums import CanHideOwnPostEdits, CanSeePostEdits, CanSeePostLikes, PermissionValue
+from ...permissions.enums import (
+    CanHideOwnPostEdits,
+    CanSeePostEdits,
+    CanSeePostLikes,
+    PermissionValue,
+)
 from ...plugins.models import PluginDataModel
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
