@@ -37,7 +37,6 @@ class Post(PluginDataModel):
 
     posted_at = models.DateTimeField(db_index=True)
     updated_at = models.DateTimeField(null=True, blank=True)
-    hidden_at = models.DateTimeField(null=True, blank=True)
 
     edits = models.PositiveIntegerField(default=0)
     last_editor = models.ForeignKey(
@@ -51,6 +50,8 @@ class Post(PluginDataModel):
     last_editor_slug = models.CharField(max_length=255, null=True, blank=True)
     last_edit_reason = models.CharField(max_length=255, null=True, blank=True)
 
+    is_hidden = models.BooleanField(default=False)
+    hidden_at = models.DateTimeField(null=True, blank=True)
     hidden_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,
@@ -60,11 +61,11 @@ class Post(PluginDataModel):
     )
     hidden_by_name = models.CharField(max_length=255, null=True, blank=True)
     hidden_by_slug = models.CharField(max_length=255, null=True, blank=True)
+    hidden_reason = models.CharField(max_length=255, null=True, blank=True)
 
     has_reports = models.BooleanField(default=False)
     has_open_reports = models.BooleanField(default=False)
     is_unapproved = models.BooleanField(default=False, db_index=True)
-    is_hidden = models.BooleanField(default=False)
     is_locked = models.BooleanField(default=False)
 
     likes = models.PositiveIntegerField(default=0)

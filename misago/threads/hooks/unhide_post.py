@@ -3,22 +3,22 @@ from typing import Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ..models import Thread
+from ..models import Post
 
 
-class UnhideThreadHookAction(Protocol):
+class UnhidePostHookAction(Protocol):
     """
-    Misago function for unhiding a thread.
+    Misago function for unhiding a post.
 
     # Arguments
 
-    ## `thread: Thread`
+    ## `post: Post`
 
-    A `Thread` to unhide.
+    A `Post` to unhide.
 
     ## `commit: bool = True`
 
-    Whether the updated thread instance should be saved to the database.
+    Whether the updated post instance should be saved to the database.
 
     Defaults to `True`.
 
@@ -28,37 +28,37 @@ class UnhideThreadHookAction(Protocol):
 
     # Return value
 
-    `True` if the thread was unhidden, `False` otherwise.
+    `True` if the post was unhidden, `False` otherwise.
     """
 
     def __call__(
         self,
-        thread: Thread,
+        post: Post,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
 
 
-class UnhideThreadHookFilter(Protocol):
+class UnhidePostHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: UnhideThreadHookAction`
+    ## `action: UnhidePostHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
 
     See the [action](#action) section for details.
 
-    ## `thread: Thread`
+    ## `post: Post`
 
-    A `Thread` to unhide.
+    A `Post` to unhide.
 
     ## `commit: bool = True`
 
-    Whether the updated thread instance should be saved to the database.
+    Whether the updated post instance should be saved to the database.
 
     Defaults to `True`.
 
@@ -68,53 +68,53 @@ class UnhideThreadHookFilter(Protocol):
 
     # Return value
 
-    `True` if the thread was unhidden, `False` otherwise.
+    `True` if the post was unhidden, `False` otherwise.
     """
 
     def __call__(
         self,
-        action: UnhideThreadHookAction,
-        thread: Thread,
+        action: UnhidePostHookAction,
+        post: Post,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
 
 
-class UnhideThreadHook(
+class UnhidePostHook(
     FilterHook[
-        UnhideThreadHookAction,
-        UnhideThreadHookFilter,
+        UnhidePostHookAction,
+        UnhidePostHookFilter,
     ]
 ):
     """
     This hook allows plugins to replace or extend the logic used to
-    unhide a thread.
+    unhide a post.
 
     # Example
 
-    Register user who unhidden the thread:
+    Register user who unhidden the post:
 
     ```python
     from django.http import HttpRequest
-    from misago.threads.hooks import unhide_thread_hook
-    from misago.threads.models import Thread
+    from misago.posts.hooks import unhide_post_hook
+    from misago.posts.models import Post
 
 
-    @unhide_thread_hook.append_filter
-    def register_user_that_unhidden_thread(
+    @unhide_post_hook.append_filter
+    def register_user_that_unhidden_post(
         action,
-        thread: Thread,
+        post: Post,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
-        if not action(thread, commit=False, request=request):
+        if not action(post, commit=False, request=request):
             return False
 
         if request:
-            thread.plugin_data["unhidden_by"] = request.user.id
+            post.plugin_data["unhidden_by"] = request.user.id
 
         if commit:
-            thread.save()
+            post.save()
 
         return True
     """
@@ -123,17 +123,17 @@ class UnhideThreadHook(
 
     def __call__(
         self,
-        action: UnhideThreadHookAction,
-        thread: Thread,
+        action: UnhidePostHookAction,
+        post: Post,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
         return super().__call__(
             action,
-            thread,
+            post,
             commit,
             request,
         )
 
 
-unhide_thread_hook = UnhideThreadHook()
+unhide_post_hook = UnhidePostHook()

@@ -37,6 +37,7 @@ from .get_threads_page_filters import get_threads_page_filters_hook
 from .get_threads_page_queryset import get_threads_page_queryset_hook
 from .get_threads_page_subcategories import get_threads_page_subcategories_hook
 from .get_threads_page_threads import get_threads_page_threads_hook
+from .hide_post import hide_post_hook
 from .hide_thread import hide_thread_hook
 from .lock_post import lock_post_hook
 from .lock_thread import lock_thread_hook
@@ -47,6 +48,7 @@ from .populate_post_feed_data import populate_post_feed_data_hook
 from .remove_thread_reply_approval import remove_thread_reply_approval_hook
 from .require_thread_reply_approval import require_thread_reply_approval_hook
 from .synchronize_thread import synchronize_thread_hook
+from .unhide_post import unhide_post_hook
 from .unhide_thread import unhide_thread_hook
 from .unlock_post import unlock_post_hook
 from .unlock_thread import unlock_thread_hook
@@ -78,6 +80,7 @@ __all__ = [
     "get_threads_page_queryset_hook",
     "get_threads_page_subcategories_hook",
     "get_threads_page_threads_hook",
+    "hide_post_hook",
     "hide_thread_hook",
     "lock_post_hook",
     "lock_thread_hook",
@@ -88,6 +91,7 @@ __all__ = [
     "remove_thread_reply_approval_hook",
     "require_thread_reply_approval_hook",
     "synchronize_thread_hook",
+    "unhide_post_hook",
     "unhide_thread_hook",
     "unlock_post_hook",
     "unlock_thread_hook",

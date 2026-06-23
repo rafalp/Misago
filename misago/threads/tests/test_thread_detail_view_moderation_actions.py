@@ -1507,6 +1507,96 @@ def test_thread_detail_view_unlock_posts_moderation_action_validates_posts(
     assert_contains(response, "Posts are already unlocked.")
 
 
+def test_thread_detail_view_hide_posts_moderation_action_hides_posts(
+    moderator_client, moderator, thread, reply
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "hide", "posts": [reply.id]},
+    )
+    assert_contains(response, "Reason for hiding")
+    assert_contains(response, "Hide posts")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "hide",
+            "posts": [reply.id],
+            "moderation-hidden_reason": "Lorem ipsum",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    reply.refresh_from_db()
+    assert reply.is_hidden
+    assert reply.hidden_at
+    assert reply.hidden_by == moderator
+    assert reply.hidden_by_name == moderator.username
+    assert reply.hidden_by_slug == moderator.slug
+    assert reply.hidden_reason == "Lorem ipsum"
+
+
+def test_thread_detail_view_hide_posts_moderation_action_validates_posts(
+    moderator_client, thread, reply
+):
+    reply.is_hidden = True
+    reply.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "hide", "posts": [reply.id]},
+    )
+    assert_contains(response, "Posts are already hidden.")
+
+
+def test_thread_detail_view_hide_posts_moderation_action_validates_first_post(
+    moderator_client, thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "hide", "posts": [thread.first_post_id]},
+    )
+    assert_contains(response, "The thread&#x27;s original post can&#x27;t be hidden.")
+
+
+def test_thread_detail_view_unhide_posts_moderation_action_unhides_posts(
+    moderator_client, thread, reply
+):
+    reply.is_hidden = True
+    reply.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "unhide", "posts": [reply.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_hidden
+    assert reply.hidden_at is None
+    assert reply.hidden_by is None
+    assert reply.hidden_by_name is None
+    assert reply.hidden_by_slug is None
+    assert reply.hidden_reason is None
+
+
+def test_thread_detail_view_unhide_posts_moderation_action_validates_posts(
+    moderator_client, thread, reply
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "unhide", "posts": [reply.id]},
+    )
+    assert_contains(response, "Posts are already unhidden.")
+
+
 def test_thread_detail_view_executes_lock_post_moderation_action(
     moderator_client, thread, reply
 ):
@@ -1548,3 +1638,68 @@ def test_thread_detail_view_executes_unlock_post_moderation_action(
 
     reply.refresh_from_db()
     assert not reply.is_locked
+
+
+def test_thread_detail_view_executes_hide_post_moderation_action(
+    moderator_client, moderator, thread, reply
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "hide", "post": reply.id},
+    )
+    assert_contains(response, "Reason for hiding")
+    assert_contains(response, "Hide post")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "hide",
+            "post": reply.id,
+            "moderation-hidden_reason": "Lorem ipsum",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert reply.is_hidden
+    assert reply.hidden_at
+    assert reply.hidden_by == moderator
+    assert reply.hidden_by_name == moderator.username
+    assert reply.hidden_by_slug == moderator.slug
+    assert reply.hidden_reason == "Lorem ipsum"
+
+
+def test_thread_detail_view_executes_unhide_post_moderation_action(
+    moderator_client, thread, reply
+):
+    reply.is_hidden = True
+    reply.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unhide", "post": reply.id},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_hidden
+    assert reply.hidden_at is None
+    assert reply.hidden_by is None
+    assert reply.hidden_by_name is None
+    assert reply.hidden_by_slug is None
+    assert reply.hidden_reason is None

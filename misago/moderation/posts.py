@@ -7,6 +7,7 @@ from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.delete import delete_post
+from ..threads.hide import hide_post, unhide_post
 from ..threads.lock import lock_post, unlock_post
 from ..threads.models import Thread
 from ..threads.synchronize import synchronize_thread
@@ -16,7 +17,7 @@ from .actions import (
     ModerationResult,
     PostsModerationAction,
 )
-from .forms import SplitPostsForm
+from .forms import HideForm, SplitPostsForm
 from .hooks import (
     get_private_thread_posts_moderation_actions_hook,
     get_thread_posts_moderation_actions_hook,
@@ -47,6 +48,8 @@ def _get_thread_posts_moderation_actions_action(
     return [
         LockPostsModerationAction,
         UnlockPostsModerationAction,
+        HidePostsModerationAction,
+        UnhidePostsModerationAction,
         SplitPostsModerationAction,
         DeletePostsModerationAction,
     ]
@@ -76,6 +79,8 @@ def _get_private_thread_posts_moderation_actions_action(
     return [
         LockPostsModerationAction,
         UnlockPostsModerationAction,
+        HidePostsModerationAction,
+        UnhidePostsModerationAction,
         SplitPostsModerationAction,
         DeletePostsModerationAction,
     ]
@@ -130,11 +135,84 @@ class UnlockPostsModerationAction(PostsModerationAction):
 
         for post in valid_posts:
             unlock_post(post, request=request)
-            post.save()
 
         messages.success(
             self.request,
             pgettext("posts moderation success", "Posts unlocked"),
+        )
+
+        return ModerationResult(
+            updated_items=[post.id for post in valid_posts],
+        )
+
+
+class HidePostsModerationAction(FormMixin, PostsModerationAction):
+    id = "hide"
+    full_name = pgettext_lazy("posts moderation action name", "Hide posts")
+    button_label = pgettext_lazy("posts moderation button label", "Hide")
+    form_class = HideForm
+    template_name = "misago/moderation/hide.html"
+
+    def validate(self):
+        for post in self.posts:
+            if post.id == self.thread.first_post_id:
+                raise ValidationError(
+                    pgettext(
+                        "posts moderation validation",
+                        "The thread's original post can't be hidden.",
+                    )
+                )
+
+        for post in self.posts:
+            print(post.is_hidden)
+            if not post.is_hidden:
+                return
+
+        raise ValidationError(
+            pgettext("posts moderation validation", "Posts are already hidden.")
+        )
+
+    def form_valid(self, form) -> ModerationResult:
+        request = self.request
+        valid_posts = [post for post in self.posts if not post.is_hidden]
+        hidden_reason = form.cleaned_data["hidden_reason"]
+
+        for post in valid_posts:
+            hide_post(post, request.user, hidden_reason, request=request)
+
+        messages.success(
+            self.request,
+            pgettext("posts moderation success", "Posts hidden"),
+        )
+
+        return ModerationResult(
+            updated_items=[post.id for post in valid_posts],
+        )
+
+
+class UnhidePostsModerationAction(PostsModerationAction):
+    id = "unhide"
+    button_label = pgettext_lazy("posts moderation button label", "Unhide")
+
+    def validate(self):
+        for post in self.posts:
+            if post.is_hidden:
+                return
+
+        raise ValidationError(
+            pgettext("posts moderation validation", "Posts are already unhidden.")
+        )
+
+    def execute(self) -> ModerationResult:
+        request = self.request
+        valid_posts = [post for post in self.posts if post.is_hidden]
+
+        for post in valid_posts:
+            unhide_post(post, request=request)
+
+        messages.success(
+            self.request,
+            pgettext("posts moderation success", "Posts unhidden"),
         )
 
         return ModerationResult(

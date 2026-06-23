@@ -1,6 +1,6 @@
-# `hide_thread_hook`
+# `hide_post_hook`
 
-This hook allows plugins to replace or extend the logic used to hide a thread.
+This hook allows plugins to replace or extend the logic used to hide a post.
 
 
 ## Location
@@ -8,16 +8,16 @@ This hook allows plugins to replace or extend the logic used to hide a thread.
 This hook can be imported from `misago.threads.hooks`:
 
 ```python
-from misago.threads.hooks import hide_thread_hook
+from misago.threads.hooks import hide_post_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_hide_thread_filter(
-    action: HideThreadHookAction,
-    thread: Thread,
+def custom_hide_post_filter(
+    action: HidePostHookAction,
+    post: Post,
     hidden_by: Union['User', str],
     hidden_reason: str | None=None,
     commit: bool=True,
@@ -31,31 +31,31 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: HideThreadHookAction`
+#### `action: HidePostHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
 
-#### `thread: Thread`
+#### `post: Post`
 
-A `Thread` to hide.
+A `Post` to hide.
 
 
 #### `hidden_by: User | str`
 
-The user who hid the thread.
+The user who hid the post.
 
 
 #### `hidden_reason: str | None`
 
-A `str` with a short description of why the thread was hidden, or `None`.
+A `str` with a short description of why the post was hidden, or `None`.
 
 
 #### `commit: bool = True`
 
-Whether the updated thread instance should be saved to the database.
+Whether the updated post instance should be saved to the database.
 
 Defaults to `True`.
 
@@ -67,14 +67,14 @@ The request object, or `None` if not provided.
 
 ### Return value
 
-`True` if the thread was hidden, `False` otherwise.
+`True` if the post was hidden, `False` otherwise.
 
 
 ## Action
 
 ```python
-def hide_thread_action(
-    thread: Thread,
+def hide_post_action(
+    post: Post,
     hidden_by: Union['User', str],
     hidden_reason: str | None=None,
     commit: bool=True,
@@ -83,29 +83,29 @@ def hide_thread_action(
     ...
 ```
 
-Misago function for hiding a thread.
+Misago function for hiding a post.
 
 
 ### Arguments
 
-#### `thread: Thread`
+#### `post: Post`
 
-A `Thread` to hide.
+A `Post` to hide.
 
 
 #### `hidden_by: User | str`
 
-The user who hid the thread.
+The user who hid the post.
 
 
 #### `hidden_reason: str | None`
 
-A `str` with a short description of why the thread was hidden, or `None`.
+A `str` with a short description of why the post was hidden, or `None`.
 
 
 #### `commit: bool = True`
 
-Whether the updated thread instance should be saved to the database.
+Whether the updated post instance should be saved to the database.
 
 Defaults to `True`.
 
@@ -117,36 +117,36 @@ The request object, or `None` if not provided.
 
 ### Return value
 
-`True` if the thread was hidden, `False` otherwise.
+`True` if the post was hidden, `False` otherwise.
 
 
 ## Example
 
-Register ip of user who hid the thread:
+Register ip of user who hid the post:
 
 ```python
 from django.http import HttpRequest
-from misago.threads.hooks import hide_thread_hook
-from misago.threads.models import Thread
+from misago.posts.hooks import hide_post_hook
+from misago.posts.models import Post
 from misago.users.models import User
 
 
-@hide_thread_hook.append_filter
-def register_user_that_hid_thread(
+@hide_post_hook.append_filter
+def register_user_that_hid_post(
     action,
-    thread: Thread,
+    post: Post,
     hidden_by: User | str,
     hidden_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
-    if not action(thread, hidden_by, hidden_reason, commit=False, request=request):
+    if not action(post, hidden_by, hidden_reason, commit=False, request=request):
         return False
 
     if request:
-        thread.plugin_data["hidden_by_ip"] = request.user_ip
+        post.plugin_data["hidden_by_ip"] = request.user_ip
 
     if commit:
-        thread.save()
+        post.save()
 
     return True
