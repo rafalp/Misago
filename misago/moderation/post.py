@@ -7,6 +7,7 @@ from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.delete import delete_post
+from ..threads.lock import lock_post, unlock_post
 from ..threads.models import Post, Thread
 from ..threads.synchronize import synchronize_thread
 from .actions import (
@@ -108,8 +109,7 @@ class LockPostModerationAction(PostModerationAction):
     def execute(self) -> ModerationResult:
         post = self.post
 
-        post.is_locked = True
-        post.save()
+        lock_post(post, request=self.request)
 
         messages.success(
             self.request,
@@ -134,8 +134,7 @@ class UnlockPostModerationAction(PostModerationAction):
     def execute(self) -> ModerationResult:
         post = self.post
 
-        post.is_locked = False
-        post.save()
+        unlock_post(post, request=self.request)
 
         messages.success(
             self.request,

@@ -319,6 +319,7 @@ Hooks instances are importable from the following Python modules:
 - [`get_threads_page_subcategories_hook`](./get-threads-page-subcategories-hook.md)
 - [`get_threads_page_threads_hook`](./get-threads-page-threads-hook.md)
 - [`hide_thread_hook`](./hide-thread-hook.md)
+- [`lock_post_hook`](./lock-post-hook.md)
 - [`lock_thread_hook`](./lock-thread-hook.md)
 - [`merge_threads_hook`](./merge-threads-hook.md)
 - [`move_thread_hook`](./move-thread-hook.md)
@@ -328,6 +329,7 @@ Hooks instances are importable from the following Python modules:
 - [`require_thread_reply_approval_hook`](./require-thread-reply-approval-hook.md)
 - [`synchronize_thread_hook`](./synchronize-thread-hook.md)
 - [`unhide_thread_hook`](./unhide-thread-hook.md)
+- [`unlock_post_hook`](./unlock-post-hook.md)
 - [`unlock_thread_hook`](./unlock-thread-hook.md)
 - [`unpin_thread_hook`](./unpin-thread-hook.md)
 

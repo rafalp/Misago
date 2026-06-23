@@ -2,7 +2,7 @@ import pytest
 from django.urls import reverse
 
 from ...permissions.enums import CategoryPermission
-from ...permissions.models import CategoryGroupPermission, Moderator
+from ...permissions.models import Moderator
 from ...polls.models import Poll
 from ...solutions.select import select_thread_solution
 from ...test import UNORDERED, assert_contains
@@ -1447,3 +1447,104 @@ def test_thread_detail_view_executes_delete_thread_moderation_action(
         thread.refresh_from_db()
 
     mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
+
+
+def test_thread_detail_view_lock_posts_moderation_action_locks_posts(
+    moderator_client, thread, reply
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "lock", "posts": [reply.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    reply.refresh_from_db()
+    assert reply.is_locked
+
+
+def test_thread_detail_view_lock_posts_moderation_action_validates_posts(
+    moderator_client, thread, reply
+):
+    reply.is_locked = True
+    reply.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "lock", "posts": [reply.id]},
+    )
+    assert_contains(response, "Posts are already locked.")
+
+
+def test_thread_detail_view_unlock_posts_moderation_action_unlocks_posts(
+    moderator_client, thread, reply
+):
+    reply.is_locked = True
+    reply.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "unlock", "posts": [reply.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_thread_detail_view_unlock_posts_moderation_action_validates_posts(
+    moderator_client, thread, reply
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "unlock", "posts": [reply.id]},
+    )
+    assert_contains(response, "Posts are already unlocked.")
+
+
+def test_thread_detail_view_executes_lock_post_moderation_action(
+    moderator_client, thread, reply
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "lock", "post": reply.id},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert reply.is_locked
+
+
+def test_thread_detail_view_executes_unlock_post_moderation_action(
+    moderator_client, thread, reply
+):
+    reply.is_locked = True
+    reply.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock", "post": reply.id},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_locked

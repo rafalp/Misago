@@ -322,3 +322,153 @@ def test_private_thread_detail_view_executes_delete_thread_moderation_action(
     mock_synchronize_categories.delay.assert_called_once_with(
         [user_private_thread.category_id]
     )
+
+
+def test_private_thread_detail_view_lock_posts_moderation_action_locks_posts(
+    thread_reply_factory, moderator_client, user_private_thread
+):
+    reply = thread_reply_factory(user_private_thread)
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"posts_moderation": "lock", "posts": [reply.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    )
+
+    reply.refresh_from_db()
+    assert reply.is_locked
+
+
+def test_private_thread_detail_view_lock_posts_moderation_action_validates_posts(
+    thread_reply_factory, moderator_client, user_private_thread
+):
+    reply = thread_reply_factory(user_private_thread, is_locked=True)
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"posts_moderation": "lock", "posts": [reply.id]},
+    )
+    assert_contains(response, "Posts are already locked.")
+
+
+def test_private_thread_detail_view_unlock_posts_moderation_action_unlocks_posts(
+    thread_reply_factory, moderator_client, user_private_thread
+):
+    reply = thread_reply_factory(user_private_thread, is_locked=True)
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"posts_moderation": "unlock", "posts": [reply.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_private_thread_detail_view_unlock_posts_moderation_action_validates_posts(
+    thread_reply_factory, moderator_client, user_private_thread
+):
+    reply = thread_reply_factory(user_private_thread)
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"posts_moderation": "unlock", "posts": [reply.id]},
+    )
+    assert_contains(response, "Posts are already unlocked.")
+
+
+def test_private_thread_detail_view_executes_lock_post_moderation_action(
+    thread_reply_factory, moderator_client, user_private_thread
+):
+    reply = thread_reply_factory(user_private_thread)
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"post_moderation": "lock", "post": reply.id},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert reply.is_locked
+
+
+def test_private_thread_detail_view_executes_unlock_post_moderation_action(
+    thread_reply_factory, moderator_client, user_private_thread
+):
+    reply = thread_reply_factory(user_private_thread, is_locked=True)
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"post_moderation": "unlock", "post": reply.id},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
