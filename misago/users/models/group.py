@@ -1,7 +1,12 @@
 from django.db import models
 from django.utils.translation import pgettext
 
-from ...permissions.enums import CanHideOwnPostEdits, CanSeePostEdits, PermissionValue
+from ...permissions.enums import (
+    CanHideOwnPostEdits,
+    CanSeePostEdits,
+    CanSeePostLikes,
+    PermissionValue,
+)
 from ...plugins.models import PluginDataModel
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
@@ -54,8 +59,8 @@ class Group(PluginDataModel):
     can_vote_in_polls = models.PositiveIntegerField(default=PermissionValue.NO)
 
     can_like_posts = models.PositiveIntegerField(default=PermissionValue.NO)
-    can_see_own_post_likes = models.PositiveIntegerField(default=0)
-    can_see_others_post_likes = models.PositiveIntegerField(default=0)
+    can_see_own_post_likes = models.PositiveIntegerField(default=CanSeePostLikes.NO)
+    can_see_others_post_likes = models.PositiveIntegerField(default=CanSeePostLikes.NO)
 
     can_select_own_thread_solutions = models.PositiveIntegerField(
         default=PermissionValue.NO

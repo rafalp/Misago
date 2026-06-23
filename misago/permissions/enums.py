@@ -50,9 +50,10 @@ class CanHideOwnPostEdits(IntEnum):
 
 
 class CanSeePostLikes(IntEnum):
-    USERS = 2
-    COUNT = 1
-    NEVER = 0
+    USERS = 3
+    COUNT = 2
+    NO = 0
+    NEVER = 1
 
     @classmethod
     def get_choices(cls):
@@ -68,6 +69,7 @@ class CanSeePostLikes(IntEnum):
                 pgettext_lazy("see post likes permission", "Count only"),
             ),
             (cls.NEVER, pgettext_lazy("see post likes permission", "Never")),
+            (cls.NO, pgettext_lazy("see post likes permission", "No")),
         )
 
 

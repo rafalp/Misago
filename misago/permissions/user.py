@@ -25,6 +25,7 @@ from .models import CategoryGroupPermission
 from .rules import (
     can_hide_own_post_edits,
     can_see_post_edits,
+    can_see_post_likes,
     yes_no_never,
     zero_or_greater,
 )
@@ -103,8 +104,8 @@ PERMISSION_RULES = {
     "own_polls_close_time_limit": zero_or_greater,
     "can_vote_in_polls": yes_no_never,
     "can_like_posts": yes_no_never,
-    "can_see_own_post_likes": max,
-    "can_see_others_post_likes": max,
+    "can_see_own_post_likes": can_see_post_likes,
+    "can_see_others_post_likes": can_see_post_likes,
     "can_select_own_thread_solutions": yes_no_never,
     "can_change_own_thread_solutions": yes_no_never,
     "own_thread_solutions_change_time_limit": zero_or_greater,
