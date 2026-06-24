@@ -381,6 +381,275 @@ def test_private_thread_detail_view_shows_user_post_locked_status_bar_to_moderat
     assert_contains(response, "This post is locked and only editable by moderators.")
 
 
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_user_and_reason_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by=other_user,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_and_user_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by=other_user,
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+
+
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_deleted_user_and_reason_to_user(
+    thread_reply_factory, user_client, user_private_thread
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by="DeletedModerator",
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "DeletedModerator")
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_and_deleted_user_to_user(
+    thread_reply_factory, user_client, user_private_thread
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by="DeletedModerator",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "DeletedModerator")
+
+
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_and_reason_to_user(
+    thread_reply_factory, user_client, user_private_thread
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        is_hidden=True,
+        hidden_at=True,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_to_user(
+    thread_reply_factory, user_client, user_private_thread
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        is_hidden=True,
+        hidden_at=True,
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+
+
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_user_and_reason_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        is_hidden=True,
+        hidden_by=other_user,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_user_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        is_hidden=True,
+        hidden_by=other_user,
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+
+
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_deleted_user_and_reason_to_user(
+    thread_reply_factory, user_client, user_private_thread
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        is_hidden=True,
+        hidden_by="DeletedModerator",
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "DeletedModerator")
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_deleted_user_to_user(
+    thread_reply_factory, user_client, user_private_thread
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        is_hidden=True,
+        hidden_by="DeletedModerator",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "DeletedModerator")
+
+
+def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_reason_to_user(
+    thread_reply_factory, user_client, user_private_thread
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        is_hidden=True,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
 def test_private_thread_detail_view_shows_deleted_user_hidden_post_to_user(
     thread_reply_factory, user_client, user_private_thread
 ):
@@ -400,23 +669,218 @@ def test_private_thread_detail_view_shows_deleted_user_hidden_post_to_user(
     assert_not_contains(response, post.original)
 
 
-def test_private_thread_detail_view_shows_deleted_user_hidden_post_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread
+def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_user_and_reason_to_user(
+    thread_reply_factory, user_client, thread, user, other_user
 ):
     post = thread_reply_factory(
-        user_private_thread, original=get_random_string(12), is_hidden=True
+        thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by=other_user,
+        hidden_reason="Lorem ipsum offtopic",
     )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
+    assert_not_contains(response, post.original)
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_and_user_to_user(
+    thread_reply_factory, user_client, thread, user, other_user
+):
+    post = thread_reply_factory(
+        thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by=other_user,
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_deleted_user_and_reason_to_user(
+    thread_reply_factory, user_client, thread, user
+):
+    post = thread_reply_factory(
+        thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by="DeletedModerator",
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "DeletedModerator")
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_and_deleted_user_to_user(
+    thread_reply_factory, user_client, thread, user
+):
+    post = thread_reply_factory(
+        thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by="DeletedModerator",
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "DeletedModerator")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_and_reason_to_user(
+    thread_reply_factory, user_client, thread, user
+):
+    post = thread_reply_factory(
+        thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_to_user(
+    thread_reply_factory, user_client, thread, user
+):
+    post = thread_reply_factory(
+        thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_at=True,
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_user_and_reason_to_user(
+    thread_reply_factory, user_client, thread, user, other_user
+):
+    post = thread_reply_factory(
+        thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_by=other_user,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_user_to_user(
+    thread_reply_factory, user_client, thread, user, other_user
+):
+    post = thread_reply_factory(
+        thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_by=other_user,
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_deleted_user_and_reason_to_user(
+    thread_reply_factory, user_client, thread, user
+):
+    post = thread_reply_factory(
+        thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_by="DeletedModerator",
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "DeletedModerator")
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_deleted_user_to_user(
+    thread_reply_factory, user_client, thread, user
+):
+    post = thread_reply_factory(
+        thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_by="DeletedModerator",
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "DeletedModerator")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_reason_to_user(
+    thread_reply_factory, user_client, thread, user
+):
+    post = thread_reply_factory(
+        thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "Lorem ipsum offtopic")
 
 
 def test_private_thread_detail_view_shows_user_hidden_post_to_user(
@@ -436,6 +900,286 @@ def test_private_thread_detail_view_shows_user_hidden_post_to_user(
     )
     assert_contains(response, post.get_absolute_url())
     assert_not_contains(response, post.original)
+
+
+def test_private_thread_detail_view_shows_other_user_hidden_post_with_timestamp_user_and_reason_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by=other_user,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_other_user_hidden_post_with_timestamp_and_user_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by=other_user,
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+
+
+def test_private_thread_detail_view_shows_other_user_hidden_post_with_timestamp_deleted_user_and_reason_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by="DeletedModerator",
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "DeletedModerator")
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_other_user_hidden_post_with_timestamp_and_deleted_user_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by="DeletedModerator",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "DeletedModerator")
+
+
+def test_private_thread_detail_view_shows_other_user_hidden_post_with_timestamp_and_reason_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_other_user_hidden_post_with_timestamp_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
+        hidden_at=True,
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+
+
+def test_private_thread_detail_view_shows_other_user_hidden_post_with_user_and_reason_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
+        hidden_by=other_user,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_other_user_hidden_post_with_user_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
+        hidden_by=other_user,
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+
+
+def test_private_thread_detail_view_shows_other_user_hidden_post_with_deleted_user_and_reason_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
+        hidden_by="DeletedModerator",
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "DeletedModerator")
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_other_user_hidden_post_with_deleted_user_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
+        hidden_by="DeletedModerator",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "DeletedModerator")
+
+
+def test_private_thread_detail_view_shows_other_user_hidden_post_with_reason_to_user(
+    thread_reply_factory, user_client, user_private_thread, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=other_user,
+        is_hidden=True,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_not_contains(response, post.original)
+    assert_contains(response, "Lorem ipsum offtopic")
 
 
 def test_private_thread_detail_view_shows_other_user_hidden_post_to_user(
@@ -460,317 +1204,298 @@ def test_private_thread_detail_view_shows_other_user_hidden_post_to_user(
     assert_not_contains(response, post.original)
 
 
+def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_user_and_reason_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by=other_user,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_and_user_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by=other_user,
+    )
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_deleted_user_and_reason_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by="DeletedModerator",
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "DeletedModerator")
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_and_deleted_user_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_by="DeletedModerator",
+    )
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "DeletedModerator")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_and_reason_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_at=True,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_at=True,
+    )
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+    assert_contains(response, "contents are hidden and visible only to moderators")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_user_and_reason_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_by=other_user,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_user_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user, other_user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_by=other_user,
+    )
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, other_user.get_absolute_url())
+    assert_contains(response, other_user.username)
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_deleted_user_and_reason_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_by="DeletedModerator",
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "DeletedModerator")
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_deleted_user_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_by="DeletedModerator",
+    )
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "DeletedModerator")
+
+
+def test_private_thread_detail_view_shows_user_hidden_post_with_reason_to_moderator(
+    thread_reply_factory, moderator_client, user_private_thread, user
+):
+    post = thread_reply_factory(
+        user_private_thread,
+        original=get_random_string(12),
+        poster=user,
+        is_hidden=True,
+        hidden_reason="Lorem ipsum offtopic",
+    )
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, post.original)
+    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Lorem ipsum offtopic")
+
+
 def test_private_thread_detail_view_shows_user_hidden_post_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread, user
-):
-    post = thread_reply_factory(
-        user_private_thread, original=get_random_string(12), poster=user, is_hidden=True
-    )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-
-def test_private_thread_detail_view_shows_hidden_post_status_bar_with_timestamp_user_and_reason_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread, user, other_user
-):
-    post = thread_reply_factory(
-        user_private_thread,
-        original=get_random_string(12),
-        poster=user,
-        is_hidden=True,
-        hidden_at=True,
-        hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
-    )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
-    assert_contains(response, other_user.get_absolute_url())
-    assert_contains(response, other_user.username)
-    assert_contains(response, "Lorem ipsum offtopic")
-
-
-def test_private_thread_detail_view_shows_hidden_post_status_bar_with_timestamp_and_user_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread, user, other_user
-):
-    post = thread_reply_factory(
-        user_private_thread,
-        original=get_random_string(12),
-        poster=user,
-        is_hidden=True,
-        hidden_at=True,
-        hidden_by=other_user,
-    )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
-    assert_contains(response, other_user.get_absolute_url())
-    assert_contains(response, other_user.username)
-
-
-def test_private_thread_detail_view_shows_hidden_post_status_bar_with_timestamp_deleted_user_and_reason_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread, user
-):
-    post = thread_reply_factory(
-        user_private_thread,
-        original=get_random_string(12),
-        poster=user,
-        is_hidden=True,
-        hidden_at=True,
-        hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
-    )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
-    assert_contains(response, "DeletedModerator")
-    assert_contains(response, "Lorem ipsum offtopic")
-
-
-def test_private_thread_detail_view_shows_hidden_post_status_bar_with_timestamp_and_deleted_user_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread, user
-):
-    post = thread_reply_factory(
-        user_private_thread,
-        original=get_random_string(12),
-        poster=user,
-        is_hidden=True,
-        hidden_at=True,
-        hidden_by="DeletedModerator",
-    )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
-    assert_contains(response, "DeletedModerator")
-
-
-def test_private_thread_detail_view_shows_hidden_post_status_bar_with_timestamp_and_reason_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread, user
-):
-    post = thread_reply_factory(
-        user_private_thread,
-        original=get_random_string(12),
-        poster=user,
-        is_hidden=True,
-        hidden_at=True,
-        hidden_reason="Lorem ipsum offtopic",
-    )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
-    assert_contains(response, "Lorem ipsum offtopic")
-
-
-def test_private_thread_detail_view_shows_hidden_post_status_bar_with_timestamp_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread, user
-):
-    post = thread_reply_factory(
-        user_private_thread,
-        original=get_random_string(12),
-        poster=user,
-        is_hidden=True,
-        hidden_at=True,
-    )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
-
-
-def test_private_thread_detail_view_shows_hidden_post_status_bar_with_user_and_reason_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread, user, other_user
-):
-    post = thread_reply_factory(
-        user_private_thread,
-        original=get_random_string(12),
-        poster=user,
-        is_hidden=True,
-        hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
-    )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
-    assert_contains(response, other_user.get_absolute_url())
-    assert_contains(response, other_user.username)
-    assert_contains(response, "Lorem ipsum offtopic")
-
-
-def test_private_thread_detail_view_shows_hidden_post_status_bar_with_user_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread, user, other_user
-):
-    post = thread_reply_factory(
-        user_private_thread,
-        original=get_random_string(12),
-        poster=user,
-        is_hidden=True,
-        hidden_by=other_user,
-    )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
-    assert_contains(response, other_user.get_absolute_url())
-    assert_contains(response, other_user.username)
-
-
-def test_private_thread_detail_view_shows_hidden_post_status_bar_with_deleted_user_and_reason_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread, user
-):
-    post = thread_reply_factory(
-        user_private_thread,
-        original=get_random_string(12),
-        poster=user,
-        is_hidden=True,
-        hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
-    )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
-    assert_contains(response, "DeletedModerator")
-    assert_contains(response, "Lorem ipsum offtopic")
-
-
-def test_private_thread_detail_view_shows_hidden_post_status_bar_with_deleted_user_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread, user
-):
-    post = thread_reply_factory(
-        user_private_thread,
-        original=get_random_string(12),
-        poster=user,
-        is_hidden=True,
-        hidden_by="DeletedModerator",
-    )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
-    assert_contains(response, "DeletedModerator")
-
-
-def test_private_thread_detail_view_shows_hidden_post_status_bar_with_reason_to_moderator(
-    thread_reply_factory, moderator_client, user_private_thread, user
-):
-    post = thread_reply_factory(
-        user_private_thread,
-        original=get_random_string(12),
-        poster=user,
-        is_hidden=True,
-        hidden_reason="Lorem ipsum offtopic",
-    )
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
-    assert_contains(response, "Lorem ipsum offtopic")
-
-
-def test_private_thread_detail_view_shows_hidden_post_status_bar_to_moderator(
     thread_reply_factory, moderator_client, user_private_thread, user
 ):
     post = thread_reply_factory(
