@@ -125,8 +125,8 @@
                   Hidden by {{ hidden_by }}, {{ hidden_at }}.
                 {% endblocktranslate %}
               {% endif %}
-            {% elif hidden_reason %}
-              {% blocktranslate trimmed with hidden_at=hidden_at_html|safe reason=hidden_reason context="hidden post message" %}
+            {% elif post.hidden_reason %}
+              {% blocktranslate trimmed with hidden_at=hidden_at_html|safe reason=post.hidden_reason context="hidden post message" %}
                 Hidden {{ hidden_at }}. Reason: {{ reason }}
               {% endblocktranslate %}
             {% else %}
