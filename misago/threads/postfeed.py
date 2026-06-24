@@ -39,11 +39,24 @@ from .prefetch import prefetch_post_feed_data
 class PostFeed:
     template_name: str = "misago/post_feed/index.html"
     htmx_like_template_name: str = "misago/post_feed/htmx_like.html"
+
     post_template_name: str = "misago/post_feed/post.html"
-    post_locked_template_name: str = "misago/post_feed/post_locked.html"
-    post_solved_template_name: str = "misago/post_feed/post_solved.html"
-    post_solution_template_name = "misago/post_feed/post_solution.html"
-    post_unapproved_template_name = "misago/post_feed/post_unapproved.html"
+    hidden_post_template_name: str = "misago/post_feed/hidden_post.html"
+
+    post_locked_status_bar_template_name: str = (
+        "misago/post_feed/status_bar/locked.html"
+    )
+    post_hidden_status_bar_template_name: str = (
+        "misago/post_feed/status_bar/hidden.html"
+    )
+    post_solved_status_bar_template_name: str = (
+        "misago/post_feed/status_bar/solved.html"
+    )
+    post_solution_status_bar_template_name = "misago/post_feed/status_bar/solution.html"
+    post_unapproved_status_bar_template_name = (
+        "misago/post_feed/status_bar/unapproved.html"
+    )
+
     thread_update_template_name: str = "misago/post_feed/thread_update.html"
 
     request: HttpRequest
@@ -169,15 +182,20 @@ class PostFeed:
         return feed
 
     def get_post_data(self, post: Post, counter: int = 1) -> dict:
-        is_visible = self.moderation or not post.is_hidden
-
         if self.request.user.is_authenticated:
             poster_is_current_user = post.poster_id == self.request.user.id
         else:
             poster_is_current_user = False
 
+        if post.is_hidden and not self.moderation:
+            is_visible = False
+            template_name = self.hidden_post_template_name
+        else:
+            is_visible = True
+            template_name = self.post_template_name
+
         data = {
-            "template_name": self.post_template_name,
+            "template_name": template_name,
             "type": "post",
             "post": post,
             "animate": post.id in self.animate_posts,
@@ -352,6 +370,11 @@ class PostFeed:
                 self.get_post_locked_data(),
             )
 
+        if post.is_hidden and self.moderation:
+            item["post_body_top_components"].append(
+                self.get_post_hidden_data(post),
+            )
+
         if self.thread.solution_id and post.id == self.thread.first_post_id:
             item["post_body_bottom_components"].append(
                 self.get_post_solved_data(),
@@ -430,13 +453,23 @@ class PostFeed:
         return []
 
     def get_post_locked_data(self) -> dict:
-        return {"template_name": self.post_locked_template_name}
+        return {"template_name": self.post_locked_status_bar_template_name}
+
+    def get_post_hidden_data(self, post: Post) -> dict:
+        return {
+            "template_name": self.post_hidden_status_bar_template_name,
+            "hidden_at": post.hidden_at,
+            "hidden_by_id": post.hidden_by_id,
+            "hidden_by_name": post.hidden_by_name,
+            "hidden_by_slug": post.hidden_by_slug,
+            "hidden_reason": post.hidden_reason,
+        }
 
     def get_post_solved_data(self) -> dict:
         thread = self.thread
 
         data = {
-            "template_name": self.post_solved_template_name,
+            "template_name": self.post_solved_status_bar_template_name,
             "solved_at": thread.solution_posted_at,
             "solved_by": None,
             "solved_by_name": thread.solution_by_name,
@@ -459,7 +492,7 @@ class PostFeed:
         thread = self.thread
 
         data = {
-            "template_name": self.post_solution_template_name,
+            "template_name": self.post_solution_status_bar_template_name,
             "selected_at": thread.solution_selected_at,
             "selected_by": None,
             "selected_by_name": thread.solution_selected_by_name,
@@ -488,7 +521,7 @@ class PostFeed:
         return data
 
     def get_post_unapproved_data(self) -> dict:
-        return {"template_name": self.post_unapproved_template_name}
+        return {"template_name": self.post_unapproved_status_bar_template_name}
 
     def populate_thread_update_data(
         self, item: dict, thread_update: ThreadUpdate, prefetched_data: dict

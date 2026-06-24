@@ -159,7 +159,7 @@ class HidePostsModerationAction(FormMixin, PostsModerationAction):
                 raise ValidationError(
                     pgettext(
                         "posts moderation validation",
-                        "The thread's original post can't be hidden.",
+                        "Thread's original post can't be hidden.",
                     )
                 )
 

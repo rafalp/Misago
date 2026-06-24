@@ -295,7 +295,7 @@ class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
             raise ValidationError(
                 pgettext(
                     "post moderation validation",
-                    "The first post in a thread can't be deleted.",
+                    "First post in a thread can't be deleted.",
                 )
             )
 

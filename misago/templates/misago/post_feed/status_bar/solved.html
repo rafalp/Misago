@@ -6,7 +6,6 @@
   </div>
   <div class="status-bar-body">
     <p>
-      <strong>{% translate "Solved:" context "post solved status bar" %}</strong>
       {% capture trimmed as solved_at %}
         <span
           title="{{ solved_at|date:'DATETIME_FORMAT' }}"

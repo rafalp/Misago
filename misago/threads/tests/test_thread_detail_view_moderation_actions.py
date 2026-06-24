@@ -1560,7 +1560,7 @@ def test_thread_detail_view_hide_posts_moderation_action_validates_first_post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "hide", "posts": [thread.first_post_id]},
     )
-    assert_contains(response, "The thread&#x27;s original post can&#x27;t be hidden.")
+    assert_contains(response, "Thread&#x27;s original post can&#x27;t be hidden.")
 
 
 def test_thread_detail_view_unhide_posts_moderation_action_unhides_posts(
