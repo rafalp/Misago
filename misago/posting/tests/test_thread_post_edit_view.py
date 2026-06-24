@@ -647,7 +647,7 @@ def test_thread_post_edit_view_hides_attachments_form_if_user_has_no_group_permi
 ):
     post = thread_reply_factory(thread, poster=user)
 
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     response = user_client.get(
@@ -1204,7 +1204,7 @@ def test_thread_post_edit_view_displays_associated_attachment_for_user_without_u
 ):
     post = thread_reply_factory(thread, poster=user)
 
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     text_attachment.associate_with_post(post)
@@ -1372,7 +1372,7 @@ def test_thread_post_edit_view_adds_existing_attachment_to_deleted_list_for_user
 ):
     post = thread_reply_factory(thread, poster=user)
 
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     text_attachment.associate_with_post(post)
@@ -1576,7 +1576,7 @@ def test_thread_post_edit_view_deletes_existing_attachment_on_submit_for_user_wi
 ):
     post = thread_reply_factory(thread, poster=user)
 
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     text_attachment.associate_with_post(post)
