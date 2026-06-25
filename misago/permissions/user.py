@@ -212,10 +212,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         groups_permissions["bypass_flood_control"].add(group.bypass_flood_control)
         groups_permissions["bypass_content_approval"].add(group.bypass_content_approval)
         groups_permissions["can_upload_attachments"].add(group.can_upload_attachments)
-        if group.can_upload_attachments not in (
-            CanUploadAttachments.NO,
-            CanUploadAttachments.NEVER,
-        ):
+        if group.can_upload_attachments >= CanUploadAttachments.THREADS:
             groups_permissions["attachment_storage_limit"].add(
                 group.attachment_storage_limit
             )
