@@ -96,7 +96,7 @@ The request object, or `None` if not provided.
 
 ## Example
 
-Register user who approved the thread.
+Register user who approved the thread:
 
 ```python
 from django.http import HttpRequest

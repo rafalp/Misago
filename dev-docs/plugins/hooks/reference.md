@@ -293,6 +293,7 @@ Hooks instances are importable from the following Python modules:
 
 `misago.threads.hooks` defines the following hooks:
 
+- [`approve_post_hook`](./approve-post-hook.md)
 - [`approve_thread_hook`](./approve-thread-hook.md)
 - [`create_prefetch_post_feed_data_hook`](./create-prefetch-post-feed-data-hook.md)
 - [`create_thread_hook`](./create-thread-hook.md)

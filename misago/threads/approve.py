@@ -1,11 +1,12 @@
 from django.http import HttpRequest
 
 from .hooks import (
+    approve_post_hook,
     approve_thread_hook,
     remove_thread_reply_approval_hook,
     require_thread_reply_approval_hook,
 )
-from .models import Thread
+from .models import Post, Thread
 
 
 def approve_thread(
@@ -68,5 +69,25 @@ def _remove_thread_reply_approval_action(
 
     if commit:
         thread.save()
+
+    return True
+
+
+def approve_post(
+    post: Post, commit: bool = True, request: HttpRequest | None = None
+) -> bool:
+    return approve_post_hook(_approve_post_action, post, commit, request)
+
+
+def _approve_post_action(
+    post: Post, commit: bool = True, request: HttpRequest | None = None
+) -> bool:
+    if not post.is_unapproved:
+        return False
+
+    post.is_unapproved = False
+
+    if commit:
+        post.save()
 
     return True

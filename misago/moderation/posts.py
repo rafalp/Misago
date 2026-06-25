@@ -5,7 +5,9 @@ from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
+from ..notifications.tasks import notify_on_new_thread_reply
 from ..permissions.proxy import UserPermissionsProxy
+from ..threads.approve import approve_post
 from ..threads.delete import delete_post
 from ..threads.hide import hide_post, unhide_post
 from ..threads.lock import lock_post, unlock_post
@@ -50,6 +52,7 @@ def _get_thread_posts_moderation_actions_action(
         UnlockPostsModerationAction,
         HidePostsModerationAction,
         UnhidePostsModerationAction,
+        ApprovePostsModerationAction,
         SplitPostsModerationAction,
         DeletePostsModerationAction,
     ]
@@ -81,6 +84,7 @@ def _get_private_thread_posts_moderation_actions_action(
         UnlockPostsModerationAction,
         HidePostsModerationAction,
         UnhidePostsModerationAction,
+        ApprovePostsModerationAction,
         SplitPostsModerationAction,
         DeletePostsModerationAction,
     ]
@@ -213,6 +217,44 @@ class UnhidePostsModerationAction(PostsModerationAction):
         messages.success(
             self.request,
             pgettext("posts moderation success", "Posts unhidden"),
+        )
+
+        return ModerationResult(
+            updated_items=[post.id for post in valid_posts],
+        )
+
+
+class ApprovePostsModerationAction(PostsModerationAction):
+    id = "approve"
+    button_label = pgettext_lazy("posts moderation button label", "Approve")
+
+    def validate(self):
+        for post in self.posts:
+            if post.is_unapproved:
+                return
+
+        raise ValidationError(
+            pgettext("posts moderation validation", "Posts are already approved.")
+        )
+
+    def execute(self) -> ModerationResult:
+        request = self.request
+        thread = self.thread
+        valid_posts = [post for post in self.posts if post.is_unapproved]
+
+        for post in valid_posts:
+            approve_post(post, request=request)
+
+        synchronize_thread(thread, request=request)
+
+        for post in valid_posts:
+            notify_on_new_thread_reply.delay(post.id)
+
+        synchronize_categories.delay([thread.category_id])
+
+        messages.success(
+            self.request,
+            pgettext("posts moderation success", "Posts approved"),
         )
 
         return ModerationResult(

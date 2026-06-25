@@ -14,13 +14,33 @@ from ..models import Thread
 
 
 @pytest.fixture
-def mock_synchronize_categories(mocker):
+def mock_thread_synchronize_categories(mocker):
     return mocker.patch("misago.moderation.thread.synchronize_categories")
 
 
 @pytest.fixture
 def mock_delete_duplicate_watched_threads(mocker):
     return mocker.patch("misago.moderation.thread.delete_duplicate_watched_threads")
+
+
+@pytest.fixture
+def mock_posts_synchronize_categories(mocker):
+    return mocker.patch("misago.moderation.posts.synchronize_categories")
+
+
+@pytest.fixture
+def mock_posts_notify_on_new_thread_reply(mocker):
+    return mocker.patch("misago.moderation.posts.notify_on_new_thread_reply")
+
+
+@pytest.fixture
+def mock_post_synchronize_categories(mocker):
+    return mocker.patch("misago.moderation.post.synchronize_categories")
+
+
+@pytest.fixture
+def mock_post_notify_on_new_thread_reply(mocker):
+    return mocker.patch("misago.moderation.post.notify_on_new_thread_reply")
 
 
 def test_thread_detail_view_executes_pin_everywhere_thread_moderation_action(
@@ -165,7 +185,7 @@ def test_thread_detail_view_executes_unlock_thread_moderation_action(
 
 
 def test_thread_detail_view_executes_hide_thread_moderation_action(
-    moderator_client, moderator, thread, mock_synchronize_categories
+    moderator_client, moderator, thread, mock_thread_synchronize_categories
 ):
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -201,11 +221,13 @@ def test_thread_detail_view_executes_hide_thread_moderation_action(
         action=ThreadUpdateActionName.HIDDEN,
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with([thread.category_id])
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
+        [thread.category_id]
+    )
 
 
 def test_thread_detail_view_executes_unhide_thread_moderation_action(
-    moderator_client, thread, mock_synchronize_categories
+    moderator_client, thread, mock_thread_synchronize_categories
 ):
     thread.is_hidden = True
     thread.save()
@@ -233,11 +255,13 @@ def test_thread_detail_view_executes_unhide_thread_moderation_action(
         action=ThreadUpdateActionName.UNHIDDEN,
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with([thread.category_id])
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
+        [thread.category_id]
+    )
 
 
 def test_thread_detail_view_executes_approve_thread_moderation_action(
-    moderator_client, thread, mock_synchronize_categories
+    moderator_client, thread, mock_thread_synchronize_categories
 ):
     thread.is_unapproved = True
     thread.save()
@@ -260,7 +284,9 @@ def test_thread_detail_view_executes_approve_thread_moderation_action(
         action=ThreadUpdateActionName.APPROVED,
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with([thread.category_id])
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
+        [thread.category_id]
+    )
 
 
 def test_thread_detail_view_executes_require_reply_approval_thread_moderation_action(
@@ -316,7 +342,7 @@ def test_thread_detail_view_executes_move_thread_moderation_action(
     moderators_group,
     default_category,
     sibling_category,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
 ):
     grant_category_group_permissions(
         sibling_category,
@@ -356,13 +382,16 @@ def test_thread_detail_view_executes_move_thread_moderation_action(
         action=ThreadUpdateActionName.MOVED,
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with(
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
         UNORDERED([default_category.id, sibling_category.id])
     )
 
 
 def test_thread_detail_view_move_moderation_action_requires_category(
-    thread_factory, moderator_client, default_category, mock_synchronize_categories
+    thread_factory,
+    moderator_client,
+    default_category,
+    mock_thread_synchronize_categories,
 ):
     thread = thread_factory(default_category, is_unapproved=True)
 
@@ -387,11 +416,14 @@ def test_thread_detail_view_move_moderation_action_requires_category(
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
 
 
 def test_thread_detail_view_move_moderation_action_validates_category_value(
-    thread_factory, moderator_client, default_category, mock_synchronize_categories
+    thread_factory,
+    moderator_client,
+    default_category,
+    mock_thread_synchronize_categories,
 ):
     thread = thread_factory(default_category, is_unapproved=True)
 
@@ -417,7 +449,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_value(
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
 
 
 def test_thread_detail_view_move_moderation_action_validates_category_permission(
@@ -426,7 +458,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_permission
     moderators_group,
     default_category,
     sibling_category,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
 ):
     grant_category_group_permissions(
         sibling_category,
@@ -459,7 +491,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_permission
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
 
 
 def test_thread_detail_view_move_moderation_action_validates_category_type(
@@ -468,7 +500,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_type(
     moderators_group,
     default_category,
     sibling_category,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
 ):
     grant_category_group_permissions(
         sibling_category,
@@ -505,11 +537,14 @@ def test_thread_detail_view_move_moderation_action_validates_category_type(
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
 
 
 def test_thread_detail_view_move_moderation_action_validates_category_is_new(
-    thread_factory, moderator_client, default_category, mock_synchronize_categories
+    thread_factory,
+    moderator_client,
+    default_category,
+    mock_thread_synchronize_categories,
 ):
     thread = thread_factory(default_category, is_unapproved=True)
 
@@ -535,7 +570,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_is_new(
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
 
 
 def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_other(
@@ -543,7 +578,7 @@ def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_o
     default_category,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     response = moderator_client.post(
@@ -589,7 +624,9 @@ def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_o
         == 1
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(other_thread.id)
 
 
@@ -598,7 +635,7 @@ def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_o
     default_category,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     response = moderator_client.post(
@@ -646,7 +683,9 @@ def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_o
         == 1
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(other_thread.id)
 
 
@@ -655,7 +694,7 @@ def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_cur
     default_category,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     response = moderator_client.post(
@@ -696,7 +735,9 @@ def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_cur
         == 1
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(thread.id)
 
 
@@ -705,7 +746,7 @@ def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_cur
     default_category,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     response = moderator_client.post(
@@ -746,7 +787,9 @@ def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_cur
         == 1
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(thread.id)
 
 
@@ -757,7 +800,7 @@ def test_thread_detail_view_merge_moderation_action_merges_threads_without_confl
     default_category,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     solution = thread_reply_factory(thread, poster="Answer")
@@ -812,7 +855,9 @@ def test_thread_detail_view_merge_moderation_action_merges_threads_without_confl
         == 1
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(other_thread.id)
 
 
@@ -823,7 +868,7 @@ def test_thread_detail_view_merge_moderation_action_merges_threads_with_conflict
     default_category,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     thread_solution = thread_reply_factory(thread, poster="Answer")
@@ -904,7 +949,9 @@ def test_thread_detail_view_merge_moderation_action_merges_threads_with_conflict
         == 1
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(other_thread.id)
 
 
@@ -912,7 +959,7 @@ def test_thread_detail_view_merge_moderation_action_requires_other_thread_link(
     moderator_client,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     response = moderator_client.post(
@@ -936,7 +983,7 @@ def test_thread_detail_view_merge_moderation_action_requires_other_thread_link(
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
@@ -944,7 +991,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_link_
     moderator_client,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     response = moderator_client.post(
@@ -972,7 +1019,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_link_
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
@@ -980,7 +1027,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_link_
     moderator_client,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     response = moderator_client.post(
@@ -1005,7 +1052,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_link_
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
@@ -1013,7 +1060,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_link_
     moderator_client,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     response = moderator_client.post(
@@ -1042,7 +1089,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_link_
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
@@ -1050,7 +1097,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_link_
     moderator_client,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     response = moderator_client.post(
@@ -1075,7 +1122,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_link_
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
@@ -1083,7 +1130,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_link_
     moderator_client,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     response = moderator_client.post(
@@ -1109,7 +1156,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_link_
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
@@ -1117,7 +1164,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_di
     moderator_client,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     response = moderator_client.post(
@@ -1145,7 +1192,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_di
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
@@ -1153,7 +1200,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_exist
     moderator_client,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     response = moderator_client.post(
@@ -1181,7 +1228,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_exist
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
@@ -1190,7 +1237,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_vi
     moderator_client,
     sibling_category,
     thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     other_thread = thread_factory(sibling_category, starter="DeletedUser")
@@ -1224,7 +1271,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_vi
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
@@ -1235,7 +1282,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_can_b
     members_group,
     sibling_category,
     thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     Moderator.objects.create(
@@ -1279,7 +1326,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_can_b
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
@@ -1289,7 +1336,7 @@ def test_thread_detail_view_merge_moderation_action_requires_conflict_resolution
     moderator_client,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     thread_solution = thread_reply_factory(thread, poster="Answer")
@@ -1347,7 +1394,7 @@ def test_thread_detail_view_merge_moderation_action_requires_conflict_resolution
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
@@ -1357,7 +1404,7 @@ def test_thread_detail_view_merge_moderation_action_validates_conflict_resolutio
     moderator_client,
     thread,
     other_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
     thread_solution = thread_reply_factory(thread, poster="Answer")
@@ -1417,12 +1464,12 @@ def test_thread_detail_view_merge_moderation_action_validates_conflict_resolutio
 
     assert not ThreadUpdate.objects.exists()
 
-    mock_synchronize_categories.delay.assert_not_called()
+    mock_thread_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
 def test_thread_detail_view_executes_delete_thread_moderation_action(
-    moderator_client, default_category, thread, mock_synchronize_categories
+    moderator_client, default_category, thread, mock_thread_synchronize_categories
 ):
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1446,7 +1493,9 @@ def test_thread_detail_view_executes_delete_thread_moderation_action(
     with pytest.raises(Thread.DoesNotExist):
         thread.refresh_from_db()
 
-    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
 
 
 def test_thread_detail_view_lock_posts_moderation_action_locks_posts(
@@ -1597,6 +1646,51 @@ def test_thread_detail_view_unhide_posts_moderation_action_validates_posts(
     assert_contains(response, "Posts are already unhidden.")
 
 
+def test_thread_detail_view_approve_posts_moderation_action_approves_posts(
+    post_factory,
+    moderator_client,
+    thread,
+    mock_posts_synchronize_categories,
+    mock_posts_notify_on_new_thread_reply,
+):
+    reply = post_factory(thread, is_unapproved=True)
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "approve", "posts": [reply.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_unapproved
+
+    thread.refresh_from_db()
+    assert thread.last_post == reply
+
+    mock_posts_synchronize_categories.delay.assert_called_with([thread.category_id])
+    mock_posts_notify_on_new_thread_reply.delay.assert_called_with(reply.id)
+
+
+def test_thread_detail_view_approve_posts_moderation_action_validates_posts(
+    moderator_client,
+    thread,
+    reply,
+    mock_posts_synchronize_categories,
+    mock_posts_notify_on_new_thread_reply,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "approve", "posts": [reply.id]},
+    )
+    assert_contains(response, "Posts are already approved.")
+
+    mock_posts_synchronize_categories.delay.assert_not_called()
+    mock_posts_notify_on_new_thread_reply.delay.assert_not_called()
+
+
 def test_thread_detail_view_executes_lock_post_moderation_action(
     moderator_client, thread, reply
 ):
@@ -1703,3 +1797,35 @@ def test_thread_detail_view_executes_unhide_post_moderation_action(
     assert reply.hidden_by_name is None
     assert reply.hidden_by_slug is None
     assert reply.hidden_reason is None
+
+
+def test_thread_detail_view_executes_approve_post_moderation_action(
+    post_factory,
+    moderator_client,
+    thread,
+    mock_post_synchronize_categories,
+    mock_post_notify_on_new_thread_reply,
+):
+    reply = post_factory(thread, is_unapproved=True)
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "approve", "post": reply.id},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_unapproved
+
+    thread.refresh_from_db()
+    assert thread.last_post == reply
+
+    mock_post_synchronize_categories.delay.assert_called_with([thread.category_id])
+    mock_post_notify_on_new_thread_reply.delay.assert_called_with(reply.id)
