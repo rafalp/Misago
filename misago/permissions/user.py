@@ -26,6 +26,7 @@ from .rules import (
     can_hide_own_post_edits,
     can_see_post_edits,
     can_see_post_likes,
+    can_upload_attachments,
     yes_no_never,
     zero_or_greater,
 )
@@ -92,7 +93,7 @@ PERMISSION_RULES = {
     "own_delete_post_edits_time_limit": zero_or_greater,
     "bypass_flood_control": yes_no_never,
     "bypass_content_approval": yes_no_never,
-    "can_upload_attachments": max,
+    "can_upload_attachments": can_upload_attachments,
     "attachment_storage_limit": zero_or_greater,
     "unused_attachments_storage_limit": zero_or_greater,
     "attachment_size_limit": zero_or_greater,
@@ -211,7 +212,7 @@ def _build_user_permissions_action(groups: list[Group]) -> dict:
         groups_permissions["bypass_flood_control"].add(group.bypass_flood_control)
         groups_permissions["bypass_content_approval"].add(group.bypass_content_approval)
         groups_permissions["can_upload_attachments"].add(group.can_upload_attachments)
-        if group.can_upload_attachments:
+        if group.can_upload_attachments >= CanUploadAttachments.THREADS:
             groups_permissions["attachment_storage_limit"].add(
                 group.attachment_storage_limit
             )

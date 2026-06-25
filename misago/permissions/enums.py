@@ -74,9 +74,10 @@ class CanSeePostLikes(IntEnum):
 
 
 class CanUploadAttachments(IntEnum):
-    EVERYWHERE = 2
-    THREADS = 1
-    NEVER = 0
+    EVERYWHERE = 3
+    THREADS = 2
+    NO = 0
+    NEVER = 1
 
     @classmethod
     def get_choices(cls):
@@ -92,6 +93,7 @@ class CanUploadAttachments(IntEnum):
                 pgettext_lazy("upload attachments permission", "In threads only"),
             ),
             (cls.NEVER, pgettext_lazy("upload attachments permission", "Never")),
+            (cls.NO, pgettext_lazy("upload attachments permission", "No")),
         )
 
 

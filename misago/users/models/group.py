@@ -5,6 +5,7 @@ from ...permissions.enums import (
     CanHideOwnPostEdits,
     CanSeePostEdits,
     CanSeePostLikes,
+    CanUploadAttachments,
     PermissionValue,
 )
 from ...plugins.models import PluginDataModel
@@ -43,7 +44,9 @@ class Group(PluginDataModel):
     can_start_private_threads = models.PositiveIntegerField(default=PermissionValue.NO)
     private_thread_members_limit = models.PositiveIntegerField(default=1)
 
-    can_upload_attachments = models.PositiveIntegerField(default=0)
+    can_upload_attachments = models.PositiveIntegerField(
+        default=CanUploadAttachments.NO
+    )
     attachment_storage_limit = models.PositiveIntegerField(default=512)
     unused_attachments_storage_limit = models.PositiveIntegerField(default=64)
     attachment_size_limit = models.PositiveIntegerField(default=1000)

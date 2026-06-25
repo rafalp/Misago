@@ -246,10 +246,7 @@ class AttachmentsUploadView(View):
                 pgettext("attachments upload", "Sign in to upload attachments")
             )
 
-        if (
-            request.user_permissions.can_upload_attachments
-            == CanUploadAttachments.NEVER
-        ):
+        if request.user_permissions.can_upload_attachments == CanUploadAttachments.NO:
             raise PermissionDenied(
                 pgettext("attachments upload", "You can't upload attachments")
             )

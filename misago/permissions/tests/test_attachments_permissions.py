@@ -30,10 +30,13 @@ def test_can_upload_threads_attachments_returns_true_if_user_has_permission_to_u
     assert can_upload_threads_attachments(permissions, default_category)
 
 
+@pytest.mark.parametrize(
+    "permission", [CanUploadAttachments.NEVER, CanUploadAttachments.NO]
+)
 def test_can_upload_threads_attachments_returns_false_if_user_cant_upload_attachments(
-    user, members_group, cache_versions, default_category
+    user, members_group, cache_versions, default_category, permission
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = permission
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -70,10 +73,13 @@ def test_can_upload_private_threads_attachments_returns_false_if_user_has_permis
     assert not can_upload_private_threads_attachments(permissions)
 
 
+@pytest.mark.parametrize(
+    "permission", [CanUploadAttachments.NEVER, CanUploadAttachments.NO]
+)
 def test_can_upload_private_threads_attachments_returns_false_if_user_cant_upload_attachments(
-    user, members_group, cache_versions
+    user, members_group, cache_versions, permission
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = permission
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)

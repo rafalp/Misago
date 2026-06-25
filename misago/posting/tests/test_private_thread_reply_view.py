@@ -1052,7 +1052,8 @@ def test_private_thread_reply_view_hides_attachments_form_if_uploads_are_disable
 
 
 @pytest.mark.parametrize(
-    "permission", [CanUploadAttachments.THREADS, CanUploadAttachments.NEVER]
+    "permission",
+    [CanUploadAttachments.THREADS, CanUploadAttachments.NEVER, CanUploadAttachments.NO],
 )
 def test_private_thread_reply_view_hides_attachments_form_if_user_has_no_group_permission(
     members_group, user_client, other_user_private_thread, permission

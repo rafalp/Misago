@@ -4,6 +4,7 @@ from .enums import (
     CanHideOwnPostEdits,
     CanSeePostEdits,
     CanSeePostLikes,
+    CanUploadAttachments,
     PermissionValue,
 )
 
@@ -39,5 +40,12 @@ def can_hide_own_post_edits(permissions: Iterable[CanHideOwnPostEdits]) -> int:
 def can_see_post_likes(permissions: Iterable[CanSeePostLikes]) -> int:
     if CanSeePostLikes.NEVER in permissions:
         return CanSeePostLikes.NO
+
+    return max(permissions)
+
+
+def can_upload_attachments(permissions: Iterable[CanUploadAttachments]) -> int:
+    if CanUploadAttachments.NEVER in permissions:
+        return CanUploadAttachments.NO
 
     return max(permissions)

@@ -555,7 +555,7 @@ def test_thread_start_view_hides_attachments_form_if_uploads_are_disabled(
 def test_thread_start_view_hides_attachments_form_if_user_has_no_group_permission(
     members_group, user_client, default_category
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     response = user_client.get(
