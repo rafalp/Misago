@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Model
 from django.http import Http404, HttpRequest
 from django.urls import Resolver404, resolve
-from django.utils.translation import pgettext, pgettext_lazy
+from django.utils.translation import pgettext
 
 from ..categories.models import Category
 from ..categories.proxy import CategoriesProxy
@@ -16,6 +16,20 @@ from ..threads.enums import ThreadPinned
 from ..threads.merge import get_thread_merge_form_fields
 from ..threads.models import Thread
 
+THREAD_URLS = (
+    "misago:thread",
+    "misago:thread-post",
+    "misago:thread-post-last",
+    "misago:thread-post-unapproved",
+    "misago:thread-post-unread",
+    "misago:thread-post-solution",
+    "misago:thread-post-edit",
+    "misago:thread-post-edits",
+    "misago:thread-post-likes",
+    "misago:thread-reply",
+    "misago:thread-edit",
+)
+
 
 def get_disallowed_category_choices(
     user_permissions: UserPermissionsProxy,
@@ -23,13 +37,104 @@ def get_disallowed_category_choices(
 ) -> set[int]:
     choices: set[int] = set()
 
-    categories_start = user_permissions.categories[CategoryPermission.START]
+    browse_categories = user_permissions.categories[CategoryPermission.BROWSE]
 
     for category in categories.categories_list:
-        if category["is_vanilla"] or category["id"] not in categories_start:
+        if (
+            category["is_vanilla"]
+            or category["id"] not in browse_categories
+            or not user_permissions.is_category_moderator(category["id"])
+        ):
             choices.add(category["id"])
 
     return choices
+
+
+def parse_thread_url(value: str, request: HttpRequest, valid_urls: list[str]) -> int:
+    try:
+        parsed_url = urllib.parse.urlsplit(value)
+    except ValueError:
+        parsed_url = None
+
+    if not parsed_url or not parsed_url.netloc or not parsed_url.path.strip("/"):
+        raise forms.ValidationError(
+            pgettext("moderation form thread url validation", "Enter a valid link."),
+            code="invalid",
+        )
+
+    if parsed_url.netloc != request.get_host():
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form thread url validation",
+                "Enter a link to this site.",
+            ),
+            code="invalid",
+        )
+
+    try:
+        resolved_url = resolve(parsed_url.path)
+    except Resolver404:
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form thread url validation",
+                "Enter a link to this site.",
+            ),
+            code="invalid",
+        )
+
+    url_name = resolved_url.url_name
+    if resolved_url.namespaces:
+        namespace = ":".join(resolved_url.namespaces)
+        url_name = f"{namespace}:{url_name}"
+
+    if url_name not in valid_urls:
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form thread url validation",
+                "This link doesn't point to a valid thread.",
+            ),
+            code="invalid",
+        )
+
+    try:
+        return int(resolved_url.kwargs.get("thread_id"))
+    except (TypeError, ValueError):
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form thread url validation",
+                "This link doesn't point to a valid thread.",
+            ),
+            code="invalid",
+        )
+
+
+def get_valid_thread(request: HttpRequest, thread_id: int) -> Thread:
+    from ..threads.views.backend import thread_backend
+
+    try:
+        thread = thread_backend.get_thread(request, thread_id)
+    except (Http404, PermissionDenied) as exc:
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form thread validation",
+                "Thread doesn't exist or you don't have permission to see it.",
+            ),
+            code="invalid",
+        )
+
+    is_moderator = thread_backend.has_moderator_permission(
+        request.user_permissions, thread
+    )
+    if not is_moderator:
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form thread validation",
+                "You can't moderate this thread.",
+            ),
+            code="permission_denied",
+        )
+
+    return thread
 
 
 class HideForm(forms.Form):
@@ -41,7 +146,7 @@ class HideForm(forms.Form):
         super().__init__(*args, **kwargs)
 
 
-class MoveThreadForm(forms.Form):
+class SelectCategoryForm(forms.Form):
     request: HttpRequest
 
     category = forms.TypedChoiceField(coerce=int, choices=[])
@@ -199,19 +304,7 @@ class MergeThreadForm(forms.Form):
         widget=forms.RadioSelect,
     )
 
-    thread_urls = (
-        "misago:thread",
-        "misago:thread-post",
-        "misago:thread-post-last",
-        "misago:thread-post-unapproved",
-        "misago:thread-post-unread",
-        "misago:thread-post-solution",
-        "misago:thread-post-edit",
-        "misago:thread-post-edits",
-        "misago:thread-post-likes",
-        "misago:thread-reply",
-        "misago:thread-edit",
-    )
+    valid_urls = THREAD_URLS
 
     def __init__(self, *args, request: HttpRequest, thread: Thread, **kwargs):
         self.request = request
@@ -221,69 +314,12 @@ class MergeThreadForm(forms.Form):
 
     def clean_other_thread(self):
         data = self.cleaned_data["other_thread"]
-
-        try:
-            parsed_url = urllib.parse.urlsplit(data)
-        except ValueError:
-            parsed_url = None
-
-        if not parsed_url or not parsed_url.netloc or not parsed_url.path.strip("/"):
-            raise forms.ValidationError(
-                pgettext(
-                    "moderation form merge thread validation", "Enter a valid link."
-                ),
-                code="invalid",
-            )
-
-        if parsed_url.netloc != self.request.get_host():
-            raise forms.ValidationError(
-                pgettext(
-                    "moderation form merge thread validation",
-                    "Enter a link to this site.",
-                ),
-                code="invalid",
-            )
-
-        try:
-            resolved_url = resolve(parsed_url.path)
-        except Resolver404:
-            raise forms.ValidationError(
-                pgettext(
-                    "moderation form merge thread validation",
-                    "Enter a link to this site.",
-                ),
-                code="invalid",
-            )
-
-        url_name = resolved_url.url_name
-        if resolved_url.namespaces:
-            namespace = ":".join(resolved_url.namespaces)
-            url_name = f"{namespace}:{url_name}"
-
-        if url_name not in self.thread_urls:
-            raise forms.ValidationError(
-                pgettext(
-                    "moderation form merge thread validation",
-                    "This link doesn't point to a valid thread.",
-                ),
-                code="invalid",
-            )
-
-        try:
-            thread_id = int(resolved_url.kwargs.get("thread_id"))
-        except (TypeError, ValueError):
-            raise forms.ValidationError(
-                pgettext(
-                    "moderation form merge thread validation",
-                    "This link doesn't point to a valid thread.",
-                ),
-                code="invalid",
-            )
+        thread_id = parse_thread_url(data, self.request, self.valid_urls)
 
         if thread_id == self.thread.id:
             raise forms.ValidationError(
                 pgettext(
-                    "moderation form merge thread validation",
+                    "moderation form thread validation",
                     "This link doesn't point to a different thread.",
                 ),
                 code="invalid",
@@ -292,46 +328,20 @@ class MergeThreadForm(forms.Form):
         return self.get_other_thread(thread_id)
 
     def get_other_thread(self, thread_id: int):
-        from ..threads.views.backend import thread_backend
-
-        try:
-            thread = thread_backend.get_thread(self.request, thread_id)
-        except (Http404, PermissionDenied) as exc:
-            raise forms.ValidationError(
-                pgettext(
-                    "moderation form merge thread validation",
-                    "Thread doesn't exist or you don't have permission to see it.",
-                ),
-                code="invalid",
-            )
-
-        is_moderator = thread_backend.has_moderator_permission(
-            self.request.user_permissions, thread
-        )
-        if not is_moderator:
-            raise forms.ValidationError(
-                pgettext(
-                    "moderation form merge thread validation",
-                    "You can't moderate the other thread.",
-                ),
-                code="permission_denied",
-            )
-
-        return thread
+        return get_valid_thread(self.request, thread_id)
 
 
-class SplitPostsForm(forms.Form):
+class NewThreadForm(forms.Form):
     request: HttpRequest
 
-    category = forms.TypedChoiceField(
-        label=pgettext_lazy("moderation split posts form", "Category"),
-        coerce=int,
-        choices=[],
-    )
-    title = forms.CharField(
-        label=pgettext_lazy("moderation split posts form", "Title"),
-        max_length=255,
-    )
+    category = forms.TypedChoiceField(coerce=int, choices=[])
+    title = forms.CharField(max_length=255)
+    is_locked = forms.BooleanField(required=False)
+    is_hidden = forms.BooleanField(required=False)
+    redirect = forms.BooleanField(required=False)
+
+    disallowed_categories: set[int]
+    conflicts_fields: list[str]
 
     def __init__(
         self,
@@ -344,6 +354,81 @@ class SplitPostsForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields["category"].choices = request.categories.get_choices()
-        self.disabled_choices = get_disallowed_category_choices(
+        self.disallowed_categories = get_disallowed_category_choices(
             request.user_permissions, request.categories
         )
+
+        if request.user_permissions.is_global_moderator:
+            self.fields["pin"] = forms.TypedChoiceField(
+                coerce=int,
+                choices=ThreadPinned.get_choices(),
+                initial=ThreadPinned.NONE,
+                required=False,
+            )
+
+    def clean_category(self):
+        data = self.cleaned_data["category"]
+        if data in self.disallowed_categories:
+            raise forms.ValidationError(
+                message=pgettext(
+                    "moderation form category validation", "Select a valid choice."
+                ),
+                code="invalid",
+            )
+        return data
+
+    def clean_title(self):
+        data = self.cleaned_data["title"]
+        validate_thread_title(
+            data,
+            self.request.settings.thread_title_length_min,
+            self.request.settings.thread_title_length_max,
+            self.request,
+        )
+        return data
+
+    def clean(self):
+        data = super().clean()
+        if data.get("category"):
+            data["category"] = Category.objects.get(id=data["category"])
+        return data
+
+
+class SelectThreadForm(forms.Form):
+    request: HttpRequest
+    exclude_thread: Thread | None
+
+    new_thread = forms.CharField(max_length=500)
+    redirect_to_new_thread = forms.BooleanField(required=False)
+
+    valid_urls = THREAD_URLS
+
+    def __init__(
+        self,
+        *args,
+        request: HttpRequest,
+        exclude_thread: Thread | None = None,
+        **kwargs,
+    ):
+        self.request = request
+        self.exclude_thread = exclude_thread
+
+        super().__init__(*args, **kwargs)
+
+    def clean_new_thread(self):
+        data = self.cleaned_data["new_thread"]
+        thread_id = parse_thread_url(data, self.request, self.valid_urls)
+
+        if thread_id == self.exclude_thread.id:
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form thread validation",
+                    "This link doesn't point to a different thread.",
+                ),
+                code="invalid",
+            )
+
+        return self.get_new_thread(thread_id)
+
+    def get_new_thread(self, thread_id: int):
+        return get_valid_thread(self.request, thread_id)

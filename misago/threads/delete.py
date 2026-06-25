@@ -80,6 +80,9 @@ def _delete_post_action(post: Post, request: HttpRequest | None = None):
     if thread.last_post_id == post.id:
         thread.last_post = None
         save_thread_fields.add("last_post")
+    if thread.solution_id == post.id:
+        thread.solution = None
+        save_thread_fields.add("solution")
     if save_thread_fields:
         thread.save(update_fields=save_thread_fields)
 

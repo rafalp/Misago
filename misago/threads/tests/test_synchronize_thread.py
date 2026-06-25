@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+from ...solutions.lock import lock_thread_solution
+from ...solutions.select import select_thread_solution
 from ...threadupdates.create import create_test_thread_update
 from ..synchronize import synchronize_thread
 
@@ -219,3 +221,129 @@ def test_synchronize_thread_updates_last_post_by_anonymous_user(
     assert user_thread.last_poster is None
     assert user_thread.last_poster_name == "Poster"
     assert user_thread.last_poster_slug == "poster"
+
+
+def test_synchronize_thread_keeps_current_solution(
+    post_factory, user_thread, other_user, moderator
+):
+    solution = post_factory(user_thread, poster=other_user)
+    select_thread_solution(user_thread, solution, moderator)
+    lock_thread_solution(user_thread, moderator)
+
+    synchronize_thread(user_thread)
+
+    assert user_thread.solution == solution
+    assert user_thread.solution_posted_at == solution.posted_at
+    assert user_thread.solution_by == other_user
+    assert user_thread.solution_by_name == other_user.username
+    assert user_thread.solution_by_slug == other_user.slug
+    assert user_thread.solution_selected_at
+    assert user_thread.solution_selected_by == moderator
+    assert user_thread.solution_selected_by_name == moderator.username
+    assert user_thread.solution_selected_by_slug == moderator.slug
+    assert user_thread.solution_is_locked
+    assert user_thread.solution_locked_at
+    assert user_thread.solution_locked_by == moderator
+    assert user_thread.solution_locked_by_name == moderator.username
+    assert user_thread.solution_locked_by_slug == moderator.slug
+
+    user_thread.refresh_from_db()
+    assert user_thread.solution == solution
+    assert user_thread.solution_posted_at == solution.posted_at
+    assert user_thread.solution_by == other_user
+    assert user_thread.solution_by_name == other_user.username
+    assert user_thread.solution_by_slug == other_user.slug
+    assert user_thread.solution_selected_at
+    assert user_thread.solution_selected_by == moderator
+    assert user_thread.solution_selected_by_name == moderator.username
+    assert user_thread.solution_selected_by_slug == moderator.slug
+    assert user_thread.solution_is_locked
+    assert user_thread.solution_locked_at
+    assert user_thread.solution_locked_by == moderator
+    assert user_thread.solution_locked_by_name == moderator.username
+    assert user_thread.solution_locked_by_slug == moderator.slug
+
+
+def test_synchronize_thread_clears_deleted_solution(
+    post_factory, user_thread, other_user, moderator
+):
+    solution = post_factory(user_thread, poster=other_user)
+    select_thread_solution(user_thread, solution, moderator)
+    lock_thread_solution(user_thread, moderator)
+
+    user_thread.solution = None
+    user_thread.save()
+
+    synchronize_thread(user_thread)
+
+    assert user_thread.solution is None
+    assert user_thread.solution_posted_at is None
+    assert user_thread.solution_by is None
+    assert user_thread.solution_by_name is None
+    assert user_thread.solution_by_slug is None
+    assert user_thread.solution_selected_at is None
+    assert user_thread.solution_selected_by is None
+    assert user_thread.solution_selected_by_name is None
+    assert user_thread.solution_selected_by_slug is None
+    assert not user_thread.solution_is_locked
+    assert user_thread.solution_locked_at is None
+    assert user_thread.solution_locked_by is None
+    assert user_thread.solution_locked_by_name is None
+    assert user_thread.solution_locked_by_slug is None
+
+    user_thread.refresh_from_db()
+    assert user_thread.solution is None
+    assert user_thread.solution_posted_at is None
+    assert user_thread.solution_by is None
+    assert user_thread.solution_by_name is None
+    assert user_thread.solution_by_slug is None
+    assert user_thread.solution_selected_at is None
+    assert user_thread.solution_selected_by is None
+    assert user_thread.solution_selected_by_name is None
+    assert user_thread.solution_selected_by_slug is None
+    assert not user_thread.solution_is_locked
+    assert user_thread.solution_locked_at is None
+    assert user_thread.solution_locked_by is None
+    assert user_thread.solution_locked_by_name is None
+    assert user_thread.solution_locked_by_slug is None
+
+
+def test_synchronize_thread_clears_moved_solution(
+    post_factory, user_thread, other_thread, other_user, moderator
+):
+    solution = post_factory(other_thread, poster=other_user)
+    select_thread_solution(user_thread, solution, moderator)
+    lock_thread_solution(user_thread, moderator)
+
+    synchronize_thread(user_thread)
+
+    assert user_thread.solution is None
+    assert user_thread.solution_posted_at is None
+    assert user_thread.solution_by is None
+    assert user_thread.solution_by_name is None
+    assert user_thread.solution_by_slug is None
+    assert user_thread.solution_selected_at is None
+    assert user_thread.solution_selected_by is None
+    assert user_thread.solution_selected_by_name is None
+    assert user_thread.solution_selected_by_slug is None
+    assert not user_thread.solution_is_locked
+    assert user_thread.solution_locked_at is None
+    assert user_thread.solution_locked_by is None
+    assert user_thread.solution_locked_by_name is None
+    assert user_thread.solution_locked_by_slug is None
+
+    user_thread.refresh_from_db()
+    assert user_thread.solution is None
+    assert user_thread.solution_posted_at is None
+    assert user_thread.solution_by is None
+    assert user_thread.solution_by_name is None
+    assert user_thread.solution_by_slug is None
+    assert user_thread.solution_selected_at is None
+    assert user_thread.solution_selected_by is None
+    assert user_thread.solution_selected_by_name is None
+    assert user_thread.solution_selected_by_slug is None
+    assert not user_thread.solution_is_locked
+    assert user_thread.solution_locked_at is None
+    assert user_thread.solution_locked_by is None
+    assert user_thread.solution_locked_by_name is None
+    assert user_thread.solution_locked_by_slug is None

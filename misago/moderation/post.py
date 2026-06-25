@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.forms import Form
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
@@ -8,10 +9,12 @@ from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import notify_on_new_thread_reply
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.approve import approve_post
+from ..threads.create import create_thread
 from ..threads.delete import delete_post
 from ..threads.hide import hide_post, unhide_post
 from ..threads.lock import lock_post, unlock_post
 from ..threads.models import Post, Thread
+from ..threads.move import move_post
 from ..threads.synchronize import synchronize_thread
 from .actions import (
     ConfirmMixin,
@@ -19,7 +22,7 @@ from .actions import (
     ModerationResult,
     PostModerationAction,
 )
-from .forms import HideForm, SplitPostsForm
+from .forms import HideForm, NewThreadForm, SelectThreadForm
 from .hooks import (
     get_private_thread_post_moderation_actions_hook,
     get_thread_post_moderation_actions_hook,
@@ -170,6 +173,7 @@ class HidePostModerationAction(FormMixin, PostModerationAction):
     id = "hide"
     full_name = pgettext_lazy("post moderation button label", "Hide post")
     button_label = pgettext_lazy("post moderation button label", "Hide")
+
     form_class = HideForm
     template_name = "misago/moderation/hide.html"
 
@@ -263,50 +267,57 @@ class ApprovePostModerationAction(PostModerationAction):
 
 
 class SplitPostModerationAction(FormMixin, PostModerationAction):
+    swap_root = True
+
     id = "split"
     full_name = "Split post into a new thread"
     button_label = "Split"
-    form_class = SplitPostsForm
-    template_name = "misago/moderation/split_post.html"
+
+    form_class = NewThreadForm
+    template_name = "misago/moderation/new_thread.html"
+
+    def get_form(self, form_submitted: bool) -> Form:
+        form_kwargs = {
+            "prefix": self.form_prefix,
+            "request": self.request,
+            "initial": {
+                "category": self.thread.category_id,
+            },
+        }
+        if form_submitted:
+            return self.form_class(self.request.POST, **form_kwargs)
+
+        return self.form_class(**form_kwargs)
+
+    def validate(self):
+        if self.post.id == self.thread.first_post:
+            raise ValidationError(
+                pgettext(
+                    "post moderation validation",
+                    "The first post in a thread can't be split.",
+                )
+            )
 
     def form_valid(self, form) -> ModerationResult:
+        request = self.request
+        thread = self.thread
         post = self.post
 
-        if form.cleaned_data["category"] == self.category.id:
-            new_category = self.category
-            sync_categories_ids = [new_category.id]
-        else:
-            new_category = Category.objects.get(id=form.cleaned_data["category"])
-            sync_categories_ids = [self.category.id, new_category.id]
-
-        from misago.core.utils import slugify
-
-        if post.poster:
-            poster_username = post.post.username
-            poster_slug = post.post.slug
-        else:
-            poster_username = post.poster_name
-            poster_slug = slugify(post.poster_name)
-
-        new_thread = Thread.objects.create(
-            category=new_category,
-            title=form.cleaned_data["title"],
-            slug=slugify(form.cleaned_data["title"]),
-            started_at=post.posted_at,
-            last_posted_at=post.posted_at,
-            first_post=post,
-            last_post=post,
-            starter_name=poster_username,
-            starter_slug=poster_slug,
-            last_poster_name=poster_username,
-            last_poster_slug=poster_slug,
+        new_thread = create_thread(
+            form.cleaned_data["category"],
+            form.cleaned_data["title"],
+            pinned=form.cleaned_data["pin"],
+            is_locked=form.cleaned_data["is_locked"],
+            is_hidden=form.cleaned_data["is_hidden"],
+            request=request,
         )
 
-        post.category = new_category
-        post.thread = new_thread
-        post.save()
+        move_post(post, new_thread)
 
-        synchronize_thread(new_thread, request=self.request)
+        synchronize_thread(thread, request=request)
+        synchronize_thread(new_thread, request=request)
+
+        sync_categories_ids = list({thread.category_id, new_thread.category_id})
         synchronize_categories.delay(sync_categories_ids)
 
         messages.success(
@@ -314,9 +325,17 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
             pgettext("post moderation success", "Post was split into a new thread."),
         )
 
+        if form.cleaned_data.get("redirect"):
+            return ModerationResult(redirect_to=self.get_thread_url(new_thread))
+
         return ModerationResult(
             deleted_items=[post.id],
         )
+
+    def get_thread_url(self, thread: Thread) -> str:
+        from ..threads.views.backend import thread_backend
+
+        return thread_backend.get_thread_url(thread)
 
 
 class DeletePostModerationAction(ConfirmMixin, PostModerationAction):

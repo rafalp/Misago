@@ -54,5 +54,26 @@ def _synchronize_thread_action(
         thread.last_poster_name = thread.last_post.poster_name
         thread.last_poster_slug = slugify(thread.last_post.poster_name)
 
+    if thread.solution_id:
+        solution = posts.filter(id=thread.solution_id).first()
+    else:
+        solution = None
+
+    if not solution or solution.thread_id != thread.id:
+        thread.solution = None
+        thread.solution_posted_at = None
+        thread.solution_by = None
+        thread.solution_by_name = None
+        thread.solution_by_slug = None
+        thread.solution_selected_at = None
+        thread.solution_selected_by = None
+        thread.solution_selected_by_name = None
+        thread.solution_selected_by_slug = None
+        thread.solution_is_locked = False
+        thread.solution_locked_at = None
+        thread.solution_locked_by = None
+        thread.solution_locked_by_name = None
+        thread.solution_locked_by_slug = None
+
     if commit:
         thread.save()

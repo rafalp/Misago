@@ -43,6 +43,7 @@ from .hide_thread import hide_thread_hook
 from .lock_post import lock_post_hook
 from .lock_thread import lock_thread_hook
 from .merge_threads import merge_threads_hook
+from .move_post import move_post_hook
 from .move_thread import move_thread_hook
 from .pin_thread import pin_thread_hook
 from .populate_post_feed_data import populate_post_feed_data_hook
@@ -87,6 +88,7 @@ __all__ = [
     "lock_post_hook",
     "lock_thread_hook",
     "merge_threads_hook",
+    "move_post_hook",
     "move_thread_hook",
     "pin_thread_hook",
     "populate_post_feed_data_hook",

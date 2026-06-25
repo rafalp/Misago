@@ -1,17 +1,19 @@
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.forms import Form
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ..categories.models import Category
 from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import notify_on_new_thread_reply
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.approve import approve_post
+from ..threads.create import create_thread
 from ..threads.delete import delete_post
 from ..threads.hide import hide_post, unhide_post
 from ..threads.lock import lock_post, unlock_post
 from ..threads.models import Thread
+from ..threads.move import move_post
 from ..threads.synchronize import synchronize_thread
 from .actions import (
     ConfirmMixin,
@@ -19,7 +21,7 @@ from .actions import (
     ModerationResult,
     PostsModerationAction,
 )
-from .forms import HideForm, SplitPostsForm
+from .forms import HideForm, NewThreadForm, SelectThreadForm
 from .hooks import (
     get_private_thread_posts_moderation_actions_hook,
     get_thread_posts_moderation_actions_hook,
@@ -154,6 +156,7 @@ class HidePostsModerationAction(FormMixin, PostsModerationAction):
     id = "hide"
     full_name = pgettext_lazy("posts moderation action name", "Hide posts")
     button_label = pgettext_lazy("posts moderation button label", "Hide")
+
     form_class = HideForm
     template_name = "misago/moderation/hide.html"
 
@@ -168,7 +171,6 @@ class HidePostsModerationAction(FormMixin, PostsModerationAction):
                 )
 
         for post in self.posts:
-            print(post.is_hidden)
             if not post.is_hidden:
                 return
 
@@ -266,8 +268,21 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
     id = "split"
     full_name = "Split posts into a new thread"
     button_label = "Split"
-    form_class = SplitPostsForm
-    template_name = "misago/moderation/split_posts.html"
+
+    form_class = NewThreadForm
+    template_name = "misago/moderation/new_thread.html"
+
+    def get_form(self, form_submitted: bool) -> Form:
+        form_kwargs = {
+            "prefix": self.form_prefix,
+            "request": self.request,
+            "exclude_thread": self.thread,
+        }
+
+        if form_submitted:
+            return self.form_class(self.request.POST, **form_kwargs)
+
+        return self.form_class(**form_kwargs)
 
     def validate(self):
         for post in self.posts:
@@ -280,52 +295,74 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
                 )
 
     def form_valid(self, form) -> ModerationResult:
+        request = self.request
+        thread = self.thread
+        posts = self.posts
+
+        new_thread = create_thread(
+            form.cleaned_data["category"],
+            form.cleaned_data["title"],
+            pinned=form.cleaned_data["pin"],
+            is_locked=form.cleaned_data["is_locked"],
+            is_hidden=form.cleaned_data["is_hidden"],
+            request=request,
+        )
+
+        for post in posts:
+            move_post(post, new_thread)
+
+        synchronize_thread(thread, request=request)
+        synchronize_thread(new_thread, request=request)
+
+        sync_categories_ids = list({thread.category_id, new_thread.category_id})
+        synchronize_categories.delay(sync_categories_ids)
+
         messages.success(
             self.request,
             pgettext("posts moderation success", "Posts were split into a new thread."),
         )
 
-        if form.cleaned_data["category"] == self.category.id:
-            new_category = self.category
-            sync_categories_ids = [new_category.id]
-        else:
-            new_category = Category.objects.get(id=form.cleaned_data["category"])
-            sync_categories_ids = [self.category.id, new_category.id]
-
-        from misago.core.utils import slugify
-
-        first_post = self.posts[0]
-        if first_post.poster:
-            poster_username = first_post.post.username
-            poster_slug = first_post.post.slug
-        else:
-            poster_username = first_post.poster_name
-            poster_slug = slugify(first_post.poster_name)
-
-        new_thread = Thread.objects.create(
-            category=new_category,
-            title=form.cleaned_data["title"],
-            slug=slugify(form.cleaned_data["title"]),
-            started_at=first_post.posted_at,
-            last_posted_at=first_post.posted_at,
-            first_post=first_post,
-            last_post=first_post,
-            starter_name=poster_username,
-            starter_slug=poster_slug,
-            last_poster_name=poster_username,
-            last_poster_slug=poster_slug,
+        return ModerationResult(
+            deleted_items=[post.id for post in posts],
         )
 
-        for post in self.posts:
-            post.category = new_category
-            post.thread = new_thread
-            post.save()
 
-        synchronize_thread(new_thread, request=self.request)
+class MovePostsModerationAction(FormMixin, PostsModerationAction):
+    id = "move"
+    full_name = "Move posts to another thread"
+    button_label = "Move"
+
+    form_class = SelectThreadForm
+    template_name = "misago/moderation/select_thread.html"
+
+    def validate(self):
+        for post in self.posts:
+            if post.id == self.thread.first_post:
+                raise ValidationError(
+                    pgettext(
+                        "post moderation validation",
+                        "The first post in a thread can't be moved.",
+                    )
+                )
+
+    def form_valid(self, form) -> ModerationResult:
+        request = self.request
+        thread = self.thread
+        posts = self.posts
+
+        new_thread = form.cleaned_data["other_thread"]
+
+        for post in posts:
+            move_post(post, new_thread)
+
+        synchronize_thread(thread, request=request)
+        synchronize_thread(new_thread, request=request)
+
+        sync_categories_ids = list({thread.category_id, new_thread.category_id})
         synchronize_categories.delay(sync_categories_ids)
 
         return ModerationResult(
-            deleted_items=[post.id for post in self.posts],
+            deleted_items=[post.id for post in posts],
         )
 
 
