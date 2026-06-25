@@ -7,7 +7,7 @@ from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...notifications.enums import ThreadNotifications
 from ...notifications.models import WatchedThread
-from ...permissions.enums import CanUploadAttachments
+from ...permissions.enums import CanUploadAttachments, PermissionValue
 from ...permissions.models import Moderator
 from ...test import (
     UNORDERED,
@@ -35,7 +35,7 @@ def test_private_thread_start_view_displays_login_required_page_to_anonymous_use
 def test_private_thread_start_view_shows_error_403_to_users_without_private_threads_permission(
     user_client, members_group
 ):
-    members_group.can_use_private_threads = False
+    members_group.can_use_private_threads = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(reverse("misago:private-thread-start"))
@@ -45,7 +45,7 @@ def test_private_thread_start_view_shows_error_403_to_users_without_private_thre
 def test_private_thread_start_view_shows_error_403_to_users_without_start_private_threads_permission(
     user_client, members_group
 ):
-    members_group.can_start_private_threads = False
+    members_group.can_start_private_threads = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(reverse("misago:private-thread-start"))

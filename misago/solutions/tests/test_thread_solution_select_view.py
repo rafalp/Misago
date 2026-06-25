@@ -1,5 +1,6 @@
 from django.urls import reverse
 
+from ...permissions.enums import PermissionValue
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains
 from ..select import select_thread_solution
@@ -188,7 +189,7 @@ def test_thread_solution_select_view_returns_error_403_if_user_has_no_change_sol
     default_category.enable_solutions = True
     default_category.save()
 
-    members_group.can_change_own_thread_solutions = False
+    members_group.can_change_own_thread_solutions = PermissionValue.NO
     members_group.save()
 
     old_solution = thread_reply_factory(user_thread, poster=other_user)

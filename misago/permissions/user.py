@@ -14,6 +14,7 @@ from .enums import (
     CanSeePostLikes,
     CanUploadAttachments,
     CategoryPermission,
+    PermissionValue,
 )
 from .hooks import (
     build_user_category_permissions_hook,
@@ -21,10 +22,13 @@ from .hooks import (
     get_user_permissions_hook,
 )
 from .models import CategoryGroupPermission
-from .operations import (
-    if_greater,
-    if_true,
-    if_zero_or_greater,
+from .rules import (
+    can_hide_own_post_edits,
+    can_see_post_edits,
+    can_see_post_likes,
+    can_upload_attachments,
+    yes_no_never,
+    zero_or_greater,
 )
 
 if TYPE_CHECKING:
@@ -73,234 +77,206 @@ def build_user_permissions(user: Union["User", AnonymousUser]) -> dict:
     return permissions
 
 
+if_true = lambda x: bool(max())
+
+PERMISSION_RULES = {
+    "can_use_private_threads": yes_no_never,
+    "can_start_private_threads": yes_no_never,
+    "private_thread_members_limit": max,
+    "can_edit_own_threads": yes_no_never,
+    "own_threads_edit_time_limit": zero_or_greater,
+    "can_edit_own_posts": yes_no_never,
+    "own_posts_edit_time_limit": zero_or_greater,
+    "can_see_others_post_edits": can_see_post_edits,
+    "can_hide_own_post_edits": can_hide_own_post_edits,
+    "own_post_edits_hide_time_limit": zero_or_greater,
+    "own_delete_post_edits_time_limit": zero_or_greater,
+    "bypass_flood_control": yes_no_never,
+    "bypass_content_approval": yes_no_never,
+    "can_upload_attachments": can_upload_attachments,
+    "attachment_storage_limit": zero_or_greater,
+    "unused_attachments_storage_limit": zero_or_greater,
+    "attachment_size_limit": zero_or_greater,
+    "can_always_delete_own_attachments": yes_no_never,
+    "can_start_polls": yes_no_never,
+    "can_edit_own_polls": yes_no_never,
+    "own_polls_edit_time_limit": zero_or_greater,
+    "can_close_own_polls": yes_no_never,
+    "own_polls_close_time_limit": zero_or_greater,
+    "can_vote_in_polls": yes_no_never,
+    "can_like_posts": yes_no_never,
+    "can_see_own_post_likes": can_see_post_likes,
+    "can_see_others_post_likes": can_see_post_likes,
+    "can_select_own_thread_solutions": yes_no_never,
+    "can_change_own_thread_solutions": yes_no_never,
+    "own_thread_solutions_change_time_limit": zero_or_greater,
+    "can_clear_own_thread_solutions": yes_no_never,
+    "own_thread_solutions_clear_time_limit": zero_or_greater,
+    "can_change_username": yes_no_never,
+    "username_changes_limit": zero_or_greater,
+    "username_changes_expire": zero_or_greater,
+    "username_changes_span": zero_or_greater,
+    "can_see_user_profiles": yes_no_never,
+}
+
+PERMISSION_DEFAULTS = {
+    "private_thread_members_limit": 1,
+    "own_threads_edit_time_limit": 0,
+    "own_posts_edit_time_limit": 0,
+    "own_post_edits_hide_time_limit": 0,
+    "own_delete_post_edits_time_limit": 0,
+    "attachment_storage_limit": 0,
+    "unused_attachments_storage_limit": 0,
+    "attachment_size_limit": 0,
+    "own_polls_edit_time_limit": 0,
+    "own_polls_close_time_limit": 0,
+    "own_thread_solutions_change_time_limit": 0,
+    "own_thread_solutions_clear_time_limit": 0,
+    "username_changes_limit": 0,
+    "username_changes_expire": 0,
+    "username_changes_span": 0,
+}
+
+
 def _build_user_permissions_action(groups: list[Group]) -> dict:
-    permissions = {
-        "can_use_private_threads": False,
-        "can_start_private_threads": False,
-        "private_thread_members_limit": 1,
-        "can_edit_own_threads": False,
-        "own_threads_edit_time_limit": 0,
-        "can_edit_own_posts": False,
-        "own_posts_edit_time_limit": 0,
-        "can_see_others_post_edits": CanSeePostEdits.NEVER.value,
-        "can_hide_own_post_edits": CanHideOwnPostEdits.NEVER.value,
-        "own_post_edits_hide_time_limit": 0,
-        "own_delete_post_edits_time_limit": 0,
-        "bypass_flood_control": False,
-        "bypass_content_approval": False,
-        "can_upload_attachments": CanUploadAttachments.NEVER.value,
-        "attachment_storage_limit": 0,
-        "unused_attachments_storage_limit": 0,
-        "attachment_size_limit": 0,
-        "can_always_delete_own_attachments": False,
-        "can_start_polls": False,
-        "can_edit_own_polls": False,
-        "own_polls_edit_time_limit": 0,
-        "can_close_own_polls": False,
-        "own_polls_close_time_limit": 0,
-        "can_vote_in_polls": False,
-        "can_like_posts": False,
-        "can_see_own_post_likes": CanSeePostLikes.NEVER.value,
-        "can_see_others_post_likes": CanSeePostLikes.NEVER.value,
-        "can_select_own_thread_solutions": False,
-        "can_change_own_thread_solutions": False,
-        "own_thread_solutions_change_time_limit": 0,
-        "can_clear_own_thread_solutions": False,
-        "own_thread_solutions_clear_time_limit": 0,
-        "can_change_username": False,
-        "username_changes_limit": 0,
-        "username_changes_expire": 0,
-        "username_changes_span": 0,
-        "can_see_user_profiles": False,
-        "categories": {},
+    groups_permissions = {
+        "can_use_private_threads": set(),
+        "can_start_private_threads": set(),
+        "private_thread_members_limit": {1},
+        "can_edit_own_threads": set(),
+        "own_threads_edit_time_limit": set(),
+        "can_edit_own_posts": set(),
+        "own_posts_edit_time_limit": set(),
+        "can_see_others_post_edits": set(),
+        "can_hide_own_post_edits": set(),
+        "own_post_edits_hide_time_limit": set(),
+        "own_delete_post_edits_time_limit": set(),
+        "bypass_flood_control": set(),
+        "bypass_content_approval": set(),
+        "can_upload_attachments": set(),
+        "attachment_storage_limit": set(),
+        "unused_attachments_storage_limit": set(),
+        "attachment_size_limit": set(),
+        "can_always_delete_own_attachments": set(),
+        "can_start_polls": set(),
+        "can_edit_own_polls": set(),
+        "own_polls_edit_time_limit": set(),
+        "can_close_own_polls": set(),
+        "own_polls_close_time_limit": set(),
+        "can_vote_in_polls": set(),
+        "can_like_posts": set(),
+        "can_see_own_post_likes": set(),
+        "can_see_others_post_likes": set(),
+        "can_select_own_thread_solutions": set(),
+        "can_change_own_thread_solutions": set(),
+        "own_thread_solutions_change_time_limit": set(),
+        "can_clear_own_thread_solutions": set(),
+        "own_thread_solutions_clear_time_limit": set(),
+        "can_change_username": set(),
+        "username_changes_limit": set(),
+        "username_changes_expire": set(),
+        "username_changes_span": set(),
+        "can_see_user_profiles": set(),
     }
 
     for group in groups:
-        if_true(
-            permissions,
-            "can_use_private_threads",
-            group.can_use_private_threads,
+        groups_permissions["can_use_private_threads"].add(group.can_use_private_threads)
+        groups_permissions["can_start_private_threads"].add(
+            group.can_start_private_threads
         )
-        if_true(
-            permissions,
-            "can_start_private_threads",
-            group.can_start_private_threads,
+        groups_permissions["private_thread_members_limit"].add(
+            group.private_thread_members_limit
         )
-        if_greater(
-            permissions,
-            "private_thread_members_limit",
-            group.private_thread_members_limit,
+        groups_permissions["can_edit_own_threads"].add(group.can_edit_own_threads)
+        if group.can_edit_own_threads == PermissionValue.YES:
+            groups_permissions["own_threads_edit_time_limit"].add(
+                group.own_threads_edit_time_limit
+            )
+        groups_permissions["can_edit_own_posts"].add(group.can_edit_own_posts)
+        if group.can_edit_own_posts == PermissionValue.YES:
+            groups_permissions["own_posts_edit_time_limit"].add(
+                group.own_posts_edit_time_limit
+            )
+        groups_permissions["can_see_others_post_edits"].add(
+            group.can_see_others_post_edits
         )
-        if_true(
-            permissions,
-            "can_edit_own_threads",
-            group.can_edit_own_threads,
+        groups_permissions["can_hide_own_post_edits"].add(group.can_hide_own_post_edits)
+        if group.can_hide_own_post_edits >= CanHideOwnPostEdits.HIDE:
+            groups_permissions["own_post_edits_hide_time_limit"].add(
+                group.own_post_edits_hide_time_limit
+            )
+        if group.can_hide_own_post_edits == CanHideOwnPostEdits.DELETE:
+            groups_permissions["own_delete_post_edits_time_limit"].add(
+                group.own_delete_post_edits_time_limit
+            )
+        groups_permissions["bypass_flood_control"].add(group.bypass_flood_control)
+        groups_permissions["bypass_content_approval"].add(group.bypass_content_approval)
+        groups_permissions["can_upload_attachments"].add(group.can_upload_attachments)
+        if group.can_upload_attachments >= CanUploadAttachments.THREADS:
+            groups_permissions["attachment_storage_limit"].add(
+                group.attachment_storage_limit
+            )
+            groups_permissions["unused_attachments_storage_limit"].add(
+                group.unused_attachments_storage_limit
+            )
+            groups_permissions["attachment_size_limit"].add(group.attachment_size_limit)
+        groups_permissions["can_always_delete_own_attachments"].add(
+            group.can_always_delete_own_attachments
         )
-        if_zero_or_greater(
-            permissions,
-            "own_threads_edit_time_limit",
-            group.own_threads_edit_time_limit,
+        groups_permissions["can_start_polls"].add(group.can_start_polls)
+        groups_permissions["can_edit_own_polls"].add(group.can_edit_own_polls)
+        if group.can_edit_own_polls == PermissionValue.YES:
+            groups_permissions["own_polls_edit_time_limit"].add(
+                group.own_polls_edit_time_limit
+            )
+        groups_permissions["can_close_own_polls"].add(group.can_close_own_polls)
+        if group.can_close_own_polls == PermissionValue.YES:
+            groups_permissions["own_polls_close_time_limit"].add(
+                group.own_polls_close_time_limit
+            )
+        groups_permissions["can_vote_in_polls"].add(group.can_vote_in_polls)
+        groups_permissions["can_like_posts"].add(group.can_like_posts)
+        groups_permissions["can_see_own_post_likes"].add(group.can_see_own_post_likes)
+        groups_permissions["can_see_others_post_likes"].add(
+            group.can_see_others_post_likes
         )
-        if_true(
-            permissions,
-            "can_edit_own_posts",
-            group.can_edit_own_posts,
+        groups_permissions["can_select_own_thread_solutions"].add(
+            group.can_select_own_thread_solutions
         )
-        if_zero_or_greater(
-            permissions,
-            "own_posts_edit_time_limit",
-            group.own_posts_edit_time_limit,
+        groups_permissions["can_change_own_thread_solutions"].add(
+            group.can_change_own_thread_solutions
         )
-        if_greater(
-            permissions,
-            "can_see_others_post_edits",
-            group.can_see_others_post_edits,
+        if group.can_change_own_thread_solutions == PermissionValue.YES:
+            groups_permissions["own_thread_solutions_change_time_limit"].add(
+                group.own_thread_solutions_change_time_limit
+            )
+        groups_permissions["can_clear_own_thread_solutions"].add(
+            group.can_clear_own_thread_solutions
         )
-        if_greater(
-            permissions,
-            "can_hide_own_post_edits",
-            group.can_hide_own_post_edits,
-        )
-        if_zero_or_greater(
-            permissions,
-            "own_post_edits_hide_time_limit",
-            group.own_post_edits_hide_time_limit,
-        )
-        if_zero_or_greater(
-            permissions,
-            "own_delete_post_edits_time_limit",
-            group.own_delete_post_edits_time_limit,
-        )
-        if_true(
-            permissions,
-            "bypass_flood_control",
-            group.bypass_flood_control,
-        )
-        if_true(
-            permissions,
-            "bypass_content_approval",
-            group.bypass_content_approval,
-        )
-        if_greater(
-            permissions,
-            "can_upload_attachments",
-            group.can_upload_attachments,
-        )
-        if_zero_or_greater(
-            permissions,
-            "attachment_storage_limit",
-            group.attachment_storage_limit,
-        )
-        if_zero_or_greater(
-            permissions,
-            "unused_attachments_storage_limit",
-            group.unused_attachments_storage_limit,
-        )
-        if_zero_or_greater(
-            permissions,
-            "attachment_size_limit",
-            group.attachment_size_limit,
-        )
-        if_true(
-            permissions,
-            "can_always_delete_own_attachments",
-            group.can_always_delete_own_attachments,
-        )
-        if_true(
-            permissions,
-            "can_start_polls",
-            group.can_start_polls,
-        )
-        if_true(
-            permissions,
-            "can_edit_own_polls",
-            group.can_edit_own_polls,
-        )
-        if_zero_or_greater(
-            permissions,
-            "own_polls_edit_time_limit",
-            group.own_polls_edit_time_limit,
-        )
-        if_true(
-            permissions,
-            "can_close_own_polls",
-            group.can_close_own_polls,
-        )
-        if_zero_or_greater(
-            permissions,
-            "own_polls_close_time_limit",
-            group.own_polls_close_time_limit,
-        )
-        if_true(
-            permissions,
-            "can_vote_in_polls",
-            group.can_vote_in_polls,
-        )
-        if_true(
-            permissions,
-            "can_like_posts",
-            group.can_like_posts,
-        )
-        if_greater(
-            permissions,
-            "can_see_own_post_likes",
-            group.can_see_own_post_likes,
-        )
-        if_greater(
-            permissions,
-            "can_see_others_post_likes",
-            group.can_see_others_post_likes,
-        )
-        if_true(
-            permissions,
-            "can_select_own_thread_solutions",
-            group.can_select_own_thread_solutions,
-        )
-        if_true(
-            permissions,
-            "can_change_own_thread_solutions",
-            group.can_change_own_thread_solutions,
-        )
-        if_zero_or_greater(
-            permissions,
-            "own_thread_solutions_change_time_limit",
-            group.own_thread_solutions_change_time_limit,
-        )
-        if_true(
-            permissions,
-            "can_clear_own_thread_solutions",
-            group.can_clear_own_thread_solutions,
-        )
-        if_zero_or_greater(
-            permissions,
-            "own_thread_solutions_clear_time_limit",
-            group.own_thread_solutions_clear_time_limit,
-        )
-        if_true(
-            permissions,
-            "can_change_username",
-            group.can_change_username,
-        )
-        if_zero_or_greater(
-            permissions,
-            "username_changes_limit",
-            group.username_changes_limit,
-        )
-        if_zero_or_greater(
-            permissions,
-            "username_changes_expire",
-            group.username_changes_expire,
-        )
-        if_zero_or_greater(
-            permissions,
-            "username_changes_span",
-            group.username_changes_span,
-        )
-        if_true(
-            permissions,
-            "can_see_user_profiles",
-            group.can_see_user_profiles,
-        )
+        if group.can_clear_own_thread_solutions == PermissionValue.YES:
+            groups_permissions["own_thread_solutions_clear_time_limit"].add(
+                group.own_thread_solutions_clear_time_limit
+            )
+        groups_permissions["can_change_username"].add(group.can_change_username)
+        if group.can_change_username == PermissionValue.YES:
+            groups_permissions["username_changes_limit"].add(
+                group.username_changes_limit
+            )
+            groups_permissions["username_changes_expire"].add(
+                group.username_changes_expire
+            )
+            groups_permissions["username_changes_span"].add(group.username_changes_span)
+        groups_permissions["can_see_user_profiles"].add(group.can_see_user_profiles)
+
+    permissions = {
+        "categories": {},
+    }
+
+    for permission, rule in PERMISSION_RULES.items():
+        if groups_permissions[permission]:
+            permissions[permission] = rule(groups_permissions[permission])
+        else:
+            permissions[permission] = PERMISSION_DEFAULTS[permission]
 
     return permissions
 

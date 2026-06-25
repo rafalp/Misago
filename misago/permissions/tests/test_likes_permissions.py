@@ -1,7 +1,7 @@
 import pytest
 from django.core.exceptions import PermissionDenied
 
-from ..enums import CanSeePostLikes
+from ..enums import CanSeePostLikes, PermissionValue
 from ..likes import (
     can_see_post_likes_count,
     check_like_post_permission,
@@ -29,7 +29,19 @@ def test_check_like_post_permission_fails_if_user_is_anonymous(
 def test_check_like_post_permission_fails_if_user_has_no_permission(
     user, members_group, user_permissions_factory, default_category, thread, post
 ):
-    members_group.can_like_posts = False
+    members_group.can_like_posts = PermissionValue.NO
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_like_post_permission(permissions, default_category, thread, post)
+
+
+def test_check_like_post_permission_fails_if_user_has_never_permission(
+    user, members_group, user_permissions_factory, default_category, thread, post
+):
+    members_group.can_like_posts = PermissionValue.NEVER
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -57,7 +69,7 @@ def test_check_unlike_post_permission_fails_if_user_is_anonymous(
 def test_check_unlike_post_permission_fails_if_user_has_no_permission(
     user, members_group, user_permissions_factory, default_category, thread, post
 ):
-    members_group.can_like_posts = False
+    members_group.can_like_posts = PermissionValue.NO
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -70,7 +82,7 @@ def test_can_see_post_likes_count_returns_true_if_user_has_count_permission_to_o
     user, members_group, user_permissions_factory, default_category, thread, user_reply
 ):
     members_group.can_see_own_post_likes = CanSeePostLikes.COUNT
-    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NO
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -81,7 +93,7 @@ def test_can_see_post_likes_count_returns_true_if_user_has_permission_to_own_pos
     user, members_group, user_permissions_factory, default_category, thread, user_reply
 ):
     members_group.can_see_own_post_likes = CanSeePostLikes.USERS
-    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NO
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -89,6 +101,19 @@ def test_can_see_post_likes_count_returns_true_if_user_has_permission_to_own_pos
 
 
 def test_can_see_post_likes_count_returns_false_if_user_has_no_permission_to_own_posts(
+    user, members_group, user_permissions_factory, default_category, thread, user_reply
+):
+    members_group.can_see_own_post_likes = CanSeePostLikes.NO
+    members_group.can_see_others_post_likes = CanSeePostLikes.USERS
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+    assert not can_see_post_likes_count(
+        permissions, default_category, thread, user_reply
+    )
+
+
+def test_can_see_post_likes_count_returns_false_if_user_has_never_permission_to_own_posts(
     user, members_group, user_permissions_factory, default_category, thread, user_reply
 ):
     members_group.can_see_own_post_likes = CanSeePostLikes.NEVER
@@ -109,7 +134,7 @@ def test_can_see_post_likes_count_returns_true_if_user_has_count_permission_to_o
     thread,
     other_user_reply,
 ):
-    members_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_own_post_likes = CanSeePostLikes.NO
     members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
@@ -127,7 +152,7 @@ def test_can_see_post_likes_count_returns_true_if_user_has_permission_to_other_u
     thread,
     other_user_reply,
 ):
-    members_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_own_post_likes = CanSeePostLikes.NO
     members_group.can_see_others_post_likes = CanSeePostLikes.USERS
     members_group.save()
 
@@ -138,6 +163,24 @@ def test_can_see_post_likes_count_returns_true_if_user_has_permission_to_other_u
 
 
 def test_can_see_post_likes_count_returns_false_if_user_has_no_permission_to_other_users_posts(
+    user,
+    members_group,
+    user_permissions_factory,
+    default_category,
+    thread,
+    other_user_reply,
+):
+    members_group.can_see_own_post_likes = CanSeePostLikes.USERS
+    members_group.can_see_others_post_likes = CanSeePostLikes.NO
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+    assert not can_see_post_likes_count(
+        permissions, default_category, thread, other_user_reply
+    )
+
+
+def test_can_see_post_likes_count_returns_false_if_user_has_never_permission_to_other_users_posts(
     user,
     members_group,
     user_permissions_factory,
@@ -158,7 +201,7 @@ def test_can_see_post_likes_count_returns_false_if_user_has_no_permission_to_oth
 def test_can_see_post_likes_count_returns_true_if_user_has_count_permission_to_deleted_users_posts(
     user, members_group, user_permissions_factory, default_category, thread, post
 ):
-    members_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_own_post_likes = CanSeePostLikes.NO
     members_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     members_group.save()
 
@@ -169,7 +212,7 @@ def test_can_see_post_likes_count_returns_true_if_user_has_count_permission_to_d
 def test_can_see_post_likes_count_returns_true_if_user_has_permission_to_deleted_users_posts(
     user, members_group, user_permissions_factory, default_category, thread, post
 ):
-    members_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_own_post_likes = CanSeePostLikes.NO
     members_group.can_see_others_post_likes = CanSeePostLikes.USERS
     members_group.save()
 
@@ -181,7 +224,7 @@ def test_can_see_post_likes_count_returns_false_if_user_has_no_permission_to_del
     user, members_group, user_permissions_factory, default_category, thread, post
 ):
     members_group.can_see_own_post_likes = CanSeePostLikes.USERS
-    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NO
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -196,7 +239,7 @@ def test_can_see_post_likes_count_returns_true_if_anonymous_user_has_count_permi
     thread,
     other_user_reply,
 ):
-    guests_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    guests_group.can_see_own_post_likes = CanSeePostLikes.NO
     guests_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     guests_group.save()
 
@@ -214,7 +257,7 @@ def test_can_see_post_likes_count_returns_true_if_anonymous_user_has_permission_
     thread,
     other_user_reply,
 ):
-    guests_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    guests_group.can_see_own_post_likes = CanSeePostLikes.NO
     guests_group.can_see_others_post_likes = CanSeePostLikes.USERS
     guests_group.save()
 
@@ -233,7 +276,7 @@ def test_can_see_post_likes_count_returns_false_if_anonymous_user_has_no_permiss
     other_user_reply,
 ):
     guests_group.can_see_own_post_likes = CanSeePostLikes.USERS
-    guests_group.can_see_others_post_likes = CanSeePostLikes.NEVER
+    guests_group.can_see_others_post_likes = CanSeePostLikes.NO
     guests_group.save()
 
     permissions = user_permissions_factory(anonymous_user)
@@ -250,7 +293,7 @@ def test_can_see_post_likes_count_returns_true_if_anonymous_user_has_count_permi
     thread,
     post,
 ):
-    guests_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    guests_group.can_see_own_post_likes = CanSeePostLikes.NO
     guests_group.can_see_others_post_likes = CanSeePostLikes.COUNT
     guests_group.save()
 
@@ -266,7 +309,7 @@ def test_can_see_post_likes_count_returns_true_if_anonymous_user_has_permission_
     thread,
     post,
 ):
-    guests_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    guests_group.can_see_own_post_likes = CanSeePostLikes.NO
     guests_group.can_see_others_post_likes = CanSeePostLikes.USERS
     guests_group.save()
 
@@ -283,7 +326,7 @@ def test_can_see_post_likes_count_returns_false_if_anonymous_user_has_no_permiss
     post,
 ):
     guests_group.can_see_own_post_likes = CanSeePostLikes.USERS
-    guests_group.can_see_others_post_likes = CanSeePostLikes.NEVER
+    guests_group.can_see_others_post_likes = CanSeePostLikes.NO
     guests_group.save()
 
     permissions = user_permissions_factory(anonymous_user)
@@ -294,7 +337,7 @@ def test_check_see_post_likes_permission_passes_if_user_has_permission_to_own_po
     user, members_group, user_permissions_factory, default_category, thread, user_reply
 ):
     members_group.can_see_own_post_likes = CanSeePostLikes.USERS
-    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NO
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -319,7 +362,7 @@ def test_check_see_post_likes_permission_fails_if_user_has_count_permission_to_o
 def test_check_see_post_likes_permission_fails_if_user_has_no_permission_to_own_posts(
     user, members_group, user_permissions_factory, default_category, thread, user_reply
 ):
-    members_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_own_post_likes = CanSeePostLikes.NO
     members_group.can_see_others_post_likes = CanSeePostLikes.USERS
     members_group.save()
 
@@ -339,7 +382,7 @@ def test_check_see_post_likes_permission_passes_if_user_has_permission_to_other_
     thread,
     other_user_reply,
 ):
-    members_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_own_post_likes = CanSeePostLikes.NO
     members_group.can_see_others_post_likes = CanSeePostLikes.USERS
     members_group.save()
 
@@ -357,7 +400,7 @@ def test_check_see_post_likes_permission_passes_if_user_has_permission_to_delete
     thread,
     post,
 ):
-    members_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_own_post_likes = CanSeePostLikes.NO
     members_group.can_see_others_post_likes = CanSeePostLikes.USERS
     members_group.save()
 
@@ -412,7 +455,7 @@ def test_check_see_post_likes_permission_fails_if_user_has_no_permission_to_othe
     other_user_reply,
 ):
     members_group.can_see_own_post_likes = CanSeePostLikes.USERS
-    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NO
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -432,7 +475,7 @@ def test_check_see_post_likes_permission_fails_if_user_has_no_permission_to_dele
     post,
 ):
     members_group.can_see_own_post_likes = CanSeePostLikes.USERS
-    members_group.can_see_others_post_likes = CanSeePostLikes.NEVER
+    members_group.can_see_others_post_likes = CanSeePostLikes.NO
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -449,7 +492,7 @@ def test_check_see_post_likes_permission_passes_if_anonymous_user_has_permission
     thread,
     other_user_reply,
 ):
-    guests_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    guests_group.can_see_own_post_likes = CanSeePostLikes.NO
     guests_group.can_see_others_post_likes = CanSeePostLikes.USERS
     guests_group.save()
 
@@ -467,7 +510,7 @@ def test_check_see_post_likes_permission_passes_if_anonymous_user_has_permission
     thread,
     post,
 ):
-    guests_group.can_see_own_post_likes = CanSeePostLikes.NEVER
+    guests_group.can_see_own_post_likes = CanSeePostLikes.NO
     guests_group.can_see_others_post_likes = CanSeePostLikes.USERS
     guests_group.save()
 
@@ -522,7 +565,7 @@ def test_check_see_post_likes_permission_fails_if_anonymous_user_has_no_permissi
     other_user_reply,
 ):
     guests_group.can_see_own_post_likes = CanSeePostLikes.USERS
-    guests_group.can_see_others_post_likes = CanSeePostLikes.NEVER
+    guests_group.can_see_others_post_likes = CanSeePostLikes.NO
     guests_group.save()
 
     permissions = user_permissions_factory(anonymous_user)
@@ -542,7 +585,7 @@ def test_check_see_post_likes_permission_fails_if_anonymous_user_has_no_permissi
     post,
 ):
     guests_group.can_see_own_post_likes = CanSeePostLikes.USERS
-    guests_group.can_see_others_post_likes = CanSeePostLikes.NEVER
+    guests_group.can_see_others_post_likes = CanSeePostLikes.NO
     guests_group.save()
 
     permissions = user_permissions_factory(anonymous_user)

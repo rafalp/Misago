@@ -32,7 +32,7 @@ def test_attachments_upload_view_returns_error_if_user_is_not_authenticated(db, 
 def test_attachments_upload_view_returns_error_if_user_has_no_upload_permission(
     members_group, user_client
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER.value
+    members_group.can_upload_attachments = CanUploadAttachments.NO.value
     members_group.save()
 
     response = user_client.post(upload_url)

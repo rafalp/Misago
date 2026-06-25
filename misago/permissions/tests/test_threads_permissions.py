@@ -2,7 +2,7 @@ import pytest
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
-from ..enums import CategoryPermission
+from ..enums import CategoryPermission, PermissionValue
 from ..models import CategoryGroupPermission, Moderator
 from ..proxy import UserPermissionsProxy
 from ..threads import (
@@ -53,7 +53,7 @@ def test_check_edit_thread_post_permission_fails_if_user_has_no_reply_permission
 def test_check_edit_thread_post_permission_fails_if_user_has_no_edit_permission(
     user, thread, user_reply, cache_versions, default_category
 ):
-    user.group.can_edit_own_posts = False
+    user.group.can_edit_own_posts = PermissionValue.NEVER
     user.group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -277,7 +277,7 @@ def test_check_edit_thread_permission_fails_if_user_has_no_start_permission(
 def test_check_edit_thread_permission_fails_if_user_has_no_edit_permission(
     user, user_thread, cache_versions, default_category
 ):
-    user.group.can_edit_own_threads = False
+    user.group.can_edit_own_threads = PermissionValue.NEVER
     user.group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)

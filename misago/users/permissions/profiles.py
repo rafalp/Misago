@@ -6,7 +6,7 @@ from django.utils.translation import pgettext_lazy
 from ...acl import algebra
 from ...acl.decorators import return_boolean
 from ...acl.models import Role
-from ...admin.forms import YesNoSwitch
+from ...admin.forms import YesNoField
 from .decorators import authenticated_only
 
 __all__ = [
@@ -20,19 +20,19 @@ __all__ = [
     "can_see_ban_details",
 ]
 
-CAN_BROWSE_USERS_LIST = YesNoSwitch(
+CAN_BROWSE_USERS_LIST = YesNoField(
     label=pgettext_lazy("users profiles permission", "Can browse users list"), initial=1
 )
-CAN_SEARCH_USERS = YesNoSwitch(
+CAN_SEARCH_USERS = YesNoField(
     label=pgettext_lazy("users profiles permission", "Can search user profiles"),
     initial=1,
 )
-CAN_SEE_USER_NAME_HISTORY = YesNoSwitch(
+CAN_SEE_USER_NAME_HISTORY = YesNoField(
     label=pgettext_lazy(
         "users profiles permission", "Can see other members name history"
     )
 )
-CAN_SEE_DETAILS = YesNoSwitch(
+CAN_SEE_DETAILS = YesNoField(
     label=pgettext_lazy("users profiles permission", "Can see members bans details"),
     help_text=pgettext_lazy(
         "users profiles permission",
@@ -53,11 +53,11 @@ class LimitedPermissionsForm(forms.Form):
 class PermissionsForm(LimitedPermissionsForm):
     can_browse_users_list = CAN_BROWSE_USERS_LIST
     can_search_users = CAN_SEARCH_USERS
-    can_follow_users = YesNoSwitch(
+    can_follow_users = YesNoField(
         label=pgettext_lazy("users profiles permission", "Can follow other users"),
         initial=1,
     )
-    can_be_blocked = YesNoSwitch(
+    can_be_blocked = YesNoField(
         label=pgettext_lazy(
             "users profiles permission", "Can be blocked by other users"
         ),
@@ -65,13 +65,13 @@ class PermissionsForm(LimitedPermissionsForm):
     )
     can_see_users_name_history = CAN_SEE_USER_NAME_HISTORY
     can_see_ban_details = CAN_SEE_DETAILS
-    can_see_users_emails = YesNoSwitch(
+    can_see_users_emails = YesNoField(
         label=pgettext_lazy("users profiles permission", "Can see members e-mails")
     )
-    can_see_users_ips = YesNoSwitch(
+    can_see_users_ips = YesNoField(
         label=pgettext_lazy("users profiles permission", "Can see members IPs")
     )
-    can_see_hidden_users = YesNoSwitch(
+    can_see_hidden_users = YesNoField(
         label=pgettext_lazy(
             "users profiles permission", "Can see members that hide their presence"
         )

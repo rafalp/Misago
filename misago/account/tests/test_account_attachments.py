@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
 from ...pagination.cursor import EmptyPageError
+from ...permissions.enums import PermissionValue
 from ...test import assert_contains, assert_not_contains
 
 
@@ -321,7 +322,21 @@ def test_account_attachments_list_shows_attachment_delete_option_if_user_has_per
 def test_account_attachments_list_hides_attachment_delete_option_if_user_has_no_permission(
     members_group, user_text_attachment, user_client, post
 ):
-    members_group.can_always_delete_own_attachments = False
+    members_group.can_always_delete_own_attachments = PermissionValue.NO
+    members_group.save()
+
+    user_text_attachment.associate_with_post(post)
+    user_text_attachment.save()
+
+    response = user_client.get(reverse("misago:account-attachments"))
+    assert_contains(response, user_text_attachment.name)
+    assert_not_contains(response, user_text_attachment.get_delete_url())
+
+
+def test_account_attachments_list_hides_attachment_delete_option_if_user_has_never_permission(
+    members_group, user_text_attachment, user_client, post
+):
+    members_group.can_always_delete_own_attachments = PermissionValue.NEVER
     members_group.save()
 
     user_text_attachment.associate_with_post(post)

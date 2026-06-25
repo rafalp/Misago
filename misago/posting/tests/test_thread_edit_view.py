@@ -7,7 +7,11 @@ from django.urls import reverse
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
-from ...permissions.enums import CanUploadAttachments, CategoryPermission
+from ...permissions.enums import (
+    CanUploadAttachments,
+    CategoryPermission,
+    PermissionValue,
+)
 from ...permissions.models import CategoryGroupPermission
 from ...postedits.models import PostEdit
 from ...test import (
@@ -86,7 +90,7 @@ def test_thread_edit_view_shows_error_404_to_users_who_cant_see_thread(
 def test_thread_edit_view_shows_error_403_to_users_who_cant_edit_threads(
     user_client, members_group, user_thread
 ):
-    members_group.can_edit_own_threads = False
+    members_group.can_edit_own_threads = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(
@@ -599,7 +603,7 @@ def test_thread_edit_view_hides_attachments_form_if_uploads_are_disabled(
 def test_thread_edit_view_hides_attachments_form_if_user_has_no_group_permission(
     members_group, user_client, user_thread
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     response = user_client.get(
@@ -1128,7 +1132,7 @@ def test_thread_edit_view_displays_associated_attachment_if_uploads_are_disabled
 def test_thread_edit_view_displays_associated_attachment_for_user_without_upload_permission(
     members_group, user_client, user_thread, text_attachment
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     text_attachment.associate_with_post(user_thread.first_post)
@@ -1290,7 +1294,7 @@ def test_thread_edit_view_adds_existing_attachment_to_deleted_list_if_uploads_ar
 def test_thread_edit_view_adds_existing_attachment_to_deleted_list_for_user_without_upload_permission(
     members_group, user_client, user_thread, text_attachment
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     text_attachment.associate_with_post(user_thread.first_post)
@@ -1431,7 +1435,7 @@ def test_thread_edit_view_deletes_existing_attachment_on_submit_if_uploads_are_d
 def test_thread_edit_view_deletes_existing_attachment_on_submit_for_user_without_upload_permission(
     members_group, user_client, user_thread, text_attachment
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     text_attachment.associate_with_post(user_thread.first_post)

@@ -50,6 +50,16 @@ def test_can_see_post_edit_count_always_returns_true_if_user_has_history_permiss
 def test_can_see_post_edit_count_always_returns_false_if_user_has_no_permission(
     user_permissions_factory, user, members_group, default_category, thread, post
 ):
+    members_group.can_see_others_post_edits = CanSeePostEdits.NO
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+    assert not can_see_post_edit_count(permissions, default_category, thread, post)
+
+
+def test_can_see_post_edit_count_always_returns_false_if_user_has_never_permission(
+    user_permissions_factory, user, members_group, default_category, thread, post
+):
     members_group.can_see_others_post_edits = CanSeePostEdits.NEVER
     members_group.save()
 
@@ -242,10 +252,24 @@ def test_check_hide_post_edit_permission_passes_user_with_hide_permission_for_ow
     check_hide_post_edit_permission(permissions, post_edit)
 
 
-def test_check_hide_post_edit_permission_fails_user_without_hide_permission_for_own_post_edit(
+def test_check_hide_post_edit_permission_fails_user_with_never_hide_permission_for_own_post_edit(
     user_permissions_factory, user, members_group, post
 ):
     members_group.can_hide_own_post_edits = CanHideOwnPostEdits.NEVER
+    members_group.save()
+
+    post_edit = create_post_edit(post=post, user=user)
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_hide_post_edit_permission(permissions, post_edit)
+
+
+def test_check_hide_post_edit_permission_fails_user_with_no_hide_permission_for_own_post_edit(
+    user_permissions_factory, user, members_group, post
+):
+    members_group.can_hide_own_post_edits = CanHideOwnPostEdits.NO
     members_group.save()
 
     post_edit = create_post_edit(post=post, user=user)

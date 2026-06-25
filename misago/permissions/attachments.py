@@ -42,7 +42,7 @@ def _can_upload_threads_attachments_action(
     permissions: UserPermissionsProxy, category: Category
 ) -> bool:
     return (
-        permissions.can_upload_attachments != CanUploadAttachments.NEVER
+        permissions.can_upload_attachments != CanUploadAttachments.NO
         and category.id in permissions.categories[CategoryPermission.ATTACHMENTS]
     )
 

@@ -1,6 +1,13 @@
 from django.db import models
 from django.utils.translation import pgettext
 
+from ...permissions.enums import (
+    CanHideOwnPostEdits,
+    CanSeePostEdits,
+    CanSeePostLikes,
+    CanUploadAttachments,
+    PermissionValue,
+)
 from ...plugins.models import PluginDataModel
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
@@ -20,50 +27,62 @@ class Group(PluginDataModel):
 
     ordering = models.PositiveIntegerField(default=0)
 
-    can_edit_own_threads = models.BooleanField(default=False)
+    can_edit_own_threads = models.PositiveIntegerField(default=PermissionValue.NO)
     own_threads_edit_time_limit = models.PositiveIntegerField(default=0)
-    can_edit_own_posts = models.BooleanField(default=False)
+    can_edit_own_posts = models.PositiveIntegerField(default=PermissionValue.NO)
     own_posts_edit_time_limit = models.PositiveIntegerField(default=0)
-    can_see_others_post_edits = models.PositiveIntegerField(default=0)
-    can_hide_own_post_edits = models.PositiveIntegerField(default=0)
+    can_see_others_post_edits = models.PositiveIntegerField(default=CanSeePostEdits.NO)
+    can_hide_own_post_edits = models.PositiveIntegerField(
+        default=CanHideOwnPostEdits.NO
+    )
     own_post_edits_hide_time_limit = models.PositiveIntegerField(default=0)
     own_delete_post_edits_time_limit = models.PositiveIntegerField(default=0)
-    bypass_flood_control = models.BooleanField(default=False)
-    bypass_content_approval = models.BooleanField(default=False)
+    bypass_flood_control = models.PositiveIntegerField(default=PermissionValue.NO)
+    bypass_content_approval = models.PositiveIntegerField(default=PermissionValue.NO)
 
-    can_use_private_threads = models.BooleanField(default=False)
-    can_start_private_threads = models.BooleanField(default=False)
+    can_use_private_threads = models.PositiveIntegerField(default=PermissionValue.NO)
+    can_start_private_threads = models.PositiveIntegerField(default=PermissionValue.NO)
     private_thread_members_limit = models.PositiveIntegerField(default=1)
 
-    can_upload_attachments = models.PositiveIntegerField(default=0)
+    can_upload_attachments = models.PositiveIntegerField(
+        default=CanUploadAttachments.NO
+    )
     attachment_storage_limit = models.PositiveIntegerField(default=512)
     unused_attachments_storage_limit = models.PositiveIntegerField(default=64)
     attachment_size_limit = models.PositiveIntegerField(default=1000)
-    can_always_delete_own_attachments = models.BooleanField(default=False)
+    can_always_delete_own_attachments = models.PositiveIntegerField(
+        default=PermissionValue.NO
+    )
 
-    can_start_polls = models.BooleanField(default=False)
-    can_edit_own_polls = models.BooleanField(default=False)
+    can_start_polls = models.PositiveIntegerField(default=PermissionValue.NO)
+    can_edit_own_polls = models.PositiveIntegerField(default=PermissionValue.NO)
     own_polls_edit_time_limit = models.PositiveIntegerField(default=0)
-    can_close_own_polls = models.BooleanField(default=False)
+    can_close_own_polls = models.PositiveIntegerField(default=PermissionValue.NO)
     own_polls_close_time_limit = models.PositiveIntegerField(default=0)
-    can_vote_in_polls = models.BooleanField(default=False)
+    can_vote_in_polls = models.PositiveIntegerField(default=PermissionValue.NO)
 
-    can_like_posts = models.BooleanField(default=False)
-    can_see_own_post_likes = models.PositiveIntegerField(default=0)
-    can_see_others_post_likes = models.PositiveIntegerField(default=0)
+    can_like_posts = models.PositiveIntegerField(default=PermissionValue.NO)
+    can_see_own_post_likes = models.PositiveIntegerField(default=CanSeePostLikes.NO)
+    can_see_others_post_likes = models.PositiveIntegerField(default=CanSeePostLikes.NO)
 
-    can_select_own_thread_solutions = models.BooleanField(default=False)
-    can_change_own_thread_solutions = models.BooleanField(default=False)
+    can_select_own_thread_solutions = models.PositiveIntegerField(
+        default=PermissionValue.NO
+    )
+    can_change_own_thread_solutions = models.PositiveIntegerField(
+        default=PermissionValue.NO
+    )
     own_thread_solutions_change_time_limit = models.PositiveIntegerField(default=0)
-    can_clear_own_thread_solutions = models.BooleanField(default=False)
+    can_clear_own_thread_solutions = models.PositiveIntegerField(
+        default=PermissionValue.NO
+    )
     own_thread_solutions_clear_time_limit = models.PositiveIntegerField(default=0)
 
-    can_change_username = models.BooleanField(default=False)
+    can_change_username = models.PositiveIntegerField(default=PermissionValue.NO)
     username_changes_limit = models.PositiveIntegerField(default=0)
     username_changes_expire = models.PositiveIntegerField(default=0)
     username_changes_span = models.PositiveIntegerField(default=0)
 
-    can_see_user_profiles = models.BooleanField(default=False)
+    can_see_user_profiles = models.PositiveIntegerField(default=PermissionValue.NO)
 
     class Meta(PluginDataModel.Meta):
         ordering = ["ordering"]

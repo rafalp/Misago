@@ -4,7 +4,7 @@ from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import pgettext, pgettext_lazy
 from mptt.forms import TreeNodeChoiceField, TreeNodeMultipleChoiceField
 
-from ...admin.forms import YesNoSwitch
+from ...admin.forms import YesNoField
 from ...categories.enums import CategoryChildrenComponent, CategoryTree
 from ...categories.models import Category
 from ...core.validators import validate_color_hex, validate_sluggable
@@ -81,7 +81,7 @@ class CategoryForm(forms.ModelForm):
             "Optional CSS class used to customize this category's appearance from themes.",
         ),
     )
-    enable_polls = YesNoSwitch(
+    enable_polls = YesNoField(
         label=pgettext_lazy("admin category form", "Enable polls"),
         required=False,
         help_text=pgettext_lazy(
@@ -89,7 +89,7 @@ class CategoryForm(forms.ModelForm):
             "Controls whether users can start new polls in this category.",
         ),
     )
-    enable_solutions = YesNoSwitch(
+    enable_solutions = YesNoField(
         label=pgettext_lazy("admin category form", "Enable thread solutions"),
         required=False,
         help_text=pgettext_lazy(
@@ -97,7 +97,7 @@ class CategoryForm(forms.ModelForm):
             "Controls whether users can select posts as thread solutions.",
         ),
     )
-    delay_browse_check = YesNoSwitch(
+    delay_browse_check = YesNoField(
         label=pgettext_lazy(
             "admin category form",
             'Allow users without the "browse contents" permission to access category\'s threads list',
@@ -108,7 +108,7 @@ class CategoryForm(forms.ModelForm):
             'Enabling this option will allow users with permission to "see" this category to access it\'s threads list page. They will receive an error if they try to see threads replies.',
         ),
     )
-    show_started_only = YesNoSwitch(
+    show_started_only = YesNoField(
         label=pgettext_lazy(
             "admin category form", "Show users only threads that they started"
         ),
@@ -118,7 +118,7 @@ class CategoryForm(forms.ModelForm):
             "Enabling this option will limit users access to threads in this category to only the threads they have started. Moderators will still have access to all threads.",
         ),
     )
-    is_vanilla = YesNoSwitch(
+    is_vanilla = YesNoField(
         label=pgettext_lazy("admin category form", "Make category vanilla"),
         required=False,
         help_text=pgettext_lazy(
@@ -126,7 +126,7 @@ class CategoryForm(forms.ModelForm):
             'Vanilla categories behave like categories in "vanilla" forum software: users can\'t post threads directly in them. They are also displayed differently in the UI. Vanilla categories must have at least one visible subcategory to be shown to users.',
         ),
     )
-    list_children_threads = YesNoSwitch(
+    list_children_threads = YesNoField(
         label=pgettext_lazy(
             "admin category form",
             "Include threads from child categories on threads list",
@@ -147,7 +147,7 @@ class CategoryForm(forms.ModelForm):
             choices=CategoryChildrenComponent.get_category_choices(),
         ),
     )
-    require_thread_approval = YesNoSwitch(
+    require_threads_approval = YesNoField(
         label=pgettext_lazy("admin category form", "Threads"),
         required=False,
         help_text=pgettext_lazy(
@@ -155,7 +155,7 @@ class CategoryForm(forms.ModelForm):
             "All threads started in this category will require moderator approval.",
         ),
     )
-    require_reply_approval = YesNoSwitch(
+    require_replies_approval = YesNoField(
         label=pgettext_lazy("admin category form", "Replies"),
         required=False,
         help_text=pgettext_lazy(

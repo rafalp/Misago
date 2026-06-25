@@ -10,7 +10,7 @@ from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
 from ...notifications.enums import ThreadNotifications
 from ...notifications.models import WatchedThread
-from ...permissions.enums import CanUploadAttachments
+from ...permissions.enums import CanUploadAttachments, PermissionValue
 from ...postedits.models import PostEdit
 from ...privatethreads.models import PrivateThreadMember
 from ...readtracker.models import ReadCategory
@@ -38,7 +38,7 @@ def test_private_thread_reply_view_displays_login_required_page_to_anonymous_use
 def test_private_thread_reply_view_shows_error_403_to_users_without_private_threads_permission(
     user_client, members_group, other_user_private_thread
 ):
-    members_group.can_use_private_threads = False
+    members_group.can_use_private_threads = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(
@@ -1052,7 +1052,8 @@ def test_private_thread_reply_view_hides_attachments_form_if_uploads_are_disable
 
 
 @pytest.mark.parametrize(
-    "permission", [CanUploadAttachments.THREADS, CanUploadAttachments.NEVER]
+    "permission",
+    [CanUploadAttachments.THREADS, CanUploadAttachments.NEVER, CanUploadAttachments.NO],
 )
 def test_private_thread_reply_view_hides_attachments_form_if_user_has_no_group_permission(
     members_group, user_client, other_user_private_thread, permission

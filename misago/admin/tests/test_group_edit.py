@@ -17,9 +17,9 @@ def get_form_data(group: Group) -> dict:
         "group-user_title": group.user_title or "",
         "group-is_page": "1" if group.is_page else "",
         "group-is_hidden": "1" if group.is_hidden else "",
-        "group-can_edit_own_threads": "1" if group.can_edit_own_threads else "",
+        "group-can_edit_own_threads": str(group.can_edit_own_threads),
         "group-own_threads_edit_time_limit": str(group.own_threads_edit_time_limit),
-        "group-can_edit_own_posts": "1" if group.can_edit_own_posts else "",
+        "group-can_edit_own_posts": str(group.can_edit_own_posts),
         "group-own_posts_edit_time_limit": str(group.own_posts_edit_time_limit),
         "group-can_see_others_post_edits": str(group.can_see_others_post_edits),
         "group-can_hide_own_post_edits": str(group.can_hide_own_post_edits),
@@ -29,12 +29,10 @@ def get_form_data(group: Group) -> dict:
         "group-own_delete_post_edits_time_limit": str(
             group.own_delete_post_edits_time_limit
         ),
-        "group-bypass_flood_control": ("1" if group.bypass_flood_control else ""),
-        "group-bypass_content_approval": ("1" if group.bypass_content_approval else ""),
-        "group-can_use_private_threads": "1" if group.can_use_private_threads else "",
-        "group-can_start_private_threads": (
-            "1" if group.can_start_private_threads else ""
-        ),
+        "group-bypass_flood_control": str(group.bypass_flood_control),
+        "group-bypass_content_approval": str(group.bypass_content_approval),
+        "group-can_use_private_threads": str(group.can_use_private_threads),
+        "group-can_start_private_threads": str(group.can_start_private_threads),
         "group-private_thread_members_limit": str(group.private_thread_members_limit),
         "group-can_upload_attachments": str(group.can_upload_attachments),
         "group-attachment_storage_limit": str(group.attachment_storage_limit),
@@ -42,38 +40,38 @@ def get_form_data(group: Group) -> dict:
             group.unused_attachments_storage_limit
         ),
         "group-attachment_size_limit": str(group.attachment_size_limit),
-        "group-can_always_delete_own_attachments": (
-            "1" if group.can_always_delete_own_attachments else ""
+        "group-can_always_delete_own_attachments": str(
+            group.can_always_delete_own_attachments
         ),
-        "group-can_start_polls": "1" if group.can_start_polls else "",
-        "group-can_edit_own_polls": "1" if group.can_edit_own_polls else "",
+        "group-can_start_polls": str(group.can_start_polls),
+        "group-can_edit_own_polls": str(group.can_edit_own_polls),
         "group-own_polls_edit_time_limit": str(group.own_polls_edit_time_limit),
-        "group-can_close_own_polls": "1" if group.can_close_own_polls else "",
+        "group-can_close_own_polls": str(group.can_close_own_polls),
         "group-own_polls_close_time_limit": str(group.own_polls_close_time_limit),
-        "group-can_vote_in_polls": "1" if group.can_vote_in_polls else "",
-        "group-can_like_posts": "1" if group.can_like_posts else "",
+        "group-can_vote_in_polls": str(group.can_vote_in_polls),
+        "group-can_like_posts": str(group.can_like_posts),
         "group-can_see_own_post_likes": str(group.can_see_own_post_likes),
         "group-can_see_others_post_likes": str(group.can_see_others_post_likes),
-        "group-can_select_own_thread_solutions": (
-            "1" if group.can_select_own_thread_solutions else ""
+        "group-can_select_own_thread_solutions": str(
+            group.can_select_own_thread_solutions
         ),
-        "group-can_change_own_thread_solutions": (
-            "1" if group.can_change_own_thread_solutions else ""
+        "group-can_change_own_thread_solutions": str(
+            group.can_change_own_thread_solutions
         ),
         "group-own_thread_solutions_change_time_limit": str(
             group.own_thread_solutions_change_time_limit
         ),
-        "group-can_clear_own_thread_solutions": (
-            "1" if group.can_clear_own_thread_solutions else ""
+        "group-can_clear_own_thread_solutions": str(
+            group.can_clear_own_thread_solutions
         ),
         "group-own_thread_solutions_clear_time_limit": str(
             group.own_thread_solutions_clear_time_limit
         ),
-        "group-can_change_username": "1" if group.can_change_username else "",
+        "group-can_change_username": str(group.can_change_username),
         "group-username_changes_limit": str(group.username_changes_limit),
         "group-username_changes_expire": str(group.username_changes_expire),
         "group-username_changes_span": str(group.username_changes_span),
-        "group-can_see_user_profiles": "1" if group.can_see_user_profiles else "",
+        "group-can_see_user_profiles": str(group.can_see_user_profiles),
     }
 
 

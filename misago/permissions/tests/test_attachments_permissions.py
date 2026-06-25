@@ -8,7 +8,7 @@ from ..attachments import (
     check_delete_attachment_permission,
     check_download_attachment_permission,
 )
-from ..enums import CanUploadAttachments, CategoryPermission
+from ..enums import CanUploadAttachments, CategoryPermission, PermissionValue
 from ..models import CategoryGroupPermission, Moderator
 from ..proxy import UserPermissionsProxy
 
@@ -30,10 +30,13 @@ def test_can_upload_threads_attachments_returns_true_if_user_has_permission_to_u
     assert can_upload_threads_attachments(permissions, default_category)
 
 
+@pytest.mark.parametrize(
+    "permission", [CanUploadAttachments.NEVER, CanUploadAttachments.NO]
+)
 def test_can_upload_threads_attachments_returns_false_if_user_cant_upload_attachments(
-    user, members_group, cache_versions, default_category
+    user, members_group, cache_versions, default_category, permission
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = permission
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -70,10 +73,13 @@ def test_can_upload_private_threads_attachments_returns_false_if_user_has_permis
     assert not can_upload_private_threads_attachments(permissions)
 
 
+@pytest.mark.parametrize(
+    "permission", [CanUploadAttachments.NEVER, CanUploadAttachments.NO]
+)
 def test_can_upload_private_threads_attachments_returns_false_if_user_cant_upload_attachments(
-    user, members_group, cache_versions
+    user, members_group, cache_versions, permission
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = permission
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -259,7 +265,7 @@ def test_check_download_attachment_permission_fails_user_without_private_threads
     text_attachment.associate_with_post(user_private_thread.first_post)
     text_attachment.save()
 
-    members_group.can_use_private_threads = False
+    members_group.can_use_private_threads = PermissionValue.NO
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -437,7 +443,7 @@ def test_check_delete_attachment_permission_fails_uploader_without_permission_fo
     user_text_attachment.associate_with_post(post)
     user_text_attachment.save()
 
-    members_group.can_always_delete_own_attachments = False
+    members_group.can_always_delete_own_attachments = PermissionValue.NO
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -554,7 +560,7 @@ def test_check_delete_attachment_permission_fails_uploader_without_permission_fo
     user_text_attachment.associate_with_post(private_thread.first_post)
     user_text_attachment.save()
 
-    members_group.can_always_delete_own_attachments = False
+    members_group.can_always_delete_own_attachments = PermissionValue.NO
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)

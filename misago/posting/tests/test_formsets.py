@@ -305,7 +305,7 @@ def test_get_thread_start_formset_setups_post_form_with_attachment_upload_if_upl
 def test_get_thread_start_formset_setups_post_form_without_attachment_upload_if_user_has_no_permission(
     user, members_group, cache_versions, dynamic_settings, default_category
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     request = Mock(
@@ -374,7 +374,7 @@ def test_get_private_thread_start_formset_setups_post_form_without_attachment_up
 def test_get_private_thread_start_formset_setups_post_form_without_attachment_upload_if_user_no_permission(
     user, members_group, cache_versions, dynamic_settings, private_threads_category
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     request = Mock(
@@ -456,7 +456,7 @@ def test_get_thread_reply_formset_setups_post_form_with_attachment_upload_if_upl
 def test_get_thread_reply_formset_setups_post_form_without_attachment_upload_if_user_has_no_permission(
     user, members_group, cache_versions, dynamic_settings, thread
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     request = Mock(
@@ -525,7 +525,7 @@ def test_get_private_thread_reply_formset_setups_post_form_without_attachment_up
 def test_get_private_thread_reply_formset_setups_post_form_without_attachment_upload_if_user_has_no_permission(
     user, members_group, cache_versions, dynamic_settings, private_thread
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     request = Mock(
@@ -641,7 +641,7 @@ def test_get_thread_edit_formset_setups_post_form_with_attachment_upload_if_uplo
 def test_get_thread_edit_formset_setups_post_form_without_attachment_upload_if_user_has_no_permission(
     user, members_group, cache_versions, dynamic_settings, thread
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     request = Mock(
@@ -751,7 +751,7 @@ def test_get_private_thread_edit_formset_setups_post_form_without_attachment_upl
 def test_get_private_thread_edit_formset_setups_post_form_without_attachment_upload_if_user_has_no_permission(
     user, members_group, cache_versions, dynamic_settings, private_thread
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     request = Mock(
@@ -867,7 +867,7 @@ def test_get_thread_post_edit_formset_setups_post_form_with_attachment_upload_if
 def test_get_thread_post_edit_formset_setups_post_form_without_attachment_upload_if_user_has_no_permission(
     user, members_group, cache_versions, dynamic_settings, thread
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     request = Mock(
@@ -974,7 +974,7 @@ def test_get_private_thread_post_edit_formset_setups_post_form_without_attachmen
 def test_get_private_thread_post_edit_formset_setups_post_form_without_attachment_upload_if_user_has_no_permission(
     user, members_group, cache_versions, dynamic_settings, private_thread
 ):
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     request = Mock(

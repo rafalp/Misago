@@ -15,7 +15,7 @@ from ...permissions.enums import (
     CanUploadAttachments,
 )
 from ...users.models import Group, GroupDescription
-from ..forms import YesNoSwitch
+from ..forms import YesNoField, YesNoNeverField
 
 
 class NewGroupForm(forms.ModelForm):
@@ -27,7 +27,7 @@ class NewGroupForm(forms.ModelForm):
         label=pgettext_lazy("admin group form", "Copy permissions from"),
         help_text=pgettext_lazy(
             "admin group form",
-            "You can speed up a new group setup process by copying its permissions from another group. Aadministrator and moderator permissions are not copied.",
+            "You can speed up a new group setup process by copying its permissions from another group. Administrator and moderator permissions are not copied.",
         ),
         queryset=Group.objects,
         required=False,
@@ -89,7 +89,7 @@ class EditGroupForm(forms.ModelForm):
         required=False,
     )
 
-    is_page = YesNoSwitch(
+    is_page = YesNoField(
         label=pgettext_lazy(
             "admin group form", "Give this group a dedicated section on the Users page"
         ),
@@ -98,7 +98,7 @@ class EditGroupForm(forms.ModelForm):
             "Enabling this option will allow users to view all members of this group on a dedicated section of the Users page.",
         ),
     )
-    is_hidden = YesNoSwitch(
+    is_hidden = YesNoField(
         label=pgettext_lazy("admin group form", "Hide this group on user details"),
         help_text=pgettext_lazy(
             "admin group form",
@@ -119,7 +119,7 @@ class EditGroupForm(forms.ModelForm):
 
     # Permissions
 
-    can_edit_own_threads = YesNoSwitch(
+    can_edit_own_threads = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can edit own threads"),
     )
     own_threads_edit_time_limit = forms.IntegerField(
@@ -133,7 +133,7 @@ class EditGroupForm(forms.ModelForm):
         min_value=0,
     )
 
-    can_edit_own_posts = YesNoSwitch(
+    can_edit_own_posts = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can edit own posts"),
     )
     own_posts_edit_time_limit = forms.IntegerField(
@@ -182,14 +182,14 @@ class EditGroupForm(forms.ModelForm):
         min_value=0,
     )
 
-    bypass_flood_control = YesNoSwitch(
+    bypass_flood_control = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Bypass flood control"),
         help_text=pgettext_lazy(
             "admin group permissions form",
             "Enable this option to allow members of this group to bypass flood control.",
         ),
     )
-    bypass_content_approval = YesNoSwitch(
+    bypass_content_approval = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Bypass content approval"),
         help_text=pgettext_lazy(
             "admin group permissions form",
@@ -197,10 +197,10 @@ class EditGroupForm(forms.ModelForm):
         ),
     )
 
-    can_use_private_threads = YesNoSwitch(
+    can_use_private_threads = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can use private threads"),
     )
-    can_start_private_threads = YesNoSwitch(
+    can_start_private_threads = YesNoNeverField(
         label=pgettext_lazy(
             "admin group permissions form", "Can start new private threads"
         ),
@@ -250,7 +250,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         min_value=0,
     )
-    can_always_delete_own_attachments = YesNoSwitch(
+    can_always_delete_own_attachments = YesNoNeverField(
         label=pgettext_lazy(
             "admin group permissions form", "Can always delete own attachments"
         ),
@@ -260,14 +260,14 @@ class EditGroupForm(forms.ModelForm):
         ),
     )
 
-    can_start_polls = YesNoSwitch(
+    can_start_polls = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can start polls"),
         help_text=pgettext_lazy(
             "admin group permissions form",
             "This permission only applies to categories with the polls option enabled.",
         ),
     )
-    can_edit_own_polls = YesNoSwitch(
+    can_edit_own_polls = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can edit own polls"),
     )
     own_polls_edit_time_limit = forms.IntegerField(
@@ -280,7 +280,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         min_value=0,
     )
-    can_close_own_polls = YesNoSwitch(
+    can_close_own_polls = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can close own polls"),
     )
     own_polls_close_time_limit = forms.IntegerField(
@@ -293,14 +293,14 @@ class EditGroupForm(forms.ModelForm):
         ),
         min_value=0,
     )
-    can_vote_in_polls = YesNoSwitch(
+    can_vote_in_polls = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can vote in polls"),
         help_text=pgettext_lazy(
             "admin group permissions form", "Users can always vote in their own polls."
         ),
     )
 
-    can_like_posts = YesNoSwitch(
+    can_like_posts = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can like posts"),
     )
     can_see_own_post_likes = forms.TypedChoiceField(
@@ -318,12 +318,12 @@ class EditGroupForm(forms.ModelForm):
         coerce=int,
     )
 
-    can_select_own_thread_solutions = YesNoSwitch(
+    can_select_own_thread_solutions = YesNoNeverField(
         label=pgettext_lazy(
             "admin group permissions form", "Can select solutions in own threads"
         ),
     )
-    can_change_own_thread_solutions = YesNoSwitch(
+    can_change_own_thread_solutions = YesNoNeverField(
         label=pgettext_lazy(
             "admin group permissions form", "Can change the solution in own threads"
         ),
@@ -339,7 +339,7 @@ class EditGroupForm(forms.ModelForm):
         ),
         min_value=0,
     )
-    can_clear_own_thread_solutions = YesNoSwitch(
+    can_clear_own_thread_solutions = YesNoNeverField(
         label=pgettext_lazy(
             "admin group permissions form",
             "Can clear the selected solution in own threads",
@@ -357,7 +357,7 @@ class EditGroupForm(forms.ModelForm):
         min_value=0,
     )
 
-    can_change_username = YesNoSwitch(
+    can_change_username = YesNoNeverField(
         label=pgettext_lazy("admin group permissions form", "Can change username"),
     )
     username_changes_limit = forms.IntegerField(
@@ -389,7 +389,7 @@ class EditGroupForm(forms.ModelForm):
         min_value=0,
     )
 
-    can_see_user_profiles = YesNoSwitch(
+    can_see_user_profiles = YesNoNeverField(
         label=pgettext_lazy(
             "admin group permissions form", "Can see other users' profiles"
         ),

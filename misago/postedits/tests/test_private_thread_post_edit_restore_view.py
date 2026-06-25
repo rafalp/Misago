@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 
-from ...permissions.enums import CanSeePostEdits
+from ...permissions.enums import CanSeePostEdits, PermissionValue
 from ...test import assert_contains
 from ..create import create_post_edit
 
@@ -114,7 +114,7 @@ def test_private_thread_post_edit_restore_view_shows_error_403_if_post_edit_cant
 def test_private_thread_post_edit_restore_view_shows_error_403_if_post_is_not_editable(
     thread_reply_factory, user_client, user, members_group, other_user_private_thread
 ):
-    members_group.can_edit_own_posts = False
+    members_group.can_edit_own_posts = PermissionValue.NO
     members_group.save()
 
     post = thread_reply_factory(other_user_private_thread, poster=user)

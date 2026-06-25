@@ -4,7 +4,12 @@ from django.utils.crypto import get_random_string
 
 from ...conf.test import override_dynamic_settings
 from ...likes.like import like_post
-from ...permissions.enums import CanSeePostEdits, CanSeePostLikes, CategoryPermission
+from ...permissions.enums import (
+    CanSeePostEdits,
+    CanSeePostLikes,
+    CategoryPermission,
+    PermissionValue,
+)
 from ...permissions.models import CategoryGroupPermission
 from ...test import assert_contains, assert_not_contains
 
@@ -3800,7 +3805,7 @@ def test_private_thread_detail_view_doesnt_show_like_button_to_user_without_perm
     user_client,
     other_user_private_thread,
 ):
-    members_group.can_like_posts = False
+    members_group.can_like_posts = PermissionValue.NO
     members_group.save()
 
     post = thread_reply_factory(other_user_private_thread)
@@ -3899,7 +3904,7 @@ def test_private_thread_detail_view_doesnt_show_unlike_button_to_user_without_pe
     user,
     other_user_private_thread,
 ):
-    members_group.can_like_posts = False
+    members_group.can_like_posts = PermissionValue.NO
     members_group.save()
 
     post = thread_reply_factory(other_user_private_thread)

@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import npgettext_lazy, pgettext_lazy
 
-from ....admin.forms import YesNoSwitch
+from ....admin.forms import YesNoField
 from ....core.validators import validate_image_square
 from ....users.validators import validate_username_content
 from ... import settings
@@ -94,7 +94,7 @@ class UsersSettingsForm(SettingsForm):
         max_value=20,
     )
 
-    allow_custom_avatars = YesNoSwitch(
+    allow_custom_avatars = YesNoField(
         label=pgettext_lazy("admin users settings form", "Allow custom avatar uploads"),
         help_text=pgettext_lazy(
             "admin users settings form",
@@ -210,7 +210,7 @@ class UsersSettingsForm(SettingsForm):
         min_value=2,
     )
 
-    allow_data_downloads = YesNoSwitch(
+    allow_data_downloads = YesNoField(
         label=pgettext_lazy(
             "admin users settings form", "Allow users to download their data"
         )
@@ -227,7 +227,7 @@ class UsersSettingsForm(SettingsForm):
         min_value=1,
     )
 
-    allow_delete_own_account = YesNoSwitch(
+    allow_delete_own_account = YesNoField(
         label=pgettext_lazy(
             "admin users settings form", "Allow users to delete their own accounts"
         )

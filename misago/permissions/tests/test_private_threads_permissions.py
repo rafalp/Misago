@@ -3,6 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
 from ...privatethreads.models import PrivateThreadMember
+from ..enums import PermissionValue
 from ..models import Moderator
 from ..privatethreads import (
     check_add_private_thread_members_permission,
@@ -52,7 +53,7 @@ def test_check_edit_private_thread_post_permission_fails_if_user_has_no_edit_per
 ):
     PrivateThreadMember.objects.create(thread=private_thread, user=user)
 
-    user.group.can_edit_own_posts = False
+    user.group.can_edit_own_posts = PermissionValue.NO
     user.group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -267,7 +268,7 @@ def test_check_edit_private_thread_permission_passes_if_user_is_poster_in_time_l
 def test_check_edit_private_thread_permission_fails_if_user_has_no_edit_permission(
     user, user_private_thread, cache_versions
 ):
-    user.group.can_edit_own_threads = False
+    user.group.can_edit_own_threads = PermissionValue.NO
     user.group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -279,7 +280,7 @@ def test_check_edit_private_thread_permission_fails_if_user_has_no_edit_permissi
 def test_check_edit_private_thread_permission_fails_if_user_is_not_thread_owner(
     user, other_user_private_thread, cache_versions
 ):
-    user.group.can_edit_own_threads = False
+    user.group.can_edit_own_threads = PermissionValue.NO
     user.group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -428,7 +429,19 @@ def test_check_private_threads_permission_passes_if_user_has_permission(
 def test_check_private_threads_permission_fails_if_user_has_no_permission(
     user, members_group, cache_versions
 ):
-    members_group.can_use_private_threads = False
+    members_group.can_use_private_threads = PermissionValue.NO
+    members_group.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_private_threads_permission(permissions)
+
+
+def test_check_private_threads_permission_fails_if_user_has_never_permission(
+    user, members_group, cache_versions
+):
+    members_group.can_use_private_threads = PermissionValue.NEVER
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)
@@ -456,7 +469,19 @@ def test_check_start_private_threads_permission_passes_if_user_has_permission(
 def test_check_start_private_threads_permission_fails_if_user_has_no_permission(
     user, members_group, cache_versions
 ):
-    members_group.can_start_private_threads = False
+    members_group.can_start_private_threads = PermissionValue.NO
+    members_group.save()
+
+    permissions = UserPermissionsProxy(user, cache_versions)
+
+    with pytest.raises(PermissionDenied):
+        check_start_private_threads_permission(permissions)
+
+
+def test_check_start_private_threads_permission_fails_if_user_has_never_permission(
+    user, members_group, cache_versions
+):
+    members_group.can_start_private_threads = PermissionValue.NEVER
     members_group.save()
 
     permissions = UserPermissionsProxy(user, cache_versions)

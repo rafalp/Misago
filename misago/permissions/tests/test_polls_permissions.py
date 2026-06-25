@@ -1,6 +1,7 @@
 import pytest
 from django.core.exceptions import PermissionDenied
 
+from ..enums import PermissionValue
 from ..polls import (
     check_close_thread_poll_permission,
     check_delete_thread_poll_permission,
@@ -32,7 +33,19 @@ def test_check_start_thread_poll_permission_fails_if_user_is_anonymous(
 def test_check_start_thread_poll_permission_fails_if_user_has_no_permission(
     user, members_group, user_permissions_factory, default_category, user_thread
 ):
-    members_group.can_start_polls = False
+    members_group.can_start_polls = PermissionValue.NO
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_start_thread_poll_permission(permissions, default_category, user_thread)
+
+
+def test_check_start_thread_poll_permission_fails_if_user_has_never_permission(
+    user, members_group, user_permissions_factory, default_category, user_thread
+):
+    members_group.can_start_polls = PermissionValue.NEVER
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -155,7 +168,26 @@ def test_check_edit_thread_poll_permission_fails_if_user_has_no_permission(
     user_thread,
     user_poll,
 ):
-    members_group.can_edit_own_polls = False
+    members_group.can_edit_own_polls = PermissionValue.NO
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_edit_thread_poll_permission(
+            permissions, default_category, user_thread, user_poll
+        )
+
+
+def test_check_edit_thread_poll_permission_fails_if_user_has_never_permission(
+    user,
+    user_permissions_factory,
+    members_group,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    members_group.can_edit_own_polls = PermissionValue.NEVER
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -173,7 +205,7 @@ def test_check_edit_thread_poll_permission_passes_category_moderator(
     user_thread,
     user_poll,
 ):
-    members_group.can_edit_own_polls = False
+    members_group.can_edit_own_polls = PermissionValue.NO
     members_group.save()
 
     check_edit_thread_poll_permission(
@@ -188,7 +220,7 @@ def test_check_edit_thread_poll_permission_passes_global_moderator(
     user_thread,
     user_poll,
 ):
-    moderators_group.can_edit_own_polls = False
+    moderators_group.can_edit_own_polls = PermissionValue.NO
     moderators_group.save()
 
     check_edit_thread_poll_permission(
@@ -422,7 +454,7 @@ def test_check_close_thread_poll_permission_passes_if_user_has_permission(
     user_thread,
     user_poll,
 ):
-    members_group.can_close_own_polls = True
+    members_group.can_close_own_polls = PermissionValue.YES
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -440,7 +472,26 @@ def test_check_close_thread_poll_permission_fails_if_user_has_no_permission(
     user_thread,
     user_poll,
 ):
-    members_group.can_close_own_polls = False
+    members_group.can_close_own_polls = PermissionValue.NO
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_close_thread_poll_permission(
+            permissions, default_category, user_thread, user_poll
+        )
+
+
+def test_check_close_thread_poll_permission_fails_if_user_has_never_permission(
+    user,
+    user_permissions_factory,
+    members_group,
+    default_category,
+    user_thread,
+    user_poll,
+):
+    members_group.can_close_own_polls = PermissionValue.NEVER
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -459,7 +510,7 @@ def test_check_close_thread_poll_permission_passes_category_moderator(
     user_thread,
     user_poll,
 ):
-    members_group.can_close_own_polls = False
+    members_group.can_close_own_polls = PermissionValue.NO
     members_group.save()
 
     permissions = user_permissions_factory(category_moderator)
@@ -477,7 +528,7 @@ def test_check_close_thread_poll_permission_passes_global_moderator(
     user_thread,
     user_poll,
 ):
-    moderators_group.can_close_own_polls = False
+    moderators_group.can_close_own_polls = PermissionValue.NO
     moderators_group.save()
 
     permissions = user_permissions_factory(moderator)
@@ -495,7 +546,7 @@ def test_check_close_thread_poll_permission_fails_if_user_is_anonymous(
     thread,
     poll,
 ):
-    guests_group.can_close_own_polls = True
+    guests_group.can_close_own_polls = PermissionValue.YES
     guests_group.save()
 
     permissions = user_permissions_factory(anonymous_user)
@@ -512,7 +563,7 @@ def test_check_close_thread_poll_permission_fails_if_user_is_not_thread_starter(
     other_user_thread,
     poll_factory,
 ):
-    members_group.can_close_own_polls = True
+    members_group.can_close_own_polls = PermissionValue.YES
     members_group.save()
 
     poll = poll_factory(other_user_thread, starter=user)
@@ -533,7 +584,7 @@ def test_check_close_thread_poll_permission_fails_if_user_is_not_poll_starter(
     user_thread,
     poll_factory,
 ):
-    members_group.can_close_own_polls = True
+    members_group.can_close_own_polls = PermissionValue.YES
     members_group.save()
 
     poll = poll_factory(user_thread, starter=other_user)
@@ -556,7 +607,7 @@ def test_check_close_thread_poll_permission_fails_if_thread_is_locked(
     user_thread.is_locked = True
     user_thread.save()
 
-    members_group.can_close_own_polls = True
+    members_group.can_close_own_polls = PermissionValue.YES
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -578,7 +629,7 @@ def test_check_close_thread_poll_permission_passes_for_category_moderator_if_thr
     user_thread.is_locked = True
     user_thread.save()
 
-    members_group.can_close_own_polls = True
+    members_group.can_close_own_polls = PermissionValue.YES
     members_group.save()
 
     permissions = user_permissions_factory(category_moderator)
@@ -599,7 +650,7 @@ def test_check_close_thread_poll_permission_passes_for_global_moderator_if_threa
     user_thread.is_locked = True
     user_thread.save()
 
-    moderators_group.can_close_own_polls = True
+    moderators_group.can_close_own_polls = PermissionValue.YES
     moderators_group.save()
 
     permissions = user_permissions_factory(moderator)
@@ -620,7 +671,7 @@ def test_check_close_thread_poll_permission_fails_if_poll_close_time_has_expired
 ):
     poll = poll_factory(user_thread, starter=user, started_at=day_seconds * -2)
 
-    members_group.can_close_own_polls = True
+    members_group.can_close_own_polls = PermissionValue.YES
     members_group.own_polls_close_time_limit = 60 * 24
     members_group.save()
 
@@ -645,7 +696,7 @@ def test_check_close_thread_poll_permission_passes_for_category_moderator_if_pol
         user_thread, starter=category_moderator, started_at=day_seconds * -2
     )
 
-    members_group.can_close_own_polls = True
+    members_group.can_close_own_polls = PermissionValue.YES
     members_group.own_polls_close_time_limit = 60 * 24
     members_group.save()
 
@@ -665,7 +716,7 @@ def test_check_close_thread_poll_permission_passes_for_global_moderator_if_poll_
 ):
     poll = poll_factory(user_thread, starter=moderator, started_at=day_seconds * -2)
 
-    moderators_group.can_close_own_polls = True
+    moderators_group.can_close_own_polls = PermissionValue.YES
     moderators_group.own_polls_close_time_limit = 60 * 24
     moderators_group.save()
 
@@ -819,7 +870,26 @@ def test_check_vote_in_thread_poll_permission_fails_if_user_has_no_permission(
     thread,
     poll,
 ):
-    members_group.can_vote_in_polls = False
+    members_group.can_vote_in_polls = PermissionValue.NO
+    members_group.save()
+
+    permissions = user_permissions_factory(user)
+
+    with pytest.raises(PermissionDenied):
+        check_vote_in_thread_poll_permission(
+            permissions, default_category, thread, poll
+        )
+
+
+def test_check_vote_in_thread_poll_permission_fails_if_user_has_never_permission(
+    user,
+    user_permissions_factory,
+    members_group,
+    default_category,
+    thread,
+    poll,
+):
+    members_group.can_vote_in_polls = PermissionValue.NEVER
     members_group.save()
 
     permissions = user_permissions_factory(user)
@@ -838,7 +908,7 @@ def test_check_vote_in_thread_poll_permission_fails_if_category_moderator_has_no
     thread,
     poll,
 ):
-    members_group.can_vote_in_polls = False
+    members_group.can_vote_in_polls = PermissionValue.NO
     members_group.save()
 
     permissions = user_permissions_factory(category_moderator)
@@ -857,7 +927,7 @@ def test_check_vote_in_thread_poll_permission_fails_if_global_moderator_has_no_p
     thread,
     poll,
 ):
-    moderators_group.can_vote_in_polls = False
+    moderators_group.can_vote_in_polls = PermissionValue.NO
     moderators_group.save()
 
     permissions = user_permissions_factory(moderator)

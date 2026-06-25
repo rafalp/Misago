@@ -4,9 +4,10 @@ from django.utils.translation import pgettext_lazy
 
 
 class CanSeePostEdits(IntEnum):
-    HISTORY = 2
-    COUNT = 1
-    NEVER = 0
+    HISTORY = 3
+    COUNT = 2
+    NO = 0
+    NEVER = 1
 
     @classmethod
     def get_choices(cls):
@@ -21,14 +22,16 @@ class CanSeePostEdits(IntEnum):
                 cls.COUNT,
                 pgettext_lazy("see post edits permission", "Count only"),
             ),
+            (cls.NO, pgettext_lazy("see post edits permission", "No")),
             (cls.NEVER, pgettext_lazy("see post edits permission", "Never")),
         )
 
 
 class CanHideOwnPostEdits(IntEnum):
-    NEVER = 0
-    HIDE = 1
-    DELETE = 2
+    NEVER = 1
+    NO = 0
+    HIDE = 2
+    DELETE = 3
 
     @classmethod
     def get_choices(cls):
@@ -42,13 +45,15 @@ class CanHideOwnPostEdits(IntEnum):
                 pgettext_lazy("hide own post edits permission", "Hide only"),
             ),
             (cls.NEVER, pgettext_lazy("hide own post edits permission", "Never")),
+            (cls.NO, pgettext_lazy("hide own post edits permission", "No")),
         )
 
 
 class CanSeePostLikes(IntEnum):
-    USERS = 2
-    COUNT = 1
-    NEVER = 0
+    USERS = 3
+    COUNT = 2
+    NO = 0
+    NEVER = 1
 
     @classmethod
     def get_choices(cls):
@@ -64,13 +69,15 @@ class CanSeePostLikes(IntEnum):
                 pgettext_lazy("see post likes permission", "Count only"),
             ),
             (cls.NEVER, pgettext_lazy("see post likes permission", "Never")),
+            (cls.NO, pgettext_lazy("see post likes permission", "No")),
         )
 
 
 class CanUploadAttachments(IntEnum):
-    EVERYWHERE = 2
-    THREADS = 1
-    NEVER = 0
+    EVERYWHERE = 3
+    THREADS = 2
+    NO = 0
+    NEVER = 1
 
     @classmethod
     def get_choices(cls):
@@ -86,6 +93,21 @@ class CanUploadAttachments(IntEnum):
                 pgettext_lazy("upload attachments permission", "In threads only"),
             ),
             (cls.NEVER, pgettext_lazy("upload attachments permission", "Never")),
+            (cls.NO, pgettext_lazy("upload attachments permission", "No")),
+        )
+
+
+class PermissionValue(IntEnum):
+    YES = 1
+    NO = 0
+    NEVER = 2
+
+    @classmethod
+    def get_choices(cls):
+        return (
+            (cls.YES, pgettext_lazy("permission value", "Yes")),
+            (cls.NO, pgettext_lazy("permission value", "No")),
+            (cls.NEVER, pgettext_lazy("permission value", "Never")),
         )
 
 

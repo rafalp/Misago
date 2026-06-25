@@ -7,7 +7,11 @@ from django.urls import reverse
 from ...attachments.enums import AllowedAttachments
 from ...attachments.models import Attachment
 from ...conf.test import override_dynamic_settings
-from ...permissions.enums import CanUploadAttachments, CategoryPermission
+from ...permissions.enums import (
+    CanUploadAttachments,
+    CategoryPermission,
+    PermissionValue,
+)
 from ...permissions.models import CategoryGroupPermission
 from ...postedits.models import PostEdit
 from ...test import (
@@ -139,7 +143,7 @@ def test_thread_post_edit_view_shows_error_403_to_users_who_cant_edit_posts(
 ):
     post = thread_reply_factory(thread, poster=user)
 
-    members_group.can_edit_own_posts = False
+    members_group.can_edit_own_posts = PermissionValue.NO
     members_group.save()
 
     response = user_client.get(
@@ -643,7 +647,7 @@ def test_thread_post_edit_view_hides_attachments_form_if_user_has_no_group_permi
 ):
     post = thread_reply_factory(thread, poster=user)
 
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     response = user_client.get(
@@ -1200,7 +1204,7 @@ def test_thread_post_edit_view_displays_associated_attachment_for_user_without_u
 ):
     post = thread_reply_factory(thread, poster=user)
 
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     text_attachment.associate_with_post(post)
@@ -1368,7 +1372,7 @@ def test_thread_post_edit_view_adds_existing_attachment_to_deleted_list_for_user
 ):
     post = thread_reply_factory(thread, poster=user)
 
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     text_attachment.associate_with_post(post)
@@ -1572,7 +1576,7 @@ def test_thread_post_edit_view_deletes_existing_attachment_on_submit_for_user_wi
 ):
     post = thread_reply_factory(thread, poster=user)
 
-    members_group.can_upload_attachments = CanUploadAttachments.NEVER
+    members_group.can_upload_attachments = CanUploadAttachments.NO
     members_group.save()
 
     text_attachment.associate_with_post(post)
