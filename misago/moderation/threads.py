@@ -322,7 +322,7 @@ class HideThreadsModerationAction(FormMixin, ThreadsModerationAction):
 
         messages.success(
             self.request,
-            pgettext("thread moderation success", "Thread hidden"),
+            pgettext("thread moderation success", "Threads hidden"),
         )
 
         return ModerationResult.from_updated_threads(threads)

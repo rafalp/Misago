@@ -1,0 +1,168 @@
+{% load i18n misago_avatars misago_capture misago_formats %}
+<div
+  id="post-feed-item-hidden-post-{{ post.id }}"
+  class="post-feed-item{% if animate %} post-feed-item-animate{% endif %}"
+  {% if htmx_swap %}
+    hx-swap-oob="true"
+  {% endif %}
+>
+  <a id="post-{{ post.id }}" class="scroll-target"></a>
+  <div class="post-feed-item-hidden-post">
+    <div class="post-feed-item-hidden-post-side">
+      {% if poster %}
+        <a
+          class="post-feed-item-hidden-post-avatar"
+          href="{{ poster.get_absolute_url }}"
+          title="{{ poster.username }}"
+        >
+          <img
+            class="user-avatar"
+            srcset="{{ poster|avatar:64 }}"
+            src="{{ poster|avatar:32 }}"
+            width="32"
+            height="32"
+            alt="{{ poster.username }}"
+          >
+        </a>
+      {% else %}
+        <span class="post-feed-item-hidden-post-avatar" title="{{ poster_name }}">
+          <img class="user-avatar" src="{{ BLANK_AVATAR_URL }}" width="32" height="32" alt="{{ poster_name }}">
+        </span>
+      {% endif %}
+    </div>
+    <div class="post-feed-item-hidden-post-main">
+      <div class="post-feed-item-hidden-post-header">
+        <div class="post-feed-item-hidden-post-header-start">
+          {% if poster %}
+            <a
+              class="post-feed-item-hidden-post-avatar-sm"
+              href="{{ poster.get_absolute_url }}"
+              title="{{ poster.username }}"
+            >
+              <img
+                class="user-avatar"
+                srcset="{{ poster|avatar:48 }}"
+                src="{{ poster|avatar:24 }}"
+                width="24"
+                height="24"
+                alt="{{ poster.username }}"
+              >
+            </a>
+          {% else %}
+            <span class="post-feed-item-hidden-post-avatar-sm" title="{{ poster_name }}">
+              <img src="{{ BLANK_AVATAR_URL }}" width="24" height="24" alt="{{ poster_name }}">
+            </span>
+          {% endif %}
+          {% if poster %}
+            <a class="post-feed-item-hidden-post-poster" href="{{ poster.get_absolute_url }}">{{ poster_name }}</a>
+          {% else %}
+            <span class="post-feed-item-hidden-post-poster">{{ poster_name }}</span>
+          {% endif %}
+          <a
+            class="post-feed-item-hidden-post-timestamp post-feed-item-hidden-post-timestamp-full"
+            href="{{ post.get_absolute_url }}"
+            title="{{ post.posted_at|date:'DATETIME_FORMAT' }}"
+            misago-timestamp="{{ post.posted_at.isoformat }}"
+          >
+            {{ post.posted_at|date_relative }}
+          </a>
+          <a
+            class="post-feed-item-hidden-post-timestamp post-feed-item-hidden-post-timestamp-short"
+            href="{{ post.get_absolute_url }}"
+            title="{{ post.posted_at|date:'DATETIME_FORMAT' }}"
+            misago-timestamp="{{ post.posted_at.isoformat }}"
+            misago-timestamp-format="short"
+          >
+            {{ post.posted_at|date_relative_short }}
+          </a>
+        </div>
+        <div class="post-feed-item-hidden-post-header-end">
+          <a
+            class="post-feed-item-hidden-post-counter"
+            href="{{ post.get_absolute_url }}"
+          >
+            #{{ counter }}
+          </a>
+          {% if is_new %}
+            <span
+              class="post-feed-item-hidden-post-new"
+              title="{% translate 'This post is new' context 'posts feed new hidden post' %}"
+            >
+              {% translate "New" context "posts feed hidden post new" %}
+            </span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="post-feed-item-hidden-post-body">
+        <p class="post-feed-item-hidden-post-message">
+          {% if post.hidden_at %}
+            {% capture trimmed as hidden_at_html %}
+              <span
+                title="{{ post.hidden_at|date:'DATETIME_FORMAT' }}"
+                mg-timestamp="{{ post.hidden_at.isoformat }}"
+                mg-timestamp-format="sentence"
+              >
+                {{ post.hidden_at|date_relative_in_sentence }}
+              </span>
+            {% endcapture %}
+            {% if post.hidden_by_name %}
+              {% capture trimmed as hidden_by_html %}
+                {% if post.hidden_by_id %}
+                  <a
+                    href="{% url 'misago:user' pk=post.hidden_by_id slug=post.hidden_by_slug %}"
+                    class="item-title"
+                  >{{ post.hidden_by_name }}</a>
+                {% else %}
+                  <a class="item-title">{{ post.hidden_by_name }}</a>
+                {% endif %}
+              {% endcapture %}
+              {% if post.hidden_reason %}
+                {% blocktranslate trimmed with hidden_by=hidden_by_html|safe hidden_at=hidden_at_html|safe reason=post.hidden_reason context="hidden post message" %}
+                  Hidden by {{ hidden_by }}, {{ hidden_at }}. Reason: {{ reason }}
+                {% endblocktranslate %}
+              {% else %}
+                {% blocktranslate trimmed with hidden_by=hidden_by_html|safe hidden_at=hidden_at_html|safe context="hidden post message" %}
+                  Hidden by {{ hidden_by }}, {{ hidden_at }}.
+                {% endblocktranslate %}
+              {% endif %}
+            {% elif post.hidden_reason %}
+              {% blocktranslate trimmed with hidden_at=hidden_at_html|safe reason=post.hidden_reason context="hidden post message" %}
+                Hidden {{ hidden_at }}. Reason: {{ reason }}
+              {% endblocktranslate %}
+            {% else %}
+              {% blocktranslate trimmed with hidden_at=hidden_at_html|safe context="hidden post message" %}
+                Hidden {{ hidden_at }}.
+              {% endblocktranslate %}
+            {% endif %}
+          {% elif post.hidden_by_name %}
+            {% capture trimmed as hidden_by_html %}
+              {% if post.hidden_by_id %}
+                <a
+                  href="{% url 'misago:user' pk=post.hidden_by_id slug=post.hidden_by_slug %}"
+                  class="item-title"
+                >{{ post.hidden_by_name }}</a>
+              {% else %}
+                <a class="item-title">{{ post.hidden_by_name }}</a>
+              {% endif %}
+            {% endcapture %}
+            {% if post.hidden_reason %}
+              {% blocktranslate trimmed with hidden_by=hidden_by_html|safe reason=post.hidden_reason context="hidden post message" %}
+                Hidden by {{ hidden_by }}. Reason: {{ reason }}
+              {% endblocktranslate %}
+            {% else %}
+              {% blocktranslate trimmed with hidden_by=hidden_by_html|safe context="hidden post message" %}
+                Hidden by {{ hidden_by }}.
+              {% endblocktranslate %}
+            {% endif %}
+          {% elif post.hidden_reason %}
+            {% blocktranslate trimmed with reason=post.hidden_reason context="hidden post message" %}
+              Reason: {{ reason }}
+            {% endblocktranslate %}
+          {% else %}
+              {% translate "This post is hidden." context "hidden post message" %}
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,20 +1,20 @@
 {% load i18n misago_avatars misago_capture misago_component misago_formats misago_rich_text %}
 
 <div
-  id="posts-feed-item-post-{{ post.id }}"
-  class="posts-feed-item{% if animate %} posts-feed-item-animate{% endif %}"
+  id="post-feed-item-post-{{ post.id }}"
+  class="post-feed-item{% if animate %} post-feed-item-animate{% endif %}"
   {% if htmx_swap %}
     hx-swap-oob="true"
   {% endif %}
   mg-feed-item
 >
   <a id="post-{{ post.id }}" class="scroll-target"></a>
-  <div class="posts-feed-item-post">
-    <div class="posts-feed-item-post-bit-side">
-      <div class="posts-feed-item-post-bit-side-avatar">
+  <div class="post-feed-item-post">
+    <div class="post-feed-item-post-bit-side">
+      <div class="post-feed-item-post-bit-side-avatar">
         {% if poster %}
           <a
-            class="posts-feed-item-post-bit-side-avatar-link"
+            class="post-feed-item-post-bit-side-avatar-link"
             href="{{ poster.get_absolute_url }}"
           >
             <img
@@ -27,15 +27,15 @@
             >
           </a>
         {% else %}
-          <span class="posts-feed-item-post-bit-side-avatar-link">
+          <span class="post-feed-item-post-bit-side-avatar-link">
             <img src="{{ BLANK_AVATAR_URL }}" width="100" height="100" alt="{{ poster_name }}">
           </span>
         {% endif %}
       </div>
-      <div class="posts-feed-item-post-bit-side-avatar-sm">
+      <div class="post-feed-item-post-bit-side-avatar-sm">
         {% if poster %}
           <a
-            class="posts-feed-item-post-bit-side-avatar-link"
+            class="post-feed-item-post-bit-side-avatar-link"
             href="{{ poster.get_absolute_url }}"
           >
             <img
@@ -48,18 +48,18 @@
             >
           </a>
         {% else %}
-          <span class="posts-feed-item-post-bit-side-avatar-link">
+          <span class="post-feed-item-post-bit-side-avatar-link">
             <img src="{{ BLANK_AVATAR_URL }}" width="50" height="50" alt="{{ poster_name }}">
           </span>
         {% endif %}
       </div>
-      <div class="posts-feed-item-post-bit-side-poster">
+      <div class="post-feed-item-post-bit-side-poster">
 
         {% if poster %}
           <div>
             <a
               href="{{ poster.get_absolute_url }}"
-              class="posts-feed-item-post-bit-side-poster-link"
+              class="post-feed-item-post-bit-side-poster-link"
               {% if poster.group.color %}
               style="--color: {{ poster.group.color }}"
               {% endif %}
@@ -70,7 +70,7 @@
           {% if not poster.group.is_hidden %}
             <div>
               <a
-                class="posts-feed-item-post-bit-side-poster-title"
+                class="post-feed-item-post-bit-side-poster-title"
                 href="#todo"
               >
                 {{ poster.title|default:poster.group.user_title|default:poster.group.name }}
@@ -78,14 +78,14 @@
             </div>
           {% elif poster.title or poster.group.user_title %}
             <div>
-              <span class="posts-feed-item-post-bit-side-poster-title">
+              <span class="post-feed-item-post-bit-side-poster-title">
                 {{ poster.title|default:poster.group.user_title }}
               </span>
             </div>
           {% endif %}
         {% else %}
           <div>
-            <span class="posts-feed-item-post-bit-side-poster-link">
+            <span class="post-feed-item-post-bit-side-poster-link">
               {{ poster_name }}
             </span>
           </div>
@@ -94,12 +94,12 @@
       </div>
     </div>
 
-    <div class="posts-feed-item-post-main">
-      <div class="posts-feed-item-post-bit-top">
+    <div class="post-feed-item-post-main">
+      <div class="post-feed-item-post-bit-top">
 
         {% if poster %}
           <a
-            class="posts-feed-item-post-bit-top-avatar"
+            class="post-feed-item-post-bit-top-avatar"
             href="{{ poster.get_absolute_url }}"
           >
             <img
@@ -112,7 +112,7 @@
             >
           </a>
         {% else %}
-          <span class="posts-feed-item-post-bit-top-avatar">
+          <span class="post-feed-item-post-bit-top-avatar">
             <img src="{{ BLANK_AVATAR_URL }}" width="32" height="32" alt="{{ poster_name }}">
           </span>
         {% endif %}
@@ -120,7 +120,7 @@
         {% if poster %}
           <a
             href="{{ poster.get_absolute_url }}"
-            class="posts-feed-item-post-bit-top-poster-link"
+            class="post-feed-item-post-bit-top-poster-link"
             {% if poster.group.color %}
             style="--color: {{ poster.group.color }}"
             {% endif %}
@@ -129,24 +129,24 @@
           </a>
           {% if not poster.group.is_hidden %}
             <a
-              class="posts-feed-item-post-bit-top-poster-title"
+              class="post-feed-item-post-bit-top-poster-title"
               href="#todo"
             >
               {{ poster.title|default:poster.group.user_title|default:poster.group.name }}
             </a>
           {% elif poster.title or poster.group.user_title %}
-            <span class="posts-feed-item-post-bit-top-poster-title">
+            <span class="post-feed-item-post-bit-top-poster-title">
               {{ poster.title|default:poster.group.user_title }}
             </span>
           {% endif %}
         {% else %}
-          <span class="posts-feed-item-post-bit-top-poster-link">
+          <span class="post-feed-item-post-bit-top-poster-link">
             {{ poster_name }}
           </span>
         {% endif %}
 
         <a
-          class="posts-feed-item-post-bit-top-timestamp"
+          class="post-feed-item-post-bit-top-timestamp"
           href="{{ post.get_absolute_url }}"
           title="{{ post.posted_at|date:'DATETIME_FORMAT' }}"
           misago-timestamp="{{ post.posted_at.isoformat }}"
@@ -155,7 +155,7 @@
         </a>
 
         <a
-          class="posts-feed-item-post-bit-top-timestamp-compact"
+          class="post-feed-item-post-bit-top-timestamp-compact"
           href="{{ post.get_absolute_url }}"
           title="{{ post.posted_at|date:'DATETIME_FORMAT' }}"
           misago-timestamp="{{ post.posted_at.isoformat }}"
@@ -165,7 +165,7 @@
         </a>
 
         <a
-          class="posts-feed-item-post-bit-top-post-counter"
+          class="post-feed-item-post-bit-top-post-counter"
           href="{{ post.get_absolute_url }}"
         >
           #{{ counter }}
@@ -173,7 +173,7 @@
 
         {% if is_new %}
           <span
-            class="posts-feed-item-post-bit-top-post-new"
+            class="post-feed-item-post-bit-top-post-new"
             title="{% translate 'This post is new' context 'posts feed new post' %}"
           >
             {% translate "New" context "posts feed post new" %}
@@ -273,25 +273,25 @@
         </div>
 
         {% if moderation %}
-          <label class="posts-feed-item-checkbox">
+          <label class="post-feed-item-checkbox">
             <input type="checkbox" name="posts" form="posts-moderation" value="{{ post.id }}"{% if is_selected %} checked{% endif %}>
           </label>
         {% endif %}
 
       </div>
-      <div class="posts-feed-item-post-body">
+      <div class="post-feed-item-post-body">
 
-        <div class="posts-feed-item-post-body-message">
+        <div class="post-feed-item-post-body-message">
           {% includecomponents post_body_top_components %}
           {% if is_visible %}
-            <article class="posts-feed-item-post-rich-text rich-text" misago-quote-root="{% if poster %}{{ poster.username }}{% else %}{{ post.poster_name }}{% endif %}, post: {{ post.id }}" misago-lightbox-root>
+            <article class="post-feed-item-post-rich-text rich-text" misago-quote-root="{% if poster %}{{ poster.username }}{% else %}{{ post.poster_name }}{% endif %}, post: {{ post.id }}" misago-lightbox-root>
               {% rich_text post.parsed rich_text_data thread=thread %}
             </article>
             {% if attachments %}
               {% include "misago/post_feed/post_attachments.html" %}
             {% endif %}
             {% if edits %}
-              <div class="posts-feed-item-edits">
+              <div class="post-feed-item-edits">
                 {% if edits_url %}
                   <a
                     href="{{ edits_url }}"
@@ -311,7 +311,7 @@
                 {% endblocktranslate %}
                 {% if last_edited_at and last_editor_name %}
                   {% capture trimmed as last_edited_at_html %}
-                    <span class="posts-feed-item-last-edit-timestamp"
+                    <span class="post-feed-item-last-edit-timestamp"
                       title="{{ last_edited_at|date:'DATETIME_FORMAT' }}"
                       mg-timestamp="{{ last_edited_at.isoformat }}"
                       mg-timestamp-format="sentence"
@@ -352,11 +352,11 @@
           {% includecomponents post_body_bottom_components %}
         </div>
 
-        <div class="posts-feed-item-post-body-footer">
-          <div class="posts-feed-item-post-body-footer-left">
+        <div class="post-feed-item-post-body-footer">
+          <div class="post-feed-item-post-body-footer-left">
             {% if not likes.is_liked and likes.like_url %}
               <form
-                id="posts-feed-item-post-like-{{ post.id }}"
+                id="post-feed-item-post-like-{{ post.id }}"
                 action="{{ likes.like_url }}"
                 method="post"
                 hx-post="{{ likes.like_url }}"
@@ -365,7 +365,7 @@
               >
                 {% csrf_token %}
                 <button
-                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-like"
+                  class="btn post-feed-item-post-body-footer-btn post-feed-item-post-body-footer-btn-like"
                   type="submit"
                   hx-disabled-elt="this"
                 >
@@ -376,7 +376,7 @@
             {% elif likes.is_liked %}
               {% if likes.unlike_url %}
                 <form
-                  id="posts-feed-item-post-like-{{ post.id }}"
+                  id="post-feed-item-post-like-{{ post.id }}"
                   action="{{ likes.unlike_url }}"
                   method="post"
                   hx-post="{{ likes.unlike_url }}"
@@ -385,7 +385,7 @@
                 >
                   {% csrf_token %}
                   <button
-                    class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-liked"
+                    class="btn post-feed-item-post-body-footer-btn post-feed-item-post-body-footer-btn-liked"
                     type="submit"
                     hx-disabled-elt="this"
                   >
@@ -395,7 +395,7 @@
                 </form>
               {% else %}
                 <button
-                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-liked"
+                  class="btn post-feed-item-post-body-footer-btn post-feed-item-post-body-footer-btn-liked"
                   disabled
                 >
                   <span class="material-icon">favorite</span>
@@ -413,7 +413,7 @@
               >
                 {% csrf_token %}
                 <button
-                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-select-solution"
+                  class="btn post-feed-item-post-body-footer-btn post-feed-item-post-body-footer-btn-select-solution"
                   type="submit"
                 >
                   {% include "tabler/rosette-discount-check.svg" %}
@@ -429,7 +429,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="next" value="post" />
                 <button
-                  class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-clear-solution"
+                  class="btn post-feed-item-post-body-footer-btn post-feed-item-post-body-footer-btn-clear-solution"
                   type="submit"
                 >
                   {% include "tabler/rosette-discount-check-filled.svg" %}
@@ -438,7 +438,7 @@
               </form>
             {% elif user.is_authenticated and user.id == thread.starter_id and is_solution %}
               <button
-                class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-clear-solution"
+                class="btn post-feed-item-post-body-footer-btn post-feed-item-post-body-footer-btn-clear-solution"
                 disabled
               >
                 {% include "tabler/rosette-discount-check-filled.svg" %}
@@ -446,13 +446,13 @@
               </button>
             {% endif %}
           </div>
-          <div class="posts-feed-item-post-body-footer-right">
+          <div class="post-feed-item-post-body-footer-right">
             {% if edit_url %}
               <a
-                class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-edit"
+                class="btn post-feed-item-post-body-footer-btn post-feed-item-post-body-footer-btn-edit"
                 href="{{ edit_url }}"
                 hx-get="{{ edit_url }}?inline=true"
-                hx-target="#posts-feed-item-post-{{ post.id }} .posts-feed-item-post-body"
+                hx-target="#post-feed-item-post-{{ post.id }} .post-feed-item-post-body"
                 hx-swap="innerHTML show:#post-{{ post.id }}:top"
               >
                 <span class="material-icon">edit</span>
@@ -461,7 +461,7 @@
             {% endif %}
             {% if quote_url %}
               <a
-                class="btn posts-feed-item-post-body-footer-btn posts-feed-item-post-body-footer-btn-quote"
+                class="btn post-feed-item-post-body-footer-btn post-feed-item-post-body-footer-btn-quote"
                 href="{{ quote_url }}"
                 mg-feed-action="quote"
               >
@@ -474,14 +474,14 @@
 
         {% if likes.messages %}
           <div
-            id="posts-feed-item-post-likes-{{ post.id }}"
-            class="posts-feed-item-likes{% if likes.is_liked %} posts-feed-item-likes-liked{% endif %}"
+            id="post-feed-item-post-likes-{{ post.id }}"
+            class="post-feed-item-likes{% if likes.is_liked %} post-feed-item-likes-liked{% endif %}"
           >
             {% if likes.likes_url %}
               {% for type, message in likes.messages.items %}
                 <a
                   href="{{ likes.likes_url }}"
-                  class="posts-feed-item-likes-message-{{ type }}"
+                  class="post-feed-item-likes-message-{{ type }}"
                   hx-ext="mg-modal"
                   hx-get="{{ likes.likes_url }}?modal=true"
                   hx-target="#misago-htmx-post-likes-modal"
@@ -495,12 +495,12 @@
               {% endfor %}
             {% else %}
               {% for type, message in likes.messages.items %}
-                <span class="posts-feed-item-likes-message-{{ type }}">{{ message }}</span>
+                <span class="post-feed-item-likes-message-{{ type }}">{{ message }}</span>
               {% endfor %}
             {% endif %}
           </div>
         {% else %}
-          <div id="posts-feed-item-post-likes-{{ post.id }}" class="posts-feed-item-likes d-none"></div>
+          <div id="post-feed-item-post-likes-{{ post.id }}" class="post-feed-item-likes d-none"></div>
         {% endif %}
 
       </div>

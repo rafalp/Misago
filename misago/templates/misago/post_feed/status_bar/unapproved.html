@@ -6,14 +6,13 @@
   </div>
   <div class="status-bar-body">
     <p>
-      <strong>{% translate "Unapproved:" context "post unapproved status bar" %}</strong>
       {% if poster_is_current_user %}
         {% blocktranslate trimmed context "post unapproved status bar" %}
-          This post will be visible to others after moderator approval.
+          Post is unapproved and will only be visible to others after moderator approval.
         {% endblocktranslate %}
       {% else %}
         {% blocktranslate trimmed context "post unapproved status bar" %}
-          This post is only visible to moderators and its author until approved.
+          Post is unapproved and is only visible to moderators and its author until approved.
         {% endblocktranslate %}
       {% endif %}
     </p>

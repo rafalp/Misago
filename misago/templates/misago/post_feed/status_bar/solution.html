@@ -6,7 +6,6 @@
   </div>
   <div class="status-bar-body">
     <p>
-      <strong>{% translate "Solution:" context "post solution status bar" %}</strong>
       {% capture trimmed as selected_at_html %}
         <span
           title="{{ selected_at|date:'DATETIME_FORMAT' }}"
@@ -21,7 +20,7 @@
         {% endif %}
       {% endcapture %}
       {% blocktranslate trimmed with selected_by=selected_by_html|safe selected_at=selected_at_html|safe context "post solution status bar" %}
-        Selected by {{ selected_by }}, {{ selected_at }}.
+        Solution selected by {{ selected_by }}, {{ selected_at }}.
       {% endblocktranslate %}
       {% if is_locked %}
         {% capture trimmed as locked_at_html %}
