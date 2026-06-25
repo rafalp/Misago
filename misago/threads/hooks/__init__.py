@@ -1,3 +1,4 @@
+from .approve_post import approve_post_hook
 from .approve_thread import approve_thread_hook
 from .create_prefetch_post_feed_data import (
     create_prefetch_post_feed_data_hook,
@@ -55,6 +56,7 @@ from .unlock_thread import unlock_thread_hook
 from .unpin_thread import unpin_thread_hook
 
 __all__ = [
+    "approve_post_hook",
     "approve_thread_hook",
     "create_prefetch_post_feed_data_hook",
     "create_thread_hook",

@@ -1,4 +1,5 @@
 from ..approve import (
+    approve_post,
     approve_thread,
     remove_thread_reply_approval,
     require_thread_reply_approval,
@@ -102,3 +103,31 @@ def test_remove_thread_reply_approval_doesnt_save_thread_if_commit_is_false(
 
     thread.refresh_from_db()
     assert thread.require_reply_approval
+
+
+def test_approve_post_approves_post(unapproved_reply):
+    assert approve_post(unapproved_reply)
+    assert not unapproved_reply.is_unapproved
+
+    unapproved_reply.refresh_from_db()
+    assert not unapproved_reply.is_unapproved
+
+
+def test_approve_post_doesnt_approve_approved_post(django_assert_num_queries, post):
+    with django_assert_num_queries(0):
+        assert not approve_post(post)
+        assert not post.is_unapproved
+
+    post.refresh_from_db()
+    assert not post.is_unapproved
+
+
+def test_approve_post_doesnt_save_post_if_commit_is_false(
+    django_assert_num_queries, unapproved_reply
+):
+    with django_assert_num_queries(0):
+        assert approve_post(unapproved_reply, commit=False)
+        assert not unapproved_reply.is_unapproved
+
+    unapproved_reply.refresh_from_db()
+    assert unapproved_reply.is_unapproved

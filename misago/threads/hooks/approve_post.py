@@ -3,22 +3,22 @@ from typing import Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
-from ..models import Thread
+from ..models import Post
 
 
-class ApproveThreadHookAction(Protocol):
+class ApprovePostHookAction(Protocol):
     """
-    Misago function for approving a thread.
+    Misago function for approving a post.
 
     # Arguments
 
-    ## `thread: Thread`
+    ## `post: Post`
 
-    A `Thread` to approve.
+    A `Post` to approve.
 
     ## `commit: bool = True`
 
-    Whether the updated thread instance should be saved to the database.
+    Whether the updated post instance should be saved to the database.
 
     Defaults to `True`.
 
@@ -28,37 +28,37 @@ class ApproveThreadHookAction(Protocol):
 
     # Return value
 
-    `True` if the thread was approved, `False` otherwise.
+    `True` if the post was approved, `False` otherwise.
     """
 
     def __call__(
         self,
-        thread: Thread,
+        post: Post,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
 
 
-class ApproveThreadHookFilter(Protocol):
+class ApprovePostHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: ApproveThreadHookAction`
+    ## `action: ApprovePostHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
 
     See the [action](#action) section for details.
 
-    ## `thread: Thread`
+    ## `post: Post`
 
-    A `Thread` to approve.
+    A `Post` to approve.
 
     ## `commit: bool = True`
 
-    Whether the updated thread instance should be saved to the database.
+    Whether the updated post instance should be saved to the database.
 
     Defaults to `True`.
 
@@ -68,52 +68,52 @@ class ApproveThreadHookFilter(Protocol):
 
     # Return value
 
-    `True` if the thread was approved, `False` otherwise.
+    `True` if the post was approved, `False` otherwise.
     """
 
     def __call__(
         self,
-        action: ApproveThreadHookAction,
-        thread: Thread,
+        action: ApprovePostHookAction,
+        post: Post,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
 
 
-class ApproveThreadHook(
+class ApprovePostHook(
     FilterHook[
-        ApproveThreadHookAction,
-        ApproveThreadHookFilter,
+        ApprovePostHookAction,
+        ApprovePostHookFilter,
     ]
 ):
     """
-    This hook allows plugins to replace or extend the logic used to approve a thread.
+    This hook allows plugins to replace or extend the logic used to approve a post.
 
     # Example
 
-    Register user who approved the thread:
+    Register user who approved the post:
 
     ```python
     from django.http import HttpRequest
-    from misago.threads.hooks import approve_thread_hook
-    from misago.threads.models import Thread
+    from misago.posts.hooks import approve_post_hook
+    from misago.posts.models import Post
 
 
-    @approve_thread_hook.append_filter
-    def register_user_that_approved_thread(
+    @approve_post_hook.append_filter
+    def register_user_that_approved_post(
         action,
-        thread: Thread,
+        post: Post,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
-        if not action(thread, commit=False, request=request):
+        if not action(post, commit=False, request=request):
             return False
 
         if request:
-            thread.plugin_data["approved_by"] = request.user.id
+            post.plugin_data["approved_by"] = request.user.id
 
         if commit:
-            thread.save()
+            post.save()
 
         return True
     """
@@ -122,17 +122,17 @@ class ApproveThreadHook(
 
     def __call__(
         self,
-        action: ApproveThreadHookAction,
-        thread: Thread,
+        action: ApprovePostHookAction,
+        post: Post,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
         return super().__call__(
             action,
-            thread,
+            post,
             commit,
             request,
         )
 
 
-approve_thread_hook = ApproveThreadHook()
+approve_post_hook = ApprovePostHook()

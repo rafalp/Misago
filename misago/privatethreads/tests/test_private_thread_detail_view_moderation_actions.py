@@ -8,8 +8,28 @@ from ...threadupdates.models import ThreadUpdate
 
 
 @pytest.fixture
-def mock_synchronize_categories(mocker):
+def mock_thread_synchronize_categories(mocker):
     return mocker.patch("misago.moderation.thread.synchronize_categories")
+
+
+@pytest.fixture
+def mock_posts_synchronize_categories(mocker):
+    return mocker.patch("misago.moderation.posts.synchronize_categories")
+
+
+@pytest.fixture
+def mock_posts_notify_on_new_thread_reply(mocker):
+    return mocker.patch("misago.moderation.posts.notify_on_new_thread_reply")
+
+
+@pytest.fixture
+def mock_post_synchronize_categories(mocker):
+    return mocker.patch("misago.moderation.post.synchronize_categories")
+
+
+@pytest.fixture
+def mock_post_notify_on_new_thread_reply(mocker):
+    return mocker.patch("misago.moderation.post.notify_on_new_thread_reply")
 
 
 def test_private_thread_detail_view_executes_lock_thread_moderation_action(
@@ -80,7 +100,7 @@ def test_private_thread_detail_view_executes_unlock_thread_moderation_action(
 
 
 def test_private_thread_detail_view_executes_hide_thread_moderation_action(
-    moderator_client, moderator, user_private_thread, mock_synchronize_categories
+    moderator_client, moderator, user_private_thread, mock_thread_synchronize_categories
 ):
     response = moderator_client.post(
         reverse(
@@ -129,13 +149,13 @@ def test_private_thread_detail_view_executes_hide_thread_moderation_action(
         action=ThreadUpdateActionName.HIDDEN,
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with(
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
         [user_private_thread.category_id]
     )
 
 
 def test_private_thread_detail_view_executes_unhide_thread_moderation_action(
-    moderator_client, user_private_thread, mock_synchronize_categories
+    moderator_client, user_private_thread, mock_thread_synchronize_categories
 ):
     user_private_thread.is_hidden = True
     user_private_thread.save()
@@ -170,7 +190,7 @@ def test_private_thread_detail_view_executes_unhide_thread_moderation_action(
         action=ThreadUpdateActionName.UNHIDDEN,
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with(
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
         [user_private_thread.category_id]
     )
 
@@ -182,7 +202,7 @@ def test_private_thread_detail_view_executes_approve_thread_moderation_action(
     other_user,
     moderator,
     user_private_thread,
-    mock_synchronize_categories,
+    mock_thread_synchronize_categories,
 ):
     mock_notify_on_new_private_thread = mocker.patch(
         "misago.moderation.thread.notify_on_new_private_thread"
@@ -216,7 +236,7 @@ def test_private_thread_detail_view_executes_approve_thread_moderation_action(
         action=ThreadUpdateActionName.APPROVED,
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with(
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
         [user_private_thread.category_id]
     )
     mock_notify_on_new_private_thread.delay.assert_called_once_with(
@@ -286,7 +306,7 @@ def test_private_thread_detail_view_executes_remove_reply_approval_thread_modera
 
 
 def test_private_thread_detail_view_executes_delete_thread_moderation_action(
-    moderator_client, user_private_thread, mock_synchronize_categories
+    moderator_client, user_private_thread, mock_thread_synchronize_categories
 ):
     response = moderator_client.post(
         reverse(
@@ -319,7 +339,7 @@ def test_private_thread_detail_view_executes_delete_thread_moderation_action(
     with pytest.raises(Thread.DoesNotExist):
         user_private_thread.refresh_from_db()
 
-    mock_synchronize_categories.delay.assert_called_once_with(
+    mock_thread_synchronize_categories.delay.assert_called_once_with(
         [user_private_thread.category_id]
     )
 
@@ -540,6 +560,65 @@ def test_private_thread_detail_view_unhide_posts_moderation_action_validates_pos
     assert_contains(response, "Posts are already unhidden.")
 
 
+def test_private_thread_detail_view_approve_posts_moderation_action_approves_posts(
+    post_factory,
+    moderator_client,
+    user_private_thread,
+    mock_posts_synchronize_categories,
+    mock_posts_notify_on_new_thread_reply,
+):
+    reply = post_factory(user_private_thread, is_unapproved=True)
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"posts_moderation": "approve", "posts": [reply.id]},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_hidden
+    assert reply.hidden_at is None
+    assert reply.hidden_by is None
+    assert reply.hidden_by_name is None
+    assert reply.hidden_by_slug is None
+    assert reply.hidden_reason is None
+
+
+def test_private_thread_detail_view_approve_posts_moderation_action_validates_posts(
+    thread_reply_factory,
+    moderator_client,
+    user_private_thread,
+    mock_posts_synchronize_categories,
+    mock_posts_notify_on_new_thread_reply,
+):
+    reply = thread_reply_factory(user_private_thread)
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"posts_moderation": "approve", "posts": [reply.id]},
+    )
+    assert_contains(response, "Posts are already approved.")
+
+    mock_posts_synchronize_categories.delay.assert_not_called()
+    mock_posts_notify_on_new_thread_reply.delay.assert_not_called()
+
+
 def test_private_thread_detail_view_executes_lock_post_moderation_action(
     thread_reply_factory, moderator_client, user_private_thread
 ):
@@ -694,3 +773,47 @@ def test_private_thread_detail_view_executes_unhide_post_moderation_action(
     assert reply.hidden_by_name is None
     assert reply.hidden_by_slug is None
     assert reply.hidden_reason is None
+
+
+def test_private_thread_detail_view_executes_approve_post_moderation_action(
+    post_factory,
+    moderator_client,
+    user_private_thread,
+    mock_post_synchronize_categories,
+    mock_post_notify_on_new_thread_reply,
+):
+    reply = post_factory(user_private_thread, is_unapproved=True)
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"post_moderation": "approve", "post": reply.id},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_unapproved
+
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.last_post == reply
+
+    mock_post_synchronize_categories.delay.assert_called_with(
+        [user_private_thread.category_id]
+    )
+    mock_post_notify_on_new_thread_reply.delay.assert_called_with(reply.id)
