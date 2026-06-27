@@ -42,7 +42,10 @@ class UnhideThreadUpdateHookFilter(Protocol):
 
     ## `action: UnhideThreadUpdateHookAction`
 
-    Misago function used to unhide a `ThreadUpdate` object.
+    Next function registered in this hook, either a custom function or
+    Misago's standard one.
+
+    See the [action](#action) section for details.
 
     ## `thread_update: ThreadUpdate`
 

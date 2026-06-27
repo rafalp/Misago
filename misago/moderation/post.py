@@ -16,6 +16,10 @@ from ..threads.lock import lock_post, unlock_post
 from ..threads.models import Post, Thread
 from ..threads.move import move_post
 from ..threads.synchronize import synchronize_thread
+from ..threadupdates.create import (
+    create_split_posts_from_thread_update,
+    create_split_posts_into_thread_update,
+)
 from .actions import (
     ConfirmMixin,
     FormMixin,
@@ -313,6 +317,13 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
         )
 
         move_post(post, new_thread)
+
+        create_split_posts_from_thread_update(
+            new_thread, thread, 1, request.user, request=request
+        )
+        create_split_posts_into_thread_update(
+            thread, new_thread, 1, request.user, request=request
+        )
 
         synchronize_thread(thread, request=request)
         synchronize_thread(new_thread, request=request)

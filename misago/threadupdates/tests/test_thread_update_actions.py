@@ -20,7 +20,8 @@ from ..create import (
     create_removed_member_thread_update,
     create_removed_reply_approval_thread_update,
     create_required_reply_approval_thread_update,
-    create_split_thread_update,
+    create_split_posts_from_thread_update,
+    create_split_posts_into_thread_update,
     create_started_poll_thread_update,
     create_test_thread_update,
     create_took_ownership_thread_update,
@@ -253,35 +254,6 @@ def test_merged_thread_update_without_context_object(client, thread, user_thread
     assert_contains(response, user_thread.title)
 
 
-def test_split_thread_update(client, thread, user_thread, user):
-    create_split_thread_update(thread, user_thread, user)
-
-    thread.has_updates = True
-    thread.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, "Split this thread from")
-    assert_contains(response, user_thread.title)
-
-
-def test_split_thread_update_without_context_object(client, thread, user_thread, user):
-    thread_update = create_split_thread_update(thread, user_thread, user)
-
-    thread_update.clear_context_object()
-    thread_update.save()
-
-    thread.has_updates = True
-    thread.save()
-
-    response = client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, "Split this thread from")
-    assert_contains(response, user_thread.title)
-
-
 def test_changed_title_thread_update(client, thread, user):
     create_changed_title_thread_update(thread, "Old title", user)
 
@@ -293,6 +265,96 @@ def test_changed_title_thread_update(client, thread, user):
     )
     assert_contains(response, "Changed title from")
     assert_contains(response, "Old title")
+
+
+def test_split_posts_into_thread_update(client, thread, user_thread, user):
+    create_split_posts_into_thread_update(thread, user_thread, 21, user)
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Split 21 posts into")
+    assert_contains(response, user_thread.title)
+
+
+def test_split_posts_into_thread_update_without_items(
+    client, thread, user_thread, user
+):
+    create_split_posts_into_thread_update(thread, user_thread, actor=user)
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Split into")
+    assert_contains(response, user_thread.title)
+
+
+def test_split_posts_into_thread_update_without_context_object(
+    client, thread, user_thread, user
+):
+    thread_update = create_split_posts_into_thread_update(thread, user_thread, 21, user)
+
+    thread_update.clear_context_object()
+    thread_update.save()
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Split 21 posts into")
+    assert_contains(response, user_thread.title)
+
+
+def test_split_posts_from_thread_update(client, thread, user_thread, user):
+    create_split_posts_from_thread_update(thread, user_thread, 21, user)
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Split 21 posts from")
+    assert_contains(response, user_thread.title)
+
+
+def test_split_posts_from_thread_update_without_items(
+    client, thread, user_thread, user
+):
+    create_split_posts_from_thread_update(thread, user_thread, actor=user)
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Split from")
+    assert_contains(response, user_thread.title)
+
+
+def test_split_thread_update_without_context_object(client, thread, user_thread, user):
+    thread_update = create_split_posts_from_thread_update(thread, user_thread, 21, user)
+
+    thread_update.clear_context_object()
+    thread_update.save()
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Split 21 posts from")
+    assert_contains(response, user_thread.title)
 
 
 def test_create_started_poll_thread_update(client, thread, poll, user):

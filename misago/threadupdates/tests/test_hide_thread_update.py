@@ -8,6 +8,7 @@ def test_hide_thread_update_hides_thread_update(thread_update):
     assert thread_update.is_hidden
     assert thread_update.hidden_by is None
     assert thread_update.hidden_by_name is None
+    assert thread_update.hidden_by_slug is None
     assert thread_update.hidden_at
 
 
@@ -23,6 +24,7 @@ def test_hide_thread_update_hides_thread_update_and_sets_hidden_by_relation(
     assert thread_update.is_hidden
     assert thread_update.hidden_by == user
     assert thread_update.hidden_by_name == user.username
+    assert thread_update.hidden_by_slug == user.slug
     assert thread_update.hidden_at
 
 

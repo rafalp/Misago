@@ -28,8 +28,13 @@ class Migration(migrations.Migration):
                 ),
                 ("plugin_data", models.JSONField(default=dict)),
                 ("actor_name", models.CharField(blank=True, max_length=255, null=True)),
+                ("actor_slug", models.CharField(blank=True, max_length=255, null=True)),
                 (
                     "hidden_by_name",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                (
+                    "hidden_by_slug",
                     models.CharField(blank=True, max_length=255, null=True),
                 ),
                 ("action", models.CharField(max_length=32)),
@@ -42,6 +47,7 @@ class Migration(migrations.Migration):
                     models.CharField(blank=True, max_length=255, null=True),
                 ),
                 ("context_id", models.PositiveIntegerField(blank=True, null=True)),
+                ("context_items", models.PositiveIntegerField(blank=True, null=True)),
                 ("is_hidden", models.BooleanField(default=False)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("hidden_at", models.DateTimeField(blank=True, null=True)),

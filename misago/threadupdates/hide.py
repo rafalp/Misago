@@ -24,6 +24,7 @@ def _hide_thread_update_action(
     if request and request.user.is_authenticated:
         thread_update.hidden_by = request.user
         thread_update.hidden_by_name = request.user.username
+        thread_update.hidden_by_slug = request.user.slug
 
     thread_update.save()
     return True
@@ -47,6 +48,7 @@ def _unhide_thread_update_action(
     thread_update.is_hidden = False
     thread_update.hidden_by = None
     thread_update.hidden_by_name = None
+    thread_update.hidden_by_slug = None
     thread_update.hidden_at = None
     thread_update.save()
 

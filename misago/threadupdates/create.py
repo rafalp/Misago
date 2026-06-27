@@ -1,10 +1,11 @@
-from typing import TYPE_CHECKING, Iterable, Union
+from typing import TYPE_CHECKING, Union
 
 from django.db.models import Model
 from django.http import HttpRequest
 from django.utils import timezone
 
 from ..categories.models import Category
+from ..core.utils import slugify
 from ..polls.models import Poll
 from ..threads.models import Thread
 from .enums import ThreadUpdateActionName
@@ -22,7 +23,7 @@ def create_thread_update(
     *,
     context: str | None = None,
     context_object: Model | None = None,
-    is_hidden: bool = False,
+    context_items: int | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -33,7 +34,7 @@ def create_thread_update(
         actor,
         context=context,
         context_object=context_object,
-        is_hidden=is_hidden,
+        context_items=context_items,
         commit=commit,
         request=request,
     )
@@ -46,20 +47,23 @@ def _create_thread_update_action(
     *,
     context: str | None = None,
     context_object: Model | None = None,
-    is_hidden: bool = False,
+    context_items: int | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
     actor_id = None
     actor_name = None
+    actor_slug = None
     context_type = None
     context_id = None
 
     if isinstance(actor, str):
         actor_name = actor
+        actor_slug = slugify(actor)
     elif actor:
         actor_id = actor.id
         actor_name = actor.username
+        actor_slug = actor.slug
 
     if context_object:
         context_type = ".".join(
@@ -75,12 +79,13 @@ def _create_thread_update_action(
         thread_id=thread.id,
         actor_id=actor_id,
         actor_name=actor_name,
+        actor_slug=actor_slug,
         action=action,
         context=context,
         context_type=context_type,
         context_id=context_id,
+        context_items=context_items,
         created_at=timezone.now(),
-        is_hidden=is_hidden,
     )
 
     if commit:
@@ -94,7 +99,6 @@ def create_test_thread_update(
     actor: Union["User", str, None] = None,
     context: str | None = None,
     context_object: Model | None = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -104,7 +108,6 @@ def create_test_thread_update(
         actor,
         context=context,
         context_object=context_object,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -113,7 +116,6 @@ def create_test_thread_update(
 def create_pinned_everywhere_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -121,7 +123,6 @@ def create_pinned_everywhere_thread_update(
         thread,
         ThreadUpdateActionName.PINNED_EVERYWHERE,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -130,7 +131,6 @@ def create_pinned_everywhere_thread_update(
 def create_pinned_category_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -138,7 +138,6 @@ def create_pinned_category_thread_update(
         thread,
         ThreadUpdateActionName.PINNED_CATEGORY,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -147,7 +146,6 @@ def create_pinned_category_thread_update(
 def create_unpinned_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -155,7 +153,6 @@ def create_unpinned_thread_update(
         thread,
         ThreadUpdateActionName.UNPINNED,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -164,7 +161,6 @@ def create_unpinned_thread_update(
 def create_locked_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -172,7 +168,6 @@ def create_locked_thread_update(
         thread,
         ThreadUpdateActionName.LOCKED,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -181,7 +176,6 @@ def create_locked_thread_update(
 def create_unlocked_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -189,7 +183,6 @@ def create_unlocked_thread_update(
         thread,
         ThreadUpdateActionName.UNLOCKED,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -198,7 +191,6 @@ def create_unlocked_thread_update(
 def create_hidden_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -206,7 +198,6 @@ def create_hidden_thread_update(
         thread,
         ThreadUpdateActionName.HIDDEN,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -215,7 +206,6 @@ def create_hidden_thread_update(
 def create_unhidden_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -223,7 +213,6 @@ def create_unhidden_thread_update(
         thread,
         ThreadUpdateActionName.UNHIDDEN,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -232,7 +221,6 @@ def create_unhidden_thread_update(
 def create_approved_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -240,7 +228,6 @@ def create_approved_thread_update(
         thread,
         ThreadUpdateActionName.APPROVED,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -249,7 +236,6 @@ def create_approved_thread_update(
 def create_required_reply_approval_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -257,7 +243,6 @@ def create_required_reply_approval_thread_update(
         thread,
         ThreadUpdateActionName.REQUIRED_REPLY_APPROVAL,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -266,7 +251,6 @@ def create_required_reply_approval_thread_update(
 def create_removed_reply_approval_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -274,7 +258,6 @@ def create_removed_reply_approval_thread_update(
         thread,
         ThreadUpdateActionName.REMOVED_REPLY_APPROVAL,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -284,7 +267,6 @@ def create_moved_thread_update(
     thread: Thread,
     old_category: Category,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -294,7 +276,6 @@ def create_moved_thread_update(
         actor,
         context=old_category.name,
         context_object=old_category,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -304,7 +285,6 @@ def create_merged_thread_update(
     thread: Thread,
     other_thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -314,27 +294,6 @@ def create_merged_thread_update(
         actor,
         context=other_thread.title,
         context_object=other_thread,
-        is_hidden=is_hidden,
-        commit=commit,
-        request=request,
-    )
-
-
-def create_split_thread_update(
-    thread: Thread,
-    other_thread: Thread,
-    actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
-    commit: bool = True,
-    request: HttpRequest | None = None,
-) -> ThreadUpdate:
-    return create_thread_update(
-        thread,
-        ThreadUpdateActionName.SPLIT,
-        actor,
-        context=other_thread.title,
-        context_object=other_thread,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -344,7 +303,6 @@ def create_changed_title_thread_update(
     thread: Thread,
     old_title: str,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -353,7 +311,46 @@ def create_changed_title_thread_update(
         ThreadUpdateActionName.CHANGED_TITLE,
         actor,
         context=old_title,
-        is_hidden=is_hidden,
+        commit=commit,
+        request=request,
+    )
+
+
+def create_split_posts_into_thread_update(
+    thread: Thread,
+    other_thread: Thread,
+    posts: int | None = None,
+    actor: Union["User", str, None] = None,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    return create_thread_update(
+        thread,
+        ThreadUpdateActionName.SPLIT_POSTS_INTO,
+        actor,
+        context=other_thread.title,
+        context_object=other_thread,
+        context_items=posts,
+        commit=commit,
+        request=request,
+    )
+
+
+def create_split_posts_from_thread_update(
+    thread: Thread,
+    other_thread: Thread,
+    posts: int | None = None,
+    actor: Union["User", str, None] = None,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    return create_thread_update(
+        thread,
+        ThreadUpdateActionName.SPLIT_POSTS_FROM,
+        actor,
+        context=other_thread.title,
+        context_object=other_thread,
+        context_items=posts,
         commit=commit,
         request=request,
     )
@@ -363,7 +360,6 @@ def create_started_poll_thread_update(
     thread: Thread,
     poll: Poll,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -372,7 +368,6 @@ def create_started_poll_thread_update(
         ThreadUpdateActionName.STARTED_POLL,
         actor,
         context=poll.question,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -381,7 +376,6 @@ def create_started_poll_thread_update(
 def create_closed_poll_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -389,7 +383,6 @@ def create_closed_poll_thread_update(
         thread,
         ThreadUpdateActionName.CLOSED_POLL,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -398,7 +391,6 @@ def create_closed_poll_thread_update(
 def create_opened_poll_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -406,7 +398,6 @@ def create_opened_poll_thread_update(
         thread,
         ThreadUpdateActionName.OPENED_POLL,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -416,7 +407,6 @@ def create_deleted_poll_thread_update(
     thread: Thread,
     poll: Poll,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -425,7 +415,6 @@ def create_deleted_poll_thread_update(
         ThreadUpdateActionName.DELETED_POLL,
         actor,
         context=poll.question,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -434,7 +423,6 @@ def create_deleted_poll_thread_update(
 def create_took_ownership_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -442,7 +430,6 @@ def create_took_ownership_thread_update(
         thread,
         ThreadUpdateActionName.TOOK_OWNERSHIP,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -451,7 +438,6 @@ def create_took_ownership_thread_update(
 def create_joined_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -459,7 +445,6 @@ def create_joined_thread_update(
         thread,
         ThreadUpdateActionName.JOINED,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -469,7 +454,6 @@ def create_added_member_thread_update(
     thread: Thread,
     member: "User",
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -479,7 +463,6 @@ def create_added_member_thread_update(
         actor,
         context=member.username,
         context_object=member,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -488,7 +471,6 @@ def create_added_member_thread_update(
 def create_left_thread_update(
     thread: Thread,
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -496,7 +478,6 @@ def create_left_thread_update(
         thread,
         ThreadUpdateActionName.LEFT,
         actor,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -506,7 +487,6 @@ def create_removed_member_thread_update(
     thread: Thread,
     member: "User",
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -516,7 +496,6 @@ def create_removed_member_thread_update(
         actor,
         context=member.username,
         context_object=member,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )
@@ -526,7 +505,6 @@ def create_changed_owner_thread_update(
     thread: Thread,
     new_owner: "User",
     actor: Union["User", str, None] = None,
-    is_hidden: bool = False,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> ThreadUpdate:
@@ -536,7 +514,6 @@ def create_changed_owner_thread_update(
         actor,
         context=new_owner.username,
         context_object=new_owner,
-        is_hidden=is_hidden,
         commit=commit,
         request=request,
     )

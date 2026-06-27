@@ -49,7 +49,7 @@ def thread_update_thread_context(user, thread, other_thread):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadUpdateActionName.SPLIT,
+        action=ThreadUpdateActionName.SPLIT_POSTS_FROM,
         context=other_thread.title,
         context_type="misago_threads.thread",
         context_id=other_thread.id,

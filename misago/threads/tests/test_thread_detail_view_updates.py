@@ -7,7 +7,7 @@ from ...test import assert_contains, assert_not_contains
 from ...threadupdates.create import (
     create_added_member_thread_update,
     create_moved_thread_update,
-    create_split_thread_update,
+    create_split_posts_from_thread_update,
     create_test_thread_update,
 )
 
@@ -698,7 +698,7 @@ def test_thread_detail_view_displays_thread_update_with_inaccessible_other_categ
 def test_thread_detail_view_displays_thread_update_with_other_thread_context(
     client, user, thread, other_thread
 ):
-    create_split_thread_update(thread, other_thread, user)
+    create_split_posts_from_thread_update(thread, other_thread, actor=user)
 
     thread.has_updates = True
     thread.save()
@@ -720,7 +720,7 @@ def test_thread_detail_view_displays_thread_update_with_other_thread_context(
 def test_thread_detail_view_displays_thread_update_with_inaccessible_other_thread_context(
     client, user, thread, other_thread
 ):
-    create_split_thread_update(thread, other_thread, user)
+    create_split_posts_from_thread_update(thread, other_thread, actor=user)
 
     thread.has_updates = True
     thread.save()

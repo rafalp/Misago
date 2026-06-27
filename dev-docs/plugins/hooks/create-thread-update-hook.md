@@ -23,7 +23,7 @@ def custom_create_thread_update_filter(
     *,
     context: str | None=None,
     context_object: Model | None=None,
-    is_hidden: bool=False,
+    context_items: int | None=None,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> 'ThreadUpdate':
@@ -37,7 +37,9 @@ A function implemented by a plugin that can be registered in this hook.
 
 #### `action: CreateThreadUpdateHookAction`
 
-Misago function used to create a `ThreadUpdate` object.
+Next function registered in this hook, either a custom function or Misago's standard one.
+
+See the [action](#action) section for details.
 
 
 #### `thread: Thread`
@@ -52,7 +54,7 @@ A `str` with the name of the action that updated the thread.
 
 #### `actor: Union["User", None, str] = None`
 
-A `str` with context, e.g., a previous thread title or the name of `context_object`. `None` if not available or not used for this `action_name`.
+The actor who performed the action: a `User` instance, a `str` with a name, or `None` if not available.
 
 
 #### `context: str | None = None`
@@ -65,14 +67,16 @@ A `str` with context, e.g., a previous thread title or the name of `context_obje
 A `Model` instance that this update object should store a generic relation to.
 
 
-#### `is_hidden: bool = False`
+#### `context_items: int | None = None`
 
-Controls whether the newly created update should be hidden. Hidden updates are only visible to moderators but can be made visible to all users. Defaults to `False`.
+A number of items affected by the event.
 
 
-#### `plugin_data: dict`
+#### `commit: bool = True`
 
-A plugin data `dict` that will be saved on the `ThreadUpdate.plugin_data` attribute.
+A `bool` indicating whether the new `ThreadUpdate` instance should be saved to the database.
+
+Defaults to `True`.
 
 
 #### `request: HttpRequest | None = None`
@@ -95,7 +99,7 @@ def create_thread_update_action(
     *,
     context: str | None=None,
     context_object: Model | None=None,
-    is_hidden: bool=False,
+    context_items: int | None=None,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> 'ThreadUpdate':
@@ -132,9 +136,9 @@ A `str` with context, e.g., a previous thread title or the name of `context_obje
 A `Model` instance that this update object should store a generic relation to.
 
 
-#### `is_hidden: bool = False`
+#### `context_items: int | None = None`
 
-Controls whether the newly created update should be hidden. Hidden updates are only visible to moderators but can be made visible to all users. Defaults to `False`.
+A number of items affected by the event.
 
 
 #### `commit: bool = True`

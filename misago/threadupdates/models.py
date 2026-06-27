@@ -39,6 +39,7 @@ class ThreadUpdate(PluginDataModel):
         related_name="+",
     )
     actor_name = models.CharField(max_length=255, blank=True, null=True)
+    actor_slug = models.CharField(max_length=255, blank=True, null=True)
 
     hidden_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -48,12 +49,14 @@ class ThreadUpdate(PluginDataModel):
         related_name="+",
     )
     hidden_by_name = models.CharField(max_length=255, blank=True, null=True)
+    hidden_by_slug = models.CharField(max_length=255, blank=True, null=True)
 
     action = models.CharField(max_length=32)
 
     context = models.CharField(max_length=255, blank=True, null=True)
     context_type = models.CharField(max_length=255, blank=True, null=True)
     context_id = models.PositiveIntegerField(blank=True, null=True)
+    context_items = models.PositiveIntegerField(blank=True, null=True)
 
     is_hidden = models.BooleanField(default=False)
 

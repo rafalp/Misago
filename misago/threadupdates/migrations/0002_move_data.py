@@ -3,6 +3,8 @@
 from django.conf import settings
 from django.db import migrations
 
+from ...core.utils import slugify
+
 EVENT_TYPES = {
     "pinned_globally": "pinned_everywhere",
     "pinned_locally": "pinned_category",
@@ -10,6 +12,7 @@ EVENT_TYPES = {
     "opened": "unlocked",
     "hid": "hidden",
     "unhid": "unhidden",
+    "split": "split_posts_from",
     "entered_thread": "joined",
     "tookover": "took_ownership",
     "removed_owner": "removed_member",
@@ -36,8 +39,10 @@ def convert_events_to_thread_updates(apps, _):
             thread_id=post.thread_id,
             actor_id=post.poster_id,
             actor_name=post.poster_name,
+            actor_slug=slugify(post.poster_name),
             hidden_by_id=post.hidden_by_id,
             hidden_by_name=post.hidden_by_name,
+            hidden_by_slug=slugify(post.hidden_by_name),
             action=EVENT_TYPES.get(post.event_type, post.event_type),
             context=context,
             context_type=context_type,
