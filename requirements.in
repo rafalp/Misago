@@ -2,7 +2,7 @@ ariadne
 ariadne_django
 celery[redis]
 coveralls
-django~=4.2
+django~=5.2
 djangorestframework
 django-debug-toolbar
 django-mptt
