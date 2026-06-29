@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Model
 from django.http import Http404, HttpRequest
 from django.urls import Resolver404, resolve
-from django.utils.translation import pgettext
+from django.utils.translation import pgettext, pgettext_lazy
 
 from ..categories.models import Category
 from ..categories.proxy import CategoriesProxy
@@ -331,14 +331,22 @@ class MergeThreadForm(forms.Form):
         return get_valid_thread(self.request, thread_id)
 
 
-class NewThreadForm(forms.Form):
+class SplitThreadForm(forms.Form):
     request: HttpRequest
 
     category = forms.TypedChoiceField(coerce=int, choices=[])
     title = forms.CharField(max_length=255)
     is_locked = forms.BooleanField(required=False)
     is_hidden = forms.BooleanField(required=False)
-    redirect = forms.BooleanField(required=False)
+
+    redirect_to = forms.ChoiceField(
+        choices=[
+            ("new", pgettext_lazy("split thread form redirect to", "New thread")),
+            ("this", pgettext_lazy("split thread form redirect to", "Current thread")),
+        ],
+        initial="new",
+        widget=forms.RadioSelect,
+    )
 
     disallowed_categories: set[int]
     conflicts_fields: list[str]

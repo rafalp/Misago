@@ -26,7 +26,7 @@ from .actions import (
     ModerationResult,
     PostModerationAction,
 )
-from .forms import HideForm, NewThreadForm, SelectThreadForm
+from .forms import HideForm, SelectThreadForm, SplitThreadForm
 from .hooks import (
     get_private_thread_post_moderation_actions_hook,
     get_thread_post_moderation_actions_hook,
@@ -277,8 +277,8 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
     full_name = "Split post into a new thread"
     button_label = "Split"
 
-    form_class = NewThreadForm
-    template_name = "misago/moderation/new_thread.html"
+    form_class = SplitThreadForm
+    template_name = "misago/moderation/split_thread.html"
 
     def get_form(self, form_submitted: bool) -> Form:
         form_kwargs = {
@@ -336,7 +336,7 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
             pgettext("post moderation success", "Post was split into a new thread."),
         )
 
-        if form.cleaned_data.get("redirect"):
+        if form.cleaned_data["redirect_to"] == "new":
             return ModerationResult(redirect_to=self.get_thread_url(new_thread))
 
         return ModerationResult(
