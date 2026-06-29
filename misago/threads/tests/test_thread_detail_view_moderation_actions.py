@@ -452,7 +452,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_value(
     mock_thread_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_move_moderation_action_validates_category_permission(
+def test_thread_detail_view_move_moderation_action_validates_category_browse_permission(
     thread_factory,
     moderator_client,
     moderators_group,
@@ -464,7 +464,6 @@ def test_thread_detail_view_move_moderation_action_validates_category_permission
         sibling_category,
         moderators_group,
         CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
     )
 
     thread = thread_factory(default_category, is_unapproved=True)
@@ -476,6 +475,55 @@ def test_thread_detail_view_move_moderation_action_validates_category_permission
     assert_contains(response, "Move thread")
 
     response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "thread_moderation": "move",
+            "moderation-category": sibling_category.id,
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Select a valid choice.")
+
+    thread.refresh_from_db()
+    assert thread.category == default_category
+    assert not thread.has_updates
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_thread_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_move_moderation_action_validates_category_moderation_permission(
+    thread_factory,
+    user_client,
+    user,
+    members_group,
+    default_category,
+    sibling_category,
+    mock_thread_synchronize_categories,
+):
+    grant_category_group_permissions(
+        sibling_category,
+        members_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    response = user_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"thread_moderation": "move"},
+    )
+    assert_contains(response, "Move thread")
+
+    response = user_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {
             "thread_moderation": "move",
@@ -1285,17 +1333,17 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_can_b
     mock_thread_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
-    Moderator.objects.create(
-        user=user,
-        is_global=False,
-        categories=[thread.category_id],
-    )
-
     grant_category_group_permissions(
         sibling_category,
         members_group,
         CategoryPermission.SEE,
         CategoryPermission.BROWSE,
+    )
+
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[thread.category_id],
     )
 
     other_thread = thread_factory(sibling_category, starter="DeletedUser")
@@ -1319,7 +1367,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_can_b
             "confirm": "true",
         },
     )
-    assert_contains(response, "You can&#x27;t moderate the other thread.")
+    assert_contains(response, "You can&#x27;t moderate this thread.")
 
     thread.refresh_from_db()
     other_thread.refresh_from_db()

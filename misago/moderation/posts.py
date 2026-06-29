@@ -272,18 +272,6 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
     form_class = NewThreadForm
     template_name = "misago/moderation/new_thread.html"
 
-    def get_form(self, form_submitted: bool) -> Form:
-        form_kwargs = {
-            "prefix": self.form_prefix,
-            "request": self.request,
-            "exclude_thread": self.thread,
-        }
-
-        if form_submitted:
-            return self.form_class(self.request.POST, **form_kwargs)
-
-        return self.form_class(**form_kwargs)
-
     def validate(self):
         for post in self.posts:
             if post.id == self.thread.first_post:

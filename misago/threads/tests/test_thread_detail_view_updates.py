@@ -201,7 +201,9 @@ def test_thread_detail_view_shows_deleted_user_thread_update_to_global_moderator
 def test_thread_detail_view_doesnt_show_hidden_thread_update_to_anonymous_user(
     client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user, is_hidden=True)
+    thread_update = create_test_thread_update(thread, user)
+    thread_update.is_hidden = True
+    thread_update.save()
 
     thread.has_updates = True
     thread.save()
@@ -216,7 +218,9 @@ def test_thread_detail_view_doesnt_show_hidden_thread_update_to_anonymous_user(
 def test_thread_detail_view_doesnt_show_hidden_thread_update_to_user(
     user_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user, is_hidden=True)
+    thread_update = create_test_thread_update(thread, user)
+    thread_update.is_hidden = True
+    thread_update.save()
 
     thread.has_updates = True
     thread.save()
@@ -237,7 +241,9 @@ def test_thread_detail_view_shows_hidden_thread_update_to_category_moderator(
         categories=[thread.category_id],
     )
 
-    thread_update = create_test_thread_update(thread, user, is_hidden=True)
+    thread_update = create_test_thread_update(thread, user)
+    thread_update.is_hidden = True
+    thread_update.save()
 
     thread.has_updates = True
     thread.save()
@@ -252,7 +258,9 @@ def test_thread_detail_view_shows_hidden_thread_update_to_category_moderator(
 def test_thread_detail_view_shows_hidden_thread_update_to_global_moderator(
     moderator_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user, is_hidden=True)
+    thread_update = create_test_thread_update(thread, user)
+    thread_update.is_hidden = True
+    thread_update.save()
 
     thread.has_updates = True
     thread.save()
@@ -383,7 +391,9 @@ def test_thread_detail_view_shows_unhide_thread_update_button_to_category_modera
         categories=[thread.category_id],
     )
 
-    thread_update = create_test_thread_update(thread, user, is_hidden=True)
+    thread_update = create_test_thread_update(thread, user)
+    thread_update.is_hidden = True
+    thread_update.save()
 
     thread.has_updates = True
     thread.save()
@@ -409,7 +419,9 @@ def test_thread_detail_view_shows_unhide_thread_update_button_to_category_modera
 def test_thread_detail_view_shows_unhide_thread_update_button_to_global_moderator(
     moderator_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user, is_hidden=True)
+    thread_update = create_test_thread_update(thread, user)
+    thread_update.is_hidden = True
+    thread_update.save()
 
     thread.has_updates = True
     thread.save()

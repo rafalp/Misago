@@ -3,6 +3,7 @@ from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CategoryPermission
+from ...permissions.models import Moderator
 from ...polls.models import Poll
 from ...solutions.select import select_thread_solution
 from ...test import UNORDERED, assert_contains, assert_not_contains
@@ -624,7 +625,7 @@ def test_thread_list_view_move_moderation_action_validates_category_value(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_move_moderation_action_validates_category_permission(
+def test_thread_list_view_move_moderation_action_validates_category_browse_permission(
     thread_factory,
     moderator_client,
     moderators_group,
@@ -636,7 +637,6 @@ def test_thread_list_view_move_moderation_action_validates_category_permission(
         sibling_category,
         moderators_group,
         CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
     )
 
     thread = thread_factory(default_category, is_unapproved=True)
@@ -648,6 +648,57 @@ def test_thread_list_view_move_moderation_action_validates_category_permission(
     assert_contains(response, "Move threads")
 
     response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "move",
+            "threads": [thread.id],
+            "moderation-category": sibling_category.id,
+            "confirm": True,
+        },
+    )
+    assert_contains(response, "Select a valid choice.")
+
+    thread.refresh_from_db()
+    assert thread.category == default_category
+    assert not thread.has_updates
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_synchronize_categories.delay.assert_not_called()
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_move_moderation_action_validates_category_moderation_permission(
+    thread_factory,
+    user_client,
+    user,
+    members_group,
+    default_category,
+    sibling_category,
+    mock_synchronize_categories,
+):
+    grant_category_group_permissions(
+        sibling_category,
+        members_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    response = user_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "move", "threads": [thread.id]},
+    )
+    assert_contains(response, "Move threads")
+
+    response = user_client.post(
         reverse("misago:thread-list"),
         {
             "moderation": "move",
@@ -1053,10 +1104,9 @@ def test_thread_list_view_merge_moderation_action_validates_category_value(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_merge_moderation_action_validates_category_permission(
+def test_thread_list_view_merge_moderation_action_validates_category_browse_permission(
     moderator_client,
     moderators_group,
-    default_category,
     sibling_category,
     thread,
     other_thread,
@@ -1067,7 +1117,6 @@ def test_thread_list_view_merge_moderation_action_validates_category_permission(
         sibling_category,
         moderators_group,
         CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
     )
 
     response = moderator_client.post(
@@ -1077,6 +1126,57 @@ def test_thread_list_view_merge_moderation_action_validates_category_permission(
     assert_contains(response, "Merge threads")
 
     response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "merge",
+            "threads": [thread.id, other_thread.id],
+            "moderation-category": sibling_category.id,
+            "moderation-title": "Merged thread",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Select a valid choice.")
+
+    thread.refresh_from_db()
+    other_thread.refresh_from_db()
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_synchronize_categories.delay.assert_not_called()
+    mock_delete_duplicate_watched_threads.delay.assert_not_called()
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_merge_moderation_action_validates_category_moderation_permission(
+    user_client,
+    user,
+    members_group,
+    default_category,
+    sibling_category,
+    thread,
+    other_thread,
+    mock_synchronize_categories,
+    mock_delete_duplicate_watched_threads,
+):
+    grant_category_group_permissions(
+        sibling_category,
+        members_group,
+        CategoryPermission.SEE,
+    )
+
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    response = user_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "merge", "threads": [thread.id, other_thread.id]},
+    )
+    assert_contains(response, "Merge threads")
+
+    response = user_client.post(
         reverse("misago:thread-list"),
         {
             "moderation": "merge",
