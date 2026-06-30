@@ -26,11 +26,11 @@ Production use
 
 Misago implements all features considered "must have" on live internet forum:
 
-* Your users may register accounts, set avatars, change options and edit their profiles. They have option to reset forgotten password.
+* Your users may register accounts, set avatars, change options and edit their profiles. They have the option to reset a forgotten password.
 * Sign in with Facebook, Google, Github, Steam, Blizzard.net or any other over 50 supported OAuth providers.
-* Site admins may require users to confirm validity of their e-mail addresses via e-mail sent activation link, or limit user account activation to administrator action. They can use custom Q&A challenge, ReCAPTCHA, Stop Forum Spam or IP's blacklist to combat spam registrations. Pletora of settings are available to control user account behavior, like username lengths or avatar restrictions.
+* Site admins may require users to confirm validity of their e-mail addresses via an activation link sent by email, or limit user account activation to administrator action. They can use custom Q&A challenge, ReCAPTCHA, Stop Forum Spam or IP's blacklist to combat spam registrations. Plethora of settings are available to control user account behavior, like username lengths or avatar restrictions.
 * Create categories together with unlimited number and depth of subcategories.
-* Write messages using either GitHub flavoured markdown, BBCode subset, or both.
+* Write messages using either GitHub-flavoured markdown, BBCode subset, or both.
 * Presence features let site members know when other users are online, offline or banned. Individual users have setting to hide their activity from non-admins.
 * Complete moderation toolset allowing admin-approved moderators to edit, move, hide, approve, delete or close user posted content. This also includes option to delete or block user accounts or avatars.
 * Ban system allows you to ban existing users as well as forbid certain user names, e-mails or IP addresses from registering accounts.
@@ -38,7 +38,7 @@ Misago implements all features considered "must have" on live internet forum:
 * Post accurate read tracker that lets your users spot threads with new posts as well as let moderators spot unapproved replies and non-moderators spot approved posts.
 * Private threads feature allowing users to create threads visible only to them and those they've invited. 
 * Python-based profile fields framework letting site owners to define custom fields for users to fill in complete with powerful customization options for custom requirements, display or validation logic.
-* Rich polls system, allowing polls with public and private voters, single and multiple choices as well as ones that allow vote change or limit voting tp limited period of time.
+* Rich polls system, allowing polls with public and private voters, single and multiple choices as well as ones that allow vote change or limit voting to a limited period of time.
 * Post attachments complete thumbnailing and gif's animation removal.
 * Mark post in question thread as best answer, bringing basic Q&A functionality.
 * Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
@@ -93,7 +93,7 @@ Currently Misago's `package.json` defines following tasks:
 
 To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifying assets in `frontend` directory, however special care should be taken when changing source JavaScript files as no test suite for those exists.
 
-Misago defines template that allows you to include custom html and JavaScript code before Misago's JavaScript app is ran, named `scripts.html`.
+Misago defines template that allows you to include custom html and JavaScript code before Misago's JavaScript app is run, named `scripts.html`.
 
 
 ### Admin
@@ -132,11 +132,11 @@ This error is caused by the `dev` file having its line endings converted from Un
 Providing feedback and contributing
 -----------------------------------
 
-If you have found a bug, please report it either on the [issue tracker](https://github.com/rafalp/Misago/issues) or on the [project's forums](hhttps://misago-project.org/c/bug-reports/29/).
+If you have found a bug, please report it either on the [issue tracker](https://github.com/rafalp/Misago/issues) or on the [project's forums](https://misago-project.org/c/bug-reports/29/).
 
 If you want to contribute to project, please see the [contributing](./CONTRIBUTING.md) document.
 
-For feature or support requests as well as general feedback please use the [official forums](http://misago-project.org). Your feedback means much to the project so please do share your thoughts!
+For feature or support requests as well as general feedback please use the [official forums](https://misago-project.org). Your feedback means much to the project so please do share your thoughts!
 
 There's also a [Discord server](https://discord.gg/fwvrZgB) for those looking for instant-messaging approach for getting in touch with Misago devs and users.
 
@@ -146,8 +146,8 @@ Authors
 
 **Rafał Pitoń** and ❤️ [contributors](https://github.com/rafalp/misago/graphs/contributors).
 
-* http://rpiton.com
-* http://github.com/rafalp
+* https://rpiton.com
+* https://github.com/rafalp
 * https://twitter.com/RafalPiton
 
 
