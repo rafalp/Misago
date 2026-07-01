@@ -10,7 +10,7 @@ from ...threads.models import Post, Thread
 THREAD_MODERATION_FORM_HTML = 'name="thread_moderation"'
 POSTS_MODERATION_FORM_HTML = 'name="posts_moderation'
 POSTS_MODERATION_FIXED_HTML = '<div class="fixed-moderation">'
-POSTS_CHECKBOX_HTML = "posts-feed-item-checkbox"
+POSTS_CHECKBOX_HTML = "post-feed-item-checkbox"
 POST_MODERATION_FORM_HTML = 'name="post_moderation"'
 
 
