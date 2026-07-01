@@ -358,3 +358,5 @@ DEFAULT_FROM_EMAIL = "Misago <misago@example.com>"
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": "misago.conf.debugtoolbar.enable_debug_toolbar"
 }
+
+FORMS_URLFIELD_ASSUME_HTTPS = True

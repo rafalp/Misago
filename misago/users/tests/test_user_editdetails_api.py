@@ -94,7 +94,7 @@ class UserEditDetailsApiTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         profile_fields = self.get_profile_fields()
-        self.assertEqual(profile_fields["website"], "http://onet.pl")
+        self.assertEqual(profile_fields["website"], "https://onet.pl")
 
         response_json = response.json()
         self.assertEqual(response_json["id"], self.user.id)
