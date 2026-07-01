@@ -112,8 +112,8 @@ def test_private_thread_detail_view_executes_hide_thread_moderation_action(
         ),
         {"thread_moderation": "hide"},
     )
-    assert_contains(response, "Reason for hiding")
     assert_contains(response, "Hide thread")
+    assert_contains(response, "Reason for hiding")
 
     response = moderator_client.post(
         reverse(
@@ -445,8 +445,8 @@ def test_private_thread_detail_view_hide_posts_moderation_action_hides_posts(
         ),
         {"posts_moderation": "hide", "posts": [reply.id]},
     )
-    assert_contains(response, "Reason for hiding")
     assert_contains(response, "Hide posts")
+    assert_contains(response, "Reason for hiding")
 
     response = moderator_client.post(
         reverse(

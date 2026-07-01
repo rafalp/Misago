@@ -191,8 +191,8 @@ def test_thread_detail_view_executes_hide_thread_moderation_action(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "hide"},
     )
-    assert_contains(response, "Reason for hiding")
     assert_contains(response, "Hide thread")
+    assert_contains(response, "Reason for hiding")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -359,6 +359,7 @@ def test_thread_detail_view_executes_move_thread_moderation_action(
         {"thread_moderation": "move"},
     )
     assert_contains(response, "Move thread")
+    assert_contains(response, "Category")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -387,7 +388,7 @@ def test_thread_detail_view_executes_move_thread_moderation_action(
     )
 
 
-def test_thread_detail_view_move_moderation_action_requires_category(
+def test_thread_detail_view_move_thread_moderation_action_requires_category(
     thread_factory,
     moderator_client,
     default_category,
@@ -400,6 +401,7 @@ def test_thread_detail_view_move_moderation_action_requires_category(
         {"thread_moderation": "move"},
     )
     assert_contains(response, "Move thread")
+    assert_contains(response, "Category")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -419,7 +421,7 @@ def test_thread_detail_view_move_moderation_action_requires_category(
     mock_thread_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_move_moderation_action_validates_category_value(
+def test_thread_detail_view_move_thread_moderation_action_validates_category_value(
     thread_factory,
     moderator_client,
     default_category,
@@ -432,6 +434,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_value(
         {"thread_moderation": "move"},
     )
     assert_contains(response, "Move thread")
+    assert_contains(response, "Category")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -452,7 +455,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_value(
     mock_thread_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_move_moderation_action_validates_category_browse_permission(
+def test_thread_detail_view_move_thread_moderation_action_validates_category_browse_permission(
     thread_factory,
     moderator_client,
     moderators_group,
@@ -473,6 +476,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_browse_per
         {"thread_moderation": "move"},
     )
     assert_contains(response, "Move thread")
+    assert_contains(response, "Category")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -493,7 +497,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_browse_per
     mock_thread_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_move_moderation_action_validates_category_moderator_permission(
+def test_thread_detail_view_move_thread_moderation_action_validates_category_moderator_permission(
     thread_factory,
     user_client,
     user,
@@ -522,6 +526,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_moderator_
         {"thread_moderation": "move"},
     )
     assert_contains(response, "Move thread")
+    assert_contains(response, "Category")
 
     response = user_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -542,7 +547,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_moderator_
     mock_thread_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_move_moderation_action_validates_category_type(
+def test_thread_detail_view_move_thread_moderation_action_validates_category_type(
     thread_factory,
     moderator_client,
     moderators_group,
@@ -568,6 +573,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_type(
         {"thread_moderation": "move"},
     )
     assert_contains(response, "Move thread")
+    assert_contains(response, "Category")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -588,7 +594,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_type(
     mock_thread_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_move_moderation_action_validates_category_is_new(
+def test_thread_detail_view_move_thread_moderation_action_validates_category_is_new(
     thread_factory,
     moderator_client,
     default_category,
@@ -601,6 +607,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_is_new(
         {"thread_moderation": "move"},
     )
     assert_contains(response, "Move thread")
+    assert_contains(response, "Category")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -621,7 +628,7 @@ def test_thread_detail_view_move_moderation_action_validates_category_is_new(
     mock_thread_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_other(
+def test_thread_detail_view_merge_thread_moderation_action_merges_current_thread_into_other(
     moderator_client,
     default_category,
     thread,
@@ -634,6 +641,7 @@ def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_o
         {"thread_moderation": "merge"},
     )
     assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -678,7 +686,7 @@ def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_o
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(other_thread.id)
 
 
-def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_other_in_htmx(
+def test_thread_detail_view_merge_thread_moderation_action_merges_current_thread_into_other_in_htmx(
     moderator_client,
     default_category,
     thread,
@@ -691,7 +699,7 @@ def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_o
         {"thread_moderation": "merge"},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Merge")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -737,7 +745,7 @@ def test_thread_detail_view_merge_moderation_action_merges_current_thread_into_o
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(other_thread.id)
 
 
-def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_current(
+def test_thread_detail_view_merge_thread_moderation_action_merges_other_thread_into_current(
     moderator_client,
     default_category,
     thread,
@@ -750,6 +758,7 @@ def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_cur
         {"thread_moderation": "merge"},
     )
     assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -789,7 +798,7 @@ def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_cur
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(thread.id)
 
 
-def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_current_in_htmx(
+def test_thread_detail_view_merge_thread_moderation_action_merges_other_thread_into_current_in_htmx(
     moderator_client,
     default_category,
     thread,
@@ -802,7 +811,7 @@ def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_cur
         {"thread_moderation": "merge"},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Merge")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -841,7 +850,7 @@ def test_thread_detail_view_merge_moderation_action_merges_other_thread_into_cur
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(thread.id)
 
 
-def test_thread_detail_view_merge_moderation_action_merges_threads_without_conflicts(
+def test_thread_detail_view_merge_thread_moderation_action_merges_threads_without_conflicts(
     thread_reply_factory,
     poll_factory,
     moderator_client,
@@ -861,6 +870,7 @@ def test_thread_detail_view_merge_moderation_action_merges_threads_without_confl
         {"thread_moderation": "merge"},
     )
     assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -909,7 +919,7 @@ def test_thread_detail_view_merge_moderation_action_merges_threads_without_confl
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(other_thread.id)
 
 
-def test_thread_detail_view_merge_moderation_action_merges_threads_with_conflicts(
+def test_thread_detail_view_merge_thread_moderation_action_merges_threads_with_conflicts(
     thread_reply_factory,
     poll_factory,
     moderator_client,
@@ -933,6 +943,7 @@ def test_thread_detail_view_merge_moderation_action_merges_threads_with_conflict
         {"thread_moderation": "merge"},
     )
     assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1003,7 +1014,7 @@ def test_thread_detail_view_merge_moderation_action_merges_threads_with_conflict
     mock_delete_duplicate_watched_threads.delay.assert_called_once_with(other_thread.id)
 
 
-def test_thread_detail_view_merge_moderation_action_requires_other_thread_link(
+def test_thread_detail_view_merge_thread_moderation_action_requires_other_thread_link(
     moderator_client,
     thread,
     other_thread,
@@ -1015,6 +1026,7 @@ def test_thread_detail_view_merge_moderation_action_requires_other_thread_link(
         {"thread_moderation": "merge"},
     )
     assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1035,7 +1047,7 @@ def test_thread_detail_view_merge_moderation_action_requires_other_thread_link(
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
-def test_thread_detail_view_merge_moderation_action_validates_other_thread_link(
+def test_thread_detail_view_merge_thread_moderation_action_validates_other_thread_link(
     moderator_client,
     thread,
     other_thread,
@@ -1047,6 +1059,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_link(
         {"thread_moderation": "merge"},
     )
     assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1071,7 +1084,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_link(
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
-def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_different_thread(
+def test_thread_detail_view_merge_thread_moderation_action_validates_other_thread_is_different_thread(
     moderator_client,
     thread,
     other_thread,
@@ -1083,6 +1096,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_di
         {"thread_moderation": "merge"},
     )
     assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1107,7 +1121,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_di
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
-def test_thread_detail_view_merge_moderation_action_validates_other_thread_exists(
+def test_thread_detail_view_merge_thread_moderation_action_validates_other_thread_exists(
     moderator_client,
     thread,
     other_thread,
@@ -1119,6 +1133,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_exist
         {"thread_moderation": "merge"},
     )
     assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1143,7 +1158,51 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_exist
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
-def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_visible(
+def test_thread_detail_view_merge_thread_moderation_action_validates_other_thread_is_not_private_thread(
+    moderator_client,
+    thread,
+    user_private_thread,
+    mock_thread_synchronize_categories,
+    mock_delete_duplicate_watched_threads,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"thread_moderation": "merge"},
+    )
+    assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "thread_moderation": "merge",
+            "moderation-other_thread": "http://testserver"
+            + reverse(
+                "misago:thread",
+                kwargs={
+                    "thread_id": user_private_thread.id,
+                    "slug": user_private_thread.slug,
+                },
+            ),
+            "moderation-direction": "this",
+            "confirm": "true",
+        },
+    )
+    assert_contains(
+        response,
+        "Thread doesn&#x27;t exist or you don&#x27;t have permission to see it.",
+    )
+
+    thread.refresh_from_db()
+    user_private_thread.refresh_from_db()
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_thread_synchronize_categories.delay.assert_not_called()
+    mock_delete_duplicate_watched_threads.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_thread_moderation_action_validates_other_thread_is_visible(
     thread_factory,
     moderator_client,
     sibling_category,
@@ -1158,6 +1217,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_vi
         {"thread_moderation": "merge"},
     )
     assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1186,7 +1246,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_vi
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
-def test_thread_detail_view_merge_moderation_action_validates_other_thread_can_be_moderated(
+def test_thread_detail_view_merge_thread_moderation_action_validates_other_thread_can_be_moderated(
     thread_factory,
     user_client,
     user,
@@ -1216,6 +1276,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_can_b
         {"thread_moderation": "merge"},
     )
     assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
 
     response = user_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1241,7 +1302,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_can_b
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
-def test_thread_detail_view_merge_moderation_action_requires_conflict_resolution(
+def test_thread_detail_view_merge_thread_moderation_action_requires_conflict_resolution(
     thread_reply_factory,
     poll_factory,
     moderator_client,
@@ -1264,6 +1325,7 @@ def test_thread_detail_view_merge_moderation_action_requires_conflict_resolution
         {"thread_moderation": "merge"},
     )
     assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1309,7 +1371,7 @@ def test_thread_detail_view_merge_moderation_action_requires_conflict_resolution
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
-def test_thread_detail_view_merge_moderation_action_validates_conflict_resolution(
+def test_thread_detail_view_merge_thread_moderation_action_validates_conflict_resolution(
     thread_reply_factory,
     poll_factory,
     moderator_client,
@@ -1332,6 +1394,7 @@ def test_thread_detail_view_merge_moderation_action_validates_conflict_resolutio
         {"thread_moderation": "merge"},
     )
     assert_contains(response, "Merge thread")
+    assert_contains(response, "Other thread link")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1474,8 +1537,8 @@ def test_thread_detail_view_hide_posts_moderation_action_hides_posts(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "hide", "posts": [reply.id]},
     )
-    assert_contains(response, "Reason for hiding")
     assert_contains(response, "Hide posts")
+    assert_contains(response, "Reason for hiding")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -2899,7 +2962,7 @@ def test_thread_detail_view_move_post_moderation_action_validates_target_thread_
     mock_post_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_move_post_moderation_action_validates_other_thread_is_different_thread(
+def test_thread_detail_view_move_post_moderation_action_validates_target_thread_is_different_thread(
     moderator_client,
     thread,
     other_thread,
@@ -2943,7 +3006,7 @@ def test_thread_detail_view_move_post_moderation_action_validates_other_thread_i
     mock_post_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_move_post_moderation_action_validates_other_thread_exists(
+def test_thread_detail_view_move_post_moderation_action_validates_target_thread_exists(
     moderator_client,
     thread,
     other_thread,
@@ -2986,7 +3049,7 @@ def test_thread_detail_view_move_post_moderation_action_validates_other_thread_e
     mock_post_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_not_private_thread(
+def test_thread_detail_view_move_post_moderation_action_validates_target_thread_is_not_private_thread(
     thread_factory,
     moderator_client,
     thread,
@@ -3037,7 +3100,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_no
     mock_post_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_visible(
+def test_thread_detail_view_move_post_moderation_action_validates_target_thread_is_visible(
     thread_factory,
     moderator_client,
     sibling_category,
@@ -3087,7 +3150,7 @@ def test_thread_detail_view_merge_moderation_action_validates_other_thread_is_vi
     mock_post_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_merge_moderation_action_validates_other_thread_can_be_moderated(
+def test_thread_detail_view_move_post_moderation_action_validates_target_thread_can_be_moderated(
     thread_factory,
     user_client,
     user,
