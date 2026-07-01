@@ -77,7 +77,7 @@ def parse_thread_url(value: str, request: HttpRequest, valid_urls: list[str]) ->
         raise forms.ValidationError(
             pgettext(
                 "moderation form thread url validation",
-                "Enter a link to this site.",
+                "Enter a valid thread link.",
             ),
             code="invalid",
         )
@@ -91,7 +91,7 @@ def parse_thread_url(value: str, request: HttpRequest, valid_urls: list[str]) ->
         raise forms.ValidationError(
             pgettext(
                 "moderation form thread url validation",
-                "This link doesn't point to a valid thread.",
+                "Enter a valid thread link.",
             ),
             code="invalid",
         )
@@ -102,7 +102,7 @@ def parse_thread_url(value: str, request: HttpRequest, valid_urls: list[str]) ->
         raise forms.ValidationError(
             pgettext(
                 "moderation form thread url validation",
-                "This link doesn't point to a valid thread.",
+                "Enter a valid thread link.",
             ),
             code="invalid",
         )
