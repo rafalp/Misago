@@ -1109,7 +1109,7 @@ def test_category_thread_list_view_merge_moderation_action_validates_category_br
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
-def test_category_thread_list_view_merge_moderation_action_validates_category_moderation_permission(
+def test_category_thread_list_view_merge_moderation_action_validates_category_moderator_permission(
     user_client,
     members_group,
     user,

@@ -342,7 +342,10 @@ class SplitThreadForm(forms.Form):
     redirect_to = forms.ChoiceField(
         choices=[
             ("new", pgettext_lazy("split thread form redirect to", "New thread")),
-            ("this", pgettext_lazy("split thread form redirect to", "Current thread")),
+            (
+                "current",
+                pgettext_lazy("split thread form redirect to", "Current thread"),
+            ),
         ],
         initial="new",
         widget=forms.RadioSelect,

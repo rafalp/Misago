@@ -294,7 +294,7 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
         return self.form_class(**form_kwargs)
 
     def validate(self):
-        if self.post.id == self.thread.first_post:
+        if self.post.id == self.thread.first_post_id:
             raise ValidationError(
                 pgettext(
                     "post moderation validation",

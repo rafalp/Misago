@@ -278,7 +278,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
 
     def validate(self):
         for post in self.posts:
-            if post.id == self.thread.first_post:
+            if post.id == self.thread.first_post_id:
                 raise ValidationError(
                     pgettext(
                         "post moderation validation",
@@ -303,7 +303,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
         request = self.request
         thread = self.thread
         posts = self.posts
-        posts_count = len(post)
+        posts_count = len(posts)
 
         new_thread = create_thread(
             form.cleaned_data["category"],

@@ -668,7 +668,7 @@ def test_thread_list_view_move_moderation_action_validates_category_browse_permi
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_move_moderation_action_validates_category_moderation_permission(
+def test_thread_list_view_move_moderation_action_validates_category_moderator_permission(
     thread_factory,
     user_client,
     user,
@@ -1046,9 +1046,7 @@ def test_thread_list_view_merge_moderation_action_merges_threads_with_moderation
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_merge_moderation_action_validates_multiple_threads_are_selected(
     moderator_client,
-    default_category,
     thread,
-    other_thread,
     mock_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):
@@ -1070,7 +1068,6 @@ def test_thread_list_view_merge_moderation_action_validates_multiple_threads_are
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_merge_moderation_action_validates_category_value(
     moderator_client,
-    default_category,
     thread,
     other_thread,
     mock_synchronize_categories,
@@ -1147,7 +1144,7 @@ def test_thread_list_view_merge_moderation_action_validates_category_browse_perm
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_merge_moderation_action_validates_category_moderation_permission(
+def test_thread_list_view_merge_moderation_action_validates_category_moderator_permission(
     user_client,
     user,
     members_group,
@@ -1162,6 +1159,7 @@ def test_thread_list_view_merge_moderation_action_validates_category_moderation_
         sibling_category,
         members_group,
         CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
     )
 
     Moderator.objects.create(
