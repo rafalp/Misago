@@ -17,6 +17,7 @@ from ..threads.models import Post, Thread
 from ..threads.move import move_post
 from ..threads.synchronize import synchronize_thread
 from ..threadupdates.create import (
+    create_deleted_posts_thread_update,
     create_moved_posts_from_thread_update,
     create_moved_posts_to_thread_update,
     create_split_posts_from_thread_update,
@@ -444,17 +445,25 @@ class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
             )
 
     def confirmed(self) -> ModerationResult:
+        request = self.request
+        thread = self.thread
         post = self.post
 
         delete_post(post)
-        synchronize_thread(self.thread)
+
+        thread_update = create_deleted_posts_thread_update(
+            thread, 1, request.user, request=request
+        )
+
+        synchronize_thread(thread)
         synchronize_categories.delay([post.category_id])
 
         messages.success(
-            self.request,
+            request,
             pgettext("post moderation success", "Post deleted"),
         )
 
         return ModerationResult(
             deleted_items=[post.id],
+            thread_updates=[thread_update],
         )

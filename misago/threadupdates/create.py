@@ -396,6 +396,23 @@ def create_split_posts_from_thread_update(
     )
 
 
+def create_deleted_posts_thread_update(
+    thread: Thread,
+    posts: int,
+    actor: Union["User", str, None] = None,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    return create_thread_update(
+        thread,
+        ThreadUpdateActionName.DELETED_POSTS,
+        actor,
+        context_items=posts,
+        commit=commit,
+        request=request,
+    )
+
+
 def create_started_poll_thread_update(
     thread: Thread,
     poll: Poll,
