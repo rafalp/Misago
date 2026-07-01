@@ -7,7 +7,7 @@ from ...test import assert_contains, assert_not_contains
 from ...threadupdates.create import (
     create_added_member_thread_update,
     create_moved_thread_update,
-    create_split_thread_update,
+    create_split_posts_from_thread_update,
     create_test_thread_update,
 )
 
@@ -171,9 +171,9 @@ def test_private_thread_detail_view_shows_deleted_user_thread_update_to_global_m
 def test_private_thread_detail_view_doesnt_show_hidden_thread_update_to_user(
     user_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(
-        other_user_private_thread, user, is_hidden=True
-    )
+    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update.is_hidden = True
+    thread_update.save()
 
     other_user_private_thread.has_updates = True
     other_user_private_thread.save()
@@ -200,9 +200,9 @@ def test_private_thread_detail_view_shows_hidden_thread_update_to_category_moder
         private_threads=True,
     )
 
-    thread_update = create_test_thread_update(
-        other_user_private_thread, user, is_hidden=True
-    )
+    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update.is_hidden = True
+    thread_update.save()
 
     other_user_private_thread.has_updates = True
     other_user_private_thread.save()
@@ -223,9 +223,9 @@ def test_private_thread_detail_view_shows_hidden_thread_update_to_category_moder
 def test_private_thread_detail_view_shows_hidden_thread_update_to_global_moderator(
     moderator_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(
-        other_user_private_thread, user, is_hidden=True
-    )
+    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update.is_hidden = True
+    thread_update.save()
 
     other_user_private_thread.has_updates = True
     other_user_private_thread.save()
@@ -354,9 +354,9 @@ def test_private_thread_detail_view_shows_unhide_thread_update_button_to_categor
         private_threads=True,
     )
 
-    thread_update = create_test_thread_update(
-        other_user_private_thread, user, is_hidden=True
-    )
+    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update.is_hidden = True
+    thread_update.save()
 
     other_user_private_thread.has_updates = True
     other_user_private_thread.save()
@@ -388,9 +388,9 @@ def test_private_thread_detail_view_shows_unhide_thread_update_button_to_categor
 def test_private_thread_detail_view_shows_unhide_thread_update_button_to_global_moderator(
     moderator_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(
-        other_user_private_thread, user, is_hidden=True
-    )
+    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update.is_hidden = True
+    thread_update.save()
 
     other_user_private_thread.has_updates = True
     other_user_private_thread.save()
@@ -721,7 +721,9 @@ def test_private_thread_detail_view_displays_thread_update_with_inaccessible_oth
 def test_private_thread_detail_view_displays_thread_update_with_other_thread_context(
     user_client, user, other_user_private_thread, other_thread
 ):
-    create_split_thread_update(other_user_private_thread, other_thread, user)
+    create_split_posts_from_thread_update(
+        other_user_private_thread, other_thread, actor=user
+    )
 
     other_user_private_thread.has_updates = True
     other_user_private_thread.save()
@@ -749,7 +751,9 @@ def test_private_thread_detail_view_displays_thread_update_with_other_thread_con
 def test_private_thread_detail_view_displays_thread_update_with_inaccessible_other_thread_context(
     user_client, user, other_user_private_thread, other_thread
 ):
-    create_split_thread_update(other_user_private_thread, other_thread, user)
+    create_split_posts_from_thread_update(
+        other_user_private_thread, other_thread, actor=user
+    )
 
     other_user_private_thread.has_updates = True
     other_user_private_thread.save()

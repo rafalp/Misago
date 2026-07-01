@@ -10,7 +10,7 @@ from ...threads.models import Post, Thread
 THREAD_MODERATION_FORM_HTML = 'name="thread_moderation"'
 POSTS_MODERATION_FORM_HTML = 'name="posts_moderation'
 POSTS_MODERATION_FIXED_HTML = '<div class="fixed-moderation">'
-POSTS_CHECKBOX_HTML = "posts-feed-item-checkbox"
+POSTS_CHECKBOX_HTML = "post-feed-item-checkbox"
 POST_MODERATION_FORM_HTML = 'name="post_moderation"'
 
 
@@ -523,7 +523,7 @@ def test_thread_detail_view_executes_posts_moderation_action_in_htmx(
 
 
 def test_thread_detail_view_executes_posts_moderation_action_with_form(
-    mocker, moderator_client, child_category, thread, reply
+    mocker, moderator_client, default_category, thread, reply
 ):
     mock_synchronize_categories = mocker.patch(
         "misago.moderation.posts.synchronize_categories"
@@ -541,8 +541,9 @@ def test_thread_detail_view_executes_posts_moderation_action_with_form(
         {
             "posts_moderation": "split",
             "posts": [reply.id],
-            "moderation-category": child_category.id,
+            "moderation-category": default_category.id,
             "moderation-title": "New thread",
+            "moderation-redirect_to": "current",
             "confirm": "true",
         },
     )
@@ -551,17 +552,15 @@ def test_thread_detail_view_executes_posts_moderation_action_with_form(
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with(
-        [thread.category_id, child_category.id]
-    )
+    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
 
     reply.refresh_from_db()
-    assert reply.category == child_category
+    assert reply.category == default_category
     assert reply.thread != thread
 
 
 def test_thread_detail_view_executes_posts_moderation_action_with_form_in_htmx(
-    mocker, moderator_client, child_category, thread, reply
+    mocker, moderator_client, default_category, thread, reply
 ):
     mock_synchronize_categories = mocker.patch(
         "misago.moderation.posts.synchronize_categories"
@@ -579,22 +578,21 @@ def test_thread_detail_view_executes_posts_moderation_action_with_form_in_htmx(
         {
             "posts_moderation": "split",
             "posts": [reply.id],
-            "moderation-category": child_category.id,
+            "moderation-category": default_category.id,
             "moderation-title": "New thread",
+            "moderation-redirect_to": "current",
             "confirm": "true",
         },
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Posts were split into a new thread.")
 
-    mock_synchronize_categories.delay.assert_called_once_with(
-        [thread.category_id, child_category.id]
-    )
+    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
 
     reply.refresh_from_db()
-    assert reply.category == child_category
+    assert reply.category == default_category
     assert reply.thread == Thread.objects.get(
-        slug="new-thread", category=child_category
+        slug="new-thread", category=default_category
     )
 
 
@@ -939,7 +937,7 @@ def test_thread_detail_view_executes_post_moderation_action_in_htmx(
 
 
 def test_thread_detail_view_executes_post_moderation_action_with_form(
-    mocker, moderator_client, child_category, thread, reply
+    mocker, moderator_client, default_category, thread, reply
 ):
     mock_synchronize_categories = mocker.patch(
         "misago.moderation.post.synchronize_categories"
@@ -957,8 +955,9 @@ def test_thread_detail_view_executes_post_moderation_action_with_form(
         {
             "post_moderation": "split",
             "post": [reply.id],
-            "moderation-category": child_category.id,
+            "moderation-category": default_category.id,
             "moderation-title": "New thread",
+            "moderation-redirect_to": "current",
             "confirm": "true",
         },
     )
@@ -967,17 +966,15 @@ def test_thread_detail_view_executes_post_moderation_action_with_form(
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
-    mock_synchronize_categories.delay.assert_called_once_with(
-        [thread.category_id, child_category.id]
-    )
+    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
 
     reply.refresh_from_db()
-    assert reply.category == child_category
+    assert reply.category == default_category
     assert reply.thread != thread
 
 
 def test_thread_detail_view_executes_post_moderation_action_with_form_in_htmx(
-    mocker, moderator_client, child_category, thread, reply
+    mocker, moderator_client, default_category, thread, reply
 ):
     mock_synchronize_categories = mocker.patch(
         "misago.moderation.post.synchronize_categories"
@@ -995,22 +992,21 @@ def test_thread_detail_view_executes_post_moderation_action_with_form_in_htmx(
         {
             "post_moderation": "split",
             "post": [reply.id],
-            "moderation-category": child_category.id,
+            "moderation-category": default_category.id,
             "moderation-title": "New thread",
+            "moderation-redirect_to": "current",
             "confirm": "true",
         },
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Post was split into a new thread.")
 
-    mock_synchronize_categories.delay.assert_called_once_with(
-        [thread.category_id, child_category.id]
-    )
+    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
 
     reply.refresh_from_db()
-    assert reply.category == child_category
+    assert reply.category == default_category
     assert reply.thread == Thread.objects.get(
-        slug="new-thread", category=child_category
+        slug="new-thread", category=default_category
     )
 
 

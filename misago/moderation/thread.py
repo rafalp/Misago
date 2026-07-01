@@ -46,7 +46,7 @@ from .actions import (
     ModerationResult,
     ThreadModerationAction,
 )
-from .forms import HideForm, MergeForm, MergeThreadForm, MoveThreadForm
+from .forms import HideForm, MergeForm, MergeThreadForm, MoveThreadsForm
 from .hooks import (
     get_private_thread_moderation_actions_hook,
     get_thread_moderation_actions_hook,
@@ -272,6 +272,7 @@ class HideThreadModerationAction(FormMixin, ThreadModerationAction):
     id = "hide"
     full_name = pgettext_lazy("thread moderation action name", "Hide thread")
     button_label = pgettext_lazy("thread moderation button label", "Hide")
+
     form_class = HideForm
     template_name = "misago/moderation/hide.html"
 
@@ -419,8 +420,9 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
     id = "move"
     full_name = pgettext_lazy("thread moderation action name", "Move thread")
     button_label = pgettext_lazy("thread moderation button label", "Move")
-    form_class = MoveThreadForm
-    template_name = "misago/moderation/move.html"
+
+    form_class = MoveThreadsForm
+    template_name = "misago/moderation/move_threads.html"
 
     def get_form(self, form_submitted: bool):
         kwargs = {
@@ -461,6 +463,7 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
     id = "merge"
     full_name = pgettext_lazy("thread moderation action name", "Merge thread")
     button_label = pgettext_lazy("thread moderation button label", "Merge")
+
     form_class = MergeThreadForm
     template_name = "misago/moderation/merge_thread.html"
 

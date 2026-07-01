@@ -325,16 +325,22 @@ class DetailView(GenericThreadView):
 
             return result.render(request, template_name)
 
+        if response := get_moderation_result_response(request, result):
+            return response
+
         if result.deleted_items:
             if not request.is_htmx:
                 return redirect(request.get_full_path())
 
-            response = self.get(request, thread_id, slug, page)
+            response = self.get(
+                request,
+                thread_id,
+                slug,
+                page,
+                updated_posts=result.updated_items,
+            )
             set_moderation_response_headers(request, response)
 
-            return response
-
-        if response := get_moderation_result_response(request, result):
             return response
 
         if not request.is_htmx:

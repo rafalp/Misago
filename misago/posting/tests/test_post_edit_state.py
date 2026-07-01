@@ -1,5 +1,5 @@
 from ...parser.parse import parse
-from ...threadupdates.create import create_split_thread_update
+from ...threadupdates.create import create_split_posts_from_thread_update
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
 from ..state import PostEditState
@@ -210,7 +210,9 @@ def test_post_edit_state_save_updates_context_in_existing_thread_updates(
     thread,
     other_user_thread,
 ):
-    thread_update = create_split_thread_update(thread, other_user_thread, user)
+    thread_update = create_split_posts_from_thread_update(
+        thread, other_user_thread, actor=user
+    )
 
     state = PostEditState(user_request, other_user_thread.first_post)
     state.set_thread_title("Updated title")

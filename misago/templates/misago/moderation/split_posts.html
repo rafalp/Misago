@@ -1,24 +1,13 @@
 {% load i18n misago_forms %}
 
-<div class="form-group">
-  {% with field=form.title %}
+{% with field=form.category %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label class="control-label" for="{{ field.id_for_label }}">
-      {{ field.label }}:
-    </label>
-    <input class="form-control" type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" maxlength="255" required>
-    {% for error in field.errors %}
-      <p class="help-block">{{ error }}</p>
-    {% endfor %}
-  {% endwith %}
-</div>
-<div class="form-group">
-  {% with field=form.category %}
-    <label class="control-label" for="{{ field.id_for_label }}">
-      {{ field.label }}:
+      {% translate "Category:" context "moderation split posts form" %}
     </label>
     <select class="form-control" name="{{ field.html_name }}" id="{{ field.id_for_label }}" required>
       {% for choice in field.subwidgets %}
-        <option value="{{ choice.data.value }}"{% if choice.data.value in form.disabled_choices %} disabled{% else %}{{ choice|selectedhtml }}{% endif %}>
+        <option value="{{ choice.data.value }}"{% if choice.data.value in form.disallowed_categories %} disabled{% else %}{{ choice|selectedhtml }}{% endif %}>
           {{ choice.choice_label }}
         </option>
       {% endfor %}
@@ -26,5 +15,69 @@
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}
-  {% endwith %}
+  </div>
+{% endwith %}
+{% with field=form.title %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Title:" context "moderation split posts form" %}
+    </label>
+    <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" required />
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endwith %}
+<div class="form-group">
+  <div class="control-label">
+    {% translate "Options:" context "moderation split posts form" %}
+  </div>
+  <div class="form-control-choices">
+    {% if form.pin %}
+      {% with field=form.pin %}
+        {% for choice in field.subwidgets %}
+          <div class="radio">
+            <label>
+              <input type="radio" name="{{ field.html_name }}" value="{{ choice.data.value }}"{{ choice|checkedhtml }}>
+              {{ choice.choice_label }}
+            </label>
+          </div>
+        {% endfor %}
+      {% endwith %}
+    {% endif %}
+    {% with field=form.is_locked %}
+      <div class="checkbox">
+        <label>
+          <input name="{{ field.html_name }}" type="checkbox" value="1"{% if field.data %} checked{% endif %}> {% translate "Lock thread" context "moderation split posts form" %}
+        </label>
+      </div>
+    {% endwith %}
+    {% with field=form.is_hidden %}
+      <div class="checkbox">
+        <label>
+          <input name="{{ field.html_name }}" type="checkbox" value="1"{% if field.data %} checked{% endif %}> {% translate "Hide thread" context "moderation split posts form" %}
+        </label>
+      </div>
+    {% endwith %}
+  </div>
 </div>
+{% with field=form.redirect_to %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Show after splitting:" context "moderation split posts form" %}
+    </label>
+    <div class="form-control-choices">
+      {% for choice in field.subwidgets %}
+        <div class="radio">
+          <label>
+            <input type="radio" name="{{ field.html_name }}" value="{{ choice.data.value }}"{{ choice|checkedhtml }}>
+            {{ choice.choice_label }}
+          </label>
+        </div>
+      {% endfor %}
+    </div>
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endwith %}

@@ -1,9 +1,9 @@
 {% load i18n misago_forms %}
 
-{% with field=form.other_thread %}
+{% with field=form.target_thread %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label class="control-label" for="{{ field.id_for_label }}">
-      {% translate "Other thread link:" context "moderation merge thread form" %}
+      {% translate "Target thread link:" context "moderation move posts form" %}
     </label>
     <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" required />
     {% for error in field.errors %}
@@ -11,10 +11,10 @@
     {% endfor %}
   </div>
 {% endwith %}
-{% with field=form.direction %}
+{% with field=form.redirect_to %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label class="control-label" for="{{ field.id_for_label }}">
-      {% translate "Merge direction:" context "moderation merge thread form" %}
+      {% translate "Show after moving:" context "moderation move posts form" %}
     </label>
     <div class="form-control-choices">
       {% for choice in field.subwidgets %}

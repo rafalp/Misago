@@ -1,7 +1,7 @@
 from html import escape
 
 from django.db.models import Model
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import npgettext, pgettext, pgettext_lazy
 
 from ..threads.threadurl import get_thread_url
 from .enums import ThreadUpdateActionName
@@ -194,12 +194,140 @@ class MergedThreadUpdateAction(ThreadContextThreadUpdateAction):
 
 
 @thread_updates_renderer.register_action
-class SplitThreadUpdateAction(ThreadContextThreadUpdateAction):
-    action = ThreadUpdateActionName.SPLIT
+class MovedPostsToThreadUpdateAction(ThreadContextThreadUpdateAction):
+    action = ThreadUpdateActionName.MOVED_POSTS_TO
+    icon = "tabler/arrows-right.svg"
+
+    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+        thread = self.get_context_obj_from_data(update, data["threads"])
+        category = None
+
+        if thread:
+            category = data["categories"].get(thread.category_id)
+
+        replacements = {"posts": update.context_items}
+
+        if thread and category:
+            replacements["context"] = self.get_context_link(
+                get_thread_url(thread, category), thread.title
+            )
+        else:
+            replacements["context"] = self.get_context_text(update.context)
+
+        replacements["posts"] = update.context_items
+        description = npgettext(
+            "thread update action description",
+            "Moved %(posts)s post to %(context)s",
+            "Moved %(posts)s posts to %(context)s",
+            update.context_items,
+        )
+
+        return escape(description) % replacements
+
+
+@thread_updates_renderer.register_action
+class MovedPostsFromThreadUpdateAction(ThreadContextThreadUpdateAction):
+    action = ThreadUpdateActionName.MOVED_POSTS_FROM
+    icon = "tabler/arrows-right.svg"
+
+    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+        thread = self.get_context_obj_from_data(update, data["threads"])
+        category = None
+
+        if thread:
+            category = data["categories"].get(thread.category_id)
+
+        replacements = {"posts": update.context_items}
+
+        if thread and category:
+            replacements["context"] = self.get_context_link(
+                get_thread_url(thread, category), thread.title
+            )
+        else:
+            replacements["context"] = self.get_context_text(update.context)
+
+        description = npgettext(
+            "thread update action description",
+            "Moved %(posts)s post from %(context)s",
+            "Moved %(posts)s posts from %(context)s",
+            update.context_items,
+        )
+
+        return escape(description) % replacements
+
+
+@thread_updates_renderer.register_action
+class SplitPostsIntoThreadUpdateAction(ThreadContextThreadUpdateAction):
+    action = ThreadUpdateActionName.SPLIT_POSTS_INTO
     icon = "tabler/arrows-split-2.svg"
-    description = pgettext_lazy(
-        "thread update action description", "Split this thread from %(context)s"
-    )
+
+    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+        thread = self.get_context_obj_from_data(update, data["threads"])
+        category = None
+
+        if thread:
+            category = data["categories"].get(thread.category_id)
+
+        replacements = {}
+
+        if thread and category:
+            replacements["context"] = self.get_context_link(
+                get_thread_url(thread, category), thread.title
+            )
+        else:
+            replacements["context"] = self.get_context_text(update.context)
+
+        if update.context_items:
+            replacements["posts"] = update.context_items
+            description = npgettext(
+                "thread update action description",
+                "Split %(posts)s post into %(context)s",
+                "Split %(posts)s posts into %(context)s",
+                update.context_items,
+            )
+        else:
+            description = pgettext(
+                "thread update action description", "Split into %(context)s"
+            )
+
+        return escape(description) % replacements
+
+
+@thread_updates_renderer.register_action
+class SplitPostsFromThreadUpdateAction(ThreadContextThreadUpdateAction):
+    action = ThreadUpdateActionName.SPLIT_POSTS_FROM
+    icon = "tabler/arrows-split-2.svg"
+
+    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+        thread = self.get_context_obj_from_data(update, data["threads"])
+        category = None
+
+        if thread:
+            category = data["categories"].get(thread.category_id)
+
+        replacements = {}
+
+        if thread and category:
+            replacements["context"] = self.get_context_link(
+                get_thread_url(thread, category), thread.title
+            )
+        else:
+            replacements["context"] = self.get_context_text(update.context)
+
+        if update.context_items:
+            replacements["posts"] = update.context_items
+            description = npgettext(
+                "thread update action description",
+                "Split %(posts)s post from %(context)s",
+                "Split %(posts)s posts from %(context)s",
+                update.context_items,
+            )
+        else:
+            description = pgettext(
+                "thread update action description", "Split from %(context)s"
+            )
+
+        return escape(description) % replacements
 
 
 @thread_updates_renderer.register_action

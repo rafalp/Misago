@@ -324,6 +324,7 @@ Hooks instances are importable from the following Python modules:
 - [`lock_post_hook`](./lock-post-hook.md)
 - [`lock_thread_hook`](./lock-thread-hook.md)
 - [`merge_threads_hook`](./merge-threads-hook.md)
+- [`move_post_hook`](./move-post-hook.md)
 - [`move_thread_hook`](./move-thread-hook.md)
 - [`pin_thread_hook`](./pin-thread-hook.md)
 - [`populate_post_feed_data_hook`](./populate-post-feed-data-hook.md)

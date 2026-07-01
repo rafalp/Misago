@@ -14,6 +14,7 @@ def test_create_thread_update_creates_thread_update_with_actor(thread, user):
     thread_update = create_thread_update(thread, "closed", user)
     assert thread_update.actor == user
     assert thread_update.actor_name == user.username
+    assert thread_update.actor_slug == user.slug
 
     thread_update.refresh_from_db()
 
@@ -22,6 +23,7 @@ def test_create_thread_update_creates_thread_update_with_actor_name(thread):
     thread_update = create_thread_update(thread, "closed", "Misago")
     assert thread_update.actor is None
     assert thread_update.actor_name == "Misago"
+    assert thread_update.actor_slug == "misago"
 
     thread_update.refresh_from_db()
 
@@ -30,6 +32,7 @@ def test_create_thread_update_creates_thread_update_without_actor(thread):
     thread_update = create_thread_update(thread, "closed")
     assert thread_update.actor is None
     assert thread_update.actor_name is None
+    assert thread_update.actor_slug is None
 
     thread_update.refresh_from_db()
 
