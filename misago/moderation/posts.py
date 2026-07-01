@@ -15,6 +15,10 @@ from ..threads.lock import lock_post, unlock_post
 from ..threads.models import Thread
 from ..threads.move import move_post
 from ..threads.synchronize import synchronize_thread
+from ..threadupdates.create import (
+    create_split_posts_from_thread_update,
+    create_split_posts_into_thread_update,
+)
 from .actions import (
     ConfirmMixin,
     FormMixin,
@@ -282,10 +286,24 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
                     )
                 )
 
+    def get_form(self, form_submitted: bool) -> Form:
+        form_kwargs = {
+            "prefix": self.form_prefix,
+            "request": self.request,
+            "initial": {
+                "category": self.thread.category_id,
+            },
+        }
+        if form_submitted:
+            return self.form_class(self.request.POST, **form_kwargs)
+
+        return self.form_class(**form_kwargs)
+
     def form_valid(self, form) -> ModerationResult:
         request = self.request
         thread = self.thread
         posts = self.posts
+        posts_count = len(post)
 
         new_thread = create_thread(
             form.cleaned_data["category"],
@@ -298,6 +316,13 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
 
         for post in posts:
             move_post(post, new_thread)
+
+        thread_update = create_split_posts_from_thread_update(
+            new_thread, thread, posts_count, request.user, request=request
+        )
+        create_split_posts_into_thread_update(
+            thread, new_thread, posts_count, request.user, request=request
+        )
 
         synchronize_thread(thread, request=request)
         synchronize_thread(new_thread, request=request)
@@ -315,6 +340,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
 
         return ModerationResult(
             deleted_items=[post.id for post in posts],
+            thread_updates=[thread_update],
         )
 
     def get_thread_url(self, thread: Thread) -> str:
