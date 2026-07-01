@@ -2142,6 +2142,468 @@ def test_thread_detail_view_split_posts_moderation_action_validates_thread_title
     mock_posts_synchronize_categories.delay.assert_not_called()
 
 
+def test_thread_detail_view_move_posts_moderation_action_moves_posts(
+    moderator_client,
+    default_category,
+    thread,
+    other_thread,
+    reply,
+    mock_posts_synchronize_categories,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "move", "posts": [reply.id]},
+    )
+    assert_contains(response, "Move posts")
+    assert_contains(response, "Target thread link")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "move",
+            "posts": [reply.id],
+            "moderation-target_thread": "http://testserver"
+            + reverse(
+                "misago:thread",
+                kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
+            ),
+            "moderation-redirect_to": "current",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert thread.replies == 0
+
+    other_thread.refresh_from_db()
+    assert other_thread.replies == 1
+
+    reply.refresh_from_db()
+    assert reply.thread == other_thread
+
+    ThreadUpdate.objects.get(
+        thread=other_thread,
+        action=ThreadUpdateActionName.MOVED_POSTS_FROM,
+    )
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.MOVED_POSTS_TO,
+    )
+
+    mock_posts_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
+
+
+def test_thread_detail_view_move_posts_moderation_action_moves_posts_in_htmx(
+    moderator_client,
+    default_category,
+    thread,
+    other_thread,
+    reply,
+    mock_posts_synchronize_categories,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "move", "posts": [reply.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Target thread link")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "move",
+            "posts": [reply.id],
+            "moderation-target_thread": "http://testserver"
+            + reverse(
+                "misago:thread",
+                kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
+            ),
+            "moderation-redirect_to": "current",
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 200
+
+    thread.refresh_from_db()
+    assert thread.replies == 0
+
+    other_thread.refresh_from_db()
+    assert other_thread.replies == 1
+
+    reply.refresh_from_db()
+    assert reply.thread == other_thread
+
+    ThreadUpdate.objects.get(
+        thread=other_thread,
+        action=ThreadUpdateActionName.MOVED_POSTS_FROM,
+    )
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.MOVED_POSTS_TO,
+    )
+
+    mock_posts_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
+
+
+def test_thread_detail_view_move_posts_moderation_action_moves_posts_with_redirect_to_target_thread(
+    moderator_client,
+    default_category,
+    thread,
+    other_thread,
+    reply,
+    mock_posts_synchronize_categories,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "move", "posts": [reply.id]},
+    )
+    assert_contains(response, "Move posts")
+    assert_contains(response, "Target thread link")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "move",
+            "posts": [reply.id],
+            "moderation-target_thread": "http://testserver"
+            + reverse(
+                "misago:thread",
+                kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
+            ),
+            "moderation-redirect_to": "target",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread",
+        kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
+    )
+
+    thread.refresh_from_db()
+    assert thread.replies == 0
+
+    other_thread.refresh_from_db()
+    assert other_thread.replies == 1
+
+    reply.refresh_from_db()
+    assert reply.thread == other_thread
+
+    ThreadUpdate.objects.get(
+        thread=other_thread,
+        action=ThreadUpdateActionName.MOVED_POSTS_FROM,
+    )
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.MOVED_POSTS_TO,
+    )
+
+    mock_posts_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
+
+
+def test_thread_detail_view_move_posts_moderation_action_validates_target_thread_link(
+    moderator_client,
+    thread,
+    other_thread,
+    reply,
+    mock_posts_synchronize_categories,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "move", "posts": [reply.id]},
+    )
+    assert_contains(response, "Move posts")
+    assert_contains(response, "Target thread link")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "move",
+            "posts": [reply.id],
+            "moderation-target_thread": reverse(
+                "misago:thread",
+                kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
+            ),
+            "moderation-redirect_to": "target",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Enter a valid link.")
+
+    thread.refresh_from_db()
+    assert thread.replies == 1
+
+    other_thread.refresh_from_db()
+    assert other_thread.replies == 0
+
+    reply.refresh_from_db()
+    assert reply.thread == thread
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_posts_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_move_posts_moderation_action_validates_target_thread_is_different_thread(
+    moderator_client,
+    thread,
+    other_thread,
+    reply,
+    mock_posts_synchronize_categories,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "move", "posts": [reply.id]},
+    )
+    assert_contains(response, "Move posts")
+    assert_contains(response, "Target thread link")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "move",
+            "posts": [reply.id],
+            "moderation-target_thread": "http://testserver"
+            + reverse(
+                "misago:thread",
+                kwargs={"thread_id": thread.id, "slug": thread.slug},
+            ),
+            "moderation-redirect_to": "target",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Enter a different thread link.")
+
+    thread.refresh_from_db()
+    assert thread.replies == 1
+
+    other_thread.refresh_from_db()
+    assert other_thread.replies == 0
+
+    reply.refresh_from_db()
+    assert reply.thread == thread
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_posts_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_move_posts_moderation_action_validates_target_thread_exists(
+    moderator_client,
+    thread,
+    other_thread,
+    reply,
+    mock_posts_synchronize_categories,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "move", "posts": [reply.id]},
+    )
+    assert_contains(response, "Move posts")
+    assert_contains(response, "Target thread link")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "move",
+            "posts": [reply.id],
+            "moderation-target_thread": f"http://testserver/t/other-thread/{max(thread.id, other_thread.id) + 1}/",
+            "moderation-redirect_to": "target",
+            "confirm": "true",
+        },
+    )
+    assert_contains(
+        response,
+        "Thread doesn&#x27;t exist or you don&#x27;t have permission to see it.",
+    )
+
+    thread.refresh_from_db()
+    assert thread.replies == 1
+
+    other_thread.refresh_from_db()
+    assert other_thread.replies == 0
+
+    reply.refresh_from_db()
+    assert reply.thread == thread
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_posts_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_move_posts_moderation_action_validates_target_thread_is_not_private_thread(
+    moderator_client,
+    thread,
+    user_private_thread,
+    reply,
+    mock_posts_synchronize_categories,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "move", "posts": [reply.id]},
+    )
+    assert_contains(response, "Move posts")
+    assert_contains(response, "Target thread link")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "move",
+            "posts": [reply.id],
+            "moderation-target_thread": "http://testserver"
+            + reverse(
+                "misago:thread",
+                kwargs={
+                    "thread_id": user_private_thread.id,
+                    "slug": user_private_thread.slug,
+                },
+            ),
+            "moderation-redirect_to": "target",
+            "confirm": "true",
+        },
+    )
+    assert_contains(
+        response,
+        "Thread doesn&#x27;t exist or you don&#x27;t have permission to see it.",
+    )
+
+    thread.refresh_from_db()
+    assert thread.replies == 1
+
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.replies == 0
+
+    reply.refresh_from_db()
+    assert reply.thread == thread
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_posts_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_move_posts_moderation_action_validates_target_thread_is_visible(
+    thread_factory,
+    moderator_client,
+    sibling_category,
+    thread,
+    reply,
+    mock_posts_synchronize_categories,
+):
+    other_thread = thread_factory(sibling_category, starter="DeletedUser")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "move", "posts": [reply.id]},
+    )
+    assert_contains(response, "Move posts")
+    assert_contains(response, "Target thread link")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "move",
+            "posts": [reply.id],
+            "moderation-target_thread": "http://testserver"
+            + reverse(
+                "misago:thread",
+                kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
+            ),
+            "moderation-redirect_to": "target",
+            "confirm": "true",
+        },
+    )
+    assert_contains(
+        response,
+        "Thread doesn&#x27;t exist or you don&#x27;t have permission to see it.",
+    )
+
+    thread.refresh_from_db()
+    assert thread.replies == 1
+
+    other_thread.refresh_from_db()
+    assert other_thread.replies == 0
+
+    reply.refresh_from_db()
+    assert reply.thread == thread
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_posts_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_move_posts_moderation_action_validates_target_thread_can_be_moderated(
+    thread_factory,
+    user_client,
+    user,
+    members_group,
+    sibling_category,
+    thread,
+    reply,
+    mock_post_synchronize_categories,
+):
+    grant_category_group_permissions(
+        sibling_category,
+        members_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[thread.category_id],
+    )
+
+    other_thread = thread_factory(sibling_category, starter="DeletedUser")
+
+    response = user_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "move", "posts": [reply.id]},
+    )
+    assert_contains(response, "Move post")
+    assert_contains(response, "Target thread link")
+
+    response = user_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "move",
+            "posts": [reply.id],
+            "moderation-target_thread": "http://testserver"
+            + reverse(
+                "misago:thread",
+                kwargs={"thread_id": other_thread.id, "slug": other_thread.slug},
+            ),
+            "moderation-redirect_to": "target",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "You can&#x27;t moderate this thread.")
+
+    thread.refresh_from_db()
+    assert thread.replies == 1
+
+    other_thread.refresh_from_db()
+    assert other_thread.replies == 0
+
+    reply.refresh_from_db()
+    assert reply.thread == thread
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
 def test_thread_detail_view_executes_lock_post_moderation_action(
     moderator_client, thread, reply
 ):
