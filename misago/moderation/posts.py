@@ -16,6 +16,8 @@ from ..threads.models import Thread
 from ..threads.move import move_post
 from ..threads.synchronize import synchronize_thread
 from ..threadupdates.create import (
+    create_moved_posts_from_thread_update,
+    create_moved_posts_to_thread_update,
     create_split_posts_from_thread_update,
     create_split_posts_into_thread_update,
 )
@@ -25,7 +27,7 @@ from .actions import (
     ModerationResult,
     PostsModerationAction,
 )
-from .forms import HideForm, SelectThreadForm, SplitThreadForm
+from .forms import HideForm, MovePostsForm, SplitPostsForm
 from .hooks import (
     get_private_thread_posts_moderation_actions_hook,
     get_thread_posts_moderation_actions_hook,
@@ -60,6 +62,7 @@ def _get_thread_posts_moderation_actions_action(
         UnhidePostsModerationAction,
         ApprovePostsModerationAction,
         SplitPostsModerationAction,
+        MovePostsModerationAction,
         DeletePostsModerationAction,
     ]
 
@@ -91,7 +94,6 @@ def _get_private_thread_posts_moderation_actions_action(
         HidePostsModerationAction,
         UnhidePostsModerationAction,
         ApprovePostsModerationAction,
-        SplitPostsModerationAction,
         DeletePostsModerationAction,
     ]
 
@@ -273,8 +275,8 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
     full_name = "Split posts into a new thread"
     button_label = "Split"
 
-    form_class = SplitThreadForm
-    template_name = "misago/moderation/split_thread.html"
+    form_class = SplitPostsForm
+    template_name = "misago/moderation/split_posts.html"
 
     def validate(self):
         for post in self.posts:
@@ -354,12 +356,12 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
     full_name = "Move posts to another thread"
     button_label = "Move"
 
-    form_class = SelectThreadForm
-    template_name = "misago/moderation/select_thread.html"
+    form_class = MovePostsForm
+    template_name = "misago/moderation/move_posts.html"
 
     def validate(self):
         for post in self.posts:
-            if post.id == self.thread.first_post:
+            if post.id == self.thread.first_post_id:
                 raise ValidationError(
                     pgettext(
                         "post moderation validation",
@@ -367,25 +369,59 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
                     )
                 )
 
+    def get_form(self, form_submitted: bool) -> Form:
+        form_kwargs = {
+            "prefix": self.form_prefix,
+            "request": self.request,
+            "current_thread": self.thread,
+        }
+        if form_submitted:
+            return self.form_class(self.request.POST, **form_kwargs)
+
+        return self.form_class(**form_kwargs)
+
     def form_valid(self, form) -> ModerationResult:
         request = self.request
         thread = self.thread
+        target_thread = form.cleaned_data["target_thread"]
         posts = self.posts
-
-        new_thread = form.cleaned_data["other_thread"]
+        posts_count = len(posts)
 
         for post in posts:
-            move_post(post, new_thread)
+            move_post(post, target_thread)
+
+        thread_update = create_moved_posts_from_thread_update(
+            target_thread, thread, posts_count, request.user, request=request
+        )
+        create_moved_posts_to_thread_update(
+            thread, target_thread, posts_count, request.user, request=request
+        )
 
         synchronize_thread(thread, request=request)
-        synchronize_thread(new_thread, request=request)
+        synchronize_thread(target_thread, request=request)
 
-        sync_categories_ids = list({thread.category_id, new_thread.category_id})
+        sync_categories_ids = list({thread.category_id, target_thread.category_id})
         synchronize_categories.delay(sync_categories_ids)
+
+        messages.success(
+            self.request,
+            pgettext(
+                "posts moderation success", "Posts were moved to the target thread."
+            ),
+        )
+
+        if form.cleaned_data["redirect_to"] == "target":
+            return ModerationResult(redirect_to=self.get_thread_url(target_thread))
 
         return ModerationResult(
             deleted_items=[post.id for post in posts],
+            thread_updates=[thread_update],
         )
+
+    def get_thread_url(self, thread: Thread) -> str:
+        from ..threads.views.backend import thread_backend
+
+        return thread_backend.get_thread_url(thread)
 
 
 class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):

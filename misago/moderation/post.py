@@ -17,6 +17,8 @@ from ..threads.models import Post, Thread
 from ..threads.move import move_post
 from ..threads.synchronize import synchronize_thread
 from ..threadupdates.create import (
+    create_moved_posts_from_thread_update,
+    create_moved_posts_to_thread_update,
     create_split_posts_from_thread_update,
     create_split_posts_into_thread_update,
 )
@@ -26,7 +28,7 @@ from .actions import (
     ModerationResult,
     PostModerationAction,
 )
-from .forms import HideForm, SelectThreadForm, SplitThreadForm
+from .forms import HideForm, MovePostsForm, SplitPostsForm
 from .hooks import (
     get_private_thread_post_moderation_actions_hook,
     get_thread_post_moderation_actions_hook,
@@ -72,6 +74,7 @@ def _get_thread_post_moderation_actions_action(
 
         actions += [
             SplitPostModerationAction,
+            MovePostModerationAction,
             DeletePostModerationAction,
         ]
 
@@ -277,8 +280,8 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
     full_name = "Split post into a new thread"
     button_label = "Split"
 
-    form_class = SplitThreadForm
-    template_name = "misago/moderation/split_thread.html"
+    form_class = SplitPostsForm
+    template_name = "misago/moderation/split_posts.html"
 
     def get_form(self, form_submitted: bool) -> Form:
         form_kwargs = {
@@ -318,7 +321,7 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
 
         move_post(post, new_thread)
 
-        create_split_posts_from_thread_update(
+        thread_update = create_split_posts_from_thread_update(
             new_thread, thread, 1, request.user, request=request
         )
         create_split_posts_into_thread_update(
@@ -341,6 +344,77 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
 
         return ModerationResult(
             deleted_items=[post.id],
+            thread_updates=[thread_update],
+        )
+
+    def get_thread_url(self, thread: Thread) -> str:
+        from ..threads.views.backend import thread_backend
+
+        return thread_backend.get_thread_url(thread)
+
+
+class MovePostModerationAction(FormMixin, PostModerationAction):
+    swap_root = True
+
+    id = "move"
+    full_name = "Move post to another thread"
+    button_label = "Move"
+
+    form_class = MovePostsForm
+    template_name = "misago/moderation/move_posts.html"
+
+    def get_form(self, form_submitted: bool) -> Form:
+        form_kwargs = {
+            "prefix": self.form_prefix,
+            "request": self.request,
+            "current_thread": self.thread,
+        }
+        if form_submitted:
+            return self.form_class(self.request.POST, **form_kwargs)
+
+        return self.form_class(**form_kwargs)
+
+    def validate(self):
+        if self.post.id == self.thread.first_post_id:
+            raise ValidationError(
+                pgettext(
+                    "post moderation validation",
+                    "The first post in a thread can't be split.",
+                )
+            )
+
+    def form_valid(self, form) -> ModerationResult:
+        request = self.request
+        thread = self.thread
+        target_thread = form.cleaned_data["target_thread"]
+        post = self.post
+
+        move_post(post, target_thread)
+
+        thread_update = create_moved_posts_from_thread_update(
+            target_thread, thread, 1, request.user, request=request
+        )
+        create_moved_posts_to_thread_update(
+            thread, target_thread, 1, request.user, request=request
+        )
+
+        synchronize_thread(thread, request=request)
+        synchronize_thread(target_thread, request=request)
+
+        sync_categories_ids = list({thread.category_id, target_thread.category_id})
+        synchronize_categories.delay(sync_categories_ids)
+
+        messages.success(
+            self.request,
+            pgettext("post moderation success", "Post was split into a new thread."),
+        )
+
+        if form.cleaned_data["redirect_to"] == "target":
+            return ModerationResult(redirect_to=self.get_thread_url(target_thread))
+
+        return ModerationResult(
+            deleted_items=[post.id],
+            thread_updates=[thread_update],
         )
 
     def get_thread_url(self, thread: Thread) -> str:

@@ -138,19 +138,20 @@ def get_valid_thread(request: HttpRequest, thread_id: int) -> Thread:
 
 
 class HideForm(forms.Form):
-    request: HttpRequest
-
     hidden_reason = forms.CharField(max_length=255, required=False)
+
+    request: HttpRequest
 
     def __init__(self, *args, request: HttpRequest, **kwargs):
         super().__init__(*args, **kwargs)
 
 
-class SelectCategoryForm(forms.Form):
-    request: HttpRequest
-
+class MoveThreadsForm(forms.Form):
     category = forms.TypedChoiceField(coerce=int, choices=[])
+
     disallowed_categories: set[int]
+
+    request: HttpRequest
 
     def __init__(self, *args, request: HttpRequest, **kwargs):
         self.request = request
@@ -221,9 +222,6 @@ class MergeForm(forms.Form):
 
 
 class MergeThreadsForm(MergeForm):
-    request: HttpRequest
-    conflicts: dict[str, list[Model]]
-
     category = forms.TypedChoiceField(coerce=int, choices=[])
     title = forms.CharField(max_length=255)
     is_locked = forms.BooleanField(required=False)
@@ -231,6 +229,9 @@ class MergeThreadsForm(MergeForm):
 
     disallowed_categories: set[int]
     conflicts_fields: list[str]
+
+    request: HttpRequest
+    conflicts: dict[str, list[Model]]
 
     def __init__(
         self,
@@ -283,21 +284,18 @@ class MergeThreadsForm(MergeForm):
 
 
 class MergeThreadForm(forms.Form):
-    request: HttpRequest
-    thread: Thread
-
     other_thread = forms.CharField(max_length=500)
     direction = forms.ChoiceField(
         choices=(
             (
                 "other",
-                pgettext(
-                    "moderation form thread merge direction", "Keep the other thread"
-                ),
+                pgettext("moderation form thread merge direction", "Keep other thread"),
             ),
             (
-                "this",
-                pgettext("moderation form thread merge direction", "Keep this thread"),
+                "current",
+                pgettext(
+                    "moderation form thread merge direction", "Keep current thread"
+                ),
             ),
         ),
         initial="other",
@@ -305,6 +303,9 @@ class MergeThreadForm(forms.Form):
     )
 
     valid_urls = THREAD_URLS
+
+    request: HttpRequest
+    thread: Thread
 
     def __init__(self, *args, request: HttpRequest, thread: Thread, **kwargs):
         self.request = request
@@ -320,7 +321,7 @@ class MergeThreadForm(forms.Form):
             raise forms.ValidationError(
                 pgettext(
                     "moderation form thread validation",
-                    "This link doesn't point to a different thread.",
+                    "Enter a different thread link.",
                 ),
                 code="invalid",
             )
@@ -331,20 +332,17 @@ class MergeThreadForm(forms.Form):
         return get_valid_thread(self.request, thread_id)
 
 
-class SplitThreadForm(forms.Form):
-    request: HttpRequest
-
+class SplitPostsForm(forms.Form):
     category = forms.TypedChoiceField(coerce=int, choices=[])
     title = forms.CharField(max_length=255)
     is_locked = forms.BooleanField(required=False)
     is_hidden = forms.BooleanField(required=False)
-
     redirect_to = forms.ChoiceField(
         choices=[
-            ("new", pgettext_lazy("split thread form redirect to", "New thread")),
+            ("new", pgettext_lazy("split posts form redirect to", "New thread")),
             (
                 "current",
-                pgettext_lazy("split thread form redirect to", "Current thread"),
+                pgettext_lazy("split posts form redirect to", "Current thread"),
             ),
         ],
         initial="new",
@@ -353,6 +351,8 @@ class SplitThreadForm(forms.Form):
 
     disallowed_categories: set[int]
     conflicts_fields: list[str]
+
+    request: HttpRequest
 
     def __init__(
         self,
@@ -405,41 +405,51 @@ class SplitThreadForm(forms.Form):
         return data
 
 
-class SelectThreadForm(forms.Form):
-    request: HttpRequest
-    exclude_thread: Thread | None
-
-    new_thread = forms.CharField(max_length=500)
-    redirect_to_new_thread = forms.BooleanField(required=False)
+class MovePostsForm(forms.Form):
+    target_thread = forms.CharField(max_length=500)
+    redirect_to = forms.ChoiceField(
+        choices=[
+            ("target", pgettext_lazy("move posts form redirect to", "Target thread")),
+            (
+                "current",
+                pgettext_lazy("move posts form redirect to", "Current thread"),
+            ),
+        ],
+        initial="target",
+        widget=forms.RadioSelect,
+    )
 
     valid_urls = THREAD_URLS
+
+    request: HttpRequest
+    current_thread: Thread | None
 
     def __init__(
         self,
         *args,
         request: HttpRequest,
-        exclude_thread: Thread | None = None,
+        current_thread: Thread | None = None,
         **kwargs,
     ):
         self.request = request
-        self.exclude_thread = exclude_thread
+        self.current_thread = current_thread
 
         super().__init__(*args, **kwargs)
 
-    def clean_new_thread(self):
-        data = self.cleaned_data["new_thread"]
+    def clean_target_thread(self):
+        data = self.cleaned_data["target_thread"]
         thread_id = parse_thread_url(data, self.request, self.valid_urls)
 
-        if thread_id == self.exclude_thread.id:
+        if thread_id == self.current_thread.id:
             raise forms.ValidationError(
                 pgettext(
                     "moderation form thread validation",
-                    "This link doesn't point to a different thread.",
+                    "Enter a different thread link.",
                 ),
                 code="invalid",
             )
 
-        return self.get_new_thread(thread_id)
+        return self.get_target_thread(thread_id)
 
-    def get_new_thread(self, thread_id: int):
+    def get_target_thread(self, thread_id: int):
         return get_valid_thread(self.request, thread_id)

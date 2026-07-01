@@ -3,7 +3,7 @@
 {% with field=form.category %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
     <label class="control-label" for="{{ field.id_for_label }}">
-      {% translate "Category:" context "moderation select category form" %}
+      {% translate "Category:" context "moderation move threads form" %}
     </label>
     <select class="form-control" name="{{ field.html_name }}" id="{{ field.id_for_label }}" required>
       {% for choice in field.subwidgets %}
