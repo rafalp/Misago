@@ -316,6 +316,46 @@ def create_changed_title_thread_update(
     )
 
 
+def create_moved_posts_to_thread_update(
+    thread: Thread,
+    other_thread: Thread,
+    posts: int,
+    actor: Union["User", str, None] = None,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    return create_thread_update(
+        thread,
+        ThreadUpdateActionName.MOVED_POSTS_TO,
+        actor,
+        context=other_thread.title,
+        context_object=other_thread,
+        context_items=posts,
+        commit=commit,
+        request=request,
+    )
+
+
+def create_moved_posts_from_thread_update(
+    thread: Thread,
+    other_thread: Thread,
+    posts: int,
+    actor: Union["User", str, None] = None,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> ThreadUpdate:
+    return create_thread_update(
+        thread,
+        ThreadUpdateActionName.MOVED_POSTS_FROM,
+        actor,
+        context=other_thread.title,
+        context_object=other_thread,
+        context_items=posts,
+        commit=commit,
+        request=request,
+    )
+
+
 def create_split_posts_into_thread_update(
     thread: Thread,
     other_thread: Thread,

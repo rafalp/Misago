@@ -13,6 +13,8 @@ from ..create import (
     create_left_thread_update,
     create_locked_thread_update,
     create_merged_thread_update,
+    create_moved_posts_from_thread_update,
+    create_moved_posts_to_thread_update,
     create_moved_thread_update,
     create_opened_poll_thread_update,
     create_pinned_category_thread_update,
@@ -265,6 +267,68 @@ def test_changed_title_thread_update(client, thread, user):
     )
     assert_contains(response, "Changed title from")
     assert_contains(response, "Old title")
+
+
+def test_moved_posts_to_thread_update(client, thread, user_thread, user):
+    create_moved_posts_to_thread_update(thread, user_thread, 21, user)
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Moved 21 posts to")
+    assert_contains(response, user_thread.title)
+
+
+def test_moved_posts_to_thread_update_without_context_object(
+    client, thread, user_thread, user
+):
+    thread_update = create_moved_posts_to_thread_update(thread, user_thread, 21, user)
+
+    thread_update.clear_context_object()
+    thread_update.save()
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Moved 21 posts to")
+    assert_contains(response, user_thread.title)
+
+
+def test_moved_posts_from_thread_update(client, thread, user_thread, user):
+    create_moved_posts_from_thread_update(thread, user_thread, 21, user)
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Moved 21 posts from")
+    assert_contains(response, user_thread.title)
+
+
+def test_moved_posts_from_thread_update_without_context_object(
+    client, thread, user_thread, user
+):
+    thread_update = create_moved_posts_from_thread_update(thread, user_thread, 21, user)
+
+    thread_update.clear_context_object()
+    thread_update.save()
+
+    thread.has_updates = True
+    thread.save()
+
+    response = client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, "Moved 21 posts from")
+    assert_contains(response, user_thread.title)
 
 
 def test_split_posts_into_thread_update(client, thread, user_thread, user):

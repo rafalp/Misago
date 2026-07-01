@@ -1766,20 +1766,13 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_with_mode
 
 
 def test_thread_detail_view_split_posts_moderation_action_validates_first_post(
-    moderator_client, thread, mock_posts_synchronize_categories
+    moderator_client, thread
 ):
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "split", "posts": [thread.first_post_id]},
     )
     assert_contains(response, "The first post in a thread can&#x27;t be split.")
-
-    thread.first_post.refresh_from_db()
-    assert thread.first_post == thread
-
-    assert not ThreadUpdate.objects.exists()
-
-    mock_posts_synchronize_categories.delay.assert_not_called()
 
 
 def test_thread_detail_view_split_posts_moderation_action_validates_category_value(
@@ -1984,7 +1977,6 @@ def test_thread_detail_view_split_posts_moderation_action_requires_thread_title(
 
 def test_thread_detail_view_split_posts_moderation_action_validates_thread_title(
     moderator_client,
-    moderators_group,
     default_category,
     thread,
     reply,
@@ -2155,3 +2147,400 @@ def test_thread_detail_view_executes_approve_post_moderation_action(
 
     mock_post_synchronize_categories.delay.assert_called_with([thread.category_id])
     mock_post_notify_on_new_thread_reply.delay.assert_called_with(reply.id)
+
+
+def test_thread_detail_view_split_post_moderation_action_splits_posts(
+    moderator_client,
+    default_category,
+    thread,
+    reply,
+    mock_post_synchronize_categories,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "split", "post": reply.id},
+    )
+    assert_contains(response, "Split post")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "split",
+            "post": reply.id,
+            "moderation-category": default_category.id,
+            "moderation-title": "New thread",
+            "moderation-redirect_to": "current",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert thread.replies == 0
+
+    new_thread = Thread.objects.get(slug="new-thread")
+    assert new_thread.replies == 0
+
+    reply.refresh_from_db()
+    assert reply.thread == new_thread
+
+    ThreadUpdate.objects.get(
+        thread=new_thread,
+        action=ThreadUpdateActionName.SPLIT_POSTS_FROM,
+    )
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.SPLIT_POSTS_INTO,
+    )
+
+    mock_post_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
+
+
+def test_thread_detail_view_split_post_moderation_action_splits_post_with_redirect_to_new_thread(
+    moderator_client,
+    default_category,
+    thread,
+    reply,
+    mock_post_synchronize_categories,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "split", "post": reply.id},
+    )
+    assert_contains(response, "Split post")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "split",
+            "post": reply.id,
+            "moderation-category": default_category.id,
+            "moderation-title": "New thread",
+            "moderation-redirect_to": "new",
+            "confirm": "true",
+        },
+    )
+
+    new_thread = Thread.objects.get(slug="new-thread")
+    assert new_thread.replies == 0
+
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": new_thread.id, "slug": new_thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert thread.replies == 0
+
+    reply.refresh_from_db()
+    assert reply.thread == new_thread
+
+    ThreadUpdate.objects.get(
+        thread=new_thread,
+        action=ThreadUpdateActionName.SPLIT_POSTS_FROM,
+    )
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.SPLIT_POSTS_INTO,
+    )
+
+    mock_post_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
+
+
+def test_thread_detail_view_split_post_moderation_action_splits_post_with_moderation_options(
+    moderator_client,
+    default_category,
+    thread,
+    reply,
+    mock_post_synchronize_categories,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "split", "post": reply.id},
+    )
+    assert_contains(response, "Split post")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "split",
+            "post": reply.id,
+            "moderation-category": default_category.id,
+            "moderation-title": "New thread",
+            "moderation-redirect_to": "current",
+            "moderation-pin": ThreadPinned.EVERYWHERE,
+            "moderation-is_hidden": "1",
+            "moderation-is_locked": "1",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert thread.replies == 0
+
+    new_thread = Thread.objects.get(slug="new-thread")
+    assert new_thread.replies == 0
+    assert new_thread.pinned == ThreadPinned.EVERYWHERE
+    assert new_thread.is_hidden
+    assert new_thread.is_locked
+
+    reply.refresh_from_db()
+    assert reply.thread == new_thread
+
+    ThreadUpdate.objects.get(
+        thread=new_thread,
+        action=ThreadUpdateActionName.SPLIT_POSTS_FROM,
+    )
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.SPLIT_POSTS_INTO,
+    )
+
+    mock_post_synchronize_categories.delay.assert_called_once_with(
+        [default_category.id]
+    )
+
+
+def test_thread_detail_view_split_post_moderation_action_validates_category_value(
+    moderator_client, thread, reply, mock_post_synchronize_categories
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "split", "post": reply.id},
+    )
+    assert_contains(response, "Split post")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "split",
+            "post": reply.id,
+            "moderation-category": "invalid",
+            "moderation-title": "New thread",
+            "moderation-redirect_to": "new",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Select a valid choice.")
+
+    reply.refresh_from_db()
+    assert reply.thread == thread
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_split_post_moderation_action_validates_category_browse_permission(
+    moderator_client,
+    moderators_group,
+    sibling_category,
+    thread,
+    reply,
+    mock_post_synchronize_categories,
+):
+    grant_category_group_permissions(
+        sibling_category,
+        moderators_group,
+        CategoryPermission.SEE,
+    )
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "split", "post": reply.id},
+    )
+    assert_contains(response, "Split post")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "split",
+            "post": reply.id,
+            "moderation-category": sibling_category.id,
+            "moderation-title": "New thread",
+            "moderation-redirect_to": "new",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Select a valid choice.")
+
+    reply.refresh_from_db()
+    assert reply.thread == thread
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_split_post_moderation_action_validates_category_moderator_permission(
+    user_client,
+    user,
+    members_group,
+    default_category,
+    sibling_category,
+    thread,
+    reply,
+    mock_post_synchronize_categories,
+):
+    grant_category_group_permissions(
+        sibling_category,
+        members_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    Moderator.objects.create(
+        user=user,
+        is_global=False,
+        categories=[default_category.id],
+    )
+
+    response = user_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "split", "post": reply.id},
+    )
+    assert_contains(response, "Split post")
+
+    response = user_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "split",
+            "post": reply.id,
+            "moderation-category": sibling_category.id,
+            "moderation-title": "New thread",
+            "moderation-redirect_to": "new",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Select a valid choice.")
+
+    reply.refresh_from_db()
+    assert reply.thread == thread
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_split_post_moderation_action_validates_category_type(
+    moderator_client,
+    moderators_group,
+    sibling_category,
+    thread,
+    reply,
+    mock_post_synchronize_categories,
+):
+    grant_category_group_permissions(
+        sibling_category,
+        moderators_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+
+    sibling_category.is_vanilla = True
+    sibling_category.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "split", "post": reply.id},
+    )
+    assert_contains(response, "Split post")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "split",
+            "post": reply.id,
+            "moderation-category": sibling_category.id,
+            "moderation-title": "New thread",
+            "moderation-redirect_to": "new",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Select a valid choice.")
+
+    reply.refresh_from_db()
+    assert reply.thread == thread
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_split_post_moderation_action_requires_thread_title(
+    moderator_client,
+    moderators_group,
+    default_category,
+    thread,
+    reply,
+    mock_post_synchronize_categories,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "split", "post": reply.id},
+    )
+    assert_contains(response, "Split post")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "split",
+            "post": reply.id,
+            "moderation-category": default_category.id,
+            "moderation-redirect_to": "new",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "This field is required.")
+
+    reply.refresh_from_db()
+    assert reply.thread == thread
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_split_post_moderation_action_validates_thread_title(
+    moderator_client,
+    default_category,
+    thread,
+    reply,
+    mock_post_synchronize_categories,
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "split", "post": reply.id},
+    )
+    assert_contains(response, "Split post")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "split",
+            "post": reply.id,
+            "moderation-category": default_category.id,
+            "moderation-title": "Q",
+            "moderation-redirect_to": "new",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Thread title should be at least 5 characters long")
+
+    reply.refresh_from_db()
+    assert reply.thread == thread
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_post_synchronize_categories.delay.assert_not_called()
