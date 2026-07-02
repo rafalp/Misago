@@ -10,7 +10,7 @@ from ...testutils import grant_category_group_permissions
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
 from ..enums import ThreadPinned
-from ..models import Thread
+from ..models import Post, Thread
 
 
 @pytest.fixture
@@ -2604,6 +2604,88 @@ def test_thread_detail_view_move_posts_moderation_action_validates_target_thread
     mock_post_synchronize_categories.delay.assert_not_called()
 
 
+def test_thread_detail_view_delete_posts_moderation_action_deletes_posts(
+    moderator_client, default_category, thread, reply, mock_posts_synchronize_categories
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "delete", "posts": [reply.id]},
+    )
+    assert_contains(response, "Delete posts")
+    assert_contains(response, "Are you sure you want to delete the selected posts?")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "delete",
+            "posts": [reply.id],
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.DELETED_POSTS,
+    )
+
+    mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_delete_posts_moderation_action_deletes_posts_in_htmx(
+    moderator_client, default_category, thread, reply, mock_posts_synchronize_categories
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "delete", "posts": [reply.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Are you sure you want to delete the selected posts?")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "delete",
+            "posts": [reply.id],
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 200
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.DELETED_POSTS,
+    )
+
+    mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_delete_posts_moderation_action_validates_first_post(
+    moderator_client, thread, mock_posts_synchronize_categories
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "delete", "posts": [thread.first_post_id]},
+    )
+    assert_contains(response, "The first post in a thread can&#x27;t be deleted.")
+
+    thread.first_post.refresh_from_db()
+
+    assert not ThreadUpdate.objects.exists()
+
+    mock_posts_synchronize_categories.delay.assert_not_called()
+
+
 def test_thread_detail_view_executes_lock_post_moderation_action(
     moderator_client, thread, reply
 ):
@@ -3672,3 +3754,69 @@ def test_thread_detail_view_move_post_moderation_action_validates_target_thread_
     assert not ThreadUpdate.objects.exists()
 
     mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_delete_post_moderation_action_deletes_post(
+    moderator_client, default_category, thread, reply, mock_post_synchronize_categories
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "delete", "post": reply.id},
+    )
+    assert_contains(response, "Delete post")
+    assert_contains(response, "Are you sure you want to delete this post?")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "delete",
+            "post": reply.id,
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.DELETED_POSTS,
+    )
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_delete_post_moderation_action_deletes_post_in_htmx(
+    moderator_client, default_category, thread, reply, mock_post_synchronize_categories
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "delete", "post": reply.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Are you sure you want to delete this post?")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "delete",
+            "post": reply.id,
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 200
+
+    with pytest.raises(Post.DoesNotExist):
+        reply.refresh_from_db()
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.DELETED_POSTS,
+    )
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])

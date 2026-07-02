@@ -16,6 +16,7 @@ from ..threads.models import Thread
 from ..threads.move import move_post
 from ..threads.synchronize import synchronize_thread
 from ..threadupdates.create import (
+    create_deleted_posts_thread_update,
     create_moved_posts_from_thread_update,
     create_moved_posts_to_thread_update,
     create_split_posts_from_thread_update,
@@ -438,23 +439,32 @@ class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
             if post.id == self.thread.first_post_id:
                 raise ValidationError(
                     pgettext(
-                        "post moderation validation",
+                        "posts moderation validation",
                         "The first post in a thread can't be deleted.",
                     )
                 )
 
     def confirmed(self) -> ModerationResult:
-        for post in self.posts:
+        request = self.request
+        thread = self.thread
+        posts = self.posts
+
+        for post in posts:
             delete_post(post)
 
-        synchronize_thread(self.thread)
-        synchronize_categories.delay([self.thread.category_id])
+        thread_update = create_deleted_posts_thread_update(
+            thread, len(posts), request.user, request=request
+        )
+
+        synchronize_thread(thread)
+        synchronize_categories.delay([thread.category_id])
 
         messages.success(
-            self.request,
+            request,
             pgettext("posts moderation success", "Posts deleted"),
         )
 
         return ModerationResult(
-            deleted_items=[post.id for post in self.posts],
+            deleted_items=[post.id for post in posts],
+            thread_updates=[thread_update],
         )

@@ -194,6 +194,15 @@ class MergedThreadUpdateAction(ThreadContextThreadUpdateAction):
 
 
 @thread_updates_renderer.register_action
+class ChangedTitleThreadUpdateAction(TextContextThreadUpdateAction):
+    action = ThreadUpdateActionName.CHANGED_TITLE
+    icon = "tabler/pencil.svg"
+    description = pgettext_lazy(
+        "thread update action description", "Changed title from %(context)s"
+    )
+
+
+@thread_updates_renderer.register_action
 class MovedPostsToThreadUpdateAction(ThreadContextThreadUpdateAction):
     action = ThreadUpdateActionName.MOVED_POSTS_TO
     icon = "tabler/arrows-right.svg"
@@ -331,12 +340,19 @@ class SplitPostsFromThreadUpdateAction(ThreadContextThreadUpdateAction):
 
 
 @thread_updates_renderer.register_action
-class ChangedTitleThreadUpdateAction(TextContextThreadUpdateAction):
-    action = ThreadUpdateActionName.CHANGED_TITLE
-    icon = "tabler/pencil.svg"
-    description = pgettext_lazy(
-        "thread update action description", "Changed title from %(context)s"
-    )
+class DeletedPostsThreadUpdateAction(ThreadUpdateAction):
+    action = ThreadUpdateActionName.DELETED_POSTS
+    icon = "tabler/x.svg"
+
+    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+        description = npgettext(
+            "thread update action description",
+            "Deleted %(posts)s post",
+            "Deleted %(posts)s posts",
+            update.context_items,
+        ) % {"posts": update.context_items}
+
+        return escape(description)
 
 
 @thread_updates_renderer.register_action
