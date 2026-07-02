@@ -432,7 +432,7 @@ class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
     button_label = "Delete"
     confirmation_message = pgettext_lazy(
         "post moderation",
-        "Are you sure you want to delete the selected post? This action cannot be undone.",
+        "Are you sure you want to delete this post? This action cannot be undone.",
     )
 
     def validate(self):
