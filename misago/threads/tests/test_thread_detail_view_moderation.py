@@ -1021,7 +1021,7 @@ def test_thread_detail_view_executes_destructive_post_moderation_action_with_con
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "delete", "post": reply.id},
     )
-    assert_contains(response, "Are you sure you want to delete the selected post?")
+    assert_contains(response, "Are you sure you want to delete this post?")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1054,7 +1054,7 @@ def test_thread_detail_view_executes_destructive_post_moderation_action_with_con
         {"post_moderation": "delete", "post": reply.id},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Are you sure you want to delete the selected post?")
+    assert_contains(response, "Are you sure you want to delete this post?")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),

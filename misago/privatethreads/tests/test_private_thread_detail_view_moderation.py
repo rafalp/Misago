@@ -1070,7 +1070,7 @@ def test_private_thread_detail_view_executes_destructive_post_moderation_action_
         ),
         {"post_moderation": "delete", "post": [reply.id]},
     )
-    assert_contains(response, "Are you sure you want to delete the selected post?")
+    assert_contains(response, "Are you sure you want to delete this post?")
 
     response = moderator_client.post(
         reverse(
@@ -1120,7 +1120,7 @@ def test_private_thread_detail_view_executes_destructive_post_moderation_action_
         {"post_moderation": "delete", "post": [reply.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Are you sure you want to delete the selected post?")
+    assert_contains(response, "Are you sure you want to delete this post?")
 
     response = moderator_client.post(
         reverse(
