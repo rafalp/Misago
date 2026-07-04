@@ -36,6 +36,7 @@ def post_factory():
         is_unapproved: bool = False,
         is_hidden: bool = False,
         is_locked: bool = False,
+        search_document: str | None = None,
     ):
         poster_obj, poster_name, _ = unpack_factory_user_arg(poster)
         last_editor_obj, last_editor_name, last_editor_slug = unpack_factory_user_arg(
@@ -49,6 +50,8 @@ def post_factory():
             original = f"{get_random_string(4)} {get_random_string(4)}"
         if not parsed:
             parsed = f"<p>{original}</p>"
+        if not search_document:
+            search_document = original
 
         return Post.objects.create(
             category=thread.category,
@@ -74,6 +77,7 @@ def post_factory():
             is_unapproved=is_unapproved,
             is_hidden=is_hidden,
             is_locked=is_locked,
+            search_document=search_document,
         )
 
     return _post_factory
@@ -100,6 +104,7 @@ def thread_reply_factory(post_factory):
         is_unapproved: bool = False,
         is_hidden: bool = False,
         is_locked: bool = False,
+        search_document: str | None = None,
         commit: bool = True,
     ):
         if not parsed:
@@ -123,6 +128,7 @@ def thread_reply_factory(post_factory):
             is_unapproved=is_unapproved,
             is_hidden=is_hidden,
             is_locked=is_locked,
+            search_document=search_document,
         )
 
         if post.poster:
