@@ -247,6 +247,7 @@ def _merge_posts_action(
         target.original += f"\n\n{post.original}"
         target.parsed += f"\n{post.parsed}"
         target.search_document += f"\n\n{post.search_document}"
+        target.edits += post.edits
 
         for key in MISAGO_POST_METADATA:
             merge_post_metadata(key, target, post)

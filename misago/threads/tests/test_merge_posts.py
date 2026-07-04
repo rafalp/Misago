@@ -2,6 +2,7 @@ import pytest
 
 from ...likes.like import like_post
 from ...notifications.users import notify_user
+from ...postedits.create import create_post_edit
 from ...solutions.select import select_thread_solution
 from ..merge import (
     get_post_merge_conflicts,
@@ -117,6 +118,42 @@ def test_merge_posts_merges_likes(target, other_post):
 
     other_post_like.refresh_from_db()
     assert other_post_like.post == target
+
+
+def test_merge_posts_merges_post_edits(target, other_post):
+    target_edit = create_post_edit(
+        post=target,
+        user="DeletedUser",
+        old_content="Lorem",
+        new_content="Ipsum",
+    )
+    other_post_edit = create_post_edit(
+        post=other_post,
+        user="DeletedUser",
+        old_content="Lorem",
+        new_content="Ipsum",
+    )
+
+    merge_posts(target, [other_post], {})
+
+    target_edit.refresh_from_db()
+    assert target_edit.post == target
+
+    other_post_edit.refresh_from_db()
+    assert other_post_edit.post == target
+
+
+def test_merge_posts_merges_post_edits_count(target, other_post):
+    target.edits = 1
+    target.save()
+
+    other_post.edits = 2
+    other_post.save()
+
+    merge_posts(target, [other_post], {})
+
+    target.refresh_from_db()
+    assert target.edits == 3
 
 
 def test_merge_posts_merges_thread_post_notifications(user, target, other_post):
