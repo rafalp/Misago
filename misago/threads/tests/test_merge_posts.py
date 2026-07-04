@@ -1,5 +1,6 @@
 import pytest
 
+from ...likes.like import like_post
 from ..merge import (
     get_post_merge_conflicts,
     get_post_merge_form_fields,
@@ -66,6 +67,62 @@ def test_get_merge_posts_merges_posts_metadata(thread_reply_factory, thread):
         "highlight_code": ["asm", "php", "python"],
         "posts": [6, 5, 4],
     }
+
+
+def test_merge_posts_merges_attachments(thread_reply_factory, thread, text_attachment):
+    target = thread_reply_factory(
+        thread,
+        original="Lorem ipsum",
+        parsed="<p>Lorem ipsum</p>",
+        search_document="Lorem",
+    )
+    other_post = thread_reply_factory(
+        thread,
+        original="Dolor met",
+        parsed="<p>Dolor met</p>",
+        search_document="Dolor",
+    )
+
+    text_attachment.associate_with_post(other_post)
+    text_attachment.save()
+
+    merge_posts(target, [other_post], {})
+
+    text_attachment.refresh_from_db()
+    assert text_attachment.post == target
+
+
+def test_merge_posts_merges_likes(thread_reply_factory, thread):
+    target = thread_reply_factory(
+        thread,
+        original="Lorem ipsum",
+        parsed="<p>Lorem ipsum</p>",
+        search_document="Lorem",
+    )
+    other_post = thread_reply_factory(
+        thread,
+        original="Dolor met",
+        parsed="<p>Dolor met</p>",
+        search_document="Dolor",
+    )
+
+    target_like = like_post(target, "Bob")
+    other_post_like = like_post(other_post, "Alice")
+
+    merge_posts(target, [other_post], {})
+
+    target.refresh_from_db()
+    assert target.likes == 2
+    assert target.last_likes == [
+        {"id": None, "username": "Alice"},
+        {"id": None, "username": "Bob"},
+    ]
+
+    target_like.refresh_from_db()
+    assert target_like.post == target
+
+    other_post_like.refresh_from_db()
+    assert other_post_like.post == target
 
 
 def test_get_merge_posts_deletes_old_posts(thread_reply_factory, thread):

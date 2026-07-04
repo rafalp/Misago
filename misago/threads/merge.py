@@ -7,6 +7,7 @@ from django.utils.translation import pgettext
 
 from ..attachments.models import Attachment
 from ..likes.models import Like
+from ..likes.synchronize import synchronize_post_likes
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
@@ -260,12 +261,18 @@ def _merge_posts_action(
         if save_thread:
             thread.save()
 
+    Attachment.objects.filter(post__in=posts).update(post=target)
+    Like.objects.filter(post__in=posts).update(post=target)
+    Notification.objects.filter(post__in=posts).update(post=target)
+    PostEdit.objects.filter(post__in=posts).update(post=target)
+
     post_ids = [post.id for post in posts]
 
     delete_all(Post, id=post_ids)
 
-    target.set_search_vector()
+    synchronize_post_likes(target, commit=False, request=request)
 
+    target.set_search_vector()
     target.save()
 
     return target
