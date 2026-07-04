@@ -1,6 +1,7 @@
 import pytest
 
 from ...likes.like import like_post
+from ...notifications.users import notify_user
 from ..merge import (
     get_post_merge_conflicts,
     get_post_merge_form_fields,
@@ -123,6 +124,48 @@ def test_merge_posts_merges_likes(thread_reply_factory, thread):
 
     other_post_like.refresh_from_db()
     assert other_post_like.post == target
+
+
+def test_merge_posts_merges_thread_post_notifications(
+    thread_reply_factory, user, thread
+):
+    target = thread_reply_factory(
+        thread,
+        original="Lorem ipsum",
+        parsed="<p>Lorem ipsum</p>",
+        search_document="Lorem",
+    )
+    other_post = thread_reply_factory(
+        thread,
+        original="Dolor met",
+        parsed="<p>Dolor met</p>",
+        search_document="Dolor",
+    )
+
+    target_notification = notify_user(
+        user,
+        "TEST",
+        "DeletedUser",
+        target.category,
+        target.thread,
+        target,
+    )
+    other_post_notification = notify_user(
+        user,
+        "TEST",
+        "DeletedUser",
+        other_post.category,
+        other_post.thread,
+        other_post,
+    )
+
+    merge_posts(target, [other_post], {})
+
+    target_notification.refresh_from_db()
+    assert target_notification.post == target
+
+    other_post_notification.refresh_from_db()
+    assert other_post_notification.post == target
 
 
 def test_get_merge_posts_deletes_old_posts(thread_reply_factory, thread):
