@@ -2,12 +2,41 @@ import pytest
 
 from ...likes.like import like_post
 from ...notifications.users import notify_user
+from ...solutions.select import select_thread_solution
 from ..merge import (
     get_post_merge_conflicts,
     get_post_merge_form_fields,
     merge_posts,
 )
 from ..models import Post
+
+
+@pytest.fixture
+def posts(thread_reply_factory, thread):
+    target = thread_reply_factory(
+        thread,
+        original="Lorem ipsum",
+        parsed="<p>Lorem ipsum</p>",
+        search_document="Lorem",
+    )
+    other_post = thread_reply_factory(
+        thread,
+        original="Dolor met",
+        parsed="<p>Dolor met</p>",
+        search_document="Dolor",
+    )
+
+    return (target, other_post)
+
+
+@pytest.fixture
+def target(posts):
+    return posts[0]
+
+
+@pytest.fixture
+def other_post(posts):
+    return posts[1]
 
 
 def test_get_post_merge_conflicts_returns_dict(post, reply):
@@ -20,20 +49,7 @@ def test_get_post_merge_form_fields_returns_dict():
     assert isinstance(fields, dict)
 
 
-def test_get_merge_posts_merges_posts_contents(thread_reply_factory, thread):
-    target = thread_reply_factory(
-        thread,
-        original="Lorem ipsum",
-        parsed="<p>Lorem ipsum</p>",
-        search_document="Lorem",
-    )
-    other_post = thread_reply_factory(
-        thread,
-        original="Dolor met",
-        parsed="<p>Dolor met</p>",
-        search_document="Dolor",
-    )
-
+def test_get_merge_posts_merges_posts_contents(target, other_post):
     merge_posts(target, [other_post], {})
 
     assert target.original == "Lorem ipsum\n\nDolor met"
@@ -41,20 +57,7 @@ def test_get_merge_posts_merges_posts_contents(thread_reply_factory, thread):
     assert target.search_document == "Lorem\n\nDolor"
 
 
-def test_get_merge_posts_merges_posts_metadata(thread_reply_factory, thread):
-    target = thread_reply_factory(
-        thread,
-        original="Lorem ipsum",
-        parsed="<p>Lorem ipsum</p>",
-        search_document="Lorem",
-    )
-    other_post = thread_reply_factory(
-        thread,
-        original="Dolor met",
-        parsed="<p>Dolor met</p>",
-        search_document="Dolor",
-    )
-
+def test_get_merge_posts_merges_posts_metadata(target, other_post):
     target.metadata = {
         "attachments": [1, 2, 3],
         "highlight_code": ["asm", "python"],
@@ -70,20 +73,23 @@ def test_get_merge_posts_merges_posts_metadata(thread_reply_factory, thread):
     }
 
 
-def test_merge_posts_merges_attachments(thread_reply_factory, thread, text_attachment):
-    target = thread_reply_factory(
-        thread,
-        original="Lorem ipsum",
-        parsed="<p>Lorem ipsum</p>",
-        search_document="Lorem",
-    )
-    other_post = thread_reply_factory(
-        thread,
-        original="Dolor met",
-        parsed="<p>Dolor met</p>",
-        search_document="Dolor",
-    )
+def test_merge_posts_updates_thread_last_post(thread, target, other_post):
+    merge_posts(target, [other_post], {})
 
+    thread.refresh_from_db()
+    assert thread.last_post == target
+
+
+def test_merge_posts_merges_solution(thread, target, other_post):
+    select_thread_solution(thread, other_post, "John")
+
+    merge_posts(target, [other_post], {})
+
+    thread.refresh_from_db()
+    assert thread.solution == target
+
+
+def test_merge_posts_merges_attachments(target, other_post, text_attachment):
     text_attachment.associate_with_post(other_post)
     text_attachment.save()
 
@@ -93,20 +99,7 @@ def test_merge_posts_merges_attachments(thread_reply_factory, thread, text_attac
     assert text_attachment.post == target
 
 
-def test_merge_posts_merges_likes(thread_reply_factory, thread):
-    target = thread_reply_factory(
-        thread,
-        original="Lorem ipsum",
-        parsed="<p>Lorem ipsum</p>",
-        search_document="Lorem",
-    )
-    other_post = thread_reply_factory(
-        thread,
-        original="Dolor met",
-        parsed="<p>Dolor met</p>",
-        search_document="Dolor",
-    )
-
+def test_merge_posts_merges_likes(target, other_post):
     target_like = like_post(target, "Bob")
     other_post_like = like_post(other_post, "Alice")
 
@@ -126,22 +119,7 @@ def test_merge_posts_merges_likes(thread_reply_factory, thread):
     assert other_post_like.post == target
 
 
-def test_merge_posts_merges_thread_post_notifications(
-    thread_reply_factory, user, thread
-):
-    target = thread_reply_factory(
-        thread,
-        original="Lorem ipsum",
-        parsed="<p>Lorem ipsum</p>",
-        search_document="Lorem",
-    )
-    other_post = thread_reply_factory(
-        thread,
-        original="Dolor met",
-        parsed="<p>Dolor met</p>",
-        search_document="Dolor",
-    )
-
+def test_merge_posts_merges_thread_post_notifications(user, target, other_post):
     target_notification = notify_user(
         user,
         "TEST",
@@ -168,20 +146,7 @@ def test_merge_posts_merges_thread_post_notifications(
     assert other_post_notification.post == target
 
 
-def test_get_merge_posts_deletes_old_posts(thread_reply_factory, thread):
-    target = thread_reply_factory(
-        thread,
-        original="Lorem ipsum",
-        parsed="<p>Lorem ipsum</p>",
-        search_document="Lorem",
-    )
-    other_post = thread_reply_factory(
-        thread,
-        original="Dolor met",
-        parsed="<p>Dolor met</p>",
-        search_document="Dolor",
-    )
-
+def test_get_merge_posts_deletes_old_posts(target, other_post):
     merge_posts(target, [other_post], {})
 
     with pytest.raises(Post.DoesNotExist):
