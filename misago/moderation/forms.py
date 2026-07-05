@@ -203,7 +203,6 @@ class MergeThreadsForm(forms.Form):
     is_hidden = forms.BooleanField(required=False)
 
     disallowed_categories: set[int]
-    conflicts_fields: list[str]
 
     request: HttpRequest
     conflicts: dict[str, list[Model]]
@@ -220,7 +219,9 @@ class MergeThreadsForm(forms.Form):
 
         super().__init__(*args, **kwargs)
 
+        self.fields.update(get_thread_merge_form_fields(conflicts, request))
         self.fields["category"].choices = request.categories.get_choices()
+
         self.disallowed_categories = get_disallowed_category_choices(
             request.user_permissions, request.categories
         )
