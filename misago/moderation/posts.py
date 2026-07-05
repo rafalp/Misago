@@ -295,7 +295,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
                 )
 
     def get_form(self, form_submitted: bool) -> Form:
-        form_kwargs = {
+        kwargs = {
             "prefix": self.form_prefix,
             "request": self.request,
             "initial": {
@@ -304,9 +304,9 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
         }
 
         if form_submitted:
-            return self.form_class(self.request.POST, **form_kwargs)
+            return self.form_class(self.request.POST, **kwargs)
 
-        return self.form_class(**form_kwargs)
+        return self.form_class(**kwargs)
 
     def form_valid(self, form) -> ModerationResult:
         request = self.request
@@ -377,16 +377,16 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
                 )
 
     def get_form(self, form_submitted: bool) -> Form:
-        form_kwargs = {
+        kwargs = {
             "prefix": self.form_prefix,
             "request": self.request,
             "current_thread": self.thread,
         }
 
         if form_submitted:
-            return self.form_class(self.request.POST, **form_kwargs)
+            return self.form_class(self.request.POST, **kwargs)
 
-        return self.form_class(**form_kwargs)
+        return self.form_class(**kwargs)
 
     def form_valid(self, form) -> ModerationResult:
         request = self.request
@@ -466,16 +466,16 @@ class MergePostsModerationAction(FormMixin, PostsModerationAction):
                 )
 
     def get_form(self, form_submitted: bool) -> Form:
-        form_kwargs = {
+        kwargs = {
             "prefix": self.form_prefix,
             "request": self.request,
             "conflicts": get_post_merge_conflicts(self.posts, self.request),
         }
 
         if form_submitted:
-            return self.form_class(self.request.POST, **form_kwargs)
+            return self.form_class(self.request.POST, **kwargs)
 
-        return self.form_class(**form_kwargs)
+        return self.form_class(**kwargs)
 
     def form_valid(self, form) -> ModerationResult:
         request = self.request

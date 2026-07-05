@@ -286,17 +286,18 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
     template_name = "misago/moderation/split_posts.html"
 
     def get_form(self, form_submitted: bool) -> Form:
-        form_kwargs = {
+        kwargs = {
             "prefix": self.form_prefix,
             "request": self.request,
             "initial": {
                 "category": self.thread.category_id,
             },
         }
-        if form_submitted:
-            return self.form_class(self.request.POST, **form_kwargs)
 
-        return self.form_class(**form_kwargs)
+        if form_submitted:
+            return self.form_class(self.request.POST, **kwargs)
+
+        return self.form_class(**kwargs)
 
     def validate(self):
         if self.post.id == self.thread.first_post_id:
@@ -366,15 +367,16 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
     template_name = "misago/moderation/move_posts.html"
 
     def get_form(self, form_submitted: bool) -> Form:
-        form_kwargs = {
+        kwargs = {
             "prefix": self.form_prefix,
             "request": self.request,
             "current_thread": self.thread,
         }
-        if form_submitted:
-            return self.form_class(self.request.POST, **form_kwargs)
 
-        return self.form_class(**form_kwargs)
+        if form_submitted:
+            return self.form_class(self.request.POST, **kwargs)
+
+        return self.form_class(**kwargs)
 
     def validate(self):
         if self.post.id == self.thread.first_post_id:
