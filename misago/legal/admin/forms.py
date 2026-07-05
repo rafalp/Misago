@@ -34,6 +34,7 @@ class AgreementForm(forms.ModelForm):
             "If your agreement is located on other page, enter here a link to it.",
         ),
         required=False,
+        assume_scheme="http",
     )
     text = forms.CharField(
         label=pgettext_lazy("admin agreement form", "Text"),

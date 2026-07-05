@@ -13,6 +13,7 @@ class MenuItemForm(forms.ModelForm):
         help_text=pgettext_lazy(
             "admin menu item form", "URL where this item will point to."
         ),
+        assume_scheme="http",
     )
     menu = forms.ChoiceField(
         label=pgettext_lazy("admin menu item form", "Menu"),

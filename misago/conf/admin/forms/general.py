@@ -34,6 +34,7 @@ class GeneralSettingsForm(SettingsForm):
     forum_address = forms.URLField(
         label=pgettext_lazy("admin general settings form", "Forum address"),
         max_length=255,
+        assume_scheme="http",
     )
 
     index_title = forms.CharField(
