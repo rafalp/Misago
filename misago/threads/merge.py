@@ -1,11 +1,13 @@
-from typing import Iterable
+from typing import TYPE_CHECKING, Iterable, Union
 
 from django import forms
 from django.db.models import Model
 from django.http import HttpRequest
+from django.utils import timezone
 from django.utils.translation import pgettext
 
 from ..attachments.models import Attachment
+from ..core.utils import slugify
 from ..likes.models import Like
 from ..likes.synchronize import synchronize_post_likes
 from ..notifications.models import Notification, WatchedThread
@@ -23,6 +25,9 @@ from .hooks import (
     merge_threads_hook,
 )
 from .models import Post, Thread
+
+if TYPE_CHECKING:
+    from ..users.models import User
 
 
 def get_thread_merge_conflicts(
@@ -216,6 +221,9 @@ def merge_posts(
     target: Post,
     posts: Iterable[Post],
     conflicts: dict[str, Model],
+    merged_by: Union["User", str],
+    edit_reason: str | None = None,
+    commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Post:
     return merge_posts_hook(
@@ -223,6 +231,9 @@ def merge_posts(
         target,
         posts,
         conflicts,
+        merged_by,
+        edit_reason,
+        commit,
         request,
     )
 
@@ -239,6 +250,9 @@ def _merge_posts_action(
     target: Post,
     posts: Iterable[Post],
     conflicts: dict[str, Model],
+    merged_by: Union["User", str],
+    edit_reason: str | None = None,
+    commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Post:
     thread = target.thread
@@ -273,8 +287,22 @@ def _merge_posts_action(
 
     synchronize_post_likes(target, commit=False, request=request)
 
+    target.updated_at = timezone.now()
+    target.edits += 1
+    target.last_edit_reason = edit_reason
+
+    if isinstance(merged_by, str):
+        target.last_editor_name = merged_by
+        target.last_editor_slug = slugify(merged_by)
+    else:
+        target.last_editor = merged_by
+        target.last_editor_name = merged_by.username
+        target.last_editor_slug = merged_by.slug
+
     target.set_search_vector()
-    target.save()
+
+    if commit:
+        target.save()
 
     return target
 
