@@ -106,6 +106,7 @@ def merge_threads(
     target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
+    commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Thread:
     return merge_threads_hook(
@@ -113,6 +114,7 @@ def merge_threads(
         target,
         threads,
         conflicts,
+        commit,
         request,
     )
 
@@ -121,6 +123,7 @@ def _merge_threads_action(
     target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
+    commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Thread:
     new_category = target.category
@@ -181,7 +184,8 @@ def _merge_threads_action(
 
     delete_all(Thread, id=thread_ids)
 
-    target.save()
+    if commit:
+        target.save()
 
     return target
 

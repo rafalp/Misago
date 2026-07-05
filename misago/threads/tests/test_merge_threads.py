@@ -465,3 +465,23 @@ def test_merge_threads_deletes_old_threads(
         other_user_thread.refresh_from_db()
 
     assert default_category.last_thread is None
+
+
+def test_merge_threads_save_target_if_commit_is_false(
+    thread_reply_factory, sibling_category, thread, user_thread, other_user_thread
+):
+    user_thread_solution = thread_reply_factory(thread, poster="PosterB")
+    select_thread_solution(user_thread, user_thread_solution, "Bob")
+
+    new_thread = create_thread(sibling_category, "Merged thread")
+    merge_threads(
+        new_thread,
+        [thread, user_thread, other_user_thread],
+        {"solution": user_thread},
+        commit=False,
+    )
+
+    assert new_thread.solution == user_thread_solution
+
+    new_thread.refresh_from_db()
+    assert new_thread.solution is None

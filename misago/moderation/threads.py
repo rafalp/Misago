@@ -583,7 +583,7 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
             request=request,
         )
 
-        merge_threads(new_thread, threads, conflicts, request)
+        merge_threads(new_thread, threads, conflicts, request=request)
 
         for thread in threads:
             create_merged_thread_update(

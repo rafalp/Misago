@@ -22,6 +22,7 @@ def custom_merge_threads_filter(
     target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
+    commit: bool=True,
     request: HttpRequest | None=None,
 ) -> Thread:
     ...
@@ -56,6 +57,13 @@ These threads are deleted during the merge.
 A `dict` with the conflict resolutions to use during the merge.
 
 
+#### `commit: bool = True`
+
+Whether the updated thread instance should be saved to the database.
+
+Defaults to `True`.
+
+
 #### `request: HttpRequest | None`
 
 The request object, or `None` if not provided.
@@ -73,6 +81,7 @@ def merge_threads_action(
     target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
+    commit: bool=True,
     request: HttpRequest | None=None,
 ) -> Thread:
     ...
@@ -100,6 +109,13 @@ These threads are deleted during the merge.
 A `dict` with the conflict resolutions to use during the merge.
 
 
+#### `commit: bool = True`
+
+Whether the updated thread instance should be saved to the database.
+
+Defaults to `True`.
+
+
 #### `request: HttpRequest | None`
 
 The request object, or `None` if not provided.
@@ -112,7 +128,7 @@ The desynchronized `Thread` instance.
 
 ## Example
 
-Update `PluginModel` objects during the merge
+Update `PluginModel` objects during the merge:
 
 ```python
 from typing import Iterable
@@ -130,10 +146,11 @@ def get_plugin_merge_conflicts(
     target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
+    commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Thread:
     PluginModel.objects.filter(thread__in=threads).update(
         category=target.category, thread=target
     )
 
-    return action(target, threads, conflicts, request)
+    return action(target, threads, conflicts, commit, request)
