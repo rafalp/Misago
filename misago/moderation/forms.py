@@ -13,7 +13,7 @@ from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
 from ..posting.validators import validate_thread_title
 from ..threads.enums import ThreadPinned
-from ..threads.merge import get_thread_merge_form_fields
+from ..threads.merge import get_post_merge_form_fields, get_thread_merge_form_fields
 from ..threads.models import Thread
 
 THREAD_URLS = (
@@ -137,6 +137,17 @@ def get_valid_thread(request: HttpRequest, thread_id: int) -> Thread:
     return thread
 
 
+def get_conflicts_resolutions(conflicts: dict[str, list[Model]], cleaned_data: dict):
+    resolutions: dict[str, Model] = {}
+    for conflict, objects in conflicts.items():
+        if len(objects) > 1:
+            choices = {obj.id: obj for obj in objects}
+            resolutions[conflict] = choices[cleaned_data[conflict]]
+        else:
+            resolutions[conflict] = objects[0]
+    return resolutions
+
+
 class HideForm(forms.Form):
     hidden_reason = forms.CharField(max_length=255, required=False)
 
@@ -185,43 +196,7 @@ class MoveThreadsForm(forms.Form):
         return data
 
 
-class MergeForm(forms.Form):
-    conflicts: dict[str, list[Model]]
-
-    def __init__(
-        self,
-        *args,
-        request: HttpRequest,
-        conflicts: dict[str, list[Model]],
-        **kwargs,
-    ):
-        self.request = request
-        self.conflicts = conflicts
-
-        super().__init__(*args, **kwargs)
-
-        self.fields.update(get_thread_merge_form_fields(conflicts, request))
-
-    @property
-    def conflicts_fields(self):
-        return [
-            self[field_name]
-            for field_name, choices in self.conflicts.items()
-            if len(choices) > 1
-        ]
-
-    def get_conflicts_resolutions(self):
-        resolutions: dict[str, Model] = {}
-        for conflict, objects in self.conflicts.items():
-            if len(objects) > 1:
-                choices = {obj.id: obj for obj in objects}
-                resolutions[conflict] = choices[self.cleaned_data[conflict]]
-            else:
-                resolutions[conflict] = objects[0]
-        return resolutions
-
-
-class MergeThreadsForm(MergeForm):
+class MergeThreadsForm(forms.Form):
     category = forms.TypedChoiceField(coerce=int, choices=[])
     title = forms.CharField(max_length=255)
     is_locked = forms.BooleanField(required=False)
@@ -240,7 +215,10 @@ class MergeThreadsForm(MergeForm):
         conflicts: dict[str, list[Model]],
         **kwargs,
     ):
-        super().__init__(*args, request=request, conflicts=conflicts, **kwargs)
+        self.request = request
+        self.conflicts = conflicts
+
+        super().__init__(*args, **kwargs)
 
         self.fields["category"].choices = request.categories.get_choices()
         self.disallowed_categories = get_disallowed_category_choices(
@@ -254,6 +232,14 @@ class MergeThreadsForm(MergeForm):
                 initial=ThreadPinned.NONE,
                 required=False,
             )
+
+    @property
+    def conflicts_fields(self):
+        return [
+            self[field_name]
+            for field_name, choices in self.conflicts.items()
+            if len(choices) > 1
+        ]
 
     def clean_category(self):
         data = self.cleaned_data["category"]
@@ -281,6 +267,9 @@ class MergeThreadsForm(MergeForm):
         if data.get("category"):
             data["category"] = Category.objects.get(id=data["category"])
         return data
+
+    def get_conflicts_resolutions(self):
+        return get_conflicts_resolutions(self.conflicts, self.cleaned_data)
 
 
 class MergeThreadForm(forms.Form):
@@ -332,6 +321,35 @@ class MergeThreadForm(forms.Form):
         return get_valid_thread(self.request, thread_id)
 
 
+class MergeThreadConflictsForm(forms.Form):
+    conflicts: dict[str, list[Model]]
+
+    def __init__(
+        self,
+        *args,
+        request: HttpRequest,
+        conflicts: dict[str, list[Model]],
+        **kwargs,
+    ):
+        self.request = request
+        self.conflicts = conflicts
+
+        super().__init__(*args, **kwargs)
+
+        self.fields.update(get_thread_merge_form_fields(conflicts, request))
+
+    @property
+    def conflicts_fields(self):
+        return [
+            self[field_name]
+            for field_name, choices in self.conflicts.items()
+            if len(choices) > 1
+        ]
+
+    def get_conflicts_resolutions(self):
+        return get_conflicts_resolutions(self.conflicts, self.changed_data)
+
+
 class SplitPostsForm(forms.Form):
     category = forms.TypedChoiceField(coerce=int, choices=[])
     title = forms.CharField(max_length=255)
@@ -349,10 +367,8 @@ class SplitPostsForm(forms.Form):
         widget=forms.RadioSelect,
     )
 
-    disallowed_categories: set[int]
-    conflicts_fields: list[str]
-
     request: HttpRequest
+    disallowed_categories: set[int]
 
     def __init__(
         self,
@@ -453,3 +469,35 @@ class MovePostsForm(forms.Form):
 
     def get_target_thread(self, thread_id: int):
         return get_valid_thread(self.request, thread_id)
+
+
+class MergePostsForm(forms.Form):
+    edit_reason = forms.CharField(max_length=255, required=False)
+
+    request: HttpRequest
+    conflicts: dict[str, list[Model]]
+
+    def __init__(
+        self,
+        *args,
+        request: HttpRequest,
+        conflicts: dict[str, list[Model]],
+        **kwargs,
+    ):
+        self.request = request
+        self.conflicts = conflicts
+
+        super().__init__(*args, **kwargs)
+
+        self.fields.update(get_post_merge_form_fields(conflicts, request))
+
+    @property
+    def conflicts_fields(self):
+        return [
+            self[field_name]
+            for field_name, choices in self.conflicts.items()
+            if len(choices) > 1
+        ]
+
+    def get_conflicts_resolutions(self):
+        return get_conflicts_resolutions(self.conflicts, self.cleaned_data)

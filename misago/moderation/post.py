@@ -13,6 +13,7 @@ from ..threads.create import create_thread
 from ..threads.delete import delete_post
 from ..threads.hide import hide_post, unhide_post
 from ..threads.lock import lock_post, unlock_post
+from ..threads.merge import merge_posts
 from ..threads.models import Post, Thread
 from ..threads.move import move_post
 from ..threads.synchronize import synchronize_thread

@@ -46,7 +46,7 @@ from .actions import (
     ModerationResult,
     ThreadModerationAction,
 )
-from .forms import HideForm, MergeForm, MergeThreadForm, MoveThreadsForm
+from .forms import HideForm, MergeThreadConflictsForm, MergeThreadForm, MoveThreadsForm
 from .hooks import (
     get_private_thread_moderation_actions_hook,
     get_thread_moderation_actions_hook,
@@ -467,7 +467,7 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
     form_class = MergeThreadForm
     template_name = "misago/moderation/merge_thread.html"
 
-    conflicts_form_class = MergeForm
+    conflicts_form_class = MergeThreadConflictsForm
     conflicts_template_name = "misago/moderation/merge_thread_conflicts.html"
 
     def get_form(self, form_submitted: bool):
