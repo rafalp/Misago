@@ -348,7 +348,7 @@ class MergeThreadConflictsForm(forms.Form):
         ]
 
     def get_conflicts_resolutions(self):
-        return get_conflicts_resolutions(self.conflicts, self.changed_data)
+        return get_conflicts_resolutions(self.conflicts, self.cleaned_data)
 
 
 class SplitPostsForm(forms.Form):
