@@ -455,7 +455,7 @@ class MergePostsModerationAction(FormMixin, PostsModerationAction):
         target, posts = posts[0], posts[1:]
 
         for post in posts:
-            if (target.poster_id and post.poster_id != target.poster_id) or (
+            if post.poster_id != target.poster_id or (
                 not target.poster_id and post.poster_name != target.poster_name
             ):
                 raise ValidationError(

@@ -608,6 +608,7 @@ class MergeThreadPostForm(forms.Form):
         initial="other",
         widget=forms.RadioSelect,
     )
+    edit_reason = forms.CharField(max_length=255, required=False)
 
     valid_urls = (
         "misago:post",
@@ -618,13 +619,18 @@ class MergeThreadPostForm(forms.Form):
     )
 
     request: HttpRequest
+    thread: Thread
     post: Post
 
     def __init__(self, *args, request: HttpRequest, post: Post, **kwargs):
         self.request = request
+        self.thread = post.thread
         self.post = post
 
         super().__init__(*args, **kwargs)
+
+        if post.id == post.thread.first_post_id:
+            del self.fields["direction"]
 
     def clean_other_post(self) -> Post:
         data = self.cleaned_data["other_post"]
@@ -652,7 +658,42 @@ class MergeThreadPostForm(forms.Form):
                 code="invalid",
             )
 
+        if (post.poster_id != self.post.poster_id) or (
+            not self.post.poster_id and not post.poster_name != self.post.poster_name
+        ):
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form post validation",
+                    "Merged posts must belong to the same user.",
+                ),
+                code="invalid",
+            )
+
         return post
+
+    def clean(self):
+        data = super().clean()
+
+        data.setdefault("direction", "current")
+
+        other_post = data.get("other_post")
+        if (
+            other_post
+            and other_post.id == self.thread.first_post_id
+            and data["direction"] == "current"
+        ):
+            self.add_error(
+                "direction",
+                forms.ValidationError(
+                    pgettext(
+                        "moderation form post validation",
+                        "Thread's first post cannot be merged into another post.",
+                    ),
+                    code="invalid",
+                ),
+            )
+
+        return data
 
     def get_other_post(self, post_id: int) -> Post:
         from ..threads.views.backend import thread_backend

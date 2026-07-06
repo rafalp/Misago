@@ -1,0 +1,49 @@
+{% load i18n misago_forms %}
+
+{% with field=form.other_post %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Other post link:" context "moderation merge post form" %}
+    </label>
+    <input type="text" class="form-control" maxlength="{{ field.field.max_length }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value|default:'' }}" required />
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endwith %}
+{% if form.direction %}
+  {% with field=form.direction %}
+    <div class="form-group{% if field.errors %} has-error{% endif %}">
+      <label class="control-label" for="{{ field.id_for_label }}">
+        {% translate "Merge direction:" context "moderation merge post form" %}
+      </label>
+      <div class="form-control-choices">
+        {% for choice in field.subwidgets %}
+          <div class="radio">
+            <label>
+              <input type="radio" name="{{ field.html_name }}" value="{{ choice.data.value }}"{{ choice|checkedhtml }}>
+              {{ choice.choice_label }}
+            </label>
+          </div>
+        {% endfor %}
+      </div>
+      {% for error in field.errors %}
+        <p class="help-block">{{ error }}</p>
+      {% endfor %}
+    </div>
+  {% endwith %}
+{% endif %}
+{% with field=form.edit_reason %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Reason for merging:" context "moderation merge post form" %}
+    </label>
+    <input class="form-control" type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" maxlength="{{ field.maxlength }}">
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+    <p class="help-block">
+      {% translate "Short explanation for why posts were merged. Optional." context "moderation merge post form" %}
+    </p>
+  </div>
+{% endwith %}
