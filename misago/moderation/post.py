@@ -30,7 +30,14 @@ from .actions import (
     ModerationResult,
     PostModerationAction,
 )
-from .forms import HideForm, MovePostsForm, SplitPostsForm
+from .forms import (
+    HideForm,
+    MergePostConflictsForm,
+    MergePrivateThreadPostForm,
+    MergeThreadPostForm,
+    MovePostsForm,
+    SplitPostsForm,
+)
 from .hooks import (
     get_private_thread_post_moderation_actions_hook,
     get_thread_post_moderation_actions_hook,

@@ -675,7 +675,7 @@ class MergePrivateThreadPostForm(MergeThreadPostForm):
         from ..privatethreads.views.backend import private_thread_backend
 
         return private_thread_backend.get_post(
-            self.request, self.thread, post_id, for_content=True
+            self.request, self.post.thread, post_id, for_content=True
         )
 
 
