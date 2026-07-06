@@ -4,6 +4,7 @@ from django.urls import reverse
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import Moderator
 from ...polls.models import Poll
+from ...postedits.models import PostEdit
 from ...solutions.select import select_thread_solution
 from ...test import UNORDERED, assert_contains
 from ...testutils import grant_category_group_permissions
@@ -2602,6 +2603,337 @@ def test_thread_detail_view_move_posts_moderation_action_validates_target_thread
     assert not ThreadUpdate.objects.exists()
 
     mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_posts_moderation_action_merges_posts(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    thread,
+    mock_posts_synchronize_categories,
+):
+    target_post = thread_reply_factory(thread, poster=user, original="Target body")
+    other_post = thread_reply_factory(thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "merge", "posts": [target_post.id, other_post.id]},
+    )
+    assert_contains(response, "Merge posts")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "merge",
+            "posts": [target_post.id, other_post.id],
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    target_post.refresh_from_db()
+    assert target_post.original == "Target body\n\nOther body"
+    assert not target_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=target_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Target body"
+    assert post_edit.new_content == "Target body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_posts_moderation_action_merges_posts_in_htmx(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    thread,
+    mock_posts_synchronize_categories,
+):
+    target_post = thread_reply_factory(thread, poster=user, original="Target body")
+    other_post = thread_reply_factory(thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "merge", "posts": [target_post.id, other_post.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "merge",
+            "posts": [target_post.id, other_post.id],
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 200
+
+    target_post.refresh_from_db()
+    assert target_post.original == "Target body\n\nOther body"
+    assert not target_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=target_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Target body"
+    assert post_edit.new_content == "Target body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_posts_moderation_action_merges_posts_with_merge_reason(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    thread,
+    mock_posts_synchronize_categories,
+):
+    target_post = thread_reply_factory(thread, poster=user, original="Target body")
+    other_post = thread_reply_factory(thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "merge", "posts": [target_post.id, other_post.id]},
+    )
+    assert_contains(response, "Merge posts")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "merge",
+            "posts": [target_post.id, other_post.id],
+            "moderation-edit_reason": "Test merge",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    target_post.refresh_from_db()
+    assert target_post.original == "Target body\n\nOther body"
+    assert target_post.last_edit_reason == "Test merge"
+
+    post_edit = PostEdit.objects.get(post=target_post)
+    assert post_edit.user == moderator
+    assert post_edit.edit_reason == "Test merge"
+    assert post_edit.old_content == "Target body"
+    assert post_edit.new_content == "Target body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_posts_moderation_action_merges_posts_with_attachments(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    thread,
+    text_attachment,
+    image_attachment,
+    mock_posts_synchronize_categories,
+):
+    target_post = thread_reply_factory(thread, poster=user, original="Target body")
+    other_post = thread_reply_factory(thread, poster=user, original="Other body")
+
+    text_attachment.associate_with_post(target_post)
+    text_attachment.save()
+
+    image_attachment.associate_with_post(other_post)
+    image_attachment.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "merge", "posts": [target_post.id, other_post.id]},
+    )
+    assert_contains(response, "Merge posts")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "merge",
+            "posts": [target_post.id, other_post.id],
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    target_post.refresh_from_db()
+    assert target_post.original == "Target body\n\nOther body"
+    assert not target_post.last_edit_reason
+
+    text_attachment.refresh_from_db()
+    assert text_attachment.post == target_post
+
+    image_attachment.refresh_from_db()
+    assert image_attachment.post == target_post
+
+    post_edit = PostEdit.objects.get(post=target_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Target body"
+    assert post_edit.new_content == "Target body\n\nOther body"
+    assert post_edit.attachments[0]["id"] == image_attachment.id
+    assert post_edit.attachments[0]["change"] == "+"
+    assert post_edit.attachments[1]["id"] == text_attachment.id
+    assert post_edit.attachments[1]["change"] == "="
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_posts_moderation_action_orders_posts_from_oldest(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    thread,
+    mock_posts_synchronize_categories,
+):
+    target_post = thread_reply_factory(thread, poster=user, original="Target body")
+    other_post = thread_reply_factory(thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "merge", "posts": [other_post.id, target_post.id]},
+    )
+    assert_contains(response, "Merge posts")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "merge",
+            "posts": [other_post.id, target_post.id],
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    target_post.refresh_from_db()
+    assert target_post.original == "Target body\n\nOther body"
+    assert not target_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=target_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Target body"
+    assert post_edit.new_content == "Target body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_posts_moderation_action_validates_multiple_posts_are_selected(
+    thread_reply_factory,
+    moderator_client,
+    user,
+    thread,
+    mock_posts_synchronize_categories,
+):
+    target_post = thread_reply_factory(thread, poster=user, original="Target body")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "merge", "posts": [target_post.id]},
+    )
+    assert_contains(response, "Select at least two posts to merge.")
+
+    target_post.refresh_from_db()
+    assert target_post.original == "Target body"
+
+    assert not PostEdit.objects.exists()
+
+    mock_posts_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_posts_moderation_action_validates_posts_are_by_same_user(
+    thread_reply_factory,
+    moderator_client,
+    user,
+    other_user,
+    thread,
+    mock_posts_synchronize_categories,
+):
+    target_post = thread_reply_factory(thread, poster=user, original="Target body")
+    other_post = thread_reply_factory(thread, poster=other_user, original="Other body")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "merge", "posts": [target_post.id, other_post.id]},
+    )
+    assert_contains(response, "Merged posts must belong to the same user.")
+
+    target_post.refresh_from_db()
+    assert target_post.original == "Target body"
+
+    other_post.refresh_from_db()
+    assert other_post.original == "Other body"
+
+    assert not PostEdit.objects.exists()
+
+    mock_posts_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_posts_moderation_action_validates_posts_are_by_same_deleted_user(
+    thread_reply_factory, moderator_client, thread, mock_posts_synchronize_categories
+):
+    target_post = thread_reply_factory(thread, poster="John", original="Target body")
+    other_post = thread_reply_factory(thread, poster="Alice", original="Other body")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "merge", "posts": [target_post.id, other_post.id]},
+    )
+    assert_contains(response, "Merged posts must belong to the same user.")
+
+    target_post.refresh_from_db()
+    assert target_post.original == "Target body"
+
+    other_post.refresh_from_db()
+    assert other_post.original == "Other body"
+
+    assert not PostEdit.objects.exists()
+
+    mock_posts_synchronize_categories.delay.assert_not_called()
 
 
 def test_thread_detail_view_delete_posts_moderation_action_deletes_posts(

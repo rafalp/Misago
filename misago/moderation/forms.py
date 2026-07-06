@@ -502,3 +502,32 @@ class MergePostsForm(forms.Form):
 
     def get_conflicts_resolutions(self):
         return get_conflicts_resolutions(self.conflicts, self.cleaned_data)
+
+
+class MergePostConflictsForm(forms.Form):
+    conflicts: dict[str, list[Model]]
+
+    def __init__(
+        self,
+        *args,
+        request: HttpRequest,
+        conflicts: dict[str, list[Model]],
+        **kwargs,
+    ):
+        self.request = request
+        self.conflicts = conflicts
+
+        super().__init__(*args, **kwargs)
+
+        self.fields.update(get_post_merge_form_fields(conflicts, request))
+
+    @property
+    def conflicts_fields(self):
+        return [
+            self[field_name]
+            for field_name, choices in self.conflicts.items()
+            if len(choices) > 1
+        ]
+
+    def get_conflicts_resolutions(self):
+        return get_conflicts_resolutions(self.conflicts, self.cleaned_data)
