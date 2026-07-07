@@ -516,6 +516,8 @@ class MergePostsModerationAction(FormMixin, PostsModerationAction):
             old_content=old_content,
             new_content=target.original,
             attachments=attachments,
+            edited_at=target.updated_at,
+            request=request,
         )
 
         synchronize_thread(thread, request=request)

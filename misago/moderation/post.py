@@ -4,10 +4,11 @@ from django.forms import Form
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ..categories.models import Category
+from ..attachments.models import Attachment
 from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import notify_on_new_thread_reply
 from ..permissions.proxy import UserPermissionsProxy
+from ..postedits.create import create_post_edit
 from ..threads.approve import approve_post
 from ..threads.create import create_thread
 from ..threads.delete import delete_post
@@ -438,6 +439,8 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
 
 
 class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
+    swap_root = True
+
     id = "merge"
     full_name = pgettext_lazy("post moderation action name", "Merge post")
     button_label = pgettext_lazy("post moderation button label", "Merge")
@@ -495,11 +498,16 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
                 conflict: choices[0] for conflict, choices in conflicts.items()
             }
 
+        attachments = list(
+            Attachment.objects.filter(post__in=[post, other_post]).order_by("-id")
+        )
+
         if form.cleaned_data["direction"] == "other":
-            final_post = other_post
+            final_post, other_post = other_post, post
+            old_content = final_post.original
             merge_posts(
-                other_post,
-                [post],
+                final_post,
+                [other_post],
                 conflicts_resolutions,
                 request.user,
                 edit_reason,
@@ -507,8 +515,9 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
             )
         else:
             final_post = post
+            old_content = final_post.original
             merge_posts(
-                post,
+                final_post,
                 [other_post],
                 conflicts_resolutions,
                 request.user,
@@ -518,6 +527,25 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
 
         final_post.thread = thread
         synchronize_thread(thread, request=request)
+
+        for attachment in attachments:
+            # A bit of black magic: by unsetting attachment post relations
+            # we make 'create_post_edit' record attachment as new addition to a post
+            if attachment.post_id != final_post.id:
+                attachment.category = None
+                attachment.thread = None
+                attachment.post = None
+
+        create_post_edit(
+            post=final_post,
+            user=request.user,
+            edit_reason=edit_reason,
+            old_content=old_content,
+            new_content=final_post.original,
+            attachments=attachments,
+            edited_at=final_post.updated_at,
+            request=request,
+        )
 
         synchronize_categories.delay([final_post.category_id])
 
@@ -538,14 +566,12 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
         )
 
     def get_result(self, post: Post) -> ModerationResult:
-        refresh = False
         redirect_to = self.get_redirect_url(post)
-
         refresh = self.request.path == redirect_to[: redirect_to.rindex("/") + 1]
 
         return ModerationResult(
             refresh=refresh,
-            redirect_to=redirect_to,
+            redirect_to=redirect_to if not refresh else None,
         )
 
     def get_redirect_url(self, post: Post) -> str:
