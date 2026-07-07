@@ -6,7 +6,7 @@ from ...permissions.models import Moderator
 from ...polls.models import Poll
 from ...postedits.models import PostEdit
 from ...solutions.select import select_thread_solution
-from ...test import UNORDERED, assert_contains
+from ...test import UNORDERED, assert_contains, assert_not_contains
 from ...testutils import grant_category_group_permissions
 from ...threadupdates.enums import ThreadUpdateActionName
 from ...threadupdates.models import ThreadUpdate
@@ -1111,7 +1111,7 @@ def test_thread_detail_view_merge_thread_moderation_action_validates_other_threa
             "confirm": "true",
         },
     )
-    assert_contains(response, "Enter a different thread link.")
+    assert_contains(response, "Can&#x27;t merge a thread with itself.")
 
     thread.refresh_from_db()
     other_thread.refresh_from_db()
@@ -2384,7 +2384,7 @@ def test_thread_detail_view_move_posts_moderation_action_validates_target_thread
             "confirm": "true",
         },
     )
-    assert_contains(response, "Enter a different thread link.")
+    assert_contains(response, "Can&#x27;t move posts to the same thread.")
 
     thread.refresh_from_db()
     assert thread.replies == 1
@@ -2739,6 +2739,112 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_posts_with_merg
     post_edit = PostEdit.objects.get(post=target_post)
     assert post_edit.user == moderator
     assert post_edit.edit_reason == "Test merge"
+    assert post_edit.old_content == "Target body"
+    assert post_edit.new_content == "Target body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_posts_moderation_action_merges_other_post_into_solution(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    thread,
+    mock_posts_synchronize_categories,
+):
+    target_post = thread_reply_factory(thread, poster=user, original="Target body")
+    other_post = thread_reply_factory(thread, poster=user, original="Other body")
+
+    select_thread_solution(thread, target_post, moderator)
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "merge", "posts": [target_post.id, other_post.id]},
+    )
+    assert_contains(response, "Merge posts")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "merge",
+            "posts": [target_post.id, other_post.id],
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert thread.solution == target_post
+
+    target_post.refresh_from_db()
+    assert target_post.original == "Target body\n\nOther body"
+    assert not target_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=target_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Target body"
+    assert post_edit.new_content == "Target body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_posts_moderation_action_merges_solution_into_target_post(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    thread,
+    mock_posts_synchronize_categories,
+):
+    target_post = thread_reply_factory(thread, poster=user, original="Target body")
+    other_post = thread_reply_factory(thread, poster=user, original="Other body")
+
+    select_thread_solution(thread, other_post, moderator)
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "merge", "posts": [target_post.id, other_post.id]},
+    )
+    assert_contains(response, "Merge posts")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "merge",
+            "posts": [target_post.id, other_post.id],
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert thread.solution == target_post
+
+    target_post.refresh_from_db()
+    assert target_post.original == "Target body\n\nOther body"
+    assert not target_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=target_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
     assert post_edit.old_content == "Target body"
     assert post_edit.new_content == "Target body\n\nOther body"
 
@@ -3866,7 +3972,7 @@ def test_thread_detail_view_move_post_moderation_action_validates_target_thread_
             "confirm": "true",
         },
     )
-    assert_contains(response, "Enter a different thread link.")
+    assert_contains(response, "Can&#x27;t move posts to the same thread.")
 
     thread.refresh_from_db()
     assert thread.replies == 1
@@ -4084,6 +4190,1384 @@ def test_thread_detail_view_move_post_moderation_action_validates_target_thread_
     assert reply.thread == thread
 
     assert not ThreadUpdate.objects.exists()
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_first_post(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = user_thread.first_post
+    other_post = thread_reply_factory(user_thread, poster=user, original="Other body")
+
+    current_post_content = current_post.original
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_not_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+        + f"#post-{current_post.id}"
+    )
+
+    current_post.refresh_from_db()
+    assert current_post.original == f"{current_post_content}\n\nOther body"
+    assert not current_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=current_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == current_post_content
+    assert post_edit.new_content == f"{current_post_content}\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_first_post_in_htmx(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = user_thread.first_post
+    other_post = thread_reply_factory(user_thread, poster=user, original="Other body")
+
+    current_post_content = current_post.original
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Other post link")
+    assert_not_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 201
+    assert response["hx-refresh"] == "true"
+
+    current_post.refresh_from_db()
+    assert current_post.original == f"{current_post_content}\n\nOther body"
+    assert not current_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=current_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == current_post_content
+    assert post_edit.new_content == f"{current_post_content}\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_post_moderation_action_merges_current_post_into_other(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(user_thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "moderation-direction": "other",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+        + f"#post-{other_post.id}"
+    )
+
+    other_post.refresh_from_db()
+    assert other_post.original == "Current body\n\nOther body"
+    assert not other_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=other_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Other body"
+    assert post_edit.new_content == "Current body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        current_post.refresh_from_db()
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_post_moderation_action_merges_current_post_into_other_in_htmx(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(user_thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "moderation-direction": "other",
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 201
+    assert response["hx-refresh"] == "true"
+
+    other_post.refresh_from_db()
+    assert other_post.original == "Current body\n\nOther body"
+    assert not other_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=other_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Other body"
+    assert post_edit.new_content == "Current body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        current_post.refresh_from_db()
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_current(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(user_thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+        + f"#post-{current_post.id}"
+    )
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body\n\nOther body"
+    assert not current_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=current_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Current body"
+    assert post_edit.new_content == "Current body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_current_in_htmx(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(user_thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 201
+    assert response["hx-refresh"] == "true"
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body\n\nOther body"
+    assert not current_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=current_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Current body"
+    assert post_edit.new_content == "Current body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_post_moderation_action_merges_posts_with_merge_reason(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(user_thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "moderation-direction": "current",
+            "moderation-edit_reason": "Test merge",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+        + f"#post-{current_post.id}"
+    )
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body\n\nOther body"
+    assert current_post.last_edit_reason == "Test merge"
+
+    post_edit = PostEdit.objects.get(post=current_post)
+    assert post_edit.user == moderator
+    assert post_edit.edit_reason == "Test merge"
+    assert post_edit.old_content == "Current body"
+    assert post_edit.new_content == "Current body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_post_moderation_action_merges_other_post_into_solution(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(user_thread, poster=user, original="Other body")
+
+    select_thread_solution(user_thread, current_post, moderator)
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+        + f"#post-{current_post.id}"
+    )
+
+    user_thread.refresh_from_db()
+    assert user_thread.solution == current_post
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body\n\nOther body"
+    assert not current_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=current_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Current body"
+    assert post_edit.new_content == "Current body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_post_moderation_action_merges_solution_into_current_post(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(user_thread, poster=user, original="Other body")
+
+    select_thread_solution(user_thread, other_post, moderator)
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+        + f"#post-{current_post.id}"
+    )
+
+    user_thread.refresh_from_db()
+    assert user_thread.solution == current_post
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body\n\nOther body"
+    assert not current_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=current_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Current body"
+    assert post_edit.new_content == "Current body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_post_moderation_action_merges_posts_with_attachments(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    user_thread,
+    text_attachment,
+    image_attachment,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(user_thread, poster=user, original="Other body")
+
+    text_attachment.associate_with_post(current_post)
+    text_attachment.save()
+
+    image_attachment.associate_with_post(other_post)
+    image_attachment.save()
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+        + f"#post-{current_post.id}"
+    )
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body\n\nOther body"
+    assert not current_post.last_edit_reason
+
+    text_attachment.refresh_from_db()
+    assert text_attachment.post == current_post
+
+    image_attachment.refresh_from_db()
+    assert image_attachment.post == current_post
+
+    post_edit = PostEdit.objects.get(post=current_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Current body"
+    assert post_edit.new_content == "Current body\n\nOther body"
+    assert post_edit.attachments[0]["id"] == image_attachment.id
+    assert post_edit.attachments[0]["change"] == "+"
+    assert post_edit.attachments[1]["id"] == text_attachment.id
+    assert post_edit.attachments[1]["change"] == "="
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_post_moderation_action_merges_posts_using_global_post_link(
+    thread_reply_factory,
+    moderator_client,
+    moderator,
+    user,
+    default_category,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(user_thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse("misago:post", kwargs={"post_id": other_post.id}),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        )
+        + f"#post-{current_post.id}"
+    )
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body\n\nOther body"
+    assert not current_post.last_edit_reason
+
+    post_edit = PostEdit.objects.get(post=current_post)
+    assert post_edit.user == moderator
+    assert not post_edit.edit_reason
+    assert post_edit.old_content == "Current body"
+    assert post_edit.new_content == "Current body\n\nOther body"
+
+    with pytest.raises(Post.DoesNotExist):
+        other_post.refresh_from_db()
+
+    mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
+
+
+def test_thread_detail_view_merge_post_moderation_action_validates_other_post_link(
+    thread_reply_factory,
+    moderator_client,
+    user,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(user_thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": reverse(
+                "misago:post", kwargs={"post_id": other_post.id}
+            ),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Enter a valid link.")
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body"
+
+    other_post.refresh_from_db()
+    assert other_post.original == "Other body"
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_post_moderation_action_validates_thread_post_link_post_exists(
+    thread_reply_factory,
+    moderator_client,
+    user,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": current_post.id + 1,
+                },
+            ),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Post doesn&#x27;t exist")
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body"
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_post_moderation_action_validates_thread_post_link_is_current_thread(
+    thread_reply_factory,
+    moderator_client,
+    user,
+    thread,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": thread.id,
+                    "slug": thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Enter a link to a post in the current thread.")
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body"
+
+    other_post.refresh_from_db()
+    assert other_post.original == "Other body"
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_post_moderation_action_validates_thread_post_link_is_different_post(
+    thread_reply_factory,
+    moderator_client,
+    user,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": current_post.id,
+                },
+            ),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Can&#x27;t merge a post with itself.")
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body"
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_post_moderation_action_validates_global_post_link_post_exists(
+    thread_reply_factory,
+    moderator_client,
+    user,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse("misago:post", kwargs={"post_id": current_post.id + 1}),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Post doesn&#x27;t exist")
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body"
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_post_moderation_action_validates_global_post_link_post_permission(
+    thread_factory,
+    thread_reply_factory,
+    moderator_client,
+    user,
+    sibling_category,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_factory(sibling_category).first_post
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse("misago:post", kwargs={"post_id": other_post.id}),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Post doesn&#x27;t exist")
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body"
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_post_moderation_action_validates_global_post_link_post_is_in_current_thread(
+    thread_reply_factory,
+    moderator_client,
+    user,
+    thread,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(thread, poster=user, original="Other body")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse("misago:post", kwargs={"post_id": other_post.id}),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Post doesn&#x27;t exist in this thread")
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body"
+
+    other_post.refresh_from_db()
+    assert other_post.original == "Other body"
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_post_moderation_action_validates_global_post_link_post_is_different_post(
+    thread_reply_factory,
+    moderator_client,
+    user,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse("misago:post", kwargs={"post_id": current_post.id}),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Can&#x27;t merge a post with itself.")
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body"
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_post_moderation_action_validates_first_post_merge_into_current_post(
+    thread_reply_factory,
+    moderator_client,
+    user,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    first_post_content = user_thread.first_post.original
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": user_thread.first_post.id,
+                },
+            ),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert_contains(
+        response, "Thread&#x27;s first post can&#x27;t be merged into another post"
+    )
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body"
+
+    user_thread.first_post.refresh_from_db()
+    assert user_thread.first_post.original == first_post_content
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_post_moderation_action_validates_posts_are_by_same_user(
+    thread_reply_factory,
+    moderator_client,
+    user,
+    other_user,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster=user, original="Current body"
+    )
+    other_post = thread_reply_factory(
+        user_thread, poster=other_user, original="Other body"
+    )
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Merged posts must belong to the same user.")
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body"
+
+    other_post.refresh_from_db()
+    assert other_post.original == "Other body"
+
+    mock_post_synchronize_categories.delay.assert_not_called()
+
+
+def test_thread_detail_view_merge_post_moderation_action_validates_posts_are_by_same_deleted_user(
+    thread_reply_factory,
+    moderator_client,
+    user_thread,
+    mock_post_synchronize_categories,
+):
+    current_post = thread_reply_factory(
+        user_thread, poster="Bob", original="Current body"
+    )
+    other_post = thread_reply_factory(
+        user_thread, poster="Elice", original="Other body"
+    )
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {"post_moderation": "merge", "post": current_post.id},
+    )
+    assert_contains(response, "Merge post")
+    assert_contains(response, "Other post link")
+    assert_contains(response, "Merge direction")
+    assert_contains(response, "Reason for merging")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:thread",
+            kwargs={"thread_id": user_thread.id, "slug": user_thread.slug},
+        ),
+        {
+            "post_moderation": "merge",
+            "post": current_post.id,
+            "moderation-other_post": "http://testserver"
+            + reverse(
+                "misago:thread-post",
+                kwargs={
+                    "thread_id": user_thread.id,
+                    "slug": user_thread.slug,
+                    "post_id": other_post.id,
+                },
+            ),
+            "moderation-direction": "current",
+            "confirm": "true",
+        },
+    )
+    assert_contains(response, "Merged posts must belong to the same user.")
+
+    current_post.refresh_from_db()
+    assert current_post.original == "Current body"
+
+    other_post.refresh_from_db()
+    assert other_post.original == "Other body"
 
     mock_post_synchronize_categories.delay.assert_not_called()
 

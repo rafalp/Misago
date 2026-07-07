@@ -262,9 +262,17 @@ def _merge_posts_action(
     thread = target.thread
 
     for post in posts:
-        target.original += f"\n\n{post.original}"
-        target.parsed += f"\n{post.parsed}"
-        target.search_document += f"\n\n{post.search_document}"
+        if post.id > target.id:
+            target.original += f"\n\n{post.original}"
+            target.parsed += f"\n{post.parsed}"
+            target.search_document += f"\n\n{post.search_document}"
+        else:
+            target.original = f"{post.original}\n\n{target.original}"
+            target.parsed = f"{post.parsed}\n{target.parsed}"
+            target.search_document = (
+                f"{post.search_document}\n\n{target.search_document}"
+            )
+
         target.edits += post.edits
 
         for key in MISAGO_POST_METADATA:

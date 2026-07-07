@@ -86,9 +86,12 @@ def _get_thread_post_moderation_actions_action(
         actions += [
             SplitPostModerationAction,
             MovePostModerationAction,
-            MergeThreadPostModerationAction,
-            DeletePostModerationAction,
         ]
+
+    actions.append(MergeThreadPostModerationAction)
+
+    if post.id != post.thread.first_post_id:
+        actions.append(DeletePostModerationAction)
 
     return actions
 
@@ -130,11 +133,10 @@ def _get_private_thread_post_moderation_actions_action(
     if post.is_unapproved:
         actions.append(ApprovePostModerationAction)
 
+    actions.append(MergePrivateThreadPostModerationAction)
+
     if post.id != post.thread.first_post_id:
-        actions += [
-            MergePrivateThreadPostModerationAction,
-            DeletePostModerationAction,
-        ]
+        actions.append(DeletePostModerationAction)
 
     return actions
 
@@ -525,7 +527,6 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
                 request=request,
             )
 
-        final_post.thread = thread
         synchronize_thread(thread, request=request)
 
         for attachment in attachments:
@@ -567,6 +568,10 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
 
     def get_result(self, post: Post) -> ModerationResult:
         redirect_to = self.get_redirect_url(post)
+
+        if not self.request.is_htmx:
+            return ModerationResult(redirect_to=redirect_to)
+
         refresh = self.request.path == redirect_to[: redirect_to.rindex("/") + 1]
 
         return ModerationResult(
@@ -577,14 +582,18 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
     def get_redirect_url(self, post: Post) -> str:
         from ..threads.views.backend import thread_backend
 
-        return thread_backend.get_post_redirect_url(post)
+        redirect = thread_backend.get_post_redirect(self.request, post)
+        return redirect["location"]
 
 
 class MergePrivateThreadPostModerationAction(MergeThreadPostModerationAction):
+    form_class = MergePrivateThreadPostForm
+
     def get_redirect_url(self, post: Post) -> str:
         from ..privatethreads.views.backend import private_thread_backend
 
-        return private_thread_backend.get_post_redirect_url(post)
+        redirect = private_thread_backend.get_post_redirect(self.request, post)
+        return redirect["location"]
 
 
 class DeletePostModerationAction(ConfirmMixin, PostModerationAction):

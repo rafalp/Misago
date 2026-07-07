@@ -58,6 +58,16 @@ def test_get_merge_posts_merges_posts_contents(user, target, other_post):
     assert target.search_document == "Lorem\n\nDolor"
 
 
+def test_get_merge_posts_merges_posts_contents_chronologically(
+    user, target, other_post
+):
+    merge_posts(other_post, [target], {}, user)
+
+    assert other_post.original == "Lorem ipsum\n\nDolor met"
+    assert other_post.parsed == "<p>Lorem ipsum</p>\n<p>Dolor met</p>"
+    assert other_post.search_document == "Lorem\n\nDolor"
+
+
 def test_get_merge_posts_merges_posts_metadata(user, target, other_post):
     target.metadata = {
         "attachments": [1, 2, 3],

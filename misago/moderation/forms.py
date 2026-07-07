@@ -177,7 +177,7 @@ def parse_thread_post_url(
             raise forms.ValidationError(
                 pgettext(
                     "moderation form post url validation",
-                    "Enter a valid thread link.",
+                    "Enter a valid thread post link.",
                 ),
                 code="invalid",
             )
@@ -186,7 +186,7 @@ def parse_thread_post_url(
             raise forms.ValidationError(
                 pgettext(
                     "moderation form post url validation",
-                    "Enter a link to the current thread.",
+                    "Enter a link to a post in the current thread.",
                 ),
                 code="invalid",
             )
@@ -399,7 +399,7 @@ class MergeThreadForm(forms.Form):
             raise forms.ValidationError(
                 pgettext(
                     "moderation form thread validation",
-                    "Enter a different thread link.",
+                    "Can't merge a thread with itself.",
                 ),
                 code="invalid",
             )
@@ -549,7 +549,7 @@ class MovePostsForm(forms.Form):
             raise forms.ValidationError(
                 pgettext(
                     "moderation form thread validation",
-                    "Enter a different thread link.",
+                    "Can't move posts to the same thread.",
                 ),
                 code="invalid",
             )
@@ -642,7 +642,7 @@ class MergeThreadPostForm(forms.Form):
             raise forms.ValidationError(
                 pgettext(
                     "moderation form post validation",
-                    "Enter a different post link.",
+                    "Can't merge a post with itself.",
                 ),
                 code="invalid",
             )
@@ -653,13 +653,13 @@ class MergeThreadPostForm(forms.Form):
             raise forms.ValidationError(
                 pgettext(
                     "moderation form post validation",
-                    "Post doesn't exist or you don't have permission to see it.",
+                    "Post doesn't exist in this thread or you don't have permission to see it.",
                 ),
                 code="invalid",
             )
 
-        if (post.poster_id != self.post.poster_id) or (
-            not self.post.poster_id and not post.poster_name != self.post.poster_name
+        if (self.post.poster_id and self.post.poster_id != post.poster_id) or (
+            not self.post.poster_id and post.poster_name != self.post.poster_name
         ):
             raise forms.ValidationError(
                 pgettext(
@@ -687,7 +687,7 @@ class MergeThreadPostForm(forms.Form):
                 forms.ValidationError(
                     pgettext(
                         "moderation form post validation",
-                        "Thread's first post cannot be merged into another post.",
+                        "Thread's first post can't be merged into another post.",
                     ),
                     code="invalid",
                 ),

@@ -282,6 +282,10 @@ class DetailView(GenericThreadView):
         page_posts = list(page_obj.object_list)
         selected_posts = self.get_selected_posts(request, page_posts)
 
+        for post in selected_posts:
+            post.category = thread.category
+            post.thread = thread
+
         action_obj = action(request, thread, selected_posts)
         action_obj.validate()
 
@@ -309,6 +313,9 @@ class DetailView(GenericThreadView):
 
         try:
             post = self.get_selected_post(request, thread)
+            post.category = thread.category
+            post.thread = thread
+
             result = self.execute_post_moderation_action(request, thread, post)
         except ValidationError as e:
             if request.is_htmx:

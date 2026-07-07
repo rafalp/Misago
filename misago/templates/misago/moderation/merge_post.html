@@ -9,6 +9,11 @@
     {% for error in field.errors %}
       <p class="help-block">{{ error }}</p>
     {% endfor %}
+    {% if post.id == post.thread.first_post_id %}
+      <p class="help-block">
+        {% translate "The other post will be merged into this post." context "moderation merge post form" %}
+      </p>
+    {% endif %}
   </div>
 {% endwith %}
 {% if form.direction %}
