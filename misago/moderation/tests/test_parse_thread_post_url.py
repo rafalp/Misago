@@ -105,4 +105,4 @@ def test_parse_thread_url_raises_validation_error_on_path_being_invalid_thread(r
             2222,
         )
 
-    assert exc_info.value.message == "Enter a link to the current thread."
+    assert exc_info.value.message == "Enter a link to a post in the current thread."

@@ -555,7 +555,7 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
             pgettext("post moderation success", "Posts merged"),
         )
 
-        return self.get_result(final_post)
+        return self.get_result(final_post, other_post)
 
     def get_conflicts_form_result(self, merge_form: Form, conflicts_form: Form):
         return ModerationActionTemplateResult(
@@ -566,7 +566,7 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
             },
         )
 
-    def get_result(self, post: Post) -> ModerationResult:
+    def get_result(self, post: Post, other_post: Post) -> ModerationResult:
         redirect_to = self.get_redirect_url(post)
 
         if not self.request.is_htmx:
@@ -577,6 +577,8 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
         return ModerationResult(
             refresh=refresh,
             redirect_to=redirect_to if not refresh else None,
+            updated_items=[post.id],
+            deleted_items=[other_post.id],
         )
 
     def get_redirect_url(self, post: Post) -> str:
