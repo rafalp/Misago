@@ -583,7 +583,7 @@ class DeleteThreadModerationAction(ConfirmMixin, ThreadModerationAction):
     button_label = "Delete"
     confirmation_message = pgettext_lazy(
         "thread moderation",
-        "Are you sure you want to delete this thread? This action cannot be undone.",
+        "Are you sure you want to delete this thread? This can't be undone.",
     )
 
     def confirmed(self) -> ModerationResult:

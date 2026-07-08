@@ -510,7 +510,7 @@ def test_private_thread_detail_view_hide_posts_moderation_action_validates_first
         ),
         {"posts_moderation": "hide", "posts": [user_private_thread.first_post_id]},
     )
-    assert_contains(response, "Thread&#x27;s original post can&#x27;t be hidden.")
+    assert_contains(response, "Thread&#x27;s first post can&#x27;t be hidden.")
 
 
 def test_private_thread_detail_view_unhide_posts_moderation_action_unhides_posts(
@@ -1189,7 +1189,7 @@ def test_private_thread_detail_view_delete_posts_moderation_action_validates_fir
         ),
         {"posts_moderation": "delete", "posts": [user_private_thread.first_post_id]},
     )
-    assert_contains(response, "The first post in a thread can&#x27;t be deleted.")
+    assert_contains(response, "Thread&#x27;s first post can&#x27;t be deleted.")
 
     user_private_thread.first_post.refresh_from_db()
 
