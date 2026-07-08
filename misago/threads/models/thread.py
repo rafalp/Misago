@@ -21,8 +21,6 @@ class Thread(PluginDataModel):
 
     has_updates = models.BooleanField(default=False)
     has_poll = models.BooleanField(default=False)
-    has_reported_posts = models.BooleanField(default=False)
-    has_open_reports = models.BooleanField(default=False)
     has_unapproved_posts = models.BooleanField(default=False)
     has_hidden_posts = models.BooleanField(default=False)
 
@@ -143,11 +141,7 @@ class Thread(PluginDataModel):
                 fields=["pinned"],
                 condition=Q(pinned__lt=ThreadPinned.EVERYWHERE.value),
             ),
-            models.Index(
-                name="misago_thread_has_reporte_part",
-                fields=["has_reported_posts"],
-                condition=Q(has_reported_posts=True),
-            ),
+
             models.Index(
                 name="misago_thread_has_unappro_part",
                 fields=["has_unapproved_posts"],
