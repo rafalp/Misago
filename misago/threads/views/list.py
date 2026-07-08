@@ -10,7 +10,7 @@ from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import pgettext
+from django.utils.translation import npgettext, pgettext
 from django.views import View
 
 from ...categories.components import get_categories_data, get_subcategories_data
@@ -49,6 +49,7 @@ from ...permissions.threads import (
     CategoryThreadsQuerysetFilter,
     ThreadsQuerysetFilter,
     check_start_thread_permission,
+    filter_threads_queryset,
 )
 from ...readtracker.models import ReadCategory, ReadThread
 from ...readtracker.threads import is_category_read
@@ -85,6 +86,7 @@ from ..hooks import (
     get_threads_page_threads_hook,
 )
 from ..models import Thread
+from .backend import ViewBackend, thread_backend
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -94,6 +96,8 @@ ANIMATE_NEW_THREADS = "animate_new"
 
 
 class ListView(View):
+    backend: ViewBackend
+
     template_name: str
     template_name_htmx: str
     moderation_page_template_name: str
@@ -244,7 +248,7 @@ class ListView(View):
             if request.is_htmx:
                 raise
 
-            messages.error(request, e.message)
+            messages.error(request, e.messages[0])
             return self.get(request, **kwargs)
 
         current_url = request.get_full_path()
@@ -282,23 +286,37 @@ class ListView(View):
     ) -> ModerationResult:
         raise NotImplementedError()
 
-    def get_selected_threads(self, request: HttpRequest, threads: dict) -> list[Thread]:
+    def get_selected_threads(self, request: HttpRequest, queryset) -> list[Thread]:
         threads_ids = self.get_selected_threads_ids(request)
 
-        selection: list[Thread] = []
-        for thread_data in threads["items"]:
-            thread = thread_data["thread"]
-            if thread.id in threads_ids:
-                if not thread_data["moderation"]:
-                    raise ValidationError(
-                        pgettext(
-                            "threads moderation error",
-                            'Can\'t moderate the "%(thread)s" thread.',
-                        )
-                        % {"thread": thread.title},
-                    )
+        limit = request.settings.threads_per_page + 5
 
-                selection.append(thread)
+        if len(threads_ids) > limit:
+            raise ValidationError(
+                message=npgettext(
+                    "threads moderation error",
+                    "You can't select more than %(limit)s threads to moderate.",
+                    "You can't select more than %(limit)s threads to moderate.",
+                    limit,
+                ),
+                params={"limit": limit},
+            )
+
+        selection: list[Thread] = list(
+            queryset.filter(id__in=threads_ids).prefetch_related("category")
+        )
+
+        for thread in selection:
+            if not self.backend.has_moderator_permission(
+                request.user_permissions, thread
+            ):
+                raise ValidationError(
+                    message=pgettext(
+                        "threads moderation error",
+                        'Can\'t moderate the "%(thread)s" thread.',
+                    ),
+                    params={"thread": thread.title},
+                )
 
         if not selection:
             raise ValidationError(
@@ -365,6 +383,7 @@ class ListView(View):
 
 
 class ThreadListView(ListView):
+    backend = thread_backend
     template_name = "misago/thread_list/index.html"
     template_name_htmx = "misago/thread_list/partial.html"
     mark_as_read_template_name = "misago/thread_list/mark_as_read_page.html"
@@ -420,8 +439,10 @@ class ThreadListView(ListView):
             actions, request.POST["moderation"]
         )
 
-        page_threads = self.get_threads(request, kwargs)
-        selected_threads = self.get_selected_threads(request, page_threads)
+        queryset = filter_threads_queryset(
+            request.user_permissions, request.categories.category_list, Thread.objects
+        )
+        selected_threads = self.get_selected_threads(request, queryset)
 
         action_obj = action(request, selected_threads)
         action_obj.validate()
@@ -432,7 +453,6 @@ class ThreadListView(ListView):
             result.update_context(
                 {
                     "moderation_action": action_obj,
-                    "threads": page_threads,
                     "selection": selected_threads,
                     "breadcrumbs": get_threads_breadcrumbs(request),
                 }
@@ -489,7 +509,7 @@ class ThreadListView(ListView):
         if component == CategoryChildrenComponent.DROPDOWN:
             return {
                 "categories": [
-                    c for c in request.categories.categories_list if c["level"] < 2
+                    c for c in request.categories.category_list if c["level"] < 2
                 ],
                 "template_name": None,
             }
@@ -630,7 +650,7 @@ class ThreadListView(ListView):
         self, request: HttpRequest
     ) -> ThreadsQuerysetFilter:
         return ThreadsQuerysetFilter(
-            request.user_permissions, request.categories.categories_list
+            request.user_permissions, request.categories.category_list
         )
 
     def get_threads_paginator(
@@ -716,6 +736,7 @@ class ThreadListView(ListView):
 
 
 class CategoryThreadListView(ListView):
+    backend = thread_backend
     template_name = "misago/category_thread_list/index.html"
     template_name_htmx = "misago/category_thread_list/partial.html"
     mark_as_read_template_name = "misago/category_thread_list/mark_as_read_page.html"
@@ -772,8 +793,10 @@ class CategoryThreadListView(ListView):
             actions, request.POST["moderation"]
         )
 
-        page_threads = self.get_threads(request, category, kwargs)
-        selected_threads = self.get_selected_threads(request, page_threads)
+        queryset = filter_threads_queryset(
+            request.user_permissions, request.categories.category_list, Thread.objects
+        )
+        selected_threads = self.get_selected_threads(request, queryset)
 
         action_obj = action(request, selected_threads, category)
         action_obj.validate()
@@ -785,7 +808,6 @@ class CategoryThreadListView(ListView):
                 {
                     "moderation_action": action_obj,
                     "category": category,
-                    "threads": page_threads,
                     "selection": selected_threads,
                     "breadcrumbs": get_category_breadcrumbs(
                         request, category, include_category=True
@@ -909,7 +931,7 @@ class CategoryThreadListView(ListView):
     def get_subcategories_dropdown_items(
         self, request: HttpRequest, category: Category
     ):
-        for c in request.categories.categories_list:
+        for c in request.categories.category_list:
             if (
                 c["lft"] > category.lft
                 and c["rght"] < category.rght
@@ -1080,7 +1102,7 @@ class CategoryThreadListView(ListView):
 
         return CategoryThreadsQuerysetFilter(
             request.user_permissions,
-            request.categories.categories_list,
+            request.categories.category_list,
             current_category=categories[0],
             child_categories=categories[1:],
             include_children=category.list_children_threads,

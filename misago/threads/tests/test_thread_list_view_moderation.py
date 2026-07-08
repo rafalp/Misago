@@ -511,6 +511,29 @@ def test_thread_list_view_shows_error_for_invalid_threads_ids_in_selection_in_ht
     assert_contains(response, "No valid threads selected.", status_code=400)
 
 
+@override_dynamic_settings(index_view="categories", threads_per_page=10)
+def test_thread_list_view_shows_error_for_too_many_selected_threads(moderator_client):
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "lock", "threads": list(range(1, 20))},
+    )
+    assert_contains(response, "You can&#x27;t select more than 15 threads to moderate.")
+
+
+@override_dynamic_settings(index_view="categories", threads_per_page=10)
+def test_thread_list_view_shows_error_for_too_many_selected_threads_in_htmx(
+    moderator_client,
+):
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "lock", "threads": list(range(1, 20))},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(
+        response, "You can't select more than 15 threads to moderate.", status_code=400
+    )
+
+
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_shows_error_for_not_existing_threads_ids_in_selection(
     moderator_client,

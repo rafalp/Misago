@@ -866,7 +866,7 @@ def test_thread_detail_view_posts_moderation_action_shows_error_for_invalid_post
 
 
 @override_dynamic_settings(posts_per_page=6, posts_per_page_orphans=1)
-def test_thread_detail_view_posts_moderation_action_shows_error_for_too_big_posts_selection(
+def test_thread_detail_view_posts_moderation_action_shows_error_for_too_many_selected_posts(
     moderator_client, thread
 ):
     response = moderator_client.post(
@@ -877,12 +877,12 @@ def test_thread_detail_view_posts_moderation_action_shows_error_for_too_big_post
 
 
 @override_dynamic_settings(posts_per_page=6, posts_per_page_orphans=1)
-def test_thread_detail_view_posts_moderation_action_shows_error_for_too_big_posts_selection_in_htmx(
+def test_thread_detail_view_posts_moderation_action_shows_error_for_too_many_selected_posts_in_htmx(
     moderator_client, thread
 ):
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"posts_moderation": "unlock", "posts": list(range(1, 200))},
+        {"posts_moderation": "unlock", "posts": list(range(1, 10))},
         headers={"hx-request": "true"},
     )
     assert_contains(
