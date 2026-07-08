@@ -14,7 +14,7 @@ ariadne==0.22
     #   ariadne-django
 ariadne-django==0.3.0
     # via -r requirements.in
-asgiref==3.7.2
+asgiref==3.11.1
     # via django
 billiard==4.2.0
     # via celery
@@ -50,7 +50,7 @@ defusedxml==0.8.0rc2
     # via
     #   python3-openid
     #   social-auth-core
-django==4.2.10
+django==5.2.15
     # via
     #   -r requirements.in
     #   ariadne-django

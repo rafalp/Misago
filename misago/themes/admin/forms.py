@@ -35,7 +35,11 @@ class ThemeForm(forms.ModelForm):
     author = forms.CharField(
         label=pgettext_lazy("admin theme form", "Author(s)"), required=False
     )
-    url = forms.URLField(label=pgettext_lazy("admin theme form", "Url"), required=False)
+    url = forms.URLField(
+        label=pgettext_lazy("admin theme form", "Url"),
+        required=False,
+        assume_scheme="http",
+    )
 
     class Meta:
         model = Theme
@@ -90,12 +94,12 @@ class ThemeManifest(forms.Form):
     name = forms.CharField(max_length=255)
     version = forms.CharField(max_length=255, required=False)
     author = forms.CharField(max_length=255, required=False)
-    url = forms.URLField(max_length=255, required=False)
+    url = forms.URLField(max_length=255, required=False, assume_scheme="http")
 
 
 class ThemeCssUrlManifest(forms.Form):
     name = forms.CharField(max_length=255)
-    url = forms.URLField(max_length=255)
+    url = forms.URLField(max_length=255, assume_scheme="http")
 
 
 def create_css_file_manifest(allowed_path):
@@ -273,7 +277,8 @@ class CssLinkForm(forms.ModelForm):
         ),
     )
     url = forms.URLField(
-        label=pgettext_lazy("admin theme css link form", "Remote CSS URL")
+        label=pgettext_lazy("admin theme css link form", "Remote CSS URL"),
+        assume_scheme="http",
     )
 
     class Meta:

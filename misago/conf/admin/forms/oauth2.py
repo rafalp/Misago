@@ -83,6 +83,7 @@ class OAuth2SettingsForm(SettingsForm):
         ),
         max_length=500,
         required=False,
+        assume_scheme="http",
     )
 
     oauth2_token_url = forms.URLField(
@@ -93,6 +94,7 @@ class OAuth2SettingsForm(SettingsForm):
         ),
         max_length=500,
         required=False,
+        assume_scheme="http",
     )
     oauth2_token_extra_headers = forms.CharField(
         label=pgettext_lazy(
@@ -120,6 +122,7 @@ class OAuth2SettingsForm(SettingsForm):
         label=pgettext_lazy("admin oauth2 settings form", "User data URL"),
         max_length=500,
         required=False,
+        assume_scheme="http",
     )
     oauth2_user_method = forms.ChoiceField(
         label=pgettext_lazy("admin oauth2 settings form", "Request method"),

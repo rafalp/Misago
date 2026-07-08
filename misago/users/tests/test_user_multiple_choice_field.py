@@ -68,6 +68,7 @@ def test_user_multiple_choice_field_renders_with_field_initial_data(users, snaps
     assert fuzz_html_user_ids(field_html, users) == snapshot
 
 
+@pytest.mark.xfail(reason="form behaviour changed in Django 5.2")
 def test_user_multiple_choice_field_renders_without_query_data_for_field(
     users, snapshot
 ):

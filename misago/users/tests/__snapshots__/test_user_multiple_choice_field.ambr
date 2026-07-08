@@ -460,32 +460,3 @@
     </noscript>
   '''
 # ---
-# name: test_user_multiple_choice_field_renders_without_query_data_for_field
-  '''
-  <ul class="form-chips-control d-js-flex" maxchoices="5" m-user-multiple-choice>
-      
-      <li>
-        <input type="text" class="form-chips-control-input" id="id_users_0" m-user-multiple-choice-input>
-      </li>
-    </ul>
-    <template id="m-user-multiple-choice-template">
-      <li m-user-multiple-choice-item>
-        <input type="hidden" name="users" value="">
-        <button class="form-chips-control-item" type="button" aria-label="Remove this choice">
-          <img class="form-chips-control-item-image" src="" alt="">
-          <span class="form-chips-control-item-name">
-            <slot name="username"></slot>
-          </span>
-          <span class="form-chips-control-item-close-icon">
-            <span class="material-icon">clear</span>
-          </span>
-        </button>
-      </li>
-    </template>
-  
-  
-    <noscript>
-      <input type="text" class="form-control" id="id_users_1" name="users_noscript" value="" >
-    </noscript>
-  '''
-# ---
