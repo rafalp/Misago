@@ -56,7 +56,7 @@ def test_categories_proxy_list_has_categories_visible_to_user(
     user_permissions = UserPermissionsProxy(user, cache_versions)
     categories = CategoriesProxy(user_permissions, cache_versions)
 
-    assert categories.categories_list == [
+    assert categories.category_list == [
         get_category_data_dict(default_category),
     ]
 

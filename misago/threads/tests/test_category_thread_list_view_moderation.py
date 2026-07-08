@@ -1,5 +1,6 @@
 import pytest
 
+from ...conf.test import override_dynamic_settings
 from ...permissions.models import Moderator
 from ...test import assert_contains, assert_not_contains
 from ...threads.models import Thread
@@ -444,6 +445,31 @@ def test_category_thread_list_view_shows_error_for_invalid_threads_ids_in_select
         headers={"hx-request": "true"},
     )
     assert_contains(response, "No valid threads selected.", status_code=400)
+
+
+@override_dynamic_settings(threads_per_page=10)
+def test_category_thread_list_view_shows_error_for_too_many_selected_threads(
+    moderator_client, default_category
+):
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "lock", "threads": list(range(1, 20))},
+    )
+    assert_contains(response, "You can&#x27;t select more than 15 threads to moderate.")
+
+
+@override_dynamic_settings(threads_per_page=10)
+def test_category_thread_list_view_shows_error_for_too_many_selected_threads_in_htmx(
+    moderator_client, default_category
+):
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {"moderation": "lock", "threads": list(range(1, 20))},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(
+        response, "You can't select more than 15 threads to moderate.", status_code=400
+    )
 
 
 def test_category_thread_list_view_shows_error_for_not_existing_threads_ids_in_selection(

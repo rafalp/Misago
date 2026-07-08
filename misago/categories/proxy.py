@@ -21,14 +21,14 @@ class CategoriesProxy:
         return get_categories(self.user_permissions, self.cache_versions)
 
     @cached_property
-    def categories_list(self) -> list[dict]:
+    def category_list(self) -> list[dict]:
         return list(self.categories.values())
 
     def get_categories_menu(self) -> list[dict]:
         top_categories: list[dict] = []
         children: dict[int, list[dict]] = defaultdict(list)
 
-        for item in self.categories_list:
+        for item in self.category_list:
             category = item.copy()
 
             if category["parent_id"] is None:
@@ -82,7 +82,7 @@ class CategoriesProxy:
 
         if include_self:
             items.append(parent)
-        for item in self.categories_list:
+        for item in self.category_list:
             if item["lft"] > parent["lft"] and item["rght"] < parent["rght"]:
                 items.append(item)
 
@@ -114,7 +114,7 @@ class CategoriesProxy:
         choices: list[tuple[int, str]] = []
         if include_empty:
             choices.append(("", ""))
-        for category in self.categories_list:
+        for category in self.category_list:
             prefix = "⭢ " * category["level"]
             choices.append((category["id"], f"{prefix}{category['name']}"))
         return choices

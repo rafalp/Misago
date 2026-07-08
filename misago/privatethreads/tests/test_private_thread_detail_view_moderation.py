@@ -929,7 +929,7 @@ def test_private_thread_detail_view_posts_moderation_action_shows_error_for_inva
 
 
 @override_dynamic_settings(posts_per_page=6, posts_per_page_orphans=1)
-def test_private_thread_detail_view_posts_moderation_action_shows_error_for_too_big_posts_selection(
+def test_private_thread_detail_view_posts_moderation_action_shows_error_for_too_many_selected_posts(
     moderator_client, user_private_thread
 ):
     response = moderator_client.post(
@@ -946,7 +946,7 @@ def test_private_thread_detail_view_posts_moderation_action_shows_error_for_too_
 
 
 @override_dynamic_settings(posts_per_page=6, posts_per_page_orphans=1)
-def test_private_thread_detail_view_posts_moderation_action_shows_error_for_too_big_posts_selection_in_htmx(
+def test_private_thread_detail_view_posts_moderation_action_shows_error_for_too_many_selected_posts_in_htmx(
     moderator_client, user_private_thread
 ):
     response = moderator_client.post(
@@ -957,7 +957,7 @@ def test_private_thread_detail_view_posts_moderation_action_shows_error_for_too_
                 "slug": user_private_thread.slug,
             },
         ),
-        {"posts_moderation": "unlock", "posts": list(range(1, 200))},
+        {"posts_moderation": "unlock", "posts": list(range(1, 10))},
         headers={"hx-request": "true"},
     )
     assert_contains(

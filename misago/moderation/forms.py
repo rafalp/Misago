@@ -39,7 +39,7 @@ def get_disallowed_category_choices(
 
     browse_categories = user_permissions.categories[CategoryPermission.BROWSE]
 
-    for category in categories.categories_list:
+    for category in categories.category_list:
         if (
             category["is_vanilla"]
             or category["id"] not in browse_categories
