@@ -87,6 +87,7 @@ def preload_settings_json(request):
             "THREADS_ON_INDEX": settings.MISAGO_THREADS_ON_INDEX,
             "NOTIFICATIONS_API": reverse("misago:apiv2:notifications"),
             "NOTIFICATIONS_URL": reverse("misago:notifications"),
+            "PRIVATE_THREADS_URL": reverse("misago:private-thread-list"),
         }
     )
 
