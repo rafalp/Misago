@@ -23,8 +23,6 @@ def _synchronize_thread_action(
     thread.has_updates = ThreadUpdate.objects.filter(thread=thread).exists()
     thread.has_poll = Poll.objects.filter(thread=thread).exists()
 
-    thread.has_reported_posts = False
-    thread.has_open_reports = False
     thread.has_unapproved_posts = posts.filter(is_unapproved=True).exists()
     thread.has_hidden_posts = posts.filter(is_hidden=True).exists()
 
