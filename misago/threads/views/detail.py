@@ -11,7 +11,7 @@ from django.http import (
 )
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.utils.translation import pgettext
+from django.utils.translation import npgettext, pgettext
 
 from ...categories.models import Category
 from ...metadata import TextMetaData
@@ -165,7 +165,7 @@ class DetailView(GenericThreadView):
             if request.is_htmx:
                 raise
 
-            messages.error(request, e.message)
+            messages.error(request, e.messages[0])
             return self.get(request, thread_id, slug, page)
 
         if isinstance(result, ModerationActionTemplateResult):
@@ -243,7 +243,7 @@ class DetailView(GenericThreadView):
             if request.is_htmx:
                 raise
 
-            messages.error(request, e.message)
+            messages.error(request, e.messages[0])
             return self.get(request, thread_id, slug, page)
 
         if isinstance(result, ModerationActionTemplateResult):
@@ -278,9 +278,7 @@ class DetailView(GenericThreadView):
             actions, request.POST["posts_moderation"]
         )
 
-        page_obj = self.get_posts_page(request, thread, page)
-        page_posts = list(page_obj.object_list)
-        selected_posts = self.get_selected_posts(request, page_posts)
+        selected_posts = self.get_selected_posts(request, thread)
 
         for post in selected_posts:
             post.category = thread.category
@@ -298,7 +296,6 @@ class DetailView(GenericThreadView):
                     "moderation_type": "posts_moderation",
                     "breadcrumbs": self.get_thread_breadcrumbs(request, thread),
                     "thread": thread,
-                    "posts": page_posts,
                     "selection": selected_posts,
                     "cancel_url": request.get_full_path(),
                 },
@@ -313,15 +310,12 @@ class DetailView(GenericThreadView):
 
         try:
             post = self.get_selected_post(request, thread)
-            post.category = thread.category
-            post.thread = thread
-
             result = self.execute_post_moderation_action(request, thread, post)
         except ValidationError as e:
             if request.is_htmx:
                 raise
 
-            messages.error(request, e.message)
+            messages.error(request, e.messages[0])
             return self.get(request, thread_id, slug, page)
 
         if isinstance(result, ModerationActionTemplateResult):
@@ -387,7 +381,7 @@ class DetailView(GenericThreadView):
                     "moderation_type": "post_moderation",
                     "breadcrumbs": self.get_thread_breadcrumbs(request, thread),
                     "thread": thread,
-                    "post": post,
+                    "selection": post,
                     "cancel_url": self.get_post_url(post),
                 },
             )
@@ -409,14 +403,36 @@ class DetailView(GenericThreadView):
     ) -> list[type[PostModerationAction]]:
         raise NotImplementedError()
 
-    def get_selected_posts(self, request: HttpRequest, posts: list[Post]) -> list[Post]:
+    def get_selected_posts(self, request: HttpRequest, thread: Thread) -> list[Post]:
         posts_id = self.get_selected_posts_ids(request)
-        selection: list[Post] = [post for post in posts if post.id in posts_id]
+
+        limit = (
+            request.settings.posts_per_page + request.settings.posts_per_page_orphans
+        )
+
+        if len(posts_id) > limit:
+            raise ValidationError(
+                message=npgettext(
+                    "posts moderation error",
+                    "You can't select more than %(limit)s post to moderate.",
+                    "You can't select more than %(limit)s posts to moderate.",
+                    limit,
+                ),
+                params={"limit": limit},
+            )
+
+        selection: list[Post] = self.get_posts_queryset(request, thread).filter(
+            id__in=posts_id
+        )
 
         if not selection:
             raise ValidationError(
                 pgettext("posts moderation error", "No valid posts selected."),
             )
+
+        for post in selection:
+            post.category = thread.category
+            post.thread = thread
 
         return selection
 

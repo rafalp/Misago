@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 
+from ...conf.test import override_dynamic_settings
 from ...permissions.models import Moderator
 from ...test import assert_contains, assert_not_contains
 from ...threads.models import Post, Thread
@@ -563,6 +564,7 @@ def test_private_thread_detail_view_executes_destructive_posts_moderation_action
         {"posts_moderation": "delete", "posts": [reply.id]},
     )
     assert_contains(response, "Are you sure you want to delete the selected posts?")
+    assert_contains(response, f'value="{reply.id}"')
 
     response = moderator_client.post(
         reverse(
@@ -613,6 +615,7 @@ def test_private_thread_detail_view_executes_destructive_posts_moderation_action
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Are you sure you want to delete the selected posts?")
+    assert_contains(response, f'value="{reply.id}"')
 
     response = moderator_client.post(
         reverse(
@@ -925,6 +928,43 @@ def test_private_thread_detail_view_posts_moderation_action_shows_error_for_inva
     assert_contains(response, "No valid posts selected.", status_code=400)
 
 
+@override_dynamic_settings(posts_per_page=6, posts_per_page_orphans=1)
+def test_private_thread_detail_view_posts_moderation_action_shows_error_for_too_big_posts_selection(
+    moderator_client, user_private_thread
+):
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"posts_moderation": "unlock", "posts": list(range(1, 10))},
+    )
+    assert_contains(response, "You can&#x27;t select more than 7 posts to moderate.")
+
+
+@override_dynamic_settings(posts_per_page=6, posts_per_page_orphans=1)
+def test_private_thread_detail_view_posts_moderation_action_shows_error_for_too_big_posts_selection_in_htmx(
+    moderator_client, user_private_thread
+):
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"posts_moderation": "unlock", "posts": list(range(1, 200))},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(
+        response, "You can't select more than 7 posts to moderate.", status_code=400
+    )
+
+
 def test_private_thread_detail_view_posts_moderation_action_shows_error_for_not_existing_posts_ids_in_selection(
     moderator_client, user_private_thread
 ):
@@ -1071,6 +1111,7 @@ def test_private_thread_detail_view_executes_destructive_post_moderation_action_
         {"post_moderation": "delete", "post": [reply.id]},
     )
     assert_contains(response, "Are you sure you want to delete this post?")
+    assert_contains(response, f'value="{reply.id}"')
 
     response = moderator_client.post(
         reverse(
@@ -1121,6 +1162,7 @@ def test_private_thread_detail_view_executes_destructive_post_moderation_action_
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Are you sure you want to delete this post?")
+    assert_contains(response, f'value="{reply.id}"')
 
     response = moderator_client.post(
         reverse(

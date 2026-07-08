@@ -17,11 +17,14 @@
       {% csrf_token %}
       <input type="hidden" name="{{ moderation_type }}" value="{{ moderation_action.id }}" />
       <input type="hidden" name="confirm" value="true">
-      {% for post in selection %}
-        <input type="hidden" name="posts" value="{{ post.id }}" />
-      {% endfor %}
-      {% if moderation_type == "post_moderation" and post %}
-        <input type="hidden" name="post" value="{{ post.id }}" />
+      {% if selection %}
+        {% if moderation_type == "posts_moderation" %}
+          {% for post in selection %}
+            <input type="hidden" name="posts" value="{{ post.id }}" />
+          {% endfor %}
+        {% elif moderation_type == "post_moderation" %}
+          <input type="hidden" name="post" value="{{ selection.id }}" />
+        {% endif %}
       {% endif %}
       <div class="panel panel-default panel-form">
         <div class="panel-heading">

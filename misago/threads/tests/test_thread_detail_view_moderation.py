@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 
+from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import Moderator
 from ...test import assert_contains, assert_not_contains
@@ -535,6 +536,7 @@ def test_thread_detail_view_executes_posts_moderation_action_with_form(
     )
     assert_contains(response, "Split posts into a new thread")
     assert_contains(response, "Category")
+    assert_contains(response, f'value="{reply.id}"')
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -572,6 +574,7 @@ def test_thread_detail_view_executes_posts_moderation_action_with_form_in_htmx(
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Category")
+    assert_contains(response, f'value="{reply.id}"')
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -608,6 +611,7 @@ def test_thread_detail_view_executes_destructive_posts_moderation_action_with_co
         {"posts_moderation": "delete", "posts": [reply.id]},
     )
     assert_contains(response, "Are you sure you want to delete the selected posts?")
+    assert_contains(response, f'value="{reply.id}"')
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -641,6 +645,7 @@ def test_thread_detail_view_executes_destructive_posts_moderation_action_with_co
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Are you sure you want to delete the selected posts?")
+    assert_contains(response, f'value="{reply.id}"')
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -860,6 +865,31 @@ def test_thread_detail_view_posts_moderation_action_shows_error_for_invalid_post
     assert_contains(response, "No valid posts selected.", status_code=400)
 
 
+@override_dynamic_settings(posts_per_page=6, posts_per_page_orphans=1)
+def test_thread_detail_view_posts_moderation_action_shows_error_for_too_big_posts_selection(
+    moderator_client, thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "unlock", "posts": list(range(1, 10))},
+    )
+    assert_contains(response, "You can&#x27;t select more than 7 posts to moderate.")
+
+
+@override_dynamic_settings(posts_per_page=6, posts_per_page_orphans=1)
+def test_thread_detail_view_posts_moderation_action_shows_error_for_too_big_posts_selection_in_htmx(
+    moderator_client, thread
+):
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "unlock", "posts": list(range(1, 200))},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(
+        response, "You can't select more than 7 posts to moderate.", status_code=400
+    )
+
+
 def test_thread_detail_view_posts_moderation_action_shows_error_for_not_existing_posts_ids_in_selection(
     moderator_client, thread
 ):
@@ -949,6 +979,7 @@ def test_thread_detail_view_executes_post_moderation_action_with_form(
     )
     assert_contains(response, "Split post into a new thread")
     assert_contains(response, "Category")
+    assert_contains(response, f'value="{reply.id}"')
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -986,6 +1017,7 @@ def test_thread_detail_view_executes_post_moderation_action_with_form_in_htmx(
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Category")
+    assert_contains(response, f'value="{reply.id}"')
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1022,6 +1054,7 @@ def test_thread_detail_view_executes_destructive_post_moderation_action_with_con
         {"post_moderation": "delete", "post": reply.id},
     )
     assert_contains(response, "Are you sure you want to delete this post?")
+    assert_contains(response, f'value="{reply.id}"')
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
@@ -1055,6 +1088,7 @@ def test_thread_detail_view_executes_destructive_post_moderation_action_with_con
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Are you sure you want to delete this post?")
+    assert_contains(response, f'value="{reply.id}"')
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
