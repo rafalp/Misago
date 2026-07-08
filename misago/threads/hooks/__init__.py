@@ -16,6 +16,8 @@ from .get_category_threads_page_subcategories import (
     get_category_threads_page_subcategories_hook,
 )
 from .get_category_threads_page_threads import get_category_threads_page_threads_hook
+from .get_post_merge_conflicts import get_post_merge_conflicts_hook
+from .get_post_merge_form_fields import get_post_merge_form_fields_hook
 from .get_thread_breadcrumbs import get_thread_breadcrumbs_hook
 from .get_thread_detail_view_context_data import (
     get_thread_detail_view_context_data_hook,
@@ -42,6 +44,7 @@ from .hide_post import hide_post_hook
 from .hide_thread import hide_thread_hook
 from .lock_post import lock_post_hook
 from .lock_thread import lock_thread_hook
+from .merge_posts import merge_posts_hook
 from .merge_threads import merge_threads_hook
 from .move_post import move_post_hook
 from .move_thread import move_thread_hook
@@ -69,6 +72,8 @@ __all__ = [
     "get_category_threads_page_queryset_hook",
     "get_category_threads_page_subcategories_hook",
     "get_category_threads_page_threads_hook",
+    "get_post_merge_conflicts_hook",
+    "get_post_merge_form_fields_hook",
     "get_thread_breadcrumbs_hook",
     "get_thread_detail_view_context_data_hook",
     "get_thread_detail_view_moderation_result_data_hook",
@@ -87,6 +92,7 @@ __all__ = [
     "hide_thread_hook",
     "lock_post_hook",
     "lock_thread_hook",
+    "merge_posts_hook",
     "merge_threads_hook",
     "move_post_hook",
     "move_thread_hook",

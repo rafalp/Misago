@@ -46,7 +46,7 @@ from .actions import (
     ModerationResult,
     ThreadModerationAction,
 )
-from .forms import HideForm, MergeForm, MergeThreadForm, MoveThreadsForm
+from .forms import HideForm, MergeThreadConflictsForm, MergeThreadForm, MoveThreadsForm
 from .hooks import (
     get_private_thread_moderation_actions_hook,
     get_thread_moderation_actions_hook,
@@ -467,7 +467,7 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
     form_class = MergeThreadForm
     template_name = "misago/moderation/merge_thread.html"
 
-    conflicts_form_class = MergeForm
+    conflicts_form_class = MergeThreadConflictsForm
     conflicts_template_name = "misago/moderation/merge_thread_conflicts.html"
 
     def get_form(self, form_submitted: bool):
@@ -488,7 +488,7 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
         other_thread = form.cleaned_data["other_thread"]
 
         conflicts = get_thread_merge_conflicts([thread, other_thread], request)
-        resolutions = {}
+        conflicts_resolutions = {}
 
         handle_conflicts = any([len(conflict) > 1 for conflict in conflicts.values()])
         if handle_conflicts:
@@ -502,7 +502,7 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
                 conflicts_form = self.conflicts_form_class(request.POST, **form_kwargs)
 
                 if conflicts_form.is_valid():
-                    resolutions = conflicts_form.get_conflicts_resolutions()
+                    conflicts_resolutions = conflicts_form.get_conflicts_resolutions()
                 else:
                     return self.get_conflicts_form_result(form, conflicts_form)
 
@@ -511,7 +511,7 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
                 return self.get_conflicts_form_result(form, conflicts_form)
 
         else:
-            resolutions = {
+            conflicts_resolutions = {
                 conflict: choices[0] for conflict, choices in conflicts.items()
             }
 
@@ -521,14 +521,18 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
 
         if form.cleaned_data["direction"] == "other":
             final_thread = other_thread
-            merge_threads(other_thread, [thread], resolutions, request)
+            merge_threads(
+                other_thread, [thread], conflicts_resolutions, request=request
+            )
 
             create_merged_thread_update(
                 other_thread, thread, self.request.user, request=request
             )
         else:
             final_thread = thread
-            merge_threads(thread, [other_thread], resolutions, request)
+            merge_threads(
+                thread, [other_thread], conflicts_resolutions, request=request
+            )
 
             create_merged_thread_update(
                 thread, other_thread, self.request.user, request=request

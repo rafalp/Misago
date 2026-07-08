@@ -4,15 +4,17 @@ from django.forms import Form
 from django.http import HttpRequest
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ..categories.models import Category
+from ..attachments.models import Attachment
 from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import notify_on_new_thread_reply
 from ..permissions.proxy import UserPermissionsProxy
+from ..postedits.create import create_post_edit
 from ..threads.approve import approve_post
 from ..threads.create import create_thread
 from ..threads.delete import delete_post
 from ..threads.hide import hide_post, unhide_post
 from ..threads.lock import lock_post, unlock_post
+from ..threads.merge import get_post_merge_conflicts, merge_posts
 from ..threads.models import Post, Thread
 from ..threads.move import move_post
 from ..threads.synchronize import synchronize_thread
@@ -26,10 +28,18 @@ from ..threadupdates.create import (
 from .actions import (
     ConfirmMixin,
     FormMixin,
+    ModerationActionTemplateResult,
     ModerationResult,
     PostModerationAction,
 )
-from .forms import HideForm, MovePostsForm, SplitPostsForm
+from .forms import (
+    HideForm,
+    MergePostConflictsForm,
+    MergePrivateThreadPostForm,
+    MergeThreadPostForm,
+    MovePostsForm,
+    SplitPostsForm,
+)
 from .hooks import (
     get_private_thread_post_moderation_actions_hook,
     get_thread_post_moderation_actions_hook,
@@ -76,8 +86,12 @@ def _get_thread_post_moderation_actions_action(
         actions += [
             SplitPostModerationAction,
             MovePostModerationAction,
-            DeletePostModerationAction,
         ]
+
+    actions.append(MergeThreadPostModerationAction)
+
+    if post.id != post.thread.first_post_id:
+        actions.append(DeletePostModerationAction)
 
     return actions
 
@@ -119,10 +133,10 @@ def _get_private_thread_post_moderation_actions_action(
     if post.is_unapproved:
         actions.append(ApprovePostModerationAction)
 
+    actions.append(MergePrivateThreadPostModerationAction)
+
     if post.id != post.thread.first_post_id:
-        actions += [
-            DeletePostModerationAction,
-        ]
+        actions.append(DeletePostModerationAction)
 
     return actions
 
@@ -285,17 +299,18 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
     template_name = "misago/moderation/split_posts.html"
 
     def get_form(self, form_submitted: bool) -> Form:
-        form_kwargs = {
+        kwargs = {
             "prefix": self.form_prefix,
             "request": self.request,
             "initial": {
                 "category": self.thread.category_id,
             },
         }
-        if form_submitted:
-            return self.form_class(self.request.POST, **form_kwargs)
 
-        return self.form_class(**form_kwargs)
+        if form_submitted:
+            return self.form_class(self.request.POST, **kwargs)
+
+        return self.form_class(**kwargs)
 
     def validate(self):
         if self.post.id == self.thread.first_post_id:
@@ -365,15 +380,16 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
     template_name = "misago/moderation/move_posts.html"
 
     def get_form(self, form_submitted: bool) -> Form:
-        form_kwargs = {
+        kwargs = {
             "prefix": self.form_prefix,
             "request": self.request,
             "current_thread": self.thread,
         }
-        if form_submitted:
-            return self.form_class(self.request.POST, **form_kwargs)
 
-        return self.form_class(**form_kwargs)
+        if form_submitted:
+            return self.form_class(self.request.POST, **kwargs)
+
+        return self.form_class(**kwargs)
 
     def validate(self):
         if self.post.id == self.thread.first_post_id:
@@ -422,6 +438,164 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
         from ..threads.views.backend import thread_backend
 
         return thread_backend.get_thread_url(thread)
+
+
+class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
+    swap_root = True
+
+    id = "merge"
+    full_name = pgettext_lazy("post moderation action name", "Merge post")
+    button_label = pgettext_lazy("post moderation button label", "Merge")
+
+    form_class = MergeThreadPostForm
+    template_name = "misago/moderation/merge_post.html"
+
+    conflicts_form_class = MergePostConflictsForm
+    conflicts_template_name = "misago/moderation/merge_post_conflicts.html"
+
+    def get_form(self, form_submitted: bool):
+        kwargs = {
+            "request": self.request,
+            "prefix": self.form_prefix,
+            "post": self.post,
+        }
+
+        if form_submitted:
+            return self.form_class(self.request.POST, **kwargs)
+
+        return self.form_class(**kwargs)
+
+    def form_valid(self, form) -> ModerationResult:
+        request = self.request
+        thread = self.thread
+        post = self.post
+        other_post = form.cleaned_data["other_post"]
+        edit_reason = form.cleaned_data["edit_reason"]
+
+        conflicts = get_post_merge_conflicts([post, other_post], request)
+        conflicts_resolutions = {}
+
+        handle_conflicts = any([len(conflict) > 1 for conflict in conflicts.values()])
+        if handle_conflicts:
+            form_kwargs = {
+                "request": request,
+                "prefix": self.form_prefix,
+                "conflicts": conflicts,
+            }
+
+            if request.POST.get("confirm_conflicts"):
+                conflicts_form = self.conflicts_form_class(request.POST, **form_kwargs)
+
+                if conflicts_form.is_valid():
+                    conflicts_resolutions = conflicts_form.get_conflicts_resolutions()
+                else:
+                    return self.get_conflicts_form_result(form, conflicts_form)
+
+            else:
+                conflicts_form = self.conflicts_form_class(**form_kwargs)
+                return self.get_conflicts_form_result(form, conflicts_form)
+
+        else:
+            conflicts_resolutions = {
+                conflict: choices[0] for conflict, choices in conflicts.items()
+            }
+
+        attachments = list(
+            Attachment.objects.filter(post__in=[post, other_post]).order_by("-id")
+        )
+
+        if form.cleaned_data["direction"] == "other":
+            final_post, other_post = other_post, post
+            old_content = final_post.original
+            merge_posts(
+                final_post,
+                [other_post],
+                conflicts_resolutions,
+                request.user,
+                edit_reason,
+                request=request,
+            )
+        else:
+            final_post = post
+            old_content = final_post.original
+            merge_posts(
+                final_post,
+                [other_post],
+                conflicts_resolutions,
+                request.user,
+                edit_reason,
+                request=request,
+            )
+
+        synchronize_thread(thread, request=request)
+
+        for attachment in attachments:
+            # A bit of black magic: by unsetting attachment post relations
+            # we make 'create_post_edit' record attachment as new addition to a post
+            if attachment.post_id != final_post.id:
+                attachment.category = None
+                attachment.thread = None
+                attachment.post = None
+
+        create_post_edit(
+            post=final_post,
+            user=request.user,
+            edit_reason=edit_reason,
+            old_content=old_content,
+            new_content=final_post.original,
+            attachments=attachments,
+            edited_at=final_post.updated_at,
+            request=request,
+        )
+
+        synchronize_categories.delay([final_post.category_id])
+
+        messages.success(
+            self.request,
+            pgettext("post moderation success", "Posts merged"),
+        )
+
+        return self.get_result(final_post, other_post)
+
+    def get_conflicts_form_result(self, merge_form: Form, conflicts_form: Form):
+        return ModerationActionTemplateResult(
+            context={
+                "template_name": self.conflicts_template_name,
+                "merge_form": merge_form,
+                "conflicts_form": conflicts_form,
+            },
+        )
+
+    def get_result(self, post: Post, other_post: Post) -> ModerationResult:
+        redirect_to = self.get_redirect_url(post)
+
+        if not self.request.is_htmx:
+            return ModerationResult(redirect_to=redirect_to)
+
+        refresh = self.request.path == redirect_to[: redirect_to.rindex("/") + 1]
+
+        return ModerationResult(
+            refresh=refresh,
+            redirect_to=redirect_to if not refresh else None,
+            updated_items=[post.id],
+            deleted_items=[other_post.id],
+        )
+
+    def get_redirect_url(self, post: Post) -> str:
+        from ..threads.views.backend import thread_backend
+
+        redirect = thread_backend.get_post_redirect(self.request, post)
+        return redirect["location"]
+
+
+class MergePrivateThreadPostModerationAction(MergeThreadPostModerationAction):
+    form_class = MergePrivateThreadPostForm
+
+    def get_redirect_url(self, post: Post) -> str:
+        from ..privatethreads.views.backend import private_thread_backend
+
+        redirect = private_thread_backend.get_post_redirect(self.request, post)
+        return redirect["location"]
 
 
 class DeletePostModerationAction(ConfirmMixin, PostModerationAction):

@@ -1,12 +1,15 @@
-from typing import Iterable
+from typing import TYPE_CHECKING, Iterable, Union
 
 from django import forms
 from django.db.models import Model
 from django.http import HttpRequest
+from django.utils import timezone
 from django.utils.translation import pgettext
 
 from ..attachments.models import Attachment
+from ..core.utils import slugify
 from ..likes.models import Like
+from ..likes.synchronize import synchronize_post_likes
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
@@ -14,11 +17,17 @@ from ..postgres.delete import delete_all
 from ..readtracker.models import ReadThread
 from ..threadupdates.models import ThreadUpdate
 from .hooks import (
+    get_post_merge_conflicts_hook,
+    get_post_merge_form_fields_hook,
     get_thread_merge_conflicts_hook,
     get_thread_merge_form_fields_hook,
+    merge_posts_hook,
     merge_threads_hook,
 )
 from .models import Post, Thread
+
+if TYPE_CHECKING:
+    from ..users.models import User
 
 
 def get_thread_merge_conflicts(
@@ -97,6 +106,7 @@ def merge_threads(
     target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
+    commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Thread:
     return merge_threads_hook(
@@ -104,6 +114,7 @@ def merge_threads(
         target,
         threads,
         conflicts,
+        commit,
         request,
     )
 
@@ -112,6 +123,7 @@ def _merge_threads_action(
     target: Thread,
     threads: Iterable[Thread],
     conflicts: dict[str, Model],
+    commit: bool = True,
     request: HttpRequest | None = None,
 ) -> Thread:
     new_category = target.category
@@ -172,6 +184,146 @@ def _merge_threads_action(
 
     delete_all(Thread, id=thread_ids)
 
-    target.save()
+    if commit:
+        target.save()
 
     return target
+
+
+def get_post_merge_conflicts(
+    posts: Iterable[Post], request: HttpRequest | None = None
+) -> dict[str, list[Model]]:
+    return get_post_merge_conflicts_hook(
+        _get_post_merge_conflicts_action, posts, request
+    )
+
+
+def _get_post_merge_conflicts_action(
+    posts: Iterable[Post], request: HttpRequest | None = None
+) -> dict[str, list[Model]]:
+    return {}  # No post merge conflicts are possible in standard Misago
+
+
+def get_post_merge_form_fields(
+    conflicts: dict[str, list[Model]],
+    request: HttpRequest | None = None,
+) -> dict[str, forms.Field]:
+    return get_post_merge_form_fields_hook(
+        _get_post_merge_form_fields_action, conflicts, request
+    )
+
+
+def _get_post_merge_form_fields_action(
+    conflicts: dict[str, list[Model]],
+    request: HttpRequest | None = None,
+) -> dict[str, forms.Field]:
+    fields: dict[str, forms.Field] = {}
+    return fields  # No post merge conflicts are possible in standard Misago
+
+
+def merge_posts(
+    target: Post,
+    posts: Iterable[Post],
+    conflicts: dict[str, Model],
+    merged_by: Union["User", str],
+    edit_reason: str | None = None,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> Post:
+    return merge_posts_hook(
+        _merge_posts_action,
+        target,
+        posts,
+        conflicts,
+        merged_by,
+        edit_reason,
+        commit,
+        request,
+    )
+
+
+MISAGO_POST_METADATA = (
+    "attachments",
+    "highlight_code",
+    "posts",
+    "mentions",
+)
+
+
+def _merge_posts_action(
+    target: Post,
+    posts: Iterable[Post],
+    conflicts: dict[str, Model],
+    merged_by: Union["User", str],
+    edit_reason: str | None = None,
+    commit: bool = True,
+    request: HttpRequest | None = None,
+) -> Post:
+    thread = target.thread
+
+    for post in posts:
+        if post.id > target.id:
+            target.original += f"\n\n{post.original}"
+            target.parsed += f"\n{post.parsed}"
+            target.search_document += f"\n\n{post.search_document}"
+        else:
+            target.original = f"{post.original}\n\n{target.original}"
+            target.parsed = f"{post.parsed}\n{target.parsed}"
+            target.search_document = (
+                f"{post.search_document}\n\n{target.search_document}"
+            )
+
+        target.edits += post.edits
+
+        for key in MISAGO_POST_METADATA:
+            merge_post_metadata(key, target, post)
+
+        save_thread = False
+        if thread.solution_id == post.id:
+            thread.solution = target
+            save_thread = True
+        if thread.last_post_id == post.id:
+            thread.last_post = target
+            save_thread = True
+        if save_thread:
+            thread.save()
+
+    Attachment.objects.filter(post__in=posts).update(post=target)
+    Like.objects.filter(post__in=posts).update(post=target)
+    Notification.objects.filter(post__in=posts).update(post=target)
+    PostEdit.objects.filter(post__in=posts).update(post=target)
+
+    post_ids = [post.id for post in posts]
+
+    delete_all(Post, id=post_ids)
+
+    synchronize_post_likes(target, commit=False, request=request)
+
+    target.updated_at = timezone.now()
+    target.edits += 1
+    target.last_edit_reason = edit_reason
+
+    if isinstance(merged_by, str):
+        target.last_editor_name = merged_by
+        target.last_editor_slug = slugify(merged_by)
+    else:
+        target.last_editor = merged_by
+        target.last_editor_name = merged_by.username
+        target.last_editor_slug = merged_by.slug
+
+    target.set_search_vector()
+
+    if commit:
+        target.save()
+
+    return target
+
+
+def merge_post_metadata(key: str, target: Post, source: Post):
+    target_meta = target.metadata.get(key)
+    source_meta = source.metadata.get(key)
+
+    if target_meta and source_meta:
+        target.metadata[key] = sorted(set(target_meta).union(set(source_meta)))
+    elif source_meta:
+        target.metadata[key] = source_meta

@@ -13,8 +13,8 @@ from ..permissions.enums import CategoryPermission
 from ..permissions.proxy import UserPermissionsProxy
 from ..posting.validators import validate_thread_title
 from ..threads.enums import ThreadPinned
-from ..threads.merge import get_thread_merge_form_fields
-from ..threads.models import Thread
+from ..threads.merge import get_post_merge_form_fields, get_thread_merge_form_fields
+from ..threads.models import Post, Thread
 
 THREAD_URLS = (
     "misago:thread",
@@ -108,12 +108,98 @@ def parse_thread_url(value: str, request: HttpRequest, valid_urls: list[str]) ->
         )
 
 
+def parse_thread_post_url(
+    value: str,
+    request: HttpRequest,
+    valid_urls: list[str],
+    current_thread_id: int,
+) -> int:
+    try:
+        parsed_url = urllib.parse.urlsplit(value)
+    except ValueError:
+        parsed_url = None
+
+    if not parsed_url or not parsed_url.netloc or not parsed_url.path.strip("/"):
+        raise forms.ValidationError(
+            pgettext("moderation form post url validation", "Enter a valid link."),
+            code="invalid",
+        )
+
+    if parsed_url.netloc != request.get_host():
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form post url validation",
+                "Enter a link to this site.",
+            ),
+            code="invalid",
+        )
+
+    try:
+        resolved_url = resolve(parsed_url.path)
+    except Resolver404:
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form post url validation",
+                "Enter a valid post link.",
+            ),
+            code="invalid",
+        )
+
+    url_name = resolved_url.url_name
+    if resolved_url.namespaces:
+        namespace = ":".join(resolved_url.namespaces)
+        url_name = f"{namespace}:{url_name}"
+
+    if url_name not in valid_urls:
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form post url validation",
+                "Enter a valid post link.",
+            ),
+            code="invalid",
+        )
+
+    try:
+        post_int = int(resolved_url.kwargs.get("post_id"))
+    except (TypeError, ValueError):
+        raise forms.ValidationError(
+            pgettext(
+                "moderation form post url validation",
+                "Enter a valid post link.",
+            ),
+            code="invalid",
+        )
+
+    if "thread_id" in resolved_url.kwargs:
+        try:
+            thread_id = int(resolved_url.kwargs.get("thread_id"))
+        except (TypeError, ValueError):
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form post url validation",
+                    "Enter a valid thread post link.",
+                ),
+                code="invalid",
+            )
+
+        if thread_id != current_thread_id:
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form post url validation",
+                    "Enter a link to a post in the current thread.",
+                ),
+                code="invalid",
+            )
+
+    return post_int
+
+
 def get_valid_thread(request: HttpRequest, thread_id: int) -> Thread:
     from ..threads.views.backend import thread_backend
 
     try:
         thread = thread_backend.get_thread(request, thread_id)
-    except (Http404, PermissionDenied) as exc:
+    except (Http404, PermissionDenied):
         raise forms.ValidationError(
             pgettext(
                 "moderation form thread validation",
@@ -135,6 +221,19 @@ def get_valid_thread(request: HttpRequest, thread_id: int) -> Thread:
         )
 
     return thread
+
+
+def get_conflicts_resolutions(
+    conflicts: dict[str, list[Model]], cleaned_data: dict
+) -> dict[str, int]:
+    resolutions: dict[str, Model] = {}
+    for conflict, objects in conflicts.items():
+        if len(objects) > 1:
+            choices = {obj.id: obj for obj in objects}
+            resolutions[conflict] = choices[cleaned_data[conflict]]
+        else:
+            resolutions[conflict] = objects[0]
+    return resolutions
 
 
 class HideForm(forms.Form):
@@ -167,7 +266,7 @@ class MoveThreadsForm(forms.Form):
 
         self.fields["category"].choices = request.categories.get_choices()
 
-    def clean_category(self):
+    def clean_category(self) -> int:
         data = self.cleaned_data["category"]
         if data in self.disallowed_categories:
             raise forms.ValidationError(
@@ -185,7 +284,15 @@ class MoveThreadsForm(forms.Form):
         return data
 
 
-class MergeForm(forms.Form):
+class MergeThreadsForm(forms.Form):
+    category = forms.TypedChoiceField(coerce=int, choices=[])
+    title = forms.CharField(max_length=255)
+    is_locked = forms.BooleanField(required=False)
+    is_hidden = forms.BooleanField(required=False)
+
+    disallowed_categories: set[int]
+
+    request: HttpRequest
     conflicts: dict[str, list[Model]]
 
     def __init__(
@@ -201,48 +308,8 @@ class MergeForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields.update(get_thread_merge_form_fields(conflicts, request))
-
-    @property
-    def conflicts_fields(self):
-        return [
-            self[field_name]
-            for field_name, choices in self.conflicts.items()
-            if len(choices) > 1
-        ]
-
-    def get_conflicts_resolutions(self):
-        resolutions: dict[str, Model] = {}
-        for conflict, objects in self.conflicts.items():
-            if len(objects) > 1:
-                choices = {obj.id: obj for obj in objects}
-                resolutions[conflict] = choices[self.cleaned_data[conflict]]
-            else:
-                resolutions[conflict] = objects[0]
-        return resolutions
-
-
-class MergeThreadsForm(MergeForm):
-    category = forms.TypedChoiceField(coerce=int, choices=[])
-    title = forms.CharField(max_length=255)
-    is_locked = forms.BooleanField(required=False)
-    is_hidden = forms.BooleanField(required=False)
-
-    disallowed_categories: set[int]
-    conflicts_fields: list[str]
-
-    request: HttpRequest
-    conflicts: dict[str, list[Model]]
-
-    def __init__(
-        self,
-        *args,
-        request: HttpRequest,
-        conflicts: dict[str, list[Model]],
-        **kwargs,
-    ):
-        super().__init__(*args, request=request, conflicts=conflicts, **kwargs)
-
         self.fields["category"].choices = request.categories.get_choices()
+
         self.disallowed_categories = get_disallowed_category_choices(
             request.user_permissions, request.categories
         )
@@ -255,7 +322,15 @@ class MergeThreadsForm(MergeForm):
                 required=False,
             )
 
-    def clean_category(self):
+    @property
+    def conflicts_fields(self):
+        return [
+            self[field_name]
+            for field_name, choices in self.conflicts.items()
+            if len(choices) > 1
+        ]
+
+    def clean_category(self) -> int:
         data = self.cleaned_data["category"]
         if data in self.disallowed_categories:
             raise forms.ValidationError(
@@ -266,7 +341,7 @@ class MergeThreadsForm(MergeForm):
             )
         return data
 
-    def clean_title(self):
+    def clean_title(self) -> str:
         data = self.cleaned_data["title"]
         validate_thread_title(
             data,
@@ -281,6 +356,9 @@ class MergeThreadsForm(MergeForm):
         if data.get("category"):
             data["category"] = Category.objects.get(id=data["category"])
         return data
+
+    def get_conflicts_resolutions(self) -> dict[str, int]:
+        return get_conflicts_resolutions(self.conflicts, self.cleaned_data)
 
 
 class MergeThreadForm(forms.Form):
@@ -313,7 +391,7 @@ class MergeThreadForm(forms.Form):
 
         super().__init__(*args, **kwargs)
 
-    def clean_other_thread(self):
+    def clean_other_thread(self) -> Thread:
         data = self.cleaned_data["other_thread"]
         thread_id = parse_thread_url(data, self.request, self.valid_urls)
 
@@ -321,15 +399,44 @@ class MergeThreadForm(forms.Form):
             raise forms.ValidationError(
                 pgettext(
                     "moderation form thread validation",
-                    "Enter a different thread link.",
+                    "Can't merge a thread with itself.",
                 ),
                 code="invalid",
             )
 
         return self.get_other_thread(thread_id)
 
-    def get_other_thread(self, thread_id: int):
+    def get_other_thread(self, thread_id: int) -> Thread:
         return get_valid_thread(self.request, thread_id)
+
+
+class MergeThreadConflictsForm(forms.Form):
+    conflicts: dict[str, list[Model]]
+
+    def __init__(
+        self,
+        *args,
+        request: HttpRequest,
+        conflicts: dict[str, list[Model]],
+        **kwargs,
+    ):
+        self.request = request
+        self.conflicts = conflicts
+
+        super().__init__(*args, **kwargs)
+
+        self.fields.update(get_thread_merge_form_fields(conflicts, request))
+
+    @property
+    def conflicts_fields(self):
+        return [
+            self[field_name]
+            for field_name, choices in self.conflicts.items()
+            if len(choices) > 1
+        ]
+
+    def get_conflicts_resolutions(self):
+        return get_conflicts_resolutions(self.conflicts, self.cleaned_data)
 
 
 class SplitPostsForm(forms.Form):
@@ -349,10 +456,8 @@ class SplitPostsForm(forms.Form):
         widget=forms.RadioSelect,
     )
 
-    disallowed_categories: set[int]
-    conflicts_fields: list[str]
-
     request: HttpRequest
+    disallowed_categories: set[int]
 
     def __init__(
         self,
@@ -377,7 +482,7 @@ class SplitPostsForm(forms.Form):
                 required=False,
             )
 
-    def clean_category(self):
+    def clean_category(self) -> int:
         data = self.cleaned_data["category"]
         if data in self.disallowed_categories:
             raise forms.ValidationError(
@@ -388,7 +493,7 @@ class SplitPostsForm(forms.Form):
             )
         return data
 
-    def clean_title(self):
+    def clean_title(self) -> str:
         data = self.cleaned_data["title"]
         validate_thread_title(
             data,
@@ -436,7 +541,7 @@ class MovePostsForm(forms.Form):
 
         super().__init__(*args, **kwargs)
 
-    def clean_target_thread(self):
+    def clean_target_thread(self) -> Thread:
         data = self.cleaned_data["target_thread"]
         thread_id = parse_thread_url(data, self.request, self.valid_urls)
 
@@ -444,12 +549,201 @@ class MovePostsForm(forms.Form):
             raise forms.ValidationError(
                 pgettext(
                     "moderation form thread validation",
-                    "Enter a different thread link.",
+                    "Can't move posts to the same thread.",
                 ),
                 code="invalid",
             )
 
         return self.get_target_thread(thread_id)
 
-    def get_target_thread(self, thread_id: int):
+    def get_target_thread(self, thread_id: int) -> Thread:
         return get_valid_thread(self.request, thread_id)
+
+
+class MergePostsForm(forms.Form):
+    edit_reason = forms.CharField(max_length=255, required=False)
+
+    request: HttpRequest
+    conflicts: dict[str, list[Model]]
+
+    def __init__(
+        self,
+        *args,
+        request: HttpRequest,
+        conflicts: dict[str, list[Model]],
+        **kwargs,
+    ):
+        self.request = request
+        self.conflicts = conflicts
+
+        super().__init__(*args, **kwargs)
+
+        self.fields.update(get_post_merge_form_fields(conflicts, request))
+
+    @property
+    def conflicts_fields(self):
+        return [
+            self[field_name]
+            for field_name, choices in self.conflicts.items()
+            if len(choices) > 1
+        ]
+
+    def get_conflicts_resolutions(self):
+        return get_conflicts_resolutions(self.conflicts, self.cleaned_data)
+
+
+class MergeThreadPostForm(forms.Form):
+    other_post = forms.CharField(max_length=500)
+    direction = forms.ChoiceField(
+        choices=(
+            (
+                "other",
+                pgettext("moderation form post merge direction", "Keep other post"),
+            ),
+            (
+                "current",
+                pgettext("moderation form post merge direction", "Keep current post"),
+            ),
+        ),
+        initial="other",
+        widget=forms.RadioSelect,
+    )
+    edit_reason = forms.CharField(max_length=255, required=False)
+
+    valid_urls = (
+        "misago:post",
+        "misago:thread-post",
+        "misago:thread-post-edit",
+        "misago:thread-post-edits",
+        "misago:thread-post-likes",
+    )
+
+    request: HttpRequest
+    thread: Thread
+    post: Post
+
+    def __init__(self, *args, request: HttpRequest, post: Post, **kwargs):
+        self.request = request
+        self.thread = post.thread
+        self.post = post
+
+        super().__init__(*args, **kwargs)
+
+        if post.id == post.thread.first_post_id:
+            del self.fields["direction"]
+
+    def clean_other_post(self) -> Post:
+        data = self.cleaned_data["other_post"]
+        post_id = parse_thread_post_url(
+            data, self.request, self.valid_urls, self.post.thread_id
+        )
+
+        if post_id == self.post.id:
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form post validation",
+                    "Can't merge a post with itself.",
+                ),
+                code="invalid",
+            )
+
+        try:
+            post = self.get_other_post(post_id)
+        except (Http404, PermissionDenied):
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form post validation",
+                    "Post doesn't exist in this thread or you don't have permission to see it.",
+                ),
+                code="invalid",
+            )
+
+        if (self.post.poster_id and self.post.poster_id != post.poster_id) or (
+            not self.post.poster_id and post.poster_name != self.post.poster_name
+        ):
+            raise forms.ValidationError(
+                pgettext(
+                    "moderation form post validation",
+                    "Merged posts must belong to the same user.",
+                ),
+                code="invalid",
+            )
+
+        return post
+
+    def clean(self):
+        data = super().clean()
+
+        data.setdefault("direction", "current")
+
+        other_post = data.get("other_post")
+        if (
+            other_post
+            and other_post.id == self.thread.first_post_id
+            and data["direction"] == "current"
+        ):
+            self.add_error(
+                "direction",
+                forms.ValidationError(
+                    pgettext(
+                        "moderation form post validation",
+                        "Thread's first post can't be merged into another post.",
+                    ),
+                    code="invalid",
+                ),
+            )
+
+        return data
+
+    def get_other_post(self, post_id: int) -> Post:
+        from ..threads.views.backend import thread_backend
+
+        return thread_backend.get_post(
+            self.request, self.post.thread, post_id, for_content=True
+        )
+
+
+class MergePrivateThreadPostForm(MergeThreadPostForm):
+    valid_urls = (
+        "misago:post",
+        "misago:private-thread-post",
+        "misago:private-thread-post-edit",
+        "misago:private-thread-post-edits",
+        "misago:private-thread-post-likes",
+    )
+
+    def get_other_post(self, post_id: int):
+        from ..privatethreads.views.backend import private_thread_backend
+
+        return private_thread_backend.get_post(
+            self.request, self.post.thread, post_id, for_content=True
+        )
+
+
+class MergePostConflictsForm(forms.Form):
+    conflicts: dict[str, list[Model]]
+
+    def __init__(
+        self,
+        *args,
+        request: HttpRequest,
+        conflicts: dict[str, list[Model]],
+        **kwargs,
+    ):
+        self.request = request
+        self.conflicts = conflicts
+
+        super().__init__(*args, **kwargs)
+
+        self.fields.update(get_post_merge_form_fields(conflicts, request))
+
+    @property
+    def conflicts_fields(self):
+        return [
+            self[field_name]
+            for field_name, choices in self.conflicts.items()
+            if len(choices) > 1
+        ]
+
+    def get_conflicts_resolutions(self):
+        return get_conflicts_resolutions(self.conflicts, self.cleaned_data)

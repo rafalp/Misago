@@ -27,6 +27,12 @@ class MergeThreadsHookAction(Protocol):
 
     A `dict` with the conflict resolutions to use during the merge.
 
+    ## `commit: bool = True`
+
+    Whether the updated thread instance should be saved to the database.
+
+    Defaults to `True`.
+
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
@@ -41,6 +47,7 @@ class MergeThreadsHookAction(Protocol):
         target: Thread,
         threads: Iterable[Thread],
         conflicts: dict[str, Model],
+        commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Thread: ...
 
@@ -72,6 +79,12 @@ class MergeThreadsHookFilter(Protocol):
 
     A `dict` with the conflict resolutions to use during the merge.
 
+    ## `commit: bool = True`
+
+    Whether the updated thread instance should be saved to the database.
+
+    Defaults to `True`.
+
     ## `request: HttpRequest | None`
 
     The request object, or `None` if not provided.
@@ -87,6 +100,7 @@ class MergeThreadsHookFilter(Protocol):
         target: Thread,
         threads: Iterable[Thread],
         conflicts: dict[str, Model],
+        commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Thread: ...
 
@@ -105,7 +119,7 @@ class MergeThreadsHook(
 
     # Example
 
-    Update `PluginModel` objects during the merge
+    Update `PluginModel` objects during the merge:
 
     ```python
     from typing import Iterable
@@ -123,13 +137,14 @@ class MergeThreadsHook(
         target: Thread,
         threads: Iterable[Thread],
         conflicts: dict[str, Model],
+        commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Thread:
         PluginModel.objects.filter(thread__in=threads).update(
             category=target.category, thread=target
         )
 
-        return action(target, threads, conflicts, request)
+        return action(target, threads, conflicts, commit, request)
     """
 
     __slots__ = FilterHook.__slots__
@@ -140,9 +155,10 @@ class MergeThreadsHook(
         target: Thread,
         threads: Iterable[Thread],
         conflicts: dict[str, Model],
+        commit: bool = True,
         request: HttpRequest | None = None,
     ) -> Thread:
-        return super().__call__(action, target, threads, conflicts, request)
+        return super().__call__(action, target, threads, conflicts, commit, request)
 
 
 merge_threads_hook = MergeThreadsHook()
