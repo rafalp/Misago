@@ -11,9 +11,19 @@ Translations
 
 Misago's translations are maintained on a separate service, [Transifex](https://explore.transifex.com/misago/). To contribute translations, create an account there and request to join your language's translation team.
 
+If your request doesn't get approved or rejected within a day or two, feel free to ask about it on the Misago forums or the Discord server.
+
 Pull requests with new translations on GitHub will be rejected.
 
 Because Misago only supports languages that the Django framework itself supports, new language requests are not accepted. Every new language request will be rejected. Please request to join an existing language instead of requesting a new one.
+
+
+AI usage
+--------
+
+It is acceptable to use AI tools for checking code or researching solutions in contributions to Misago, but the project is not vibecoded and AI PRs will be rejected.
+
+Also, please don't use AI in communication with other people involved in the project on GitHub, forums, or Discord.
 
 
 Working on existing issue
