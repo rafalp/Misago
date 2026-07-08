@@ -178,7 +178,7 @@ class HidePostsModerationAction(FormMixin, PostsModerationAction):
                 raise ValidationError(
                     pgettext(
                         "posts moderation validation",
-                        "Thread's original post can't be hidden.",
+                        "Thread's first post can't be hidden.",
                     )
                 )
 
@@ -290,7 +290,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
                 raise ValidationError(
                     pgettext(
                         "post moderation validation",
-                        "The first post in a thread can't be split.",
+                        "Thread's first post can't be split.",
                     )
                 )
 
@@ -372,7 +372,7 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
                 raise ValidationError(
                     pgettext(
                         "post moderation validation",
-                        "The first post in a thread can't be moved.",
+                        "Thread's first post can't be moved.",
                     )
                 )
 
@@ -540,7 +540,7 @@ class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
     button_label = "Delete"
     confirmation_message = pgettext_lazy(
         "posts moderation",
-        "Are you sure you want to delete the selected posts? This action cannot be undone.",
+        "Are you sure you want to delete the selected posts? This can't be undone.",
     )
 
     def validate(self):
@@ -549,7 +549,7 @@ class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
                 raise ValidationError(
                     pgettext(
                         "posts moderation validation",
-                        "The first post in a thread can't be deleted.",
+                        "Thread's first post can't be deleted.",
                     )
                 )
 
