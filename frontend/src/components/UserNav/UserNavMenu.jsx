@@ -163,7 +163,7 @@ function select(state) {
       username: user.username,
       unreadNotifications: user.unreadNotifications,
       unreadPrivateThreads: user.unread_private_threads,
-      showPrivateThreads: user.acl.can_use_private_threads,
+      showPrivateThreads: !!user.permissions.can_use_private_threads,
       url: user.url,
     },
     options: [...misago.get("userOptions")],

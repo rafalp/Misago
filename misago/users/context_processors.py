@@ -42,6 +42,10 @@ def preload_user_json(request):
         serializer = AnonymousUserSerializer
 
     serialized_user = serializer(request.user, context={"acl": request.user_acl}).data
+    serialized_user["permissions"] = {
+        "can_use_private_threads": request.user_permissions.can_use_private_threads,
+    }
+
     request.frontend_context["user"] = serialized_user
 
     request.frontend_context.update(get_users_menus(request))

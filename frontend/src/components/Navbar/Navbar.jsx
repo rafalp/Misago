@@ -134,7 +134,7 @@ function select(state) {
 
     authDelegated: settings.enable_oauth2_client,
     showSearch: !!user.acl.can_search,
-    showPrivateThreads: !!user && !!user.acl.can_use_private_threads,
+    showPrivateThreads: !!user && !!user.permissions.can_use_private_threads,
   }
 }
 
