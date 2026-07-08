@@ -51,6 +51,6 @@ jobs:
           MISAGO_PLUGINS: plugins
         run: |
           python manage.py makemigrations --check
-          pytest --cov=misago
+          pytest --run-slow --cov=misago
       - name: Publish to coveralls.io
         uses: coverallsapp/github-action@v2

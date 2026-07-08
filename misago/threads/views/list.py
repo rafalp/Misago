@@ -421,7 +421,7 @@ class ThreadListView(ListView):
         )
 
         page_threads = self.get_threads(request, kwargs)
-        selected_threads = self.get_selected_threads(request, page_threads)
+        selected_threads = self.get_selected_threads(request)
 
         action_obj = action(request, selected_threads)
         action_obj.validate()

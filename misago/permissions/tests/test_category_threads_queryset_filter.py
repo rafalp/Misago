@@ -1,7 +1,12 @@
 from itertools import product
 
+import pytest
+
+from ...categories.proxy import CategoriesProxy
 from ...threads.enums import ThreadPinned
 from ...threads.models import Thread
+from ..proxy import UserPermissionsProxy
+from ..threads import filter_category_threads_queryset
 
 
 def test_category_threads_queryset_includes_category_with_see_and_browse_permission(
@@ -32,6 +37,7 @@ def test_category_threads_queryset_includes_category_with_see_permission_and_del
     assert category_thread in queryset
 
 
+@pytest.mark.slow
 def test_category_threads_queryset_filter(
     thread_factory,
     category_threads_filter_factory,
@@ -75,12 +81,12 @@ def test_category_threads_queryset_filter(
     )
 
     for args in product(*MATRIX):
-        check_category_thread_visibility(
+        check_category_threads_queryset_filter_case(
             thread_factory, category_threads_filter_factory, *args
         )
 
 
-def check_category_thread_visibility(
+def check_category_threads_queryset_filter_case(
     thread_factory,
     category_threads_filter_factory,
     user,
@@ -270,6 +276,7 @@ def test_category_pinned_threads_queryset_includes_category_with_see_permission_
     assert category_pinned_everywhere_thread in queryset
 
 
+@pytest.mark.slow
 def test_category_pinned_threads_queryset_filter(
     thread_factory,
     category_threads_filter_factory,
@@ -313,12 +320,12 @@ def test_category_pinned_threads_queryset_filter(
     )
 
     for args in product(*MATRIX):
-        check_category_pinned_thread_visibility(
+        check_category_pinned_threads_queryset_filter_case(
             thread_factory, category_threads_filter_factory, *args
         )
 
 
-def check_category_pinned_thread_visibility(
+def check_category_pinned_threads_queryset_filter_case(
     thread_factory,
     category_threads_filter_factory,
     user,
@@ -423,4 +430,128 @@ def assert_pinned_queryset_not_contains(user, category, thread_category, thread)
     ):
         raise AssertionError(
             "pinned queryset result for a user is missing a thread started by them"
+        )
+
+
+@pytest.mark.slow
+def test_filter_category_threads_queryset(
+    thread_factory,
+    cache_versions,
+    category,
+    moderator,
+    category_moderator,
+    anonymous_user,
+    user,
+    other_user,
+    category_guests_see_permission,
+    category_guests_browse_permission,
+    category_members_see_permission,
+    category_members_browse_permission,
+    category_moderators_see_permission,
+    category_moderators_browse_permission,
+):
+    MATRIX = (
+        (moderator, category_moderator, anonymous_user, user, other_user),
+        (False, True),
+        (anonymous_user, user, other_user),
+        (ThreadPinned.NONE, ThreadPinned.CATEGORY, ThreadPinned.EVERYWHERE),
+        (False, True),
+        (False, True),
+    )
+
+    for args in product(*MATRIX):
+        check_filter_category_threads_queryset_case(
+            thread_factory, cache_versions, category, *args
+        )
+
+
+def check_filter_category_threads_queryset_case(
+    thread_factory,
+    cache_versions,
+    category,
+    user,
+    started_only,
+    starter,
+    thread_pinned,
+    thread_unapproved,
+    thread_hidden,
+):
+    permissions = UserPermissionsProxy(user, cache_versions)
+    categories = CategoriesProxy(permissions, cache_versions)
+
+    if category.show_started_only != started_only:
+        category.show_started_only = started_only
+        category.save()
+
+    thread = thread_factory(
+        category,
+        starter=starter if starter.is_authenticated else "Anon",
+        pinned=thread_pinned,
+        is_unapproved=thread_unapproved,
+        is_hidden=thread_hidden,
+    )
+
+    queryset = filter_category_threads_queryset(
+        permissions, categories.categories[category.id], category.thread_set
+    )
+    if thread in queryset:
+        assert_category_threads_queryset_contains(user, category, thread)
+    else:
+        assert_category_threads_queryset_not_contains(user, category, thread)
+
+    thread.delete()
+
+
+def assert_category_threads_queryset_contains(user, category, thread):
+    if user.is_authenticated and (
+        user.slug == "moderator" or user.slug == "categorymoderator"
+    ):
+        return
+
+    if thread.is_hidden:
+        raise AssertionError(
+            "category threads queryset result for a user without moderator permissions "
+            "contains a hidden thread"
+        )
+
+    if user.is_anonymous and thread.is_unapproved:
+        raise AssertionError(
+            "category threads queryset result for an anonymous user contains "
+            "an unapproved thread"
+        )
+
+    if user.is_authenticated and thread.is_unapproved and thread.starter_id != user.id:
+        raise AssertionError(
+            "category threads queryset result for a user without moderator permissions "
+            "contains an unapproved thread started by a different user"
+        )
+
+
+def assert_category_threads_queryset_not_contains(user, category, thread):
+    if user.is_authenticated and (
+        user.slug == "moderator" or user.slug == "categorymoderator"
+    ):
+        raise AssertionError(
+            "category threads queryset result for a moderator is missing a thread"
+        )
+
+    if thread.is_hidden:
+        return
+
+    if user.is_anonymous and thread.is_unapproved:
+        return
+
+    if user.is_authenticated and thread.is_unapproved and thread.starter_id == user.id:
+        raise AssertionError(
+            "category threads queryset result for a user without moderator "
+            "permissions is missing an unapproved thread started by them"
+        )
+
+    if (
+        user.is_authenticated
+        and category.show_started_only
+        and thread.starter_id == user.id
+    ):
+        raise AssertionError(
+            "category threads queryset result for a user is missing a thread started by them"
         )
