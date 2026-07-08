@@ -2,10 +2,10 @@
 
 <div class="post-feed-item-post-edit-form">
   <form
-    action="{{ request_path }}"
+    action="{{ path }}"
     method="post"
     enctype="multipart/form-data"
-    hx-post="{{ request_path }}?inline=true"
+    hx-post="{{ path }}?inline=true"
     hx-trigger="submit"
     hx-target="#post-feed-item-post-{{ post.id }} .post-feed-item-post-body"
     hx-swap="innerHTML show:#post-{{ post.id }}:top"
@@ -33,7 +33,7 @@
         value="true"
         formnovalidate
         hx-confirm="{% translate 'Cancel edits? Unsaved changes will be lost.' context 'inline edit cancel prompt' %}"
-        hx-post="{{ request_path }}?inline=true"
+        hx-post="{{ path }}?inline=true"
       >
         {% translate "Cancel" context "inline edit cancel btn" %}
       </button>

@@ -9,10 +9,6 @@ def misago_version(request):
     return {"MISAGO_VERSION": __version__}
 
 
-def request_path(request):
-    return {"request_path": request.path_info}
-
-
 def current_link(request):
     if not request.resolver_match or request.frontend_context.get("CURRENT_LINK"):
         return {}
