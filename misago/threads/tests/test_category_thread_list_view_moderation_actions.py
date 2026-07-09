@@ -281,8 +281,8 @@ def test_category_thread_list_view_hide_moderation_action_hides_threads(
         default_category.get_absolute_url(),
         {"moderation": "hide", "threads": [thread.id]},
     )
-    assert_contains(response, "Reason for hiding")
     assert_contains(response, "Hide threads")
+    assert_contains(response, "Reason for hiding")
 
     response = moderator_client.post(
         default_category.get_absolute_url(),

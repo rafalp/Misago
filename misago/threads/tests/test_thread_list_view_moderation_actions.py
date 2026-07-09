@@ -296,8 +296,8 @@ def test_thread_list_view_hide_moderation_action_hides_threads(
         reverse("misago:thread-list"),
         {"moderation": "hide", "threads": [thread.id]},
     )
-    assert_contains(response, "Reason for hiding")
     assert_contains(response, "Hide threads")
+    assert_contains(response, "Reason for hiding")
 
     response = moderator_client.post(
         reverse("misago:thread-list"),

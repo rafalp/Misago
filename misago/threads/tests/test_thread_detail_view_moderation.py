@@ -54,6 +54,15 @@ def test_thread_detail_view_shows_posts_moderation_form_to_category_moderator(
     assert_contains(response, POSTS_MODERATION_FORM_HTML)
 
 
+def test_thread_detail_view_shows_posts_moderation_form_to_global_moderator(
+    moderator_client, thread
+):
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, POSTS_MODERATION_FORM_HTML)
+
+
 def test_thread_detail_view_shows_posts_checkboxes_to_category_moderator(
     user_client, user, thread
 ):
@@ -76,15 +85,6 @@ def test_thread_detail_view_shows_posts_checkboxes_to_global_moderator(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, POSTS_CHECKBOX_HTML)
-
-
-def test_thread_detail_view_shows_posts_moderation_form_to_global_moderator(
-    moderator_client, thread
-):
-    response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, POSTS_MODERATION_FORM_HTML)
 
 
 def test_thread_detail_view_shows_fixed_posts_moderation_form_to_category_moderator(
@@ -215,7 +215,9 @@ def test_thread_detail_view_doesnt_show_post_moderation_form_to_guest(client, th
     assert_not_contains(response, POST_MODERATION_FORM_HTML)
 
 
-def test_thread_detail_view_executes_thread_moderation_action(moderator_client, thread):
+def test_thread_detail_view_executes_one_step_thread_moderation_action(
+    moderator_client, thread
+):
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"thread_moderation": "lock"},
@@ -229,7 +231,7 @@ def test_thread_detail_view_executes_thread_moderation_action(moderator_client, 
     assert thread.is_locked
 
 
-def test_thread_detail_view_executes_thread_moderation_action_in_htmx(
+def test_thread_detail_view_executes_one_step_thread_moderation_action_in_htmx(
     moderator_client, thread
 ):
     response = moderator_client.post(

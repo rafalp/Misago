@@ -11,6 +11,11 @@ MODERATION_FIXED_HTML = '<div class="fixed-moderation">'
 DISABLED_CHECKBOX_HTML = '<input type="checkbox" disabled />'
 
 
+@pytest.fixture
+def mock_synchronize_categories(mocker):
+    return mocker.patch("misago.moderation.threads.synchronize_categories")
+
+
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_shows_noscript_moderation_form_to_category_moderator(
     user_client, user, default_category
@@ -151,10 +156,79 @@ def test_thread_list_view_executes_moderation_action_in_htmx(
     assert thread.is_locked
 
 
-@pytest.mark.xfail(reason="delete thread moderation action not yet implemented")
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_executes_moderation_action_with_form(
+    thread_factory, moderator_client, default_category, mock_synchronize_categories
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "hide", "threads": [thread.id]},
+    )
+    assert_contains(response, "Hide threads")
+    assert_contains(response, "Reason for hiding")
+    assert_contains(response, f'type="hidden" name="threads" value="{thread.id}"')
+    assert_not_contains(
+        response, 'type="hidden" name="success-hx-target" value="#misago-htmx-root"'
+    )
+    assert_not_contains(
+        response, 'type="hidden" name="success-hx-swap" value="outerHTML"'
+    )
+    assert_contains(response, 'type="hidden" name="confirm" value="true"')
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "hide",
+            "threads": [thread.id],
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse("misago:thread-list")
+
+    thread.refresh_from_db()
+    assert thread.is_hidden
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_executes_moderation_action_with_form_in_htmx(
+    thread_factory, moderator_client, default_category, mock_synchronize_categories
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "hide", "threads": [thread.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Reason for hiding")
+    assert_contains(response, f'type="hidden" name="threads" value="{thread.id}"')
+    assert_contains(
+        response, 'type="hidden" name="success-hx-target" value="#misago-htmx-root"'
+    )
+    assert_contains(response, 'type="hidden" name="success-hx-swap" value="outerHTML"')
+    assert_contains(response, 'type="hidden" name="confirm" value="true"')
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "hide",
+            "threads": [thread.id],
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, thread.title)
+
+    thread.refresh_from_db()
+    assert thread.is_hidden
+
+
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_executes_moderation_action_with_confirmation(
-    thread_factory, moderator_client, default_category
+    thread_factory, moderator_client, default_category, mock_synchronize_categories
 ):
     thread = thread_factory(default_category)
 
@@ -163,7 +237,15 @@ def test_thread_list_view_executes_moderation_action_with_confirmation(
         {"moderation": "delete", "threads": [thread.id]},
     )
     assert_contains(response, "Delete threads")
-    assert_contains(response, "Are you sure you want to delete selected threads?")
+    assert_contains(response, "Are you sure you want to delete the selected threads?")
+    assert_contains(response, f'type="hidden" name="threads" value="{thread.id}"')
+    assert_not_contains(
+        response, 'type="hidden" name="success-hx-target" value="#misago-htmx-root"'
+    )
+    assert_not_contains(
+        response, 'type="hidden" name="success-hx-swap" value="outerHTML"'
+    )
+    assert_contains(response, 'type="hidden" name="confirm" value="true"')
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -180,10 +262,9 @@ def test_thread_list_view_executes_moderation_action_with_confirmation(
         thread.refresh_from_db()
 
 
-@pytest.mark.xfail(reason="delete thread moderation action not yet implemented")
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_executes_moderation_action_with_confirmation_in_htmx(
-    thread_factory, moderator_client, default_category
+    thread_factory, moderator_client, default_category, mock_synchronize_categories
 ):
     thread = thread_factory(default_category)
 
@@ -192,8 +273,13 @@ def test_thread_list_view_executes_moderation_action_with_confirmation_in_htmx(
         {"moderation": "delete", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Delete")
-    assert_contains(response, "Are you sure you want to delete selected threads?")
+    assert_contains(response, "Are you sure you want to delete the selected threads?")
+    assert_contains(response, f'type="hidden" name="threads" value="{thread.id}"')
+    assert_contains(
+        response, 'type="hidden" name="success-hx-target" value="#misago-htmx-root"'
+    )
+    assert_contains(response, 'type="hidden" name="success-hx-swap" value="outerHTML"')
+    assert_contains(response, 'type="hidden" name="confirm" value="true"')
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
@@ -204,70 +290,159 @@ def test_thread_list_view_executes_moderation_action_with_confirmation_in_htmx(
         },
         headers={"hx-request": "true"},
     )
-    assert_contains(response, thread.title)
+    assert response.status_code == 200
 
     with pytest.raises(Thread.DoesNotExist):
         thread.refresh_from_db()
 
 
-@pytest.mark.xfail(reason="move thread moderation action not yet implemented")
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_executes_moderation_action_with_form(
-    thread_factory, moderator_client, default_category, child_category
+def test_thread_list_view_moderation_doesnt_set_htmx_trigger_header(
+    thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "move", "threads": [thread.id]},
-    )
-    assert_contains(response, "Move threads")
-    assert_contains(response, "Move to")
-
-    response = moderator_client.post(
-        reverse("misago:thread-list"),
         {
-            "moderation": "move",
+            "moderation": "lock",
             "threads": [thread.id],
-            "moderation-category": child_category.id,
-            "confirm": "true",
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse("misago:thread-list")
+    assert "hx-trigger" not in response
 
     thread.refresh_from_db()
-    assert thread.category == child_category
+    assert thread.is_locked
 
 
-@pytest.mark.xfail(reason="move thread moderation action not yet implemented")
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_executes_moderation_action_with_form_in_htmx(
-    thread_factory, moderator_client, default_category, child_category
+def test_thread_list_view_moderation_sets_htmx_trigger_header_on_success_in_htmx(
+    thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "move", "threads": [thread.id]},
+        {
+            "moderation": "lock",
+            "threads": [thread.id],
+        },
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Move to")
+    assert response.status_code == 200
+    assert response["hx-trigger"] == "misago:afterModeration"
+
+    thread.refresh_from_db()
+    assert thread.is_locked
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_moderation_doesnt_set_htmx_retarget_header_on_success(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "lock",
+            "threads": [thread.id],
+            "success-hx-target": "#misago-htmx-root",
+        },
+    )
+    assert response.status_code == 302
+    assert "hx-retarget" not in response
+
+    thread.refresh_from_db()
+    assert thread.is_locked
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_moderation_sets_htmx_retarget_header_on_success_in_htmx(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "lock",
+            "threads": [thread.id],
+            "success-hx-target": "#misago-htmx-root",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 200
+    assert response["hx-retarget"] == "#misago-htmx-root"
+
+    thread.refresh_from_db()
+    assert thread.is_locked
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_moderation_doesnt_set_htmx_reswap_header_on_success(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "lock",
+            "threads": [thread.id],
+            "success-hx-swap": "outerHTML",
+        },
+    )
+    assert response.status_code == 302
+    assert "hx-reswap" not in response
+
+    thread.refresh_from_db()
+    assert thread.is_locked
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_moderation_sets_htmx_reswap_header_on_success_in_htmx(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {
+            "moderation": "lock",
+            "threads": [thread.id],
+            "success-hx-swap": "outerHTML",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 200
+    assert response["hx-reswap"] == "outerHTML"
+
+    thread.refresh_from_db()
+    assert thread.is_locked
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_moderation_doesnt_set_htmx_headers_on_template_response_in_htmx(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
         {
             "moderation": "move",
             "threads": [thread.id],
-            "moderation-category": child_category.id,
-            "confirm": "true",
+            "success-hx-target": "#misago-htmx-root",
+            "success-hx-swap": "outerHTML",
         },
         headers={"hx-request": "true"},
     )
-    assert_contains(response, thread.title)
-
-    thread.refresh_from_db()
-    assert thread.category == child_category
+    assert response.status_code == 200
+    assert "hx-trigger" not in response
+    assert "hx-retarget" not in response
+    assert "hx-reswap" not in response
 
 
 @override_dynamic_settings(index_view="categories")
