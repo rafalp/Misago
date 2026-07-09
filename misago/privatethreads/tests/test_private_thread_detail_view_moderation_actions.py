@@ -33,7 +33,7 @@ def mock_post_notify_on_new_thread_reply(mocker):
     return mocker.patch("misago.moderation.post.notify_on_new_thread_reply")
 
 
-def test_private_thread_detail_view_executes_lock_thread_moderation_action(
+def test_private_thread_detail_view_lock_thread_moderation_action_locks_thread(
     moderator_client, user_private_thread
 ):
     response = moderator_client.post(
@@ -65,7 +65,7 @@ def test_private_thread_detail_view_executes_lock_thread_moderation_action(
     )
 
 
-def test_private_thread_detail_view_executes_unlock_thread_moderation_action(
+def test_private_thread_detail_view_unlock_thread_moderation_action_unlocks_thread(
     moderator_client, user_private_thread
 ):
     user_private_thread.is_locked = True
@@ -100,7 +100,7 @@ def test_private_thread_detail_view_executes_unlock_thread_moderation_action(
     )
 
 
-def test_private_thread_detail_view_executes_hide_thread_moderation_action(
+def test_private_thread_detail_view_hide_thread_moderation_action_hides_thread(
     moderator_client, moderator, user_private_thread, mock_thread_synchronize_categories
 ):
     response = moderator_client.post(
@@ -155,7 +155,7 @@ def test_private_thread_detail_view_executes_hide_thread_moderation_action(
     )
 
 
-def test_private_thread_detail_view_executes_unhide_thread_moderation_action(
+def test_private_thread_detail_view_unhide_thread_moderation_action_unhides_thread(
     moderator_client, user_private_thread, mock_thread_synchronize_categories
 ):
     user_private_thread.is_hidden = True
@@ -196,7 +196,7 @@ def test_private_thread_detail_view_executes_unhide_thread_moderation_action(
     )
 
 
-def test_private_thread_detail_view_executes_approve_thread_moderation_action(
+def test_private_thread_detail_view_approve_thread_moderation_action_approves_thread(
     mocker,
     moderator_client,
     user,
@@ -245,7 +245,7 @@ def test_private_thread_detail_view_executes_approve_thread_moderation_action(
     )
 
 
-def test_private_thread_detail_view_executes_require_reply_approval_thread_moderation_action(
+def test_private_thread_detail_view_require_reply_approval_thread_moderation_action_sets_thread_require_reply_approval_flag(
     moderator_client, user_private_thread
 ):
     response = moderator_client.post(
@@ -274,7 +274,7 @@ def test_private_thread_detail_view_executes_require_reply_approval_thread_moder
     )
 
 
-def test_private_thread_detail_view_executes_remove_reply_approval_thread_moderation_action(
+def test_private_thread_detail_view_remove_reply_approval_thread_moderation_action_removes_thread_require_reply_approval_flag(
     moderator_client, user_private_thread
 ):
     user_private_thread.require_reply_approval = True
@@ -306,7 +306,7 @@ def test_private_thread_detail_view_executes_remove_reply_approval_thread_modera
     )
 
 
-def test_private_thread_detail_view_executes_delete_thread_moderation_action(
+def test_private_thread_detail_view_delete_thread_moderation_action_deletes_thread(
     moderator_client, user_private_thread, mock_thread_synchronize_categories
 ):
     response = moderator_client.post(
@@ -1198,7 +1198,7 @@ def test_private_thread_detail_view_delete_posts_moderation_action_validates_fir
     mock_posts_synchronize_categories.delay.assert_not_called()
 
 
-def test_private_thread_detail_view_executes_lock_post_moderation_action(
+def test_private_thread_detail_view_lock_post_moderation_action_locks_post(
     thread_reply_factory, moderator_client, user_private_thread
 ):
     reply = thread_reply_factory(user_private_thread)
@@ -1230,7 +1230,7 @@ def test_private_thread_detail_view_executes_lock_post_moderation_action(
     assert reply.is_locked
 
 
-def test_private_thread_detail_view_executes_unlock_post_moderation_action(
+def test_private_thread_detail_view_unlock_post_moderation_action_unlocks_post(
     thread_reply_factory, moderator_client, user_private_thread
 ):
     reply = thread_reply_factory(user_private_thread, is_locked=True)
@@ -1262,7 +1262,7 @@ def test_private_thread_detail_view_executes_unlock_post_moderation_action(
     assert not reply.is_locked
 
 
-def test_private_thread_detail_view_executes_hide_post_moderation_action(
+def test_private_thread_detail_view_hide_post_moderation_action_hides_post(
     thread_reply_factory, moderator_client, moderator, user_private_thread
 ):
     reply = thread_reply_factory(user_private_thread)
@@ -1317,7 +1317,7 @@ def test_private_thread_detail_view_executes_hide_post_moderation_action(
     assert reply.hidden_reason == "Lorem ipsum"
 
 
-def test_private_thread_detail_view_executes_unhide_post_moderation_action(
+def test_private_thread_detail_view_unhide_post_moderation_action_unhides_post(
     thread_reply_factory, moderator_client, user_private_thread
 ):
     reply = thread_reply_factory(user_private_thread, is_hidden=True)
@@ -1354,7 +1354,7 @@ def test_private_thread_detail_view_executes_unhide_post_moderation_action(
     assert reply.hidden_reason is None
 
 
-def test_private_thread_detail_view_executes_approve_post_moderation_action(
+def test_private_thread_detail_view_approve_post_moderation_action_approves_post(
     post_factory,
     moderator_client,
     user_private_thread,

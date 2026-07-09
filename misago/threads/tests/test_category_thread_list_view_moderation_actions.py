@@ -22,7 +22,7 @@ def mock_delete_duplicate_watched_threads(mocker):
     return mocker.patch("misago.moderation.threads.delete_duplicate_watched_threads")
 
 
-def test_category_thread_list_view_pin_everywhere_moderation_action_pins_unpinned_thread(
+def test_category_thread_list_view_pin_everywhere_moderation_action_pins_unpinned_threads(
     thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category)
@@ -44,7 +44,7 @@ def test_category_thread_list_view_pin_everywhere_moderation_action_pins_unpinne
     )
 
 
-def test_category_thread_list_view_pin_everywhere_moderation_action_pins_pinned_category_thread(
+def test_category_thread_list_view_pin_everywhere_moderation_action_pins_pinned_category_threads(
     thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category, pinned=ThreadPinned.CATEGORY)
@@ -80,7 +80,7 @@ def test_category_thread_list_view_pin_everywhere_moderation_action_validates_th
     assert not ThreadUpdate.objects.exists()
 
 
-def test_category_thread_list_view_pin_category_moderation_action_pins_unpinned_thread(
+def test_category_thread_list_view_pin_category_moderation_action_pins_unpinned_threads(
     thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category)
@@ -102,7 +102,7 @@ def test_category_thread_list_view_pin_category_moderation_action_pins_unpinned_
     )
 
 
-def test_category_thread_list_view_pin_category_moderation_action_pins_pinned_everywhere_thread(
+def test_category_thread_list_view_pin_category_moderation_action_pins_pinned_everywhere_threads(
     thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category, pinned=ThreadPinned.EVERYWHERE)
@@ -138,7 +138,7 @@ def test_category_thread_list_view_pin_category_moderation_action_validates_thre
     assert not ThreadUpdate.objects.exists()
 
 
-def test_category_thread_list_view_unpin_moderation_action_unpins_pinned_everywhere_thread(
+def test_category_thread_list_view_unpin_moderation_action_unpins_pinned_everywhere_threads(
     thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category, pinned=ThreadPinned.EVERYWHERE)
@@ -160,7 +160,7 @@ def test_category_thread_list_view_unpin_moderation_action_unpins_pinned_everywh
     )
 
 
-def test_category_thread_list_view_unpin_moderation_action_unpins_pinned_category_thread(
+def test_category_thread_list_view_unpin_moderation_action_unpins_pinned_category_threads(
     thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category, pinned=ThreadPinned.CATEGORY)
@@ -196,7 +196,7 @@ def test_category_thread_list_view_unpin_moderation_action_validates_threads(
     assert not ThreadUpdate.objects.exists()
 
 
-def test_category_thread_list_view_lock_moderation_action_locks_thread(
+def test_category_thread_list_view_lock_moderation_action_locks_threads(
     thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category)
@@ -232,7 +232,7 @@ def test_category_thread_list_view_lock_moderation_action_validates_threads(
     assert not ThreadUpdate.objects.exists()
 
 
-def test_category_thread_list_view_unlock_moderation_action_unlocks_thread(
+def test_category_thread_list_view_unlock_moderation_action_unlocks_threads(
     thread_factory, moderator_client, default_category
 ):
     thread = thread_factory(default_category, is_locked=True)
