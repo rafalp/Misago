@@ -44,7 +44,7 @@ def mock_post_notify_on_new_thread_reply(mocker):
     return mocker.patch("misago.moderation.post.notify_on_new_thread_reply")
 
 
-def test_thread_detail_view_executes_pin_everywhere_thread_moderation_action(
+def test_thread_detail_view_pin_everywhere_thread_moderation_action_pins_unpinned_thread(
     moderator_client, thread
 ):
     response = moderator_client.post(
@@ -66,7 +66,32 @@ def test_thread_detail_view_executes_pin_everywhere_thread_moderation_action(
     )
 
 
-def test_thread_detail_view_executes_pin_category_thread_moderation_action(
+def test_thread_detail_view_pin_everywhere_thread_moderation_action_pins_pinned_category_thread(
+    moderator_client, thread
+):
+    thread.pinned = ThreadPinned.CATEGORY
+    thread.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"thread_moderation": "pin_everywhere"},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert thread.pinned == ThreadPinned.EVERYWHERE
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.PINNED_EVERYWHERE,
+    )
+
+
+def test_thread_detail_view_pin_category_thread_moderation_action_pins_unpinned_thread(
     moderator_client, thread
 ):
     response = moderator_client.post(
@@ -88,7 +113,32 @@ def test_thread_detail_view_executes_pin_category_thread_moderation_action(
     )
 
 
-def test_thread_detail_view_executes_unpin_pinned_everywhere_thread_moderation_action(
+def test_thread_detail_view_pin_category_thread_moderation_action_pins_pinned_everywhere_thread(
+    moderator_client, thread
+):
+    thread.pinned = ThreadPinned.EVERYWHERE
+    thread.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"thread_moderation": "pin_category"},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    )
+
+    thread.refresh_from_db()
+    assert thread.pinned == ThreadPinned.CATEGORY
+    assert thread.has_updates
+
+    ThreadUpdate.objects.get(
+        thread=thread,
+        action=ThreadUpdateActionName.PINNED_CATEGORY,
+    )
+
+
+def test_thread_detail_view_unpin_thread_moderation_action_unpins_pinned_everywhere_thread(
     moderator_client, thread
 ):
     thread.pinned = ThreadPinned.EVERYWHERE
@@ -113,7 +163,7 @@ def test_thread_detail_view_executes_unpin_pinned_everywhere_thread_moderation_a
     )
 
 
-def test_thread_detail_view_executes_unpin_pinned_category_thread_moderation_action(
+def test_thread_detail_view_unpin_thread_moderation_action_unpins_pinned_category_thread(
     moderator_client, thread
 ):
     thread.pinned = ThreadPinned.CATEGORY
@@ -138,7 +188,7 @@ def test_thread_detail_view_executes_unpin_pinned_category_thread_moderation_act
     )
 
 
-def test_thread_detail_view_executes_lock_thread_moderation_action(
+def test_thread_detail_view_lock_thread_moderation_action_locks_thread(
     moderator_client, thread
 ):
     response = moderator_client.post(
@@ -160,7 +210,7 @@ def test_thread_detail_view_executes_lock_thread_moderation_action(
     )
 
 
-def test_thread_detail_view_executes_unlock_thread_moderation_action(
+def test_thread_detail_view_unlock_thread_moderation_action_unlocks_thread(
     moderator_client, thread
 ):
     thread.is_locked = True
@@ -185,7 +235,7 @@ def test_thread_detail_view_executes_unlock_thread_moderation_action(
     )
 
 
-def test_thread_detail_view_executes_hide_thread_moderation_action(
+def test_thread_detail_view_hide_thread_moderation_action_hides_thread(
     moderator_client, moderator, thread, mock_thread_synchronize_categories
 ):
     response = moderator_client.post(
@@ -227,7 +277,7 @@ def test_thread_detail_view_executes_hide_thread_moderation_action(
     )
 
 
-def test_thread_detail_view_executes_unhide_thread_moderation_action(
+def test_thread_detail_view_unhide_thread_moderation_action_unhides_thread(
     moderator_client, thread, mock_thread_synchronize_categories
 ):
     thread.is_hidden = True
@@ -261,7 +311,7 @@ def test_thread_detail_view_executes_unhide_thread_moderation_action(
     )
 
 
-def test_thread_detail_view_executes_approve_thread_moderation_action(
+def test_thread_detail_view_approve_thread_moderation_action_approves_thread(
     moderator_client, thread, mock_thread_synchronize_categories
 ):
     thread.is_unapproved = True
@@ -290,7 +340,7 @@ def test_thread_detail_view_executes_approve_thread_moderation_action(
     )
 
 
-def test_thread_detail_view_executes_require_reply_approval_thread_moderation_action(
+def test_thread_detail_view_require_reply_approval_thread_moderation_action_sets_thread_require_reply_approval_flag(
     moderator_client, thread
 ):
     response = moderator_client.post(
@@ -312,7 +362,7 @@ def test_thread_detail_view_executes_require_reply_approval_thread_moderation_ac
     )
 
 
-def test_thread_detail_view_executes_remove_reply_approval_thread_moderation_action(
+def test_thread_detail_view_remove_reply_approval_thread_moderation_action_removes_thread_require_reply_approval_flag(
     moderator_client, thread
 ):
     thread.require_reply_approval = True
@@ -337,7 +387,7 @@ def test_thread_detail_view_executes_remove_reply_approval_thread_moderation_act
     )
 
 
-def test_thread_detail_view_executes_move_thread_moderation_action(
+def test_thread_detail_view_move_thread_moderation_action_moves_thread(
     thread_factory,
     moderator_client,
     moderators_group,
@@ -1443,7 +1493,7 @@ def test_thread_detail_view_merge_thread_moderation_action_validates_conflict_re
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
 
 
-def test_thread_detail_view_executes_delete_thread_moderation_action(
+def test_thread_detail_view_delete_thread_moderation_action_deletes_thread(
     moderator_client, default_category, thread, mock_thread_synchronize_categories
 ):
     response = moderator_client.post(
@@ -3124,7 +3174,7 @@ def test_thread_detail_view_delete_posts_moderation_action_validates_first_post(
     mock_posts_synchronize_categories.delay.assert_not_called()
 
 
-def test_thread_detail_view_executes_lock_post_moderation_action(
+def test_thread_detail_view_lock_post_moderation_action_locks_post(
     moderator_client, thread, reply
 ):
     response = moderator_client.post(
@@ -3144,7 +3194,7 @@ def test_thread_detail_view_executes_lock_post_moderation_action(
     assert reply.is_locked
 
 
-def test_thread_detail_view_executes_unlock_post_moderation_action(
+def test_thread_detail_view_unlock_post_moderation_action_unlocks_post(
     moderator_client, thread, reply
 ):
     reply.is_locked = True
@@ -3167,7 +3217,7 @@ def test_thread_detail_view_executes_unlock_post_moderation_action(
     assert not reply.is_locked
 
 
-def test_thread_detail_view_executes_hide_post_moderation_action(
+def test_thread_detail_view_hide_post_moderation_action_hides_post(
     moderator_client, moderator, thread, reply
 ):
     response = moderator_client.post(
@@ -3204,7 +3254,7 @@ def test_thread_detail_view_executes_hide_post_moderation_action(
     assert reply.hidden_reason == "Lorem ipsum"
 
 
-def test_thread_detail_view_executes_unhide_post_moderation_action(
+def test_thread_detail_view_unhide_post_moderation_action_unhides_post(
     moderator_client, thread, reply
 ):
     reply.is_hidden = True
@@ -3232,7 +3282,7 @@ def test_thread_detail_view_executes_unhide_post_moderation_action(
     assert reply.hidden_reason is None
 
 
-def test_thread_detail_view_executes_approve_post_moderation_action(
+def test_thread_detail_view_approve_post_moderation_action_approves_post(
     post_factory,
     moderator_client,
     thread,

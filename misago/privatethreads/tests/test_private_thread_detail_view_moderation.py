@@ -70,6 +70,21 @@ def test_private_thread_detail_view_shows_posts_moderation_form_to_private_threa
     assert_contains(response, POSTS_MODERATION_FORM_HTML)
 
 
+def test_private_thread_detail_view_shows_posts_moderation_form_to_global_moderator(
+    moderator_client, user_private_thread
+):
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, POSTS_MODERATION_FORM_HTML)
+
+
 def test_private_thread_detail_view_shows_posts_checkboxes_to_private_threads_moderator(
     user_client, user, user_private_thread
 ):
@@ -104,21 +119,6 @@ def test_private_thread_detail_view_shows_posts_checkboxes_to_global_moderator(
         )
     )
     assert_contains(response, POSTS_CHECKBOX_HTML)
-
-
-def test_private_thread_detail_view_shows_posts_moderation_form_to_global_moderator(
-    moderator_client, user_private_thread
-):
-    response = moderator_client.get(
-        reverse(
-            "misago:private-thread",
-            kwargs={
-                "thread_id": user_private_thread.id,
-                "slug": user_private_thread.slug,
-            },
-        )
-    )
-    assert_contains(response, POSTS_MODERATION_FORM_HTML)
 
 
 def test_private_thread_detail_view_shows_fixed_posts_moderation_form_to_private_threads_moderator(
