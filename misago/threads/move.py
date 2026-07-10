@@ -7,7 +7,7 @@ from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
 from ..readtracker.models import ReadThread
-from ..threadupdates.models import ThreadUpdate
+from ..threadevents.models import ThreadEvent
 from .hooks import move_post_hook, move_thread_hook
 from .models import Post, Thread
 
@@ -40,7 +40,7 @@ def _move_thread_action(
     Poll.objects.filter(thread=thread).update(category=new_category)
     PollVote.objects.filter(thread=thread).update(category=new_category)
     ReadThread.objects.filter(thread=thread).update(category=new_category)
-    ThreadUpdate.objects.filter(thread=thread).update(category=new_category)
+    ThreadEvent.objects.filter(thread=thread).update(category=new_category)
     WatchedThread.objects.filter(thread=thread).update(category=new_category)
 
     if commit:

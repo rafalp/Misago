@@ -21,7 +21,7 @@ def custom_delete_thread_poll_filter(
     poll: Poll,
     user: 'User',
     request: HttpRequest | None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     ...
 ```
 
@@ -59,7 +59,7 @@ The request object, or `None` if not provided.
 
 ### Return value
 
-A `ThreadUpdate` instance.
+A `ThreadEvent` instance.
 
 
 ## Action
@@ -67,7 +67,7 @@ A `ThreadUpdate` instance.
 ```python
 def delete_thread_poll_action(
     thread: Thread, poll: Poll, user: 'User', request: HttpRequest | None
-) -> ThreadUpdate:
+) -> ThreadEvent:
     ...
 ```
 
@@ -98,7 +98,7 @@ The request object, or `None` if not provided.
 
 ### Return value
 
-A `ThreadUpdate` instance.
+A `ThreadEvent` instance.
 
 
 ## Example
@@ -111,8 +111,8 @@ from django.utils import timezone
 from misago.polls.hooks import delete_thread_poll_hook
 from misago.polls.models import Poll
 from misago.threads.models import Thread
-from misago.threadupdates.hide import hide_thread_update
-from misago.threadupdates.models import ThreadUpdate
+from misago.threadevents.hide import hide_thread_update
+from misago.threadevents.models import ThreadEvent
 from misago.users.models import User
 
 @delete_thread_poll_hook.append_filter
@@ -122,7 +122,7 @@ def delete_plugin_relations(
     poll: Poll,
     user: User,
     request: HttpRequest | None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     # Run standard deletion logic
     thread_update = action(thread, poll, user, request)
 

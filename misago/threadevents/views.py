@@ -9,7 +9,7 @@ from ..threads.models import Thread
 from ..threads.views.generic import ThreadView
 from .delete import delete_thread_update
 from .hide import hide_thread_update, unhide_thread_update
-from .models import ThreadUpdate
+from .models import ThreadEvent
 from .threadflag import sync_thread_has_updates
 
 
@@ -52,8 +52,8 @@ class UpdateView:
         return False
 
     def execute_action(
-        self, request: HttpRequest, thread_update: ThreadUpdate
-    ) -> ThreadUpdate:
+        self, request: HttpRequest, thread_update: ThreadEvent
+    ) -> ThreadEvent:
         return thread_update
 
 
@@ -62,7 +62,7 @@ class UpdateHideView(UpdateView):
         "thread update hide success message", "Thread update hidden"
     )
 
-    def execute_action(self, request: HttpRequest, thread_update: ThreadUpdate) -> bool:
+    def execute_action(self, request: HttpRequest, thread_update: ThreadEvent) -> bool:
         return hide_thread_update(thread_update, request)
 
     def raise_permission_error(self):
@@ -79,7 +79,7 @@ class UpdateUnhideView(UpdateView):
         "thread update unhide success message", "Thread update unhidden"
     )
 
-    def execute_action(self, request: HttpRequest, thread_update: ThreadUpdate) -> bool:
+    def execute_action(self, request: HttpRequest, thread_update: ThreadEvent) -> bool:
         return unhide_thread_update(thread_update, request)
 
     def raise_permission_error(self):
@@ -160,7 +160,7 @@ class UpdateDeleteView:
             )
         )
 
-    def execute_action(self, request: HttpRequest, thread_update: ThreadUpdate):
+    def execute_action(self, request: HttpRequest, thread_update: ThreadEvent):
         thread = thread_update.thread
 
         delete_thread_update(thread_update, request)

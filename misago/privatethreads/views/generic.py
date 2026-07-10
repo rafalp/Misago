@@ -9,10 +9,10 @@ from ...permissions.privatethreads import (
     filter_private_thread_posts_queryset,
     filter_private_thread_updates_queryset,
 )
+from ...threadevents.models import ThreadEvent
 from ...threads.models import Post, Thread
 from ...threads.postfeed import PostFeed
 from ...threads.views.generic import GenericView
-from ...threadupdates.models import ThreadUpdate
 from ..members import get_private_thread_members
 from ..postfeed import PrivateThreadPostFeed
 
@@ -67,7 +67,7 @@ class PrivateThreadView(GenericView):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadUpdate] | None = None,
+        thread_updates: list[ThreadEvent] | None = None,
     ) -> PostFeed:
         post_feed = PrivateThreadPostFeed(request, thread, posts, thread_updates)
 

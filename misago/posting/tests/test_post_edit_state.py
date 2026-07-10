@@ -1,7 +1,7 @@
 from ...parser.parse import parse
-from ...threadupdates.create import create_split_posts_from_thread_update
-from ...threadupdates.enums import ThreadUpdateActionName
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.create import create_split_posts_from_thread_update
+from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.models import ThreadEvent
 from ..state import PostEditState
 
 
@@ -188,15 +188,15 @@ def test_post_edit_state_save_creates_thread_update_object_for_changed_title(
 ):
     original_title = other_user_thread.title
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     state = PostEditState(user_request, other_user_thread.first_post)
     state.set_thread_title("Updated title")
     state.save()
 
-    assert ThreadUpdate.objects.count() == 1
+    assert ThreadEvent.objects.count() == 1
 
-    thread_update = ThreadUpdate.objects.first()
+    thread_update = ThreadEvent.objects.first()
     assert thread_update.actor == user
     assert thread_update.action == ThreadUpdateActionName.CHANGED_TITLE
     assert thread_update.context == original_title

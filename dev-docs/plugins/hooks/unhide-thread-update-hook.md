@@ -5,10 +5,10 @@ This hook wraps a standard Misago function used to unhide a `ThreadUpdate` objec
 
 ## Location
 
-This hook can be imported from `misago.threadupdates.hooks`:
+This hook can be imported from `misago.threadevents.hooks`:
 
 ```python
-from misago.threadupdates.hooks import unhide_thread_update_hook
+from misago.threadevents.hooks import unhide_thread_update_hook
 ```
 
 

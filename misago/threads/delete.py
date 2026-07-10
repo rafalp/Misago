@@ -9,7 +9,7 @@ from ..postedits.models import PostEdit
 from ..postgres.delete import delete_all, delete_one
 from ..privatethreads.models import PrivateThreadMember
 from ..readtracker.models import ReadThread
-from ..threadupdates.models import ThreadUpdate
+from ..threadevents.models import ThreadEvent
 from .hooks import delete_post_hook, delete_thread_hook
 from .models import Post, Thread
 
@@ -46,7 +46,7 @@ def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
     delete_all(PostEdit, thread_id=thread.id)
     delete_all(PrivateThreadMember, thread_id=thread.id)
     delete_all(ReadThread, thread_id=thread.id)
-    delete_all(ThreadUpdate, thread_id=thread.id)
+    delete_all(ThreadEvent, thread_id=thread.id)
     delete_all(WatchedThread, thread_id=thread.id)
 
     delete_all(Post, thread_id=thread.id)

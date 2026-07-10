@@ -3,13 +3,13 @@ from typing import TYPE_CHECKING
 from django.http import HttpRequest
 from django.utils import timezone
 
-from ..threads.models import Thread
-from ..threadupdates.create import (
+from ..threadevents.create import (
     create_closed_poll_thread_update,
     create_opened_poll_thread_update,
 )
-from ..threadupdates.models import ThreadUpdate
-from ..threadupdates.threadflag import set_thread_has_updates
+from ..threadevents.models import ThreadEvent
+from ..threadevents.threadflag import set_thread_has_updates
+from ..threads.models import Thread
 from .hooks import (
     close_poll_hook,
     close_thread_poll_hook,
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 
 def close_thread_poll(
     thread: Thread, poll: Poll, user: "User", request: HttpRequest | None = None
-) -> ThreadUpdate | None:
+) -> ThreadEvent | None:
     return close_thread_poll_hook(
         _close_thread_poll_action, thread, poll, user, request
     )
@@ -32,7 +32,7 @@ def close_thread_poll(
 
 def _close_thread_poll_action(
     thread: Thread, poll: Poll, user: "User", request: HttpRequest | None = None
-) -> ThreadUpdate | None:
+) -> ThreadEvent | None:
     if not close_poll(poll, user, request):
         return None
 
@@ -43,13 +43,13 @@ def _close_thread_poll_action(
 
 def open_thread_poll(
     thread: Thread, poll: Poll, user: "User", request: HttpRequest | None = None
-) -> ThreadUpdate | None:
+) -> ThreadEvent | None:
     return open_thread_poll_hook(_open_thread_poll_action, thread, poll, user, request)
 
 
 def _open_thread_poll_action(
     thread: Thread, poll: Poll, user: "User", request: HttpRequest | None = None
-) -> ThreadUpdate | None:
+) -> ThreadEvent | None:
     if not open_poll(poll, user, request):
         return None
 

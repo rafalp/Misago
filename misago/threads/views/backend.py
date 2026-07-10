@@ -18,7 +18,7 @@ from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,
 )
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.models import ThreadEvent
 from ..breadcrumbs import get_category_breadcrumbs, get_thread_breadcrumbs
 from ..models import Post, Thread
 from ..paginator import ThreadPostsPaginator
@@ -117,7 +117,7 @@ class ViewBackend(ABC):
         *,
         select_related: bool | Iterable[str] = False,
     ) -> QuerySet:
-        queryset = ThreadUpdate.objects.filter(thread=thread).order_by("-id")
+        queryset = ThreadEvent.objects.filter(thread=thread).order_by("-id")
         if select_related is True:
             queryset = queryset.select_related()
         elif select_related:
@@ -131,13 +131,13 @@ class ViewBackend(ABC):
         thread_update_id: int,
         *,
         select_related: bool | Iterable[str] = False,
-    ) -> ThreadUpdate:
+    ) -> ThreadEvent:
         queryset = self.get_thread_updates_queryset(
             request, thread, select_related=select_related
         )
         try:
             thread_update = queryset.get(id=thread_update_id)
-        except ThreadUpdate.DoesNotExist:
+        except ThreadEvent.DoesNotExist:
             raise Http404()
 
         thread_update.category = thread.category
@@ -171,7 +171,7 @@ class ViewBackend(ABC):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadUpdate] | None = None,
+        thread_updates: list[ThreadEvent] | None = None,
     ) -> PostFeed:
         pass
 
@@ -392,7 +392,7 @@ class ThreadViewBackend(ViewBackend):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadUpdate] | None = None,
+        thread_updates: list[ThreadEvent] | None = None,
     ) -> PostFeed:
         post_feed = ThreadPostFeed(request, thread, posts, thread_updates)
 

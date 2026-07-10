@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING, Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
+from ...threadevents.models import ThreadEvent
 from ...threads.models import Thread
-from ...threadupdates.models import ThreadUpdate
 from ..models import Poll
 
 if TYPE_CHECKING:
@@ -36,7 +36,7 @@ class CloseThreadPollHookAction(Protocol):
 
     # Return value
 
-    A `ThreadUpdate` instance if the poll was closed, `None` if it wasn't.
+    A `ThreadEvent` instance if the poll was closed, `None` if it wasn't.
     """
 
     def __call__(
@@ -45,7 +45,7 @@ class CloseThreadPollHookAction(Protocol):
         poll: Poll,
         user: "User",
         request: HttpRequest | None,
-    ) -> ThreadUpdate | None: ...
+    ) -> ThreadEvent | None: ...
 
 
 class CloseThreadPollHookFilter(Protocol):
@@ -79,7 +79,7 @@ class CloseThreadPollHookFilter(Protocol):
 
     # Return value
 
-    A `ThreadUpdate` instance if the poll was closed, `None` if it wasn't.
+    A `ThreadEvent` instance if the poll was closed, `None` if it wasn't.
     """
 
     def __call__(
@@ -89,7 +89,7 @@ class CloseThreadPollHookFilter(Protocol):
         poll: Poll,
         user: "User",
         request: HttpRequest | None,
-    ) -> ThreadUpdate | None: ...
+    ) -> ThreadEvent | None: ...
 
 
 class CloseThreadPollHook(
@@ -111,8 +111,8 @@ class CloseThreadPollHook(
     from misago.polls.hooks import close_thread_poll_hook
     from misago.polls.models import Poll
     from misago.threads.models import Thread
-    from misago.threadupdates.hide import hide_thread_update
-    from misago.threadupdates.models import ThreadUpdate
+    from misago.threadevents.hide import hide_thread_update
+    from misago.threadevents.models import ThreadEvent
     from misago.users.models import User
 
     @close_thread_poll_hook.append_filter
@@ -122,7 +122,7 @@ class CloseThreadPollHook(
         poll: Poll,
         user: User,
         request: HttpRequest | None,
-    ) -> ThreadUpdate | None:
+    ) -> ThreadEvent | None:
         thread_update = action(thread, poll, user, request)
 
         if thread_update:
@@ -141,7 +141,7 @@ class CloseThreadPollHook(
         poll: Poll,
         user: "User",
         request: HttpRequest | None,
-    ) -> ThreadUpdate | None:
+    ) -> ThreadEvent | None:
         return super().__call__(action, thread, poll, user, request)
 
 

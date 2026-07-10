@@ -1,5 +1,5 @@
-from ...threadupdates.enums import ThreadUpdateActionName
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.models import ThreadEvent
 from ..close import close_thread_poll
 
 
@@ -26,4 +26,4 @@ def test_close_thread_poll_doesnt_create_thread_update_if_poll_is_already_closed
     thread, closed_poll, user
 ):
     assert not close_thread_poll(thread, closed_poll, user)
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()

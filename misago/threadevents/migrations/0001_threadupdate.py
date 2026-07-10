@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="ThreadUpdate",
+            name="ThreadEvent",
             fields=[
                 (
                     "id",
@@ -90,16 +90,16 @@ class Migration(migrations.Migration):
             options={
                 "indexes": [
                     django.contrib.postgres.indexes.GinIndex(
-                        fields=["plugin_data"], name="misago_thre_plugin__a3a1a5_gin"
+                        fields=["plugin_data"], name="misago_thre_plugin__e99496_gin"
                     ),
                     models.Index(
                         fields=["thread", "created_at"],
-                        name="misago_thread_update_created",
+                        name="misago_thread_event_created",
                     ),
                     models.Index(
                         condition=models.Q(("context_id__isnull", False)),
                         fields=["context_type", "context_id"],
-                        name="misago_thread_update_context",
+                        name="misago_thread_event_context",
                     ),
                 ],
             },

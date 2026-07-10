@@ -1,5 +1,5 @@
-from ...threadupdates.enums import ThreadUpdateActionName
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.models import ThreadEvent
 from ..models import Poll
 from ..save import save_thread_poll
 
@@ -55,7 +55,7 @@ def test_save_thread_poll_creates_thread_update(user, thread):
 
     save_thread_poll(thread, poll, user)
 
-    ThreadUpdate.objects.get(thread=thread, action=ThreadUpdateActionName.STARTED_POLL)
+    ThreadEvent.objects.get(thread=thread, action=ThreadUpdateActionName.STARTED_POLL)
 
     thread.refresh_from_db()
     assert thread.has_updates

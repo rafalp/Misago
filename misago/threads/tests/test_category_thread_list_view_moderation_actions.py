@@ -6,8 +6,8 @@ from ...polls.models import Poll
 from ...solutions.select import select_thread_solution
 from ...test import UNORDERED, assert_contains, assert_not_contains
 from ...testutils import grant_category_group_permissions
-from ...threadupdates.enums import ThreadUpdateActionName
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.models import ThreadEvent
 from ..enums import ThreadPinned
 from ..models import Thread
 
@@ -38,7 +38,7 @@ def test_category_thread_list_view_pin_everywhere_moderation_action_pins_unpinne
     assert thread.pinned == ThreadPinned.EVERYWHERE
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.PINNED_EVERYWHERE,
     )
@@ -60,7 +60,7 @@ def test_category_thread_list_view_pin_everywhere_moderation_action_pins_pinned_
     assert thread.pinned == ThreadPinned.EVERYWHERE
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.PINNED_EVERYWHERE,
     )
@@ -77,7 +77,7 @@ def test_category_thread_list_view_pin_everywhere_moderation_action_validates_th
     )
     assert_contains(response, "Threads are already pinned.")
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
 
 def test_category_thread_list_view_pin_category_moderation_action_pins_unpinned_threads(
@@ -96,7 +96,7 @@ def test_category_thread_list_view_pin_category_moderation_action_pins_unpinned_
     assert thread.pinned == ThreadPinned.CATEGORY
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.PINNED_CATEGORY,
     )
@@ -118,7 +118,7 @@ def test_category_thread_list_view_pin_category_moderation_action_pins_pinned_ev
     assert thread.pinned == ThreadPinned.CATEGORY
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.PINNED_CATEGORY,
     )
@@ -135,7 +135,7 @@ def test_category_thread_list_view_pin_category_moderation_action_validates_thre
     )
     assert_contains(response, "Threads are already pinned.")
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
 
 def test_category_thread_list_view_unpin_moderation_action_unpins_pinned_everywhere_threads(
@@ -154,7 +154,7 @@ def test_category_thread_list_view_unpin_moderation_action_unpins_pinned_everywh
     assert thread.pinned == ThreadPinned.NONE
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.UNPINNED,
     )
@@ -176,7 +176,7 @@ def test_category_thread_list_view_unpin_moderation_action_unpins_pinned_categor
     assert thread.pinned == ThreadPinned.NONE
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.UNPINNED,
     )
@@ -193,7 +193,7 @@ def test_category_thread_list_view_unpin_moderation_action_validates_threads(
     )
     assert_contains(response, "Threads are already unpinned.")
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
 
 def test_category_thread_list_view_lock_moderation_action_locks_threads(
@@ -212,7 +212,7 @@ def test_category_thread_list_view_lock_moderation_action_locks_threads(
     assert thread.is_locked
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.LOCKED,
     )
@@ -229,7 +229,7 @@ def test_category_thread_list_view_lock_moderation_action_validates_threads(
     )
     assert_contains(response, "Threads are already locked.")
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
 
 def test_category_thread_list_view_unlock_moderation_action_unlocks_threads(
@@ -248,7 +248,7 @@ def test_category_thread_list_view_unlock_moderation_action_unlocks_threads(
     assert not thread.is_locked
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.UNLOCKED,
     )
@@ -265,7 +265,7 @@ def test_category_thread_list_view_unlock_moderation_action_validates_threads(
     )
     assert_contains(response, "Threads are already unlocked.")
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
 
 def test_category_thread_list_view_hide_moderation_action_hides_threads(
@@ -305,7 +305,7 @@ def test_category_thread_list_view_hide_moderation_action_hides_threads(
     assert thread.hidden_reason == "Lorem ipsum"
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.HIDDEN,
     )
@@ -324,7 +324,7 @@ def test_category_thread_list_view_hide_moderation_action_validates_threads(
     )
     assert_contains(response, "Threads are already hidden.")
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
 
@@ -350,7 +350,7 @@ def test_category_thread_list_view_unhide_moderation_action_unhides_threads(
     assert thread.hidden_reason is None
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.UNHIDDEN,
     )
@@ -369,7 +369,7 @@ def test_category_thread_list_view_unhide_moderation_action_validates_threads(
     )
     assert_contains(response, "Threads are already unhidden.")
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
 
@@ -390,7 +390,7 @@ def test_category_thread_list_view_require_reply_approval_moderation_action_requ
     assert thread.require_reply_approval
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.REQUIRED_REPLY_APPROVAL,
     )
@@ -407,7 +407,7 @@ def test_category_thread_list_view_require_reply_approval_moderation_action_vali
     )
     assert_contains(response, "Threads already require reply approval.")
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
 
 def test_category_thread_list_view_remove_reply_approval_moderation_action_removes_threads_reply_approval(
@@ -426,7 +426,7 @@ def test_category_thread_list_view_remove_reply_approval_moderation_action_remov
     assert not thread.require_reply_approval
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.REMOVED_REPLY_APPROVAL,
     )
@@ -443,7 +443,7 @@ def test_category_thread_list_view_remove_reply_approval_moderation_action_valid
     )
     assert_contains(response, "Threads already don&#x27;t require reply approval.")
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
 
 def test_category_thread_list_view_approve_moderation_action_approves_threads(
@@ -462,7 +462,7 @@ def test_category_thread_list_view_approve_moderation_action_approves_threads(
     assert not thread.is_unapproved
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.APPROVED,
     )
@@ -481,7 +481,7 @@ def test_category_thread_list_view_approve_moderation_action_validates_threads(
     )
     assert_contains(response, "Threads are already approved.")
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
 
@@ -526,7 +526,7 @@ def test_category_thread_list_view_move_moderation_action_moves_threads(
     assert thread.category == sibling_category
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.MOVED,
     )
@@ -561,7 +561,7 @@ def test_category_thread_list_view_move_moderation_action_requires_category(
     assert thread.category == default_category
     assert not thread.has_updates
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
 
@@ -592,7 +592,7 @@ def test_category_thread_list_view_move_moderation_action_validates_category_val
     assert thread.category == default_category
     assert not thread.has_updates
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
 
@@ -642,7 +642,7 @@ def test_category_thread_list_view_move_moderation_action_validates_category_bro
     assert thread.category == default_category
     assert not thread.has_updates
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
 
@@ -684,7 +684,7 @@ def test_category_thread_list_view_move_moderation_action_validates_category_bro
     assert thread.category == default_category
     assert not thread.has_updates
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
 
@@ -731,7 +731,7 @@ def test_category_thread_list_view_move_moderation_action_validates_category_typ
     assert thread.category == default_category
     assert not thread.has_updates
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
 
@@ -762,7 +762,7 @@ def test_category_thread_list_view_move_moderation_action_validates_category_is_
     assert thread.category == default_category
     assert not thread.has_updates
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
 
@@ -804,7 +804,7 @@ def test_category_thread_list_view_merge_moderation_action_merges_threads(
     assert merged_thread.replies == 1
 
     assert (
-        ThreadUpdate.objects.filter(
+        ThreadEvent.objects.filter(
             thread=merged_thread,
             action=ThreadUpdateActionName.MERGED,
         ).count()
@@ -867,7 +867,7 @@ def test_category_thread_list_view_merge_moderation_action_merges_threads_withou
     assert poll.thread == merged_thread
 
     assert (
-        ThreadUpdate.objects.filter(
+        ThreadEvent.objects.filter(
             thread=merged_thread,
             action=ThreadUpdateActionName.MERGED,
         ).count()
@@ -939,7 +939,7 @@ def test_category_thread_list_view_merge_moderation_action_merges_threads_with_c
         thread_poll.refresh_from_db()
 
     assert (
-        ThreadUpdate.objects.filter(
+        ThreadEvent.objects.filter(
             thread=merged_thread,
             action=ThreadUpdateActionName.MERGED,
         ).count()
@@ -995,7 +995,7 @@ def test_category_thread_list_view_merge_moderation_action_merges_threads_with_m
     assert merged_thread.is_locked
 
     assert (
-        ThreadUpdate.objects.filter(
+        ThreadEvent.objects.filter(
             thread=merged_thread,
             action=ThreadUpdateActionName.MERGED,
         ).count()
@@ -1025,7 +1025,7 @@ def test_category_thread_list_view_merge_moderation_action_validates_multiple_th
 
     thread.refresh_from_db()
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
@@ -1060,7 +1060,7 @@ def test_category_thread_list_view_merge_moderation_action_validates_category_va
     thread.refresh_from_db()
     other_thread.refresh_from_db()
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
@@ -1103,7 +1103,7 @@ def test_category_thread_list_view_merge_moderation_action_validates_category_br
     thread.refresh_from_db()
     other_thread.refresh_from_db()
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
@@ -1154,7 +1154,7 @@ def test_category_thread_list_view_merge_moderation_action_validates_category_mo
     thread.refresh_from_db()
     other_thread.refresh_from_db()
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
@@ -1201,7 +1201,7 @@ def test_category_thread_list_view_merge_moderation_action_validates_category_ty
     thread.refresh_from_db()
     other_thread.refresh_from_db()
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
@@ -1235,7 +1235,7 @@ def test_category_thread_list_view_merge_moderation_action_requires_thread_title
     thread.refresh_from_db()
     other_thread.refresh_from_db()
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
@@ -1270,7 +1270,7 @@ def test_category_thread_list_view_merge_moderation_action_validates_thread_titl
     thread.refresh_from_db()
     other_thread.refresh_from_db()
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
@@ -1312,7 +1312,7 @@ def test_category_thread_list_view_merge_moderation_action_requires_conflict_res
     thread.refresh_from_db()
     other_thread.refresh_from_db()
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()
@@ -1355,7 +1355,7 @@ def test_category_thread_list_view_merge_moderation_action_validates_conflict_re
     thread.refresh_from_db()
     other_thread.refresh_from_db()
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_synchronize_categories.delay.assert_not_called()
     mock_delete_duplicate_watched_threads.delay.assert_not_called()

@@ -15,7 +15,7 @@ from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
 from ..postgres.delete import delete_all
 from ..readtracker.models import ReadThread
-from ..threadupdates.models import ThreadUpdate
+from ..threadevents.models import ThreadEvent
 from .hooks import (
     get_post_merge_conflicts_hook,
     get_post_merge_form_fields_hook,
@@ -169,7 +169,7 @@ def _merge_threads_action(
     PostEdit.objects.filter(thread__in=threads).update(
         thread=target, category=new_category
     )
-    ThreadUpdate.objects.filter(thread__in=threads).update(
+    ThreadEvent.objects.filter(thread__in=threads).update(
         thread=target, category=new_category
     )
     WatchedThread.objects.filter(thread__in=threads).update(

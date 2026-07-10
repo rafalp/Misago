@@ -18,8 +18,8 @@ Hooks instances are importable from the following Python modules:
 - [`misago.posting.hooks`](#misago-posting-hooks)
 - [`misago.privatethreads.hooks`](#misago-privatethreads-hooks)
 - [`misago.solutions.hooks`](#misago-solutions-hooks)
+- [`misago.threadevents.hooks`](#misago-threadevents-hooks)
 - [`misago.threads.hooks`](#misago-threads-hooks)
-- [`misago.threadupdates.hooks`](#misago-threadupdates-hooks)
 - [`misago.users.hooks`](#misago-users-hooks)
 
 
@@ -341,9 +341,9 @@ Hooks instances are importable from the following Python modules:
 - [`unpin_thread_hook`](./unpin-thread-hook.md)
 
 
-## `misago.threadupdates.hooks`
+## `misago.threadevents.hooks`
 
-`misago.threadupdates.hooks` defines the following hooks:
+`misago.threadevents.hooks` defines the following hooks:
 
 - [`create_thread_update_hook`](./create-thread-update-hook.md)
 - [`delete_thread_update_hook`](./delete-thread-update-hook.md)

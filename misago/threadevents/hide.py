@@ -2,17 +2,17 @@ from django.http import HttpRequest
 from django.utils import timezone
 
 from .hooks import hide_thread_update_hook, unhide_thread_update_hook
-from .models import ThreadUpdate
+from .models import ThreadEvent
 
 
 def hide_thread_update(
-    thread_update: ThreadUpdate, request: HttpRequest | None = None
+    thread_update: ThreadEvent, request: HttpRequest | None = None
 ) -> bool:
     return hide_thread_update_hook(_hide_thread_update_action, thread_update, request)
 
 
 def _hide_thread_update_action(
-    thread_update: ThreadUpdate,
+    thread_update: ThreadEvent,
     request: HttpRequest | None = None,
 ) -> bool:
     if thread_update.is_hidden:
@@ -31,7 +31,7 @@ def _hide_thread_update_action(
 
 
 def unhide_thread_update(
-    thread_update: ThreadUpdate, request: HttpRequest | None = None
+    thread_update: ThreadEvent, request: HttpRequest | None = None
 ) -> bool:
     return unhide_thread_update_hook(
         _unhide_thread_update_action, thread_update, request
@@ -39,7 +39,7 @@ def unhide_thread_update(
 
 
 def _unhide_thread_update_action(
-    thread_update: ThreadUpdate,
+    thread_update: ThreadEvent,
     request: HttpRequest | None = None,
 ) -> bool:
     if not thread_update.is_hidden:

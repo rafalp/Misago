@@ -3,9 +3,9 @@ from django.urls import reverse
 
 from ...postedits.models import PostEdit
 from ...test import UNORDERED, assert_contains, assert_not_contains
+from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.models import ThreadEvent
 from ...threads.models import Post, Thread
-from ...threadupdates.enums import ThreadUpdateActionName
-from ...threadupdates.models import ThreadUpdate
 
 
 @pytest.fixture
@@ -59,7 +59,7 @@ def test_private_thread_detail_view_lock_thread_moderation_action_locks_thread(
     assert user_private_thread.is_locked
     assert user_private_thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.LOCKED,
     )
@@ -94,7 +94,7 @@ def test_private_thread_detail_view_unlock_thread_moderation_action_unlocks_thre
     assert not user_private_thread.is_locked
     assert user_private_thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.UNLOCKED,
     )
@@ -145,7 +145,7 @@ def test_private_thread_detail_view_hide_thread_moderation_action_hides_thread(
     assert user_private_thread.hidden_reason == "Lorem ipsum"
     assert user_private_thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.HIDDEN,
     )
@@ -186,7 +186,7 @@ def test_private_thread_detail_view_unhide_thread_moderation_action_unhides_thre
     assert user_private_thread.hidden_reason is None
     assert user_private_thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.UNHIDDEN,
     )
@@ -232,7 +232,7 @@ def test_private_thread_detail_view_approve_thread_moderation_action_approves_th
     assert not user_private_thread.is_unapproved
     assert user_private_thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.APPROVED,
     )
@@ -268,7 +268,7 @@ def test_private_thread_detail_view_require_reply_approval_thread_moderation_act
     assert user_private_thread.require_reply_approval
     assert user_private_thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.REQUIRED_REPLY_APPROVAL,
     )
@@ -300,7 +300,7 @@ def test_private_thread_detail_view_remove_reply_approval_thread_moderation_acti
     assert not user_private_thread.require_reply_approval
     assert user_private_thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.REMOVED_REPLY_APPROVAL,
     )
@@ -1115,7 +1115,7 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.DELETED_POSTS,
     )
@@ -1166,7 +1166,7 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.DELETED_POSTS,
     )
@@ -1193,7 +1193,7 @@ def test_private_thread_detail_view_delete_posts_moderation_action_validates_fir
 
     user_private_thread.first_post.refresh_from_db()
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_posts_synchronize_categories.delay.assert_not_called()
 
@@ -2856,7 +2856,7 @@ def test_private_thread_detail_view_delete_post_moderation_action_deletes_post(
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.DELETED_POSTS,
     )
@@ -2907,7 +2907,7 @@ def test_private_thread_detail_view_delete_post_moderation_action_deletes_post_i
     with pytest.raises(Post.DoesNotExist):
         reply.refresh_from_db()
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.DELETED_POSTS,
     )

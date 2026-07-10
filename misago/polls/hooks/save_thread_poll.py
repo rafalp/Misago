@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING, Protocol
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
+from ...threadevents.models import ThreadEvent
 from ...threads.models import Thread
-from ...threadupdates.models import ThreadUpdate
 from ..models import Poll
 
 if TYPE_CHECKING:
@@ -37,7 +37,7 @@ class SaveThreadPollHookAction(Protocol):
 
     # Return value
 
-    A `ThreadUpdate` instance.
+    A `ThreadEvent` instance.
     """
 
     def __call__(
@@ -46,7 +46,7 @@ class SaveThreadPollHookAction(Protocol):
         poll: Poll,
         user: "User",
         request: HttpRequest | None,
-    ) -> ThreadUpdate: ...
+    ) -> ThreadEvent: ...
 
 
 class SaveThreadPollHookFilter(Protocol):
@@ -80,7 +80,7 @@ class SaveThreadPollHookFilter(Protocol):
 
     # Return value
 
-    A `ThreadUpdate` instance.
+    A `ThreadEvent` instance.
     """
 
     def __call__(
@@ -90,7 +90,7 @@ class SaveThreadPollHookFilter(Protocol):
         poll: Poll,
         user: "User",
         request: HttpRequest | None,
-    ) -> ThreadUpdate: ...
+    ) -> ThreadEvent: ...
 
 
 class SaveThreadPollHook(
@@ -112,8 +112,8 @@ class SaveThreadPollHook(
     from misago.polls.hooks import save_thread_poll_hook
     from misago.polls.models import Poll
     from misago.threads.models import Thread
-    from misago.threadupdates.hide import hide_thread_update
-    from misago.threadupdates.models import ThreadUpdate
+    from misago.threadevents.hide import hide_thread_update
+    from misago.threadevents.models import ThreadEvent
     from misago.users.models import User
 
     @save_thread_poll_hook.append_filter
@@ -123,7 +123,7 @@ class SaveThreadPollHook(
         poll: Poll,
         user: User,
         request: HttpRequest | None,
-    ) -> ThreadUpdate:
+    ) -> ThreadEvent:
         thread_update = action(thread, poll, user, request)
 
         if thread_update:
@@ -142,7 +142,7 @@ class SaveThreadPollHook(
         poll: Poll,
         user: "User",
         request: HttpRequest | None,
-    ) -> ThreadUpdate:
+    ) -> ThreadEvent:
         return super().__call__(action, thread, poll, user, request)
 
 

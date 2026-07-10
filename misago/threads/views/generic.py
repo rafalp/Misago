@@ -17,7 +17,7 @@ from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,
 )
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.models import ThreadEvent
 from ..models import Post, Thread
 from ..nexturl import get_next_thread_url
 from ..paginator import ThreadPostsPaginator
@@ -110,7 +110,7 @@ class GenericThreadView(View):
         thread_update_id: int,
         *,
         select_related: bool | Iterable[str] = False,
-    ) -> ThreadUpdate:
+    ) -> ThreadEvent:
         return self.backend.get_thread_update(
             request,
             thread,
@@ -140,7 +140,7 @@ class GenericThreadView(View):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadUpdate] | None = None,
+        thread_updates: list[ThreadEvent] | None = None,
     ) -> PostFeed:
         return self.backend.get_post_feed(request, thread, posts, thread_updates)
 
@@ -280,7 +280,7 @@ class GenericView(View):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadUpdate] | None = None,
+        thread_updates: list[ThreadEvent] | None = None,
     ) -> PostFeed:
         raise NotImplementedError()
 
@@ -321,11 +321,11 @@ class GenericView(View):
         request: HttpRequest,
         thread: Thread,
     ) -> QuerySet:
-        return ThreadUpdate.objects.filter(thread=thread).order_by("-id")
+        return ThreadEvent.objects.filter(thread=thread).order_by("-id")
 
     def get_thread_update(
         self, request: HttpRequest, thread: Thread, thread_update_id: int
-    ) -> ThreadUpdate:
+    ) -> ThreadEvent:
         queryset = self.get_thread_updates_queryset(request, thread)
         if self.thread_update_select_related is True:
             queryset = queryset.select_related()
@@ -334,7 +334,7 @@ class GenericView(View):
 
         try:
             thread_update = queryset.get(id=thread_update_id)
-        except ThreadUpdate.DoesNotExist:
+        except ThreadEvent.DoesNotExist:
             raise Http404()
 
         if self.thread_select_related and (
@@ -382,7 +382,7 @@ class ThreadView(GenericView):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadUpdate] | None = None,
+        thread_updates: list[ThreadEvent] | None = None,
     ) -> PostFeed:
         post_feed = ThreadPostFeed(request, thread, posts, thread_updates)
 

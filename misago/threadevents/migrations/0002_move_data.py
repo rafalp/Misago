@@ -24,7 +24,7 @@ EVENT_TYPES = {
 
 def convert_events_to_thread_updates(apps, _):
     Post = apps.get_model("misago_threads", "Post")
-    ThreadUpdate = apps.get_model("misago_threadupdates", "ThreadUpdate")
+    ThreadEvent = apps.get_model("misago_threadevents", "ThreadEvent")
 
     for post in Post.objects.filter(is_event=True).order_by("id"):
         context = None
@@ -34,7 +34,7 @@ def convert_events_to_thread_updates(apps, _):
         if parsed_context := get_update_context_data(apps, post.event_context):
             context, context_type, context_id = parsed_context
 
-        update = ThreadUpdate.objects.create(
+        update = ThreadEvent.objects.create(
             category_id=post.category_id,
             thread_id=post.thread_id,
             actor_id=post.poster_id,
@@ -51,7 +51,7 @@ def convert_events_to_thread_updates(apps, _):
             hidden_at=post.hidden_on,
         )
 
-        ThreadUpdate.objects.filter(id=update.id).update(created_at=post.posted_on)
+        ThreadEvent.objects.filter(id=update.id).update(created_at=post.posted_on)
 
 
 def get_update_context_data(
@@ -91,7 +91,7 @@ class Migration(migrations.Migration):
     atomic = False
 
     dependencies = [
-        ("misago_threadupdates", "0001_threadupdate"),
+        ("misago_threadevents", "0001_threadupdate"),
     ]
 
     operations = [

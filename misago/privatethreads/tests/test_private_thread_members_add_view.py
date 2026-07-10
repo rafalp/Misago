@@ -2,8 +2,8 @@ import pytest
 from django.urls import reverse
 
 from ...test import assert_contains
-from ...threadupdates.enums import ThreadUpdateActionName
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.models import ThreadEvent
 from ..models import PrivateThreadMember
 
 
@@ -69,7 +69,7 @@ def test_private_thread_members_add_view_does_nothing_if_new_users_are_members_a
 
     PrivateThreadMember.objects.get(thread=user_private_thread, user=other_user)
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
     mock_notify_on_new_private_thread.delay.assert_not_called()
 
@@ -96,7 +96,7 @@ def test_private_thread_members_add_view_adds_new_thread_members(
 
     PrivateThreadMember.objects.get(thread=user_private_thread, user=admin)
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.ADDED_MEMBER,
         context=admin.username,
@@ -129,7 +129,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_using_noscript_
 
     PrivateThreadMember.objects.get(thread=user_private_thread, user=admin)
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.ADDED_MEMBER,
         context=admin.username,
@@ -160,7 +160,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_htmx(
 
     PrivateThreadMember.objects.get(thread=user_private_thread, user=admin)
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.ADDED_MEMBER,
         context=admin.username,
@@ -350,7 +350,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_locked_threa
 
     PrivateThreadMember.objects.get(thread=user_private_thread, user=admin)
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=user_private_thread,
         action=ThreadUpdateActionName.ADDED_MEMBER,
         context=admin.username,

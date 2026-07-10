@@ -10,7 +10,7 @@ from ..polls.models import Poll
 from ..threads.models import Thread
 from .enums import ThreadUpdateActionName
 from .hooks import create_thread_update_hook
-from .models import ThreadUpdate
+from .models import ThreadEvent
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -26,7 +26,7 @@ def create_thread_update(
     context_items: int | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update_hook(
         _create_thread_update_action,
         thread,
@@ -50,7 +50,7 @@ def _create_thread_update_action(
     context_items: int | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     actor_id = None
     actor_name = None
     actor_slug = None
@@ -74,7 +74,7 @@ def _create_thread_update_action(
         )
         context_id = context_object.id
 
-    thread_update = ThreadUpdate(
+    thread_update = ThreadEvent(
         category_id=thread.category_id,
         thread_id=thread.id,
         actor_id=actor_id,
@@ -101,7 +101,7 @@ def create_test_thread_update(
     context_object: Model | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.TEST,
@@ -118,7 +118,7 @@ def create_pinned_everywhere_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.PINNED_EVERYWHERE,
@@ -133,7 +133,7 @@ def create_pinned_category_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.PINNED_CATEGORY,
@@ -148,7 +148,7 @@ def create_unpinned_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.UNPINNED,
@@ -163,7 +163,7 @@ def create_locked_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.LOCKED,
@@ -178,7 +178,7 @@ def create_unlocked_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.UNLOCKED,
@@ -193,7 +193,7 @@ def create_hidden_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.HIDDEN,
@@ -208,7 +208,7 @@ def create_unhidden_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.UNHIDDEN,
@@ -223,7 +223,7 @@ def create_approved_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.APPROVED,
@@ -238,7 +238,7 @@ def create_required_reply_approval_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.REQUIRED_REPLY_APPROVAL,
@@ -253,7 +253,7 @@ def create_removed_reply_approval_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.REMOVED_REPLY_APPROVAL,
@@ -269,7 +269,7 @@ def create_moved_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.MOVED,
@@ -287,7 +287,7 @@ def create_merged_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.MERGED,
@@ -305,7 +305,7 @@ def create_changed_title_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.CHANGED_TITLE,
@@ -323,7 +323,7 @@ def create_moved_posts_to_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.MOVED_POSTS_TO,
@@ -343,7 +343,7 @@ def create_moved_posts_from_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.MOVED_POSTS_FROM,
@@ -363,7 +363,7 @@ def create_split_posts_into_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.SPLIT_POSTS_INTO,
@@ -383,7 +383,7 @@ def create_split_posts_from_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.SPLIT_POSTS_FROM,
@@ -402,7 +402,7 @@ def create_deleted_posts_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.DELETED_POSTS,
@@ -419,7 +419,7 @@ def create_started_poll_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.STARTED_POLL,
@@ -435,7 +435,7 @@ def create_closed_poll_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.CLOSED_POLL,
@@ -450,7 +450,7 @@ def create_opened_poll_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.OPENED_POLL,
@@ -466,7 +466,7 @@ def create_deleted_poll_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.DELETED_POLL,
@@ -482,7 +482,7 @@ def create_took_ownership_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.TOOK_OWNERSHIP,
@@ -497,7 +497,7 @@ def create_joined_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.JOINED,
@@ -513,7 +513,7 @@ def create_added_member_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.ADDED_MEMBER,
@@ -530,7 +530,7 @@ def create_left_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.LEFT,
@@ -546,7 +546,7 @@ def create_removed_member_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.REMOVED_MEMBER,
@@ -564,7 +564,7 @@ def create_changed_owner_thread_update(
     actor: Union["User", str, None] = None,
     commit: bool = True,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return create_thread_update(
         thread,
         ThreadUpdateActionName.CHANGED_OWNER,

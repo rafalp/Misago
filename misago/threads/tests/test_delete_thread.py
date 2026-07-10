@@ -11,8 +11,8 @@ from ...postedits.models import PostEdit
 from ...readtracker.models import ReadThread
 from ...readtracker.tracker import mark_thread_read
 from ...solutions.select import select_thread_solution
-from ...threadupdates.create import create_test_thread_update
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.create import create_test_thread_update
+from ...threadevents.models import ThreadEvent
 from ..delete import delete_thread
 from ..models import Post, Thread
 
@@ -197,7 +197,7 @@ def test_delete_thread_deletes_thread_updates(user, thread, reply):
 
     delete_thread(thread)
 
-    with pytest.raises(ThreadUpdate.DoesNotExist):
+    with pytest.raises(ThreadEvent.DoesNotExist):
         thread_update.refresh_from_db()
 
 

@@ -4,7 +4,7 @@ from ...cache.enums import CacheName
 from ...cache.test import assert_invalidates_cache
 from ...categories.models import Category
 from ...test import assert_contains, assert_has_error_message
-from ...threadupdates.create import create_test_thread_update
+from ...threadevents.create import create_test_thread_update
 from .categories_tree import assert_valid_categories_tree
 
 category_new = reverse("misago:admin:categories:new")

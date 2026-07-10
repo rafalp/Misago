@@ -2,10 +2,10 @@ from typing import TYPE_CHECKING
 
 from django.http import HttpRequest
 
+from ..threadevents.create import create_started_poll_thread_update
+from ..threadevents.models import ThreadEvent
+from ..threadevents.threadflag import set_thread_has_updates
 from ..threads.models import Thread
-from ..threadupdates.create import create_started_poll_thread_update
-from ..threadupdates.models import ThreadUpdate
-from ..threadupdates.threadflag import set_thread_has_updates
 from .hooks import edit_thread_poll_hook, save_thread_poll_hook
 from .models import Poll, PollVote
 
@@ -34,13 +34,13 @@ def _edit_thread_poll_action(
 
 def save_thread_poll(
     thread: Thread, poll: Poll, user: "User", request: HttpRequest | None = None
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return save_thread_poll_hook(_save_thread_poll_action, thread, poll, user, request)
 
 
 def _save_thread_poll_action(
     thread: Thread, poll: Poll, user: "User", request: HttpRequest | None = None
-) -> ThreadUpdate:
+) -> ThreadEvent:
     poll.save()
 
     thread.has_updates = True

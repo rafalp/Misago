@@ -5,10 +5,10 @@ This hook wraps a standard Misago function used to create a `ThreadUpdate` objec
 
 ## Location
 
-This hook can be imported from `misago.threadupdates.hooks`:
+This hook can be imported from `misago.threadevents.hooks`:
 
 ```python
-from misago.threadupdates.hooks import create_thread_update_hook
+from misago.threadevents.hooks import create_thread_update_hook
 ```
 
 
@@ -164,8 +164,8 @@ The code below implements a custom filter function that stores the actor's IP ad
 
 ```python
 from django.http import HttpRequest
-from misago.threadupdates.hooks import create_thread_update_hook
-from misago.threadupdates.models import ThreadUpdate
+from misago.threadevents.hooks import create_thread_update_hook
+from misago.threadevents.models import ThreadEvent
 
 
 @create_thread_update_hook.append_filter

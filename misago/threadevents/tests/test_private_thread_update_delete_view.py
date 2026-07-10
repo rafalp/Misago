@@ -3,7 +3,7 @@ from django.urls import reverse
 
 from ...permissions.models import Moderator
 from ...test import assert_contains
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.models import ThreadEvent
 
 
 def test_private_thread_update_delete_view_returns_404_error_for_not_found_thread(
@@ -178,7 +178,7 @@ def test_private_thread_update_delete_view_deletes_update_for_private_threads_mo
 
     assert response.status_code == 302
 
-    with pytest.raises(ThreadUpdate.DoesNotExist):
+    with pytest.raises(ThreadEvent.DoesNotExist):
         user_private_thread_update.refresh_from_db()
 
 
@@ -216,7 +216,7 @@ def test_private_thread_update_delete_view_deletes_update_for_global_moderator(
 
     assert response.status_code == 302
 
-    with pytest.raises(ThreadUpdate.DoesNotExist):
+    with pytest.raises(ThreadEvent.DoesNotExist):
         user_private_thread_update.refresh_from_db()
 
 
@@ -455,7 +455,7 @@ def test_private_thread_update_delete_view_deletes_update_for_private_threads_mo
 
     assert response.status_code == 200
 
-    with pytest.raises(ThreadUpdate.DoesNotExist):
+    with pytest.raises(ThreadEvent.DoesNotExist):
         user_private_thread_update.refresh_from_db()
 
 
@@ -476,5 +476,5 @@ def test_private_thread_update_delete_view_deletes_update_for_global_moderator_i
 
     assert response.status_code == 200
 
-    with pytest.raises(ThreadUpdate.DoesNotExist):
+    with pytest.raises(ThreadEvent.DoesNotExist):
         user_private_thread_update.refresh_from_db()

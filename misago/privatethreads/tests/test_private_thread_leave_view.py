@@ -2,9 +2,9 @@ import pytest
 from django.urls import reverse
 
 from ...test import assert_contains
+from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.models import ThreadEvent
 from ...threads.models import Thread
-from ...threadupdates.enums import ThreadUpdateActionName
-from ...threadupdates.models import ThreadUpdate
 from ..members import get_private_thread_members
 from ..models import PrivateThreadMember
 
@@ -73,7 +73,7 @@ def test_private_thread_leave_view_removes_thread_owner(
     assert owner is None
     assert members == [other_user, moderator]
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         actor=user,
         thread=user_private_thread,
         action=ThreadUpdateActionName.LEFT,
@@ -102,7 +102,7 @@ def test_private_thread_leave_view_removes_thread_member(
     assert owner == user
     assert members == [user, moderator]
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         actor=other_user,
         thread=user_private_thread,
         action=ThreadUpdateActionName.LEFT,
@@ -131,7 +131,7 @@ def test_private_thread_leave_view_removes_thread_moderator(
     assert owner == user
     assert members == [user, other_user]
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         actor=moderator,
         thread=user_private_thread,
         action=ThreadUpdateActionName.LEFT,
@@ -191,8 +191,8 @@ def test_private_thread_leave_view_does_nothing_if_non_member_thread_moderator_l
     assert owner == user
     assert members == [user, other_user]
 
-    with pytest.raises(ThreadUpdate.DoesNotExist):
-        ThreadUpdate.objects.get(
+    with pytest.raises(ThreadEvent.DoesNotExist):
+        ThreadEvent.objects.get(
             actor=moderator,
             thread=user_private_thread,
             action=ThreadUpdateActionName.LEFT,

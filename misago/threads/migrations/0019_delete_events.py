@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("misago_threads", "0018_update_attachments_markup"),
-        ("misago_threadupdates", "0002_move_data"),
+        ("misago_threadevents", "0002_move_data"),
     ]
 
     operations = [
