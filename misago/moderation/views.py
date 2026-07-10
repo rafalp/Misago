@@ -1,3 +1,4 @@
+import json
 from typing import Iterable
 
 from django.core.exceptions import ValidationError
@@ -56,11 +57,22 @@ def get_moderation_result_response(
     return None
 
 
-def set_moderation_response_headers(request: HttpRequest, response: HttpResponse):
-    response.headers["hx-trigger"] = "misago:afterModeration"
+def set_moderation_response_headers(
+    request: HttpRequest,
+    response: HttpResponse,
+    trigger: str | None = None,
+    trigger_context: dict | None = None,
+):
+    if trigger:
+        if trigger_context:
+            response.headers["hx-trigger-after-settle"] = json.dumps(
+                {trigger: trigger_context}
+            )
+        else:
+            response.headers["hx-trigger-after-settle"] = trigger
 
-    # if request.POST.get("success-hx-target"):
-    #     response.headers["hx-retarget"] = request.POST["success-hx-target"]
+    if request.POST.get("success-hx-target"):
+        response.headers["hx-retarget"] = request.POST["success-hx-target"]
 
-    # if request.POST.get("success-hx-swap"):
-    #     response.headers["hx-reswap"] = request.POST["success-hx-swap"]
+    if request.POST.get("success-hx-swap"):
+        response.headers["hx-reswap"] = request.POST["success-hx-swap"]

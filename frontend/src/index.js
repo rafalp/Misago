@@ -149,10 +149,21 @@ export default misago
 document.addEventListener("htmx:load", activateEditors)
 
 // Hide moderation modal
-document.addEventListener("misago:afterModeration", () => {
-  $("#moderation-modal").modal("hide")
+const HIDE_MODERATION_MODAL_EVENTS = [
+  "misago:hideModal",
+  "misago:afterPostModeration",
+  "misago:afterPostsModeration",
+  "misago:afterThreadModeration",
+  "misago:afterThreadsModeration",
+]
+
+HIDE_MODERATION_MODAL_EVENTS.forEach(function (event) {
+  document.addEventListener(event, () => {
+    $("#moderation-modal").modal("hide")
+  })
 })
 
+// Hide memebers update modal
 document.addEventListener("misago:afterUpdateMembers", () => {
   $("#add-members-modal").modal("hide")
 })
