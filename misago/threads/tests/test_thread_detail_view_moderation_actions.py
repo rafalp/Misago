@@ -85,7 +85,7 @@ def test_thread_detail_view_pin_everywhere_thread_moderation_action_pins_pinned_
     assert thread.pinned == ThreadPinned.EVERYWHERE
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.PINNED_EVERYWHERE,
     )
@@ -132,7 +132,7 @@ def test_thread_detail_view_pin_category_thread_moderation_action_pins_pinned_ev
     assert thread.pinned == ThreadPinned.CATEGORY
     assert thread.has_updates
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         thread=thread,
         action=ThreadUpdateActionName.PINNED_CATEGORY,
     )
