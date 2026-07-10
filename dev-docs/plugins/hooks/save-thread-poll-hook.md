@@ -21,7 +21,7 @@ def custom_save_thread_poll_filter(
     poll: Poll,
     user: 'User',
     request: HttpRequest | None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     ...
 ```
 
@@ -59,7 +59,7 @@ The request object, or `None` if not provided.
 
 ### Return value
 
-A `ThreadUpdate` instance.
+A `ThreadEvent` instance.
 
 
 ## Action
@@ -67,7 +67,7 @@ A `ThreadUpdate` instance.
 ```python
 def save_thread_poll_action(
     thread: Thread, poll: Poll, user: 'User', request: HttpRequest | None
-) -> ThreadUpdate:
+) -> ThreadEvent:
     ...
 ```
 
@@ -98,7 +98,7 @@ The request object, or `None` if not provided.
 
 ### Return value
 
-A `ThreadUpdate` instance.
+A `ThreadEvent` instance.
 
 
 ## Example
@@ -110,8 +110,8 @@ from django.http import HttpRequest
 from misago.polls.hooks import save_thread_poll_hook
 from misago.polls.models import Poll
 from misago.threads.models import Thread
-from misago.threadupdates.hide import hide_thread_update
-from misago.threadupdates.models import ThreadUpdate
+from misago.threadevents.hide import hide_thread_update
+from misago.threadevents.models import ThreadEvent
 from misago.users.models import User
 
 @save_thread_poll_hook.append_filter
@@ -121,7 +121,7 @@ def hide_opened_poll_update(
     poll: Poll,
     user: User,
     request: HttpRequest | None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     thread_update = action(thread, poll, user, request)
 
     if thread_update:

@@ -13,9 +13,9 @@ from ...permissions.privatethreads import (
     filter_private_thread_updates_queryset,
 )
 from ...permissions.proxy import UserPermissionsProxy
+from ...threadevents.models import ThreadEvent
 from ...threads.models import Post, Thread
 from ...threads.views.backend import ViewBackend
-from ...threadupdates.models import ThreadUpdate
 from ..breadcrumbs import (
     get_private_thread_breadcrumbs,
     get_private_threads_breadcrumbs,
@@ -143,7 +143,7 @@ class PrivateThreadViewBackend(ViewBackend):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadUpdate] | None = None,
+        thread_updates: list[ThreadEvent] | None = None,
     ) -> PrivateThreadPostFeed:
         post_feed = PrivateThreadPostFeed(request, thread, posts, thread_updates)
 

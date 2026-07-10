@@ -3,8 +3,8 @@ import json
 from django.urls import reverse
 
 from ...test import assert_contains
-from ...threadupdates.enums import ThreadUpdateActionName
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.models import ThreadEvent
 from ..members import get_private_thread_members
 
 
@@ -72,7 +72,7 @@ def test_private_thread_member_remove_view_removes_thread_member(
     assert owner == user
     assert members == [user, moderator]
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         actor=user,
         thread=user_private_thread,
         action=ThreadUpdateActionName.REMOVED_MEMBER,
@@ -108,7 +108,7 @@ def test_private_thread_member_remove_view_removes_thread_member_for_moderator(
     assert owner == user
     assert members == [user, moderator]
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         actor=moderator,
         thread=user_private_thread,
         action=ThreadUpdateActionName.REMOVED_MEMBER,
@@ -199,7 +199,7 @@ def test_private_thread_member_remove_view_removes_thread_member_in_htmx(
     assert owner == user
     assert members == [user, moderator]
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         actor=user,
         thread=user_private_thread,
         action=ThreadUpdateActionName.REMOVED_MEMBER,
@@ -232,7 +232,7 @@ def test_private_thread_member_remove_view_does_nothing_if_user_tries_to_delete_
     assert owner == user
     assert members == [user, other_user, moderator]
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
 
 def test_private_thread_member_remove_view_returns_403_if_user_cant_use_private_threads(
@@ -383,7 +383,7 @@ def test_private_thread_member_remove_view_removes_member_for_moderator_if_threa
     assert owner == user
     assert members == [user, moderator]
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         actor=moderator,
         thread=user_private_thread,
         action=ThreadUpdateActionName.REMOVED_MEMBER,

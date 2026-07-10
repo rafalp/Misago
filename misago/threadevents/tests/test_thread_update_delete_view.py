@@ -5,7 +5,7 @@ from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains
 from ..create import create_test_thread_update
-from ..models import ThreadUpdate
+from ..models import ThreadEvent
 
 
 def test_thread_update_delete_view_returns_404_error_for_not_found_thread(user_client):
@@ -182,7 +182,7 @@ def test_thread_update_delete_view_deletes_update_for_category_moderator(
 
     assert response.status_code == 302
 
-    with pytest.raises(ThreadUpdate.DoesNotExist):
+    with pytest.raises(ThreadEvent.DoesNotExist):
         thread_update.refresh_from_db()
 
 
@@ -220,7 +220,7 @@ def test_thread_update_delete_view_deletes_update_for_global_moderator(
 
     assert response.status_code == 302
 
-    with pytest.raises(ThreadUpdate.DoesNotExist):
+    with pytest.raises(ThreadEvent.DoesNotExist):
         thread_update.refresh_from_db()
 
 
@@ -247,7 +247,7 @@ def test_thread_update_delete_view_unsets_thread_has_updates_flag_for_last_updat
     thread.refresh_from_db()
     assert not thread.has_updates
 
-    with pytest.raises(ThreadUpdate.DoesNotExist):
+    with pytest.raises(ThreadEvent.DoesNotExist):
         thread_update.refresh_from_db()
 
 
@@ -276,7 +276,7 @@ def test_thread_update_delete_view_keeps_thread_has_updates_flag_if_other_update
     thread.refresh_from_db()
     assert thread.has_updates
 
-    with pytest.raises(ThreadUpdate.DoesNotExist):
+    with pytest.raises(ThreadEvent.DoesNotExist):
         thread_update.refresh_from_db()
 
 
@@ -512,7 +512,7 @@ def test_thread_update_delete_view_deletes_update_for_category_moderator_in_htmx
 
     assert response.status_code == 200
 
-    with pytest.raises(ThreadUpdate.DoesNotExist):
+    with pytest.raises(ThreadEvent.DoesNotExist):
         thread_update.refresh_from_db()
 
 
@@ -533,5 +533,5 @@ def test_thread_update_delete_view_deletes_update_for_global_moderator_in_htmx(
 
     assert response.status_code == 200
 
-    with pytest.raises(ThreadUpdate.DoesNotExist):
+    with pytest.raises(ThreadEvent.DoesNotExist):
         thread_update.refresh_from_db()

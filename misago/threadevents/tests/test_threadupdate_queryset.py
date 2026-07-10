@@ -1,6 +1,6 @@
 from ...categories.models import Category
 from ..create import create_test_thread_update
-from ..models import ThreadUpdate
+from ..models import ThreadEvent
 
 
 def test_thread_update_queryset_context_object_filters_by_context_object(
@@ -12,10 +12,8 @@ def test_thread_update_queryset_context_object_filters_by_context_object(
 
     thread_update = create_test_thread_update(thread, context_object=default_category)
 
-    assert ThreadUpdate.objects.context_object(default_category).count() == 1
-    assert (
-        ThreadUpdate.objects.context_object(default_category).first() == thread_update
-    )
+    assert ThreadEvent.objects.context_object(default_category).count() == 1
+    assert ThreadEvent.objects.context_object(default_category).first() == thread_update
 
 
 def test_thread_update_queryset_context_type_filters_by_context_type_using_model_instance(
@@ -26,7 +24,7 @@ def test_thread_update_queryset_context_type_filters_by_context_type_using_model
     create_test_thread_update(thread, context_object=sibling_category)
     create_test_thread_update(thread, context_object=default_category)
 
-    assert ThreadUpdate.objects.context_type(default_category).count() == 2
+    assert ThreadEvent.objects.context_type(default_category).count() == 2
 
 
 def test_thread_update_queryset_context_type_filters_by_context_type_using_model_type(
@@ -37,7 +35,7 @@ def test_thread_update_queryset_context_type_filters_by_context_type_using_model
     create_test_thread_update(thread, context_object=sibling_category)
     create_test_thread_update(thread, context_object=default_category)
 
-    assert ThreadUpdate.objects.context_type(Category).count() == 2
+    assert ThreadEvent.objects.context_type(Category).count() == 2
 
 
 def test_thread_update_queryset_clear_context_objects_clears_context_type_and_context_id(
@@ -54,7 +52,7 @@ def test_thread_update_queryset_clear_context_objects_clears_context_type_and_co
         context_object=sibling_category,
     )
 
-    ThreadUpdate.objects.context_object(default_category).clear_context_objects()
+    ThreadEvent.objects.context_object(default_category).clear_context_objects()
 
     thread_update.refresh_from_db()
     assert thread_update.context == default_category.name

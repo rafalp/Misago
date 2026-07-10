@@ -14,7 +14,7 @@ from ..likes.synchronize import synchronize_post_likes
 from ..notifications.models import Notification, WatchedThread
 from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
-from ..threadupdates.models import ThreadUpdate
+from ..threadevents.models import ThreadEvent
 from ..users.signals import (
     anonymize_user_data,
     archive_user_data,
@@ -36,7 +36,7 @@ update_thread_title = Signal()
 
 @receiver(delete_thread)
 def delete_thread_updates(sender, **kwargs):
-    ThreadUpdate.objects.filter(thread=sender).delete()
+    ThreadEvent.objects.filter(thread=sender).delete()
 
 
 @receiver(merge_thread)
@@ -91,8 +91,8 @@ def delete_user_threads(sender, **kwargs):
         Q(thread__starter=sender) | Q(post__poster=sender)
     ).delete()
 
-    ThreadUpdate.objects.filter(actor=sender).delete()
-    ThreadUpdate.objects.context_object(sender).clear_context_objects()
+    ThreadEvent.objects.filter(actor=sender).delete()
+    ThreadEvent.objects.context_object(sender).clear_context_objects()
 
     WatchedThread.objects.filter(thread__starter=sender).delete()
 
@@ -174,7 +174,7 @@ def archive_user_polls(sender, archive=None, **kwargs):
 
 @receiver(archive_user_data)
 def archive_user_thread_updates(sender, archive=None, **kwargs):
-    queryset = ThreadUpdate.objects.filter(actor=sender).order_by("id")
+    queryset = ThreadEvent.objects.filter(actor=sender).order_by("id")
 
     for thread_update in queryset.iterator(chunk_size=50):
         item_name = thread_update.created_at.strftime("%H%M%S-thread-update")
@@ -190,7 +190,7 @@ def archive_user_thread_updates(sender, archive=None, **kwargs):
 
 @receiver(archive_user_data)
 def archive_user_context_thread_updates(sender, archive=None, **kwargs):
-    queryset = ThreadUpdate.objects.context_object(sender).order_by("id")
+    queryset = ThreadEvent.objects.context_object(sender).order_by("id")
 
     for thread_update in queryset.iterator(chunk_size=50):
         item_name = thread_update.created_at.strftime("%H%M%S-thread-update")
@@ -206,9 +206,9 @@ def archive_user_context_thread_updates(sender, archive=None, **kwargs):
 
 @receiver(anonymize_user_data)
 def anonymize_user_in_thread_updates(sender, **kwargs):
-    ThreadUpdate.objects.filter(actor=sender).update(actor_name=sender.username)
-    ThreadUpdate.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
-    ThreadUpdate.objects.context_object(sender).update(context=sender.username)
+    ThreadEvent.objects.filter(actor=sender).update(actor_name=sender.username)
+    ThreadEvent.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
+    ThreadEvent.objects.context_object(sender).update(context=sender.username)
 
 
 @receiver([anonymize_user_data])
@@ -240,9 +240,9 @@ def update_usernames(sender, **kwargs):
         solution_selected_by_slug=sender.slug,
     )
 
-    ThreadUpdate.objects.filter(actor=sender).update(actor_name=sender.username)
-    ThreadUpdate.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
-    ThreadUpdate.objects.context_object(sender).update(context=sender.username)
+    ThreadEvent.objects.filter(actor=sender).update(actor_name=sender.username)
+    ThreadEvent.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
+    ThreadEvent.objects.context_object(sender).update(context=sender.username)
 
     Post.objects.filter(poster=sender).update(poster_name=sender.username)
     Post.objects.filter(last_editor=sender).update(

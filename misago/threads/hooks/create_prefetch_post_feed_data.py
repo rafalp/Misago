@@ -5,7 +5,7 @@ from ...categories.models import Category
 from ...conf.dynamicsettings import DynamicSettings
 from ...permissions.proxy import UserPermissionsProxy
 from ...plugins.hooks import FilterHook
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.models import ThreadEvent
 from ..models import Post, Thread
 
 if TYPE_CHECKING:
@@ -42,9 +42,9 @@ class CreatePrefetchPostFeedDataHookAction(Protocol):
     Iterable of `Thread` instances that have already been loaded.
     Defaults to `None` if not provided.
 
-    ## `thread_updates: Iterable[ThreadUpdate] | None = None`
+    ## `thread_updates: Iterable[ThreadEvent] | None = None`
 
-    Iterable of `ThreadUpdate` instances to prefetch data for.
+    Iterable of `ThreadEvent` instances to prefetch data for.
     Defaults to `None` if not provided.
 
     ## `attachments: Iterable[Attachment] | None = None`
@@ -69,7 +69,7 @@ class CreatePrefetchPostFeedDataHookAction(Protocol):
         *,
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
-        thread_updates: Iterable[ThreadUpdate] | None = None,
+        thread_updates: Iterable[ThreadEvent] | None = None,
         attachments: Iterable[Attachment] | None = None,
         users: Iterable["User"] | None = None,
     ) -> "PrefetchPostFeedData": ...
@@ -110,9 +110,9 @@ class CreatePrefetchPostFeedDataHookFilter(Protocol):
     Iterable of `Thread` instances that have already been loaded.
     Defaults to `None` if not provided.
 
-    ## `thread_updates: Iterable[ThreadUpdate] | None = None`
+    ## `thread_updates: Iterable[ThreadEvent] | None = None`
 
-    Iterable of `ThreadUpdate` instances to prefetch data for.
+    Iterable of `ThreadEvent` instances to prefetch data for.
     Defaults to `None` if not provided.
 
     ## `attachments: Iterable[Attachment] | None = None`
@@ -138,7 +138,7 @@ class CreatePrefetchPostFeedDataHookFilter(Protocol):
         *,
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
-        thread_updates: Iterable[ThreadUpdate] | None = None,
+        thread_updates: Iterable[ThreadEvent] | None = None,
         attachments: Iterable[Attachment] | None = None,
         users: Iterable["User"] | None = None,
     ) -> "PrefetchPostFeedData": ...
@@ -211,7 +211,7 @@ class CreatePrefetchPostFeedDataHook(
         *,
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
-        thread_updates: Iterable[ThreadUpdate] | None = None,
+        thread_updates: Iterable[ThreadEvent] | None = None,
         attachments: Iterable[Attachment] | None = None,
         users: Iterable["User"] | None = None,
     ) -> "PrefetchPostFeedData":

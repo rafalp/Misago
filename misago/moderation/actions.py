@@ -6,8 +6,8 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from ..categories.models import Category
+from ..threadevents.models import ThreadEvent
 from ..threads.models import Post, Thread
-from ..threadupdates.models import ThreadUpdate
 
 
 class ModerationAction:
@@ -34,14 +34,14 @@ class ModerationAction:
 class ModerationResult:
     updated_items: set[int] = field(default_factory=set)
     deleted_items: set[int] = field(default_factory=set)
-    thread_updates: list[ThreadUpdate] = field(default_factory=list)
+    thread_updates: list[ThreadEvent] = field(default_factory=list)
 
     refresh: bool = False
     redirect_to: str | None = None
 
     @classmethod
     def from_updated_thread(
-        cls, thread: Thread, thread_update: ThreadUpdate | None
+        cls, thread: Thread, thread_update: ThreadEvent | None
     ) -> "ModerationResult":
         if thread_update:
             return cls(updated_items=[thread.id], thread_updates=[thread_update])

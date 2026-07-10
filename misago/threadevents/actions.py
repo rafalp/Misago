@@ -5,7 +5,7 @@ from django.utils.translation import npgettext, pgettext, pgettext_lazy
 
 from ..threads.threadurl import get_thread_url
 from .enums import ThreadUpdateActionName
-from .models import ThreadUpdate
+from .models import ThreadEvent
 from .renderer import thread_updates_renderer
 
 
@@ -14,7 +14,7 @@ class ThreadUpdateAction:
     icon: str
     description: str
 
-    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+    def get_description(self, update: ThreadEvent, data: dict) -> str:
         return escape(self.description)
 
     def get_context_text(self, context: str):
@@ -24,7 +24,7 @@ class ThreadUpdateAction:
         return f'<a href="{escape(context_url)}">{escape(context)}</a>'
 
     def get_context_obj_from_data(
-        self, update: ThreadUpdate, data: dict
+        self, update: ThreadEvent, data: dict
     ) -> Model | None:
         if not update.context_id:
             return None
@@ -32,13 +32,13 @@ class ThreadUpdateAction:
 
 
 class TextContextThreadUpdateAction(ThreadUpdateAction):
-    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+    def get_description(self, update: ThreadEvent, data: dict) -> str:
         replacements = {"context": self.get_context_text(update.context)}
         return escape(self.description) % replacements
 
 
 class CategoryContextThreadUpdateAction(ThreadUpdateAction):
-    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+    def get_description(self, update: ThreadEvent, data: dict) -> str:
         category = self.get_context_obj_from_data(update, data["categories"])
 
         if category:
@@ -54,7 +54,7 @@ class CategoryContextThreadUpdateAction(ThreadUpdateAction):
 
 
 class ThreadContextThreadUpdateAction(ThreadUpdateAction):
-    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+    def get_description(self, update: ThreadEvent, data: dict) -> str:
         thread = self.get_context_obj_from_data(update, data["threads"])
         category = None
 
@@ -74,7 +74,7 @@ class ThreadContextThreadUpdateAction(ThreadUpdateAction):
 
 
 class UserContextThreadUpdateAction(ThreadUpdateAction):
-    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+    def get_description(self, update: ThreadEvent, data: dict) -> str:
         user = self.get_context_obj_from_data(update, data["users"])
 
         if user:
@@ -92,7 +92,7 @@ class TestThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.TEST
     icon = "tabler/bug.svg"
 
-    def get_description(self, update: ThreadUpdate, data: dict | None = None) -> str:
+    def get_description(self, update: ThreadEvent, data: dict | None = None) -> str:
         if update.context:
             return f"UPDATE [{update.id}] - {escape(update.context)}"
 
@@ -207,7 +207,7 @@ class MovedPostsToThreadUpdateAction(ThreadContextThreadUpdateAction):
     action = ThreadUpdateActionName.MOVED_POSTS_TO
     icon = "tabler/arrows-right.svg"
 
-    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+    def get_description(self, update: ThreadEvent, data: dict) -> str:
         thread = self.get_context_obj_from_data(update, data["threads"])
         category = None
 
@@ -239,7 +239,7 @@ class MovedPostsFromThreadUpdateAction(ThreadContextThreadUpdateAction):
     action = ThreadUpdateActionName.MOVED_POSTS_FROM
     icon = "tabler/arrows-right.svg"
 
-    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+    def get_description(self, update: ThreadEvent, data: dict) -> str:
         thread = self.get_context_obj_from_data(update, data["threads"])
         category = None
 
@@ -270,7 +270,7 @@ class SplitPostsIntoThreadUpdateAction(ThreadContextThreadUpdateAction):
     action = ThreadUpdateActionName.SPLIT_POSTS_INTO
     icon = "tabler/arrows-split-2.svg"
 
-    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+    def get_description(self, update: ThreadEvent, data: dict) -> str:
         thread = self.get_context_obj_from_data(update, data["threads"])
         category = None
 
@@ -307,7 +307,7 @@ class SplitPostsFromThreadUpdateAction(ThreadContextThreadUpdateAction):
     action = ThreadUpdateActionName.SPLIT_POSTS_FROM
     icon = "tabler/arrows-split-2.svg"
 
-    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+    def get_description(self, update: ThreadEvent, data: dict) -> str:
         thread = self.get_context_obj_from_data(update, data["threads"])
         category = None
 
@@ -344,7 +344,7 @@ class DeletedPostsThreadUpdateAction(ThreadUpdateAction):
     action = ThreadUpdateActionName.DELETED_POSTS
     icon = "tabler/x.svg"
 
-    def get_description(self, update: ThreadUpdate, data: dict) -> str:
+    def get_description(self, update: ThreadEvent, data: dict) -> str:
         description = npgettext(
             "thread update action description",
             "Deleted %(posts)s post",

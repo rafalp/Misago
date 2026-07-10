@@ -84,7 +84,7 @@ INSTALLED_APPS = [
     "misago.themes",
     "misago.threads",
     "misago.postedits",
-    "misago.threadupdates",
+    "misago.threadevents",
 ]
 
 INSTALLED_PLUGINS = []

@@ -26,7 +26,7 @@ HOOKS_MODULES = (
     "misago.privatethreads.hooks",
     "misago.solutions.hooks",
     "misago.threads.hooks",
-    "misago.threadupdates.hooks",
+    "misago.threadevents.hooks",
     "misago.users.hooks",
 )
 PLUGIN_MANIFEST = "misago.plugins.manifest.MisagoPlugin"

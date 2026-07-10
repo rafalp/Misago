@@ -13,8 +13,8 @@ from ..polls.models import Poll, PollVote
 from ..postedits.models import PostEdit
 from ..postgres.delete import delete_all
 from ..readtracker.models import ReadCategory, ReadThread
+from ..threadevents.models import ThreadEvent
 from ..threads.models import Post, Thread
-from ..threadupdates.models import ThreadUpdate
 from .hooks import delete_categories_hook
 from .models import Category
 from .synchronize import synchronize_category
@@ -67,7 +67,7 @@ def _delete_categories_action(
     delete_all(CategoryGroupPermission, category_id=categories)
     delete_all(ReadCategory, category_id=categories)
 
-    ThreadUpdate.objects.filter(
+    ThreadEvent.objects.filter(
         context_type="misago_categories.category",
         context_id__in=[c.id for c in categories],
     ).clear_context_objects()
@@ -122,7 +122,7 @@ def _move_categories_contents(categories: list[Category], new_category: Category
     _move_objects(Thread, categories, new_category)
 
     # misago.threadupdates
-    _move_objects(ThreadUpdate, categories, new_category)
+    _move_objects(ThreadEvent, categories, new_category)
 
     synchronize_category(new_category)
 
@@ -150,5 +150,5 @@ def _delete_categories_contents(
     delete_all(Poll, category_id=categories)
     delete_all(PostEdit, category_id=categories)
     delete_all(Post, category_id=categories)
-    delete_all(ThreadUpdate, category_id=categories)
+    delete_all(ThreadEvent, category_id=categories)
     delete_all(Thread, category_id=categories)

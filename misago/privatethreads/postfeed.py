@@ -7,9 +7,9 @@ from ..permissions.privatethreads import (
     check_edit_private_thread_post_permission,
     check_reply_private_thread_permission,
 )
+from ..threadevents.models import ThreadEvent
 from ..threads.models import Post
 from ..threads.postfeed import PostFeed
-from ..threadupdates.models import ThreadUpdate
 
 
 class PrivateThreadPostFeed(PostFeed):
@@ -99,7 +99,7 @@ class PrivateThreadPostFeed(PostFeed):
             },
         )
 
-    def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+    def get_hide_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
         return reverse(
             "misago:private-thread-update-hide",
             kwargs={
@@ -109,7 +109,7 @@ class PrivateThreadPostFeed(PostFeed):
             },
         )
 
-    def get_unhide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+    def get_unhide_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
         return reverse(
             "misago:private-thread-update-unhide",
             kwargs={
@@ -119,7 +119,7 @@ class PrivateThreadPostFeed(PostFeed):
             },
         )
 
-    def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+    def get_delete_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
         return reverse(
             "misago:private-thread-update-delete",
             kwargs={

@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from .models import ThreadUpdate
+from .models import ThreadEvent
 
 if TYPE_CHECKING:
     from .actions import ThreadUpdateAction
@@ -18,7 +18,7 @@ class ThreadUpdatesRenderer:
         return action
 
     def render_thread_update(
-        self, thread_update: ThreadUpdate, data: dict
+        self, thread_update: ThreadEvent, data: dict
     ) -> dict | None:
         action = self.actions.get(thread_update.action)
         if not action:

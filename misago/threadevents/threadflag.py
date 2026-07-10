@@ -1,5 +1,5 @@
 from ..threads.models import Thread
-from .models import ThreadUpdate
+from .models import ThreadEvent
 
 
 def set_thread_has_updates(thread: Thread, commit: bool = True) -> bool:
@@ -17,7 +17,7 @@ def set_thread_has_updates(thread: Thread, commit: bool = True) -> bool:
 def sync_thread_has_updates(thread: Thread, commit: bool = True) -> bool:
     org_has_updates = thread.has_updates
 
-    thread.has_updates = ThreadUpdate.objects.filter(thread=thread).exists()
+    thread.has_updates = ThreadEvent.objects.filter(thread=thread).exists()
 
     if org_has_updates == thread.has_updates:
         return False

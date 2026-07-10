@@ -12,9 +12,9 @@ from ..polls.models import Poll, PollVote
 from ..postedits.create import create_post_edit
 from ..postedits.models import PostEdit
 from ..readtracker.models import ReadCategory, ReadThread
+from ..threadevents.create import create_test_thread_update
+from ..threadevents.models import ThreadEvent
 from ..threads.models import Post, Thread
-from ..threadupdates.create import create_test_thread_update
-from ..threadupdates.models import ThreadUpdate
 
 __all__ = ["CategoryRelations", "category_relations_factory"]
 
@@ -145,7 +145,7 @@ class CategoryRelations:
     thread: Thread
     thread_first_post: Post
     thread_reply: Post
-    thread_update: ThreadUpdate
+    thread_update: ThreadEvent
     watched_thread: WatchedThread
 
     def assert_relations_deleted(self):
@@ -207,7 +207,7 @@ class CategoryRelations:
             """Thread reply should be deleted when category is deleted"""
             self.thread_reply.refresh_from_db()
 
-        with pytest.raises(ThreadUpdate.DoesNotExist):
+        with pytest.raises(ThreadEvent.DoesNotExist):
             """Thread update should be deleted when category is deleted"""
             self.thread_update.refresh_from_db()
 
@@ -281,7 +281,7 @@ class CategoryRelations:
 
         self.thread_update.refresh_from_db()
         assert self.thread_update.category_id == new_category.id, (
-            "ThreadUpdate category relation was not updated"
+            "ThreadEvent category relation was not updated"
         )
 
         self.watched_thread.refresh_from_db()

@@ -1,13 +1,13 @@
 import pytest
 from django.utils import timezone
 
-from ..threadupdates.enums import ThreadUpdateActionName
-from ..threadupdates.models import ThreadUpdate
+from ..threadevents.enums import ThreadUpdateActionName
+from ..threadevents.models import ThreadEvent
 
 
 @pytest.fixture
 def thread_update(user, thread):
-    return ThreadUpdate.objects.create(
+    return ThreadEvent.objects.create(
         category=thread.category,
         thread=thread,
         actor=user,
@@ -18,7 +18,7 @@ def thread_update(user, thread):
 
 @pytest.fixture
 def thread_update_context(user, thread):
-    return ThreadUpdate.objects.create(
+    return ThreadEvent.objects.create(
         category=thread.category,
         thread=thread,
         actor=user,
@@ -30,7 +30,7 @@ def thread_update_context(user, thread):
 
 @pytest.fixture
 def thread_update_category_context(user, thread, sibling_category):
-    return ThreadUpdate.objects.create(
+    return ThreadEvent.objects.create(
         category=thread.category,
         thread=thread,
         actor=user,
@@ -44,7 +44,7 @@ def thread_update_category_context(user, thread, sibling_category):
 
 @pytest.fixture
 def thread_update_thread_context(user, thread, other_thread):
-    return ThreadUpdate.objects.create(
+    return ThreadEvent.objects.create(
         category=thread.category,
         thread=thread,
         actor=user,
@@ -58,7 +58,7 @@ def thread_update_thread_context(user, thread, other_thread):
 
 @pytest.fixture
 def thread_update_user_context(user, thread, other_user):
-    return ThreadUpdate.objects.create(
+    return ThreadEvent.objects.create(
         category=thread.category,
         thread=thread,
         actor=user,
@@ -72,7 +72,7 @@ def thread_update_user_context(user, thread, other_user):
 
 @pytest.fixture
 def hidden_thread_update(user, moderator, thread):
-    return ThreadUpdate.objects.create(
+    return ThreadEvent.objects.create(
         category=thread.category,
         thread=thread,
         actor=user,
@@ -87,7 +87,7 @@ def hidden_thread_update(user, moderator, thread):
 
 @pytest.fixture
 def private_thread_update(user, private_thread):
-    return ThreadUpdate.objects.create(
+    return ThreadEvent.objects.create(
         category=private_thread.category,
         thread=private_thread,
         actor=user,
@@ -98,7 +98,7 @@ def private_thread_update(user, private_thread):
 
 @pytest.fixture
 def user_private_thread_update(user, user_private_thread):
-    return ThreadUpdate.objects.create(
+    return ThreadEvent.objects.create(
         category=user_private_thread.category,
         thread=user_private_thread,
         actor=user,
@@ -109,7 +109,7 @@ def user_private_thread_update(user, user_private_thread):
 
 @pytest.fixture
 def hidden_private_thread_update(user, moderator, private_thread):
-    return ThreadUpdate.objects.create(
+    return ThreadEvent.objects.create(
         category=private_thread.category,
         thread=private_thread,
         actor=user,
@@ -124,7 +124,7 @@ def hidden_private_thread_update(user, moderator, private_thread):
 
 @pytest.fixture
 def hidden_user_private_thread_update(user, moderator, user_private_thread):
-    return ThreadUpdate.objects.create(
+    return ThreadEvent.objects.create(
         category=user_private_thread.category,
         thread=user_private_thread,
         actor=user,

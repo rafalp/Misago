@@ -2,10 +2,10 @@ from django.db import models, transaction
 from django.http import HttpRequest
 
 from ...postedits.create import create_post_edit
+from ...threadevents.create import create_changed_title_thread_update
+from ...threadevents.models import ThreadEvent
+from ...threadevents.threadflag import set_thread_has_updates
 from ...threads.models import Post
-from ...threadupdates.create import create_changed_title_thread_update
-from ...threadupdates.models import ThreadUpdate
-from ...threadupdates.threadflag import set_thread_has_updates
 from ..hooks import (
     get_private_thread_post_edit_state_hook,
     get_thread_post_edit_state_hook,
@@ -111,7 +111,7 @@ class PostEditState(State):
                 request=request,
             )
 
-            ThreadUpdate.objects.context_object(self.thread).update(
+            ThreadEvent.objects.context_object(self.thread).update(
                 context=self.thread.title
             )
 

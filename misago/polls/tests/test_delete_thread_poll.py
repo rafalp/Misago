@@ -1,6 +1,6 @@
 import pytest
 
-from ...threadupdates.enums import ThreadUpdateActionName
+from ...threadevents.enums import ThreadUpdateActionName
 from ..delete import delete_thread_poll
 from ..models import Poll
 

@@ -1,6 +1,6 @@
 import pytest
 
-from ...threadupdates.create import create_moved_thread_update
+from ...threadevents.create import create_moved_thread_update
 from ..delete import delete_category
 from ..models import Category
 from ..mptt import heal_category_trees

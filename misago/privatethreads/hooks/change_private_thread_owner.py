@@ -6,7 +6,7 @@ from ...plugins.hooks import FilterHook
 from ...threads.models import Thread
 
 if TYPE_CHECKING:
-    from ...threadupdates.models import ThreadUpdate
+    from ...threadevents.models import ThreadEvent
     from ...users.models import User
 
 
@@ -35,7 +35,7 @@ class ChangePrivateThreadOwnerHookAction(Protocol):
 
     # Return value
 
-    A `ThreadUpdate` instance.
+    A `ThreadEvent` instance.
     """
 
     def __call__(
@@ -44,7 +44,7 @@ class ChangePrivateThreadOwnerHookAction(Protocol):
         thread: Thread,
         new_owner: "User",
         request: HttpRequest | None = None,
-    ) -> "ThreadUpdate": ...
+    ) -> "ThreadEvent": ...
 
 
 class ChangePrivateThreadOwnerHookFilter(Protocol):
@@ -79,7 +79,7 @@ class ChangePrivateThreadOwnerHookFilter(Protocol):
 
     # Return value
 
-    A `ThreadUpdate` instance.
+    A `ThreadEvent` instance.
     """
 
     def __call__(
@@ -89,7 +89,7 @@ class ChangePrivateThreadOwnerHookFilter(Protocol):
         thread: Thread,
         new_owner: "User",
         request: HttpRequest | None = None,
-    ) -> "ThreadUpdate": ...
+    ) -> "ThreadEvent": ...
 
 
 class ChangePrivateThreadOwnerHook(
@@ -110,7 +110,7 @@ class ChangePrivateThreadOwnerHook(
     from django.http import HttpRequest
     from misago.privatethreads.hooks import change_private_thread_owner_hook
     from misago.threads.models import Thread
-    from misago.threadupdates.models import ThreadUpdate
+    from misago.threadevents.models import ThreadEvent
     from misago.users.models import User
 
 
@@ -121,7 +121,7 @@ class ChangePrivateThreadOwnerHook(
         thread: Thread,
         new_owner: User,
         request: HttpRequest | None = None,
-    ) -> ThreadUpdate:
+    ) -> ThreadEvent:
         thread_update = action(actor, thread, new_owner, request)
 
         thread_update.plugin_data["user_ip"] = request.user_ip
@@ -140,7 +140,7 @@ class ChangePrivateThreadOwnerHook(
         thread: Thread,
         new_owner: "User",
         request: HttpRequest | None = None,
-    ) -> "ThreadUpdate":
+    ) -> "ThreadEvent":
         return super().__call__(
             action,
             actor,

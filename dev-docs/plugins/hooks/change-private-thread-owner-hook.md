@@ -21,7 +21,7 @@ def custom_change_private_thread_owner_filter(
     thread: Thread,
     new_owner: 'User',
     request: HttpRequest | None=None,
-) -> 'ThreadUpdate':
+) -> 'ThreadEvent':
     ...
 ```
 
@@ -59,7 +59,7 @@ The request object, or `None` if not provided.
 
 ### Return value
 
-A `ThreadUpdate` instance.
+A `ThreadEvent` instance.
 
 
 ## Action
@@ -70,7 +70,7 @@ def change_private_thread_owner_action(
     thread: Thread,
     new_owner: 'User',
     request: HttpRequest | None=None,
-) -> 'ThreadUpdate':
+) -> 'ThreadEvent':
     ...
 ```
 
@@ -101,7 +101,7 @@ The request object, or `None` if not provided.
 
 ### Return value
 
-A `ThreadUpdate` instance.
+A `ThreadEvent` instance.
 
 
 ## Example
@@ -112,7 +112,7 @@ Record the IP address used to change the thread owner:
 from django.http import HttpRequest
 from misago.privatethreads.hooks import change_private_thread_owner_hook
 from misago.threads.models import Thread
-from misago.threadupdates.models import ThreadUpdate
+from misago.threadevents.models import ThreadEvent
 from misago.users.models import User
 
 
@@ -123,7 +123,7 @@ def record_private_thread_owner_change_actor_ip(
     thread: Thread,
     new_owner: User,
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     thread_update = action(actor, thread, new_owner, request)
 
     thread_update.plugin_data["user_ip"] = request.user_ip

@@ -13,10 +13,10 @@ from ..polls.models import Poll, PollVote
 from ..postedits.create import create_post_edit
 from ..postedits.models import PostEdit
 from ..readtracker.models import ReadThread
+from ..threadevents.create import create_test_thread_update
+from ..threadevents.models import ThreadEvent
 from ..threads.enums import ThreadPinned
 from ..threads.models import Post, Thread
-from ..threadupdates.create import create_test_thread_update
-from ..threadupdates.models import ThreadUpdate
 from .utils import (
     FactoryTimestampArg,
     FactoryUserArg,
@@ -197,7 +197,7 @@ class ThreadRelations:
     post: Post
     post_edit: PostEdit
     read_thread: ReadThread
-    thread_update: ThreadUpdate
+    thread_update: ThreadEvent
     watched_thread: WatchedThread
 
     def assert_category(self, category: Category):

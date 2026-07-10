@@ -5,7 +5,7 @@ from django.db import models
 from ..plugins.models import PluginDataModel
 
 
-class ThreadUpdateQuerySet(models.QuerySet):
+class ThreadEventQuerySet(models.QuerySet):
     def context_object(self, obj: models.Model):
         return self.filter(
             context_type=f"{obj._meta.app_label}.{obj._meta.model_name}",
@@ -20,7 +20,7 @@ class ThreadUpdateQuerySet(models.QuerySet):
         return self.update(context_type=None, context_id=None)
 
 
-class ThreadUpdate(PluginDataModel):
+class ThreadEvent(PluginDataModel):
     category = models.ForeignKey(
         "misago_categories.Category",
         on_delete=models.DO_NOTHING,
@@ -63,16 +63,16 @@ class ThreadUpdate(PluginDataModel):
     created_at = models.DateTimeField(auto_now_add=True)
     hidden_at = models.DateTimeField(blank=True, null=True)
 
-    objects = ThreadUpdateQuerySet.as_manager()
+    objects = ThreadEventQuerySet.as_manager()
 
     class Meta(PluginDataModel.Meta):
         indexes = PluginDataModel.Meta.indexes + [
             models.Index(
-                name="misago_thread_update_created",
+                name="misago_thread_event_created",
                 fields=["thread", "created_at"],
             ),
             models.Index(
-                name="misago_thread_update_context",
+                name="misago_thread_event_context",
                 fields=["context_type", "context_id"],
                 condition=models.Q(context_id__isnull=False),
             ),

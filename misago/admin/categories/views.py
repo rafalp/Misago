@@ -12,7 +12,7 @@ from ...categories.models import Category, RoleCategoryACL
 from ...permissions.admin import get_admin_category_permissions
 from ...permissions.copy import copy_category_permissions
 from ...permissions.models import CategoryGroupPermission
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.models import ThreadEvent
 from ...users.models import Group
 from .forms import CategoryForm, DeleteCategoryForm
 
@@ -119,7 +119,7 @@ class EditCategory(CategoryFormMixin, CategoryAdmin, generic.ModelFormView):
     def handle_form(self, form, request, target):
         # Todo: add plugin hooks for admin form updates
         if "name" in form.changed_data:
-            ThreadUpdate.objects.context_object(target).update(context=target.name)
+            ThreadEvent.objects.context_object(target).update(context=target.name)
 
         super().handle_form(form, request, target)
 

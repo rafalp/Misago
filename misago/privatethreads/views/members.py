@@ -17,11 +17,11 @@ from ...permissions.privatethreads import (
     check_remove_private_thread_member_permission,
 )
 from ...permissions.proxy import UserPermissionsProxy
+from ...threadevents.create import create_added_member_thread_update
+from ...threadevents.models import ThreadEvent
+from ...threadevents.threadflag import set_thread_has_updates
 from ...threads.models import Thread
 from ...threads.nexturl import get_next_thread_url
-from ...threadupdates.create import create_added_member_thread_update
-from ...threadupdates.models import ThreadUpdate
-from ...threadupdates.threadflag import set_thread_has_updates
 from ..forms import MembersAddForm
 from ..members import (
     change_private_thread_owner,
@@ -208,7 +208,7 @@ class PrivateThreadMemberView(PrivateThreadView):
 
     def update_members(
         self, request: HttpRequest, thread: Thread, member: "User"
-    ) -> ThreadUpdate | None:
+    ) -> ThreadEvent | None:
         return None
 
     def get_member(self, request: HttpRequest, user_id: int) -> "User":
@@ -254,7 +254,7 @@ class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
 
     def update_members(
         self, request: HttpRequest, thread: Thread, member: "User"
-    ) -> ThreadUpdate | None:
+    ) -> ThreadEvent | None:
         if member == self.owner:
             return None
 
@@ -282,7 +282,7 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
 
     def update_members(
         self, request: HttpRequest, thread: Thread, member: "User"
-    ) -> ThreadUpdate | None:
+    ) -> ThreadEvent | None:
         if member == self.owner:
             return None
 
@@ -348,7 +348,7 @@ class PrivateThreadMembersHtmxResponse:
     thread: Thread
     owner: Optional["User"]
     members: list["User"]
-    thread_updates: Optional[list[ThreadUpdate]]
+    thread_updates: Optional[list[ThreadEvent]]
 
     def __init__(
         self,
@@ -363,7 +363,7 @@ class PrivateThreadMembersHtmxResponse:
         self.members = members
         self.thread_updates = None
 
-    def set_thread_updates(self, thread_updates: list[ThreadUpdate]):
+    def set_thread_updates(self, thread_updates: list[ThreadEvent]):
         self.thread_updates = thread_updates
 
     def get_context(self):

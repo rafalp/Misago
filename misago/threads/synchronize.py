@@ -2,7 +2,7 @@ from django.http import HttpRequest
 
 from ..core.utils import slugify
 from ..polls.models import Poll
-from ..threadupdates.models import ThreadUpdate
+from ..threadevents.models import ThreadEvent
 from .hooks import synchronize_thread_hook
 from .models import Post, Thread
 
@@ -20,7 +20,7 @@ def _synchronize_thread_action(
 
     thread.replies = max(0, posts.exclude(is_unapproved=True).count() - 1)
 
-    thread.has_updates = ThreadUpdate.objects.filter(thread=thread).exists()
+    thread.has_updates = ThreadEvent.objects.filter(thread=thread).exists()
     thread.has_poll = Poll.objects.filter(thread=thread).exists()
 
     thread.has_reported_posts = False

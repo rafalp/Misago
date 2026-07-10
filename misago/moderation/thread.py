@@ -10,6 +10,21 @@ from ..notifications.tasks import (
 )
 from ..permissions.proxy import UserPermissionsProxy
 from ..privatethreads.members import prefetch_private_thread_member_ids
+from ..threadevents.create import (
+    create_approved_thread_update,
+    create_hidden_thread_update,
+    create_locked_thread_update,
+    create_merged_thread_update,
+    create_moved_thread_update,
+    create_pinned_category_thread_update,
+    create_pinned_everywhere_thread_update,
+    create_removed_reply_approval_thread_update,
+    create_required_reply_approval_thread_update,
+    create_unhidden_thread_update,
+    create_unlocked_thread_update,
+    create_unpinned_thread_update,
+)
+from ..threadevents.threadflag import set_thread_has_updates
 from ..threads.approve import (
     approve_thread,
     remove_thread_reply_approval,
@@ -24,21 +39,6 @@ from ..threads.models import Thread
 from ..threads.move import move_thread
 from ..threads.pin import pin_thread, unpin_thread
 from ..threads.synchronize import synchronize_thread
-from ..threadupdates.create import (
-    create_approved_thread_update,
-    create_hidden_thread_update,
-    create_locked_thread_update,
-    create_merged_thread_update,
-    create_moved_thread_update,
-    create_pinned_category_thread_update,
-    create_pinned_everywhere_thread_update,
-    create_removed_reply_approval_thread_update,
-    create_required_reply_approval_thread_update,
-    create_unhidden_thread_update,
-    create_unlocked_thread_update,
-    create_unpinned_thread_update,
-)
-from ..threadupdates.threadflag import set_thread_has_updates
 from .actions import (
     ConfirmMixin,
     FormMixin,

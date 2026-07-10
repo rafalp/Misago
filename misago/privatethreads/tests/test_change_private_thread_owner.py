@@ -1,4 +1,4 @@
-from ...threadupdates.enums import ThreadUpdateActionName
+from ...threadevents.enums import ThreadUpdateActionName
 from ..members import change_private_thread_owner, get_private_thread_members
 
 

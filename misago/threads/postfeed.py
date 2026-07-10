@@ -27,8 +27,8 @@ from ..permissions.threads import (
     check_reply_thread_permission,
 )
 from ..solutions.validators import is_valid_thread_solution
-from ..threadupdates.actions import thread_updates_renderer
-from ..threadupdates.models import ThreadUpdate
+from ..threadevents.actions import thread_updates_renderer
+from ..threadevents.models import ThreadEvent
 from .hooks import (
     populate_post_feed_data_hook,
 )
@@ -66,7 +66,7 @@ class PostFeed:
     thread: Thread
     thread: Thread
     posts: list[Post]
-    updates: list[ThreadUpdate]
+    updates: list[ThreadEvent]
 
     animate_posts: set[int]
     animate_thread_updates: set[int]
@@ -84,7 +84,7 @@ class PostFeed:
         request: HttpRequest,
         thread: Thread,
         posts: list[Post] | None = None,
-        thread_updates: list[ThreadUpdate] | None = None,
+        thread_updates: list[ThreadEvent] | None = None,
     ):
         self.request = request
         self.user_permissions = request.user_permissions
@@ -283,7 +283,7 @@ class PostFeed:
     def get_post_unlike_url(self, post: Post) -> str | None:
         return None
 
-    def get_thread_update_data(self, thread_update: ThreadUpdate) -> dict:
+    def get_thread_update_data(self, thread_update: ThreadEvent) -> dict:
         hide_url: str | None = None
         unhide_url: str | None = None
         delete_url: str | None = None
@@ -313,13 +313,13 @@ class PostFeed:
             "moderation": self.moderation,
         }
 
-    def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+    def get_hide_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
         return None
 
-    def get_unhide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+    def get_unhide_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
         return None
 
-    def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+    def get_delete_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
         return None
 
     def populate_post_feed_data(self, feed: list[dict], prefetched_data: dict) -> None:
@@ -524,7 +524,7 @@ class PostFeed:
         return {"template_name": self.post_unapproved_status_bar_template_name}
 
     def populate_thread_update_data(
-        self, item: dict, thread_update: ThreadUpdate, prefetched_data: dict
+        self, item: dict, thread_update: ThreadEvent, prefetched_data: dict
     ) -> None:
         if thread_update.actor_id:
             thread_update.actor = prefetched_data["users"].get(thread_update.actor_id)
@@ -665,7 +665,7 @@ class ThreadPostFeed(PostFeed):
             },
         )
 
-    def get_hide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+    def get_hide_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
         return reverse(
             "misago:thread-update-hide",
             kwargs={
@@ -675,7 +675,7 @@ class ThreadPostFeed(PostFeed):
             },
         )
 
-    def get_unhide_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+    def get_unhide_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
         return reverse(
             "misago:thread-update-unhide",
             kwargs={
@@ -685,7 +685,7 @@ class ThreadPostFeed(PostFeed):
             },
         )
 
-    def get_delete_thread_update_url(self, thread_update: ThreadUpdate) -> str | None:
+    def get_delete_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
         return reverse(
             "misago:thread-update-delete",
             kwargs={

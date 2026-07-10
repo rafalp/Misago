@@ -9,6 +9,13 @@ from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import notify_on_new_thread_reply
 from ..permissions.proxy import UserPermissionsProxy
 from ..postedits.create import create_post_edit
+from ..threadevents.create import (
+    create_deleted_posts_thread_update,
+    create_moved_posts_from_thread_update,
+    create_moved_posts_to_thread_update,
+    create_split_posts_from_thread_update,
+    create_split_posts_into_thread_update,
+)
 from ..threads.approve import approve_post
 from ..threads.create import create_thread
 from ..threads.delete import delete_post
@@ -18,13 +25,6 @@ from ..threads.merge import get_post_merge_conflicts, merge_posts
 from ..threads.models import Post, Thread
 from ..threads.move import move_post
 from ..threads.synchronize import synchronize_thread
-from ..threadupdates.create import (
-    create_deleted_posts_thread_update,
-    create_moved_posts_from_thread_update,
-    create_moved_posts_to_thread_update,
-    create_split_posts_from_thread_update,
-    create_split_posts_into_thread_update,
-)
 from .actions import (
     ConfirmMixin,
     FormMixin,

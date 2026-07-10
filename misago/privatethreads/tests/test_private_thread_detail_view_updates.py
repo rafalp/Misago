@@ -4,7 +4,7 @@ from ...conf.test import override_dynamic_settings
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains, assert_not_contains
-from ...threadupdates.create import (
+from ...threadevents.create import (
     create_added_member_thread_update,
     create_moved_thread_update,
     create_split_posts_from_thread_update,

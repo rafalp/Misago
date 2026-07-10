@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from ...solutions.lock import lock_thread_solution
 from ...solutions.select import select_thread_solution
-from ...threadupdates.create import create_test_thread_update
+from ...threadevents.create import create_test_thread_update
 from ..synchronize import synchronize_thread
 
 

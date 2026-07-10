@@ -3,14 +3,14 @@ from typing import TYPE_CHECKING, Iterable, Optional, Union
 from django.db import transaction
 from django.http import HttpRequest
 
-from ..threads.models import Thread
-from ..threadupdates.create import (
+from ..threadevents.create import (
     create_changed_owner_thread_update,
     create_left_thread_update,
     create_removed_member_thread_update,
     create_took_ownership_thread_update,
 )
-from ..threadupdates.models import ThreadUpdate
+from ..threadevents.models import ThreadEvent
+from ..threads.models import Thread
 from .hooks import (
     change_private_thread_owner_hook,
     remove_private_thread_member_hook,
@@ -85,7 +85,7 @@ def change_private_thread_owner(
     thread: Thread,
     new_owner: "User",
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     return change_private_thread_owner_hook(
         _change_private_thread_owner_action, actor, thread, new_owner, request
     )
@@ -96,7 +96,7 @@ def _change_private_thread_owner_action(
     thread: Thread,
     new_owner: "User",
     request: HttpRequest | None = None,
-) -> ThreadUpdate:
+) -> ThreadEvent:
     with transaction.atomic():
         PrivateThreadMember.objects.filter(thread=thread).update(is_owner=False)
         PrivateThreadMember.objects.filter(thread=thread, user=new_owner).update(
@@ -114,7 +114,7 @@ def remove_private_thread_member(
     thread: Thread,
     member: "User",
     request: HttpRequest | None = None,
-) -> ThreadUpdate | None:
+) -> ThreadEvent | None:
     return remove_private_thread_member_hook(
         _remove_private_thread_member_action, actor, thread, member, request
     )
@@ -125,7 +125,7 @@ def _remove_private_thread_member_action(
     thread: Thread,
     member: "User",
     request: HttpRequest | None = None,
-) -> ThreadUpdate | None:
+) -> ThreadEvent | None:
     deleted, _ = PrivateThreadMember.objects.filter(thread=thread, user=member).delete()
 
     if not deleted:

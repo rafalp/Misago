@@ -15,11 +15,11 @@ from ..permissions.polls import (
     check_vote_in_thread_poll_permission,
 )
 from ..polls.models import Poll
+from ..threadevents.models import ThreadEvent
 from ..threads.models import Thread
 from ..threads.nexturl import get_next_thread_url
 from ..threads.postfeed import ThreadPostFeed
 from ..threads.views.generic import ThreadView
-from ..threadupdates.models import ThreadUpdate
 from .close import close_thread_poll, open_thread_poll
 from .delete import delete_thread_poll
 from .enums import PollTemplate, PublicPollsAvailability
@@ -323,7 +323,7 @@ class UpdateThreadPollView(ThreadPollView):
 
     def update(
         self, request: HttpRequest, thread: Thread, poll: Poll
-    ) -> ThreadUpdate | None:
+    ) -> ThreadEvent | None:
         raise NotADirectoryError()
 
 
@@ -335,7 +335,7 @@ class CloseThreadPollView(UpdateThreadPollView):
 
     def update(
         self, request: HttpRequest, thread: Thread, poll: Poll
-    ) -> ThreadUpdate | None:
+    ) -> ThreadEvent | None:
         thread_update = close_thread_poll(thread, poll, request.user, request)
         if thread_update:
             messages.success(request, pgettext("poll vote", "Poll closed"))
@@ -351,7 +351,7 @@ class OpenThreadPollView(UpdateThreadPollView):
 
     def update(
         self, request: HttpRequest, thread: Thread, poll: Poll
-    ) -> ThreadUpdate | None:
+    ) -> ThreadEvent | None:
         thread_update = open_thread_poll(thread, poll, request.user, request)
         if thread_update:
             messages.success(request, pgettext("poll vote", "Poll opened"))

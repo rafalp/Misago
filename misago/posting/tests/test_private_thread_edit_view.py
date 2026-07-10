@@ -15,8 +15,8 @@ from ...test import (
     assert_not_contains,
     assert_not_contains_element,
 )
-from ...threadupdates.enums import ThreadUpdateActionName
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.models import ThreadEvent
 from ..forms import PostForm
 from ..formsets import Formset
 
@@ -390,7 +390,7 @@ def test_private_thread_edit_view_creates_changed_title_update_object(
     )
     assert response.status_code == 302
 
-    ThreadUpdate.objects.get(
+    ThreadEvent.objects.get(
         category=user_private_thread.category,
         thread=user_private_thread,
         actor=user,
@@ -420,7 +420,7 @@ def test_private_thread_edit_view_doesnt_create_changed_title_update_object_if_t
     )
     assert response.status_code == 302
 
-    assert not ThreadUpdate.objects.exists()
+    assert not ThreadEvent.objects.exists()
 
 
 def test_private_thread_edit_view_previews_message(user_client, user_private_thread):

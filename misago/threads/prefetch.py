@@ -19,7 +19,7 @@ from ..permissions.generic import (
 )
 from ..permissions.proxy import UserPermissionsProxy
 from ..privatethreads.members import prefetch_private_thread_member_ids
-from ..threadupdates.models import ThreadUpdate
+from ..threadevents.models import ThreadEvent
 from ..users.models import Group
 from .hooks import create_prefetch_post_feed_data_hook
 from .models import Post, Thread
@@ -42,7 +42,7 @@ def prefetch_post_feed_data(
     *,
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
-    thread_updates: Iterable[ThreadUpdate] | None = None,
+    thread_updates: Iterable[ThreadEvent] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> dict:
@@ -67,7 +67,7 @@ def _create_prefetch_post_feed_data_action(
     *,
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
-    thread_updates: Iterable[ThreadUpdate] | None = None,
+    thread_updates: Iterable[ThreadEvent] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> "PrefetchPostFeedData":
@@ -122,7 +122,7 @@ class PrefetchPostFeedData:
     categories: list[Category]
     threads: list[Thread]
     posts: list[Post]
-    thread_updates: list[ThreadUpdate]
+    thread_updates: list[ThreadEvent]
     attachments: list[Attachment]
     users: list["User"]
     extra_kwargs: dict
@@ -135,7 +135,7 @@ class PrefetchPostFeedData:
         posts: Iterable[Post],
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
-        thread_updates: Iterable[ThreadUpdate] | None = None,
+        thread_updates: Iterable[ThreadEvent] | None = None,
         attachments: Iterable[Attachment] | None = None,
         users: Iterable["User"] | None = None,
         **kwargs,

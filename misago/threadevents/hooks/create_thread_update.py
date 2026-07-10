@@ -157,8 +157,8 @@ class CreateThreadUpdateHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.threadupdates.hooks import create_thread_update_hook
-    from misago.threadupdates.models import ThreadUpdate
+    from misago.threadevents.hooks import create_thread_update_hook
+    from misago.threadevents.models import ThreadEvent
 
 
     @create_thread_update_hook.append_filter

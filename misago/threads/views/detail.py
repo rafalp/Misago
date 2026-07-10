@@ -52,7 +52,7 @@ from ...readtracker.tracker import (
     mark_category_read,
     mark_thread_read,
 )
-from ...threadupdates.models import ThreadUpdate
+from ...threadevents.models import ThreadEvent
 from ..breadcrumbs import get_thread_breadcrumbs
 from ..hooks import (
     get_thread_detail_view_context_data_hook,
@@ -719,7 +719,7 @@ class DetailView(GenericThreadView):
         thread: Thread,
         page: ThreadPostsPaginator,
         posts: list[Post],
-    ) -> list[ThreadUpdate]:
+    ) -> list[ThreadEvent]:
         queryset = self.get_thread_updates_queryset(request, thread)
         if page.number > 1:
             queryset = queryset.filter(created_at__gt=posts[0].posted_at)
