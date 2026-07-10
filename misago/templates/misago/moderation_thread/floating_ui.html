@@ -62,18 +62,4 @@
     </div>
   </div>
 </div>
-<script type="text/javascript">
-  const moderation = misago.bulkModeration({
-    menu: ".fixed-moderation",
-    form: "#posts-moderation",
-    field: "posts_moderation",
-    modal: "#moderation-modal",
-    actions: ".fixed-moderation ul button",
-    selection: ".post-feed-item-checkbox input:checked",
-    button: {
-      selector: "#posts-moderation-menu",
-      text: pgettext("posts moderation", "Moderate posts (%(number)s)"),
-    }
-  })
-</script>
 {% endif %}

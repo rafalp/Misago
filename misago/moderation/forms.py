@@ -255,7 +255,7 @@ class MoveThreadsForm(forms.Form):
     def __init__(self, *args, request: HttpRequest, **kwargs):
         self.request = request
 
-        self.disallowed_categories = set(kwargs.pop("disallowed_categories") or [])
+        self.disallowed_categories = set(kwargs.pop("disallowed_categories", []))
         self.disallowed_categories.update(
             get_disallowed_category_choices(
                 request.user_permissions, request.categories

@@ -173,7 +173,7 @@ class PinEverywhereThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread pinned everywhere"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_update=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
 
 
 class PinCategoryThreadModerationAction(ThreadModerationAction):
@@ -196,7 +196,7 @@ class PinCategoryThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread pinned in category"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_update=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
 
 
 class UnpinThreadModerationAction(ThreadModerationAction):
@@ -219,7 +219,7 @@ class UnpinThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread unpinned"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_update=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
 
 
 class LockThreadModerationAction(ThreadModerationAction):
@@ -242,7 +242,7 @@ class LockThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread locked"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_update=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
 
 
 class UnlockThreadModerationAction(ThreadModerationAction):
@@ -265,7 +265,7 @@ class UnlockThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread unlocked"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_update=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
 
 
 class HideThreadModerationAction(FormMixin, ThreadModerationAction):
@@ -296,7 +296,7 @@ class HideThreadModerationAction(FormMixin, ThreadModerationAction):
             pgettext("thread moderation success", "Thread hidden"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_update=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
 
 
 class UnhideThreadModerationAction(ThreadModerationAction):
@@ -321,7 +321,7 @@ class UnhideThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread unhidden"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_update=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
 
 
 class ApproveThreadModerationAction(ThreadModerationAction):
@@ -348,7 +348,7 @@ class ApproveThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread approved"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_update=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
 
     def send_notifications(self):
         pass
@@ -388,7 +388,7 @@ class RequireThreadReplyApprovalModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Reply approval required"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_update=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
 
 
 class RemoveThreadReplyApprovalModerationAction(ThreadModerationAction):
@@ -413,7 +413,7 @@ class RemoveThreadReplyApprovalModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Reply approval removed"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_update=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
 
 
 class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
@@ -458,7 +458,7 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
             pgettext("thread moderation success", "Thread moved"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_update=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
 
 
 class MergeThreadModerationAction(FormMixin, ThreadModerationAction):

@@ -340,7 +340,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
             return ModerationResult(redirect_to=self.get_thread_url(new_thread))
 
         return ModerationResult(
-            deleted_items=[posts],
+            deleted_items=posts,
             thread_updates=[thread_update],
         )
 
@@ -416,7 +416,7 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
             return ModerationResult(redirect_to=self.get_thread_url(target_thread))
 
         return ModerationResult(
-            deleted_items=[posts],
+            deleted_items=posts,
             thread_updates=[thread_update],
         )
 
@@ -526,7 +526,7 @@ class MergePostsModerationAction(FormMixin, PostsModerationAction):
 
         return ModerationResult(
             updated_items=[target],
-            deleted_items=[posts],
+            deleted_items=posts,
         )
 
 
@@ -570,6 +570,6 @@ class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
         )
 
         return ModerationResult(
-            deleted_items=[posts],
+            deleted_items=posts,
             thread_updates=[thread_update],
         )

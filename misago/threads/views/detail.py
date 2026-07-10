@@ -202,7 +202,9 @@ class DetailView(GenericThreadView):
             context_data["thread_updates"] = post_feed.get_context_data()["items"]
 
         response = render(request, self.moderation_result_template_name, context_data)
-        set_moderation_response_headers(request, response)
+        set_moderation_response_headers(
+            request, response, "misago:afterThreadModeration"
+        )
 
         return response
 
@@ -282,7 +284,12 @@ class DetailView(GenericThreadView):
         ]
 
         response = render(request, self.moderation_result_template_name, context_data)
-        set_moderation_response_headers(request, response)
+        set_moderation_response_headers(
+            request,
+            response,
+            "misago:afterPostsModeration",
+            self.get_moderation_event_context(result),
+        )
 
         return response
 
@@ -357,7 +364,6 @@ class DetailView(GenericThreadView):
             request, thread, result.updated_items, result.thread_updates
         )
         post_feed.set_animated_posts(updated_post_ids)
-        post_feed.set_selected_posts(updated_post_ids)
         post_feed_data = post_feed.get_feed_data()
 
         context_data = self.get_moderation_result_data(request, thread)
@@ -369,7 +375,12 @@ class DetailView(GenericThreadView):
         ]
 
         response = render(request, self.moderation_result_template_name, context_data)
-        set_moderation_response_headers(request, response)
+        set_moderation_response_headers(
+            request,
+            response,
+            "misago:afterPostModeration",
+            self.get_moderation_event_context(result),
+        )
 
         return response
 
@@ -484,6 +495,16 @@ class DetailView(GenericThreadView):
             "status_bars": self.get_thread_status_bars(request, thread),
             "extra_components": [],
         }
+
+    def get_moderation_event_context(self, result: ModerationResult) -> dict:
+        event_context = {}
+
+        if result.updated_items:
+            event_context["updated"] = [item.id for item in result.updated_items]
+        if result.deleted_items:
+            event_context["deleted"] = [item.id for item in result.deleted_items]
+
+        return event_context
 
     # Context data
 

@@ -298,45 +298,6 @@ def test_category_thread_list_view_executes_moderation_action_with_confirmation_
         thread.refresh_from_db()
 
 
-def test_category_thread_list_view_moderation_doesnt_set_htmx_trigger_header_on_success(
-    thread_factory, moderator_client, default_category
-):
-    thread = thread_factory(default_category)
-
-    response = moderator_client.post(
-        default_category.get_absolute_url(),
-        {
-            "moderation": "lock",
-            "threads": [thread.id],
-        },
-    )
-    assert response.status_code == 302
-    assert "hx-trigger" not in response
-
-    thread.refresh_from_db()
-    assert thread.is_locked
-
-
-def test_category_thread_list_view_moderation_sets_htmx_trigger_header_on_success_in_htmx(
-    thread_factory, moderator_client, default_category
-):
-    thread = thread_factory(default_category)
-
-    response = moderator_client.post(
-        default_category.get_absolute_url(),
-        {
-            "moderation": "lock",
-            "threads": [thread.id],
-        },
-        headers={"hx-request": "true"},
-    )
-    assert response.status_code == 200
-    assert response["hx-trigger"] == "misago:afterModeration"
-
-    thread.refresh_from_db()
-    assert thread.is_locked
-
-
 def test_category_thread_list_view_moderation_doesnt_set_htmx_retarget_header_on_success(
     thread_factory, moderator_client, default_category
 ):
@@ -417,6 +378,70 @@ def test_category_thread_list_view_moderation_sets_htmx_reswap_header_on_success
 
     thread.refresh_from_db()
     assert thread.is_locked
+
+
+def test_category_thread_list_view_moderation_doesnt_set_htmx_trigger_header_on_success(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "lock",
+            "threads": [thread.id],
+        },
+    )
+    assert response.status_code == 302
+    assert "hx-trigger-after-settke" not in response
+
+    thread.refresh_from_db()
+    assert thread.is_locked
+
+
+def test_category_thread_list_view_moderation_sets_htmx_trigger_header_on_success_after_update_in_htmx(
+    thread_factory, moderator_client, default_category
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "lock",
+            "threads": [thread.id],
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 200
+    assert response["hx-trigger-after-settle"] == (
+        '{"misago:afterThreadsModeration": {"updated": [%s]}}' % thread.id
+    )
+
+    thread.refresh_from_db()
+    assert thread.is_locked
+
+
+def test_category_thread_list_view_moderation_sets_htmx_trigger_header_on_success_after_delete_in_htmx(
+    thread_factory, moderator_client, default_category, mock_synchronize_categories
+):
+    thread = thread_factory(default_category)
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "delete",
+            "threads": [thread.id],
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert response.status_code == 200
+    assert response["hx-trigger-after-settle"] == (
+        '{"misago:afterThreadsModeration": {"deleted": [%s]}}' % thread.id
+    )
+
+    with pytest.raises(Thread.DoesNotExist):
+        thread.refresh_from_db()
 
 
 def test_category_thread_list_view_moderation_doesnt_set_htmx_headers_on_template_response_in_htmx(

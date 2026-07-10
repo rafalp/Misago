@@ -79,7 +79,10 @@ class BulkModeration {
         values: data,
       })
     } else {
-      htmx.ajax("POST", document.location.href, { swap: "none", values: data })
+      htmx.ajax("POST", document.location.href, {
+        swap: "none",
+        values: data,
+      })
     }
   }
 

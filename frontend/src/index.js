@@ -47,7 +47,6 @@ export class Misago {
     this.lightbox = lightbox
     this.quote = quote
     this.feed = new Feed()
-
     this.deleteElement = deleteElement
     this.slideUpElement = slideUpElement
 
@@ -157,14 +156,14 @@ const HIDE_MODERATION_MODAL_EVENTS = [
   "misago:afterThreadsModeration",
 ]
 
-HIDE_MODERATION_MODAL_EVENTS.forEach(function (event) {
-  document.addEventListener(event, (e) => {
+HIDE_MODERATION_MODAL_EVENTS.forEach(function (eventName) {
+  document.addEventListener(eventName, function () {
     $("#moderation-modal").modal("hide")
   })
 })
 
 // Hide memebers update modal
-document.addEventListener("misago:afterUpdateMembers", () => {
+document.addEventListener("misago:afterUpdateMembers", function () {
   $("#add-members-modal").modal("hide")
 })
 
