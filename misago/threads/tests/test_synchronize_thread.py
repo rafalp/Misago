@@ -21,29 +21,29 @@ def test_synchronize_thread_updates_thread_replies(thread_reply_factory, thread)
     assert thread.replies == 2
 
 
-def test_synchronize_thread_sets_has_updates_flag(thread):
-    assert not thread.has_updates
+def test_synchronize_thread_sets_has_events_flag(thread):
+    assert not thread.has_events
 
     create_test_thread_update(thread, "Actor")
 
     synchronize_thread(thread)
 
-    assert thread.has_updates
+    assert thread.has_events
 
     thread.refresh_from_db()
-    assert thread.has_updates
+    assert thread.has_events
 
 
-def test_synchronize_thread_removes_has_updates_flag(thread):
-    thread.has_updates = True
+def test_synchronize_thread_removes_has_events_flag(thread):
+    thread.has_events = True
     thread.save()
 
     synchronize_thread(thread)
 
-    assert not thread.has_updates
+    assert not thread.has_events
 
     thread.refresh_from_db()
-    assert not thread.has_updates
+    assert not thread.has_events
 
 
 def test_synchronize_thread_sets_has_poll_flag(poll_factory, thread):

@@ -79,7 +79,7 @@ def test_private_thread_member_remove_view_removes_thread_member(
     )
 
     user_private_thread.refresh_from_db()
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
 
 def test_private_thread_member_remove_view_removes_thread_member_for_moderator(
@@ -115,7 +115,7 @@ def test_private_thread_member_remove_view_removes_thread_member_for_moderator(
     )
 
     user_private_thread.refresh_from_db()
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
 
 def test_private_thread_member_remove_view_returns_redirect_to_next_url(
@@ -390,7 +390,7 @@ def test_private_thread_member_remove_view_removes_member_for_moderator_if_threa
     )
 
     user_private_thread.refresh_from_db()
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
 
 def test_private_thread_member_remove_view_returns_403_if_member_cant_be_removed(

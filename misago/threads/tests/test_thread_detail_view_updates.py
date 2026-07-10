@@ -71,7 +71,7 @@ def test_thread_detail_view_shows_thread_update_to_anonymous_user_if_thread_flag
 ):
     thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(
@@ -86,7 +86,7 @@ def test_thread_detail_view_shows_thread_update_to_user_if_thread_flag_is_set(
 ):
     thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = user_client.get(
@@ -107,7 +107,7 @@ def test_thread_detail_view_shows_thread_update_to_category_moderator_if_thread_
 
     thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = user_client.get(
@@ -122,7 +122,7 @@ def test_thread_detail_view_shows_thread_update_to_global_moderator_if_thread_fl
 ):
     thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = moderator_client.get(
@@ -137,7 +137,7 @@ def test_thread_detail_view_shows_deleted_user_thread_update_to_anonymous_user(
 ):
     thread_update = create_test_thread_update(thread, "DeletedUser")
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(
@@ -152,7 +152,7 @@ def test_thread_detail_view_shows_deleted_user_thread_update_to_user(
 ):
     thread_update = create_test_thread_update(thread, "DeletedUser")
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = user_client.get(
@@ -173,7 +173,7 @@ def test_thread_detail_view_shows_deleted_user_thread_update_to_category_moderat
 
     thread_update = create_test_thread_update(thread, "DeletedUser")
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = user_client.get(
@@ -188,7 +188,7 @@ def test_thread_detail_view_shows_deleted_user_thread_update_to_global_moderator
 ):
     thread_update = create_test_thread_update(thread, "DeletedUser")
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = moderator_client.get(
@@ -205,7 +205,7 @@ def test_thread_detail_view_doesnt_show_hidden_thread_update_to_anonymous_user(
     thread_update.is_hidden = True
     thread_update.save()
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(
@@ -222,7 +222,7 @@ def test_thread_detail_view_doesnt_show_hidden_thread_update_to_user(
     thread_update.is_hidden = True
     thread_update.save()
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = user_client.get(
@@ -245,7 +245,7 @@ def test_thread_detail_view_shows_hidden_thread_update_to_category_moderator(
     thread_update.is_hidden = True
     thread_update.save()
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = user_client.get(
@@ -262,7 +262,7 @@ def test_thread_detail_view_shows_hidden_thread_update_to_global_moderator(
     thread_update.is_hidden = True
     thread_update.save()
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = moderator_client.get(
@@ -277,7 +277,7 @@ def test_thread_detail_view_doesnt_show_hide_thread_update_button_to_anonymous_u
 ):
     thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(
@@ -303,7 +303,7 @@ def test_thread_detail_view_doesnt_show_hide_thread_update_button_to_user(
 ):
     thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = user_client.get(
@@ -335,7 +335,7 @@ def test_thread_detail_view_shows_hide_thread_update_button_to_category_moderato
 
     thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = user_client.get(
@@ -361,7 +361,7 @@ def test_thread_detail_view_shows_hide_thread_update_button_to_global_moderator(
 ):
     thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = moderator_client.get(
@@ -395,7 +395,7 @@ def test_thread_detail_view_shows_unhide_thread_update_button_to_category_modera
     thread_update.is_hidden = True
     thread_update.save()
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = user_client.get(
@@ -423,7 +423,7 @@ def test_thread_detail_view_shows_unhide_thread_update_button_to_global_moderato
     thread_update.is_hidden = True
     thread_update.save()
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = moderator_client.get(
@@ -449,7 +449,7 @@ def test_thread_detail_view_doesnt_show_delete_thread_update_button_to_anonymous
 ):
     thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(
@@ -475,7 +475,7 @@ def test_thread_detail_view_doesnt_show_delete_thread_update_button_to_user(
 ):
     thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = user_client.get(
@@ -507,7 +507,7 @@ def test_thread_detail_view_shows_delete_thread_update_button_to_category_modera
 
     thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = user_client.get(
@@ -533,7 +533,7 @@ def test_thread_detail_view_shows_delete_thread_update_button_to_global_moderato
 ):
     thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = moderator_client.get(
@@ -567,7 +567,7 @@ def test_thread_detail_view_shows_thread_updates_on_first_page(
 
     last_page_thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(
@@ -599,7 +599,7 @@ def test_thread_detail_view_shows_thread_updates_on_second_page(
 
     last_page_thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(
@@ -630,7 +630,7 @@ def test_thread_detail_view_shows_thread_updates_on_last_page(
 
     last_page_thread_update = create_test_thread_update(thread, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(
@@ -650,7 +650,7 @@ def test_thread_detail_view_limits_displayed_thread_updates_count(client, user, 
     for _ in range(5):
         thread_updates.append(create_test_thread_update(thread, user))
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(
@@ -678,7 +678,7 @@ def test_thread_detail_view_displays_thread_update_with_other_category_context(
 
     create_moved_thread_update(thread, other_category, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(
@@ -696,7 +696,7 @@ def test_thread_detail_view_displays_thread_update_with_inaccessible_other_categ
 
     create_moved_thread_update(thread, other_category, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(
@@ -712,7 +712,7 @@ def test_thread_detail_view_displays_thread_update_with_other_thread_context(
 ):
     create_split_posts_from_thread_update(thread, other_thread, actor=user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(
@@ -734,7 +734,7 @@ def test_thread_detail_view_displays_thread_update_with_inaccessible_other_threa
 ):
     create_split_posts_from_thread_update(thread, other_thread, actor=user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     other_thread.is_hidden = True
@@ -759,7 +759,7 @@ def test_thread_detail_view_displays_thread_update_with_user_context(
 ):
     create_added_member_thread_update(thread, other_user, user)
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = client.get(

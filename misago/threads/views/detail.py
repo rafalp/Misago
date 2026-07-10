@@ -666,7 +666,7 @@ class DetailView(GenericThreadView):
         page_obj = self.get_posts_page(request, thread, page)
         posts = list(page_obj.object_list)
 
-        if thread.has_updates:
+        if thread.has_events:
             thread_updates = self.get_thread_updates(request, thread, page_obj, posts)
         else:
             thread_updates = []

@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("misago_threads", "0038_thread_hidden"),
+        ("misago_threads", "0037_thread_hidden"),
     ]
 
     operations = [

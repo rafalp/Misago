@@ -42,7 +42,7 @@ def test_save_thread_poll_updates_thread_poll_flag(user, thread):
     assert thread.has_poll
 
 
-def test_save_thread_poll_creates_thread_update(user, thread):
+def test_save_thread_poll_creates_thread_event(user, thread):
     poll = Poll(
         category=thread.category,
         thread=thread,
@@ -58,4 +58,4 @@ def test_save_thread_poll_creates_thread_update(user, thread):
     ThreadEvent.objects.get(thread=thread, action=ThreadUpdateActionName.STARTED_POLL)
 
     thread.refresh_from_db()
-    assert thread.has_updates
+    assert thread.has_events

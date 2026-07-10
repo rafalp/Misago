@@ -43,7 +43,7 @@ def _save_thread_poll_action(
 ) -> ThreadEvent:
     poll.save()
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.has_poll = True
     thread.save()
 

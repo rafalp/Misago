@@ -227,7 +227,7 @@ def test_thread_update_delete_view_deletes_update_for_global_moderator(
 def test_thread_update_delete_view_unsets_thread_has_updates_flag_for_last_update_deleted(
     moderator_client, thread, thread_update
 ):
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     response = moderator_client.post(
@@ -245,7 +245,7 @@ def test_thread_update_delete_view_unsets_thread_has_updates_flag_for_last_updat
     assert response.status_code == 302
 
     thread.refresh_from_db()
-    assert not thread.has_updates
+    assert not thread.has_events
 
     with pytest.raises(ThreadEvent.DoesNotExist):
         thread_update.refresh_from_db()
@@ -254,7 +254,7 @@ def test_thread_update_delete_view_unsets_thread_has_updates_flag_for_last_updat
 def test_thread_update_delete_view_keeps_thread_has_updates_flag_if_other_updates_exist(
     moderator_client, thread, thread_update
 ):
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     create_test_thread_update(thread, "DeletedUser")
@@ -274,7 +274,7 @@ def test_thread_update_delete_view_keeps_thread_has_updates_flag_if_other_update
     assert response.status_code == 302
 
     thread.refresh_from_db()
-    assert thread.has_updates
+    assert thread.has_events
 
     with pytest.raises(ThreadEvent.DoesNotExist):
         thread_update.refresh_from_db()

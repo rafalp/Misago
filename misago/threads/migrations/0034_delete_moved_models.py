@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
         ("misago_polls", "0002_move_data"),
         ("misago_postedits", "0002_move_data"),
         ("misago_privatethreads", "0002_move_data"),
-        ("misago_threads", "0034_rename_is_protected_is_closed_to_is_locked"),
+        ("misago_threads", "0033_rename_is_protected_is_closed_to_is_locked"),
     ]
 
     operations = [

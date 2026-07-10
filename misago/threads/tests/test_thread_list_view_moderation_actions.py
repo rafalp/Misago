@@ -39,7 +39,7 @@ def test_thread_list_view_pin_everywhere_threads_moderation_action_pins_unpinned
 
     thread.refresh_from_db()
     assert thread.pinned == ThreadPinned.EVERYWHERE
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -62,7 +62,7 @@ def test_thread_list_view_pin_everywhere_threads_moderation_action_pins_pinned_c
 
     thread.refresh_from_db()
     assert thread.pinned == ThreadPinned.EVERYWHERE
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -100,7 +100,7 @@ def test_thread_list_view_pin_category_threads_moderation_action_pins_unpinned_t
 
     thread.refresh_from_db()
     assert thread.pinned == ThreadPinned.CATEGORY
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -123,7 +123,7 @@ def test_thread_list_view_pin_category_threads_moderation_action_pins_pinned_eve
 
     thread.refresh_from_db()
     assert thread.pinned == ThreadPinned.CATEGORY
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -161,7 +161,7 @@ def test_thread_list_view_unpin_threads_moderation_action_unpins_pinned_everywhe
 
     thread.refresh_from_db()
     assert thread.pinned == ThreadPinned.NONE
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -184,7 +184,7 @@ def test_thread_list_view_unpin_threads_moderation_action_unpins_pinned_category
 
     thread.refresh_from_db()
     assert thread.pinned == ThreadPinned.NONE
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -221,7 +221,7 @@ def test_thread_list_view_lock_moderation_action_locks_threads(
 
     thread.refresh_from_db()
     assert thread.is_locked
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -259,7 +259,7 @@ def test_thread_list_view_unlock_moderation_action_unlocks_threads(
 
     thread.refresh_from_db()
     assert not thread.is_locked
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -318,7 +318,7 @@ def test_thread_list_view_hide_moderation_action_hides_threads(
     assert thread.hidden_by_name == moderator.username
     assert thread.hidden_by_slug == moderator.slug
     assert thread.hidden_reason == "Lorem ipsum"
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -365,7 +365,7 @@ def test_thread_list_view_unhide_moderation_action_unhides_threads(
     assert thread.hidden_by_name is None
     assert thread.hidden_by_slug is None
     assert thread.hidden_reason is None
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -407,7 +407,7 @@ def test_thread_list_view_approve_moderation_action_approves_threads(
 
     thread.refresh_from_db()
     assert not thread.is_unapproved
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -449,7 +449,7 @@ def test_thread_list_view_require_reply_approval_moderation_action_requires_thre
 
     thread.refresh_from_db()
     assert thread.require_reply_approval
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -487,7 +487,7 @@ def test_thread_list_view_remove_reply_approval_moderation_action_removes_thread
 
     thread.refresh_from_db()
     assert not thread.require_reply_approval
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -549,7 +549,7 @@ def test_thread_list_view_move_moderation_action_moves_threads(
 
     thread.refresh_from_db()
     assert thread.category == sibling_category
-    assert thread.has_updates
+    assert thread.has_events
 
     ThreadEvent.objects.get(
         thread=thread,
@@ -585,7 +585,7 @@ def test_thread_list_view_move_moderation_action_requires_category(
 
     thread.refresh_from_db()
     assert thread.category == default_category
-    assert not thread.has_updates
+    assert not thread.has_events
 
     assert not ThreadEvent.objects.exists()
 
@@ -617,7 +617,7 @@ def test_thread_list_view_move_moderation_action_validates_category_value(
 
     thread.refresh_from_db()
     assert thread.category == default_category
-    assert not thread.has_updates
+    assert not thread.has_events
 
     assert not ThreadEvent.objects.exists()
 
@@ -660,7 +660,7 @@ def test_thread_list_view_move_moderation_action_validates_category_browse_permi
 
     thread.refresh_from_db()
     assert thread.category == default_category
-    assert not thread.has_updates
+    assert not thread.has_events
 
     assert not ThreadEvent.objects.exists()
 
@@ -711,7 +711,7 @@ def test_thread_list_view_move_moderation_action_validates_category_moderator_pe
 
     thread.refresh_from_db()
     assert thread.category == default_category
-    assert not thread.has_updates
+    assert not thread.has_events
 
     assert not ThreadEvent.objects.exists()
 
@@ -759,7 +759,7 @@ def test_thread_list_view_move_moderation_action_validates_category_type(
 
     thread.refresh_from_db()
     assert thread.category == default_category
-    assert not thread.has_updates
+    assert not thread.has_events
 
     assert not ThreadEvent.objects.exists()
 
@@ -791,7 +791,7 @@ def test_thread_list_view_move_moderation_action_validates_category_is_new(
 
     thread.refresh_from_db()
     assert thread.category == default_category
-    assert not thread.has_updates
+    assert not thread.has_events
 
     assert not ThreadEvent.objects.exists()
 

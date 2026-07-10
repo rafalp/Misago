@@ -13,19 +13,19 @@ def test_open_thread_poll_opens_poll(thread, closed_poll, user):
     assert not closed_poll.closed_by_slug
 
 
-def test_open_thread_poll_creates_thread_update(thread, closed_poll, user):
-    thread_update = open_thread_poll(thread, closed_poll, user)
+def test_open_thread_poll_creates_thread_event(thread, closed_poll, user):
+    thread_event = open_thread_poll(thread, closed_poll, user)
 
-    assert thread_update
-    assert thread_update.action == ThreadUpdateActionName.OPENED_POLL
-    assert thread_update.thread == thread
-    assert thread_update.actor == user
+    assert thread_event
+    assert thread_event.action == ThreadUpdateActionName.OPENED_POLL
+    assert thread_event.thread == thread
+    assert thread_event.actor == user
 
     thread.refresh_from_db()
-    assert thread.has_updates
+    assert thread.has_events
 
 
-def test_open_thread_poll_doesnt_create_thread_update_if_poll_is_already_open(
+def test_open_thread_poll_doesnt_create_thread_event_if_poll_is_already_open(
     thread, poll, user
 ):
     assert not open_thread_poll(thread, poll, user)

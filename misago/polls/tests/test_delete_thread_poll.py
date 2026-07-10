@@ -21,13 +21,13 @@ def test_delete_thread_poll_updates_thread(thread, poll, user):
     assert not thread.has_poll
 
 
-def test_delete_thread_poll_creates_thread_update(thread, poll, user):
-    thread_update = delete_thread_poll(thread, poll, user)
+def test_delete_thread_poll_creates_thread_event(thread, poll, user):
+    thread_event = delete_thread_poll(thread, poll, user)
 
-    assert thread_update
-    assert thread_update.action == ThreadUpdateActionName.DELETED_POLL
-    assert thread_update.thread == thread
-    assert thread_update.actor == user
+    assert thread_event
+    assert thread_event.action == ThreadUpdateActionName.DELETED_POLL
+    assert thread_event.thread == thread
+    assert thread_event.actor == user
 
     thread.refresh_from_db()
-    assert thread.has_updates
+    assert thread.has_events
