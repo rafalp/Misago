@@ -273,7 +273,7 @@ class ListView(View):
 
         if request.is_htmx:
             if result.updated_items:
-                kwargs["animate"] = result.updated_items
+                kwargs["animate"] = [thread.id for thread in result.updated_items]
 
             response = self.get(request, **kwargs)
             set_moderation_response_headers(request, response)

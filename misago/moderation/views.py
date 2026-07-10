@@ -59,8 +59,8 @@ def get_moderation_result_response(
 def set_moderation_response_headers(request: HttpRequest, response: HttpResponse):
     response.headers["hx-trigger"] = "misago:afterModeration"
 
-    if request.POST.get("success-hx-target"):
-        response.headers["hx-retarget"] = request.POST["success-hx-target"]
+    # if request.POST.get("success-hx-target"):
+    #     response.headers["hx-retarget"] = request.POST["success-hx-target"]
 
-    if request.POST.get("success-hx-swap"):
-        response.headers["hx-reswap"] = request.POST["success-hx-swap"]
+    # if request.POST.get("success-hx-swap"):
+    #     response.headers["hx-reswap"] = request.POST["success-hx-swap"]

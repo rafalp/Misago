@@ -152,18 +152,17 @@ class LockPostModerationAction(PostModerationAction):
             )
 
     def execute(self) -> ModerationResult:
+        request = self.request
         post = self.post
 
-        lock_post(post, request=self.request)
+        lock_post(post, request=request)
 
         messages.success(
-            self.request,
+            request,
             pgettext("post moderation success", "Post locked"),
         )
 
-        return ModerationResult(
-            updated_items=[post.id],
-        )
+        return ModerationResult(updated_items=[post])
 
 
 class UnlockPostModerationAction(PostModerationAction):
@@ -177,18 +176,17 @@ class UnlockPostModerationAction(PostModerationAction):
             )
 
     def execute(self) -> ModerationResult:
+        request = self.request
         post = self.post
 
-        unlock_post(post, request=self.request)
+        unlock_post(post, request=request)
 
         messages.success(
-            self.request,
+            request,
             pgettext("post moderation success", "Post unlocked"),
         )
 
-        return ModerationResult(
-            updated_items=[post.id],
-        )
+        return ModerationResult(updated_items=[post])
 
 
 class HidePostModerationAction(FormMixin, PostModerationAction):
@@ -222,13 +220,11 @@ class HidePostModerationAction(FormMixin, PostModerationAction):
         )
 
         messages.success(
-            self.request,
+            request,
             pgettext("post moderation success", "Post hidden"),
         )
 
-        return ModerationResult(
-            updated_items=[post.id],
-        )
+        return ModerationResult(updated_items=[post])
 
 
 class UnhidePostModerationAction(PostModerationAction):
@@ -242,18 +238,17 @@ class UnhidePostModerationAction(PostModerationAction):
             )
 
     def execute(self) -> ModerationResult:
+        request = self.request
         post = self.post
 
-        unhide_post(post, request=self.request)
+        unhide_post(post, request=request)
 
         messages.success(
-            self.request,
+            request,
             pgettext("post moderation success", "Post unhidden"),
         )
 
-        return ModerationResult(
-            updated_items=[post.id],
-        )
+        return ModerationResult(updated_items=[post])
 
 
 class ApprovePostModerationAction(PostModerationAction):
@@ -279,13 +274,11 @@ class ApprovePostModerationAction(PostModerationAction):
         synchronize_categories.delay([thread.category_id])
 
         messages.success(
-            self.request,
+            request,
             pgettext("post moderation success", "Post approved"),
         )
 
-        return ModerationResult(
-            updated_items=[post.id],
-        )
+        return ModerationResult(updated_items=[post])
 
 
 class SplitPostModerationAction(FormMixin, PostModerationAction):
@@ -299,16 +292,18 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
     template_name = "misago/moderation/split_posts.html"
 
     def get_form(self, form_submitted: bool) -> Form:
+        request = self.request
+
         kwargs = {
             "prefix": self.form_prefix,
-            "request": self.request,
+            "request": request,
             "initial": {
                 "category": self.thread.category_id,
             },
         }
 
         if form_submitted:
-            return self.form_class(self.request.POST, **kwargs)
+            return self.form_class(request.POST, **kwargs)
 
         return self.form_class(**kwargs)
 
@@ -351,7 +346,7 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
         synchronize_categories.delay(sync_categories_ids)
 
         messages.success(
-            self.request,
+            request,
             pgettext("post moderation success", "Post was split into a new thread."),
         )
 
@@ -359,7 +354,7 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
             return ModerationResult(redirect_to=self.get_thread_url(new_thread))
 
         return ModerationResult(
-            deleted_items=[post.id],
+            deleted_items=[post],
             thread_updates=[thread_update],
         )
 
@@ -380,14 +375,16 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
     template_name = "misago/moderation/move_posts.html"
 
     def get_form(self, form_submitted: bool) -> Form:
+        request = self.request
+
         kwargs = {
             "prefix": self.form_prefix,
-            "request": self.request,
+            "request": request,
             "current_thread": self.thread,
         }
 
         if form_submitted:
-            return self.form_class(self.request.POST, **kwargs)
+            return self.form_class(request.POST, **kwargs)
 
         return self.form_class(**kwargs)
 
@@ -422,7 +419,7 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
         synchronize_categories.delay(sync_categories_ids)
 
         messages.success(
-            self.request,
+            request,
             pgettext("post moderation success", "Post was split into a new thread."),
         )
 
@@ -430,7 +427,7 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
             return ModerationResult(redirect_to=self.get_thread_url(target_thread))
 
         return ModerationResult(
-            deleted_items=[post.id],
+            deleted_items=[post],
             thread_updates=[thread_update],
         )
 
@@ -454,14 +451,16 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
     conflicts_template_name = "misago/moderation/merge_post_conflicts.html"
 
     def get_form(self, form_submitted: bool):
+        request = self.request
+
         kwargs = {
-            "request": self.request,
+            "request": request,
             "prefix": self.form_prefix,
             "post": self.post,
         }
 
         if form_submitted:
-            return self.form_class(self.request.POST, **kwargs)
+            return self.form_class(request.POST, **kwargs)
 
         return self.form_class(**kwargs)
 
@@ -551,7 +550,7 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
         synchronize_categories.delay([final_post.category_id])
 
         messages.success(
-            self.request,
+            request,
             pgettext("post moderation success", "Posts merged"),
         )
 
@@ -567,18 +566,19 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
         )
 
     def get_result(self, post: Post, other_post: Post) -> ModerationResult:
+        request = self.request
         redirect_to = self.get_redirect_url(post)
 
-        if not self.request.is_htmx:
+        if not request.is_htmx:
             return ModerationResult(redirect_to=redirect_to)
 
-        refresh = self.request.path == redirect_to[: redirect_to.rindex("/") + 1]
+        refresh = request.path == redirect_to[: redirect_to.rindex("/") + 1]
 
         return ModerationResult(
             refresh=refresh,
             redirect_to=redirect_to if not refresh else None,
-            updated_items=[post.id],
-            deleted_items=[other_post.id],
+            updated_items=[post],
+            deleted_items=[other_post],
         )
 
     def get_redirect_url(self, post: Post) -> str:
@@ -638,6 +638,6 @@ class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
         )
 
         return ModerationResult(
-            deleted_items=[post.id],
+            deleted_items=[post],
             thread_updates=[thread_update],
         )

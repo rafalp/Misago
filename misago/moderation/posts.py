@@ -125,13 +125,11 @@ class LockPostsModerationAction(PostsModerationAction):
             lock_post(post, request=request)
 
         messages.success(
-            self.request,
+            request,
             pgettext("posts moderation success", "Posts locked"),
         )
 
-        return ModerationResult(
-            updated_items=[post.id for post in valid_posts],
-        )
+        return ModerationResult(updated_items=valid_posts)
 
 
 class UnlockPostsModerationAction(PostsModerationAction):
@@ -155,13 +153,11 @@ class UnlockPostsModerationAction(PostsModerationAction):
             unlock_post(post, request=request)
 
         messages.success(
-            self.request,
+            request,
             pgettext("posts moderation success", "Posts unlocked"),
         )
 
-        return ModerationResult(
-            updated_items=[post.id for post in valid_posts],
-        )
+        return ModerationResult(updated_items=valid_posts)
 
 
 class HidePostsModerationAction(FormMixin, PostsModerationAction):
@@ -199,13 +195,11 @@ class HidePostsModerationAction(FormMixin, PostsModerationAction):
             hide_post(post, request.user, hidden_reason, request=request)
 
         messages.success(
-            self.request,
+            request,
             pgettext("posts moderation success", "Posts hidden"),
         )
 
-        return ModerationResult(
-            updated_items=[post.id for post in valid_posts],
-        )
+        return ModerationResult(updated_items=valid_posts)
 
 
 class UnhidePostsModerationAction(PostsModerationAction):
@@ -229,13 +223,11 @@ class UnhidePostsModerationAction(PostsModerationAction):
             unhide_post(post, request=request)
 
         messages.success(
-            self.request,
+            request,
             pgettext("posts moderation success", "Posts unhidden"),
         )
 
-        return ModerationResult(
-            updated_items=[post.id for post in valid_posts],
-        )
+        return ModerationResult(updated_items=valid_posts)
 
 
 class ApprovePostsModerationAction(PostsModerationAction):
@@ -267,13 +259,11 @@ class ApprovePostsModerationAction(PostsModerationAction):
         synchronize_categories.delay([thread.category_id])
 
         messages.success(
-            self.request,
+            request,
             pgettext("posts moderation success", "Posts approved"),
         )
 
-        return ModerationResult(
-            updated_items=[post.id for post in valid_posts],
-        )
+        return ModerationResult(updated_items=valid_posts)
 
 
 class SplitPostsModerationAction(FormMixin, PostsModerationAction):
@@ -295,16 +285,18 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
                 )
 
     def get_form(self, form_submitted: bool) -> Form:
+        request = self.request
+
         kwargs = {
             "prefix": self.form_prefix,
-            "request": self.request,
+            "request": request,
             "initial": {
                 "category": self.thread.category_id,
             },
         }
 
         if form_submitted:
-            return self.form_class(self.request.POST, **kwargs)
+            return self.form_class(request.POST, **kwargs)
 
         return self.form_class(**kwargs)
 
@@ -340,7 +332,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
         synchronize_categories.delay(sync_categories_ids)
 
         messages.success(
-            self.request,
+            request,
             pgettext("posts moderation success", "Posts were split into a new thread."),
         )
 
@@ -348,7 +340,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
             return ModerationResult(redirect_to=self.get_thread_url(new_thread))
 
         return ModerationResult(
-            deleted_items=[post.id for post in posts],
+            deleted_items=[posts],
             thread_updates=[thread_update],
         )
 
@@ -377,14 +369,16 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
                 )
 
     def get_form(self, form_submitted: bool) -> Form:
+        request = self.request
+
         kwargs = {
             "prefix": self.form_prefix,
-            "request": self.request,
+            "request": request,
             "current_thread": self.thread,
         }
 
         if form_submitted:
-            return self.form_class(self.request.POST, **kwargs)
+            return self.form_class(request.POST, **kwargs)
 
         return self.form_class(**kwargs)
 
@@ -412,7 +406,7 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
         synchronize_categories.delay(sync_categories_ids)
 
         messages.success(
-            self.request,
+            request,
             pgettext(
                 "posts moderation success", "Posts were moved to the target thread."
             ),
@@ -422,7 +416,7 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
             return ModerationResult(redirect_to=self.get_thread_url(target_thread))
 
         return ModerationResult(
-            deleted_items=[post.id for post in posts],
+            deleted_items=[posts],
             thread_updates=[thread_update],
         )
 
@@ -466,14 +460,16 @@ class MergePostsModerationAction(FormMixin, PostsModerationAction):
                 )
 
     def get_form(self, form_submitted: bool) -> Form:
+        request = self.request
+
         kwargs = {
             "prefix": self.form_prefix,
-            "request": self.request,
-            "conflicts": get_post_merge_conflicts(self.posts, self.request),
+            "request": request,
+            "conflicts": get_post_merge_conflicts(self.posts, request),
         }
 
         if form_submitted:
-            return self.form_class(self.request.POST, **kwargs)
+            return self.form_class(request.POST, **kwargs)
 
         return self.form_class(**kwargs)
 
@@ -524,13 +520,13 @@ class MergePostsModerationAction(FormMixin, PostsModerationAction):
         synchronize_categories.delay([thread.category_id])
 
         messages.success(
-            self.request,
+            request,
             pgettext("posts moderation success", "Posts merged"),
         )
 
         return ModerationResult(
-            updated_items=[target.id],
-            deleted_items=[post.id for post in posts],
+            updated_items=[target],
+            deleted_items=[posts],
         )
 
 
@@ -574,6 +570,6 @@ class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
         )
 
         return ModerationResult(
-            deleted_items=[post.id for post in posts],
+            deleted_items=[posts],
             thread_updates=[thread_update],
         )
