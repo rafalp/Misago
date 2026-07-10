@@ -24,7 +24,7 @@ def test_close_thread_poll_view_closes_poll(moderator_client, thread, poll):
     assert poll.is_closed
 
     thread.refresh_from_db()
-    assert thread.has_updates
+    assert thread.has_events
 
 
 def test_close_thread_poll_view_returns_redirect_to_next_thread_url(

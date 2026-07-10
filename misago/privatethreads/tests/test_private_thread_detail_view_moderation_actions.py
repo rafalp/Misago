@@ -57,7 +57,7 @@ def test_private_thread_detail_view_lock_thread_moderation_action_locks_thread(
 
     user_private_thread.refresh_from_db()
     assert user_private_thread.is_locked
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
@@ -92,7 +92,7 @@ def test_private_thread_detail_view_unlock_thread_moderation_action_unlocks_thre
 
     user_private_thread.refresh_from_db()
     assert not user_private_thread.is_locked
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
@@ -143,7 +143,7 @@ def test_private_thread_detail_view_hide_thread_moderation_action_hides_thread(
     assert user_private_thread.hidden_by_name == moderator.username
     assert user_private_thread.hidden_by_slug == moderator.slug
     assert user_private_thread.hidden_reason == "Lorem ipsum"
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
@@ -184,7 +184,7 @@ def test_private_thread_detail_view_unhide_thread_moderation_action_unhides_thre
     assert user_private_thread.hidden_by_name is None
     assert user_private_thread.hidden_by_slug is None
     assert user_private_thread.hidden_reason is None
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
@@ -230,7 +230,7 @@ def test_private_thread_detail_view_approve_thread_moderation_action_approves_th
 
     user_private_thread.refresh_from_db()
     assert not user_private_thread.is_unapproved
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
@@ -266,7 +266,7 @@ def test_private_thread_detail_view_require_reply_approval_thread_moderation_act
 
     user_private_thread.refresh_from_db()
     assert user_private_thread.require_reply_approval
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
@@ -298,7 +298,7 @@ def test_private_thread_detail_view_remove_reply_approval_thread_moderation_acti
 
     user_private_thread.refresh_from_db()
     assert not user_private_thread.require_reply_approval
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
     ThreadEvent.objects.get(
         thread=user_private_thread,

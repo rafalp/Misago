@@ -80,7 +80,7 @@ def test_private_thread_leave_view_removes_thread_owner(
     )
 
     user_private_thread.refresh_from_db()
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
 
 def test_private_thread_leave_view_removes_thread_member(
@@ -109,7 +109,7 @@ def test_private_thread_leave_view_removes_thread_member(
     )
 
     user_private_thread.refresh_from_db()
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
 
 def test_private_thread_leave_view_removes_thread_moderator(
@@ -138,7 +138,7 @@ def test_private_thread_leave_view_removes_thread_moderator(
     )
 
     user_private_thread.refresh_from_db()
-    assert user_private_thread.has_updates
+    assert user_private_thread.has_events
 
 
 def test_private_thread_member_deletes_thread_when_last_member_leaves(
@@ -199,7 +199,7 @@ def test_private_thread_leave_view_does_nothing_if_non_member_thread_moderator_l
         )
 
     user_private_thread.refresh_from_db()
-    assert not user_private_thread.has_updates
+    assert not user_private_thread.has_events
 
 
 def test_private_thread_leave_view_returns_403_if_user_cant_use_private_threads(

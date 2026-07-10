@@ -363,7 +363,7 @@ def test_thread_edit_view_sets_edit_reason(user_client, user, user_thread):
     assert post_edit.edit_reason == "Lorem ipsum dolor met"
 
 
-def test_thread_edit_view_creates_changed_title_update_object(
+def test_thread_edit_view_creates_changed_title_thread_event(
     user_client, user, user_thread
 ):
     response = user_client.post(
@@ -390,10 +390,10 @@ def test_thread_edit_view_creates_changed_title_update_object(
     )
 
     user_thread.refresh_from_db()
-    assert user_thread.has_updates
+    assert user_thread.has_events
 
 
-def test_thread_edit_view_doesnt_create_changed_title_update_object_if_title_wasnt_changed(
+def test_thread_edit_view_doesnt_create_changed_title_thread_event_if_title_wasnt_changed(
     user_client, user_thread
 ):
     response = user_client.post(

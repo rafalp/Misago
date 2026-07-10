@@ -4,24 +4,24 @@ from ..threadflag import set_thread_has_updates, sync_thread_has_updates
 
 def test_set_thread_has_updates_sets_thread_has_updates_flag(thread):
     assert set_thread_has_updates(thread)
-    assert thread.has_updates
+    assert thread.has_events
 
     thread.refresh_from_db()
-    assert thread.has_updates
+    assert thread.has_events
 
 
 def test_set_thread_has_updates_doesnt_set_thread_has_updates_flag_if_its_already_set(
     django_assert_num_queries, thread
 ):
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     with django_assert_num_queries(0):
         assert not set_thread_has_updates(thread)
-        assert thread.has_updates
+        assert thread.has_events
 
     thread.refresh_from_db()
-    assert thread.has_updates
+    assert thread.has_events
 
 
 def test_set_thread_has_updates_doesnt_save_thread_has_updates_flag_if_commit_is_false(
@@ -29,24 +29,24 @@ def test_set_thread_has_updates_doesnt_save_thread_has_updates_flag_if_commit_is
 ):
     with django_assert_num_queries(0):
         assert set_thread_has_updates(thread, commit=False)
-        assert thread.has_updates
+        assert thread.has_events
 
     thread.refresh_from_db()
-    assert not thread.has_updates
+    assert not thread.has_events
 
 
 def test_sync_thread_has_updates_unsets_thread_has_updates_flag_for_thread_whithout_updates(
     django_assert_num_queries, thread
 ):
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     with django_assert_num_queries(2):
         assert sync_thread_has_updates(thread)
-        assert not thread.has_updates
+        assert not thread.has_events
 
     thread.refresh_from_db()
-    assert not thread.has_updates
+    assert not thread.has_events
 
 
 def test_sync_thread_has_updates_sets_thread_has_updates_flag_for_thread_with_updates(
@@ -56,24 +56,24 @@ def test_sync_thread_has_updates_sets_thread_has_updates_flag_for_thread_with_up
 
     with django_assert_num_queries(2):
         assert sync_thread_has_updates(thread)
-        assert thread.has_updates
+        assert thread.has_events
 
     thread.refresh_from_db()
-    assert thread.has_updates
+    assert thread.has_events
 
 
 def test_sync_thread_has_updates_doesnt_change_thread_has_updates_flag_for_thread_without_updates(
     django_assert_num_queries, thread
 ):
-    thread.has_updates = False
+    thread.has_events = False
     thread.save()
 
     with django_assert_num_queries(1):
         assert not sync_thread_has_updates(thread)
-        assert not thread.has_updates
+        assert not thread.has_events
 
     thread.refresh_from_db()
-    assert not thread.has_updates
+    assert not thread.has_events
 
 
 def test_sync_thread_has_updates_doesnt_change_thread_has_updates_flag_for_thread_with_updates(
@@ -81,29 +81,29 @@ def test_sync_thread_has_updates_doesnt_change_thread_has_updates_flag_for_threa
 ):
     create_test_thread_update(thread, "DeletedUser")
 
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     with django_assert_num_queries(1):
         assert not sync_thread_has_updates(thread)
-        assert thread.has_updates
+        assert thread.has_events
 
     thread.refresh_from_db()
-    assert thread.has_updates
+    assert thread.has_events
 
 
 def test_sync_thread_has_updates_doesnt_save_thread_without_updates_if_commit_is_false(
     django_assert_num_queries, thread
 ):
-    thread.has_updates = True
+    thread.has_events = True
     thread.save()
 
     with django_assert_num_queries(1):
         assert sync_thread_has_updates(thread, commit=False)
-        assert not thread.has_updates
+        assert not thread.has_events
 
     thread.refresh_from_db()
-    assert thread.has_updates
+    assert thread.has_events
 
 
 def test_sync_thread_has_updates_doesnt_save_thread_with_updates_if_commit_is_false(
@@ -113,7 +113,7 @@ def test_sync_thread_has_updates_doesnt_save_thread_with_updates_if_commit_is_fa
 
     with django_assert_num_queries(1):
         assert sync_thread_has_updates(thread, commit=False)
-        assert thread.has_updates
+        assert thread.has_events
 
     thread.refresh_from_db()
-    assert not thread.has_updates
+    assert not thread.has_events
