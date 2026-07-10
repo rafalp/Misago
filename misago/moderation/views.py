@@ -34,10 +34,7 @@ def get_moderation_action_choices(actions: list[ModerationAction]) -> list[dict]
 
 
 def get_moderation_result_response(
-    request: HttpRequest,
-    result: ModerationResult,
-    event: str | None = None,
-    event_context: dict | None = None,
+    request: HttpRequest, result: ModerationResult
 ) -> HttpResponse | None:
     if result.refresh:
         if not request.is_htmx:
@@ -45,7 +42,7 @@ def get_moderation_result_response(
 
         response = HttpResponse(status=201)
         response.headers["hx-refresh"] = "true"
-        set_moderation_response_headers(request, response, event, event_context)
+
         return response
 
     if result.redirect_to:
@@ -54,7 +51,7 @@ def get_moderation_result_response(
 
         response = HttpResponse(status=201)
         response.headers["hx-redirect"] = result.redirect_to
-        set_moderation_response_headers(request, response, event, event_context)
+
         return response
 
     return None
