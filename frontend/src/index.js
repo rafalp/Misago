@@ -158,7 +158,7 @@ const HIDE_MODERATION_MODAL_EVENTS = [
 ]
 
 HIDE_MODERATION_MODAL_EVENTS.forEach(function (event) {
-  document.addEventListener(event, () => {
+  document.addEventListener(event, (e) => {
     $("#moderation-modal").modal("hide")
   })
 })

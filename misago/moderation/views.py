@@ -34,7 +34,10 @@ def get_moderation_action_choices(actions: list[ModerationAction]) -> list[dict]
 
 
 def get_moderation_result_response(
-    request: HttpRequest, result: ModerationResult
+    request: HttpRequest,
+    result: ModerationResult,
+    event: str | None = None,
+    event_context: dict | None = None,
 ) -> HttpResponse | None:
     if result.refresh:
         if not request.is_htmx:
@@ -42,7 +45,7 @@ def get_moderation_result_response(
 
         response = HttpResponse(status=201)
         response.headers["hx-refresh"] = "true"
-        set_moderation_response_headers(request, response)
+        set_moderation_response_headers(request, response, event, event_context)
         return response
 
     if result.redirect_to:
@@ -51,7 +54,7 @@ def get_moderation_result_response(
 
         response = HttpResponse(status=201)
         response.headers["hx-redirect"] = result.redirect_to
-        set_moderation_response_headers(request, response)
+        set_moderation_response_headers(request, response, event, event_context)
         return response
 
     return None
@@ -60,19 +63,19 @@ def get_moderation_result_response(
 def set_moderation_response_headers(
     request: HttpRequest,
     response: HttpResponse,
-    trigger: str | None = None,
-    trigger_context: dict | None = None,
+    event: str | None = None,
+    event_context: dict | None = None,
 ):
-    if trigger:
-        if trigger_context:
+    if retarget := request.POST.get("success-hx-target"):
+        response.headers["hx-retarget"] = retarget
+
+    if reswap := request.POST.get("success-hx-swap"):
+        response.headers["hx-reswap"] = reswap
+
+    if event:
+        if event_context:
             response.headers["hx-trigger-after-settle"] = json.dumps(
-                {trigger: trigger_context}
+                {event: event_context}
             )
         else:
-            response.headers["hx-trigger-after-settle"] = trigger
-
-    if request.POST.get("success-hx-target"):
-        response.headers["hx-retarget"] = request.POST["success-hx-target"]
-
-    if request.POST.get("success-hx-swap"):
-        response.headers["hx-reswap"] = request.POST["success-hx-swap"]
+            response.headers["hx-trigger-after-settle"] = event
