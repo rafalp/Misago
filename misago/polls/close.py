@@ -8,7 +8,7 @@ from ..threadevents.create import (
     create_opened_poll_thread_update,
 )
 from ..threadevents.models import ThreadEvent
-from ..threadevents.threadflag import set_thread_has_updates
+from ..threadevents.threadflag import ensure_thread_has_events
 from ..threads.models import Thread
 from .hooks import (
     close_poll_hook,
@@ -36,7 +36,7 @@ def _close_thread_poll_action(
     if not close_poll(poll, user, request):
         return None
 
-    set_thread_has_updates(thread)
+    ensure_thread_has_events(thread)
 
     return create_closed_poll_thread_update(thread, user, request=request)
 
@@ -53,7 +53,7 @@ def _open_thread_poll_action(
     if not open_poll(poll, user, request):
         return None
 
-    set_thread_has_updates(thread)
+    ensure_thread_has_events(thread)
 
     return create_opened_poll_thread_update(thread, user, request=request)
 

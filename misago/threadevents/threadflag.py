@@ -2,7 +2,7 @@ from ..threads.models import Thread
 from .models import ThreadEvent
 
 
-def set_thread_has_updates(thread: Thread, commit: bool = True) -> bool:
+def ensure_thread_has_events(thread: Thread, commit: bool = True) -> bool:
     if thread.has_events:
         return False
 

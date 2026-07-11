@@ -5,7 +5,7 @@ from django.http import HttpRequest
 from ..postgres.delete import delete_all, delete_one
 from ..threadevents.create import create_deleted_poll_thread_update
 from ..threadevents.models import ThreadEvent
-from ..threadevents.threadflag import set_thread_has_updates
+from ..threadevents.threadflag import ensure_thread_has_events
 from ..threads.models import Thread
 from .hooks import delete_poll_hook, delete_thread_poll_hook
 from .models import Poll, PollVote
@@ -27,7 +27,7 @@ def _delete_thread_poll_action(
 ) -> ThreadEvent:
     delete_poll(poll, request)
 
-    set_thread_has_updates(thread, commit=False)
+    ensure_thread_has_events(thread, commit=False)
 
     thread.has_poll = False
     thread.save(update_fields=["has_events", "has_poll"])

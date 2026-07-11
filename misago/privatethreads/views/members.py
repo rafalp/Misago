@@ -19,7 +19,7 @@ from ...permissions.privatethreads import (
 from ...permissions.proxy import UserPermissionsProxy
 from ...threadevents.create import create_added_member_thread_update
 from ...threadevents.models import ThreadEvent
-from ...threadevents.threadflag import set_thread_has_updates
+from ...threadevents.threadflag import ensure_thread_has_events
 from ...threads.models import Thread
 from ...threads.nexturl import get_next_thread_url
 from ..forms import MembersAddForm
@@ -83,7 +83,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
                 )
                 thread_updates.append(thread_update)
 
-            set_thread_has_updates(thread)
+            ensure_thread_has_events(thread)
 
             notify_on_new_private_thread.delay(
                 request.user.id, thread.id, [user.id for user in new_members]
@@ -190,7 +190,7 @@ class PrivateThreadMemberView(PrivateThreadView):
         thread_update = self.update_members(request, thread, member)
 
         if thread_update:
-            set_thread_has_updates(thread)
+            ensure_thread_has_events(thread)
 
         if not request.is_htmx:
             return redirect(self.get_next_thread_url(request, thread))
@@ -320,7 +320,7 @@ class PrivateThreadLeaveView(PrivateThreadView):
         thread = self.get_thread(request, thread_id)
 
         if remove_private_thread_member(request.user, thread, request.user, request):
-            set_thread_has_updates(thread)
+            ensure_thread_has_events(thread)
 
         messages.success(
             request,
