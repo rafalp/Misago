@@ -503,8 +503,12 @@ def test_thread_detail_view_executes_posts_moderation_action(
         {"posts_moderation": "lock", "posts": [reply.id]},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
     )
 
     reply.refresh_from_db()

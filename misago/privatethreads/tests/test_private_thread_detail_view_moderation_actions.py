@@ -361,9 +361,16 @@ def test_private_thread_detail_view_lock_posts_moderation_action_locks_posts(
         {"posts_moderation": "lock", "posts": [reply.id]},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:private-thread",
-        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
     )
 
     reply.refresh_from_db()
@@ -404,9 +411,16 @@ def test_private_thread_detail_view_unlock_posts_moderation_action_unlocks_posts
         {"posts_moderation": "unlock", "posts": [reply.id]},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:private-thread",
-        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
     )
 
     reply.refresh_from_db()
@@ -465,9 +479,16 @@ def test_private_thread_detail_view_hide_posts_moderation_action_hides_posts(
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:private-thread",
-        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
     )
 
     reply.refresh_from_db()
@@ -529,9 +550,16 @@ def test_private_thread_detail_view_unhide_posts_moderation_action_unhides_posts
         {"posts_moderation": "unhide", "posts": [reply.id]},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:private-thread",
-        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
     )
 
     reply.refresh_from_db()
@@ -581,9 +609,16 @@ def test_private_thread_detail_view_approve_posts_moderation_action_approves_pos
         {"posts_moderation": "approve", "posts": [reply.id]},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:private-thread",
-        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
     )
 
     reply.refresh_from_db()
@@ -663,9 +698,16 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts(
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:private-thread",
-        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{target_post.id}"
     )
 
     target_post.refresh_from_db()
@@ -793,9 +835,16 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts_w
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:private-thread",
-        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{target_post.id}"
     )
 
     target_post.refresh_from_db()
@@ -867,9 +916,16 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts_w
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:private-thread",
-        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{target_post.id}"
     )
 
     target_post.refresh_from_db()
@@ -943,9 +999,16 @@ def test_private_thread_detail_view_merge_posts_moderation_action_orders_posts_f
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:private-thread",
-        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{target_post.id}"
     )
 
     target_post.refresh_from_db()

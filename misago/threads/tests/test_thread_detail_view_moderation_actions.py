@@ -1531,8 +1531,12 @@ def test_thread_detail_view_lock_posts_moderation_action_locks_posts(
         {"posts_moderation": "lock", "posts": [reply.id]},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
     )
 
     reply.refresh_from_db()
@@ -1563,8 +1567,12 @@ def test_thread_detail_view_unlock_posts_moderation_action_unlocks_posts(
         {"posts_moderation": "unlock", "posts": [reply.id]},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
     )
 
     reply.refresh_from_db()
@@ -1601,8 +1609,12 @@ def test_thread_detail_view_hide_posts_moderation_action_hides_posts(
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
     )
 
     reply.refresh_from_db()
@@ -1648,8 +1660,12 @@ def test_thread_detail_view_unhide_posts_moderation_action_unhides_posts(
         {"posts_moderation": "unhide", "posts": [reply.id]},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
     )
 
     reply.refresh_from_db()
@@ -1685,8 +1701,12 @@ def test_thread_detail_view_approve_posts_moderation_action_approves_posts(
         {"posts_moderation": "approve", "posts": [reply.id]},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
     )
 
     reply.refresh_from_db()
@@ -2683,8 +2703,12 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_posts(
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{target_post.id}"
     )
 
     target_post.refresh_from_db()
@@ -2778,8 +2802,12 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_posts_with_merg
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{target_post.id}"
     )
 
     target_post.refresh_from_db()
@@ -2828,8 +2856,12 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_other_post_into
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{target_post.id}"
     )
 
     thread.refresh_from_db()
@@ -2881,8 +2913,12 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_solution_into_t
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{target_post.id}"
     )
 
     thread.refresh_from_db()
@@ -2940,8 +2976,12 @@ def test_thread_detail_view_merge_posts_moderation_action_merges_posts_with_atta
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{target_post.id}"
     )
 
     target_post.refresh_from_db()
@@ -2998,8 +3038,12 @@ def test_thread_detail_view_merge_posts_moderation_action_orders_posts_from_olde
         },
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{target_post.id}"
     )
 
     target_post.refresh_from_db()

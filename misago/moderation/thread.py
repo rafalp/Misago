@@ -525,16 +525,12 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
 
         if form.cleaned_data["direction"] == "other":
             final_thread, other_thread = other_thread, thread
-            merge_threads(
-                other_thread, [other_thread], conflicts_resolutions, request=request
-            )
-
         else:
             final_thread = thread
-            merge_threads(
-                thread, [other_thread], conflicts_resolutions, request=request
-            )
 
+        merge_threads(
+            final_thread, [other_thread], conflicts_resolutions, request=request
+        )
         create_merged_thread_update(
             final_thread, other_thread, request.user, request=request
         )

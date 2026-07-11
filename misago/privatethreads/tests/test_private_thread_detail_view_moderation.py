@@ -513,9 +513,16 @@ def test_private_thread_detail_view_executes_posts_moderation_action(
         {"posts_moderation": "lock", "posts": [reply.id]},
     )
     assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:private-thread",
-        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
     )
 
     reply.refresh_from_db()

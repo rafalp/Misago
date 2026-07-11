@@ -179,14 +179,13 @@ class DetailView(GenericThreadView):
         if response := get_moderation_result_response(request, result):
             return response
 
-        if thread.id in result.deleted_items:
+        if thread in result.deleted_items:
             parent_url = self.get_thread_parent_url(request, thread)
             if not request.is_htmx:
                 return redirect(parent_url)
 
             response = HttpResponse(status=201)
             response.headers["hx-redirect"] = parent_url
-            set_moderation_response_headers(request, response)
             return response
 
         if not request.is_htmx:
