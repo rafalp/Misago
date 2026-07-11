@@ -4,7 +4,7 @@ from django.http import HttpRequest
 
 from ..threadevents.create import create_started_poll_thread_update
 from ..threadevents.models import ThreadEvent
-from ..threadevents.threadflag import set_thread_has_updates
+from ..threadevents.threadflag import ensure_thread_has_events
 from ..threads.models import Thread
 from .hooks import edit_thread_poll_hook, save_thread_poll_hook
 from .models import Poll, PollVote

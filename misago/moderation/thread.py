@@ -24,7 +24,7 @@ from ..threadevents.create import (
     create_unlocked_thread_update,
     create_unpinned_thread_update,
 )
-from ..threadevents.threadflag import set_thread_has_updates
+from ..threadevents.threadflag import ensure_thread_has_events
 from ..threads.approve import (
     approve_thread,
     remove_thread_reply_approval,
@@ -161,7 +161,7 @@ class PinEverywhereThreadModerationAction(ThreadModerationAction):
         request = self.request
         thread = self.thread
 
-        set_thread_has_updates(thread, commit=False)
+        ensure_thread_has_events(thread, commit=False)
         pin_thread(thread, everywhere=True, request=request)
 
         thread_update = create_pinned_everywhere_thread_update(
@@ -184,7 +184,7 @@ class PinCategoryThreadModerationAction(ThreadModerationAction):
         request = self.request
         thread = self.thread
 
-        set_thread_has_updates(thread, commit=False)
+        ensure_thread_has_events(thread, commit=False)
         pin_thread(thread, everywhere=False, request=request)
 
         thread_update = create_pinned_category_thread_update(
@@ -207,7 +207,7 @@ class UnpinThreadModerationAction(ThreadModerationAction):
         request = self.request
         thread = self.thread
 
-        set_thread_has_updates(thread, commit=False)
+        ensure_thread_has_events(thread, commit=False)
         unpin_thread(thread, request=request)
 
         thread_update = create_unpinned_thread_update(
@@ -230,7 +230,7 @@ class LockThreadModerationAction(ThreadModerationAction):
         request = self.request
         thread = self.thread
 
-        set_thread_has_updates(thread, commit=False)
+        ensure_thread_has_events(thread, commit=False)
         lock_thread(thread, request=request)
 
         thread_update = create_locked_thread_update(
@@ -253,7 +253,7 @@ class UnlockThreadModerationAction(ThreadModerationAction):
         request = self.request
         thread = self.thread
 
-        set_thread_has_updates(thread, commit=False)
+        ensure_thread_has_events(thread, commit=False)
         unlock_thread(thread, request=request)
 
         thread_update = create_unlocked_thread_update(
@@ -280,7 +280,7 @@ class HideThreadModerationAction(FormMixin, ThreadModerationAction):
         request = self.request
         thread = self.thread
 
-        set_thread_has_updates(thread, commit=False)
+        ensure_thread_has_events(thread, commit=False)
         hide_thread(
             thread, request.user, form.cleaned_data["hidden_reason"], request=request
         )
@@ -307,7 +307,7 @@ class UnhideThreadModerationAction(ThreadModerationAction):
         request = self.request
         thread = self.thread
 
-        set_thread_has_updates(thread, commit=False)
+        ensure_thread_has_events(thread, commit=False)
         unhide_thread(thread, request=request)
 
         thread_update = create_unhidden_thread_update(
@@ -332,7 +332,7 @@ class ApproveThreadModerationAction(ThreadModerationAction):
         request = self.request
         thread = self.thread
 
-        set_thread_has_updates(thread, commit=False)
+        ensure_thread_has_events(thread, commit=False)
         approve_thread(thread, request=request)
 
         thread_update = create_approved_thread_update(
@@ -376,7 +376,7 @@ class RequireThreadReplyApprovalModerationAction(ThreadModerationAction):
         request = self.request
         thread = self.thread
 
-        set_thread_has_updates(thread, commit=False)
+        ensure_thread_has_events(thread, commit=False)
         require_thread_reply_approval(thread, request=request)
 
         thread_update = create_required_reply_approval_thread_update(
@@ -401,7 +401,7 @@ class RemoveThreadReplyApprovalModerationAction(ThreadModerationAction):
         request = self.request
         thread = self.thread
 
-        set_thread_has_updates(thread, commit=False)
+        ensure_thread_has_events(thread, commit=False)
         remove_thread_reply_approval(thread, request=request)
 
         thread_update = create_removed_reply_approval_thread_update(
@@ -443,7 +443,7 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
         old_category = self.category
         new_category = form.cleaned_data["category"]
 
-        set_thread_has_updates(thread, commit=False)
+        ensure_thread_has_events(thread, commit=False)
         move_thread(thread, new_category, request=request)
         thread_update = create_moved_thread_update(
             thread, old_category, request.user, request=request

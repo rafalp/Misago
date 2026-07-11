@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from ...postedits.create import create_post_edit
 from ...threadevents.create import create_changed_title_thread_update
 from ...threadevents.models import ThreadEvent
-from ...threadevents.threadflag import set_thread_has_updates
+from ...threadevents.threadflag import ensure_thread_has_events
 from ...threads.models import Post
 from ..hooks import (
     get_private_thread_post_edit_state_hook,
@@ -97,7 +97,7 @@ class PostEditState(State):
             self.post.edits = post_edits + 1
 
         if self.thread_title != self.thread.title:
-            set_thread_has_updates(self.thread, commit=False)
+            ensure_thread_has_events(self.thread, commit=False)
 
             self.save_thread()
 
