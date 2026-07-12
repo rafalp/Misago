@@ -629,6 +629,11 @@ def test_private_thread_detail_view_approve_posts_moderation_action_approves_pos
     assert reply.hidden_by_slug is None
     assert reply.hidden_reason is None
 
+    mock_posts_synchronize_categories.delay.assert_called_with(
+        [user_private_thread.category_id]
+    )
+    mock_posts_notify_on_new_thread_reply.delay.assert_called_with(reply.id)
+
 
 def test_private_thread_detail_view_approve_posts_moderation_action_validates_posts(
     thread_reply_factory,

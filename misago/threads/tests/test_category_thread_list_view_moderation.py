@@ -196,6 +196,8 @@ def test_category_thread_list_view_executes_moderation_action_with_form(
     thread.refresh_from_db()
     assert thread.is_hidden
 
+    mock_synchronize_categories.delay.assert_called_with([default_category.id])
+
 
 def test_category_thread_list_view_executes_moderation_action_with_form_in_htmx(
     thread_factory, moderator_client, default_category, mock_synchronize_categories
@@ -228,6 +230,8 @@ def test_category_thread_list_view_executes_moderation_action_with_form_in_htmx(
 
     thread.refresh_from_db()
     assert thread.is_hidden
+
+    mock_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
 def test_category_thread_list_view_executes_moderation_action_with_confirmation(
@@ -264,6 +268,8 @@ def test_category_thread_list_view_executes_moderation_action_with_confirmation(
     with pytest.raises(Thread.DoesNotExist):
         thread.refresh_from_db()
 
+    mock_synchronize_categories.delay.assert_called_with([default_category.id])
+
 
 def test_category_thread_list_view_executes_moderation_action_with_confirmation_in_htmx(
     thread_factory, moderator_client, default_category, mock_synchronize_categories
@@ -296,6 +302,8 @@ def test_category_thread_list_view_executes_moderation_action_with_confirmation_
 
     with pytest.raises(Thread.DoesNotExist):
         thread.refresh_from_db()
+
+    mock_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
 def test_category_thread_list_view_moderation_doesnt_set_htmx_retarget_header_on_success(
@@ -442,6 +450,8 @@ def test_category_thread_list_view_moderation_sets_htmx_trigger_header_on_succes
 
     with pytest.raises(Thread.DoesNotExist):
         thread.refresh_from_db()
+
+    mock_synchronize_categories.delay.assert_called_with([default_category.id])
 
 
 def test_category_thread_list_view_moderation_doesnt_set_htmx_headers_on_template_response_in_htmx(

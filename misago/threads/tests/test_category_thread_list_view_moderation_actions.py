@@ -1012,7 +1012,6 @@ def test_category_thread_list_view_merge_moderation_action_validates_multiple_th
     moderator_client,
     default_category,
     thread,
-    other_thread,
     mock_synchronize_categories,
     mock_delete_duplicate_watched_threads,
 ):

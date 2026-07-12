@@ -2143,7 +2143,6 @@ def test_thread_detail_view_split_posts_moderation_action_validates_category_typ
 
 def test_thread_detail_view_split_posts_moderation_action_requires_thread_title(
     moderator_client,
-    moderators_group,
     default_category,
     thread,
     reply,
@@ -3755,7 +3754,6 @@ def test_thread_detail_view_split_post_moderation_action_validates_category_type
 
 def test_thread_detail_view_split_post_moderation_action_requires_thread_title(
     moderator_client,
-    moderators_group,
     default_category,
     thread,
     reply,
@@ -4126,7 +4124,6 @@ def test_thread_detail_view_move_post_moderation_action_validates_target_thread_
 
 
 def test_thread_detail_view_move_post_moderation_action_validates_target_thread_is_not_private_thread(
-    thread_factory,
     moderator_client,
     thread,
     user_private_thread,
