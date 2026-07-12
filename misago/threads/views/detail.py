@@ -247,56 +247,9 @@ class DetailView(GenericThreadView):
             messages.error(request, e.messages[0])
             return self.get(request, thread_id, slug, page)
 
-        if isinstance(result, ModerationActionTemplateResult):
-            if request.is_htmx:
-                template_name = self.moderation_modal_template_name
-            else:
-                template_name = self.moderation_page_template_name
-
-            return result.render(request, template_name)
-
-        if response := get_moderation_result_response(request, result):
-            return response
-
-        if not request.is_htmx:
-            if result.updated_items:
-                post = result.updated_items[0]
-                return self.get_post_redirect(request, post)
-
-            return redirect(request.get_full_path())
-
-        context_data = self.get_moderation_result_data(request, thread)
-
-        if result.updated_items or result.thread_updates:
-            updated_post_ids = [post.id for post in result.updated_items]
-            post_feed = self.get_post_feed(
-                request, thread, result.updated_items, result.thread_updates
-            )
-
-            if result.updated_items:
-                post_feed.set_counter_start(
-                    self.get_post_number(request, result.updated_items[0]) - 1
-                )
-                post_feed.set_animated_posts(updated_post_ids)
-                post_feed.set_selected_posts(updated_post_ids)
-
-            post_feed_data = post_feed.get_feed_data()
-            context_data["update_posts"] = [
-                item for item in post_feed_data if item["type"] == "post"
-            ]
-            context_data["thread_updates"] = [
-                item for item in post_feed_data if item["type"] == "update"
-            ]
-
-        response = render(request, self.moderation_result_template_name, context_data)
-        set_moderation_response_headers(
-            request,
-            response,
-            "misago:afterPostsModeration",
-            self.get_moderation_event_context(result),
+        return self.get_posts_moderation_response(
+            request, thread, result, "misago:afterPostsModeration"
         )
-
-        return response
 
     def execute_posts_moderation_action(
         self, request: HttpRequest, thread: Thread, page: int | None
@@ -346,53 +299,9 @@ class DetailView(GenericThreadView):
             messages.error(request, e.messages[0])
             return self.get(request, thread_id, slug, page)
 
-        if isinstance(result, ModerationActionTemplateResult):
-            if request.is_htmx:
-                template_name = self.moderation_modal_template_name
-            else:
-                template_name = self.moderation_page_template_name
-
-            return result.render(request, template_name)
-
-        if response := get_moderation_result_response(request, result):
-            return response
-
-        if not request.is_htmx:
-            if result.updated_items:
-                return self.get_post_redirect(request, post)
-
-            return redirect(request.get_full_path())
-
-        context_data = self.get_moderation_result_data(request, thread)
-
-        if result.updated_items or result.thread_updates:
-            post_feed = self.get_post_feed(
-                request, thread, result.updated_items, result.thread_updates
-            )
-
-            if result.updated_items:
-                post_feed.set_counter_start(
-                    self.get_post_number(request, result.updated_items[0]) - 1
-                )
-                post_feed.set_animated_posts([post.id for post in result.updated_items])
-
-            post_feed_data = post_feed.get_feed_data()
-            context_data["update_posts"] = [
-                item for item in post_feed_data if item["type"] == "post"
-            ]
-            context_data["thread_updates"] = [
-                item for item in post_feed_data if item["type"] == "update"
-            ]
-
-        response = render(request, self.moderation_result_template_name, context_data)
-        set_moderation_response_headers(
-            request,
-            response,
-            "misago:afterPostModeration",
-            self.get_moderation_event_context(result),
+        return self.get_posts_moderation_response(
+            request, thread, result, "misago:afterPostModeration"
         )
-
-        return response
 
     def execute_post_moderation_action(
         self, request: HttpRequest, thread: Thread, post: Post
@@ -420,6 +329,64 @@ class DetailView(GenericThreadView):
             )
 
         return result
+
+    def get_posts_moderation_response(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        result: ModerationResult,
+        htmx_event_name: str,
+    ) -> HttpResponse:
+        if isinstance(result, ModerationActionTemplateResult):
+            if request.is_htmx:
+                template_name = self.moderation_modal_template_name
+            else:
+                template_name = self.moderation_page_template_name
+
+            return result.render(request, template_name)
+
+        if response := get_moderation_result_response(request, result):
+            return response
+
+        if not request.is_htmx:
+            if result.updated_items:
+                post = result.updated_items[0]
+                return self.get_post_redirect(request, post)
+
+            return redirect(request.get_full_path())
+
+        context_data = self.get_moderation_result_data(request, thread)
+
+        if result.updated_items or result.thread_updates:
+            updated_post_ids = [post.id for post in result.updated_items]
+            post_feed = self.get_post_feed(
+                request, thread, result.updated_items, result.thread_updates
+            )
+
+            if result.updated_items:
+                post_feed.set_counter_start(
+                    self.get_post_number(request, result.updated_items[0]) - 1
+                )
+                post_feed.set_animated_posts(updated_post_ids)
+                post_feed.set_selected_posts(updated_post_ids)
+
+            post_feed_data = post_feed.get_feed_data()
+            context_data["update_posts"] = [
+                item for item in post_feed_data if item["type"] == "post"
+            ]
+            context_data["thread_updates"] = [
+                item for item in post_feed_data if item["type"] == "update"
+            ]
+
+        response = render(request, self.moderation_result_template_name, context_data)
+        set_moderation_response_headers(
+            request,
+            response,
+            htmx_event_name,
+            self.get_moderation_event_context(result),
+        )
+
+        return response
 
     def get_thread_moderation_actions(
         self, request: HttpRequest, thread: Thread
