@@ -1,3 +1,4 @@
+import json
 from typing import Iterable
 
 from django.core.exceptions import ValidationError
@@ -41,7 +42,7 @@ def get_moderation_result_response(
 
         response = HttpResponse(status=201)
         response.headers["hx-refresh"] = "true"
-        set_moderation_response_headers(request, response)
+
         return response
 
     if result.redirect_to:
@@ -50,17 +51,28 @@ def get_moderation_result_response(
 
         response = HttpResponse(status=201)
         response.headers["hx-redirect"] = result.redirect_to
-        set_moderation_response_headers(request, response)
+
         return response
 
     return None
 
 
-def set_moderation_response_headers(request: HttpRequest, response: HttpResponse):
-    response.headers["hx-trigger"] = "misago:afterModeration"
+def set_moderation_response_headers(
+    request: HttpRequest,
+    response: HttpResponse,
+    event: str | None = None,
+    event_context: dict | None = None,
+):
+    if retarget := request.POST.get("success-hx-target"):
+        response.headers["hx-retarget"] = retarget
 
-    if request.POST.get("success-hx-target"):
-        response.headers["hx-retarget"] = request.POST["success-hx-target"]
+    if reswap := request.POST.get("success-hx-swap"):
+        response.headers["hx-reswap"] = reswap
 
-    if request.POST.get("success-hx-swap"):
-        response.headers["hx-reswap"] = request.POST["success-hx-swap"]
+    if event:
+        if event_context:
+            response.headers["hx-trigger-after-settle"] = json.dumps(
+                {event: event_context}
+            )
+        else:
+            response.headers["hx-trigger-after-settle"] = event

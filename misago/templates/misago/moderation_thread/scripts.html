@@ -1,0 +1,73 @@
+{% if posts_moderation_actions %}
+<script type="text/javascript">
+  const moderation = misago.bulkModeration({
+    menu: ".fixed-moderation",
+    form: "#posts-moderation",
+    field: "posts_moderation",
+    modal: "#moderation-modal",
+    actions: ".fixed-moderation ul button",
+    selection: ".post-feed-item-checkbox input:checked",
+    button: {
+      selector: "#posts-moderation-menu",
+      text: pgettext("posts moderation", "Moderate posts (%(number)s)"),
+    }
+  })
+
+  document.addEventListener("misago:afterPostsModeration", function({ detail }) {
+    if (detail.updated.length > 1) {
+      updateFeedPostNumbers()
+    }
+  })
+
+  function updateFeedPostNumbers() {
+    const post = document.querySelector("[mg-post-number]")
+    const number = parseInt(post.getAttribute("mg-post-number"))
+
+    document.querySelectorAll(
+      "[mg-post-number-visible]"
+    ).forEach(function(element, index) {
+      element.textContent = "#" + (number + index)
+    })
+  }
+
+  const moderationEvents = [
+    "misago:afterPostModeration",
+    "misago:afterPostsModeration",
+  ]
+
+  moderationEvents.forEach(function(eventName) {
+    document.addEventListener(eventName, function({ detail }) {
+      if (detail.deleted) {
+        deleteFeedPosts(detail.deleted)
+      }
+    })
+  })
+
+  function deleteFeedPosts(postIds) {
+    let postCount = document.querySelectorAll(".post-feed-item-post").length
+
+    const deletedPosts = []
+    postIds.forEach(function(item) {
+      const post = document.getElementById("post-feed-item-post-" + item)
+      if (post) {
+        deletedPosts.push(post)
+      }
+    })
+
+    if (postCount !== postIds.length) {
+      deletedPosts.forEach(misago.slideUpElement)
+    } else {
+      misago.slideUpElement(deletedPosts[0], {duration: 800})
+      deletedPosts.slice(1).forEach(misago.slideUpElement)
+
+      misago.htmx.ajax(
+        "GET", "",
+        {
+          target: "#misago-htmx-root",
+          swap: "outerHTML",
+        }
+      )
+    }
+  }
+</script>
+{% endif %}

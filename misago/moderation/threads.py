@@ -163,7 +163,7 @@ class PinEverywhereThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads pinned everywhere"),
         )
 
-        return ModerationResult.from_updated_threads(threads)
+        return ModerationResult(updated_items=threads)
 
 
 class PinCategoryThreadsModerationAction(ThreadsModerationAction):
@@ -196,7 +196,7 @@ class PinCategoryThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads pinned in category"),
         )
 
-        return ModerationResult.from_updated_threads(threads)
+        return ModerationResult(updated_items=threads)
 
 
 class UnpinThreadsModerationAction(ThreadsModerationAction):
@@ -227,7 +227,7 @@ class UnpinThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads unpinned"),
         )
 
-        return ModerationResult.from_updated_threads(threads)
+        return ModerationResult(updated_items=threads)
 
 
 class LockThreadsModerationAction(ThreadsModerationAction):
@@ -258,7 +258,7 @@ class LockThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads locked"),
         )
 
-        return ModerationResult.from_updated_threads(threads)
+        return ModerationResult(updated_items=threads)
 
 
 class UnlockThreadsModerationAction(ThreadsModerationAction):
@@ -288,7 +288,7 @@ class UnlockThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads unlocked"),
         )
 
-        return ModerationResult.from_updated_threads(threads)
+        return ModerationResult(updated_items=threads)
 
 
 class HideThreadsModerationAction(FormMixin, ThreadsModerationAction):
@@ -322,11 +322,11 @@ class HideThreadsModerationAction(FormMixin, ThreadsModerationAction):
         synchronize_categories.delay(categories)
 
         messages.success(
-            self.request,
+            request,
             pgettext("thread moderation success", "Threads hidden"),
         )
 
-        return ModerationResult.from_updated_threads(threads)
+        return ModerationResult(updated_items=threads)
 
 
 class UnhideThreadsModerationAction(ThreadsModerationAction):
@@ -359,7 +359,7 @@ class UnhideThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads unhidden"),
         )
 
-        return ModerationResult.from_updated_threads(threads)
+        return ModerationResult(updated_items=threads)
 
 
 class ApproveThreadsModerationAction(ThreadsModerationAction):
@@ -392,7 +392,7 @@ class ApproveThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Threads approved"),
         )
 
-        return ModerationResult.from_updated_threads(threads)
+        return ModerationResult(updated_items=threads)
 
 
 class RequireThreadsReplyApprovalModerationAction(ThreadsModerationAction):
@@ -432,7 +432,7 @@ class RequireThreadsReplyApprovalModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Reply approval required"),
         )
 
-        return ModerationResult.from_updated_threads(threads)
+        return ModerationResult(updated_items=threads)
 
 
 class RemoveThreadsReplyApprovalModerationAction(ThreadsModerationAction):
@@ -470,7 +470,7 @@ class RemoveThreadsReplyApprovalModerationAction(ThreadsModerationAction):
             pgettext("threads moderation success", "Reply approval removed"),
         )
 
-        return ModerationResult.from_updated_threads(threads)
+        return ModerationResult(updated_items=threads)
 
 
 class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
@@ -482,8 +482,10 @@ class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
     template_name = "misago/moderation/move_threads.html"
 
     def get_form(self, form_submitted: bool):
+        request = self.request
+
         kwargs = {
-            "request": self.request,
+            "request": request,
             "prefix": self.form_prefix,
         }
 
@@ -492,7 +494,7 @@ class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
             kwargs["disallowed_categories"] = threads_categories
 
         if form_submitted:
-            return self.form_class(self.request.POST, **kwargs)
+            return self.form_class(request.POST, **kwargs)
 
         return self.form_class(**kwargs)
 
@@ -521,11 +523,11 @@ class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
         synchronize_categories.delay(list(categories))
 
         messages.success(
-            self.request,
+            request,
             pgettext("threads moderation success", "Threads moved"),
         )
 
-        return ModerationResult.from_updated_threads(threads)
+        return ModerationResult(updated_items=threads)
 
 
 class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
@@ -546,17 +548,20 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
             )
 
     def get_form(self, form_submitted: bool):
+        request = self.request
+        threads = self.threads
+
         kwargs = {
-            "request": self.request,
+            "request": request,
             "prefix": self.form_prefix,
-            "conflicts": get_thread_merge_conflicts(self.threads, self.request),
+            "conflicts": get_thread_merge_conflicts(threads, request),
             "initial": {
-                "category": self.threads[0].category_id,
+                "category": threads[0].category_id,
             },
         }
 
         if form_submitted:
-            return self.form_class(self.request.POST, **kwargs)
+            return self.form_class(request.POST, **kwargs)
 
         return self.form_class(**kwargs)
 
@@ -587,7 +592,7 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
 
         for thread in threads:
             create_merged_thread_update(
-                new_thread, thread, self.request.user, request=request
+                new_thread, thread, request.user, request=request
             )
 
         synchronize_thread(new_thread, request=request)
@@ -596,11 +601,11 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
         delete_duplicate_watched_threads.delay(new_thread.id)
 
         messages.success(
-            self.request,
+            request,
             pgettext("threads moderation success", "Threads merged"),
         )
 
-        return ModerationResult.from_deleted_threads(threads)
+        return ModerationResult(created_items=[new_thread], deleted_items=threads)
 
 
 class DeleteThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
@@ -614,20 +619,19 @@ class DeleteThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
 
     def confirmed(self) -> ModerationResult:
         request = self.request
+        threads = self.threads
 
         categories = set()
 
-        for thread in self.threads:
+        for thread in threads:
             categories.add(thread.category_id)
             delete_thread(thread, request=request)
 
         synchronize_categories.delay(list(categories))
 
         messages.success(
-            self.request,
+            request,
             pgettext("threads moderation success", "Threads deleted"),
         )
 
-        return ModerationResult(
-            deleted_items=[thread.id for thread in self.threads],
-        )
+        return ModerationResult(deleted_items=threads)

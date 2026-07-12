@@ -9,7 +9,7 @@ class BulkModeration {
     this.menu = options.menu ? document.querySelector(options.menu) : null
     this.modal = options.modal
     this.selection = options.selection
-    this.target = options.target || "#misago-htmx-root"
+    this.target = options.target
     this.text = options.button.text
 
     this.update()
@@ -72,10 +72,15 @@ class BulkModeration {
         source: this.control,
         values: data,
       })
-    } else {
+    } else if (this.target) {
       htmx.ajax("POST", document.location.href, {
         target: this.target,
         swap: "outerHTML",
+        values: data,
+      })
+    } else {
+      htmx.ajax("POST", document.location.href, {
+        swap: "none",
         values: data,
       })
     }

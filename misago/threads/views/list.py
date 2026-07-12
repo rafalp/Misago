@@ -272,11 +272,27 @@ class ListView(View):
             return response
 
         if request.is_htmx:
+            hx_trigger_context = {}
+
             if result.updated_items:
-                kwargs["animate"] = result.updated_items
+                updated_ids = [thread.id for thread in result.updated_items]
+                kwargs["animate"] = updated_ids
+                hx_trigger_context["updated"] = updated_ids
+
+            if result.deleted_items:
+                hx_trigger_context["deleted"] = [
+                    thread.id for thread in result.deleted_items
+                ]
 
             response = self.get(request, **kwargs)
-            set_moderation_response_headers(request, response)
+
+            set_moderation_response_headers(
+                request,
+                response,
+                "misago:afterThreadsModeration",
+                hx_trigger_context,
+            )
+
             return response
 
         return redirect(current_url)

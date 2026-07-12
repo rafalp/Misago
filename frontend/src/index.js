@@ -47,7 +47,6 @@ export class Misago {
     this.lightbox = lightbox
     this.quote = quote
     this.feed = new Feed()
-
     this.deleteElement = deleteElement
     this.slideUpElement = slideUpElement
 
@@ -149,11 +148,22 @@ export default misago
 document.addEventListener("htmx:load", activateEditors)
 
 // Hide moderation modal
-document.addEventListener("misago:afterModeration", () => {
-  $("#moderation-modal").modal("hide")
+const HIDE_MODERATION_MODAL_EVENTS = [
+  "misago:hideModal",
+  "misago:afterPostModeration",
+  "misago:afterPostsModeration",
+  "misago:afterThreadModeration",
+  "misago:afterThreadsModeration",
+]
+
+HIDE_MODERATION_MODAL_EVENTS.forEach(function (eventName) {
+  document.addEventListener(eventName, function () {
+    $("#moderation-modal").modal("hide")
+  })
 })
 
-document.addEventListener("misago:afterUpdateMembers", () => {
+// Hide memebers update modal
+document.addEventListener("misago:afterUpdateMembers", function () {
   $("#add-members-modal").modal("hide")
 })
 

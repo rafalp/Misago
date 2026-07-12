@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
+from django.db.models import Model
 from django.forms import Form
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
@@ -32,29 +33,13 @@ class ModerationAction:
 
 @dataclass(frozen=True)
 class ModerationResult:
-    updated_items: set[int] = field(default_factory=set)
-    deleted_items: set[int] = field(default_factory=set)
+    created_items: list[Model] = field(default_factory=list)
+    updated_items: list[Model] = field(default_factory=list)
+    deleted_items: list[Model] = field(default_factory=list)
     thread_updates: list[ThreadEvent] = field(default_factory=list)
 
     refresh: bool = False
     redirect_to: str | None = None
-
-    @classmethod
-    def from_updated_thread(
-        cls, thread: Thread, thread_update: ThreadEvent | None
-    ) -> "ModerationResult":
-        if thread_update:
-            return cls(updated_items=[thread.id], thread_updates=[thread_update])
-
-        return cls(updated_items=[thread.id])
-
-    @classmethod
-    def from_updated_threads(cls, threads: list[Thread]) -> "ModerationResult":
-        return cls(updated_items=[thread.id for thread in threads])
-
-    @classmethod
-    def from_deleted_threads(cls, threads: list[Thread]) -> "ModerationResult":
-        return cls(deleted_items=[thread.id for thread in threads])
 
 
 @dataclass(frozen=True)
@@ -173,8 +158,6 @@ class ThreadsModerationAction(ModerationAction):
 
 
 class PostsModerationAction(ModerationAction):
-    swap_root = True
-
     category: Category
     thread: Thread
     posts: list[Post]

@@ -80,4 +80,7 @@
   misago.feed.activate()
   {% endif %}
 </script>
+{% if posts_moderation_actions %}
+  {% include "misago/moderation_thread/scripts.html" %}
+{% endif %}
 {% endblock javascript %}

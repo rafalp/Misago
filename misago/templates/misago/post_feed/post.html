@@ -7,6 +7,7 @@
     hx-swap-oob="true"
   {% endif %}
   mg-feed-item
+  mg-post-number="{{ counter }}"
 >
   <a id="post-{{ post.id }}" class="scroll-target"></a>
   <div class="post-feed-item-post">
@@ -167,6 +168,7 @@
         <a
           class="post-feed-item-post-bit-top-post-counter"
           href="{{ post.get_absolute_url }}"
+          mg-post-number-visible
         >
           #{{ counter }}
         </a>
