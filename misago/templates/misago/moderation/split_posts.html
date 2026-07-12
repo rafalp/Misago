@@ -7,7 +7,7 @@
     </label>
     <select class="form-control" name="{{ field.html_name }}" id="{{ field.id_for_label }}" required>
       {% for choice in field.subwidgets %}
-        <option value="{{ choice.data.value }}"{% if choice.data.value in form.disallowed_categories %} disabled{% else %}{{ choice|selectedhtml }}{% endif %}>
+        <option value="{{ choice.data.value }}"{% if choice.data.value in form.invalid_category_choices %} disabled{% else %}{{ choice|selectedhtml }}{% endif %}>
           {{ choice.choice_label }}
         </option>
       {% endfor %}

@@ -38,6 +38,11 @@ def _delete_thread_action(thread: Thread, request: HttpRequest | None = None):
         is_deleted=True,
     )
 
+    ThreadEvent.objects.filter(
+        context_type="misago_threads.thread",
+        context_id=thread.id,
+    ).clear_context_objects()
+
     delete_all(PollVote, thread_id=thread.id)
     delete_all(Poll, thread_id=thread.id)
 

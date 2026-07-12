@@ -491,7 +491,7 @@ class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
 
         threads_categories = set(thread.category_id for thread in self.threads)
         if len(threads_categories) == 1:
-            kwargs["disallowed_categories"] = threads_categories
+            kwargs["invalid_category_choices"] = threads_categories
 
         if form_submitted:
             return self.form_class(request.POST, **kwargs)
