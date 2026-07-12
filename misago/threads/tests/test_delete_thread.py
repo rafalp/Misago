@@ -11,7 +11,10 @@ from ...postedits.models import PostEdit
 from ...readtracker.models import ReadThread
 from ...readtracker.tracker import mark_thread_read
 from ...solutions.select import select_thread_solution
-from ...threadevents.create import create_test_thread_update
+from ...threadevents.create import (
+    create_moved_posts_from_thread_update,
+    create_test_thread_update,
+)
 from ...threadevents.models import ThreadEvent
 from ..delete import delete_thread
 from ..models import Post, Thread
@@ -192,7 +195,21 @@ def test_delete_thread_deletes_read_thread(user, thread, reply):
     assert not ReadThread.objects.exists()
 
 
-def test_delete_thread_deletes_thread_updates(user, thread, reply):
+def test_delete_thread_removes_clears_related_thread_event_context(
+    other_thread, thread
+):
+    thread_update = create_moved_posts_from_thread_update(
+        other_thread, thread, 10, "DeletedUser"
+    )
+
+    delete_thread(thread)
+
+    thread_update.refresh_from_db()
+    assert not thread_update.context_type
+    assert not thread_update.context_id
+
+
+def test_delete_thread_deletes_thread_updates(thread):
     thread_update = create_test_thread_update(thread, "DeletedUser")
 
     delete_thread(thread)
