@@ -13,6 +13,23 @@
     }
   })
 
+  document.addEventListener("misago:afterPostsModeration", function({ detail }) {
+    if (detail.updated.length > 1) {
+      updateFeedPostNumbers()
+    }
+  })
+
+  function updateFeedPostNumbers() {
+    const post = document.querySelector("[mg-post-number]")
+    const number = parseInt(post.getAttribute("mg-post-number"))
+
+    document.querySelectorAll(
+      "[mg-post-number-visible]"
+    ).forEach(function(element, index) {
+      element.textContent = "#" + (number + index)
+    })
+  }
+
   const moderationEvents = [
     "misago:afterPostModeration",
     "misago:afterPostsModeration",

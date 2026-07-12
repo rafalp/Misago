@@ -265,22 +265,28 @@ class DetailView(GenericThreadView):
 
             return redirect(request.get_full_path())
 
-        updated_post_ids = [post.id for post in result.updated_items]
-
-        post_feed = self.get_post_feed(
-            request, thread, result.updated_items, result.thread_updates
-        )
-        post_feed.set_animated_posts(updated_post_ids)
-        post_feed.set_selected_posts(updated_post_ids)
-        post_feed_data = post_feed.get_feed_data()
-
         context_data = self.get_moderation_result_data(request, thread)
-        context_data["update_posts"] = [
-            item for item in post_feed_data if item["type"] == "post"
-        ]
-        context_data["thread_updates"] = [
-            item for item in post_feed_data if item["type"] == "update"
-        ]
+
+        if result.updated_items or result.thread_updates:
+            updated_post_ids = [post.id for post in result.updated_items]
+            post_feed = self.get_post_feed(
+                request, thread, result.updated_items, result.thread_updates
+            )
+
+            if result.updated_items:
+                post_feed.set_counter_start(
+                    self.get_post_number(request, result.updated_items[0]) - 1
+                )
+                post_feed.set_animated_posts(updated_post_ids)
+                post_feed.set_selected_posts(updated_post_ids)
+
+            post_feed_data = post_feed.get_feed_data()
+            context_data["update_posts"] = [
+                item for item in post_feed_data if item["type"] == "post"
+            ]
+            context_data["thread_updates"] = [
+                item for item in post_feed_data if item["type"] == "update"
+            ]
 
         response = render(request, self.moderation_result_template_name, context_data)
         set_moderation_response_headers(
@@ -357,21 +363,26 @@ class DetailView(GenericThreadView):
 
             return redirect(request.get_full_path())
 
-        updated_post_ids = [post.id for post in result.updated_items]
-
-        post_feed = self.get_post_feed(
-            request, thread, result.updated_items, result.thread_updates
-        )
-        post_feed.set_animated_posts(updated_post_ids)
-        post_feed_data = post_feed.get_feed_data()
-
         context_data = self.get_moderation_result_data(request, thread)
-        context_data["update_posts"] = [
-            item for item in post_feed_data if item["type"] == "post"
-        ]
-        context_data["thread_updates"] = [
-            item for item in post_feed_data if item["type"] == "update"
-        ]
+
+        if result.updated_items or result.thread_updates:
+            post_feed = self.get_post_feed(
+                request, thread, result.updated_items, result.thread_updates
+            )
+
+            if result.updated_items:
+                post_feed.set_counter_start(
+                    self.get_post_number(request, result.updated_items[0]) - 1
+                )
+                post_feed.set_animated_posts([post.id for post in result.updated_items])
+
+            post_feed_data = post_feed.get_feed_data()
+            context_data["update_posts"] = [
+                item for item in post_feed_data if item["type"] == "post"
+            ]
+            context_data["thread_updates"] = [
+                item for item in post_feed_data if item["type"] == "update"
+            ]
 
         response = render(request, self.moderation_result_template_name, context_data)
         set_moderation_response_headers(
