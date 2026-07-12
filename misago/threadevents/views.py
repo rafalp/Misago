@@ -10,7 +10,7 @@ from ..threads.views.generic import ThreadView
 from .delete import delete_thread_update
 from .hide import hide_thread_update, unhide_thread_update
 from .models import ThreadEvent
-from .threadflag import sync_thread_has_updates
+from .threadflag import sync_thread_has_events
 
 
 class UpdateView:
@@ -165,7 +165,7 @@ class UpdateDeleteView:
 
         delete_thread_update(thread_update, request)
 
-        sync_thread_has_updates(thread)
+        sync_thread_has_events(thread)
 
         messages.success(request, self.success_message)
 

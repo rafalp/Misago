@@ -1,5 +1,5 @@
 from ..create import create_test_thread_update
-from ..threadflag import ensure_thread_has_events, sync_thread_has_updates
+from ..threadflag import ensure_thread_has_events, sync_thread_has_events
 
 
 def test_set_thread_has_updates_sets_thread_has_updates_flag(thread):
@@ -42,7 +42,7 @@ def test_sync_thread_has_updates_unsets_thread_has_updates_flag_for_thread_whith
     thread.save()
 
     with django_assert_num_queries(2):
-        assert sync_thread_has_updates(thread)
+        assert sync_thread_has_events(thread)
         assert not thread.has_events
 
     thread.refresh_from_db()
@@ -55,7 +55,7 @@ def test_sync_thread_has_updates_sets_thread_has_updates_flag_for_thread_with_up
     create_test_thread_update(thread, "DeletedUser")
 
     with django_assert_num_queries(2):
-        assert sync_thread_has_updates(thread)
+        assert sync_thread_has_events(thread)
         assert thread.has_events
 
     thread.refresh_from_db()
@@ -69,7 +69,7 @@ def test_sync_thread_has_updates_doesnt_change_thread_has_updates_flag_for_threa
     thread.save()
 
     with django_assert_num_queries(1):
-        assert not sync_thread_has_updates(thread)
+        assert not sync_thread_has_events(thread)
         assert not thread.has_events
 
     thread.refresh_from_db()
@@ -85,7 +85,7 @@ def test_sync_thread_has_updates_doesnt_change_thread_has_updates_flag_for_threa
     thread.save()
 
     with django_assert_num_queries(1):
-        assert not sync_thread_has_updates(thread)
+        assert not sync_thread_has_events(thread)
         assert thread.has_events
 
     thread.refresh_from_db()
@@ -99,7 +99,7 @@ def test_sync_thread_has_updates_doesnt_save_thread_without_updates_if_commit_is
     thread.save()
 
     with django_assert_num_queries(1):
-        assert sync_thread_has_updates(thread, commit=False)
+        assert sync_thread_has_events(thread, commit=False)
         assert not thread.has_events
 
     thread.refresh_from_db()
@@ -112,7 +112,7 @@ def test_sync_thread_has_updates_doesnt_save_thread_with_updates_if_commit_is_fa
     create_test_thread_update(thread, "DeletedUser")
 
     with django_assert_num_queries(1):
-        assert sync_thread_has_updates(thread, commit=False)
+        assert sync_thread_has_events(thread, commit=False)
         assert thread.has_events
 
     thread.refresh_from_db()

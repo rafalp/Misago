@@ -14,7 +14,7 @@ def ensure_thread_has_events(thread: Thread, commit: bool = True) -> bool:
     return True
 
 
-def sync_thread_has_updates(thread: Thread, commit: bool = True) -> bool:
+def sync_thread_has_events(thread: Thread, commit: bool = True) -> bool:
     org_has_updates = thread.has_events
 
     thread.has_events = ThreadEvent.objects.filter(thread=thread).exists()
