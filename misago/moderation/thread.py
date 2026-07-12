@@ -430,7 +430,7 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
         kwargs = {
             "request": request,
             "prefix": self.form_prefix,
-            "disallowed_categories": [self.thread.category_id],
+            "invalid_category_choices": [self.thread.category_id],
         }
 
         if form_submitted:

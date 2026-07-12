@@ -31,18 +31,18 @@ THREAD_URLS = (
 )
 
 
-def get_disallowed_category_choices(
+def get_invalid_category_choices(
     user_permissions: UserPermissionsProxy,
     categories: CategoriesProxy,
 ) -> set[int]:
     choices: set[int] = set()
 
-    browse_categories = user_permissions.categories[CategoryPermission.BROWSE]
+    valid_categories = set(user_permissions.categories[CategoryPermission.BROWSE])
 
     for category in categories.category_list:
         if (
             category["is_vanilla"]
-            or category["id"] not in browse_categories
+            or category["id"] not in valid_categories
             or not user_permissions.is_category_moderator(category["id"])
         ):
             choices.add(category["id"])
@@ -248,18 +248,16 @@ class HideForm(forms.Form):
 class MoveThreadsForm(forms.Form):
     category = forms.TypedChoiceField(coerce=int, choices=[])
 
-    disallowed_categories: set[int]
+    invalid_category_choices: set[int]
 
     request: HttpRequest
 
     def __init__(self, *args, request: HttpRequest, **kwargs):
         self.request = request
 
-        self.disallowed_categories = set(kwargs.pop("disallowed_categories", []))
-        self.disallowed_categories.update(
-            get_disallowed_category_choices(
-                request.user_permissions, request.categories
-            )
+        self.invalid_category_choices = set(kwargs.pop("invalid_category_choices", []))
+        self.invalid_category_choices.update(
+            get_invalid_category_choices(request.user_permissions, request.categories)
         )
 
         super().__init__(*args, **kwargs)
@@ -268,7 +266,7 @@ class MoveThreadsForm(forms.Form):
 
     def clean_category(self) -> int:
         data = self.cleaned_data["category"]
-        if data in self.disallowed_categories:
+        if data in self.invalid_category_choices:
             raise forms.ValidationError(
                 message=pgettext(
                     "moderation form category validation", "Select a valid choice."
@@ -290,7 +288,7 @@ class MergeThreadsForm(forms.Form):
     is_locked = forms.BooleanField(required=False)
     is_hidden = forms.BooleanField(required=False)
 
-    disallowed_categories: set[int]
+    invalid_category_choices: set[int]
 
     request: HttpRequest
     conflicts: dict[str, list[Model]]
@@ -310,7 +308,7 @@ class MergeThreadsForm(forms.Form):
         self.fields.update(get_thread_merge_form_fields(conflicts, request))
         self.fields["category"].choices = request.categories.get_choices()
 
-        self.disallowed_categories = get_disallowed_category_choices(
+        self.invalid_category_choices = get_invalid_category_choices(
             request.user_permissions, request.categories
         )
 
@@ -332,7 +330,7 @@ class MergeThreadsForm(forms.Form):
 
     def clean_category(self) -> int:
         data = self.cleaned_data["category"]
-        if data in self.disallowed_categories:
+        if data in self.invalid_category_choices:
             raise forms.ValidationError(
                 message=pgettext(
                     "moderation form category validation", "Select a valid choice."
@@ -457,7 +455,7 @@ class SplitPostsForm(forms.Form):
     )
 
     request: HttpRequest
-    disallowed_categories: set[int]
+    invalid_category_choices: set[int]
 
     def __init__(
         self,
@@ -470,7 +468,7 @@ class SplitPostsForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields["category"].choices = request.categories.get_choices()
-        self.disallowed_categories = get_disallowed_category_choices(
+        self.invalid_category_choices = get_invalid_category_choices(
             request.user_permissions, request.categories
         )
 
@@ -484,7 +482,7 @@ class SplitPostsForm(forms.Form):
 
     def clean_category(self) -> int:
         data = self.cleaned_data["category"]
-        if data in self.disallowed_categories:
+        if data in self.invalid_category_choices:
             raise forms.ValidationError(
                 message=pgettext(
                     "moderation form category validation", "Select a valid choice."
