@@ -462,7 +462,7 @@ def test_category_thread_list_view_moderation_doesnt_set_htmx_headers_on_templat
     response = moderator_client.post(
         default_category.get_absolute_url(),
         {
-            "moderation": "move",
+            "moderation": "hide",
             "threads": [thread.id],
             "success-hx-target": "#misago-htmx-root",
             "success-hx-swap": "outerHTML",

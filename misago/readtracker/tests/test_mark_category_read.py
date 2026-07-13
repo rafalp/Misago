@@ -104,3 +104,18 @@ def test_mark_category_read_creates_read_category_for_category_with_read_time_ne
         category=default_category,
         read_time=read_time,
     )
+
+
+def test_mark_category_read_creates_read_category_for_category_with_empty_last_posted_at(
+    user, default_category
+):
+    read_time = timezone.now()
+
+    with patch("misago.readtracker.tracker.timezone.now", return_value=read_time):
+        mark_category_read(user, default_category)
+
+    ReadCategory.objects.get(
+        user=user,
+        category=default_category,
+        read_time=read_time,
+    )

@@ -48,6 +48,7 @@ from .hooks import (
     get_category_threads_moderation_actions_hook,
     get_threads_moderation_actions_hook,
 )
+from .validators import validate_other_category_choices_exist
 
 
 def get_threads_moderation_actions(
@@ -480,6 +481,18 @@ class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
 
     form_class = MoveThreadsForm
     template_name = "misago/moderation/move_threads.html"
+
+    def validate(self):
+        request = self.request
+
+        validate_other_category_choices_exist(
+            request.user_permissions,
+            request.categories,
+            pgettext(
+                "threads moderation validation",
+                "There are no other categories you can move threads to.",
+            ),
+        )
 
     def get_form(self, form_submitted: bool):
         request = self.request

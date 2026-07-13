@@ -468,7 +468,7 @@ def test_thread_list_view_moderation_doesnt_set_htmx_headers_on_template_respons
     response = moderator_client.post(
         reverse("misago:thread-list"),
         {
-            "moderation": "move",
+            "moderation": "hide",
             "threads": [thread.id],
             "success-hx-target": "#misago-htmx-root",
             "success-hx-swap": "outerHTML",
