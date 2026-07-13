@@ -35,10 +35,9 @@ def get_invalid_category_choices(
     user_permissions: UserPermissionsProxy,
     categories: CategoriesProxy,
 ) -> set[int]:
+    valid_categories = user_permissions.categories[CategoryPermission.BROWSE]
+
     choices: set[int] = set()
-
-    valid_categories = set(user_permissions.categories[CategoryPermission.BROWSE])
-
     for category in categories.category_list:
         if (
             category["is_vanilla"]
@@ -46,7 +45,6 @@ def get_invalid_category_choices(
             or not user_permissions.is_category_moderator(category["id"])
         ):
             choices.add(category["id"])
-
     return choices
 
 

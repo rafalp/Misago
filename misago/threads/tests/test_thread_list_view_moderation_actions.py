@@ -562,9 +562,46 @@ def test_thread_list_view_move_moderation_action_moves_threads(
 
 
 @override_dynamic_settings(index_view="categories")
-def test_thread_list_view_move_moderation_action_requires_category(
-    thread_factory, moderator_client, default_category, mock_synchronize_categories
+def test_thread_list_view_move_moderation_action_validates_other_category_choices_exist(
+    thread_factory,
+    moderator_client,
+    default_category,
+    mock_synchronize_categories,
 ):
+    thread = thread_factory(default_category, is_unapproved=True)
+
+    response = moderator_client.post(
+        reverse("misago:thread-list"),
+        {"moderation": "move", "threads": [thread.id]},
+    )
+    assert_contains(response, "There are no other categories you can move threads to.")
+
+    thread.refresh_from_db()
+    assert thread.category == default_category
+    assert not thread.has_events
+
+    assert not ThreadEvent.objects.exists()
+
+    mock_synchronize_categories.delay.assert_not_called()
+
+
+@override_dynamic_settings(index_view="categories")
+def test_thread_list_view_move_moderation_action_requires_category(
+    thread_factory,
+    moderator_client,
+    moderators_group,
+    default_category,
+    sibling_category,
+    mock_synchronize_categories,
+):
+    grant_category_group_permissions(
+        sibling_category,
+        moderators_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+        CategoryPermission.START,
+    )
+
     thread = thread_factory(default_category, is_unapproved=True)
 
     response = moderator_client.post(
@@ -594,8 +631,21 @@ def test_thread_list_view_move_moderation_action_requires_category(
 
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_move_moderation_action_validates_category_value(
-    thread_factory, moderator_client, default_category, mock_synchronize_categories
+    thread_factory,
+    moderator_client,
+    moderators_group,
+    default_category,
+    sibling_category,
+    mock_synchronize_categories,
 ):
+    grant_category_group_permissions(
+        sibling_category,
+        moderators_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+        CategoryPermission.START,
+    )
+
     thread = thread_factory(default_category, is_unapproved=True)
 
     response = moderator_client.post(
@@ -631,10 +681,17 @@ def test_thread_list_view_move_moderation_action_validates_category_browse_permi
     moderators_group,
     default_category,
     sibling_category,
+    other_category,
     mock_synchronize_categories,
 ):
     grant_category_group_permissions(
         sibling_category,
+        moderators_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
+    grant_category_group_permissions(
+        other_category,
         moderators_group,
         CategoryPermission.SEE,
     )
@@ -652,7 +709,7 @@ def test_thread_list_view_move_moderation_action_validates_category_browse_permi
         {
             "moderation": "move",
             "threads": [thread.id],
-            "moderation-category": sibling_category.id,
+            "moderation-category": other_category.id,
             "confirm": True,
         },
     )
@@ -675,6 +732,7 @@ def test_thread_list_view_move_moderation_action_validates_category_moderator_pe
     members_group,
     default_category,
     sibling_category,
+    other_category,
     mock_synchronize_categories,
 ):
     grant_category_group_permissions(
@@ -683,11 +741,17 @@ def test_thread_list_view_move_moderation_action_validates_category_moderator_pe
         CategoryPermission.SEE,
         CategoryPermission.BROWSE,
     )
+    grant_category_group_permissions(
+        other_category,
+        members_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+    )
 
     Moderator.objects.create(
         user=user,
         is_global=False,
-        categories=[default_category.id],
+        categories=[default_category.id, sibling_category.id],
     )
 
     thread = thread_factory(default_category, is_unapproved=True)
@@ -703,7 +767,7 @@ def test_thread_list_view_move_moderation_action_validates_category_moderator_pe
         {
             "moderation": "move",
             "threads": [thread.id],
-            "moderation-category": sibling_category.id,
+            "moderation-category": other_category.id,
             "confirm": True,
         },
     )
@@ -725,6 +789,7 @@ def test_thread_list_view_move_moderation_action_validates_category_type(
     moderators_group,
     default_category,
     sibling_category,
+    other_category,
     mock_synchronize_categories,
 ):
     grant_category_group_permissions(
@@ -734,9 +799,16 @@ def test_thread_list_view_move_moderation_action_validates_category_type(
         CategoryPermission.BROWSE,
         CategoryPermission.START,
     )
+    grant_category_group_permissions(
+        other_category,
+        moderators_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+        CategoryPermission.START,
+    )
 
-    sibling_category.is_vanilla = True
-    sibling_category.save()
+    other_category.is_vanilla = True
+    other_category.save()
 
     thread = thread_factory(default_category, is_unapproved=True)
 
@@ -751,7 +823,7 @@ def test_thread_list_view_move_moderation_action_validates_category_type(
         {
             "moderation": "move",
             "threads": [thread.id],
-            "moderation-category": sibling_category.id,
+            "moderation-category": other_category.id,
             "confirm": True,
         },
     )
@@ -768,8 +840,21 @@ def test_thread_list_view_move_moderation_action_validates_category_type(
 
 @override_dynamic_settings(index_view="categories")
 def test_thread_list_view_move_moderation_action_validates_category_is_new(
-    thread_factory, moderator_client, default_category, mock_synchronize_categories
+    thread_factory,
+    moderator_client,
+    moderators_group,
+    default_category,
+    sibling_category,
+    mock_synchronize_categories,
 ):
+    grant_category_group_permissions(
+        sibling_category,
+        moderators_group,
+        CategoryPermission.SEE,
+        CategoryPermission.BROWSE,
+        CategoryPermission.START,
+    )
+
     thread = thread_factory(default_category, is_unapproved=True)
 
     response = moderator_client.post(

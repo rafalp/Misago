@@ -1390,10 +1390,9 @@ def test_thread_detail_view_shows_hidden_thread_with_reason_to_moderator(
 
 
 def test_thread_detail_view_shows_unapproved_deleted_user_thread_to_moderator(
-    moderator_client, thread
+    thread_factory, moderator_client, default_category
 ):
-    thread.is_unapproved = True
-    thread.save()
+    thread = thread_factory(default_category, starter="DeletedUser", is_unapproved=True)
 
     response = moderator_client.get(
         reverse(
@@ -1408,17 +1407,16 @@ def test_thread_detail_view_shows_unapproved_deleted_user_thread_to_moderator(
 
 
 def test_thread_detail_view_shows_unapproved_user_thread_to_starter(
-    user_client, user_thread
+    thread_factory, user_client, user, default_category
 ):
-    user_thread.is_unapproved = True
-    user_thread.save()
+    thread = thread_factory(default_category, starter=user, is_unapproved=True)
 
     response = user_client.get(
         reverse(
             "misago:thread",
             kwargs={
-                "thread_id": user_thread.id,
-                "slug": user_thread.slug,
+                "thread_id": thread.id,
+                "slug": thread.slug,
             },
         )
     )
@@ -1426,17 +1424,16 @@ def test_thread_detail_view_shows_unapproved_user_thread_to_starter(
 
 
 def test_thread_detail_view_shows_unapproved_user_thread_to_moderator(
-    moderator_client, user_thread
+    thread_factory, moderator_client, user, default_category
 ):
-    user_thread.is_unapproved = True
-    user_thread.save()
+    thread = thread_factory(default_category, starter=user, is_unapproved=True)
 
     response = moderator_client.get(
         reverse(
             "misago:thread",
             kwargs={
-                "thread_id": user_thread.id,
-                "slug": user_thread.slug,
+                "thread_id": thread.id,
+                "slug": thread.slug,
             },
         )
     )
