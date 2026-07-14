@@ -22,19 +22,16 @@ class MembersForm(PostingForm):
     request: HttpRequest
     add_members: list["User"]
 
-    users = UserMultipleChoiceField()
-
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         self.add_members: list["User"] = []
 
         super().__init__(*args, **kwargs)
 
-        self.setup_users_field(self.fields["users"])
-
-    def setup_users_field(self, field: UserMultipleChoiceField):
-        field.queryset = get_user_model().objects.filter(is_active=True)
-        field.max_choices = self.request.user_permissions.private_thread_members_limit
+        self.fields["users"] = UserMultipleChoiceField(
+            queryset=get_user_model().objects.filter(is_active=True),
+            max_choices=self.request.user_permissions.private_thread_members_limit,
+        )
 
     def clean_users(self):
         data: list["User"] = self.cleaned_data["users"]

@@ -68,20 +68,20 @@ def test_user_multiple_choice_field_renders_with_field_initial_data(users, snaps
     assert fuzz_html_user_ids(field_html, users) == snapshot
 
 
-def test_user_multiple_choice_field_renders_without_query_data_for_field(
-    users, snapshot
-):
+def test_user_multiple_choice_field_renders_with_data_for_chip_field(users, snapshot):
     class TestForm(Form):
         users = UserMultipleChoiceField()
 
-    form = TestForm(QueryDict("&".join(f"users={user.username}" for user in users)))
+    form = TestForm(
+        QueryDict("&".join(f"users_chip={user.username}" for user in users))
+    )
 
     field_html = str(form["users"])
     assert "users" in field_html
 
     # Bound but not yet cleaned data is useless for rendering purposes
     for user in users:
-        assert user.username not in field_html
+        assert user.username in field_html
         assert f'value="{user.username}"' not in field_html
 
     usernames = " ".join(user.username for user in users)
@@ -91,15 +91,13 @@ def test_user_multiple_choice_field_renders_without_query_data_for_field(
     assert fuzz_html_user_ids(field_html, users) == snapshot
 
 
-def test_user_multiple_choice_field_renders_with_query_data_for_noscript_field(
-    users, snapshot
-):
+def test_user_multiple_choice_field_renders_with_data_for_text_field(users, snapshot):
     class TestForm(Form):
         users = UserMultipleChoiceField()
 
     usernames = " ".join(user.username for user in users)
 
-    form = TestForm(QueryDict(f"users_noscript={usernames}"))
+    form = TestForm(QueryDict(f"users_text={usernames}"))
 
     field_html = str(form["users"])
     assert "users" in field_html
@@ -112,7 +110,7 @@ def test_user_multiple_choice_field_renders_with_query_data_for_noscript_field(
     assert fuzz_html_user_ids(field_html, users) == snapshot
 
 
-def test_user_multiple_choice_field_renders_with_cleaned_query_data_for_field(
+def test_user_multiple_choice_field_renders_with_cleaned_query_data_for_chip_field(
     users, snapshot
 ):
     class TestForm(Form):
@@ -135,7 +133,7 @@ def test_user_multiple_choice_field_renders_with_cleaned_query_data_for_field(
     assert fuzz_html_user_ids(field_html, users) == snapshot
 
 
-def test_user_multiple_choice_field_renders_with_cleaned_query_data_for_noscript_field(
+def test_user_multiple_choice_field_renders_with_cleaned_query_data_for_text_field(
     users, snapshot
 ):
     class TestForm(Form):
@@ -143,7 +141,7 @@ def test_user_multiple_choice_field_renders_with_cleaned_query_data_for_noscript
 
     usernames = " ".join(user.username for user in users)
 
-    form = TestForm(QueryDict(f"users_noscript={usernames}"))
+    form = TestForm(QueryDict(f"users_text={usernames}"))
     assert form.is_valid()
 
     field_html = str(form["users"])
@@ -186,7 +184,7 @@ def test_user_multiple_choice_field_prioritizes_noscript_field(admin, other_user
         users = UserMultipleChoiceField()
 
     form = TestForm(
-        QueryDict(f"users={other_user.username}&users_noscript={admin.username}")
+        QueryDict(f"users={other_user.username}&users_text={admin.username}")
     )
     assert form.is_valid()
     assert form.cleaned_data["users"] == [admin]
@@ -197,7 +195,7 @@ def test_user_multiple_choice_field_prioritizes_noscript_field(admin, other_user
         users = UserMultipleChoiceField()
 
     form = TestForm(
-        QueryDict(f"users={other_user.username}&users_noscript={admin.username}")
+        QueryDict(f"users={other_user.username}&users_text={admin.username}")
     )
     assert form.is_valid()
     assert form.cleaned_data["users"] == [admin]
@@ -226,7 +224,7 @@ def test_user_multiple_choice_field_validates_noscript_value_max_choices(
 
     form = TestForm(
         QueryDict(
-            f"users_noscript={admin.username} {moderator.username} {other_user.username}"
+            f"users_text={admin.username} {moderator.username} {other_user.username}"
         )
     )
     assert not form.is_valid()
@@ -254,7 +252,7 @@ def test_user_multiple_choice_field_fails_to_validate_noscript_nonexisting_users
     class TestForm(Form):
         users = UserMultipleChoiceField(max_choices=10)
 
-    form = TestForm(QueryDict(f"users_noscript=John {admin.username} Doe"))
+    form = TestForm(QueryDict(f"users_text=John {admin.username} Doe"))
     assert not form.is_valid()
     assert form.errors == {"users": ["One or more users not found: John, Doe"]}
 
