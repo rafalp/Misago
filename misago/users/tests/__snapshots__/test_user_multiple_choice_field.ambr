@@ -22,12 +22,10 @@
         
       
         
-          <li m-user-multiple-choice-item>
+          <li m-user-multiple-choice-item m-user-id="1">
             <input type="hidden" name="users_chip" value="Admin_User">
-            <button class="form-chips-control-item-not-found" type="button" aria-label="Remove this user">
-              <span class="form-chips-control-item-not-found-icon">
-                <span class="material-icon">person_outline</span>
-              </span>
+            <button class="form-chips-control-item" type="button" aria-label="Remove this user">
+              <img class="form-chips-control-item-image" src="http://dummyimage.com/100/100" alt="">
               <span class="form-chips-control-item-name">
                 Admin_User
               </span>

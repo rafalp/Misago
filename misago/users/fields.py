@@ -140,9 +140,8 @@ class UserMultipleChoiceField(forms.Field):
                 python_value.append(UserNotFound(username))
 
         if len(users_dict) != len(slugs):
-            # Hack: mutate existing value so it displays nicely in chips
-            value.clear()
-            value += python_value
+            # Hack: store partially valid value
+            self._partial_value = python_value
 
             # Raise validation error
             invalid_choices = []
@@ -169,6 +168,9 @@ class UserMultipleChoiceBoundField(forms.BoundField):
     def value(self):
         if hasattr(self.form, "cleaned_data") and self.name in self.form.cleaned_data:
             return self.form.cleaned_data[self.name]
+
+        if partial_value := getattr(self.field, "_partial_value", None):
+            return partial_value
 
         return super().value()
 
