@@ -42,7 +42,7 @@ def test_members_form_validates_max_choices(
     members_group.save()
 
     request = rf.post(
-        "/", {"users": [admin.username, moderator.username, other_user.username]}
+        "/", {"users_chip": [admin.username, moderator.username, other_user.username]}
     )
     request.cache_versions = cache_versions
     request.settings = dynamic_settings
@@ -57,7 +57,7 @@ def test_members_form_validates_max_choices(
 def test_members_form_fails_to_validate_if_users_data_is_empty(
     rf, user, user_permissions, cache_versions, dynamic_settings
 ):
-    request = rf.post("/", {"users": []})
+    request = rf.post("/", {"users_chip": []})
     request.cache_versions = cache_versions
     request.settings = dynamic_settings
     request.user = user
@@ -71,7 +71,7 @@ def test_members_form_fails_to_validate_if_users_data_is_empty(
 def test_members_form_fails_to_validate_if_user_enters_themselves(
     rf, user, user_permissions, cache_versions, dynamic_settings
 ):
-    request = rf.post("/", {"users": [user.username]})
+    request = rf.post("/", {"users_chip": [user.username]})
     request.cache_versions = cache_versions
     request.settings = dynamic_settings
     request.user = user
@@ -85,7 +85,7 @@ def test_members_form_fails_to_validate_if_user_enters_themselves(
 def test_members_form_excludes_user_if_other_users_are_entered(
     rf, user, other_user, user_permissions, cache_versions, dynamic_settings
 ):
-    request = rf.post("/", {"users": [user.username, other_user.username]})
+    request = rf.post("/", {"users_chip": [user.username, other_user.username]})
     request.cache_versions = cache_versions
     request.settings = dynamic_settings
     request.user = user
@@ -99,7 +99,7 @@ def test_members_form_excludes_user_if_other_users_are_entered(
 def test_members_form_validates_nonexisting_users(
     rf, user, user_permissions, cache_versions, dynamic_settings
 ):
-    request = rf.post("/", {"users": ["NotFound"]})
+    request = rf.post("/", {"users_chip": ["NotFound"]})
     request.cache_versions = cache_versions
     request.settings = dynamic_settings
     request.user = user
@@ -113,7 +113,7 @@ def test_members_form_validates_nonexisting_users(
 def test_members_form_validates_deactivated_users(
     rf, user, user_permissions, cache_versions, dynamic_settings, inactive_user
 ):
-    request = rf.post("/", {"users": [inactive_user.username]})
+    request = rf.post("/", {"users_chip": [inactive_user.username]})
     request.cache_versions = cache_versions
     request.settings = dynamic_settings
     request.user = user
@@ -129,7 +129,7 @@ def test_members_form_validates_users(
 ):
     ban_user(other_user)
 
-    request = rf.post("/", {"users": [other_user.username]})
+    request = rf.post("/", {"users_chip": [other_user.username]})
     request.cache_versions = cache_versions
     request.settings = dynamic_settings
     request.user = user
@@ -140,11 +140,11 @@ def test_members_form_validates_users(
     assert form.errors == {"users": ["Other_User: This user is banned."]}
 
 
-def test_members_form_prioritizes_noscript_value_if_present(
+def test_members_form_prioritizes_text_value_if_present(
     rf, user, user_permissions, cache_versions, dynamic_settings, admin, moderator
 ):
     request = rf.post(
-        "/", {"users": [admin.username], "users_noscript": moderator.username}
+        "/", {"users_chip": [admin.username], "users_text": moderator.username}
     )
     request.cache_versions = cache_versions
     request.settings = dynamic_settings

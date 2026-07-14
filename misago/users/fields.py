@@ -74,7 +74,7 @@ class UserMultipleChoiceWidget(forms.Widget):
 
     def value_from_datadict(self, data, files, name) -> list[str] | None:
         if text_data := data.get(f"{name}_text"):
-            return self.list_value_from_datadict(text_data.split())
+            return self.list_value_from_datadict(text_data.replace(",", " ").split())
 
         if list_data := data.getlist(f"{name}_chip"):
             return self.list_value_from_datadict(list_data)
@@ -131,7 +131,20 @@ class UserMultipleChoiceField(forms.Field):
         queryset = self.queryset.filter(slug__in=slugs)[: self.max_choices + 5]
         users_dict = {user.slug: user for user in queryset}
 
+        python_value = []
+        for slug, username in slugs.items():
+            if slug in users_dict:
+                python_value.append(users_dict[slug])
+            else:
+                # Return "blank" user item to appear in the UI
+                python_value.append(UserNotFound(username))
+
         if len(users_dict) != len(slugs):
+            # Hack: mutate existing value so it displays nicely in chips
+            value.clear()
+            value += python_value
+
+            # Raise validation error
             invalid_choices = []
             for slug, username in slugs.items():
                 if slug not in users_dict:
@@ -142,14 +155,6 @@ class UserMultipleChoiceField(forms.Field):
                 code="invalid_choice",
                 params={"value": ", ".join(invalid_choices)},
             )
-
-        python_value = []
-        for slug, username in slugs.items():
-            if slug in users_dict:
-                python_value.append(users_dict[slug])
-            else:
-                # Return "blank" user item to appear in the UI
-                python_value.append(UserNotFound(username))
 
         return python_value
 
