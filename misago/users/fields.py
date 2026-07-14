@@ -91,6 +91,9 @@ class UserMultipleChoiceWidget(forms.Widget):
 
 
 class UserMultipleChoiceField(forms.Field):
+    queryset: QuerySet
+    max_choices: int
+
     default_error_messages = {
         "invalid_choice": pgettext_lazy(
             "user multiple choice field error", "One or more users not found: %(value)s"
@@ -107,8 +110,8 @@ class UserMultipleChoiceField(forms.Field):
     def __init__(
         self, *, queryset: QuerySet | None = None, max_choices: int = 5, **kwargs
     ):
-        self.max_choices = max_choices
         self.queryset = queryset or get_user_model().objects
+        self.max_choices = max_choices
 
         super().__init__(**kwargs)
 
@@ -140,7 +143,7 @@ class UserMultipleChoiceField(forms.Field):
                 python_value.append(UserNotFound(username))
 
         if len(users_dict) != len(slugs):
-            # Hack: store partially valid value
+            # Hack: store partially valid value for BoundField.value
             self._partial_value = python_value
 
             # Raise validation error

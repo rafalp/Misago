@@ -12,8 +12,8 @@ def users(admin, moderator, user, other_user):
 
 
 def fuzz_html_user_ids(html_str: str, users: list[User]) -> str:
-    for new_id, user in enumerate(users, 1):
-        html_str = html_str.replace(f'="{user.id}"', f'="{new_id}"')
+    for new_id, user in enumerate(users, 1000):
+        html_str = html_str.replace(f'id="{user.id}"', f'id="{new_id}"')
     return html_str
 
 
