@@ -64,8 +64,8 @@ class UserMultipleChoiceField(forms.MultiValueField):
     ):
         super().__init__(
             fields=(
-                UserMultipleChoiceJavaScriptSubField(required=False),
-                UserMultipleChoiceNoScriptSubField(required=False),
+                UserMultipleChoiceChipField(required=False),
+                UserMultipleChoiceTextField(required=False),
             ),
             require_all_fields=False,
             **kwargs,
@@ -154,7 +154,7 @@ class UserNotFound:
         self.username = username
 
 
-class UserMultipleChoiceJavaScriptSubField(UserMultipleChoiceSubField):
+class UserMultipleChoiceChipField(UserMultipleChoiceSubField):
     widget = ListInput
 
     def to_python(self, value) -> list[str]:
@@ -203,7 +203,7 @@ class UserMultipleChoiceJavaScriptSubField(UserMultipleChoiceSubField):
             )
 
 
-class UserMultipleChoiceNoScriptSubField(UserMultipleChoiceSubField):
+class UserMultipleChoiceTextField(UserMultipleChoiceSubField):
     def to_python(self, value) -> list[str]:
         if not value:
             return []
