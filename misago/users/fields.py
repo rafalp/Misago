@@ -57,15 +57,18 @@ class UserMultipleChoiceWidget(forms.Widget):
 
         context = super().get_context(name, value, attrs)
 
-        context["source_text"] = source == "text"
-        context["source_chips"] = source == "chips"
-
-        context["chips"] = self.format_chips(value)
+        context["widget"].update(
+            {
+                "source_text": source == "text",
+                "source_chip": source == "chip",
+                "chips": self.format_chips(value),
+            }
+        )
 
         if source == "text":
-            context["chips"] = []
-        elif source == "chips":
-            context["value"] = None
+            context["widget"]["chips"] = None
+        elif source == "chip":
+            context["widget"]["value"] = None
 
         return context
 
@@ -75,6 +78,8 @@ class UserMultipleChoiceWidget(forms.Widget):
 
         if list_data := data.getlist(f"{name}_chip"):
             return self.list_value_from_datadict(list_data)
+
+        return None
 
     def list_value_from_datadict(self, data: list[str]) -> list[str]:
         list_value: list[str] = []
@@ -107,7 +112,10 @@ class UserMultipleChoiceField(forms.Field):
 
         super().__init__(**kwargs)
 
-    def to_python(self, value: list[str]) -> list["User"]:
+    def to_python(self, value: list[str] | None) -> list["User"]:
+        if not value:
+            return []
+
         if len(value) > self.max_choices:
             raise forms.ValidationError(
                 self.error_messages["max_choices"],
