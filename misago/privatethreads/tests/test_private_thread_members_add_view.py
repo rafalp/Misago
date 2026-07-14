@@ -58,7 +58,7 @@ def test_private_thread_members_add_view_does_nothing_if_new_users_are_members_a
                 "slug": user_private_thread.slug,
             },
         ),
-        {"users": [user.username, other_user.username]},
+        {"users_chip": [user.username, other_user.username]},
     )
 
     assert response.status_code == 302
@@ -85,7 +85,7 @@ def test_private_thread_members_add_view_adds_new_thread_members(
                 "slug": user_private_thread.slug,
             },
         ),
-        {"users": [admin.username]},
+        {"users_chip": [admin.username]},
     )
 
     assert response.status_code == 302
@@ -118,7 +118,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_using_noscript_
                 "slug": user_private_thread.slug,
             },
         ),
-        {"users_noscript": admin.username},
+        {"users_text": admin.username},
     )
 
     assert response.status_code == 302
@@ -151,7 +151,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_htmx(
                 "slug": user_private_thread.slug,
             },
         ),
-        {"users": [admin.username]},
+        {"users_chip": [admin.username]},
         headers={"hx-request": "true"},
     )
 
@@ -194,7 +194,7 @@ def test_private_thread_members_add_view_returns_redirect_to_next_thread_url(
             },
         ),
         {
-            "users": [admin.username],
+            "users_chip": [admin.username],
             "next": next_url,
         },
     )
@@ -215,7 +215,7 @@ def test_private_thread_members_add_view_returns_redirect_to_default_thread_url_
             },
         ),
         {
-            "users": [admin.username],
+            "users_chip": [admin.username],
             "next": "invalid",
         },
     )
@@ -315,7 +315,7 @@ def test_private_thread_members_add_view_checks_locked_thread_permission(
                 "slug": user_private_thread.slug,
             },
         ),
-        {"users": [admin.username]},
+        {"users_chip": [admin.username]},
     )
     assert_contains(response, "This thread is locked.", 403)
 
@@ -339,7 +339,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_locked_threa
                 "slug": user_private_thread.slug,
             },
         ),
-        {"users": [admin.username]},
+        {"users_chip": [admin.username]},
     )
 
     assert response.status_code == 302

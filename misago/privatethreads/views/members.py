@@ -67,7 +67,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         if form.is_valid():
             return self.handle_form(request, thread, form)
 
-        return self.render(request, thread, form)
+        return self.render_form_page(request, thread, form)
 
     def handle_form(
         self, request: HttpRequest, thread: Thread, form: MembersAddForm

@@ -90,12 +90,12 @@ def test_private_thread_start_view_posts_new_thread(
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [
+            "posting-members-users_chip": [
                 admin.username,
                 moderator.username,
                 other_user.username,
             ],
-            "posting-members-users_noscript": "",
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -125,8 +125,8 @@ def test_private_thread_start_view_posts_new_thread_using_noscript_fallback(
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [],
-            "posting-members-users_noscript": (
+            "posting-members-users_chip": [],
+            "posting-members-users_text": (
                 f"{admin.username},{moderator.username} {other_user.username}"
             ),
             "posting-title-title": "Hello world",
@@ -161,12 +161,12 @@ def test_private_thread_start_view_posts_new_unapproved_thread(
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [
+            "posting-members-users_chip": [
                 admin.username,
                 moderator.username,
                 other_user.username,
             ],
-            "posting-members-users_noscript": "",
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -191,12 +191,12 @@ def test_private_thread_start_view_posts_new_thread_without_moderation_options_i
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [
+            "posting-members-users_chip": [
                 admin.username,
                 moderator.username,
                 other_user.username,
             ],
-            "posting-members-users_noscript": "",
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
             "posting-moderation-is_locked": "true",
@@ -228,12 +228,12 @@ def test_private_thread_start_view_posts_new_thread_with_moderation_options_if_u
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [
+            "posting-members-users_chip": [
                 admin.username,
                 moderator.username,
                 other_user.username,
             ],
-            "posting-members-users_noscript": "",
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
             "posting-moderation-is_locked": "true",
@@ -265,12 +265,12 @@ def test_private_thread_start_view_posts_new_thread_without_moderation_options_i
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [
+            "posting-members-users_chip": [
                 admin.username,
                 moderator.username,
                 other_user.username,
             ],
-            "posting-members-users_noscript": "",
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -300,12 +300,12 @@ def test_private_thread_start_view_posts_new_thread_with_moderation_options_if_u
     response = moderator_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [
+            "posting-members-users_chip": [
                 admin.username,
                 user.username,
                 other_user.username,
             ],
-            "posting-members-users_noscript": "",
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
             "posting-moderation-is_locked": "true",
@@ -336,12 +336,12 @@ def test_private_thread_start_view_posts_new_thread_without_moderation_options_i
     response = moderator_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [
+            "posting-members-users_chip": [
                 admin.username,
                 user.username,
                 other_user.username,
             ],
-            "posting-members-users_noscript": "",
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -378,8 +378,8 @@ def test_private_thread_start_view_keeps_users_field_value(user_client, other_us
         reverse("misago:private-thread-start"),
         {
             Formset.preview_action: "true",
-            "posting-members-users": [other_user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [other_user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -393,8 +393,8 @@ def test_private_thread_start_view_validates_users(user_client, user):
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -409,8 +409,8 @@ def test_private_thread_start_view_ignores_user_adding_self_if_other_users_are_a
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [user.username, other_user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [user.username, other_user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -431,8 +431,8 @@ def test_private_thread_start_view_validates_thread_title(user_client, other_use
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [other_user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [other_user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "???",
             "posting-post-post": "How's going?",
         },
@@ -445,8 +445,8 @@ def test_private_thread_start_view_validates_post(user_client, other_user):
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [other_user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [other_user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "?",
         },
@@ -463,8 +463,8 @@ def test_private_thread_start_view_validates_posted_contents(
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [other_user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [other_user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "This is a spam message",
         },
@@ -479,8 +479,8 @@ def test_private_thread_start_view_runs_flood_control(
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [other_user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [other_user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "This is a flood message",
         },
@@ -529,8 +529,8 @@ def test_private_thread_start_view_uploads_attachment_on_submit(
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [other_user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [other_user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
             "posting-post-upload": [
@@ -716,8 +716,8 @@ def test_private_thread_start_view_associates_unused_attachment_on_submit(
         reverse("misago:private-thread-start"),
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
-            "posting-members-users": [other_user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [other_user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -814,8 +814,8 @@ def test_private_thread_start_view_deletes_attachment_on_submit(
         {
             PostForm.attachment_ids_field: [str(user_text_attachment.id)],
             PostForm.deleted_attachment_ids_field: [str(user_text_attachment.id)],
-            "posting-members-users": [other_user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [other_user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -865,8 +865,8 @@ def test_private_thread_start_view_doesnt_watch_thread_without_user_option(
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [other_user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [other_user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -890,8 +890,8 @@ def test_private_thread_start_view_watches_thread_with_emails_on_user_option(
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [other_user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [other_user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
@@ -915,8 +915,8 @@ def test_private_thread_start_view_watches_thread_without_emails_on_user_option(
     response = user_client.post(
         reverse("misago:private-thread-start"),
         {
-            "posting-members-users": [other_user.username],
-            "posting-members-users_noscript": "",
+            "posting-members-users_chip": [other_user.username],
+            "posting-members-users_text": "",
             "posting-title-title": "Hello world",
             "posting-post-post": "How's going?",
         },
