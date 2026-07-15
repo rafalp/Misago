@@ -14,7 +14,6 @@ from .pin import pin_thread
 def create_thread(
     category: Category,
     title: str,
-    *,
     pinned: ThreadPinned = ThreadPinned.NONE,
     is_locked: bool = False,
     is_hidden: bool = False,
@@ -36,7 +35,6 @@ def create_thread(
 def _create_thread_action(
     category: Category,
     title: str,
-    *,
     pinned: ThreadPinned = ThreadPinned.NONE,
     is_locked: bool = False,
     is_hidden: bool = False,
@@ -66,13 +64,16 @@ def _create_thread_action(
         )
 
     if is_locked:
-        lock_thread(thread, request.user, commit=False, request=request)
+        if request:
+            lock_thread(thread, request.user, commit=False, request=request)
+        else:
+            lock_thread(thread, None, commit=False, request=request)
 
     if is_hidden:
         if request:
             hide_thread(thread, request.user, commit=False, request=request)
         else:
-            hide_thread(thread, "Misago", commit=False, request=request)
+            hide_thread(thread, None, commit=False, request=request)
 
     if commit:
         thread.save()

@@ -19,9 +19,9 @@ class HidePostHookAction(Protocol):
 
     A `Post` to hide.
 
-    ## `hidden_by: User | str`
+    ## `hidden_by: User | str | None`
 
-    The user who hid the post.
+    The user who hid the post, or `None` if not provided.
 
     ## `hide_reason: str | None`
 
@@ -45,7 +45,7 @@ class HidePostHookAction(Protocol):
     def __call__(
         self,
         post: Post,
-        hidden_by: Union["User", str],
+        hidden_by: Union["User", str, None] = None,
         hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
@@ -69,9 +69,9 @@ class HidePostHookFilter(Protocol):
 
     A `Post` to hide.
 
-    ## `hidden_by: User | str`
+    ## `hidden_by: User | str | None`
 
-    The user who hid the post.
+    The user who hid the post, or `None` if not provided.
 
     ## `hide_reason: str | None`
 
@@ -96,7 +96,7 @@ class HidePostHookFilter(Protocol):
         self,
         action: HidePostHookAction,
         post: Post,
-        hidden_by: Union["User", str],
+        hidden_by: Union["User", str, None] = None,
         hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
@@ -115,7 +115,7 @@ class HidePostHook(
 
     # Example
 
-    Register ip of user who hid the post:
+    Register the IP address of the user who hid the post.
 
     ```python
     from django.http import HttpRequest
@@ -128,7 +128,7 @@ class HidePostHook(
     def register_user_that_hid_post(
         action,
         post: Post,
-        hidden_by: User | str,
+        hidden_by: User | str | None = None,
         hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
@@ -151,7 +151,7 @@ class HidePostHook(
         self,
         action: HidePostHookAction,
         post: Post,
-        hidden_by: Union["User", str],
+        hidden_by: Union["User", str, None] = None,
         hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,

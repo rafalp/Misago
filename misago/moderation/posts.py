@@ -316,9 +316,9 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
         new_thread = create_thread(
             form.cleaned_data["category"],
             form.cleaned_data["title"],
-            pinned=form.cleaned_data["pin"],
-            is_locked=form.cleaned_data["is_locked"],
-            is_hidden=form.cleaned_data["is_hidden"],
+            form.cleaned_data["pin"],
+            form.cleaned_data["is_locked"],
+            form.cleaned_data["is_hidden"],
             request=request,
         )
 

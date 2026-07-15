@@ -271,6 +271,9 @@ def test_private_thread_detail_view_doesnt_show_post_moderation_form_to_user(
 def test_private_thread_detail_view_executes_thread_moderation_action(
     moderator_client, user_private_thread
 ):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
     response = moderator_client.post(
         reverse(
             "misago:private-thread",
@@ -279,7 +282,7 @@ def test_private_thread_detail_view_executes_thread_moderation_action(
                 "slug": user_private_thread.slug,
             },
         ),
-        {"thread_moderation": "lock"},
+        {"thread_moderation": "unlock"},
     )
     assert response.status_code == 302
     assert response["location"] == reverse(
@@ -288,10 +291,33 @@ def test_private_thread_detail_view_executes_thread_moderation_action(
     )
 
     user_private_thread.refresh_from_db()
-    assert user_private_thread.is_locked
+    assert not user_private_thread.is_locked
 
 
 def test_private_thread_detail_view_executes_thread_moderation_action_in_htmx(
+    moderator_client, user_private_thread
+):
+    user_private_thread.is_locked = True
+    user_private_thread.save()
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"thread_moderation": "unlock"},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Thread unlocked")
+
+    user_private_thread.refresh_from_db()
+    assert not user_private_thread.is_locked
+
+
+def test_private_thread_detail_view_executes_destructive_thread_moderation_action_with_form(
     moderator_client, user_private_thread
 ):
     response = moderator_client.post(
@@ -303,6 +329,61 @@ def test_private_thread_detail_view_executes_thread_moderation_action_in_htmx(
             },
         ),
         {"thread_moderation": "lock"},
+    )
+    assert_contains(response, "Lock thread")
+    assert_contains(response, "Reason for locking")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "thread_moderation": "lock",
+            "confirm": "true",
+        },
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    )
+
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.is_locked
+
+
+def test_private_thread_detail_view_executes_destructive_thread_moderation_action_with_form_in_htmx(
+    moderator_client, user_private_thread
+):
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"thread_moderation": "lock"},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Reason for locking")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "thread_moderation": "lock",
+            "confirm": "true",
+        },
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Thread locked")
@@ -500,6 +581,68 @@ def test_private_thread_detail_view_shows_error_for_empty_thread_moderation_acti
 def test_private_thread_detail_view_executes_posts_moderation_action(
     thread_reply_factory, moderator_client, user_private_thread
 ):
+    reply = thread_reply_factory(
+        user_private_thread,
+        poster="DeletedUser",
+        is_locked=True,
+    )
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"posts_moderation": "unlock", "posts": [reply.id]},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_private_thread_detail_view_executes_posts_moderation_action_in_htmx(
+    thread_reply_factory, moderator_client, user_private_thread
+):
+    reply = thread_reply_factory(
+        user_private_thread,
+        poster="DeletedUser",
+        is_locked=True,
+    )
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"posts_moderation": "unlock", "posts": [reply.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Posts unlocked")
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_private_thread_detail_view_executes_posts_moderation_action_with_form(
+    thread_reply_factory, moderator_client, user_private_thread
+):
     reply = thread_reply_factory(user_private_thread, poster="DeletedUser")
 
     response = moderator_client.post(
@@ -511,6 +654,24 @@ def test_private_thread_detail_view_executes_posts_moderation_action(
             },
         ),
         {"posts_moderation": "lock", "posts": [reply.id]},
+    )
+    assert_contains(response, "Lock posts")
+    assert_contains(response, "Reason for locking")
+    assert_contains(response, f'value="{reply.id}"')
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "posts_moderation": "lock",
+            "posts": [reply.id],
+            "confirm": "true",
+        },
     )
     assert response.status_code == 302
     assert (
@@ -529,7 +690,7 @@ def test_private_thread_detail_view_executes_posts_moderation_action(
     assert reply.is_locked
 
 
-def test_private_thread_detail_view_executes_posts_moderation_action_in_htmx(
+def test_private_thread_detail_view_executes_posts_moderation_action_with_form_in_htmx(
     thread_reply_factory, moderator_client, user_private_thread
 ):
     reply = thread_reply_factory(user_private_thread, poster="DeletedUser")
@@ -543,6 +704,24 @@ def test_private_thread_detail_view_executes_posts_moderation_action_in_htmx(
             },
         ),
         {"posts_moderation": "lock", "posts": [reply.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Reason for locking")
+    assert_contains(response, f'value="{reply.id}"')
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "posts_moderation": "lock",
+            "posts": [reply.id],
+            "confirm": "true",
+        },
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Posts locked")
@@ -1047,6 +1226,64 @@ def test_private_thread_detail_view_posts_moderation_action_shows_error_for_othe
 def test_private_thread_detail_view_executes_post_moderation_action(
     thread_reply_factory, moderator_client, user_private_thread
 ):
+    reply = thread_reply_factory(
+        user_private_thread, poster="DeletedUser", is_locked=True
+    )
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"post_moderation": "unlock", "post": reply.id},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_private_thread_detail_view_executes_post_moderation_action_in_htmx(
+    thread_reply_factory, moderator_client, user_private_thread
+):
+    reply = thread_reply_factory(
+        user_private_thread, poster="DeletedUser", is_locked=True
+    )
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"post_moderation": "unlock", "post": reply.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Post unlocked")
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_private_thread_detail_view_executes_post_moderation_action_with_form(
+    thread_reply_factory, moderator_client, user_private_thread
+):
     reply = thread_reply_factory(user_private_thread, poster="DeletedUser")
 
     response = moderator_client.post(
@@ -1058,6 +1295,24 @@ def test_private_thread_detail_view_executes_post_moderation_action(
             },
         ),
         {"post_moderation": "lock", "post": reply.id},
+    )
+    assert_contains(response, "Lock post")
+    assert_contains(response, "Reason for locking")
+    assert_contains(response, f'value="{reply.id}"')
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "post_moderation": "lock",
+            "post": reply.id,
+            "confirm": "true",
+        },
     )
     assert response.status_code == 302
     assert (
@@ -1076,7 +1331,7 @@ def test_private_thread_detail_view_executes_post_moderation_action(
     assert reply.is_locked
 
 
-def test_private_thread_detail_view_executes_post_moderation_action_in_htmx(
+def test_private_thread_detail_view_executes_post_moderation_action_with_form_in_htmx(
     thread_reply_factory, moderator_client, user_private_thread
 ):
     reply = thread_reply_factory(user_private_thread, poster="DeletedUser")
@@ -1090,6 +1345,24 @@ def test_private_thread_detail_view_executes_post_moderation_action_in_htmx(
             },
         ),
         {"post_moderation": "lock", "post": reply.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Reason for locking")
+    assert_contains(response, f'value="{reply.id}"')
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "post_moderation": "lock",
+            "post": reply.id,
+            "confirm": "true",
+        },
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Post locked")

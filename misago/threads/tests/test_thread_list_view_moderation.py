@@ -128,13 +128,13 @@ def test_thread_list_view_executes_moderation_action(
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "lock", "threads": [thread.id]},
+        {"moderation": "pin_category", "threads": [thread.id]},
     )
     assert response.status_code == 302
     assert response["location"] == reverse("misago:thread-list")
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 @override_dynamic_settings(index_view="categories")
@@ -145,15 +145,15 @@ def test_thread_list_view_executes_moderation_action_in_htmx(
 
     response = moderator_client.post(
         reverse("misago:thread-list"),
-        {"moderation": "lock", "threads": [thread.id]},
+        {"moderation": "pin_category", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-locked")
+    assert_contains(response, "thread-flag-pinned-category")
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 @override_dynamic_settings(index_view="categories")
@@ -313,7 +313,7 @@ def test_thread_list_view_moderation_doesnt_set_htmx_retarget_header_on_success(
     response = moderator_client.post(
         reverse("misago:thread-list"),
         {
-            "moderation": "lock",
+            "moderation": "pin_category",
             "threads": [thread.id],
             "success-hx-target": "#misago-htmx-root",
         },
@@ -322,7 +322,7 @@ def test_thread_list_view_moderation_doesnt_set_htmx_retarget_header_on_success(
     assert "hx-retarget" not in response
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 @override_dynamic_settings(index_view="categories")
@@ -334,7 +334,7 @@ def test_thread_list_view_moderation_sets_htmx_retarget_header_on_success_in_htm
     response = moderator_client.post(
         reverse("misago:thread-list"),
         {
-            "moderation": "lock",
+            "moderation": "pin_category",
             "threads": [thread.id],
             "success-hx-target": "#misago-htmx-root",
         },
@@ -344,7 +344,7 @@ def test_thread_list_view_moderation_sets_htmx_retarget_header_on_success_in_htm
     assert response["hx-retarget"] == "#misago-htmx-root"
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 @override_dynamic_settings(index_view="categories")
@@ -356,7 +356,7 @@ def test_thread_list_view_moderation_doesnt_set_htmx_reswap_header_on_success(
     response = moderator_client.post(
         reverse("misago:thread-list"),
         {
-            "moderation": "lock",
+            "moderation": "pin_category",
             "threads": [thread.id],
             "success-hx-swap": "outerHTML",
         },
@@ -365,7 +365,7 @@ def test_thread_list_view_moderation_doesnt_set_htmx_reswap_header_on_success(
     assert "hx-reswap" not in response
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 @override_dynamic_settings(index_view="categories")
@@ -377,7 +377,7 @@ def test_thread_list_view_moderation_sets_htmx_reswap_header_on_success_in_htmx(
     response = moderator_client.post(
         reverse("misago:thread-list"),
         {
-            "moderation": "lock",
+            "moderation": "pin_category",
             "threads": [thread.id],
             "success-hx-swap": "outerHTML",
         },
@@ -387,7 +387,7 @@ def test_thread_list_view_moderation_sets_htmx_reswap_header_on_success_in_htmx(
     assert response["hx-reswap"] == "outerHTML"
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 @override_dynamic_settings(index_view="categories")
@@ -399,7 +399,7 @@ def test_thread_list_view_moderation_doesnt_set_htmx_trigger_header(
     response = moderator_client.post(
         reverse("misago:thread-list"),
         {
-            "moderation": "lock",
+            "moderation": "pin_category",
             "threads": [thread.id],
         },
     )
@@ -407,7 +407,7 @@ def test_thread_list_view_moderation_doesnt_set_htmx_trigger_header(
     assert "hx-trigger-after-settle" not in response
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 @override_dynamic_settings(index_view="categories")
@@ -419,7 +419,7 @@ def test_thread_list_view_moderation_sets_htmx_trigger_header_on_success_after_u
     response = moderator_client.post(
         reverse("misago:thread-list"),
         {
-            "moderation": "lock",
+            "moderation": "pin_category",
             "threads": [thread.id],
         },
         headers={"hx-request": "true"},
@@ -430,7 +430,7 @@ def test_thread_list_view_moderation_sets_htmx_trigger_header_on_success_after_u
     )
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 @override_dynamic_settings(index_view="categories")

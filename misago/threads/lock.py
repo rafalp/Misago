@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 def lock_thread(
     thread: Thread,
-    locked_by: Union["User", str],
+    locked_by: Union["User", str, None] = None,
     lock_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
@@ -30,7 +30,7 @@ def lock_thread(
 
 def _lock_thread_action(
     thread: Thread,
-    locked_by: Union["User", str],
+    locked_by: Union["User", str, None] = None,
     lock_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
@@ -45,7 +45,7 @@ def _lock_thread_action(
     if isinstance(locked_by, str):
         thread.locked_by_name = locked_by
         thread.locked_by_slug = slugify(locked_by)
-    else:
+    elif locked_by:
         thread.locked_by = locked_by
         thread.locked_by_name = locked_by.username
         thread.locked_by_slug = locked_by.slug
@@ -83,7 +83,7 @@ def _unlock_thread_action(
 
 def lock_post(
     post: Post,
-    locked_by: Union["User", str],
+    locked_by: Union["User", str] = None,
     lock_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
@@ -95,7 +95,7 @@ def lock_post(
 
 def _lock_post_action(
     post: Post,
-    locked_by: Union["User", str],
+    locked_by: Union["User", str] = None,
     lock_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
@@ -110,7 +110,7 @@ def _lock_post_action(
     if isinstance(locked_by, str):
         post.locked_by_name = locked_by
         post.locked_by_slug = slugify(locked_by)
-    else:
+    elif locked_by:
         post.locked_by = locked_by
         post.locked_by_name = locked_by.username
         post.locked_by_slug = locked_by.slug

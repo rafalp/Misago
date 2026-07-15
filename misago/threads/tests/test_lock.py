@@ -1,7 +1,25 @@
 from ..lock import lock_post, lock_thread, unlock_post, unlock_thread
 
 
-def test_lock_thread_locks_thread(thread, user):
+def test_lock_thread_locks_thread(thread):
+    assert lock_thread(thread)
+    assert thread.is_locked
+    assert thread.locked_at
+    assert thread.locked_by is None
+    assert thread.locked_by_name is None
+    assert thread.locked_by_slug is None
+    assert thread.lock_reason is None
+
+    thread.refresh_from_db()
+    assert thread.is_locked
+    assert thread.locked_at
+    assert thread.locked_by is None
+    assert thread.locked_by_name is None
+    assert thread.locked_by_slug is None
+    assert thread.lock_reason is None
+
+
+def test_lock_thread_locks_thread_by_user(thread, user):
     assert lock_thread(thread, user)
     assert thread.is_locked
     assert thread.locked_at
@@ -147,7 +165,25 @@ def test_unlock_thread_doesnt_save_thread_if_commit_is_false(
     assert thread.lock_reason == "Reason"
 
 
-def test_lock_post_locks_post(post, user):
+def test_lock_post_locks_post(post):
+    assert lock_post(post)
+    assert post.is_locked
+    assert post.locked_at
+    assert post.locked_by is None
+    assert post.locked_by_name is None
+    assert post.locked_by_slug is None
+    assert post.lock_reason is None
+
+    post.refresh_from_db()
+    assert post.is_locked
+    assert post.locked_at
+    assert post.locked_by is None
+    assert post.locked_by_name is None
+    assert post.locked_by_slug is None
+    assert post.lock_reason is None
+
+
+def test_lock_post_locks_post_by_user(post, user):
     assert lock_post(post, user)
     assert post.is_locked
     assert post.locked_at

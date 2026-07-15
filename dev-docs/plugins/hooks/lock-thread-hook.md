@@ -18,7 +18,7 @@ from misago.threads.hooks import lock_thread_hook
 def custom_lock_thread_filter(
     action: LockThreadHookAction,
     thread: Thread,
-    locked_by: Union['User', str],
+    locked_by: Union['User', str, None]=None,
     lock_reason: str | None=None,
     commit: bool=True,
     request: HttpRequest | None=None,
@@ -43,9 +43,9 @@ See the [action](#action) section for details.
 A `Thread` to lock.
 
 
-#### `locked_by: User | str`
+#### `locked_by: User | str | None`
 
-The user who locked the thread.
+The user who locked the thread, or `None` if not provided.
 
 
 #### `lock_reason: str | None`
@@ -75,7 +75,7 @@ The request object, or `None` if not provided.
 ```python
 def lock_thread_action(
     thread: Thread,
-    locked_by: Union['User', str],
+    locked_by: Union['User', str, None]=None,
     lock_reason: str | None=None,
     commit: bool=True,
     request: HttpRequest | None=None,
@@ -93,9 +93,9 @@ Misago function for locking a thread.
 A `Thread` to lock.
 
 
-#### `locked_by: User | str`
+#### `locked_by: User | str | None`
 
-The user who locked the thread.
+The user who locked the thread, or `None` if not provided.
 
 
 #### `lock_reason: str | None`
@@ -122,26 +122,29 @@ The request object, or `None` if not provided.
 
 ## Example
 
-Register user who locked the thread.
+Register the IP address of the user who locked the thread.
 
 ```python
 from django.http import HttpRequest
 from misago.threads.hooks import lock_thread_hook
 from misago.threads.models import Thread
+from misago.users.models import User
 
 
 @lock_thread_hook.append_filter
 def register_user_that_locked_thread(
     action,
     thread: Thread,
+    locked_by: User | str | None = None,
+    lock_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
-    if not action(thread, commit=False, request=request):
+    if not action(thread, locked_by, lock_reason, commit=False, request=request):
         return False
 
     if request:
-        thread.plugin_data["locked_by"] = request.user.id
+        thread.plugin_data["locked_by_ip"] = request.user_ip
 
     if commit:
         thread.save()

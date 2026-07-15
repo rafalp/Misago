@@ -19,9 +19,9 @@ class LockPostHookAction(Protocol):
 
     A `Post` to lock.
 
-    ## `locked_by: User | str`
+    ## `locked_by: User | str | None`
 
-    The user who locked the post.
+    The user who locked the post, or `None` if not provided.
 
     ## `lock_reason: str | None`
 
@@ -45,7 +45,7 @@ class LockPostHookAction(Protocol):
     def __call__(
         self,
         post: Post,
-        locked_by: Union["User", str],
+        locked_by: Union["User", str, None] = None,
         lock_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
@@ -69,9 +69,9 @@ class LockPostHookFilter(Protocol):
 
     A `Post` to lock.
 
-    ## `locked_by: User | str`
+    ## `locked_by: User | str | None`
 
-    The user who locked the post.
+    The user who locked the post, or `None` if not provided.
 
     ## `lock_reason: str | None`
 
@@ -96,7 +96,7 @@ class LockPostHookFilter(Protocol):
         self,
         action: LockPostHookAction,
         post: Post,
-        locked_by: Union["User", str],
+        locked_by: Union["User", str, None] = None,
         lock_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
@@ -115,26 +115,29 @@ class LockPostHook(
 
     # Example
 
-    Register user who locked the post.
+    Register the IP address of the user who locked the post.
 
     ```python
     from django.http import HttpRequest
     from misago.posts.hooks import lock_post_hook
     from misago.posts.models import Post
+    from misago.users.models import User
 
 
     @lock_post_hook.append_filter
     def register_user_that_locked_post(
         action,
         post: Post,
+        locked_by: User | str | None = None,
+        lock_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
-        if not action(post, commit=False, request=request):
+        if not action(post, locked_by, lock_reason, commit=False, request=request):
             return False
 
         if request:
-            post.plugin_data["locked_by"] = request.user.id
+            post.plugin_data["locked_by"] = request.user_ip
 
         if commit:
             post.save()
@@ -148,7 +151,7 @@ class LockPostHook(
         self,
         action: LockPostHookAction,
         post: Post,
-        locked_by: Union["User", str],
+        locked_by: Union["User", str, None] = None,
         lock_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,

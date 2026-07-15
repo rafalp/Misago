@@ -599,9 +599,9 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
         new_thread = create_thread(
             new_category,
             form.cleaned_data["title"],
-            pinned=form.cleaned_data["pin"],
-            is_locked=form.cleaned_data["is_locked"],
-            is_hidden=form.cleaned_data["is_hidden"],
+            form.cleaned_data["pin"],
+            form.cleaned_data["is_locked"],
+            form.cleaned_data["is_hidden"],
             request=request,
         )
 

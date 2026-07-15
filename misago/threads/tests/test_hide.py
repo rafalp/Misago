@@ -1,7 +1,25 @@
 from ..hide import hide_post, hide_thread, unhide_post, unhide_thread
 
 
-def test_hide_thread_hides_thread(thread, user):
+def test_hide_thread_hides_thread(thread):
+    assert hide_thread(thread)
+    assert thread.is_hidden
+    assert thread.hidden_at
+    assert thread.hidden_by is None
+    assert thread.hidden_by_name is None
+    assert thread.hidden_by_slug is None
+    assert thread.hide_reason is None
+
+    thread.refresh_from_db()
+    assert thread.is_hidden
+    assert thread.hidden_at
+    assert thread.hidden_by is None
+    assert thread.hidden_by_name is None
+    assert thread.hidden_by_slug is None
+    assert thread.hide_reason is None
+
+
+def test_hide_thread_hides_thread_by_user(thread, user):
     assert hide_thread(thread, user)
     assert thread.is_hidden
     assert thread.hidden_at
@@ -147,7 +165,25 @@ def test_unhide_thread_doesnt_save_thread_if_commit_is_false(
     assert thread.hide_reason == "Reason"
 
 
-def test_hide_post_hides_post(post, user):
+def test_hide_post_hides_post(post):
+    assert hide_post(post)
+    assert post.is_hidden
+    assert post.hidden_at
+    assert post.hidden_by is None
+    assert post.hidden_by_name is None
+    assert post.hidden_by_slug is None
+    assert post.hide_reason is None
+
+    post.refresh_from_db()
+    assert post.is_hidden
+    assert post.hidden_at
+    assert post.hidden_by is None
+    assert post.hidden_by_name is None
+    assert post.hidden_by_slug is None
+    assert post.hide_reason is None
+
+
+def test_hide_post_hides_post_by_user(post, user):
     assert hide_post(post, user)
     assert post.is_hidden
     assert post.hidden_at

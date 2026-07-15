@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 def hide_thread(
     thread: Thread,
-    hidden_by: Union["User", str],
+    hidden_by: Union["User", str, None] = None,
     hide_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
@@ -30,7 +30,7 @@ def hide_thread(
 
 def _hide_thread_action(
     thread: Thread,
-    hidden_by: Union["User", str],
+    hidden_by: Union["User", str, None] = None,
     hide_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
@@ -45,7 +45,7 @@ def _hide_thread_action(
     if isinstance(hidden_by, str):
         thread.hidden_by_name = hidden_by
         thread.hidden_by_slug = slugify(hidden_by)
-    else:
+    elif hidden_by:
         thread.hidden_by = hidden_by
         thread.hidden_by_name = hidden_by.username
         thread.hidden_by_slug = hidden_by.slug
@@ -83,7 +83,7 @@ def _unhide_thread_action(
 
 def hide_post(
     post: Post,
-    hidden_by: Union["User", str],
+    hidden_by: Union["User", str, None] = None,
     hide_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
@@ -95,7 +95,7 @@ def hide_post(
 
 def _hide_post_action(
     post: Post,
-    hidden_by: Union["User", str],
+    hidden_by: Union["User", str, None] = None,
     hide_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
@@ -110,7 +110,7 @@ def _hide_post_action(
     if isinstance(hidden_by, str):
         post.hidden_by_name = hidden_by
         post.hidden_by_slug = slugify(hidden_by)
-    else:
+    elif hidden_by:
         post.hidden_by = hidden_by
         post.hidden_by_name = hidden_by.username
         post.hidden_by_slug = hidden_by.slug
