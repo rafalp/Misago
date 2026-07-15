@@ -18,6 +18,8 @@ from misago.threads.hooks import lock_thread_hook
 def custom_lock_thread_filter(
     action: LockThreadHookAction,
     thread: Thread,
+    locked_by: Union['User', str],
+    lock_reason: str | None=None,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -41,6 +43,16 @@ See the [action](#action) section for details.
 A `Thread` to lock.
 
 
+#### `locked_by: User | str`
+
+The user who locked the thread.
+
+
+#### `lock_reason: str | None`
+
+A `str` with a short description of why the thread was locked, or `None`.
+
+
 #### `commit: bool = True`
 
 Whether the updated thread instance should be saved to the database.
@@ -62,7 +74,11 @@ The request object, or `None` if not provided.
 
 ```python
 def lock_thread_action(
-    thread: Thread, commit: bool=True, request: HttpRequest | None=None
+    thread: Thread,
+    locked_by: Union['User', str],
+    lock_reason: str | None=None,
+    commit: bool=True,
+    request: HttpRequest | None=None,
 ) -> bool:
     ...
 ```
@@ -75,6 +91,16 @@ Misago function for locking a thread.
 #### `thread: Thread`
 
 A `Thread` to lock.
+
+
+#### `locked_by: User | str`
+
+The user who locked the thread.
+
+
+#### `lock_reason: str | None`
+
+A `str` with a short description of why the thread was locked, or `None`.
 
 
 #### `commit: bool = True`

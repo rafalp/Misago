@@ -19,7 +19,7 @@ def custom_hide_thread_filter(
     action: HideThreadHookAction,
     thread: Thread,
     hidden_by: Union['User', str],
-    hidden_reason: str | None=None,
+    hide_reason: str | None=None,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -48,7 +48,7 @@ A `Thread` to hide.
 The user who hid the thread.
 
 
-#### `hidden_reason: str | None`
+#### `hide_reason: str | None`
 
 A `str` with a short description of why the thread was hidden, or `None`.
 
@@ -76,7 +76,7 @@ The request object, or `None` if not provided.
 def hide_thread_action(
     thread: Thread,
     hidden_by: Union['User', str],
-    hidden_reason: str | None=None,
+    hide_reason: str | None=None,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -98,7 +98,7 @@ A `Thread` to hide.
 The user who hid the thread.
 
 
-#### `hidden_reason: str | None`
+#### `hide_reason: str | None`
 
 A `str` with a short description of why the thread was hidden, or `None`.
 
@@ -136,11 +136,11 @@ def register_user_that_hid_thread(
     action,
     thread: Thread,
     hidden_by: User | str,
-    hidden_reason: str | None = None,
+    hide_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
-    if not action(thread, hidden_by, hidden_reason, commit=False, request=request):
+    if not action(thread, hidden_by, hide_reason, commit=False, request=request):
         return False
 
     if request:

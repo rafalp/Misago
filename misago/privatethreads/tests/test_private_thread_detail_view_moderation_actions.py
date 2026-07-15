@@ -34,7 +34,7 @@ def mock_post_notify_on_new_thread_reply(mocker):
 
 
 def test_private_thread_detail_view_lock_thread_moderation_action_locks_thread(
-    moderator_client, user_private_thread
+    moderator_client, moderator, user_private_thread
 ):
     response = moderator_client.post(
         reverse(
@@ -46,17 +46,36 @@ def test_private_thread_detail_view_lock_thread_moderation_action_locks_thread(
         ),
         {"thread_moderation": "lock"},
     )
+    assert_contains(response, "Lock thread")
+    assert_contains(response, "Reason for locking")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "thread_moderation": "lock",
+            "moderation-lock_reason": "Lorem ipsum",
+            "confirm": "true",
+        },
+    )
     assert response.status_code == 302
     assert response["location"] == reverse(
         "misago:private-thread",
-        kwargs={
-            "thread_id": user_private_thread.id,
-            "slug": user_private_thread.slug,
-        },
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
     )
 
     user_private_thread.refresh_from_db()
     assert user_private_thread.is_locked
+    assert user_private_thread.locked_at
+    assert user_private_thread.locked_by == moderator
+    assert user_private_thread.locked_by_name == moderator.username
+    assert user_private_thread.locked_by_slug == moderator.slug
+    assert user_private_thread.lock_reason == "Lorem ipsum"
     assert user_private_thread.has_events
 
     ThreadEvent.objects.get(
@@ -126,7 +145,7 @@ def test_private_thread_detail_view_hide_thread_moderation_action_hides_thread(
         ),
         {
             "thread_moderation": "hide",
-            "moderation-hidden_reason": "Lorem ipsum",
+            "moderation-hide_reason": "Lorem ipsum",
             "confirm": "true",
         },
     )
@@ -142,7 +161,7 @@ def test_private_thread_detail_view_hide_thread_moderation_action_hides_thread(
     assert user_private_thread.hidden_by == moderator
     assert user_private_thread.hidden_by_name == moderator.username
     assert user_private_thread.hidden_by_slug == moderator.slug
-    assert user_private_thread.hidden_reason == "Lorem ipsum"
+    assert user_private_thread.hide_reason == "Lorem ipsum"
     assert user_private_thread.has_events
 
     ThreadEvent.objects.get(
@@ -183,7 +202,7 @@ def test_private_thread_detail_view_unhide_thread_moderation_action_unhides_thre
     assert user_private_thread.hidden_by is None
     assert user_private_thread.hidden_by_name is None
     assert user_private_thread.hidden_by_slug is None
-    assert user_private_thread.hidden_reason is None
+    assert user_private_thread.hide_reason is None
     assert user_private_thread.has_events
 
     ThreadEvent.objects.get(
@@ -346,7 +365,7 @@ def test_private_thread_detail_view_delete_thread_moderation_action_deletes_thre
 
 
 def test_private_thread_detail_view_lock_posts_moderation_action_locks_posts(
-    thread_reply_factory, moderator_client, user_private_thread
+    thread_reply_factory, moderator_client, moderator, user_private_thread
 ):
     reply = thread_reply_factory(user_private_thread)
 
@@ -359,6 +378,24 @@ def test_private_thread_detail_view_lock_posts_moderation_action_locks_posts(
             },
         ),
         {"posts_moderation": "lock", "posts": [reply.id]},
+    )
+    assert_contains(response, "Lock posts")
+    assert_contains(response, "Reason for locking")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "posts_moderation": "lock",
+            "posts": [reply.id],
+            "moderation-lock_reason": "Lorem ipsum",
+            "confirm": "true",
+        },
     )
     assert response.status_code == 302
     assert (
@@ -375,6 +412,11 @@ def test_private_thread_detail_view_lock_posts_moderation_action_locks_posts(
 
     reply.refresh_from_db()
     assert reply.is_locked
+    assert reply.locked_at
+    assert reply.locked_by == moderator
+    assert reply.locked_by_name == moderator.username
+    assert reply.locked_by_slug == moderator.slug
+    assert reply.lock_reason == "Lorem ipsum"
 
 
 def test_private_thread_detail_view_lock_posts_moderation_action_validates_posts(
@@ -474,7 +516,7 @@ def test_private_thread_detail_view_hide_posts_moderation_action_hides_posts(
         {
             "posts_moderation": "hide",
             "posts": [reply.id],
-            "moderation-hidden_reason": "Lorem ipsum",
+            "moderation-hide_reason": "Lorem ipsum",
             "confirm": "true",
         },
     )
@@ -497,7 +539,7 @@ def test_private_thread_detail_view_hide_posts_moderation_action_hides_posts(
     assert reply.hidden_by == moderator
     assert reply.hidden_by_name == moderator.username
     assert reply.hidden_by_slug == moderator.slug
-    assert reply.hidden_reason == "Lorem ipsum"
+    assert reply.hide_reason == "Lorem ipsum"
 
 
 def test_private_thread_detail_view_hide_posts_moderation_action_validates_posts(
@@ -568,7 +610,7 @@ def test_private_thread_detail_view_unhide_posts_moderation_action_unhides_posts
     assert reply.hidden_by is None
     assert reply.hidden_by_name is None
     assert reply.hidden_by_slug is None
-    assert reply.hidden_reason is None
+    assert reply.hide_reason is None
 
 
 def test_private_thread_detail_view_unhide_posts_moderation_action_validates_posts(
@@ -627,7 +669,7 @@ def test_private_thread_detail_view_approve_posts_moderation_action_approves_pos
     assert reply.hidden_by is None
     assert reply.hidden_by_name is None
     assert reply.hidden_by_slug is None
-    assert reply.hidden_reason is None
+    assert reply.hide_reason is None
 
     mock_posts_synchronize_categories.delay.assert_called_with(
         [user_private_thread.category_id]
@@ -1267,7 +1309,7 @@ def test_private_thread_detail_view_delete_posts_moderation_action_validates_fir
 
 
 def test_private_thread_detail_view_lock_post_moderation_action_locks_post(
-    thread_reply_factory, moderator_client, user_private_thread
+    thread_reply_factory, moderator_client, moderator, user_private_thread
 ):
     reply = thread_reply_factory(user_private_thread)
 
@@ -1280,6 +1322,24 @@ def test_private_thread_detail_view_lock_post_moderation_action_locks_post(
             },
         ),
         {"post_moderation": "lock", "post": reply.id},
+    )
+    assert_contains(response, "Reason for locking")
+    assert_contains(response, "Lock post")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {
+            "post_moderation": "lock",
+            "post": reply.id,
+            "moderation-lock_reason": "Lorem ipsum",
+            "confirm": "true",
+        },
     )
     assert response.status_code == 302
     assert (
@@ -1296,6 +1356,11 @@ def test_private_thread_detail_view_lock_post_moderation_action_locks_post(
 
     reply.refresh_from_db()
     assert reply.is_locked
+    assert reply.locked_at
+    assert reply.locked_by == moderator
+    assert reply.locked_by_name == moderator.username
+    assert reply.locked_by_slug == moderator.slug
+    assert reply.lock_reason == "Lorem ipsum"
 
 
 def test_private_thread_detail_view_unlock_post_moderation_action_unlocks_post(
@@ -1359,7 +1424,7 @@ def test_private_thread_detail_view_hide_post_moderation_action_hides_post(
         {
             "post_moderation": "hide",
             "post": reply.id,
-            "moderation-hidden_reason": "Lorem ipsum",
+            "moderation-hide_reason": "Lorem ipsum",
             "confirm": "true",
         },
     )
@@ -1382,7 +1447,7 @@ def test_private_thread_detail_view_hide_post_moderation_action_hides_post(
     assert reply.hidden_by == moderator
     assert reply.hidden_by_name == moderator.username
     assert reply.hidden_by_slug == moderator.slug
-    assert reply.hidden_reason == "Lorem ipsum"
+    assert reply.hide_reason == "Lorem ipsum"
 
 
 def test_private_thread_detail_view_unhide_post_moderation_action_unhides_post(
@@ -1419,7 +1484,7 @@ def test_private_thread_detail_view_unhide_post_moderation_action_unhides_post(
     assert reply.hidden_by is None
     assert reply.hidden_by_name is None
     assert reply.hidden_by_slug is None
-    assert reply.hidden_reason is None
+    assert reply.hide_reason is None
 
 
 def test_private_thread_detail_view_approve_post_moderation_action_approves_post(

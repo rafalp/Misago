@@ -66,7 +66,7 @@ def _create_thread_action(
         )
 
     if is_locked:
-        lock_thread(thread, commit=False, request=request)
+        lock_thread(thread, request.user, commit=False, request=request)
 
     if is_hidden:
         if request:

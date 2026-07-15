@@ -395,7 +395,7 @@ def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_timestam
         is_hidden=True,
         hidden_at=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse(
@@ -447,7 +447,7 @@ def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_timestam
         is_hidden=True,
         hidden_at=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse(
@@ -496,7 +496,7 @@ def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_timestam
         original=get_random_string(12),
         is_hidden=True,
         hidden_at=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse(
@@ -542,7 +542,7 @@ def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_user_and
         original=get_random_string(12),
         is_hidden=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse(
@@ -592,7 +592,7 @@ def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_deleted_
         original=get_random_string(12),
         is_hidden=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse(
@@ -639,7 +639,7 @@ def test_private_thread_detail_view_shows_deleted_user_hidden_post_with_reason_t
         user_private_thread,
         original=get_random_string(12),
         is_hidden=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse(
@@ -684,7 +684,7 @@ def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_user_a
         is_hidden=True,
         hidden_at=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -726,7 +726,7 @@ def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_delete
         is_hidden=True,
         hidden_at=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -765,7 +765,7 @@ def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_and_re
         poster=user,
         is_hidden=True,
         hidden_at=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -801,7 +801,7 @@ def test_private_thread_detail_view_shows_user_hidden_post_with_user_and_reason_
         poster=user,
         is_hidden=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -841,7 +841,7 @@ def test_private_thread_detail_view_shows_user_hidden_post_with_deleted_user_and
         poster=user,
         is_hidden=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -878,7 +878,7 @@ def test_private_thread_detail_view_shows_user_hidden_post_with_reason_to_user(
         original=get_random_string(12),
         poster=user,
         is_hidden=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -917,7 +917,7 @@ def test_private_thread_detail_view_shows_other_user_hidden_post_with_timestamp_
         is_hidden=True,
         hidden_at=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse(
@@ -971,7 +971,7 @@ def test_private_thread_detail_view_shows_other_user_hidden_post_with_timestamp_
         is_hidden=True,
         hidden_at=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse(
@@ -1022,7 +1022,7 @@ def test_private_thread_detail_view_shows_other_user_hidden_post_with_timestamp_
         poster=other_user,
         is_hidden=True,
         hidden_at=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse(
@@ -1070,7 +1070,7 @@ def test_private_thread_detail_view_shows_other_user_hidden_post_with_user_and_r
         poster=other_user,
         is_hidden=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse(
@@ -1122,7 +1122,7 @@ def test_private_thread_detail_view_shows_other_user_hidden_post_with_deleted_us
         poster=other_user,
         is_hidden=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse(
@@ -1171,7 +1171,7 @@ def test_private_thread_detail_view_shows_other_user_hidden_post_with_reason_to_
         original=get_random_string(12),
         poster=other_user,
         is_hidden=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse(
@@ -1219,7 +1219,7 @@ def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_user_a
         is_hidden=True,
         hidden_at=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = moderator_client.get(
         reverse(
@@ -1275,7 +1275,7 @@ def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_delete
         is_hidden=True,
         hidden_at=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = moderator_client.get(
         reverse(
@@ -1328,7 +1328,7 @@ def test_private_thread_detail_view_shows_user_hidden_post_with_timestamp_and_re
         poster=user,
         is_hidden=True,
         hidden_at=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = moderator_client.get(
         reverse(
@@ -1378,7 +1378,7 @@ def test_private_thread_detail_view_shows_user_hidden_post_with_user_and_reason_
         poster=user,
         is_hidden=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = moderator_client.get(
         reverse(
@@ -1432,7 +1432,7 @@ def test_private_thread_detail_view_shows_user_hidden_post_with_deleted_user_and
         poster=user,
         is_hidden=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = moderator_client.get(
         reverse(
@@ -1483,7 +1483,7 @@ def test_private_thread_detail_view_shows_user_hidden_post_with_reason_to_modera
         original=get_random_string(12),
         poster=user,
         is_hidden=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = moderator_client.get(
         reverse(

@@ -622,7 +622,7 @@ class DetailView(GenericThreadView):
             "hidden_by_id": thread.hidden_by_id,
             "hidden_by_name": thread.hidden_by_name,
             "hidden_by_slug": thread.hidden_by_slug,
-            "hidden_reason": thread.hidden_reason,
+            "hide_reason": thread.hide_reason,
         }
 
     def get_unapproved_thread_status_bar(self) -> dict:

@@ -605,7 +605,7 @@ def test_private_thread_detail_view_shows_hidden_thread_with_hidden_at_timestamp
 ):
     user_private_thread.is_hidden = True
     user_private_thread.hidden_at = timezone.now()
-    user_private_thread.hidden_reason = "Lorem ipsum"
+    user_private_thread.hide_reason = "Lorem ipsum"
     user_private_thread.save()
 
     response = moderator_client.get(
@@ -671,7 +671,7 @@ def test_private_thread_detail_view_shows_hidden_by_deleted_user_thread_with_hid
     user_private_thread.hidden_at = timezone.now()
     user_private_thread.hidden_by_name = "DeletedUser"
     user_private_thread.hidden_by_slug = "deleteduser"
-    user_private_thread.hidden_reason = "Lorem ipsum"
+    user_private_thread.hide_reason = "Lorem ipsum"
     user_private_thread.save()
 
     response = moderator_client.get(
@@ -696,7 +696,7 @@ def test_private_thread_detail_view_shows_hidden_by_user_thread_with_hidden_at_t
     user_private_thread.hidden_by = other_user
     user_private_thread.hidden_by_name = other_user.username
     user_private_thread.hidden_by_slug = other_user.slug
-    user_private_thread.hidden_reason = "Lorem ipsum"
+    user_private_thread.hide_reason = "Lorem ipsum"
     user_private_thread.save()
 
     response = moderator_client.get(
@@ -762,7 +762,7 @@ def test_private_thread_detail_view_shows_hidden_by_deleted_user_thread_with_rea
     user_private_thread.is_hidden = True
     user_private_thread.hidden_by_name = "DeletedUser"
     user_private_thread.hidden_by_slug = "deleteduser"
-    user_private_thread.hidden_reason = "Lorem ipsum"
+    user_private_thread.hide_reason = "Lorem ipsum"
     user_private_thread.save()
 
     response = moderator_client.get(
@@ -786,7 +786,7 @@ def test_private_thread_detail_view_shows_hidden_by_user_thread_with_reason_to_m
     user_private_thread.hidden_by = other_user
     user_private_thread.hidden_by_name = other_user.username
     user_private_thread.hidden_by_slug = other_user.slug
-    user_private_thread.hidden_reason = "Lorem ipsum"
+    user_private_thread.hide_reason = "Lorem ipsum"
     user_private_thread.save()
 
     response = moderator_client.get(
@@ -807,7 +807,7 @@ def test_private_thread_detail_view_shows_hidden_thread_with_reason_to_moderator
     moderator_client, user_private_thread
 ):
     user_private_thread.is_hidden = True
-    user_private_thread.hidden_reason = "Lorem ipsum"
+    user_private_thread.hide_reason = "Lorem ipsum"
     user_private_thread.save()
 
     response = moderator_client.get(

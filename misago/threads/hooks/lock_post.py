@@ -1,9 +1,12 @@
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol, Union
 
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
 from ..models import Post
+
+if TYPE_CHECKING:
+    from ...users.models import User
 
 
 class LockPostHookAction(Protocol):
@@ -15,6 +18,14 @@ class LockPostHookAction(Protocol):
     ## `post: Post`
 
     A `Post` to lock.
+
+    ## `locked_by: User | str`
+
+    The user who locked the post.
+
+    ## `lock_reason: str | None`
+
+    A `str` with a short description of why the post was locked, or `None`.
 
     ## `commit: bool = True`
 
@@ -34,6 +45,8 @@ class LockPostHookAction(Protocol):
     def __call__(
         self,
         post: Post,
+        locked_by: Union["User", str],
+        lock_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -56,6 +69,14 @@ class LockPostHookFilter(Protocol):
 
     A `Post` to lock.
 
+    ## `locked_by: User | str`
+
+    The user who locked the post.
+
+    ## `lock_reason: str | None`
+
+    A `str` with a short description of why the post was locked, or `None`.
+
     ## `commit: bool = True`
 
     Whether the updated post instance should be saved to the database.
@@ -75,6 +96,8 @@ class LockPostHookFilter(Protocol):
         self,
         action: LockPostHookAction,
         post: Post,
+        locked_by: Union["User", str],
+        lock_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -125,12 +148,16 @@ class LockPostHook(
         self,
         action: LockPostHookAction,
         post: Post,
+        locked_by: Union["User", str],
+        lock_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
         return super().__call__(
             action,
             post,
+            locked_by,
+            lock_reason,
             commit,
             request,
         )

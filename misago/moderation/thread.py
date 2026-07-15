@@ -46,7 +46,13 @@ from .actions import (
     ModerationResult,
     ThreadModerationAction,
 )
-from .forms import HideForm, MergeThreadConflictsForm, MergeThreadForm, MoveThreadsForm
+from .forms import (
+    HideForm,
+    LockForm,
+    MergeThreadConflictsForm,
+    MergeThreadForm,
+    MoveThreadsForm,
+)
 from .hooks import (
     get_private_thread_moderation_actions_hook,
     get_thread_moderation_actions_hook,
@@ -223,16 +229,22 @@ class UnpinThreadModerationAction(ThreadModerationAction):
         return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
 
 
-class LockThreadModerationAction(ThreadModerationAction):
+class LockThreadModerationAction(FormMixin, ThreadModerationAction):
     id = "lock"
+    full_name = pgettext_lazy("thread moderation action name", "Lock thread")
     button_label = pgettext_lazy("thread moderation button label", "Lock")
 
-    def execute(self) -> ModerationResult:
+    form_class = LockForm
+    template_name = "misago/moderation/lock.html"
+
+    def form_valid(self, form) -> ModerationResult:
         request = self.request
         thread = self.thread
 
         ensure_thread_has_events(thread, commit=False)
-        lock_thread(thread, request=request)
+        lock_thread(
+            thread, request.user, form.cleaned_data["lock_reason"], request=request
+        )
 
         thread_update = create_locked_thread_update(
             thread, request.user, request=request
@@ -283,7 +295,7 @@ class HideThreadModerationAction(FormMixin, ThreadModerationAction):
 
         ensure_thread_has_events(thread, commit=False)
         hide_thread(
-            thread, request.user, form.cleaned_data["hidden_reason"], request=request
+            thread, request.user, form.cleaned_data["hide_reason"], request=request
         )
 
         thread_update = create_hidden_thread_update(
@@ -593,8 +605,8 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
 
 class DeleteThreadModerationAction(ConfirmMixin, ThreadModerationAction):
     id = "delete"
-    full_name = "Delete thread"
-    button_label = "Delete"
+    full_name = pgettext_lazy("thread moderation action name", "Delete thread")
+    button_label = pgettext_lazy("thread moderation button label", "Delete")
     confirmation_message = pgettext_lazy(
         "thread moderation",
         "Are you sure you want to delete this thread? This can't be undone.",

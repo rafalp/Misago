@@ -23,7 +23,7 @@ class HideThreadHookAction(Protocol):
 
     The user who hid the thread.
 
-    ## `hidden_reason: str | None`
+    ## `hide_reason: str | None`
 
     A `str` with a short description of why the thread was hidden, or `None`.
 
@@ -46,7 +46,7 @@ class HideThreadHookAction(Protocol):
         self,
         thread: Thread,
         hidden_by: Union["User", str],
-        hidden_reason: str | None = None,
+        hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -73,7 +73,7 @@ class HideThreadHookFilter(Protocol):
 
     The user who hid the thread.
 
-    ## `hidden_reason: str | None`
+    ## `hide_reason: str | None`
 
     A `str` with a short description of why the thread was hidden, or `None`.
 
@@ -97,7 +97,7 @@ class HideThreadHookFilter(Protocol):
         action: HideThreadHookAction,
         thread: Thread,
         hidden_by: Union["User", str],
-        hidden_reason: str | None = None,
+        hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -129,11 +129,11 @@ class HideThreadHook(
         action,
         thread: Thread,
         hidden_by: User | str,
-        hidden_reason: str | None = None,
+        hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
-        if not action(thread, hidden_by, hidden_reason, commit=False, request=request):
+        if not action(thread, hidden_by, hide_reason, commit=False, request=request):
             return False
 
         if request:
@@ -152,7 +152,7 @@ class HideThreadHook(
         action: HideThreadHookAction,
         thread: Thread,
         hidden_by: Union["User", str],
-        hidden_reason: str | None = None,
+        hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
@@ -160,7 +160,7 @@ class HideThreadHook(
             action,
             thread,
             hidden_by,
-            hidden_reason,
+            hide_reason,
             commit,
             request,
         )

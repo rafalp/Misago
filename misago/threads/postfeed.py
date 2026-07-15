@@ -462,7 +462,7 @@ class PostFeed:
             "hidden_by_id": post.hidden_by_id,
             "hidden_by_name": post.hidden_by_name,
             "hidden_by_slug": post.hidden_by_slug,
-            "hidden_reason": post.hidden_reason,
+            "hide_reason": post.hide_reason,
         }
 
     def get_post_solved_data(self) -> dict:

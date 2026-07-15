@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="thread",
-            name="hidden_reason",
+            name="hide_reason",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
     ]

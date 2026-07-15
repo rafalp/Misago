@@ -197,7 +197,7 @@ def test_category_thread_list_view_unpin_moderation_action_validates_threads(
 
 
 def test_category_thread_list_view_lock_moderation_action_locks_threads(
-    thread_factory, moderator_client, default_category
+    thread_factory, moderator_client, moderator, default_category
 ):
     thread = thread_factory(default_category)
 
@@ -205,11 +205,28 @@ def test_category_thread_list_view_lock_moderation_action_locks_threads(
         default_category.get_absolute_url(),
         {"moderation": "lock", "threads": [thread.id]},
     )
+    assert_contains(response, "Lock threads")
+    assert_contains(response, "Reason for lock")
+
+    response = moderator_client.post(
+        default_category.get_absolute_url(),
+        {
+            "moderation": "lock",
+            "threads": [thread.id],
+            "moderation-lock_reason": "Lorem ipsum",
+            "confirm": True,
+        },
+    )
     assert response.status_code == 302
     assert response["location"] == default_category.get_absolute_url()
 
     thread.refresh_from_db()
     assert thread.is_locked
+    assert thread.locked_at
+    assert thread.locked_by == moderator
+    assert thread.locked_by_name == moderator.username
+    assert thread.locked_by_slug == moderator.slug
+    assert thread.lock_reason == "Lorem ipsum"
     assert thread.has_events
 
     ThreadEvent.objects.get(
@@ -289,7 +306,7 @@ def test_category_thread_list_view_hide_moderation_action_hides_threads(
         {
             "moderation": "hide",
             "threads": [thread.id],
-            "moderation-hidden_reason": "Lorem ipsum",
+            "moderation-hide_reason": "Lorem ipsum",
             "confirm": "true",
         },
     )
@@ -302,7 +319,7 @@ def test_category_thread_list_view_hide_moderation_action_hides_threads(
     assert thread.hidden_by == moderator
     assert thread.hidden_by_name == moderator.username
     assert thread.hidden_by_slug == moderator.slug
-    assert thread.hidden_reason == "Lorem ipsum"
+    assert thread.hide_reason == "Lorem ipsum"
     assert thread.has_events
 
     ThreadEvent.objects.get(
@@ -347,7 +364,7 @@ def test_category_thread_list_view_unhide_moderation_action_unhides_threads(
     assert thread.hidden_by is None
     assert thread.hidden_by_name is None
     assert thread.hidden_by_slug is None
-    assert thread.hidden_reason is None
+    assert thread.hide_reason is None
     assert thread.has_events
 
     ThreadEvent.objects.get(

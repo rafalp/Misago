@@ -43,7 +43,7 @@ from .actions import (
     ModerationResult,
     ThreadsModerationAction,
 )
-from .forms import HideForm, MergeThreadsForm, MoveThreadsForm
+from .forms import HideForm, LockForm, MergeThreadsForm, MoveThreadsForm
 from .hooks import (
     get_category_threads_moderation_actions_hook,
     get_threads_moderation_actions_hook,
@@ -231,9 +231,13 @@ class UnpinThreadsModerationAction(ThreadsModerationAction):
         return ModerationResult(updated_items=threads)
 
 
-class LockThreadsModerationAction(ThreadsModerationAction):
+class LockThreadsModerationAction(FormMixin, ThreadsModerationAction):
     id = "lock"
+    full_name = pgettext_lazy("threads moderation action name", "Lock threads")
     button_label = pgettext_lazy("threads moderation button label", "Lock")
+
+    form_class = LockForm
+    template_name = "misago/moderation/lock.html"
 
     def validate(self):
         for thread in self.threads:
@@ -244,14 +248,14 @@ class LockThreadsModerationAction(ThreadsModerationAction):
             pgettext("threads moderation validation", "Threads are already locked.")
         )
 
-    def execute(self) -> ModerationResult:
+    def form_valid(self, form) -> ModerationResult:
         request = self.request
         threads = [thread for thread in self.threads if not thread.is_locked]
+        lock_reason = form.cleaned_data["lock_reason"]
 
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
-            lock_thread(thread, request=request)
-
+            lock_thread(thread, request.user, lock_reason, request=request)
             create_locked_thread_update(thread, request.user, request=request)
 
         messages.success(
@@ -312,19 +316,19 @@ class HideThreadsModerationAction(FormMixin, ThreadsModerationAction):
     def form_valid(self, form) -> ModerationResult:
         request = self.request
         threads = [thread for thread in self.threads if not thread.is_hidden]
-        hidden_reason = form.cleaned_data["hidden_reason"]
+        hide_reason = form.cleaned_data["hide_reason"]
         categories = list(set(thread.category_id for thread in threads))
 
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
-            hide_thread(thread, request.user, hidden_reason, request=request)
+            hide_thread(thread, request.user, hide_reason, request=request)
             create_hidden_thread_update(thread, request.user, request=request)
 
         synchronize_categories.delay(categories)
 
         messages.success(
             request,
-            pgettext("thread moderation success", "Threads hidden"),
+            pgettext("threads moderation success", "Threads hidden"),
         )
 
         return ModerationResult(updated_items=threads)
@@ -623,8 +627,8 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
 
 class DeleteThreadsModerationAction(ConfirmMixin, ThreadsModerationAction):
     id = "delete"
-    full_name = "Delete threads"
-    button_label = "Delete"
+    full_name = pgettext_lazy("threads moderation action name", "Delete threads")
+    button_label = pgettext_lazy("threads moderation button label", "Delete")
     confirmation_message = pgettext_lazy(
         "threads moderation",
         "Are you sure you want to delete the selected threads? This can't be undone.",

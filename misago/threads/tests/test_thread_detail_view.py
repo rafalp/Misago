@@ -1171,7 +1171,7 @@ def test_thread_detail_view_shows_hidden_thread_with_hidden_at_timestamp_with_re
 ):
     thread.is_hidden = True
     thread.hidden_at = timezone.now()
-    thread.hidden_reason = "Lorem ipsum"
+    thread.hide_reason = "Lorem ipsum"
     thread.save()
 
     response = moderator_client.get(
@@ -1237,7 +1237,7 @@ def test_thread_detail_view_shows_hidden_by_deleted_user_thread_with_hidden_at_t
     thread.hidden_at = timezone.now()
     thread.hidden_by_name = "DeletedUser"
     thread.hidden_by_slug = "deleteduser"
-    thread.hidden_reason = "Lorem ipsum"
+    thread.hide_reason = "Lorem ipsum"
     thread.save()
 
     response = moderator_client.get(
@@ -1262,7 +1262,7 @@ def test_thread_detail_view_shows_hidden_by_user_thread_with_hidden_at_timestamp
     thread.hidden_by = other_user
     thread.hidden_by_name = other_user.username
     thread.hidden_by_slug = other_user.slug
-    thread.hidden_reason = "Lorem ipsum"
+    thread.hide_reason = "Lorem ipsum"
     thread.save()
 
     response = moderator_client.get(
@@ -1328,7 +1328,7 @@ def test_thread_detail_view_shows_hidden_by_deleted_user_thread_with_reason_to_m
     thread.is_hidden = True
     thread.hidden_by_name = "DeletedUser"
     thread.hidden_by_slug = "deleteduser"
-    thread.hidden_reason = "Lorem ipsum"
+    thread.hide_reason = "Lorem ipsum"
     thread.save()
 
     response = moderator_client.get(
@@ -1352,7 +1352,7 @@ def test_thread_detail_view_shows_hidden_by_user_thread_with_reason_to_moderator
     thread.hidden_by = other_user
     thread.hidden_by_name = other_user.username
     thread.hidden_by_slug = other_user.slug
-    thread.hidden_reason = "Lorem ipsum"
+    thread.hide_reason = "Lorem ipsum"
     thread.save()
 
     response = moderator_client.get(
@@ -1373,7 +1373,7 @@ def test_thread_detail_view_shows_hidden_thread_with_reason_to_moderator(
     moderator_client, thread
 ):
     thread.is_hidden = True
-    thread.hidden_reason = "Lorem ipsum"
+    thread.hide_reason = "Lorem ipsum"
     thread.save()
 
     response = moderator_client.get(

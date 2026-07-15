@@ -1,9 +1,12 @@
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol, Union
 
 from django.http import HttpRequest
 
 from ...plugins.hooks import FilterHook
 from ..models import Thread
+
+if TYPE_CHECKING:
+    from ...users.models import User
 
 
 class LockThreadHookAction(Protocol):
@@ -15,6 +18,14 @@ class LockThreadHookAction(Protocol):
     ## `thread: Thread`
 
     A `Thread` to lock.
+
+    ## `locked_by: User | str`
+
+    The user who locked the thread.
+
+    ## `lock_reason: str | None`
+
+    A `str` with a short description of why the thread was locked, or `None`.
 
     ## `commit: bool = True`
 
@@ -34,6 +45,8 @@ class LockThreadHookAction(Protocol):
     def __call__(
         self,
         thread: Thread,
+        locked_by: Union["User", str],
+        lock_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -56,6 +69,14 @@ class LockThreadHookFilter(Protocol):
 
     A `Thread` to lock.
 
+    ## `locked_by: User | str`
+
+    The user who locked the thread.
+
+    ## `lock_reason: str | None`
+
+    A `str` with a short description of why the thread was locked, or `None`.
+
     ## `commit: bool = True`
 
     Whether the updated thread instance should be saved to the database.
@@ -75,6 +96,8 @@ class LockThreadHookFilter(Protocol):
         self,
         action: LockThreadHookAction,
         thread: Thread,
+        locked_by: Union["User", str],
+        lock_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -125,12 +148,16 @@ class LockThreadHook(
         self,
         action: LockThreadHookAction,
         thread: Thread,
+        locked_by: Union["User", str],
+        lock_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
         return super().__call__(
             action,
             thread,
+            locked_by,
+            lock_reason,
             commit,
             request,
         )
