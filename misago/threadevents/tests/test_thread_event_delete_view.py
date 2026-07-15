@@ -11,11 +11,11 @@ from ..models import ThreadEvent
 def test_thread_update_delete_view_returns_404_error_for_not_found_thread(user_client):
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": 100,
                 "slug": "not-found",
-                "thread_update_id": 100,
+                "thread_event_id": 100,
             },
         )
     )
@@ -28,11 +28,11 @@ def test_thread_update_delete_view_returns_404_error_for_not_found_update(
 ):
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": 100,
+                "thread_event_id": 100,
             },
         )
     )
@@ -41,15 +41,15 @@ def test_thread_update_delete_view_returns_404_error_for_not_found_update(
 
 
 def test_thread_update_delete_view_returns_403_error_for_anonymous_user(
-    client, thread, thread_update
+    client, thread, thread_event
 ):
     response = client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         )
     )
@@ -60,15 +60,15 @@ def test_thread_update_delete_view_returns_403_error_for_anonymous_user(
 
 
 def test_thread_update_delete_view_returns_403_error_for_user(
-    user_client, thread, thread_update
+    user_client, thread, thread_event
 ):
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         )
     )
@@ -79,7 +79,7 @@ def test_thread_update_delete_view_returns_403_error_for_user(
 
 
 def test_thread_update_delete_view_checks_category_permission(
-    user_client, thread, thread_update
+    user_client, thread, thread_event
 ):
     CategoryGroupPermission.objects.filter(
         permission=CategoryPermission.BROWSE
@@ -87,11 +87,11 @@ def test_thread_update_delete_view_checks_category_permission(
 
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         )
     )
@@ -100,18 +100,18 @@ def test_thread_update_delete_view_checks_category_permission(
 
 
 def test_thread_update_delete_view_checks_thread_permission(
-    user_client, thread, thread_update
+    user_client, thread, thread_event
 ):
     thread.is_hidden = True
     thread.save()
 
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         )
     )
@@ -120,15 +120,15 @@ def test_thread_update_delete_view_checks_thread_permission(
 
 
 def test_thread_update_delete_view_checks_thread_update_permission(
-    user_client, thread, hidden_thread_update
+    user_client, thread, hidden_thread_event
 ):
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": hidden_thread_update.id,
+                "thread_event_id": hidden_thread_event.id,
             },
         )
     )
@@ -137,7 +137,7 @@ def test_thread_update_delete_view_checks_thread_update_permission(
 
 
 def test_thread_update_delete_view_shows_confirm_delete_form_for_category_moderator(
-    user_client, user, default_category, thread, thread_update
+    user_client, user, default_category, thread, thread_event
 ):
     Moderator.objects.create(
         categories=[default_category.id],
@@ -147,11 +147,11 @@ def test_thread_update_delete_view_shows_confirm_delete_form_for_category_modera
 
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
     )
@@ -160,7 +160,7 @@ def test_thread_update_delete_view_shows_confirm_delete_form_for_category_modera
 
 
 def test_thread_update_delete_view_deletes_update_for_category_moderator(
-    user_client, user, default_category, thread, thread_update
+    user_client, user, default_category, thread, thread_event
 ):
     Moderator.objects.create(
         categories=[default_category.id],
@@ -170,11 +170,11 @@ def test_thread_update_delete_view_deletes_update_for_category_moderator(
 
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         {"confirm": "true"},
@@ -183,19 +183,19 @@ def test_thread_update_delete_view_deletes_update_for_category_moderator(
     assert response.status_code == 302
 
     with pytest.raises(ThreadEvent.DoesNotExist):
-        thread_update.refresh_from_db()
+        thread_event.refresh_from_db()
 
 
 def test_thread_update_delete_view_shows_confirm_delete_form_for_global_moderator(
-    moderator_client, thread, thread_update
+    moderator_client, thread, thread_event
 ):
     response = moderator_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
     )
@@ -204,15 +204,15 @@ def test_thread_update_delete_view_shows_confirm_delete_form_for_global_moderato
 
 
 def test_thread_update_delete_view_deletes_update_for_global_moderator(
-    moderator_client, thread, thread_update
+    moderator_client, thread, thread_event
 ):
     response = moderator_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         {"confirm": "true"},
@@ -221,22 +221,22 @@ def test_thread_update_delete_view_deletes_update_for_global_moderator(
     assert response.status_code == 302
 
     with pytest.raises(ThreadEvent.DoesNotExist):
-        thread_update.refresh_from_db()
+        thread_event.refresh_from_db()
 
 
 def test_thread_update_delete_view_unsets_thread_has_updates_flag_for_last_update_deleted(
-    moderator_client, thread, thread_update
+    moderator_client, thread, thread_event
 ):
     thread.has_events = True
     thread.save()
 
     response = moderator_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         {"confirm": "true"},
@@ -248,11 +248,11 @@ def test_thread_update_delete_view_unsets_thread_has_updates_flag_for_last_updat
     assert not thread.has_events
 
     with pytest.raises(ThreadEvent.DoesNotExist):
-        thread_update.refresh_from_db()
+        thread_event.refresh_from_db()
 
 
 def test_thread_update_delete_view_keeps_thread_has_updates_flag_if_other_updates_exist(
-    moderator_client, thread, thread_update
+    moderator_client, thread, thread_event
 ):
     thread.has_events = True
     thread.save()
@@ -261,11 +261,11 @@ def test_thread_update_delete_view_keeps_thread_has_updates_flag_if_other_update
 
     response = moderator_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         {"confirm": "true"},
@@ -277,19 +277,19 @@ def test_thread_update_delete_view_keeps_thread_has_updates_flag_if_other_update
     assert thread.has_events
 
     with pytest.raises(ThreadEvent.DoesNotExist):
-        thread_update.refresh_from_db()
+        thread_event.refresh_from_db()
 
 
 def test_thread_update_delete_view_returns_redirect_to_thread(
-    moderator_client, thread, thread_update
+    moderator_client, thread, thread_event
 ):
     response = moderator_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         {"confirm": "true"},
@@ -302,7 +302,7 @@ def test_thread_update_delete_view_returns_redirect_to_thread(
 
 
 def test_thread_update_delete_view_returns_redirect_to_next_url(
-    moderator_client, thread, thread_update
+    moderator_client, thread, thread_event
 ):
     next_url = reverse(
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 2}
@@ -311,11 +311,11 @@ def test_thread_update_delete_view_returns_redirect_to_next_url(
 
     response = moderator_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         {
@@ -329,15 +329,15 @@ def test_thread_update_delete_view_returns_redirect_to_next_url(
 
 
 def test_thread_update_delete_view_returns_redirect_to_thread_for_invalid_next_url(
-    moderator_client, thread, thread_update
+    moderator_client, thread, thread_event
 ):
     response = moderator_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         {
@@ -357,11 +357,11 @@ def test_thread_update_delete_view_returns_404_error_for_not_found_thread_in_htm
 ):
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": 100,
                 "slug": "not-found",
-                "thread_update_id": 100,
+                "thread_event_id": 100,
             },
         ),
         headers={"hx-request": "true"},
@@ -375,11 +375,11 @@ def test_thread_update_delete_view_returns_404_error_for_not_found_update_in_htm
 ):
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": 100,
+                "thread_event_id": 100,
             },
         ),
         headers={"hx-request": "true"},
@@ -389,15 +389,15 @@ def test_thread_update_delete_view_returns_404_error_for_not_found_update_in_htm
 
 
 def test_thread_update_delete_view_returns_403_error_for_anonymous_user_in_htmx(
-    client, thread, thread_update
+    client, thread, thread_event
 ):
     response = client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -409,15 +409,15 @@ def test_thread_update_delete_view_returns_403_error_for_anonymous_user_in_htmx(
 
 
 def test_thread_update_delete_view_returns_403_error_for_user_in_htmx(
-    user_client, thread, thread_update
+    user_client, thread, thread_event
 ):
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -429,7 +429,7 @@ def test_thread_update_delete_view_returns_403_error_for_user_in_htmx(
 
 
 def test_thread_update_delete_view_checks_category_permission_in_htmx(
-    user_client, thread, thread_update
+    user_client, thread, thread_event
 ):
     CategoryGroupPermission.objects.filter(
         permission=CategoryPermission.BROWSE
@@ -437,11 +437,11 @@ def test_thread_update_delete_view_checks_category_permission_in_htmx(
 
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -451,18 +451,18 @@ def test_thread_update_delete_view_checks_category_permission_in_htmx(
 
 
 def test_thread_update_delete_view_checks_thread_permission_in_htmx(
-    user_client, thread, thread_update
+    user_client, thread, thread_event
 ):
     thread.is_hidden = True
     thread.save()
 
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -472,15 +472,15 @@ def test_thread_update_delete_view_checks_thread_permission_in_htmx(
 
 
 def test_thread_update_delete_view_checks_thread_update_permission_in_htmx(
-    user_client, thread, hidden_thread_update
+    user_client, thread, hidden_thread_event
 ):
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": hidden_thread_update.id,
+                "thread_event_id": hidden_thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -490,7 +490,7 @@ def test_thread_update_delete_view_checks_thread_update_permission_in_htmx(
 
 
 def test_thread_update_delete_view_deletes_update_for_category_moderator_in_htmx(
-    user_client, user, default_category, thread, thread_update
+    user_client, user, default_category, thread, thread_event
 ):
     Moderator.objects.create(
         categories=[default_category.id],
@@ -500,11 +500,11 @@ def test_thread_update_delete_view_deletes_update_for_category_moderator_in_htmx
 
     response = user_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -513,19 +513,19 @@ def test_thread_update_delete_view_deletes_update_for_category_moderator_in_htmx
     assert response.status_code == 200
 
     with pytest.raises(ThreadEvent.DoesNotExist):
-        thread_update.refresh_from_db()
+        thread_event.refresh_from_db()
 
 
 def test_thread_update_delete_view_deletes_update_for_global_moderator_in_htmx(
-    moderator_client, thread, thread_update
+    moderator_client, thread, thread_event
 ):
     response = moderator_client.post(
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -534,4 +534,4 @@ def test_thread_update_delete_view_deletes_update_for_global_moderator_in_htmx(
     assert response.status_code == 200
 
     with pytest.raises(ThreadEvent.DoesNotExist):
-        thread_update.refresh_from_db()
+        thread_event.refresh_from_db()

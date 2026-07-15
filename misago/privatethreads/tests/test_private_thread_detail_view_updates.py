@@ -265,11 +265,11 @@ def test_private_thread_detail_view_doesnt_show_hide_thread_update_button_to_use
     assert_not_contains(
         response,
         reverse(
-            "misago:private-thread-update-hide",
+            "misago:private-thread-event-hide",
             kwargs={
                 "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -303,11 +303,11 @@ def test_private_thread_detail_view_shows_hide_thread_update_button_to_private_t
     assert_contains(
         response,
         reverse(
-            "misago:private-thread-update-hide",
+            "misago:private-thread-event-hide",
             kwargs={
                 "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -335,11 +335,11 @@ def test_private_thread_detail_view_shows_hide_thread_update_button_to_global_mo
     assert_contains(
         response,
         reverse(
-            "misago:private-thread-update-hide",
+            "misago:private-thread-event-hide",
             kwargs={
                 "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -375,11 +375,11 @@ def test_private_thread_detail_view_shows_unhide_thread_update_button_to_categor
     assert_contains(
         response,
         reverse(
-            "misago:private-thread-update-unhide",
+            "misago:private-thread-event-unhide",
             kwargs={
                 "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -409,11 +409,11 @@ def test_private_thread_detail_view_shows_unhide_thread_update_button_to_global_
     assert_contains(
         response,
         reverse(
-            "misago:private-thread-update-unhide",
+            "misago:private-thread-event-unhide",
             kwargs={
                 "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -441,11 +441,11 @@ def test_private_thread_detail_view_doesnt_show_delete_thread_update_button_to_u
     assert_not_contains(
         response,
         reverse(
-            "misago:private-thread-update-delete",
+            "misago:private-thread-event-delete",
             kwargs={
                 "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -479,11 +479,11 @@ def test_private_thread_detail_view_shows_delete_thread_update_button_to_categor
     assert_contains(
         response,
         reverse(
-            "misago:private-thread-update-delete",
+            "misago:private-thread-event-delete",
             kwargs={
                 "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -511,11 +511,11 @@ def test_private_thread_detail_view_shows_delete_thread_update_button_to_global_
     assert_contains(
         response,
         reverse(
-            "misago:private-thread-update-delete",
+            "misago:private-thread-event-delete",
             kwargs={
                 "thread_id": other_user_private_thread.id,
                 "slug": other_user_private_thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )

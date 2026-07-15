@@ -316,24 +316,24 @@ class GenericView(View):
         """
         return get_next_thread_url(request, thread, self.thread_url_name, strip_qs)
 
-    def get_thread_updates_queryset(
+    def get_thread_event_queryset(
         self,
         request: HttpRequest,
         thread: Thread,
     ) -> QuerySet:
         return ThreadEvent.objects.filter(thread=thread).order_by("-id")
 
-    def get_thread_update(
-        self, request: HttpRequest, thread: Thread, thread_update_id: int
+    def get_thread_event(
+        self, request: HttpRequest, thread: Thread, thread_event_id: int
     ) -> ThreadEvent:
-        queryset = self.get_thread_updates_queryset(request, thread)
+        queryset = self.get_thread_event_queryset(request, thread)
         if self.thread_update_select_related is True:
             queryset = queryset.select_related()
         elif self.thread_update_select_related:
             queryset = queryset.select_related(*self.thread_update_select_related)
 
         try:
-            thread_update = queryset.get(id=thread_update_id)
+            thread_event = queryset.get(id=thread_event_id)
         except ThreadEvent.DoesNotExist:
             raise Http404()
 
@@ -341,11 +341,11 @@ class GenericView(View):
             self.thread_select_related is True
             or "category" in self.thread_select_related
         ):
-            thread_update.category = thread.category
+            thread_event.category = thread.category
 
-        thread_update.thread = thread
+        thread_event.thread = thread
 
-        return thread_update
+        return thread_event
 
     def get_moderator_status(self, request: HttpRequest, thread: Thread) -> bool:
         return False
@@ -367,12 +367,12 @@ class ThreadView(GenericView):
         queryset = super().get_posts_queryset(request, thread)
         return filter_thread_posts_queryset(request.user_permissions, thread, queryset)
 
-    def get_thread_updates_queryset(
+    def get_thread_event_queryset(
         self,
         request: HttpRequest,
         thread: Thread,
     ) -> QuerySet:
-        queryset = super().get_thread_updates_queryset(request, thread)
+        queryset = super().get_thread_event_queryset(request, thread)
         return filter_thread_updates_queryset(
             request.user_permissions, thread, queryset
         )

@@ -287,58 +287,56 @@ def test_thread_post_feed_marks_original_post_as_thread_editable_by_moderator(
 
 
 def test_post_feed_returns_thread_update_data(
-    request_factory, user, thread, post, thread_update
+    request_factory, user, thread, post, thread_event
 ):
     request = request_factory(user)
 
-    post_feed = PostFeed(request, thread, [post], [thread_update])
+    post_feed = PostFeed(request, thread, [post], [thread_event])
     feed_data = post_feed.get_context_data()
 
     assert feed_data["template_name"] == post_feed.template_name
     assert (
         feed_data["items"][1]["template_name"] == post_feed.thread_update_template_name
     )
-    assert feed_data["items"][1]["thread_update"] == thread_update
+    assert feed_data["items"][1]["thread_update"] == thread_event
 
 
 def test_post_feed_sets_actors_in_thread_update_data(
-    request_factory, user, thread, post, thread_update
+    request_factory, user, thread, post, thread_event
 ):
     request = request_factory(user)
 
-    post_feed = PostFeed(request, thread, [post], [thread_update])
+    post_feed = PostFeed(request, thread, [post], [thread_event])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_update
+    assert feed_data["items"][1]["thread_update"] == thread_event
     assert feed_data["items"][1]["actor"] == user
     assert feed_data["items"][1]["actor_name"] == user.username
 
 
 def test_post_feed_sets_action_data_in_thread_update_data(
-    request_factory, user, thread, post, thread_update
+    request_factory, user, thread, post, thread_event
 ):
     request = request_factory(user)
 
-    post_feed = PostFeed(request, thread, [post], [thread_update])
+    post_feed = PostFeed(request, thread, [post], [thread_event])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_update
+    assert feed_data["items"][1]["thread_update"] == thread_event
     assert feed_data["items"][1]["icon"] == "tabler/lock-open.svg"
     assert feed_data["items"][1]["description"] == "Unlocked"
 
 
 def test_post_feed_marks_thread_update_as_animated(
-    request_factory, user, thread, post, thread_update, thread_update_context
+    request_factory, user, thread, post, thread_event, thread_update_context
 ):
     request = request_factory(user)
 
-    post_feed = PostFeed(
-        request, thread, [post], [thread_update, thread_update_context]
-    )
+    post_feed = PostFeed(request, thread, [post], [thread_event, thread_update_context])
     post_feed.set_animated_thread_updates([thread_update_context.id])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_update
+    assert feed_data["items"][1]["thread_update"] == thread_event
     assert not feed_data["items"][1]["animate"]
 
     assert feed_data["items"][2]["thread_update"] == thread_update_context
@@ -346,17 +344,15 @@ def test_post_feed_marks_thread_update_as_animated(
 
 
 def test_post_feed_marks_thread_update_as_animated(
-    request_factory, user, thread, post, thread_update, thread_update_context
+    request_factory, user, thread, post, thread_event, thread_update_context
 ):
     request = request_factory(user)
 
-    post_feed = PostFeed(
-        request, thread, [post], [thread_update, thread_update_context]
-    )
+    post_feed = PostFeed(request, thread, [post], [thread_event, thread_update_context])
     post_feed.set_animated_thread_updates([thread_update_context.id])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_update
+    assert feed_data["items"][1]["thread_update"] == thread_event
     assert not feed_data["items"][1]["animate"]
 
     assert feed_data["items"][2]["thread_update"] == thread_update_context
@@ -364,78 +360,78 @@ def test_post_feed_marks_thread_update_as_animated(
 
 
 def test_thread_post_feed_doesnt_mark_thread_update_as_hidable_by_user(
-    request_factory, user, thread, post, thread_update
+    request_factory, user, thread, post, thread_event
 ):
     request = request_factory(user)
 
-    post_feed = ThreadPostFeed(request, thread, [post], [thread_update])
+    post_feed = ThreadPostFeed(request, thread, [post], [thread_event])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_update
+    assert feed_data["items"][1]["thread_update"] == thread_event
     assert not feed_data["items"][1]["hide_url"]
 
 
 def test_thread_post_feed_doesnt_mark_thread_update_as_unhideable_by_user(
-    request_factory, user, thread, post, hidden_thread_update
+    request_factory, user, thread, post, hidden_thread_event
 ):
     request = request_factory(user)
 
-    post_feed = ThreadPostFeed(request, thread, [post], [hidden_thread_update])
+    post_feed = ThreadPostFeed(request, thread, [post], [hidden_thread_event])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == hidden_thread_update
+    assert feed_data["items"][1]["thread_update"] == hidden_thread_event
     assert not feed_data["items"][1]["unhide_url"]
 
 
 def test_thread_post_feed_doesnt_mark_thread_update_as_deletable_by_user(
-    request_factory, user, thread, post, thread_update
+    request_factory, user, thread, post, thread_event
 ):
     request = request_factory(user)
 
-    post_feed = ThreadPostFeed(request, thread, [post], [thread_update])
+    post_feed = ThreadPostFeed(request, thread, [post], [thread_event])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_update
+    assert feed_data["items"][1]["thread_update"] == thread_event
     assert not feed_data["items"][1]["delete_url"]
 
 
 def test_thread_post_feed_marks_thread_update_as_hidable_by_moderator(
-    request_factory, moderator, thread, post, thread_update
+    request_factory, moderator, thread, post, thread_event
 ):
     request = request_factory(moderator)
 
-    post_feed = ThreadPostFeed(request, thread, [post], [thread_update])
+    post_feed = ThreadPostFeed(request, thread, [post], [thread_event])
     post_feed.set_moderation(True)
 
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_update
+    assert feed_data["items"][1]["thread_update"] == thread_event
     assert feed_data["items"][1]["hide_url"]
 
 
 def test_thread_post_feed_marks_thread_update_as_unhideable_by_moderator(
-    request_factory, moderator, thread, post, hidden_thread_update
+    request_factory, moderator, thread, post, hidden_thread_event
 ):
     request = request_factory(moderator)
 
-    post_feed = ThreadPostFeed(request, thread, [post], [hidden_thread_update])
+    post_feed = ThreadPostFeed(request, thread, [post], [hidden_thread_event])
     post_feed.set_moderation(True)
 
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == hidden_thread_update
+    assert feed_data["items"][1]["thread_update"] == hidden_thread_event
     assert feed_data["items"][1]["unhide_url"]
 
 
 def test_thread_post_feed_marks_thread_update_as_deletable_by_moderator(
-    request_factory, moderator, thread, post, thread_update
+    request_factory, moderator, thread, post, thread_event
 ):
     request = request_factory(moderator)
 
-    post_feed = ThreadPostFeed(request, thread, [post], [thread_update])
+    post_feed = ThreadPostFeed(request, thread, [post], [thread_event])
     post_feed.set_moderation(True)
 
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_update
+    assert feed_data["items"][1]["thread_update"] == thread_event
     assert feed_data["items"][1]["delete_url"]

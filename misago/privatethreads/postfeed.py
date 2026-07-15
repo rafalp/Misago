@@ -101,30 +101,30 @@ class PrivateThreadPostFeed(PostFeed):
 
     def get_hide_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
         return reverse(
-            "misago:private-thread-update-hide",
+            "misago:private-thread-event-hide",
             kwargs={
                 "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         )
 
     def get_unhide_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
         return reverse(
-            "misago:private-thread-update-unhide",
+            "misago:private-thread-event-unhide",
             kwargs={
                 "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         )
 
     def get_delete_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
         return reverse(
-            "misago:private-thread-update-delete",
+            "misago:private-thread-event-delete",
             kwargs={
                 "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         )
