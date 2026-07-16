@@ -54,10 +54,10 @@ class PrivateThreadView(GenericView):
             request.user_permissions, thread, queryset
         )
 
-    def get_thread_updates_queryset(
+    def get_thread_event_queryset(
         self, request: HttpRequest, thread: Thread
     ) -> QuerySet:
-        queryset = super().get_thread_updates_queryset(request, thread)
+        queryset = super().get_thread_event_queryset(request, thread)
         return filter_private_thread_updates_queryset(
             request.user_permissions, thread, queryset
         )

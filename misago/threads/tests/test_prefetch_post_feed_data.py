@@ -937,7 +937,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_users(
     cache_versions,
     anonymous_user,
     user,
-    thread_update,
+    thread_event,
 ):
     permissions = UserPermissionsProxy(anonymous_user, cache_versions)
     permissions.permissions
@@ -945,7 +945,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_users(
 
     with django_assert_num_queries(2):
         data = prefetch_post_feed_data(
-            dynamic_settings, permissions, [], thread_updates=[thread_update]
+            dynamic_settings, permissions, [], thread_updates=[thread_event]
         )
         assert data["users"] == {user.id: user}
 

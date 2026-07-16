@@ -1,43 +1,43 @@
 from django.urls import path
 
 from .views import (
-    PrivateThreadUpdateDeleteView,
-    PrivateThreadUpdateHideView,
-    PrivateThreadUpdateUnhideView,
-    ThreadUpdateDeleteView,
-    ThreadUpdateHideView,
-    ThreadUpdateUnhideView,
+    PrivateThreadEventDeleteView,
+    PrivateThreadEventHideView,
+    PrivateThreadEventUnhideView,
+    ThreadEventDeleteView,
+    ThreadEventHideView,
+    ThreadEventUnhideView,
 )
 
 urlpatterns = [
     path(
-        "t/<slug:slug>/<int:thread_id>/update/<int:thread_update_id>/hide/",
-        ThreadUpdateHideView.as_view(),
-        name="thread-update-hide",
+        "t/<slug:slug>/<int:thread_id>/event/<int:thread_event_id>/hide/",
+        ThreadEventHideView.as_view(),
+        name="thread-event-hide",
     ),
     path(
-        "t/<slug:slug>/<int:thread_id>/update/<int:thread_update_id>/unhide/",
-        ThreadUpdateUnhideView.as_view(),
-        name="thread-update-unhide",
+        "t/<slug:slug>/<int:thread_id>/event/<int:thread_event_id>/unhide/",
+        ThreadEventUnhideView.as_view(),
+        name="thread-event-unhide",
     ),
     path(
-        "t/<slug:slug>/<int:thread_id>/update/<int:thread_update_id>/delete/",
-        ThreadUpdateDeleteView.as_view(),
-        name="thread-update-delete",
+        "t/<slug:slug>/<int:thread_id>/event/<int:thread_event_id>/delete/",
+        ThreadEventDeleteView.as_view(),
+        name="thread-event-delete",
     ),
     path(
-        "p/<slug:slug>/<int:thread_id>/update/<int:thread_update_id>/hide/",
-        PrivateThreadUpdateHideView.as_view(),
-        name="private-thread-update-hide",
+        "p/<slug:slug>/<int:thread_id>/event/<int:thread_event_id>/hide/",
+        PrivateThreadEventHideView.as_view(),
+        name="private-thread-event-hide",
     ),
     path(
-        "p/<slug:slug>/<int:thread_id>/update/<int:thread_update_id>/unhide/",
-        PrivateThreadUpdateUnhideView.as_view(),
-        name="private-thread-update-unhide",
+        "p/<slug:slug>/<int:thread_id>/event/<int:thread_event_id>/unhide/",
+        PrivateThreadEventUnhideView.as_view(),
+        name="private-thread-event-unhide",
     ),
     path(
-        "p/<slug:slug>/<int:thread_id>/update/<int:thread_update_id>/delete/",
-        PrivateThreadUpdateDeleteView.as_view(),
-        name="private-thread-update-delete",
+        "p/<slug:slug>/<int:thread_id>/event/<int:thread_event_id>/delete/",
+        PrivateThreadEventDeleteView.as_view(),
+        name="private-thread-event-delete",
     ),
 ]

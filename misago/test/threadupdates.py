@@ -6,7 +6,7 @@ from ..threadevents.models import ThreadEvent
 
 
 @pytest.fixture
-def thread_update(user, thread):
+def thread_event(user, thread):
     return ThreadEvent.objects.create(
         category=thread.category,
         thread=thread,
@@ -71,7 +71,7 @@ def thread_update_user_context(user, thread, other_user):
 
 
 @pytest.fixture
-def hidden_thread_update(user, moderator, thread):
+def hidden_thread_event(user, moderator, thread):
     return ThreadEvent.objects.create(
         category=thread.category,
         thread=thread,

@@ -5,51 +5,49 @@ from .hooks import hide_thread_update_hook, unhide_thread_update_hook
 from .models import ThreadEvent
 
 
-def hide_thread_update(
-    thread_update: ThreadEvent, request: HttpRequest | None = None
+def hide_thread_event(
+    thread_event: ThreadEvent, request: HttpRequest | None = None
 ) -> bool:
-    return hide_thread_update_hook(_hide_thread_update_action, thread_update, request)
+    return hide_thread_update_hook(_hide_thread_event_action, thread_event, request)
 
 
-def _hide_thread_update_action(
-    thread_update: ThreadEvent,
+def _hide_thread_event_action(
+    thread_event: ThreadEvent,
     request: HttpRequest | None = None,
 ) -> bool:
-    if thread_update.is_hidden:
+    if thread_event.is_hidden:
         return False
 
-    thread_update.is_hidden = True
-    thread_update.hidden_at = timezone.now()
+    thread_event.is_hidden = True
+    thread_event.hidden_at = timezone.now()
 
     if request and request.user.is_authenticated:
-        thread_update.hidden_by = request.user
-        thread_update.hidden_by_name = request.user.username
-        thread_update.hidden_by_slug = request.user.slug
+        thread_event.hidden_by = request.user
+        thread_event.hidden_by_name = request.user.username
+        thread_event.hidden_by_slug = request.user.slug
 
-    thread_update.save()
+    thread_event.save()
     return True
 
 
-def unhide_thread_update(
-    thread_update: ThreadEvent, request: HttpRequest | None = None
+def unhide_thread_event(
+    thread_event: ThreadEvent, request: HttpRequest | None = None
 ) -> bool:
-    return unhide_thread_update_hook(
-        _unhide_thread_update_action, thread_update, request
-    )
+    return unhide_thread_update_hook(_unhide_thread_event_action, thread_event, request)
 
 
-def _unhide_thread_update_action(
-    thread_update: ThreadEvent,
+def _unhide_thread_event_action(
+    thread_event: ThreadEvent,
     request: HttpRequest | None = None,
 ) -> bool:
-    if not thread_update.is_hidden:
+    if not thread_event.is_hidden:
         return False
 
-    thread_update.is_hidden = False
-    thread_update.hidden_by = None
-    thread_update.hidden_by_name = None
-    thread_update.hidden_by_slug = None
-    thread_update.hidden_at = None
-    thread_update.save()
+    thread_event.is_hidden = False
+    thread_event.hidden_by = None
+    thread_event.hidden_by_name = None
+    thread_event.hidden_by_slug = None
+    thread_event.hidden_at = None
+    thread_event.save()
 
     return True

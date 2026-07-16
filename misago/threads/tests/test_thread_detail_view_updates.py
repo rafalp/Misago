@@ -288,11 +288,11 @@ def test_thread_detail_view_doesnt_show_hide_thread_update_button_to_anonymous_u
     assert_not_contains(
         response,
         reverse(
-            "misago:thread-update-hide",
+            "misago:thread-event-hide",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -314,11 +314,11 @@ def test_thread_detail_view_doesnt_show_hide_thread_update_button_to_user(
     assert_not_contains(
         response,
         reverse(
-            "misago:thread-update-hide",
+            "misago:thread-event-hide",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -346,11 +346,11 @@ def test_thread_detail_view_shows_hide_thread_update_button_to_category_moderato
     assert_contains(
         response,
         reverse(
-            "misago:thread-update-hide",
+            "misago:thread-event-hide",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -372,11 +372,11 @@ def test_thread_detail_view_shows_hide_thread_update_button_to_global_moderator(
     assert_contains(
         response,
         reverse(
-            "misago:thread-update-hide",
+            "misago:thread-event-hide",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -406,11 +406,11 @@ def test_thread_detail_view_shows_unhide_thread_update_button_to_category_modera
     assert_contains(
         response,
         reverse(
-            "misago:thread-update-unhide",
+            "misago:thread-event-unhide",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -434,11 +434,11 @@ def test_thread_detail_view_shows_unhide_thread_update_button_to_global_moderato
     assert_contains(
         response,
         reverse(
-            "misago:thread-update-unhide",
+            "misago:thread-event-unhide",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -460,11 +460,11 @@ def test_thread_detail_view_doesnt_show_delete_thread_update_button_to_anonymous
     assert_not_contains(
         response,
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -486,11 +486,11 @@ def test_thread_detail_view_doesnt_show_delete_thread_update_button_to_user(
     assert_not_contains(
         response,
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -518,11 +518,11 @@ def test_thread_detail_view_shows_delete_thread_update_button_to_category_modera
     assert_contains(
         response,
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
@@ -544,11 +544,11 @@ def test_thread_detail_view_shows_delete_thread_update_button_to_global_moderato
     assert_contains(
         response,
         reverse(
-            "misago:thread-update-delete",
+            "misago:thread-event-delete",
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_update_id": thread_update.id,
+                "thread_event_id": thread_update.id,
             },
         ),
     )
