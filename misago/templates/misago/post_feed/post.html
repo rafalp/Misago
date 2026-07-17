@@ -285,7 +285,14 @@
 
         <div class="post-feed-item-post-body-message">
           {% includecomponents post_body_top_components %}
+
           {% if is_visible %}
+            {% if status_messages_top %}
+              <ul class="status-messages post-feed-item-post-status-messages-top">
+                {% includecomponents status_messages_top %}
+              </ul>
+            {% endif %}
+
             <article class="post-feed-item-post-rich-text rich-text" misago-quote-root="{% if poster %}{{ poster.username }}{% else %}{{ post.poster_name }}{% endif %}, post: {{ post.id }}" misago-lightbox-root>
               {% rich_text post.parsed rich_text_data thread=thread %}
             </article>
@@ -347,6 +354,11 @@
                   </a>
                 {% endif %}
               </div>
+            {% endif %}
+            {% if status_messages_bottom %}
+              <ul class="status-messages post-feed-item-post-status-messages-bottom">
+                {% includecomponents status_messages_bottom %}
+              </ul>
             {% endif %}
           {% else %}
             {% translate "Hidden" context "posts feed post hidden" %}

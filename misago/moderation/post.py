@@ -75,15 +75,15 @@ def _get_thread_post_moderation_actions_action(
     else:
         actions.append(LockPostModerationAction)
 
+    if post.is_hidden:
+        actions.append(UnhidePostModerationAction)
+    elif post.id != post.thread.first_post_id:
+        actions.append(HidePostModerationAction)
+
     if post.is_unapproved:
         actions.append(ApprovePostModerationAction)
 
     if post.id != post.thread.first_post_id:
-        if post.is_hidden:
-            actions.append(UnhidePostModerationAction)
-        else:
-            actions.append(HidePostModerationAction)
-
         actions += [
             SplitPostModerationAction,
             MovePostModerationAction,
@@ -125,11 +125,10 @@ def _get_private_thread_post_moderation_actions_action(
     else:
         actions.append(LockPostModerationAction)
 
-    if post.id != post.thread.first_post_id:
-        if post.is_hidden:
-            actions.append(UnhidePostModerationAction)
-        else:
-            actions.append(HidePostModerationAction)
+    if post.is_hidden:
+        actions.append(UnhidePostModerationAction)
+    elif post.id != post.thread.first_post_id:
+        actions.append(HidePostModerationAction)
 
     if post.is_unapproved:
         actions.append(ApprovePostModerationAction)

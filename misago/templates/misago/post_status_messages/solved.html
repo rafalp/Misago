@@ -1,0 +1,59 @@
+{% load i18n misago_capture misago_formats %}
+
+<li class="status-message status-message-solved">
+  <div class="status-message-icon">
+    {% include "tabler/rosette-discount-check-filled.svg" %}
+  </div>
+  <div class="status-message-body">
+    <div class="status-message-content">
+      <p class="status-message-text">
+        {% capture trimmed as solved_at %}
+          <span
+            title="{{ solved_at|date:'DATETIME_FORMAT' }}"
+            mg-timestamp="{{ solved_at.isoformat }}"
+          >{{ solved_at|date_relative }}</span>
+        {% endcapture %}
+        {% capture trimmed as solved_by_html %}
+          {% if solved_by %}
+            <a href="{% url 'misago:user' pk=solved_by.id slug=solved_by.slug %}" class="item-title">{{ solved_by.username }}</a>
+          {% else %}
+            <span class="item-title">{{ solved_by_name }}</span>
+          {% endif %}
+        {% endcapture %}
+        {% blocktranslate trimmed with solved_by=solved_by_html|safe solved_at=solved_at|safe context "post solved status bar" %}
+          Solved by {{ solved_by }}, {{ solved_at }}.
+        {% endblocktranslate %}
+      </p>
+      {% if is_locked %}
+        <ul class="status-message-meta">
+          {% capture trimmed as locked_by_html %}
+            {% if locked_by %}
+              <a href="{% url 'misago:user' pk=locked_by.id slug=locked_by.slug %}" class="item-title">{{ locked_by.username }}</a>
+            {% else %}
+              <span class="item-title">{{ locked_by_name }}</span>
+            {% endif %}
+          {% endcapture %}
+          <li class="status-message-meta-user">
+            {% blocktranslate trimmed with locked_by=locked_by_html|safe context "post solution status bar" %}
+              Locked by {{ locked_by }}
+            {% endblocktranslate %}
+          </li>
+          <li class="status-message-meta-date">
+            <span
+              title="{{ locked_at|date:'DATETIME_FORMAT' }}"
+              mg-timestamp="{{ locked_at.isoformat }}"
+            >
+              {{ locked_at|date_relative }}
+            </span>
+          </li>
+        </ul>
+      {% endif %}
+    </div>
+    <div class="status-message-actions">
+      <a href="{{ solution_url }}" class="status-message-action">
+        <span>{% translate "Go to solution" context "post solved status bar" %}</span>
+        {% include "tabler/arrow-right.svg" %}
+      </a>
+    </div>
+  </div>
+</li>

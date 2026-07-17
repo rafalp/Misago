@@ -1,0 +1,54 @@
+{% load i18n misago_capture misago_formats %}
+
+<li class="status-message status-message-hidden">
+  <div class="status-message-icon">
+    {% include "tabler/eye-off.svg" %}
+  </div>
+  <div class="status-message-body">
+    <div class="status-message-content">
+      <p class="status-message-text">
+        {% blocktranslate trimmed context "thread hidden status message" %}
+          Hidden and visible only to moderators.
+        {% endblocktranslate %}
+      </p>
+      {% if hidden_at or hidden_by_name or hide_reason %}
+        <ul class="status-message-meta">
+          {% if hidden_by_name %}
+            {% capture trimmed as hidden_by_html %}
+              {% if hidden_by_id and hidden_by_slug %}
+                <a
+                  href="{% url 'misago:user' pk=hidden_by_id slug=hidden_by_slug %}"
+                  class="item-title"
+                >{{ hidden_by_name }}</a>
+              {% else %}
+                <a class="item-title">{{ hidden_by_name }}</a>
+              {% endif %}
+            {% endcapture %}
+            <li class="status-message-meta-user">
+              {% blocktranslate trimmed with hidden_by=hidden_by_html|safe context="thread hidden status message" %}
+                Hidden by {{ hidden_by }}
+              {% endblocktranslate %}
+            </li>
+          {% endif %}
+          {% if hidden_at %}
+            <li class="status-message-meta-date">
+              <span
+                title="{{ hidden_at|date:'DATETIME_FORMAT' }}"
+                mg-timestamp="{{ hidden_at.isoformat }}"
+              >
+                {{ hidden_at|date_relative }}
+              </span>
+            </li>
+          {% endif %}
+          {% if hide_reason %}
+            <li class="status-message-meta-text">
+              {% blocktranslate trimmed with reason=hide_reason context="thread hidden status message" %}
+                Reason: {{ reason }}
+              {% endblocktranslate %}
+            </li>
+          {% endif %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+</li>

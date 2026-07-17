@@ -15,8 +15,8 @@
 {% endif %}
 
 <div id="misago-htmx-root">
-  <div id="misago-htmx-status-bars">
-    {% includecomponent status_bars %}
+  <div id="misago-htmx-status-messages">
+    {% includecomponent status_messages %}
   </div>
   {% include "misago/thread/toolbar.html" with top_toolbar=True bottom_toolbar=False %}
   {% includecomponent feed %}

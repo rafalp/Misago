@@ -1066,7 +1066,7 @@ def test_category_thread_list_view_doesnt_display_thread_requires_reply_approval
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-requires-reply-approval")
+    assert_not_contains(response, "thread-flag-require-reply-approval")
 
 
 def test_category_thread_list_view_doesnt_display_thread_requires_reply_approval_flag_to_user(
@@ -1080,7 +1080,7 @@ def test_category_thread_list_view_doesnt_display_thread_requires_reply_approval
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-requires-reply-approval")
+    assert_not_contains(response, "thread-flag-require-reply-approval")
 
 
 def test_category_thread_list_view_displays_thread_requires_reply_approval_flag_to_category_moderator(
@@ -1100,7 +1100,7 @@ def test_category_thread_list_view_displays_thread_requires_reply_approval_flag_
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-requires-reply-approval")
+    assert_contains(response, "thread-flag-require-reply-approval")
 
 
 def test_category_thread_list_view_displays_thread_requires_reply_approval_flag_to_global_moderator(
@@ -1114,7 +1114,7 @@ def test_category_thread_list_view_displays_thread_requires_reply_approval_flag_
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-requires-reply-approval")
+    assert_contains(response, "thread-flag-require-reply-approval")
 
 
 def test_category_thread_list_view_doesnt_display_own_thread_requires_reply_approval_flag_to_user(
@@ -1126,7 +1126,7 @@ def test_category_thread_list_view_doesnt_display_own_thread_requires_reply_appr
     assert_contains(response, default_category.name)
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-requires-reply-approval")
+    assert_not_contains(response, "thread-flag-require-reply-approval")
 
 
 def test_category_thread_list_view_doesnt_display_deleted_user_thread_to_anonymous_user_if_show_started_only_is_enabled(

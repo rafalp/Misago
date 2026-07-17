@@ -34,6 +34,13 @@ from .hooks import (
 )
 from .models import Post, Thread
 from .prefetch import prefetch_post_feed_data
+from .statusmessages import (
+    hidden_post_status_message,
+    locked_post_status_message,
+    solution_post_status_message,
+    solved_post_status_message,
+    unapproved_post_status_message,
+)
 
 
 class PostFeed:
@@ -42,20 +49,6 @@ class PostFeed:
 
     post_template_name: str = "misago/post_feed/post.html"
     hidden_post_template_name: str = "misago/post_feed/hidden_post.html"
-
-    post_locked_status_bar_template_name: str = (
-        "misago/post_feed/status_bar/locked.html"
-    )
-    post_hidden_status_bar_template_name: str = (
-        "misago/post_feed/status_bar/hidden.html"
-    )
-    post_solved_status_bar_template_name: str = (
-        "misago/post_feed/status_bar/solved.html"
-    )
-    post_solution_status_bar_template_name = "misago/post_feed/status_bar/solution.html"
-    post_unapproved_status_bar_template_name = (
-        "misago/post_feed/status_bar/unapproved.html"
-    )
 
     thread_update_template_name: str = "misago/post_feed/thread_update.html"
 
@@ -206,7 +199,8 @@ class PostFeed:
             "poster_is_current_user": poster_is_current_user,
             "rich_text_data": None,
             "attachments": [],
-            "bars": [],
+            "status_messages_top": [],
+            "status_messages_bottom": [],
             "edits": None,
             "updated_at": post.updated_at,
             "last_edit_reason": None,
@@ -362,28 +356,19 @@ class PostFeed:
             self.get_post_unlike_url(post),
         )
 
-        if post.is_locked and (
-            self.moderation
-            or (post.poster_id and post.poster_id == self.request.user.id)
-        ):
-            item["post_body_top_components"].append(
-                self.get_post_locked_data(),
-            )
+        if post.is_locked and (self.moderation or item["poster_is_current_user"]):
+            item["status_messages_top"].append(locked_post_status_message(post))
 
         if post.is_hidden and self.moderation:
-            item["post_body_top_components"].append(
-                self.get_post_hidden_data(post),
-            )
+            item["status_messages_top"].append(hidden_post_status_message(post))
 
-        if self.thread.solution_id and post.id == self.thread.first_post_id:
-            item["post_body_bottom_components"].append(
-                self.get_post_solved_data(),
-            )
+        if status_message := solved_post_status_message(post):
+            item["status_messages_bottom"].append(status_message)
 
-        if post.is_unapproved:
-            item["post_body_top_components"].append(
-                self.get_post_unapproved_data(),
-            )
+        if status_message := unapproved_post_status_message(
+            post, item["poster_is_current_user"]
+        ):
+            item["status_messages_top"].append(status_message)
 
         item["is_solution"] = is_solution = post.id == self.thread.solution_id
 
@@ -404,10 +389,6 @@ class PostFeed:
                 )
 
         elif is_solution:
-            item["post_body_top_components"].append(
-                self.get_post_solution_data(),
-            )
-
             with check_permissions():
                 check_clear_thread_solution_permission(
                     self.user_permissions, self.thread
@@ -449,79 +430,17 @@ class PostFeed:
                         },
                     )
 
+            solution_post_status_message_data = {
+                "lock_url": item.get("lock_solution_url"),
+                "unlock_url": item.get("unlock_solution_url"),
+                "clear_url": item.get("clear_solution_url"),
+            }
+            item["status_messages_top"].append(
+                solution_post_status_message(post, solution_post_status_message_data)
+            )
+
     def get_post_moderation_actions(self, post: Post) -> list[PostModerationAction]:
         return []
-
-    def get_post_locked_data(self) -> dict:
-        return {"template_name": self.post_locked_status_bar_template_name}
-
-    def get_post_hidden_data(self, post: Post) -> dict:
-        return {
-            "template_name": self.post_hidden_status_bar_template_name,
-            "hidden_at": post.hidden_at,
-            "hidden_by_id": post.hidden_by_id,
-            "hidden_by_name": post.hidden_by_name,
-            "hidden_by_slug": post.hidden_by_slug,
-            "hide_reason": post.hide_reason,
-        }
-
-    def get_post_solved_data(self) -> dict:
-        thread = self.thread
-
-        data = {
-            "template_name": self.post_solved_status_bar_template_name,
-            "solved_at": thread.solution_posted_at,
-            "solved_by": None,
-            "solved_by_name": thread.solution_by_name,
-            "solution_url": reverse(
-                "misago:thread-post-solution",
-                kwargs={"thread_id": thread.id, "slug": thread.slug},
-            ),
-        }
-
-        if thread.solution_by_id:
-            data["solved_by"] = {
-                "id": thread.solution_by_id,
-                "username": thread.solution_by_name,
-                "slug": thread.solution_by_slug,
-            }
-
-        return data
-
-    def get_post_solution_data(self) -> dict:
-        thread = self.thread
-
-        data = {
-            "template_name": self.post_solution_status_bar_template_name,
-            "selected_at": thread.solution_selected_at,
-            "selected_by": None,
-            "selected_by_name": thread.solution_selected_by_name,
-            "is_locked": thread.solution_is_locked,
-            "locked_at": thread.solution_locked_at,
-            "locked_by": None,
-            "locked_by_name": thread.solution_locked_by_name,
-            "lock_url": None,
-            "unlock_url": None,
-        }
-
-        if thread.solution_selected_by_id:
-            data["selected_by"] = {
-                "id": thread.solution_selected_by_id,
-                "username": thread.solution_selected_by_name,
-                "slug": thread.solution_selected_by_slug,
-            }
-
-        if thread.solution_locked_by_id:
-            data["selected_by"] = {
-                "id": thread.solution_locked_by_id,
-                "username": thread.solution_locked_by_name,
-                "slug": thread.solution_locked_by_slug,
-            }
-
-        return data
-
-    def get_post_unapproved_data(self) -> dict:
-        return {"template_name": self.post_unapproved_status_bar_template_name}
 
     def populate_thread_update_data(
         self, item: dict, thread_update: ThreadEvent, prefetched_data: dict

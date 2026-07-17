@@ -663,7 +663,7 @@ def test_thread_list_view_doesnt_display_thread_requires_reply_approval_flag_to_
     response = client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-requires-reply-approval")
+    assert_not_contains(response, "thread-flag-require-reply-approval")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -677,7 +677,7 @@ def test_thread_list_view_doesnt_display_thread_requires_reply_approval_flag_to_
     response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-requires-reply-approval")
+    assert_not_contains(response, "thread-flag-require-reply-approval")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -697,7 +697,7 @@ def test_thread_list_view_displays_thread_requires_reply_approval_flag_to_catego
     response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-requires-reply-approval")
+    assert_contains(response, "thread-flag-require-reply-approval")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -711,7 +711,7 @@ def test_thread_list_view_displays_thread_requires_reply_approval_flag_to_global
     response = moderator_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-requires-reply-approval")
+    assert_contains(response, "thread-flag-require-reply-approval")
 
 
 @override_dynamic_settings(index_view="categories")
@@ -723,7 +723,7 @@ def test_thread_list_view_doesnt_display_own_thread_requires_reply_approval_flag
     response = user_client.get(reverse("misago:thread-list"))
     assert_contains(response, thread.title)
     assert_not_contains(response, "thread-flags")
-    assert_not_contains(response, "thread-flag-requires-reply-approval")
+    assert_not_contains(response, "thread-flag-require-reply-approval")
 
 
 @override_dynamic_settings(index_view="categories")

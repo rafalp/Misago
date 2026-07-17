@@ -1,0 +1,20 @@
+{% load i18n %}
+
+<li class="status-message status-message-unapproved">
+  <div class="status-message-icon">
+  {% include "tabler/shield-half.svg" %}
+  </div>
+  <div class="status-message-body">
+    <div class="status-message-content">
+      <p class="status-message-text">
+        {% translate "Unapproved posts." context "thread unapproved posts status message" %}
+      </p>
+    </div>
+    <div class="status-message-actions">
+      <a href="#" class="status-message-action">
+        <span>{% translate "First unapproved" context "thread unapproved posts status message" %}</span>
+        {% include "tabler/arrow-right.svg" %}
+      </a>
+    </div>
+  </div>
+</li>

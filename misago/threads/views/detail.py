@@ -61,6 +61,13 @@ from ..hooks import (
 )
 from ..models import Post, Thread
 from ..paginator import ThreadPostsPaginator
+from ..statusmessages import (
+    hidden_thread_status_message,
+    locked_thread_status_message,
+    require_reply_approval_thread_status_message,
+    unapproved_posts_thread_status_message,
+    unapproved_thread_status_message,
+)
 from .backend import thread_backend
 from .generic import GenericThreadView
 
@@ -82,22 +89,10 @@ class DetailView(GenericThreadView):
     meta_bar_template_name: str = "misago/thread/meta_bar.html"
     footer_template_name: str
 
+    status_messages_template_name: str = "misago/thread/status_messages.html"
     reply_error_template_name: str = "misago/thread/reply_error.html"
     reply_template_name: str = "misago/quick_reply/form.html"
     watch_thread_template_name: str = "misago/thread/watch_thread.html"
-
-    status_bars_template_name: str = "misago/thread/status_bars.html"
-    locked_thread_status_bar_template_name: str = "misago/thread/locked_thread.html"
-    hidden_thread_status_bar_template_name: str = "misago/thread/hidden_thread.html"
-    require_reply_approval_status_bar_template_name = (
-        "misago/thread/require_reply_approval.html"
-    )
-    unapproved_thread_status_bar_template_name: str = (
-        "misago/thread/unapproved_thread.html"
-    )
-    unapproved_posts_status_bar_template_name: str = (
-        "misago/thread/unapproved_posts.html"
-    )
 
     moderation_modal_template_name: str = "misago/moderation_thread/modal.html"
     moderation_page_template_name: str = "misago/moderation_thread/page.html"
@@ -469,7 +464,7 @@ class DetailView(GenericThreadView):
             ),
             "header": self.get_header_data(request, thread, shared_context),
             "footer": self.get_footer_data(request, thread, shared_context),
-            "status_bars": self.get_thread_status_bars(request, thread),
+            "status_messages": self.get_thread_status_messages(request, thread),
             "extra_components": [],
         }
 
@@ -515,7 +510,7 @@ class DetailView(GenericThreadView):
             "starter_is_current_user": starter_is_current_user,
             "header": self.get_header_data(request, thread, shared_context),
             "footer": self.get_footer_data(request, thread, shared_context),
-            "status_bars": self.get_thread_status_bars(request, thread),
+            "status_messages": self.get_thread_status_messages(request, thread),
             "thread": thread,
             "thread_url": self.get_thread_url(thread),
             "watch_thread": self.get_watch_thread_data(request, thread),
@@ -581,67 +576,33 @@ class DetailView(GenericThreadView):
 
         return final_context
 
-    def get_thread_status_bars(self, request: HttpRequest, thread: Thread) -> dict:
-        items = []
+    def get_thread_status_messages(self, request: HttpRequest, thread: Thread) -> dict:
+        messages = []
 
-        if thread.is_locked:
-            items.append(self.get_locked_thread_status_bar())
+        if status_message := locked_thread_status_message(thread):
+            messages.append(status_message)
 
-        if thread.is_hidden:
-            items.append(self.get_hidden_thread_status_bar(thread))
+        if status_message := hidden_thread_status_message(thread):
+            messages.append(status_message)
 
-        if thread.is_unapproved:
-            items.append(self.get_unapproved_thread_status_bar())
+        if status_message := unapproved_thread_status_message(thread):
+            messages.append(status_message)
 
-        if thread.require_reply_approval:
-            items.append(self.get_require_reply_approval_thread_status_bar())
+        if status_message := require_reply_approval_thread_status_message(thread):
+            messages.append(status_message)
 
         if (
             request.user_permissions.is_category_moderator(thread.category_id)
             and thread.has_unapproved_posts
         ):
-            items.append(self.get_unapproved_posts_status_bar(thread))
+            messages.append(
+                unapproved_posts_thread_status_message(thread, self.backend)
+            )
 
         return {
-            "id": "status_bars",
-            "template_name": self.status_bars_template_name,
-            "items": items,
-        }
-
-    def get_locked_thread_status_bar(self) -> dict:
-        return {
-            "id": "locked_thread",
-            "template_name": self.locked_thread_status_bar_template_name,
-        }
-
-    def get_hidden_thread_status_bar(self, thread: Thread) -> dict:
-        return {
-            "id": "hidden_thread",
-            "template_name": self.hidden_thread_status_bar_template_name,
-            "hidden_at": thread.hidden_at,
-            "hidden_by_id": thread.hidden_by_id,
-            "hidden_by_name": thread.hidden_by_name,
-            "hidden_by_slug": thread.hidden_by_slug,
-            "hide_reason": thread.hide_reason,
-        }
-
-    def get_unapproved_thread_status_bar(self) -> dict:
-        return {
-            "id": "unapproved_thread",
-            "template_name": self.unapproved_thread_status_bar_template_name,
-        }
-
-    def get_require_reply_approval_thread_status_bar(self) -> dict:
-        return {
-            "id": "require_reply_approval",
-            "template_name": self.require_reply_approval_status_bar_template_name,
-        }
-
-    def get_unapproved_posts_status_bar(self, thread: Thread) -> dict:
-        return {
-            "id": "unapproved_posts",
-            "template_name": self.unapproved_posts_status_bar_template_name,
-            "unapproved_post_url": self.backend.get_post_unapproved_url(thread),
+            "id": "status_messages",
+            "template_name": self.status_messages_template_name,
+            "messages": messages,
         }
 
     def get_watch_thread_data(
