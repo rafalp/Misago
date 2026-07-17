@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<li class="status-message status-message-require-reply-approval">
+  <div class="status-message-icon">
+    {% include "tabler/player-pause-filled.svg" %}
+  </div>
+  <div class="status-message-body">
+    <div class="status-message-content">
+      <p class="status-message-text">
+        {% blocktranslate trimmed context "thread require reply approval status message" %}
+          New replies require moderator approval before they will be visible to other users. before they will be visible to other users.
+        {% endblocktranslate %}
+      </p>
+    </div>
+  </div>
+</li>

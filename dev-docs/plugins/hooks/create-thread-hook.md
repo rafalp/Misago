@@ -19,7 +19,6 @@ def custom_create_thread_filter(
     action: CreateThreadHookAction,
     category: Category,
     title: str,
-    *,
     pinned: ThreadPinned=ThreadPinned.NONE,
     is_locked: bool=False,
     is_hidden: bool=False,
@@ -95,7 +94,6 @@ The request object, or `None` if not provided.
 def create_thread_action(
     category: Category,
     title: str,
-    *,
     pinned: ThreadPinned=ThreadPinned.NONE,
     is_locked: bool=False,
     is_hidden: bool=False,
@@ -180,7 +178,6 @@ def record_thread_creator(
     action,
     category: Category,
     title: str,
-    *,
     pinned: ThreadPinned = ThreadPinned.NONE,
     is_locked: bool = False,
     is_hidden: bool = False,
@@ -190,9 +187,9 @@ def record_thread_creator(
     thread = action(
         category,
         title,
-        pinned=pinned,
-        is_locked=is_locked,
-        is_hidden=is_hidden,
+        pinned,
+        is_locked,
+        is_hidden,
         commit=False,
         request=request,
     )

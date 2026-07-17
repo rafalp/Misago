@@ -31,7 +31,7 @@ from .actions import (
     ModerationResult,
     PostsModerationAction,
 )
-from .forms import HideForm, MergePostsForm, MovePostsForm, SplitPostsForm
+from .forms import HideForm, LockForm, MergePostsForm, MovePostsForm, SplitPostsForm
 from .hooks import (
     get_private_thread_posts_moderation_actions_hook,
     get_thread_posts_moderation_actions_hook,
@@ -104,9 +104,13 @@ def _get_private_thread_posts_moderation_actions_action(
     ]
 
 
-class LockPostsModerationAction(PostsModerationAction):
+class LockPostsModerationAction(FormMixin, PostsModerationAction):
     id = "lock"
+    full_name = pgettext_lazy("posts moderation action name", "Lock posts")
     button_label = pgettext_lazy("posts moderation button label", "Lock")
+
+    form_class = LockForm
+    template_name = "misago/moderation/lock.html"
 
     def validate(self):
         for post in self.posts:
@@ -117,12 +121,13 @@ class LockPostsModerationAction(PostsModerationAction):
             pgettext("posts moderation validation", "Posts are already locked.")
         )
 
-    def execute(self) -> ModerationResult:
+    def form_valid(self, form) -> ModerationResult:
         request = self.request
         valid_posts = [post for post in self.posts if not post.is_locked]
+        lock_reason = form.cleaned_data["lock_reason"]
 
         for post in valid_posts:
-            lock_post(post, request=request)
+            lock_post(post, request.user, lock_reason, request=request)
 
         messages.success(
             request,
@@ -189,10 +194,10 @@ class HidePostsModerationAction(FormMixin, PostsModerationAction):
     def form_valid(self, form) -> ModerationResult:
         request = self.request
         valid_posts = [post for post in self.posts if not post.is_hidden]
-        hidden_reason = form.cleaned_data["hidden_reason"]
+        hide_reason = form.cleaned_data["hide_reason"]
 
         for post in valid_posts:
-            hide_post(post, request.user, hidden_reason, request=request)
+            hide_post(post, request.user, hide_reason, request=request)
 
         messages.success(
             request,
@@ -268,8 +273,10 @@ class ApprovePostsModerationAction(PostsModerationAction):
 
 class SplitPostsModerationAction(FormMixin, PostsModerationAction):
     id = "split"
-    full_name = "Split posts into a new thread"
-    button_label = "Split"
+    full_name = pgettext_lazy(
+        "posts moderation action name", "Split posts into a new thread"
+    )
+    button_label = pgettext_lazy("posts moderation button label", "Split")
 
     form_class = SplitPostsForm
     template_name = "misago/moderation/split_posts.html"
@@ -279,7 +286,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
             if post.id == self.thread.first_post_id:
                 raise ValidationError(
                     pgettext(
-                        "post moderation validation",
+                        "posts moderation validation",
                         "Thread's first post can't be split.",
                     )
                 )
@@ -309,9 +316,9 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
         new_thread = create_thread(
             form.cleaned_data["category"],
             form.cleaned_data["title"],
-            pinned=form.cleaned_data["pin"],
-            is_locked=form.cleaned_data["is_locked"],
-            is_hidden=form.cleaned_data["is_hidden"],
+            form.cleaned_data["pin"],
+            form.cleaned_data["is_locked"],
+            form.cleaned_data["is_hidden"],
             request=request,
         )
 
@@ -352,8 +359,10 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
 
 class MovePostsModerationAction(FormMixin, PostsModerationAction):
     id = "move"
-    full_name = "Move posts to another thread"
-    button_label = "Move"
+    full_name = pgettext_lazy(
+        "posts moderation action name", "Move posts to another thread"
+    )
+    button_label = pgettext_lazy("posts moderation button label", "Move")
 
     form_class = MovePostsForm
     template_name = "misago/moderation/move_posts.html"
@@ -363,7 +372,7 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
             if post.id == self.thread.first_post_id:
                 raise ValidationError(
                     pgettext(
-                        "post moderation validation",
+                        "posts moderation validation",
                         "Thread's first post can't be moved.",
                     )
                 )
@@ -428,8 +437,8 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
 
 class MergePostsModerationAction(FormMixin, PostsModerationAction):
     id = "merge"
-    full_name = "Merge posts"
-    button_label = "Merge"
+    full_name = pgettext_lazy("posts moderation action name", "Merge posts")
+    button_label = pgettext_lazy("posts moderation button label", "Merge")
 
     form_class = MergePostsForm
     template_name = "misago/moderation/merge_posts.html"
@@ -532,8 +541,8 @@ class MergePostsModerationAction(FormMixin, PostsModerationAction):
 
 class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
     id = "delete"
-    full_name = "Delete posts"
-    button_label = "Delete"
+    full_name = pgettext_lazy("posts moderation action name", "Delete posts")
+    button_label = pgettext_lazy("posts moderation button label", "Delete")
     confirmation_message = pgettext_lazy(
         "posts moderation",
         "Are you sure you want to delete the selected posts? This can't be undone.",

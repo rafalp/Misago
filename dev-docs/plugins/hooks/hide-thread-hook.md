@@ -18,8 +18,8 @@ from misago.threads.hooks import hide_thread_hook
 def custom_hide_thread_filter(
     action: HideThreadHookAction,
     thread: Thread,
-    hidden_by: Union['User', str],
-    hidden_reason: str | None=None,
+    hidden_by: Union['User', str, None]=None,
+    hide_reason: str | None=None,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -43,12 +43,12 @@ See the [action](#action) section for details.
 A `Thread` to hide.
 
 
-#### `hidden_by: User | str`
+#### `hidden_by: User | str | None`
 
-The user who hid the thread.
+The user who hid the thread, or `None` if not provided.
 
 
-#### `hidden_reason: str | None`
+#### `hide_reason: str | None`
 
 A `str` with a short description of why the thread was hidden, or `None`.
 
@@ -75,8 +75,8 @@ The request object, or `None` if not provided.
 ```python
 def hide_thread_action(
     thread: Thread,
-    hidden_by: Union['User', str],
-    hidden_reason: str | None=None,
+    hidden_by: Union['User', str, None]=None,
+    hide_reason: str | None=None,
     commit: bool=True,
     request: HttpRequest | None=None,
 ) -> bool:
@@ -93,12 +93,12 @@ Misago function for hiding a thread.
 A `Thread` to hide.
 
 
-#### `hidden_by: User | str`
+#### `hidden_by: User | str | None`
 
-The user who hid the thread.
+The user who hid the thread, or `None` if not provided.
 
 
-#### `hidden_reason: str | None`
+#### `hide_reason: str | None`
 
 A `str` with a short description of why the thread was hidden, or `None`.
 
@@ -122,7 +122,7 @@ The request object, or `None` if not provided.
 
 ## Example
 
-Register ip of user who hid the thread:
+Register the IP address of the user who hid the thread.
 
 ```python
 from django.http import HttpRequest
@@ -135,12 +135,12 @@ from misago.users.models import User
 def register_user_that_hid_thread(
     action,
     thread: Thread,
-    hidden_by: User | str,
-    hidden_reason: str | None = None,
+    hidden_by: User | str | None = None,
+    hide_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
-    if not action(thread, hidden_by, hidden_reason, commit=False, request=request):
+    if not action(thread, hidden_by, hide_reason, commit=False, request=request):
         return False
 
     if request:

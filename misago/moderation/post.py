@@ -34,6 +34,7 @@ from .actions import (
 )
 from .forms import (
     HideForm,
+    LockForm,
     MergePostConflictsForm,
     MergePrivateThreadPostForm,
     MergeThreadPostForm,
@@ -74,15 +75,15 @@ def _get_thread_post_moderation_actions_action(
     else:
         actions.append(LockPostModerationAction)
 
+    if post.is_hidden:
+        actions.append(UnhidePostModerationAction)
+    elif post.id != post.thread.first_post_id:
+        actions.append(HidePostModerationAction)
+
     if post.is_unapproved:
         actions.append(ApprovePostModerationAction)
 
     if post.id != post.thread.first_post_id:
-        if post.is_hidden:
-            actions.append(UnhidePostModerationAction)
-        else:
-            actions.append(HidePostModerationAction)
-
         actions += [
             SplitPostModerationAction,
             MovePostModerationAction,
@@ -124,11 +125,10 @@ def _get_private_thread_post_moderation_actions_action(
     else:
         actions.append(LockPostModerationAction)
 
-    if post.id != post.thread.first_post_id:
-        if post.is_hidden:
-            actions.append(UnhidePostModerationAction)
-        else:
-            actions.append(HidePostModerationAction)
+    if post.is_hidden:
+        actions.append(UnhidePostModerationAction)
+    elif post.id != post.thread.first_post_id:
+        actions.append(HidePostModerationAction)
 
     if post.is_unapproved:
         actions.append(ApprovePostModerationAction)
@@ -141,9 +141,13 @@ def _get_private_thread_post_moderation_actions_action(
     return actions
 
 
-class LockPostModerationAction(PostModerationAction):
+class LockPostModerationAction(FormMixin, PostModerationAction):
     id = "lock"
+    full_name = pgettext_lazy("post moderation action name", "Lock post")
     button_label = pgettext_lazy("post moderation button label", "Lock")
+
+    form_class = LockForm
+    template_name = "misago/moderation/lock.html"
 
     def validate(self):
         if self.post.is_locked:
@@ -151,11 +155,11 @@ class LockPostModerationAction(PostModerationAction):
                 pgettext("post moderation validation", "Post is already locked.")
             )
 
-    def execute(self) -> ModerationResult:
+    def form_valid(self, form) -> ModerationResult:
         request = self.request
         post = self.post
 
-        lock_post(post, request=request)
+        lock_post(post, request.user, form.cleaned_data["lock_reason"], request=request)
 
         messages.success(
             request,
@@ -191,7 +195,7 @@ class UnlockPostModerationAction(PostModerationAction):
 
 class HidePostModerationAction(FormMixin, PostModerationAction):
     id = "hide"
-    full_name = pgettext_lazy("post moderation button label", "Hide post")
+    full_name = pgettext_lazy("post moderation action name", "Hide post")
     button_label = pgettext_lazy("post moderation button label", "Hide")
 
     form_class = HideForm
@@ -215,9 +219,7 @@ class HidePostModerationAction(FormMixin, PostModerationAction):
         request = self.request
         post = self.post
 
-        hide_post(
-            post, request.user, form.cleaned_data["hidden_reason"], request=request
-        )
+        hide_post(post, request.user, form.cleaned_data["hide_reason"], request=request)
 
         messages.success(
             request,
@@ -285,8 +287,10 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
     swap_root = True
 
     id = "split"
-    full_name = "Split post into a new thread"
-    button_label = "Split"
+    full_name = pgettext_lazy(
+        "post moderation action name", "Split post into a new thread"
+    )
+    button_label = pgettext_lazy("post moderation button label", "Split")
 
     form_class = SplitPostsForm
     template_name = "misago/moderation/split_posts.html"
@@ -324,9 +328,9 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
         new_thread = create_thread(
             form.cleaned_data["category"],
             form.cleaned_data["title"],
-            pinned=form.cleaned_data["pin"],
-            is_locked=form.cleaned_data["is_locked"],
-            is_hidden=form.cleaned_data["is_hidden"],
+            form.cleaned_data["pin"],
+            form.cleaned_data["is_locked"],
+            form.cleaned_data["is_hidden"],
             request=request,
         )
 
@@ -368,8 +372,10 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
     swap_root = True
 
     id = "move"
-    full_name = "Move post to another thread"
-    button_label = "Move"
+    full_name = pgettext_lazy(
+        "post moderation action name", "Move post to another thread"
+    )
+    button_label = pgettext_lazy("post moderation button label", "Move")
 
     form_class = MovePostsForm
     template_name = "misago/moderation/move_posts.html"
@@ -602,8 +608,8 @@ class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
     swap_root = True
 
     id = "delete"
-    full_name = "Delete post"
-    button_label = "Delete"
+    full_name = pgettext_lazy("post moderation action name", "Delete post")
+    button_label = pgettext_lazy("post moderation button label", "Delete")
     confirmation_message = pgettext_lazy(
         "post moderation",
         "Are you sure you want to delete this post? This can't be undone.",

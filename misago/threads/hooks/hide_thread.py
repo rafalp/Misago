@@ -19,11 +19,11 @@ class HideThreadHookAction(Protocol):
 
     A `Thread` to hide.
 
-    ## `hidden_by: User | str`
+    ## `hidden_by: User | str | None`
 
-    The user who hid the thread.
+    The user who hid the thread, or `None` if not provided.
 
-    ## `hidden_reason: str | None`
+    ## `hide_reason: str | None`
 
     A `str` with a short description of why the thread was hidden, or `None`.
 
@@ -45,8 +45,8 @@ class HideThreadHookAction(Protocol):
     def __call__(
         self,
         thread: Thread,
-        hidden_by: Union["User", str],
-        hidden_reason: str | None = None,
+        hidden_by: Union["User", str, None] = None,
+        hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -69,11 +69,11 @@ class HideThreadHookFilter(Protocol):
 
     A `Thread` to hide.
 
-    ## `hidden_by: User | str`
+    ## `hidden_by: User | str | None`
 
-    The user who hid the thread.
+    The user who hid the thread, or `None` if not provided.
 
-    ## `hidden_reason: str | None`
+    ## `hide_reason: str | None`
 
     A `str` with a short description of why the thread was hidden, or `None`.
 
@@ -96,8 +96,8 @@ class HideThreadHookFilter(Protocol):
         self,
         action: HideThreadHookAction,
         thread: Thread,
-        hidden_by: Union["User", str],
-        hidden_reason: str | None = None,
+        hidden_by: Union["User", str, None] = None,
+        hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -115,7 +115,7 @@ class HideThreadHook(
 
     # Example
 
-    Register ip of user who hid the thread:
+    Register the IP address of the user who hid the thread.
 
     ```python
     from django.http import HttpRequest
@@ -128,12 +128,12 @@ class HideThreadHook(
     def register_user_that_hid_thread(
         action,
         thread: Thread,
-        hidden_by: User | str,
-        hidden_reason: str | None = None,
+        hidden_by: User | str | None = None,
+        hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
-        if not action(thread, hidden_by, hidden_reason, commit=False, request=request):
+        if not action(thread, hidden_by, hide_reason, commit=False, request=request):
             return False
 
         if request:
@@ -151,8 +151,8 @@ class HideThreadHook(
         self,
         action: HideThreadHookAction,
         thread: Thread,
-        hidden_by: Union["User", str],
-        hidden_reason: str | None = None,
+        hidden_by: Union["User", str, None] = None,
+        hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
@@ -160,7 +160,7 @@ class HideThreadHook(
             action,
             thread,
             hidden_by,
-            hidden_reason,
+            hide_reason,
             commit,
             request,
         )

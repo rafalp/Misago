@@ -1,0 +1,16 @@
+{% load i18n %}
+
+{% with field=form.lock_reason %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label class="control-label" for="{{ field.id_for_label }}">
+      {% translate "Reason for locking:" context "moderation lock form" %}
+    </label>
+    <input class="form-control" type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" maxlength="{{ field.maxlength }}">
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+    <p class="help-block">
+      {% translate "Short explanation for why this content was hidden. Optional." context "moderation lock form" %}
+    </p>
+  </div>
+{% endwith %}

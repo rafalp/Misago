@@ -1,0 +1,22 @@
+{% load i18n %}
+
+<li class="status-message status-message-unapproved">
+  <div class="status-message-icon">
+    {% include "tabler/shield-half.svg" %}
+  </div>
+  <div class="status-message-body">
+    <div class="status-message-content">
+      <p class="status-message-text">
+        {% if message_for_poster %}
+          {% blocktranslate trimmed context "post unapproved status message" %}
+            Visible only to you until approved by a moderator.
+          {% endblocktranslate %}
+        {% else %}
+          {% blocktranslate trimmed context "post unapproved status message" %}
+            Unapproved and visible only to moderators and its author until approved.
+          {% endblocktranslate %}
+        {% endif %}
+      </p>
+    </div>
+  </div>
+</li>

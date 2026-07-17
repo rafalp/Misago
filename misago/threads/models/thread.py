@@ -65,7 +65,19 @@ class Thread(PluginDataModel):
     pinned = models.PositiveIntegerField(default=ThreadPinned.NONE.value)
 
     is_unapproved = models.BooleanField(default=False, db_index=True)
+
     is_locked = models.BooleanField(default=False)
+    locked_at = models.DateTimeField(null=True, blank=True)
+    locked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="+",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    locked_by_name = models.CharField(max_length=255, null=True, blank=True)
+    locked_by_slug = models.CharField(max_length=255, null=True, blank=True)
+    lock_reason = models.CharField(max_length=255, null=True, blank=True)
 
     is_hidden = models.BooleanField(default=False)
     hidden_at = models.DateTimeField(null=True, blank=True)
@@ -78,7 +90,7 @@ class Thread(PluginDataModel):
     )
     hidden_by_name = models.CharField(max_length=255, null=True, blank=True)
     hidden_by_slug = models.CharField(max_length=255, null=True, blank=True)
-    hidden_reason = models.CharField(max_length=255, null=True, blank=True)
+    hide_reason = models.CharField(max_length=255, null=True, blank=True)
 
     solution = models.ForeignKey(
         "misago_threads.Post",

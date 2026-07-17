@@ -1,0 +1,54 @@
+{% load i18n misago_capture misago_formats %}
+
+<li class="status-message status-message-locked">
+  <div class="status-message-icon">
+    {% include "tabler/lock-filled.svg" %}
+  </div>
+  <div class="status-message-body">
+    <div class="status-message-content">
+      <p class="status-message-text">
+        {% blocktranslate trimmed context "thread locked status message" %}
+          Locked for new replies.
+        {% endblocktranslate %}
+      </p>
+      {% if locked_at or locked_by_name or lock_reason %}
+        <ul class="status-message-meta">
+          {% if locked_by_name %}
+            {% capture trimmed as locked_by_html %}
+              {% if locked_by_id and locked_by_slug %}
+                <a
+                  href="{% url 'misago:user' pk=locked_by_id slug=locked_by_slug %}"
+                  class="item-title"
+                >{{ locked_by_name }}</a>
+              {% else %}
+                <a class="item-title">{{ locked_by_name }}</a>
+              {% endif %}
+            {% endcapture %}
+            <li class="status-message-meta-user">
+              {% blocktranslate trimmed with locked_by=locked_by_html|safe context="thread locked status message" %}
+                Locked by {{ locked_by }}
+              {% endblocktranslate %}
+            </li>
+          {% endif %}
+          {% if locked_at %}
+            <li class="status-message-meta-date">
+              <span
+                title="{{ locked_at|date:'DATETIME_FORMAT' }}"
+                mg-timestamp="{{ locked_at.isoformat }}"
+              >
+                {{ locked_at|date_relative }}
+              </span>
+            </li>
+          {% endif %}
+          {% if lock_reason %}
+            <li class="status-message-meta-text">
+              {% blocktranslate trimmed with reason=lock_reason context="thread locked status message" %}
+                Reason: {{ reason }}
+              {% endblocktranslate %}
+            </li>
+          {% endif %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+</li>

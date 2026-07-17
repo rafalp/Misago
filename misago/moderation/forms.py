@@ -234,12 +234,25 @@ def get_conflicts_resolutions(
     return resolutions
 
 
-class HideForm(forms.Form):
-    hidden_reason = forms.CharField(max_length=255, required=False)
+class LockForm(forms.Form):
+    lock_reason = forms.CharField(max_length=255, required=False)
 
     request: HttpRequest
 
     def __init__(self, *args, request: HttpRequest, **kwargs):
+        self.request = request
+
+        super().__init__(*args, **kwargs)
+
+
+class HideForm(forms.Form):
+    hide_reason = forms.CharField(max_length=255, required=False)
+
+    request: HttpRequest
+
+    def __init__(self, *args, request: HttpRequest, **kwargs):
+        self.request = request
+
         super().__init__(*args, **kwargs)
 
 

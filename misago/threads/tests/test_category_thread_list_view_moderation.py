@@ -135,13 +135,13 @@ def test_category_thread_list_view_executes_moderation_action(
 
     response = moderator_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": [thread.id]},
+        {"moderation": "pin_category", "threads": [thread.id]},
     )
     assert response.status_code == 302
     assert response["location"] == default_category.get_absolute_url()
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 def test_category_thread_list_view_executes_moderation_action_in_htmx(
@@ -151,15 +151,15 @@ def test_category_thread_list_view_executes_moderation_action_in_htmx(
 
     response = moderator_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": [thread.id]},
+        {"moderation": "pin_category", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, thread.title)
     assert_contains(response, "thread-flags")
-    assert_contains(response, "thread-flag-locked")
+    assert_contains(response, "thread-flag-pinned-category")
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 def test_category_thread_list_view_executes_moderation_action_with_form(
@@ -314,7 +314,7 @@ def test_category_thread_list_view_moderation_doesnt_set_htmx_retarget_header_on
     response = moderator_client.post(
         default_category.get_absolute_url(),
         {
-            "moderation": "lock",
+            "moderation": "pin_category",
             "threads": [thread.id],
             "success-hx-target": "#misago-htmx-root",
         },
@@ -323,7 +323,7 @@ def test_category_thread_list_view_moderation_doesnt_set_htmx_retarget_header_on
     assert "hx-retarget" not in response
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 def test_category_thread_list_view_moderation_sets_htmx_retarget_header_on_success_in_htmx(
@@ -334,7 +334,7 @@ def test_category_thread_list_view_moderation_sets_htmx_retarget_header_on_succe
     response = moderator_client.post(
         default_category.get_absolute_url(),
         {
-            "moderation": "lock",
+            "moderation": "pin_category",
             "threads": [thread.id],
             "success-hx-target": "#misago-htmx-root",
         },
@@ -344,7 +344,7 @@ def test_category_thread_list_view_moderation_sets_htmx_retarget_header_on_succe
     assert response["hx-retarget"] == "#misago-htmx-root"
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 def test_category_thread_list_view_moderation_doesnt_set_htmx_reswap_header_on_success(
@@ -355,7 +355,7 @@ def test_category_thread_list_view_moderation_doesnt_set_htmx_reswap_header_on_s
     response = moderator_client.post(
         default_category.get_absolute_url(),
         {
-            "moderation": "lock",
+            "moderation": "pin_category",
             "threads": [thread.id],
             "success-hx-swap": "outerHTML",
         },
@@ -364,7 +364,7 @@ def test_category_thread_list_view_moderation_doesnt_set_htmx_reswap_header_on_s
     assert "hx-reswap" not in response
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 def test_category_thread_list_view_moderation_sets_htmx_reswap_header_on_success_in_htmx(
@@ -375,7 +375,7 @@ def test_category_thread_list_view_moderation_sets_htmx_reswap_header_on_success
     response = moderator_client.post(
         default_category.get_absolute_url(),
         {
-            "moderation": "lock",
+            "moderation": "pin_category",
             "threads": [thread.id],
             "success-hx-swap": "outerHTML",
         },
@@ -385,7 +385,7 @@ def test_category_thread_list_view_moderation_sets_htmx_reswap_header_on_success
     assert response["hx-reswap"] == "outerHTML"
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 def test_category_thread_list_view_moderation_doesnt_set_htmx_trigger_header_on_success(
@@ -396,7 +396,7 @@ def test_category_thread_list_view_moderation_doesnt_set_htmx_trigger_header_on_
     response = moderator_client.post(
         default_category.get_absolute_url(),
         {
-            "moderation": "lock",
+            "moderation": "pin_category",
             "threads": [thread.id],
         },
     )
@@ -404,7 +404,7 @@ def test_category_thread_list_view_moderation_doesnt_set_htmx_trigger_header_on_
     assert "hx-trigger-after-settke" not in response
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 def test_category_thread_list_view_moderation_sets_htmx_trigger_header_on_success_after_update_in_htmx(
@@ -415,7 +415,7 @@ def test_category_thread_list_view_moderation_sets_htmx_trigger_header_on_succes
     response = moderator_client.post(
         default_category.get_absolute_url(),
         {
-            "moderation": "lock",
+            "moderation": "pin_category",
             "threads": [thread.id],
         },
         headers={"hx-request": "true"},
@@ -426,7 +426,7 @@ def test_category_thread_list_view_moderation_sets_htmx_trigger_header_on_succes
     )
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 def test_category_thread_list_view_moderation_sets_htmx_trigger_header_on_success_after_delete_in_htmx(
@@ -482,7 +482,7 @@ def test_category_thread_list_view_moderation_shows_error_to_user(
 
     response = user_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": [thread.id]},
+        {"moderation": "pin_category", "threads": [thread.id]},
     )
     assert_contains(response, "Invalid moderation action.")
 
@@ -497,7 +497,7 @@ def test_category_thread_list_view_moderation_shows_error_to_user_in_htmx(
 
     response = user_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": [thread.id]},
+        {"moderation": "pin_category", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Invalid moderation action.", status_code=400)
@@ -513,7 +513,7 @@ def test_category_thread_list_view_moderation_shows_error_to_guest(
 
     response = client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": [thread.id]},
+        {"moderation": "pin_category", "threads": [thread.id]},
     )
     assert_contains(response, "Invalid moderation action.")
 
@@ -528,7 +528,7 @@ def test_category_thread_list_view_moderation_shows_error_to_guest_in_htmx(
 
     response = client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": [thread.id]},
+        {"moderation": "pin_category", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Invalid moderation action.", status_code=400)
@@ -592,7 +592,7 @@ def test_category_thread_list_view_shows_error_for_empty_threads_selection(
 ):
     response = moderator_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": []},
+        {"moderation": "pin_category", "threads": []},
     )
     assert_contains(response, "No valid threads selected.")
 
@@ -602,7 +602,7 @@ def test_category_thread_list_view_shows_error_for_empty_threads_selection_in_ht
 ):
     response = moderator_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": []},
+        {"moderation": "pin_category", "threads": []},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "No valid threads selected.", status_code=400)
@@ -613,7 +613,7 @@ def test_category_thread_list_view_shows_error_for_invalid_threads_selection(
 ):
     response = moderator_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": "invalid"},
+        {"moderation": "pin_category", "threads": "invalid"},
     )
     assert_contains(response, "No valid threads selected.")
 
@@ -623,7 +623,7 @@ def test_category_thread_list_view_shows_error_for_invalid_threads_selection_in_
 ):
     response = moderator_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": "invalid"},
+        {"moderation": "pin_category", "threads": "invalid"},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "No valid threads selected.", status_code=400)
@@ -634,7 +634,7 @@ def test_category_thread_list_view_shows_error_for_invalid_threads_ids_in_select
 ):
     response = moderator_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": ["invalid"]},
+        {"moderation": "pin_category", "threads": ["invalid"]},
     )
     assert_contains(response, "No valid threads selected.")
 
@@ -644,7 +644,7 @@ def test_category_thread_list_view_shows_error_for_invalid_threads_ids_in_select
 ):
     response = moderator_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": ["invalid"]},
+        {"moderation": "pin_category", "threads": ["invalid"]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "No valid threads selected.", status_code=400)
@@ -656,7 +656,7 @@ def test_category_thread_list_view_shows_error_for_too_many_selected_threads(
 ):
     response = moderator_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": list(range(1, 20))},
+        {"moderation": "pin_category", "threads": list(range(1, 20))},
     )
     assert_contains(response, "You can&#x27;t select more than 15 threads to moderate.")
 
@@ -667,7 +667,7 @@ def test_category_thread_list_view_shows_error_for_too_many_selected_threads_in_
 ):
     response = moderator_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": list(range(1, 20))},
+        {"moderation": "pin_category", "threads": list(range(1, 20))},
         headers={"hx-request": "true"},
     )
     assert_contains(
@@ -680,7 +680,7 @@ def test_category_thread_list_view_shows_error_for_not_existing_threads_ids_in_s
 ):
     response = moderator_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": [42]},
+        {"moderation": "pin_category", "threads": [42]},
     )
     assert_contains(response, "No valid threads selected.")
 
@@ -690,7 +690,7 @@ def test_category_thread_list_view_shows_error_for_not_existing_threads_ids_in_s
 ):
     response = moderator_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": [42]},
+        {"moderation": "pin_category", "threads": [42]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "No valid threads selected.", status_code=400)
@@ -708,7 +708,7 @@ def test_category_thread_list_view_shows_error_for_thread_in_selection_user_cant
 
     response = user_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": [thread.id]},
+        {"moderation": "pin_category", "threads": [thread.id]},
     )
     assert_contains(
         response,
@@ -716,7 +716,7 @@ def test_category_thread_list_view_shows_error_for_thread_in_selection_user_cant
     )
 
     thread.refresh_from_db()
-    assert not thread.is_locked
+    assert not thread.pinned
 
 
 def test_category_thread_list_view_shows_error_for_thread_in_selection_user_cant_moderate_in_htmx(
@@ -731,9 +731,10 @@ def test_category_thread_list_view_shows_error_for_thread_in_selection_user_cant
 
     response = user_client.post(
         default_category.get_absolute_url(),
-        {"moderation": "lock", "threads": [thread.id]},
+        {"moderation": "pin_category", "threads": [thread.id]},
         headers={"hx-request": "true"},
     )
+    print(response.content.decode())
     assert_contains(
         response,
         f'Can\'t moderate the \\"{thread.title}\\" thread.',
@@ -741,7 +742,7 @@ def test_category_thread_list_view_shows_error_for_thread_in_selection_user_cant
     )
 
     thread.refresh_from_db()
-    assert not thread.is_locked
+    assert not thread.pinned
 
 
 def test_category_thread_list_view_shows_validation_error_from_moderation_action(

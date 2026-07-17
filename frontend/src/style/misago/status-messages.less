@@ -1,0 +1,225 @@
+.status-message {
+  display: flex;
+  align-items: center;
+
+  background-color: var(--status-message-bg, @gray-100);
+  border-radius: @border-radius-base;
+  overflow: hidden;
+
+  &-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    width: 36px;
+    height: 36px;
+
+    line-height: 0;
+
+    color: var(--status-message-icon, @gray-400);
+
+    svg {
+      display: block;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &-body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: ceil(@line-height-computed / 2);
+
+    min-height: 36px;
+    width: 100%;
+    min-width: 0;
+
+    padding: 6px 12px;
+
+    background-color: var(--status-message-body, @gray-100);
+  }
+
+  &-content {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: ceil(@line-height-computed / 2);
+
+    min-height: 28px;
+  }
+
+  &-text {
+    max-width: 100%;
+
+    margin: 0;
+
+    overflow-wrap: break-word;
+    orphans: 3;
+
+    color: var(--status-message-text, @gray-700);
+
+    a,
+    a:link,
+    a:visited {
+      color: var(--status-message-link, @gray-700);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    a:focus,
+    a:hover,
+    a:active {
+      color: var(--status-message-link, @gray-700);
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
+
+  &-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 ceil(@line-height-computed / 2);
+
+    padding: 0;
+    margin: 0;
+
+    list-style: none;
+
+    color: var(--status-message-meta, @gray-500);
+  }
+
+  &-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: ceil(@grid-gutter-width / 2);
+  }
+
+  &-action {
+    display: flex;
+    align-items: center;
+
+    min-height: 28px;
+
+    padding: 0 6px;
+
+    border: 1px solid
+      color-mix(
+        in srgb,
+        var(--status-message-btn-color, @gray-300),
+        transparent 50%
+      );
+    border-radius: @border-radius-small;
+
+    white-space: nowrap;
+
+    &,
+    a&:link,
+    a&:visited {
+      color: var(--status-message-btn-text, @gray-700);
+      background-color: color-mix(
+        in srgb,
+        var(--status-message-btn-color, @gray-300),
+        transparent 80%
+      );
+    }
+
+    a&,
+    button& {
+      &:hover,
+      &:focus {
+        color: var(--status-message-btn-text, @gray-700);
+        background-color: color-mix(
+          in srgb,
+          var(--status-message-btn-color, @gray-300),
+          transparent 40%
+        );
+        text-decoration: none;
+      }
+
+      &:active {
+        color: var(--status-message-btn-text, @gray-700);
+        background-color: color-mix(
+          in srgb,
+          var(--status-message-btn-color, @gray-300),
+          transparent 20%
+        );
+        text-decoration: none;
+      }
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+
+      opacity: 0.8;
+    }
+
+    svg:first-child {
+      margin-right: 4px;
+    }
+
+    svg:last-child {
+      margin-left: 4px;
+    }
+  }
+}
+
+.status-message-info {
+  --status-message-bg: @blue-200;
+  --status-message-icon: @blue-700;
+}
+
+.status-message-warning {
+  --status-message-bg: @orange-200;
+  --status-message-icon: @orange-700;
+}
+
+.status-message-danger {
+  --status-message-bg: @red-200;
+  --status-message-icon: @red-700;
+}
+
+.status-message-success {
+  --status-message-bg: @green-200;
+  --status-message-icon: @green-700;
+}
+
+.status-message-locked {
+  --status-message-bg: @thread-flag-locked-bg;
+  --status-message-icon: @thread-flag-locked-color;
+}
+
+.status-message-solution,
+.status-message-solved {
+  --status-message-bg: @thread-flag-solved-bg;
+  --status-message-icon: @thread-flag-solved-color;
+}
+
+.status-message-hidden {
+  --status-message-bg: @thread-flag-hidden-bg;
+  --status-message-icon: @thread-flag-hidden-color;
+}
+
+.status-message-unapproved {
+  --status-message-bg: @thread-flag-unapproved-bg;
+  --status-message-icon: @thread-flag-unapproved-color;
+}
+
+.status-message-require-reply-approval {
+  --status-message-bg: @thread-flag-require-reply-approval-bg;
+  --status-message-icon: @thread-flag-require-reply-approval-color;
+}
+
+.status-messages {
+  display: flex;
+  flex-direction: column;
+  gap: @line-height-computed;
+
+  margin: 0 0 @line-height-computed 0;
+  padding: 0;
+
+  list-style: none;
+}

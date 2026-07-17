@@ -2,10 +2,8 @@ import pytest
 from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
-from ...permissions.enums import CategoryPermission
 from ...permissions.models import Moderator
 from ...test import assert_contains, assert_not_contains
-from ...testutils import grant_category_group_permissions
 from ...threads.models import Post, Thread
 
 THREAD_MODERATION_FORM_HTML = 'name="thread_moderation"'
@@ -220,7 +218,7 @@ def test_thread_detail_view_executes_one_step_thread_moderation_action(
 ):
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"thread_moderation": "lock"},
+        {"thread_moderation": "pin_category"},
     )
     assert response.status_code == 302
     assert response["location"] == reverse(
@@ -228,7 +226,7 @@ def test_thread_detail_view_executes_one_step_thread_moderation_action(
     )
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 def test_thread_detail_view_executes_one_step_thread_moderation_action_in_htmx(
@@ -236,46 +234,29 @@ def test_thread_detail_view_executes_one_step_thread_moderation_action_in_htmx(
 ):
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"thread_moderation": "lock"},
+        {"thread_moderation": "pin_category"},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Thread locked")
+    assert_contains(response, "Thread pinned")
 
     thread.refresh_from_db()
-    assert thread.is_locked
+    assert thread.pinned
 
 
 def test_thread_detail_view_executes_thread_moderation_action_with_form(
-    mocker,
-    moderator_client,
-    moderators_group,
-    default_category,
-    sibling_category,
-    thread,
+    moderator_client, thread
 ):
-    grant_category_group_permissions(
-        sibling_category,
-        moderators_group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-        CategoryPermission.START,
-    )
-
-    mock_synchronize_categories = mocker.patch(
-        "misago.moderation.thread.synchronize_categories"
-    )
-
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"thread_moderation": "move"},
+        {"thread_moderation": "lock"},
     )
-    assert_contains(response, "Move")
+    assert_contains(response, "Lock thread")
+    assert_contains(response, "Reason for locking")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {
-            "thread_moderation": "move",
-            "moderation-category": sibling_category.id,
+            "thread_moderation": "lock",
             "confirm": "true",
         },
     )
@@ -285,57 +266,31 @@ def test_thread_detail_view_executes_thread_moderation_action_with_form(
     )
 
     thread.refresh_from_db()
-    assert thread.category == sibling_category
-
-    mock_synchronize_categories.delay.assert_called_once_with(
-        [default_category.id, sibling_category.id]
-    )
+    assert thread.is_locked
 
 
 def test_thread_detail_view_executes_thread_moderation_action_with_form_in_htmx(
-    mocker,
-    moderator_client,
-    moderators_group,
-    default_category,
-    sibling_category,
-    thread,
+    moderator_client, thread
 ):
-    grant_category_group_permissions(
-        sibling_category,
-        moderators_group,
-        CategoryPermission.SEE,
-        CategoryPermission.BROWSE,
-        CategoryPermission.START,
-    )
-
-    mock_synchronize_categories = mocker.patch(
-        "misago.moderation.thread.synchronize_categories"
-    )
-
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"thread_moderation": "move"},
+        {"thread_moderation": "lock"},
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Move")
+    assert_contains(response, "Reason for locking")
 
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {
-            "thread_moderation": "move",
-            "moderation-category": sibling_category.id,
+            "thread_moderation": "lock",
             "confirm": "true",
         },
         headers={"hx-request": "true"},
     )
-    assert_contains(response, "Thread moved")
+    assert_contains(response, "Thread locked")
 
     thread.refresh_from_db()
-    assert thread.category == sibling_category
-
-    mock_synchronize_categories.delay.assert_called_once_with(
-        [default_category.id, sibling_category.id]
-    )
+    assert thread.is_locked
 
 
 def test_thread_detail_view_executes_destructive_thread_moderation_action_with_confirmation(
@@ -406,12 +361,12 @@ def test_thread_detail_view_executes_destructive_thread_moderation_action_with_c
 def test_thread_detail_view_thread_moderation_shows_error_to_user(user_client, thread):
     response = user_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"thread_moderation": "lock"},
+        {"thread_moderation": "pin_category"},
     )
     assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
-    assert not thread.is_locked
+    assert not thread.pinned
 
 
 def test_thread_detail_view_thread_moderation_shows_error_to_user_in_htmx(
@@ -419,24 +374,24 @@ def test_thread_detail_view_thread_moderation_shows_error_to_user_in_htmx(
 ):
     response = user_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"thread_moderation": "lock"},
+        {"thread_moderation": "pin_category"},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Invalid moderation action.", status_code=400)
 
     thread.refresh_from_db()
-    assert not thread.is_locked
+    assert not thread.pinned
 
 
 def test_thread_detail_view_thread_moderation_shows_error_to_guest(client, thread):
     response = client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"thread_moderation": "lock"},
+        {"thread_moderation": "pin_category"},
     )
     assert_contains(response, "Invalid moderation action.")
 
     thread.refresh_from_db()
-    assert not thread.is_locked
+    assert not thread.pinned
 
 
 def test_thread_detail_view_thread_moderation_shows_error_to_guest_in_htmx(
@@ -444,13 +399,13 @@ def test_thread_detail_view_thread_moderation_shows_error_to_guest_in_htmx(
 ):
     response = client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"thread_moderation": "lock"},
+        {"thread_moderation": "pin_category"},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Invalid moderation action.", status_code=400)
 
     thread.refresh_from_db()
-    assert not thread.is_locked
+    assert not thread.pinned
 
 
 def test_thread_detail_view_shows_error_for_invalid_thread_moderation_action(
@@ -498,9 +453,61 @@ def test_thread_detail_view_shows_error_for_empty_thread_moderation_action_in_ht
 def test_thread_detail_view_executes_posts_moderation_action(
     moderator_client, thread, reply
 ):
+    reply.is_locked = True
+    reply.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "unlock", "posts": [reply.id]},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_thread_detail_view_executes_posts_moderation_action_in_htmx(
+    moderator_client, thread, reply
+):
+    reply.is_locked = True
+    reply.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"posts_moderation": "unlock", "posts": [reply.id]},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Posts unlocked")
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_thread_detail_view_executes_posts_moderation_action_with_form(
+    moderator_client, thread, reply
+):
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"posts_moderation": "lock", "posts": [reply.id]},
+    )
+    assert_contains(response, "Lock posts")
+    assert_contains(response, "Reason for locking")
+    assert_contains(response, f'value="{reply.id}"')
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "lock",
+            "posts": [reply.id],
+            "confirm": "true",
+        },
     )
     assert response.status_code == 302
     assert (
@@ -515,7 +522,7 @@ def test_thread_detail_view_executes_posts_moderation_action(
     assert reply.is_locked
 
 
-def test_thread_detail_view_executes_posts_moderation_action_in_htmx(
+def test_thread_detail_view_executes_posts_moderation_action_with_form_in_htmx(
     moderator_client, thread, reply
 ):
     response = moderator_client.post(
@@ -523,86 +530,22 @@ def test_thread_detail_view_executes_posts_moderation_action_in_htmx(
         {"posts_moderation": "lock", "posts": [reply.id]},
         headers={"hx-request": "true"},
     )
+    assert_contains(response, "Reason for locking")
+    assert_contains(response, f'value="{reply.id}"')
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "posts_moderation": "lock",
+            "posts": [reply.id],
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
     assert_contains(response, "Posts locked")
 
     reply.refresh_from_db()
     assert reply.is_locked
-
-
-def test_thread_detail_view_executes_posts_moderation_action_with_form(
-    mocker, moderator_client, default_category, thread, reply
-):
-    mock_synchronize_categories = mocker.patch(
-        "misago.moderation.posts.synchronize_categories"
-    )
-
-    response = moderator_client.post(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"posts_moderation": "split", "posts": [reply.id]},
-    )
-    assert_contains(response, "Split posts into a new thread")
-    assert_contains(response, "Category")
-    assert_contains(response, f'value="{reply.id}"')
-
-    response = moderator_client.post(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {
-            "posts_moderation": "split",
-            "posts": [reply.id],
-            "moderation-category": default_category.id,
-            "moderation-title": "New thread",
-            "moderation-redirect_to": "current",
-            "confirm": "true",
-        },
-    )
-    assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
-    )
-
-    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
-
-    reply.refresh_from_db()
-    assert reply.category == default_category
-    assert reply.thread != thread
-
-
-def test_thread_detail_view_executes_posts_moderation_action_with_form_in_htmx(
-    mocker, moderator_client, default_category, thread, reply
-):
-    mock_synchronize_categories = mocker.patch(
-        "misago.moderation.posts.synchronize_categories"
-    )
-
-    response = moderator_client.post(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"posts_moderation": "split", "posts": [reply.id]},
-        headers={"hx-request": "true"},
-    )
-    assert_contains(response, "Category")
-    assert_contains(response, f'value="{reply.id}"')
-
-    response = moderator_client.post(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {
-            "posts_moderation": "split",
-            "posts": [reply.id],
-            "moderation-category": default_category.id,
-            "moderation-title": "New thread",
-            "moderation-redirect_to": "current",
-            "confirm": "true",
-        },
-        headers={"hx-request": "true"},
-    )
-    assert_contains(response, "Posts were split into a new thread.")
-
-    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
-
-    reply.refresh_from_db()
-    assert reply.category == default_category
-    assert reply.thread == Thread.objects.get(
-        slug="new-thread", category=default_category
-    )
 
 
 def test_thread_detail_view_executes_destructive_posts_moderation_action_with_confirmation(
@@ -673,55 +616,67 @@ def test_thread_detail_view_executes_destructive_posts_moderation_action_with_co
 def test_thread_detail_view_posts_moderation_action_shows_error_to_user(
     user_client, thread, reply
 ):
+    reply.is_locked = True
+    reply.save()
+
     response = user_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"posts_moderation": "lock", "posts": [reply.id]},
+        {"posts_moderation": "unlock", "posts": [reply.id]},
     )
     assert_contains(response, "Invalid moderation action.")
 
     reply.refresh_from_db()
-    assert not reply.is_locked
+    assert reply.is_locked
 
 
 def test_thread_detail_view_posts_moderation_action_shows_error_to_user_in_htmx(
     user_client, thread, reply
 ):
+    reply.is_locked = True
+    reply.save()
+
     response = user_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"posts_moderation": "lock", "posts": [reply.id]},
+        {"posts_moderation": "unlock", "posts": [reply.id]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Invalid moderation action.", status_code=400)
 
     reply.refresh_from_db()
-    assert not reply.is_locked
+    assert reply.is_locked
 
 
 def test_thread_detail_view_posts_moderation_action_shows_error_to_guest(
     client, thread, reply
 ):
+    reply.is_locked = True
+    reply.save()
+
     response = client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"posts_moderation": "lock", "posts": [reply.id]},
+        {"posts_moderation": "unlock", "posts": [reply.id]},
     )
     assert_contains(response, "Invalid moderation action.")
 
     reply.refresh_from_db()
-    assert not reply.is_locked
+    assert reply.is_locked
 
 
 def test_thread_detail_view_posts_moderation_action_shows_error_to_guest_in_htmx(
     client, thread, reply
 ):
+    reply.is_locked = True
+    reply.save()
+
     response = client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"posts_moderation": "lock", "posts": [reply.id]},
+        {"posts_moderation": "unlock", "posts": [reply.id]},
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Invalid moderation action.", status_code=400)
 
     reply.refresh_from_db()
-    assert not reply.is_locked
+    assert reply.is_locked
 
 
 def test_thread_detail_view_posts_moderation_action_shows_error_for_invalid_moderation_action(
@@ -941,9 +896,61 @@ def test_thread_detail_view_posts_moderation_action_shows_error_for_other_thread
 def test_thread_detail_view_executes_post_moderation_action(
     moderator_client, thread, reply
 ):
+    reply.is_locked = True
+    reply.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock", "post": reply.id},
+    )
+    assert response.status_code == 302
+    assert (
+        response["location"]
+        == reverse(
+            "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
+        )
+        + f"#post-{reply.id}"
+    )
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_thread_detail_view_executes_post_moderation_action_in_htmx(
+    moderator_client, thread, reply
+):
+    reply.is_locked = True
+    reply.save()
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {"post_moderation": "unlock", "post": reply.id},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, "Post unlocked")
+
+    reply.refresh_from_db()
+    assert not reply.is_locked
+
+
+def test_thread_detail_view_executes_post_moderation_action_with_form(
+    moderator_client, thread, reply
+):
     response = moderator_client.post(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
         {"post_moderation": "lock", "post": reply.id},
+    )
+    assert_contains(response, "Lock post")
+    assert_contains(response, "Reason for locking")
+    assert_contains(response, f'value="{reply.id}"')
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "lock",
+            "post": reply.id,
+            "confirm": "true",
+        },
     )
     assert response.status_code == 302
     assert (
@@ -958,7 +965,7 @@ def test_thread_detail_view_executes_post_moderation_action(
     assert reply.is_locked
 
 
-def test_thread_detail_view_executes_post_moderation_action_in_htmx(
+def test_thread_detail_view_executes_post_moderation_action_with_form_in_htmx(
     moderator_client, thread, reply
 ):
     response = moderator_client.post(
@@ -966,86 +973,22 @@ def test_thread_detail_view_executes_post_moderation_action_in_htmx(
         {"post_moderation": "lock", "post": reply.id},
         headers={"hx-request": "true"},
     )
+    assert_contains(response, "Reason for locking")
+    assert_contains(response, f'value="{reply.id}"')
+
+    response = moderator_client.post(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
+        {
+            "post_moderation": "lock",
+            "post": reply.id,
+            "confirm": "true",
+        },
+        headers={"hx-request": "true"},
+    )
     assert_contains(response, "Post locked")
 
     reply.refresh_from_db()
     assert reply.is_locked
-
-
-def test_thread_detail_view_executes_post_moderation_action_with_form(
-    mocker, moderator_client, default_category, thread, reply
-):
-    mock_synchronize_categories = mocker.patch(
-        "misago.moderation.post.synchronize_categories"
-    )
-
-    response = moderator_client.post(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"post_moderation": "split", "post": [reply.id]},
-    )
-    assert_contains(response, "Split post into a new thread")
-    assert_contains(response, "Category")
-    assert_contains(response, f'value="{reply.id}"')
-
-    response = moderator_client.post(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {
-            "post_moderation": "split",
-            "post": [reply.id],
-            "moderation-category": default_category.id,
-            "moderation-title": "New thread",
-            "moderation-redirect_to": "current",
-            "confirm": "true",
-        },
-    )
-    assert response.status_code == 302
-    assert response["location"] == reverse(
-        "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
-    )
-
-    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
-
-    reply.refresh_from_db()
-    assert reply.category == default_category
-    assert reply.thread != thread
-
-
-def test_thread_detail_view_executes_post_moderation_action_with_form_in_htmx(
-    mocker, moderator_client, default_category, thread, reply
-):
-    mock_synchronize_categories = mocker.patch(
-        "misago.moderation.post.synchronize_categories"
-    )
-
-    response = moderator_client.post(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {"post_moderation": "split", "post": [reply.id]},
-        headers={"hx-request": "true"},
-    )
-    assert_contains(response, "Category")
-    assert_contains(response, f'value="{reply.id}"')
-
-    response = moderator_client.post(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug}),
-        {
-            "post_moderation": "split",
-            "post": [reply.id],
-            "moderation-category": default_category.id,
-            "moderation-title": "New thread",
-            "moderation-redirect_to": "current",
-            "confirm": "true",
-        },
-        headers={"hx-request": "true"},
-    )
-    assert_contains(response, "Post was split into a new thread.")
-
-    mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
-
-    reply.refresh_from_db()
-    assert reply.category == default_category
-    assert reply.thread == Thread.objects.get(
-        slug="new-thread", category=default_category
-    )
 
 
 def test_thread_detail_view_executes_destructive_post_moderation_action_with_confirmation(

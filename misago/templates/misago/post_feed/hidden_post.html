@@ -116,8 +116,8 @@
                   <a class="item-title">{{ post.hidden_by_name }}</a>
                 {% endif %}
               {% endcapture %}
-              {% if post.hidden_reason %}
-                {% blocktranslate trimmed with hidden_by=hidden_by_html|safe hidden_at=hidden_at_html|safe reason=post.hidden_reason context="hidden post message" %}
+              {% if post.hide_reason %}
+                {% blocktranslate trimmed with hidden_by=hidden_by_html|safe hidden_at=hidden_at_html|safe reason=post.hide_reason context="hidden post message" %}
                   Hidden by {{ hidden_by }}, {{ hidden_at }}. Reason: {{ reason }}
                 {% endblocktranslate %}
               {% else %}
@@ -125,8 +125,8 @@
                   Hidden by {{ hidden_by }}, {{ hidden_at }}.
                 {% endblocktranslate %}
               {% endif %}
-            {% elif post.hidden_reason %}
-              {% blocktranslate trimmed with hidden_at=hidden_at_html|safe reason=post.hidden_reason context="hidden post message" %}
+            {% elif post.hide_reason %}
+              {% blocktranslate trimmed with hidden_at=hidden_at_html|safe reason=post.hide_reason context="hidden post message" %}
                 Hidden {{ hidden_at }}. Reason: {{ reason }}
               {% endblocktranslate %}
             {% else %}
@@ -145,8 +145,8 @@
                 <a class="item-title">{{ post.hidden_by_name }}</a>
               {% endif %}
             {% endcapture %}
-            {% if post.hidden_reason %}
-              {% blocktranslate trimmed with hidden_by=hidden_by_html|safe reason=post.hidden_reason context="hidden post message" %}
+            {% if post.hide_reason %}
+              {% blocktranslate trimmed with hidden_by=hidden_by_html|safe reason=post.hide_reason context="hidden post message" %}
                 Hidden by {{ hidden_by }}. Reason: {{ reason }}
               {% endblocktranslate %}
             {% else %}
@@ -154,8 +154,8 @@
                 Hidden by {{ hidden_by }}.
               {% endblocktranslate %}
             {% endif %}
-          {% elif post.hidden_reason %}
-            {% blocktranslate trimmed with reason=post.hidden_reason context="hidden post message" %}
+          {% elif post.hide_reason %}
+            {% blocktranslate trimmed with reason=post.hide_reason context="hidden post message" %}
               Reason: {{ reason }}
             {% endblocktranslate %}
           {% else %}

@@ -19,11 +19,11 @@ class HidePostHookAction(Protocol):
 
     A `Post` to hide.
 
-    ## `hidden_by: User | str`
+    ## `hidden_by: User | str | None`
 
-    The user who hid the post.
+    The user who hid the post, or `None` if not provided.
 
-    ## `hidden_reason: str | None`
+    ## `hide_reason: str | None`
 
     A `str` with a short description of why the post was hidden, or `None`.
 
@@ -45,8 +45,8 @@ class HidePostHookAction(Protocol):
     def __call__(
         self,
         post: Post,
-        hidden_by: Union["User", str],
-        hidden_reason: str | None = None,
+        hidden_by: Union["User", str, None] = None,
+        hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -69,11 +69,11 @@ class HidePostHookFilter(Protocol):
 
     A `Post` to hide.
 
-    ## `hidden_by: User | str`
+    ## `hidden_by: User | str | None`
 
-    The user who hid the post.
+    The user who hid the post, or `None` if not provided.
 
-    ## `hidden_reason: str | None`
+    ## `hide_reason: str | None`
 
     A `str` with a short description of why the post was hidden, or `None`.
 
@@ -96,8 +96,8 @@ class HidePostHookFilter(Protocol):
         self,
         action: HidePostHookAction,
         post: Post,
-        hidden_by: Union["User", str],
-        hidden_reason: str | None = None,
+        hidden_by: Union["User", str, None] = None,
+        hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool: ...
@@ -115,7 +115,7 @@ class HidePostHook(
 
     # Example
 
-    Register ip of user who hid the post:
+    Register the IP address of the user who hid the post.
 
     ```python
     from django.http import HttpRequest
@@ -128,12 +128,12 @@ class HidePostHook(
     def register_user_that_hid_post(
         action,
         post: Post,
-        hidden_by: User | str,
-        hidden_reason: str | None = None,
+        hidden_by: User | str | None = None,
+        hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
-        if not action(post, hidden_by, hidden_reason, commit=False, request=request):
+        if not action(post, hidden_by, hide_reason, commit=False, request=request):
             return False
 
         if request:
@@ -151,8 +151,8 @@ class HidePostHook(
         self,
         action: HidePostHookAction,
         post: Post,
-        hidden_by: Union["User", str],
-        hidden_reason: str | None = None,
+        hidden_by: Union["User", str, None] = None,
+        hide_reason: str | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
     ) -> bool:
@@ -160,7 +160,7 @@ class HidePostHook(
             action,
             post,
             hidden_by,
-            hidden_reason,
+            hide_reason,
             commit,
             request,
         )

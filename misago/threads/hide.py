@@ -18,20 +18,20 @@ if TYPE_CHECKING:
 
 def hide_thread(
     thread: Thread,
-    hidden_by: Union["User", str],
-    hidden_reason: str | None = None,
+    hidden_by: Union["User", str, None] = None,
+    hide_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
     return hide_thread_hook(
-        _hide_thread_action, thread, hidden_by, hidden_reason, commit, request
+        _hide_thread_action, thread, hidden_by, hide_reason, commit, request
     )
 
 
 def _hide_thread_action(
     thread: Thread,
-    hidden_by: Union["User", str],
-    hidden_reason: str | None = None,
+    hidden_by: Union["User", str, None] = None,
+    hide_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
@@ -40,12 +40,12 @@ def _hide_thread_action(
 
     thread.is_hidden = True
     thread.hidden_at = timezone.now()
-    thread.hidden_reason = hidden_reason
+    thread.hide_reason = hide_reason
 
     if isinstance(hidden_by, str):
         thread.hidden_by_name = hidden_by
         thread.hidden_by_slug = slugify(hidden_by)
-    else:
+    elif hidden_by:
         thread.hidden_by = hidden_by
         thread.hidden_by_name = hidden_by.username
         thread.hidden_by_slug = hidden_by.slug
@@ -73,7 +73,7 @@ def _unhide_thread_action(
     thread.hidden_by = None
     thread.hidden_by_name = None
     thread.hidden_by_slug = None
-    thread.hidden_reason = None
+    thread.hide_reason = None
 
     if commit:
         thread.save()
@@ -83,20 +83,20 @@ def _unhide_thread_action(
 
 def hide_post(
     post: Post,
-    hidden_by: Union["User", str],
-    hidden_reason: str | None = None,
+    hidden_by: Union["User", str, None] = None,
+    hide_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
     return hide_post_hook(
-        _hide_post_action, post, hidden_by, hidden_reason, commit, request
+        _hide_post_action, post, hidden_by, hide_reason, commit, request
     )
 
 
 def _hide_post_action(
     post: Post,
-    hidden_by: Union["User", str],
-    hidden_reason: str | None = None,
+    hidden_by: Union["User", str, None] = None,
+    hide_reason: str | None = None,
     commit: bool = True,
     request: HttpRequest | None = None,
 ) -> bool:
@@ -105,12 +105,12 @@ def _hide_post_action(
 
     post.is_hidden = True
     post.hidden_at = timezone.now()
-    post.hidden_reason = hidden_reason
+    post.hide_reason = hide_reason
 
     if isinstance(hidden_by, str):
         post.hidden_by_name = hidden_by
         post.hidden_by_slug = slugify(hidden_by)
-    else:
+    elif hidden_by:
         post.hidden_by = hidden_by
         post.hidden_by_name = hidden_by.username
         post.hidden_by_slug = hidden_by.slug
@@ -138,7 +138,7 @@ def _unhide_post_action(
     post.hidden_by = None
     post.hidden_by_name = None
     post.hidden_by_slug = None
-    post.hidden_reason = None
+    post.hide_reason = None
 
     if commit:
         post.save()

@@ -274,9 +274,7 @@ def test_thread_detail_view_doesnt_show_deleted_user_post_locked_status_bar_to_a
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
-    assert_not_contains(
-        response, "This post is locked and only editable by moderators."
-    )
+    assert_not_contains(response, "Locked and cannot be edited.")
 
 
 def test_thread_detail_view_doesnt_show_user_post_locked_status_bar_to_anonymous_user(
@@ -289,9 +287,7 @@ def test_thread_detail_view_doesnt_show_user_post_locked_status_bar_to_anonymous
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
-    assert_not_contains(
-        response, "This post is locked and only editable by moderators."
-    )
+    assert_not_contains(response, "Locked and cannot be edited.")
 
 
 def test_thread_detail_view_doesnt_show_deleted_user_post_locked_status_bar_to_user(
@@ -302,9 +298,7 @@ def test_thread_detail_view_doesnt_show_deleted_user_post_locked_status_bar_to_u
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
-    assert_not_contains(
-        response, "This post is locked and only editable by moderators."
-    )
+    assert_not_contains(response, "Locked and cannot be edited.")
 
 
 def test_thread_detail_view_doesnt_show_other_user_post_locked_status_bar_to_user(
@@ -317,9 +311,7 @@ def test_thread_detail_view_doesnt_show_other_user_post_locked_status_bar_to_use
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
-    assert_not_contains(
-        response, "This post is locked and only editable by moderators."
-    )
+    assert_not_contains(response, "Locked and cannot be edited.")
 
 
 def test_thread_detail_view_shows_user_post_locked_status_bar_to_user(
@@ -332,7 +324,7 @@ def test_thread_detail_view_shows_user_post_locked_status_bar_to_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
-    assert_contains(response, "This post is locked and only editable by moderators.")
+    assert_contains(response, "Locked and cannot be edited.")
 
 
 def test_thread_detail_view_shows_deleted_user_post_locked_status_bar_to_moderator(
@@ -343,7 +335,7 @@ def test_thread_detail_view_shows_deleted_user_post_locked_status_bar_to_moderat
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
-    assert_contains(response, "This post is locked and only editable by moderators.")
+    assert_contains(response, "Locked and cannot be edited.")
 
 
 def test_thread_detail_view_shows_user_post_locked_status_bar_to_moderator(
@@ -356,7 +348,225 @@ def test_thread_detail_view_shows_user_post_locked_status_bar_to_moderator(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
-    assert_contains(response, "This post is locked and only editable by moderators.")
+    assert_contains(response, "Locked and cannot be edited.")
+
+
+def test_thread_detail_view_shows_locked_post_with_locked_by_user_at_timestamp_with_reason_status_message(
+    thread_reply_factory, moderator_client, user, other_user, thread
+):
+    post = thread_reply_factory(
+        thread,
+        poster=user,
+        original=get_random_string(12),
+        is_locked=True,
+        locked_at=True,
+        locked_by=other_user,
+        lock_reason="Lorem ipsum",
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, "Locked and cannot be edited.")
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
+def test_thread_detail_view_shows_locked_post_with_locked_by_user_at_timestamp_status_message(
+    thread_reply_factory, moderator_client, user, other_user, thread
+):
+    post = thread_reply_factory(
+        thread,
+        poster=user,
+        original=get_random_string(12),
+        is_locked=True,
+        locked_at=True,
+        locked_by=other_user,
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, "Locked and cannot be edited.")
+    assert_contains(response, other_user.username)
+    assert_not_contains(response, "Reason:")
+
+
+def test_thread_detail_view_shows_locked_post_with_locked_by_deleted_user_at_timestamp_with_reason_status_message(
+    thread_reply_factory, moderator_client, user, thread
+):
+    post = thread_reply_factory(
+        thread,
+        poster=user,
+        original=get_random_string(12),
+        is_locked=True,
+        locked_at=True,
+        locked_by="OtherUser",
+        lock_reason="Lorem ipsum",
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, "Locked and cannot be edited.")
+    assert_contains(response, "OtherUser")
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
+def test_thread_detail_view_shows_locked_post_with_locked_by_deleted_user_at_timestamp_status_message(
+    thread_reply_factory, moderator_client, user, thread
+):
+    post = thread_reply_factory(
+        thread,
+        poster=user,
+        original=get_random_string(12),
+        is_locked=True,
+        locked_at=True,
+        locked_by="OtherUser",
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, "Locked and cannot be edited.")
+    assert_contains(response, "OtherUser")
+    assert_not_contains(response, "Reason:")
+
+
+def test_thread_detail_view_shows_locked_post_with_locked_with_at_timestamp_reason_status_message(
+    thread_reply_factory, moderator_client, user, thread
+):
+    post = thread_reply_factory(
+        thread,
+        poster=user,
+        original=get_random_string(12),
+        is_locked=True,
+        locked_at=True,
+        lock_reason="Lorem ipsum",
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, "Locked and cannot be edited.")
+    assert_not_contains(response, "Locked by")
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
+def test_thread_detail_view_shows_locked_post_with_locked_with_at_timestamp_status_message(
+    thread_reply_factory, moderator_client, user, thread
+):
+    post = thread_reply_factory(
+        thread,
+        poster=user,
+        original=get_random_string(12),
+        is_locked=True,
+        locked_at=True,
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, "Locked and cannot be edited.")
+    assert_not_contains(response, "Locked by")
+    assert_not_contains(response, "Reason:")
+
+
+def test_thread_detail_view_shows_locked_post_with_locked_by_user_with_reason_status_message(
+    thread_reply_factory, moderator_client, user, other_user, thread
+):
+    post = thread_reply_factory(
+        thread,
+        poster=user,
+        original=get_random_string(12),
+        is_locked=True,
+        locked_by=other_user,
+        lock_reason="Lorem ipsum",
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, "Locked and cannot be edited.")
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
+def test_thread_detail_view_shows_locked_post_with_locked_by_user_status_message(
+    thread_reply_factory, moderator_client, user, other_user, thread
+):
+    post = thread_reply_factory(
+        thread,
+        poster=user,
+        original=get_random_string(12),
+        is_locked=True,
+        locked_by=other_user,
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, "Locked and cannot be edited.")
+    assert_contains(response, other_user.username)
+    assert_not_contains(response, "Reason:")
+
+
+def test_thread_detail_view_shows_locked_post_with_locked_by_deleted_user_with_reason_status_message(
+    thread_reply_factory, moderator_client, user, thread
+):
+    post = thread_reply_factory(
+        thread,
+        poster=user,
+        original=get_random_string(12),
+        is_locked=True,
+        locked_by="OtherUser",
+        lock_reason="Lorem ipsum",
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, "Locked and cannot be edited.")
+    assert_contains(response, "OtherUser")
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
+def test_thread_detail_view_shows_locked_post_with_locked_by_deleted_user_status_message(
+    thread_reply_factory, moderator_client, user, thread
+):
+    post = thread_reply_factory(
+        thread,
+        poster=user,
+        original=get_random_string(12),
+        is_locked=True,
+        locked_by="OtherUser",
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, "Locked and cannot be edited.")
+    assert_contains(response, "OtherUser")
+    assert_not_contains(response, "Reason:")
+
+
+def test_thread_detail_view_shows_locked_post_with_lock_reason_status_message(
+    thread_reply_factory, moderator_client, user, thread
+):
+    post = thread_reply_factory(
+        thread,
+        poster=user,
+        original=get_random_string(12),
+        is_locked=True,
+        lock_reason="Lorem ipsum",
+    )
+    response = moderator_client.get(
+        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
+    )
+    assert_contains(response, post.get_absolute_url())
+    assert_contains(response, "Locked and cannot be edited.")
+    assert_not_contains(response, "Locked by")
+    assert_contains(response, "Reason: Lorem ipsum")
 
 
 def test_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_user_and_reason_to_anonymous_user(
@@ -368,7 +578,7 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_user_a
         is_hidden=True,
         hidden_at=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -408,7 +618,7 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_delete
         is_hidden=True,
         hidden_at=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -445,7 +655,7 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_and_re
         original=get_random_string(12),
         is_hidden=True,
         hidden_at=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -479,7 +689,7 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_with_user_and_reason_
         original=get_random_string(12),
         is_hidden=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -517,7 +727,7 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_with_deleted_user_and
         original=get_random_string(12),
         is_hidden=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -552,7 +762,7 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_with_reason_to_anonym
         thread,
         original=get_random_string(12),
         is_hidden=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -571,7 +781,7 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_user_a
         is_hidden=True,
         hidden_at=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -611,7 +821,7 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_delete
         is_hidden=True,
         hidden_at=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -648,7 +858,7 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_with_timestamp_and_re
         original=get_random_string(12),
         is_hidden=True,
         hidden_at=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -682,7 +892,7 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_with_user_and_reason_
         original=get_random_string(12),
         is_hidden=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -720,7 +930,7 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_with_deleted_user_and
         original=get_random_string(12),
         is_hidden=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -755,7 +965,7 @@ def test_thread_detail_view_shows_deleted_user_hidden_post_with_reason_to_user(
         thread,
         original=get_random_string(12),
         is_hidden=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -786,7 +996,7 @@ def test_thread_detail_view_shows_user_hidden_post_with_timestamp_user_and_reaso
         is_hidden=True,
         hidden_at=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -828,7 +1038,7 @@ def test_thread_detail_view_shows_user_hidden_post_with_timestamp_deleted_user_a
         is_hidden=True,
         hidden_at=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -867,7 +1077,7 @@ def test_thread_detail_view_shows_user_hidden_post_with_timestamp_and_reason_to_
         poster=user,
         is_hidden=True,
         hidden_at=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -903,7 +1113,7 @@ def test_thread_detail_view_shows_user_hidden_post_with_user_and_reason_to_user(
         poster=user,
         is_hidden=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -943,7 +1153,7 @@ def test_thread_detail_view_shows_user_hidden_post_with_deleted_user_and_reason_
         poster=user,
         is_hidden=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -980,7 +1190,7 @@ def test_thread_detail_view_shows_user_hidden_post_with_reason_to_user(
         original=get_random_string(12),
         poster=user,
         is_hidden=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -1013,7 +1223,7 @@ def test_thread_detail_view_shows_other_user_hidden_post_with_timestamp_user_and
         is_hidden=True,
         hidden_at=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -1055,7 +1265,7 @@ def test_thread_detail_view_shows_other_user_hidden_post_with_timestamp_deleted_
         is_hidden=True,
         hidden_at=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -1094,7 +1304,7 @@ def test_thread_detail_view_shows_other_user_hidden_post_with_timestamp_and_reas
         poster=other_user,
         is_hidden=True,
         hidden_at=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -1130,7 +1340,7 @@ def test_thread_detail_view_shows_other_user_hidden_post_with_user_and_reason_to
         poster=other_user,
         is_hidden=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -1170,7 +1380,7 @@ def test_thread_detail_view_shows_other_user_hidden_post_with_deleted_user_and_r
         poster=other_user,
         is_hidden=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -1207,7 +1417,7 @@ def test_thread_detail_view_shows_other_user_hidden_post_with_reason_to_user(
         original=get_random_string(12),
         poster=other_user,
         is_hidden=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
@@ -1240,14 +1450,14 @@ def test_thread_detail_view_shows_user_hidden_post_with_timestamp_user_and_reaso
         is_hidden=True,
         hidden_at=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, other_user.get_absolute_url())
     assert_contains(response, other_user.username)
     assert_contains(response, "Lorem ipsum offtopic")
@@ -1269,7 +1479,7 @@ def test_thread_detail_view_shows_user_hidden_post_with_timestamp_and_user_to_mo
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, other_user.get_absolute_url())
     assert_contains(response, other_user.username)
 
@@ -1284,14 +1494,14 @@ def test_thread_detail_view_shows_user_hidden_post_with_timestamp_deleted_user_a
         is_hidden=True,
         hidden_at=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, "DeletedModerator")
     assert_contains(response, "Lorem ipsum offtopic")
 
@@ -1312,7 +1522,7 @@ def test_thread_detail_view_shows_user_hidden_post_with_timestamp_and_deleted_us
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, "DeletedModerator")
 
 
@@ -1325,14 +1535,14 @@ def test_thread_detail_view_shows_user_hidden_post_with_timestamp_and_reason_to_
         poster=user,
         is_hidden=True,
         hidden_at=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, "Lorem ipsum offtopic")
 
 
@@ -1351,7 +1561,7 @@ def test_thread_detail_view_shows_user_hidden_post_with_timestamp_to_moderator(
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Hidden and visible only to moderators.")
 
 
 def test_thread_detail_view_shows_user_hidden_post_with_user_and_reason_to_moderator(
@@ -1363,14 +1573,14 @@ def test_thread_detail_view_shows_user_hidden_post_with_user_and_reason_to_moder
         poster=user,
         is_hidden=True,
         hidden_by=other_user,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, other_user.get_absolute_url())
     assert_contains(response, other_user.username)
     assert_contains(response, "Lorem ipsum offtopic")
@@ -1391,7 +1601,7 @@ def test_thread_detail_view_shows_user_hidden_post_with_user_to_moderator(
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, other_user.get_absolute_url())
     assert_contains(response, other_user.username)
 
@@ -1405,14 +1615,14 @@ def test_thread_detail_view_shows_user_hidden_post_with_deleted_user_and_reason_
         poster=user,
         is_hidden=True,
         hidden_by="DeletedModerator",
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, "DeletedModerator")
     assert_contains(response, "Lorem ipsum offtopic")
 
@@ -1432,7 +1642,7 @@ def test_thread_detail_view_shows_user_hidden_post_with_deleted_user_to_moderato
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, "DeletedModerator")
 
 
@@ -1444,14 +1654,14 @@ def test_thread_detail_view_shows_user_hidden_post_with_reason_to_moderator(
         original=get_random_string(12),
         poster=user,
         is_hidden=True,
-        hidden_reason="Lorem ipsum offtopic",
+        hide_reason="Lorem ipsum offtopic",
     )
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, "Lorem ipsum offtopic")
 
 
@@ -1469,7 +1679,7 @@ def test_thread_detail_view_shows_user_hidden_post_to_moderator(
     )
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
-    assert_contains(response, "contents are hidden and visible only to moderators")
+    assert_contains(response, "Hidden and visible only to moderators.")
 
 
 def test_thread_detail_view_doesnt_show_unapproved_post_to_anonymous_user(
@@ -1524,19 +1734,6 @@ def test_thread_detail_view_shows_deleted_user_unapproved_post_to_moderator(
     assert_contains(response, post.original)
 
 
-def test_thread_detail_view_shows_user_unapproved_post_to_moderator(
-    thread_reply_factory, moderator_client, thread, user
-):
-    post = thread_reply_factory(
-        thread, original=get_random_string(12), poster=user, is_unapproved=True
-    )
-    response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(response, post.original)
-
-
 def test_thread_detail_view_doesnt_show_deleted_user_unapproved_post_to_anonymous_user(
     thread_reply_factory, client, thread
 ):
@@ -1559,22 +1756,6 @@ def test_thread_detail_view_doesnt_show_deleted_user_unapproved_post_to_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_not_contains(response, post.get_absolute_url())
-
-
-def test_thread_detail_view_shows_deleted_user_unapproved_post_to_moderator(
-    thread_reply_factory, moderator_client, thread
-):
-    post = thread_reply_factory(
-        thread, original=get_random_string(12), is_unapproved=True
-    )
-    response = moderator_client.get(
-        reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
-    )
-    assert_contains(response, post.get_absolute_url())
-    assert_contains(
-        response,
-        "Post is unapproved and is only visible to moderators and its author until approved.",
-    )
 
 
 def test_thread_detail_view_doesnt_show_user_unapproved_post_to_anonymous_user(
@@ -1613,7 +1794,7 @@ def test_thread_detail_view_shows_user_unapproved_post_to_user(
     assert_contains(response, post.get_absolute_url())
     assert_contains(
         response,
-        "Post is unapproved and will only be visible to others after moderator approval.",
+        "Visible only to you until approved by a moderator.",
     )
 
 
@@ -1629,7 +1810,7 @@ def test_thread_detail_view_shows_user_unapproved_post_to_moderator(
     assert_contains(response, post.get_absolute_url())
     assert_contains(
         response,
-        "Post is unapproved and is only visible to moderators and its author until approved.",
+        "Unapproved and visible only to moderators and its author until approved.",
     )
 
 
