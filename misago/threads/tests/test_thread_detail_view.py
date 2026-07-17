@@ -1578,7 +1578,7 @@ def test_thread_detail_view_shows_unapproved_user_thread_to_moderator(
     )
 
 
-def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_moderator(
+def test_thread_detail_view_shows_requires_reply_approval_status_message_to_moderator(
     moderator_client, thread
 ):
     thread.require_reply_approval = True
@@ -1599,7 +1599,7 @@ def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_moderato
     )
 
 
-def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_user(
+def test_thread_detail_view_shows_requires_reply_approval_status_message_to_user(
     user_client, thread
 ):
     thread.require_reply_approval = True
@@ -1620,7 +1620,7 @@ def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_user(
     )
 
 
-def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_anonymous_user(
+def test_thread_detail_view_shows_requires_reply_approval_status_message_to_anonymous_user(
     client, thread
 ):
     thread.require_reply_approval = True
@@ -1641,7 +1641,7 @@ def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_anonymou
     )
 
 
-def test_thread_detail_view_shows_unapproved_posts_status_bar_to_moderator(
+def test_thread_detail_view_shows_unapproved_posts_status_message_to_moderator(
     moderator_client, thread
 ):
     thread.has_unapproved_posts = True
@@ -1669,7 +1669,7 @@ def test_thread_detail_view_shows_unapproved_posts_status_bar_to_moderator(
     )
 
 
-def test_thread_detail_view_doesnt_show_unapproved_posts_status_bar_to_user(
+def test_thread_detail_view_doesnt_show_unapproved_posts_status_message_to_user(
     user_client, thread
 ):
     thread.has_unapproved_posts = True
@@ -1697,7 +1697,7 @@ def test_thread_detail_view_doesnt_show_unapproved_posts_status_bar_to_user(
     )
 
 
-def test_thread_detail_view_doesnt_show_unapproved_posts_status_bar_to_anonymous_user(
+def test_thread_detail_view_doesnt_show_unapproved_posts_status_message_to_anonymous_user(
     client, thread
 ):
     thread.has_unapproved_posts = True

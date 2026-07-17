@@ -1127,7 +1127,7 @@ def test_private_thread_detail_view_shows_unapproved_user_thread_to_moderator(
     )
 
 
-def test_private_thread_detail_view_shows_requires_reply_approval_status_bar_to_moderator(
+def test_private_thread_detail_view_shows_requires_reply_approval_status_message_to_moderator(
     moderator_client, user_private_thread
 ):
     user_private_thread.require_reply_approval = True
@@ -1148,7 +1148,7 @@ def test_private_thread_detail_view_shows_requires_reply_approval_status_bar_to_
     )
 
 
-def test_private_thread_detail_view_shows_requires_reply_approval_status_bar_to_user(
+def test_private_thread_detail_view_shows_requires_reply_approval_status_message_to_user(
     user_client, user_private_thread
 ):
     user_private_thread.require_reply_approval = True
@@ -1169,7 +1169,7 @@ def test_private_thread_detail_view_shows_requires_reply_approval_status_bar_to_
     )
 
 
-def test_private_thread_detail_view_shows_unapproved_posts_status_bar_to_moderator(
+def test_private_thread_detail_view_shows_unapproved_posts_status_message_to_moderator(
     moderator_client, user_private_thread
 ):
     user_private_thread.has_unapproved_posts = True
@@ -1197,7 +1197,7 @@ def test_private_thread_detail_view_shows_unapproved_posts_status_bar_to_moderat
     )
 
 
-def test_private_thread_detail_view_doesnt_show_unapproved_posts_status_bar_to_user(
+def test_private_thread_detail_view_doesnt_show_unapproved_posts_status_message_to_user(
     user_client, user_private_thread
 ):
     user_private_thread.has_unapproved_posts = True

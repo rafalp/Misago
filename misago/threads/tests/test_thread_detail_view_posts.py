@@ -266,7 +266,7 @@ def test_thread_detail_view_shows_user_post_to_moderator(
     assert_contains(response, post.original)
 
 
-def test_thread_detail_view_doesnt_show_deleted_user_post_locked_status_bar_to_anonymous_user(
+def test_thread_detail_view_doesnt_show_deleted_user_post_locked_status_message_to_anonymous_user(
     thread_reply_factory, client, thread
 ):
     post = thread_reply_factory(thread, original=get_random_string(12), is_locked=True)
@@ -277,7 +277,7 @@ def test_thread_detail_view_doesnt_show_deleted_user_post_locked_status_bar_to_a
     assert_not_contains(response, "Locked and cannot be edited.")
 
 
-def test_thread_detail_view_doesnt_show_user_post_locked_status_bar_to_anonymous_user(
+def test_thread_detail_view_doesnt_show_user_post_locked_status_message_to_anonymous_user(
     thread_reply_factory, client, user, thread
 ):
     post = thread_reply_factory(
@@ -290,7 +290,7 @@ def test_thread_detail_view_doesnt_show_user_post_locked_status_bar_to_anonymous
     assert_not_contains(response, "Locked and cannot be edited.")
 
 
-def test_thread_detail_view_doesnt_show_deleted_user_post_locked_status_bar_to_user(
+def test_thread_detail_view_doesnt_show_deleted_user_post_locked_status_message_to_user(
     thread_reply_factory, user_client, thread
 ):
     post = thread_reply_factory(thread, original=get_random_string(12), is_locked=True)
@@ -301,7 +301,7 @@ def test_thread_detail_view_doesnt_show_deleted_user_post_locked_status_bar_to_u
     assert_not_contains(response, "Locked and cannot be edited.")
 
 
-def test_thread_detail_view_doesnt_show_other_user_post_locked_status_bar_to_user(
+def test_thread_detail_view_doesnt_show_other_user_post_locked_status_message_to_user(
     thread_reply_factory, user_client, other_user, thread
 ):
     post = thread_reply_factory(
@@ -314,7 +314,7 @@ def test_thread_detail_view_doesnt_show_other_user_post_locked_status_bar_to_use
     assert_not_contains(response, "Locked and cannot be edited.")
 
 
-def test_thread_detail_view_shows_user_post_locked_status_bar_to_user(
+def test_thread_detail_view_shows_user_post_locked_status_message_to_user(
     thread_reply_factory, user_client, user, thread
 ):
     post = thread_reply_factory(
@@ -327,7 +327,7 @@ def test_thread_detail_view_shows_user_post_locked_status_bar_to_user(
     assert_contains(response, "Locked and cannot be edited.")
 
 
-def test_thread_detail_view_shows_deleted_user_post_locked_status_bar_to_moderator(
+def test_thread_detail_view_shows_deleted_user_post_locked_status_message_to_moderator(
     thread_reply_factory, moderator_client, thread
 ):
     post = thread_reply_factory(thread, original=get_random_string(12), is_locked=True)
@@ -338,7 +338,7 @@ def test_thread_detail_view_shows_deleted_user_post_locked_status_bar_to_moderat
     assert_contains(response, "Locked and cannot be edited.")
 
 
-def test_thread_detail_view_shows_user_post_locked_status_bar_to_moderator(
+def test_thread_detail_view_shows_user_post_locked_status_message_to_moderator(
     thread_reply_factory, moderator_client, user, thread
 ):
     post = thread_reply_factory(
