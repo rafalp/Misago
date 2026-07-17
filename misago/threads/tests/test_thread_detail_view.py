@@ -1020,7 +1020,7 @@ def test_thread_detail_view_shows_locked_deleted_user_thread_to_anonymous_user(
             },
         )
     )
-    assert_contains(response, "This thread is locked.")
+    assert_contains(response, "Locked for new replies.")
 
 
 def test_thread_detail_view_shows_locked_deleted_user_thread_to_user(
@@ -1038,7 +1038,7 @@ def test_thread_detail_view_shows_locked_deleted_user_thread_to_user(
             },
         )
     )
-    assert_contains(response, "This thread is locked.")
+    assert_contains(response, "Locked for new replies.")
 
 
 def test_thread_detail_view_shows_locked_deleted_user_thread_to_moderator(
@@ -1056,7 +1056,7 @@ def test_thread_detail_view_shows_locked_deleted_user_thread_to_moderator(
             },
         )
     )
-    assert_contains(response, "This thread is locked.")
+    assert_contains(response, "Locked for new replies.")
 
 
 def test_thread_detail_view_shows_locked_user_thread_to_anonymous_user(
@@ -1074,7 +1074,7 @@ def test_thread_detail_view_shows_locked_user_thread_to_anonymous_user(
             },
         )
     )
-    assert_contains(response, "This thread is locked.")
+    assert_contains(response, "Locked for new replies.")
 
 
 def test_thread_detail_view_shows_locked_user_thread_to_user(user_client, user_thread):
@@ -1090,7 +1090,7 @@ def test_thread_detail_view_shows_locked_user_thread_to_user(user_client, user_t
             },
         )
     )
-    assert_contains(response, "This thread is locked.")
+    assert_contains(response, "Locked for new replies.")
 
 
 def test_thread_detail_view_shows_locked_user_thread_to_moderator(
@@ -1108,7 +1108,139 @@ def test_thread_detail_view_shows_locked_user_thread_to_moderator(
             },
         )
     )
-    assert_contains(response, "This thread is locked.")
+    assert_contains(response, "Locked for new replies.")
+
+
+def test_thread_detail_view_shows_locked_thread_with_locked_at_timestamp_to_moderator(
+    moderator_client, thread
+):
+    thread.is_locked = True
+    thread.locked_at = timezone.now()
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Locked for new replies.")
+
+
+def test_thread_detail_view_shows_locked_thread_with_locked_at_timestamp_with_reason_to_moderator(
+    moderator_client, thread
+):
+    thread.is_locked = True
+    thread.locked_at = timezone.now()
+    thread.lock_reason = "Lorem ipsum"
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Locked for new replies.")
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
+def test_thread_detail_view_shows_locked_by_deleted_user_thread_with_locked_at_timestamp_to_moderator(
+    moderator_client, thread
+):
+    thread.is_locked = True
+    thread.locked_at = timezone.now()
+    thread.locked_by_name = "DeletedUser"
+    thread.locked_by_slug = "deleteduser"
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Locked for new replies.")
+
+
+def test_thread_detail_view_shows_locked_by_user_thread_with_locked_at_timestamp_to_moderator(
+    moderator_client, thread, other_user
+):
+    thread.is_locked = True
+    thread.locked_at = timezone.now()
+    thread.locked_by = other_user
+    thread.locked_by_name = other_user.username
+    thread.locked_by_slug = other_user.slug
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Locked for new replies.")
+
+
+def test_thread_detail_view_shows_locked_by_deleted_user_thread_with_locked_at_timestamp_and_reason_to_moderator(
+    moderator_client, thread
+):
+    thread.is_locked = True
+    thread.locked_at = timezone.now()
+    thread.locked_by_name = "DeletedUser"
+    thread.locked_by_slug = "deleteduser"
+    thread.lock_reason = "Lorem ipsum"
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Locked for new replies.")
+    assert_contains(response, "DeletedUser")
+    assert_contains(response, "Reason: Lorem ipsum")
+
+
+def test_thread_detail_view_shows_locked_by_user_thread_with_locked_at_timestamp_and_reason_to_moderator(
+    moderator_client, thread, other_user
+):
+    thread.is_locked = True
+    thread.locked_at = timezone.now()
+    thread.locked_by = other_user
+    thread.locked_by_name = other_user.username
+    thread.locked_by_slug = other_user.slug
+    thread.lock_reason = "Lorem ipsum"
+    thread.save()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:thread",
+            kwargs={
+                "thread_id": thread.id,
+                "slug": thread.slug,
+            },
+        )
+    )
+    assert_contains(response, "Locked for new replies.")
+    assert_contains(response, other_user.username)
+    assert_contains(response, "Reason: Lorem ipsum")
 
 
 def test_thread_detail_view_shows_hidden_deleted_user_thread_to_moderator(
@@ -1126,7 +1258,7 @@ def test_thread_detail_view_shows_hidden_deleted_user_thread_to_moderator(
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
 
 
 def test_thread_detail_view_shows_hidden_user_thread_to_moderator(
@@ -1144,7 +1276,7 @@ def test_thread_detail_view_shows_hidden_user_thread_to_moderator(
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
 
 
 def test_thread_detail_view_shows_hidden_thread_with_hidden_at_timestamp_to_moderator(
@@ -1163,7 +1295,7 @@ def test_thread_detail_view_shows_hidden_thread_with_hidden_at_timestamp_to_mode
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
 
 
 def test_thread_detail_view_shows_hidden_thread_with_hidden_at_timestamp_with_reason_to_moderator(
@@ -1183,7 +1315,7 @@ def test_thread_detail_view_shows_hidden_thread_with_hidden_at_timestamp_with_re
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, "Reason: Lorem ipsum")
 
 
@@ -1205,7 +1337,7 @@ def test_thread_detail_view_shows_hidden_by_deleted_user_thread_with_hidden_at_t
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
 
 
 def test_thread_detail_view_shows_hidden_by_user_thread_with_hidden_at_timestamp_to_moderator(
@@ -1227,7 +1359,7 @@ def test_thread_detail_view_shows_hidden_by_user_thread_with_hidden_at_timestamp
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
 
 
 def test_thread_detail_view_shows_hidden_by_deleted_user_thread_with_hidden_at_timestamp_and_reason_to_moderator(
@@ -1249,7 +1381,7 @@ def test_thread_detail_view_shows_hidden_by_deleted_user_thread_with_hidden_at_t
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, "DeletedUser")
     assert_contains(response, "Reason: Lorem ipsum")
 
@@ -1274,7 +1406,7 @@ def test_thread_detail_view_shows_hidden_by_user_thread_with_hidden_at_timestamp
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, other_user.username)
     assert_contains(response, "Reason: Lorem ipsum")
 
@@ -1296,7 +1428,7 @@ def test_thread_detail_view_shows_hidden_by_deleted_user_thread_to_moderator(
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, "DeletedUser")
 
 
@@ -1318,7 +1450,7 @@ def test_thread_detail_view_shows_hidden_by_user_thread_to_moderator(
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, other_user.username)
 
 
@@ -1340,7 +1472,7 @@ def test_thread_detail_view_shows_hidden_by_deleted_user_thread_with_reason_to_m
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, "DeletedUser")
     assert_contains(response, "Reason: Lorem ipsum")
 
@@ -1364,7 +1496,7 @@ def test_thread_detail_view_shows_hidden_by_user_thread_with_reason_to_moderator
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, other_user.username)
     assert_contains(response, "Reason: Lorem ipsum")
 
@@ -1385,7 +1517,7 @@ def test_thread_detail_view_shows_hidden_thread_with_reason_to_moderator(
             },
         )
     )
-    assert_contains(response, "Thread is hidden")
+    assert_contains(response, "Hidden and visible only to moderators.")
     assert_contains(response, "Reason: Lorem ipsum")
 
 
@@ -1403,7 +1535,9 @@ def test_thread_detail_view_shows_unapproved_deleted_user_thread_to_moderator(
             },
         )
     )
-    assert_contains(response, "Thread requires moderator approval")
+    assert_contains(
+        response, "Requires moderator approval before other users can see it."
+    )
 
 
 def test_thread_detail_view_shows_unapproved_user_thread_to_starter(
@@ -1420,7 +1554,9 @@ def test_thread_detail_view_shows_unapproved_user_thread_to_starter(
             },
         )
     )
-    assert_contains(response, "Thread requires moderator approval")
+    assert_contains(
+        response, "Requires moderator approval before other users can see it."
+    )
 
 
 def test_thread_detail_view_shows_unapproved_user_thread_to_moderator(
@@ -1437,7 +1573,9 @@ def test_thread_detail_view_shows_unapproved_user_thread_to_moderator(
             },
         )
     )
-    assert_contains(response, "Thread requires moderator approval")
+    assert_contains(
+        response, "Requires moderator approval before other users can see it."
+    )
 
 
 def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_moderator(
@@ -1455,7 +1593,10 @@ def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_moderato
             },
         )
     )
-    assert_contains(response, "New replies to this thread require moderator approval")
+    assert_contains(
+        response,
+        "New replies require moderator approval before they will be visible to other users.",
+    )
 
 
 def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_user(
@@ -1473,7 +1614,10 @@ def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_user(
             },
         )
     )
-    assert_contains(response, "New replies to this thread require moderator approval")
+    assert_contains(
+        response,
+        "New replies require moderator approval before they will be visible to other users.",
+    )
 
 
 def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_anonymous_user(
@@ -1491,7 +1635,10 @@ def test_thread_detail_view_shows_requires_reply_approval_status_bar_to_anonymou
             },
         )
     )
-    assert_contains(response, "New replies to this thread require moderator approval")
+    assert_contains(
+        response,
+        "New replies require moderator approval before they will be visible to other users.",
+    )
 
 
 def test_thread_detail_view_shows_unapproved_posts_status_bar_to_moderator(
@@ -1509,7 +1656,7 @@ def test_thread_detail_view_shows_unapproved_posts_status_bar_to_moderator(
             },
         )
     )
-    assert_contains(response, "contains unapproved posts")
+    assert_contains(response, "Unapproved posts.")
     assert_contains(
         response,
         reverse(
@@ -1537,7 +1684,7 @@ def test_thread_detail_view_doesnt_show_unapproved_posts_status_bar_to_user(
             },
         )
     )
-    assert_not_contains(response, "contains unapproved posts")
+    assert_not_contains(response, "Unapproved posts.")
     assert_not_contains(
         response,
         reverse(
@@ -1565,7 +1712,7 @@ def test_thread_detail_view_doesnt_show_unapproved_posts_status_bar_to_anonymous
             },
         )
     )
-    assert_not_contains(response, "contains unapproved posts")
+    assert_not_contains(response, "Unapproved posts.")
     assert_not_contains(
         response,
         reverse(
