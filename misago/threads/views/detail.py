@@ -363,6 +363,8 @@ class DetailView(GenericThreadView):
                     self.get_post_number(request, result.updated_items[0]) - 1
                 )
                 post_feed.set_animated_posts(updated_post_ids)
+
+            if request.POST.get("posts_moderation"):
                 post_feed.set_selected_posts(updated_post_ids)
 
             post_feed_data = post_feed.get_feed_data()
