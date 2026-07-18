@@ -307,6 +307,8 @@ class PrivateThreadLeaveView(PrivateThreadView):
     def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
+        self.check_leave_thread_permission(request, thread)
+
         return render(
             request,
             self.template_name,
@@ -318,6 +320,8 @@ class PrivateThreadLeaveView(PrivateThreadView):
 
     def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
+
+        self.check_leave_thread_permission(request, thread)
 
         if remove_private_thread_member(request.user, thread, request.user, request):
             ensure_thread_has_events(thread)
@@ -339,6 +343,15 @@ class PrivateThreadLeaveView(PrivateThreadView):
             check_locked_private_thread_permission(request.user_permissions, thread)
 
         return thread
+
+    def check_leave_thread_permission(self, request: HttpRequest, thread: Thread):
+        if request.user not in thread.private_thread_members:
+            raise PermissionDenied(
+                pgettext(
+                    "private thread leave view",
+                    "You can't leave this private thread because you're not a member.",
+                ),
+            )
 
 
 class PrivateThreadMembersHtmxResponse:

@@ -488,6 +488,86 @@ def test_private_thread_detail_view_shows_thread_members_to_moderator(
     assert_contains(response, moderator.username)
 
 
+def test_private_thread_detail_view_shows_leave_thread_option_to_thread_owner(
+    user_client, user_private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, user_private_thread.title)
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-leave",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_shows_leave_thread_option_to_thread_member(
+    user_client, other_user_private_thread
+):
+    response = user_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, other_user_private_thread.title)
+    assert_contains(
+        response,
+        reverse(
+            "misago:private-thread-leave",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+    )
+
+
+def test_private_thread_detail_view_doesnt_shows_leave_thread_option_to_non_member_moderator(
+    moderator_client, moderator, user_private_thread
+):
+    user_private_thread.is_unapproved = True
+    user_private_thread.save()
+
+    PrivateThreadMember.objects.filter(user=moderator).delete()
+
+    response = moderator_client.get(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        )
+    )
+    assert_contains(response, user_private_thread.title)
+    assert_not_contains(
+        response,
+        reverse(
+            "misago:private-thread-leave",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+    )
+
+
 def test_private_thread_detail_view_shows_locked_deleted_user_thread_to_user(
     user_client, user_private_thread
 ):
