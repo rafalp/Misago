@@ -65,7 +65,7 @@ def test_private_thread_list_view_poll_returns_update_button_for_hx_request_if_t
 
 
 def test_private_thread_list_view_poll_doesnt_return_update_button_for_hx_request_if_there_are_no_new_threads(
-    user_client, private_threads_category
+    user_client,
 ):
     response = user_client.get(
         reverse("misago:private-thread-list") + "?poll_new=0",
@@ -112,7 +112,7 @@ def test_private_thread_list_view_poll_doesnt_return_button_if_request_is_not_ht
 
 
 def test_private_thread_list_view_poll_shows_error_to_users_without_permission(
-    user_client, private_threads_category, members_group
+    user_client, members_group
 ):
     members_group.can_use_private_threads = False
     members_group.save()
