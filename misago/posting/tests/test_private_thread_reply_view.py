@@ -673,6 +673,79 @@ def test_private_thread_reply_view_runs_flood_control(
     )
 
 
+@override_dynamic_settings(merge_concurrent_posts=0)
+def test_private_thread_reply_view_runs_flood_control_in_htmx(
+    thread_reply_factory, user_client, user, other_user_private_thread
+):
+    thread_reply_factory(other_user_private_thread, poster=user)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "This is a flood message",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(
+        response, "You can&#x27;t post a new message so soon after the previous one."
+    )
+
+
+@override_dynamic_settings(merge_concurrent_posts=0)
+def test_private_thread_reply_view_runs_flood_control_in_quick_reply(
+    thread_reply_factory, user_client, user, other_user_private_thread
+):
+    thread_reply_factory(other_user_private_thread, poster=user)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "This is a flood message",
+            "quick_reply": "true",
+        },
+    )
+    assert_contains(
+        response, "You can&#x27;t post a new message so soon after the previous one."
+    )
+
+
+@override_dynamic_settings(merge_concurrent_posts=0)
+def test_private_thread_reply_view_runs_flood_control_in_quick_reply_in_htmx(
+    thread_reply_factory, user_client, user, other_user_private_thread
+):
+    thread_reply_factory(other_user_private_thread, poster=user)
+
+    response = user_client.post(
+        reverse(
+            "misago:private-thread-reply",
+            kwargs={
+                "thread_id": other_user_private_thread.id,
+                "slug": other_user_private_thread.slug,
+            },
+        ),
+        {
+            "posting-post-post": "This is a flood message",
+            "quick_reply": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(
+        response, "You can&#x27;t post a new message so soon after the previous one."
+    )
+
+
 def test_private_thread_reply_view_merges_reply_with_users_recent_post(
     thread_reply_factory, user, user_client, other_user_private_thread
 ):
