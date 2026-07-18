@@ -12,50 +12,56 @@
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_BEFORE_SPACER %}
   <div class="toolbar-spacer"></div>
   {% pluginoutlet PRIVATE_THREAD_REPLIES_PAGE_TOOLBAR_AFTER_SPACER %}
-  {% if watch_thread %}
+  {% if user_is_member or watch_thread %}
     <div class="toolbar-section">
-      <div class="toolbar-item">
-        {% includecomponent watch_thread %}
-      </div>
-      {% if not user_is_member and thread_moderation_actions and bottom_toolbar %}
-        <div class="toolbar-item">
-          {% include "misago/moderation_thread/dropdown.html" with moderation_actions=thread_moderation_actions %}
+      {% if user_is_member %}
+        <div class="toolbar-item d-js-block">
+          <form
+            action="{% url 'misago:private-thread-leave' thread_id=thread.id slug=thread.slug %}"
+            method="post"
+            mg-confirm="{% translate 'Are you sure you want to leave this thread?' context 'private thread leave confirm prompt' %}"
+          >
+            {% csrf_token %}
+            <button class="btn btn-default btn-block">
+              {% translate "Leave" context "private thread replies toolbar" %}
+            </button>
+          </form>
         </div>
+        <noscript class="toolbar-item">
+          <a href="{% url 'misago:private-thread-leave' thread_id=thread.id slug=thread.slug %}" class="btn btn-default btn-block">
+            {% translate "Leave" context "private thread replies toolbar" %}
+          </a>
+        </noscript>
+      {% endif %}
+      {% if watch_thread %}
+        <div class="toolbar-item">
+          {% includecomponent watch_thread %}
+        </div>
+        {% if thread_moderation_actions and bottom_toolbar %}
+          <div class="toolbar-item">
+            {% include "misago/moderation_thread/dropdown.html" with moderation_actions=thread_moderation_actions %}
+          </div>
+        {% endif %}
       {% endif %}
     </div>
   {% endif %}
   {% if top_toolbar %}
-    <div class="toolbar-section">
-      <div class="toolbar-item d-js-block">
-        <form
-          action="{% url 'misago:private-thread-leave' thread_id=thread.id slug=thread.slug %}"
-          method="post"
-          mg-confirm="{% translate 'Are you sure you want to leave this thread?' context 'private thread leave confirm prompt' %}"
-        >
-          {% csrf_token %}
-          <button class="btn btn-default btn-block">
-            {% translate "Leave" context "private thread replies toolbar" %}
-          </button>
-        </form>
+    {% if reply.url or thread_moderation_actions %}
+      <div class="toolbar-section">
+        {% if reply.url %}
+          <div class="toolbar-item">
+            <a href="{{ reply.url }}" class="btn btn-primary btn-block">
+              {% translate "Post reply" context "thread replies toolbar" %}
+            </a>
+          </div>
+        {% endif %}
+        {% if thread_moderation_actions %}
+          <div class="toolbar-item">
+            {% include "misago/moderation_thread/dropdown.html" with moderation_actions=thread_moderation_actions %}
+          </div>
+        {% endif %}
       </div>
-      <noscript class="toolbar-item">
-        <a href="{% url 'misago:private-thread-leave' thread_id=thread.id slug=thread.slug %}" class="btn btn-default btn-block">
-          {% translate "Leave" context "private thread replies toolbar" %}
-        </a>
-      </noscript>
-      {% if reply.url %}
-        <div class="toolbar-item">
-          <a href="{{ reply.url }}" class="btn btn-primary btn-block">
-            {% translate "Post reply" context "thread replies toolbar" %}
-          </a>
-        </div>
-      {% endif %}
-      {% if thread_moderation_actions %}
-        <div class="toolbar-item">
-          {% include "misago/moderation_thread/dropdown.html" with moderation_actions=thread_moderation_actions %}
-        </div>
-      {% endif %}
-    </div>
+    {% endif %}
   {% elif user_is_member %}
     <div class="toolbar-section">
       <div class="toolbar-item">

@@ -167,8 +167,8 @@ def test_private_thread_member_deletes_thread_when_last_member_leaves(
         user_private_thread.refresh_from_db()
 
 
-def test_private_thread_leave_view_does_nothing_if_non_member_thread_moderator_leaves(
-    moderator_client, user, other_user, moderator, user_private_thread
+def test_private_thread_leave_view_shows_error_if_non_member_thread_moderator_leaves(
+    moderator_client, moderator, user_private_thread
 ):
     user_private_thread.is_unapproved = True
     user_private_thread.save()
@@ -184,22 +184,11 @@ def test_private_thread_leave_view_does_nothing_if_non_member_thread_moderator_l
             },
         )
     )
-    assert response.status_code == 302
-    assert response["location"] == reverse("misago:private-thread-list")
-
-    owner, members = get_private_thread_members(user_private_thread)
-    assert owner == user
-    assert members == [user, other_user]
-
-    with pytest.raises(ThreadEvent.DoesNotExist):
-        ThreadEvent.objects.get(
-            actor=moderator,
-            thread=user_private_thread,
-            action=ThreadUpdateActionName.LEFT,
-        )
-
-    user_private_thread.refresh_from_db()
-    assert not user_private_thread.has_events
+    assert_contains(
+        response,
+        "You can&#x27;t leave this private thread because you&#x27;re not a member.",
+        status_code=403,
+    )
 
 
 def test_private_thread_leave_view_returns_403_if_user_cant_use_private_threads(
