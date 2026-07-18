@@ -15,6 +15,7 @@
       {% if preview %}
         {% include "misago/posting/preview.html" %}
       {% endif %}
+      {% include "misago/posting/errors.html" %}
       {% for form in formset.get_forms %}
         {% include form.template_name with form=form %}
       {% endfor %}

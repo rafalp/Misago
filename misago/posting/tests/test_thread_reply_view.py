@@ -658,6 +658,70 @@ def test_thread_reply_view_runs_flood_control(
     )
 
 
+@override_dynamic_settings(merge_concurrent_posts=0)
+def test_thread_reply_view_runs_flood_control_in_htmx(
+    thread_reply_factory, user_client, user, thread
+):
+    thread_reply_factory(thread, poster=user)
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "This is a flood message",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(
+        response, "You can&#x27;t post a new message so soon after the previous one."
+    )
+
+
+@override_dynamic_settings(merge_concurrent_posts=0)
+def test_thread_reply_view_runs_flood_control_in_quick_reply(
+    thread_reply_factory, user_client, user, thread
+):
+    thread_reply_factory(thread, poster=user)
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "This is a flood message",
+            "quick_reply": "true",
+        },
+    )
+    assert_contains(
+        response, "You can&#x27;t post a new message so soon after the previous one."
+    )
+
+
+@override_dynamic_settings(merge_concurrent_posts=0)
+def test_thread_reply_view_runs_flood_control_in_quick_reply_in_htmx(
+    thread_reply_factory, user_client, user, thread
+):
+    thread_reply_factory(thread, poster=user)
+
+    response = user_client.post(
+        reverse(
+            "misago:thread-reply",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        ),
+        {
+            "posting-post-post": "This is a flood message",
+            "quick_reply": "true",
+        },
+        headers={"hx-request": "true"},
+    )
+    assert_contains(
+        response, "You can&#x27;t post a new message so soon after the previous one."
+    )
+
+
 def test_thread_reply_view_merges_reply_with_users_recent_post(
     thread_reply_factory, user, user_client, thread
 ):
