@@ -12,11 +12,10 @@ def test_private_thread_list_view_includes_polling_if_its_not_empty(
     thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
-    response = user_client.get(private_threads_category.get_absolute_url())
+    response = user_client.get(reverse("misago:private-thread-list"))
     assert_contains(
         response,
-        private_threads_category.get_absolute_url()
-        + f"?poll_new={thread.last_post_id}",
+        reverse("misago:private-thread-list") + f"?poll_new={thread.last_post_id}",
     )
 
 
@@ -26,10 +25,8 @@ def test_private_thread_list_view_excludes_polling_if_its_disabled(
 ):
     thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
-    response = user_client.get(private_threads_category.get_absolute_url())
-    assert_not_contains(
-        response, private_threads_category.get_absolute_url() + "?poll_new="
-    )
+    response = user_client.get(reverse("misago:private-thread-list"))
+    assert_not_contains(response, reverse("misago:private-thread-list") + "?poll_new=")
 
 
 def test_private_thread_list_view_poll_returns_update_button_for_hx_request_if_there_are_new_threads(
@@ -42,7 +39,7 @@ def test_private_thread_list_view_poll_returns_update_button_for_hx_request_if_t
     PrivateThreadMember.objects.create(thread=thread_2, user=user)
 
     response = user_client.get(
-        private_threads_category.get_absolute_url() + "?poll_new=0",
+        reverse("misago:private-thread-list") + "?poll_new=0",
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Show 2 new or updated threads")
@@ -61,18 +58,17 @@ def test_private_thread_list_view_poll_returns_update_button_for_hx_request_if_t
         PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
-        private_threads_category.get_absolute_url()
-        + f"?poll_new={threads[0].last_post_id}",
+        reverse("misago:private-thread-list") + f"?poll_new={threads[0].last_post_id}",
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Show 2 new or updated threads")
 
 
 def test_private_thread_list_view_poll_doesnt_return_update_button_for_hx_request_if_there_are_no_new_threads(
-    user_client, private_threads_category
+    user_client,
 ):
     response = user_client.get(
-        private_threads_category.get_absolute_url() + "?poll_new=0",
+        reverse("misago:private-thread-list") + "?poll_new=0",
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "new or updated thread")
@@ -85,8 +81,7 @@ def test_private_thread_list_view_poll_doesnt_return_update_button_for_hx_reques
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
-        private_threads_category.get_absolute_url()
-        + f"?poll_new={thread.last_post_id}",
+        reverse("misago:private-thread-list") + f"?poll_new={thread.last_post_id}",
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "new or updated thread")
@@ -100,7 +95,7 @@ def test_private_thread_list_view_poll_doesnt_return_update_button_if_polling_is
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
     response = user_client.get(
-        private_threads_category.get_absolute_url() + "?poll_new=0",
+        reverse("misago:private-thread-list") + "?poll_new=0",
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "new or updated thread")
@@ -112,20 +107,18 @@ def test_private_thread_list_view_poll_doesnt_return_button_if_request_is_not_ht
     thread = thread_factory(private_threads_category)
     PrivateThreadMember.objects.create(thread=thread, user=user)
 
-    response = user_client.get(
-        private_threads_category.get_absolute_url() + "?poll_new=0"
-    )
+    response = user_client.get(reverse("misago:private-thread-list") + "?poll_new=0")
     assert_not_contains(response, "new or updated thread")
 
 
 def test_private_thread_list_view_poll_shows_error_to_users_without_permission(
-    user_client, private_threads_category, members_group
+    user_client, members_group
 ):
     members_group.can_use_private_threads = False
     members_group.save()
 
     response = user_client.get(
-        private_threads_category.get_absolute_url() + "?poll_new=0",
+        reverse("misago:private-thread-list") + "?poll_new=0",
         headers={"hx-request": "true"},
     )
     assert_contains(response, "You can't use private threads.", status_code=403)
@@ -138,7 +131,7 @@ def test_private_thread_list_view_poll_doesnt_return_button_if_new_threads_are_n
     PrivateThreadMember.objects.create(thread=thread, user=other_user)
 
     response = user_client.get(
-        private_threads_category.get_absolute_url() + "?poll_new=0",
+        reverse("misago:private-thread-list") + "?poll_new=0",
         headers={"hx-request": "true"},
     )
     assert_not_contains(response, "new or updated thread")
