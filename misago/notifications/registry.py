@@ -2,6 +2,7 @@ import html
 from typing import TYPE_CHECKING, Callable, Dict, overload
 
 from django.http import HttpRequest
+from django.urls import reverse
 from django.utils.translation import pgettext
 
 from ..threads.redirect import redirect_to_post
@@ -191,8 +192,9 @@ def get_added_to_private_thread_notification_message(
 def get_added_to_private_thread_notification_url(
     request: HttpRequest, notification: "Notification"
 ) -> str:
-    return notification.category.thread_type.get_thread_absolute_url(
-        notification.thread
+    thread = notification.thread
+    return reverse(
+        "misago:private-thread", kwargs={"thread_id": thread.id, "slug": thread.slug}
     )
 
 

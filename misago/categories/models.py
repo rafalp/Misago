@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 
@@ -7,7 +8,6 @@ from ..acl.models import BaseRole
 from ..conf import settings
 from ..core.utils import slugify
 from ..plugins.models import PluginDataModel
-from ..threads.threadtypes import trees_map
 from .enums import CategoryChildrenComponent, CategoryTree
 
 
@@ -92,27 +92,17 @@ class Category(MPTTModel, PluginDataModel):
         pass
 
     def __str__(self):
-        return str(self.thread_type.get_category_name(self))
-
-    @property
-    def thread_type(self):
-        return trees_map.get_type_for_tree_id(self.tree_id)
+        return str(self.name)
 
     def delete(self, *args, **kwargs):
         clear_acl_cache()
         return super().delete(*args, **kwargs)
 
     def get_absolute_url(self):
-        return self.thread_type.get_category_absolute_url(self)
-
-    def get_last_thread_url(self):
-        return self.thread_type.get_category_last_thread_url(self)
-
-    def get_last_thread_new_url(self):
-        return self.thread_type.get_category_last_thread_new_url(self)
-
-    def get_last_post_url(self):
-        return self.thread_type.get_category_last_post_url(self)
+        return reverse(
+            "misago:category-thread-list",
+            kwargs={"category_id": self.id, "slug": self.slug},
+        )
 
     def set_name(self, name):
         self.name = name

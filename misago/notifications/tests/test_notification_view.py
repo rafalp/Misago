@@ -108,7 +108,14 @@ def test_notification_view_returns_redirect_to_thread_reply(
         reverse("misago:notification", kwargs={"notification_id": notification.id})
     )
     assert response.status_code == 302
-    assert response.headers["location"]
+    assert (
+        response.headers["location"]
+        == reverse(
+            "misago:thread",
+            kwargs={"thread_id": thread.id, "slug": thread.slug},
+        )
+        + f"#post-{other_user_reply.id}"
+    )
 
 
 def test_notification_view_returns_redirect_to_private_thread_reply(
@@ -129,7 +136,14 @@ def test_notification_view_returns_redirect_to_private_thread_reply(
         reverse("misago:notification", kwargs={"notification_id": notification.id})
     )
     assert response.status_code == 302
-    assert response.headers["location"]
+    assert (
+        response.headers["location"]
+        == reverse(
+            "misago:private-thread",
+            kwargs={"thread_id": private_thread.id, "slug": private_thread.slug},
+        )
+        + f"#post-{private_thread_reply.id}"
+    )
 
 
 def test_notification_view_returns_redirect_to_private_thread(
@@ -150,4 +164,7 @@ def test_notification_view_returns_redirect_to_private_thread(
         reverse("misago:notification", kwargs={"notification_id": notification.id})
     )
     assert response.status_code == 302
-    assert response.headers["location"]
+    assert response.headers["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"thread_id": private_thread.id, "slug": private_thread.slug},
+    )

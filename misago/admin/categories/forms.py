@@ -1,6 +1,6 @@
 from django import forms
 from django.db import models
-from django.utils.html import conditional_escape, mark_safe
+from django.utils.html import conditional_escape
 from django.utils.translation import pgettext, pgettext_lazy
 from mptt.forms import TreeNodeChoiceField, TreeNodeMultipleChoiceField
 
@@ -24,10 +24,24 @@ class AdminCategoryFieldMixin:
         super().__init__(*args, **kwargs)
 
     def _get_level_indicator(self, obj):
-        level = getattr(obj, obj._mptt_meta.level_attr) - self.base_level
+        level = obj.level - self.base_level
         if level > 0:
-            return mark_safe(conditional_escape(self.level_indicator) * level)
+            return self.level_indicator * level
         return ""
+
+    def label_from_instance(self, obj):
+        """
+        Creates labels which represent the tree level of each node when
+        generating option labels.
+        """
+        level_indicator = self._get_level_indicator(obj)
+
+        if obj.level == 0:
+            return pgettext(
+                "root category choice", "None (will become top level category)"
+            )
+
+        return f"{level_indicator}{obj.name}"
 
 
 class AdminCategoryChoiceField(AdminCategoryFieldMixin, TreeNodeChoiceField):
@@ -147,7 +161,7 @@ class CategoryForm(forms.ModelForm):
             choices=CategoryChildrenComponent.get_category_choices(),
         ),
     )
-    require_threads_approval = YesNoField(
+    require_thread_approval = YesNoField(
         label=pgettext_lazy("admin category form", "Threads"),
         required=False,
         help_text=pgettext_lazy(
@@ -155,7 +169,7 @@ class CategoryForm(forms.ModelForm):
             "All threads started in this category will require moderator approval.",
         ),
     )
-    require_replies_approval = YesNoField(
+    require_reply_approval = YesNoField(
         label=pgettext_lazy("admin category form", "Replies"),
         required=False,
         help_text=pgettext_lazy(
