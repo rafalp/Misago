@@ -16,7 +16,7 @@ def migrate_edits_data_from_threads(apps, schema_editor):
 
         if legacy_edit.edited_from != legacy_edit.edited_to:
             old_content = legacy_edit.edited_from
-            new_content = legacy_edit.edited_from
+            new_content = legacy_edit.edited_to
 
         diff = diff_text(legacy_edit.edited_from, legacy_edit.edited_to)
         PostEdit.objects.create(
