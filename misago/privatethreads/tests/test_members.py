@@ -86,6 +86,9 @@ def test_add_private_thread_member_adds_new_member_to_private_thread(
 ):
     assert add_private_thread_member(private_thread, user)
 
+    private_thread.private_thread_members == [user]
+    private_thread.private_thread_member_ids == [user.id]
+
     owner, members = get_private_thread_members(private_thread)
     assert owner is None
     assert members == [user]
@@ -96,6 +99,13 @@ def test_add_private_thread_member_returns_false_if_user_is_already_private_thre
 ):
     with django_assert_num_queries(1):
         assert not add_private_thread_member(user_private_thread, user)
+
+    user_private_thread.private_thread_members == [user, other_user, moderator]
+    user_private_thread.private_thread_member_ids == [
+        user.id,
+        other_user.id,
+        moderator.id,
+    ]
 
     owner, members = get_private_thread_members(user_private_thread)
     assert owner == user
@@ -110,6 +120,13 @@ def test_add_private_thread_member_returns_false_if_user_is_already_private_thre
     with django_assert_num_queries(0):
         assert not add_private_thread_member(user_private_thread, user)
 
+    user_private_thread.private_thread_members == [user, other_user, moderator]
+    user_private_thread.private_thread_member_ids == [
+        user.id,
+        other_user.id,
+        moderator.id,
+    ]
+
     owner, members = get_private_thread_members(user_private_thread)
     assert owner == user
     assert members == [user, other_user, moderator]
@@ -120,6 +137,9 @@ def test_set_private_thread_owner_sets_member_as_private_thread_owner(
 ):
     assert set_private_thread_owner(user_private_thread, other_user)
 
+    user_private_thread.private_thread_owner == other_user
+    user_private_thread.private_thread_owner_id == other_user.id
+
     owner, members = get_private_thread_members(user_private_thread)
     assert owner == other_user
     assert members == [user, other_user, moderator]
@@ -129,6 +149,9 @@ def test_set_private_thread_owner_returns_true_if_existing_owner_was_used(
     user, other_user, moderator, user_private_thread
 ):
     assert set_private_thread_owner(user_private_thread, user)
+
+    user_private_thread.private_thread_owner == other_user
+    user_private_thread.private_thread_owner_id == other_user.id
 
     owner, members = get_private_thread_members(user_private_thread)
     assert owner == user
@@ -143,6 +166,9 @@ def test_set_private_thread_owner_returns_false_if_new_owner_is_not_set(
     ).delete()
 
     assert not set_private_thread_owner(user_private_thread, other_user)
+
+    user_private_thread.private_thread_owner == user
+    user_private_thread.private_thread_owner_id == user.id
 
     owner, members = get_private_thread_members(user_private_thread)
     assert owner == user
@@ -169,3 +195,14 @@ def test_remove_private_thread_member_removes_other_member(
     assert members == [user, moderator]
 
     assert thread_update.action == ThreadUpdateActionName.REMOVED_MEMBER
+
+
+def test_remove_private_thread_member_updates_private_thread_member_cache(
+    user, other_user, moderator, user_private_thread
+):
+    get_private_thread_members(user_private_thread)
+
+    remove_private_thread_member(user, user_private_thread, user)
+
+    user_private_thread.private_thread_members == [other_user, moderator]
+    user_private_thread.private_thread_member_ids == [other_user.id, moderator.id]

@@ -148,7 +148,7 @@ def _remove_private_thread_member_action(
     if member.id in thread.private_thread_member_ids:
         thread.private_thread_member_ids.remove(member.id)
 
-    if deleted:
+    if not deleted:
         return None
 
     if actor == member:
