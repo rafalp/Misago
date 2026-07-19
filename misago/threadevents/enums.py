@@ -1,7 +1,7 @@
 from enum import StrEnum
 
 
-class ThreadUpdateActionName(StrEnum):
+class ThreadEventActionName(StrEnum):
     TEST = "test"
 
     PINNED_EVERYWHERE = "pinned_everywhere"

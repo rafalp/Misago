@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from django.http import HttpRequest
 
-from ..threadevents.create import create_started_poll_thread_update
+from ..threadevents.create import create_started_poll_thread_event
 from ..threadevents.models import ThreadEvent
 from ..threadevents.threadflag import ensure_thread_has_events
 from ..threads.models import Thread
@@ -47,4 +47,4 @@ def _save_thread_poll_action(
     thread.has_poll = True
     thread.save()
 
-    return create_started_poll_thread_update(thread, poll, user, request=request)
+    return create_started_poll_thread_event(thread, poll, user, request=request)

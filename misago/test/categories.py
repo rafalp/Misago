@@ -12,7 +12,7 @@ from ..polls.models import Poll, PollVote
 from ..postedits.create import create_post_edit
 from ..postedits.models import PostEdit
 from ..readtracker.models import ReadCategory, ReadThread
-from ..threadevents.create import create_test_thread_update
+from ..threadevents.create import create_test_thread_event
 from ..threadevents.models import ThreadEvent
 from ..threads.models import Post, Thread
 
@@ -26,7 +26,7 @@ def category_relations_factory(
     def _category_relations_factory(category: Category) -> "CategoryRelations":
         thread = thread_factory(category)
         thread_reply = thread_reply_factory(thread)
-        thread_update = create_test_thread_update(thread, other_user)
+        thread_update = create_test_thread_event(thread, other_user)
 
         attachment = Attachment.objects.create(
             category=category,

@@ -4,7 +4,7 @@ from ...cache.enums import CacheName
 from ...cache.test import assert_invalidates_cache
 from ...categories.models import Category
 from ...test import assert_contains, assert_has_error_message
-from ...threadevents.create import create_test_thread_update
+from ...threadevents.create import create_test_thread_event
 from .categories_tree import assert_valid_categories_tree
 
 category_new = reverse("misago:admin:categories:new")
@@ -70,12 +70,12 @@ def form_data(category: Category, new_data: dict | None = None) -> dict:
 def test_edit_category_form_updates_context_on_thread_updates(
     default_category, sibling_category, admin_client, thread
 ):
-    thread_update = create_test_thread_update(
+    thread_update = create_test_thread_event(
         thread,
         context=default_category.name,
         context_object=default_category,
     )
-    other_thread_update = create_test_thread_update(
+    other_thread_update = create_test_thread_event(
         thread,
         context=sibling_category.name,
         context_object=sibling_category,

@@ -3,7 +3,7 @@ import json
 from django.urls import reverse
 
 from ...test import assert_contains
-from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.enums import ThreadEventActionName
 from ...threadevents.models import ThreadEvent
 from ..members import get_private_thread_members
 
@@ -75,7 +75,7 @@ def test_private_thread_member_remove_view_removes_thread_member(
     ThreadEvent.objects.get(
         actor=user,
         thread=user_private_thread,
-        action=ThreadUpdateActionName.REMOVED_MEMBER,
+        action=ThreadEventActionName.REMOVED_MEMBER,
     )
 
     user_private_thread.refresh_from_db()
@@ -111,7 +111,7 @@ def test_private_thread_member_remove_view_removes_thread_member_for_moderator(
     ThreadEvent.objects.get(
         actor=moderator,
         thread=user_private_thread,
-        action=ThreadUpdateActionName.REMOVED_MEMBER,
+        action=ThreadEventActionName.REMOVED_MEMBER,
     )
 
     user_private_thread.refresh_from_db()
@@ -202,7 +202,7 @@ def test_private_thread_member_remove_view_removes_thread_member_in_htmx(
     ThreadEvent.objects.get(
         actor=user,
         thread=user_private_thread,
-        action=ThreadUpdateActionName.REMOVED_MEMBER,
+        action=ThreadEventActionName.REMOVED_MEMBER,
     )
 
 
@@ -386,7 +386,7 @@ def test_private_thread_member_remove_view_removes_member_for_moderator_if_threa
     ThreadEvent.objects.get(
         actor=moderator,
         thread=user_private_thread,
-        action=ThreadUpdateActionName.REMOVED_MEMBER,
+        action=ThreadEventActionName.REMOVED_MEMBER,
     )
 
     user_private_thread.refresh_from_db()

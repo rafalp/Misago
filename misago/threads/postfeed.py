@@ -27,7 +27,7 @@ from ..permissions.threads import (
     check_reply_thread_permission,
 )
 from ..solutions.validators import is_valid_thread_solution
-from ..threadevents.actions import thread_updates_renderer
+from ..threadevents.actions import thread_events_renderer
 from ..threadevents.models import ThreadEvent
 from .hooks import (
     populate_post_feed_data_hook,
@@ -467,7 +467,7 @@ class PostFeed:
                     thread_update.context_id
                 )
 
-        if thread_update_data := thread_updates_renderer.render_thread_update(
+        if thread_update_data := thread_events_renderer.render_thread_event(
             thread_update, prefetched_data
         ):
             item.update(thread_update_data)

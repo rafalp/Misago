@@ -20,7 +20,7 @@ from ...test import (
     assert_not_contains,
     assert_not_contains_element,
 )
-from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.enums import ThreadEventActionName
 from ...threadevents.models import ThreadEvent
 from ..forms import PostForm
 from ..formsets import Formset
@@ -385,7 +385,7 @@ def test_thread_edit_view_creates_changed_title_thread_event(
         category=user_thread.category,
         thread=user_thread,
         actor=user,
-        action=ThreadUpdateActionName.CHANGED_TITLE,
+        action=ThreadEventActionName.CHANGED_TITLE,
         context=user_thread.title,
     )
 

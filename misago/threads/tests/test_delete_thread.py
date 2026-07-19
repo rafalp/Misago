@@ -12,8 +12,8 @@ from ...readtracker.models import ReadThread
 from ...readtracker.tracker import mark_thread_read
 from ...solutions.select import select_thread_solution
 from ...threadevents.create import (
-    create_moved_posts_from_thread_update,
-    create_test_thread_update,
+    create_moved_posts_from_thread_event,
+    create_test_thread_event,
 )
 from ...threadevents.models import ThreadEvent
 from ..delete import delete_thread
@@ -198,24 +198,24 @@ def test_delete_thread_deletes_read_thread(user, thread, reply):
 def test_delete_thread_removes_clears_related_thread_event_context(
     other_thread, thread
 ):
-    thread_update = create_moved_posts_from_thread_update(
+    thread_event = create_moved_posts_from_thread_event(
         other_thread, thread, 10, "DeletedUser"
     )
 
     delete_thread(thread)
 
-    thread_update.refresh_from_db()
-    assert not thread_update.context_type
-    assert not thread_update.context_id
+    thread_event.refresh_from_db()
+    assert not thread_event.context_type
+    assert not thread_event.context_id
 
 
-def test_delete_thread_deletes_thread_updates(thread):
-    thread_update = create_test_thread_update(thread, "DeletedUser")
+def test_delete_thread_deletes_thread_events(thread):
+    thread_event = create_test_thread_event(thread, "DeletedUser")
 
     delete_thread(thread)
 
     with pytest.raises(ThreadEvent.DoesNotExist):
-        thread_update.refresh_from_db()
+        thread_event.refresh_from_db()
 
 
 def test_delete_thread_marks_attachments_for_deletion(thread, reply, text_attachment):

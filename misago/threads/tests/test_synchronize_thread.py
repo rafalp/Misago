@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from ...solutions.lock import lock_thread_solution
 from ...solutions.select import select_thread_solution
-from ...threadevents.create import create_test_thread_update
+from ...threadevents.create import create_test_thread_event
 from ..synchronize import synchronize_thread
 
 
@@ -24,7 +24,7 @@ def test_synchronize_thread_updates_thread_replies(thread_reply_factory, thread)
 def test_synchronize_thread_sets_has_events_flag(thread):
     assert not thread.has_events
 
-    create_test_thread_update(thread, "Actor")
+    create_test_thread_event(thread, "Actor")
 
     synchronize_thread(thread)
 

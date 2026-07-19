@@ -14,7 +14,7 @@ from .threadflag import sync_thread_has_events
 
 
 class EventView:
-    template_name: str = "misago/thread_update/update.html"
+    template_name: str = "misago/thread_events/event.html"
     success_message: str
 
     def post(
@@ -43,7 +43,7 @@ class EventView:
             request,
             self.template_name,
             {
-                "thread_update": feed.get_feed_data()[0],
+                "thread_event": feed.get_feed_data()[0],
                 "htmx_swap": True,
             },
         )
@@ -59,7 +59,7 @@ class EventView:
 
 class EventHideView(EventView):
     success_message = pgettext_lazy(
-        "thread update hide success message", "Thread update hidden"
+        "thread update hide success message", "Thread event hidden"
     )
 
     def execute_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
@@ -69,14 +69,14 @@ class EventHideView(EventView):
         raise PermissionDenied(
             pgettext(
                 "thread update hide permission error",
-                "Only a moderator can hide thread updates.",
+                "Only a moderator can hide thread events.",
             )
         )
 
 
 class EventUnhideView(EventView):
     success_message = pgettext_lazy(
-        "thread update unhide success message", "Thread update unhidden"
+        "thread update unhide success message", "Thread event unhidden"
     )
 
     def execute_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
@@ -86,7 +86,7 @@ class EventUnhideView(EventView):
         raise PermissionDenied(
             pgettext(
                 "thread update unhide permission error",
-                "Only a moderator can unhide thread updates.",
+                "Only a moderator can unhide thread events.",
             )
         )
 
@@ -113,11 +113,11 @@ class PrivateThreadEventUnhideView(EventUnhideView, PrivateThreadView):
 
 class EventDeleteView:
     thread_select_related = True
-    thread_update_select_related = True
+    thread_event_select_related = True
 
-    template_name: str = "misago/thread_update/delete.html"
-    confirm_template_name: str = "misago/thread_update/confirm_delete.html"
-    success_message = pgettext_lazy("thread update deleted", "Thread update deleted")
+    template_name: str = "misago/thread_events/delete.html"
+    confirm_template_name: str = "misago/thread_events/confirm_delete.html"
+    success_message = pgettext_lazy("thread update deleted", "Thread event deleted")
 
     def post(
         self, request: HttpRequest, thread_id: int, slug: str, thread_event_id: int
@@ -144,7 +144,7 @@ class EventDeleteView:
             self.confirm_template_name,
             {
                 "thread": thread,
-                "thread_update": thread_event,
+                "thread_event": thread_event,
                 "next_url": self.get_next_thread_url(request, thread),
             },
         )
@@ -156,7 +156,7 @@ class EventDeleteView:
         raise PermissionDenied(
             pgettext(
                 "thread update delete permission error",
-                "Only a moderator can delete thread updates.",
+                "Only a moderator can delete thread events.",
             )
         )
 

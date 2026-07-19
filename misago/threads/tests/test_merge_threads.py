@@ -9,7 +9,7 @@ from ...postedits.create import create_post_edit
 from ...readtracker.models import ReadThread
 from ...readtracker.tracker import mark_thread_read
 from ...solutions.select import select_thread_solution
-from ...threadevents.create import create_test_thread_update
+from ...threadevents.create import create_test_thread_event
 from ..create import create_thread
 from ..merge import (
     get_thread_merge_conflicts,
@@ -419,9 +419,9 @@ def test_merge_threads_deletes_thread_reads(
 def test_merge_threads_merges_thread_updates(
     sibling_category, thread, user_thread, other_user_thread
 ):
-    thread_update = create_test_thread_update(thread, "DeletedUser")
-    user_thread_update = create_test_thread_update(user_thread, "DeletedUser")
-    other_user_thread_update = create_test_thread_update(
+    thread_update = create_test_thread_event(thread, "DeletedUser")
+    user_thread_update = create_test_thread_event(user_thread, "DeletedUser")
+    other_user_thread_update = create_test_thread_event(
         other_user_thread, "DeletedUser"
     )
 

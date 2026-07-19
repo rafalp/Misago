@@ -22,7 +22,7 @@ EVENT_TYPES = {
 }
 
 
-def convert_events_to_thread_updates(apps, _):
+def convert_events_to_thread_events(apps, _):
     Post = apps.get_model("misago_threads", "Post")
     ThreadEvent = apps.get_model("misago_threadevents", "ThreadEvent")
 
@@ -96,7 +96,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(
-            convert_events_to_thread_updates,
+            convert_events_to_thread_events,
             migrations.RunPython.noop,
         ),
     ]

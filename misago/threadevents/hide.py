@@ -1,14 +1,14 @@
 from django.http import HttpRequest
 from django.utils import timezone
 
-from .hooks import hide_thread_update_hook, unhide_thread_update_hook
+from .hooks import hide_thread_event_hook, unhide_thread_event_hook
 from .models import ThreadEvent
 
 
 def hide_thread_event(
     thread_event: ThreadEvent, request: HttpRequest | None = None
 ) -> bool:
-    return hide_thread_update_hook(_hide_thread_event_action, thread_event, request)
+    return hide_thread_event_hook(_hide_thread_event_action, thread_event, request)
 
 
 def _hide_thread_event_action(
@@ -33,7 +33,7 @@ def _hide_thread_event_action(
 def unhide_thread_event(
     thread_event: ThreadEvent, request: HttpRequest | None = None
 ) -> bool:
-    return unhide_thread_update_hook(_unhide_thread_event_action, thread_event, request)
+    return unhide_thread_event_hook(_unhide_thread_event_action, thread_event, request)
 
 
 def _unhide_thread_event_action(
