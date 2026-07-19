@@ -82,7 +82,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         new_members = form.cleaned_data["users"]
         if new_members:
             for member in new_members:
-                PrivateThreadMember.objects.create(thread=thread, user=member)
+                add_private_thread_member(thread, member)
                 thread_update = create_added_member_thread_update(
                     thread, member, self.request.user, request=request
                 )
@@ -101,9 +101,6 @@ class PrivateThreadMembersAddView(PrivateThreadView):
 
         if not request.is_htmx:
             return redirect(self.get_next_thread_url(request, thread))
-
-        for new_member in new_members:
-            add_private_thread_member(thread, new_member)
 
         response = PrivateThreadMembersHtmxResponse(request, thread)
 

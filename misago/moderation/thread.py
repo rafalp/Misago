@@ -152,7 +152,7 @@ def _get_private_thread_moderation_actions_action(
     else:
         actions.append(HideThreadModerationAction)
 
-    if user_permissions.user != thread.private_thread_owner:
+    if user_permissions.user.id != thread.private_thread_owner_id:
         actions.append(TakeOwnershipPrivateThreadModerationAction)
 
     if thread.is_unapproved:
