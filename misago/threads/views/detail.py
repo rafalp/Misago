@@ -186,7 +186,7 @@ class DetailView(GenericThreadView):
         if not request.is_htmx:
             return redirect(request.get_full_path())
 
-        context_data = self.get_moderation_result_data(request, thread)
+        context_data = self.get_moderation_result_data(request, thread, result)
 
         if thread_updates := result.thread_updates:
             post_feed = self.get_post_feed(request, thread, [], thread_updates)
@@ -350,7 +350,7 @@ class DetailView(GenericThreadView):
 
             return redirect(request.get_full_path())
 
-        context_data = self.get_moderation_result_data(request, thread)
+        context_data = self.get_moderation_result_data(request, thread, result)
 
         if result.updated_items or result.thread_updates:
             updated_post_ids = [post.id for post in result.updated_items]
@@ -451,11 +451,13 @@ class DetailView(GenericThreadView):
                 pgettext("posts moderation error", "No valid posts selected."),
             )
 
-    def get_moderation_result_data(self, request: HttpRequest, thread: Thread) -> dict:
-        return self.get_moderation_result_data_action(request, thread)
+    def get_moderation_result_data(
+        self, request: HttpRequest, thread: Thread, result: ModerationResult
+    ) -> dict:
+        return self.get_moderation_result_data_action(request, thread, result)
 
     def get_moderation_result_data_action(
-        self, request: HttpRequest, thread: Thread
+        self, request: HttpRequest, thread: Thread, result: ModerationResult
     ) -> dict:
         breadcrumbs = self.get_category_breadcrumbs(request, thread.category)
         shared_context = {"breadcrumbs": breadcrumbs}
@@ -846,9 +848,11 @@ class ThreadDetailView(DetailView):
             request.user_permissions, post, request
         )
 
-    def get_moderation_result_data(self, request: HttpRequest, thread: Thread) -> dict:
+    def get_moderation_result_data(
+        self, request: HttpRequest, thread: Thread, result: ModerationResult
+    ) -> dict:
         return get_thread_detail_view_moderation_result_data_hook(
-            self.get_moderation_result_data_action, request, thread
+            self.get_moderation_result_data_action, request, thread, result
         )
 
     # Context data

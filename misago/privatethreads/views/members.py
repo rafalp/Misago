@@ -17,16 +17,21 @@ from ...permissions.privatethreads import (
     check_remove_private_thread_member_permission,
 )
 from ...permissions.proxy import UserPermissionsProxy
-from ...threadevents.create import create_added_member_thread_update
+from ...threadevents.create import (
+    create_added_member_thread_update,
+    create_changed_owner_thread_update,
+    create_took_ownership_thread_update,
+)
 from ...threadevents.models import ThreadEvent
 from ...threadevents.threadflag import ensure_thread_has_events
 from ...threads.models import Thread
 from ...threads.nexturl import get_next_thread_url
 from ..forms import MembersAddForm
 from ..members import (
-    change_private_thread_owner,
+    add_private_thread_member,
     private_thread_has_members,
     remove_private_thread_member,
+    set_private_thread_owner,
 )
 from ..models import PrivateThreadMember
 from ..postfeed import PrivateThreadPostFeed
@@ -48,8 +53,8 @@ class PrivateThreadMembersAddView(PrivateThreadView):
 
         form = self.form_type(
             request=request,
-            owner=self.owner,
-            members=self.members,
+            owner=thread.private_thread_owner,
+            members=thread.private_thread_members,
         )
 
         return self.render_form_page(request, thread, form)
@@ -60,8 +65,8 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         form = self.form_type(
             request.POST,
             request=request,
-            owner=self.owner,
-            members=self.members,
+            owner=thread.private_thread_owner,
+            members=thread.private_thread_members,
         )
 
         if form.is_valid():
@@ -97,9 +102,10 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         if not request.is_htmx:
             return redirect(self.get_next_thread_url(request, thread))
 
-        response = PrivateThreadMembersHtmxResponse(
-            request, thread, self.owner, self.members + new_members
-        )
+        for new_member in new_members:
+            add_private_thread_member(thread, new_member)
+
+        response = PrivateThreadMembersHtmxResponse(request, thread)
 
         if thread_update:
             response.set_thread_updates([thread_update])
@@ -195,9 +201,7 @@ class PrivateThreadMemberView(PrivateThreadView):
         if not request.is_htmx:
             return redirect(self.get_next_thread_url(request, thread))
 
-        response = PrivateThreadMembersHtmxResponse(
-            request, thread, self.owner, self.members
-        )
+        response = PrivateThreadMembersHtmxResponse(request, thread)
         if thread_update:
             response.set_thread_updates([thread_update])
 
@@ -258,17 +262,22 @@ class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
         if member == self.owner:
             return None
 
-        thread_update = change_private_thread_owner(
-            request.user, thread, member, request
-        )
-        self.owner = member
+        set_private_thread_owner(thread, member, request)
+        thread.private_thread_owner = member
 
         messages.success(
             request,
             pgettext("add private thread owner change view", "Owner changed"),
         )
 
-        return thread_update
+        if member == request.user:
+            return create_took_ownership_thread_update(
+                thread, request.user, request=request
+            )
+
+        return create_changed_owner_thread_update(
+            thread, member, request.user, request=request
+        )
 
 
 class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
@@ -289,8 +298,6 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
         thread_update = remove_private_thread_member(
             request.user, thread, member, request
         )
-
-        self.members.remove(member)
 
         messages.success(
             request,
@@ -359,30 +366,22 @@ class PrivateThreadMembersHtmxResponse:
 
     request: HttpRequest
     thread: Thread
-    owner: Optional["User"]
-    members: list["User"]
     thread_updates: Optional[list[ThreadEvent]]
 
     def __init__(
         self,
         request: HttpRequest,
         thread: Thread,
-        owner: Optional["User"],
-        members: list["User"],
     ):
         self.request = request
         self.thread = thread
-        self.owner = owner
-        self.members = members
         self.thread_updates = None
 
     def set_thread_updates(self, thread_updates: list[ThreadEvent]):
         self.thread_updates = thread_updates
 
     def get_context(self):
-        context = get_private_thread_members_context_data(
-            self.request, self.thread, self.owner, self.members
-        )
+        context = get_private_thread_members_context_data(self.request, self.thread)
         if self.thread_updates:
             context["thread_updates"] = self.get_post_feed_data()
         return context
@@ -391,6 +390,9 @@ class PrivateThreadMembersHtmxResponse:
         post_feed = PrivateThreadPostFeed(
             self.request, self.thread, [], self.thread_updates
         )
+
+        if self.request.user_permissions.is_private_threads_moderator:
+            post_feed.set_moderation(True)
 
         post_feed.set_animated_thread_updates(
             [thread_update.id for thread_update in self.thread_updates]
@@ -417,11 +419,11 @@ class PrivateThreadMembersHtmxResponse:
 
 
 def get_private_thread_members_context_data(
-    request: HttpRequest,
-    thread: Thread,
-    owner: Optional["User"],
-    members: list["User"],
+    request: HttpRequest, thread: Thread
 ) -> dict:
+    owner = thread.private_thread_owner
+    members = thread.private_thread_members
+
     moderation = bool(request.user_permissions.is_private_threads_moderator)
     manage = moderation or request.user.id == owner.id if owner else None
 
