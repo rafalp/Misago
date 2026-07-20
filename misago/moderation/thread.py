@@ -9,7 +9,11 @@ from ..notifications.tasks import (
     notify_on_new_private_thread,
 )
 from ..permissions.proxy import UserPermissionsProxy
-from ..privatethreads.members import prefetch_private_thread_member_ids
+from ..privatethreads.members import (
+    add_private_thread_member,
+    prefetch_private_thread_member_ids,
+    set_private_thread_owner,
+)
 from ..threadevents.create import (
     create_approved_thread_update,
     create_hidden_thread_update,
@@ -20,6 +24,7 @@ from ..threadevents.create import (
     create_pinned_everywhere_thread_update,
     create_removed_reply_approval_thread_update,
     create_required_reply_approval_thread_update,
+    create_took_ownership_thread_update,
     create_unhidden_thread_update,
     create_unlocked_thread_update,
     create_unpinned_thread_update,
@@ -146,6 +151,9 @@ def _get_private_thread_moderation_actions_action(
         actions.append(UnhideThreadModerationAction)
     else:
         actions.append(HideThreadModerationAction)
+
+    if user_permissions.user.id != thread.private_thread_owner_id:
+        actions.append(TakeOwnershipPrivateThreadModerationAction)
 
     if thread.is_unapproved:
         actions.append(ApprovePrivateThreadModerationAction)
@@ -335,6 +343,39 @@ class UnhideThreadModerationAction(ThreadModerationAction):
         )
 
         return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
+
+
+class TakeOwnershipPrivateThreadModerationAction(ConfirmMixin, ThreadModerationAction):
+    id = "ownership"
+    full_name = pgettext_lazy("thread moderation action name", "Take thread ownership")
+    button_label = pgettext_lazy("thread moderation button label", "Take ownership")
+    confirmation_message = pgettext_lazy(
+        "thread moderation",
+        "Take ownership of this thread?",
+    )
+
+    def confirmed(self) -> ModerationResult:
+        request = self.request
+        thread = self.thread
+        user = request.user
+
+        add_private_thread_member(thread, user)
+        set_private_thread_owner(thread, user, request=request)
+        thread.private_thread_owner = user
+
+        thread_update = create_took_ownership_thread_update(
+            thread, user, request=request
+        )
+        ensure_thread_has_events(thread)
+
+        messages.success(
+            request,
+            pgettext("thread moderation success", "Ownership taken"),
+        )
+
+        return ModerationResult(
+            context={"updated_members": True}, thread_updates=[thread_update]
+        )
 
 
 class ApproveThreadModerationAction(ThreadModerationAction):

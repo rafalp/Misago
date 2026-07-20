@@ -7,6 +7,7 @@ from django.urls import reverse
 
 from ...categories.models import Category
 from ...moderation.actions import (
+    ModerationResult,
     PostModerationAction,
     PostsModerationAction,
     ThreadModerationAction,
@@ -76,10 +77,29 @@ class PrivateThreadDetailView(DetailView):
             request.user_permissions, post, request
         )
 
-    def get_moderation_result_data(self, request: HttpRequest, thread: Thread) -> dict:
+    def get_moderation_result_data(
+        self, request: HttpRequest, thread: Thread, result: ModerationResult
+    ) -> dict:
         return get_private_thread_detail_view_moderation_result_data_hook(
-            self.get_moderation_result_data_action, request, thread
+            self.get_moderation_result_data_action, request, thread, result
         )
+
+    def get_moderation_result_data_action(
+        self, request: HttpRequest, thread: Thread, result: ModerationResult
+    ) -> dict:
+        data = super().get_moderation_result_data_action(request, thread, result)
+
+        if result.context.get("updated_members"):
+            data["extra_components"].append(
+                {
+                    "template_name": "misago/moderation_private_thread/members.html",
+                    "members_list": self.get_thread_members_context_data(
+                        request, thread
+                    ),
+                }
+            )
+
+        return data
 
     # Context data
 
@@ -117,9 +137,7 @@ class PrivateThreadDetailView(DetailView):
     def get_thread_members_context_data(
         self, request: HttpRequest, thread: Thread
     ) -> dict:
-        return get_private_thread_members_context_data(
-            request, thread, thread.private_thread_owner, thread.private_thread_members
-        )
+        return get_private_thread_members_context_data(request, thread)
 
     def get_watch_thread_url(self, thread: Thread) -> str:
         return reverse(

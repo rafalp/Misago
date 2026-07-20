@@ -4,16 +4,14 @@ from django.db import transaction
 from django.http import HttpRequest
 
 from ..threadevents.create import (
-    create_changed_owner_thread_update,
     create_left_thread_update,
     create_removed_member_thread_update,
-    create_took_ownership_thread_update,
 )
 from ..threadevents.models import ThreadEvent
 from ..threads.models import Thread
 from .hooks import (
-    change_private_thread_owner_hook,
     remove_private_thread_member_hook,
+    set_private_thread_owner_hook,
 )
 from .models import PrivateThreadMember
 
@@ -80,33 +78,50 @@ def get_private_thread_members(thread: Thread) -> tuple[Optional["User"], list["
     return owner, members
 
 
-def change_private_thread_owner(
-    actor: Union["User", str, None],
+def add_private_thread_member(thread: Thread, new_member: "User") -> bool:
+    if thread.private_thread_members:
+        if new_member in thread.private_thread_members:
+            return False
+    elif PrivateThreadMember.objects.filter(thread=thread, user=new_member).exists():
+        return False
+
+    PrivateThreadMember.objects.create(thread=thread, user=new_member)
+
+    thread.private_thread_members.append(new_member)
+    thread.private_thread_member_ids.append(new_member.id)
+
+    return True
+
+
+def set_private_thread_owner(
     thread: Thread,
     new_owner: "User",
     request: HttpRequest | None = None,
-) -> ThreadEvent:
-    return change_private_thread_owner_hook(
-        _change_private_thread_owner_action, actor, thread, new_owner, request
+) -> bool:
+    return set_private_thread_owner_hook(
+        _set_private_thread_owner_action, thread, new_owner, request
     )
 
 
-def _change_private_thread_owner_action(
-    actor: Union["User", str, None],
+def _set_private_thread_owner_action(
     thread: Thread,
     new_owner: "User",
     request: HttpRequest | None = None,
-) -> ThreadEvent:
+) -> bool:
     with transaction.atomic():
-        PrivateThreadMember.objects.filter(thread=thread).update(is_owner=False)
-        PrivateThreadMember.objects.filter(thread=thread, user=new_owner).update(
-            is_owner=True
-        )
+        updated_rows = PrivateThreadMember.objects.filter(
+            thread=thread, user=new_owner
+        ).update(is_owner=True)
 
-    if actor == new_owner:
-        return create_took_ownership_thread_update(thread, actor, request=request)
+        if updated_rows:
+            PrivateThreadMember.objects.filter(thread=thread).exclude(
+                user=new_owner
+            ).update(is_owner=False)
 
-    return create_changed_owner_thread_update(thread, new_owner, actor, request=request)
+            thread.private_thread_owner = new_owner
+            thread.private_thread_owner.id = new_owner.id
+
+        return bool(updated_rows)
 
 
 def remove_private_thread_member(
@@ -127,6 +142,11 @@ def _remove_private_thread_member_action(
     request: HttpRequest | None = None,
 ) -> ThreadEvent | None:
     deleted, _ = PrivateThreadMember.objects.filter(thread=thread, user=member).delete()
+
+    if member in thread.private_thread_members:
+        thread.private_thread_members.remove(member)
+    if member.id in thread.private_thread_member_ids:
+        thread.private_thread_member_ids.remove(member.id)
 
     if not deleted:
         return None

@@ -262,7 +262,6 @@ Hooks instances are importable from the following Python modules:
 
 `misago.privatethreads.hooks` defines the following hooks:
 
-- [`change_private_thread_owner_hook`](./change-private-thread-owner-hook.md)
 - [`get_private_thread_breadcrumbs_hook`](./get-private-thread-breadcrumbs-hook.md)
 - [`get_private_thread_detail_view_context_data_hook`](./get-private-thread-detail-view-context-data-hook.md)
 - [`get_private_thread_detail_view_moderation_result_data_hook`](./get-private-thread-detail-view-moderation-result-data-hook.md)
@@ -274,6 +273,7 @@ Hooks instances are importable from the following Python modules:
 - [`get_private_thread_list_threads_hook`](./get-private-thread-list-threads-hook.md)
 - [`get_private_threads_breadcrumbs_hook`](./get-private-threads-breadcrumbs-hook.md)
 - [`remove_private_thread_member_hook`](./remove-private-thread-member-hook.md)
+- [`set_private_thread_owner_hook`](./set-private-thread-owner-hook.md)
 - [`validate_new_private_thread_member_hook`](./validate-new-private-thread-member-hook.md)
 - [`validate_new_private_thread_owner_hook`](./validate-new-private-thread-owner-hook.md)
 

@@ -2,6 +2,7 @@ from typing import Protocol
 
 from django.http import HttpRequest
 
+from ...moderation.actions import ModerationResult
 from ...plugins.hooks import FilterHook
 from ..models import Thread
 
@@ -9,7 +10,7 @@ from ..models import Thread
 class GetThreadDetailViewModerationResultDataHookAction(Protocol):
     """
     Misago function used to get the template context data
-    for the moderation result in the thread detail view.
+    for a moderation result in the thread detail view.
 
     # Arguments
 
@@ -19,14 +20,23 @@ class GetThreadDetailViewModerationResultDataHookAction(Protocol):
 
     ## `thread: Thread`
 
-    A `Thread` instance.
+    The `Thread` instance.
+
+    ## `result: ModerationResult`
+
+    The `ModerationResult` instance returned by a moderation action.
 
     # Return value
 
     A Python `dict` with context data to use to `render` the moderation result.
     """
 
-    def __call__(self, request: HttpRequest, thread: Thread) -> dict: ...
+    def __call__(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        result: ModerationResult,
+    ) -> dict: ...
 
 
 class GetThreadDetailViewModerationResultDataHookFilter(Protocol):
@@ -48,7 +58,11 @@ class GetThreadDetailViewModerationResultDataHookFilter(Protocol):
 
     ## `thread: Thread`
 
-    A `Thread` instance.
+    The `Thread` instance.
+
+    ## `result: ModerationResult`
+
+    The `ModerationResult` instance returned by a moderation action.
 
     # Return value
 
@@ -60,6 +74,7 @@ class GetThreadDetailViewModerationResultDataHookFilter(Protocol):
         action: GetThreadDetailViewModerationResultDataHookAction,
         request: HttpRequest,
         thread: Thread,
+        result: ModerationResult,
     ) -> dict: ...
 
 
@@ -80,6 +95,7 @@ class GetThreadDetailViewModerationResultDataHook(
 
     ```python
     from django.http import HttpRequest
+    from misago.moderation.actions import ModerationResult
     from misago.threads.hooks import (
         get_thread_detail_view_moderation_result_data_hook
     )
@@ -88,13 +104,15 @@ class GetThreadDetailViewModerationResultDataHook(
 
     @get_thread_detail_view_moderation_result_data_hook.append_filter
     def include_plugin_component(
-        action, request: HttpRequest, thread: Thread
+        action, request: HttpRequest, thread: Thread, result: ModerationResult
     ) -> dict:
-        context = action(request, thread)
-        context["extra_components"].append({
-            "id": "plugin_component",
-            "template_name": "myplugin/component.html"
-        })
+        context = action(request, thread, result)
+
+        if result.context.get("plugin"):
+            context["extra_components"].append({
+                "id": "plugin_component",
+                "template_name": "myplugin/component.html"
+            })
 
         return context
     ```
@@ -107,8 +125,9 @@ class GetThreadDetailViewModerationResultDataHook(
         action: GetThreadDetailViewModerationResultDataHookAction,
         request: HttpRequest,
         thread: Thread,
+        result: ModerationResult,
     ) -> dict:
-        return super().__call__(action, request, thread)
+        return super().__call__(action, request, thread, result)
 
 
 get_thread_detail_view_moderation_result_data_hook = (
