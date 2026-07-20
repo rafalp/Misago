@@ -2,6 +2,8 @@ import pytest
 from django.urls import reverse
 
 from ...postedits.models import PostEdit
+from ...privatethreads.members import get_private_thread_members
+from ...privatethreads.models import PrivateThreadMember
 from ...test import UNORDERED, assert_contains, assert_not_contains
 from ...threadevents.enums import ThreadUpdateActionName
 from ...threadevents.models import ThreadEvent
@@ -212,6 +214,212 @@ def test_private_thread_detail_view_unhide_thread_moderation_action_unhides_thre
 
     mock_thread_synchronize_categories.delay.assert_called_once_with(
         [user_private_thread.category_id]
+    )
+
+
+def test_private_thread_detail_view_ownership_thread_moderation_action_makes_moderator_thread_owner(
+    moderator_client,
+    user,
+    other_user,
+    moderator,
+    user_private_thread,
+):
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"thread_moderation": "ownership"},
+    )
+    assert_contains(response, "Take thread ownership")
+    assert_contains(response, "Take ownership of this thread?")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"thread_moderation": "ownership", "confirm": "true"},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    )
+
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.has_events
+
+    owner, members = get_private_thread_members(user_private_thread)
+    assert owner == moderator
+    assert members == [user, other_user, moderator]
+
+    ThreadEvent.objects.get(
+        thread=user_private_thread,
+        action=ThreadUpdateActionName.TOOK_OWNERSHIP,
+    )
+
+
+def test_private_thread_detail_view_ownership_thread_moderation_action_makes_moderator_thread_owner_in_htmx(
+    moderator_client,
+    user,
+    other_user,
+    moderator,
+    user_private_thread,
+):
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"thread_moderation": "ownership"},
+    )
+    assert_contains(response, "Take ownership of this thread?")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"thread_moderation": "ownership", "confirm": "true"},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, user.username)
+    assert_contains(response, other_user.username)
+    assert_contains(response, moderator.username)
+
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.has_events
+
+    owner, members = get_private_thread_members(user_private_thread)
+    assert owner == moderator
+    assert members == [user, other_user, moderator]
+
+    ThreadEvent.objects.get(
+        thread=user_private_thread,
+        action=ThreadUpdateActionName.TOOK_OWNERSHIP,
+    )
+
+
+def test_private_thread_detail_view_ownership_thread_moderation_action_makes_moderator_thread_owner_and_member(
+    moderator_client,
+    user,
+    other_user,
+    moderator,
+    user_private_thread,
+):
+    PrivateThreadMember.objects.filter(
+        thread=user_private_thread, user=moderator
+    ).delete()
+
+    user_private_thread.has_unapproved_posts = True
+    user_private_thread.save()
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"thread_moderation": "ownership"},
+    )
+    assert_contains(response, "Take thread ownership")
+    assert_contains(response, "Take ownership of this thread?")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"thread_moderation": "ownership", "confirm": "true"},
+    )
+    assert response.status_code == 302
+    assert response["location"] == reverse(
+        "misago:private-thread",
+        kwargs={"thread_id": user_private_thread.id, "slug": user_private_thread.slug},
+    )
+
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.has_events
+
+    owner, members = get_private_thread_members(user_private_thread)
+    assert owner == moderator
+    assert members == [user, other_user, moderator]
+
+    ThreadEvent.objects.get(
+        thread=user_private_thread,
+        action=ThreadUpdateActionName.TOOK_OWNERSHIP,
+    )
+
+
+def test_private_thread_detail_view_ownership_thread_moderation_action_makes_moderator_thread_owner_and_member_in_htmx(
+    moderator_client,
+    user,
+    other_user,
+    moderator,
+    user_private_thread,
+):
+    PrivateThreadMember.objects.filter(
+        thread=user_private_thread, user=moderator
+    ).delete()
+
+    user_private_thread.has_unapproved_posts = True
+    user_private_thread.save()
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"thread_moderation": "ownership"},
+    )
+    assert_contains(response, "Take ownership of this thread?")
+
+    response = moderator_client.post(
+        reverse(
+            "misago:private-thread",
+            kwargs={
+                "thread_id": user_private_thread.id,
+                "slug": user_private_thread.slug,
+            },
+        ),
+        {"thread_moderation": "ownership", "confirm": "true"},
+        headers={"hx-request": "true"},
+    )
+    assert_contains(response, user.username)
+    assert_contains(response, other_user.username)
+    assert_contains(response, moderator.username)
+
+    user_private_thread.refresh_from_db()
+    assert user_private_thread.has_events
+
+    owner, members = get_private_thread_members(user_private_thread)
+    assert owner == moderator
+    assert members == [user, other_user, moderator]
+
+    ThreadEvent.objects.get(
+        thread=user_private_thread,
+        action=ThreadUpdateActionName.TOOK_OWNERSHIP,
     )
 
 

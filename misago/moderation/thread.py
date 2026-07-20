@@ -347,11 +347,11 @@ class UnhideThreadModerationAction(ThreadModerationAction):
 
 class TakeOwnershipPrivateThreadModerationAction(ConfirmMixin, ThreadModerationAction):
     id = "ownership"
-    full_name = pgettext_lazy("thread moderation action name", "Take ownership")
+    full_name = pgettext_lazy("thread moderation action name", "Take thread ownership")
     button_label = pgettext_lazy("thread moderation button label", "Take ownership")
     confirmation_message = pgettext_lazy(
         "thread moderation",
-        "Are you sure you want to take ownership of this thread?",
+        "Take ownership of this thread?",
     )
 
     def confirmed(self) -> ModerationResult:
