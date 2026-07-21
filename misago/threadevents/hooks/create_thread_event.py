@@ -157,12 +157,12 @@ class CreateThreadUpdateHook(
 
     ```python
     from django.http import HttpRequest
-    from misago.threadevents.hooks import create_thread_update_hook
+    from misago.threadevents.hooks import create_thread_event_hook
     from misago.threadevents.models import ThreadEvent
 
 
-    @create_thread_update_hook.append_filter
-    def set_actor_ip_on_thread_update(
+    @create_thread_event_hook.append_filter
+    def set_actor_ip_on_thread_event(
         action,
         *args,
         commit: bool = True,
@@ -172,7 +172,7 @@ class CreateThreadUpdateHook(
         if request:
             plugin_data["actor_id"] = request.user_ip
 
-        thread_update = action(
+        thread_event = action(
             *args,
             commit=False,
             request=request,
@@ -180,12 +180,12 @@ class CreateThreadUpdateHook(
         )
 
         if request:
-            thread_update.plugin_data["actor_id"] = request.user_ip
+            thread_event.plugin_data["actor_id"] = request.user_ip
 
         if commit:
-            thread_update.save()
+            thread_event.save()
 
-        return thread_update
+        return thread_event
     ```
     """
 
@@ -217,4 +217,4 @@ class CreateThreadUpdateHook(
         )
 
 
-create_thread_update_hook = CreateThreadUpdateHook()
+create_thread_event_hook = CreateThreadUpdateHook()

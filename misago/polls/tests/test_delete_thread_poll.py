@@ -1,6 +1,6 @@
 import pytest
 
-from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.enums import ThreadEventActionName
 from ..delete import delete_thread_poll
 from ..models import Poll
 
@@ -25,7 +25,7 @@ def test_delete_thread_poll_creates_thread_event(thread, poll, user):
     thread_event = delete_thread_poll(thread, poll, user)
 
     assert thread_event
-    assert thread_event.action == ThreadUpdateActionName.DELETED_POLL
+    assert thread_event.action == ThreadEventActionName.DELETED_POLL
     assert thread_event.thread == thread
     assert thread_event.actor == user
 

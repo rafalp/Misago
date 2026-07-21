@@ -5,38 +5,38 @@ from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains, assert_not_contains
 from ...threadevents.create import (
-    create_added_member_thread_update,
-    create_moved_thread_update,
-    create_split_posts_from_thread_update,
-    create_test_thread_update,
+    create_added_member_thread_event,
+    create_moved_thread_event,
+    create_split_posts_from_thread_event,
+    create_test_thread_event,
 )
 
 
-def test_thread_detail_view_doesnt_show_thread_update_to_anonymous_user_if_thread_flag_is_not_set(
+def test_thread_detail_view_doesnt_show_thread_event_to_anonymous_user_if_thread_flag_is_not_set(
     client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     response = client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_doesnt_show_thread_update_to_user_if_thread_flag_is_set(
+def test_thread_detail_view_doesnt_show_thread_event_to_user_if_thread_flag_is_set(
     user_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_doesnt_show_thread_update_to_category_moderator_if_thread_flag_is_not_set(
+def test_thread_detail_view_doesnt_show_thread_event_to_category_moderator_if_thread_flag_is_not_set(
     user_client, user, thread
 ):
     Moderator.objects.create(
@@ -45,31 +45,31 @@ def test_thread_detail_view_doesnt_show_thread_update_to_category_moderator_if_t
         categories=[thread.category_id],
     )
 
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     response = user_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_doesnt_show_thread_update_to_global_moderator_if_thread_flag_is_not_set(
+def test_thread_detail_view_doesnt_show_thread_event_to_global_moderator_if_thread_flag_is_not_set(
     moderator_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     response = moderator_client.get(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_shows_thread_update_to_anonymous_user_if_thread_flag_is_set(
+def test_thread_detail_view_shows_thread_event_to_anonymous_user_if_thread_flag_is_set(
     client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -78,13 +78,13 @@ def test_thread_detail_view_shows_thread_update_to_anonymous_user_if_thread_flag
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_shows_thread_update_to_user_if_thread_flag_is_set(
+def test_thread_detail_view_shows_thread_event_to_user_if_thread_flag_is_set(
     user_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -93,10 +93,10 @@ def test_thread_detail_view_shows_thread_update_to_user_if_thread_flag_is_set(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_shows_thread_update_to_category_moderator_if_thread_flag_is_set(
+def test_thread_detail_view_shows_thread_event_to_category_moderator_if_thread_flag_is_set(
     user_client, user, thread
 ):
     Moderator.objects.create(
@@ -105,7 +105,7 @@ def test_thread_detail_view_shows_thread_update_to_category_moderator_if_thread_
         categories=[thread.category_id],
     )
 
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -114,13 +114,13 @@ def test_thread_detail_view_shows_thread_update_to_category_moderator_if_thread_
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_shows_thread_update_to_global_moderator_if_thread_flag_is_set(
+def test_thread_detail_view_shows_thread_event_to_global_moderator_if_thread_flag_is_set(
     moderator_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -129,13 +129,13 @@ def test_thread_detail_view_shows_thread_update_to_global_moderator_if_thread_fl
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_shows_deleted_user_thread_update_to_anonymous_user(
+def test_thread_detail_view_shows_deleted_user_thread_event_to_anonymous_user(
     client, thread
 ):
-    thread_update = create_test_thread_update(thread, "DeletedUser")
+    thread_event = create_test_thread_event(thread, "DeletedUser")
 
     thread.has_events = True
     thread.save()
@@ -144,13 +144,13 @@ def test_thread_detail_view_shows_deleted_user_thread_update_to_anonymous_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_shows_deleted_user_thread_update_to_user(
+def test_thread_detail_view_shows_deleted_user_thread_event_to_user(
     user_client, thread
 ):
-    thread_update = create_test_thread_update(thread, "DeletedUser")
+    thread_event = create_test_thread_event(thread, "DeletedUser")
 
     thread.has_events = True
     thread.save()
@@ -159,10 +159,10 @@ def test_thread_detail_view_shows_deleted_user_thread_update_to_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_shows_deleted_user_thread_update_to_category_moderator(
+def test_thread_detail_view_shows_deleted_user_thread_event_to_category_moderator(
     user_client, user, thread
 ):
     Moderator.objects.create(
@@ -171,7 +171,7 @@ def test_thread_detail_view_shows_deleted_user_thread_update_to_category_moderat
         categories=[thread.category_id],
     )
 
-    thread_update = create_test_thread_update(thread, "DeletedUser")
+    thread_event = create_test_thread_event(thread, "DeletedUser")
 
     thread.has_events = True
     thread.save()
@@ -180,13 +180,13 @@ def test_thread_detail_view_shows_deleted_user_thread_update_to_category_moderat
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_shows_deleted_user_thread_update_to_global_moderator(
+def test_thread_detail_view_shows_deleted_user_thread_event_to_global_moderator(
     moderator_client, thread
 ):
-    thread_update = create_test_thread_update(thread, "DeletedUser")
+    thread_event = create_test_thread_event(thread, "DeletedUser")
 
     thread.has_events = True
     thread.save()
@@ -195,15 +195,15 @@ def test_thread_detail_view_shows_deleted_user_thread_update_to_global_moderator
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_doesnt_show_hidden_thread_update_to_anonymous_user(
+def test_thread_detail_view_doesnt_show_hidden_thread_event_to_anonymous_user(
     client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
-    thread_update.is_hidden = True
-    thread_update.save()
+    thread_event = create_test_thread_event(thread, user)
+    thread_event.is_hidden = True
+    thread_event.save()
 
     thread.has_events = True
     thread.save()
@@ -212,15 +212,15 @@ def test_thread_detail_view_doesnt_show_hidden_thread_update_to_anonymous_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_doesnt_show_hidden_thread_update_to_user(
+def test_thread_detail_view_doesnt_show_hidden_thread_event_to_user(
     user_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
-    thread_update.is_hidden = True
-    thread_update.save()
+    thread_event = create_test_thread_event(thread, user)
+    thread_event.is_hidden = True
+    thread_event.save()
 
     thread.has_events = True
     thread.save()
@@ -229,10 +229,10 @@ def test_thread_detail_view_doesnt_show_hidden_thread_update_to_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_not_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_shows_hidden_thread_update_to_category_moderator(
+def test_thread_detail_view_shows_hidden_thread_event_to_category_moderator(
     user_client, user, thread
 ):
     Moderator.objects.create(
@@ -241,9 +241,9 @@ def test_thread_detail_view_shows_hidden_thread_update_to_category_moderator(
         categories=[thread.category_id],
     )
 
-    thread_update = create_test_thread_update(thread, user)
-    thread_update.is_hidden = True
-    thread_update.save()
+    thread_event = create_test_thread_event(thread, user)
+    thread_event.is_hidden = True
+    thread_event.save()
 
     thread.has_events = True
     thread.save()
@@ -252,15 +252,15 @@ def test_thread_detail_view_shows_hidden_thread_update_to_category_moderator(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_shows_hidden_thread_update_to_global_moderator(
+def test_thread_detail_view_shows_hidden_thread_event_to_global_moderator(
     moderator_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
-    thread_update.is_hidden = True
-    thread_update.save()
+    thread_event = create_test_thread_event(thread, user)
+    thread_event.is_hidden = True
+    thread_event.save()
 
     thread.has_events = True
     thread.save()
@@ -269,13 +269,13 @@ def test_thread_detail_view_shows_hidden_thread_update_to_global_moderator(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
 
 
-def test_thread_detail_view_doesnt_show_hide_thread_update_button_to_anonymous_user(
+def test_thread_detail_view_doesnt_show_hide_thread_event_button_to_anonymous_user(
     client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -284,7 +284,7 @@ def test_thread_detail_view_doesnt_show_hide_thread_update_button_to_anonymous_u
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
     assert_not_contains(
         response,
         reverse(
@@ -292,16 +292,16 @@ def test_thread_detail_view_doesnt_show_hide_thread_update_button_to_anonymous_u
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
     )
 
 
-def test_thread_detail_view_doesnt_show_hide_thread_update_button_to_user(
+def test_thread_detail_view_doesnt_show_hide_thread_event_button_to_user(
     user_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -310,7 +310,7 @@ def test_thread_detail_view_doesnt_show_hide_thread_update_button_to_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
     assert_not_contains(
         response,
         reverse(
@@ -318,13 +318,13 @@ def test_thread_detail_view_doesnt_show_hide_thread_update_button_to_user(
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
     )
 
 
-def test_thread_detail_view_shows_hide_thread_update_button_to_category_moderator(
+def test_thread_detail_view_shows_hide_thread_event_button_to_category_moderator(
     user_client, user, thread
 ):
     Moderator.objects.create(
@@ -333,7 +333,7 @@ def test_thread_detail_view_shows_hide_thread_update_button_to_category_moderato
         categories=[thread.category_id],
     )
 
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -342,7 +342,7 @@ def test_thread_detail_view_shows_hide_thread_update_button_to_category_moderato
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -350,16 +350,16 @@ def test_thread_detail_view_shows_hide_thread_update_button_to_category_moderato
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
     )
 
 
-def test_thread_detail_view_shows_hide_thread_update_button_to_global_moderator(
+def test_thread_detail_view_shows_hide_thread_event_button_to_global_moderator(
     moderator_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -368,7 +368,7 @@ def test_thread_detail_view_shows_hide_thread_update_button_to_global_moderator(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -376,13 +376,13 @@ def test_thread_detail_view_shows_hide_thread_update_button_to_global_moderator(
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
     )
 
 
-def test_thread_detail_view_shows_unhide_thread_update_button_to_category_moderator(
+def test_thread_detail_view_shows_unhide_thread_event_button_to_category_moderator(
     user_client, user, thread
 ):
     Moderator.objects.create(
@@ -391,9 +391,9 @@ def test_thread_detail_view_shows_unhide_thread_update_button_to_category_modera
         categories=[thread.category_id],
     )
 
-    thread_update = create_test_thread_update(thread, user)
-    thread_update.is_hidden = True
-    thread_update.save()
+    thread_event = create_test_thread_event(thread, user)
+    thread_event.is_hidden = True
+    thread_event.save()
 
     thread.has_events = True
     thread.save()
@@ -402,7 +402,7 @@ def test_thread_detail_view_shows_unhide_thread_update_button_to_category_modera
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -410,18 +410,18 @@ def test_thread_detail_view_shows_unhide_thread_update_button_to_category_modera
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
     )
 
 
-def test_thread_detail_view_shows_unhide_thread_update_button_to_global_moderator(
+def test_thread_detail_view_shows_unhide_thread_event_button_to_global_moderator(
     moderator_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
-    thread_update.is_hidden = True
-    thread_update.save()
+    thread_event = create_test_thread_event(thread, user)
+    thread_event.is_hidden = True
+    thread_event.save()
 
     thread.has_events = True
     thread.save()
@@ -430,7 +430,7 @@ def test_thread_detail_view_shows_unhide_thread_update_button_to_global_moderato
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -438,16 +438,16 @@ def test_thread_detail_view_shows_unhide_thread_update_button_to_global_moderato
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
     )
 
 
-def test_thread_detail_view_doesnt_show_delete_thread_update_button_to_anonymous_user(
+def test_thread_detail_view_doesnt_show_delete_thread_event_button_to_anonymous_user(
     client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -456,7 +456,7 @@ def test_thread_detail_view_doesnt_show_delete_thread_update_button_to_anonymous
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
     assert_not_contains(
         response,
         reverse(
@@ -464,16 +464,16 @@ def test_thread_detail_view_doesnt_show_delete_thread_update_button_to_anonymous
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
     )
 
 
-def test_thread_detail_view_doesnt_show_delete_thread_update_button_to_user(
+def test_thread_detail_view_doesnt_show_delete_thread_event_button_to_user(
     user_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -482,7 +482,7 @@ def test_thread_detail_view_doesnt_show_delete_thread_update_button_to_user(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
     assert_not_contains(
         response,
         reverse(
@@ -490,13 +490,13 @@ def test_thread_detail_view_doesnt_show_delete_thread_update_button_to_user(
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
     )
 
 
-def test_thread_detail_view_shows_delete_thread_update_button_to_category_moderator(
+def test_thread_detail_view_shows_delete_thread_event_button_to_category_moderator(
     user_client, user, thread
 ):
     Moderator.objects.create(
@@ -505,7 +505,7 @@ def test_thread_detail_view_shows_delete_thread_update_button_to_category_modera
         categories=[thread.category_id],
     )
 
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -514,7 +514,7 @@ def test_thread_detail_view_shows_delete_thread_update_button_to_category_modera
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -522,16 +522,16 @@ def test_thread_detail_view_shows_delete_thread_update_button_to_category_modera
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
     )
 
 
-def test_thread_detail_view_shows_delete_thread_update_button_to_global_moderator(
+def test_thread_detail_view_shows_delete_thread_event_button_to_global_moderator(
     moderator_client, user, thread
 ):
-    thread_update = create_test_thread_update(thread, user)
+    thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -540,7 +540,7 @@ def test_thread_detail_view_shows_delete_thread_update_button_to_global_moderato
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"UPDATE [{thread_update.id}]")
+    assert_contains(response, f"UPDATE [{thread_event.id}]")
     assert_contains(
         response,
         reverse(
@@ -548,24 +548,24 @@ def test_thread_detail_view_shows_delete_thread_update_button_to_global_moderato
             kwargs={
                 "thread_id": thread.id,
                 "slug": thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         ),
     )
 
 
 @override_dynamic_settings(
-    thread_updates_per_page=4, posts_per_page=5, posts_per_page_orphans=1
+    thread_events_per_page=4, posts_per_page=5, posts_per_page_orphans=1
 )
-def test_thread_detail_view_shows_thread_updates_on_first_page(
+def test_thread_detail_view_shows_thread_events_on_first_page(
     thread_reply_factory, client, user, thread
 ):
-    first_page_thread_update = create_test_thread_update(thread, user)
+    first_page_thread_event = create_test_thread_event(thread, user)
 
     for _ in range(6):
         thread_reply_factory(thread)
 
-    last_page_thread_update = create_test_thread_update(thread, user)
+    last_page_thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -574,30 +574,30 @@ def test_thread_detail_view_shows_thread_updates_on_first_page(
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_contains(response, f"[{first_page_thread_update.id}]")
-    assert_not_contains(response, f"[{last_page_thread_update.id}]")
+    assert_contains(response, f"[{first_page_thread_event.id}]")
+    assert_not_contains(response, f"[{last_page_thread_event.id}]")
 
 
 @override_dynamic_settings(
-    thread_updates_per_page=4, posts_per_page=5, posts_per_page_orphans=1
+    thread_events_per_page=4, posts_per_page=5, posts_per_page_orphans=1
 )
-def test_thread_detail_view_shows_thread_updates_on_second_page(
+def test_thread_detail_view_shows_thread_events_on_second_page(
     thread_reply_factory, client, user, thread
 ):
     for _ in range(4):
         thread_reply_factory(thread)
 
-    first_page_thread_update = create_test_thread_update(thread, user)
+    first_page_thread_event = create_test_thread_event(thread, user)
 
     for _ in range(5):
         thread_reply_factory(thread)
 
-    second_page_thread_update = create_test_thread_update(thread, user)
+    second_page_thread_event = create_test_thread_event(thread, user)
 
     for _ in range(2):
         thread_reply_factory(thread)
 
-    last_page_thread_update = create_test_thread_update(thread, user)
+    last_page_thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -609,26 +609,26 @@ def test_thread_detail_view_shows_thread_updates_on_second_page(
         )
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"[{first_page_thread_update.id}]")
-    assert_contains(response, f"[{second_page_thread_update.id}]")
-    assert_not_contains(response, f"[{last_page_thread_update.id}]")
+    assert_not_contains(response, f"[{first_page_thread_event.id}]")
+    assert_contains(response, f"[{second_page_thread_event.id}]")
+    assert_not_contains(response, f"[{last_page_thread_event.id}]")
 
 
 @override_dynamic_settings(
-    thread_updates_per_page=4, posts_per_page=5, posts_per_page_orphans=1
+    thread_events_per_page=4, posts_per_page=5, posts_per_page_orphans=1
 )
-def test_thread_detail_view_shows_thread_updates_on_last_page(
+def test_thread_detail_view_shows_thread_events_on_last_page(
     thread_reply_factory, client, user, thread
 ):
     for _ in range(4):
         thread_reply_factory(thread)
 
-    first_page_thread_update = create_test_thread_update(thread, user)
+    first_page_thread_event = create_test_thread_event(thread, user)
 
     for _ in range(2):
         thread_reply_factory(thread)
 
-    last_page_thread_update = create_test_thread_update(thread, user)
+    last_page_thread_event = create_test_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -640,15 +640,15 @@ def test_thread_detail_view_shows_thread_updates_on_last_page(
         )
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"[{first_page_thread_update.id}]")
-    assert_contains(response, f"[{last_page_thread_update.id}]")
+    assert_not_contains(response, f"[{first_page_thread_event.id}]")
+    assert_contains(response, f"[{last_page_thread_event.id}]")
 
 
 @override_dynamic_settings(thread_updates_per_page=4)
-def test_thread_detail_view_limits_displayed_thread_updates_count(client, user, thread):
-    thread_updates = []
+def test_thread_detail_view_limits_displayed_thread_events_count(client, user, thread):
+    thread_events = []
     for _ in range(5):
-        thread_updates.append(create_test_thread_update(thread, user))
+        thread_events.append(create_test_thread_event(thread, user))
 
     thread.has_events = True
     thread.save()
@@ -657,12 +657,12 @@ def test_thread_detail_view_limits_displayed_thread_updates_count(client, user, 
         reverse("misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug})
     )
     assert_contains(response, thread.title)
-    assert_not_contains(response, f"[{thread_updates[0].id}]")
-    assert_contains(response, f"[{thread_updates[1].id}]")
-    assert_contains(response, f"[{thread_updates[-1].id}]")
+    assert_not_contains(response, f"[{thread_events[0].id}]")
+    assert_contains(response, f"[{thread_events[1].id}]")
+    assert_contains(response, f"[{thread_events[-1].id}]")
 
 
-def test_thread_detail_view_displays_thread_update_with_other_category_context(
+def test_thread_detail_view_displays_thread_event_with_other_category_context(
     client, guests_group, user, thread, other_category
 ):
     CategoryGroupPermission.objects.create(
@@ -676,7 +676,7 @@ def test_thread_detail_view_displays_thread_update_with_other_category_context(
         permission=CategoryPermission.BROWSE,
     )
 
-    create_moved_thread_update(thread, other_category, user)
+    create_moved_thread_event(thread, other_category, user)
 
     thread.has_events = True
     thread.save()
@@ -689,12 +689,12 @@ def test_thread_detail_view_displays_thread_update_with_other_category_context(
     assert_contains(response, other_category.get_absolute_url())
 
 
-def test_thread_detail_view_displays_thread_update_with_inaccessible_other_category_context(
+def test_thread_detail_view_displays_thread_event_with_inaccessible_other_category_context(
     client, user, thread, other_category
 ):
     CategoryGroupPermission.objects.filter(category=other_category).delete()
 
-    create_moved_thread_update(thread, other_category, user)
+    create_moved_thread_event(thread, other_category, user)
 
     thread.has_events = True
     thread.save()
@@ -707,10 +707,10 @@ def test_thread_detail_view_displays_thread_update_with_inaccessible_other_categ
     assert_not_contains(response, other_category.get_absolute_url())
 
 
-def test_thread_detail_view_displays_thread_update_with_other_thread_context(
+def test_thread_detail_view_displays_thread_event_with_other_thread_context(
     client, user, thread, other_thread
 ):
-    create_split_posts_from_thread_update(thread, other_thread, actor=user)
+    create_split_posts_from_thread_event(thread, other_thread, actor=user)
 
     thread.has_events = True
     thread.save()
@@ -729,10 +729,10 @@ def test_thread_detail_view_displays_thread_update_with_other_thread_context(
     )
 
 
-def test_thread_detail_view_displays_thread_update_with_inaccessible_other_thread_context(
+def test_thread_detail_view_displays_thread_event_with_inaccessible_other_thread_context(
     client, user, thread, other_thread
 ):
-    create_split_posts_from_thread_update(thread, other_thread, actor=user)
+    create_split_posts_from_thread_event(thread, other_thread, actor=user)
 
     thread.has_events = True
     thread.save()
@@ -754,10 +754,10 @@ def test_thread_detail_view_displays_thread_update_with_inaccessible_other_threa
     )
 
 
-def test_thread_detail_view_displays_thread_update_with_user_context(
+def test_thread_detail_view_displays_thread_event_with_user_context(
     client, user, other_user, thread
 ):
-    create_added_member_thread_update(thread, other_user, user)
+    create_added_member_thread_event(thread, other_user, user)
 
     thread.has_events = True
     thread.save()

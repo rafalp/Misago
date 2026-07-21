@@ -8,7 +8,7 @@ from ...polls.models import Poll
 from ...solutions.select import select_thread_solution
 from ...test import UNORDERED, assert_contains, assert_not_contains
 from ...testutils import grant_category_group_permissions
-from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.enums import ThreadEventActionName
 from ...threadevents.models import ThreadEvent
 from ..enums import ThreadPinned
 from ..models import Thread
@@ -43,7 +43,7 @@ def test_thread_list_view_pin_everywhere_threads_moderation_action_pins_unpinned
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.PINNED_EVERYWHERE,
+        action=ThreadEventActionName.PINNED_EVERYWHERE,
     )
 
 
@@ -66,7 +66,7 @@ def test_thread_list_view_pin_everywhere_threads_moderation_action_pins_pinned_c
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.PINNED_EVERYWHERE,
+        action=ThreadEventActionName.PINNED_EVERYWHERE,
     )
 
 
@@ -104,7 +104,7 @@ def test_thread_list_view_pin_category_threads_moderation_action_pins_unpinned_t
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.PINNED_CATEGORY,
+        action=ThreadEventActionName.PINNED_CATEGORY,
     )
 
 
@@ -127,7 +127,7 @@ def test_thread_list_view_pin_category_threads_moderation_action_pins_pinned_eve
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.PINNED_CATEGORY,
+        action=ThreadEventActionName.PINNED_CATEGORY,
     )
 
 
@@ -165,7 +165,7 @@ def test_thread_list_view_unpin_threads_moderation_action_unpins_pinned_everywhe
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.UNPINNED,
+        action=ThreadEventActionName.UNPINNED,
     )
 
 
@@ -188,7 +188,7 @@ def test_thread_list_view_unpin_threads_moderation_action_unpins_pinned_category
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.UNPINNED,
+        action=ThreadEventActionName.UNPINNED,
     )
 
 
@@ -242,7 +242,7 @@ def test_thread_list_view_lock_moderation_action_locks_threads(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.LOCKED,
+        action=ThreadEventActionName.LOCKED,
     )
 
 
@@ -280,7 +280,7 @@ def test_thread_list_view_unlock_moderation_action_unlocks_threads(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.UNLOCKED,
+        action=ThreadEventActionName.UNLOCKED,
     )
 
 
@@ -339,7 +339,7 @@ def test_thread_list_view_hide_moderation_action_hides_threads(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.HIDDEN,
+        action=ThreadEventActionName.HIDDEN,
     )
 
     mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
@@ -386,7 +386,7 @@ def test_thread_list_view_unhide_moderation_action_unhides_threads(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.UNHIDDEN,
+        action=ThreadEventActionName.UNHIDDEN,
     )
 
     mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
@@ -428,7 +428,7 @@ def test_thread_list_view_approve_moderation_action_approves_threads(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.APPROVED,
+        action=ThreadEventActionName.APPROVED,
     )
 
     mock_synchronize_categories.delay.assert_called_once_with([default_category.id])
@@ -470,7 +470,7 @@ def test_thread_list_view_require_reply_approval_moderation_action_requires_thre
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.REQUIRED_REPLY_APPROVAL,
+        action=ThreadEventActionName.REQUIRED_REPLY_APPROVAL,
     )
 
 
@@ -508,7 +508,7 @@ def test_thread_list_view_remove_reply_approval_moderation_action_removes_thread
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.REMOVED_REPLY_APPROVAL,
+        action=ThreadEventActionName.REMOVED_REPLY_APPROVAL,
     )
 
 
@@ -570,7 +570,7 @@ def test_thread_list_view_move_moderation_action_moves_threads(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.MOVED,
+        action=ThreadEventActionName.MOVED,
     )
 
     mock_synchronize_categories.delay.assert_called_once_with(
@@ -940,7 +940,7 @@ def test_thread_list_view_merge_moderation_action_merges_threads(
     assert (
         ThreadEvent.objects.filter(
             thread=merged_thread,
-            action=ThreadUpdateActionName.MERGED,
+            action=ThreadEventActionName.MERGED,
         ).count()
         == 2
     )
@@ -1004,7 +1004,7 @@ def test_thread_list_view_merge_moderation_action_merges_threads_without_conflic
     assert (
         ThreadEvent.objects.filter(
             thread=merged_thread,
-            action=ThreadUpdateActionName.MERGED,
+            action=ThreadEventActionName.MERGED,
         ).count()
         == 2
     )
@@ -1077,7 +1077,7 @@ def test_thread_list_view_merge_moderation_action_merges_threads_with_conflicts(
     assert (
         ThreadEvent.objects.filter(
             thread=merged_thread,
-            action=ThreadUpdateActionName.MERGED,
+            action=ThreadEventActionName.MERGED,
         ).count()
         == 2
     )
@@ -1134,7 +1134,7 @@ def test_thread_list_view_merge_moderation_action_merges_threads_with_moderation
     assert (
         ThreadEvent.objects.filter(
             thread=merged_thread,
-            action=ThreadUpdateActionName.MERGED,
+            action=ThreadEventActionName.MERGED,
         ).count()
         == 2
     )

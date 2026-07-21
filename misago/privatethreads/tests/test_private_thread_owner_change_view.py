@@ -3,7 +3,7 @@ import json
 from django.urls import reverse
 
 from ...test import assert_contains
-from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.enums import ThreadEventActionName
 from ...threadevents.models import ThreadEvent
 from ...users.bans import ban_user
 from ..members import get_private_thread_members
@@ -76,7 +76,7 @@ def test_private_thread_owner_change_view_changes_thread_owner(
     ThreadEvent.objects.get(
         actor=user,
         thread=user_private_thread,
-        action=ThreadUpdateActionName.CHANGED_OWNER,
+        action=ThreadEventActionName.CHANGED_OWNER,
     )
 
 
@@ -109,7 +109,7 @@ def test_private_thread_owner_change_view_changes_thread_owner_for_moderator(
     ThreadEvent.objects.get(
         actor=moderator,
         thread=user_private_thread,
-        action=ThreadUpdateActionName.CHANGED_OWNER,
+        action=ThreadEventActionName.CHANGED_OWNER,
     )
 
 
@@ -197,7 +197,7 @@ def test_private_thread_owner_change_view_changes_thread_owner_in_htmx(
     ThreadEvent.objects.get(
         actor=user,
         thread=user_private_thread,
-        action=ThreadUpdateActionName.CHANGED_OWNER,
+        action=ThreadEventActionName.CHANGED_OWNER,
     )
 
 
@@ -381,7 +381,7 @@ def test_private_thread_owner_change_view_changes_thread_owner_for_moderator_if_
     ThreadEvent.objects.get(
         actor=moderator,
         thread=user_private_thread,
-        action=ThreadUpdateActionName.CHANGED_OWNER,
+        action=ThreadEventActionName.CHANGED_OWNER,
     )
 
 

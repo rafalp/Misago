@@ -5,7 +5,7 @@ from ...postedits.models import PostEdit
 from ...privatethreads.members import get_private_thread_members
 from ...privatethreads.models import PrivateThreadMember
 from ...test import UNORDERED, assert_contains, assert_not_contains
-from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.enums import ThreadEventActionName
 from ...threadevents.models import ThreadEvent
 from ...threads.models import Post, Thread
 
@@ -82,7 +82,7 @@ def test_private_thread_detail_view_lock_thread_moderation_action_locks_thread(
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.LOCKED,
+        action=ThreadEventActionName.LOCKED,
     )
 
 
@@ -117,7 +117,7 @@ def test_private_thread_detail_view_unlock_thread_moderation_action_unlocks_thre
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.UNLOCKED,
+        action=ThreadEventActionName.UNLOCKED,
     )
 
 
@@ -168,7 +168,7 @@ def test_private_thread_detail_view_hide_thread_moderation_action_hides_thread(
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.HIDDEN,
+        action=ThreadEventActionName.HIDDEN,
     )
 
     mock_thread_synchronize_categories.delay.assert_called_once_with(
@@ -209,7 +209,7 @@ def test_private_thread_detail_view_unhide_thread_moderation_action_unhides_thre
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.UNHIDDEN,
+        action=ThreadEventActionName.UNHIDDEN,
     )
 
     mock_thread_synchronize_categories.delay.assert_called_once_with(
@@ -262,7 +262,7 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.TOOK_OWNERSHIP,
+        action=ThreadEventActionName.TOOK_OWNERSHIP,
     )
 
 
@@ -309,7 +309,7 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.TOOK_OWNERSHIP,
+        action=ThreadEventActionName.TOOK_OWNERSHIP,
     )
 
 
@@ -365,7 +365,7 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.TOOK_OWNERSHIP,
+        action=ThreadEventActionName.TOOK_OWNERSHIP,
     )
 
 
@@ -419,7 +419,7 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.TOOK_OWNERSHIP,
+        action=ThreadEventActionName.TOOK_OWNERSHIP,
     )
 
 
@@ -461,7 +461,7 @@ def test_private_thread_detail_view_approve_thread_moderation_action_approves_th
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.APPROVED,
+        action=ThreadEventActionName.APPROVED,
     )
 
     mock_thread_synchronize_categories.delay.assert_called_once_with(
@@ -497,7 +497,7 @@ def test_private_thread_detail_view_require_reply_approval_thread_moderation_act
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.REQUIRED_REPLY_APPROVAL,
+        action=ThreadEventActionName.REQUIRED_REPLY_APPROVAL,
     )
 
 
@@ -529,7 +529,7 @@ def test_private_thread_detail_view_remove_reply_approval_thread_moderation_acti
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.REMOVED_REPLY_APPROVAL,
+        action=ThreadEventActionName.REMOVED_REPLY_APPROVAL,
     )
 
 
@@ -1435,7 +1435,7 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.DELETED_POSTS,
+        action=ThreadEventActionName.DELETED_POSTS,
     )
 
     mock_posts_synchronize_categories.delay.assert_called_with(
@@ -1486,7 +1486,7 @@ def test_private_thread_detail_view_delete_posts_moderation_action_deletes_posts
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.DELETED_POSTS,
+        action=ThreadEventActionName.DELETED_POSTS,
     )
 
     mock_posts_synchronize_categories.delay.assert_called_with(
@@ -3199,7 +3199,7 @@ def test_private_thread_detail_view_delete_post_moderation_action_deletes_post(
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.DELETED_POSTS,
+        action=ThreadEventActionName.DELETED_POSTS,
     )
 
     mock_post_synchronize_categories.delay.assert_called_with(
@@ -3250,7 +3250,7 @@ def test_private_thread_detail_view_delete_post_moderation_action_deletes_post_i
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.DELETED_POSTS,
+        action=ThreadEventActionName.DELETED_POSTS,
     )
 
     mock_post_synchronize_categories.delay.assert_called_with(

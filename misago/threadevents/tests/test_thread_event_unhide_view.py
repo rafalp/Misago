@@ -5,7 +5,7 @@ from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains
 
 
-def test_thread_update_unhide_view_returns_404_error_for_not_found_thread(user_client):
+def test_thread_event_unhide_view_returns_404_error_for_not_found_thread(user_client):
     response = user_client.post(
         reverse(
             "misago:thread-event-unhide",
@@ -20,7 +20,7 @@ def test_thread_update_unhide_view_returns_404_error_for_not_found_thread(user_c
     assert response.status_code == 404
 
 
-def test_thread_update_unhide_view_returns_404_error_for_not_found_update(
+def test_thread_event_unhide_view_returns_404_error_for_not_found_update(
     user_client, thread
 ):
     response = user_client.post(
@@ -37,7 +37,7 @@ def test_thread_update_unhide_view_returns_404_error_for_not_found_update(
     assert response.status_code == 404
 
 
-def test_thread_update_unhide_view_returns_403_error_for_anonymous_user(
+def test_thread_event_unhide_view_returns_403_error_for_anonymous_user(
     client, thread, hidden_thread_event
 ):
     response = client.post(
@@ -52,11 +52,11 @@ def test_thread_update_unhide_view_returns_403_error_for_anonymous_user(
     )
 
     assert_contains(
-        response, "Only a moderator can unhide thread updates.", status_code=403
+        response, "Only a moderator can unhide thread events.", status_code=403
     )
 
 
-def test_thread_update_unhide_view_returns_404_error_for_user(
+def test_thread_event_unhide_view_returns_404_error_for_user(
     user_client, thread, hidden_thread_event
 ):
     response = user_client.post(
@@ -73,7 +73,7 @@ def test_thread_update_unhide_view_returns_404_error_for_user(
     assert response.status_code == 404
 
 
-def test_thread_update_unhide_view_checks_category_permission(
+def test_thread_event_unhide_view_checks_category_permission(
     user_client, thread, hidden_thread_event
 ):
     CategoryGroupPermission.objects.filter(
@@ -94,7 +94,7 @@ def test_thread_update_unhide_view_checks_category_permission(
     assert response.status_code == 404
 
 
-def test_thread_update_unhide_view_checks_thread_permission(
+def test_thread_event_unhide_view_checks_thread_permission(
     user_client, thread, hidden_thread_event
 ):
     thread.is_hidden = True
@@ -114,7 +114,7 @@ def test_thread_update_unhide_view_checks_thread_permission(
     assert response.status_code == 404
 
 
-def test_thread_update_unhide_view_unhides_update_for_category_moderator(
+def test_thread_event_unhide_view_unhides_event_for_category_moderator(
     user_client, user, default_category, thread, hidden_thread_event
 ):
     Moderator.objects.create(
@@ -140,7 +140,7 @@ def test_thread_update_unhide_view_unhides_update_for_category_moderator(
     assert not hidden_thread_event.is_hidden
 
 
-def test_thread_update_unhide_view_unhides_update_for_global_moderator(
+def test_thread_event_unhide_view_unhides_event_for_global_moderator(
     moderator_client, thread, hidden_thread_event
 ):
     response = moderator_client.post(
@@ -160,7 +160,7 @@ def test_thread_update_unhide_view_unhides_update_for_global_moderator(
     assert not hidden_thread_event.is_hidden
 
 
-def test_thread_update_unhide_view_doesnt_update_already_unhidden_update(
+def test_thread_event_unhide_view_doesnt_event_already_unhidden_update(
     moderator_client, thread, thread_event
 ):
     response = moderator_client.post(
@@ -180,7 +180,7 @@ def test_thread_update_unhide_view_doesnt_update_already_unhidden_update(
     assert not thread_event.is_hidden
 
 
-def test_thread_update_unhide_view_returns_redirect_to_thread(
+def test_thread_event_unhide_view_returns_redirect_to_thread(
     moderator_client, thread, hidden_thread_event
 ):
     response = moderator_client.post(
@@ -200,7 +200,7 @@ def test_thread_update_unhide_view_returns_redirect_to_thread(
     )
 
 
-def test_thread_update_unhide_view_returns_redirect_to_next_url(
+def test_thread_event_unhide_view_returns_redirect_to_next_url(
     moderator_client, thread, hidden_thread_event
 ):
     next_url = reverse(
@@ -224,7 +224,7 @@ def test_thread_update_unhide_view_returns_redirect_to_next_url(
     assert response["location"] == next_url
 
 
-def test_thread_update_unhide_view_returns_redirect_to_thread_for_invalid_next_url(
+def test_thread_event_unhide_view_returns_redirect_to_thread_for_invalid_next_url(
     moderator_client, thread, hidden_thread_event
 ):
     response = moderator_client.post(
@@ -245,7 +245,7 @@ def test_thread_update_unhide_view_returns_redirect_to_thread_for_invalid_next_u
     )
 
 
-def test_thread_update_unhide_view_returns_404_error_for_not_found_thread_in_htmx(
+def test_thread_event_unhide_view_returns_404_error_for_not_found_thread_in_htmx(
     user_client,
 ):
     response = user_client.post(
@@ -263,7 +263,7 @@ def test_thread_update_unhide_view_returns_404_error_for_not_found_thread_in_htm
     assert response.status_code == 404
 
 
-def test_thread_update_unhide_view_returns_404_error_for_not_found_update_in_htmx(
+def test_thread_event_unhide_view_returns_404_error_for_not_found_event_in_htmx(
     user_client, thread
 ):
     response = user_client.post(
@@ -281,7 +281,7 @@ def test_thread_update_unhide_view_returns_404_error_for_not_found_update_in_htm
     assert response.status_code == 404
 
 
-def test_thread_update_unhide_view_returns_403_error_for_anonymous_user_in_htmx(
+def test_thread_event_unhide_view_returns_403_error_for_anonymous_user_in_htmx(
     client, thread, thread_event
 ):
     response = client.post(
@@ -297,11 +297,11 @@ def test_thread_update_unhide_view_returns_403_error_for_anonymous_user_in_htmx(
     )
 
     assert_contains(
-        response, "Only a moderator can unhide thread updates.", status_code=403
+        response, "Only a moderator can unhide thread events.", status_code=403
     )
 
 
-def test_thread_update_unhide_view_returns_404_error_for_user_in_htmx(
+def test_thread_event_unhide_view_returns_404_error_for_user_in_htmx(
     user_client, thread, hidden_thread_event
 ):
     response = user_client.post(
@@ -319,7 +319,7 @@ def test_thread_update_unhide_view_returns_404_error_for_user_in_htmx(
     assert response.status_code == 404
 
 
-def test_thread_update_unhide_view_checks_category_permission_in_htmx(
+def test_thread_event_unhide_view_checks_category_permission_in_htmx(
     user_client, thread, hidden_thread_event
 ):
     CategoryGroupPermission.objects.filter(
@@ -341,7 +341,7 @@ def test_thread_update_unhide_view_checks_category_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_thread_update_unhide_view_checks_thread_permission_in_htmx(
+def test_thread_event_unhide_view_checks_thread_permission_in_htmx(
     user_client, thread, hidden_thread_event
 ):
     thread.is_hidden = True
@@ -362,7 +362,7 @@ def test_thread_update_unhide_view_checks_thread_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_thread_update_unhide_view_checks_thread_update_permission_in_htmx(
+def test_thread_event_unhide_view_checks_thread_event_permission_in_htmx(
     user_client, thread, hidden_thread_event
 ):
     response = user_client.post(
@@ -380,7 +380,7 @@ def test_thread_update_unhide_view_checks_thread_update_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_thread_update_unhide_view_unhides_update_for_category_moderator_in_htmx(
+def test_thread_event_unhide_view_unhides_event_for_category_moderator_in_htmx(
     user_client, user, default_category, thread, hidden_thread_event
 ):
     Moderator.objects.create(
@@ -407,7 +407,7 @@ def test_thread_update_unhide_view_unhides_update_for_category_moderator_in_htmx
     assert not hidden_thread_event.is_hidden
 
 
-def test_thread_update_unhide_view_unhides_update_for_global_moderator_in_htmx(
+def test_thread_event_unhide_view_unhides_event_for_global_moderator_in_htmx(
     moderator_client, thread, hidden_thread_event
 ):
     response = moderator_client.post(
@@ -428,7 +428,7 @@ def test_thread_update_unhide_view_unhides_update_for_global_moderator_in_htmx(
     assert not hidden_thread_event.is_hidden
 
 
-def test_thread_update_unhide_view_doesnt_update_already_unhidden_update_in_htmx(
+def test_thread_event_unhide_view_doesnt_event_already_unhidden_event_in_htmx(
     moderator_client, thread, hidden_thread_event
 ):
 

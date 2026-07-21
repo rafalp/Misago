@@ -9,18 +9,18 @@ from ..categories.tasks import synchronize_categories
 from ..notifications.tasks import delete_duplicate_watched_threads
 from ..permissions.proxy import UserPermissionsProxy
 from ..threadevents.create import (
-    create_approved_thread_update,
-    create_hidden_thread_update,
-    create_locked_thread_update,
-    create_merged_thread_update,
-    create_moved_thread_update,
-    create_pinned_category_thread_update,
-    create_pinned_everywhere_thread_update,
-    create_removed_reply_approval_thread_update,
-    create_required_reply_approval_thread_update,
-    create_unhidden_thread_update,
-    create_unlocked_thread_update,
-    create_unpinned_thread_update,
+    create_approved_thread_event,
+    create_hidden_thread_event,
+    create_locked_thread_event,
+    create_merged_thread_event,
+    create_moved_thread_event,
+    create_pinned_category_thread_event,
+    create_pinned_everywhere_thread_event,
+    create_removed_reply_approval_thread_event,
+    create_required_reply_approval_thread_event,
+    create_unhidden_thread_event,
+    create_unlocked_thread_event,
+    create_unpinned_thread_event,
 )
 from ..threadevents.threadflag import ensure_thread_has_events
 from ..threads.approve import (
@@ -155,9 +155,7 @@ class PinEverywhereThreadsModerationAction(ThreadsModerationAction):
             ensure_thread_has_events(thread, commit=False)
             pin_thread(thread, everywhere=True, request=request)
 
-            create_pinned_everywhere_thread_update(
-                thread, request.user, request=request
-            )
+            create_pinned_everywhere_thread_event(thread, request.user, request=request)
 
         messages.success(
             request,
@@ -190,7 +188,7 @@ class PinCategoryThreadsModerationAction(ThreadsModerationAction):
             ensure_thread_has_events(thread, commit=False)
             pin_thread(thread, everywhere=False, request=request)
 
-            create_pinned_category_thread_update(thread, request.user, request=request)
+            create_pinned_category_thread_event(thread, request.user, request=request)
 
         messages.success(
             request,
@@ -221,7 +219,7 @@ class UnpinThreadsModerationAction(ThreadsModerationAction):
             ensure_thread_has_events(thread, commit=False)
             unpin_thread(thread, request=request)
 
-            create_unpinned_thread_update(thread, request.user, request=request)
+            create_unpinned_thread_event(thread, request.user, request=request)
 
         messages.success(
             request,
@@ -256,7 +254,7 @@ class LockThreadsModerationAction(FormMixin, ThreadsModerationAction):
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
             lock_thread(thread, request.user, lock_reason, request=request)
-            create_locked_thread_update(thread, request.user, request=request)
+            create_locked_thread_event(thread, request.user, request=request)
 
         messages.success(
             request,
@@ -286,7 +284,7 @@ class UnlockThreadsModerationAction(ThreadsModerationAction):
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
             unlock_thread(thread, request=request)
-            create_unlocked_thread_update(thread, request.user, request=request)
+            create_unlocked_thread_event(thread, request.user, request=request)
 
         messages.success(
             request,
@@ -322,7 +320,7 @@ class HideThreadsModerationAction(FormMixin, ThreadsModerationAction):
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
             hide_thread(thread, request.user, hide_reason, request=request)
-            create_hidden_thread_update(thread, request.user, request=request)
+            create_hidden_thread_event(thread, request.user, request=request)
 
         synchronize_categories.delay(categories)
 
@@ -355,7 +353,7 @@ class UnhideThreadsModerationAction(ThreadsModerationAction):
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
             unhide_thread(thread, request=request)
-            create_unhidden_thread_update(thread, request.user, request=request)
+            create_unhidden_thread_event(thread, request.user, request=request)
 
         synchronize_categories.delay(categories)
 
@@ -388,7 +386,7 @@ class ApproveThreadsModerationAction(ThreadsModerationAction):
         for thread in threads:
             ensure_thread_has_events(thread, commit=False)
             approve_thread(thread, request=request)
-            create_approved_thread_update(thread, request.user, request=request)
+            create_approved_thread_event(thread, request.user, request=request)
 
         synchronize_categories.delay(categories)
 
@@ -428,7 +426,7 @@ class RequireThreadsReplyApprovalModerationAction(ThreadsModerationAction):
             ensure_thread_has_events(thread, commit=False)
             require_thread_reply_approval(thread, request=request)
 
-            create_required_reply_approval_thread_update(
+            create_required_reply_approval_thread_event(
                 thread, request.user, request=request
             )
 
@@ -466,7 +464,7 @@ class RemoveThreadsReplyApprovalModerationAction(ThreadsModerationAction):
             ensure_thread_has_events(thread, commit=False)
             remove_thread_reply_approval(thread, request=request)
 
-            create_removed_reply_approval_thread_update(
+            create_removed_reply_approval_thread_event(
                 thread, request.user, request=request
             )
 
@@ -533,7 +531,7 @@ class MoveThreadsModerationAction(FormMixin, ThreadsModerationAction):
 
             ensure_thread_has_events(thread, commit=False)
             move_thread(thread, new_category, request=request)
-            create_moved_thread_update(
+            create_moved_thread_event(
                 thread, old_category, request.user, request=request
             )
 
@@ -608,7 +606,7 @@ class MergeThreadsModerationAction(FormMixin, ThreadsModerationAction):
         merge_threads(new_thread, threads, conflicts, request=request)
 
         for thread in threads:
-            create_merged_thread_update(
+            create_merged_thread_event(
                 new_thread, thread, request.user, request=request
             )
 

@@ -4,8 +4,8 @@ from django.http import HttpRequest
 from django.utils import timezone
 
 from ..threadevents.create import (
-    create_closed_poll_thread_update,
-    create_opened_poll_thread_update,
+    create_closed_poll_thread_event,
+    create_opened_poll_thread_event,
 )
 from ..threadevents.models import ThreadEvent
 from ..threadevents.threadflag import ensure_thread_has_events
@@ -38,7 +38,7 @@ def _close_thread_poll_action(
 
     ensure_thread_has_events(thread)
 
-    return create_closed_poll_thread_update(thread, user, request=request)
+    return create_closed_poll_thread_event(thread, user, request=request)
 
 
 def open_thread_poll(
@@ -55,7 +55,7 @@ def _open_thread_poll_action(
 
     ensure_thread_has_events(thread)
 
-    return create_opened_poll_thread_update(thread, user, request=request)
+    return create_opened_poll_thread_event(thread, user, request=request)
 
 
 def close_poll(poll: Poll, user: "User", request: HttpRequest | None = None) -> bool:

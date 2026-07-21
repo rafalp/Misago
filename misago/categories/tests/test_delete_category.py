@@ -1,6 +1,6 @@
 import pytest
 
-from ...threadevents.create import create_moved_thread_update
+from ...threadevents.create import create_moved_thread_event
 from ..delete import delete_category
 from ..models import Category
 from ..mptt import heal_category_trees
@@ -131,7 +131,7 @@ def test_delete_category_moves_deleted_child_category_contents(
     child_category_relations.assert_relations_moved(sibling_category)
 
 
-def test_delete_category_clears_thread_update_generic_relation(
+def test_delete_category_clears_thread_event_generic_relation(
     category_relations_factory, default_category, sibling_category, thread
 ):
     thread.category = sibling_category
@@ -139,7 +139,7 @@ def test_delete_category_clears_thread_update_generic_relation(
 
     thread.post_set.update(category=sibling_category)
 
-    thread_update = create_moved_thread_update(thread, default_category, "test")
+    thread_event = create_moved_thread_event(thread, default_category, "test")
 
     category_relations = category_relations_factory(default_category)
 
@@ -150,9 +150,9 @@ def test_delete_category_clears_thread_update_generic_relation(
 
     category_relations.assert_relations_deleted()
 
-    thread_update.refresh_from_db()
-    assert thread_update.context_type == None
-    assert thread_update.context_id == None
+    thread_event.refresh_from_db()
+    assert thread_event.context_type == None
+    assert thread_event.context_id == None
 
 
 # A list of parametrized test params for category deletion

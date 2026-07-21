@@ -15,19 +15,19 @@ from ..privatethreads.members import (
     set_private_thread_owner,
 )
 from ..threadevents.create import (
-    create_approved_thread_update,
-    create_hidden_thread_update,
-    create_locked_thread_update,
-    create_merged_thread_update,
-    create_moved_thread_update,
-    create_pinned_category_thread_update,
-    create_pinned_everywhere_thread_update,
-    create_removed_reply_approval_thread_update,
-    create_required_reply_approval_thread_update,
-    create_took_ownership_thread_update,
-    create_unhidden_thread_update,
-    create_unlocked_thread_update,
-    create_unpinned_thread_update,
+    create_approved_thread_event,
+    create_hidden_thread_event,
+    create_locked_thread_event,
+    create_merged_thread_event,
+    create_moved_thread_event,
+    create_pinned_category_thread_event,
+    create_pinned_everywhere_thread_event,
+    create_removed_reply_approval_thread_event,
+    create_required_reply_approval_thread_event,
+    create_took_ownership_thread_event,
+    create_unhidden_thread_event,
+    create_unlocked_thread_event,
+    create_unpinned_thread_event,
 )
 from ..threadevents.threadflag import ensure_thread_has_events
 from ..threads.approve import (
@@ -179,7 +179,7 @@ class PinEverywhereThreadModerationAction(ThreadModerationAction):
         ensure_thread_has_events(thread, commit=False)
         pin_thread(thread, everywhere=True, request=request)
 
-        thread_update = create_pinned_everywhere_thread_update(
+        thread_event = create_pinned_everywhere_thread_event(
             thread, request.user, request=request
         )
 
@@ -188,7 +188,7 @@ class PinEverywhereThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread pinned everywhere"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_event])
 
 
 class PinCategoryThreadModerationAction(ThreadModerationAction):
@@ -202,7 +202,7 @@ class PinCategoryThreadModerationAction(ThreadModerationAction):
         ensure_thread_has_events(thread, commit=False)
         pin_thread(thread, everywhere=False, request=request)
 
-        thread_update = create_pinned_category_thread_update(
+        thread_event = create_pinned_category_thread_event(
             thread, request.user, request=request
         )
 
@@ -211,7 +211,7 @@ class PinCategoryThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread pinned in category"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_event])
 
 
 class UnpinThreadModerationAction(ThreadModerationAction):
@@ -225,7 +225,7 @@ class UnpinThreadModerationAction(ThreadModerationAction):
         ensure_thread_has_events(thread, commit=False)
         unpin_thread(thread, request=request)
 
-        thread_update = create_unpinned_thread_update(
+        thread_event = create_unpinned_thread_event(
             thread, request.user, request=request
         )
 
@@ -234,7 +234,7 @@ class UnpinThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread unpinned"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_event])
 
 
 class LockThreadModerationAction(FormMixin, ThreadModerationAction):
@@ -254,16 +254,14 @@ class LockThreadModerationAction(FormMixin, ThreadModerationAction):
             thread, request.user, form.cleaned_data["lock_reason"], request=request
         )
 
-        thread_update = create_locked_thread_update(
-            thread, request.user, request=request
-        )
+        thread_event = create_locked_thread_event(thread, request.user, request=request)
 
         messages.success(
             request,
             pgettext("thread moderation success", "Thread locked"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_event])
 
 
 class UnlockThreadModerationAction(ThreadModerationAction):
@@ -277,7 +275,7 @@ class UnlockThreadModerationAction(ThreadModerationAction):
         ensure_thread_has_events(thread, commit=False)
         unlock_thread(thread, request=request)
 
-        thread_update = create_unlocked_thread_update(
+        thread_event = create_unlocked_thread_event(
             thread, request.user, request=request
         )
 
@@ -286,7 +284,7 @@ class UnlockThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread unlocked"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_event])
 
 
 class HideThreadModerationAction(FormMixin, ThreadModerationAction):
@@ -306,9 +304,7 @@ class HideThreadModerationAction(FormMixin, ThreadModerationAction):
             thread, request.user, form.cleaned_data["hide_reason"], request=request
         )
 
-        thread_update = create_hidden_thread_update(
-            thread, request.user, request=request
-        )
+        thread_event = create_hidden_thread_event(thread, request.user, request=request)
 
         synchronize_categories.delay([thread.category_id])
 
@@ -317,7 +313,7 @@ class HideThreadModerationAction(FormMixin, ThreadModerationAction):
             pgettext("thread moderation success", "Thread hidden"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_event])
 
 
 class UnhideThreadModerationAction(ThreadModerationAction):
@@ -331,7 +327,7 @@ class UnhideThreadModerationAction(ThreadModerationAction):
         ensure_thread_has_events(thread, commit=False)
         unhide_thread(thread, request=request)
 
-        thread_update = create_unhidden_thread_update(
+        thread_event = create_unhidden_thread_event(
             thread, request.user, request=request
         )
 
@@ -342,7 +338,7 @@ class UnhideThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread unhidden"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_event])
 
 
 class TakeOwnershipPrivateThreadModerationAction(ConfirmMixin, ThreadModerationAction):
@@ -363,7 +359,7 @@ class TakeOwnershipPrivateThreadModerationAction(ConfirmMixin, ThreadModerationA
         set_private_thread_owner(thread, user, request=request)
         thread.private_thread_owner = user
 
-        thread_update = create_took_ownership_thread_update(
+        thread_update = create_took_ownership_thread_event(
             thread, user, request=request
         )
         ensure_thread_has_events(thread)
@@ -389,7 +385,7 @@ class ApproveThreadModerationAction(ThreadModerationAction):
         ensure_thread_has_events(thread, commit=False)
         approve_thread(thread, request=request)
 
-        thread_update = create_approved_thread_update(
+        thread_event = create_approved_thread_event(
             thread, request.user, request=request
         )
 
@@ -402,7 +398,7 @@ class ApproveThreadModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Thread approved"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_event])
 
     def send_notifications(self):
         pass
@@ -433,7 +429,7 @@ class RequireThreadReplyApprovalModerationAction(ThreadModerationAction):
         ensure_thread_has_events(thread, commit=False)
         require_thread_reply_approval(thread, request=request)
 
-        thread_update = create_required_reply_approval_thread_update(
+        thread_event = create_required_reply_approval_thread_event(
             thread, request.user, request=request
         )
 
@@ -442,7 +438,7 @@ class RequireThreadReplyApprovalModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Reply approval required"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_event])
 
 
 class RemoveThreadReplyApprovalModerationAction(ThreadModerationAction):
@@ -458,7 +454,7 @@ class RemoveThreadReplyApprovalModerationAction(ThreadModerationAction):
         ensure_thread_has_events(thread, commit=False)
         remove_thread_reply_approval(thread, request=request)
 
-        thread_update = create_removed_reply_approval_thread_update(
+        thread_event = create_removed_reply_approval_thread_event(
             thread, request.user, request=request
         )
 
@@ -467,7 +463,7 @@ class RemoveThreadReplyApprovalModerationAction(ThreadModerationAction):
             pgettext("thread moderation success", "Reply approval removed"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_event])
 
 
 class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
@@ -513,7 +509,7 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
 
         ensure_thread_has_events(thread, commit=False)
         move_thread(thread, new_category, request=request)
-        thread_update = create_moved_thread_update(
+        thread_event = create_moved_thread_event(
             thread, old_category, request.user, request=request
         )
 
@@ -524,7 +520,7 @@ class MoveThreadModerationAction(FormMixin, ThreadModerationAction):
             pgettext("thread moderation success", "Thread moved"),
         )
 
-        return ModerationResult(updated_items=[thread], thread_updates=[thread_update])
+        return ModerationResult(updated_items=[thread], thread_updates=[thread_event])
 
 
 class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
@@ -597,7 +593,7 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
         merge_threads(
             final_thread, [other_thread], conflicts_resolutions, request=request
         )
-        create_merged_thread_update(
+        create_merged_thread_event(
             final_thread, other_thread, request.user, request=request
         )
 

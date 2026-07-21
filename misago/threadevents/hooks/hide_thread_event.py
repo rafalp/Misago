@@ -8,15 +8,15 @@ if TYPE_CHECKING:
     from ..models import ThreadUpdate
 
 
-class UnhideThreadUpdateHookAction(Protocol):
+class HideThreadUpdateHookAction(Protocol):
     """
-    Misago function used to unhide a `ThreadUpdate` object.
+    Misago function used to hide a `ThreadUpdate` object.
 
     # Arguments
 
-    ## `thread_update: ThreadUpdate`
+    ## `thread_event: ThreadUpdate`
 
-    A `ThreadUpdate` instance to unhide.
+    A `ThreadUpdate` instance to hide.
 
     ## `request: HttpRequest | None = None`
 
@@ -24,32 +24,32 @@ class UnhideThreadUpdateHookAction(Protocol):
 
     # Return value
 
-    `True` if the thread update was unhidden, `False` otherwise.
+    `True` if the thread update was hidden, `False` otherwise.
     """
 
     def __call__(
         self,
-        thread_update: "ThreadUpdate",
+        thread_event: "ThreadUpdate",
         request: HttpRequest | None = None,
     ) -> bool: ...
 
 
-class UnhideThreadUpdateHookFilter(Protocol):
+class HideThreadUpdateHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: UnhideThreadUpdateHookAction`
+    ## `action: HideThreadUpdateHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
 
     See the [action](#action) section for details.
 
-    ## `thread_update: ThreadUpdate`
+    ## `thread_event: ThreadUpdate`
 
-    A `ThreadUpdate` instance to unhide.
+    A `ThreadUpdate` instance to hide.
 
     ## `request: HttpRequest | None = None`
 
@@ -57,49 +57,49 @@ class UnhideThreadUpdateHookFilter(Protocol):
 
     # Return value
 
-    `True` if the thread update was unhidden, `False` otherwise.
+    `True` if the thread update was hidden, `False` otherwise.
     """
 
     def __call__(
         self,
-        action: UnhideThreadUpdateHookAction,
-        thread_update: "ThreadUpdate",
+        action: HideThreadUpdateHookAction,
+        thread_event: "ThreadUpdate",
         request: HttpRequest | None = None,
     ) -> bool: ...
 
 
-class UnhideThreadUpdateHook(
+class HideThreadUpdateHook(
     FilterHook[
-        UnhideThreadUpdateHookAction,
-        UnhideThreadUpdateHookFilter,
+        HideThreadUpdateHookAction,
+        HideThreadUpdateHookFilter,
     ]
 ):
     """
-    This hook wraps a standard Misago function used to unhide a `ThreadUpdate` object.
+    This hook wraps a standard Misago function used to hide a `ThreadUpdate` object.
 
     # Example
 
     The code below implements a custom filter function that stores the client's
-    IP address when a thread update is unhidden:
+    IP address when a thread update is hidden:
 
     ```python
     from django.http import HttpRequest
-    from misago.threads.hooks import unhide_thread_update_hook
+    from misago.threads.hooks import hide_thread_event_hook
     from misago.threads.models import ThreadUpdate
 
 
-    @unhide_thread_update_hook.append_filter
-    def save_client_ip_on_thread_update_unhide(
+    @hide_thread_event_hook.append_filter
+    def save_client_ip_on_thread_event_hide(
         action,
-        thread_update: ThreadUpdate,
+        thread_event: ThreadUpdate,
         request: HttpRequest | None = None,
     ) -> bool:
         if not request:
-            return action(thread_update)
+            return action(thread_event)
 
-        thread_update.plugin_data["last_ip"] = request.client_ip
+        thread_event.plugin_data["last_ip"] = request.client_ip
 
-        return action(thread_update, request)
+        return action(thread_event, request)
     ```
     """
 
@@ -107,11 +107,11 @@ class UnhideThreadUpdateHook(
 
     def __call__(
         self,
-        action: UnhideThreadUpdateHookAction,
-        thread_update: "ThreadUpdate",
+        action: HideThreadUpdateHookAction,
+        thread_event: "ThreadUpdate",
         request: HttpRequest | None = None,
     ) -> "ThreadUpdate":
-        return super().__call__(action, thread_update, request)
+        return super().__call__(action, thread_event, request)
 
 
-unhide_thread_update_hook = UnhideThreadUpdateHook()
+hide_thread_event_hook = HideThreadUpdateHook()

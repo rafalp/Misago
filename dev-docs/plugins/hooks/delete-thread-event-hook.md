@@ -1,4 +1,4 @@
-# `delete_thread_update_hook`
+# `delete_thread_event_hook`
 
 This hook wraps a standard Misago function used to delete a `ThreadUpdate` object.
 
@@ -8,16 +8,16 @@ This hook wraps a standard Misago function used to delete a `ThreadUpdate` objec
 This hook can be imported from `misago.threadevents.hooks`:
 
 ```python
-from misago.threadevents.hooks import delete_thread_update_hook
+from misago.threadevents.hooks import delete_thread_event_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_delete_thread_update_filter(
+def custom_delete_thread_event_filter(
     action: DeleteThreadUpdateHookAction,
-    thread_update: 'ThreadUpdate',
+    thread_event: 'ThreadUpdate',
     request: HttpRequest | None=None,
 ):
     ...
@@ -35,7 +35,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `thread_update: ThreadUpdate`
+#### `thread_event: ThreadUpdate`
 
 A `ThreadUpdate` instance to delete.
 
@@ -48,8 +48,8 @@ The request object or `None` if not available.
 ## Action
 
 ```python
-def delete_thread_update_action(
-    thread_update: 'ThreadUpdate', request: HttpRequest | None=None
+def delete_thread_event_action(
+    thread_event: 'ThreadUpdate', request: HttpRequest | None=None
 ):
     ...
 ```
@@ -59,7 +59,7 @@ Misago function used to delete a `ThreadUpdate` object.
 
 ### Arguments
 
-#### `thread_update: ThreadUpdate`
+#### `thread_event: ThreadUpdate`
 
 A `ThreadUpdate` instance to delete.
 
@@ -77,25 +77,25 @@ The code below implements a custom filter function that logs the deletion of a t
 import logging
 
 from django.http import HttpRequest
-from misago.threads.hooks import delete_thread_update_hook
+from misago.threads.hooks import delete_thread_event_hook
 from misago.threads.models import ThreadUpdate
 
 logger = logging.getLogger("misago.moderation")
 
 
-@delete_thread_update_hook.append_filter
-def log_thread_update_deletion(
+@delete_thread_event_hook.append_filter
+def log_thread_event_deletion(
     action,
-    thread_update: ThreadUpdate,
+    thread_event: ThreadUpdate,
     request: HttpRequest | None = None,
 ) -> bool:
     logger.info(
         "Thread update was deleted",
         extra={
-            "id": thread_update.id,
+            "id": thread_event.id,
             "user": request.user.id if request else "",
             "ip": request.client_ip if request else "",
         },
     )
-    return action(thread_update, request)
+    return action(thread_event, request)
 ```

@@ -1,4 +1,4 @@
-# `create_thread_update_hook`
+# `create_thread_event_hook`
 
 This hook wraps a standard Misago function used to create a `ThreadUpdate` object.
 
@@ -8,14 +8,14 @@ This hook wraps a standard Misago function used to create a `ThreadUpdate` objec
 This hook can be imported from `misago.threadevents.hooks`:
 
 ```python
-from misago.threadevents.hooks import create_thread_update_hook
+from misago.threadevents.hooks import create_thread_event_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_create_thread_update_filter(
+def custom_create_thread_event_filter(
     action: CreateThreadUpdateHookAction,
     thread: 'Thread',
     action_name: str,
@@ -92,7 +92,7 @@ A newly created `ThreadUpdate` instance.
 ## Action
 
 ```python
-def create_thread_update_action(
+def create_thread_event_action(
     thread: 'Thread',
     action_name: str,
     actor: Union['User', None, str]=None,
@@ -164,12 +164,12 @@ The code below implements a custom filter function that stores the actor's IP ad
 
 ```python
 from django.http import HttpRequest
-from misago.threadevents.hooks import create_thread_update_hook
+from misago.threadevents.hooks import create_thread_event_hook
 from misago.threadevents.models import ThreadEvent
 
 
-@create_thread_update_hook.append_filter
-def set_actor_ip_on_thread_update(
+@create_thread_event_hook.append_filter
+def set_actor_ip_on_thread_event(
     action,
     *args,
     commit: bool = True,
@@ -179,7 +179,7 @@ def set_actor_ip_on_thread_update(
     if request:
         plugin_data["actor_id"] = request.user_ip
 
-    thread_update = action(
+    thread_event = action(
         *args,
         commit=False,
         request=request,
@@ -187,10 +187,10 @@ def set_actor_ip_on_thread_update(
     )
 
     if request:
-        thread_update.plugin_data["actor_id"] = request.user_ip
+        thread_event.plugin_data["actor_id"] = request.user_ip
 
     if commit:
-        thread_update.save()
+        thread_event.save()
 
-    return thread_update
+    return thread_event
 ```

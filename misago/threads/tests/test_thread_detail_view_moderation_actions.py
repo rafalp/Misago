@@ -8,7 +8,7 @@ from ...postedits.models import PostEdit
 from ...solutions.select import select_thread_solution
 from ...test import UNORDERED, assert_contains, assert_not_contains
 from ...testutils import grant_category_group_permissions
-from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.enums import ThreadEventActionName
 from ...threadevents.models import ThreadEvent
 from ..enums import ThreadPinned
 from ..models import Post, Thread
@@ -62,7 +62,7 @@ def test_thread_detail_view_pin_everywhere_thread_moderation_action_pins_unpinne
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.PINNED_EVERYWHERE,
+        action=ThreadEventActionName.PINNED_EVERYWHERE,
     )
 
 
@@ -87,7 +87,7 @@ def test_thread_detail_view_pin_everywhere_thread_moderation_action_pins_pinned_
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.PINNED_EVERYWHERE,
+        action=ThreadEventActionName.PINNED_EVERYWHERE,
     )
 
 
@@ -109,7 +109,7 @@ def test_thread_detail_view_pin_category_thread_moderation_action_pins_unpinned_
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.PINNED_CATEGORY,
+        action=ThreadEventActionName.PINNED_CATEGORY,
     )
 
 
@@ -134,7 +134,7 @@ def test_thread_detail_view_pin_category_thread_moderation_action_pins_pinned_ev
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.PINNED_CATEGORY,
+        action=ThreadEventActionName.PINNED_CATEGORY,
     )
 
 
@@ -159,7 +159,7 @@ def test_thread_detail_view_unpin_thread_moderation_action_unpins_pinned_everywh
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.UNPINNED,
+        action=ThreadEventActionName.UNPINNED,
     )
 
 
@@ -184,7 +184,7 @@ def test_thread_detail_view_unpin_thread_moderation_action_unpins_pinned_categor
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.UNPINNED,
+        action=ThreadEventActionName.UNPINNED,
     )
 
 
@@ -222,7 +222,7 @@ def test_thread_detail_view_lock_thread_moderation_action_locks_thread(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.LOCKED,
+        action=ThreadEventActionName.LOCKED,
     )
 
 
@@ -247,7 +247,7 @@ def test_thread_detail_view_unlock_thread_moderation_action_unlocks_thread(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.UNLOCKED,
+        action=ThreadEventActionName.UNLOCKED,
     )
 
 
@@ -285,7 +285,7 @@ def test_thread_detail_view_hide_thread_moderation_action_hides_thread(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.HIDDEN,
+        action=ThreadEventActionName.HIDDEN,
     )
 
     mock_thread_synchronize_categories.delay.assert_called_once_with(
@@ -319,7 +319,7 @@ def test_thread_detail_view_unhide_thread_moderation_action_unhides_thread(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.UNHIDDEN,
+        action=ThreadEventActionName.UNHIDDEN,
     )
 
     mock_thread_synchronize_categories.delay.assert_called_once_with(
@@ -348,7 +348,7 @@ def test_thread_detail_view_approve_thread_moderation_action_approves_thread(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.APPROVED,
+        action=ThreadEventActionName.APPROVED,
     )
 
     mock_thread_synchronize_categories.delay.assert_called_once_with(
@@ -374,7 +374,7 @@ def test_thread_detail_view_require_reply_approval_thread_moderation_action_sets
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.REQUIRED_REPLY_APPROVAL,
+        action=ThreadEventActionName.REQUIRED_REPLY_APPROVAL,
     )
 
 
@@ -399,7 +399,7 @@ def test_thread_detail_view_remove_reply_approval_thread_moderation_action_remov
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.REMOVED_REPLY_APPROVAL,
+        action=ThreadEventActionName.REMOVED_REPLY_APPROVAL,
     )
 
 
@@ -447,7 +447,7 @@ def test_thread_detail_view_move_thread_moderation_action_moves_thread(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.MOVED,
+        action=ThreadEventActionName.MOVED,
     )
 
     mock_thread_synchronize_categories.delay.assert_called_once_with(
@@ -819,7 +819,7 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_current_thread
     assert (
         ThreadEvent.objects.filter(
             thread=other_thread,
-            action=ThreadUpdateActionName.MERGED,
+            action=ThreadEventActionName.MERGED,
         ).count()
         == 1
     )
@@ -878,7 +878,7 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_current_thread
     assert (
         ThreadEvent.objects.filter(
             thread=other_thread,
-            action=ThreadUpdateActionName.MERGED,
+            action=ThreadEventActionName.MERGED,
         ).count()
         == 1
     )
@@ -931,7 +931,7 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_other_thread_i
     assert (
         ThreadEvent.objects.filter(
             thread=thread,
-            action=ThreadUpdateActionName.MERGED,
+            action=ThreadEventActionName.MERGED,
         ).count()
         == 1
     )
@@ -983,7 +983,7 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_other_thread_i
     assert (
         ThreadEvent.objects.filter(
             thread=thread,
-            action=ThreadUpdateActionName.MERGED,
+            action=ThreadEventActionName.MERGED,
         ).count()
         == 1
     )
@@ -1052,7 +1052,7 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_threads_withou
     assert (
         ThreadEvent.objects.filter(
             thread=other_thread,
-            action=ThreadUpdateActionName.MERGED,
+            action=ThreadEventActionName.MERGED,
         ).count()
         == 1
     )
@@ -1147,7 +1147,7 @@ def test_thread_detail_view_merge_thread_moderation_action_merges_threads_with_c
     assert (
         ThreadEvent.objects.filter(
             thread=other_thread,
-            action=ThreadUpdateActionName.MERGED,
+            action=ThreadEventActionName.MERGED,
         ).count()
         == 1
     )
@@ -1888,11 +1888,11 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts(
 
     ThreadEvent.objects.get(
         thread=new_thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_FROM,
+        action=ThreadEventActionName.SPLIT_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_INTO,
+        action=ThreadEventActionName.SPLIT_POSTS_INTO,
     )
 
     mock_posts_synchronize_categories.delay.assert_called_once_with(
@@ -1940,11 +1940,11 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_in_htmx(
 
     ThreadEvent.objects.get(
         thread=new_thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_FROM,
+        action=ThreadEventActionName.SPLIT_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_INTO,
+        action=ThreadEventActionName.SPLIT_POSTS_INTO,
     )
 
     mock_posts_synchronize_categories.delay.assert_called_once_with(
@@ -1995,11 +1995,11 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_with_redi
 
     ThreadEvent.objects.get(
         thread=new_thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_FROM,
+        action=ThreadEventActionName.SPLIT_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_INTO,
+        action=ThreadEventActionName.SPLIT_POSTS_INTO,
     )
 
     mock_posts_synchronize_categories.delay.assert_called_once_with(
@@ -2055,11 +2055,11 @@ def test_thread_detail_view_split_posts_moderation_action_splits_posts_with_mode
 
     ThreadEvent.objects.get(
         thread=new_thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_FROM,
+        action=ThreadEventActionName.SPLIT_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_INTO,
+        action=ThreadEventActionName.SPLIT_POSTS_INTO,
     )
 
     mock_posts_synchronize_categories.delay.assert_called_once_with(
@@ -2367,11 +2367,11 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts(
 
     ThreadEvent.objects.get(
         thread=other_thread,
-        action=ThreadUpdateActionName.MOVED_POSTS_FROM,
+        action=ThreadEventActionName.MOVED_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.MOVED_POSTS_TO,
+        action=ThreadEventActionName.MOVED_POSTS_TO,
     )
 
     mock_posts_synchronize_categories.delay.assert_called_once_with(
@@ -2422,11 +2422,11 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts_in_htmx(
 
     ThreadEvent.objects.get(
         thread=other_thread,
-        action=ThreadUpdateActionName.MOVED_POSTS_FROM,
+        action=ThreadEventActionName.MOVED_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.MOVED_POSTS_TO,
+        action=ThreadEventActionName.MOVED_POSTS_TO,
     )
 
     mock_posts_synchronize_categories.delay.assert_called_once_with(
@@ -2480,11 +2480,11 @@ def test_thread_detail_view_move_posts_moderation_action_moves_posts_with_redire
 
     ThreadEvent.objects.get(
         thread=other_thread,
-        action=ThreadUpdateActionName.MOVED_POSTS_FROM,
+        action=ThreadEventActionName.MOVED_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.MOVED_POSTS_TO,
+        action=ThreadEventActionName.MOVED_POSTS_TO,
     )
 
     mock_posts_synchronize_categories.delay.assert_called_once_with(
@@ -3273,7 +3273,7 @@ def test_thread_detail_view_delete_posts_moderation_action_deletes_posts(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.DELETED_POSTS,
+        action=ThreadEventActionName.DELETED_POSTS,
     )
 
     mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
@@ -3305,7 +3305,7 @@ def test_thread_detail_view_delete_posts_moderation_action_deletes_posts_in_htmx
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.DELETED_POSTS,
+        action=ThreadEventActionName.DELETED_POSTS,
     )
 
     mock_posts_synchronize_categories.delay.assert_called_with([default_category.id])
@@ -3526,11 +3526,11 @@ def test_thread_detail_view_split_post_moderation_action_splits_post(
 
     ThreadEvent.objects.get(
         thread=new_thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_FROM,
+        action=ThreadEventActionName.SPLIT_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_INTO,
+        action=ThreadEventActionName.SPLIT_POSTS_INTO,
     )
 
     mock_post_synchronize_categories.delay.assert_called_once_with(
@@ -3578,11 +3578,11 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_in_htmx(
 
     ThreadEvent.objects.get(
         thread=new_thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_FROM,
+        action=ThreadEventActionName.SPLIT_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_INTO,
+        action=ThreadEventActionName.SPLIT_POSTS_INTO,
     )
 
     mock_post_synchronize_categories.delay.assert_called_once_with(
@@ -3633,11 +3633,11 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_with_redire
 
     ThreadEvent.objects.get(
         thread=new_thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_FROM,
+        action=ThreadEventActionName.SPLIT_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_INTO,
+        action=ThreadEventActionName.SPLIT_POSTS_INTO,
     )
 
     mock_post_synchronize_categories.delay.assert_called_once_with(
@@ -3693,11 +3693,11 @@ def test_thread_detail_view_split_post_moderation_action_splits_post_with_modera
 
     ThreadEvent.objects.get(
         thread=new_thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_FROM,
+        action=ThreadEventActionName.SPLIT_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.SPLIT_POSTS_INTO,
+        action=ThreadEventActionName.SPLIT_POSTS_INTO,
     )
 
     mock_post_synchronize_categories.delay.assert_called_once_with(
@@ -3995,11 +3995,11 @@ def test_thread_detail_view_move_post_moderation_action_moves_post(
 
     ThreadEvent.objects.get(
         thread=other_thread,
-        action=ThreadUpdateActionName.MOVED_POSTS_FROM,
+        action=ThreadEventActionName.MOVED_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.MOVED_POSTS_TO,
+        action=ThreadEventActionName.MOVED_POSTS_TO,
     )
 
     mock_post_synchronize_categories.delay.assert_called_once_with(
@@ -4050,11 +4050,11 @@ def test_thread_detail_view_move_post_moderation_action_moves_post_in_htmx(
 
     ThreadEvent.objects.get(
         thread=other_thread,
-        action=ThreadUpdateActionName.MOVED_POSTS_FROM,
+        action=ThreadEventActionName.MOVED_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.MOVED_POSTS_TO,
+        action=ThreadEventActionName.MOVED_POSTS_TO,
     )
 
     mock_post_synchronize_categories.delay.assert_called_once_with(
@@ -4108,11 +4108,11 @@ def test_thread_detail_view_move_post_moderation_action_moves_post_with_redirect
 
     ThreadEvent.objects.get(
         thread=other_thread,
-        action=ThreadUpdateActionName.MOVED_POSTS_FROM,
+        action=ThreadEventActionName.MOVED_POSTS_FROM,
     )
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.MOVED_POSTS_TO,
+        action=ThreadEventActionName.MOVED_POSTS_TO,
     )
 
     mock_post_synchronize_categories.delay.assert_called_once_with(
@@ -5818,7 +5818,7 @@ def test_thread_detail_view_delete_post_moderation_action_deletes_post(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.DELETED_POSTS,
+        action=ThreadEventActionName.DELETED_POSTS,
     )
 
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])
@@ -5850,7 +5850,7 @@ def test_thread_detail_view_delete_post_moderation_action_deletes_post_in_htmx(
 
     ThreadEvent.objects.get(
         thread=thread,
-        action=ThreadUpdateActionName.DELETED_POSTS,
+        action=ThreadEventActionName.DELETED_POSTS,
     )
 
     mock_post_synchronize_categories.delay.assert_called_with([default_category.id])

@@ -4,7 +4,7 @@ from ...permissions.models import Moderator
 from ...test import assert_contains
 
 
-def test_private_thread_update_hide_view_returns_404_error_for_not_found_thread(
+def test_private_thread_event_hide_view_returns_404_error_for_not_found_thread(
     user_client,
 ):
     response = user_client.post(
@@ -21,7 +21,7 @@ def test_private_thread_update_hide_view_returns_404_error_for_not_found_thread(
     assert response.status_code == 404
 
 
-def test_private_thread_update_hide_view_returns_404_error_for_not_found_update(
+def test_private_thread_event_hide_view_returns_404_error_for_not_found_update(
     user_client, user_private_thread
 ):
     response = user_client.post(
@@ -38,8 +38,8 @@ def test_private_thread_update_hide_view_returns_404_error_for_not_found_update(
     assert response.status_code == 404
 
 
-def test_private_thread_update_hide_view_returns_403_error_for_anonymous_user(
-    client, user_private_thread, user_private_thread_update
+def test_private_thread_event_hide_view_returns_403_error_for_anonymous_user(
+    client, user_private_thread, user_private_thread_event
 ):
     response = client.post(
         reverse(
@@ -47,18 +47,18 @@ def test_private_thread_update_hide_view_returns_403_error_for_anonymous_user(
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": user_private_thread_update.id,
+                "thread_event_id": user_private_thread_event.id,
             },
         )
     )
 
     assert_contains(
-        response, "Only a moderator can hide thread updates.", status_code=403
+        response, "Only a moderator can hide thread events.", status_code=403
     )
 
 
-def test_private_thread_update_hide_view_returns_403_error_for_user(
-    user_client, user_private_thread, user_private_thread_update
+def test_private_thread_event_hide_view_returns_403_error_for_user(
+    user_client, user_private_thread, user_private_thread_event
 ):
     response = user_client.post(
         reverse(
@@ -66,18 +66,18 @@ def test_private_thread_update_hide_view_returns_403_error_for_user(
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": user_private_thread_update.id,
+                "thread_event_id": user_private_thread_event.id,
             },
         )
     )
 
     assert_contains(
-        response, "Only a moderator can hide thread updates.", status_code=403
+        response, "Only a moderator can hide thread events.", status_code=403
     )
 
 
-def test_private_thread_update_hide_view_checks_private_threads_permission(
-    user_client, members_group, user_private_thread, user_private_thread_update
+def test_private_thread_event_hide_view_checks_private_threads_permission(
+    user_client, members_group, user_private_thread, user_private_thread_event
 ):
     members_group.can_use_private_threads = False
     members_group.save()
@@ -88,7 +88,7 @@ def test_private_thread_update_hide_view_checks_private_threads_permission(
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": user_private_thread_update.id,
+                "thread_event_id": user_private_thread_event.id,
             },
         )
     )
@@ -96,8 +96,8 @@ def test_private_thread_update_hide_view_checks_private_threads_permission(
     assert_contains(response, "You can&#x27;t use private threads.", status_code=403)
 
 
-def test_private_thread_update_hide_view_checks_thread_permission(
-    user_client, private_thread, private_thread_update
+def test_private_thread_event_hide_view_checks_thread_permission(
+    user_client, private_thread, private_thread_event
 ):
     response = user_client.post(
         reverse(
@@ -105,7 +105,7 @@ def test_private_thread_update_hide_view_checks_thread_permission(
             kwargs={
                 "thread_id": private_thread.id,
                 "slug": private_thread.slug,
-                "thread_event_id": private_thread_update.id,
+                "thread_event_id": private_thread_event.id,
             },
         )
     )
@@ -113,8 +113,8 @@ def test_private_thread_update_hide_view_checks_thread_permission(
     assert response.status_code == 404
 
 
-def test_private_thread_update_hide_view_checks_thread_update_permission(
-    user_client, user_private_thread, hidden_user_private_thread_update
+def test_private_thread_event_hide_view_checks_thread_event_permission(
+    user_client, user_private_thread, hidden_user_private_thread_event
 ):
     response = user_client.post(
         reverse(
@@ -122,7 +122,7 @@ def test_private_thread_update_hide_view_checks_thread_update_permission(
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": hidden_user_private_thread_update.id,
+                "thread_event_id": hidden_user_private_thread_event.id,
             },
         )
     )
@@ -130,8 +130,8 @@ def test_private_thread_update_hide_view_checks_thread_update_permission(
     assert response.status_code == 404
 
 
-def test_private_thread_update_hide_view_hides_update_for_private_threads_moderator(
-    user_client, user, user_private_thread, user_private_thread_update
+def test_private_thread_event_hide_view_hides_event_for_private_threads_moderator(
+    user_client, user, user_private_thread, user_private_thread_event
 ):
     Moderator.objects.create(
         private_threads=True,
@@ -145,19 +145,19 @@ def test_private_thread_update_hide_view_hides_update_for_private_threads_modera
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": user_private_thread_update.id,
+                "thread_event_id": user_private_thread_event.id,
             },
         )
     )
 
     assert response.status_code == 302
 
-    user_private_thread_update.refresh_from_db()
-    assert user_private_thread_update.is_hidden
+    user_private_thread_event.refresh_from_db()
+    assert user_private_thread_event.is_hidden
 
 
-def test_private_thread_update_hide_view_hides_update_for_global_moderator(
-    moderator_client, user_private_thread, user_private_thread_update
+def test_private_thread_event_hide_view_hides_event_for_global_moderator(
+    moderator_client, user_private_thread, user_private_thread_event
 ):
     response = moderator_client.post(
         reverse(
@@ -165,19 +165,19 @@ def test_private_thread_update_hide_view_hides_update_for_global_moderator(
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": user_private_thread_update.id,
+                "thread_event_id": user_private_thread_event.id,
             },
         )
     )
 
     assert response.status_code == 302
 
-    user_private_thread_update.refresh_from_db()
-    assert user_private_thread_update.is_hidden
+    user_private_thread_event.refresh_from_db()
+    assert user_private_thread_event.is_hidden
 
 
-def test_private_thread_update_hide_view_doesnt_update_already_hidden_update(
-    moderator_client, user_private_thread, hidden_user_private_thread_update
+def test_private_thread_event_hide_view_doesnt_event_already_hidden_update(
+    moderator_client, user_private_thread, hidden_user_private_thread_event
 ):
     response = moderator_client.post(
         reverse(
@@ -185,19 +185,19 @@ def test_private_thread_update_hide_view_doesnt_update_already_hidden_update(
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": hidden_user_private_thread_update.id,
+                "thread_event_id": hidden_user_private_thread_event.id,
             },
         )
     )
 
     assert response.status_code == 302
 
-    hidden_user_private_thread_update.refresh_from_db()
-    assert hidden_user_private_thread_update.is_hidden
+    hidden_user_private_thread_event.refresh_from_db()
+    assert hidden_user_private_thread_event.is_hidden
 
 
-def test_private_thread_update_hide_view_returns_redirect_to_thread(
-    moderator_client, user_private_thread, user_private_thread_update
+def test_private_thread_event_hide_view_returns_redirect_to_thread(
+    moderator_client, user_private_thread, user_private_thread_event
 ):
     response = moderator_client.post(
         reverse(
@@ -205,7 +205,7 @@ def test_private_thread_update_hide_view_returns_redirect_to_thread(
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": user_private_thread_update.id,
+                "thread_event_id": user_private_thread_event.id,
             },
         )
     )
@@ -217,8 +217,8 @@ def test_private_thread_update_hide_view_returns_redirect_to_thread(
     )
 
 
-def test_private_thread_update_hide_view_returns_redirect_to_thread_for_invalid_next_url(
-    moderator_client, user_private_thread, user_private_thread_update
+def test_private_thread_event_hide_view_returns_redirect_to_thread_for_invalid_next_url(
+    moderator_client, user_private_thread, user_private_thread_event
 ):
     response = moderator_client.post(
         reverse(
@@ -226,7 +226,7 @@ def test_private_thread_update_hide_view_returns_redirect_to_thread_for_invalid_
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": user_private_thread_update.id,
+                "thread_event_id": user_private_thread_event.id,
             },
         ),
         {"next": "/invalid/url/"},
@@ -239,7 +239,7 @@ def test_private_thread_update_hide_view_returns_redirect_to_thread_for_invalid_
     )
 
 
-def test_private_thread_update_hide_view_returns_404_error_for_not_found_thread_in_htmx(
+def test_private_thread_event_hide_view_returns_404_error_for_not_found_thread_in_htmx(
     user_client,
 ):
     response = user_client.post(
@@ -257,7 +257,7 @@ def test_private_thread_update_hide_view_returns_404_error_for_not_found_thread_
     assert response.status_code == 404
 
 
-def test_private_thread_update_hide_view_returns_404_error_for_not_found_update_in_htmx(
+def test_private_thread_event_hide_view_returns_404_error_for_not_found_event_in_htmx(
     user_client, user_private_thread
 ):
     response = user_client.post(
@@ -275,8 +275,8 @@ def test_private_thread_update_hide_view_returns_404_error_for_not_found_update_
     assert response.status_code == 404
 
 
-def test_private_thread_update_hide_view_returns_403_error_for_anonymous_user_in_htmx(
-    client, user_private_thread, user_private_thread_update
+def test_private_thread_event_hide_view_returns_403_error_for_anonymous_user_in_htmx(
+    client, user_private_thread, user_private_thread_event
 ):
     response = client.post(
         reverse(
@@ -284,19 +284,19 @@ def test_private_thread_update_hide_view_returns_403_error_for_anonymous_user_in
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": user_private_thread_update.id,
+                "thread_event_id": user_private_thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
     )
 
     assert_contains(
-        response, "Only a moderator can hide thread updates.", status_code=403
+        response, "Only a moderator can hide thread events.", status_code=403
     )
 
 
-def test_private_thread_update_hide_view_returns_403_error_for_user_in_htmx(
-    user_client, user_private_thread, user_private_thread_update
+def test_private_thread_event_hide_view_returns_403_error_for_user_in_htmx(
+    user_client, user_private_thread, user_private_thread_event
 ):
     response = user_client.post(
         reverse(
@@ -304,19 +304,19 @@ def test_private_thread_update_hide_view_returns_403_error_for_user_in_htmx(
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": user_private_thread_update.id,
+                "thread_event_id": user_private_thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
     )
 
     assert_contains(
-        response, "Only a moderator can hide thread updates.", status_code=403
+        response, "Only a moderator can hide thread events.", status_code=403
     )
 
 
-def test_private_thread_update_hide_view_checks_private_threads_permission_in_htmx(
-    user_client, members_group, user_private_thread, user_private_thread_update
+def test_private_thread_event_hide_view_checks_private_threads_permission_in_htmx(
+    user_client, members_group, user_private_thread, user_private_thread_event
 ):
     members_group.can_use_private_threads = False
     members_group.save()
@@ -327,7 +327,7 @@ def test_private_thread_update_hide_view_checks_private_threads_permission_in_ht
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": user_private_thread_update.id,
+                "thread_event_id": user_private_thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -336,8 +336,8 @@ def test_private_thread_update_hide_view_checks_private_threads_permission_in_ht
     assert_contains(response, "You can't use private threads.", status_code=403)
 
 
-def test_private_thread_update_hide_view_checks_thread_permission_in_htmx(
-    user_client, private_thread, private_thread_update
+def test_private_thread_event_hide_view_checks_thread_permission_in_htmx(
+    user_client, private_thread, private_thread_event
 ):
     response = user_client.post(
         reverse(
@@ -345,7 +345,7 @@ def test_private_thread_update_hide_view_checks_thread_permission_in_htmx(
             kwargs={
                 "thread_id": private_thread.id,
                 "slug": private_thread.slug,
-                "thread_event_id": private_thread_update.id,
+                "thread_event_id": private_thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -354,8 +354,8 @@ def test_private_thread_update_hide_view_checks_thread_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_private_thread_update_hide_view_checks_thread_update_permission_in_htmx(
-    user_client, user_private_thread, hidden_user_private_thread_update
+def test_private_thread_event_hide_view_checks_thread_event_permission_in_htmx(
+    user_client, user_private_thread, hidden_user_private_thread_event
 ):
     response = user_client.post(
         reverse(
@@ -363,7 +363,7 @@ def test_private_thread_update_hide_view_checks_thread_update_permission_in_htmx
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": hidden_user_private_thread_update.id,
+                "thread_event_id": hidden_user_private_thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -372,8 +372,8 @@ def test_private_thread_update_hide_view_checks_thread_update_permission_in_htmx
     assert response.status_code == 404
 
 
-def test_private_thread_update_hide_view_hides_update_for_private_threads_moderator_in_htmx(
-    user_client, user, default_category, user_private_thread, user_private_thread_update
+def test_private_thread_event_hide_view_hides_event_for_private_threads_moderator_in_htmx(
+    user_client, user, default_category, user_private_thread, user_private_thread_event
 ):
     Moderator.objects.create(
         private_threads=True,
@@ -387,7 +387,7 @@ def test_private_thread_update_hide_view_hides_update_for_private_threads_modera
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": user_private_thread_update.id,
+                "thread_event_id": user_private_thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -395,12 +395,12 @@ def test_private_thread_update_hide_view_hides_update_for_private_threads_modera
 
     assert response.status_code == 200
 
-    user_private_thread_update.refresh_from_db()
-    assert user_private_thread_update.is_hidden
+    user_private_thread_event.refresh_from_db()
+    assert user_private_thread_event.is_hidden
 
 
-def test_private_thread_update_hide_view_hides_update_for_global_moderator_in_htmx(
-    moderator_client, user_private_thread, user_private_thread_update
+def test_private_thread_event_hide_view_hides_event_for_global_moderator_in_htmx(
+    moderator_client, user_private_thread, user_private_thread_event
 ):
     response = moderator_client.post(
         reverse(
@@ -408,7 +408,7 @@ def test_private_thread_update_hide_view_hides_update_for_global_moderator_in_ht
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": user_private_thread_update.id,
+                "thread_event_id": user_private_thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -416,12 +416,12 @@ def test_private_thread_update_hide_view_hides_update_for_global_moderator_in_ht
 
     assert response.status_code == 200
 
-    user_private_thread_update.refresh_from_db()
-    assert user_private_thread_update.is_hidden
+    user_private_thread_event.refresh_from_db()
+    assert user_private_thread_event.is_hidden
 
 
-def test_private_thread_update_hide_view_doesnt_update_already_hidden_update_in_htmx(
-    moderator_client, user_private_thread, hidden_user_private_thread_update
+def test_private_thread_event_hide_view_doesnt_event_already_hidden_event_in_htmx(
+    moderator_client, user_private_thread, hidden_user_private_thread_event
 ):
     response = moderator_client.post(
         reverse(
@@ -429,7 +429,7 @@ def test_private_thread_update_hide_view_doesnt_update_already_hidden_update_in_
             kwargs={
                 "thread_id": user_private_thread.id,
                 "slug": user_private_thread.slug,
-                "thread_event_id": hidden_user_private_thread_update.id,
+                "thread_event_id": hidden_user_private_thread_event.id,
             },
         ),
         headers={"hx-request": "true"},
@@ -437,5 +437,5 @@ def test_private_thread_update_hide_view_doesnt_update_already_hidden_update_in_
 
     assert response.status_code == 200
 
-    hidden_user_private_thread_update.refresh_from_db()
-    assert hidden_user_private_thread_update.is_hidden
+    hidden_user_private_thread_event.refresh_from_db()
+    assert hidden_user_private_thread_event.is_hidden

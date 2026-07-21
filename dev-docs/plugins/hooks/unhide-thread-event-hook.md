@@ -1,4 +1,4 @@
-# `unhide_thread_update_hook`
+# `unhide_thread_event_hook`
 
 This hook wraps a standard Misago function used to unhide a `ThreadUpdate` object.
 
@@ -8,16 +8,16 @@ This hook wraps a standard Misago function used to unhide a `ThreadUpdate` objec
 This hook can be imported from `misago.threadevents.hooks`:
 
 ```python
-from misago.threadevents.hooks import unhide_thread_update_hook
+from misago.threadevents.hooks import unhide_thread_event_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_unhide_thread_update_filter(
+def custom_unhide_thread_event_filter(
     action: UnhideThreadUpdateHookAction,
-    thread_update: 'ThreadUpdate',
+    thread_event: 'ThreadUpdate',
     request: HttpRequest | None=None,
 ) -> bool:
     ...
@@ -35,7 +35,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `thread_update: ThreadUpdate`
+#### `thread_event: ThreadUpdate`
 
 A `ThreadUpdate` instance to unhide.
 
@@ -53,8 +53,8 @@ The request object or `None` if not available.
 ## Action
 
 ```python
-def unhide_thread_update_action(
-    thread_update: 'ThreadUpdate', request: HttpRequest | None=None
+def unhide_thread_event_action(
+    thread_event: 'ThreadUpdate', request: HttpRequest | None=None
 ) -> bool:
     ...
 ```
@@ -64,7 +64,7 @@ Misago function used to unhide a `ThreadUpdate` object.
 
 ### Arguments
 
-#### `thread_update: ThreadUpdate`
+#### `thread_event: ThreadUpdate`
 
 A `ThreadUpdate` instance to unhide.
 
@@ -85,20 +85,20 @@ The code below implements a custom filter function that stores the client's IP a
 
 ```python
 from django.http import HttpRequest
-from misago.threads.hooks import unhide_thread_update_hook
+from misago.threads.hooks import unhide_thread_event_hook
 from misago.threads.models import ThreadUpdate
 
 
-@unhide_thread_update_hook.append_filter
-def save_client_ip_on_thread_update_unhide(
+@unhide_thread_event_hook.append_filter
+def save_client_ip_on_thread_event_unhide(
     action,
-    thread_update: ThreadUpdate,
+    thread_event: ThreadUpdate,
     request: HttpRequest | None = None,
 ) -> bool:
     if not request:
-        return action(thread_update)
+        return action(thread_event)
 
-    thread_update.plugin_data["last_ip"] = request.client_ip
+    thread_event.plugin_data["last_ip"] = request.client_ip
 
-    return action(thread_update, request)
+    return action(thread_event, request)
 ```

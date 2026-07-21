@@ -2,7 +2,7 @@ import pytest
 from django.urls import reverse
 
 from ...test import assert_contains
-from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.enums import ThreadEventActionName
 from ...threadevents.models import ThreadEvent
 from ..models import PrivateThreadMember
 
@@ -98,7 +98,7 @@ def test_private_thread_members_add_view_adds_new_thread_members(
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.ADDED_MEMBER,
+        action=ThreadEventActionName.ADDED_MEMBER,
         context=admin.username,
     )
 
@@ -131,7 +131,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_using_noscript_
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.ADDED_MEMBER,
+        action=ThreadEventActionName.ADDED_MEMBER,
         context=admin.username,
     )
 
@@ -162,7 +162,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_htmx(
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.ADDED_MEMBER,
+        action=ThreadEventActionName.ADDED_MEMBER,
         context=admin.username,
     )
 
@@ -352,7 +352,7 @@ def test_private_thread_members_add_view_adds_new_thread_members_in_locked_threa
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.ADDED_MEMBER,
+        action=ThreadEventActionName.ADDED_MEMBER,
         context=admin.username,
     )
 

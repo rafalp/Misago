@@ -215,16 +215,16 @@ def test_private_thread_post_feed_doesnt_mark_thread_update_as_hidable_by_user(
     user,
     user_private_thread,
     private_thread_post,
-    private_thread_update,
+    private_thread_event,
 ):
     request = request_factory(user)
 
     post_feed = PrivateThreadPostFeed(
-        request, user_private_thread, [private_thread_post], [private_thread_update]
+        request, user_private_thread, [private_thread_post], [private_thread_event]
     )
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == private_thread_update
+    assert feed_data["items"][1]["thread_update"] == private_thread_event
     assert not feed_data["items"][1]["hide_url"]
 
 
@@ -233,7 +233,7 @@ def test_private_thread_post_feed_doesnt_mark_thread_update_as_unhideable_by_use
     user,
     user_private_thread,
     private_thread_post,
-    hidden_private_thread_update,
+    hidden_private_thread_event,
 ):
     request = request_factory(user)
 
@@ -241,11 +241,11 @@ def test_private_thread_post_feed_doesnt_mark_thread_update_as_unhideable_by_use
         request,
         user_private_thread,
         [private_thread_post],
-        [hidden_private_thread_update],
+        [hidden_private_thread_event],
     )
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == hidden_private_thread_update
+    assert feed_data["items"][1]["thread_update"] == hidden_private_thread_event
     assert not feed_data["items"][1]["unhide_url"]
 
 
@@ -254,16 +254,16 @@ def test_private_thread_post_feed_doesnt_mark_thread_update_as_deletable_by_user
     user,
     user_private_thread,
     private_thread_post,
-    private_thread_update,
+    private_thread_event,
 ):
     request = request_factory(user)
 
     post_feed = PrivateThreadPostFeed(
-        request, user_private_thread, [private_thread_post], [private_thread_update]
+        request, user_private_thread, [private_thread_post], [private_thread_event]
     )
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == private_thread_update
+    assert feed_data["items"][1]["thread_update"] == private_thread_event
     assert not feed_data["items"][1]["delete_url"]
 
 
@@ -272,18 +272,18 @@ def test_private_thread_post_feed_marks_thread_update_as_hidable_by_moderator(
     moderator,
     user_private_thread,
     private_thread_post,
-    private_thread_update,
+    private_thread_event,
 ):
     request = request_factory(moderator)
 
     post_feed = PrivateThreadPostFeed(
-        request, user_private_thread, [private_thread_post], [private_thread_update]
+        request, user_private_thread, [private_thread_post], [private_thread_event]
     )
     post_feed.set_moderation(True)
 
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == private_thread_update
+    assert feed_data["items"][1]["thread_update"] == private_thread_event
     assert feed_data["items"][1]["hide_url"]
 
 
@@ -292,7 +292,7 @@ def test_private_thread_post_feed_marks_thread_update_as_unhideable_by_moderator
     moderator,
     user_private_thread,
     private_thread_post,
-    hidden_private_thread_update,
+    hidden_private_thread_event,
 ):
     request = request_factory(moderator)
 
@@ -300,13 +300,13 @@ def test_private_thread_post_feed_marks_thread_update_as_unhideable_by_moderator
         request,
         user_private_thread,
         [private_thread_post],
-        [hidden_private_thread_update],
+        [hidden_private_thread_event],
     )
     post_feed.set_moderation(True)
 
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == hidden_private_thread_update
+    assert feed_data["items"][1]["thread_update"] == hidden_private_thread_event
     assert feed_data["items"][1]["unhide_url"]
 
 
@@ -315,16 +315,16 @@ def test_private_thread_post_feed_marks_thread_update_as_deletable_by_moderator(
     moderator,
     user_private_thread,
     private_thread_post,
-    private_thread_update,
+    private_thread_event,
 ):
     request = request_factory(moderator)
 
     post_feed = PrivateThreadPostFeed(
-        request, user_private_thread, [private_thread_post], [private_thread_update]
+        request, user_private_thread, [private_thread_post], [private_thread_event]
     )
     post_feed.set_moderation(True)
 
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == private_thread_update
+    assert feed_data["items"][1]["thread_update"] == private_thread_event
     assert feed_data["items"][1]["delete_url"]

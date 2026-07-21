@@ -345,10 +345,10 @@ Hooks instances are importable from the following Python modules:
 
 `misago.threadevents.hooks` defines the following hooks:
 
-- [`create_thread_update_hook`](./create-thread-update-hook.md)
-- [`delete_thread_update_hook`](./delete-thread-update-hook.md)
-- [`hide_thread_update_hook`](./hide-thread-update-hook.md)
-- [`unhide_thread_update_hook`](./unhide-thread-update-hook.md)
+- [`create_thread_event_hook`](./create-thread-event-hook.md)
+- [`delete_thread_event_hook`](./delete-thread-event-hook.md)
+- [`hide_thread_event_hook`](./hide-thread-event-hook.md)
+- [`unhide_thread_event_hook`](./unhide-thread-event-hook.md)
 
 
 ## `misago.users.hooks`

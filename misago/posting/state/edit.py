@@ -2,7 +2,7 @@ from django.db import models, transaction
 from django.http import HttpRequest
 
 from ...postedits.create import create_post_edit
-from ...threadevents.create import create_changed_title_thread_update
+from ...threadevents.create import create_changed_title_thread_event
 from ...threadevents.models import ThreadEvent
 from ...threadevents.threadflag import ensure_thread_has_events
 from ...threads.models import Post
@@ -104,7 +104,7 @@ class PostEditState(State):
             if self.category.last_thread_id == self.thread.id:
                 self.save_category()
 
-            create_changed_title_thread_update(
+            create_changed_title_thread_event(
                 self.thread,
                 self.thread_title,
                 request.user,

@@ -1,6 +1,6 @@
 from ...parser.parse import parse
-from ...threadevents.create import create_split_posts_from_thread_update
-from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.create import create_split_posts_from_thread_event
+from ...threadevents.enums import ThreadEventActionName
 from ...threadevents.models import ThreadEvent
 from ..state import PostEditState
 
@@ -183,7 +183,7 @@ def test_post_edit_state_changes_test_returns_false_if_only_new_line_characters_
     assert not state.is_post_changed()
 
 
-def test_post_edit_state_save_creates_thread_update_object_for_changed_title(
+def test_post_edit_state_save_creates_thread_event_object_for_changed_title(
     user_request, user, other_user_thread
 ):
     original_title = other_user_thread.title
@@ -196,21 +196,21 @@ def test_post_edit_state_save_creates_thread_update_object_for_changed_title(
 
     assert ThreadEvent.objects.count() == 1
 
-    thread_update = ThreadEvent.objects.first()
-    assert thread_update.actor == user
-    assert thread_update.action == ThreadUpdateActionName.CHANGED_TITLE
-    assert thread_update.context == original_title
-    assert not thread_update.context_id
-    assert not thread_update.context_type
+    thread_event = ThreadEvent.objects.first()
+    assert thread_event.actor == user
+    assert thread_event.action == ThreadEventActionName.CHANGED_TITLE
+    assert thread_event.context == original_title
+    assert not thread_event.context_id
+    assert not thread_event.context_type
 
 
-def test_post_edit_state_save_updates_context_in_existing_thread_updates(
+def test_post_edit_state_save_updates_context_in_existing_thread_events(
     user_request,
     user,
     thread,
     other_user_thread,
 ):
-    thread_update = create_split_posts_from_thread_update(
+    thread_event = create_split_posts_from_thread_event(
         thread, other_user_thread, actor=user
     )
 
@@ -218,6 +218,6 @@ def test_post_edit_state_save_updates_context_in_existing_thread_updates(
     state.set_thread_title("Updated title")
     state.save()
 
-    thread_update.refresh_from_db()
-    assert thread_update.context == "Updated title"
-    assert thread_update.get_context_id("misago_threads.thread") == other_user_thread.id
+    thread_event.refresh_from_db()
+    assert thread_event.context == "Updated title"
+    assert thread_event.get_context_id("misago_threads.thread") == other_user_thread.id

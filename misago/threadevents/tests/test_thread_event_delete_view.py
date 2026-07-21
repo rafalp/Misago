@@ -4,11 +4,11 @@ from django.urls import reverse
 from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains
-from ..create import create_test_thread_update
+from ..create import create_test_thread_event
 from ..models import ThreadEvent
 
 
-def test_thread_update_delete_view_returns_404_error_for_not_found_thread(user_client):
+def test_thread_event_delete_view_returns_404_error_for_not_found_thread(user_client):
     response = user_client.post(
         reverse(
             "misago:thread-event-delete",
@@ -23,7 +23,7 @@ def test_thread_update_delete_view_returns_404_error_for_not_found_thread(user_c
     assert response.status_code == 404
 
 
-def test_thread_update_delete_view_returns_404_error_for_not_found_update(
+def test_thread_event_delete_view_returns_404_error_for_not_found_update(
     user_client, thread
 ):
     response = user_client.post(
@@ -40,7 +40,7 @@ def test_thread_update_delete_view_returns_404_error_for_not_found_update(
     assert response.status_code == 404
 
 
-def test_thread_update_delete_view_returns_403_error_for_anonymous_user(
+def test_thread_event_delete_view_returns_403_error_for_anonymous_user(
     client, thread, thread_event
 ):
     response = client.post(
@@ -55,11 +55,11 @@ def test_thread_update_delete_view_returns_403_error_for_anonymous_user(
     )
 
     assert_contains(
-        response, "Only a moderator can delete thread updates.", status_code=403
+        response, "Only a moderator can delete thread events.", status_code=403
     )
 
 
-def test_thread_update_delete_view_returns_403_error_for_user(
+def test_thread_event_delete_view_returns_403_error_for_user(
     user_client, thread, thread_event
 ):
     response = user_client.post(
@@ -74,11 +74,11 @@ def test_thread_update_delete_view_returns_403_error_for_user(
     )
 
     assert_contains(
-        response, "Only a moderator can delete thread updates.", status_code=403
+        response, "Only a moderator can delete thread events.", status_code=403
     )
 
 
-def test_thread_update_delete_view_checks_category_permission(
+def test_thread_event_delete_view_checks_category_permission(
     user_client, thread, thread_event
 ):
     CategoryGroupPermission.objects.filter(
@@ -99,7 +99,7 @@ def test_thread_update_delete_view_checks_category_permission(
     assert response.status_code == 404
 
 
-def test_thread_update_delete_view_checks_thread_permission(
+def test_thread_event_delete_view_checks_thread_permission(
     user_client, thread, thread_event
 ):
     thread.is_hidden = True
@@ -119,7 +119,7 @@ def test_thread_update_delete_view_checks_thread_permission(
     assert response.status_code == 404
 
 
-def test_thread_update_delete_view_checks_thread_update_permission(
+def test_thread_event_delete_view_checks_thread_event_permission(
     user_client, thread, hidden_thread_event
 ):
     response = user_client.post(
@@ -136,7 +136,7 @@ def test_thread_update_delete_view_checks_thread_update_permission(
     assert response.status_code == 404
 
 
-def test_thread_update_delete_view_shows_confirm_delete_form_for_category_moderator(
+def test_thread_event_delete_view_shows_confirm_delete_form_for_category_moderator(
     user_client, user, default_category, thread, thread_event
 ):
     Moderator.objects.create(
@@ -156,10 +156,10 @@ def test_thread_update_delete_view_shows_confirm_delete_form_for_category_modera
         ),
     )
 
-    assert_contains(response, "Are you sure you want to delete this thread update?")
+    assert_contains(response, "Are you sure you want to delete this thread event?")
 
 
-def test_thread_update_delete_view_deletes_update_for_category_moderator(
+def test_thread_event_delete_view_deletes_event_for_category_moderator(
     user_client, user, default_category, thread, thread_event
 ):
     Moderator.objects.create(
@@ -186,7 +186,7 @@ def test_thread_update_delete_view_deletes_update_for_category_moderator(
         thread_event.refresh_from_db()
 
 
-def test_thread_update_delete_view_shows_confirm_delete_form_for_global_moderator(
+def test_thread_event_delete_view_shows_confirm_delete_form_for_global_moderator(
     moderator_client, thread, thread_event
 ):
     response = moderator_client.post(
@@ -200,10 +200,10 @@ def test_thread_update_delete_view_shows_confirm_delete_form_for_global_moderato
         ),
     )
 
-    assert_contains(response, "Are you sure you want to delete this thread update?")
+    assert_contains(response, "Are you sure you want to delete this thread event?")
 
 
-def test_thread_update_delete_view_deletes_update_for_global_moderator(
+def test_thread_event_delete_view_deletes_event_for_global_moderator(
     moderator_client, thread, thread_event
 ):
     response = moderator_client.post(
@@ -224,7 +224,7 @@ def test_thread_update_delete_view_deletes_update_for_global_moderator(
         thread_event.refresh_from_db()
 
 
-def test_thread_update_delete_view_unsets_thread_has_updates_flag_for_last_update_deleted(
+def test_thread_event_delete_view_unsets_thread_has_updates_flag_for_last_event_deleted(
     moderator_client, thread, thread_event
 ):
     thread.has_events = True
@@ -251,13 +251,13 @@ def test_thread_update_delete_view_unsets_thread_has_updates_flag_for_last_updat
         thread_event.refresh_from_db()
 
 
-def test_thread_update_delete_view_keeps_thread_has_updates_flag_if_other_updates_exist(
+def test_thread_event_delete_view_keeps_thread_has_updates_flag_if_other_updates_exist(
     moderator_client, thread, thread_event
 ):
     thread.has_events = True
     thread.save()
 
-    create_test_thread_update(thread, "DeletedUser")
+    create_test_thread_event(thread, "DeletedUser")
 
     response = moderator_client.post(
         reverse(
@@ -280,7 +280,7 @@ def test_thread_update_delete_view_keeps_thread_has_updates_flag_if_other_update
         thread_event.refresh_from_db()
 
 
-def test_thread_update_delete_view_returns_redirect_to_thread(
+def test_thread_event_delete_view_returns_redirect_to_thread(
     moderator_client, thread, thread_event
 ):
     response = moderator_client.post(
@@ -301,7 +301,7 @@ def test_thread_update_delete_view_returns_redirect_to_thread(
     )
 
 
-def test_thread_update_delete_view_returns_redirect_to_next_url(
+def test_thread_event_delete_view_returns_redirect_to_next_url(
     moderator_client, thread, thread_event
 ):
     next_url = reverse(
@@ -328,7 +328,7 @@ def test_thread_update_delete_view_returns_redirect_to_next_url(
     assert response["location"] == next_url
 
 
-def test_thread_update_delete_view_returns_redirect_to_thread_for_invalid_next_url(
+def test_thread_event_delete_view_returns_redirect_to_thread_for_invalid_next_url(
     moderator_client, thread, thread_event
 ):
     response = moderator_client.post(
@@ -352,7 +352,7 @@ def test_thread_update_delete_view_returns_redirect_to_thread_for_invalid_next_u
     )
 
 
-def test_thread_update_delete_view_returns_404_error_for_not_found_thread_in_htmx(
+def test_thread_event_delete_view_returns_404_error_for_not_found_thread_in_htmx(
     user_client,
 ):
     response = user_client.post(
@@ -370,7 +370,7 @@ def test_thread_update_delete_view_returns_404_error_for_not_found_thread_in_htm
     assert response.status_code == 404
 
 
-def test_thread_update_delete_view_returns_404_error_for_not_found_update_in_htmx(
+def test_thread_event_delete_view_returns_404_error_for_not_found_event_in_htmx(
     user_client, thread
 ):
     response = user_client.post(
@@ -388,7 +388,7 @@ def test_thread_update_delete_view_returns_404_error_for_not_found_update_in_htm
     assert response.status_code == 404
 
 
-def test_thread_update_delete_view_returns_403_error_for_anonymous_user_in_htmx(
+def test_thread_event_delete_view_returns_403_error_for_anonymous_user_in_htmx(
     client, thread, thread_event
 ):
     response = client.post(
@@ -404,11 +404,11 @@ def test_thread_update_delete_view_returns_403_error_for_anonymous_user_in_htmx(
     )
 
     assert_contains(
-        response, "Only a moderator can delete thread updates.", status_code=403
+        response, "Only a moderator can delete thread events.", status_code=403
     )
 
 
-def test_thread_update_delete_view_returns_403_error_for_user_in_htmx(
+def test_thread_event_delete_view_returns_403_error_for_user_in_htmx(
     user_client, thread, thread_event
 ):
     response = user_client.post(
@@ -424,11 +424,11 @@ def test_thread_update_delete_view_returns_403_error_for_user_in_htmx(
     )
 
     assert_contains(
-        response, "Only a moderator can delete thread updates.", status_code=403
+        response, "Only a moderator can delete thread events.", status_code=403
     )
 
 
-def test_thread_update_delete_view_checks_category_permission_in_htmx(
+def test_thread_event_delete_view_checks_category_permission_in_htmx(
     user_client, thread, thread_event
 ):
     CategoryGroupPermission.objects.filter(
@@ -450,7 +450,7 @@ def test_thread_update_delete_view_checks_category_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_thread_update_delete_view_checks_thread_permission_in_htmx(
+def test_thread_event_delete_view_checks_thread_permission_in_htmx(
     user_client, thread, thread_event
 ):
     thread.is_hidden = True
@@ -471,7 +471,7 @@ def test_thread_update_delete_view_checks_thread_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_thread_update_delete_view_checks_thread_update_permission_in_htmx(
+def test_thread_event_delete_view_checks_thread_event_permission_in_htmx(
     user_client, thread, hidden_thread_event
 ):
     response = user_client.post(
@@ -489,7 +489,7 @@ def test_thread_update_delete_view_checks_thread_update_permission_in_htmx(
     assert response.status_code == 404
 
 
-def test_thread_update_delete_view_deletes_update_for_category_moderator_in_htmx(
+def test_thread_event_delete_view_deletes_event_for_category_moderator_in_htmx(
     user_client, user, default_category, thread, thread_event
 ):
     Moderator.objects.create(
@@ -516,7 +516,7 @@ def test_thread_update_delete_view_deletes_update_for_category_moderator_in_htmx
         thread_event.refresh_from_db()
 
 
-def test_thread_update_delete_view_deletes_update_for_global_moderator_in_htmx(
+def test_thread_event_delete_view_deletes_event_for_global_moderator_in_htmx(
     moderator_client, thread, thread_event
 ):
     response = moderator_client.post(

@@ -10,11 +10,11 @@ from ..notifications.tasks import notify_on_new_thread_reply
 from ..permissions.proxy import UserPermissionsProxy
 from ..postedits.create import create_post_edit
 from ..threadevents.create import (
-    create_deleted_posts_thread_update,
-    create_moved_posts_from_thread_update,
-    create_moved_posts_to_thread_update,
-    create_split_posts_from_thread_update,
-    create_split_posts_into_thread_update,
+    create_deleted_posts_thread_event,
+    create_moved_posts_from_thread_event,
+    create_moved_posts_to_thread_event,
+    create_split_posts_from_thread_event,
+    create_split_posts_into_thread_event,
 )
 from ..threads.approve import approve_post
 from ..threads.create import create_thread
@@ -336,10 +336,10 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
 
         move_post(post, new_thread)
 
-        thread_update = create_split_posts_from_thread_update(
+        thread_event = create_split_posts_from_thread_event(
             new_thread, thread, 1, request.user, request=request
         )
-        create_split_posts_into_thread_update(
+        create_split_posts_into_thread_event(
             thread, new_thread, 1, request.user, request=request
         )
 
@@ -359,7 +359,7 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
 
         return ModerationResult(
             deleted_items=[post],
-            thread_updates=[thread_update],
+            thread_updates=[thread_event],
         )
 
     def get_thread_url(self, thread: Thread) -> str:
@@ -411,10 +411,10 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
 
         move_post(post, target_thread)
 
-        thread_update = create_moved_posts_from_thread_update(
+        thread_event = create_moved_posts_from_thread_event(
             target_thread, thread, 1, request.user, request=request
         )
-        create_moved_posts_to_thread_update(
+        create_moved_posts_to_thread_event(
             thread, target_thread, 1, request.user, request=request
         )
 
@@ -434,7 +434,7 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
 
         return ModerationResult(
             deleted_items=[post],
-            thread_updates=[thread_update],
+            thread_updates=[thread_event],
         )
 
     def get_thread_url(self, thread: Thread) -> str:
@@ -631,7 +631,7 @@ class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
 
         delete_post(post)
 
-        thread_update = create_deleted_posts_thread_update(
+        thread_event = create_deleted_posts_thread_event(
             thread, 1, request.user, request=request
         )
 
@@ -645,5 +645,5 @@ class DeletePostModerationAction(ConfirmMixin, PostModerationAction):
 
         return ModerationResult(
             deleted_items=[post],
-            thread_updates=[thread_update],
+            thread_updates=[thread_event],
         )

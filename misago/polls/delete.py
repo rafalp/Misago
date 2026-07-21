@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from django.http import HttpRequest
 
 from ..postgres.delete import delete_all, delete_one
-from ..threadevents.create import create_deleted_poll_thread_update
+from ..threadevents.create import create_deleted_poll_thread_event
 from ..threadevents.models import ThreadEvent
 from ..threadevents.threadflag import ensure_thread_has_events
 from ..threads.models import Thread
@@ -32,7 +32,7 @@ def _delete_thread_poll_action(
     thread.has_poll = False
     thread.save(update_fields=["has_events", "has_poll"])
 
-    return create_deleted_poll_thread_update(thread, poll, user, request=request)
+    return create_deleted_poll_thread_event(thread, poll, user, request=request)
 
 
 def delete_poll(poll: Poll, request: HttpRequest | None = None):

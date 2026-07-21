@@ -13,7 +13,7 @@ from ..polls.models import Poll, PollVote
 from ..postedits.create import create_post_edit
 from ..postedits.models import PostEdit
 from ..readtracker.models import ReadThread
-from ..threadevents.create import create_test_thread_update
+from ..threadevents.create import create_test_thread_event
 from ..threadevents.models import ThreadEvent
 from ..threads.enums import ThreadPinned
 from ..threads.models import Post, Thread
@@ -163,7 +163,7 @@ def thread_relations_factory(user, other_user):
             thread=thread,
         )
 
-        thread_update = create_test_thread_update(thread, other_user)
+        thread_update = create_test_thread_event(thread, other_user)
 
         watched_thread = WatchedThread.objects.create(
             user=user,

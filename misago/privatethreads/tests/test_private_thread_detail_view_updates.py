@@ -5,17 +5,17 @@ from ...permissions.enums import CategoryPermission
 from ...permissions.models import CategoryGroupPermission, Moderator
 from ...test import assert_contains, assert_not_contains
 from ...threadevents.create import (
-    create_added_member_thread_update,
-    create_moved_thread_update,
-    create_split_posts_from_thread_update,
-    create_test_thread_update,
+    create_added_member_thread_event,
+    create_moved_thread_event,
+    create_split_posts_from_thread_event,
+    create_test_thread_event,
 )
 
 
 def test_private_thread_detail_view_doesnt_show_thread_update_to_user_if_thread_flag_is_not_set(
     user_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
 
     response = user_client.get(
         reverse(
@@ -33,7 +33,7 @@ def test_private_thread_detail_view_doesnt_show_thread_update_to_user_if_thread_
 def test_private_thread_detail_view_shows_thread_update_to_user_if_thread_flag_is_set(
     user_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -60,7 +60,7 @@ def test_private_thread_detail_view_shows_thread_update_to_private_threads_moder
         private_threads=True,
     )
 
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -81,7 +81,7 @@ def test_private_thread_detail_view_shows_thread_update_to_private_threads_moder
 def test_private_thread_detail_view_shows_thread_update_to_global_moderator(
     moderator_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -102,7 +102,7 @@ def test_private_thread_detail_view_shows_thread_update_to_global_moderator(
 def test_private_thread_detail_view_shows_deleted_user_thread_update_to_user(
     user_client, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(other_user_private_thread, "DeletedUser")
+    thread_update = create_test_thread_event(other_user_private_thread, "DeletedUser")
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -129,7 +129,7 @@ def test_private_thread_detail_view_shows_deleted_user_thread_update_to_private_
         private_threads=True,
     )
 
-    thread_update = create_test_thread_update(other_user_private_thread, "DeletedUser")
+    thread_update = create_test_thread_event(other_user_private_thread, "DeletedUser")
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -150,7 +150,7 @@ def test_private_thread_detail_view_shows_deleted_user_thread_update_to_private_
 def test_private_thread_detail_view_shows_deleted_user_thread_update_to_global_moderator(
     moderator_client, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(other_user_private_thread, "DeletedUser")
+    thread_update = create_test_thread_event(other_user_private_thread, "DeletedUser")
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -171,7 +171,7 @@ def test_private_thread_detail_view_shows_deleted_user_thread_update_to_global_m
 def test_private_thread_detail_view_doesnt_show_hidden_thread_update_to_user(
     user_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
     thread_update.is_hidden = True
     thread_update.save()
 
@@ -200,7 +200,7 @@ def test_private_thread_detail_view_shows_hidden_thread_update_to_category_moder
         private_threads=True,
     )
 
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
     thread_update.is_hidden = True
     thread_update.save()
 
@@ -223,7 +223,7 @@ def test_private_thread_detail_view_shows_hidden_thread_update_to_category_moder
 def test_private_thread_detail_view_shows_hidden_thread_update_to_global_moderator(
     moderator_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
     thread_update.is_hidden = True
     thread_update.save()
 
@@ -246,7 +246,7 @@ def test_private_thread_detail_view_shows_hidden_thread_update_to_global_moderat
 def test_private_thread_detail_view_doesnt_show_hide_thread_update_button_to_user(
     user_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -284,7 +284,7 @@ def test_private_thread_detail_view_shows_hide_thread_update_button_to_private_t
         private_threads=True,
     )
 
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -316,7 +316,7 @@ def test_private_thread_detail_view_shows_hide_thread_update_button_to_private_t
 def test_private_thread_detail_view_shows_hide_thread_update_button_to_global_moderator(
     moderator_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -354,7 +354,7 @@ def test_private_thread_detail_view_shows_unhide_thread_update_button_to_categor
         private_threads=True,
     )
 
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
     thread_update.is_hidden = True
     thread_update.save()
 
@@ -388,7 +388,7 @@ def test_private_thread_detail_view_shows_unhide_thread_update_button_to_categor
 def test_private_thread_detail_view_shows_unhide_thread_update_button_to_global_moderator(
     moderator_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
     thread_update.is_hidden = True
     thread_update.save()
 
@@ -422,7 +422,7 @@ def test_private_thread_detail_view_shows_unhide_thread_update_button_to_global_
 def test_private_thread_detail_view_doesnt_show_delete_thread_update_button_to_user(
     user_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -460,7 +460,7 @@ def test_private_thread_detail_view_shows_delete_thread_update_button_to_categor
         private_threads=True,
     )
 
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -492,7 +492,7 @@ def test_private_thread_detail_view_shows_delete_thread_update_button_to_categor
 def test_private_thread_detail_view_shows_delete_thread_update_button_to_global_moderator(
     moderator_client, user, other_user_private_thread
 ):
-    thread_update = create_test_thread_update(other_user_private_thread, user)
+    thread_update = create_test_thread_event(other_user_private_thread, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -527,14 +527,12 @@ def test_private_thread_detail_view_shows_delete_thread_update_button_to_global_
 def test_private_thread_detail_view_shows_thread_updates_on_first_page(
     thread_reply_factory, user_client, user, other_user_private_thread
 ):
-    first_page_thread_update = create_test_thread_update(
-        other_user_private_thread, user
-    )
+    first_page_thread_update = create_test_thread_event(other_user_private_thread, user)
 
     for _ in range(6):
         thread_reply_factory(other_user_private_thread)
 
-    last_page_thread_update = create_test_thread_update(other_user_private_thread, user)
+    last_page_thread_update = create_test_thread_event(other_user_private_thread, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -562,21 +560,19 @@ def test_private_thread_detail_view_shows_thread_updates_on_second_page(
     for _ in range(4):
         thread_reply_factory(other_user_private_thread)
 
-    first_page_thread_update = create_test_thread_update(
-        other_user_private_thread, user
-    )
+    first_page_thread_update = create_test_thread_event(other_user_private_thread, user)
 
     for _ in range(5):
         thread_reply_factory(other_user_private_thread)
 
-    second_page_thread_update = create_test_thread_update(
+    second_page_thread_update = create_test_thread_event(
         other_user_private_thread, user
     )
 
     for _ in range(2):
         thread_reply_factory(other_user_private_thread)
 
-    last_page_thread_update = create_test_thread_update(other_user_private_thread, user)
+    last_page_thread_update = create_test_thread_event(other_user_private_thread, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -606,14 +602,12 @@ def test_private_thread_detail_view_shows_thread_updates_on_last_page(
     for _ in range(4):
         thread_reply_factory(other_user_private_thread)
 
-    first_page_thread_update = create_test_thread_update(
-        other_user_private_thread, user
-    )
+    first_page_thread_update = create_test_thread_event(other_user_private_thread, user)
 
     for _ in range(2):
         thread_reply_factory(other_user_private_thread)
 
-    last_page_thread_update = create_test_thread_update(other_user_private_thread, user)
+    last_page_thread_update = create_test_thread_event(other_user_private_thread, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -639,9 +633,7 @@ def test_private_thread_detail_view_limits_displayed_thread_updates_count(
 ):
     thread_updates = []
     for _ in range(5):
-        thread_updates.append(
-            create_test_thread_update(other_user_private_thread, user)
-        )
+        thread_updates.append(create_test_thread_event(other_user_private_thread, user))
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -675,7 +667,7 @@ def test_private_thread_detail_view_displays_thread_update_with_other_category_c
         permission=CategoryPermission.BROWSE,
     )
 
-    create_moved_thread_update(other_user_private_thread, other_category, user)
+    create_moved_thread_event(other_user_private_thread, other_category, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -699,7 +691,7 @@ def test_private_thread_detail_view_displays_thread_update_with_inaccessible_oth
 ):
     CategoryGroupPermission.objects.filter(category=other_category).delete()
 
-    create_moved_thread_update(other_user_private_thread, other_category, user)
+    create_moved_thread_event(other_user_private_thread, other_category, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()
@@ -721,7 +713,7 @@ def test_private_thread_detail_view_displays_thread_update_with_inaccessible_oth
 def test_private_thread_detail_view_displays_thread_update_with_other_thread_context(
     user_client, user, other_user_private_thread, other_thread
 ):
-    create_split_posts_from_thread_update(
+    create_split_posts_from_thread_event(
         other_user_private_thread, other_thread, actor=user
     )
 
@@ -751,7 +743,7 @@ def test_private_thread_detail_view_displays_thread_update_with_other_thread_con
 def test_private_thread_detail_view_displays_thread_update_with_inaccessible_other_thread_context(
     user_client, user, other_user_private_thread, other_thread
 ):
-    create_split_posts_from_thread_update(
+    create_split_posts_from_thread_event(
         other_user_private_thread, other_thread, actor=user
     )
 
@@ -784,7 +776,7 @@ def test_private_thread_detail_view_displays_thread_update_with_inaccessible_oth
 def test_private_thread_detail_view_displays_thread_update_with_user_context(
     user_client, user, other_user, other_user_private_thread
 ):
-    create_added_member_thread_update(other_user_private_thread, other_user, user)
+    create_added_member_thread_event(other_user_private_thread, other_user, user)
 
     other_user_private_thread.has_events = True
     other_user_private_thread.save()

@@ -1,4 +1,4 @@
-from ...threadevents.enums import ThreadUpdateActionName
+from ...threadevents.enums import ThreadEventActionName
 from ...threadevents.models import ThreadEvent
 from ..close import close_thread_poll
 
@@ -17,7 +17,7 @@ def test_close_thread_poll_creates_thread_update(thread, poll, user):
     thread_update = close_thread_poll(thread, poll, user)
 
     assert thread_update
-    assert thread_update.action == ThreadUpdateActionName.CLOSED_POLL
+    assert thread_update.action == ThreadEventActionName.CLOSED_POLL
     assert thread_update.thread == thread
     assert thread_update.actor == user
 

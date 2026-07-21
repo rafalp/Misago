@@ -14,7 +14,7 @@ class DeleteThreadUpdateHookAction(Protocol):
 
     # Arguments
 
-    ## `thread_update: ThreadUpdate`
+    ## `thread_event: ThreadUpdate`
 
     A `ThreadUpdate` instance to delete.
 
@@ -25,7 +25,7 @@ class DeleteThreadUpdateHookAction(Protocol):
 
     def __call__(
         self,
-        thread_update: "ThreadUpdate",
+        thread_event: "ThreadUpdate",
         request: HttpRequest | None = None,
     ): ...
 
@@ -43,7 +43,7 @@ class DeleteThreadUpdateHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `thread_update: ThreadUpdate`
+    ## `thread_event: ThreadUpdate`
 
     A `ThreadUpdate` instance to delete.
 
@@ -55,7 +55,7 @@ class DeleteThreadUpdateHookFilter(Protocol):
     def __call__(
         self,
         action: DeleteThreadUpdateHookAction,
-        thread_update: "ThreadUpdate",
+        thread_event: "ThreadUpdate",
         request: HttpRequest | None = None,
     ): ...
 
@@ -78,27 +78,27 @@ class DeleteThreadUpdateHook(
     import logging
 
     from django.http import HttpRequest
-    from misago.threads.hooks import delete_thread_update_hook
+    from misago.threads.hooks import delete_thread_event_hook
     from misago.threads.models import ThreadUpdate
 
     logger = logging.getLogger("misago.moderation")
 
 
-    @delete_thread_update_hook.append_filter
-    def log_thread_update_deletion(
+    @delete_thread_event_hook.append_filter
+    def log_thread_event_deletion(
         action,
-        thread_update: ThreadUpdate,
+        thread_event: ThreadUpdate,
         request: HttpRequest | None = None,
     ) -> bool:
         logger.info(
             "Thread update was deleted",
             extra={
-                "id": thread_update.id,
+                "id": thread_event.id,
                 "user": request.user.id if request else "",
                 "ip": request.client_ip if request else "",
             },
         )
-        return action(thread_update, request)
+        return action(thread_event, request)
     ```
     """
 
@@ -107,11 +107,11 @@ class DeleteThreadUpdateHook(
     def __call__(
         self,
         action: DeleteThreadUpdateHookAction,
-        thread_update: "ThreadUpdate",
+        thread_event: "ThreadUpdate",
         update_fields: set[str],
         request: HttpRequest | None = None,
     ) -> "ThreadUpdate":
-        return super().__call__(action, thread_update, request)
+        return super().__call__(action, thread_event, request)
 
 
-delete_thread_update_hook = DeleteThreadUpdateHook()
+delete_thread_event_hook = DeleteThreadUpdateHook()
