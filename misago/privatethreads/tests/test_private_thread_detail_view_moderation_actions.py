@@ -262,7 +262,7 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.TOOK_OWNERSHIP,
+        action=ThreadEventActionName.TOOK_OWNERSHIP,
     )
 
 
@@ -309,7 +309,7 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.TOOK_OWNERSHIP,
+        action=ThreadEventActionName.TOOK_OWNERSHIP,
     )
 
 
@@ -365,7 +365,7 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.TOOK_OWNERSHIP,
+        action=ThreadEventActionName.TOOK_OWNERSHIP,
     )
 
 
@@ -419,7 +419,7 @@ def test_private_thread_detail_view_ownership_thread_moderation_action_makes_mod
 
     ThreadEvent.objects.get(
         thread=user_private_thread,
-        action=ThreadUpdateActionName.TOOK_OWNERSHIP,
+        action=ThreadEventActionName.TOOK_OWNERSHIP,
     )
 
 

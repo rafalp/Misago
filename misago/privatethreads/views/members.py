@@ -200,7 +200,7 @@ class PrivateThreadMemberView(PrivateThreadView):
 
         response = PrivateThreadMembersHtmxResponse(request, thread)
         if thread_event:
-            response.set_thread_updates([thread_event])
+            response.set_thread_events([thread_event])
 
         return response.render()
 
