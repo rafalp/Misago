@@ -342,6 +342,7 @@ class PostFeed:
 
         if item["attachments"]:
             item["attachments"].sort(reverse=True, key=lambda a: a.id)
+            item["attachment_errors"] = prefetched_data["attachment_errors"]
 
         item["moderation_actions"] = get_moderation_action_choices(
             self.get_post_moderation_actions(post)

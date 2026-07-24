@@ -1,0 +1,15 @@
+{% load i18n %}
+<span
+  class="rich-text-attachment-permission-error rich-text-file-permission-error"
+  misago-rich-text-attachment="{{ attachment.name }}:{{ attachment.id }}"
+>
+  <span class="rich-text-attachment-permission-error-icon">
+    {% include "tabler/file.svg" %}
+  </span>
+  <span class="rich-text-attachment-permission-error-filename">
+    {{ attachment.name }}
+  </span>
+  <span class="rich-text-attachment-permission-error-message">
+    {% translate "You don't have permission to view this file." context "rich text attachment file permission error" %}
+  </span>
+</span>

@@ -160,6 +160,24 @@ class Attachment(PluginDataModel):
 
         return None
 
+    @property
+    def min_dimensions(self) -> int | None:
+        return self.thumbnail_dimensions or self.dimensions
+
+    @property
+    def min_width(self) -> int | None:
+        if dimensions := self.min_dimensions:
+            return int(dimensions.split("x")[0])
+
+        return None
+
+    @property
+    def min_height(self) -> int | None:
+        if dimensions := self.min_dimensions:
+            return int(dimensions.split("x")[1])
+
+        return None
+
     def get_absolute_url(self) -> str:
         return reverse(
             "misago:attachment-download", kwargs={"id": self.id, "slug": self.slug}

@@ -313,6 +313,49 @@ ol,
   }
 }
 
+.rich-text-attachment-permission-error {
+  display: flex;
+  flex-direction: column;
+  gap: ceil(@line-height-computed / 4);
+  align-items: center;
+
+  max-width: 280px;
+  padding: 16px;
+
+  background-color: @gray-100;
+  border-radius: @border-radius-base;
+}
+
+.rich-text-attachment-permission-error-icon {
+  display: inline-block;
+
+  color: @gray-300;
+
+  svg {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.rich-text-attachment-permission-error-filename {
+  display: inline-block;
+
+  max-width: 100%;
+  overflow-wrap: break-word;
+
+  color: @gray-800;
+  font-weight: bold;
+  text-align: center;
+}
+
+.rich-text-attachment-permission-error-message {
+  display: inline-block;
+
+  color: @gray-500;
+  font-size: @font-size-small;
+  text-align: center;
+}
+
 .rich-text-table-container {
   width: 100%;
   overflow-x: auto;
