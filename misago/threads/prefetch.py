@@ -42,7 +42,7 @@ def prefetch_post_feed_data(
     *,
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
-    thread_updates: Iterable[ThreadEvent] | None = None,
+    thread_events: Iterable[ThreadEvent] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> dict:
@@ -53,7 +53,7 @@ def prefetch_post_feed_data(
         posts,
         categories=categories,
         threads=threads,
-        thread_updates=thread_updates,
+        thread_events=thread_events,
         attachments=attachments,
         users=users,
     )
@@ -67,7 +67,7 @@ def _create_prefetch_post_feed_data_action(
     *,
     categories: Iterable[Category] | None = None,
     threads: Iterable[Thread] | None = None,
-    thread_updates: Iterable[ThreadEvent] | None = None,
+    thread_events: Iterable[ThreadEvent] | None = None,
     attachments: Iterable[Attachment] | None = None,
     users: Iterable["User"] | None = None,
 ) -> "PrefetchPostFeedData":
@@ -77,7 +77,7 @@ def _create_prefetch_post_feed_data_action(
         categories=categories,
         threads=threads,
         posts=posts,
-        thread_updates=thread_updates,
+        thread_events=thread_events,
         attachments=attachments,
         users=users,
     )
@@ -122,7 +122,7 @@ class PrefetchPostFeedData:
     categories: list[Category]
     threads: list[Thread]
     posts: list[Post]
-    thread_updates: list[ThreadEvent]
+    thread_events: list[ThreadEvent]
     attachments: list[Attachment]
     users: list["User"]
     extra_kwargs: dict
@@ -135,7 +135,7 @@ class PrefetchPostFeedData:
         posts: Iterable[Post],
         categories: Iterable[Category] | None = None,
         threads: Iterable[Thread] | None = None,
-        thread_updates: Iterable[ThreadEvent] | None = None,
+        thread_events: Iterable[ThreadEvent] | None = None,
         attachments: Iterable[Attachment] | None = None,
         users: Iterable["User"] | None = None,
         **kwargs,
@@ -148,7 +148,7 @@ class PrefetchPostFeedData:
         self.categories = categories or []
         self.threads = threads or []
         self.posts = list(posts)
-        self.thread_updates = thread_updates or []
+        self.thread_events = thread_events or []
         self.attachments = attachments or []
         self.users = users or []
 
@@ -171,8 +171,8 @@ class PrefetchPostFeedData:
             "posts": {p.id: p for p in self.posts if p.id},
             "visible_posts": {p.id for p in self.posts if p.id},
             "liked_posts": set(),
-            "thread_updates": {u.id: u for u in self.thread_updates},
-            "visible_thread_updates": {u for u in self.thread_updates},
+            "thread_events": {u.id: u for u in self.thread_events},
+            "visible_thread_updates": {u for u in self.thread_events},
             "attachments": {a.id: a for a in self.attachments},
             "attachment_errors": {},
             "users": {u.id: u for u in self.users},
@@ -250,8 +250,8 @@ def find_category_ids(
         if thread.category_id:
             data["category_ids"].add(thread.category_id)
 
-    for thread_update in data["thread_updates"].values():
-        if context_id := thread_update.get_context_id("misago_categories.category"):
+    for thread_event in data["thread_events"].values():
+        if context_id := thread_event.get_context_id("misago_categories.category"):
             data["category_ids"].add(context_id)
 
     for attachment in data["attachments"].values():
@@ -278,8 +278,8 @@ def find_thread_ids(
         if post.thread_id:
             data["thread_ids"].add(post.thread_id)
 
-    for thread_update in data["thread_updates"].values():
-        if context_id := thread_update.get_context_id("misago_threads.thread"):
+    for thread_event in data["thread_events"].values():
+        if context_id := thread_event.get_context_id("misago_threads.thread"):
             data["thread_ids"].add(context_id)
 
     for attachment in data["attachments"].values():
@@ -317,8 +317,8 @@ def find_post_ids(
     settings: DynamicSettings,
     permissions: UserPermissionsProxy,
 ):
-    for thread_update in data["thread_updates"].values():
-        if context_id := thread_update.get_context_id("misago_threads.post"):
+    for thread_event in data["thread_events"].values():
+        if context_id := thread_event.get_context_id("misago_threads.post"):
             data["post_ids"].add(context_id)
 
     for attachment in data["attachments"].values():
@@ -355,8 +355,8 @@ def find_attachment_ids(
     for post in data["posts"].values():
         data["attachment_ids"].update(post.metadata.get("attachments", []))
 
-    for thread_update in data["thread_updates"].values():
-        if context_id := thread_update.get_context_id("misago_attachments.attachment"):
+    for thread_event in data["thread_events"].values():
+        if context_id := thread_event.get_context_id("misago_attachments.attachment"):
             data["attachment_ids"].add(context_id)
 
     if extra_attachments := data["metadata"].get("attachments"):
@@ -529,10 +529,10 @@ def find_users_ids(
     for post in data["posts"].values():
         data["user_ids"].add(post.poster_id)
 
-    for thread_update in data["thread_updates"].values():
-        if thread_update.actor_id:
-            data["user_ids"].add(thread_update.actor_id)
-        if context_id := thread_update.get_context_id("misago_users.user"):
+    for thread_event in data["thread_events"].values():
+        if thread_event.actor_id:
+            data["user_ids"].add(thread_event.actor_id)
+        if context_id := thread_event.get_context_id("misago_users.user"):
             data["user_ids"].add(context_id)
 
 

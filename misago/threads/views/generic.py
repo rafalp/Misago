@@ -97,7 +97,7 @@ class GenericThreadView(View):
         *,
         select_related: bool | Iterable[str] = False,
     ) -> QuerySet:
-        return self.backend.get_thread_updates_queryset(
+        return self.backend.get_thread_events_queryset(
             request,
             thread,
             select_related=select_related,
@@ -107,14 +107,14 @@ class GenericThreadView(View):
         self,
         request: HttpRequest,
         thread: Thread,
-        thread_update_id: int,
+        thread_event_id: int,
         *,
         select_related: bool | Iterable[str] = False,
     ) -> ThreadEvent:
-        return self.backend.get_thread_update(
+        return self.backend.get_thread_event(
             request,
             thread,
-            thread_update_id,
+            thread_event_id,
             select_related=select_related,
         )
 
@@ -140,9 +140,9 @@ class GenericThreadView(View):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadEvent] | None = None,
+        thread_events: list[ThreadEvent] | None = None,
     ) -> PostFeed:
-        return self.backend.get_post_feed(request, thread, posts, thread_updates)
+        return self.backend.get_post_feed(request, thread, posts, thread_events)
 
     def get_posts_paginator(
         self,
@@ -204,7 +204,7 @@ class GenericView(View):
     thread_url_name: str
     thread_post_url_name: str
     post_select_related: Iterable[str] | True | None = None
-    thread_update_select_related: Iterable[str] | True | None = None
+    thread_event_select_related: Iterable[str] | True | None = None
     next_page: str = "next"
 
     def get_thread(
@@ -280,7 +280,7 @@ class GenericView(View):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadEvent] | None = None,
+        thread_events: list[ThreadEvent] | None = None,
     ) -> PostFeed:
         raise NotImplementedError()
 
@@ -327,10 +327,10 @@ class GenericView(View):
         self, request: HttpRequest, thread: Thread, thread_event_id: int
     ) -> ThreadEvent:
         queryset = self.get_thread_event_queryset(request, thread)
-        if self.thread_update_select_related is True:
+        if self.thread_event_select_related is True:
             queryset = queryset.select_related()
-        elif self.thread_update_select_related:
-            queryset = queryset.select_related(*self.thread_update_select_related)
+        elif self.thread_event_select_related:
+            queryset = queryset.select_related(*self.thread_event_select_related)
 
         try:
             thread_event = queryset.get(id=thread_event_id)
@@ -382,9 +382,9 @@ class ThreadView(GenericView):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadEvent] | None = None,
+        thread_events: list[ThreadEvent] | None = None,
     ) -> PostFeed:
-        post_feed = ThreadPostFeed(request, thread, posts, thread_updates)
+        post_feed = ThreadPostFeed(request, thread, posts, thread_events)
 
         if self.get_moderator_status(request, thread):
             post_feed.set_moderation(True)

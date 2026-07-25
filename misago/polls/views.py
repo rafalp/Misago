@@ -308,7 +308,7 @@ class UpdateThreadPollView(ThreadPollView):
 
         if thread_update:
             post_feed = ThreadPostFeed(request, thread, [], [thread_update])
-            post_feed.set_animated_thread_updates([thread_update.id])
+            post_feed.set_animated_thread_events([thread_update.id])
             context["thread_updates"] = post_feed.get_feed_data()
 
         if context["allow_vote"] and not user_poll_votes:

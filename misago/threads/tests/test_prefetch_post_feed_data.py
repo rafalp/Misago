@@ -187,7 +187,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_context_categories(
             dynamic_settings,
             permissions,
             [],
-            thread_updates=[thread_event_category_context],
+            thread_events=[thread_event_category_context],
         )
         assert data["categories"] == {sibling_category.id: sibling_category}
 
@@ -306,7 +306,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_context_threads(
             dynamic_settings,
             permissions,
             [],
-            thread_updates=[thread_event_thread_context],
+            thread_events=[thread_event_thread_context],
         )
         assert data["threads"] == {other_thread.id: other_thread}
 
@@ -945,7 +945,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_users(
 
     with django_assert_num_queries(2):
         data = prefetch_post_feed_data(
-            dynamic_settings, permissions, [], thread_updates=[thread_event]
+            dynamic_settings, permissions, [], thread_events=[thread_event]
         )
         assert data["users"] == {user.id: user}
 
@@ -970,7 +970,7 @@ def test_prefetch_post_feed_data_prefetches_thread_update_context_users(
             dynamic_settings,
             permissions,
             [],
-            thread_updates=[thread_event_user_context],
+            thread_events=[thread_event_user_context],
         )
         assert data["users"] == {user.id: user, other_user.id: other_user}
 

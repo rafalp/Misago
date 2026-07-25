@@ -37,7 +37,7 @@ class EventView:
 
         thread_event.refresh_from_db()
         feed = self.get_post_feed(request, thread, [], [thread_event])
-        feed.set_animated_thread_updates([thread_event.id])
+        feed.set_animated_thread_events([thread_event.id])
 
         return render(
             request,

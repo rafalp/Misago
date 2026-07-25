@@ -110,7 +110,7 @@ class ViewBackend(ABC):
         queryset = self.get_posts_queryset(request, post.thread).filter(id__lte=post.id)
         return queryset.count()
 
-    def get_thread_updates_queryset(
+    def get_thread_events_queryset(
         self,
         request: HttpRequest,
         thread: Thread,
@@ -124,26 +124,26 @@ class ViewBackend(ABC):
             queryset = queryset.select_related(*select_related)
         return queryset
 
-    def get_thread_update(
+    def get_thread_event(
         self,
         request: HttpRequest,
         thread: Thread,
-        thread_update_id: int,
+        thread_event_id: int,
         *,
         select_related: bool | Iterable[str] = False,
     ) -> ThreadEvent:
-        queryset = self.get_thread_updates_queryset(
+        queryset = self.get_thread_events_queryset(
             request, thread, select_related=select_related
         )
         try:
-            thread_update = queryset.get(id=thread_update_id)
+            thread_event = queryset.get(id=thread_event_id)
         except ThreadEvent.DoesNotExist:
             raise Http404()
 
-        thread_update.category = thread.category
-        thread_update.thread = thread
+        thread_event.category = thread.category
+        thread_event.thread = thread
 
-        return thread_update
+        return thread_event
 
     # Thread utils
 
@@ -171,7 +171,7 @@ class ViewBackend(ABC):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadEvent] | None = None,
+        thread_events: list[ThreadEvent] | None = None,
     ) -> PostFeed:
         pass
 
@@ -352,14 +352,14 @@ class ThreadViewBackend(ViewBackend):
 
         return post
 
-    def get_thread_updates_queryset(
+    def get_thread_events_queryset(
         self,
         request: HttpRequest,
         thread: Thread,
         *,
         select_related: bool | Iterable[str] = False,
     ) -> QuerySet:
-        queryset = super().get_thread_updates_queryset(
+        queryset = super().get_thread_events_queryset(
             request,
             thread,
             select_related=select_related,
@@ -392,9 +392,9 @@ class ThreadViewBackend(ViewBackend):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadEvent] | None = None,
+        thread_events: list[ThreadEvent] | None = None,
     ) -> PostFeed:
-        post_feed = ThreadPostFeed(request, thread, posts, thread_updates)
+        post_feed = ThreadPostFeed(request, thread, posts, thread_events)
 
         if self.has_moderator_permission(request.user_permissions, thread):
             post_feed.set_moderation(True)

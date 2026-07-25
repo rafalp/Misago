@@ -1,13 +1,13 @@
 {% load i18n misago_avatars misago_formats %}
 <div
-  id="post-feed-item-thread-update-{{ thread_update.id }}"
+  id="post-feed-item-thread-update-{{ thread_event.id }}"
   class="post-feed-item{% if animate %} post-feed-item-animate{% endif %}"
   {% if htmx_swap %}
     hx-swap-oob="true"
   {% endif %}
 >
-  <a id="update-{{ thread_update.id }}" class="scroll-target"></a>
-  <div class="post-feed-item-thread-update{% if thread_update.hidden %} post-feed-item-thread-update-hidden{% endif %}">
+  <a id="update-{{ thread_event.id }}" class="scroll-target"></a>
+  <div class="post-feed-item-thread-update{% if thread_event.hidden %} post-feed-item-thread-update-hidden{% endif %}">
     <div class="post-feed-item-thread-update-post-bit">
       <div>
         <div class="post-feed-item-thread-update-icon">
@@ -45,20 +45,20 @@
         <span class="post-feed-item-thread-update-separator">&bull;</span>
         <span
           class="post-feed-item-thread-update-timestamp post-feed-item-thread-update-timestamp-full"
-          title="{{ thread_update.created_at|date:'DATETIME_FORMAT' }}"
-          misago-timestamp="{{ thread_update.created_at.isoformat }}"
+          title="{{ thread_event.created_at|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ thread_event.created_at.isoformat }}"
         >
-          {{ thread_update.created_at|date_relative }}
+          {{ thread_event.created_at|date_relative }}
         </span>
         <span
           class="post-feed-item-thread-update-timestamp post-feed-item-thread-update-timestamp-short"
-          title="{{ thread_update.created_at|date:'DATETIME_FORMAT' }}"
-          misago-timestamp="{{ thread_update.created_at.isoformat }}"
+          title="{{ thread_event.created_at|date:'DATETIME_FORMAT' }}"
+          misago-timestamp="{{ thread_event.created_at.isoformat }}"
           misago-timestamp-format="short"
         >
-          {{ thread_update.created_at|date_relative_short }}
+          {{ thread_event.created_at|date_relative_short }}
         </span>
-        {% if thread_update.is_hidden %}
+        {% if thread_event.is_hidden %}
           <span class="post-feed-item-thread-update-hidden-label" title="{% translate 'This thread update is hidden. Only moderators can see it.' context 'thread update hidden label' %}">
             {% translate "Hidden" context "thread update hidden label" %}
           </span>
@@ -74,7 +74,7 @@
               hx-swap="none"
             >
               {% csrf_token %}
-              <input type="hidden" name="next" value="{{ full_path }}#update-{{ thread_update.id }}" />
+              <input type="hidden" name="next" value="{{ full_path }}#update-{{ thread_event.id }}" />
               <button type="submit" class="post-feed-item-thread-update-btn">
                 {% translate "Hide" context "thread update btn" %}
               </button>
@@ -88,7 +88,7 @@
               hx-swap="none"
             >
               {% csrf_token %}
-              <input type="hidden" name="next" value="{{ full_path }}#update-{{ thread_update.id }}" />
+              <input type="hidden" name="next" value="{{ full_path }}#update-{{ thread_event.id }}" />
               <button type="submit" class="post-feed-item-thread-update-btn">
                 {% translate "Unhide" context "thread update btn" %}
               </button>
