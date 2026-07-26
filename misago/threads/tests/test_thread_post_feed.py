@@ -296,9 +296,9 @@ def test_post_feed_returns_thread_update_data(
 
     assert feed_data["template_name"] == post_feed.template_name
     assert (
-        feed_data["items"][1]["template_name"] == post_feed.thread_update_template_name
+        feed_data["items"][1]["template_name"] == post_feed.thread_event_template_name
     )
-    assert feed_data["items"][1]["thread_update"] == thread_event
+    assert feed_data["items"][1]["thread_event"] == thread_event
 
 
 def test_post_feed_sets_actors_in_thread_update_data(
@@ -309,7 +309,7 @@ def test_post_feed_sets_actors_in_thread_update_data(
     post_feed = PostFeed(request, thread, [post], [thread_event])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_event
+    assert feed_data["items"][1]["thread_event"] == thread_event
     assert feed_data["items"][1]["actor"] == user
     assert feed_data["items"][1]["actor_name"] == user.username
 
@@ -322,7 +322,7 @@ def test_post_feed_sets_action_data_in_thread_update_data(
     post_feed = PostFeed(request, thread, [post], [thread_event])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_event
+    assert feed_data["items"][1]["thread_event"] == thread_event
     assert feed_data["items"][1]["icon"] == "tabler/lock-open.svg"
     assert feed_data["items"][1]["description"] == "Unlocked"
 
@@ -333,13 +333,13 @@ def test_post_feed_marks_thread_update_as_animated(
     request = request_factory(user)
 
     post_feed = PostFeed(request, thread, [post], [thread_event, thread_event_context])
-    post_feed.set_animated_thread_updates([thread_event_context.id])
+    post_feed.set_animated_thread_events([thread_event_context.id])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_event
+    assert feed_data["items"][1]["thread_event"] == thread_event
     assert not feed_data["items"][1]["animate"]
 
-    assert feed_data["items"][2]["thread_update"] == thread_event_context
+    assert feed_data["items"][2]["thread_event"] == thread_event_context
     assert feed_data["items"][2]["animate"]
 
 
@@ -349,13 +349,13 @@ def test_post_feed_marks_thread_update_as_animated(
     request = request_factory(user)
 
     post_feed = PostFeed(request, thread, [post], [thread_event, thread_event_context])
-    post_feed.set_animated_thread_updates([thread_event_context.id])
+    post_feed.set_animated_thread_events([thread_event_context.id])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_event
+    assert feed_data["items"][1]["thread_event"] == thread_event
     assert not feed_data["items"][1]["animate"]
 
-    assert feed_data["items"][2]["thread_update"] == thread_event_context
+    assert feed_data["items"][2]["thread_event"] == thread_event_context
     assert feed_data["items"][2]["animate"]
 
 
@@ -367,7 +367,7 @@ def test_thread_post_feed_doesnt_mark_thread_update_as_hidable_by_user(
     post_feed = ThreadPostFeed(request, thread, [post], [thread_event])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_event
+    assert feed_data["items"][1]["thread_event"] == thread_event
     assert not feed_data["items"][1]["hide_url"]
 
 
@@ -379,7 +379,7 @@ def test_thread_post_feed_doesnt_mark_thread_update_as_unhideable_by_user(
     post_feed = ThreadPostFeed(request, thread, [post], [hidden_thread_event])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == hidden_thread_event
+    assert feed_data["items"][1]["thread_event"] == hidden_thread_event
     assert not feed_data["items"][1]["unhide_url"]
 
 
@@ -391,7 +391,7 @@ def test_thread_post_feed_doesnt_mark_thread_update_as_deletable_by_user(
     post_feed = ThreadPostFeed(request, thread, [post], [thread_event])
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_event
+    assert feed_data["items"][1]["thread_event"] == thread_event
     assert not feed_data["items"][1]["delete_url"]
 
 
@@ -405,7 +405,7 @@ def test_thread_post_feed_marks_thread_update_as_hidable_by_moderator(
 
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_event
+    assert feed_data["items"][1]["thread_event"] == thread_event
     assert feed_data["items"][1]["hide_url"]
 
 
@@ -419,7 +419,7 @@ def test_thread_post_feed_marks_thread_update_as_unhideable_by_moderator(
 
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == hidden_thread_event
+    assert feed_data["items"][1]["thread_event"] == hidden_thread_event
     assert feed_data["items"][1]["unhide_url"]
 
 
@@ -433,5 +433,5 @@ def test_thread_post_feed_marks_thread_update_as_deletable_by_moderator(
 
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == thread_event
+    assert feed_data["items"][1]["thread_event"] == thread_event
     assert feed_data["items"][1]["delete_url"]

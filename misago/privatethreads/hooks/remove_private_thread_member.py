@@ -122,12 +122,12 @@ class RemovePrivateThreadMember(
         member: User,
         request: HttpRequest | None = None,
     ) -> ThreadEvent:
-        thread_update = action(actor, thread, member, request)
+        thread_event = action(actor, thread, member, request)
 
-        thread_update.plugin_data["user_ip"] = request.user_ip
-        thread_update.save(update_fields=["plugin_data"])
+        thread_event.plugin_data["user_ip"] = request.user_ip
+        thread_event.save(update_fields=["plugin_data"])
 
-        return thread_update
+        return thread_event
     ```
     """
 

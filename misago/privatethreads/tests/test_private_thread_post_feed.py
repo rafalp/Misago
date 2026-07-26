@@ -224,7 +224,7 @@ def test_private_thread_post_feed_doesnt_mark_thread_update_as_hidable_by_user(
     )
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == private_thread_event
+    assert feed_data["items"][1]["thread_event"] == private_thread_event
     assert not feed_data["items"][1]["hide_url"]
 
 
@@ -245,7 +245,7 @@ def test_private_thread_post_feed_doesnt_mark_thread_update_as_unhideable_by_use
     )
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == hidden_private_thread_event
+    assert feed_data["items"][1]["thread_event"] == hidden_private_thread_event
     assert not feed_data["items"][1]["unhide_url"]
 
 
@@ -263,7 +263,7 @@ def test_private_thread_post_feed_doesnt_mark_thread_update_as_deletable_by_user
     )
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == private_thread_event
+    assert feed_data["items"][1]["thread_event"] == private_thread_event
     assert not feed_data["items"][1]["delete_url"]
 
 
@@ -283,7 +283,7 @@ def test_private_thread_post_feed_marks_thread_update_as_hidable_by_moderator(
 
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == private_thread_event
+    assert feed_data["items"][1]["thread_event"] == private_thread_event
     assert feed_data["items"][1]["hide_url"]
 
 
@@ -306,7 +306,7 @@ def test_private_thread_post_feed_marks_thread_update_as_unhideable_by_moderator
 
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == hidden_private_thread_event
+    assert feed_data["items"][1]["thread_event"] == hidden_private_thread_event
     assert feed_data["items"][1]["unhide_url"]
 
 
@@ -326,5 +326,5 @@ def test_private_thread_post_feed_marks_thread_update_as_deletable_by_moderator(
 
     feed_data = post_feed.get_context_data()
 
-    assert feed_data["items"][1]["thread_update"] == private_thread_event
+    assert feed_data["items"][1]["thread_event"] == private_thread_event
     assert feed_data["items"][1]["delete_url"]

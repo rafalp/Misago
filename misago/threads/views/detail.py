@@ -188,12 +188,12 @@ class DetailView(GenericThreadView):
 
         context_data = self.get_moderation_result_data(request, thread, result)
 
-        if thread_updates := result.thread_updates:
-            post_feed = self.get_post_feed(request, thread, [], thread_updates)
-            post_feed.set_animated_thread_updates(
-                [update.id for update in thread_updates]
+        if thread_events := result.thread_updates:
+            post_feed = self.get_post_feed(request, thread, [], thread_events)
+            post_feed.set_animated_thread_events(
+                [update.id for update in thread_events]
             )
-            context_data["thread_updates"] = post_feed.get_context_data()["items"]
+            context_data[("thread_updates")] = post_feed.get_context_data()["items"]
 
         response = render(request, self.moderation_result_template_name, context_data)
         set_moderation_response_headers(
@@ -372,7 +372,7 @@ class DetailView(GenericThreadView):
                 item for item in post_feed_data if item["type"] == "post"
             ]
             context_data["thread_updates"] = [
-                item for item in post_feed_data if item["type"] == "update"
+                item for item in post_feed_data if item["type"] == "event"
             ]
 
         response = render(request, self.moderation_result_template_name, context_data)
@@ -642,11 +642,11 @@ class DetailView(GenericThreadView):
         posts = list(page_obj.object_list)
 
         if thread.has_events:
-            thread_updates = self.get_thread_updates(request, thread, page_obj, posts)
+            thread_events = self.get_thread_updates(request, thread, page_obj, posts)
         else:
-            thread_updates = []
+            thread_events = []
 
-        post_feed = self.get_post_feed(request, thread, posts, thread_updates)
+        post_feed = self.get_post_feed(request, thread, posts, thread_events)
         post_feed.set_counter_start(page_obj.start_index() - 1)
 
         if animate_posts := kwargs.get("updated_posts"):

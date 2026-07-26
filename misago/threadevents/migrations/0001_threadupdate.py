@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
                     "thread",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.DO_NOTHING,
-                        related_name="updates",
+                        related_name="events",
                         to="misago_threads.thread",
                     ),
                 ),

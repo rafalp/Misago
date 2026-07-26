@@ -391,7 +391,7 @@ class PrivateThreadMembersHtmxResponse:
         if self.request.user_permissions.is_private_threads_moderator:
             post_feed.set_moderation(True)
 
-        post_feed.set_animated_thread_updates(
+        post_feed.set_animated_thread_events(
             [thread_event.id for thread_event in self.thread_events]
         )
 

@@ -28,7 +28,7 @@ class ThreadEvent(PluginDataModel):
     thread = models.ForeignKey(
         "misago_threads.Thread",
         on_delete=models.DO_NOTHING,
-        related_name="updates",
+        related_name="events",
     )
 
     actor = models.ForeignKey(

@@ -105,14 +105,14 @@ class PrivateThreadViewBackend(ViewBackend):
 
         return post
 
-    def get_thread_updates_queryset(
+    def get_thread_events_queryset(
         self,
         request: HttpRequest,
         thread: Thread,
         *,
         select_related: bool | Iterable[str] = False,
     ) -> QuerySet:
-        queryset = super().get_thread_updates_queryset(
+        queryset = super().get_thread_events_queryset(
             request,
             thread,
             select_related=select_related,
@@ -143,9 +143,9 @@ class PrivateThreadViewBackend(ViewBackend):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadEvent] | None = None,
+        thread_events: list[ThreadEvent] | None = None,
     ) -> PrivateThreadPostFeed:
-        post_feed = PrivateThreadPostFeed(request, thread, posts, thread_updates)
+        post_feed = PrivateThreadPostFeed(request, thread, posts, thread_events)
 
         if self.has_moderator_permission(request.user_permissions, thread):
             post_feed.set_moderation(True)

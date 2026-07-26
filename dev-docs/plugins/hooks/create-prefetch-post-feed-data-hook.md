@@ -27,7 +27,7 @@ def custom_create_prefetch_post_feed_data_filter(
     *,
     categories: Iterable[Category] | None=None,
     threads: Iterable[Thread] | None=None,
-    thread_updates: Iterable[ThreadEvent] | None=None,
+    thread_events: Iterable[ThreadEvent] | None=None,
     attachments: Iterable[Attachment] | None=None,
     users: Iterable['User'] | None=None,
 ) -> 'PrefetchPostFeedData':
@@ -71,7 +71,7 @@ Iterable of `Category` instances that have already been loaded. Defaults to `Non
 Iterable of `Thread` instances that have already been loaded. Defaults to `None` if not provided.
 
 
-#### `thread_updates: Iterable[ThreadEvent] | None = None`
+#### `thread_events: Iterable[ThreadEvent] | None = None`
 
 Iterable of `ThreadEvent` instances to prefetch data for. Defaults to `None` if not provided.
 
@@ -101,7 +101,7 @@ def create_prefetch_post_feed_data_action(
     *,
     categories: Iterable[Category] | None=None,
     threads: Iterable[Thread] | None=None,
-    thread_updates: Iterable[ThreadEvent] | None=None,
+    thread_events: Iterable[ThreadEvent] | None=None,
     attachments: Iterable[Attachment] | None=None,
     users: Iterable['User'] | None=None,
 ) -> 'PrefetchPostFeedData':
@@ -138,7 +138,7 @@ Iterable of `Category` instances that have already been loaded. Defaults to `Non
 Iterable of `Thread` instances that have already been loaded. Defaults to `None` if not provided.
 
 
-#### `thread_updates: Iterable[ThreadEvent] | None = None`
+#### `thread_events: Iterable[ThreadEvent] | None = None`
 
 Iterable of `ThreadEvent` instances to prefetch data for. Defaults to `None` if not provided.
 

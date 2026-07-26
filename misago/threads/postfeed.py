@@ -50,7 +50,7 @@ class PostFeed:
     post_template_name: str = "misago/post_feed/post.html"
     hidden_post_template_name: str = "misago/post_feed/hidden_post.html"
 
-    thread_update_template_name: str = "misago/post_feed/thread_update.html"
+    thread_event_template_name: str = "misago/post_feed/thread_event.html"
 
     request: HttpRequest
     user_permissions: UserPermissionsProxy
@@ -59,10 +59,10 @@ class PostFeed:
     thread: Thread
     thread: Thread
     posts: list[Post]
-    updates: list[ThreadEvent]
+    events: list[ThreadEvent]
 
     animate_posts: set[int]
-    animate_thread_updates: set[int]
+    animate_thread_events: set[int]
 
     unread_posts: set[int]
     selected_posts: set[int]
@@ -77,7 +77,7 @@ class PostFeed:
         request: HttpRequest,
         thread: Thread,
         posts: list[Post] | None = None,
-        thread_updates: list[ThreadEvent] | None = None,
+        thread_events: list[ThreadEvent] | None = None,
     ):
         self.request = request
         self.user_permissions = request.user_permissions
@@ -85,10 +85,10 @@ class PostFeed:
         self.category = thread.category
         self.thread = thread
         self.posts = posts or []
-        self.thread_updates = thread_updates or []
+        self.thread_events = thread_events or []
 
         self.animate_posts = set()
-        self.animate_thread_updates = set()
+        self.animate_thread_events = set()
 
         self.unread_posts = set()
         self.selected_posts = set()
@@ -101,8 +101,8 @@ class PostFeed:
     def set_animated_posts(self, ids: Iterable[int]):
         self.animate_posts = set(ids)
 
-    def set_animated_thread_updates(self, ids: Iterable[int]):
-        self.animate_thread_updates = set(ids)
+    def set_animated_thread_events(self, ids: Iterable[int]):
+        self.animate_thread_events = set(ids)
 
     def set_unread_posts(self, ids: Iterable[int]):
         self.unread_posts = set(ids)
@@ -141,13 +141,13 @@ class PostFeed:
 
             feed.append(self.get_post_data(post, i + self.counter_start + 1))
 
-        for update in self.thread_updates:
-            if update.category_id == self.category.id:
-                update.category = self.category
-            if update.thread_id == self.thread.id:
-                update.thread = self.thread
+        for event in self.thread_events:
+            if event.category_id == self.category.id:
+                event.category = self.category
+            if event.thread_id == self.thread.id:
+                event.thread = self.thread
 
-            feed.append(self.get_thread_update_data(update))
+            feed.append(self.get_thread_event_data(event))
 
         feed.sort(key=lambda item: item["ordering"])
 
@@ -156,8 +156,8 @@ class PostFeed:
             item["previous_item"] = previous_item
             if item["type"] == "post":
                 previous_item = f"post-{item['post'].id}"
-            elif item["type"] == "thread_update":
-                previous_item = f"update-{item['thread_update'].id}"
+            elif item["type"] == "thread_event":
+                previous_item = f"event-{item['thread_event'].id}"
 
         prefetched_data = prefetch_post_feed_data(
             self.request.settings,
@@ -165,7 +165,7 @@ class PostFeed:
             self.posts,
             categories=[self.category],
             threads=[self.thread],
-            thread_updates=self.thread_updates,
+            thread_events=self.thread_events,
         )
 
         populate_post_feed_data_hook(
@@ -277,29 +277,29 @@ class PostFeed:
     def get_post_unlike_url(self, post: Post) -> str | None:
         return None
 
-    def get_thread_update_data(self, thread_update: ThreadEvent) -> dict:
+    def get_thread_event_data(self, thread_event: ThreadEvent) -> dict:
         hide_url: str | None = None
         unhide_url: str | None = None
         delete_url: str | None = None
 
         if self.moderation:
-            if thread_update.is_hidden:
-                unhide_url = self.get_unhide_thread_update_url(thread_update)
+            if thread_event.is_hidden:
+                unhide_url = self.get_unhide_thread_event_url(thread_event)
             else:
-                hide_url = self.get_hide_thread_update_url(thread_update)
+                hide_url = self.get_hide_thread_event_url(thread_event)
 
-            delete_url = self.get_delete_thread_update_url(thread_update)
+            delete_url = self.get_delete_thread_event_url(thread_event)
 
         return {
-            "template_name": self.thread_update_template_name,
-            "animate": thread_update.id in self.animate_thread_updates,
-            "ordering": thread_update.created_at,
-            "type": "thread_update",
-            "thread_update": thread_update,
+            "template_name": self.thread_event_template_name,
+            "animate": thread_event.id in self.animate_thread_events,
+            "ordering": thread_event.created_at,
+            "type": "thread_event",
+            "thread_event": thread_event,
             "icon": "",
             "description": "",
             "actor": None,
-            "actor_name": thread_update.actor_name,
+            "actor_name": thread_event.actor_name,
             "context_object": None,
             "hide_url": hide_url,
             "unhide_url": unhide_url,
@@ -307,22 +307,22 @@ class PostFeed:
             "moderation": self.moderation,
         }
 
-    def get_hide_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
+    def get_hide_thread_event_url(self, thread_event: ThreadEvent) -> str | None:
         return None
 
-    def get_unhide_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
+    def get_unhide_thread_event_url(self, thread_event: ThreadEvent) -> str | None:
         return None
 
-    def get_delete_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
+    def get_delete_thread_event_url(self, thread_event: ThreadEvent) -> str | None:
         return None
 
     def populate_post_feed_data(self, feed: list[dict], prefetched_data: dict) -> None:
         for item in feed:
             if item["type"] == "post":
                 self.populate_post_data(item, item["post"], prefetched_data)
-            if item["type"] == "thread_update":
-                self.populate_thread_update_data(
-                    item, item["thread_update"], prefetched_data
+            if item["type"] == "thread_event":
+                self.populate_thread_event_data(
+                    item, item["thread_event"], prefetched_data
                 )
 
     def populate_post_data(self, item: dict, post: Post, prefetched_data: dict) -> None:
@@ -442,38 +442,38 @@ class PostFeed:
     def get_post_moderation_actions(self, post: Post) -> list[PostModerationAction]:
         return []
 
-    def populate_thread_update_data(
-        self, item: dict, thread_update: ThreadEvent, prefetched_data: dict
+    def populate_thread_event_data(
+        self, item: dict, thread_event: ThreadEvent, prefetched_data: dict
     ) -> None:
-        if thread_update.actor_id:
-            thread_update.actor = prefetched_data["users"].get(thread_update.actor_id)
-            item["actor"] = thread_update.actor
+        if thread_event.actor_id:
+            thread_event.actor = prefetched_data["users"].get(thread_event.actor_id)
+            item["actor"] = thread_event.actor
 
-        if thread_update.context_type and thread_update.context_id:
+        if thread_event.context_type and thread_event.context_id:
             relation_name = None
-            if thread_update.context_type == "misago_attachments.attachment":
+            if thread_event.context_type == "misago_attachments.attachment":
                 relation_name = "attachment"
-            if thread_update.context_type == "misago_categories.category":
+            if thread_event.context_type == "misago_categories.category":
                 relation_name = "categories"
-            if thread_update.context_type == "misago_threads.thread":
+            if thread_event.context_type == "misago_threads.thread":
                 relation_name = "threads"
-            if thread_update.context_type == "misago_threads.post":
+            if thread_event.context_type == "misago_threads.post":
                 relation_name = "posts"
-            if thread_update.context_type == "misago_users.user":
+            if thread_event.context_type == "misago_users.user":
                 relation_name = "users"
 
             if relation_name:
                 item["context_object"] = prefetched_data[relation_name].get(
-                    thread_update.context_id
+                    thread_event.context_id
                 )
 
-        if thread_update_data := thread_events_renderer.render_thread_event(
-            thread_update, prefetched_data
+        if thread_event_data := thread_events_renderer.render_thread_event(
+            thread_event, prefetched_data
         ):
-            item.update(thread_update_data)
+            item.update(thread_event_data)
         else:
             item.update(
-                {"icon": "broken_image", "description": escape(thread_update.action)}
+                {"icon": "broken_image", "description": escape(thread_event.action)}
             )
 
     def get_like_context_data(self, post: Post, is_liked: bool) -> dict:
@@ -584,32 +584,32 @@ class ThreadPostFeed(PostFeed):
             },
         )
 
-    def get_hide_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
+    def get_hide_thread_event_url(self, thread_event: ThreadEvent) -> str | None:
         return reverse(
             "misago:thread-event-hide",
             kwargs={
                 "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         )
 
-    def get_unhide_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
+    def get_unhide_thread_event_url(self, thread_event: ThreadEvent) -> str | None:
         return reverse(
             "misago:thread-event-unhide",
             kwargs={
                 "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         )
 
-    def get_delete_thread_update_url(self, thread_update: ThreadEvent) -> str | None:
+    def get_delete_thread_event_url(self, thread_event: ThreadEvent) -> str | None:
         return reverse(
             "misago:thread-event-delete",
             kwargs={
                 "thread_id": self.thread.id,
                 "slug": self.thread.slug,
-                "thread_event_id": thread_update.id,
+                "thread_event_id": thread_event.id,
             },
         )

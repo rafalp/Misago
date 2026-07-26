@@ -35,7 +35,7 @@ update_thread_title = Signal()
 
 
 @receiver(delete_thread)
-def delete_thread_updates(sender, **kwargs):
+def delete_thread_events(sender, **kwargs):
     ThreadEvent.objects.filter(thread=sender).delete()
 
 
@@ -173,39 +173,39 @@ def archive_user_polls(sender, archive=None, **kwargs):
 
 
 @receiver(archive_user_data)
-def archive_user_thread_updates(sender, archive=None, **kwargs):
+def archive_user_thread_events(sender, archive=None, **kwargs):
     queryset = ThreadEvent.objects.filter(actor=sender).order_by("id")
 
-    for thread_update in queryset.iterator(chunk_size=50):
-        item_name = thread_update.created_at.strftime("%H%M%S-thread-update")
+    for thread_event in queryset.iterator(chunk_size=50):
+        item_name = thread_event.created_at.strftime("%H%M%S-thread-event")
         archive.add_dict(
             item_name,
             {
-                pgettext("archived thread update", "Action"): thread_update.action,
-                pgettext("archived thread update", "Context"): thread_update.context,
+                pgettext("archived thread event", "Action"): thread_event.action,
+                pgettext("archived thread event", "Context"): thread_event.context,
             },
-            date=thread_update.created_at,
+            date=thread_event.created_at,
         )
 
 
 @receiver(archive_user_data)
-def archive_user_context_thread_updates(sender, archive=None, **kwargs):
+def archive_user_context_thread_events(sender, archive=None, **kwargs):
     queryset = ThreadEvent.objects.context_object(sender).order_by("id")
 
-    for thread_update in queryset.iterator(chunk_size=50):
-        item_name = thread_update.created_at.strftime("%H%M%S-thread-update")
+    for thread_event in queryset.iterator(chunk_size=50):
+        item_name = thread_event.created_at.strftime("%H%M%S-thread-event")
         archive.add_dict(
             item_name,
             {
-                pgettext("archived thread update", "Action"): thread_update.action,
-                pgettext("archived thread update", "Context"): thread_update.context,
+                pgettext("archived thread event", "Action"): thread_event.action,
+                pgettext("archived thread event", "Context"): thread_event.context,
             },
-            date=thread_update.created_at,
+            date=thread_event.created_at,
         )
 
 
 @receiver(anonymize_user_data)
-def anonymize_user_in_thread_updates(sender, **kwargs):
+def anonymize_user_in_thread_events(sender, **kwargs):
     ThreadEvent.objects.filter(actor=sender).update(actor_name=sender.username)
     ThreadEvent.objects.filter(hidden_by=sender).update(hidden_by_name=sender.username)
     ThreadEvent.objects.context_object(sender).update(context=sender.username)

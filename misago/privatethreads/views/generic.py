@@ -67,9 +67,9 @@ class PrivateThreadView(GenericView):
         request: HttpRequest,
         thread: Thread,
         posts: list[Post],
-        thread_updates: list[ThreadEvent] | None = None,
+        thread_events: list[ThreadEvent] | None = None,
     ) -> PostFeed:
-        post_feed = PrivateThreadPostFeed(request, thread, posts, thread_updates)
+        post_feed = PrivateThreadPostFeed(request, thread, posts, thread_events)
 
         if self.get_moderator_status(request, thread):
             post_feed.set_moderation(True)
