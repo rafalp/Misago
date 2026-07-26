@@ -2427,7 +2427,7 @@ def test_thread_detail_view_shows_user_hidden_post_attachments_to_moderator(
     assert_contains(response, text_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_hides_post_attachments_from_anonymous_user_without_permission(
+def test_thread_detail_view_shows_post_attachments_to_anonymous_user_without_permission(
     thread_reply_factory,
     client,
     guests_group,
@@ -2462,20 +2462,20 @@ def test_thread_detail_view_hides_post_attachments_from_anonymous_user_without_p
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
 
-    assert_not_contains(response, text_attachment.name)
-    assert_not_contains(response, text_attachment.get_absolute_url())
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
 
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
 
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
+    assert_contains(response, image_thumbnail_attachment.name)
+    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
 
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
+    assert_contains(response, video_attachment.name)
+    assert_contains(response, video_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_hides_post_attachments_from_user_without_permission(
+def test_thread_detail_view_shows_post_attachments_to_user_without_permission(
     thread_reply_factory,
     user_client,
     members_group,
@@ -2510,17 +2510,17 @@ def test_thread_detail_view_hides_post_attachments_from_user_without_permission(
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
 
-    assert_not_contains(response, text_attachment.name)
-    assert_not_contains(response, text_attachment.get_absolute_url())
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
 
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
 
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
+    assert_contains(response, image_thumbnail_attachment.name)
+    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
 
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
+    assert_contains(response, video_attachment.name)
+    assert_contains(response, video_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_post_attachments_to_uploader_without_permission(
@@ -2562,7 +2562,7 @@ def test_thread_detail_view_shows_post_attachments_to_uploader_without_permissio
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
 
-    assert_not_contains(response, text_attachment.get_absolute_url())
+    assert_contains(response, text_attachment.get_absolute_url())
 
     assert_contains(response, user_text_attachment.name)
     assert_contains(response, user_text_attachment.get_absolute_url())
@@ -2577,7 +2577,7 @@ def test_thread_detail_view_shows_post_attachments_to_uploader_without_permissio
     assert_contains(response, user_video_attachment.get_absolute_url())
 
 
-def test_thread_detail_view_hides_post_attachments_from_moderator_without_permission(
+def test_thread_detail_view_shows_post_attachments_from_moderator_without_permission(
     thread_reply_factory,
     moderator_client,
     moderators_group,
@@ -2612,17 +2612,17 @@ def test_thread_detail_view_hides_post_attachments_from_moderator_without_permis
     assert_contains(response, post.get_absolute_url())
     assert_contains(response, post.original)
 
-    assert_not_contains(response, text_attachment.name)
-    assert_not_contains(response, text_attachment.get_absolute_url())
+    assert_contains(response, text_attachment.name)
+    assert_contains(response, text_attachment.get_absolute_url())
 
-    assert_not_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
+    assert_contains(response, image_attachment.name)
+    assert_contains(response, image_attachment.get_absolute_url())
 
-    assert_not_contains(response, image_thumbnail_attachment.name)
-    assert_not_contains(response, image_thumbnail_attachment.get_absolute_url())
+    assert_contains(response, image_thumbnail_attachment.name)
+    assert_contains(response, image_thumbnail_attachment.get_absolute_url())
 
-    assert_not_contains(response, video_attachment.name)
-    assert_not_contains(response, video_attachment.get_absolute_url())
+    assert_contains(response, video_attachment.name)
+    assert_contains(response, video_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_post_attachments_to_admin_without_permission(
@@ -3739,11 +3739,10 @@ def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_other_pos
 
     assert_not_contains(response, "<misago-attachment")
 
-    assert_contains(response, "You can&#x27;t download attachments in this category.")
-
-    assert_not_contains(response, "rich-text-image")
+    assert_contains(response, "rich-text-image")
     assert_contains(response, image_attachment.name)
-    assert_not_contains(response, image_attachment.get_absolute_url())
+    assert_contains(response, "You don't have permission to view this image.")
+    assert_contains(response, image_attachment.get_absolute_url())
 
 
 def test_thread_detail_view_shows_post_embedded_attachments_from_other_thread_post(
@@ -3964,8 +3963,9 @@ def test_thread_detail_view_doesnt_show_post_embedded_attachments_from_other_cat
 
     assert_not_contains(response, "<misago-attachment")
 
-    assert_not_contains(response, "rich-text-image")
+    assert_contains(response, "rich-text-image")
     assert_contains(response, image_attachment.name)
+    assert_contains(response, "You don't have permission to view this image.")
     assert_not_contains(response, image_attachment.get_absolute_url())
 
 

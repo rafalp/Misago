@@ -1,15 +1,24 @@
 {% load i18n %}
-<span class="rich-text-file" misago-rich-text-attachment="{{ attachment.name }}:{{ attachment.id }}">
-  <a href="{% url 'misago:attachment-download' slug=attachment.slug id=attachment.id %}" target="_blank" class="rich-text-file-link">
-    <span class="material-icon">open_in_new</span>
-    <span class="rich-text-file-name">{{ attachment.name }}</span>
+<div
+  class="rich-text-attachment-link"
+  misago-rich-text-attachment="{{ attachment.name }}:{{ attachment.id }}"
+>
+  <a href="{% url 'misago:attachment-download' slug=attachment.slug id=attachment.id %}" target="_blank" class="rich-text-attachment-link-main">
+    <div class="rich-text-attachment-link-icon" aria-hidden="true">
+      {% include "tabler/external-link.svg" %}
+    </div>
+    <div class="rich-text-attachment-link-content">
+      <div class="rich-text-attachment-link-name">
+        {{ attachment.name }}
+      </div>
+    </div>
   </a>
   <a
     href="{% url 'misago:attachment-details' slug=attachment.slug id=attachment.id %}"
     target="_blank"
-    class="rich-text-info-hover-btn"
-    title="{% translate 'See information' context 'rich text attachment info btn' %}"
+    class="rich-text-attachment-link-info-button"
+    aria-label="{% translate 'See information' context 'rich text attachment info btn' %}"
   >
-    <span class="material-icon">info</span>
+    {% include "tabler/info-circle.svg" %}
   </a>
-</span>
+</div>

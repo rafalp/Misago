@@ -492,7 +492,7 @@ def check_attachments_permissions(
         data["attachments"].values(), reverse=True, key=lambda a: a.id
     )
 
-    accessible_attachments: dict[int, Attachment] = {}
+    attachments: dict[int, Attachment] = {}
     for attachment in attachments_list:
         try:
             if attachment.category_id:
@@ -513,12 +513,13 @@ def check_attachments_permissions(
                 attachment,
             )
 
-        if can_download:
-            accessible_attachments[attachment.id] = attachment
-        else:
+        if can_download or not can_download.not_found:
+            attachments[attachment.id] = attachment
+
+        if can_download.permission_denied:
             data["attachment_errors"][attachment.id] = can_download
 
-    data["attachments"] = accessible_attachments
+    data["attachments"] = attachments
 
 
 def find_users_ids(

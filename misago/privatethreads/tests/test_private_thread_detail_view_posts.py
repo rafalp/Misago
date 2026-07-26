@@ -3287,8 +3287,9 @@ def test_private_thread_detail_view_doesnt_show_post_embedded_attachments_from_o
 
     assert_not_contains(response, "<misago-attachment")
 
-    assert_not_contains(response, "rich-text-image")
+    assert_contains(response, "rich-text-image")
     assert_contains(response, image_attachment.name)
+    assert_contains(response, "You don't have permission to view this image.")
     assert_not_contains(response, image_attachment.get_absolute_url())
 
 

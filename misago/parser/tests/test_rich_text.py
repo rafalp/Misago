@@ -88,28 +88,110 @@ def test_replace_rich_text_tokens_replaces_attachment_without_upload_with_broken
     assert f'href="{broken_image_attachment.get_absolute_url()}"' not in result
 
 
-def test_replace_rich_text_tokens_replaces_permission_denied_attachment_with_error():
-    error = PermissionCheckResult(PermissionDenied("Lorem ipsum dolor met"))
+def test_replace_rich_text_tokens_replaces_permission_denied_file_attachment_with_error(
+    text_attachment,
+):
+    error = PermissionCheckResult(PermissionDenied())
     download_url = reverse(
-        "misago:attachment-download", kwargs={"slug": "image-png", "id": 123}
+        "misago:attachment-download",
+        kwargs={"id": text_attachment.id, "slug": text_attachment.slug},
     )
     details_url = reverse(
-        "misago:attachment-details", kwargs={"slug": "image-png", "id": 123}
+        "misago:attachment-details",
+        kwargs={
+            "id": text_attachment.id,
+            "slug": text_attachment.slug,
+        },
     )
 
     html = html_element(
         "misago-attachment",
         attrs={
-            "name": "image.png",
-            "slug": "image-png",
-            "id": "123",
+            "id": str(text_attachment.id),
+            "name": text_attachment.name,
+            "slug": text_attachment.slug,
         },
     )
-    data = {"attachment_errors": {123: error}, "attachments": {}}
+    data = {
+        "attachment_errors": {text_attachment.id: error},
+        "attachments": {text_attachment.id: text_attachment},
+    }
 
     result = replace_rich_text_tokens(html, Context(), data)
-    assert "image.png" in result
-    assert "Lorem ipsum dolor met" in result
+    assert text_attachment.name in result
+    assert "You don't have permission to view this file." in result
+    assert f'href="{download_url}"' not in result
+    assert f'href="{details_url}"' not in result
+
+
+def test_replace_rich_text_tokens_replaces_permission_denied_image_attachment_with_error(
+    image_attachment,
+):
+    error = PermissionCheckResult(PermissionDenied())
+    download_url = reverse(
+        "misago:attachment-download",
+        kwargs={"id": image_attachment.id, "slug": image_attachment.slug},
+    )
+    details_url = reverse(
+        "misago:attachment-details",
+        kwargs={
+            "id": image_attachment.id,
+            "slug": image_attachment.slug,
+        },
+    )
+
+    html = html_element(
+        "misago-attachment",
+        attrs={
+            "id": str(image_attachment.id),
+            "name": image_attachment.name,
+            "slug": image_attachment.slug,
+        },
+    )
+    data = {
+        "attachment_errors": {image_attachment.id: error},
+        "attachments": {image_attachment.id: image_attachment},
+    }
+
+    result = replace_rich_text_tokens(html, Context(), data)
+    assert image_attachment.name in result
+    assert "You don't have permission to view this image." in result
+    assert f'href="{download_url}"' not in result
+    assert f'href="{details_url}"' not in result
+
+
+def test_replace_rich_text_tokens_replaces_permission_denied_video_attachment_with_error(
+    video_attachment,
+):
+    error = PermissionCheckResult(PermissionDenied())
+    download_url = reverse(
+        "misago:attachment-download",
+        kwargs={"id": video_attachment.id, "slug": video_attachment.slug},
+    )
+    details_url = reverse(
+        "misago:attachment-details",
+        kwargs={
+            "id": video_attachment.id,
+            "slug": video_attachment.slug,
+        },
+    )
+
+    html = html_element(
+        "misago-attachment",
+        attrs={
+            "id": str(video_attachment.id),
+            "name": video_attachment.name,
+            "slug": video_attachment.slug,
+        },
+    )
+    data = {
+        "attachment_errors": {video_attachment.id: error},
+        "attachments": {video_attachment.id: video_attachment},
+    }
+
+    result = replace_rich_text_tokens(html, Context(), data)
+    assert video_attachment.name in result
+    assert "You don't have permission to view this video." in result
     assert f'href="{download_url}"' not in result
     assert f'href="{details_url}"' not in result
 
