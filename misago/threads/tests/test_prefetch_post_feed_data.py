@@ -773,7 +773,42 @@ def test_prefetch_post_feed_data_fetch_posts_metadata_attachments_excludes_inacc
         }
 
 
-def test_prefetch_post_feed_data_fetch_posts_metadata_attachments_excludes_attachments_with_permission_denied(
+def test_prefetch_post_feed_data_fetch_posts_metadata_attachments_sets_errors_for_posts_attachments(
+    django_assert_num_queries,
+    dynamic_settings,
+    cache_versions,
+    anonymous_user,
+    guests_group,
+    text_attachment,
+    default_category,
+    post,
+):
+    CategoryGroupPermission.objects.filter(
+        category=default_category,
+        group=guests_group,
+        permission=CategoryPermission.ATTACHMENTS,
+    ).delete()
+
+    text_attachment.associate_with_post(post)
+    text_attachment.save()
+
+    post.metadata["attachments"] = [text_attachment.id]
+    post.save()
+
+    permissions = UserPermissionsProxy(anonymous_user, cache_versions)
+    permissions.permissions
+    permissions.is_global_moderator
+
+    with django_assert_num_queries(3):
+        data = prefetch_post_feed_data(dynamic_settings, permissions, [post])
+        assert data["attachments"] == {
+            text_attachment.id: text_attachment,
+        }
+        assert tuple(data["attachment_errors"]) == (text_attachment.id,)
+        assert data["attachment_errors"][text_attachment.id].permission_denied
+
+
+def test_prefetch_post_feed_data_fetch_posts_metadata_attachments_sets_errors_for_embedded_attachments(
     django_assert_num_queries,
     dynamic_settings,
     cache_versions,
@@ -825,6 +860,7 @@ def test_prefetch_post_feed_data_fetch_posts_metadata_attachments_excludes_attac
         )
         assert data["attachments"] == {
             text_attachment.id: text_attachment,
+            user_text_attachment.id: user_text_attachment,
         }
         assert tuple(data["attachment_errors"]) == (user_text_attachment.id,)
         assert data["attachment_errors"][user_text_attachment.id].permission_denied

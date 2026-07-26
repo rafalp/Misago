@@ -100,9 +100,9 @@ def replace_rich_text_attachment(
 def render_attachment_permission_denied(
     attachment: Attachment, error: PermissionCheckResult, args: dict
 ) -> str:
-    if attachment.filetype.is_image:
+    if attachment and attachment.filetype.is_image:
         template_name = "misago/rich_text/attachment_image_permission_denied.html"
-    elif attachment.filetype.is_video:
+    elif attachment and attachment.filetype.is_video:
         template_name = "misago/rich_text/attachment_video_permission_denied.html"
     else:
         template_name = "misago/rich_text/attachment_file_permission_denied.html"
