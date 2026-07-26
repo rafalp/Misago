@@ -67,14 +67,11 @@ def replace_rich_text_attachment(
     args: dict,
 ) -> str:
     id = int(args["id"])
-    name = args["name"]
-    slug = args["slug"]
-
     attachment = attachments.get(id)
     error = attachment_errors.get(id)
 
     if error is not None and error.permission_denied:
-        return render_attachment_permission_error(attachment, error, args)
+        return render_attachment_permission_denied(attachment, error, args)
 
     if attachment := attachments.get(id):
         if not attachment.upload:
@@ -92,23 +89,23 @@ def replace_rich_text_attachment(
         "misago/rich_text/attachment_link.html",
         {
             "attachment": {
-                "name": name,
-                "slug": slug,
                 "id": id,
+                "name": args["name"],
+                "slug": args["slug"],
             },
         },
     )
 
 
-def render_attachment_permission_error(attachment: Attachment, error: PermissionCheckResult, args: dict) -> str:
-    if not attachment:
-        template_name = "misago/rich_text/attachment_permission_error.html"
-    elif attachment.filetype.is_image:
-        template_name = "misago/rich_text/attachment_image_permission_error.html"
+def render_attachment_permission_denied(
+    attachment: Attachment, error: PermissionCheckResult, args: dict
+) -> str:
+    if attachment.filetype.is_image:
+        template_name = "misago/rich_text/attachment_image_permission_denied.html"
     elif attachment.filetype.is_video:
-        template_name = "misago/rich_text/attachment_video_permission_error.html"
+        template_name = "misago/rich_text/attachment_video_permission_denied.html"
     else:
-        template_name = "misago/rich_text/attachment_file_permission_error.html"
+        template_name = "misago/rich_text/attachment_file_permission_denied.html"
 
     if attachment:
         attachment_data = attachment

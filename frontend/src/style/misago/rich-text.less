@@ -207,113 +207,130 @@ ol,
   }
 }
 
-.rich-text-file {
-  display: inline-block;
+.rich-text-attachment-file,
+.rich-text-attachment-link {
   position: relative;
-
-  .rich-text-info-hover-btn {
-    top: 3px;
-    right: 4px;
-
-    width: 32px;
-    height: 32px;
-
-    &,
-    &:link,
-    &:visited {
-      background-color: transparent;
-      color: @gray;
-    }
-
-    &:hover,
-    &:focus,
-    &:active {
-      background-color: darken(@gray-lighter, 10);
-      color: @gray-dark;
-      text-decoration: none;
-    }
-  }
+  max-width: 280px;
 }
 
-.rich-text-file-link {
-  display: inline-block;
-  position: relative;
+.rich-text-attachment-file-link,
+.rich-text-attachment-link-main {
+  display: flex;
+  flex-direction: column;
+  gap: ceil(@line-height-computed / 4);
+  align-items: center;
 
-  padding: 8px 48px 8px 42px;
+  width: 100%;
+  padding: 16px;
 
+  background-color: @gray-100;
   border-radius: @border-radius-base;
 
   &:link,
   &:visited {
-    background: @gray-lighter;
-    color: @text-color;
-    text-decoration: none;
+    background-color: @gray-100;
   }
 
   &:hover,
-  &:focus,
-  &:active {
-    background: darken(@gray-lighter, 5);
-    color: @text-color;
+  &:focus {
+    outline: none;
+
+    box-shadow: inset 0 0 0 1px @gray-300;
+
     text-decoration: none;
   }
 
-  .material-icon {
-    position: absolute;
-    top: 8px;
-    left: 10px;
-
-    font-size: 24px;
-    line-height: 24px;
-
-    user-select: none;
-    -webkit-user-select: none;
+  &:active {
+    background-color: @gray-200;
   }
 
-  .rich-text-file-name {
-    margin-right: 8px;
-
-    word-break: break-all;
-
-    &:last-child {
-      margin: 0;
-    }
-  }
-
-  .rich-text-file-size {
-    color: @gray;
+  &:focus-visible {
+    box-shadow: 0 0 0 2px @brand-primary;
   }
 }
 
-.rich-text-attachment-error {
-  display: inline-block;
-  position: relative;
+.rich-text-attachment-file-icon,
+.rich-text-attachment-link-icon {
+  color: @gray-400;
 
-  padding: 8px 12px 8px 42px;
+  svg {
+    width: 40px;
+    height: 40px;
+  }
+}
 
-  background: lighten(@gray-lighter, 5);
+.rich-text-attachment-file-content,
+.rich-text-attachment-link-content {
+  display: flex;
+  flex-direction: column;
+  gap: ceil(@line-height-computed / 4);
+  align-items: center;
+}
+
+.rich-text-attachment-file-name,
+.rich-text-attachment-link-filename {
+  max-width: 100%;
+  overflow-wrap: break-word;
+
+  color: @gray-800;
+  font-weight: bold;
+  text-align: center;
+}
+
+.rich-text-attachment-file-meta {
+  color: @gray-500;
+  font-size: @font-size-small;
+  text-align: center;
+}
+
+.rich-text-attachment-file-info-button,
+.rich-text-attachment-link-info-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+
   border-radius: @border-radius-base;
-  color: @gray-light;
+  text-decoration: none;
 
-  .material-icon {
-    position: absolute;
-    top: 7px;
-    left: 10px;
-
-    color: @gray-light;
-    font-size: 24px;
-    line-height: 24px;
-
-    user-select: none;
-    -webkit-user-select: none;
+  svg {
+    display: block;
+    width: 24px;
+    height: 24px;
   }
 
-  .rich-text-attachment-error-name {
-    word-break: break-all;
+  &:link,
+  &:visited {
+    color: @gray-400;
+    background-color: @gray-100;
+    box-shadow: 0 0 0 1px @gray-300;
+  }
+
+  &:hover,
+  &:focus {
+    outline: none;
+
+    color: @gray-500;
+    background-color: @gray-200;
+  }
+
+  &:active {
+    color: @gray-500;
+    background-color: @gray-300;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px @brand-primary;
   }
 }
 
-.rich-text-attachment-permission-error {
+.rich-text-attachment-broken,
+.rich-text-attachment-permission-denied {
   display: flex;
   flex-direction: column;
   gap: ceil(@line-height-computed / 4);
@@ -326,9 +343,8 @@ ol,
   border-radius: @border-radius-base;
 }
 
-.rich-text-attachment-permission-error-icon {
-  display: inline-block;
-
+.rich-text-attachment-broken-icon,
+.rich-text-attachment-permission-denied-icon {
   color: @gray-300;
 
   svg {
@@ -337,9 +353,16 @@ ol,
   }
 }
 
-.rich-text-attachment-permission-error-filename {
-  display: inline-block;
+.rich-text-attachment-broken-content,
+.rich-text-attachment-permission-denied-content {
+  display: flex;
+  flex-direction: column;
+  gap: ceil(@line-height-computed / 4);
+  align-items: center;
+}
 
+.rich-text-attachment-broken-filename,
+.rich-text-attachment-permission-denied-filename {
   max-width: 100%;
   overflow-wrap: break-word;
 
@@ -348,9 +371,8 @@ ol,
   text-align: center;
 }
 
-.rich-text-attachment-permission-error-message {
-  display: inline-block;
-
+.rich-text-attachment-broken-message,
+.rich-text-attachment-permission-denied-message {
   color: @gray-500;
   font-size: @font-size-small;
   text-align: center;

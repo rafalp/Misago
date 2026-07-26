@@ -1,0 +1,17 @@
+{% load i18n %}
+<figure
+  class="rich-text-attachment-permission-denied rich-text-file-permission-denied"
+  misago-rich-text-attachment="{{ attachment.name }}:{{ attachment.id }}"
+>
+  <div class="rich-text-attachment-permission-denied-icon" aria-hidden="true">
+    {% include "tabler/file.svg" %}
+  </div>
+  <figcaption class="rich-text-attachment-permission-denied-content">
+    <div class="rich-text-attachment-permission-denied-filename">
+      {{ attachment.name }}
+    </div>
+    <div class="rich-text-attachment-permission-denied-message">
+      {% translate "You don't have permission to view this file." context "rich text attachment file permission denied" %}
+    </div>
+  </figcaption>
+</figure>
