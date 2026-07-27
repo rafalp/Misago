@@ -209,31 +209,48 @@ class Thread(PluginDataModel):
 
     @cached_property
     def private_thread_owner(self) -> Optional["User"]:
-        return None
+        raise AttributeError(
+            f"'Thread.private_thread_owner' has not been populated. "
+            "Call 'get_private_thread_members()' before accessing it."
+        )
 
     @cached_property
     def private_thread_owner_id(self) -> int | None:
-        return (
-            self.privatethreadmember_set.filter(is_owner=True)
-            .values_list("user_id", flat=True)
-            .first()
-        )
+        owner_id, member_ids = self._get_private_thread_member_ids()
+
+        self.private_thread_member_ids = member_ids
+
+        return owner_id
 
     @cached_property
     def private_thread_members(self) -> list["User"]:
-        return []
+        raise AttributeError(
+            f"'Thread.private_thread_members' has not been populated. "
+            "Call 'get_private_thread_members()' before accessing it."
+        )
 
     @cached_property
     def private_thread_member_ids(self) -> list[int]:
-        """Returns lists of private thread participating users ids.
+        owner_id, member_ids = self._get_private_thread_member_ids()
 
-        Cached property. Thread owner is guaranteed to be first item of the list.
-        """
-        return list(
-            self.privatethreadmember_set.order_by("-is_owner", "id").values_list(
-                "user_id", flat=True
-            )
+        self.private_thread_owner_id = owner_id
+
+        return member_ids
+
+    def _get_private_thread_member_ids(self) -> tuple[int | None, list[int]]:
+        owner_id: int | None = None
+        member_ids: list[int] = []
+
+        queryset = self.privatethreadmember_set.order_by("id").values_list(
+            "user_id", "is_owner"
         )
+
+        for user_id, is_owner in queryset:
+            if is_owner:
+                owner_id = user_id
+            member_ids.append(user_id)
+
+        return owner_id, member_ids
 
     def set_title(self, title):
         self.title = title
