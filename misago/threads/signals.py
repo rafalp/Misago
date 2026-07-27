@@ -181,7 +181,7 @@ def archive_user_thread_events(sender, archive=None, **kwargs):
         archive.add_dict(
             item_name,
             {
-                pgettext("archived thread event", "Action"): thread_event.action,
+                pgettext("archived thread event", "Action"): thread_event.event_type,
                 pgettext("archived thread event", "Context"): thread_event.context,
             },
             date=thread_event.created_at,
@@ -197,7 +197,7 @@ def archive_user_context_thread_events(sender, archive=None, **kwargs):
         archive.add_dict(
             item_name,
             {
-                pgettext("archived thread event", "Action"): thread_event.action,
+                pgettext("archived thread event", "Action"): thread_event.event_type,
                 pgettext("archived thread event", "Context"): thread_event.context,
             },
             date=thread_event.created_at,

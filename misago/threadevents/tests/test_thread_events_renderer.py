@@ -170,7 +170,7 @@ def test_thread_events_renderer_renders_action_with_not_found_user_context(
 
 def test_thread_events_renderer_returns_none_for_unsupported_action(thread, user):
     thread_event = create_approved_thread_event(thread, user)
-    thread_event.action = "invalid"
+    thread_event.event_type = "invalid"
     thread_event.save()
 
     data = thread_events_renderer.render_thread_event(thread_event, {})

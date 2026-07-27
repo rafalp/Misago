@@ -21,7 +21,7 @@ class CreateThreadUpdateHookAction(Protocol):
 
     A `Thread` instance.
 
-    ## `action_name: str`
+    ## `event_type_name: str`
 
     A `str` with the name of the action that updated the thread.
 
@@ -33,7 +33,7 @@ class CreateThreadUpdateHookAction(Protocol):
     ## `context: str | None = None`
 
     A `str` with context, e.g., a previous thread title or the name of
-    `context_object`. `None` if not available or not used for this `action_name`.
+    `context_object`. `None` if not available or not used for this `event_type_name`.
 
     ## `context_object: Model | None = None`
 
@@ -61,7 +61,7 @@ class CreateThreadUpdateHookAction(Protocol):
     def __call__(
         self,
         thread: "Thread",
-        action_name: str,
+        event_type_name: str,
         actor: Union["User", None, str] = None,
         *,
         context: str | None = None,
@@ -89,7 +89,7 @@ class CreateThreadUpdateHookFilter(Protocol):
 
     A `Thread` instance.
 
-    ## `action_name: str`
+    ## `event_type_name: str`
 
     A `str` with the name of the action that updated the thread.
 
@@ -101,7 +101,7 @@ class CreateThreadUpdateHookFilter(Protocol):
     ## `context: str | None = None`
 
     A `str` with context, e.g., a previous thread title or the name of
-    `context_object`. `None` if not available or not used for this `action_name`.
+    `context_object`. `None` if not available or not used for this `event_type_name`.
 
     ## `context_object: Model | None = None`
 
@@ -130,7 +130,7 @@ class CreateThreadUpdateHookFilter(Protocol):
         self,
         action: CreateThreadUpdateHookAction,
         thread: "Thread",
-        action_name: str,
+        event_type_name: str,
         actor: Union["User", None, str] = None,
         *,
         context: str | None = None,
@@ -195,7 +195,7 @@ class CreateThreadUpdateHook(
         self,
         action: CreateThreadUpdateHookAction,
         thread: "Thread",
-        action_name: str,
+        event_type_name: str,
         actor: Union["User", None, str] = None,
         *,
         context: str | None = None,
@@ -207,7 +207,7 @@ class CreateThreadUpdateHook(
         return super().__call__(
             action,
             thread,
-            action_name,
+            event_type_name,
             actor,
             context=context,
             context_object=context_object,

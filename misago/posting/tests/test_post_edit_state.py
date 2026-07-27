@@ -1,6 +1,6 @@
 from ...parser.parse import parse
 from ...threadevents.create import create_split_posts_from_thread_event
-from ...threadevents.enums import ThreadEventActionName
+from ...threadevents.enums import ThreadEventTypeName
 from ...threadevents.models import ThreadEvent
 from ..state import PostEditState
 
@@ -198,7 +198,7 @@ def test_post_edit_state_save_creates_thread_event_object_for_changed_title(
 
     thread_event = ThreadEvent.objects.first()
     assert thread_event.actor == user
-    assert thread_event.action == ThreadEventActionName.CHANGED_TITLE
+    assert thread_event.event_type == ThreadEventTypeName.CHANGED_TITLE
     assert thread_event.context == original_title
     assert not thread_event.context_id
     assert not thread_event.context_type

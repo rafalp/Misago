@@ -1,4 +1,4 @@
-from ...threadevents.enums import ThreadEventActionName
+from ...threadevents.enums import ThreadEventTypeName
 from ...threadevents.models import ThreadEvent
 from ..models import Poll
 from ..save import save_thread_poll
@@ -55,7 +55,7 @@ def test_save_thread_poll_creates_thread_event(user, thread):
 
     save_thread_poll(thread, poll, user)
 
-    ThreadEvent.objects.get(thread=thread, action=ThreadEventActionName.STARTED_POLL)
+    ThreadEvent.objects.get(thread=thread, event_type=ThreadEventTypeName.STARTED_POLL)
 
     thread.refresh_from_db()
     assert thread.has_events

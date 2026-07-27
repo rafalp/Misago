@@ -1,7 +1,7 @@
 import pytest
 from django.utils import timezone
 
-from ..threadevents.enums import ThreadEventActionName
+from ..threadevents.enums import ThreadEventTypeName
 from ..threadevents.models import ThreadEvent
 
 
@@ -12,7 +12,7 @@ def thread_event(user, thread):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadEventActionName.UNLOCKED,
+        event_type=ThreadEventTypeName.UNLOCKED,
     )
 
 
@@ -23,7 +23,7 @@ def thread_event_context(user, thread):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadEventActionName.MERGED,
+        event_type=ThreadEventTypeName.MERGED,
         context="Other thread",
     )
 
@@ -35,7 +35,7 @@ def thread_event_category_context(user, thread, sibling_category):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadEventActionName.MOVED,
+        event_type=ThreadEventTypeName.MOVED,
         context=sibling_category.name,
         context_type="misago_categories.category",
         context_id=sibling_category.id,
@@ -49,7 +49,7 @@ def thread_event_thread_context(user, thread, other_thread):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadEventActionName.SPLIT_POSTS_FROM,
+        event_type=ThreadEventTypeName.SPLIT_POSTS_FROM,
         context=other_thread.title,
         context_type="misago_threads.thread",
         context_id=other_thread.id,
@@ -63,7 +63,7 @@ def thread_event_user_context(user, thread, other_user):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadEventActionName.LEFT,
+        event_type=ThreadEventTypeName.LEFT,
         context=other_user.username,
         context_type="misago_users.user",
         context_id=other_user.id,
@@ -77,7 +77,7 @@ def hidden_thread_event(user, moderator, thread):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadEventActionName.UNLOCKED,
+        event_type=ThreadEventTypeName.UNLOCKED,
         is_hidden=True,
         hidden_by=moderator,
         hidden_by_name=moderator.username,
@@ -92,7 +92,7 @@ def private_thread_event(user, private_thread):
         thread=private_thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadEventActionName.JOINED,
+        event_type=ThreadEventTypeName.JOINED,
     )
 
 
@@ -103,7 +103,7 @@ def user_private_thread_event(user, user_private_thread):
         thread=user_private_thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadEventActionName.JOINED,
+        event_type=ThreadEventTypeName.JOINED,
     )
 
 
@@ -114,7 +114,7 @@ def hidden_private_thread_event(user, moderator, private_thread):
         thread=private_thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadEventActionName.JOINED,
+        event_type=ThreadEventTypeName.JOINED,
         is_hidden=True,
         hidden_by=moderator,
         hidden_by_name=moderator.username,
@@ -129,7 +129,7 @@ def hidden_user_private_thread_event(user, moderator, user_private_thread):
         thread=user_private_thread,
         actor=user,
         actor_name=user.username,
-        action=ThreadEventActionName.JOINED,
+        event_type=ThreadEventTypeName.JOINED,
         is_hidden=True,
         hidden_by=moderator,
         hidden_by_name=moderator.username,

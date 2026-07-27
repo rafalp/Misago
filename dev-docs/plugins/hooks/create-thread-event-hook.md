@@ -18,7 +18,7 @@ from misago.threadevents.hooks import create_thread_event_hook
 def custom_create_thread_event_filter(
     action: CreateThreadUpdateHookAction,
     thread: 'Thread',
-    action_name: str,
+    event_type_name: str,
     actor: Union['User', None, str]=None,
     *,
     context: str | None=None,
@@ -47,7 +47,7 @@ See the [action](#action) section for details.
 A `Thread` instance.
 
 
-#### `action_name: str`
+#### `event_type_name: str`
 
 A `str` with the name of the action that updated the thread.
 
@@ -59,7 +59,7 @@ The actor who performed the action: a `User` instance, a `str` with a name, or `
 
 #### `context: str | None = None`
 
-A `str` with context, e.g., a previous thread title or the name of `context_object`. `None` if not available or not used for this `action_name`.
+A `str` with context, e.g., a previous thread title or the name of `context_object`. `None` if not available or not used for this `event_type_name`.
 
 
 #### `context_object: Model | None = None`
@@ -94,7 +94,7 @@ A newly created `ThreadUpdate` instance.
 ```python
 def create_thread_event_action(
     thread: 'Thread',
-    action_name: str,
+    event_type_name: str,
     actor: Union['User', None, str]=None,
     *,
     context: str | None=None,
@@ -116,7 +116,7 @@ Misago function used to create a `ThreadUpdate` object.
 A `Thread` instance.
 
 
-#### `action_name: str`
+#### `event_type_name: str`
 
 A `str` with the name of the action that updated the thread.
 
@@ -128,7 +128,7 @@ The actor who performed the action: a `User` instance, a `str` with a name, or `
 
 #### `context: str | None = None`
 
-A `str` with context, e.g., a previous thread title or the name of `context_object`. `None` if not available or not used for this `action_name`.
+A `str` with context, e.g., a previous thread title or the name of `context_object`. `None` if not available or not used for this `event_type_name`.
 
 
 #### `context_object: Model | None = None`

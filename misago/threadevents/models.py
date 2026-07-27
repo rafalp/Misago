@@ -51,7 +51,7 @@ class ThreadEvent(PluginDataModel):
     hidden_by_name = models.CharField(max_length=255, blank=True, null=True)
     hidden_by_slug = models.CharField(max_length=255, blank=True, null=True)
 
-    action = models.CharField(max_length=32)
+    event_type = models.CharField(max_length=32)
 
     context = models.CharField(max_length=255, blank=True, null=True)
     context_type = models.CharField(max_length=255, blank=True, null=True)

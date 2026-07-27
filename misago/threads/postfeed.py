@@ -27,7 +27,7 @@ from ..permissions.threads import (
     check_reply_thread_permission,
 )
 from ..solutions.validators import is_valid_thread_solution
-from ..threadevents.actions import thread_events_renderer
+from ..threadevents.event_types import thread_events_renderer
 from ..threadevents.models import ThreadEvent
 from .hooks import (
     populate_post_feed_data_hook,
@@ -474,7 +474,7 @@ class PostFeed:
             item.update(thread_event_data)
         else:
             item.update(
-                {"icon": "broken_image", "description": escape(thread_event.action)}
+                {"icon": "broken_image", "description": escape(thread_event.event_type)}
             )
 
     def get_like_context_data(self, post: Post, is_liked: bool) -> dict:
