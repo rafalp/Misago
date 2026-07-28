@@ -1,4 +1,9 @@
-from ...privatethreads.members import get_private_thread_members
+import pytest
+
+from ...privatethreads.members import (
+    get_private_thread_members,
+    prefetch_private_thread_member_ids,
+)
 from ...privatethreads.models import PrivateThreadMember
 
 
@@ -55,13 +60,14 @@ def test_thread_private_thread_owner_property_returns_populated_thread_owner(
     assert thread.private_thread_owner == other_user
 
 
-def test_thread_private_thread_owner_property_returns_none_if_accessed_without_populating(
+def test_thread_private_thread_owner_property_raises_runtime_error_if_accessed_without_populating(
     thread, user, other_user
 ):
     PrivateThreadMember.objects.create(thread=thread, user=user)
     PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
 
-    assert thread.private_thread_owner is None
+    with pytest.raises(RuntimeError):
+        thread.private_thread_owner
 
 
 def test_thread_private_thread_members_property_returns_populated_members_list(
@@ -75,42 +81,83 @@ def test_thread_private_thread_members_property_returns_populated_members_list(
     assert thread.private_thread_members == [user, other_user]
 
 
-def test_thread_private_thread_members_property_returns_empty_list_if_accessed_without_populating(
+def test_thread_private_thread_members_property_raises_runtime_error_if_accessed_without_populating(
     thread, user, other_user
 ):
     PrivateThreadMember.objects.create(thread=thread, user=user)
     PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
 
-    assert thread.private_thread_members == []
+    with pytest.raises(RuntimeError):
+        thread.private_thread_members
 
 
-def test_thread_private_thread_member_ids_property_returns_list_of_private_thread_member_ids(
-    thread, user, other_user
+def test_thread_private_thread_owner_id_property_returns_populated_id_of_private_thread_owner(
+    django_assert_num_queries, thread, user, other_user
 ):
     PrivateThreadMember.objects.create(thread=thread, user=user)
     PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
 
-    private_thread_member_ids = list(thread.private_thread_member_ids)
-    assert private_thread_member_ids == [other_user.id, user.id]
+    get_private_thread_members(thread)
+
+    with django_assert_num_queries(0):
+        assert thread.private_thread_owner_id == other_user.id
 
 
-def test_thread_private_thread_owner_id_property_returns_id_of_private_thread_owner(
-    thread, user, other_user
+def test_thread_private_thread_owner_id_property_returns_prefetched_id_of_private_thread_owner(
+    django_assert_num_queries, thread, user, other_user
 ):
     PrivateThreadMember.objects.create(thread=thread, user=user)
     PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
 
-    assert thread.private_thread_owner_id == other_user.id
+    prefetch_private_thread_member_ids([thread])
+
+    with django_assert_num_queries(0):
+        assert thread.private_thread_owner_id == other_user.id
 
 
-def test_thread_private_thread_owner_id_property_returns_none_if_thread_has_no_members(
-    thread,
+def test_thread_private_thread_owner_id_property_fetches_ids(
+    django_assert_num_queries, thread, user, other_user
 ):
-    assert thread.private_thread_owner_id is None
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
+
+    with django_assert_num_queries(1):
+        thread.private_thread_owner_id
+        thread.private_thread_member_ids
 
 
-def test_thread_private_thread_owner_id_property_returns_none_if_thread_has_no_owner(
-    thread, other_user
+def test_thread_private_thread_member_ids_property_returns_populated_list_of_private_thread_member_ids(
+    django_assert_num_queries, thread, user, other_user
 ):
-    PrivateThreadMember.objects.create(thread=thread, user=other_user)
-    assert thread.private_thread_owner_id is None
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
+
+    get_private_thread_members(thread)
+
+    with django_assert_num_queries(0):
+        private_thread_member_ids = list(thread.private_thread_member_ids)
+        assert private_thread_member_ids == [user.id, other_user.id]
+
+
+def test_thread_private_thread_member_ids_property_returns_prefetched_list_of_private_thread_member_ids(
+    django_assert_num_queries, thread, user, other_user
+):
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
+
+    prefetch_private_thread_member_ids([thread])
+
+    with django_assert_num_queries(0):
+        private_thread_member_ids = list(thread.private_thread_member_ids)
+        assert private_thread_member_ids == [user.id, other_user.id]
+
+
+def test_thread_private_thread_member_ids_property_fetches_ids(
+    django_assert_num_queries, thread, user, other_user
+):
+    PrivateThreadMember.objects.create(thread=thread, user=user)
+    PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
+
+    with django_assert_num_queries(1):
+        thread.private_thread_member_ids
+        thread.private_thread_owner_id

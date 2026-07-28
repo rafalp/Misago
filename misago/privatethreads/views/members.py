@@ -33,7 +33,6 @@ from ..members import (
     remove_private_thread_member,
     set_private_thread_owner,
 )
-from ..models import PrivateThreadMember
 from ..postfeed import PrivateThreadPostFeed
 from ..validators import validate_new_private_thread_owner
 from .generic import PrivateThreadView
@@ -132,7 +131,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
             template_name,
             {
                 "thread": thread,
-                "members": self.members,
+                "members": thread.private_thread_members,
                 "form": form,
                 "next_url": self.get_next_thread_url(request, thread),
             },
@@ -149,7 +148,7 @@ class PrivateThreadMemberView(PrivateThreadView):
         thread = self.get_thread(request, thread_id)
 
         try:
-            member = self.get_member(request, user_id)
+            member = self.get_member(request, thread, user_id)
         except Http404 as error:
             if request.is_htmx:
                 raise
@@ -180,7 +179,7 @@ class PrivateThreadMemberView(PrivateThreadView):
         thread = self.get_thread(request, thread_id)
 
         try:
-            member = self.get_member(request, user_id)
+            member = self.get_member(request, thread, user_id)
         except Http404 as error:
             if request.is_htmx:
                 raise
@@ -212,8 +211,8 @@ class PrivateThreadMemberView(PrivateThreadView):
     ) -> ThreadEvent | None:
         return None
 
-    def get_member(self, request: HttpRequest, user_id: int) -> "User":
-        for member in self.members:
+    def get_member(self, request: HttpRequest, thread: Thread, user_id: int) -> "User":
+        for member in thread.private_thread_members:
             if member.id == user_id:
                 return member
 
@@ -256,7 +255,7 @@ class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
     def update_members(
         self, request: HttpRequest, thread: Thread, member: "User"
     ) -> ThreadEvent | None:
-        if member == self.owner:
+        if member == thread.private_thread_owner:
             return None
 
         set_private_thread_owner(thread, member, request)
@@ -289,7 +288,7 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
     def update_members(
         self, request: HttpRequest, thread: Thread, member: "User"
     ) -> ThreadEvent | None:
-        if member == self.owner:
+        if member == thread.private_thread_owner:
             return None
 
         thread_event = remove_private_thread_member(
