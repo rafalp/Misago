@@ -26,15 +26,6 @@ class PrivateThreadView(GenericView):
 
     thread_get_members: bool = False
 
-    owner: Optional["User"]
-    members: list["User"]
-
-    def __init__(self, *args, **kwargs):
-        self.owner = None
-        self.members = []
-
-        super().__init__(*args, **kwargs)
-
     def get_thread(
         self, request: HttpRequest, thread_id: int, for_update: bool = False
     ) -> Thread:
@@ -43,7 +34,8 @@ class PrivateThreadView(GenericView):
         thread = super().get_thread(request, thread_id, for_update)
 
         if self.thread_get_members:
-            self.owner, self.members = get_private_thread_members(thread)
+            print("HERE HERE HERE")
+            get_private_thread_members(thread)
 
         check_see_private_thread_permission(request.user_permissions, thread)
         return thread
@@ -80,7 +72,7 @@ class PrivateThreadView(GenericView):
         return request.user_permissions.is_private_threads_moderator
 
     def get_owner_status(self, request: HttpRequest, thread: Thread) -> bool:
-        if not self.owner or not request.user.is_authenticated:
+        if not thread.private_thread_owner_id or not request.user.is_authenticated:
             return False
 
-        return self.owner.id == request.user.id
+        return thread.private_thread_owner_id == request.user.id

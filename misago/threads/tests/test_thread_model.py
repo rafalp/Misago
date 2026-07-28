@@ -60,13 +60,13 @@ def test_thread_private_thread_owner_property_returns_populated_thread_owner(
     assert thread.private_thread_owner == other_user
 
 
-def test_thread_private_thread_owner_property_raises_attribute_error_if_accessed_without_populating(
+def test_thread_private_thread_owner_property_raises_runtime_error_if_accessed_without_populating(
     thread, user, other_user
 ):
     PrivateThreadMember.objects.create(thread=thread, user=user)
     PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
 
-    with pytest.raises(AttributeError):
+    with pytest.raises(RuntimeError):
         thread.private_thread_owner
 
 
@@ -81,13 +81,13 @@ def test_thread_private_thread_members_property_returns_populated_members_list(
     assert thread.private_thread_members == [user, other_user]
 
 
-def test_thread_private_thread_members_property_raises_attribute_error_if_accessed_without_populating(
+def test_thread_private_thread_members_property_raises_runtime_error_if_accessed_without_populating(
     thread, user, other_user
 ):
     PrivateThreadMember.objects.create(thread=thread, user=user)
     PrivateThreadMember.objects.create(thread=thread, user=other_user, is_owner=True)
 
-    with pytest.raises(AttributeError):
+    with pytest.raises(RuntimeError):
         thread.private_thread_members
 
 

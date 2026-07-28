@@ -209,7 +209,7 @@ class Thread(PluginDataModel):
 
     @cached_property
     def private_thread_owner(self) -> Optional["User"]:
-        raise AttributeError(
+        raise RuntimeError(
             f"'Thread.private_thread_owner' has not been populated. "
             "Call 'get_private_thread_members()' before accessing it."
         )
@@ -224,7 +224,7 @@ class Thread(PluginDataModel):
 
     @cached_property
     def private_thread_members(self) -> list["User"]:
-        raise AttributeError(
+        raise RuntimeError(
             f"'Thread.private_thread_members' has not been populated. "
             "Call 'get_private_thread_members()' before accessing it."
         )
@@ -248,6 +248,7 @@ class Thread(PluginDataModel):
         for user_id, is_owner in queryset:
             if is_owner:
                 owner_id = user_id
+
             member_ids.append(user_id)
 
         return owner_id, member_ids

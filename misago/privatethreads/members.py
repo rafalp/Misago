@@ -71,18 +71,18 @@ def get_private_thread_members(thread: Thread) -> tuple[Optional["User"], list["
     if owner:
         thread.private_thread_owner = owner
         thread.private_thread_owner_id = owner.id
-    if members:
-        thread.private_thread_members = members
-        thread.private_thread_member_ids = [member.id for member in members]
+    else:
+        thread.private_thread_owner = None
+        thread.private_thread_owner_id = None
+
+    thread.private_thread_members = members
+    thread.private_thread_member_ids = [member.id for member in members]
 
     return owner, members
 
 
 def add_private_thread_member(thread: Thread, new_member: "User") -> bool:
-    if thread.private_thread_members:
-        if new_member in thread.private_thread_members:
-            return False
-    elif PrivateThreadMember.objects.filter(thread=thread, user=new_member).exists():
+    if new_member in thread.private_thread_members:
         return False
 
     PrivateThreadMember.objects.create(thread=thread, user=new_member)
@@ -119,7 +119,7 @@ def _set_private_thread_owner_action(
             ).update(is_owner=False)
 
             thread.private_thread_owner = new_owner
-            thread.private_thread_owner.id = new_owner.id
+            thread.private_thread_owner_id = new_owner.id
 
         return bool(updated_rows)
 
