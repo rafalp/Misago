@@ -15,8 +15,13 @@ register.filter(is_safe=False, expects_localtime=True)(date_relative_short)
 
 
 @register.simple_tag
-def safestrformat(value, **kwargs):
+def strformat(value, **kwargs):
     try:
-        return mark_safe(value % kwargs)
+        return value % kwargs
     except (TypeError, ValueError, KeyError):
-        return mark_safe(value)
+        return value
+
+
+@register.simple_tag
+def safestrformat(value, **kwargs):
+    return mark_safe(strformat(value, **kwargs))

@@ -79,22 +79,22 @@ def test_date_relative_in_sentence_uses_hours_instead_of_midnight():
 @freeze_time("2024-07-23 00:00")
 def test_date_relative_in_sentence_uses_day_and_month_for_past_date_this_year():
     timestamp = timezone.now() - timedelta(days=100)
-    assert date_relative_in_sentence(timestamp) == "April 14"
+    assert date_relative_in_sentence(timestamp) == "on April 14"
 
 
 @freeze_time("2024-07-23 00:00")
 def test_date_relative_in_sentence_uses_day_and_month_for_future_date_this_year():
     timestamp = timezone.now() + timedelta(days=100)
-    assert date_relative_in_sentence(timestamp) == "October 31"
+    assert date_relative_in_sentence(timestamp) == "on October 31"
 
 
 @freeze_time("2024-07-23 00:00")
 def test_date_relative_in_sentence_uses_day_and_month_for_date_previous_year():
     timestamp = timezone.now() - timedelta(days=400)
-    assert date_relative_in_sentence(timestamp) == "June 19, 2023"
+    assert date_relative_in_sentence(timestamp) == "on June 19, 2023"
 
 
 @freeze_time("2024-07-23 00:00")
 def test_date_relative_in_sentence_uses_day_and_month_for_date_next_year():
     timestamp = timezone.now() + timedelta(days=400)
-    assert date_relative_in_sentence(timestamp) == "August 27, 2025"
+    assert date_relative_in_sentence(timestamp) == "on August 27, 2025"
