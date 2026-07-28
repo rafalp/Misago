@@ -6,7 +6,7 @@
       {% if item.template_name %}
         {% includecomponent item %}
       {% else %}
-        <li class="page-header-meta-item{% if item.id %} page-header-meta-item-{{ item.id }}{% endif %}"{% if item.aria_label %} aria-label="{{ item.aria_label }}"{% endif %}>
+        <li class="page-header-meta-item{% if item.id %} page-header-meta-item-{{ item.id }}{% endif %}">
           {% if item.icon %}
             <span  class="page-header-meta-item-icon">
               {% include item.icon %}
@@ -14,7 +14,7 @@
           {% endif %}
           {% if item.type == "text" %}
             {% if item.url %}
-              <a href="{{ item.url }}" class="page-header-meta-item-text">
+              <a href="{{ item.url }}" class="page-header-meta-item-text"{% if item.aria_label %} aria-label="{{ item.aria_label }}"{% endif %}>
                 {{ item.text }}
               </a>
             {% else %}
@@ -23,23 +23,35 @@
               </span>
             {% endif %}
           {% elif item.type == "datetime" %}
-            <{% if item.url %}a href="{{ item.url }}"{% else %}span{% endif %} class="page-header-meta-item-text">
-              {% capture trimmed as datetime %}
-                <strong
-                  title="{{ item.datetime|date:'DATETIME_FORMAT' }}"
-                  mg-timestamp="{{ item.datetime.isoformat }}"
-                  mg-timestamp-format="{% if item.is_sentence %}sentence{% else %}relative{% endif %}"
-                >{% if item.is_sentence %}{{ item.datetime|date_relative_in_sentence }}{% else %}{{ item.datetime|date_relative }}{% endif %}</strong>
-              {% endcapture %}
-              {% safestrformat item.text|escape datetime=datetime|safe %}
-            </{% if item.url %}a{% else %}span{% endif %}>
+            {% capture trimmed as datetime %}
+              <strong
+                title="{{ item.datetime|date:'DATETIME_FORMAT' }}"
+                mg-timestamp="{{ item.datetime.isoformat }}"
+                mg-timestamp-format="{% if item.is_sentence %}sentence{% else %}relative{% endif %}"
+              >{% if item.is_sentence %}{{ item.datetime|date_relative_in_sentence }}{% else %}{{ item.datetime|date_relative }}{% endif %}</strong>
+            {% endcapture %}
+            {% if item.url %}
+              <a href="{{ item.url }}" class="page-header-meta-item-text"{% if item.aria_label %} aria-label="{{ item.aria_label }}"{% endif %}>
+                {% safestrformat item.text|escape datetime=datetime|safe %}
+              </a>
+            {% else %}
+              <span class="page-header-meta-item-text">
+                {% safestrformat item.text|escape datetime=datetime|safe %}
+              </span>
+            {% endif %}
           {% elif item.type == "number" %}
-            <{% if item.url %}a href="{{ item.url }}"{% else %}span{% endif %} class="page-header-meta-item-text">
-              {% capture trimmed as number %}
-                <strong>{{ item.number }}</strong>
-              {% endcapture %}
-              {% safestrformat item.text|escape number=number|safe %}
-            </{% if item.url %}a{% else %}span{% endif %}>
+            {% capture trimmed as number %}
+              <strong>{{ item.number }}</strong>
+            {% endcapture %}
+            {% if item.url %}
+              <a href="{{ item.url }}" class="page-header-meta-item-text"{% if item.aria_label %} aria-label="{{ item.aria_label }}"{% endif %}>
+                {% safestrformat item.text|escape number=number|safe %}
+              </a>
+            {% else %}
+              <span class="page-header-meta-item-text">
+                {% safestrformat item.text|escape number=number|safe %}
+              </span>
+            {% endif %}
           {% elif item.type == "user_datetime" %}
             {% if item.is_registered_user %}
               <a class="page-header-meta-item-avatar" href="{{ item.user.get_absolute_url }}">
