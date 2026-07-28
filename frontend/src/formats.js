@@ -7,9 +7,16 @@ export const tomorrowAt = pgettext("day at time", "Tomorrow at %(time)s")
 export const yesterdayAt = pgettext("day at time", "Yesterday at %(time)s")
 
 export const momentAgoInSentence = pgettext("time ago", "a moment ago")
-export const timeInSentence = pgettext("time ago", "at %(time)s")
-export const soonAtInSentence = pgettext("day at time", "at %(time)s")
-export const dayAtInSentence = pgettext("day at time", "%(day)s at %(time)s")
+export const dateInSentence = pgettext("date in sentence", "on %(date)s")
+export const timeInSentence = pgettext("time in sentence", "at %(time)s")
+export const soonAtInSentence = pgettext(
+  "day at time in sentence",
+  "at %(time)s"
+)
+export const dayAtInSentence = pgettext(
+  "day at time in sentence",
+  "%(day)s at %(time)s"
+)
 export const tomorrowAtInSentence = pgettext(
   "day at time",
   "tomorrow at %(time)s"
@@ -157,10 +164,10 @@ export function dateRelativeInSentence(date) {
   }
 
   if (now.getFullYear() == date.getFullYear()) {
-    return thisYearDate.format(date)
+    return dateInSentence.replace("%(date)s", thisYearDate.format(date))
   }
 
-  return otherYearDate.format(date)
+  return dateInSentence.replace("%(date)s", otherYearDate.format(date))
 }
 
 export function isSameDay(now, date) {

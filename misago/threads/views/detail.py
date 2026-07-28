@@ -14,7 +14,7 @@ from django.urls import reverse
 from django.utils.translation import npgettext, pgettext
 
 from ...categories.models import Category
-from ...metadata import TextMetaData
+from ...metadata import NumberMetadata, TextMetadata, UserDatetimeMetadata
 from ...moderation.actions import (
     ModerationActionTemplateResult,
     ModerationResult,
@@ -145,7 +145,12 @@ class DetailView(GenericThreadView):
     # View overrides
 
     def get_thread(self, *args, **kwargs) -> Thread:
-        return super().get_thread(*args, annotate_read_time=True, **kwargs)
+        return super().get_thread(
+            *args,
+            annotate_read_time=True,
+            select_related=("category", "starter"),
+            **kwargs,
+        )
 
     # Moderation
 
@@ -530,42 +535,48 @@ class DetailView(GenericThreadView):
     def get_header_data(
         self, request: HttpRequest, thread: Thread, context: dict | None
     ) -> dict:
-        from random import randint
-
-        dice_roll = randint(1, 6)
-
-        meta_bar = {
-            "id": "meta_bar",
-            "template_name": self.meta_bar_template_name,
-            "items": [
-                TextMetaData(
-                    id="first",
-                    icon=f"tabler/dice-{dice_roll}.svg",
-                    text=f"Dice roll: {dice_roll}",
-                ),
-            ],
-        }
-
-        if thread.is_locked:
-            meta_bar["items"].append(
-                TextMetaData(
-                    id="locked",
-                    icon="tabler/lock.svg",
-                    text="Locked",
-                )
-            )
-
         final_context = {
             "id": "header",
             "template_name": self.header_template_name,
             "header": thread.title,
-            "meta_bar": meta_bar,
+            "meta_bar": self.get_meta_bar(request, thread),
         }
 
         if context:
             final_context.update(context)
 
         return final_context
+
+    def get_meta_bar(self, request: HttpRequest, thread: Thread) -> dict:
+        items: list[dict] = [
+            UserDatetimeMetadata(
+                id="thread-started",
+                user=thread.starter if thread.starter else thread.starter_name,
+                datetime=thread.started_at,
+                url=self.get_thread_url(thread) + f"#post-{thread.first_post_id}",
+            ),
+        ]
+
+        if thread.replies:
+            items.append(
+                NumberMetadata(
+                    id="thread-replies",
+                    icon="tabler/messages.svg",
+                    text=npgettext(
+                        "thread meta bar replies",
+                        "%(number)s reply",
+                        "%(number)s replies",
+                        thread.replies,
+                    ),
+                    number=thread.replies,
+                )
+            )
+
+        return {
+            "id": "meta_bar",
+            "template_name": self.meta_bar_template_name,
+            "items": items,
+        }
 
     def get_footer_data(
         self, request: HttpRequest, thread: Thread, context: dict | None

@@ -147,9 +147,13 @@ def date_relative_in_sentence(value: datetime) -> str:
         }
 
     if is_same_year(now, value):
-        return date_format(value, pgettext("same year date", "F j"))
+        return pgettext("on date in sentence", "on %(date)s") % {
+            "date": date_format(value, pgettext("same year date", "F j")),
+        }
 
-    return date_format(value, pgettext("other year date", "F j, Y"))
+    return pgettext("on date in sentence", "on %(date)s") % {
+        "date": date_format(value, pgettext("other year date", "F j, Y"))
+    }
 
 
 def is_same_day(now: datetime, datetime_: datetime) -> bool:
