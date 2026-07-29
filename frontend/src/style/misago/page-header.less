@@ -20,32 +20,113 @@
   overflow-wrap: anywhere;
 }
 
-.page-header-meta-bar {
-  width: 100%;
-  overflow: auto;
+.page-header-meta {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: start;
+  gap: ceil(@line-height-computed / 2) @grid-gutter-width;
 
-  margin: @line-height-computed 0 (@grid-gutter-width * -1) 0;
+  max-width: 100%;
+
+  margin: @line-height-computed 0 ceil(@line-height-computed * -0.5) 0;
   padding: 0;
 
   list-style: none;
 
-  li {
-    display: inline-flex;
-    align-items: center;
-    float: left;
+  color: @gray-600;
+}
 
-    min-height: 24px;
-    margin: 0 ceil(@grid-gutter-width / 2) ceil(@grid-gutter-width / 2) 0;
+.page-header-meta-item {
+  display: flex;
+  align-items: center;
 
-    svg {
-      margin-right: 4px;
+  min-height: 24px;
 
-      width: 24px;
-      height: 24px;
+  overflow-wrap: anywhere;
+}
 
-      &:last-child {
-        margin: 0;
-      }
-    }
+.page-header-meta-item-icon {
+  margin-right: 6px;
+
+  width: 24px;
+  height: 24px;
+
+  color: @gray-500;
+
+  &:last-child {
+    margin: 0;
+  }
+}
+
+.page-header-meta-item-text strong {
+  color: @gray-900;
+}
+
+a.page-header-meta-item-text {
+  &,
+  &:link,
+  &:visited {
+    color: @gray-600;
+  }
+
+  &:focus,
+  &:hover,
+  &:active {
+    color: @gray-900;
+    text-decoration: underline;
+  }
+}
+
+.page-header-meta-item-avatar {
+  margin-right: 8px;
+
+  line-height: 0;
+
+  border-radius: @border-radius-small;
+  overflow: hidden;
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.page-header-meta-item-user {
+  color: @gray-700;
+  font-weight: bold;
+}
+
+a.page-header-meta-item-user {
+  &,
+  &:link,
+  &:visited {
+    color: @gray-900;
+  }
+
+  &:focus,
+  &:hover,
+  &:active {
+    color: @gray-900;
+    text-decoration: underline;
+  }
+}
+
+.page-header-meta-item-timestamp {
+  color: @gray-600;
+}
+
+a.page-header-meta-item-timestamp {
+  &,
+  &:link,
+  &:visited {
+    color: @gray-600;
+  }
+
+  &:focus,
+  &:hover,
+  &:active {
+    color: @gray-900;
+    text-decoration: underline;
   }
 }

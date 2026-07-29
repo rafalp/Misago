@@ -1,18 +1,98 @@
-{% load misago_component %}
+{% load i18n misago_avatars misago_capture misago_component misago_formats %}
 
 {% if items %}
-  <ul class="page-header-meta-bar">
+  <ul class="page-header-meta">
     {% for item in items %}
       {% if item.template_name %}
         {% includecomponent item %}
-      {% elif item.type == "text" %}
-        <li class="page-header-meta-item{% if item.id %} page-header-meta-item-{{ item.id }}{% endif %}"{% if item.title %} title="{{ item.title }}"{% endif %}>
+      {% else %}
+        <li class="page-header-meta-item{% if item.id %} page-header-meta-item-{{ item.id }}{% endif %}">
           {% if item.icon %}
-            {% include item.icon %}
+            <span  class="page-header-meta-item-icon">
+              {% include item.icon %}
+            </span>
           {% endif %}
-          <span  class="page-header-meta-item-text">
-            {{ item.text }}
-          </span>
+          {% if item.type == "text" %}
+            {% if item.url %}
+              <a href="{{ item.url }}" class="page-header-meta-item-text"{% if item.aria_label %} aria-label="{{ item.aria_label }}"{% endif %}>
+                {{ item.text }}
+              </a>
+            {% else %}
+              <span class="page-header-meta-item-text">
+                {{ item.text }}
+              </span>
+            {% endif %}
+          {% elif item.type == "datetime" %}
+            {% capture trimmed as datetime %}
+              <strong
+                title="{{ item.datetime|date:'DATETIME_FORMAT' }}"
+                mg-timestamp="{{ item.datetime.isoformat }}"
+                mg-timestamp-format="{% if item.is_sentence %}sentence{% else %}relative{% endif %}"
+              >{% if item.is_sentence %}{{ item.datetime|date_relative_in_sentence }}{% else %}{{ item.datetime|date_relative }}{% endif %}</strong>
+            {% endcapture %}
+            {% if item.url %}
+              <a href="{{ item.url }}" class="page-header-meta-item-text"{% if item.aria_label %} aria-label="{{ item.aria_label }}"{% endif %}>
+                {% safestrformat item.text|escape datetime=datetime|safe %}
+              </a>
+            {% else %}
+              <span class="page-header-meta-item-text">
+                {% safestrformat item.text|escape datetime=datetime|safe %}
+              </span>
+            {% endif %}
+          {% elif item.type == "number" %}
+            {% capture trimmed as number %}
+              <strong>{{ item.number }}</strong>
+            {% endcapture %}
+            {% if item.url %}
+              <a href="{{ item.url }}" class="page-header-meta-item-text"{% if item.aria_label %} aria-label="{{ item.aria_label }}"{% endif %}>
+                {% safestrformat item.text|escape number=number|safe %}
+              </a>
+            {% else %}
+              <span class="page-header-meta-item-text">
+                {% safestrformat item.text|escape number=number|safe %}
+              </span>
+            {% endif %}
+          {% elif item.type == "user_datetime" %}
+            {% if item.is_registered_user %}
+              <a class="page-header-meta-item-avatar" href="{{ item.user.get_absolute_url }}">
+                <img src="{{ item.user|avatar:24 }}" srcset="{{ item.user|avatar:48 }}" alt="">
+              </a>
+            {% else %}
+              <span class="page-header-meta-item-avatar">
+                <img src="{{ BLANK_AVATAR_URL }}" alt="">
+              </span>
+            {% endif %}
+            {% capture trimmed as user %}
+              {% if item.is_registered_user %}
+                <a class="page-header-meta-item-user" href="{{ item.user.get_absolute_url }}">{{ item.user.username }}</a>
+              {% else %}
+                <span class="page-header-meta-item-user">{{ item.user }}</span>
+              {% endif %}
+            {% endcapture %}
+            {% capture trimmed as timestamp %}
+              {% if item.url %}
+                <a
+                  class="page-header-meta-item-timestamp"
+                  href="{{ item.url }}"
+                  title="{{ item.datetime|date:'DATETIME_FORMAT' }}"
+                  mg-timestamp="{{ item.datetime.isoformat }}"
+                  mg-timestamp-format="sentence"
+                >{{ item.datetime|date_relative_in_sentence }}</a>
+              {% else %}
+                <span
+                  class="page-header-meta-item-timestamp"
+                  title="{{ item.datetime|date:'DATETIME_FORMAT' }}"
+                  mg-timestamp="{{ item.datetime.isoformat }}"
+                  mg-timestamp-format="sentence"
+                >{{ item.datetime|date_relative_in_sentence }}</span>
+              {% endif %}
+            {% endcapture %}
+            <span class="page-header-meta-item-message">
+              {% blocktranslate trimmed with user=user|safe timestamp=timestamp|safe %}
+                {{ user }} {{ timestamp }}
+              {% endblocktranslate %}
+            </span>
+          {% endif %}
         </li>
       {% endif %}
     {% endfor %}

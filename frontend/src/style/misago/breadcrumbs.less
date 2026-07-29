@@ -1,18 +1,24 @@
 // Breadcrumbs component
 
 .breadcrumbs {
-  display: block;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: @breadcrumbs-gutter;
 
   max-width: 100%;
 
   padding: 0;
-  margin-bottom: @line-height-computed / 2;
+  margin-bottom: @line-height-computed;
+
+  list-style: none;
 }
 
 .breadcrumbs-separator {
-  display: inline-block;
+  display: flex;
+  align-items: center;
 
-  margin: 0 @breadcrumbs-gutter;
+  margin: 0;
   padding: 0;
 
   list-style: none;
@@ -26,11 +32,9 @@
 }
 
 .breadcrumbs-item {
-  display: inline-block;
-
   max-width: 100%;
 
-  margin: 0 0 (@line-height-computed / 2) 0;
+  margin: 0;
   padding: 0;
 
   list-style: none;
@@ -137,6 +141,6 @@
   }
 
   .breadcrumbs-compact {
-    display: block;
+    display: flex;
   }
 }
