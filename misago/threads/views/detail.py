@@ -86,7 +86,7 @@ class DetailView(GenericThreadView):
     template_name: str
     template_partial_name: str
     header_template_name: str
-    meta_bar_template_name: str = "misago/thread/meta_bar.html"
+    header_meta_template_name: str = "misago/header_meta.html"
     footer_template_name: str
 
     status_messages_template_name: str = "misago/thread/status_messages.html"
@@ -539,7 +539,7 @@ class DetailView(GenericThreadView):
             "id": "header",
             "template_name": self.header_template_name,
             "header": thread.title,
-            "meta_bar": self.get_meta_bar(request, thread),
+            "meta": self.get_header_meta(request, thread),
         }
 
         if context:
@@ -547,7 +547,7 @@ class DetailView(GenericThreadView):
 
         return final_context
 
-    def get_meta_bar(self, request: HttpRequest, thread: Thread) -> dict:
+    def get_header_meta(self, request: HttpRequest, thread: Thread) -> dict:
         items: list[dict] = [
             UserDatetimeMetadata(
                 id="thread-started",
@@ -574,7 +574,7 @@ class DetailView(GenericThreadView):
 
         return {
             "id": "meta_bar",
-            "template_name": self.meta_bar_template_name,
+            "template_name": self.header_meta_template_name,
             "items": items,
         }
 
