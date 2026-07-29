@@ -20,13 +20,13 @@ class ThreadEventsRenderer:
         return thread_event_type_cls
 
     def render_thread_event(self, thread_event: ThreadEvent, data: dict) -> dict | None:
-        type = self.types.get(thread_event.event_type)
-        if not type:
+        event_type = self.types.get(thread_event.event_type)
+        if not event_type:
             return
 
         return {
-            "icon": type.icon,
-            "description": type.get_description(thread_event, data),
+            "icon": event_type.icon,
+            "description": event_type.get_description(thread_event, data),
         }
 
 

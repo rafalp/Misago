@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 def create_thread_event(
     thread: Thread,
-    event_type: str,
+    type: str,
     actor: Union["User", str, None] = None,
     *,
     context: str | None = None,
@@ -30,7 +30,7 @@ def create_thread_event(
     return create_thread_event_hook(
         _create_thread_event_action,
         thread,
-        event_type,
+        type,
         actor,
         context=context,
         context_object=context_object,
@@ -42,7 +42,7 @@ def create_thread_event(
 
 def _create_thread_event_action(
     thread: Thread,
-    event_type: str,
+    type: str,
     actor: Union["User", None, str] = None,
     *,
     context: str | None = None,
@@ -80,7 +80,7 @@ def _create_thread_event_action(
         actor_id=actor_id,
         actor_name=actor_name,
         actor_slug=actor_slug,
-        event_type=event_type,
+        event_type=type,
         context=context,
         context_type=context_type,
         context_id=context_id,
