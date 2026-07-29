@@ -1,13 +1,14 @@
 {% load i18n misago_component %}
 <div class="toolbar toolbar-over-footer">
   {% if breadcrumbs %}
-    <div class="toolbar-section hidden-xs">
+    <div class="toolbar-section toolbar-section-auto hidden-xs">
       <div class="toolbar-item">
         {% includecomponent breadcrumbs %}
       </div>
     </div>
+  {% else %}
+    <div class="toolbar-spacer"></div>
   {% endif %}
-  <div class="toolbar-spacer"></div>
   <div class="toolbar-section">
     <div class="toolbar-item">
       <a href="#" class="btn btn-muted btn-block">
