@@ -287,12 +287,6 @@ class PostEditsView(GenericPostEditView):
         page_obj = paginator.get_page(page or 1)
 
         context_data = self.get_post_edit_context_data(request, post, page_obj)
-        context_data["breadcrumbs"] = self.get_thread_breadcrumbs(request, thread)
-        context_data["metatags"] = {
-            "robots": robots_noindex_follow_metatag,
-        }
-
-        context_data["header"] = self.get_header(post, context_data["post_number"])
 
         if request.is_htmx:
             if request.GET.get("modal"):
@@ -305,7 +299,27 @@ class PostEditsView(GenericPostEditView):
 
         return render(request, template_name, context_data)
 
-    def get_header(self, post: Post, post_number: int) -> dict:
+    def _get_post_edit_context_data_action(
+        self, request: HttpRequest, post: Post, page: Page
+    ) -> dict:
+        context = super()._get_post_edit_context_data_action(request, post, page)
+
+        if request.is_htmx:
+            return context
+
+        context.update(
+            {
+                "metatags": {
+                    "robots": robots_noindex_follow_metatag,
+                },
+                "breadcrumbs": self.get_thread_breadcrumbs(request, post.thread),
+                "header": self.get_header_data(post, context["post_number"]),
+            }
+        )
+
+        return context
+
+    def get_header_data(self, post: Post, post_number: int) -> dict:
         post_url = self.get_post_url(post)
         return {
             "template_name": self.header_template_name,
