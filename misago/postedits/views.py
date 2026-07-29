@@ -7,6 +7,8 @@ from django.utils import dateparse
 from django.utils.translation import pgettext
 
 from ..attachments.filetypes import filetypes
+from ..metadata import NumberMetadata, UserDatetimeMetadata
+from ..metatags.metatags import robots_noindex_follow_metatag
 from ..permissions.checkutils import check_permissions
 from ..permissions.postedits import (
     check_delete_post_edit_permission,
@@ -243,6 +245,7 @@ class PostEditsView(GenericPostEditView):
     post_edit_backend: PostEditViewBackend
 
     template_name: str
+    header_template_name: str
 
     def get(
         self,
@@ -253,7 +256,9 @@ class PostEditsView(GenericPostEditView):
         page: int | None = None,
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
-        post = self.get_post(request, thread, post_id, for_content=True)
+        post = self.get_post(
+            request, thread, post_id, select_related=["poster"], for_content=True
+        )
 
         check_see_post_edit_history_permission(
             request.user_permissions, thread.category, thread, post
@@ -282,6 +287,12 @@ class PostEditsView(GenericPostEditView):
         page_obj = paginator.get_page(page or 1)
 
         context_data = self.get_post_edit_context_data(request, post, page_obj)
+        context_data["breadcrumbs"] = self.get_thread_breadcrumbs(request, thread)
+        context_data["metatags"] = {
+            "robots": robots_noindex_follow_metatag,
+        }
+
+        context_data["header"] = self.get_header(post, context_data["post_number"])
 
         if request.is_htmx:
             if request.GET.get("modal"):
@@ -294,12 +305,36 @@ class PostEditsView(GenericPostEditView):
 
         return render(request, template_name, context_data)
 
+    def get_header(self, post: Post, post_number: int) -> dict:
+        post_url = self.get_post_url(post)
+        return {
+            "template_name": self.header_template_name,
+            "meta": {
+                "template_name": "misago/header_meta.html",
+                "items": [
+                    UserDatetimeMetadata(
+                        id="poster",
+                        user=post.poster or post.poster_name,
+                        datetime=post.posted_at,
+                    ),
+                    NumberMetadata(
+                        id="post-edits",
+                        text=pgettext("post edits meta", "Post #%(number)s"),
+                        number=post_number,
+                        url=post_url,
+                        icon="tabler/message.svg",
+                    ),
+                ],
+            },
+        }
+
 
 class ThreadPostEditsView(PostEditsView):
     backend = thread_backend
     post_edit_backend = thread_post_edit_backend
 
     template_name = "misago/thread_post_edits/index.html"
+    header_template_name = "misago/thread_post_edits/header.html"
 
 
 class PrivateThreadPostEditsView(PostEditsView):
@@ -307,6 +342,7 @@ class PrivateThreadPostEditsView(PostEditsView):
     post_edit_backend = private_thread_post_edit_backend
 
     template_name = "misago/private_thread_post_edits/index.html"
+    header_template_name = "misago/private_thread_post_edits/header.html"
 
 
 class PostEditView(GenericPostEditView):

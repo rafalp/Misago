@@ -19,7 +19,8 @@ from ..threadevents.models import ThreadEvent
 from ..threads.models import Thread
 from ..threads.nexturl import get_next_thread_url
 from ..threads.postfeed import ThreadPostFeed
-from ..threads.views.generic import ThreadView
+from ..threads.views.backend import thread_backend
+from ..threads.views.generic import GenericThreadView
 from .close import close_thread_poll, open_thread_poll
 from .delete import delete_thread_poll
 from .enums import PollTemplate, PublicPollsAvailability
@@ -34,7 +35,9 @@ from .votes import (
 )
 
 
-class ThreadPollView(ThreadView):
+class ThreadPollView(GenericThreadView):
+    backend = thread_backend
+
     def get_poll(self, request: HttpRequest, thread: Thread) -> Poll | None:
         poll = Poll.objects.filter(thread=thread).first()
         if not poll:
@@ -46,7 +49,7 @@ class ThreadPollView(ThreadView):
         return poll
 
 
-class StartThreadPollView(ThreadView):
+class StartThreadPollView(ThreadPollView):
     template_name = "misago/poll/start.html"
 
     def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
@@ -89,6 +92,7 @@ class StartThreadPollView(ThreadView):
             self.template_name,
             {
                 "category": thread.category,
+                "breadcrumbs": self.get_thread_breadcrumbs(request, thread),
                 "thread": thread,
                 "form": form,
             },
@@ -153,21 +157,21 @@ class EditThreadPollView(ThreadPollView):
     def render(
         self, request: HttpRequest, thread: Thread, poll: Poll, form: EditPollForm
     ) -> HttpResponse:
+        context = {
+            "category": thread.category,
+            "thread": thread,
+            "poll": poll,
+            "form": form,
+            "next_url": self.get_next_thread_url(request, thread, poll),
+        }
+
         if request.is_htmx:
             template_name = self.template_name_htmx
         else:
             template_name = self.template_name
+            context["breadcrumbs"] = self.get_thread_breadcrumbs(request, thread)
 
-        return render(
-            request,
-            template_name,
-            {
-                "category": thread.category,
-                "thread": thread,
-                "form": form,
-                "next_url": self.get_next_thread_url(request, thread, poll),
-            },
-        )
+        return render(request, template_name, context)
 
     def get_next_thread_url(
         self, request: HttpRequest, thread: Thread, poll: Poll

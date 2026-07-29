@@ -1,15 +1,15 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_component %}
 
 
 {% block title %}
   {% if post_edit %}
     {% blocktranslate trimmed with post=post_number edit=page.number context "post edits page title" %}
-      Post #{{ post }} edit #{{ edit }}
+      Post #{{ post }} edit history
     {% endblocktranslate %}
   {% else %}
     {% blocktranslate trimmed with post=post_number context "post edits page title" %}
-      Post #{{ post }} edits
+      Post #{{ post }} edit history
     {% endblocktranslate %}
   {% endif %} | {{ thread }} | {{ block.super }}
 {% endblock title %}
@@ -17,8 +17,10 @@
 
 {% block content %}
 <div class="page page-private-thread-post-edits">
+  {% includecomponent header %}
   <div class="container page-container">
     {% include partial_template_name %}
+    {% include "misago/gototop_toolbar.html" %}
   </div>
 </div>
 {% endblock content %}

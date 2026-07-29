@@ -37,6 +37,7 @@ class NumberMetadata:
     id: str
     text: str
     number: int
+    url: str | None = None
     icon: str | None = None
     aria_label: str | None = None
 

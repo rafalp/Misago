@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_component %}
 
 
 {% block title %}
@@ -10,6 +10,9 @@
 {% block content %}
 <div class="page page-thread page-start-poll">
   <div class="container page-container">
+
+    {% includecomponent breadcrumbs %}
+
     <form 
       action="{% url 'misago:thread-poll-start' thread_id=thread.id slug=thread.slug %}" method="post"
     >
@@ -32,6 +35,9 @@
         </div>
       </div>
     </form>
+
+    {% include "misago/gototop_toolbar.html" %}
+
   </div>
 </div>
 {% endblock content %}

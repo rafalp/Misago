@@ -532,7 +532,7 @@ class DetailView(GenericThreadView):
         items: list[dict] = [
             UserDatetimeMetadata(
                 id="thread-started",
-                user=thread.starter if thread.starter else thread.starter_name,
+                user=thread.starter or thread.starter_name,
                 datetime=thread.started_at,
                 url=self.get_thread_url(thread) + f"#post-{thread.first_post_id}",
             ),
@@ -542,14 +542,14 @@ class DetailView(GenericThreadView):
             items.append(
                 NumberMetadata(
                     id="thread-replies",
-                    icon="tabler/messages.svg",
                     text=npgettext(
-                        "thread meta bar replies",
+                        "thread meta replies",
                         "%(number)s reply",
                         "%(number)s replies",
                         thread.replies,
                     ),
                     number=thread.replies,
+                    icon="tabler/messages.svg",
                 )
             )
 

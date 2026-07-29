@@ -1,0 +1,20 @@
+{% load i18n misago_component %}
+
+<div class="container page-header-container">
+  <div class="page-header page-header-post-edits">
+    <div class="page-header-bg-image">
+      <div class="page-header-bg-overlay">
+        <div class="page-header-image"></div>
+        <div class="page-header-banner page-header-banner-post-edits">
+          <div class="page-header-banner-bg-image">
+            <div class="page-header-banner-bg-overlay">
+              {% includecomponent breadcrumbs %}
+              <h1>{% translate "Post edit history" context "post edits page header" %}</h1>
+              {% includecomponent meta %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

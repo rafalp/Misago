@@ -5,7 +5,14 @@ from django.templatetags.static import static
 from .hooks import get_default_metatags_hook, get_forum_index_metatags_hook
 from .metatag import MetaTag
 
-__all__ = ["MetaTag", "get_default_metatags", "get_forum_index_metatags"]
+__all__ = [
+    "MetaTag",
+    "get_default_metatags",
+    "get_forum_index_metatags",
+    "robots_noindex_follow_metatag",
+]
+
+robots_noindex_follow_metatag = MetaTag(name="robots", content="noindex,follow")
 
 
 def get_default_metatags(request: HttpRequest) -> dict[str, MetaTag]:
