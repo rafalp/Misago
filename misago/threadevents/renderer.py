@@ -16,7 +16,7 @@ class ThreadEventsRenderer:
         self, thread_event_type_cls: type["ThreadEventType"]
     ):
         thread_event_type = thread_event_type_cls()
-        self.types[thread_event_type.type] = thread_event_type
+        self.types[thread_event_type.event_type] = thread_event_type
         return thread_event_type_cls
 
     def render_thread_event(self, thread_event: ThreadEvent, data: dict) -> dict | None:

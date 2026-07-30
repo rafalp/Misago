@@ -21,7 +21,7 @@ class CreateThreadUpdateHookAction(Protocol):
 
     A `Thread` instance.
 
-    ## `type_name: str`
+    ## `event_type: str`
 
     A `str` with the name of the action that updated the thread.
 
@@ -61,7 +61,7 @@ class CreateThreadUpdateHookAction(Protocol):
     def __call__(
         self,
         thread: "Thread",
-        event_type_name: str,
+        event_type: str,
         actor: Union["User", None, str] = None,
         *,
         context: str | None = None,
@@ -89,7 +89,7 @@ class CreateThreadUpdateHookFilter(Protocol):
 
     A `Thread` instance.
 
-    ## `type_name: str`
+    ## `event_type: str`
 
     A `str` with the name of the action that updated the thread.
 
@@ -130,7 +130,7 @@ class CreateThreadUpdateHookFilter(Protocol):
         self,
         action: CreateThreadUpdateHookAction,
         thread: "Thread",
-        type_name: str,
+        event_type: str,
         actor: Union["User", None, str] = None,
         *,
         context: str | None = None,
@@ -195,7 +195,7 @@ class CreateThreadUpdateHook(
         self,
         action: CreateThreadUpdateHookAction,
         thread: "Thread",
-        type_name: str,
+        event_type: str,
         actor: Union["User", None, str] = None,
         *,
         context: str | None = None,
@@ -207,7 +207,7 @@ class CreateThreadUpdateHook(
         return super().__call__(
             action,
             thread,
-            type_name,
+            event_type,
             actor,
             context=context,
             context_object=context_object,

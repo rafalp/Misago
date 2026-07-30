@@ -10,7 +10,7 @@ from .renderer import thread_events_renderer
 
 
 class ThreadEventType:
-    type: str
+    event_type: str
     icon: str
     description: str
 
@@ -89,7 +89,7 @@ class UserContextThreadEventType(ThreadEventType):
 
 @thread_events_renderer.register_thread_event_type
 class TestThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.TEST
+    event_type = ThreadEventTypeName.TEST
     icon = "tabler/bug.svg"
 
     def get_description(
@@ -103,113 +103,113 @@ class TestThreadEventType(ThreadEventType):
 
 @thread_events_renderer.register_thread_event_type
 class PinnedEverywhereThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.PINNED_EVERYWHERE
+    event_type = ThreadEventTypeName.PINNED_EVERYWHERE
     icon = "tabler/pin-filled.svg"
     description = pgettext_lazy(
-        "thread thread_event type description", "Pinned everywhere"
+        "thread thread_event event_type description", "Pinned everywhere"
     )
 
 
 @thread_events_renderer.register_thread_event_type
 class PinnedCategoryThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.PINNED_CATEGORY
+    event_type = ThreadEventTypeName.PINNED_CATEGORY
     icon = "tabler/pin.svg"
     description = pgettext_lazy(
-        "thread thread_event type description", "Pinned in category"
+        "thread thread_event event_type description", "Pinned in category"
     )
 
 
 @thread_events_renderer.register_thread_event_type
 class UnpinnedCategoryThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.UNPINNED
+    event_type = ThreadEventTypeName.UNPINNED
     icon = "tabler/pinned-off.svg"
-    description = pgettext_lazy("thread thread_event type description", "Unpinned")
+    description = pgettext_lazy("thread thread_event event_type description", "Unpinned")
 
 
 @thread_events_renderer.register_thread_event_type
 class LockedThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.LOCKED
+    event_type = ThreadEventTypeName.LOCKED
     icon = "tabler/lock.svg"
-    description = pgettext_lazy("thread thread_event type description", "Locked")
+    description = pgettext_lazy("thread thread_event event_type description", "Locked")
 
 
 @thread_events_renderer.register_thread_event_type
 class UnlockedThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.UNLOCKED
+    event_type = ThreadEventTypeName.UNLOCKED
     icon = "tabler/lock-open.svg"
-    description = pgettext_lazy("thread thread_event type description", "Unlocked")
+    description = pgettext_lazy("thread thread_event event_type description", "Unlocked")
 
 
 @thread_events_renderer.register_thread_event_type
 class HiddenThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.HIDDEN
+    event_type = ThreadEventTypeName.HIDDEN
     icon = "tabler/eye-off.svg"
-    description = pgettext_lazy("thread thread_event type description", "Hidden")
+    description = pgettext_lazy("thread thread_event event_type description", "Hidden")
 
 
 @thread_events_renderer.register_thread_event_type
 class UnhiddenThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.UNHIDDEN
+    event_type = ThreadEventTypeName.UNHIDDEN
     icon = "tabler/eye.svg"
-    description = pgettext_lazy("thread thread_event type description", "Unhidden")
+    description = pgettext_lazy("thread thread_event event_type description", "Unhidden")
 
 
 @thread_events_renderer.register_thread_event_type
 class ApprovedThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.APPROVED
+    event_type = ThreadEventTypeName.APPROVED
     icon = "tabler/checkbox.svg"
-    description = pgettext_lazy("thread thread_event type description", "Approved")
+    description = pgettext_lazy("thread thread_event event_type description", "Approved")
 
 
 @thread_events_renderer.register_thread_event_type
 class RequiredReplyApprovalThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.REQUIRED_REPLY_APPROVAL
+    event_type = ThreadEventTypeName.REQUIRED_REPLY_APPROVAL
     icon = "tabler/player-pause-filled.svg"
     description = pgettext_lazy(
-        "thread thread_event type description", "Required reply approval"
+        "thread thread_event event_type description", "Required reply approval"
     )
 
 
 @thread_events_renderer.register_thread_event_type
 class RemovedReplyApprovalThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.REMOVED_REPLY_APPROVAL
+    event_type = ThreadEventTypeName.REMOVED_REPLY_APPROVAL
     icon = "tabler/player-pause.svg"
     description = pgettext_lazy(
-        "thread thread_event type description", "Removed reply approval"
+        "thread thread_event event_type description", "Removed reply approval"
     )
 
 
 @thread_events_renderer.register_thread_event_type
 class MovedThreadEventType(CategoryContextThreadEventType):
-    type = ThreadEventTypeName.MOVED
+    event_type = ThreadEventTypeName.MOVED
     icon = "tabler/arrow-right.svg"
     description = pgettext_lazy(
-        "thread thread_event type description", "Moved from %(context)s"
+        "thread thread_event event_type description", "Moved from %(context)s"
     )
 
 
 @thread_events_renderer.register_thread_event_type
 class MergedThreadEventType(ThreadContextThreadEventType):
-    type = ThreadEventTypeName.MERGED
+    event_type = ThreadEventTypeName.MERGED
     icon = "tabler/arrows-join-2.svg"
     description = pgettext_lazy(
-        "thread thread_event type description",
+        "thread thread_event event_type description",
         "Merged %(context)s with this thread",
     )
 
 
 @thread_events_renderer.register_thread_event_type
 class ChangedTitleThreadEventType(TextContextThreadEventType):
-    type = ThreadEventTypeName.CHANGED_TITLE
+    event_type = ThreadEventTypeName.CHANGED_TITLE
     icon = "tabler/pencil.svg"
     description = pgettext_lazy(
-        "thread thread_event type description", "Changed title from %(context)s"
+        "thread thread_event event_type description", "Changed title from %(context)s"
     )
 
 
 @thread_events_renderer.register_thread_event_type
 class MovedPostsToThreadEventType(ThreadContextThreadEventType):
-    type = ThreadEventTypeName.MOVED_POSTS_TO
+    event_type = ThreadEventTypeName.MOVED_POSTS_TO
     icon = "tabler/arrows-right.svg"
 
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
@@ -241,7 +241,7 @@ class MovedPostsToThreadEventType(ThreadContextThreadEventType):
 
 @thread_events_renderer.register_thread_event_type
 class MovedPostsFromThreadEventType(ThreadContextThreadEventType):
-    type = ThreadEventTypeName.MOVED_POSTS_FROM
+    event_type = ThreadEventTypeName.MOVED_POSTS_FROM
     icon = "tabler/arrows-right.svg"
 
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
@@ -272,7 +272,7 @@ class MovedPostsFromThreadEventType(ThreadContextThreadEventType):
 
 @thread_events_renderer.register_thread_event_type
 class SplitPostsIntoThreadEventType(ThreadContextThreadEventType):
-    type = ThreadEventTypeName.SPLIT_POSTS_INTO
+    event_type = ThreadEventTypeName.SPLIT_POSTS_INTO
     icon = "tabler/arrows-split-2.svg"
 
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
@@ -309,7 +309,7 @@ class SplitPostsIntoThreadEventType(ThreadContextThreadEventType):
 
 @thread_events_renderer.register_thread_event_type
 class SplitPostsFromThreadEventType(ThreadContextThreadEventType):
-    type = ThreadEventTypeName.SPLIT_POSTS_FROM
+    event_type = ThreadEventTypeName.SPLIT_POSTS_FROM
     icon = "tabler/arrows-split-2.svg"
 
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
@@ -346,12 +346,12 @@ class SplitPostsFromThreadEventType(ThreadContextThreadEventType):
 
 @thread_events_renderer.register_thread_event_type
 class DeletedPostsThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.DELETED_POSTS
+    event_type = ThreadEventTypeName.DELETED_POSTS
     icon = "tabler/x.svg"
 
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
         description = npgettext(
-            "thread thread_event type description",
+            "thread thread_event event_type description",
             "Deleted %(posts)s post",
             "Deleted %(posts)s posts",
             thread_event.context_items,
@@ -362,81 +362,81 @@ class DeletedPostsThreadEventType(ThreadEventType):
 
 @thread_events_renderer.register_thread_event_type
 class StartedPollThreadEventType(TextContextThreadEventType):
-    type = ThreadEventTypeName.STARTED_POLL
+    event_type = ThreadEventTypeName.STARTED_POLL
     icon = "tabler/chart-bar.svg"
     description = pgettext_lazy(
-        "thread thread_event type description", "Started poll: %(context)s"
+        "thread thread_event event_type description", "Started poll: %(context)s"
     )
 
 
 @thread_events_renderer.register_thread_event_type
 class ClosedPollThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.CLOSED_POLL
+    event_type = ThreadEventTypeName.CLOSED_POLL
     icon = "tabler/chart-bar.svg"
-    description = pgettext_lazy("thread thread_event type description", "Closed poll")
+    description = pgettext_lazy("thread thread_event event_type description", "Closed poll")
 
 
 @thread_events_renderer.register_thread_event_type
 class OpenedPollThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.OPENED_POLL
+    event_type = ThreadEventTypeName.OPENED_POLL
     icon = "tabler/chart-bar.svg"
-    description = pgettext_lazy("thread thread_event type description", "Opened poll")
+    description = pgettext_lazy("thread thread_event event_type description", "Opened poll")
 
 
 @thread_events_renderer.register_thread_event_type
 class DeletedPollThreadEventType(TextContextThreadEventType):
-    type = ThreadEventTypeName.DELETED_POLL
+    event_type = ThreadEventTypeName.DELETED_POLL
     icon = "tabler/chart-bar.svg"
     description = pgettext_lazy(
-        "thread thread_event type description", "Deleted poll: %(context)s"
+        "thread thread_event event_type description", "Deleted poll: %(context)s"
     )
 
 
 @thread_events_renderer.register_thread_event_type
 class TookOwnershipThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.TOOK_OWNERSHIP
+    event_type = ThreadEventTypeName.TOOK_OWNERSHIP
     icon = "tabler/user.svg"
     description = pgettext_lazy(
-        "thread thread_event type description", "Took ownership"
+        "thread thread_event event_type description", "Took ownership"
     )
 
 
 @thread_events_renderer.register_thread_event_type
 class ChangedOwnerThreadEventType(UserContextThreadEventType):
-    type = ThreadEventTypeName.CHANGED_OWNER
+    event_type = ThreadEventTypeName.CHANGED_OWNER
     icon = "tabler/user.svg"
     description = pgettext_lazy(
-        "thread thread_event type description", "Changed owner to %(context)s"
+        "thread thread_event event_type description", "Changed owner to %(context)s"
     )
 
 
 @thread_events_renderer.register_thread_event_type
 class JoinedThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.JOINED
+    event_type = ThreadEventTypeName.JOINED
     icon = "tabler/user.svg"
-    description = pgettext_lazy("thread thread_event type description", "Joined")
+    description = pgettext_lazy("thread thread_event event_type description", "Joined")
 
 
 @thread_events_renderer.register_thread_event_type
 class LeftThreadEventType(ThreadEventType):
-    type = ThreadEventTypeName.LEFT
+    event_type = ThreadEventTypeName.LEFT
     icon = "tabler/user-off.svg"
-    description = pgettext_lazy("thread thread_event type description", "Left")
+    description = pgettext_lazy("thread thread_event event_type description", "Left")
 
 
 @thread_events_renderer.register_thread_event_type
 class AddedMemberThreadEventType(UserContextThreadEventType):
-    type = ThreadEventTypeName.ADDED_MEMBER
+    event_type = ThreadEventTypeName.ADDED_MEMBER
     icon = "tabler/user.svg"
     description = pgettext_lazy(
-        "thread thread_event type description", "Added %(context)s"
+        "thread thread_event event_type description", "Added %(context)s"
     )
 
 
 @thread_events_renderer.register_thread_event_type
 class RemovedMemberThreadEventType(UserContextThreadEventType):
-    type = ThreadEventTypeName.REMOVED_MEMBER
+    event_type = ThreadEventTypeName.REMOVED_MEMBER
     icon = "tabler/user-off.svg"
     description = pgettext_lazy(
-        "thread thread_event type description", "Removed %(context)s"
+        "thread thread_event event_type description", "Removed %(context)s"
     )

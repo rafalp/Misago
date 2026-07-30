@@ -18,7 +18,7 @@ from misago.threadevents.hooks import create_thread_event_hook
 def custom_create_thread_event_filter(
     action: CreateThreadUpdateHookAction,
     thread: 'Thread',
-    type_name: str,
+    event_type: str,
     actor: Union['User', None, str]=None,
     *,
     context: str | None=None,
@@ -47,7 +47,7 @@ See the [action](#action) section for details.
 A `Thread` instance.
 
 
-#### `type_name: str`
+#### `event_type: str`
 
 A `str` with the name of the action that updated the thread.
 
@@ -94,7 +94,7 @@ A newly created `ThreadUpdate` instance.
 ```python
 def create_thread_event_action(
     thread: 'Thread',
-    event_type_name: str,
+    event_type: str,
     actor: Union['User', None, str]=None,
     *,
     context: str | None=None,
@@ -116,7 +116,7 @@ Misago function used to create a `ThreadUpdate` object.
 A `Thread` instance.
 
 
-#### `type_name: str`
+#### `event_type: str`
 
 A `str` with the name of the action that updated the thread.
 
