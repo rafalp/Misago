@@ -1,5 +1,6 @@
 from django.urls import path
 
+from ..plugins.extensions import extensions
 from .views.detail import ThreadDetailView
 from .views.list import CategoryThreadListView, ThreadListView
 from .views.post import (
@@ -10,6 +11,8 @@ from .views.post import (
     ThreadPostView,
     post,
 )
+
+thread_detail_view = extensions.get(ThreadDetailView).as_view()
 
 urlpatterns = [
     path("post/<int:post_id>/", post, name="post"),
@@ -36,12 +39,12 @@ urlpatterns = [
     ),
     path(
         "t/<slug:slug>/<int:thread_id>/",
-        ThreadDetailView.as_view(),
+        thread_detail_view,
         name="thread",
     ),
     path(
         "t/<slug:slug>/<int:thread_id>/<int:page>/",
-        ThreadDetailView.as_view(),
+        thread_detail_view,
         name="thread",
     ),
     path(
