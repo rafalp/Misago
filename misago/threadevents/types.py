@@ -123,7 +123,9 @@ class PinnedCategoryThreadEventType(ThreadEventType):
 class UnpinnedCategoryThreadEventType(ThreadEventType):
     event_type = ThreadEventTypeName.UNPINNED
     icon = "tabler/pinned-off.svg"
-    description = pgettext_lazy("thread thread_event event_type description", "Unpinned")
+    description = pgettext_lazy(
+        "thread thread_event event_type description", "Unpinned"
+    )
 
 
 @thread_events_renderer.register_thread_event_type
@@ -137,7 +139,9 @@ class LockedThreadEventType(ThreadEventType):
 class UnlockedThreadEventType(ThreadEventType):
     event_type = ThreadEventTypeName.UNLOCKED
     icon = "tabler/lock-open.svg"
-    description = pgettext_lazy("thread thread_event event_type description", "Unlocked")
+    description = pgettext_lazy(
+        "thread thread_event event_type description", "Unlocked"
+    )
 
 
 @thread_events_renderer.register_thread_event_type
@@ -151,14 +155,18 @@ class HiddenThreadEventType(ThreadEventType):
 class UnhiddenThreadEventType(ThreadEventType):
     event_type = ThreadEventTypeName.UNHIDDEN
     icon = "tabler/eye.svg"
-    description = pgettext_lazy("thread thread_event event_type description", "Unhidden")
+    description = pgettext_lazy(
+        "thread thread_event event_type description", "Unhidden"
+    )
 
 
 @thread_events_renderer.register_thread_event_type
 class ApprovedThreadEventType(ThreadEventType):
     event_type = ThreadEventTypeName.APPROVED
     icon = "tabler/checkbox.svg"
-    description = pgettext_lazy("thread thread_event event_type description", "Approved")
+    description = pgettext_lazy(
+        "thread thread_event event_type description", "Approved"
+    )
 
 
 @thread_events_renderer.register_thread_event_type
@@ -373,14 +381,18 @@ class StartedPollThreadEventType(TextContextThreadEventType):
 class ClosedPollThreadEventType(ThreadEventType):
     event_type = ThreadEventTypeName.CLOSED_POLL
     icon = "tabler/chart-bar.svg"
-    description = pgettext_lazy("thread thread_event event_type description", "Closed poll")
+    description = pgettext_lazy(
+        "thread thread_event event_type description", "Closed poll"
+    )
 
 
 @thread_events_renderer.register_thread_event_type
 class OpenedPollThreadEventType(ThreadEventType):
     event_type = ThreadEventTypeName.OPENED_POLL
     icon = "tabler/chart-bar.svg"
-    description = pgettext_lazy("thread thread_event event_type description", "Opened poll")
+    description = pgettext_lazy(
+        "thread thread_event event_type description", "Opened poll"
+    )
 
 
 @thread_events_renderer.register_thread_event_type
