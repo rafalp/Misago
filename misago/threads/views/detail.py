@@ -543,7 +543,7 @@ class DetailView(GenericThreadView):
                 NumberMetadata(
                     id="thread-replies",
                     text=npgettext(
-                        "thread meta replies",
+                        "thread header meta replies",
                         "%(number)s reply",
                         "%(number)s replies",
                         thread.replies,

@@ -333,7 +333,7 @@ class PostEditsView(GenericPostEditView):
                     ),
                     NumberMetadata(
                         id="post-edits",
-                        text=pgettext("post edits meta", "Post #%(number)s"),
+                        text=pgettext("post edits header meta", "Post #%(number)s"),
                         number=post_number,
                         url=post_url,
                         icon="tabler/message.svg",

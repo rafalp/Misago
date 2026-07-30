@@ -3,8 +3,9 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.utils.translation import pgettext
+from django.utils.translation import npgettext, pgettext
 
+from ..metadata import NumberMetadata, UserDatetimeMetadata
 from ..permissions.checkutils import check_permissions
 from ..permissions.polls import (
     check_close_thread_poll_permission,
@@ -38,8 +39,20 @@ from .votes import (
 class ThreadPollView(GenericThreadView):
     backend = thread_backend
 
-    def get_poll(self, request: HttpRequest, thread: Thread) -> Poll | None:
-        poll = Poll.objects.filter(thread=thread).first()
+    def get_poll(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        select_related: list[str] | bool | None = None,
+    ) -> Poll | None:
+        queryset = Poll.objects.filter(thread=thread)
+
+        if select_related is True:
+            queryset = queryset.select_related()
+        elif select_related:
+            queryset = queryset.select_related(*select_related)
+
+        poll = queryset.first()
         if not poll:
             raise Http404()
 
@@ -102,6 +115,7 @@ class StartThreadPollView(ThreadPollView):
 class EditThreadPollView(ThreadPollView):
     template_name = "misago/poll/edit.html"
     template_name_htmx = "misago/poll/edit_partial.html"
+    header_template_name = "misago/poll/edit_header.html"
 
     def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
@@ -127,6 +141,9 @@ class EditThreadPollView(ThreadPollView):
             return self.handle_form(request, thread, poll, form)
 
         return self.render(request, thread, poll, form)
+
+    def get_poll(self, request: HttpRequest, thread: Thread) -> Poll | None:
+        return super().get_poll(request, thread, select_related=["starter"])
 
     def handle_form(
         self, request: HttpRequest, thread: Thread, poll: Poll, form: EditPollForm
@@ -169,9 +186,46 @@ class EditThreadPollView(ThreadPollView):
             template_name = self.template_name_htmx
         else:
             template_name = self.template_name
+
             context["breadcrumbs"] = self.get_thread_breadcrumbs(request, thread)
+            context["header"] = self.get_header_data(request, poll)
 
         return render(request, template_name, context)
+
+    def get_header_data(self, request, poll) -> dict:
+        items: list = [
+            UserDatetimeMetadata(
+                id="starter",
+                user=poll.starter or poll.starter_name,
+                datetime=poll.started_at,
+            ),
+        ]
+
+        if poll.votes:
+            results_url = self.get_thread_url(poll.thread) + "?poll=results"
+
+            items.append(
+                NumberMetadata(
+                    id="post-edits",
+                    text=npgettext(
+                        "poll header meta",
+                        "%(number)s vote",
+                        "%(number)s votes",
+                        poll.votes,
+                    ),
+                    number=poll.votes,
+                    url=results_url,
+                    icon="tabler/checks.svg",
+                ),
+            )
+
+        return {
+            "template_name": self.header_template_name,
+            "meta": {
+                "template_name": "misago/header_meta.html",
+                "items": items,
+            },
+        }
 
     def get_next_thread_url(
         self, request: HttpRequest, thread: Thread, poll: Poll
