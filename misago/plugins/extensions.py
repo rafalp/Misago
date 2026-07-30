@@ -1,33 +1,33 @@
-class ExtensionsRegistry:
+class ExtensionRegistry:
     _extensions: dict[type, list[type]]
 
     def __init__(self):
         self._extensions = {}
 
-    def register(self, extended_type: type, extension: type, early: bool = False):
-        type_extensions = self._extensions.setdefault(extended_type, [])
+    def register(self, base_type: type, extension_type: type, early: bool = False):
+        type_extensions = self._extensions.setdefault(base_type, [])
         if early:
-            type_extensions.insert(0, extension)
+            type_extensions.insert(0, extension_type)
         else:
-            type_extensions.append(extension)
+            type_extensions.append(extension_type)
 
-    def get(self, extended_type: type) -> type:
-        if extended_type not in self._extensions:
-            return extended_type
+    def get(self, base_type: type) -> type:
+        if base_type not in self._extensions:
+            return base_type
 
         return type(
-            f"Extended{extended_type.__name__}",
-            (*reversed(self._extensions[extended_type]), extended_type),
+            f"Extended{base_type.__name__}",
+            (*reversed(self._extensions[base_type]), base_type),
             {},
         )
 
 
-extensions = ExtensionsRegistry()
+extensions = ExtensionRegistry()
 
 
-def extend(extended_type: type, early: bool = False):
-    def decorator(extension: type):
-        extensions.register(extended_type, extension, early)
-        return extension
+def extends(base_type: type, early: bool = False):
+    def decorator(extension_type: type):
+        extensions.register(base_type, extension_type, early)
+        return extension_type
 
     return decorator
