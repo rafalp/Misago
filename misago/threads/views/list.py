@@ -73,18 +73,6 @@ from ..filters import (
     UnapprovedThreadsFilter,
     UnreadThreadsFilter,
 )
-from ..hooks import (
-    get_category_threads_page_context_data_hook,
-    get_category_threads_page_filters_hook,
-    get_category_threads_page_queryset_hook,
-    get_category_threads_page_subcategories_hook,
-    get_category_threads_page_threads_hook,
-    get_threads_page_context_data_hook,
-    get_threads_page_filters_hook,
-    get_threads_page_queryset_hook,
-    get_threads_page_subcategories_hook,
-    get_threads_page_threads_hook,
-)
 from ..models import Thread
 from .backend import ViewBackend, thread_backend
 
@@ -482,11 +470,6 @@ class ThreadListView(ListView):
         return get_threads_moderation_actions(request.user_permissions, request)
 
     def get_context_data(self, request: HttpRequest, kwargs: dict):
-        return get_threads_page_context_data_hook(
-            self.get_context_data_action, request, kwargs
-        )
-
-    def get_context_data_action(self, request: HttpRequest, kwargs: dict):
         subcategories = self.get_subcategories(request)
         threads = self.get_threads(request, kwargs)
 
@@ -506,11 +489,6 @@ class ThreadListView(ListView):
         return context
 
     def get_subcategories(self, request: HttpRequest) -> dict | None:
-        return get_threads_page_subcategories_hook(
-            self.get_subcategories_action, request
-        )
-
-    def get_subcategories_action(self, request: HttpRequest) -> dict | None:
         component = request.settings.threads_list_categories_component
 
         if component == CategoryChildrenComponent.FULL:
@@ -533,11 +511,8 @@ class ThreadListView(ListView):
         return None
 
     def get_threads(self, request: HttpRequest, kwargs: dict):
-        return get_threads_page_threads_hook(self.get_threads_action, request, kwargs)
-
-    def get_threads_action(self, request: HttpRequest, kwargs: dict):
         filters_base_url = self.get_filters_base_url()
-        active_filter, filters = self.get_threads_filters(
+        active_filter, filters = self.get_thread_filters(
             request, filters_base_url, kwargs.get("filter")
         )
 
@@ -621,15 +596,13 @@ class ThreadListView(ListView):
 
         return self.get_filters_base_url()
 
-    def get_threads_filters(
+    def get_thread_filters(
         self, request: HttpRequest, base_url: str, filter: str | None
     ) -> tuple[ThreadsFilterChoice | None, list[ThreadsFilterChoice]]:
         active: ThreadsFilterChoice | None = None
         choices: list[ThreadsFilterChoice] = []
 
-        filters = get_threads_page_filters_hook(
-            self.get_threads_filters_action, request
-        )
+        filters = self.get_thread_filter_choices()
 
         for obj in filters:
             choice = obj.as_choice(base_url, obj.url == filter)
@@ -642,7 +615,9 @@ class ThreadListView(ListView):
 
         return active, choices
 
-    def get_threads_filters_action(self, request: HttpRequest) -> list[ThreadsFilter]:
+    def get_thread_filter_choices(self) -> list[ThreadsFilter]:
+        request = self.request
+
         if request.user.is_anonymous:
             return []
 
@@ -657,9 +632,6 @@ class ThreadListView(ListView):
         return filters
 
     def get_threads_queryset(self, request: HttpRequest):
-        return get_threads_page_queryset_hook(self.get_threads_queryset_action, request)
-
-    def get_threads_queryset_action(self, request: HttpRequest):
         return Thread.objects
 
     def get_threads_permissions_queryset_filter(
@@ -709,7 +681,7 @@ class ThreadListView(ListView):
 
     def poll_new_threads(self, request: HttpRequest, kwargs: dict) -> HttpResponse:
         filters_base_url = self.get_filters_base_url()
-        active_filter, _ = self.get_threads_filters(
+        active_filter, _ = self.get_thread_filters(
             request, filters_base_url, kwargs.get("filter")
         )
 
@@ -841,11 +813,6 @@ class CategoryThreadListView(ListView):
         )
 
     def get_context_data(self, request: HttpRequest, kwargs: dict):
-        return get_category_threads_page_context_data_hook(
-            self.get_context_data_action, request, kwargs
-        )
-
-    def get_context_data_action(self, request: HttpRequest, kwargs: dict):
         category = self.get_category(request, kwargs)
 
         if not category.is_vanilla or category.list_children_threads:
@@ -910,13 +877,6 @@ class CategoryThreadListView(ListView):
         if category.is_leaf_node():
             return None
 
-        return get_category_threads_page_subcategories_hook(
-            self.get_subcategories_action, request, category
-        )
-
-    def get_subcategories_action(
-        self, request: HttpRequest, category: Category
-    ) -> dict | None:
         component = category.children_categories_component
 
         if component == CategoryChildrenComponent.FULL:
@@ -958,15 +918,8 @@ class CategoryThreadListView(ListView):
                 yield category_data
 
     def get_threads(self, request: HttpRequest, category: Category, kwargs: dict):
-        return get_category_threads_page_threads_hook(
-            self.get_threads_action, request, category, kwargs
-        )
-
-    def get_threads_action(
-        self, request: HttpRequest, category: Category, kwargs: dict
-    ):
         filters_base_url = self.get_filters_base_url(category)
-        active_filter, filters = self.get_threads_filters(
+        active_filter, filters = self.get_thread_filters(
             request, category, filters_base_url, kwargs.get("filter")
         )
 
@@ -1062,7 +1015,7 @@ class CategoryThreadListView(ListView):
     def get_filters_base_url(self, category: Category) -> str:
         return category.get_absolute_url()
 
-    def get_threads_filters(
+    def get_thread_filters(
         self,
         request: HttpRequest,
         category: Category,
@@ -1072,9 +1025,7 @@ class CategoryThreadListView(ListView):
         active: ThreadsFilterChoice | None = None
         choices: list[ThreadsFilterChoice] = []
 
-        filters = get_category_threads_page_filters_hook(
-            self.get_threads_filters_action, request, category
-        )
+        filters = self.get_thread_filter_choices(category)
 
         for obj in filters:
             choice = obj.as_choice(base_url, obj.url == filter)
@@ -1087,9 +1038,9 @@ class CategoryThreadListView(ListView):
 
         return active, choices
 
-    def get_threads_filters_action(
-        self, request: HttpRequest, category: Category
-    ) -> list[ThreadsFilter]:
+    def get_thread_filter_choices(self, category: Category) -> list[ThreadsFilter]:
+        request = self.request
+
         if request.user.is_anonymous:
             return []
 
@@ -1104,11 +1055,6 @@ class CategoryThreadListView(ListView):
         return filters
 
     def get_threads_queryset(self, request: HttpRequest):
-        return get_category_threads_page_queryset_hook(
-            self.get_threads_queryset_action, request
-        )
-
-    def get_threads_queryset_action(self, request: HttpRequest):
         return Thread.objects
 
     def get_threads_permissions_queryset_filter(
@@ -1193,7 +1139,7 @@ class CategoryThreadListView(ListView):
         category = self.get_category(request, kwargs)
 
         filters_base_url = self.get_filters_base_url(category)
-        active_filter, _ = self.get_threads_filters(
+        active_filter, _ = self.get_thread_filters(
             request, category, filters_base_url, kwargs.get("filter")
         )
 

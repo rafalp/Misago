@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.urls import reverse
 
@@ -28,11 +27,6 @@ from ...posting.formsets import (
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...threads.models import Post, Thread
 from ...threads.views.detail import DetailView
-from ..hooks import (
-    get_private_thread_detail_view_context_data_hook,
-    get_private_thread_detail_view_moderation_result_data_hook,
-    get_private_thread_detail_view_posts_queryset_hook,
-)
 from .backend import private_thread_backend
 from .members import get_private_thread_members_context_data
 
@@ -80,14 +74,7 @@ class PrivateThreadDetailView(DetailView):
     def get_moderation_result_data(
         self, request: HttpRequest, thread: Thread, result: ModerationResult
     ) -> dict:
-        return get_private_thread_detail_view_moderation_result_data_hook(
-            self.get_moderation_result_data_action, request, thread, result
-        )
-
-    def get_moderation_result_data_action(
-        self, request: HttpRequest, thread: Thread, result: ModerationResult
-    ) -> dict:
-        data = super().get_moderation_result_data_action(request, thread, result)
+        data = super().get_moderation_result_data(request, thread, result)
 
         if result.context.get("updated_members"):
             data["extra_components"].append(
@@ -110,18 +97,7 @@ class PrivateThreadDetailView(DetailView):
         page: int | None,
         kwargs: dict,
     ) -> dict:
-        return get_private_thread_detail_view_context_data_hook(
-            self.get_context_data_action, request, thread, page, kwargs
-        )
-
-    def get_context_data_action(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        page: int | None,
-        kwargs: dict,
-    ) -> dict:
-        context = super().get_context_data_action(request, thread, page, kwargs)
+        context = super().get_context_data(request, thread, page, kwargs)
         context.update(
             {
                 "members": self.get_thread_members_context_data(request, thread),
@@ -143,11 +119,6 @@ class PrivateThreadDetailView(DetailView):
         return reverse(
             "misago:private-thread-watch",
             kwargs={"thread_id": thread.id, "slug": thread.slug},
-        )
-
-    def get_posts_queryset(self, request: HttpRequest, thread: Thread) -> QuerySet:
-        return get_private_thread_detail_view_posts_queryset_hook(
-            super().get_posts_queryset, request, thread
         )
 
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:

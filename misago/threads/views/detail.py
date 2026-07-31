@@ -54,11 +54,6 @@ from ...readtracker.tracker import (
 )
 from ...threadevents.models import ThreadEvent
 from ..breadcrumbs import get_thread_breadcrumbs
-from ..hooks import (
-    get_thread_detail_view_context_data_hook,
-    get_thread_detail_view_moderation_result_data_hook,
-    get_thread_detail_view_posts_queryset_hook,
-)
 from ..models import Post, Thread
 from ..paginator import ThreadPostsPaginator
 from ..statusmessages import (
@@ -459,11 +454,6 @@ class DetailView(GenericThreadView):
     def get_moderation_result_data(
         self, request: HttpRequest, thread: Thread, result: ModerationResult
     ) -> dict:
-        return self.get_moderation_result_data_action(request, thread, result)
-
-    def get_moderation_result_data_action(
-        self, request: HttpRequest, thread: Thread, result: ModerationResult
-    ) -> dict:
         breadcrumbs = self.get_category_breadcrumbs(request, thread.category)
         shared_context = {"breadcrumbs": breadcrumbs}
 
@@ -490,15 +480,6 @@ class DetailView(GenericThreadView):
     # Context data
 
     def get_context_data(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        page: int | None,
-        kwargs: dict,
-    ) -> dict:
-        return self.get_context_data_action(request, thread, page, kwargs)
-
-    def get_context_data_action(
         self,
         request: HttpRequest,
         thread: Thread,
@@ -859,13 +840,6 @@ class ThreadDetailView(DetailView):
             request.user_permissions, post, request
         )
 
-    def get_moderation_result_data(
-        self, request: HttpRequest, thread: Thread, result: ModerationResult
-    ) -> dict:
-        return get_thread_detail_view_moderation_result_data_hook(
-            self.get_moderation_result_data_action, request, thread, result
-        )
-
     # Context data
 
     def get_context_data(
@@ -875,18 +849,7 @@ class ThreadDetailView(DetailView):
         page: int | None,
         kwargs: dict,
     ) -> dict:
-        return get_thread_detail_view_context_data_hook(
-            self.get_context_data_action, request, thread, page, kwargs
-        )
-
-    def get_context_data_action(
-        self,
-        request: HttpRequest,
-        thread: Thread,
-        page: int | None,
-        kwargs: dict,
-    ) -> dict:
-        context = super().get_context_data_action(request, thread, page, kwargs)
+        context = super().get_context_data(request, thread, page, kwargs)
 
         context.update(
             {
@@ -919,11 +882,6 @@ class ThreadDetailView(DetailView):
     def get_watch_thread_url(self, thread: Thread) -> str:
         return reverse(
             "misago:thread-watch", kwargs={"thread_id": thread.id, "slug": thread.slug}
-        )
-
-    def get_posts_queryset(self, request: HttpRequest, thread: Thread) -> QuerySet:
-        return get_thread_detail_view_posts_queryset_hook(
-            super().get_posts_queryset, request, thread
         )
 
     def allow_edit_thread(self, request: HttpRequest, thread: Thread) -> bool:

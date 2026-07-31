@@ -33,12 +33,6 @@ from ...threads.filters import (
 from ...threads.models import Thread
 from ...threads.views.list import ListView
 from ..breadcrumbs import get_private_threads_breadcrumbs
-from ..hooks import (
-    get_private_thread_list_context_data_hook,
-    get_private_thread_list_filters_hook,
-    get_private_thread_list_queryset_hook,
-    get_private_thread_list_threads_hook,
-)
 
 
 class PrivateThreadListView(ListView):
@@ -77,11 +71,6 @@ class PrivateThreadListView(ListView):
         )
 
     def get_context_data(self, request: HttpRequest, kwargs: dict):
-        return get_private_thread_list_context_data_hook(
-            self.get_context_data_action, request, kwargs
-        )
-
-    def get_context_data_action(self, request: HttpRequest, kwargs: dict):
         category = self.get_category(request, kwargs)
 
         context = {
@@ -102,15 +91,8 @@ class PrivateThreadListView(ListView):
         return queryset.first()
 
     def get_threads(self, request: HttpRequest, category: Category, kwargs: dict):
-        return get_private_thread_list_threads_hook(
-            self.get_threads_action, request, category, kwargs
-        )
-
-    def get_threads_action(
-        self, request: HttpRequest, category: Category, kwargs: dict
-    ):
         filters_base_url = self.get_filters_base_url()
-        active_filter, filters = self.get_threads_filters(
+        active_filter, filters = self.get_thread_filters(
             request, filters_base_url, kwargs.get("filter")
         )
 
@@ -178,15 +160,13 @@ class PrivateThreadListView(ListView):
     def get_filters_base_url(self) -> str:
         return reverse("misago:private-thread-list")
 
-    def get_threads_filters(
+    def get_thread_filters(
         self, request: HttpRequest, base_url: str, filter: str | None
     ) -> tuple[ThreadsFilterChoice | None, list[ThreadsFilterChoice]]:
         active: ThreadsFilterChoice | None = None
         choices: list[ThreadsFilterChoice] = []
 
-        filters = get_private_thread_list_filters_hook(
-            self.get_threads_filters_action, request
-        )
+        filters = self.get_thread_filter_choices()
 
         for obj in filters:
             choice = obj.as_choice(base_url, obj.url == filter)
@@ -199,7 +179,9 @@ class PrivateThreadListView(ListView):
 
         return active, choices
 
-    def get_threads_filters_action(self, request: HttpRequest) -> list[ThreadsFilter]:
+    def get_thread_filter_choices(self) -> list[ThreadsFilter]:
+        request = self.request
+
         if request.user.is_anonymous:
             return []
 
@@ -209,21 +191,15 @@ class PrivateThreadListView(ListView):
         ]
 
     def get_threads_queryset(self, request: HttpRequest, category: Category):
-        return get_private_thread_list_queryset_hook(
-            self.get_threads_queryset_action, request, category
+        return filter_private_threads_queryset(
+            request.user_permissions,
+            Thread.objects.filter(category=category)
         )
-
-    def get_threads_queryset_action(self, request: HttpRequest, category: Category):
-        return Thread.objects.filter(category=category)
 
     def get_threads_paginator(self, request: HttpRequest, queryset):
-        threads_queryset = filter_private_threads_queryset(
-            request.user_permissions, queryset
-        )
-
         return paginate_queryset(
             request,
-            threads_queryset,
+            queryset,
             request.settings.threads_per_page,
             order_by="-last_post_id",
         )
@@ -261,7 +237,7 @@ class PrivateThreadListView(ListView):
         category = self.get_category(request, kwargs)
 
         filters_base_url = self.get_filters_base_url()
-        active_filter, _ = self.get_threads_filters(
+        active_filter, _ = self.get_thread_filters(
             request, filters_base_url, kwargs.get("filter")
         )
 
@@ -288,8 +264,6 @@ class PrivateThreadListView(ListView):
         queryset = self.get_threads_queryset(request, category).filter(
             last_post_id__gt=after
         )
-        queryset = filter_private_threads_queryset(request.user_permissions, queryset)
-
         if active_filter:
             queryset = active_filter.filter(queryset)
 
