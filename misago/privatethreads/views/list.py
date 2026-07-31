@@ -192,8 +192,7 @@ class PrivateThreadListView(ListView):
 
     def get_threads_queryset(self, request: HttpRequest, category: Category):
         return filter_private_threads_queryset(
-            request.user_permissions,
-            Thread.objects.filter(category=category)
+            request.user_permissions, Thread.objects.filter(category=category)
         )
 
     def get_threads_paginator(self, request: HttpRequest, queryset):
