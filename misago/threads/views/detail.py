@@ -14,7 +14,7 @@ from django.urls import reverse
 from django.utils.translation import npgettext, pgettext
 
 from ...categories.models import Category
-from ...metadata import NumberMetadata, TextMetadata, UserDatetimeMetadata
+from ...metadata import NumberMetadata, UserDatetimeMetadata
 from ...moderation.actions import (
     ModerationActionTemplateResult,
     ModerationResult,

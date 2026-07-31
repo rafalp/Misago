@@ -4,9 +4,9 @@ class ExtensionRegistry:
     def __init__(self):
         self._extensions = {}
 
-    def register(self, base_type: type, extension_type: type, early: bool = False):
+    def register(self, base_type: type, extension_type: type, prepend: bool = False):
         type_extensions = self._extensions.setdefault(base_type, [])
-        if early:
+        if prepend:
             type_extensions.insert(0, extension_type)
         else:
             type_extensions.append(extension_type)
@@ -25,9 +25,9 @@ class ExtensionRegistry:
 extensions = ExtensionRegistry()
 
 
-def extends(base_type: type, early: bool = False):
+def extends(base_type: type, prepend: bool = False):
     def decorator(extension_type: type):
-        extensions.register(base_type, extension_type, early)
+        extensions.register(base_type, extension_type, prepend)
         return extension_type
 
     return decorator

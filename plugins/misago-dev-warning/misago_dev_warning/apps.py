@@ -1,7 +1,4 @@
-from time import time
-
 from django.apps import AppConfig
-from django.http import HttpRequest
 
 from misago.context_processors.hooks import context_processor_hook
 

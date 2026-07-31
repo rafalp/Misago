@@ -63,7 +63,7 @@ If you are using the [local development setup](https://github.com/rafalp/misago)
 
 If you are interested in creating a custom plugin, please see the [plugin tutorial](./tutorial.md).
 
-Once you have your basic plugin up and running, the [extending Misago](./extending-misago.md) document contains a list of all available extension points.
+Once you have your basic plugin up and running, the [custom plugins](./custom-plugins.md) document contains a list of all available extension points.
 
 
 ## Creating custom threads filters
