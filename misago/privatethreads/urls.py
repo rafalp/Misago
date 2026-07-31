@@ -1,5 +1,6 @@
 from django.urls import path
 
+from ..plugins import extensions
 from .decorators import private_threads_login_required
 from .views.detail import PrivateThreadDetailView
 from .views.list import PrivateThreadListView
@@ -16,6 +17,8 @@ from .views.post import (
     PrivateThreadPostView,
 )
 
+private_thread_detail_view = extensions.get(PrivateThreadDetailView).as_view()
+
 urlpatterns = [
     path(
         "private/",
@@ -29,12 +32,12 @@ urlpatterns = [
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/",
-        private_threads_login_required(PrivateThreadDetailView.as_view()),
+        private_threads_login_required(private_thread_detail_view),
         name="private-thread",
     ),
     path(
         "p/<slug:slug>/<int:thread_id>/<int:page>/",
-        private_threads_login_required(PrivateThreadDetailView.as_view()),
+        private_threads_login_required(private_thread_detail_view),
         name="private-thread",
     ),
     path(
