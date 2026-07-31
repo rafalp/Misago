@@ -1,4 +1,4 @@
-# Extending Misago
+# Custom plugins
 
 Misago defines a multiple extension points that plugin developers can use to add new features to Misago and extend or customize existing ones.
 
@@ -49,6 +49,13 @@ Hooks are predefined locations in Misago's code where plugins can inject custom 
 
 - [Hooks guide](./hooks/index.md)
 - [Built-in hook reference](./hooks/reference.md)
+
+
+## Extensions
+
+Extensions are plugin-provided classes used to extend built-in Misago classes.
+
+[Extensions guide](./extensions.md)
 
 
 ## Template outlets

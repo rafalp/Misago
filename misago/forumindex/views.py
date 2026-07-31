@@ -1,10 +1,6 @@
 from typing import Tuple
 
 from django.http import Http404
-from django.utils.translation import pgettext_lazy
-
-from ..categories.views import index as categories
-from ..threads.views.list import ThreadListView
 
 IndexView = Tuple[str, callable]
 
@@ -26,17 +22,6 @@ class IndexViews:
 
 
 index_views = IndexViews()
-
-index_views.add_index_view(
-    "threads",
-    pgettext_lazy("index view choice", "Threads"),
-    ThreadListView.as_view(),
-)
-index_views.add_index_view(
-    "categories",
-    pgettext_lazy("index view choice", "Categories"),
-    categories,
-)
 
 
 def forum_index(request, *args, **kwargs):
