@@ -2,14 +2,14 @@
 
 Consider the `ThreadDetailView` class that handles the thread page. It implements many different methods that depend on each other to display a thread page with posts, polls, quick reply form, and moderation actions.
 
-It wouldn't make sense to implement a separate hook for each of those methods. This is where extensions step in. Extensions are plugin-provided classes that extend built-in Misago classes.
+It wouldn't make sense to implement a separate hook for each of those methods. This is where extensions step in. Extensions allow plugins to extend built-in Misago classes.
 
 
 ## Writing a custom extension
 
 Let's implement a plugin that includes additional metadata in the thread page header: the number of users watching the thread.
 
-`ThreadDetailView` has a method named `get_header_meta` that it uses to retrieve a dict with metadata to display.
+The `ThreadDetailView` has a method named `get_header_meta` that it uses to retrieve a dict with metadata to display.
 
 To extend this method, let's start with a basic extension in our plugin:
 
