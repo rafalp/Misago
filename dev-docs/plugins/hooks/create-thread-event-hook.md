@@ -1,6 +1,6 @@
 # `create_thread_event_hook`
 
-This hook wraps a standard Misago function used to create a `ThreadUpdate` object.
+This hook wraps a standard Misago function used to create a `ThreadEvent` object.
 
 
 ## Location
@@ -49,7 +49,7 @@ A `Thread` instance.
 
 #### `event_type: str`
 
-A `str` with the name of the action that updated the thread.
+A `str` with the name of the event_type that updated the thread.
 
 
 #### `actor: Union["User", None, str] = None`
@@ -59,7 +59,7 @@ The actor who performed the action: a `User` instance, a `str` with a name, or `
 
 #### `context: str | None = None`
 
-A `str` with context, e.g., a previous thread title or the name of `context_object`. `None` if not available or not used for this `type_name`.
+A `str` with context, e.g., a previous thread title or the name of `context_object`. `None` if not available or not used for this `event_type`.
 
 
 #### `context_object: Model | None = None`
@@ -118,7 +118,7 @@ A `Thread` instance.
 
 #### `event_type: str`
 
-A `str` with the name of the action that updated the thread.
+A `str` with the name of the event_type.
 
 
 #### `actor: Union["User", None, str] = None`
@@ -128,7 +128,7 @@ The actor who performed the action: a `User` instance, a `str` with a name, or `
 
 #### `context: str | None = None`
 
-A `str` with context, e.g., a previous thread title or the name of `context_object`. `None` if not available or not used for this `type_name`.
+A `str` with context, e.g., a previous thread title or the name of `context_object`. `None` if not available or not used for this `event_type`.
 
 
 #### `context_object: Model | None = None`
@@ -160,7 +160,7 @@ A newly created `ThreadUpdate` instance.
 
 ## Example
 
-The code below implements a custom filter function that stores the actor's IP address on the update object:
+The code below implements a custom filter function that stores the actor's IP address on the thread event object:
 
 ```python
 from django.http import HttpRequest

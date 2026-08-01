@@ -117,9 +117,7 @@ class EventDeleteView:
 
     template_name: str = "misago/thread_events/delete.html"
     confirm_template_name: str = "misago/thread_events/confirm_delete.html"
-    success_message = pgettext_lazy(
-        "thread event deleted", "Thread event deleted"
-    )
+    success_message = pgettext_lazy("thread event deleted", "Thread event deleted")
 
     def post(
         self, request: HttpRequest, thread_id: int, slug: str, thread_event_id: int
