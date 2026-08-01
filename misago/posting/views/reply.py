@@ -7,7 +7,6 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import pgettext
-from django.views import View
 
 from ...categories.models import Category
 from ...htmx.response import htmx_redirect
@@ -25,7 +24,6 @@ from ...permissions.threads import (
 )
 from ...privatethreads.redirect import redirect_to_private_thread_post
 from ...privatethreads.views.backend import private_thread_backend
-from ...privatethreads.views.generic import PrivateThreadView
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
 from ...readtracker.tracker import (
@@ -36,18 +34,13 @@ from ...readtracker.tracker import (
 from ...threads.models import Post, Thread
 from ...threads.prefetch import prefetch_post_feed_data
 from ...threads.redirect import redirect_to_thread_post
-from ...threads.views.backend import ViewBackend, thread_backend
-from ...threads.views.generic import ThreadView
+from ...threads.views import GenericThreadView, thread_backend
 from ..formsets import (
     Formset,
     PrivateThreadReplyFormset,
     ThreadReplyFormset,
     get_private_thread_reply_formset,
     get_thread_reply_formset,
-)
-from ..hooks import (
-    get_private_thread_reply_context_data_hook,
-    get_thread_reply_context_data_hook,
 )
 from ..state import (
     PrivateThreadReplyState,
@@ -59,10 +52,7 @@ from ..state import (
 from ..validators import validate_flood_control, validate_posted_contents
 
 
-class ReplyView(View):
-    backend: ViewBackend
-    thread_annotate_read_time: bool = True
-
+class ReplyView(GenericThreadView):
     template_name: str
     template_name_htmx: str
     template_name_quick_reply: str = "misago/quick_reply/index.html"
@@ -114,7 +104,7 @@ class ReplyView(View):
         if self.is_quick_reply(request):
             return self.post_quick_reply(request, thread, state)
 
-        redirect = self.get_redirect_response(request, state.thread, state.post)
+        redirect = self.get_post_redirect(request, state.post)
         if request.is_htmx:
             return htmx_redirect(redirect.headers["location"])
 
@@ -153,6 +143,9 @@ class ReplyView(View):
             self.mark_reply_as_read(request, thread, state)
 
         return response
+
+    def get_thread(self, request, thread_id, **kwargs):
+        return super().get_thread(request, thread_id, annotate_read_time=True, **kwargs)
 
     def mark_reply_as_read(
         self, request: HttpRequest, thread: Thread, state: ReplyState
@@ -298,16 +291,12 @@ class ReplyView(View):
     def get_context_data(
         self, request: HttpRequest, thread: Thread, formset: Formset
     ) -> dict:
-        raise NotImplementedError()
-
-    def get_context_data_action(
-        self, request: HttpRequest, thread: Thread, formset: Formset
-    ) -> dict:
         return {
+            "template_name_htmx": self.template_name_htmx,
+            "breadcrumbs": self.get_thread_breadcrumbs(request, thread),
             "thread": thread,
             "formset": formset,
             "url": self.get_form_url(request, thread),
-            "template_name_htmx": self.template_name_htmx,
         }
 
     def get_form_url(self, request: HttpRequest, thread: Thread) -> None:
@@ -334,7 +323,7 @@ class ReplyView(View):
         raise NotImplementedError()
 
 
-class ThreadReplyView(ReplyView, ThreadView):
+class ThreadReplyView(ReplyView):
     backend = thread_backend
 
     template_name: str = "misago/thread_reply/index.html"
@@ -367,13 +356,6 @@ class ThreadReplyView(ReplyView, ThreadView):
     ) -> ThreadReplyFormset:
         return get_thread_reply_formset(request, thread, initial)
 
-    def get_context_data(
-        self, request: HttpRequest, thread: Thread, formset: ThreadReplyFormset
-    ) -> dict:
-        return get_thread_reply_context_data_hook(
-            self.get_context_data_action, request, thread, formset
-        )
-
     def get_form_url(self, request: HttpRequest, thread: Thread) -> None:
         return reverse(
             "misago:thread-reply", kwargs={"thread_id": thread.id, "slug": thread.slug}
@@ -390,7 +372,7 @@ class ThreadReplyView(ReplyView, ThreadView):
         return is_category_read(request, category, read_time)
 
 
-class PrivateThreadReplyView(ReplyView, PrivateThreadView):
+class PrivateThreadReplyView(ReplyView):
     backend = private_thread_backend
 
     template_name: str = "misago/private_thread_reply/index.html"
@@ -422,13 +404,6 @@ class PrivateThreadReplyView(ReplyView, PrivateThreadView):
         self, request: HttpRequest, thread: Thread, initial: dict | None = None
     ) -> PrivateThreadReplyFormset:
         return get_private_thread_reply_formset(request, thread, initial)
-
-    def get_context_data(
-        self, request: HttpRequest, thread: Thread, formset: PrivateThreadReplyFormset
-    ) -> dict:
-        return get_private_thread_reply_context_data_hook(
-            self.get_context_data_action, request, thread, formset
-        )
 
     def get_form_url(self, request: HttpRequest, thread: Thread) -> None:
         return reverse(
