@@ -218,9 +218,7 @@ Hooks instances are importable from the following Python modules:
 
 `misago.posting.hooks` defines the following hooks:
 
-- [`get_private_thread_edit_context_data_hook`](./get-private-thread-edit-context-data-hook.md)
 - [`get_private_thread_edit_formset_hook`](./get-private-thread-edit-formset-hook.md)
-- [`get_private_thread_post_edit_context_data_hook`](./get-private-thread-post-edit-context-data-hook.md)
 - [`get_private_thread_post_edit_formset_hook`](./get-private-thread-post-edit-formset-hook.md)
 - [`get_private_thread_post_edit_state_hook`](./get-private-thread-post-edit-state-hook.md)
 - [`get_private_thread_reply_context_data_hook`](./get-private-thread-reply-context-data-hook.md)
@@ -228,9 +226,7 @@ Hooks instances are importable from the following Python modules:
 - [`get_private_thread_reply_state_hook`](./get-private-thread-reply-state-hook.md)
 - [`get_private_thread_start_formset_hook`](./get-private-thread-start-formset-hook.md)
 - [`get_private_thread_start_state_hook`](./get-private-thread-start-state-hook.md)
-- [`get_thread_edit_context_data_hook`](./get-thread-edit-context-data-hook.md)
 - [`get_thread_edit_formset_hook`](./get-thread-edit-formset-hook.md)
-- [`get_thread_post_edit_context_data_hook`](./get-thread-post-edit-context-data-hook.md)
 - [`get_thread_post_edit_formset_hook`](./get-thread-post-edit-formset-hook.md)
 - [`get_thread_post_edit_state_hook`](./get-thread-post-edit-state-hook.md)
 - [`get_thread_reply_context_data_hook`](./get-thread-reply-context-data-hook.md)

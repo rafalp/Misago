@@ -1,10 +1,13 @@
-{% load i18n misago_forms %}
+{% load i18n misago_component misago_forms %}
 
 {% if is_request_htmx %}
   {% include "misago/snackbars.html" %}
 {% endif %}
 
 <div class="container page-container" id="misago-htmx-root">
+
+  {% includecomponent breadcrumbs %}
+
   {% if preview %}
     {% include "misago/posting/preview.html" %}
   {% endif %}
@@ -41,4 +44,7 @@
       </div>
     </div>
   </form>
+
+  {% include "misago/gototop_toolbar.html" %}
+
 </div>

@@ -141,6 +141,7 @@ class StartView(GenericThreadView):
 
 class ThreadStartView(StartView):
     backend = thread_backend
+
     template_name: str = "misago/thread_start/index.html"
 
     def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
@@ -171,6 +172,7 @@ class ThreadStartView(StartView):
 
 class PrivateThreadStartView(StartView):
     backend = private_thread_backend
+
     template_name: str = "misago/private_thread_start/index.html"
 
     def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
