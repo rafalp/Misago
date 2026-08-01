@@ -23,7 +23,7 @@ class CreateThreadUpdateHookAction(Protocol):
 
     ## `event_type: str`
 
-    A `str` with the name of the action that updated the thread.
+    A `str` with the name of the event_type.
 
     ## `actor: Union["User", None, str] = None`
 
@@ -33,7 +33,7 @@ class CreateThreadUpdateHookAction(Protocol):
     ## `context: str | None = None`
 
     A `str` with context, e.g., a previous thread title or the name of
-    `context_object`. `None` if not available or not used for this `type_name`.
+    `context_object`. `None` if not available or not used for this `event_type`.
 
     ## `context_object: Model | None = None`
 
@@ -91,7 +91,7 @@ class CreateThreadUpdateHookFilter(Protocol):
 
     ## `event_type: str`
 
-    A `str` with the name of the action that updated the thread.
+    A `str` with the name of the event_type that updated the thread.
 
     ## `actor: Union["User", None, str] = None`
 
@@ -101,7 +101,7 @@ class CreateThreadUpdateHookFilter(Protocol):
     ## `context: str | None = None`
 
     A `str` with context, e.g., a previous thread title or the name of
-    `context_object`. `None` if not available or not used for this `type_name`.
+    `context_object`. `None` if not available or not used for this `event_type`.
 
     ## `context_object: Model | None = None`
 
@@ -148,12 +148,12 @@ class CreateThreadUpdateHook(
     ]
 ):
     """
-    This hook wraps a standard Misago function used to create a `ThreadUpdate` object.
+    This hook wraps a standard Misago function used to create a `ThreadEvent` object.
 
     # Example
 
     The code below implements a custom filter function that stores the actor's IP
-    address on the update object:
+    address on the thread event object:
 
     ```python
     from django.http import HttpRequest

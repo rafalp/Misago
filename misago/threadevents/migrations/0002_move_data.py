@@ -43,7 +43,7 @@ def convert_events_to_thread_events(apps, _):
             hidden_by_id=post.hidden_by_id,
             hidden_by_name=post.hidden_by_name,
             hidden_by_slug=slugify(post.hidden_by_name),
-            event_type=EVENT_TYPES.get(post.type, post.type),
+            event_type=EVENT_TYPES.get(post.event_type, post.event_type),
             context=context,
             context_type=context_type,
             context_id=context_id,
