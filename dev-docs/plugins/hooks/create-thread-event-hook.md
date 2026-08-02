@@ -49,7 +49,7 @@ A `Thread` instance.
 
 #### `event_type: str`
 
-A `str` with the name of the event_type that updated the thread.
+A `str` with the name of the event type that updated the thread.
 
 
 #### `actor: Union["User", None, str] = None`
@@ -118,7 +118,7 @@ A `Thread` instance.
 
 #### `event_type: str`
 
-A `str` with the name of the event_type.
+A `str` with the name of the event type.
 
 
 #### `actor: Union["User", None, str] = None`
