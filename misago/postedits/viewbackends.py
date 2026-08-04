@@ -7,10 +7,6 @@ from ..permissions.postedits import check_restore_post_edit_permission
 from ..permissions.privatethreads import check_edit_private_thread_post_permission
 from ..permissions.threads import check_edit_thread_post_permission
 from ..threads.models import Post
-from .hooks import (
-    get_private_thread_post_edits_view_context_data_hook,
-    get_thread_post_edits_view_context_data_hook,
-)
 from .models import PostEdit
 
 
@@ -137,11 +133,6 @@ class ThreadPostEditViewBackend(PostEditViewBackend):
             in request.user_permissions.categories[CategoryPermission.ATTACHMENTS]
         )
 
-    def get_context_data_hook(
-        self, action, request: HttpRequest, post: Post, page: Page
-    ) -> dict:
-        return get_thread_post_edits_view_context_data_hook(action, request, post, page)
-
 
 class PrivateThreadPostEditViewBackend(PostEditViewBackend):
     post_edit_restore_url = "misago:private-thread-post-edit-restore"
@@ -161,13 +152,6 @@ class PrivateThreadPostEditViewBackend(PostEditViewBackend):
         self, request: HttpRequest, post: Post, attachment: dict
     ) -> bool:
         return True
-
-    def get_context_data_hook(
-        self, action, request: HttpRequest, post: Post, page: Page
-    ) -> dict:
-        return get_private_thread_post_edits_view_context_data_hook(
-            action, request, post, page
-        )
 
 
 thread_post_edit_backend = ThreadPostEditViewBackend()

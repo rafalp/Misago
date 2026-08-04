@@ -82,13 +82,6 @@ class GenericPostEditView(GenericThreadView):
     def get_post_edit_context_data(
         self, request: HttpRequest, post: Post, page: Page
     ) -> dict:
-        return self.post_edit_backend.get_context_data_hook(
-            self._get_post_edit_context_data_action, request, post, page
-        )
-
-    def _get_post_edit_context_data_action(
-        self, request: HttpRequest, post: Post, page: Page
-    ) -> dict:
         if page.object_list:
             post_edit = page.object_list[0]
             post_edit.category = post.category
@@ -143,7 +136,7 @@ class GenericPostEditView(GenericThreadView):
             {
                 "is_moderator": is_moderator,
                 "edit_number": page.number,
-                "edit_diff": self._get_edit_diff_data(request, post_edit),
+                "edit_diff": self.get_edit_diff_data(request, post_edit),
                 "show_options": any((can_restore, can_hide, can_unhide, can_delete)),
                 "can_restore": can_restore,
                 "can_hide": can_hide,
@@ -158,7 +151,7 @@ class GenericPostEditView(GenericThreadView):
 
         return context
 
-    def _get_edit_diff_data(
+    def get_edit_diff_data(
         self,
         request: HttpRequest,
         post_edit: PostEdit | None,
@@ -177,7 +170,7 @@ class GenericPostEditView(GenericThreadView):
             "blank": True,
             "title": None,
             "content": None,
-            "attachments": self._get_edit_diff_attachments(request, post_edit),
+            "attachments": self.get_edit_diff_attachments(request, post_edit),
         }
 
         if post_edit.old_title != post_edit.new_title:
@@ -192,7 +185,7 @@ class GenericPostEditView(GenericThreadView):
 
         return diff
 
-    def _get_edit_diff_attachments(
+    def get_edit_diff_attachments(
         self, request: HttpRequest, post_edit: PostEdit
     ) -> list:
         data = []
@@ -299,10 +292,10 @@ class PostEditsView(GenericPostEditView):
 
         return render(request, template_name, context_data)
 
-    def _get_post_edit_context_data_action(
+    def get_post_edit_context_data(
         self, request: HttpRequest, post: Post, page: Page
     ) -> dict:
-        context = super()._get_post_edit_context_data_action(request, post, page)
+        context = super().get_post_edit_context_data(request, post, page)
 
         if request.is_htmx:
             return context
