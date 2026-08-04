@@ -7,83 +7,19 @@ from django.urls import reverse
 from django.utils.translation import npgettext, pgettext
 from django.views import View
 
+from ..metadata import NumberMetadata, UserDatetimeMetadata
 from ..permissions.likes import (
     check_like_post_permission,
     check_see_post_likes_permission,
     check_unlike_post_permission,
 )
+from ..privatethreads.views.backend import private_thread_backend
 from ..privatethreads.views.generic import PrivateThreadView
 from ..threads.models import Post, Thread
 from ..threads.redirect import redirect_to_post
-from ..threads.views.generic import ThreadView
+from ..threads.views import GenericThreadView, thread_backend
 from .like import like_post, remove_post_like
 from .models import Like
-
-
-class PostLikeView(View):
-    def post(
-        self, request: HttpRequest, thread_id: int, slug: str, post_id: int
-    ) -> HttpResponse:
-        thread = self.get_thread(request, thread_id)
-
-        with transaction.atomic():
-            post = self.get_post(request, thread, post_id, for_update=True)
-            check_like_post_permission(
-                request.user_permissions, thread.category, thread, post
-            )
-
-            if not Like.objects.filter(post=post, user=request.user).exists():
-                like_post(post, request.user, request=True)
-
-        if not request.is_htmx:
-            messages.success(request, pgettext("post like view", "Post liked"))
-            return redirect_to_post(request, post)
-
-        post_feed = self.get_post_feed(request, thread, [])
-        context_data = post_feed.get_like_context_data(post, True)
-        context_data["post_number"] = self.get_post_number(self.request, thread, post)
-
-        return render(request, context_data["template_name"], context_data)
-
-
-class ThreadPostLikeView(PostLikeView, ThreadView):
-    pass
-
-
-class PrivateThreadPostLikeView(PostLikeView, PrivateThreadView):
-    pass
-
-
-class PostUnlikeView(View):
-    def post(
-        self, request: HttpRequest, thread_id: int, slug: str, post_id: int
-    ) -> HttpResponse:
-        thread = self.get_thread(request, thread_id)
-
-        with transaction.atomic():
-            post = self.get_post(request, thread, post_id, for_update=True)
-            check_unlike_post_permission(
-                request.user_permissions, thread.category, thread, post
-            )
-            remove_post_like(post, request.user, request=True)
-
-        if not request.is_htmx:
-            messages.success(request, pgettext("post unlike view", "Post like removed"))
-            return redirect_to_post(request, post)
-
-        post_feed = self.get_post_feed(request, thread, [])
-        context_data = post_feed.get_like_context_data(post, False)
-        context_data["post_number"] = self.get_post_number(self.request, thread, post)
-
-        return render(request, context_data["template_name"], context_data)
-
-
-class ThreadPostUnlikeView(PostUnlikeView, ThreadView):
-    pass
-
-
-class PrivateThreadPostUnlikeView(PostUnlikeView, PrivateThreadView):
-    pass
 
 
 class PageOutOfRangeError(Exception):
@@ -93,8 +29,9 @@ class PageOutOfRangeError(Exception):
         self.redirect_to = redirect_to
 
 
-class PostLikesView(View):
+class PostLikesView(GenericThreadView):
     template_name: str
+    header_template_name: str
     partial_template_name = "misago/post_likes/partial.html"
     modal_template_name = "misago/post_likes/modal/index.html"
 
@@ -107,7 +44,7 @@ class PostLikesView(View):
         page: int | None = None,
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
-        post = self.get_post(request, thread, post_id)
+        post = self.get_post(request, thread, post_id, select_related=("poster",))
         check_see_post_likes_permission(
             request.user_permissions, thread.category, thread, post
         )
@@ -118,7 +55,7 @@ class PostLikesView(View):
             )
 
         try:
-            likes_data = self.get_likes_data(request, post, page)
+            likes = self.get_likes_data(request, post, page)
         except PageOutOfRangeError as exc:
             return redirect(exc.redirect_to)
 
@@ -128,28 +65,10 @@ class PostLikesView(View):
             else:
                 template_name = self.partial_template_name
 
-            likes_data.update(
-                {
-                    "category": thread.category,
-                    "thread": thread,
-                    "post": post,
-                }
-            )
-
-            return render(request, template_name, likes_data)
+            return render(request, template_name, likes)
 
         return render(
-            request,
-            self.template_name,
-            {
-                "category": thread.category,
-                "thread": thread,
-                "post": post,
-                "post_number": self.get_post_number(request, thread, post),
-                "likes": likes_data,
-                "thread_url": self.get_thread_url(thread),
-                "post_url": self.get_post_url(thread, post),
-            },
+            request, self.template_name, self.get_context_data(request, post, likes)
         )
 
     def get_likes_data(
@@ -188,6 +107,9 @@ class PostLikesView(View):
 
         return {
             "template_name": self.partial_template_name,
+            "category": post.category,
+            "thread": post.thread,
+            "post": post,
             "paginator": paginator,
             "page": page_obj,
             "is_liked": is_liked,
@@ -221,9 +143,50 @@ class PostLikesView(View):
     ) -> str:
         raise NotImplementedError()
 
+    def get_context_data(self, request: HttpRequest, post: Post, likes: dict) -> dict:
+        thread = post.thread
+        post_number = self.get_post_number(request, post)
 
-class ThreadPostLikesView(PostLikesView, ThreadView):
+        return {
+            "breadcrumbs": self.get_thread_breadcrumbs(request, post.thread),
+            "header": self.get_header_data(post, post_number),
+            "category": post.category,
+            "thread": thread,
+            "post": post,
+            "post_number": post_number,
+            "likes": likes,
+            "thread_url": self.get_thread_url(thread),
+            "post_url": self.get_post_url(post),
+        }
+
+    def get_header_data(self, post: Post, post_number: int) -> dict:
+        return {
+            "template_name": self.header_template_name,
+            "meta": {
+                "template_name": "misago/header_meta.html",
+                "items": [
+                    UserDatetimeMetadata(
+                        id="poster",
+                        user=post.poster or post.poster_name,
+                        datetime=post.posted_at,
+                    ),
+                    NumberMetadata(
+                        id="post-edits",
+                        text=pgettext("post edits header meta", "Post #%(number)s"),
+                        number=post_number,
+                        url=self.get_post_url(post),
+                        icon="tabler/message.svg",
+                    ),
+                ],
+            },
+        }
+
+
+class ThreadPostLikesView(PostLikesView):
+    backend = thread_backend
+
     template_name = "misago/thread_post_likes/index.html"
+    header_template_name = "misago/thread_post_likes/header.html"
 
     def get_post_likes_url(
         self, thread: Thread, post: Post, page: int | None = None
@@ -249,8 +212,11 @@ class ThreadPostLikesView(PostLikesView, ThreadView):
         )
 
 
-class PrivateThreadPostLikesView(PostLikesView, PrivateThreadView):
+class PrivateThreadPostLikesView(PostLikesView):
+    backend = private_thread_backend
+
     template_name = "misago/private_thread_post_likes/index.html"
+    header_template_name = "misago/private_thread_post_likes/header.html"
 
     def get_post_likes_url(
         self, thread: Thread, post: Post, page: int | None = None
@@ -274,3 +240,69 @@ class PrivateThreadPostLikesView(PostLikesView, PrivateThreadView):
                 "post_id": post.id,
             },
         )
+
+
+class PostLikeView(GenericThreadView):
+    def post(
+        self, request: HttpRequest, thread_id: int, slug: str, post_id: int
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+
+        with transaction.atomic():
+            post = self.get_post(request, thread, post_id, for_update=True)
+            check_like_post_permission(
+                request.user_permissions, thread.category, thread, post
+            )
+
+            if not Like.objects.filter(post=post, user=request.user).exists():
+                like_post(post, request.user, request=True)
+
+        if not request.is_htmx:
+            messages.success(request, pgettext("post like view", "Post liked"))
+            return redirect_to_post(request, post)
+
+        post_feed = self.get_post_feed(request, thread, [])
+        context_data = post_feed.get_like_context_data(post, True)
+        context_data["post_number"] = self.get_post_number(self.request, post)
+
+        return render(request, context_data["template_name"], context_data)
+
+
+class ThreadPostLikeView(PostLikeView):
+    backend = thread_backend
+
+
+class PrivateThreadPostLikeView(PostLikeView):
+    backend = private_thread_backend
+
+
+class PostUnlikeView(GenericThreadView):
+    def post(
+        self, request: HttpRequest, thread_id: int, slug: str, post_id: int
+    ) -> HttpResponse:
+        thread = self.get_thread(request, thread_id)
+
+        with transaction.atomic():
+            post = self.get_post(request, thread, post_id, for_update=True)
+            check_unlike_post_permission(
+                request.user_permissions, thread.category, thread, post
+            )
+            remove_post_like(post, request.user, request=True)
+
+        if not request.is_htmx:
+            messages.success(request, pgettext("post unlike view", "Post like removed"))
+            return redirect_to_post(request, post)
+
+        post_feed = self.get_post_feed(request, thread, [])
+        context_data = post_feed.get_like_context_data(post, False)
+        context_data["post_number"] = self.get_post_number(self.request, post)
+
+        return render(request, context_data["template_name"], context_data)
+
+
+class ThreadPostUnlikeView(PostUnlikeView):
+    backend = thread_backend
+
+
+class PrivateThreadPostUnlikeView(PostUnlikeView):
+    backend = private_thread_backend

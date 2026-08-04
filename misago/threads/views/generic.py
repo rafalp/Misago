@@ -87,9 +87,6 @@ class GenericThreadView(View):
             **kwargs,
         )
 
-    def get_post_number(self, request: HttpRequest, post: Post) -> int:
-        return self.backend.get_post_number(request, post)
-
     def get_thread_updates_queryset(
         self,
         request: HttpRequest,
@@ -150,6 +147,9 @@ class GenericThreadView(View):
         queryset: QuerySet,
     ) -> ThreadPostsPaginator:
         return self.backend.get_posts_paginator(request, queryset)
+
+    def get_post_number(self, request: HttpRequest, post: Post) -> int:
+        return self.backend.get_post_number(request, post)
 
     def get_post_redirect(
         self,
