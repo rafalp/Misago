@@ -226,7 +226,7 @@ class MovedPostsToThreadEventType(ThreadContextThreadEventType):
 
         replacements["posts"] = thread_event.context_items
         description = npgettext(
-            "thread thread_event type description",
+            "thread event type description",
             "Moved %(posts)s post to %(context)s",
             "Moved %(posts)s posts to %(context)s",
             thread_event.context_items,
@@ -257,7 +257,7 @@ class MovedPostsFromThreadEventType(ThreadContextThreadEventType):
             replacements["context"] = self.get_context_text(thread_event.context)
 
         description = npgettext(
-            "thread thread_event type description",
+            "thread event type description",
             "Moved %(posts)s post from %(context)s",
             "Moved %(posts)s posts from %(context)s",
             thread_event.context_items,
@@ -290,7 +290,7 @@ class SplitPostsIntoThreadEventType(ThreadContextThreadEventType):
         if thread_event.context_items:
             replacements["posts"] = thread_event.context_items
             description = npgettext(
-                "thread thread_event type description",
+                "thread event type description",
                 "Split %(posts)s post into %(context)s",
                 "Split %(posts)s posts into %(context)s",
                 thread_event.context_items,
@@ -327,7 +327,7 @@ class SplitPostsFromThreadEventType(ThreadContextThreadEventType):
         if thread_event.context_items:
             replacements["posts"] = thread_event.context_items
             description = npgettext(
-                "thread thread_event type description",
+                "thread event type description",
                 "Split %(posts)s post from %(context)s",
                 "Split %(posts)s posts from %(context)s",
                 thread_event.context_items,
@@ -347,7 +347,7 @@ class DeletedPostsThreadEventType(ThreadEventType):
 
     def get_description(self, thread_event: ThreadEvent, data: dict) -> str:
         description = npgettext(
-            "thread thread_event event_type description",
+            "thread event type description",
             "Deleted %(posts)s post",
             "Deleted %(posts)s posts",
             thread_event.context_items,
