@@ -29,7 +29,7 @@ class EventView:
         if not self.check_permission(request, thread):
             self.raise_permission_error()
 
-        if self.execute_action(request, thread_event):
+        if self.perform_action(request, thread_event):
             messages.success(request, self.success_message)
 
         if not request.is_htmx:
@@ -51,7 +51,7 @@ class EventView:
     def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
         return False
 
-    def execute_action(
+    def perform_action(
         self, request: HttpRequest, thread_event: ThreadEvent
     ) -> ThreadEvent:
         return thread_event
@@ -62,7 +62,7 @@ class EventHideView(EventView):
         "thread update hide success message", "Thread event hidden"
     )
 
-    def execute_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
+    def perform_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
         return hide_thread_event(thread_event, request)
 
     def raise_permission_error(self):
@@ -79,7 +79,7 @@ class EventUnhideView(EventView):
         "thread update unhide success message", "Thread event unhidden"
     )
 
-    def execute_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
+    def perform_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
         return unhide_thread_event(thread_event, request)
 
     def raise_permission_error(self):
@@ -132,11 +132,11 @@ class EventDeleteView:
             self.raise_permission_error()
 
         if request.is_htmx:
-            self.execute_action(request, thread_event)
+            self.perform_action(request, thread_event)
             return render(request, self.template_name)
 
         if request.POST.get("confirm"):
-            self.execute_action(request, thread_event)
+            self.perform_action(request, thread_event)
             return redirect(self.get_next_thread_url(request, thread))
 
         return render(
@@ -160,7 +160,7 @@ class EventDeleteView:
             )
         )
 
-    def execute_action(self, request: HttpRequest, thread_event: ThreadEvent):
+    def perform_action(self, request: HttpRequest, thread_event: ThreadEvent):
         thread = thread_event.thread
 
         delete_thread_event(thread_event, request)

@@ -34,7 +34,7 @@ class PostEditViewBackend:
         except PostEdit.DoesNotExist:
             raise Http404()
 
-    def get_post_edit_index(self, post_edit: PostEdit) -> int | None:
+    def get_post_edit_number(self, post_edit: PostEdit) -> int | None:
         return (
             PostEdit.objects.filter(post=post_edit.post, id__lte=post_edit.id).count()
             or None

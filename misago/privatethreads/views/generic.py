@@ -34,7 +34,6 @@ class PrivateThreadView(GenericView):
         thread = super().get_thread(request, thread_id, for_update)
 
         if self.thread_get_members:
-            print("HERE HERE HERE")
             get_private_thread_members(thread)
 
         check_see_private_thread_permission(request.user_permissions, thread)

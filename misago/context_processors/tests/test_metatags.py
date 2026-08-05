@@ -1,4 +1,4 @@
-from ...metatags.metatags import get_default_metatags
+from ...metatags.default import get_default_metatags
 from ...test import assert_contains
 from ..metatags import default_metatags
 

@@ -17,11 +17,9 @@ from ...categories.components import get_categories_data, get_subcategories_data
 from ...categories.enums import CategoryChildrenComponent, CategoryTree
 from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
+from ...metatags.default import get_default_metatags
+from ...metatags.forumindex import get_forum_index_metatags
 from ...metatags.metatag import MetaTag
-from ...metatags.metatags import (
-    get_default_metatags,
-    get_forum_index_metatags,
-)
 from ...moderation.actions import (
     ModerationActionTemplateResult,
     ModerationResult,

@@ -8,6 +8,8 @@ from django.utils.translation import npgettext, pgettext
 from django.views import View
 
 from ..metadata import NumberMetadata, UserDatetimeMetadata
+from ..metatags.default import get_default_metatags
+from ..metatags.robots import robots_noindex_follow_metatag
 from ..permissions.likes import (
     check_like_post_permission,
     check_see_post_likes_permission,
@@ -148,6 +150,7 @@ class PostLikesView(GenericThreadView):
         post_number = self.get_post_number(request, post)
 
         return {
+            "metatags": self.get_metatags(post, post_number),
             "breadcrumbs": self.get_thread_breadcrumbs(request, post.thread),
             "header": self.get_header_data(post, post_number),
             "category": post.category,
@@ -158,6 +161,11 @@ class PostLikesView(GenericThreadView):
             "thread_url": self.get_thread_url(thread),
             "post_url": self.get_post_url(post),
         }
+
+    def get_metatags(self, post: Post, post_number: int) -> dict:
+        metatags = get_default_metatags(self.request)
+        metatags["robots"] = robots_noindex_follow_metatag
+        return metatags
 
     def get_header_data(self, post: Post, post_number: int) -> dict:
         return {
