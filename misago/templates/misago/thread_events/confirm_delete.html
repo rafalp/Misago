@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_component %}
 
 
 {% block title %}{% translate "Delete thread update" context "confirm delete thread update" %} | {{ thread.title }} | {{ block.super }}{% endblock %}
@@ -8,6 +8,7 @@
 {% block content %}
 <div class="page page-confirm page-confirm-delete">
   <div class="container page-container page-confirm-form-container">
+    {% includecomponent breadcrumbs %}
     
     <form action="{{ path }}" method="post">
       {% csrf_token %}
@@ -39,6 +40,7 @@
       </div>
     </form>
 
+    {% include "misago/main_footer.html" %}
   </div>
 </div>
 {% endblock content %}
