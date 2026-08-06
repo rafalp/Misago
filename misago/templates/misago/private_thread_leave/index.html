@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_component %}
 
 
 {% block title %}
@@ -10,6 +10,7 @@
 {% block content %}
 <div class="page page-confirm page-confirm-private-thread-member-remove">
   <div class="container page-container page-confirm-form-container">
+    {% includecomponent breadcrumbs %}
   
     <form action="{{ path }}" method="post">
       {% csrf_token %}
@@ -40,6 +41,7 @@
       </div>
     </form>
 
+    {% include "misago/main_footer.html" %}
   </div>
 </div>
 {% endblock content %}

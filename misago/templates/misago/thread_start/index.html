@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n misago_forms %}
+{% load i18n misago_component misago_forms %}
 
 
 {% block title %}
@@ -10,6 +10,7 @@
 {% block content %}
 <div class="page page-start-thread">
   <div class="container page-container">
+    {% includecomponent breadcrumbs %}
 
     {% if preview %}
       {% include "misago/posting/preview.html" %}
@@ -73,6 +74,8 @@
         </div>
       </div>
     </form>
+
+    {% include "misago/main_footer.html" %}
   </div>
 </div>
 {% endblock content %}

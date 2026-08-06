@@ -1,11 +1,11 @@
-from .backend import PrivateThreadViewBackend, private_thread_backend
 from .detail import PrivateThreadDetailView
 from .list import PrivateThreadListView
 from .members import (
     PrivateThreadLeaveView,
+    PrivateThreadManageMembersView,
+    PrivateThreadManageMemberView,
     PrivateThreadMemberRemoveView,
     PrivateThreadMembersAddView,
-    PrivateThreadMemberView,
     PrivateThreadOwnerChangeView,
 )
 from .post import (

@@ -363,9 +363,9 @@ class SplitPostModerationAction(FormMixin, PostModerationAction):
         )
 
     def get_thread_url(self, thread: Thread) -> str:
-        from ..threads.views.backend import thread_backend
+        from ..threads.threadtypes import thread_type
 
-        return thread_backend.get_thread_url(thread)
+        return thread_type.get_thread_url(thread)
 
 
 class MovePostModerationAction(FormMixin, PostModerationAction):
@@ -438,9 +438,9 @@ class MovePostModerationAction(FormMixin, PostModerationAction):
         )
 
     def get_thread_url(self, thread: Thread) -> str:
-        from ..threads.views.backend import thread_backend
+        from ..threads.threadtypes import thread_type
 
-        return thread_backend.get_thread_url(thread)
+        return thread_type.get_thread_url(thread)
 
 
 class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
@@ -588,9 +588,9 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
         )
 
     def get_redirect_url(self, post: Post) -> str:
-        from ..threads.views.backend import thread_backend
+        from ..threads.threadtypes import thread_type
 
-        redirect = thread_backend.get_post_redirect(self.request, post)
+        redirect = thread_type.get_post_redirect(self.request, post)
         return redirect["location"]
 
 
@@ -598,9 +598,9 @@ class MergePrivateThreadPostModerationAction(MergeThreadPostModerationAction):
     form_class = MergePrivateThreadPostForm
 
     def get_redirect_url(self, post: Post) -> str:
-        from ..privatethreads.views.backend import private_thread_backend
+        from ..privatethreads.threadtypes import private_thread_type
 
-        redirect = private_thread_backend.get_post_redirect(self.request, post)
+        redirect = private_thread_type.get_post_redirect(self.request, post)
         return redirect["location"]
 
 

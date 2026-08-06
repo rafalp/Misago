@@ -2,6 +2,7 @@ from django.urls import path
 from django.utils.translation import pgettext_lazy
 
 from ..auth.decorators import login_required
+from ..plugins import extensions
 from .views.categoryselect import ThreadStartCategorySelectView
 from .views.edit import (
     PrivateThreadEditView,
@@ -18,10 +19,23 @@ from .views.start import (
     ThreadStartView,
 )
 
+thread_start_category_select_view = extensions.get(
+    ThreadStartCategorySelectView
+).as_view()
+thread_start_view = extensions.get(ThreadStartView).as_view()
+thread_reply_view = extensions.get(ThreadReplyView).as_view()
+thread_edit_view = extensions.get(ThreadEditView).as_view()
+thread_post_edit_view = extensions.get(ThreadPostEditView).as_view()
+
+private_thread_start_view = extensions.get(PrivateThreadStartView).as_view()
+private_thread_reply_view = extensions.get(PrivateThreadReplyView).as_view()
+private_thread_edit_view = extensions.get(PrivateThreadEditView).as_view()
+private_thread_post_edit_view = extensions.get(PrivateThreadPostEditView).as_view()
+
 urlpatterns = [
     path(
         "threads/start/",
-        ThreadStartCategorySelectView.as_view(),
+        thread_start_category_select_view,
         name="thread-start",
     ),
     path(
@@ -31,7 +45,7 @@ urlpatterns = [
                 "thread start login required error",
                 "Sign in to start new thread",
             )
-        )(ThreadStartView.as_view()),
+        )(thread_start_view),
         name="thread-start",
     ),
     path(
@@ -41,7 +55,7 @@ urlpatterns = [
                 "private thread start login required error",
                 "Sign in to start new private thread",
             )
-        )(PrivateThreadStartView.as_view()),
+        )(private_thread_start_view),
         name="private-thread-start",
     ),
     path(
@@ -51,7 +65,7 @@ urlpatterns = [
                 "thread reply login required error",
                 "Sign in to reply to threads",
             )
-        )(ThreadReplyView.as_view()),
+        )(thread_reply_view),
         name="thread-reply",
     ),
     path(
@@ -61,7 +75,7 @@ urlpatterns = [
                 "thread reply login required error",
                 "Sign in to reply to threads",
             )
-        )(PrivateThreadReplyView.as_view()),
+        )(private_thread_reply_view),
         name="private-thread-reply",
     ),
     path(
@@ -71,7 +85,7 @@ urlpatterns = [
                 "thread edit login required error",
                 "Sign in to edit threads",
             )
-        )(ThreadEditView.as_view()),
+        )(thread_edit_view),
         name="thread-edit",
     ),
     path(
@@ -81,7 +95,7 @@ urlpatterns = [
                 "thread post edit login required error",
                 "Sign in to edit posts",
             )
-        )(ThreadPostEditView.as_view()),
+        )(thread_post_edit_view),
         name="thread-post-edit",
     ),
     path(
@@ -91,7 +105,7 @@ urlpatterns = [
                 "thread edit login required error",
                 "Sign in to edit threads",
             )
-        )(PrivateThreadEditView.as_view()),
+        )(private_thread_edit_view),
         name="private-thread-edit",
     ),
     path(
@@ -101,7 +115,7 @@ urlpatterns = [
                 "thread post edit login required error",
                 "Sign in to edit posts",
             )
-        )(PrivateThreadPostEditView.as_view()),
+        )(private_thread_post_edit_view),
         name="private-thread-post-edit",
     ),
 ]

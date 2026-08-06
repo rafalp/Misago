@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import pgettext
 
-from ..metatags.metatags import get_forum_index_metatags
+from ..metatags.forumindex import get_forum_index_metatags
 from ..readtracker.models import ReadCategory, ReadThread
 from .components import get_categories_data
 from .hooks import (

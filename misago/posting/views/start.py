@@ -15,8 +15,10 @@ from ...permissions.privatethreads import (
     check_start_private_threads_permission,
 )
 from ...permissions.threads import check_start_thread_permission
-from ...threads.models import Thread
+from ...privatethreads.threadtypes import private_thread_type
 from ...threads.prefetch import prefetch_post_feed_data
+from ...threads.threadtypes import thread_type
+from ...threads.views import BaseThreadView
 from ..formsets import (
     Formset,
     PrivateThreadStartFormset,
@@ -24,10 +26,6 @@ from ..formsets import (
     ThreadStartFormset,
     get_private_thread_start_formset,
     get_thread_start_formset,
-)
-from ..hooks import (
-    get_private_thread_start_context_data_hook,
-    get_thread_start_context_data_hook,
 )
 from ..state.start import (
     PrivateThreadStartState,
@@ -39,7 +37,7 @@ from ..state.start import (
 from ..validators import validate_flood_control, validate_posted_contents
 
 
-class StartView(View):
+class StartView(BaseThreadView):
     template_name: str
 
     def get(self, request: HttpRequest, **kwargs) -> HttpResponse:
@@ -80,7 +78,7 @@ class StartView(View):
 
         messages.success(request, pgettext("thread started", "Thread started"))
 
-        thread_url = self.get_thread_url(request, state.thread)
+        thread_url = self.get_thread_url(state.thread)
         return redirect(thread_url)
 
     def preview(
@@ -135,15 +133,16 @@ class StartView(View):
     def get_context_data(
         self, request: HttpRequest, category: Category, formset: Formset | TabbedFormset
     ) -> dict:
-        return self.get_context_data_action(request, category, formset)
-
-    def get_context_data_action(
-        self, request: HttpRequest, category: Category, formset: Formset | TabbedFormset
-    ) -> dict:
-        return {"category": category, "formset": formset}
+        return {
+            "category": category,
+            "formset": formset,
+            "breadcrumbs": self.get_category_breadcrumbs(request, category),
+        }
 
 
 class ThreadStartView(StartView):
+    thread_type = thread_type
+
     template_name: str = "misago/thread_start/index.html"
 
     def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
@@ -171,21 +170,10 @@ class ThreadStartView(StartView):
     def get_state(self, request: HttpRequest, category: Category) -> ThreadStartState:
         return get_thread_start_state(request, category)
 
-    def get_context_data(
-        self, request: HttpRequest, category: Category, formset: ThreadStartFormset
-    ) -> dict:
-        return get_thread_start_context_data_hook(
-            self.get_context_data_action, request, category, formset
-        )
-
-    def get_thread_url(self, request: HttpRequest, thread: Thread) -> str:
-        return reverse(
-            "misago:thread",
-            kwargs={"thread_id": thread.id, "slug": thread.slug},
-        )
-
 
 class PrivateThreadStartView(StartView):
+    thread_type = private_thread_type
+
     template_name: str = "misago/private_thread_start/index.html"
 
     def get_category(self, request: HttpRequest, kwargs: dict) -> Category:
@@ -202,22 +190,6 @@ class PrivateThreadStartView(StartView):
         self, request: HttpRequest, category: Category
     ) -> PrivateThreadStartState:
         return get_private_thread_start_state(request, category)
-
-    def get_context_data(
-        self,
-        request: HttpRequest,
-        category: Category,
-        formset: PrivateThreadStartFormset,
-    ) -> dict:
-        return get_private_thread_start_context_data_hook(
-            self.get_context_data_action, request, category, formset
-        )
-
-    def get_thread_url(self, request: HttpRequest, thread: Thread) -> str:
-        return reverse(
-            "misago:private-thread",
-            kwargs={"thread_id": thread.id, "slug": thread.slug},
-        )
 
     def post_state_save(
         self,

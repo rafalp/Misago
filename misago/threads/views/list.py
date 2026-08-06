@@ -17,11 +17,9 @@ from ...categories.components import get_categories_data, get_subcategories_data
 from ...categories.enums import CategoryChildrenComponent, CategoryTree
 from ...categories.models import Category
 from ...core.exceptions import OutdatedSlug
+from ...metatags.default import get_default_metatags
+from ...metatags.forumindex import get_forum_index_metatags
 from ...metatags.metatag import MetaTag
-from ...metatags.metatags import (
-    get_default_metatags,
-    get_forum_index_metatags,
-)
 from ...moderation.actions import (
     ModerationActionTemplateResult,
     ModerationResult,
@@ -74,7 +72,7 @@ from ..filters import (
     UnreadThreadsFilter,
 )
 from ..models import Thread
-from .backend import ViewBackend, thread_backend
+from ..threadtypes import BaseThreadType, thread_type
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -84,7 +82,7 @@ ANIMATE_NEW_THREADS = "animate_new"
 
 
 class ListView(View):
-    backend: ViewBackend
+    thread_type: BaseThreadType
 
     template_name: str
     template_name_htmx: str
@@ -311,7 +309,7 @@ class ListView(View):
         )
 
         for thread in selection:
-            if not self.backend.has_moderator_permission(
+            if not self.thread_type.has_moderator_permission(
                 request.user_permissions, thread
             ):
                 raise ValidationError(
@@ -387,7 +385,7 @@ class ListView(View):
 
 
 class ThreadListView(ListView):
-    backend = thread_backend
+    thread_type = thread_type
     template_name = "misago/thread_list/index.html"
     template_name_htmx = "misago/thread_list/partial.html"
     mark_as_read_template_name = "misago/thread_list/mark_as_read_page.html"
@@ -724,7 +722,7 @@ class ThreadListView(ListView):
 
 
 class CategoryThreadListView(ListView):
-    backend = thread_backend
+    thread_type = thread_type
     template_name = "misago/category_thread_list/index.html"
     template_name_htmx = "misago/category_thread_list/partial.html"
     mark_as_read_template_name = "misago/category_thread_list/mark_as_read_page.html"

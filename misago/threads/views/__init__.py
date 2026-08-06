@@ -1,4 +1,4 @@
-from .backend import ThreadViewBackend, ViewBackend, thread_backend
+from .base import BaseThreadView
 from .detail import DetailView, ThreadDetailView
 from .list import CategoryThreadListView, ListView, ThreadListView
 from .post import (

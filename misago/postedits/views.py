@@ -7,6 +7,9 @@ from django.utils import dateparse
 from django.utils.translation import pgettext
 
 from ..attachments.filetypes import filetypes
+from ..metadata import NumberMetadata, UserDatetimeMetadata
+from ..metatags.default import get_default_metatags
+from ..metatags.robots import robots_noindex_follow_metatag
 from ..permissions.checkutils import check_permissions
 from ..permissions.postedits import (
     check_delete_post_edit_permission,
@@ -14,77 +17,68 @@ from ..permissions.postedits import (
     check_see_post_edit_history_permission,
     check_unhide_post_edit_permission,
 )
-from ..privatethreads.views.backend import private_thread_backend
+from ..privatethreads.threadtypes import private_thread_type
 from ..threads.models import Post
-from ..threads.views.backend import thread_backend
-from ..threads.views.generic import GenericThreadView
+from ..threads.threadtypes import thread_type
+from ..threads.views import BaseThreadView
 from .delete import delete_post_edit
 from .diff import diff_text
 from .hide import hide_post_edit, unhide_post_edit
 from .models import PostEdit
-from .restore import restore_post_edit
-from .viewbackends import (
-    PostEditViewBackend,
-    private_thread_post_edit_backend,
-    thread_post_edit_backend,
+from .postedittypes import (
+    BasePostEditType,
+    private_thread_post_edit_type,
+    thread_post_edit_type,
 )
+from .restore import restore_post_edit
 
 
-class GenericPostEditView(GenericThreadView):
-    post_edit_backend: PostEditViewBackend
+class GenericPostEditView(BaseThreadView):
+    post_edit_type: BasePostEditType
 
     @property
     def partial_template_name(self) -> str:
-        return self.post_edit_backend.partial_template_name
+        return self.post_edit_type.partial_template_name
 
     @property
     def modal_template_name(self) -> str:
-        return self.post_edit_backend.modal_template_name
+        return self.post_edit_type.modal_template_name
 
     @property
     def edit_diff_template_name(self) -> str:
-        return self.post_edit_backend.edit_diff_template_name
+        return self.post_edit_type.edit_diff_template_name
 
     def get_post_edit(
         self, request: HttpRequest, post: Post, post_edit_id: int
     ) -> PostEdit:
-        return self.post_edit_backend.get_post_edit(request, post, post_edit_id)
+        return self.post_edit_type.get_post_edit(request, post, post_edit_id)
 
-    def get_post_edit_index(self, post_edit: PostEdit) -> int | None:
-        return self.post_edit_backend.get_post_edit_index(post_edit)
+    def get_post_edit_number(self, post_edit: PostEdit) -> int | None:
+        return self.post_edit_type.get_post_edit_number(post_edit)
 
     def check_restore_post_edit_permission(
         self, request: HttpRequest, post_edit: PostEdit
     ):
-        self.post_edit_backend.check_restore_post_edit_permission(request, post_edit)
+        self.post_edit_type.check_restore_post_edit_permission(request, post_edit)
 
     def get_attachment_permission(
         self, request: HttpRequest, post: Post, attachment: dict
     ) -> bool:
-        return self.post_edit_backend.get_attachment_permission(
-            request, post, attachment
-        )
+        return self.post_edit_type.get_attachment_permission(request, post, attachment)
 
     def get_post_edit_restore_url(self, post_edit: PostEdit) -> str:
-        return self.post_edit_backend.get_post_edit_restore_url(post_edit)
+        return self.post_edit_type.get_post_edit_restore_url(post_edit)
 
     def get_post_edit_hide_url(self, post_edit: PostEdit) -> str:
-        return self.post_edit_backend.get_post_edit_hide_url(post_edit)
+        return self.post_edit_type.get_post_edit_hide_url(post_edit)
 
     def get_post_edit_unhide_url(self, post_edit: PostEdit) -> str:
-        return self.post_edit_backend.get_post_edit_unhide_url(post_edit)
+        return self.post_edit_type.get_post_edit_unhide_url(post_edit)
 
     def get_post_edit_delete_url(self, post_edit: PostEdit) -> str:
-        return self.post_edit_backend.get_post_edit_delete_url(post_edit)
+        return self.post_edit_type.get_post_edit_delete_url(post_edit)
 
     def get_post_edit_context_data(
-        self, request: HttpRequest, post: Post, page: Page
-    ) -> dict:
-        return self.post_edit_backend.get_context_data_hook(
-            self._get_post_edit_context_data_action, request, post, page
-        )
-
-    def _get_post_edit_context_data_action(
         self, request: HttpRequest, post: Post, page: Page
     ) -> dict:
         if page.object_list:
@@ -141,7 +135,7 @@ class GenericPostEditView(GenericThreadView):
             {
                 "is_moderator": is_moderator,
                 "edit_number": page.number,
-                "edit_diff": self._get_edit_diff_data(request, post_edit),
+                "edit_diff": self.get_edit_diff_data(request, post_edit),
                 "show_options": any((can_restore, can_hide, can_unhide, can_delete)),
                 "can_restore": can_restore,
                 "can_hide": can_hide,
@@ -156,7 +150,7 @@ class GenericPostEditView(GenericThreadView):
 
         return context
 
-    def _get_edit_diff_data(
+    def get_edit_diff_data(
         self,
         request: HttpRequest,
         post_edit: PostEdit | None,
@@ -175,7 +169,7 @@ class GenericPostEditView(GenericThreadView):
             "blank": True,
             "title": None,
             "content": None,
-            "attachments": self._get_edit_diff_attachments(request, post_edit),
+            "attachments": self.get_edit_diff_attachments(request, post_edit),
         }
 
         if post_edit.old_title != post_edit.new_title:
@@ -190,7 +184,7 @@ class GenericPostEditView(GenericThreadView):
 
         return diff
 
-    def _get_edit_diff_attachments(
+    def get_edit_diff_attachments(
         self, request: HttpRequest, post_edit: PostEdit
     ) -> list:
         data = []
@@ -240,9 +234,10 @@ class GenericPostEditView(GenericThreadView):
 
 
 class PostEditsView(GenericPostEditView):
-    post_edit_backend: PostEditViewBackend
+    post_edit_type: BasePostEditType
 
     template_name: str
+    header_template_name: str
 
     def get(
         self,
@@ -253,7 +248,9 @@ class PostEditsView(GenericPostEditView):
         page: int | None = None,
     ) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
-        post = self.get_post(request, thread, post_id, for_content=True)
+        post = self.get_post(
+            request, thread, post_id, select_related=["poster"], for_content=True
+        )
 
         check_see_post_edit_history_permission(
             request.user_permissions, thread.category, thread, post
@@ -281,7 +278,7 @@ class PostEditsView(GenericPostEditView):
 
         page_obj = paginator.get_page(page or 1)
 
-        context_data = self.get_post_edit_context_data(request, post, page_obj)
+        context = self.get_post_edit_context_data(request, post, page_obj)
 
         if request.is_htmx:
             if request.GET.get("modal"):
@@ -290,27 +287,75 @@ class PostEditsView(GenericPostEditView):
                 template_name = self.partial_template_name
         else:
             template_name = self.template_name
-            context_data["partial_template_name"] = self.partial_template_name
+            context["partial_template_name"] = self.partial_template_name
 
-        return render(request, template_name, context_data)
+        return render(request, template_name, context)
+
+    def get_post_edit_context_data(
+        self, request: HttpRequest, post: Post, page: Page
+    ) -> dict:
+        context = super().get_post_edit_context_data(request, post, page)
+
+        if request.is_htmx:
+            return context
+
+        context.update(
+            {
+                "metatags": self.get_metatags(post, context["post_number"]),
+                "breadcrumbs": self.get_thread_breadcrumbs(request, post.thread),
+                "header": self.get_header_data(post, context["post_number"]),
+            }
+        )
+
+        return context
+
+    def get_metatags(self, post: Post, post_number: int) -> dict:
+        metatags = get_default_metatags(self.request)
+        metatags["robots"] = robots_noindex_follow_metatag
+        return metatags
+
+    def get_header_data(self, post: Post, post_number: int) -> dict:
+        post_url = self.get_post_url(post)
+        return {
+            "template_name": self.header_template_name,
+            "meta": {
+                "template_name": "misago/header_meta.html",
+                "items": [
+                    UserDatetimeMetadata(
+                        id="poster",
+                        user=post.poster or post.poster_name,
+                        datetime=post.posted_at,
+                    ),
+                    NumberMetadata(
+                        id="post-edits",
+                        text=pgettext("post edits header meta", "Post #%(number)s"),
+                        number=post_number,
+                        url=post_url,
+                        icon="tabler/message.svg",
+                    ),
+                ],
+            },
+        }
 
 
 class ThreadPostEditsView(PostEditsView):
-    backend = thread_backend
-    post_edit_backend = thread_post_edit_backend
+    thread_type = thread_type
+    post_edit_type = thread_post_edit_type
 
     template_name = "misago/thread_post_edits/index.html"
+    header_template_name = "misago/thread_post_edits/header.html"
 
 
 class PrivateThreadPostEditsView(PostEditsView):
-    backend = private_thread_backend
-    post_edit_backend = private_thread_post_edit_backend
+    thread_type = private_thread_type
+    post_edit_type = private_thread_post_edit_type
 
     template_name = "misago/private_thread_post_edits/index.html"
+    header_template_name = "misago/private_thread_post_edits/header.html"
 
 
 class PostEditView(GenericPostEditView):
-    post_edit_backend: PostEditViewBackend
+    post_edit_type: BasePostEditType
 
     template_name: str | None = None
 
@@ -335,33 +380,18 @@ class PostEditView(GenericPostEditView):
         )
 
         post_edit = self.get_post_edit(request, post, post_edit_id)
-        self.check_post_edit_permission(request, post_edit)
+        self.check_action_permission(request, post_edit)
 
         if request.method == "POST":
-            return self.execute_action(request, post_edit)
+            return self.perform_action(request, post_edit)
 
-        edit_index = self.get_post_edit_index(post_edit)
+        return render(request, self.template_name, self.get_context_data(post_edit))
 
-        return render(
-            request,
-            self.template_name,
-            {
-                "category": thread.category,
-                "thread": thread,
-                "post": post,
-                "post_number": self.get_post_number(request, post),
-                "post_edit": post_edit,
-                "post_url": self.get_post_url(post),
-                "post_edit_number": edit_index,
-                "post_edit_url": self.get_post_edits_url(post, edit_index),
-            },
-        )
-
-    def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
+    def check_action_permission(self, request: HttpRequest, post_edit: PostEdit):
         raise NotImplementedError()
 
-    def execute_action(self, request: HttpRequest, post_edit: PostEdit) -> HttpResponse:
-        raise NotImplementedError
+    def perform_action(self, request: HttpRequest, post_edit: PostEdit) -> HttpResponse:
+        raise NotImplementedError()
 
     def get_action_response(
         self, request: HttpRequest, post: Post, page: int | None
@@ -384,20 +414,39 @@ class PostEditView(GenericPostEditView):
         else:
             template_name = self.partial_template_name
 
-        context_data = self.get_post_edit_context_data(
+        context = self.get_post_edit_context_data(
             request, post, paginator.get_page(page)
         )
 
-        return render(request, template_name, context_data)
+        return render(request, template_name, context)
+
+    def get_context_data(self, post_edit: PostEdit) -> dict:
+        request = self.request
+        thread = post_edit.thread
+        post = post_edit.post
+
+        edit_number = self.get_post_edit_number(post_edit)
+
+        return {
+            "breadcrumbs": self.get_thread_breadcrumbs(request, thread),
+            "category": thread.category,
+            "thread": thread,
+            "post": post,
+            "post_number": self.get_post_number(request, post),
+            "post_edit": post_edit,
+            "post_url": self.get_post_url(post),
+            "post_edit_number": edit_number,
+            "post_edit_url": self.get_post_edits_url(post, edit_number),
+        }
 
 
 class PostEditRestoreView(PostEditView):
     template_name = "misago/post_edit_restore/index.html"
 
-    def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
+    def check_action_permission(self, request: HttpRequest, post_edit: PostEdit):
         self.check_restore_post_edit_permission(request, post_edit)
 
-    def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
+    def perform_action(self, request, post_edit: PostEdit) -> HttpResponse:
         restore_post_edit(post_edit, request.user, request=request)
 
         messages.success(
@@ -409,22 +458,22 @@ class PostEditRestoreView(PostEditView):
 
 
 class ThreadPostEditRestoreView(PostEditRestoreView):
-    backend = thread_backend
-    post_edit_backend = thread_post_edit_backend
+    thread_type = thread_type
+    post_edit_type = thread_post_edit_type
 
 
 class PrivateThreadPostEditRestoreView(PostEditRestoreView):
-    backend = private_thread_backend
-    post_edit_backend = private_thread_post_edit_backend
+    thread_type = private_thread_type
+    post_edit_type = private_thread_post_edit_type
 
 
 class PostEditHideView(PostEditView):
     template_name = "misago/post_edit_hide/index.html"
 
-    def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
+    def check_action_permission(self, request: HttpRequest, post_edit: PostEdit):
         check_hide_post_edit_permission(request.user_permissions, post_edit)
 
-    def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
+    def perform_action(self, request, post_edit: PostEdit) -> HttpResponse:
         if not post_edit.is_hidden:
             hide_post_edit(post_edit, request.user, request=request)
 
@@ -433,25 +482,25 @@ class PostEditHideView(PostEditView):
                 pgettext("hide post edit", "Post edit hidden"),
             )
 
-        post_edit_index = self.get_post_edit_index(post_edit)
-        return self.get_action_response(request, post_edit.post, post_edit_index)
+        edit_number = self.get_post_edit_number(post_edit)
+        return self.get_action_response(request, post_edit.post, edit_number)
 
 
 class ThreadPostEditHideView(PostEditHideView):
-    backend = thread_backend
-    post_edit_backend = thread_post_edit_backend
+    thread_type = thread_type
+    post_edit_type = thread_post_edit_type
 
 
 class PrivateThreadPostEditHideView(PostEditHideView):
-    backend = private_thread_backend
-    post_edit_backend = private_thread_post_edit_backend
+    thread_type = private_thread_type
+    post_edit_type = private_thread_post_edit_type
 
 
 class PostEditUnhideView(PostEditView):
-    def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
+    def check_action_permission(self, request: HttpRequest, post_edit: PostEdit):
         check_unhide_post_edit_permission(request.user_permissions, post_edit)
 
-    def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
+    def perform_action(self, request, post_edit: PostEdit) -> HttpResponse:
         if post_edit.is_hidden:
             unhide_post_edit(post_edit, request=request)
 
@@ -460,28 +509,28 @@ class PostEditUnhideView(PostEditView):
                 pgettext("unhide post edit", "Post edit unhidden"),
             )
 
-        post_edit_index = self.get_post_edit_index(post_edit)
-        return self.get_action_response(request, post_edit.post, post_edit_index)
+        edit_number = self.get_post_edit_number(post_edit)
+        return self.get_action_response(request, post_edit.post, edit_number)
 
 
 class ThreadPostEditUnhideView(PostEditUnhideView):
-    backend = thread_backend
-    post_edit_backend = thread_post_edit_backend
+    thread_type = thread_type
+    post_edit_type = thread_post_edit_type
 
 
 class PrivateThreadPostEditUnhideView(PostEditUnhideView):
-    backend = private_thread_backend
-    post_edit_backend = private_thread_post_edit_backend
+    thread_type = private_thread_type
+    post_edit_type = private_thread_post_edit_type
 
 
 class PostEditDeleteView(PostEditView):
     template_name = "misago/post_edit_delete/index.html"
 
-    def check_post_edit_permission(self, request: HttpRequest, post_edit: PostEdit):
+    def check_action_permission(self, request: HttpRequest, post_edit: PostEdit):
         check_delete_post_edit_permission(request.user_permissions, post_edit)
 
-    def execute_action(self, request, post_edit: PostEdit) -> HttpResponse:
-        post_edit_index = self.get_post_edit_index(post_edit)
+    def perform_action(self, request, post_edit: PostEdit) -> HttpResponse:
+        edit_number = self.get_post_edit_number(post_edit)
         delete_post_edit(post_edit, request=request)
 
         messages.success(
@@ -489,14 +538,14 @@ class PostEditDeleteView(PostEditView):
             pgettext("delete post edit", "Post edit deleted"),
         )
 
-        return self.get_action_response(request, post_edit.post, post_edit_index)
+        return self.get_action_response(request, post_edit.post, edit_number)
 
 
 class ThreadPostEditDeleteView(PostEditDeleteView):
-    backend = thread_backend
-    post_edit_backend = thread_post_edit_backend
+    thread_type = thread_type
+    post_edit_type = thread_post_edit_type
 
 
 class PrivateThreadPostEditDeleteView(PostEditDeleteView):
-    backend = private_thread_backend
-    post_edit_backend = private_thread_post_edit_backend
+    thread_type = private_thread_type
+    post_edit_type = private_thread_post_edit_type

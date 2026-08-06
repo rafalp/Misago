@@ -635,9 +635,9 @@ class MergeThreadModerationAction(FormMixin, ThreadModerationAction):
         )
 
     def get_redirect_url(self, thread: Thread) -> str:
-        from ..threads.views.backend import thread_backend
+        from ..threads.threadtypes import thread_type
 
-        return thread_backend.get_post_redirect_url(thread.last_post)
+        return thread_type.get_post_redirect_url(thread.last_post)
 
 
 class DeleteThreadModerationAction(ConfirmMixin, ThreadModerationAction):

@@ -15,7 +15,7 @@ from ..statusmessages import (
     unapproved_posts_thread_status_message,
     unapproved_thread_status_message,
 )
-from ..views.backend import thread_backend
+from ..threadtypes import thread_type
 
 
 def test_locked_thread_status_message_returns_none_for_unlocked_thread(thread):
@@ -259,7 +259,7 @@ def test_unapproved_posts_thread_status_message_returns_none_for_thread_without_
 ):
     thread.has_unapproved_posts = True
 
-    message = unapproved_posts_thread_status_message(thread, thread_backend)
+    message = unapproved_posts_thread_status_message(thread, thread_type)
 
     assert message == {
         "id": "unapproved_posts",

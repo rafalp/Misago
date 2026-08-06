@@ -16,12 +16,11 @@ from ...permissions.threads import (
     check_edit_thread_permission,
     check_edit_thread_post_permission,
 )
-from ...privatethreads.redirect import redirect_to_private_thread_post
-from ...privatethreads.views.generic import PrivateThreadView
+from ...privatethreads.threadtypes import private_thread_type
 from ...threads.models import Post, Thread
 from ...threads.prefetch import prefetch_post_feed_data
-from ...threads.redirect import redirect_to_thread_post
-from ...threads.views.generic import ThreadView
+from ...threads.threadtypes import thread_type
+from ...threads.views import BaseThreadView
 from ..formsets import (
     Formset,
     PrivateThreadEditFormset,
@@ -33,12 +32,6 @@ from ..formsets import (
     get_thread_edit_formset,
     get_thread_post_edit_formset,
 )
-from ..hooks import (
-    get_private_thread_edit_context_data_hook,
-    get_private_thread_post_edit_context_data_hook,
-    get_thread_edit_context_data_hook,
-    get_thread_post_edit_context_data_hook,
-)
 from ..state import (
     PostEditState,
     PrivateThreadPostEditState,
@@ -49,7 +42,7 @@ from ..state import (
 from ..validators import validate_posted_contents
 
 
-class EditView(View):
+class EditView(BaseThreadView):
     template_name: str
     template_name_htmx: str
     template_name_inline: str = "misago/inline_edit/index.html"
@@ -118,7 +111,7 @@ class EditView(View):
             return self.post_inline_edit(request, state)
 
         if post_id:
-            response = self.get_redirect_to_post(request, state.thread, state.post)
+            response = self.get_post_redirect(request, state.post)
         else:
             response = redirect(self.get_thread_url(thread))
 
@@ -195,13 +188,9 @@ class EditView(View):
     def get_context_data(
         self, request: HttpRequest, post: Post, formset: Formset
     ) -> dict:
-        raise NotImplementedError()
-
-    def get_context_data_action(
-        self, request: HttpRequest, post: Post, formset: Formset
-    ) -> dict:
         return {
             "template_name_htmx": self.template_name_htmx,
+            "breadcrumbs": self.get_thread_breadcrumbs(request, post.thread),
             "thread": post.thread,
             "post": post,
             "formset": formset,
@@ -216,7 +205,9 @@ class EditView(View):
         raise NotImplementedError()
 
 
-class ThreadPostEditView(EditView, ThreadView):
+class ThreadPostEditView(EditView):
+    thread_type = thread_type
+
     template_name: str = "misago/thread_post_edit/index.html"
     template_name_htmx: str = "misago/thread_post_edit/form.html"
 
@@ -233,20 +224,10 @@ class ThreadPostEditView(EditView, ThreadView):
     def get_formset(self, request: HttpRequest, post: Post) -> ThreadPostEditFormset:
         return get_thread_post_edit_formset(request, post)
 
-    def get_context_data(
-        self, request: HttpRequest, post: Post, formset: ThreadPostEditFormset
-    ) -> dict:
-        return get_thread_post_edit_context_data_hook(
-            self.get_context_data_action, request, post, formset
-        )
 
-    def get_redirect_to_post(
-        self, request: HttpRequest, thread: Thread, post: Post
-    ) -> HttpResponse:
-        return redirect_to_thread_post(request, thread, post)
+class PrivateThreadPostEditView(EditView):
+    thread_type = private_thread_type
 
-
-class PrivateThreadPostEditView(EditView, PrivateThreadView):
     template_name: str = "misago/private_thread_post_edit/index.html"
     template_name_htmx: str = "misago/private_thread_post_edit/form.html"
 
@@ -265,18 +246,6 @@ class PrivateThreadPostEditView(EditView, PrivateThreadView):
     ) -> PrivateThreadPostEditFormset:
         return get_private_thread_post_edit_formset(request, post)
 
-    def get_context_data(
-        self, request: HttpRequest, post: Post, formset: PrivateThreadPostEditFormset
-    ) -> dict:
-        return get_private_thread_post_edit_context_data_hook(
-            self.get_context_data_action, request, post, formset
-        )
-
-    def get_redirect_to_post(
-        self, request: HttpRequest, thread: Thread, post: Post
-    ) -> HttpResponse:
-        return redirect_to_private_thread_post(request, thread, post)
-
 
 class ThreadEditView(ThreadPostEditView):
     template_name: str = "misago/thread_edit/index.html"
@@ -291,13 +260,6 @@ class ThreadEditView(ThreadPostEditView):
     def get_formset(self, request: HttpRequest, post: Post) -> ThreadEditFormset:
         return get_thread_edit_formset(request, post)
 
-    def get_context_data(
-        self, request: HttpRequest, post: Post, formset: ThreadEditFormset
-    ) -> dict:
-        return get_thread_edit_context_data_hook(
-            self.get_context_data_action, request, post, formset
-        )
-
 
 class PrivateThreadEditView(PrivateThreadPostEditView):
     template_name: str = "misago/private_thread_edit/index.html"
@@ -311,10 +273,3 @@ class PrivateThreadEditView(PrivateThreadPostEditView):
 
     def get_formset(self, request: HttpRequest, post: Post) -> PrivateThreadEditFormset:
         return get_private_thread_edit_formset(request, post)
-
-    def get_context_data(
-        self, request: HttpRequest, post: Post, formset: PrivateThreadEditFormset
-    ) -> dict:
-        return get_private_thread_edit_context_data_hook(
-            self.get_context_data_action, request, post, formset
-        )

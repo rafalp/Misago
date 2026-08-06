@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from ...conf.test import override_dynamic_settings
-from ..metatags import get_forum_index_metatags
+from ..forumindex import get_forum_index_metatags
 
 
 @override_dynamic_settings(index_title="Index Title")

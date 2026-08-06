@@ -11,15 +11,15 @@ from ..permissions.solutions import (
     check_select_thread_solution_permission,
     check_unlock_thread_solution_permission,
 )
-from ..threads.views.backend import thread_backend
-from ..threads.views.generic import GenericThreadView
+from ..threads.threadtypes import thread_type
+from ..threads.views import BaseThreadView
 from .lock import lock_thread_solution, unlock_thread_solution
 from .select import clear_thread_solution, select_thread_solution
 from .validators import validate_thread_solution
 
 
-class ThreadSolutionView(GenericThreadView):
-    backend = thread_backend
+class ThreadSolutionView(BaseThreadView):
+    thread_type = thread_type
 
 
 class ThreadSolutionSelectView(ThreadSolutionView):

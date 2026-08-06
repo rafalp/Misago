@@ -1,19 +1,51 @@
+from typing import Iterable
+
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest, HttpResponse
+from django.db.models import QuerySet
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ..privatethreads.views.generic import PrivateThreadView
+from ..privatethreads.threadtypes import private_thread_type
 from ..threads.models import Thread
-from ..threads.views.generic import ThreadView
+from ..threads.threadtypes import thread_type
+from ..threads.views import BaseThreadView
 from .delete import delete_thread_event
 from .hide import hide_thread_event, unhide_thread_event
 from .models import ThreadEvent
+from .threadeventtypes import (
+    BaseThreadEventType,
+    private_thread_event_type,
+    thread_event_type,
+)
 from .threadflag import sync_thread_has_events
 
 
-class EventView:
+class BaseEventView(BaseThreadView):
+    thread_event_type: BaseThreadEventType
+
+    def get_thread_event_queryset(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+    ) -> QuerySet:
+        return self.thread_event_type.get_thread_event_queryset(request, thread)
+
+    def get_thread_event(
+        self,
+        request: HttpRequest,
+        thread: Thread,
+        thread_event_id: int,
+        *,
+        select_related: bool | Iterable[str] = False,
+    ) -> ThreadEvent:
+        return self.thread_event_type.get_thread_event(
+            request, thread, thread_event_id, select_related=select_related
+        )
+
+
+class EventVisibilityView(BaseEventView):
     template_name: str = "misago/thread_events/event.html"
     success_message: str
 
@@ -26,10 +58,10 @@ class EventView:
         thread = self.get_thread(request, thread_id)
         thread_event = self.get_thread_event(request, thread, thread_event_id)
 
-        if not self.check_permission(request, thread):
+        if not self.has_moderator_permission(request.user_permissions, thread):
             self.raise_permission_error()
 
-        if self.execute_action(request, thread_event):
+        if self.perform_action(request, thread_event):
             messages.success(request, self.success_message)
 
         if not request.is_htmx:
@@ -48,21 +80,18 @@ class EventView:
             },
         )
 
-    def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
-        return False
-
-    def execute_action(
+    def perform_action(
         self, request: HttpRequest, thread_event: ThreadEvent
     ) -> ThreadEvent:
         return thread_event
 
 
-class EventHideView(EventView):
+class EventHideView(EventVisibilityView):
     success_message = pgettext_lazy(
         "thread event hide success message", "Thread event hidden"
     )
 
-    def execute_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
+    def perform_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
         return hide_thread_event(thread_event, request)
 
     def raise_permission_error(self):
@@ -74,12 +103,12 @@ class EventHideView(EventView):
         )
 
 
-class EventUnhideView(EventView):
+class EventUnhideView(EventVisibilityView):
     success_message = pgettext_lazy(
         "thread event unhide success message", "Thread event unhidden"
     )
 
-    def execute_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
+    def perform_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
         return unhide_thread_event(thread_event, request)
 
     def raise_permission_error(self):
@@ -91,30 +120,27 @@ class EventUnhideView(EventView):
         )
 
 
-class ThreadEventHideView(EventHideView, ThreadView):
-    def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
-        return request.user_permissions.is_category_moderator(thread.category_id)
+class ThreadEventHideView(EventHideView):
+    thread_type = thread_type
+    thread_event_type = thread_event_type
 
 
-class ThreadEventUnhideView(EventUnhideView, ThreadView):
-    def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
-        return request.user_permissions.is_category_moderator(thread.category_id)
+class ThreadEventUnhideView(EventUnhideView):
+    thread_type = thread_type
+    thread_event_type = thread_event_type
 
 
-class PrivateThreadEventHideView(EventHideView, PrivateThreadView):
-    def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
-        return request.user_permissions.is_private_threads_moderator
+class PrivateThreadEventHideView(EventHideView):
+    thread_type = private_thread_type
+    thread_event_type = private_thread_event_type
 
 
-class PrivateThreadEventUnhideView(EventUnhideView, PrivateThreadView):
-    def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
-        return request.user_permissions.is_private_threads_moderator
+class PrivateThreadEventUnhideView(EventUnhideView):
+    thread_type = private_thread_type
+    thread_event_type = private_thread_event_type
 
 
-class EventDeleteView:
-    thread_select_related = True
-    thread_event_select_related = True
-
+class EventDeleteView(BaseEventView):
     template_name: str = "misago/thread_events/delete.html"
     confirm_template_name: str = "misago/thread_events/confirm_delete.html"
     success_message = pgettext_lazy("thread event deleted", "Thread event deleted")
@@ -128,29 +154,23 @@ class EventDeleteView:
         thread = self.get_thread(request, thread_id)
         thread_event = self.get_thread_event(request, thread, thread_event_id)
 
-        if not self.check_permission(request, thread):
+        if not self.has_moderator_permission(request.user_permissions, thread):
             self.raise_permission_error()
 
         if request.is_htmx:
-            self.execute_action(request, thread_event)
+            self.perform_action(request, thread_event)
             return render(request, self.template_name)
 
         if request.POST.get("confirm"):
-            self.execute_action(request, thread_event)
+            self.perform_action(request, thread_event)
             return redirect(self.get_next_thread_url(request, thread))
 
         return render(
-            request,
-            self.confirm_template_name,
-            {
-                "thread": thread,
-                "thread_event": thread_event,
-                "next_url": self.get_next_thread_url(request, thread),
-            },
+            request, self.confirm_template_name, self.get_context_data(thread_event)
         )
 
-    def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
-        return False
+    def get_thread(self, request: Thread, thread_id: int, **kwargs) -> Thread:
+        return super().get_thread(request, thread_id, select_related=True)
 
     def raise_permission_error(self):
         raise PermissionDenied(
@@ -160,21 +180,30 @@ class EventDeleteView:
             )
         )
 
-    def execute_action(self, request: HttpRequest, thread_event: ThreadEvent):
+    def get_context_data(self, thread_event: Thread) -> dict:
+        thread = thread_event.thread
+
+        return {
+            "breadcrumbs": self.get_thread_breadcrumbs(self.request, thread),
+            "thread": thread,
+            "thread_event": thread_event,
+            "next_url": self.get_next_thread_url(self.request, thread),
+        }
+
+    def perform_action(self, request: HttpRequest, thread_event: ThreadEvent):
         thread = thread_event.thread
 
         delete_thread_event(thread_event, request)
-
         sync_thread_has_events(thread)
 
         messages.success(request, self.success_message)
 
 
-class ThreadEventDeleteView(EventDeleteView, ThreadView):
-    def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
-        return request.user_permissions.is_category_moderator(thread.category_id)
+class ThreadEventDeleteView(EventDeleteView):
+    thread_type = thread_type
+    thread_event_type = thread_event_type
 
 
-class PrivateThreadEventDeleteView(EventDeleteView, PrivateThreadView):
-    def check_permission(self, request: HttpRequest, thread: Thread) -> bool:
-        return request.user_permissions.is_private_threads_moderator
+class PrivateThreadEventDeleteView(EventDeleteView):
+    thread_type = private_thread_type
+    thread_event_type = private_thread_event_type

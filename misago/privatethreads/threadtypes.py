@@ -4,27 +4,27 @@ from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.urls import reverse
 
-from ...categories.models import Category
-from ...permissions.privatethreads import (
+from ..categories.models import Category
+from ..permissions.privatethreads import (
     check_private_threads_permission,
     check_see_private_thread_permission,
     check_see_private_thread_post_permission,
     filter_private_thread_posts_queryset,
     filter_private_thread_updates_queryset,
 )
-from ...permissions.proxy import UserPermissionsProxy
-from ...threadevents.models import ThreadEvent
-from ...threads.models import Post, Thread
-from ...threads.views.backend import ViewBackend
-from ..breadcrumbs import (
+from ..permissions.proxy import UserPermissionsProxy
+from ..threadevents.models import ThreadEvent
+from ..threads.models import Post, Thread
+from ..threads.threadtypes import BaseThreadType
+from .breadcrumbs import (
     get_private_thread_breadcrumbs,
     get_private_threads_breadcrumbs,
 )
-from ..members import get_private_thread_members
-from ..postfeed import PrivateThreadPostFeed
+from .members import get_private_thread_members
+from .postfeed import PrivateThreadPostFeed
 
 
-class PrivateThreadViewBackend(ViewBackend):
+class PrivateThreadType(BaseThreadType):
     thread_url_name: str = "misago:private-thread"
     thread_post_url_name: str = "misago:private-thread-post"
     thread_post_edits_url_name: str = "misago:private-thread-post-edits"
@@ -158,4 +158,4 @@ class PrivateThreadViewBackend(ViewBackend):
         return reverse("misago:private-thread-list")
 
 
-private_thread_backend = PrivateThreadViewBackend()
+private_thread_type = PrivateThreadType()

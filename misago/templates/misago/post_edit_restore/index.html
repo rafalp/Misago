@@ -1,10 +1,19 @@
 {% extends "misago/base.html" %}
-{% load i18n misago_plugins %}
+{% load i18n misago_component %}
+
+
+{% block title %}
+  {% blocktranslate trimmed with edit=edit_number context "post edit restore page title" %}
+    Restore post edit #{{ post_edit_number }}
+  {% endblocktranslate %} | {{ thread.title }} | {{ forum_name }}
+{% endblock title %}
 
 
 {% block content %}
 <div class="page page-post-edit-restore">
   <div class="container page-container">
+    {% includecomponent breadcrumbs %}
+
     <form action="{{ full_path }}" method="post">
       {% csrf_token %}
       <div class="panel panel-default panel-form">
@@ -30,6 +39,8 @@
         </div>
       </div>
     </form>
+
+    {% include "misago/main_footer.html" %}
   </div>
 </div>
 {% endblock content %}

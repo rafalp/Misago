@@ -1,14 +1,16 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_component %}
 
 
 {% block title %}
-  {% translate "Edit poll" context "edit poll page" %} | {{ thread }} | {{ settings.forum_name }}
+  {% translate "Edit poll" context "edit poll page" %} | {{ poll.question }} | {{ thread.title }} | {{ settings.forum_name }}
 {% endblock title %}
 
 
 {% block content %}
-<div class="page page-thread page-start-poll">
+<div class="page page-thread page-edit-poll">
+  {% includecomponent header %}
+
   <div class="container page-container">
     <form 
       action="{% url 'misago:thread-poll-edit' thread_id=thread.id slug=thread.slug %}" method="post"
@@ -40,6 +42,9 @@
         </div>
       </div>
     </form>
+
+    {% include "misago/main_footer.html" %}
+
   </div>
 </div>
 {% endblock content %}

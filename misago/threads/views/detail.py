@@ -63,8 +63,8 @@ from ..statusmessages import (
     unapproved_posts_thread_status_message,
     unapproved_thread_status_message,
 )
-from .backend import thread_backend
-from .generic import GenericThreadView
+from ..threadtypes import thread_type
+from .base import BaseThreadView
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -77,7 +77,7 @@ class PageOutOfRangeError(Exception):
         self.redirect_to = redirect_to
 
 
-class DetailView(GenericThreadView):
+class DetailView(BaseThreadView):
     template_name: str
     template_partial_name: str
     header_template_name: str
@@ -509,8 +509,8 @@ class DetailView(GenericThreadView):
             "posts_moderation_actions": get_moderation_action_choices(
                 posts_moderation_actions
             ),
-            "post_edits_modal_template": self.backend.post_edits_modal_template,
-            "post_likes_modal_template": self.backend.post_likes_modal_template,
+            "post_edits_modal_template": self.thread_type.post_edits_modal_template,
+            "post_likes_modal_template": self.thread_type.post_likes_modal_template,
         }
 
     def get_header_data(
@@ -532,7 +532,7 @@ class DetailView(GenericThreadView):
         items: list[dict] = [
             UserDatetimeMetadata(
                 id="thread-started",
-                user=thread.starter if thread.starter else thread.starter_name,
+                user=thread.starter or thread.starter_name,
                 datetime=thread.started_at,
                 url=self.get_thread_url(thread) + f"#post-{thread.first_post_id}",
             ),
@@ -542,14 +542,14 @@ class DetailView(GenericThreadView):
             items.append(
                 NumberMetadata(
                     id="thread-replies",
-                    icon="tabler/messages.svg",
                     text=npgettext(
-                        "thread meta bar replies",
+                        "thread header meta replies",
                         "%(number)s reply",
                         "%(number)s replies",
                         thread.replies,
                     ),
                     number=thread.replies,
+                    icon="tabler/messages.svg",
                 )
             )
 
@@ -592,7 +592,7 @@ class DetailView(GenericThreadView):
             and thread.has_unapproved_posts
         ):
             messages.append(
-                unapproved_posts_thread_status_message(thread, self.backend)
+                unapproved_posts_thread_status_message(thread, self.thread_type)
             )
 
         return {
@@ -787,7 +787,7 @@ class DetailView(GenericThreadView):
 
 
 class ThreadDetailView(DetailView):
-    backend = thread_backend
+    thread_type = thread_type
 
     template_name: str = "misago/thread/index.html"
     template_partial_name: str = "misago/thread/partial.html"

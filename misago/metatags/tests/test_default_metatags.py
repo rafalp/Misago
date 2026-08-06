@@ -2,7 +2,7 @@ from django.conf import settings
 
 from ...conf.dynamicsettings import DynamicSettings
 from ...conf.models import Setting
-from ..metatags import get_default_metatags
+from ..default import get_default_metatags
 
 
 def test_get_default_metatags_returns_default_metatags_with_default_og_image(

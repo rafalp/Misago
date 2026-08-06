@@ -17,6 +17,7 @@ from ...permissions.privatethreads import (
     check_remove_private_thread_member_permission,
 )
 from ...permissions.proxy import UserPermissionsProxy
+from ...plugins import extensions
 from ...threadevents.create import (
     create_added_member_thread_event,
     create_changed_owner_thread_event,
@@ -26,6 +27,7 @@ from ...threadevents.models import ThreadEvent
 from ...threadevents.threadflag import ensure_thread_has_events
 from ...threads.models import Thread
 from ...threads.nexturl import get_next_thread_url
+from ...threads.views import BaseThreadView
 from ..forms import MembersAddForm
 from ..members import (
     add_private_thread_member,
@@ -34,21 +36,34 @@ from ..members import (
     set_private_thread_owner,
 )
 from ..postfeed import PrivateThreadPostFeed
+from ..threadtypes import private_thread_type
 from ..validators import validate_new_private_thread_owner
-from .generic import PrivateThreadView
 
 if TYPE_CHECKING:
     from ...users.models import User
 
 
-class PrivateThreadMembersAddView(PrivateThreadView):
-    thread_get_members = True
+class PrivateThreadManageMembersView(BaseThreadView):
+    thread_type = private_thread_type
+
+    def get_thread(self, request: HttpRequest, thread_id: int, **kwargs) -> Thread:
+        return super().get_thread(request, thread_id, select_members=True, **kwargs)
+
+    def get_htmx_response(
+        self, request: HttpRequest, thread: Thread
+    ) -> "PrivateThreadMembersHtmxResponse":
+        return extensions.get(PrivateThreadMembersHtmxResponse)(request, thread)
+
+
+class PrivateThreadMembersAddView(PrivateThreadManageMembersView):
     form_type = MembersAddForm
     template_name = "misago/private_thread_members_add/index.html"
     template_name_htmx = "misago/private_thread_members_add/htmx.html"
 
     def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
+
+        self.check_permissions(request, thread)
 
         form = self.form_type(
             request=request,
@@ -61,6 +76,8 @@ class PrivateThreadMembersAddView(PrivateThreadView):
     def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
+        self.check_permissions(request, thread)
+
         form = self.form_type(
             request.POST,
             request=request,
@@ -72,6 +89,9 @@ class PrivateThreadMembersAddView(PrivateThreadView):
             return self.handle_form(request, thread, form)
 
         return self.render_form_page(request, thread, form)
+
+    def check_permissions(self, request: HttpRequest, thread: Thread):
+        check_add_private_thread_members_permission(request.user_permissions, thread)
 
     def handle_form(
         self, request: HttpRequest, thread: Thread, form: MembersAddForm
@@ -101,7 +121,7 @@ class PrivateThreadMembersAddView(PrivateThreadView):
         if not request.is_htmx:
             return redirect(self.get_next_thread_url(request, thread))
 
-        response = PrivateThreadMembersHtmxResponse(request, thread)
+        response = self.get_htmx_response(request, thread)
 
         if thread_event:
             response.set_thread_events([thread_event])
@@ -111,34 +131,27 @@ class PrivateThreadMembersAddView(PrivateThreadView):
             {"hx-trigger": "misago:afterUpdateMembers", "hx-reswap": "none"},
         )
 
-    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
-        thread = super().get_thread(request, thread_id)
-
-        check_add_private_thread_members_permission(request.user_permissions, thread)
-
-        return thread
-
     def render_form_page(
         self, request: HttpRequest, thread: Thread, form: MembersAddForm
-    ):
+    ) -> HttpResponse:
         if request.is_htmx:
             template_name = self.template_name_htmx
         else:
             template_name = self.template_name
 
-        return render(
-            request,
-            template_name,
-            {
-                "thread": thread,
-                "members": thread.private_thread_members,
-                "form": form,
-                "next_url": self.get_next_thread_url(request, thread),
-            },
-        )
+        return render(request, template_name, self.get_context_data(thread, form))
+
+    def get_context_data(self, thread: Thread, form: MembersAddForm) -> dict:
+        return {
+            "breadcrumbs": self.get_thread_breadcrumbs(self.request, thread),
+            "thread": thread,
+            "members": thread.private_thread_members,
+            "form": form,
+            "next_url": self.get_next_thread_url(self.request, thread),
+        }
 
 
-class PrivateThreadMemberView(PrivateThreadView):
+class PrivateThreadManageMemberView(PrivateThreadManageMembersView):
     thread_get_members = True
     template_name: str
 
@@ -164,13 +177,7 @@ class PrivateThreadMemberView(PrivateThreadView):
         )
 
         return render(
-            request,
-            self.template_name,
-            {
-                "thread": thread,
-                "member": member,
-                "next_url": self.get_next_thread_url(request, thread, strip_qs=True),
-            },
+            request, self.template_name, self.get_context_data(thread, member)
         )
 
     def post(
@@ -189,7 +196,7 @@ class PrivateThreadMemberView(PrivateThreadView):
 
         self.check_permissions(request, thread, member)
 
-        thread_event = self.update_members(request, thread, member)
+        thread_event = self.perform_action(request, thread, member)
 
         if thread_event:
             ensure_thread_has_events(thread)
@@ -197,7 +204,7 @@ class PrivateThreadMemberView(PrivateThreadView):
         if not request.is_htmx:
             return redirect(self.get_next_thread_url(request, thread))
 
-        response = PrivateThreadMembersHtmxResponse(request, thread)
+        response = self.get_htmx_response(request, thread)
         if thread_event:
             response.set_thread_events([thread_event])
 
@@ -206,7 +213,7 @@ class PrivateThreadMemberView(PrivateThreadView):
     def check_permissions(self, request: HttpRequest, thread: Thread, member: "User"):
         pass
 
-    def update_members(
+    def perform_action(
         self, request: HttpRequest, thread: Thread, member: "User"
     ) -> ThreadEvent | None:
         return None
@@ -218,25 +225,17 @@ class PrivateThreadMemberView(PrivateThreadView):
 
         raise Http404(pgettext("private thread member view", "Member doesn't exist"))
 
+    def get_context_data(self, thread: Thread, member: "User") -> dict:
+        return {
+            "breadcrumbs": self.get_thread_breadcrumbs(self.request, thread),
+            "thread": thread,
+            "member": member,
+            "next_url": self.get_next_thread_url(self.request, thread, strip_qs=True),
+        }
 
-class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
+
+class PrivateThreadOwnerChangeView(PrivateThreadManageMemberView):
     template_name = "misago/private_thread_owner_change/index.html"
-
-    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
-        thread = super().get_thread(request, thread_id)
-
-        if not (
-            self.get_moderator_status(request, thread)
-            or self.get_owner_status(request, thread)
-        ):
-            raise PermissionDenied(
-                pgettext(
-                    "private thread owner change view",
-                    "You can't change this thread's owner.",
-                )
-            )
-
-        return thread
 
     def check_permissions(self, request: HttpRequest, thread: Thread, member: "User"):
         check_change_private_thread_owner_permission(request.user_permissions, thread)
@@ -252,14 +251,13 @@ class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
         except ValidationError as error:
             raise PermissionDenied(error.messages[0])
 
-    def update_members(
+    def perform_action(
         self, request: HttpRequest, thread: Thread, member: "User"
     ) -> ThreadEvent | None:
         if member == thread.private_thread_owner:
             return None
 
         set_private_thread_owner(thread, member, request)
-        thread.private_thread_owner = member
 
         messages.success(
             request,
@@ -276,7 +274,7 @@ class PrivateThreadOwnerChangeView(PrivateThreadMemberView):
         )
 
 
-class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
+class PrivateThreadMemberRemoveView(PrivateThreadManageMemberView):
     template_name = "misago/private_thread_member_remove/index.html"
 
     def check_permissions(self, request: HttpRequest, thread: Thread, member: "User"):
@@ -285,7 +283,7 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
             request.user_permissions, thread, member_permissions
         )
 
-    def update_members(
+    def perform_action(
         self, request: HttpRequest, thread: Thread, member: "User"
     ) -> ThreadEvent | None:
         if member == thread.private_thread_owner:
@@ -303,28 +301,21 @@ class PrivateThreadMemberRemoveView(PrivateThreadMemberView):
         return thread_event
 
 
-class PrivateThreadLeaveView(PrivateThreadView):
+class PrivateThreadLeaveView(PrivateThreadManageMembersView):
     thread_get_members = True
     template_name = "misago/private_thread_leave/index.html"
 
     def get(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
-        self.check_leave_thread_permission(request, thread)
+        self.check_permissions(request, thread)
 
-        return render(
-            request,
-            self.template_name,
-            {
-                "thread": thread,
-                "next_url": self.get_next_thread_url(request, thread, strip_qs=True),
-            },
-        )
+        return render(request, self.template_name, self.get_context_data(thread))
 
     def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
         thread = self.get_thread(request, thread_id)
 
-        self.check_leave_thread_permission(request, thread)
+        self.check_permissions(request, thread)
 
         if remove_private_thread_member(request.user, thread, request.user, request):
             ensure_thread_has_events(thread)
@@ -339,15 +330,7 @@ class PrivateThreadLeaveView(PrivateThreadView):
 
         return redirect(reverse("misago:private-thread-list"))
 
-    def get_thread(self, request: HttpRequest, thread_id: int) -> Thread:
-        thread = super().get_thread(request, thread_id)
-
-        if self.get_owner_status(request, thread):
-            check_locked_private_thread_permission(request.user_permissions, thread)
-
-        return thread
-
-    def check_leave_thread_permission(self, request: HttpRequest, thread: Thread):
+    def check_permissions(self, request: HttpRequest, thread: Thread):
         if request.user not in thread.private_thread_members:
             raise PermissionDenied(
                 pgettext(
@@ -355,6 +338,16 @@ class PrivateThreadLeaveView(PrivateThreadView):
                     "You can't leave this private thread because you're not a member.",
                 ),
             )
+
+        if request.user.id == thread.private_thread_owner_id:
+            check_locked_private_thread_permission(request.user_permissions, thread)
+
+    def get_context_data(self, thread: Thread) -> dict:
+        return {
+            "breadcrumbs": self.get_thread_breadcrumbs(self.request, thread),
+            "thread": thread,
+            "next_url": self.get_next_thread_url(self.request, thread, strip_qs=True),
+        }
 
 
 class PrivateThreadMembersHtmxResponse:
@@ -376,7 +369,7 @@ class PrivateThreadMembersHtmxResponse:
     def set_thread_events(self, thread_events: list[ThreadEvent]):
         self.thread_events = thread_events
 
-    def get_context(self):
+    def get_context_data(self):
         context = get_private_thread_members_context_data(self.request, self.thread)
         if self.thread_events:
             context["thread_events"] = self.get_post_feed_data()
@@ -399,7 +392,7 @@ class PrivateThreadMembersHtmxResponse:
     def render(
         self, context: dict | None = None, headers: dict | None = None
     ) -> HttpResponse:
-        final_context = self.get_context()
+        final_context = self.get_context_data()
         final_context["open"] = True
 
         if context:

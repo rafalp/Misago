@@ -4,20 +4,22 @@ from django.http import HttpRequest
 from ...categories.enums import CategoryTree
 from ...threads.models import Post, Thread
 from ...threads.redirect import redirect_to_post
-from ...threads.views.post import (
+from ...threads.views import (
     PostLastView,
     PostUnapprovedView,
     PostUnreadView,
     PostView,
 )
-from .generic import PrivateThreadView
+from ..threadtypes import private_thread_type
 
 
-class PrivateThreadPostLastView(PostLastView, PrivateThreadView):
-    pass
+class PrivateThreadPostLastView(PostLastView):
+    thread_type = private_thread_type
 
 
-class PrivateThreadPostUnapprovedView(PostUnapprovedView, PrivateThreadView):
+class PrivateThreadPostUnapprovedView(PostUnapprovedView):
+    thread_type = private_thread_type
+
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:
@@ -27,12 +29,12 @@ class PrivateThreadPostUnapprovedView(PostUnapprovedView, PrivateThreadView):
         return queryset.filter(is_unapproved=True).first()
 
 
-class PrivateThreadPostUnreadView(PostUnreadView, PrivateThreadView):
-    pass
+class PrivateThreadPostUnreadView(PostUnreadView):
+    thread_type = private_thread_type
 
 
-class PrivateThreadPostView(PostView, PrivateThreadView):
-    pass
+class PrivateThreadPostView(PostView):
+    thread_type = private_thread_type
 
 
 redirect_to_post.view(CategoryTree.PRIVATE_THREADS, PrivateThreadPostView.as_view())

@@ -7,14 +7,10 @@ from ..permissions.postedits import check_restore_post_edit_permission
 from ..permissions.privatethreads import check_edit_private_thread_post_permission
 from ..permissions.threads import check_edit_thread_post_permission
 from ..threads.models import Post
-from .hooks import (
-    get_private_thread_post_edits_view_context_data_hook,
-    get_thread_post_edits_view_context_data_hook,
-)
 from .models import PostEdit
 
 
-class PostEditViewBackend:
+class BasePostEditType:
     partial_template_name = "misago/post_edits/partial.html"
     modal_template_name = "misago/post_edits/modal/index.html"
     edit_diff_template_name = "misago/post_edits/edit_diff.html"
@@ -38,7 +34,7 @@ class PostEditViewBackend:
         except PostEdit.DoesNotExist:
             raise Http404()
 
-    def get_post_edit_index(self, post_edit: PostEdit) -> int | None:
+    def get_post_edit_number(self, post_edit: PostEdit) -> int | None:
         return (
             PostEdit.objects.filter(post=post_edit.post, id__lte=post_edit.id).count()
             or None
@@ -106,7 +102,7 @@ class PostEditViewBackend:
         )
 
 
-class ThreadPostEditViewBackend(PostEditViewBackend):
+class ThreadPostEditType(BasePostEditType):
     post_edit_restore_url = "misago:thread-post-edit-restore"
     post_edit_hide_url = "misago:thread-post-edit-hide"
     post_edit_unhide_url = "misago:thread-post-edit-unhide"
@@ -137,13 +133,8 @@ class ThreadPostEditViewBackend(PostEditViewBackend):
             in request.user_permissions.categories[CategoryPermission.ATTACHMENTS]
         )
 
-    def get_context_data_hook(
-        self, action, request: HttpRequest, post: Post, page: Page
-    ) -> dict:
-        return get_thread_post_edits_view_context_data_hook(action, request, post, page)
 
-
-class PrivateThreadPostEditViewBackend(PostEditViewBackend):
+class PrivateThreadPostEditType(BasePostEditType):
     post_edit_restore_url = "misago:private-thread-post-edit-restore"
     post_edit_hide_url = "misago:private-thread-post-edit-hide"
     post_edit_unhide_url = "misago:private-thread-post-edit-unhide"
@@ -162,13 +153,6 @@ class PrivateThreadPostEditViewBackend(PostEditViewBackend):
     ) -> bool:
         return True
 
-    def get_context_data_hook(
-        self, action, request: HttpRequest, post: Post, page: Page
-    ) -> dict:
-        return get_private_thread_post_edits_view_context_data_hook(
-            action, request, post, page
-        )
 
-
-thread_post_edit_backend = ThreadPostEditViewBackend()
-private_thread_post_edit_backend = PrivateThreadPostEditViewBackend()
+thread_post_edit_type = ThreadPostEditType()
+private_thread_post_edit_type = PrivateThreadPostEditType()

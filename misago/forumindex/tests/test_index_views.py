@@ -9,10 +9,10 @@ index_views.add_index_view("categories", "Categories", lambda: "categories")
 
 def test_index_views_get_choices_returns_django_form_choices_tuple():
     choices = index_views.get_choices()
-    assert choices == (
+    assert choices == [
         ("threads", "Threads"),
         ("categories", "Categories"),
-    )
+    ]
 
 
 def test_index_views_get_view_returns_view_callable():
