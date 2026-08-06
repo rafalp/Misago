@@ -9,7 +9,8 @@ from ...categories.enums import CategoryTree
 from ...readtracker.readtime import get_default_read_time
 from ..models import Post, Thread
 from ..redirect import redirect_to_post
-from .generic import ThreadView
+from .backend import thread_backend
+from .generic import GenericThreadView
 
 
 def post(request: HttpRequest, post_id: int) -> HttpResponse:
@@ -21,7 +22,7 @@ def post(request: HttpRequest, post_id: int) -> HttpResponse:
         raise Http404(pgettext("post not found error", "Thread not found")) from error
 
 
-class PostView(View):
+class PostView(GenericThreadView):
     def get(
         self, request: HttpRequest, thread_id: int, slug: str, **kwargs
     ) -> HttpResponse:
@@ -64,7 +65,8 @@ class PostLastView(PostView):
 
 
 class PostUnreadView(PostView):
-    thread_annotate_read_time = True
+    def get_thread(self, request, thread_id, **kwargs) -> Thread:
+        return super().get_thread(request, thread_id, annotate_read_time=True, **kwargs)
 
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
@@ -83,8 +85,6 @@ class PostUnreadView(PostView):
 
 
 class PostSolutionView(PostView):
-    thread_annotate_read_time = True
-
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:
@@ -104,19 +104,21 @@ class PostUnapprovedView(PostView):
         )
 
 
-class ThreadPostLastView(PostLastView, ThreadView):
-    pass
+class ThreadPostLastView(PostLastView):
+    backend = thread_backend
 
 
-class ThreadPostSolutionView(PostSolutionView, ThreadView):
-    pass
+class ThreadPostSolutionView(PostSolutionView):
+    backend = thread_backend
 
 
-class ThreadPostUnreadView(PostUnreadView, ThreadView):
-    pass
+class ThreadPostUnreadView(PostUnreadView):
+    backend = thread_backend
 
 
-class ThreadPostUnapprovedView(PostUnapprovedView, ThreadView):
+class ThreadPostUnapprovedView(PostUnapprovedView):
+    backend = thread_backend
+
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:
@@ -126,8 +128,8 @@ class ThreadPostUnapprovedView(PostUnapprovedView, ThreadView):
         return queryset.filter(is_unapproved=True).first()
 
 
-class ThreadPostView(PostView, ThreadView):
-    pass
+class ThreadPostView(PostView):
+    backend = thread_backend
 
 
 redirect_to_post.view(CategoryTree.THREADS, ThreadPostView.as_view())

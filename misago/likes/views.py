@@ -16,7 +16,6 @@ from ..permissions.likes import (
     check_unlike_post_permission,
 )
 from ..privatethreads.views.backend import private_thread_backend
-from ..privatethreads.views.generic import PrivateThreadView
 from ..threads.models import Post, Thread
 from ..threads.redirect import redirect_to_post
 from ..threads.views import GenericThreadView, thread_backend

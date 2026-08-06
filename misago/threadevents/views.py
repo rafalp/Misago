@@ -8,7 +8,6 @@ from django.shortcuts import redirect, render
 from django.utils.translation import pgettext, pgettext_lazy
 
 from ..privatethreads.views.backend import private_thread_backend
-from ..privatethreads.views.generic import PrivateThreadView
 from ..threads.models import Thread
 from ..threads.views.backend import thread_backend
 from ..threads.views.generic import GenericThreadView

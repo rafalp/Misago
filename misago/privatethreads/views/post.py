@@ -10,14 +10,16 @@ from ...threads.views.post import (
     PostUnreadView,
     PostView,
 )
-from .generic import PrivateThreadView
+from .backend import private_thread_backend
 
 
-class PrivateThreadPostLastView(PostLastView, PrivateThreadView):
-    pass
+class PrivateThreadPostLastView(PostLastView):
+    backend = private_thread_backend
 
 
-class PrivateThreadPostUnapprovedView(PostUnapprovedView, PrivateThreadView):
+class PrivateThreadPostUnapprovedView(PostUnapprovedView):
+    backend = private_thread_backend
+
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
     ) -> Post | None:
@@ -27,12 +29,12 @@ class PrivateThreadPostUnapprovedView(PostUnapprovedView, PrivateThreadView):
         return queryset.filter(is_unapproved=True).first()
 
 
-class PrivateThreadPostUnreadView(PostUnreadView, PrivateThreadView):
-    pass
+class PrivateThreadPostUnreadView(PostUnreadView):
+    backend = private_thread_backend
 
 
-class PrivateThreadPostView(PostView, PrivateThreadView):
-    pass
+class PrivateThreadPostView(PostView):
+    backend = private_thread_backend
 
 
 redirect_to_post.view(CategoryTree.PRIVATE_THREADS, PrivateThreadPostView.as_view())
