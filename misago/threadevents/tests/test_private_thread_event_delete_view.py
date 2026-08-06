@@ -253,7 +253,7 @@ def test_private_thread_event_delete_view_returns_redirect_to_next_url(
             "page": 2,
         },
     )
-    next_url += "?redirect=1#update-123"
+    next_url += "?redirect=1#event-123"
 
     response = moderator_client.post(
         reverse(

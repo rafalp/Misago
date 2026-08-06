@@ -26,7 +26,7 @@ def category_relations_factory(
     def _category_relations_factory(category: Category) -> "CategoryRelations":
         thread = thread_factory(category)
         thread_reply = thread_reply_factory(thread)
-        thread_update = create_test_thread_event(thread, other_user)
+        thread_event = create_test_thread_event(thread, other_user)
 
         attachment = Attachment.objects.create(
             category=category,
@@ -123,7 +123,7 @@ def category_relations_factory(
             thread=thread,
             thread_first_post=thread.first_post,
             thread_reply=thread_reply,
-            thread_update=thread_update,
+            thread_event=thread_event,
             watched_thread=watched_thread,
         )
 
@@ -145,7 +145,7 @@ class CategoryRelations:
     thread: Thread
     thread_first_post: Post
     thread_reply: Post
-    thread_update: ThreadEvent
+    thread_event: ThreadEvent
     watched_thread: WatchedThread
 
     def assert_relations_deleted(self):
@@ -208,8 +208,8 @@ class CategoryRelations:
             self.thread_reply.refresh_from_db()
 
         with pytest.raises(ThreadEvent.DoesNotExist):
-            """Thread update should be deleted when category is deleted"""
-            self.thread_update.refresh_from_db()
+            """Thread event should be deleted when category is deleted"""
+            self.thread_event.refresh_from_db()
 
         with pytest.raises(WatchedThread.DoesNotExist):
             """WatchedThread should be deleted when category is deleted"""
@@ -279,8 +279,8 @@ class CategoryRelations:
             "Thread reply's category relation was not updated"
         )
 
-        self.thread_update.refresh_from_db()
-        assert self.thread_update.category_id == new_category.id, (
+        self.thread_event.refresh_from_db()
+        assert self.thread_event.category_id == new_category.id, (
             "ThreadEvent category relation was not updated"
         )
 

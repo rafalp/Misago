@@ -59,7 +59,7 @@ class EventView:
 
 class EventHideView(EventView):
     success_message = pgettext_lazy(
-        "thread update hide success message", "Thread event hidden"
+        "thread event hide success message", "Thread event hidden"
     )
 
     def execute_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
@@ -68,7 +68,7 @@ class EventHideView(EventView):
     def raise_permission_error(self):
         raise PermissionDenied(
             pgettext(
-                "thread update hide permission error",
+                "thread event hide permission error",
                 "Only a moderator can hide thread events.",
             )
         )
@@ -76,7 +76,7 @@ class EventHideView(EventView):
 
 class EventUnhideView(EventView):
     success_message = pgettext_lazy(
-        "thread update unhide success message", "Thread event unhidden"
+        "thread event unhide success message", "Thread event unhidden"
     )
 
     def execute_action(self, request: HttpRequest, thread_event: ThreadEvent) -> bool:
@@ -85,7 +85,7 @@ class EventUnhideView(EventView):
     def raise_permission_error(self):
         raise PermissionDenied(
             pgettext(
-                "thread update unhide permission error",
+                "thread event unhide permission error",
                 "Only a moderator can unhide thread events.",
             )
         )
@@ -117,7 +117,7 @@ class EventDeleteView:
 
     template_name: str = "misago/thread_events/delete.html"
     confirm_template_name: str = "misago/thread_events/confirm_delete.html"
-    success_message = pgettext_lazy("thread update deleted", "Thread event deleted")
+    success_message = pgettext_lazy("thread event deleted", "Thread event deleted")
 
     def post(
         self, request: HttpRequest, thread_id: int, slug: str, thread_event_id: int
@@ -155,7 +155,7 @@ class EventDeleteView:
     def raise_permission_error(self):
         raise PermissionDenied(
             pgettext(
-                "thread update delete permission error",
+                "thread event delete permission error",
                 "Only a moderator can delete thread events.",
             )
         )

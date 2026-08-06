@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                     "hidden_by_slug",
                     models.CharField(blank=True, max_length=255, null=True),
                 ),
-                ("action", models.CharField(max_length=32)),
+                ("event_type", models.CharField(max_length=32)),
                 (
                     "context",
                     models.CharField(blank=True, max_length=255, null=True),

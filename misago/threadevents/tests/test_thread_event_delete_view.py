@@ -307,7 +307,7 @@ def test_thread_event_delete_view_returns_redirect_to_next_url(
     next_url = reverse(
         "misago:thread", kwargs={"thread_id": thread.id, "slug": thread.slug, "page": 2}
     )
-    next_url += "?redirect=1#update-123"
+    next_url += "?redirect=1#event-123"
 
     response = moderator_client.post(
         reverse(

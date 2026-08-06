@@ -8,7 +8,7 @@ from ..categories.models import Category
 from ..core.utils import slugify
 from ..polls.models import Poll
 from ..threads.models import Thread
-from .enums import ThreadEventActionName
+from .enums import ThreadEventTypeName
 from .hooks import create_thread_event_hook
 from .models import ThreadEvent
 
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 def create_thread_event(
     thread: Thread,
-    action: str,
+    event_type: str,
     actor: Union["User", str, None] = None,
     *,
     context: str | None = None,
@@ -30,7 +30,7 @@ def create_thread_event(
     return create_thread_event_hook(
         _create_thread_event_action,
         thread,
-        action,
+        event_type,
         actor,
         context=context,
         context_object=context_object,
@@ -42,7 +42,7 @@ def create_thread_event(
 
 def _create_thread_event_action(
     thread: Thread,
-    action: str,
+    event_type: str,
     actor: Union["User", None, str] = None,
     *,
     context: str | None = None,
@@ -80,7 +80,7 @@ def _create_thread_event_action(
         actor_id=actor_id,
         actor_name=actor_name,
         actor_slug=actor_slug,
-        action=action,
+        event_type=event_type,
         context=context,
         context_type=context_type,
         context_id=context_id,
@@ -104,7 +104,7 @@ def create_test_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.TEST,
+        ThreadEventTypeName.TEST,
         actor,
         context=context,
         context_object=context_object,
@@ -121,7 +121,7 @@ def create_pinned_everywhere_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.PINNED_EVERYWHERE,
+        ThreadEventTypeName.PINNED_EVERYWHERE,
         actor,
         commit=commit,
         request=request,
@@ -136,7 +136,7 @@ def create_pinned_category_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.PINNED_CATEGORY,
+        ThreadEventTypeName.PINNED_CATEGORY,
         actor,
         commit=commit,
         request=request,
@@ -151,7 +151,7 @@ def create_unpinned_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.UNPINNED,
+        ThreadEventTypeName.UNPINNED,
         actor,
         commit=commit,
         request=request,
@@ -166,7 +166,7 @@ def create_locked_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.LOCKED,
+        ThreadEventTypeName.LOCKED,
         actor,
         commit=commit,
         request=request,
@@ -181,7 +181,7 @@ def create_unlocked_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.UNLOCKED,
+        ThreadEventTypeName.UNLOCKED,
         actor,
         commit=commit,
         request=request,
@@ -196,7 +196,7 @@ def create_hidden_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.HIDDEN,
+        ThreadEventTypeName.HIDDEN,
         actor,
         commit=commit,
         request=request,
@@ -211,7 +211,7 @@ def create_unhidden_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.UNHIDDEN,
+        ThreadEventTypeName.UNHIDDEN,
         actor,
         commit=commit,
         request=request,
@@ -226,7 +226,7 @@ def create_approved_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.APPROVED,
+        ThreadEventTypeName.APPROVED,
         actor,
         commit=commit,
         request=request,
@@ -241,7 +241,7 @@ def create_required_reply_approval_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.REQUIRED_REPLY_APPROVAL,
+        ThreadEventTypeName.REQUIRED_REPLY_APPROVAL,
         actor,
         commit=commit,
         request=request,
@@ -256,7 +256,7 @@ def create_removed_reply_approval_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.REMOVED_REPLY_APPROVAL,
+        ThreadEventTypeName.REMOVED_REPLY_APPROVAL,
         actor,
         commit=commit,
         request=request,
@@ -272,7 +272,7 @@ def create_moved_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.MOVED,
+        ThreadEventTypeName.MOVED,
         actor,
         context=old_category.name,
         context_object=old_category,
@@ -290,7 +290,7 @@ def create_merged_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.MERGED,
+        ThreadEventTypeName.MERGED,
         actor,
         context=other_thread.title,
         context_object=other_thread,
@@ -308,7 +308,7 @@ def create_changed_title_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.CHANGED_TITLE,
+        ThreadEventTypeName.CHANGED_TITLE,
         actor,
         context=old_title,
         commit=commit,
@@ -326,7 +326,7 @@ def create_moved_posts_to_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.MOVED_POSTS_TO,
+        ThreadEventTypeName.MOVED_POSTS_TO,
         actor,
         context=other_thread.title,
         context_object=other_thread,
@@ -346,7 +346,7 @@ def create_moved_posts_from_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.MOVED_POSTS_FROM,
+        ThreadEventTypeName.MOVED_POSTS_FROM,
         actor,
         context=other_thread.title,
         context_object=other_thread,
@@ -366,7 +366,7 @@ def create_split_posts_into_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.SPLIT_POSTS_INTO,
+        ThreadEventTypeName.SPLIT_POSTS_INTO,
         actor,
         context=other_thread.title,
         context_object=other_thread,
@@ -386,7 +386,7 @@ def create_split_posts_from_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.SPLIT_POSTS_FROM,
+        ThreadEventTypeName.SPLIT_POSTS_FROM,
         actor,
         context=other_thread.title,
         context_object=other_thread,
@@ -405,7 +405,7 @@ def create_deleted_posts_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.DELETED_POSTS,
+        ThreadEventTypeName.DELETED_POSTS,
         actor,
         context_items=posts,
         commit=commit,
@@ -422,7 +422,7 @@ def create_started_poll_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.STARTED_POLL,
+        ThreadEventTypeName.STARTED_POLL,
         actor,
         context=poll.question,
         commit=commit,
@@ -438,7 +438,7 @@ def create_closed_poll_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.CLOSED_POLL,
+        ThreadEventTypeName.CLOSED_POLL,
         actor,
         commit=commit,
         request=request,
@@ -453,7 +453,7 @@ def create_opened_poll_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.OPENED_POLL,
+        ThreadEventTypeName.OPENED_POLL,
         actor,
         commit=commit,
         request=request,
@@ -469,7 +469,7 @@ def create_deleted_poll_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.DELETED_POLL,
+        ThreadEventTypeName.DELETED_POLL,
         actor,
         context=poll.question,
         commit=commit,
@@ -485,7 +485,7 @@ def create_took_ownership_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.TOOK_OWNERSHIP,
+        ThreadEventTypeName.TOOK_OWNERSHIP,
         actor,
         commit=commit,
         request=request,
@@ -500,7 +500,7 @@ def create_joined_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.JOINED,
+        ThreadEventTypeName.JOINED,
         actor,
         commit=commit,
         request=request,
@@ -516,7 +516,7 @@ def create_added_member_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.ADDED_MEMBER,
+        ThreadEventTypeName.ADDED_MEMBER,
         actor,
         context=member.username,
         context_object=member,
@@ -533,7 +533,7 @@ def create_left_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.LEFT,
+        ThreadEventTypeName.LEFT,
         actor,
         commit=commit,
         request=request,
@@ -549,7 +549,7 @@ def create_removed_member_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.REMOVED_MEMBER,
+        ThreadEventTypeName.REMOVED_MEMBER,
         actor,
         context=member.username,
         context_object=member,
@@ -567,7 +567,7 @@ def create_changed_owner_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventActionName.CHANGED_OWNER,
+        ThreadEventTypeName.CHANGED_OWNER,
         actor,
         context=new_owner.username,
         context_object=new_owner,
