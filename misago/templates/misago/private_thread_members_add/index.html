@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_component %}
 
 
 {% block title %}
@@ -10,6 +10,8 @@
 {% block content %}
 <div class="page page-private-thread-members-add">
   <div class="container page-container">
+    {% includecomponent breadcrumbs %}
+
     <form 
       action="{% url 'misago:private-thread-members-add' thread_id=thread.id slug=thread.slug %}"
       method="post"
@@ -35,6 +37,8 @@
         </div>
       </div>
     </form>
+
+    {% include "misago/main_footer.html" %}
   </div>
 </div>
 {% endblock content %}
