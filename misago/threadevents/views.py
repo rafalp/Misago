@@ -7,23 +7,23 @@ from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import pgettext, pgettext_lazy
 
-from ..privatethreads.views.backend import private_thread_backend
+from ..privatethreads.threadtypes import private_thread_type
 from ..threads.models import Thread
-from ..threads.views.backend import thread_backend
-from ..threads.views.generic import GenericThreadView
+from ..threads.threadtypes import thread_type
+from ..threads.views import BaseThreadView
 from .delete import delete_thread_event
 from .hide import hide_thread_event, unhide_thread_event
 from .models import ThreadEvent
 from .threadeventtypes import (
-    GenericThreadEventType,
+    BaseThreadEventType,
     private_thread_event_type,
     thread_event_type,
 )
 from .threadflag import sync_thread_has_events
 
 
-class EventView(GenericThreadView):
-    thread_event_type: GenericThreadEventType
+class BaseEventView(BaseThreadView):
+    thread_event_type: BaseThreadEventType
 
     def get_thread_event_queryset(
         self,
@@ -45,7 +45,7 @@ class EventView(GenericThreadView):
         )
 
 
-class EventVisibilityView(EventView):
+class EventVisibilityView(BaseEventView):
     template_name: str = "misago/thread_events/event.html"
     success_message: str
 
@@ -121,26 +121,26 @@ class EventUnhideView(EventVisibilityView):
 
 
 class ThreadEventHideView(EventHideView):
-    backend = thread_backend
+    thread_type = thread_type
     thread_event_type = thread_event_type
 
 
 class ThreadEventUnhideView(EventUnhideView):
-    backend = thread_backend
+    thread_type = thread_type
     thread_event_type = thread_event_type
 
 
 class PrivateThreadEventHideView(EventHideView):
-    backend = private_thread_backend
+    thread_type = private_thread_type
     thread_event_type = private_thread_event_type
 
 
 class PrivateThreadEventUnhideView(EventUnhideView):
-    backend = private_thread_backend
+    thread_type = private_thread_type
     thread_event_type = private_thread_event_type
 
 
-class EventDeleteView(EventView):
+class EventDeleteView(BaseEventView):
     template_name: str = "misago/thread_events/delete.html"
     confirm_template_name: str = "misago/thread_events/confirm_delete.html"
     success_message = pgettext_lazy("thread update deleted", "Thread event deleted")
@@ -200,10 +200,10 @@ class EventDeleteView(EventView):
 
 
 class ThreadEventDeleteView(EventDeleteView):
-    backend = thread_backend
+    thread_type = thread_type
     thread_event_type = thread_event_type
 
 
 class PrivateThreadEventDeleteView(EventDeleteView):
-    backend = private_thread_backend
+    thread_type = private_thread_type
     thread_event_type = private_thread_event_type

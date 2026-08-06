@@ -1,6 +1,5 @@
-from .backend import ThreadViewBackend, ViewBackend, thread_backend
+from .base import BaseThreadView
 from .detail import DetailView, ThreadDetailView
-from .generic import GenericThreadView
 from .list import CategoryThreadListView, ListView, ThreadListView
 from .post import (
     PostLastView,

@@ -17,68 +17,66 @@ from ..permissions.postedits import (
     check_see_post_edit_history_permission,
     check_unhide_post_edit_permission,
 )
-from ..privatethreads.views.backend import private_thread_backend
+from ..privatethreads.threadtypes import private_thread_type
 from ..threads.models import Post
-from ..threads.views.backend import thread_backend
-from ..threads.views.generic import GenericThreadView
+from ..threads.threadtypes import thread_type
+from ..threads.views import BaseThreadView
 from .delete import delete_post_edit
 from .diff import diff_text
 from .hide import hide_post_edit, unhide_post_edit
 from .models import PostEdit
-from .restore import restore_post_edit
-from .viewbackends import (
-    PostEditViewBackend,
-    private_thread_post_edit_backend,
-    thread_post_edit_backend,
+from .postedittypes import (
+    BasePostEditType,
+    private_thread_post_edit_type,
+    thread_post_edit_type,
 )
+from .restore import restore_post_edit
 
 
-class GenericPostEditView(GenericThreadView):
-    post_edit_backend: PostEditViewBackend
+class GenericPostEditView(BaseThreadView):
+    post_edit_type: BasePostEditType
 
     @property
     def partial_template_name(self) -> str:
-        return self.post_edit_backend.partial_template_name
+        return self.post_edit_type.partial_template_name
 
     @property
     def modal_template_name(self) -> str:
-        return self.post_edit_backend.modal_template_name
+        return self.post_edit_type.modal_template_name
 
     @property
     def edit_diff_template_name(self) -> str:
-        return self.post_edit_backend.edit_diff_template_name
+        return self.post_edit_type.edit_diff_template_name
 
     def get_post_edit(
         self, request: HttpRequest, post: Post, post_edit_id: int
     ) -> PostEdit:
-        return self.post_edit_backend.get_post_edit(request, post, post_edit_id)
+        return self.post_edit_type.get_post_edit(request, post, post_edit_id)
 
     def get_post_edit_number(self, post_edit: PostEdit) -> int | None:
-        return self.post_edit_backend.get_post_edit_number(post_edit)
+        return self.post_edit_type.get_post_edit_number(post_edit)
 
     def check_restore_post_edit_permission(
         self, request: HttpRequest, post_edit: PostEdit
     ):
-        self.post_edit_backend.check_restore_post_edit_permission(request, post_edit)
+        self.post_edit_type.check_restore_post_edit_permission(request, post_edit)
 
     def get_attachment_permission(
         self, request: HttpRequest, post: Post, attachment: dict
     ) -> bool:
-        return self.post_edit_backend.get_attachment_permission(
-            request, post, attachment
-        )
+        return self.post_edit_type.get_attachment_permission(request, post, attachment)
 
     def get_post_edit_restore_url(self, post_edit: PostEdit) -> str:
-        return self.post_edit_backend.get_post_edit_restore_url(post_edit)
+        return self.post_edit_type.get_post_edit_restore_url(post_edit)
 
     def get_post_edit_hide_url(self, post_edit: PostEdit) -> str:
-        return self.post_edit_backend.get_post_edit_hide_url(post_edit)
+        return self.post_edit_type.get_post_edit_hide_url(post_edit)
 
     def get_post_edit_unhide_url(self, post_edit: PostEdit) -> str:
-        return self.post_edit_backend.get_post_edit_unhide_url(post_edit)
+        return self.post_edit_type.get_post_edit_unhide_url(post_edit)
 
     def get_post_edit_delete_url(self, post_edit: PostEdit) -> str:
-        return self.post_edit_backend.get_post_edit_delete_url(post_edit)
+        return self.post_edit_type.get_post_edit_delete_url(post_edit)
 
     def get_post_edit_context_data(
         self, request: HttpRequest, post: Post, page: Page
@@ -236,7 +234,7 @@ class GenericPostEditView(GenericThreadView):
 
 
 class PostEditsView(GenericPostEditView):
-    post_edit_backend: PostEditViewBackend
+    post_edit_type: BasePostEditType
 
     template_name: str
     header_template_name: str
@@ -341,23 +339,23 @@ class PostEditsView(GenericPostEditView):
 
 
 class ThreadPostEditsView(PostEditsView):
-    backend = thread_backend
-    post_edit_backend = thread_post_edit_backend
+    thread_type = thread_type
+    post_edit_type = thread_post_edit_type
 
     template_name = "misago/thread_post_edits/index.html"
     header_template_name = "misago/thread_post_edits/header.html"
 
 
 class PrivateThreadPostEditsView(PostEditsView):
-    backend = private_thread_backend
-    post_edit_backend = private_thread_post_edit_backend
+    thread_type = private_thread_type
+    post_edit_type = private_thread_post_edit_type
 
     template_name = "misago/private_thread_post_edits/index.html"
     header_template_name = "misago/private_thread_post_edits/header.html"
 
 
 class PostEditView(GenericPostEditView):
-    post_edit_backend: PostEditViewBackend
+    post_edit_type: BasePostEditType
 
     template_name: str | None = None
 
@@ -460,13 +458,13 @@ class PostEditRestoreView(PostEditView):
 
 
 class ThreadPostEditRestoreView(PostEditRestoreView):
-    backend = thread_backend
-    post_edit_backend = thread_post_edit_backend
+    thread_type = thread_type
+    post_edit_type = thread_post_edit_type
 
 
 class PrivateThreadPostEditRestoreView(PostEditRestoreView):
-    backend = private_thread_backend
-    post_edit_backend = private_thread_post_edit_backend
+    thread_type = private_thread_type
+    post_edit_type = private_thread_post_edit_type
 
 
 class PostEditHideView(PostEditView):
@@ -489,13 +487,13 @@ class PostEditHideView(PostEditView):
 
 
 class ThreadPostEditHideView(PostEditHideView):
-    backend = thread_backend
-    post_edit_backend = thread_post_edit_backend
+    thread_type = thread_type
+    post_edit_type = thread_post_edit_type
 
 
 class PrivateThreadPostEditHideView(PostEditHideView):
-    backend = private_thread_backend
-    post_edit_backend = private_thread_post_edit_backend
+    thread_type = private_thread_type
+    post_edit_type = private_thread_post_edit_type
 
 
 class PostEditUnhideView(PostEditView):
@@ -516,13 +514,13 @@ class PostEditUnhideView(PostEditView):
 
 
 class ThreadPostEditUnhideView(PostEditUnhideView):
-    backend = thread_backend
-    post_edit_backend = thread_post_edit_backend
+    thread_type = thread_type
+    post_edit_type = thread_post_edit_type
 
 
 class PrivateThreadPostEditUnhideView(PostEditUnhideView):
-    backend = private_thread_backend
-    post_edit_backend = private_thread_post_edit_backend
+    thread_type = private_thread_type
+    post_edit_type = private_thread_post_edit_type
 
 
 class PostEditDeleteView(PostEditView):
@@ -544,10 +542,10 @@ class PostEditDeleteView(PostEditView):
 
 
 class ThreadPostEditDeleteView(PostEditDeleteView):
-    backend = thread_backend
-    post_edit_backend = thread_post_edit_backend
+    thread_type = thread_type
+    post_edit_type = thread_post_edit_type
 
 
 class PrivateThreadPostEditDeleteView(PostEditDeleteView):
-    backend = private_thread_backend
-    post_edit_backend = private_thread_post_edit_backend
+    thread_type = private_thread_type
+    post_edit_type = private_thread_post_edit_type

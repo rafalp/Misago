@@ -15,10 +15,11 @@ from ..permissions.likes import (
     check_see_post_likes_permission,
     check_unlike_post_permission,
 )
-from ..privatethreads.views.backend import private_thread_backend
+from ..privatethreads.threadtypes import private_thread_type
 from ..threads.models import Post, Thread
 from ..threads.redirect import redirect_to_post
-from ..threads.views import GenericThreadView, thread_backend
+from ..threads.threadtypes import thread_type
+from ..threads.views import BaseThreadView
 from .like import like_post, remove_post_like
 from .models import Like
 
@@ -30,7 +31,7 @@ class PageOutOfRangeError(Exception):
         self.redirect_to = redirect_to
 
 
-class PostLikesView(GenericThreadView):
+class PostLikesView(BaseThreadView):
     template_name: str
     header_template_name: str
     partial_template_name = "misago/post_likes/partial.html"
@@ -190,7 +191,7 @@ class PostLikesView(GenericThreadView):
 
 
 class ThreadPostLikesView(PostLikesView):
-    backend = thread_backend
+    thread_type = thread_type
 
     template_name = "misago/thread_post_likes/index.html"
     header_template_name = "misago/thread_post_likes/header.html"
@@ -220,7 +221,7 @@ class ThreadPostLikesView(PostLikesView):
 
 
 class PrivateThreadPostLikesView(PostLikesView):
-    backend = private_thread_backend
+    thread_type = private_thread_type
 
     template_name = "misago/private_thread_post_likes/index.html"
     header_template_name = "misago/private_thread_post_likes/header.html"
@@ -249,7 +250,7 @@ class PrivateThreadPostLikesView(PostLikesView):
         )
 
 
-class PostLikeView(GenericThreadView):
+class PostLikeView(BaseThreadView):
     def post(
         self, request: HttpRequest, thread_id: int, slug: str, post_id: int
     ) -> HttpResponse:
@@ -276,14 +277,14 @@ class PostLikeView(GenericThreadView):
 
 
 class ThreadPostLikeView(PostLikeView):
-    backend = thread_backend
+    thread_type = thread_type
 
 
 class PrivateThreadPostLikeView(PostLikeView):
-    backend = private_thread_backend
+    thread_type = private_thread_type
 
 
-class PostUnlikeView(GenericThreadView):
+class PostUnlikeView(BaseThreadView):
     def post(
         self, request: HttpRequest, thread_id: int, slug: str, post_id: int
     ) -> HttpResponse:
@@ -308,8 +309,8 @@ class PostUnlikeView(GenericThreadView):
 
 
 class ThreadPostUnlikeView(PostUnlikeView):
-    backend = thread_backend
+    thread_type = thread_type
 
 
 class PrivateThreadPostUnlikeView(PostUnlikeView):
-    backend = private_thread_backend
+    thread_type = private_thread_type

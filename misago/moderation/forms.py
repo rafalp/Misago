@@ -193,10 +193,10 @@ def parse_thread_post_url(
 
 
 def get_valid_thread(request: HttpRequest, thread_id: int) -> Thread:
-    from ..threads.views.backend import thread_backend
+    from ..threads.threadtypes import thread_type
 
     try:
-        thread = thread_backend.get_thread(request, thread_id)
+        thread = thread_type.get_thread(request, thread_id)
     except (Http404, PermissionDenied):
         raise forms.ValidationError(
             pgettext(
@@ -206,7 +206,7 @@ def get_valid_thread(request: HttpRequest, thread_id: int) -> Thread:
             code="invalid",
         )
 
-    is_moderator = thread_backend.has_moderator_permission(
+    is_moderator = thread_type.has_moderator_permission(
         request.user_permissions, thread
     )
     if not is_moderator:
@@ -705,9 +705,9 @@ class MergeThreadPostForm(forms.Form):
         return data
 
     def get_other_post(self, post_id: int) -> Post:
-        from ..threads.views.backend import thread_backend
+        from ..threads.threadtypes import thread_type
 
-        return thread_backend.get_post(
+        return thread_type.get_post(
             self.request, self.post.thread, post_id, for_content=True
         )
 
@@ -722,9 +722,9 @@ class MergePrivateThreadPostForm(MergeThreadPostForm):
     )
 
     def get_other_post(self, post_id: int):
-        from ..privatethreads.views.backend import private_thread_backend
+        from ..privatethreads.threadtypes import private_thread_type
 
-        return private_thread_backend.get_post(
+        return private_thread_type.get_post(
             self.request, self.post.thread, post_id, for_content=True
         )
 

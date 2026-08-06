@@ -352,9 +352,9 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
         )
 
     def get_thread_url(self, thread: Thread) -> str:
-        from ..threads.views.backend import thread_backend
+        from ..threads.threadtypes import thread_type
 
-        return thread_backend.get_thread_url(thread)
+        return thread_type.get_thread_url(thread)
 
 
 class MovePostsModerationAction(FormMixin, PostsModerationAction):
@@ -430,9 +430,9 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
         )
 
     def get_thread_url(self, thread: Thread) -> str:
-        from ..threads.views.backend import thread_backend
+        from ..threads.threadtypes import thread_type
 
-        return thread_backend.get_thread_url(thread)
+        return thread_type.get_thread_url(thread)
 
 
 class MergePostsModerationAction(FormMixin, PostsModerationAction):

@@ -15,9 +15,10 @@ from ...permissions.privatethreads import (
     check_start_private_threads_permission,
 )
 from ...permissions.threads import check_start_thread_permission
-from ...privatethreads.views import private_thread_backend
+from ...privatethreads.threadtypes import private_thread_type
 from ...threads.prefetch import prefetch_post_feed_data
-from ...threads.views import GenericThreadView, thread_backend
+from ...threads.threadtypes import thread_type
+from ...threads.views import BaseThreadView
 from ..formsets import (
     Formset,
     PrivateThreadStartFormset,
@@ -36,7 +37,7 @@ from ..state.start import (
 from ..validators import validate_flood_control, validate_posted_contents
 
 
-class StartView(GenericThreadView):
+class StartView(BaseThreadView):
     template_name: str
 
     def get(self, request: HttpRequest, **kwargs) -> HttpResponse:
@@ -140,7 +141,7 @@ class StartView(GenericThreadView):
 
 
 class ThreadStartView(StartView):
-    backend = thread_backend
+    thread_type = thread_type
 
     template_name: str = "misago/thread_start/index.html"
 
@@ -171,7 +172,7 @@ class ThreadStartView(StartView):
 
 
 class PrivateThreadStartView(StartView):
-    backend = private_thread_backend
+    thread_type = private_thread_type
 
     template_name: str = "misago/private_thread_start/index.html"
 

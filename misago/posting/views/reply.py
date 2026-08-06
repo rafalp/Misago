@@ -23,7 +23,7 @@ from ...permissions.threads import (
     check_reply_thread_permission,
 )
 from ...privatethreads.redirect import redirect_to_private_thread_post
-from ...privatethreads.views.backend import private_thread_backend
+from ...privatethreads.threadtypes import private_thread_type
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...readtracker.threads import is_category_read
 from ...readtracker.tracker import (
@@ -34,7 +34,8 @@ from ...readtracker.tracker import (
 from ...threads.models import Post, Thread
 from ...threads.prefetch import prefetch_post_feed_data
 from ...threads.redirect import redirect_to_thread_post
-from ...threads.views import GenericThreadView, thread_backend
+from ...threads.threadtypes import thread_type
+from ...threads.views import BaseThreadView
 from ..formsets import (
     Formset,
     PrivateThreadReplyFormset,
@@ -52,7 +53,7 @@ from ..state import (
 from ..validators import validate_flood_control, validate_posted_contents
 
 
-class ReplyView(GenericThreadView):
+class ReplyView(BaseThreadView):
     template_name: str
     template_name_htmx: str
     template_name_quick_reply: str = "misago/quick_reply/index.html"
@@ -224,7 +225,7 @@ class ReplyView(GenericThreadView):
             return None
 
         try:
-            return self.backend.get_post(request, thread, post_id, for_content=True)
+            return self.thread_type.get_post(request, thread, post_id, for_content=True)
         except (Http404, PermissionDenied):
             return None
 
@@ -324,7 +325,7 @@ class ReplyView(GenericThreadView):
 
 
 class ThreadReplyView(ReplyView):
-    backend = thread_backend
+    thread_type = thread_type
 
     template_name: str = "misago/thread_reply/index.html"
     template_name_htmx: str = "misago/thread_reply/form.html"
@@ -373,7 +374,7 @@ class ThreadReplyView(ReplyView):
 
 
 class PrivateThreadReplyView(ReplyView):
-    backend = private_thread_backend
+    thread_type = private_thread_type
 
     template_name: str = "misago/private_thread_reply/index.html"
     template_name_htmx: str = "misago/private_thread_reply/form.html"

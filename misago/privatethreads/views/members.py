@@ -27,7 +27,7 @@ from ...threadevents.models import ThreadEvent
 from ...threadevents.threadflag import ensure_thread_has_events
 from ...threads.models import Thread
 from ...threads.nexturl import get_next_thread_url
-from ...threads.views.generic import GenericThreadView
+from ...threads.views import BaseThreadView
 from ..forms import MembersAddForm
 from ..members import (
     add_private_thread_member,
@@ -36,15 +36,15 @@ from ..members import (
     set_private_thread_owner,
 )
 from ..postfeed import PrivateThreadPostFeed
+from ..threadtypes import private_thread_type
 from ..validators import validate_new_private_thread_owner
-from .backend import private_thread_backend
 
 if TYPE_CHECKING:
     from ...users.models import User
 
 
-class PrivateThreadManageMembersView(GenericThreadView):
-    backend = private_thread_backend
+class PrivateThreadManageMembersView(BaseThreadView):
+    thread_type = private_thread_type
 
     def get_thread(self, request: HttpRequest, thread_id: int, **kwargs) -> Thread:
         return super().get_thread(request, thread_id, select_members=True, **kwargs)

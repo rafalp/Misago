@@ -7,10 +7,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import pgettext
 
 from ..permissions.notifications import check_notifications_permission
-from ..privatethreads.views.backend import private_thread_backend
+from ..privatethreads.threadtypes import private_thread_type
 from ..threads.models import Thread
-from ..threads.views.backend import thread_backend
-from ..threads.views.generic import GenericThreadView
+from ..threads.threadtypes import thread_type
+from ..threads.views import BaseThreadView
 from .enums import ThreadNotifications
 from .exceptions import NotificationVerbError
 from .hooks import get_watched_thread_context_data_hook
@@ -93,7 +93,7 @@ def disable_email_notifications(
     )
 
 
-class WatchView(GenericThreadView):
+class WatchView(BaseThreadView):
     template_name = "misago/watch_thread/htmx.html"
 
     def post(self, request: HttpRequest, thread_id: int, slug: str) -> HttpResponse:
@@ -156,11 +156,11 @@ class WatchView(GenericThreadView):
 
 
 class ThreadWatchView(WatchView):
-    backend = thread_backend
+    thread_type = thread_type
 
 
 class PrivateThreadWatchView(WatchView):
-    backend = private_thread_backend
+    thread_type = private_thread_type
 
 
 def get_watched_thread_context_data(

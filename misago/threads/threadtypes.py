@@ -6,26 +6,26 @@ from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from ...categories.models import Category
-from ...permissions.proxy import UserPermissionsProxy
-from ...permissions.threads import (
+from ..categories.models import Category
+from ..permissions.proxy import UserPermissionsProxy
+from ..permissions.threads import (
     check_see_thread_permission,
     check_see_thread_post_permission,
     filter_thread_posts_queryset,
     filter_thread_updates_queryset,
 )
-from ...readtracker.tracker import (
+from ..readtracker.tracker import (
     threads_annotate_user_readcategory_time,
     threads_select_related_user_readthread,
 )
-from ...threadevents.models import ThreadEvent
-from ..breadcrumbs import get_category_breadcrumbs, get_thread_breadcrumbs
-from ..models import Post, Thread
-from ..paginator import ThreadPostsPaginator
-from ..postfeed import PostFeed, ThreadPostFeed
+from ..threadevents.models import ThreadEvent
+from .breadcrumbs import get_category_breadcrumbs, get_thread_breadcrumbs
+from .models import Post, Thread
+from .paginator import ThreadPostsPaginator
+from .postfeed import PostFeed, ThreadPostFeed
 
 
-class ViewBackend(ABC):
+class BaseThreadType(ABC):
     thread_url_name: str
     thread_post_url_name: str
     thread_post_edits_url_name: str
@@ -37,7 +37,6 @@ class ViewBackend(ABC):
 
     # Querysets and DB getters
 
-    @abstractmethod
     def get_thread(
         self,
         request: HttpRequest,
@@ -63,7 +62,6 @@ class ViewBackend(ABC):
         except Thread.DoesNotExist:
             raise Http404()
 
-    @abstractmethod
     def get_posts_queryset(
         self,
         request: HttpRequest,
@@ -80,7 +78,6 @@ class ViewBackend(ABC):
             queryset = queryset.select_for_update()
         return queryset
 
-    @abstractmethod
     def get_post(
         self,
         request: HttpRequest,
@@ -280,7 +277,7 @@ class ViewBackend(ABC):
         return f"{thread_url}#post-{post.id}"
 
 
-class ThreadViewBackend(ViewBackend):
+class ThreadType(BaseThreadType):
     thread_url_name: str = "misago:thread"
     thread_post_url_name: str = "misago:thread-post"
     thread_post_edits_url_name: str = "misago:thread-post-edits"
@@ -413,4 +410,4 @@ class ThreadViewBackend(ViewBackend):
         )
 
 
-thread_backend = ThreadViewBackend()
+thread_type = ThreadType()

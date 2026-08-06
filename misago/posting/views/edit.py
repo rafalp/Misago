@@ -16,10 +16,11 @@ from ...permissions.threads import (
     check_edit_thread_permission,
     check_edit_thread_post_permission,
 )
-from ...privatethreads.views import private_thread_backend
+from ...privatethreads.threadtypes import private_thread_type
 from ...threads.models import Post, Thread
 from ...threads.prefetch import prefetch_post_feed_data
-from ...threads.views import GenericThreadView, thread_backend
+from ...threads.threadtypes import thread_type
+from ...threads.views import BaseThreadView
 from ..formsets import (
     Formset,
     PrivateThreadEditFormset,
@@ -41,7 +42,7 @@ from ..state import (
 from ..validators import validate_posted_contents
 
 
-class EditView(GenericThreadView):
+class EditView(BaseThreadView):
     template_name: str
     template_name_htmx: str
     template_name_inline: str = "misago/inline_edit/index.html"
@@ -205,7 +206,7 @@ class EditView(GenericThreadView):
 
 
 class ThreadPostEditView(EditView):
-    backend = thread_backend
+    thread_type = thread_type
 
     template_name: str = "misago/thread_post_edit/index.html"
     template_name_htmx: str = "misago/thread_post_edit/form.html"
@@ -225,7 +226,7 @@ class ThreadPostEditView(EditView):
 
 
 class PrivateThreadPostEditView(EditView):
-    backend = private_thread_backend
+    thread_type = private_thread_type
 
     template_name: str = "misago/private_thread_post_edit/index.html"
     template_name_htmx: str = "misago/private_thread_post_edit/form.html"

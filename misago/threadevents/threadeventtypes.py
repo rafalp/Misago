@@ -1,3 +1,4 @@
+from abc import ABC
 from typing import Iterable
 
 from django.db.models import QuerySet
@@ -9,7 +10,7 @@ from ..threads.models import Thread
 from .models import ThreadEvent
 
 
-class GenericThreadEventType:
+class BaseThreadEventType(ABC):
     def get_thread_event_queryset(
         self,
         request: HttpRequest,
@@ -44,7 +45,7 @@ class GenericThreadEventType:
         return thread_event
 
 
-class ThreadEventType(GenericThreadEventType):
+class ThreadEventType(BaseThreadEventType):
     def get_thread_event_queryset(
         self,
         request: HttpRequest,
@@ -57,7 +58,7 @@ class ThreadEventType(GenericThreadEventType):
         )
 
 
-class PrivateThreadEventType(GenericThreadEventType):
+class PrivateThreadEventType(BaseThreadEventType):
     def get_thread_event_queryset(
         self,
         request: HttpRequest,

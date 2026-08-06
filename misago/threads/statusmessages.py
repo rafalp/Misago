@@ -4,7 +4,7 @@ from typing_extensions import TYPE_CHECKING
 from .models import Post, Thread
 
 if TYPE_CHECKING:
-    from .views.backend import ViewBackend
+    from .threadtypes import BaseThreadType
 
 
 def locked_thread_status_message(thread: Thread) -> dict | None:
@@ -58,7 +58,7 @@ def require_reply_approval_thread_status_message(thread: Thread) -> dict | None:
 
 
 def unapproved_posts_thread_status_message(
-    thread: Thread, backend: "ViewBackend"
+    thread: Thread, thread_type: "BaseThreadType"
 ) -> dict | None:
     if not thread.has_unapproved_posts:
         return None
@@ -66,7 +66,7 @@ def unapproved_posts_thread_status_message(
     return {
         "id": "unapproved_posts",
         "template_name": "misago/thread_status_messages/unapproved_posts.html",
-        "unapproved_post_url": backend.get_post_unapproved_url(thread),
+        "unapproved_post_url": thread_type.get_post_unapproved_url(thread),
     }
 
 

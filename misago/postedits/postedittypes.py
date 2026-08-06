@@ -10,7 +10,7 @@ from ..threads.models import Post
 from .models import PostEdit
 
 
-class PostEditViewBackend:
+class BasePostEditType:
     partial_template_name = "misago/post_edits/partial.html"
     modal_template_name = "misago/post_edits/modal/index.html"
     edit_diff_template_name = "misago/post_edits/edit_diff.html"
@@ -102,7 +102,7 @@ class PostEditViewBackend:
         )
 
 
-class ThreadPostEditViewBackend(PostEditViewBackend):
+class ThreadPostEditType(BasePostEditType):
     post_edit_restore_url = "misago:thread-post-edit-restore"
     post_edit_hide_url = "misago:thread-post-edit-hide"
     post_edit_unhide_url = "misago:thread-post-edit-unhide"
@@ -134,7 +134,7 @@ class ThreadPostEditViewBackend(PostEditViewBackend):
         )
 
 
-class PrivateThreadPostEditViewBackend(PostEditViewBackend):
+class PrivateThreadPostEditType(BasePostEditType):
     post_edit_restore_url = "misago:private-thread-post-edit-restore"
     post_edit_hide_url = "misago:private-thread-post-edit-hide"
     post_edit_unhide_url = "misago:private-thread-post-edit-unhide"
@@ -154,5 +154,5 @@ class PrivateThreadPostEditViewBackend(PostEditViewBackend):
         return True
 
 
-thread_post_edit_backend = ThreadPostEditViewBackend()
-private_thread_post_edit_backend = PrivateThreadPostEditViewBackend()
+thread_post_edit_type = ThreadPostEditType()
+private_thread_post_edit_type = PrivateThreadPostEditType()

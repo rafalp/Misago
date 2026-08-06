@@ -31,11 +31,14 @@ from ...threads.filters import (
     UnreadThreadsFilter,
 )
 from ...threads.models import Thread
-from ...threads.views.list import ListView
+from ...threads.views import ListView
 from ..breadcrumbs import get_private_threads_breadcrumbs
+from ..threadtypes import private_thread_type
 
 
 class PrivateThreadListView(ListView):
+    thread_type = private_thread_type
+
     template_name = "misago/private_thread_list/index.html"
     template_name_htmx = "misago/private_thread_list/partial.html"
     mark_as_read_template_name = "misago/private_thread_list/mark_as_read_page.html"

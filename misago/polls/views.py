@@ -20,8 +20,8 @@ from ..threadevents.models import ThreadEvent
 from ..threads.models import Thread
 from ..threads.nexturl import get_next_thread_url
 from ..threads.postfeed import ThreadPostFeed
-from ..threads.views.backend import thread_backend
-from ..threads.views.generic import GenericThreadView
+from ..threads.threadtypes import thread_type
+from ..threads.views import BaseThreadView
 from .close import close_thread_poll, open_thread_poll
 from .delete import delete_thread_poll
 from .enums import PollTemplate, PublicPollsAvailability
@@ -36,8 +36,8 @@ from .votes import (
 )
 
 
-class ThreadPollView(GenericThreadView):
-    backend = thread_backend
+class ThreadPollView(BaseThreadView):
+    thread_type = thread_type
 
     def get_poll(
         self,

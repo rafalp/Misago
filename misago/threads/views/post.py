@@ -9,8 +9,8 @@ from ...categories.enums import CategoryTree
 from ...readtracker.readtime import get_default_read_time
 from ..models import Post, Thread
 from ..redirect import redirect_to_post
-from .backend import thread_backend
-from .generic import GenericThreadView
+from ..threadtypes import thread_type
+from .base import BaseThreadView
 
 
 def post(request: HttpRequest, post_id: int) -> HttpResponse:
@@ -22,7 +22,7 @@ def post(request: HttpRequest, post_id: int) -> HttpResponse:
         raise Http404(pgettext("post not found error", "Thread not found")) from error
 
 
-class PostView(GenericThreadView):
+class PostView(BaseThreadView):
     def get(
         self, request: HttpRequest, thread_id: int, slug: str, **kwargs
     ) -> HttpResponse:
@@ -105,19 +105,19 @@ class PostUnapprovedView(PostView):
 
 
 class ThreadPostLastView(PostLastView):
-    backend = thread_backend
+    thread_type = thread_type
 
 
 class ThreadPostSolutionView(PostSolutionView):
-    backend = thread_backend
+    thread_type = thread_type
 
 
 class ThreadPostUnreadView(PostUnreadView):
-    backend = thread_backend
+    thread_type = thread_type
 
 
 class ThreadPostUnapprovedView(PostUnapprovedView):
-    backend = thread_backend
+    thread_type = thread_type
 
     def get_post(
         self, request: HttpRequest, thread: Thread, queryset: QuerySet, kwargs: dict
@@ -129,7 +129,7 @@ class ThreadPostUnapprovedView(PostUnapprovedView):
 
 
 class ThreadPostView(PostView):
-    backend = thread_backend
+    thread_type = thread_type
 
 
 redirect_to_post.view(CategoryTree.THREADS, ThreadPostView.as_view())

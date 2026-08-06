@@ -26,8 +26,8 @@ from ...posting.formsets import (
 )
 from ...readtracker.privatethreads import unread_private_threads_exist
 from ...threads.models import Post, Thread
-from ...threads.views.detail import DetailView
-from .backend import private_thread_backend
+from ...threads.views import DetailView
+from ..threadtypes import private_thread_type
 from .members import get_private_thread_members_context_data
 
 if TYPE_CHECKING:
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 
 
 class PrivateThreadDetailView(DetailView):
-    backend = private_thread_backend
+    thread_type = private_thread_type
 
     template_name: str = "misago/private_thread/index.html"
     template_partial_name: str = "misago/private_thread/partial.html"
