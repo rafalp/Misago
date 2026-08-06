@@ -375,7 +375,7 @@ class ListView(View):
         return request.user_permissions.is_category_moderator(thread.category_id)
 
     def get_metatags(self, request: HttpRequest, context: dict) -> dict:
-        return get_default_metatags(request)
+        return {}
 
     def get_canonical_link(self, request: HttpRequest, context: dict) -> list:
         link = context["pagination_url"]
@@ -718,7 +718,7 @@ class ThreadListView(ListView):
         if context["is_index"]:
             return get_forum_index_metatags(request)
 
-        return super().get_metatags(request, context)
+        return {}
 
 
 class CategoryThreadListView(ListView):
@@ -1189,7 +1189,7 @@ class CategoryThreadListView(ListView):
                 "url": MetaTag(
                     property="og:url",
                     name="twitter:url",
-                    content=category.get_absolute_url(),
+                    content=request.build_absolute_uri(category.get_absolute_url()),
                 ),
             }
         )

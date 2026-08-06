@@ -1,4 +1,4 @@
-{% load i18n static misago_absoluteurl misago_component misago_json misago_plugins %}
+{% load i18n static misago_absoluteurl misago_component misago_json misago_metatags misago_plugins %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE_SHORT }}">
   <head>
@@ -8,15 +8,9 @@
     <title>{% spaceless %}{% block title %}{{ settings.forum_name }}{% endblock %}{% endspaceless %}</title>
     <meta name="description" content="{% spaceless %}{% block meta-description %}{% endblock %}{% endspaceless %}">
     {% spaceless %}
-      {% if metatags %}
-        {% for metatag in metatags.values %}
-          {{ metatag.as_html|safe }}
-        {% endfor %}
-      {% elif default_metatags %}
-        {% for metatag in default_metatags.values %}
-          {{ metatag.as_html|safe }}
-        {% endfor %}
-      {% endif %}
+      {% for metatag in metatags|mergemetatags:default_metatags %}
+        {{ metatag.as_html|safe }}
+      {% endfor %}
       {% if theme.include_defaults %}
         <link href="{% static 'misago/css/misago.css' %}" rel="stylesheet">
       {% endif %}

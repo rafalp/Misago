@@ -8,7 +8,6 @@ from django.utils.translation import pgettext
 
 from ..attachments.filetypes import filetypes
 from ..metadata import NumberMetadata, UserDatetimeMetadata
-from ..metatags.default import get_default_metatags
 from ..metatags.robots import robots_noindex_follow_metatag
 from ..permissions.checkutils import check_permissions
 from ..permissions.postedits import (
@@ -310,9 +309,7 @@ class PostEditsView(GenericPostEditView):
         return context
 
     def get_metatags(self, post: Post, post_number: int) -> dict:
-        metatags = get_default_metatags(self.request)
-        metatags["robots"] = robots_noindex_follow_metatag
-        return metatags
+        return {"robots": robots_noindex_follow_metatag}
 
     def get_header_data(self, post: Post, post_number: int) -> dict:
         post_url = self.get_post_url(post)
