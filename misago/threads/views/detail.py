@@ -456,15 +456,13 @@ class DetailView(BaseThreadView):
     def get_moderation_result_data(
         self, request: HttpRequest, thread: Thread, result: ModerationResult
     ) -> dict:
-        breadcrumbs = self.get_category_breadcrumbs(request, thread.category)
-        shared_context = {"breadcrumbs": breadcrumbs}
-
         return {
             "moderation_actions": get_moderation_action_choices(
                 self.get_thread_moderation_actions(request, thread)
             ),
-            "header": self.get_header_data(request, thread, shared_context),
-            "footer": self.get_footer_data(request, thread, shared_context),
+            "breadcrumbs": self.get_category_breadcrumbs(request, thread.category),
+            "header": self.get_header_data(request, thread),
+            "footer": self.get_footer_data(request, thread),
             "status_messages": self.get_thread_status_messages(request, thread),
             "extra_components": [],
         }
