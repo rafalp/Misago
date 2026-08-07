@@ -36,7 +36,7 @@ class ModerationResult:
     created_items: list[Model] = field(default_factory=list)
     updated_items: list[Model] = field(default_factory=list)
     deleted_items: list[Model] = field(default_factory=list)
-    thread_updates: list[ThreadEvent] = field(default_factory=list)
+    thread_events: list[ThreadEvent] = field(default_factory=list)
     context: dict = field(default_factory=dict)
 
     refresh: bool = False

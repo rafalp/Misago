@@ -348,7 +348,7 @@ class SplitPostsModerationAction(FormMixin, PostsModerationAction):
 
         return ModerationResult(
             deleted_items=posts,
-            thread_updates=[thread_event],
+            thread_events=[thread_event],
         )
 
     def get_thread_url(self, thread: Thread) -> str:
@@ -426,7 +426,7 @@ class MovePostsModerationAction(FormMixin, PostsModerationAction):
 
         return ModerationResult(
             deleted_items=posts,
-            thread_updates=[thread_event],
+            thread_events=[thread_event],
         )
 
     def get_thread_url(self, thread: Thread) -> str:
@@ -580,5 +580,5 @@ class DeletePostsModerationAction(ConfirmMixin, PostsModerationAction):
 
         return ModerationResult(
             deleted_items=posts,
-            thread_updates=[thread_event],
+            thread_events=[thread_event],
         )
