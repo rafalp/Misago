@@ -188,12 +188,12 @@ class DetailView(BaseThreadView):
 
         context_data = self.get_moderation_result_data(request, thread, result)
 
-        if thread_events := result.thread_updates:
+        if thread_events := result.thread_events:
             post_feed = self.get_post_feed(request, thread, [], thread_events)
             post_feed.set_animated_thread_events(
                 [update.id for update in thread_events]
             )
-            context_data[("thread_updates")] = post_feed.get_context_data()["items"]
+            context_data[("thread_events")] = post_feed.get_context_data()["items"]
 
         response = render(request, self.moderation_result_template_name, context_data)
         set_moderation_response_headers(
@@ -352,10 +352,10 @@ class DetailView(BaseThreadView):
 
         context_data = self.get_moderation_result_data(request, thread, result)
 
-        if result.updated_items or result.thread_updates:
+        if result.updated_items or result.thread_events:
             updated_post_ids = [post.id for post in result.updated_items]
             post_feed = self.get_post_feed(
-                request, thread, result.updated_items, result.thread_updates
+                request, thread, result.updated_items, result.thread_events
             )
 
             if result.updated_items:
@@ -371,7 +371,7 @@ class DetailView(BaseThreadView):
             context_data["update_posts"] = [
                 item for item in post_feed_data if item["type"] == "post"
             ]
-            context_data["thread_updates"] = [
+            context_data["thread_events"] = [
                 item for item in post_feed_data if item["type"] == "event"
             ]
 
