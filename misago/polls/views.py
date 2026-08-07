@@ -356,7 +356,7 @@ class UpdateThreadPollView(ThreadPollView):
 
         self.check_permission(request, thread, poll)
 
-        thread_update = self.update(request, thread, poll)
+        thread_event = self.get_thread_event(request, thread, poll)
 
         if not request.is_htmx:
             return redirect(self.get_next_thread_url(request, thread))
@@ -364,10 +364,10 @@ class UpdateThreadPollView(ThreadPollView):
         user_poll_votes = get_user_poll_votes(request.user, poll)
         context = get_poll_context_data(request, thread, poll, user_poll_votes)
 
-        if thread_update:
-            post_feed = ThreadPostFeed(request, thread, [], [thread_update])
-            post_feed.set_animated_thread_events([thread_update.id])
-            context["thread_updates"] = post_feed.get_feed_data()
+        if thread_event:
+            post_feed = ThreadPostFeed(request, thread, [], [thread_event])
+            post_feed.set_animated_thread_events([thread_event.id])
+            context["thread_events"] = post_feed.get_feed_data()
 
         if context["allow_vote"] and not user_poll_votes:
             template_name = PollTemplate.VOTE_HTMX
@@ -379,7 +379,7 @@ class UpdateThreadPollView(ThreadPollView):
     def check_permission(self, request: HttpRequest, thread: Thread, poll: Poll):
         raise NotImplementedError()
 
-    def update(
+    def get_thread_event(
         self, request: HttpRequest, thread: Thread, poll: Poll
     ) -> ThreadEvent | None:
         raise NotADirectoryError()
@@ -391,14 +391,14 @@ class CloseThreadPollView(UpdateThreadPollView):
             request.user_permissions, thread.category, thread, poll
         )
 
-    def update(
+    def get_thread_event(
         self, request: HttpRequest, thread: Thread, poll: Poll
     ) -> ThreadEvent | None:
-        thread_update = close_thread_poll(thread, poll, request.user, request)
-        if thread_update:
+        thread_event = close_thread_poll(thread, poll, request.user, request)
+        if thread_event:
             messages.success(request, pgettext("poll vote", "Poll closed"))
 
-        return thread_update
+        return thread_event
 
 
 class OpenThreadPollView(UpdateThreadPollView):
@@ -407,14 +407,14 @@ class OpenThreadPollView(UpdateThreadPollView):
             request.user_permissions, thread.category, thread, poll
         )
 
-    def update(
+    def get_thread_event(
         self, request: HttpRequest, thread: Thread, poll: Poll
     ) -> ThreadEvent | None:
-        thread_update = open_thread_poll(thread, poll, request.user, request)
-        if thread_update:
+        thread_event = open_thread_poll(thread, poll, request.user, request)
+        if thread_event:
             messages.success(request, pgettext("poll vote", "Poll opened"))
 
-        return thread_update
+        return thread_event
 
 
 class DeleteThreadPollView(ThreadPollView):

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class OpenThreadPollHookAction(Protocol):
     """
     Misago function that opens a thread's poll, updates the thread instance,
-    and creates a new thread update object.
+    and creates a new thread event object.
 
     # Arguments
 
@@ -28,7 +28,7 @@ class OpenThreadPollHookAction(Protocol):
 
     ## `user: User`
 
-    The user who opened the poll, recorded as the actor of the thread update.
+    The user who opened the poll, recorded as the actor of the thread event.
 
     ## `request: HttpRequest | None`
 
@@ -71,7 +71,7 @@ class OpenThreadPollHookFilter(Protocol):
 
     ## `user: User`
 
-    The user who opened the poll, recorded as the actor of the thread update.
+    The user who opened the poll, recorded as the actor of the thread event.
 
     ## `request: HttpRequest | None`
 
@@ -100,35 +100,35 @@ class OpenThreadPollHook(
 ):
     """
     This hook allows plugins to replace or extend the standard logic for
-    opening a opened thread poll.
+    opening an opened thread poll.
 
     # Example
 
-    This plugin automatically hides newly created thread update.
+    This plugin automatically hides newly created thread event.
 
     ```python
     from django.http import HttpRequest
     from misago.polls.hooks import open_thread_poll_hook
     from misago.polls.models import Poll
     from misago.threads.models import Thread
-    from misago.threadevents.hide import hide_thread_update
+    from misago.threadevents.hide import hide_thread_event
     from misago.threadevents.models import ThreadEvent
     from misago.users.models import User
 
     @open_thread_poll_hook.append_filter
-    def hide_opened_poll_update(
+    def hide_opened_poll_event(
         action,
         thread: Thread,
         poll: Poll,
         user: User,
         request: HttpRequest | None,
     ) -> ThreadEvent | None:
-        thread_update = action(thread, poll, user, request)
+        thread_event = action(thread, poll, user, request)
 
-        if thread_update:
-            hide_thread_update(thread_update, request)
+        if thread_event:
+            hide_thread_event(thread_event, request)
 
-        return thread_update
+        return thread_event
     ```
     """
 
