@@ -49,7 +49,7 @@ The poll to delete.
 
 #### `user: User`
 
-The user who deleted the poll, recorded as the actor of the thread update.
+The user who deleted the poll, recorded as the actor of the thread event.
 
 
 #### `request: HttpRequest | None`
@@ -71,7 +71,7 @@ def delete_thread_poll_action(
     ...
 ```
 
-Misago function that deletes a thread's poll, updates the thread instance, and creates a new thread update object.
+Misago function that deletes a thread's poll, updates the thread instance, and creates a new thread event object.
 
 
 ### Arguments
@@ -88,7 +88,7 @@ The poll to delete.
 
 #### `user: User`
 
-The user who deleted the poll, recorded as the actor of the thread update.
+The user who deleted the poll, recorded as the actor of the thread event.
 
 
 #### `request: HttpRequest | None`
@@ -103,7 +103,7 @@ A `ThreadEvent` instance.
 
 ## Example
 
-This plugin automatically hides newly created thread update if deleted poll existed for less than 15 minutes.
+This plugin automatically hides newly created thread event if deleted poll existed for less than 15 minutes.
 
 ```python
 from django.http import HttpRequest
@@ -111,7 +111,7 @@ from django.utils import timezone
 from misago.polls.hooks import delete_thread_poll_hook
 from misago.polls.models import Poll
 from misago.threads.models import Thread
-from misago.threadevents.hide import hide_thread_update
+from misago.threadevents.hide import hide_thread_event
 from misago.threadevents.models import ThreadEvent
 from misago.users.models import User
 
@@ -124,11 +124,11 @@ def delete_plugin_relations(
     request: HttpRequest | None,
 ) -> ThreadEvent:
     # Run standard deletion logic
-    thread_update = action(thread, poll, user, request)
+    thread_event = action(thread, poll, user, request)
 
     poll_age = timezone.now() - poll.started_at
     if poll_age.total_seconds() < 900:
-        hide_thread_update(thread_update, request)
+        hide_thread_event(thread_event, request)
 
-    return thread_update
+    return thread_event
 ```

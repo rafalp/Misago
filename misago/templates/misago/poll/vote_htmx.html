@@ -3,8 +3,8 @@
 {% include "misago/snackbars.html" %}
 {% include "misago/poll/vote.html" %}
 
-{% if thread_updates %}
+{% if thread_events %}
   <div hx-swap-oob="beforeend:.post-feed-inner">
-    {% includecomponents thread_updates %}
+    {% includecomponents thread_events %}
   </div>
 {% endif %}

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class CloseThreadPollHookAction(Protocol):
     """
     Misago function that closes a thread's poll, updates the thread instance,
-    and creates a new thread update object.
+    and creates a new thread event object.
 
     # Arguments
 
@@ -28,7 +28,7 @@ class CloseThreadPollHookAction(Protocol):
 
     ## `user: User`
 
-    The user who closed the poll, recorded as the actor of the thread update.
+    The user who closed the poll, recorded as the actor of the thread event.
 
     ## `request: HttpRequest | None`
 
@@ -71,7 +71,7 @@ class CloseThreadPollHookFilter(Protocol):
 
     ## `user: User`
 
-    The user who closed the poll, recorded as the actor of the thread update.
+    The user who closed the poll, recorded as the actor of the thread event.
 
     ## `request: HttpRequest | None`
 
@@ -104,31 +104,31 @@ class CloseThreadPollHook(
 
     # Example
 
-    This plugin automatically hides newly created thread update.
+    This plugin automatically hides newly created thread event.
 
     ```python
     from django.http import HttpRequest
     from misago.polls.hooks import close_thread_poll_hook
     from misago.polls.models import Poll
     from misago.threads.models import Thread
-    from misago.threadevents.hide import hide_thread_update
+    from misago.threadevents.hide import hide_thread_event
     from misago.threadevents.models import ThreadEvent
     from misago.users.models import User
 
     @close_thread_poll_hook.append_filter
-    def hide_closed_poll_update(
+    def hide_closed_poll_event(
         action,
         thread: Thread,
         poll: Poll,
         user: User,
         request: HttpRequest | None,
     ) -> ThreadEvent | None:
-        thread_update = action(thread, poll, user, request)
+        thread_event = action(thread, poll, user, request)
 
-        if thread_update:
-            hide_thread_update(thread_update, request)
+        if thread_event:
+            hide_thread_event(thread_event, request)
 
-        return thread_update
+        return thread_event
     ```
     """
 
