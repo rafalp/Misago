@@ -4,7 +4,7 @@ register = template.Library()
 
 
 @register.filter
-def mergemetatags(metatags: dict | None, default_metatags: dict | None):
+def mergemetatags(metatags: dict | None = None, default_metatags: dict | None = None):
     if metatags and default_metatags:
         merged = default_metatags.copy()
         merged.update(metatags)
