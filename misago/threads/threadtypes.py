@@ -11,8 +11,8 @@ from ..permissions.proxy import UserPermissionsProxy
 from ..permissions.threads import (
     check_see_thread_permission,
     check_see_thread_post_permission,
+    filter_thread_events_queryset,
     filter_thread_posts_queryset,
-    filter_thread_updates_queryset,
 )
 from ..readtracker.tracker import (
     threads_annotate_user_readcategory_time,
@@ -361,9 +361,7 @@ class ThreadType(BaseThreadType):
             thread,
             select_related=select_related,
         )
-        return filter_thread_updates_queryset(
-            request.user_permissions, thread, queryset
-        )
+        return filter_thread_events_queryset(request.user_permissions, thread, queryset)
 
     # Thread utils
 

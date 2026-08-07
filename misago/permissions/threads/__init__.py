@@ -12,8 +12,8 @@ from .querysets import (
     CategoryThreadsQuerysetFilter,
     ThreadsQuerysetFilter,
     filter_category_threads_queryset,
+    filter_thread_events_queryset,
     filter_thread_posts_queryset,
-    filter_thread_updates_queryset,
     filter_threads_queryset,
 )
 
@@ -32,5 +32,5 @@ __all__ = [
     "filter_category_threads_queryset",
     "filter_threads_queryset",
     "filter_thread_posts_queryset",
-    "filter_thread_updates_queryset",
+    "filter_thread_events_queryset",
 ]

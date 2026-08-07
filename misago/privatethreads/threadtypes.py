@@ -9,8 +9,8 @@ from ..permissions.privatethreads import (
     check_private_threads_permission,
     check_see_private_thread_permission,
     check_see_private_thread_post_permission,
+    filter_private_thread_events_queryset,
     filter_private_thread_posts_queryset,
-    filter_private_thread_updates_queryset,
 )
 from ..permissions.proxy import UserPermissionsProxy
 from ..threadevents.models import ThreadEvent
@@ -117,7 +117,7 @@ class PrivateThreadType(BaseThreadType):
             thread,
             select_related=select_related,
         )
-        return filter_private_thread_updates_queryset(
+        return filter_private_thread_events_queryset(
             request.user_permissions, thread, queryset
         )
 
