@@ -754,7 +754,7 @@ class DetailView(BaseThreadView):
         page: ThreadPostsPaginator,
         posts: list[Post],
     ) -> list[ThreadEvent]:
-        queryset = self.get_thread_updates_queryset(request, thread)
+        queryset = self.get_thread_events_queryset(request, thread)
         if page.number > 1:
             queryset = queryset.filter(created_at__gt=posts[0].posted_at)
         if page.next_page_first_item:

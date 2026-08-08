@@ -4,8 +4,8 @@ from typing import Iterable
 from django.db.models import QuerySet
 from django.http import Http404, HttpRequest
 
-from ..permissions.privatethreads import filter_private_thread_updates_queryset
-from ..permissions.threads import filter_thread_updates_queryset
+from ..permissions.privatethreads import filter_private_thread_events_queryset
+from ..permissions.threads import filter_thread_events_queryset
 from ..threads.models import Thread
 from .models import ThreadEvent
 
@@ -51,7 +51,7 @@ class ThreadEventType(BaseThreadEventType):
         request: HttpRequest,
         thread: Thread,
     ) -> QuerySet:
-        return filter_thread_updates_queryset(
+        return filter_thread_events_queryset(
             request.user_permissions,
             thread,
             super().get_thread_event_queryset(request, thread),
@@ -64,7 +64,7 @@ class PrivateThreadEventType(BaseThreadEventType):
         request: HttpRequest,
         thread: Thread,
     ) -> QuerySet:
-        return filter_private_thread_updates_queryset(
+        return filter_private_thread_events_queryset(
             request.user_permissions,
             thread,
             super().get_thread_event_queryset(request, thread),

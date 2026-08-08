@@ -10,8 +10,8 @@ from ..enums import (
     CategoryThreadsQuery,
 )
 from ..hooks import (
+    filter_thread_events_queryset_hook,
     filter_thread_posts_queryset_hook,
-    filter_thread_updates_queryset_hook,
     get_category_threads_category_query_hook,
     get_category_threads_pinned_category_query_hook,
     get_category_threads_query_hook,
@@ -631,17 +631,17 @@ def _filter_thread_posts_queryset_action(
     return queryset.filter(is_unapproved=False)
 
 
-def filter_thread_updates_queryset(
+def filter_thread_events_queryset(
     permissions: UserPermissionsProxy,
     thread: Thread,
     queryset: QuerySet,
 ):
-    return filter_thread_updates_queryset_hook(
-        _filter_thread_updates_queryset_action, permissions, thread, queryset
+    return filter_thread_events_queryset_hook(
+        _filter_thread_events_queryset_action, permissions, thread, queryset
     )
 
 
-def _filter_thread_updates_queryset_action(
+def _filter_thread_events_queryset_action(
     permissions: UserPermissionsProxy,
     thread: Thread,
     queryset: QuerySet,

@@ -10,8 +10,8 @@ from ...categories.models import Category
 from ...permissions.proxy import UserPermissionsProxy
 from ...permissions.threads import (
     check_see_thread_permission,
+    filter_thread_events_queryset,
     filter_thread_posts_queryset,
-    filter_thread_updates_queryset,
 )
 from ...readtracker.tracker import (
     threads_annotate_user_readcategory_time,
@@ -87,7 +87,7 @@ class BaseThreadView(View):
             **kwargs,
         )
 
-    def get_thread_updates_queryset(
+    def get_thread_events_queryset(
         self,
         request: HttpRequest,
         thread: Thread,
@@ -100,7 +100,7 @@ class BaseThreadView(View):
             select_related=select_related,
         )
 
-    def get_thread_update(
+    def get_thread_event(
         self,
         request: HttpRequest,
         thread: Thread,

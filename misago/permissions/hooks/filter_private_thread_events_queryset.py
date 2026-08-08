@@ -9,10 +9,10 @@ if TYPE_CHECKING:
     from ..proxy import UserPermissionsProxy
 
 
-class FilterPrivateThreadUpdatesQuerysetHookAction(Protocol):
+class FilterPrivateThreadEventsQuerysetHookAction(Protocol):
     """
     Misago function used to set filters on a queryset used to retrieve
-    specified private thread's updates that user can see.
+    specified private thread's events that user can see.
 
     # Arguments
 
@@ -22,15 +22,15 @@ class FilterPrivateThreadUpdatesQuerysetHookAction(Protocol):
 
     ## `thread: Thread`
 
-    A private thread instance which's updates are retrieved.
+    A private thread instance which's events are retrieved.
 
     ## `queryset: Queryset`
 
-    A queryset returning thread's updates.
+    A queryset returning thread's events.
 
     ## Return value
 
-    A `queryset` filtered to show only thread updates that the user can see.
+    A `queryset` filtered to show only thread events that the user can see.
     """
 
     def __call__(
@@ -41,13 +41,13 @@ class FilterPrivateThreadUpdatesQuerysetHookAction(Protocol):
     ) -> QuerySet: ...
 
 
-class FilterPrivateThreadUpdatesQuerysetHookFilter(Protocol):
+class FilterPrivateThreadEventsQuerysetHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: FilterPrivateThreadUpdatesQuerysetHookAction`
+    ## `action: FilterPrivateThreadEventsQuerysetHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -60,47 +60,47 @@ class FilterPrivateThreadUpdatesQuerysetHookFilter(Protocol):
 
     ## `thread: Thread`
 
-    A private thread instance which's updates are retrieved.
+    A private thread instance which's events are retrieved.
 
     ## `queryset: Queryset`
 
-    A queryset returning thread's updates.
+    A queryset returning thread's events.
 
     ## Return value
 
-    A `queryset` filtered to show only thread updates that the user can see.
+    A `queryset` filtered to show only thread events that the user can see.
     """
 
     def __call__(
         self,
-        action: FilterPrivateThreadUpdatesQuerysetHookAction,
+        action: FilterPrivateThreadEventsQuerysetHookAction,
         permissions: "UserPermissionsProxy",
         thread: Thread,
         queryset: QuerySet,
     ) -> QuerySet: ...
 
 
-class FilterPrivateThreadUpdatesQuerysetHook(
+class FilterPrivateThreadEventsQuerysetHook(
     FilterHook[
-        FilterPrivateThreadUpdatesQuerysetHookAction,
-        FilterPrivateThreadUpdatesQuerysetHookFilter,
+        FilterPrivateThreadEventsQuerysetHookAction,
+        FilterPrivateThreadEventsQuerysetHookFilter,
     ]
 ):
     """
     This hook wraps the standard function that Misago uses set filters on private
-    thread's updates queryset to limit it only to updates that the user can see.
+    thread's events queryset to limit it only to events that the user can see.
 
     # Example
 
-    The code below implements a custom filter function hides updates user who is
+    The code below implements a custom filter function hides events user who is
     not the private thread's owner.
 
     ```python
-    from misago.permissions.hooks import filter_private_thread_updates_queryset_hook
+    from misago.permissions.hooks import filter_private_thread_events_queryset_hook
     from misago.permissions.proxy import UserPermissionsProxy
 
-    @filter_private_thread_updates_queryset_hook.append_filter
-    def hide_private_thread_updates_from_non_owner(
+    @filter_private_thread_events_queryset_hook.append_filter
+    def hide_private_thread_events_from_non_owner(
         action,
         permissions: UserPermissionsProxy,
         thread,
@@ -119,7 +119,7 @@ class FilterPrivateThreadUpdatesQuerysetHook(
 
     def __call__(
         self,
-        action: FilterPrivateThreadUpdatesQuerysetHookAction,
+        action: FilterPrivateThreadEventsQuerysetHookAction,
         permissions: "UserPermissionsProxy",
         thread: Thread,
         queryset: QuerySet,
@@ -127,4 +127,4 @@ class FilterPrivateThreadUpdatesQuerysetHook(
         return super().__call__(action, permissions, thread, queryset)
 
 
-filter_private_thread_updates_queryset_hook = FilterPrivateThreadUpdatesQuerysetHook()
+filter_private_thread_events_queryset_hook = FilterPrivateThreadEventsQuerysetHook()
