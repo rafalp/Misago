@@ -92,8 +92,8 @@ class FilterPrivateThreadEventsQuerysetHook(
 
     # Example
 
-    The code below implements a custom filter function hides events user who is
-    not the private thread's owner.
+    The code below implements a custom filter function
+    that hides events for user who is not the private thread's owner.
 
     ```python
     from misago.permissions.hooks import filter_private_thread_events_queryset_hook
