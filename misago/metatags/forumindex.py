@@ -2,7 +2,6 @@ from django.conf import settings as dj_settings
 from django.http import HttpRequest
 from django.templatetags.static import static
 
-from .default import get_default_metatags
 from .hooks import get_forum_index_metatags_hook
 from .metatag import MetaTag
 
@@ -12,7 +11,7 @@ def get_forum_index_metatags(request: HttpRequest) -> dict[str, MetaTag]:
 
 
 def _get_forum_index_metatags_action(request: HttpRequest) -> dict[str, MetaTag]:
-    metatags = get_default_metatags(request)
+    metatags = {}
 
     if request.settings.index_title:
         metatags["title"] = MetaTag(

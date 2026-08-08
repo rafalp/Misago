@@ -76,16 +76,12 @@ class PrivateThreadListView(ListView):
     def get_context_data(self, request: HttpRequest, kwargs: dict):
         category = self.get_category(request, kwargs)
 
-        context = {
+        return {
             "template_name_htmx": self.template_name_htmx,
             "threads": self.get_threads(request, category, kwargs),
             "pagination_url": self.get_pagination_url(kwargs),
             "start_thread_url": self.get_start_thread_url(request),
         }
-
-        context["metatags"] = self.get_metatags(request, {})
-
-        return context
 
     def get_category(self, request: HttpRequest, kwargs: dict):
         queryset = categories_select_related_user_readcategory(

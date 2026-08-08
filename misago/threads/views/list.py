@@ -374,15 +374,6 @@ class ListView(View):
     def allow_thread_moderation(self, request: HttpRequest, thread: Thread) -> bool:
         return request.user_permissions.is_category_moderator(thread.category_id)
 
-    def get_metatags(self, request: HttpRequest, context: dict) -> dict:
-        return get_default_metatags(request)
-
-    def get_canonical_link(self, request: HttpRequest, context: dict) -> list:
-        link = context["pagination_url"]
-        if "cursor" in request.GET:
-            link += "?cursor" + request.GET["cursor"]
-        return link
-
 
 class ThreadListView(ListView):
     thread_type = thread_type
@@ -471,20 +462,24 @@ class ThreadListView(ListView):
         subcategories = self.get_subcategories(request)
         threads = self.get_threads(request, kwargs)
 
-        context = {
+        is_index = kwargs.get("is_index", False)
+        pagination_url = self.get_pagination_url(kwargs)
+
+        canonical_link = pagination_url
+        if cursor := request.GET.get("cursor"):
+            canonical_link += f"?cursor={cursor}"
+
+        return {
             "template_name_htmx": self.template_name_htmx,
-            "is_index": kwargs.get("is_index", False),
+            "is_index": is_index,
+            "metatags": self.get_metatags(request, is_index),
+            "canonical_link": canonical_link,
             "subcategories": subcategories,
             "threads": threads,
-            "pagination_url": self.get_pagination_url(kwargs),
+            "pagination_url": pagination_url,
             "start_thread_modal": True,
             "start_thread_url": self.get_start_thread_url(request),
         }
-
-        context["metatags"] = self.get_metatags(request, context)
-        context["canonical_link"] = self.get_canonical_link(request, context)
-
-        return context
 
     def get_subcategories(self, request: HttpRequest) -> dict | None:
         component = request.settings.threads_list_categories_component
@@ -714,11 +709,11 @@ class ThreadListView(ListView):
 
         return new_threads
 
-    def get_metatags(self, request: HttpRequest, context: dict) -> dict:
-        if context["is_index"]:
+    def get_metatags(self, request: HttpRequest, is_index: bool) -> dict:
+        if is_index:
             return get_forum_index_metatags(request)
 
-        return super().get_metatags(request, context)
+        return {}
 
 
 class CategoryThreadListView(ListView):
@@ -818,32 +813,25 @@ class CategoryThreadListView(ListView):
         else:
             threads = None
 
+        pagination_url = self.get_pagination_url(category, kwargs)
+
+        canonical_link = pagination_url
+        if cursor := request.GET.get("cursor"):
+            canonical_link += f"?cursor={cursor}"
+
         context = {
             "template_name_htmx": self.template_name_htmx,
+            "metatags": self.get_metatags(request, category),
+            "canonical_link": canonical_link,
             "category": category,
             "subcategories": self.get_subcategories(request, category),
             "threads": threads,
             "breadcrumbs": get_category_breadcrumbs(request, category),
-            "pagination_url": self.get_pagination_url(category, kwargs),
+            "pagination_url": pagination_url,
             "start_thread_url": self.get_start_thread_url(request, category),
         }
 
         self.raise_404_for_vanilla_category(category, context)
-
-        if kwargs.get("filter"):
-            context["pagination_url"] = reverse(
-                "misago:category-thread-list",
-                kwargs={
-                    "category_id": category.id,
-                    "slug": category.slug,
-                    "filter": kwargs["filter"],
-                },
-            )
-        else:
-            context["pagination_url"] = category.get_absolute_url()
-
-        context["metatags"] = self.get_metatags(request, context)
-        context["canonical_link"] = self.get_canonical_link(request, context)
 
         return context
 
@@ -1094,6 +1082,16 @@ class CategoryThreadListView(ListView):
         )
 
     def get_pagination_url(self, category: Category, kwargs: dict) -> str:
+        if threads_filter := kwargs.get("filter"):
+            return reverse(
+                "misago:category-thread-list",
+                kwargs={
+                    "category_id": category.id,
+                    "slug": category.slug,
+                    "filter": threads_filter,
+                },
+            )
+
         return category.get_absolute_url()
 
     def get_start_thread_url(
@@ -1174,25 +1172,19 @@ class CategoryThreadListView(ListView):
         new_threads += permissions_filter.filter_pinned(queryset).count()
         return new_threads
 
-    def get_metatags(self, request: HttpRequest, context: dict) -> dict:
-        metatags = super().get_metatags(request, context)
-
-        category = context["category"]
-
-        metatags.update(
-            {
-                "title": MetaTag(
-                    property="og:title",
-                    name="twitter:title",
-                    content=category.name,
-                ),
-                "url": MetaTag(
-                    property="og:url",
-                    name="twitter:url",
-                    content=category.get_absolute_url(),
-                ),
-            }
-        )
+    def get_metatags(self, request: HttpRequest, category: Category) -> dict:
+        metatags = {
+            "title": MetaTag(
+                property="og:title",
+                name="twitter:title",
+                content=category.name,
+            ),
+            "url": MetaTag(
+                property="og:url",
+                name="twitter:url",
+                content=request.build_absolute_uri(category.get_absolute_url()),
+            ),
+        }
 
         if category.description:
             metatags["description"] = MetaTag(

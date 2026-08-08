@@ -10,11 +10,13 @@ from django.http import (
     HttpResponse,
 )
 from django.shortcuts import redirect, render
+from django.template.defaultfilters import date as format_date
 from django.urls import reverse
 from django.utils.translation import npgettext, pgettext
 
 from ...categories.models import Category
 from ...metadata import NumberMetadata, UserDatetimeMetadata
+from ...metatags.metatag import MetaTag
 from ...moderation.actions import (
     ModerationActionTemplateResult,
     ModerationResult,
@@ -454,15 +456,13 @@ class DetailView(BaseThreadView):
     def get_moderation_result_data(
         self, request: HttpRequest, thread: Thread, result: ModerationResult
     ) -> dict:
-        breadcrumbs = self.get_category_breadcrumbs(request, thread.category)
-        shared_context = {"breadcrumbs": breadcrumbs}
-
         return {
             "moderation_actions": get_moderation_action_choices(
                 self.get_thread_moderation_actions(request, thread)
             ),
-            "header": self.get_header_data(request, thread, shared_context),
-            "footer": self.get_footer_data(request, thread, shared_context),
+            "breadcrumbs": self.get_category_breadcrumbs(request, thread.category),
+            "header": self.get_header_data(request, thread),
+            "footer": self.get_footer_data(request, thread),
             "status_messages": self.get_thread_status_messages(request, thread),
             "extra_components": [],
         }
@@ -493,13 +493,13 @@ class DetailView(BaseThreadView):
         else:
             starter_is_current_user = False
 
-        breadcrumbs = self.get_category_breadcrumbs(request, thread.category)
-        shared_context = {"breadcrumbs": breadcrumbs}
-
         return {
             "starter_is_current_user": starter_is_current_user,
-            "header": self.get_header_data(request, thread, shared_context),
-            "footer": self.get_footer_data(request, thread, shared_context),
+            "metatags": self.get_metatags(thread),
+            "canonical_link": self.request.path,
+            "breadcrumbs": self.get_category_breadcrumbs(request, thread.category),
+            "header": self.get_header_data(request, thread),
+            "footer": self.get_footer_data(request, thread),
             "status_messages": self.get_thread_status_messages(request, thread),
             "thread": thread,
             "thread_url": self.get_thread_url(thread),
@@ -513,20 +513,94 @@ class DetailView(BaseThreadView):
             "post_likes_modal_template": self.thread_type.post_likes_modal_template,
         }
 
-    def get_header_data(
-        self, request: HttpRequest, thread: Thread, context: dict | None
-    ) -> dict:
-        final_context = {
+    def get_metatags(self, thread: Thread) -> dict:
+        request = self.request
+
+        description: list[str] = [
+            pgettext(
+                "thread description metatag", "Thread by %(user)s in %(category)s."
+            )
+            % {
+                "user": thread.starter_name,
+                "category": thread.category.name,
+                "date": format_date(thread.started_at),
+            },
+        ]
+
+        if thread.replies:
+            description.append(
+                npgettext(
+                    "thread description metatag",
+                    "%(replies)s reply.",
+                    "%(replies)s replies.",
+                    thread.replies,
+                )
+                % {"replies": thread.replies},
+            )
+            description.append(
+                pgettext(
+                    "thread description metatag",
+                    "Last replied by %(user)s on %(date)s.",
+                )
+                % {
+                    "user": thread.last_poster_name,
+                    "date": format_date(thread.last_posted_at),
+                },
+            )
+
+        metatags = {
+            "url": MetaTag(
+                name="twitter:url",
+                property="og:url",
+                content=request.build_absolute_uri(request.path),
+            ),
+            "title": MetaTag(
+                name="twitter:title",
+                property="og:title",
+                content=thread.title,
+            ),
+            "description": MetaTag(
+                name="twitter:description",
+                property="og:description",
+                content=" ".join(description),
+            ),
+        }
+
+        if (
+            request.settings.og_image_avatar_on_thread
+            and thread.starter
+            and thread.starter.avatars
+        ):
+            starter_avatar = thread.starter.avatars[0]
+            metatags.update(
+                {
+                    "image": MetaTag(
+                        name="twitter:image",
+                        property="og:image",
+                        content=request.build_absolute_uri(starter_avatar["url"]),
+                    ),
+                    "image:width": MetaTag(
+                        name="twitter:image",
+                        property="og:image",
+                        content=starter_avatar["size"],
+                    ),
+                    "image:height": MetaTag(
+                        name="twitter:image",
+                        property="og:image",
+                        content=starter_avatar["size"],
+                    ),
+                },
+            )
+
+        return metatags
+
+    def get_header_data(self, request: HttpRequest, thread: Thread) -> dict:
+        return {
             "id": "header",
             "template_name": self.header_template_name,
             "header": thread.title,
             "meta": self.get_header_meta(request, thread),
         }
-
-        if context:
-            final_context.update(context)
-
-        return final_context
 
     def get_header_meta(self, request: HttpRequest, thread: Thread) -> dict:
         items: list[dict] = [
@@ -559,18 +633,11 @@ class DetailView(BaseThreadView):
             "items": items,
         }
 
-    def get_footer_data(
-        self, request: HttpRequest, thread: Thread, context: dict | None
-    ) -> dict:
-        final_context = {
+    def get_footer_data(self, request: HttpRequest, thread: Thread) -> dict:
+        return {
             "id": "footer",
             "template_name": self.footer_template_name,
         }
-
-        if context:
-            final_context.update(context)
-
-        return final_context
 
     def get_thread_status_messages(self, request: HttpRequest, thread: Thread) -> dict:
         messages = []
