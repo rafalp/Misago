@@ -496,7 +496,7 @@ class DetailView(BaseThreadView):
         return {
             "starter_is_current_user": starter_is_current_user,
             "metatags": self.get_metatags(thread),
-            "canonical_link": self.get_canonical_link(thread),
+            "canonical_link": self.request.path,
             "breadcrumbs": self.get_category_breadcrumbs(request, thread.category),
             "header": self.get_header_data(request, thread),
             "footer": self.get_footer_data(request, thread),
@@ -593,9 +593,6 @@ class DetailView(BaseThreadView):
             )
 
         return metatags
-
-    def get_canonical_link(self, thread: Thread) -> str:
-        return self.request.path
 
     def get_header_data(self, request: HttpRequest, thread: Thread) -> dict:
         return {
