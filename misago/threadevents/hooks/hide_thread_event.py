@@ -5,18 +5,18 @@ from django.http import HttpRequest
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..models import ThreadUpdate
+    from ..models import ThreadEvent
 
 
-class HideThreadUpdateHookAction(Protocol):
+class HideThreadEventHookAction(Protocol):
     """
-    Misago function used to hide a `ThreadUpdate` object.
+    Misago function used to hide a `ThreadEvent` object.
 
     # Arguments
 
-    ## `thread_event: ThreadUpdate`
+    ## `thread_event: ThreadEvent`
 
-    A `ThreadUpdate` instance to hide.
+    A `ThreadEvent` instance to hide.
 
     ## `request: HttpRequest | None = None`
 
@@ -24,32 +24,32 @@ class HideThreadUpdateHookAction(Protocol):
 
     # Return value
 
-    `True` if the thread update was hidden, `False` otherwise.
+    `True` if the thread event was hidden, `False` otherwise.
     """
 
     def __call__(
         self,
-        thread_event: "ThreadUpdate",
+        thread_event: "ThreadEvent",
         request: HttpRequest | None = None,
     ) -> bool: ...
 
 
-class HideThreadUpdateHookFilter(Protocol):
+class HideThreadEventHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: HideThreadUpdateHookAction`
+    ## `action: HideThreadEventHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
 
     See the [action](#action) section for details.
 
-    ## `thread_event: ThreadUpdate`
+    ## `thread_event: ThreadEvent`
 
-    A `ThreadUpdate` instance to hide.
+    A `ThreadEvent` instance to hide.
 
     ## `request: HttpRequest | None = None`
 
@@ -57,41 +57,41 @@ class HideThreadUpdateHookFilter(Protocol):
 
     # Return value
 
-    `True` if the thread update was hidden, `False` otherwise.
+    `True` if the thread event was hidden, `False` otherwise.
     """
 
     def __call__(
         self,
-        action: HideThreadUpdateHookAction,
-        thread_event: "ThreadUpdate",
+        action: HideThreadEventHookAction,
+        thread_event: "ThreadEvent",
         request: HttpRequest | None = None,
     ) -> bool: ...
 
 
-class HideThreadUpdateHook(
+class HideThreadEventHook(
     FilterHook[
-        HideThreadUpdateHookAction,
-        HideThreadUpdateHookFilter,
+        HideThreadEventHookAction,
+        HideThreadEventHookFilter,
     ]
 ):
     """
-    This hook wraps a standard Misago function used to hide a `ThreadUpdate` object.
+    This hook wraps a standard Misago function used to hide a `ThreadEvent` object.
 
     # Example
 
     The code below implements a custom filter function that stores the client's
-    IP address when a thread update is hidden:
+    IP address when a thread event is hidden:
 
     ```python
     from django.http import HttpRequest
-    from misago.threads.hooks import hide_thread_event_hook
-    from misago.threads.models import ThreadUpdate
+    from misago.threadevents.hooks import hide_thread_event_hook
+    from misago.threadevents.models import ThreadEvent
 
 
     @hide_thread_event_hook.append_filter
     def save_client_ip_on_thread_event_hide(
         action,
-        thread_event: ThreadUpdate,
+        thread_event: ThreadEvent,
         request: HttpRequest | None = None,
     ) -> bool:
         if not request:
@@ -107,11 +107,11 @@ class HideThreadUpdateHook(
 
     def __call__(
         self,
-        action: HideThreadUpdateHookAction,
-        thread_event: "ThreadUpdate",
+        action: HideThreadEventHookAction,
+        thread_event: "ThreadEvent",
         request: HttpRequest | None = None,
-    ) -> "ThreadUpdate":
+    ) -> "ThreadEvent":
         return super().__call__(action, thread_event, request)
 
 
-hide_thread_event_hook = HideThreadUpdateHook()
+hide_thread_event_hook = HideThreadEventHook()

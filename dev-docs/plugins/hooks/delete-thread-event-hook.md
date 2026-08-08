@@ -1,6 +1,6 @@
 # `delete_thread_event_hook`
 
-This hook wraps a standard Misago function used to delete a `ThreadUpdate` object.
+This hook wraps a standard Misago function used to delete a `ThreadEvent` object.
 
 
 ## Location
@@ -16,8 +16,8 @@ from misago.threadevents.hooks import delete_thread_event_hook
 
 ```python
 def custom_delete_thread_event_filter(
-    action: DeleteThreadUpdateHookAction,
-    thread_event: 'ThreadUpdate',
+    action: DeleteThreadEventHookAction,
+    thread_event: 'ThreadEvent',
     request: HttpRequest | None=None,
 ):
     ...
@@ -28,16 +28,16 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: DeleteThreadUpdateHookAction`
+#### `action: DeleteThreadEventHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
 
-#### `thread_event: ThreadUpdate`
+#### `thread_event: ThreadEvent`
 
-A `ThreadUpdate` instance to delete.
+A `ThreadEvent` instance to delete.
 
 
 #### `request: HttpRequest | None = None`
@@ -49,19 +49,19 @@ The request object or `None` if not available.
 
 ```python
 def delete_thread_event_action(
-    thread_event: 'ThreadUpdate', request: HttpRequest | None=None
+    thread_event: 'ThreadEvent', request: HttpRequest | None=None
 ):
     ...
 ```
 
-Misago function used to delete a `ThreadUpdate` object.
+Misago function used to delete a `ThreadEvent` object.
 
 
 ### Arguments
 
-#### `thread_event: ThreadUpdate`
+#### `thread_event: ThreadEvent`
 
-A `ThreadUpdate` instance to delete.
+A `ThreadEvent` instance to delete.
 
 
 #### `request: HttpRequest | None = None`
@@ -71,26 +71,26 @@ The request object or `None` if not available.
 
 ## Example
 
-The code below implements a custom filter function that logs the deletion of a thread update:
+The code below implements a custom filter function that logs the deletion of a thread event:
 
 ```python
 import logging
 
 from django.http import HttpRequest
-from misago.threads.hooks import delete_thread_event_hook
-from misago.threads.models import ThreadUpdate
+from misago.threadevents.hooks import delete_thread_event_hook
+from misago.threadevents.models import ThreadEvent
 
-logger = logging.getLogger("misago.moderation")
+logger = logging.getLogger("misago.threadevents")
 
 
 @delete_thread_event_hook.append_filter
 def log_thread_event_deletion(
     action,
-    thread_event: ThreadUpdate,
+    thread_event: ThreadEvent,
     request: HttpRequest | None = None,
 ) -> bool:
     logger.info(
-        "Thread update was deleted",
+        "Thread event was deleted",
         extra={
             "id": thread_event.id,
             "user": request.user.id if request else "",

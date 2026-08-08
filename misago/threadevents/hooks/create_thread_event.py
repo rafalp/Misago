@@ -8,12 +8,12 @@ from ...plugins.hooks import FilterHook
 if TYPE_CHECKING:
     from ...threads.models import Thread
     from ...users.models import User
-    from ..models import ThreadUpdate
+    from ..models import ThreadEvent
 
 
-class CreateThreadUpdateHookAction(Protocol):
+class CreateThreadEventHookAction(Protocol):
     """
-    Misago function used to create a `ThreadUpdate` object.
+    Misago function used to create a `ThreadEvent` object.
 
     # Arguments
 
@@ -37,7 +37,7 @@ class CreateThreadUpdateHookAction(Protocol):
 
     ## `context_object: Model | None = None`
 
-    A `Model` instance that this update object should store a generic relation to.
+    A `Model` instance that this event object should store a generic relation to.
 
     ## `context_items: int | None = None`
 
@@ -45,7 +45,7 @@ class CreateThreadUpdateHookAction(Protocol):
 
     ## `commit: bool = True`
 
-    A `bool` indicating whether the new `ThreadUpdate` instance should be saved to the database.
+    A `bool` indicating whether the new `ThreadEvent` instance should be saved to the database.
 
     Defaults to `True`.
 
@@ -55,7 +55,7 @@ class CreateThreadUpdateHookAction(Protocol):
 
     # Return value
 
-    A newly created `ThreadUpdate` instance.
+    A newly created `ThreadEvent` instance.
     """
 
     def __call__(
@@ -69,16 +69,16 @@ class CreateThreadUpdateHookAction(Protocol):
         context_items: int | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> "ThreadUpdate": ...
+    ) -> "ThreadEvent": ...
 
 
-class CreateThreadUpdateHookFilter(Protocol):
+class CreateThreadEventHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: CreateThreadUpdateHookAction`
+    ## `action: CreateThreadEventHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
@@ -91,7 +91,7 @@ class CreateThreadUpdateHookFilter(Protocol):
 
     ## `event_type: str`
 
-    A `str` with the name of the event type that updated the thread.
+    A `str` with the name of the event type.
 
     ## `actor: Union["User", None, str] = None`
 
@@ -105,7 +105,7 @@ class CreateThreadUpdateHookFilter(Protocol):
 
     ## `context_object: Model | None = None`
 
-    A `Model` instance that this update object should store a generic relation to.
+    A `Model` instance that this event object should store a generic relation to.
 
     ## `context_items: int | None = None`
 
@@ -113,7 +113,7 @@ class CreateThreadUpdateHookFilter(Protocol):
 
     ## `commit: bool = True`
 
-    A `bool` indicating whether the new `ThreadUpdate` instance should be saved to the database.
+    A `bool` indicating whether the new `ThreadEvent` instance should be saved to the database.
 
     Defaults to `True`.
 
@@ -123,12 +123,12 @@ class CreateThreadUpdateHookFilter(Protocol):
 
     # Return value
 
-    A newly created `ThreadUpdate` instance.
+    A newly created `ThreadEvent` instance.
     """
 
     def __call__(
         self,
-        action: CreateThreadUpdateHookAction,
+        action: CreateThreadEventHookAction,
         thread: "Thread",
         event_type: str,
         actor: Union["User", None, str] = None,
@@ -138,13 +138,13 @@ class CreateThreadUpdateHookFilter(Protocol):
         context_items: int | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> "ThreadUpdate": ...
+    ) -> "ThreadEvent": ...
 
 
-class CreateThreadUpdateHook(
+class CreateThreadEventHook(
     FilterHook[
-        CreateThreadUpdateHookAction,
-        CreateThreadUpdateHookFilter,
+        CreateThreadEventHookAction,
+        CreateThreadEventHookFilter,
     ]
 ):
     """
@@ -168,7 +168,7 @@ class CreateThreadUpdateHook(
         commit: bool = True,
         request: HttpRequest | None = None,
         **kwargs
-    ) -> ThreadUpdate:
+    ) -> ThreadEvent:
         if request:
             plugin_data["actor_id"] = request.user_ip
 
@@ -193,7 +193,7 @@ class CreateThreadUpdateHook(
 
     def __call__(
         self,
-        action: CreateThreadUpdateHookAction,
+        action: CreateThreadEventHookAction,
         thread: "Thread",
         event_type: str,
         actor: Union["User", None, str] = None,
@@ -203,7 +203,7 @@ class CreateThreadUpdateHook(
         context_items: int | None = None,
         commit: bool = True,
         request: HttpRequest | None = None,
-    ) -> "ThreadUpdate":
+    ) -> "ThreadEvent":
         return super().__call__(
             action,
             thread,
@@ -217,4 +217,4 @@ class CreateThreadUpdateHook(
         )
 
 
-create_thread_event_hook = CreateThreadUpdateHook()
+create_thread_event_hook = CreateThreadEventHook()

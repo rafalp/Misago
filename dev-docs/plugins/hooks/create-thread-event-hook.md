@@ -16,7 +16,7 @@ from misago.threadevents.hooks import create_thread_event_hook
 
 ```python
 def custom_create_thread_event_filter(
-    action: CreateThreadUpdateHookAction,
+    action: CreateThreadEventHookAction,
     thread: 'Thread',
     event_type: str,
     actor: Union['User', None, str]=None,
@@ -26,7 +26,7 @@ def custom_create_thread_event_filter(
     context_items: int | None=None,
     commit: bool=True,
     request: HttpRequest | None=None,
-) -> 'ThreadUpdate':
+) -> 'ThreadEvent':
     ...
 ```
 
@@ -35,7 +35,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: CreateThreadUpdateHookAction`
+#### `action: CreateThreadEventHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
@@ -49,7 +49,7 @@ A `Thread` instance.
 
 #### `event_type: str`
 
-A `str` with the name of the event type that updated the thread.
+A `str` with the name of the event type.
 
 
 #### `actor: Union["User", None, str] = None`
@@ -64,7 +64,7 @@ A `str` with context, e.g., a previous thread title or the name of `context_obje
 
 #### `context_object: Model | None = None`
 
-A `Model` instance that this update object should store a generic relation to.
+A `Model` instance that this event object should store a generic relation to.
 
 
 #### `context_items: int | None = None`
@@ -74,7 +74,7 @@ A number of items affected by the event.
 
 #### `commit: bool = True`
 
-A `bool` indicating whether the new `ThreadUpdate` instance should be saved to the database.
+A `bool` indicating whether the new `ThreadEvent` instance should be saved to the database.
 
 Defaults to `True`.
 
@@ -86,7 +86,7 @@ The request object or `None` if not available.
 
 ### Return value
 
-A newly created `ThreadUpdate` instance.
+A newly created `ThreadEvent` instance.
 
 
 ## Action
@@ -102,11 +102,11 @@ def create_thread_event_action(
     context_items: int | None=None,
     commit: bool=True,
     request: HttpRequest | None=None,
-) -> 'ThreadUpdate':
+) -> 'ThreadEvent':
     ...
 ```
 
-Misago function used to create a `ThreadUpdate` object.
+Misago function used to create a `ThreadEvent` object.
 
 
 ### Arguments
@@ -133,7 +133,7 @@ A `str` with context, e.g., a previous thread title or the name of `context_obje
 
 #### `context_object: Model | None = None`
 
-A `Model` instance that this update object should store a generic relation to.
+A `Model` instance that this event object should store a generic relation to.
 
 
 #### `context_items: int | None = None`
@@ -143,7 +143,7 @@ A number of items affected by the event.
 
 #### `commit: bool = True`
 
-A `bool` indicating whether the new `ThreadUpdate` instance should be saved to the database.
+A `bool` indicating whether the new `ThreadEvent` instance should be saved to the database.
 
 Defaults to `True`.
 
@@ -155,7 +155,7 @@ The request object or `None` if not available.
 
 ### Return value
 
-A newly created `ThreadUpdate` instance.
+A newly created `ThreadEvent` instance.
 
 
 ## Example
@@ -175,7 +175,7 @@ def set_actor_ip_on_thread_event(
     commit: bool = True,
     request: HttpRequest | None = None,
     **kwargs
-) -> ThreadUpdate:
+) -> ThreadEvent:
     if request:
         plugin_data["actor_id"] = request.user_ip
 
