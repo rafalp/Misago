@@ -69,7 +69,9 @@ def build_user_permissions(user: Union["User", AnonymousUser]) -> dict:
     else:
         groups_ids = user.groups_ids
 
-    groups: list[Group] = list(Group.objects.filter(id__in=groups_ids))
+    groups: list[Group] = list(
+        Group.objects.filter(id__in=groups_ids).defer_descriptions()
+    )
     permissions = build_user_permissions_hook(_build_user_permissions_action, groups)
 
     permissions["categories"] = build_user_category_permissions(groups, permissions)

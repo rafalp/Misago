@@ -148,6 +148,7 @@ MISAGO_MIDDLEWARE = [
     "misago.users.middleware.UserMiddleware",
     "misago.middleware.permissions.permissions_middleware",
     "misago.middleware.categories.categories_middleware",
+    "misago.middleware.groups.groups_middleware",
     "misago.acl.middleware.user_acl_middleware",
     "misago.core.middleware.ExceptionHandlerMiddleware",
     "misago.users.middleware.OnlineTrackerMiddleware",

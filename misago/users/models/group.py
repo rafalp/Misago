@@ -12,9 +12,18 @@ from ...plugins.models import PluginDataModel
 from ..enums import CUSTOM_GROUP_ID_START, DefaultGroupId
 
 
+class GroupQueryset(models.QuerySet):
+    def defer_descriptions(self):
+        return self.defer("description", "description_parsed", "meta_description")
+
+
 class Group(PluginDataModel):
     name = models.CharField(max_length=150)
     slug = models.CharField(max_length=150, unique=True)
+
+    description = models.TextField(null=True, blank=True)
+    description_parsed = models.TextField(null=True, blank=True)
+    meta_description = models.TextField(null=True, blank=True)
 
     user_title = models.CharField(max_length=150, null=True, blank=True)
     color = models.CharField(max_length=7, null=True, blank=True)
@@ -84,6 +93,8 @@ class Group(PluginDataModel):
 
     can_see_user_profiles = models.PositiveIntegerField(default=PermissionValue.NO)
 
+    objects = GroupQueryset.as_manager()
+
     class Meta(PluginDataModel.Meta):
         ordering = ["ordering"]
 
@@ -102,15 +113,3 @@ class Group(PluginDataModel):
         if self.user_title:
             return pgettext("default user group", self.user_title)
         return None
-
-
-class GroupDescription(PluginDataModel):
-    group = models.OneToOneField(
-        Group,
-        on_delete=models.PROTECT,
-        primary_key=True,
-        related_name="description",
-    )
-    markdown = models.TextField(null=True, blank=True)
-    html = models.TextField(null=True, blank=True)
-    meta = models.TextField(null=True, blank=True)

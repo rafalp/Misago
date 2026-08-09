@@ -35,8 +35,8 @@
   <fieldset>
     <legend>{% translate "Basic settings" context "admin group form" %}</legend>
 
-    {% form_row form.group.name %}
-    {% form_row form.group.slug %}
+    {% form_row form.name %}
+    {% form_row form.slug %}
 
   </fieldset>
 </div>
@@ -44,8 +44,8 @@
   <fieldset>
     <legend>{% translate "Description" context "admin group form" %}</legend>
 
-    {% form_row form.description.markdown %}
-    {% form_row form.description.meta %}
+    {% form_row form.description %}
+    {% form_row form.meta_description %}
 
   </fieldset>
 </div>
@@ -53,12 +53,12 @@
   <fieldset>
     <legend>{% translate "Display and appearance" context "admin group form" %}</legend>
 
-    {% form_row form.group.user_title %}
-    {% form_row form.group.color %}
-    {% form_row form.group.icon %}
-    {% form_row form.group.css_suffix %}
-    {% form_row form.group.is_page %}
-    {% form_row form.group.is_hidden %}
+    {% form_row form.user_title %}
+    {% form_row form.color %}
+    {% form_row form.icon %}
+    {% form_row form.css_suffix %}
+    {% form_row form.is_page %}
+    {% form_row form.is_hidden %}
 
   </fieldset>
 </div>
@@ -66,7 +66,7 @@
   <fieldset>
     <legend>{% translate "Permissions" context "admin group form" %}</legend>
 
-    {% form_row form.group.copy_permissions %}
+    {% form_row form.copy_permissions %}
 
   </fieldset>
 </div>
@@ -74,12 +74,12 @@
   <fieldset>
     <legend>{% translate "Posting" context "admin group permissions form" %}</legend>
 
-    {% form_row form.group.can_edit_own_threads %}
-    {% form_row form.group.own_threads_edit_time_limit %}
-    {% form_row form.group.can_edit_own_posts %}
-    {% form_row form.group.own_posts_edit_time_limit %}
-    {% form_row form.group.bypass_flood_control %}
-    {% form_row form.group.bypass_content_approval %}
+    {% form_row form.can_edit_own_threads %}
+    {% form_row form.own_threads_edit_time_limit %}
+    {% form_row form.can_edit_own_posts %}
+    {% form_row form.own_posts_edit_time_limit %}
+    {% form_row form.bypass_flood_control %}
+    {% form_row form.bypass_content_approval %}
 
   </fieldset>
 </div>
@@ -87,10 +87,10 @@
   <fieldset>
     <legend>{% translate "Post edits" context "admin group permissions form" %}</legend>
 
-    {% form_row form.group.can_see_others_post_edits %}
-    {% form_row form.group.can_hide_own_post_edits %}
-    {% form_row form.group.own_post_edits_hide_time_limit %}
-    {% form_row form.group.own_delete_post_edits_time_limit %}
+    {% form_row form.can_see_others_post_edits %}
+    {% form_row form.can_hide_own_post_edits %}
+    {% form_row form.own_post_edits_hide_time_limit %}
+    {% form_row form.own_delete_post_edits_time_limit %}
 
   </fieldset>
 </div>
@@ -98,9 +98,9 @@
   <fieldset>
     <legend>{% translate "Private threads" context "admin group permissions form" %}</legend>
 
-    {% form_row form.group.can_use_private_threads %}
-    {% form_row form.group.can_start_private_threads %}
-    {% form_row form.group.private_thread_members_limit %}
+    {% form_row form.can_use_private_threads %}
+    {% form_row form.can_start_private_threads %}
+    {% form_row form.private_thread_members_limit %}
 
   </fieldset>
 </div>
@@ -108,11 +108,11 @@
   <fieldset>
     <legend>{% translate "Attachments" context "admin group permissions form" %}</legend>
 
-    {% form_row form.group.can_upload_attachments %}
-    {% form_row form.group.attachment_storage_limit %}
-    {% form_row form.group.unused_attachments_storage_limit %}
-    {% form_row form.group.attachment_size_limit %}
-    {% form_row form.group.can_always_delete_own_attachments %}
+    {% form_row form.can_upload_attachments %}
+    {% form_row form.attachment_storage_limit %}
+    {% form_row form.unused_attachments_storage_limit %}
+    {% form_row form.attachment_size_limit %}
+    {% form_row form.can_always_delete_own_attachments %}
 
   </fieldset>
 </div>
@@ -120,12 +120,12 @@
   <fieldset>
     <legend>{% translate "Polls" context "admin group permissions form" %}</legend>
 
-    {% form_row form.group.can_start_polls %}
-    {% form_row form.group.can_edit_own_polls %}
-    {% form_row form.group.own_polls_edit_time_limit %}
-    {% form_row form.group.can_close_own_polls %}
-    {% form_row form.group.own_polls_close_time_limit %}
-    {% form_row form.group.can_vote_in_polls %}
+    {% form_row form.can_start_polls %}
+    {% form_row form.can_edit_own_polls %}
+    {% form_row form.own_polls_edit_time_limit %}
+    {% form_row form.can_close_own_polls %}
+    {% form_row form.own_polls_close_time_limit %}
+    {% form_row form.can_vote_in_polls %}
 
   </fieldset>
 </div>
@@ -133,9 +133,9 @@
   <fieldset>
     <legend>{% translate "Likes" context "admin group permissions form" %}</legend>
 
-    {% form_row form.group.can_like_posts %}
-    {% form_row form.group.can_see_own_post_likes %}
-    {% form_row form.group.can_see_others_post_likes %}
+    {% form_row form.can_like_posts %}
+    {% form_row form.can_see_own_post_likes %}
+    {% form_row form.can_see_others_post_likes %}
 
   </fieldset>
 </div>
@@ -149,11 +149,11 @@
       {% endblocktranslate %}
     </p>
 
-    {% form_row form.group.can_select_own_thread_solutions %}
-    {% form_row form.group.can_change_own_thread_solutions %}
-    {% form_row form.group.own_thread_solutions_change_time_limit %}
-    {% form_row form.group.can_clear_own_thread_solutions %}
-    {% form_row form.group.own_thread_solutions_clear_time_limit %}
+    {% form_row form.can_select_own_thread_solutions %}
+    {% form_row form.can_change_own_thread_solutions %}
+    {% form_row form.own_thread_solutions_change_time_limit %}
+    {% form_row form.can_clear_own_thread_solutions %}
+    {% form_row form.own_thread_solutions_clear_time_limit %}
 
   </fieldset>
 </div>
@@ -161,10 +161,10 @@
   <fieldset>
     <legend>{% translate "Usernames" context "admin group permissions form" %}</legend>
 
-    {% form_row form.group.can_change_username %}
-    {% form_row form.group.username_changes_limit %}
-    {% form_row form.group.username_changes_expire %}
-    {% form_row form.group.username_changes_span %}
+    {% form_row form.can_change_username %}
+    {% form_row form.username_changes_limit %}
+    {% form_row form.username_changes_expire %}
+    {% form_row form.username_changes_span %}
 
   </fieldset>
 </div>
@@ -172,7 +172,7 @@
   <fieldset>
     <legend>{% translate "User profiles" context "admin group permissions form" %}</legend>
 
-    {% form_row form.group.can_see_user_profiles %}
+    {% form_row form.can_see_user_profiles %}
 
   </fieldset>
 </div>
