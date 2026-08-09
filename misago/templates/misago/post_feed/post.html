@@ -294,7 +294,7 @@
             {% endif %}
 
             <article class="post-feed-item-post-rich-text rich-text" misago-quote-root="{% if poster %}{{ poster.username }}{% else %}{{ post.poster_name }}{% endif %}, post: {{ post.id }}" misago-lightbox-root>
-              {% rich_text post.parsed rich_text_data thread=thread %}
+              {% rich_text post.content_parsed rich_text_data thread=thread %}
             </article>
             {% if attachments %}
               {% include "misago/post_feed/post_attachments.html" %}

@@ -76,7 +76,7 @@ from misago.threads.models import Post
 
 @post_needs_content_upgrade_hook.append_filter
 def post_needs_plugin_content_upgrade(action, post: Post) -> bool:
-    if "<plugin-html" in post.parsed:
+    if "<plugin-html" in post.content_parsed:
         return True
 
     return action(post)

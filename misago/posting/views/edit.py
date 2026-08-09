@@ -173,7 +173,7 @@ class EditView(BaseThreadView):
                 attachments=preview.attachments,
             )
 
-            context["preview"] = preview.post.parsed
+            context["preview"] = preview.post.content_parsed
             context["preview_rich_text_data"] = related_objects
 
         if self.is_inline(request):

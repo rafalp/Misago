@@ -194,9 +194,7 @@ def test_thread_reply_view_displays_posting_form_to_users_with_in_locked_thread_
 def test_thread_reply_view_displays_posting_form_with_quoted_post(
     thread_reply_factory, user_client, thread
 ):
-    post = thread_reply_factory(
-        thread, poster="QuotedUser", original="Bread and butter"
-    )
+    post = thread_reply_factory(thread, poster="QuotedUser", content="Bread and butter")
 
     response = user_client.get(
         reverse(
@@ -211,7 +209,7 @@ def test_thread_reply_view_displays_posting_form_with_quoted_post(
     assert_contains(response, "Reply to thread")
     assert_contains(response, thread.title)
     assert_contains(response, f"[quote=QuotedUser, post: {post.id}]")
-    assert_contains(response, post.original)
+    assert_contains(response, post.content)
     assert_contains(response, "[/quote]")
 
 
@@ -219,7 +217,7 @@ def test_thread_reply_view_doesnt_init_posting_form_with_hidden_quoted_post(
     thread_reply_factory, user_client, thread
 ):
     post = thread_reply_factory(
-        thread, poster="QuotedUser", original="Bread and butter", is_hidden=True
+        thread, poster="QuotedUser", content="Bread and butter", is_hidden=True
     )
 
     response = user_client.get(
@@ -235,7 +233,7 @@ def test_thread_reply_view_doesnt_init_posting_form_with_hidden_quoted_post(
     assert_contains(response, "Reply to thread")
     assert_contains(response, thread.title)
     assert_not_contains(response, f"[quote=QuotedUser, post: {post.id}]")
-    assert_not_contains(response, post.original)
+    assert_not_contains(response, post.content)
     assert_not_contains(response, "[/quote]")
 
 
@@ -243,7 +241,7 @@ def test_thread_reply_view_doesnt_init_posting_form_with_invisible_quoted_post(
     thread_reply_factory, user_client, thread
 ):
     post = thread_reply_factory(
-        thread, poster="QuotedUser", original="Bread and butter", is_unapproved=True
+        thread, poster="QuotedUser", content="Bread and butter", is_unapproved=True
     )
 
     response = user_client.get(
@@ -259,7 +257,7 @@ def test_thread_reply_view_doesnt_init_posting_form_with_invisible_quoted_post(
     assert_contains(response, "Reply to thread")
     assert_contains(response, thread.title)
     assert_not_contains(response, f"[quote=QuotedUser, post: {post.id}]")
-    assert_not_contains(response, post.original)
+    assert_not_contains(response, post.content)
     assert_not_contains(response, "[/quote]")
 
 
@@ -267,7 +265,7 @@ def test_thread_reply_view_doesnt_init_posting_form_with_other_thread_quoted_pos
     thread_reply_factory, user_client, thread, user_thread
 ):
     post = thread_reply_factory(
-        user_thread, poster="QuotedUser", original="Bread and butter"
+        user_thread, poster="QuotedUser", content="Bread and butter"
     )
 
     response = user_client.get(
@@ -283,7 +281,7 @@ def test_thread_reply_view_doesnt_init_posting_form_with_other_thread_quoted_pos
     assert_contains(response, "Reply to thread")
     assert_contains(response, thread.title)
     assert_not_contains(response, f"[quote=QuotedUser, post: {post.id}]")
-    assert_not_contains(response, post.original)
+    assert_not_contains(response, post.content)
     assert_not_contains(response, "[/quote]")
 
 
@@ -725,7 +723,7 @@ def test_thread_reply_view_runs_flood_control_in_quick_reply_in_htmx(
 def test_thread_reply_view_merges_reply_with_users_recent_post(
     thread_reply_factory, user, user_client, thread
 ):
-    reply = thread_reply_factory(thread, poster=user, original="Previous message")
+    reply = thread_reply_factory(thread, poster=user, content="Previous message")
 
     response = user_client.post(
         reverse(
@@ -748,7 +746,7 @@ def test_thread_reply_view_merges_reply_with_users_recent_post(
         + f"#post-{reply.id}"
     )
 
-    assert reply.original == "Previous message\n\nReply contents"
+    assert reply.content == "Previous message\n\nReply contents"
 
     post_edit = PostEdit.objects.get(post=reply)
     assert not post_edit.edit_reason
@@ -759,7 +757,7 @@ def test_thread_reply_view_merges_reply_with_users_recent_post(
 def test_thread_reply_view_merges_reply_with_users_recent_post_in_htmx(
     thread_reply_factory, user, user_client, thread
 ):
-    reply = thread_reply_factory(thread, poster=user, original="Previous message")
+    reply = thread_reply_factory(thread, poster=user, content="Previous message")
 
     response = user_client.post(
         reverse(
@@ -780,16 +778,16 @@ def test_thread_reply_view_merges_reply_with_users_recent_post_in_htmx(
     reply.refresh_from_db()
 
     assert_contains(response, f"post-{reply.id}")
-    assert_contains(response, reply.parsed)
+    assert_contains(response, reply.content_parsed)
 
-    assert reply.original == "Previous message\n\nReply contents"
+    assert reply.content == "Previous message\n\nReply contents"
 
 
 @override_dynamic_settings(merge_concurrent_posts=0, flood_control=0)
 def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_feature_is_disabled(
     thread_reply_factory, user, user_client, thread, mock_notify_on_new_thread_reply
 ):
-    reply = thread_reply_factory(thread, poster=user, original="Previous message")
+    reply = thread_reply_factory(thread, poster=user, content="Previous message")
 
     response = user_client.post(
         reverse(
@@ -814,7 +812,7 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_feature_
     )
 
     reply.refresh_from_db()
-    assert reply.original == "Previous message"
+    assert reply.content == "Previous message"
 
     mock_notify_on_new_thread_reply.delay.assert_called_once_with(thread.last_post_id)
 
@@ -823,7 +821,7 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_feature_
 def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_in_preview(
     thread_reply_factory, user, user_client, thread
 ):
-    thread_reply_factory(thread, poster=user, original="Previous message")
+    thread_reply_factory(thread, poster=user, content="Previous message")
 
     response = user_client.post(
         reverse(
@@ -847,7 +845,7 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_too_
     thread_reply_factory, user, user_client, thread, mock_notify_on_new_thread_reply
 ):
     post = thread_reply_factory(
-        thread, poster=user, original="Previous message", posted_at=-120
+        thread, poster=user, content="Previous message", posted_at=-120
     )
 
     response = user_client.post(
@@ -872,7 +870,7 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_too_
     )
 
     assert reply.id == post.id + 1
-    assert reply.original == "Reply contents"
+    assert reply.content == "Reply contents"
 
     mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
 
@@ -884,7 +882,7 @@ def test_thread_reply_view_doesnt_merge_reply_with_recent_post_if_its_by_other_u
     thread,
     mock_notify_on_new_thread_reply,
 ):
-    post = thread_reply_factory(thread, poster=other_user, original="Previous message")
+    post = thread_reply_factory(thread, poster=other_user, content="Previous message")
 
     response = user_client.post(
         reverse(
@@ -908,7 +906,7 @@ def test_thread_reply_view_doesnt_merge_reply_with_recent_post_if_its_by_other_u
     )
 
     assert reply.id == post.id + 1
-    assert reply.original == "Reply contents"
+    assert reply.content == "Reply contents"
 
     mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
 
@@ -918,7 +916,7 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_hidd
     thread_reply_factory, user, user_client, thread, mock_notify_on_new_thread_reply
 ):
     post = thread_reply_factory(
-        thread, poster=user, original="Previous message", is_hidden=True
+        thread, poster=user, content="Previous message", is_hidden=True
     )
 
     response = user_client.post(
@@ -943,7 +941,7 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_hidd
     )
 
     assert reply.id == post.id + 1
-    assert reply.original == "Reply contents"
+    assert reply.content == "Reply contents"
 
     mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
 
@@ -953,7 +951,7 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_not_
     thread_reply_factory, user, user_client, thread, mock_notify_on_new_thread_reply
 ):
     post = thread_reply_factory(
-        thread, poster=user, original="Previous message", is_locked=True
+        thread, poster=user, content="Previous message", is_locked=True
     )
 
     response = user_client.post(
@@ -978,7 +976,7 @@ def test_thread_reply_view_doesnt_merge_reply_with_users_recent_post_if_its_not_
     )
 
     assert reply.id == post.id + 1
-    assert reply.original == "Reply contents"
+    assert reply.content == "Reply contents"
 
     mock_notify_on_new_thread_reply.delay.assert_called_once_with(reply.id)
 

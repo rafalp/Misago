@@ -24,7 +24,7 @@ def test_rebuildpostssearch_command_does_nothing_if_there_are_no_posts(db):
 def test_rebuildpostssearch_command_updates_existing_posts_search_documents(
     thread, post
 ):
-    post.original = "Hello **world**!"
+    post.content = "Hello **world**!"
     post.save()
 
     command_output = call_command()

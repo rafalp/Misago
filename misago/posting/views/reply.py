@@ -207,7 +207,7 @@ class ReplyView(BaseThreadView):
             data["post"] = (
                 f"[quote={quoted_post.poster_name}, post: {quoted_post.id}]"
                 "\n"
-                f"{quoted_post.original}"
+                f"{quoted_post.content}"
                 "\n"
                 "[/quote]"
                 "\n\n"
@@ -274,7 +274,7 @@ class ReplyView(BaseThreadView):
                 attachments=preview.attachments,
             )
 
-            context["preview"] = preview.post.parsed
+            context["preview"] = preview.post.content_parsed
             context["preview_rich_text_data"] = related_objects
 
         if extra_context:

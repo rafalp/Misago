@@ -22,7 +22,7 @@ def test_parseposts_command_does_nothing_if_there_are_no_posts(db):
 
 
 def test_parseposts_command_reparses_existing_posts(post):
-    post.original = "Hello **world**!"
+    post.content = "Hello **world**!"
     post.metadata = {"outdated": True}
     post.save()
 
@@ -31,5 +31,5 @@ def test_parseposts_command_reparses_existing_posts(post):
     assert command_output[-1] == "Parsed one post."
 
     post.refresh_from_db()
-    assert post.parsed == "<p>Hello <strong>world</strong>!</p>"
+    assert post.content_parsed == "<p>Hello <strong>world</strong>!</p>"
     assert post.metadata == {}

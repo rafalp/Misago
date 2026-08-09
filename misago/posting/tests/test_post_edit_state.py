@@ -24,7 +24,7 @@ def test_post_edit_state_save_updates_post(user, user_request, other_user_thread
     post = other_user_thread.first_post
     post.refresh_from_db()
 
-    assert post.original == "Edit reply"
+    assert post.content == "Edit reply"
     assert post.search_document == f"{other_user_thread.title}\n\nEdit reply"
     assert post.updated_at == state.timestamp
     assert post.edits == 1
@@ -141,7 +141,7 @@ def test_post_edit_state_changes_test_returns_false_if_nothing_changed(
     user_request, other_user_thread
 ):
     state = PostEditState(user_request, other_user_thread.first_post)
-    state.set_post_message(parse(other_user_thread.first_post.original))
+    state.set_post_message(parse(other_user_thread.first_post.content))
 
     assert not state.is_post_changed()
 
@@ -152,7 +152,7 @@ def test_post_edit_state_changes_test_returns_true_if_thread_title_changed(
 
     state = PostEditState(user_request, other_user_thread.first_post)
     state.set_thread_title("New title")
-    state.set_post_message(parse(other_user_thread.first_post.original))
+    state.set_post_message(parse(other_user_thread.first_post.content))
 
     assert state.is_post_changed()
 
@@ -161,7 +161,7 @@ def test_post_edit_state_changes_test_returns_true_if_post_contents_changed(
     user_request, other_user_thread
 ):
     post = other_user_thread.first_post
-    post.original = "Lorem\nIpsum"
+    post.content = "Lorem\nIpsum"
     post.save()
 
     state = PostEditState(user_request, other_user_thread.first_post)
@@ -174,7 +174,7 @@ def test_post_edit_state_changes_test_returns_false_if_only_new_line_characters_
     user_request, other_user_thread
 ):
     post = other_user_thread.first_post
-    post.original = "Lorem\r\nIpsum"
+    post.content = "Lorem\r\nIpsum"
     post.save()
 
     state = PostEditState(user_request, other_user_thread.first_post)

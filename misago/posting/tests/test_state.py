@@ -75,8 +75,8 @@ def test_state_set_post_message_updates_post_contents(user_request, post):
     state.post = post
     state.set_post_message(parse("Hello world"))
 
-    assert post.original == "Hello world"
-    assert post.parsed == "<p>Hello world</p>"
+    assert post.content == "Hello world"
+    assert post.content_parsed == "<p>Hello world</p>"
     assert post.metadata == {}
 
 
@@ -87,8 +87,8 @@ def test_state_set_post_message_stores_attachments_ids_in_post_metadata(
     state.post = post
     state.set_post_message(parse("<attachment=image.png:123>"))
 
-    assert post.original == "<attachment=image.png:123>"
-    assert post.parsed == (
+    assert post.content == "<attachment=image.png:123>"
+    assert post.content_parsed == (
         '<misago-attachment name="image.png" slug="image-png" id="123">'
     )
     assert post.metadata == {"attachments": [123]}

@@ -39,7 +39,7 @@ def validate_spam_contents(formset, state):
     if formset.title and "spam" in state.thread.title.lower():
         raise ValidationError("Your message contains spam!")
 
-    if "spam" in state.post.original.lower():
+    if "spam" in state.post.content.lower():
         raise ValidationError("Your message contains spam!")
 
     raise ValidationError("Your message contains spam!")

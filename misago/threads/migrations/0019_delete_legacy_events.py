@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     atomic = False
 
     dependencies = [
-        ("misago_threads", "0018_update_attachments_markup"),
+        ("misago_threads", "0018_post_content_parsed"),
         ("misago_threadevents", "0002_move_data"),
     ]
 

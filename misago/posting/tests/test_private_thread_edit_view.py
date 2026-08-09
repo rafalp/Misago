@@ -171,7 +171,7 @@ def test_private_thread_edit_view_displays_edit_form(user_client, user_private_t
     )
     assert_contains(response, "Edit thread")
     assert_contains(response, user_private_thread.title)
-    assert_contains(response, user_private_thread.first_post.original)
+    assert_contains(response, user_private_thread.first_post.content)
 
 
 def test_private_thread_edit_view_displays_edit_form_for_moderator(
@@ -188,7 +188,7 @@ def test_private_thread_edit_view_displays_edit_form_for_moderator(
     )
     assert_contains(response, "Edit thread")
     assert_contains(response, user_private_thread.title)
-    assert_contains(response, user_private_thread.first_post.original)
+    assert_contains(response, user_private_thread.first_post.content)
 
 
 def test_private_thread_edit_view_displays_inline_edit_form_in_htmx(
@@ -207,7 +207,7 @@ def test_private_thread_edit_view_displays_inline_edit_form_in_htmx(
     )
     assert_contains(response, "Save")
     assert_contains(response, user_private_thread.title)
-    assert_contains(response, user_private_thread.first_post.original)
+    assert_contains(response, user_private_thread.first_post.content)
     assert_contains(response, "?inline=true")
 
 
@@ -242,7 +242,7 @@ def test_private_thread_edit_view_updates_thread_title_and_post(
     assert user_private_thread.title == "Edited title"
 
     post = user_private_thread.first_post
-    assert post.original == "Edited post"
+    assert post.content == "Edited post"
     assert post.updated_at
     assert post.edits == 1
     assert post.last_editor == user
@@ -290,7 +290,7 @@ def test_private_thread_edit_view_updates_thread_title_and_post_in_htmx(
     assert user_private_thread.title == "Edited title"
 
     post = user_private_thread.first_post
-    assert post.original == "Edited post"
+    assert post.content == "Edited post"
     assert post.updated_at
     assert post.edits == 1
     assert post.last_editor == user
@@ -330,7 +330,7 @@ def test_private_thread_edit_view_updates_thread_title_and_post_inline_in_htmx(
     assert user_private_thread.title == "Edited title"
 
     post = user_private_thread.first_post
-    assert post.original == "Edited post"
+    assert post.content == "Edited post"
     assert post.updated_at
     assert post.edits == 1
     assert post.last_editor == user
@@ -360,7 +360,7 @@ def test_private_thread_edit_view_sets_edit_reason(
 
     post = user_private_thread.first_post
     post.refresh_from_db()
-    assert post.original == "Edited post"
+    assert post.content == "Edited post"
     assert post.updated_at
     assert post.edits == 1
     assert post.last_editor == user
@@ -583,7 +583,7 @@ def test_private_thread_edit_view_skips_flood_control(
     post = user_private_thread.first_post
     post.refresh_from_db()
 
-    assert post.original == "This is a flood message"
+    assert post.content == "This is a flood message"
     assert post.edits == 1
 
 

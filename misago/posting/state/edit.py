@@ -33,7 +33,7 @@ class PostEditState(State):
         self.store_object_state(post)
 
         self.thread_title = self.thread.title
-        self.post_original = post.original
+        self.post_original = post.content
         self.edit_reason = None
 
     def set_edit_reason(self, edit_reason: str):
@@ -51,7 +51,7 @@ class PostEditState(State):
         if self.thread_title != self.thread.title:
             return True
 
-        if self.post_original.splitlines() != self.post.original.splitlines():
+        if self.post_original.splitlines() != self.post.content.splitlines():
             return True
 
         if self.delete_attachments:
@@ -72,7 +72,7 @@ class PostEditState(State):
             post_edits = self.post.edits + 1
 
             self.set_post_edits()
-            if self.post_original != self.post.original:
+            if self.post_original != self.post.content:
                 # Full post update
                 self.save_post()
             else:
@@ -85,7 +85,7 @@ class PostEditState(State):
                 old_title=self.thread_title,
                 new_title=self.thread.title,
                 old_content=self.post_original,
-                new_content=self.post.original,
+                new_content=self.post.content,
                 attachments=self.attachments,
                 deleted_attachments=self.delete_attachments,
                 edited_at=self.timestamp,

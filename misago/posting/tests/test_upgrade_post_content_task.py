@@ -28,7 +28,7 @@ def test_upgrade_post_content_task_logs_exceptions(mocker, post):
 
 
 def test_upgrade_post_content_task_upgrades_post_code(post):
-    post.parsed = html_element(
+    post.content_parsed = html_element(
         "misago-code", "<pre><code>add(1, 2)</code></pre>", {"syntax": "python"}
     )
     post.metadata["highlight_code"] = True
@@ -37,5 +37,5 @@ def test_upgrade_post_content_task_upgrades_post_code(post):
     upgrade_post_content(post.id, post.sha256_checksum)
 
     post.refresh_from_db()
-    assert "span" in post.parsed
+    assert "span" in post.content_parsed
     assert post.metadata == {}

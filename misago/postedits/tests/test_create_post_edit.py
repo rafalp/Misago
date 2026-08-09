@@ -6,7 +6,7 @@ def test_create_post_edit_creates_post_edit_by_user(user, post):
         post=post,
         user=user,
         old_content="Lorem ipsum dolor",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     assert post_edit.category == post.category
@@ -18,7 +18,7 @@ def test_create_post_edit_creates_post_edit_by_user(user, post):
     assert post_edit.edit_reason is None
     assert post_edit.old_title is None
     assert post_edit.old_content == "Lorem ipsum dolor"
-    assert post_edit.new_content == post.original
+    assert post_edit.new_content == post.content
     assert post_edit.added_content == 1
     assert post_edit.removed_content == 1
     assert post_edit.attachments == []
@@ -31,7 +31,7 @@ def test_create_post_edit_creates_post_edit_by_deleted_user(post):
         post=post,
         user="DeletedUser",
         old_content="Lorem ipsum dolor",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     assert post_edit.category == post.category
@@ -43,7 +43,7 @@ def test_create_post_edit_creates_post_edit_by_deleted_user(post):
     assert post_edit.edit_reason is None
     assert post_edit.old_title is None
     assert post_edit.old_content == "Lorem ipsum dolor"
-    assert post_edit.new_content == post.original
+    assert post_edit.new_content == post.content
     assert post_edit.added_content == 1
     assert post_edit.removed_content == 1
     assert post_edit.attachments == []
@@ -57,7 +57,7 @@ def test_create_post_edit_creates_post_edit_with_edit_reason(user, post):
         user=user,
         edit_reason="Test edit",
         old_content="Lorem ipsum dolor",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     assert post_edit.category == post.category
@@ -69,7 +69,7 @@ def test_create_post_edit_creates_post_edit_with_edit_reason(user, post):
     assert post_edit.edit_reason == "Test edit"
     assert post_edit.old_title is None
     assert post_edit.old_content == "Lorem ipsum dolor"
-    assert post_edit.new_content == post.original
+    assert post_edit.new_content == post.content
     assert post_edit.added_content == 1
     assert post_edit.removed_content == 1
     assert post_edit.attachments == []
@@ -137,7 +137,7 @@ def test_create_post_edit_creates_post_edit_with_new_attachment(
         user=user,
         attachments=[user_image_attachment],
         old_content="Lorem ipsum dolor",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     assert post_edit.category == post.category
@@ -149,7 +149,7 @@ def test_create_post_edit_creates_post_edit_with_new_attachment(
     assert post_edit.edit_reason is None
     assert post_edit.old_title is None
     assert post_edit.old_content == "Lorem ipsum dolor"
-    assert post_edit.new_content == post.original
+    assert post_edit.new_content == post.content
     assert post_edit.added_content == 1
     assert post_edit.removed_content == 1
     assert post_edit.attachments == [
@@ -183,7 +183,7 @@ def test_create_post_edit_creates_post_edit_with_unchanged_attachment(
         user=user,
         attachments=[user_image_attachment],
         old_content="Lorem ipsum dolor",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     assert post_edit.category == post.category
@@ -195,7 +195,7 @@ def test_create_post_edit_creates_post_edit_with_unchanged_attachment(
     assert post_edit.edit_reason is None
     assert post_edit.old_title is None
     assert post_edit.old_content == "Lorem ipsum dolor"
-    assert post_edit.new_content == post.original
+    assert post_edit.new_content == post.content
     assert post_edit.added_content == 1
     assert post_edit.removed_content == 1
     assert post_edit.attachments == [
@@ -229,7 +229,7 @@ def test_create_post_edit_creates_post_edit_with_deleted_attachment(
         user=user,
         deleted_attachments=[user_image_attachment],
         old_content="Lorem ipsum dolor",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     assert post_edit.category == post.category
@@ -241,7 +241,7 @@ def test_create_post_edit_creates_post_edit_with_deleted_attachment(
     assert post_edit.edit_reason is None
     assert post_edit.old_title is None
     assert post_edit.old_content == "Lorem ipsum dolor"
-    assert post_edit.new_content == post.original
+    assert post_edit.new_content == post.content
     assert post_edit.added_content == 1
     assert post_edit.removed_content == 1
     assert post_edit.attachments == [
@@ -272,7 +272,7 @@ def test_create_post_edit_doesnt_save_edit_if_commit_is_false(
             post=post,
             user=user,
             old_content="Lorem ipsum dolor",
-            new_content=post.original,
+            new_content=post.content,
             commit=False,
         )
 

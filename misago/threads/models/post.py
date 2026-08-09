@@ -10,7 +10,6 @@ from django.urls import reverse
 
 from ...conf import settings
 from ...core.utils import parse_iso8601_string
-from ...markup import finalize_markup
 from ...plugins.models import PluginDataModel
 from ..checksums import is_post_valid, update_post_checksum
 
@@ -28,8 +27,9 @@ class Post(PluginDataModel):
         on_delete=models.SET_NULL,
     )
     poster_name = models.CharField(max_length=255)
-    original = models.TextField()
-    parsed = models.TextField()
+
+    content = models.TextField()
+    content_parsed = models.TextField()
     checksum = models.CharField(max_length=64, default="-")
     metadata = models.JSONField(default=dict)
 
@@ -133,8 +133,10 @@ class Post(PluginDataModel):
         if self.pk == other_post.pk:
             raise ValueError("post can't be merged with itself")
 
-        other_post.original = str("\n\n").join((other_post.original, self.original))
-        other_post.parsed = str("\n").join((other_post.parsed, self.parsed))
+        other_post.content = str("\n\n").join((other_post.content, self.content))
+        other_post.content_parsed = str("\n").join(
+            (other_post.content_parsed, self.content_parsed)
+        )
         update_post_checksum(other_post)
 
         if self.is_locked:
@@ -172,14 +174,8 @@ class Post(PluginDataModel):
     @property
     def sha256_checksum(self) -> str:
         return hashlib.sha256(
-            f"{self.id}:{self.updated_at or 0}:{self.parsed}".encode()
+            f"{self.id}:{self.updated_at or 0}:{self.content_parsed}".encode()
         ).hexdigest()
-
-    @property
-    def content(self):
-        if not hasattr(self, "_finalised_parsed"):
-            self._finalised_parsed = finalize_markup(self.parsed)
-        return self._finalised_parsed
 
     @property
     def thread_type(self):

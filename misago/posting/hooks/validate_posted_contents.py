@@ -64,7 +64,7 @@ class ValidatePostedContentsHook(ActionHook[ValidatePostedContentsHookAction]):
         ):
             return True
 
-        if "spam" in state.post.original.lower():
+        if "spam" in state.post.content.lower():
             return True
 
         return False

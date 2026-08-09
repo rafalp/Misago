@@ -16,7 +16,7 @@ def test_thread_post_edit_unhide_view_unhides_hidden_post_edit_on_post(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     hide_post_edit(post_edit, "Moderator")
 
@@ -55,7 +55,7 @@ def test_thread_post_edit_unhide_view_unhides_hidden_post_edit_on_post_in_htmx(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     hide_post_edit(post_edit, "Moderator")
 
@@ -86,7 +86,7 @@ def test_thread_post_edit_unhide_view_unhides_hidden_post_edit_on_post_in_modal(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     hide_post_edit(post_edit, "Moderator")
 
@@ -118,7 +118,7 @@ def test_thread_post_edit_unhide_view_does_nothing_for_visible_post_edit_on_post
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = moderator_client.post(
@@ -156,7 +156,7 @@ def test_thread_post_edit_unhide_view_does_nothing_for_visible_post_edit_on_post
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = moderator_client.post(
@@ -186,7 +186,7 @@ def test_thread_post_edit_unhide_view_does_nothing_for_visible_post_edit_on_post
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = moderator_client.post(
@@ -217,7 +217,7 @@ def test_thread_post_edit_unhide_view_shows_method_not_allowed_error_on_get_requ
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     hide_post_edit(post_edit, "Moderator")
 
@@ -244,7 +244,7 @@ def test_thread_post_edit_unhide_view_shows_error_403_if_post_edit_cant_be_unhid
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     hide_post_edit(post_edit, "Moderator")
 

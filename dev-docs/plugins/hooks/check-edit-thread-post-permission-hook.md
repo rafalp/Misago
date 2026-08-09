@@ -116,7 +116,7 @@ def check_user_can_edit_thread_post(
     action(permissions, category, thread, post)
 
     if (
-        "[PROTECT]" in post.original
+        "[PROTECT]" in post.content
         and not (
             permissions.is_global_moderator
             or permissions.is_category_moderator(thread.category_id)

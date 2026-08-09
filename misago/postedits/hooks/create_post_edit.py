@@ -40,11 +40,11 @@ class CreatePostEditHookAction(Protocol):
 
     ## `old_content: str | None`
 
-    A `str` with a snapshot of `Post.original` before the edit, or `None`.
+    A `str` with a snapshot of `Post.content` before the edit, or `None`.
 
     ## `new_content: str | None`
 
-    A `str` with a snapshot of new `Post.original`, or `None`.
+    A `str` with a snapshot of new `Post.content`, or `None`.
 
     ## `attachments: list[Attachment]`
 
@@ -118,10 +118,6 @@ class CreatePostEditHookFilter(Protocol):
 
     A `str` with a short description of the changes, or `None`.
 
-    ## `old_content: str`
-
-    A `str` with a snapshot of `Post.original` before the edit.
-
     ## `old_title: str | None = None`
 
     A `str` with the previous thread title, or `None`.
@@ -129,6 +125,14 @@ class CreatePostEditHookFilter(Protocol):
     ## `new_title: str | None = None`
 
     A `str` with the new thread title, or `None`.
+
+    ## `old_content: str | None`
+
+    A `str` with a snapshot of `Post.content` before the edit, or `None`.
+
+    ## `new_content: str | None`
+
+    A `str` with a snapshot of new `Post.content`, or `None`.
 
     ## `attachments: list[Attachment]`
 

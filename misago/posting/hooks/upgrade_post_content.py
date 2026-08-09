@@ -61,8 +61,8 @@ class UpgradePostContentHook(
 
     @upgrade_post_content_hook.append_filter
     def upgrade_post_plugin_html(action, post: Post):
-        if "<plugin-html" in post.parsed:
-            post.parsed = very_costful_html_change_operation(post.parsed)
+        if "<plugin-html" in post.content_parsed:
+            post.content_parsed = very_costful_html_change_operation(post.content_parsed)
             post.save(update_fields=["parsed"])
 
         action(post)

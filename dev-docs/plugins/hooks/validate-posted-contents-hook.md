@@ -66,7 +66,7 @@ def is_spam(formset, state) -> bool:
     ):
         return True
 
-    if "spam" in state.post.original.lower():
+    if "spam" in state.post.content.lower():
         return True
 
     return False

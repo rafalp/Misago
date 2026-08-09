@@ -24,7 +24,7 @@ def test_thread_post_edit_delete_view_deletes_only_post_edit_on_post(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -65,7 +65,7 @@ def test_thread_post_edit_delete_view_deletes_only_post_edit_on_post_in_htmx(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -98,7 +98,7 @@ def test_thread_post_edit_delete_view_deletes_only_post_edit_on_post_in_modal(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -132,13 +132,13 @@ def test_thread_post_edit_delete_view_deletes_first_post_edit_on_post(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     create_post_edit(
         post=post,
         user=user,
         old_content="Other post edit",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -179,13 +179,13 @@ def test_thread_post_edit_delete_view_deletes_first_post_edit_on_post_in_htmx(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     other_post_edit = create_post_edit(
         post=post,
         user=user,
         old_content="Other post edit",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -218,13 +218,13 @@ def test_thread_post_edit_delete_view_deletes_first_post_edit_on_post_in_modal(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     other_post_edit = create_post_edit(
         post=post,
         user=user,
         old_content="Other post edit",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -258,13 +258,13 @@ def test_thread_post_edit_delete_view_deletes_last_post_edit_on_post(
         post=post,
         user=user,
         old_content="Other post edit",
-        new_content=post.original,
+        new_content=post.content,
     )
     post_edit = create_post_edit(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -305,13 +305,13 @@ def test_thread_post_edit_delete_view_deletes_last_post_edit_on_post_in_htmx(
         post=post,
         user=user,
         old_content="Other post edit",
-        new_content=post.original,
+        new_content=post.content,
     )
     post_edit = create_post_edit(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -344,13 +344,13 @@ def test_thread_post_edit_delete_view_deletes_last_post_edit_on_post_in_modal(
         post=post,
         user=user,
         old_content="Other post edit",
-        new_content=post.original,
+        new_content=post.content,
     )
     post_edit = create_post_edit(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -384,19 +384,19 @@ def test_thread_post_edit_delete_view_deletes_middle_post_edit_on_post(
         post=post,
         user=user,
         old_content="Previous post edit",
-        new_content=post.original,
+        new_content=post.content,
     )
     post_edit = create_post_edit(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     create_post_edit(
         post=post,
         user=user,
         old_content="Next post edit",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -437,19 +437,19 @@ def test_thread_post_edit_delete_view_deletes_middle_post_edit_on_post_in_htmx(
         post=post,
         user=user,
         old_content="Previous post edit",
-        new_content=post.original,
+        new_content=post.content,
     )
     post_edit = create_post_edit(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     next_post_edit = create_post_edit(
         post=post,
         user=user,
         old_content="Next post edit",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -483,19 +483,19 @@ def test_thread_post_edit_delete_view_deletes_middle_post_edit_on_post_in_modal(
         post=post,
         user=user,
         old_content="Previous post edit",
-        new_content=post.original,
+        new_content=post.content,
     )
     post_edit = create_post_edit(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     next_post_edit = create_post_edit(
         post=post,
         user=user,
         old_content="Next post edit",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -530,7 +530,7 @@ def test_thread_post_edit_delete_view_shows_confirmation_page_on_get_request(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.get(

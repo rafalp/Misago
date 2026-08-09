@@ -78,16 +78,16 @@ def test_reply_state_updates_user(user_request, other_user_thread, user):
 def test_reply_state_updates_existing_post(user, user_request, user_thread):
     category = user_thread.category
     post = user_thread.first_post
-    post_original = post.original
-    post_parsed = post.parsed
+    post_original = post.content
+    post_parsed = post.content_parsed
 
     state = ReplyState(user_request, user_thread, post)
     state.set_post_message(parse("Test reply"))
     state.save()
 
     post.refresh_from_db()
-    assert post.original == f"{post_original}\n\nTest reply"
-    assert post.parsed == f"{post_parsed}\n<p>Test reply</p>"
+    assert post.content == f"{post_original}\n\nTest reply"
+    assert post.content_parsed == f"{post_parsed}\n<p>Test reply</p>"
     assert post.search_document == (
         f"{user_thread.title}\n\n{post_original}\n\nTest reply"
     )

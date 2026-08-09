@@ -489,7 +489,7 @@ class MergePostsModerationAction(FormMixin, PostsModerationAction):
         posts = sorted(self.posts, key=lambda i: i.id)
         target, posts = posts[0], posts[1:]
 
-        old_content = target.original
+        old_content = target.content
         attachments = []
 
         attachments_queryset = Attachment.objects.filter(post__in=self.posts).order_by(
@@ -519,7 +519,7 @@ class MergePostsModerationAction(FormMixin, PostsModerationAction):
             user=request.user,
             edit_reason=edit_reason,
             old_content=old_content,
-            new_content=target.original,
+            new_content=target.content,
             attachments=attachments,
             edited_at=target.updated_at,
             request=request,

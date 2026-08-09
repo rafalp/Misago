@@ -67,7 +67,7 @@ from misago.threads.models import Post
 @upgrade_post_code_blocks_hook.append_filter
 def plugin_upgrade_post_code_blocks(action, post: Post):
     if post.metadata.get("highlight_code"):
-        post.parsed = custom_highlight_code_util(post.parsed)
+        post.content_parsed = custom_highlight_code_util(post.content_parsed)
         post.metadata.pop("highlight_code")
         post.save(update_fields=["parsed", "metadata"])
 ```

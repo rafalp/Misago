@@ -23,7 +23,7 @@ def test_thread_post_edit_hide_view_hides_post_edit_on_post(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -64,7 +64,7 @@ def test_thread_post_edit_hide_view_hides_post_edit_on_post_in_htmx(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -97,7 +97,7 @@ def test_thread_post_edit_hide_view_hides_post_edit_on_post_in_modal(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.post(
@@ -131,7 +131,7 @@ def test_thread_post_edit_hide_view_does_nothing_for_hidden_post_edit_on_post(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     hide_post_edit(post_edit, "Moderator")
 
@@ -173,7 +173,7 @@ def test_thread_post_edit_hide_view_does_nothing_for_hidden_post_edit_on_post_in
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     hide_post_edit(post_edit, "Moderator")
 
@@ -207,7 +207,7 @@ def test_thread_post_edit_hide_view_does_nothing_for_hidden_post_edit_on_post_in
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
     hide_post_edit(post_edit, "Moderator")
 
@@ -242,7 +242,7 @@ def test_thread_post_edit_hide_view_shows_confirmation_page_on_get_request(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     response = user_client.get(

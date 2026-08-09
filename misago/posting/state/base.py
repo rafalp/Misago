@@ -120,8 +120,8 @@ class State:
     def set_post_message(self, parsing_result: ParsingResult):
         self.parsing_result = parsing_result
 
-        self.post.original = parsing_result.markup
-        self.post.parsed = parsing_result.html
+        self.post.content = parsing_result.markup
+        self.post.content_parsed = parsing_result.html
         self.post.metadata = parsing_result.metadata
 
     def schedule_post_content_upgrade(self):

@@ -77,7 +77,7 @@ def _create_post_edit_action(
         user_slug = user.slug
 
     if old_content and new_content:
-        content_diff = diff_text(old_content, post.original)
+        content_diff = diff_text(old_content, post.content)
         added_content = content_diff.added
         removed_content = content_diff.removed
     else:

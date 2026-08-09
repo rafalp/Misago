@@ -100,7 +100,7 @@ class StartView(BaseThreadView):
             attachments=state.attachments,
         )
 
-        context["preview"] = state.post.parsed
+        context["preview"] = state.post.content_parsed
         context["preview_rich_text_data"] = related_objects
 
         return render(request, self.template_name, context)

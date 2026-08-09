@@ -919,10 +919,10 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts(
     mock_posts_synchronize_categories,
 ):
     target_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Target body"
+        user_private_thread, poster=user, content="Target body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -966,7 +966,7 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts(
     )
 
     target_post.refresh_from_db()
-    assert target_post.original == "Target body\n\nOther body"
+    assert target_post.content == "Target body\n\nOther body"
     assert not target_post.last_edit_reason
 
     post_edit = PostEdit.objects.get(post=target_post)
@@ -992,10 +992,10 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts_i
     mock_posts_synchronize_categories,
 ):
     target_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Target body"
+        user_private_thread, poster=user, content="Target body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -1029,7 +1029,7 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts_i
     assert response.status_code == 200
 
     target_post.refresh_from_db()
-    assert target_post.original == "Target body\n\nOther body"
+    assert target_post.content == "Target body\n\nOther body"
     assert not target_post.last_edit_reason
 
     post_edit = PostEdit.objects.get(post=target_post)
@@ -1055,10 +1055,10 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts_w
     mock_posts_synchronize_categories,
 ):
     target_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Target body"
+        user_private_thread, poster=user, content="Target body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -1103,7 +1103,7 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts_w
     )
 
     target_post.refresh_from_db()
-    assert target_post.original == "Target body\n\nOther body"
+    assert target_post.content == "Target body\n\nOther body"
     assert target_post.last_edit_reason == "Test merge"
 
     post_edit = PostEdit.objects.get(post=target_post)
@@ -1131,10 +1131,10 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts_w
     mock_posts_synchronize_categories,
 ):
     target_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Target body"
+        user_private_thread, poster=user, content="Target body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     text_attachment.associate_with_post(target_post)
@@ -1184,7 +1184,7 @@ def test_private_thread_detail_view_merge_posts_moderation_action_merges_posts_w
     )
 
     target_post.refresh_from_db()
-    assert target_post.original == "Target body\n\nOther body"
+    assert target_post.content == "Target body\n\nOther body"
     assert not target_post.last_edit_reason
 
     text_attachment.refresh_from_db()
@@ -1220,10 +1220,10 @@ def test_private_thread_detail_view_merge_posts_moderation_action_orders_posts_f
     mock_posts_synchronize_categories,
 ):
     target_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Target body"
+        user_private_thread, poster=user, content="Target body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -1267,7 +1267,7 @@ def test_private_thread_detail_view_merge_posts_moderation_action_orders_posts_f
     )
 
     target_post.refresh_from_db()
-    assert target_post.original == "Target body\n\nOther body"
+    assert target_post.content == "Target body\n\nOther body"
     assert not target_post.last_edit_reason
 
     post_edit = PostEdit.objects.get(post=target_post)
@@ -1292,7 +1292,7 @@ def test_private_thread_detail_view_merge_posts_moderation_action_validates_mult
     mock_posts_synchronize_categories,
 ):
     target_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Target body"
+        user_private_thread, poster=user, content="Target body"
     )
 
     response = moderator_client.post(
@@ -1308,7 +1308,7 @@ def test_private_thread_detail_view_merge_posts_moderation_action_validates_mult
     assert_contains(response, "Select at least two posts to merge.")
 
     target_post.refresh_from_db()
-    assert target_post.original == "Target body"
+    assert target_post.content == "Target body"
 
     assert not PostEdit.objects.exists()
 
@@ -1324,10 +1324,10 @@ def test_private_thread_detail_view_merge_posts_moderation_action_validates_post
     mock_posts_synchronize_categories,
 ):
     target_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Target body"
+        user_private_thread, poster=user, content="Target body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=other_user, original="Other body"
+        user_private_thread, poster=other_user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -1343,10 +1343,10 @@ def test_private_thread_detail_view_merge_posts_moderation_action_validates_post
     assert_contains(response, "Merged posts must belong to the same user.")
 
     target_post.refresh_from_db()
-    assert target_post.original == "Target body"
+    assert target_post.content == "Target body"
 
     other_post.refresh_from_db()
-    assert other_post.original == "Other body"
+    assert other_post.content == "Other body"
 
     assert not PostEdit.objects.exists()
 
@@ -1360,10 +1360,10 @@ def test_private_thread_detail_view_merge_posts_moderation_action_validates_post
     mock_posts_synchronize_categories,
 ):
     target_post = thread_reply_factory(
-        user_private_thread, poster="John", original="Target body"
+        user_private_thread, poster="John", content="Target body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster="Alice", original="Other body"
+        user_private_thread, poster="Alice", content="Other body"
     )
 
     response = moderator_client.post(
@@ -1379,10 +1379,10 @@ def test_private_thread_detail_view_merge_posts_moderation_action_validates_post
     assert_contains(response, "Merged posts must belong to the same user.")
 
     target_post.refresh_from_db()
-    assert target_post.original == "Target body"
+    assert target_post.content == "Target body"
 
     other_post.refresh_from_db()
-    assert other_post.original == "Other body"
+    assert other_post.content == "Other body"
 
     assert not PostEdit.objects.exists()
 
@@ -1749,10 +1749,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
 ):
     current_post = user_private_thread.first_post
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
-    current_post_content = current_post.original
+    current_post_content = current_post.content
 
     response = moderator_client.post(
         reverse(
@@ -1806,7 +1806,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
     )
 
     current_post.refresh_from_db()
-    assert current_post.original == f"{current_post_content}\n\nOther body"
+    assert current_post.content == f"{current_post_content}\n\nOther body"
     assert not current_post.last_edit_reason
 
     post_edit = PostEdit.objects.get(post=current_post)
@@ -1833,10 +1833,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
 ):
     current_post = user_private_thread.first_post
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
-    current_post_content = current_post.original
+    current_post_content = current_post.content
 
     response = moderator_client.post(
         reverse(
@@ -1881,7 +1881,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
     assert response["hx-refresh"] == "true"
 
     current_post.refresh_from_db()
-    assert current_post.original == f"{current_post_content}\n\nOther body"
+    assert current_post.content == f"{current_post_content}\n\nOther body"
     assert not current_post.last_edit_reason
 
     post_edit = PostEdit.objects.get(post=current_post)
@@ -1907,10 +1907,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_current_
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -1966,7 +1966,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_current_
     )
 
     other_post.refresh_from_db()
-    assert other_post.original == "Current body\n\nOther body"
+    assert other_post.content == "Current body\n\nOther body"
     assert not other_post.last_edit_reason
 
     post_edit = PostEdit.objects.get(post=other_post)
@@ -1992,10 +1992,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_current_
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -2042,7 +2042,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_current_
     assert response["hx-refresh"] == "true"
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body\n\nOther body"
+    assert current_post.content == "Current body\n\nOther body"
     assert not current_post.last_edit_reason
 
     post_edit = PostEdit.objects.get(post=current_post)
@@ -2068,10 +2068,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -2127,7 +2127,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
     )
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body\n\nOther body"
+    assert current_post.content == "Current body\n\nOther body"
     assert not current_post.last_edit_reason
 
     post_edit = PostEdit.objects.get(post=current_post)
@@ -2153,10 +2153,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -2203,7 +2203,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_other_po
     assert response["hx-refresh"] == "true"
 
     other_post.refresh_from_db()
-    assert other_post.original == "Current body\n\nOther body"
+    assert other_post.content == "Current body\n\nOther body"
     assert not other_post.last_edit_reason
 
     post_edit = PostEdit.objects.get(post=other_post)
@@ -2229,10 +2229,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_posts_wi
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -2289,7 +2289,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_posts_wi
     )
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body\n\nOther body"
+    assert current_post.content == "Current body\n\nOther body"
     assert current_post.last_edit_reason == "Test merge"
 
     post_edit = PostEdit.objects.get(post=current_post)
@@ -2317,10 +2317,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_posts_wi
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     text_attachment.associate_with_post(current_post)
@@ -2383,7 +2383,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_posts_wi
     )
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body\n\nOther body"
+    assert current_post.content == "Current body\n\nOther body"
     assert current_post.last_edit_reason == "Test merge"
 
     text_attachment.refresh_from_db()
@@ -2421,10 +2421,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_posts_us
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     text_attachment.associate_with_post(current_post)
@@ -2480,7 +2480,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_merges_posts_us
     )
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body\n\nOther body"
+    assert current_post.content == "Current body\n\nOther body"
     assert current_post.last_edit_reason == "Test merge"
 
     text_attachment.refresh_from_db()
@@ -2515,10 +2515,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_other
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Other body"
+        user_private_thread, poster=user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -2557,10 +2557,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_other
     assert_contains(response, "Enter a valid link.")
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body"
+    assert current_post.content == "Current body"
 
     other_post.refresh_from_db()
-    assert other_post.original == "Other body"
+    assert other_post.content == "Other body"
 
     mock_post_synchronize_categories.delay.assert_not_called()
 
@@ -2573,7 +2573,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_threa
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
 
     response = moderator_client.post(
@@ -2618,7 +2618,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_threa
     assert_contains(response, "Post doesn&#x27;t exist")
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body"
+    assert current_post.content == "Current body"
 
     mock_post_synchronize_categories.delay.assert_not_called()
 
@@ -2632,10 +2632,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_threa
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(
-        other_user_private_thread, poster=user, original="Other body"
+        other_user_private_thread, poster=user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -2680,10 +2680,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_threa
     assert_contains(response, "Enter a link to a post in the current thread.")
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body"
+    assert current_post.content == "Current body"
 
     other_post.refresh_from_db()
-    assert other_post.original == "Other body"
+    assert other_post.content == "Other body"
 
     mock_post_synchronize_categories.delay.assert_not_called()
 
@@ -2696,7 +2696,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_threa
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
 
     response = moderator_client.post(
@@ -2741,7 +2741,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_threa
     assert_contains(response, "Can&#x27;t merge a post with itself.")
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body"
+    assert current_post.content == "Current body"
 
     mock_post_synchronize_categories.delay.assert_not_called()
 
@@ -2754,7 +2754,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_globa
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
 
     response = moderator_client.post(
@@ -2792,7 +2792,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_globa
     assert_contains(response, "Post doesn&#x27;t exist")
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body"
+    assert current_post.content == "Current body"
 
     mock_post_synchronize_categories.delay.assert_not_called()
 
@@ -2806,11 +2806,9 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_globa
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
-    other_post = thread_reply_factory(
-        private_thread, poster=user, original="Other body"
-    )
+    other_post = thread_reply_factory(private_thread, poster=user, content="Other body")
 
     response = moderator_client.post(
         reverse(
@@ -2847,7 +2845,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_globa
     assert_contains(response, "Post doesn&#x27;t exist")
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body"
+    assert current_post.content == "Current body"
 
     mock_post_synchronize_categories.delay.assert_not_called()
 
@@ -2861,10 +2859,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_globa
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(
-        other_user_private_thread, poster=user, original="Other body"
+        other_user_private_thread, poster=user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -2902,10 +2900,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_globa
     assert_contains(response, "Post doesn&#x27;t exist in this thread")
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body"
+    assert current_post.content == "Current body"
 
     other_post.refresh_from_db()
-    assert other_post.original == "Other body"
+    assert other_post.content == "Other body"
 
     mock_post_synchronize_categories.delay.assert_not_called()
 
@@ -2918,7 +2916,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_globa
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
 
     response = moderator_client.post(
@@ -2956,7 +2954,7 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_globa
     assert_contains(response, "Can&#x27;t merge a post with itself.")
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body"
+    assert current_post.content == "Current body"
 
     mock_post_synchronize_categories.delay.assert_not_called()
 
@@ -2969,9 +2967,9 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_first
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
-    first_post_content = user_private_thread.first_post.original
+    first_post_content = user_private_thread.first_post.content
 
     response = moderator_client.post(
         reverse(
@@ -3017,10 +3015,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_first
     )
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body"
+    assert current_post.content == "Current body"
 
     user_private_thread.first_post.refresh_from_db()
-    assert user_private_thread.first_post.original == first_post_content
+    assert user_private_thread.first_post.content == first_post_content
 
     mock_post_synchronize_categories.delay.assert_not_called()
 
@@ -3034,10 +3032,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_posts
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster=user, original="Current body"
+        user_private_thread, poster=user, content="Current body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster=other_user, original="Other body"
+        user_private_thread, poster=other_user, content="Other body"
     )
 
     response = moderator_client.post(
@@ -3082,10 +3080,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_posts
     assert_contains(response, "Merged posts must belong to the same user.")
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body"
+    assert current_post.content == "Current body"
 
     other_post.refresh_from_db()
-    assert other_post.original == "Other body"
+    assert other_post.content == "Other body"
 
     mock_post_synchronize_categories.delay.assert_not_called()
 
@@ -3097,10 +3095,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_posts
     mock_post_synchronize_categories,
 ):
     current_post = thread_reply_factory(
-        user_private_thread, poster="Bob", original="Current body"
+        user_private_thread, poster="Bob", content="Current body"
     )
     other_post = thread_reply_factory(
-        user_private_thread, poster="Elice", original="Other body"
+        user_private_thread, poster="Elice", content="Other body"
     )
 
     response = moderator_client.post(
@@ -3145,10 +3143,10 @@ def test_private_thread_detail_view_merge_post_moderation_action_validates_posts
     assert_contains(response, "Merged posts must belong to the same user.")
 
     current_post.refresh_from_db()
-    assert current_post.original == "Current body"
+    assert current_post.content == "Current body"
 
     other_post.refresh_from_db()
-    assert other_post.original == "Other body"
+    assert other_post.content == "Other body"
 
     mock_post_synchronize_categories.delay.assert_not_called()
 
