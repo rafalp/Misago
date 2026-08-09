@@ -42,7 +42,7 @@ from .themes import THEME_CACHE
 from .threads.models import Thread
 from .users import BANS_CACHE
 from .users.enums import DefaultGroupId
-from .users.models import AnonymousUser, Group, GroupDescription
+from .users.models import AnonymousUser, Group
 from .users.test import create_test_superuser, create_test_user
 
 
@@ -257,13 +257,11 @@ def guests_group(db):
 
 @pytest.fixture
 def custom_group(db):
-    group = Group.objects.create(
+    return Group.objects.create(
         name="Custom Group",
         slug="custom-group",
         ordering=4,
     )
-    group.description = GroupDescription.objects.create(group=group)
-    return group
 
 
 @pytest.fixture

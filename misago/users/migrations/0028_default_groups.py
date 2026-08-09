@@ -162,11 +162,6 @@ def create_default_groups(apps, schema_editor):
         ]
     )
 
-    GroupDescription = apps.get_model("misago_users", "GroupDescription")
-    GroupDescription.objects.bulk_create(
-        [GroupDescription(group=group) for group in groups]
-    )
-
 
 def set_users_default_groups(apps, schema_editor):
     User = apps.get_model("misago_users", "User")

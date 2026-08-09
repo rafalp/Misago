@@ -9,69 +9,59 @@ from ...users.models import Group
 
 def get_form_data(group: Group) -> dict:
     return {
-        "group-name": group.name,
-        "group-slug": group.slug,
-        "group-color": group.color or "",
-        "group-icon": group.icon or "",
-        "group-css_suffix": group.css_suffix or "",
-        "group-user_title": group.user_title or "",
-        "group-is_page": "1" if group.is_page else "",
-        "group-is_hidden": "1" if group.is_hidden else "",
-        "group-can_edit_own_threads": str(group.can_edit_own_threads),
-        "group-own_threads_edit_time_limit": str(group.own_threads_edit_time_limit),
-        "group-can_edit_own_posts": str(group.can_edit_own_posts),
-        "group-own_posts_edit_time_limit": str(group.own_posts_edit_time_limit),
-        "group-can_see_others_post_edits": str(group.can_see_others_post_edits),
-        "group-can_hide_own_post_edits": str(group.can_hide_own_post_edits),
-        "group-own_post_edits_hide_time_limit": str(
-            group.own_post_edits_hide_time_limit
-        ),
-        "group-own_delete_post_edits_time_limit": str(
-            group.own_delete_post_edits_time_limit
-        ),
-        "group-bypass_flood_control": str(group.bypass_flood_control),
-        "group-bypass_content_approval": str(group.bypass_content_approval),
-        "group-can_use_private_threads": str(group.can_use_private_threads),
-        "group-can_start_private_threads": str(group.can_start_private_threads),
-        "group-private_thread_members_limit": str(group.private_thread_members_limit),
-        "group-can_upload_attachments": str(group.can_upload_attachments),
-        "group-attachment_storage_limit": str(group.attachment_storage_limit),
-        "group-unused_attachments_storage_limit": str(
-            group.unused_attachments_storage_limit
-        ),
-        "group-attachment_size_limit": str(group.attachment_size_limit),
-        "group-can_always_delete_own_attachments": str(
+        "name": group.name,
+        "slug": group.slug,
+        "description": group.description or "",
+        "meta_description": group.meta_description or "",
+        "color": group.color or "",
+        "icon": group.icon or "",
+        "css_suffix": group.css_suffix or "",
+        "user_title": group.user_title or "",
+        "is_page": "1" if group.is_page else "",
+        "is_hidden": "1" if group.is_hidden else "",
+        "can_edit_own_threads": str(group.can_edit_own_threads),
+        "own_threads_edit_time_limit": str(group.own_threads_edit_time_limit),
+        "can_edit_own_posts": str(group.can_edit_own_posts),
+        "own_posts_edit_time_limit": str(group.own_posts_edit_time_limit),
+        "can_see_others_post_edits": str(group.can_see_others_post_edits),
+        "can_hide_own_post_edits": str(group.can_hide_own_post_edits),
+        "own_post_edits_hide_time_limit": str(group.own_post_edits_hide_time_limit),
+        "own_delete_post_edits_time_limit": str(group.own_delete_post_edits_time_limit),
+        "bypass_flood_control": str(group.bypass_flood_control),
+        "bypass_content_approval": str(group.bypass_content_approval),
+        "can_use_private_threads": str(group.can_use_private_threads),
+        "can_start_private_threads": str(group.can_start_private_threads),
+        "private_thread_members_limit": str(group.private_thread_members_limit),
+        "can_upload_attachments": str(group.can_upload_attachments),
+        "attachment_storage_limit": str(group.attachment_storage_limit),
+        "unused_attachments_storage_limit": str(group.unused_attachments_storage_limit),
+        "attachment_size_limit": str(group.attachment_size_limit),
+        "can_always_delete_own_attachments": str(
             group.can_always_delete_own_attachments
         ),
-        "group-can_start_polls": str(group.can_start_polls),
-        "group-can_edit_own_polls": str(group.can_edit_own_polls),
-        "group-own_polls_edit_time_limit": str(group.own_polls_edit_time_limit),
-        "group-can_close_own_polls": str(group.can_close_own_polls),
-        "group-own_polls_close_time_limit": str(group.own_polls_close_time_limit),
-        "group-can_vote_in_polls": str(group.can_vote_in_polls),
-        "group-can_like_posts": str(group.can_like_posts),
-        "group-can_see_own_post_likes": str(group.can_see_own_post_likes),
-        "group-can_see_others_post_likes": str(group.can_see_others_post_likes),
-        "group-can_select_own_thread_solutions": str(
-            group.can_select_own_thread_solutions
-        ),
-        "group-can_change_own_thread_solutions": str(
-            group.can_change_own_thread_solutions
-        ),
-        "group-own_thread_solutions_change_time_limit": str(
+        "can_start_polls": str(group.can_start_polls),
+        "can_edit_own_polls": str(group.can_edit_own_polls),
+        "own_polls_edit_time_limit": str(group.own_polls_edit_time_limit),
+        "can_close_own_polls": str(group.can_close_own_polls),
+        "own_polls_close_time_limit": str(group.own_polls_close_time_limit),
+        "can_vote_in_polls": str(group.can_vote_in_polls),
+        "can_like_posts": str(group.can_like_posts),
+        "can_see_own_post_likes": str(group.can_see_own_post_likes),
+        "can_see_others_post_likes": str(group.can_see_others_post_likes),
+        "can_select_own_thread_solutions": str(group.can_select_own_thread_solutions),
+        "can_change_own_thread_solutions": str(group.can_change_own_thread_solutions),
+        "own_thread_solutions_change_time_limit": str(
             group.own_thread_solutions_change_time_limit
         ),
-        "group-can_clear_own_thread_solutions": str(
-            group.can_clear_own_thread_solutions
-        ),
-        "group-own_thread_solutions_clear_time_limit": str(
+        "can_clear_own_thread_solutions": str(group.can_clear_own_thread_solutions),
+        "own_thread_solutions_clear_time_limit": str(
             group.own_thread_solutions_clear_time_limit
         ),
-        "group-can_change_username": str(group.can_change_username),
-        "group-username_changes_limit": str(group.username_changes_limit),
-        "group-username_changes_expire": str(group.username_changes_expire),
-        "group-username_changes_span": str(group.username_changes_span),
-        "group-can_see_user_profiles": str(group.can_see_user_profiles),
+        "can_change_username": str(group.can_change_username),
+        "username_changes_limit": str(group.username_changes_limit),
+        "username_changes_expire": str(group.username_changes_expire),
+        "username_changes_span": str(group.username_changes_span),
+        "can_see_user_profiles": str(group.can_see_user_profiles),
     }
 
 
@@ -84,7 +74,7 @@ def test_edit_group_form_is_rendered(admin_client, custom_group):
 
 def test_edit_group_form_updates_name(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["group-name"] = "New Name"
+    form_data["name"] = "New Name"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -98,7 +88,7 @@ def test_edit_group_form_updates_name(admin_client, custom_group):
 
 def test_edit_group_form_sets_custom_slug(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["group-slug"] = "customized"
+    form_data["slug"] = "customized"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -112,7 +102,7 @@ def test_edit_group_form_sets_custom_slug(admin_client, custom_group):
 
 def test_edit_group_form_validates_slug(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["group-slug"] = "invalid!"
+    form_data["slug"] = "invalid!"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -129,8 +119,8 @@ def test_edit_group_form_validates_slug(admin_client, custom_group):
 
 def test_edit_group_form_sets_slug_from_name_if_its_empty(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["group-name"] = "New Name"
-    form_data["group-slug"] = ""
+    form_data["name"] = "New Name"
+    form_data["slug"] = ""
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -144,7 +134,7 @@ def test_edit_group_form_sets_slug_from_name_if_its_empty(admin_client, custom_g
 
 def test_edit_group_form_validates_color(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["group-color"] = "invalid"
+    form_data["color"] = "invalid"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -158,7 +148,7 @@ def test_edit_group_form_validates_color(admin_client, custom_group):
 
 def test_edit_group_form_validates_css_suffix(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["group-css_suffix"] = "invalid!"
+    form_data["css_suffix"] = "invalid!"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -174,8 +164,8 @@ def test_edit_group_form_validates_unused_attachments_limit_is_smaller_than_tota
     admin_client, custom_group
 ):
     form_data = get_form_data(custom_group)
-    form_data["group-attachment_storage_limit"] = "10"
-    form_data["group-unused_attachments_storage_limit"] = "20"
+    form_data["attachment_storage_limit"] = "10"
+    form_data["unused_attachments_storage_limit"] = "20"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -195,8 +185,8 @@ def test_edit_group_form_allows_unused_attachments_limit_smaller_than_total_limi
     admin_client, custom_group
 ):
     form_data = get_form_data(custom_group)
-    form_data["group-attachment_storage_limit"] = "20"
-    form_data["group-unused_attachments_storage_limit"] = "10"
+    form_data["attachment_storage_limit"] = "20"
+    form_data["unused_attachments_storage_limit"] = "10"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -213,8 +203,8 @@ def test_edit_group_form_allows_unused_attachments_limit_smaller_than_disabled_t
     admin_client, custom_group
 ):
     form_data = get_form_data(custom_group)
-    form_data["group-attachment_storage_limit"] = "0"
-    form_data["group-unused_attachments_storage_limit"] = "10"
+    form_data["attachment_storage_limit"] = "0"
+    form_data["unused_attachments_storage_limit"] = "10"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -229,9 +219,9 @@ def test_edit_group_form_allows_unused_attachments_limit_smaller_than_disabled_t
 
 def test_edit_group_form_updates_appearance_settings(admin_client, custom_group):
     form_data = get_form_data(custom_group)
-    form_data["group-icon"] = "fas fa-shield"
-    form_data["group-css_suffix"] = "lorem-ipsum"
-    form_data["group-user_title"] = "Customer"
+    form_data["icon"] = "fas fa-shield"
+    form_data["css_suffix"] = "lorem-ipsum"
+    form_data["user_title"] = "Customer"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -249,7 +239,7 @@ def test_edit_group_form_copies_group_permissions(
     admin_client, custom_group, members_group, other_category
 ):
     form_data = get_form_data(custom_group)
-    form_data["group-copy_permissions"] = str(members_group.id)
+    form_data["copy_permissions"] = str(members_group.id)
 
     CategoryGroupPermission.objects.create(
         group=members_group,
@@ -274,8 +264,8 @@ def test_edit_group_form_sets_group_description_and_meta_description(
     admin_client, custom_group
 ):
     form_data = get_form_data(custom_group)
-    form_data["description-markdown"] = "Hello **world**!"
-    form_data["description-meta"] = "Hello meta description!"
+    form_data["description"] = "Hello **world**!"
+    form_data["meta_description"] = "Hello meta description!"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -283,17 +273,17 @@ def test_edit_group_form_sets_group_description_and_meta_description(
     )
     assert response.status_code == 302
 
-    custom_group.description.refresh_from_db()
-    assert custom_group.description.markdown == "Hello **world**!"
-    assert custom_group.description.html == "<p>Hello <strong>world</strong>!</p>"
-    assert custom_group.description.meta == "Hello meta description!"
+    custom_group.refresh_from_db()
+    assert custom_group.description == "Hello **world**!"
+    assert custom_group.description_parsed == "<p>Hello <strong>world</strong>!</p>"
+    assert custom_group.meta_description == "Hello meta description!"
 
 
 def test_edit_group_form_sets_group_description_and_automatic_meta_description(
     admin_client, custom_group
 ):
     form_data = get_form_data(custom_group)
-    form_data["description-markdown"] = "Hello **world**!"
+    form_data["description"] = "Hello **world**!"
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -301,23 +291,23 @@ def test_edit_group_form_sets_group_description_and_automatic_meta_description(
     )
     assert response.status_code == 302
 
-    custom_group.description.refresh_from_db()
-    assert custom_group.description.markdown == "Hello **world**!"
-    assert custom_group.description.html == "<p>Hello <strong>world</strong>!</p>"
-    assert custom_group.description.meta == "Hello world!"
+    custom_group.refresh_from_db()
+    assert custom_group.description == "Hello **world**!"
+    assert custom_group.description_parsed == "<p>Hello <strong>world</strong>!</p>"
+    assert custom_group.meta_description == "Hello world!"
 
 
 def test_edit_group_form_clears_group_description_and_meta_description(
     admin_client, custom_group
 ):
-    custom_group.description.markdown = "Hello **world**!"
-    custom_group.description.html = "<p>Hello <strong>world</strong>!</p>"
-    custom_group.description.meta = "Hello meta description!"
-    custom_group.description.save()
+    custom_group.description = "Hello **world**!"
+    custom_group.description_parsed = "<p>Hello <strong>world</strong>!</p>"
+    custom_group.meta_description = "Hello meta description!"
+    custom_group.save()
 
     form_data = get_form_data(custom_group)
-    form_data["description-markdown"] = ""
-    form_data["description-meta"] = ""
+    form_data["description"] = ""
+    form_data["meta_description"] = ""
 
     response = admin_client.post(
         reverse("misago:admin:groups:edit", kwargs={"pk": custom_group.id}),
@@ -325,10 +315,10 @@ def test_edit_group_form_clears_group_description_and_meta_description(
     )
     assert response.status_code == 302
 
-    custom_group.description.refresh_from_db()
-    assert custom_group.description.markdown is None
-    assert custom_group.description.html is None
-    assert custom_group.description.meta is None
+    custom_group.refresh_from_db()
+    assert custom_group.description is None
+    assert custom_group.description_parsed is None
+    assert custom_group.meta_description is None
 
 
 def test_edit_group_form_invalidates_groups_cache(admin_client, custom_group):

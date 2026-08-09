@@ -14,7 +14,7 @@ from ...permissions.enums import (
     CanSeePostLikes,
     CanUploadAttachments,
 )
-from ...users.models import Group, GroupDescription
+from ...users.models import Group
 from ..forms import YesNoField, YesNoNeverField
 
 
@@ -52,6 +52,25 @@ class EditGroupForm(forms.ModelForm):
         ),
         validators=[validate_slug],
         required=False,
+    )
+
+    description = forms.CharField(
+        label=pgettext_lazy("admin group form", "Description"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Optional. Group's description in Markdown that will be parsed into HTML displayed on the group's page.",
+        ),
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 4}),
+    )
+    meta_description = forms.CharField(
+        label=pgettext_lazy("admin group form", "Meta description"),
+        help_text=pgettext_lazy(
+            "admin group form",
+            "Optional. Will be used verbatim for the group page's meta description. Leave empty to generate one from the group's description.",
+        ),
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 2}),
     )
 
     user_title = forms.CharField(
@@ -400,6 +419,8 @@ class EditGroupForm(forms.ModelForm):
         fields = [
             "name",
             "slug",
+            "description",
+            "meta_description",
             "user_title",
             "color",
             "icon",
@@ -448,12 +469,33 @@ class EditGroupForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.tokens = None
+        self.metadata = None
+
         self.fields["copy_permissions"].queryset = Group.objects.exclude(
             id=kwargs["instance"].id
         )
 
     def clean(self):
         data = super().clean()
+
+        if data.get("description"):
+            parser = create_parser()
+            tokens = tokenize(parser, data["description"])
+            metadata = get_tokens_metadata(tokens)
+
+            data["description_parsed"] = render_tokens_to_html(parser, tokens)
+
+            if not data.get("meta_description"):
+                data["meta_description"] = render_tokens_to_plaintext(tokens)
+
+            self.tokens = tokens
+            self.metadata = metadata
+        else:
+            data.update({"description": None, "description_parsed": None})
+
+        if not data.get("meta_description"):
+            data["meta_description"] = None
 
         attachment_storage_limit = data.get("attachment_storage_limit")
         unused_attachments_storage_limit = data.get("unused_attachments_storage_limit")
@@ -471,64 +513,5 @@ class EditGroupForm(forms.ModelForm):
                     ),
                 ),
             )
-
-        return data
-
-
-class EditGroupDescriptionForm(forms.ModelForm):
-    markdown = forms.CharField(
-        label=pgettext_lazy("admin group form", "Description"),
-        help_text=pgettext_lazy(
-            "admin group form",
-            "Optional. Group's description in Markdown that will be parsed into HTML displayed on the group's page.",
-        ),
-        required=False,
-        widget=forms.Textarea(attrs={"rows": 4}),
-    )
-    meta = forms.CharField(
-        label=pgettext_lazy("admin group form", "Meta description"),
-        help_text=pgettext_lazy(
-            "admin group form",
-            "Optional. Will be used verbatim for the group page's meta description. Leave empty to generate one from the group's description.",
-        ),
-        required=False,
-        widget=forms.Textarea(attrs={"rows": 2}),
-    )
-
-    class Meta:
-        model = GroupDescription
-        fields = [
-            "markdown",
-            "meta",
-        ]
-
-    def __init__(self, *args, request, **kwargs):
-        self.request = request
-
-        self.tokens = None
-        self.metadata = None
-
-        super().__init__(*args, **kwargs)
-
-    def clean(self):
-        data = super().clean()
-
-        if data.get("markdown"):
-            parser = create_parser()
-            tokens = tokenize(parser, data["markdown"])
-            metadata = get_tokens_metadata(tokens)
-
-            data["html"] = render_tokens_to_html(parser, tokens)
-
-            if not data.get("meta"):
-                data["meta"] = render_tokens_to_plaintext(tokens)
-
-            self.tokens = tokens
-            self.metadata = metadata
-        else:
-            data.update({"markdown": None, "html": None})
-
-        if not data.get("meta"):
-            data["meta"] = None
 
         return data
