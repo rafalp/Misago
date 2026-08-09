@@ -1,6 +1,6 @@
 # `unhide_thread_event_hook`
 
-This hook wraps a standard Misago function used to unhide a `ThreadUpdate` object.
+This hook wraps a standard Misago function used to unhide a `ThreadEvent` object.
 
 
 ## Location
@@ -16,8 +16,8 @@ from misago.threadevents.hooks import unhide_thread_event_hook
 
 ```python
 def custom_unhide_thread_event_filter(
-    action: UnhideThreadUpdateHookAction,
-    thread_event: 'ThreadUpdate',
+    action: UnhideThreadEventHookAction,
+    thread_event: 'ThreadEvent',
     request: HttpRequest | None=None,
 ) -> bool:
     ...
@@ -28,16 +28,16 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: UnhideThreadUpdateHookAction`
+#### `action: UnhideThreadEventHookAction`
 
 Next function registered in this hook, either a custom function or Misago's standard one.
 
 See the [action](#action) section for details.
 
 
-#### `thread_event: ThreadUpdate`
+#### `thread_event: ThreadEvent`
 
-A `ThreadUpdate` instance to unhide.
+A `ThreadEvent` instance to unhide.
 
 
 #### `request: HttpRequest | None = None`
@@ -47,26 +47,26 @@ The request object or `None` if not available.
 
 ### Return value
 
-`True` if the thread update was unhidden, `False` otherwise.
+`True` if the thread event was unhidden, `False` otherwise.
 
 
 ## Action
 
 ```python
 def unhide_thread_event_action(
-    thread_event: 'ThreadUpdate', request: HttpRequest | None=None
+    thread_event: 'ThreadEvent', request: HttpRequest | None=None
 ) -> bool:
     ...
 ```
 
-Misago function used to unhide a `ThreadUpdate` object.
+Misago function used to unhide a `ThreadEvent` object.
 
 
 ### Arguments
 
-#### `thread_event: ThreadUpdate`
+#### `thread_event: ThreadEvent`
 
-A `ThreadUpdate` instance to unhide.
+A `ThreadEvent` instance to unhide.
 
 
 #### `request: HttpRequest | None = None`
@@ -76,23 +76,23 @@ The request object or `None` if not available.
 
 ### Return value
 
-`True` if the thread update was unhidden, `False` otherwise.
+`True` if the thread event was unhidden, `False` otherwise.
 
 
 ## Example
 
-The code below implements a custom filter function that stores the client's IP address when a thread update is unhidden:
+The code below implements a custom filter function that stores the client's IP address when a thread event is unhidden:
 
 ```python
 from django.http import HttpRequest
-from misago.threads.hooks import unhide_thread_event_hook
-from misago.threads.models import ThreadUpdate
+from misago.threadevents.hooks import unhide_thread_event_hook
+from misago.threadevents.models import ThreadEvent
 
 
 @unhide_thread_event_hook.append_filter
 def save_client_ip_on_thread_event_unhide(
     action,
-    thread_event: ThreadUpdate,
+    thread_event: ThreadEvent,
     request: HttpRequest | None = None,
 ) -> bool:
     if not request:

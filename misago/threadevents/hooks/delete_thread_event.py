@@ -5,18 +5,18 @@ from django.http import HttpRequest
 from ...plugins.hooks import FilterHook
 
 if TYPE_CHECKING:
-    from ..models import ThreadUpdate
+    from ..models import ThreadEvent
 
 
-class DeleteThreadUpdateHookAction(Protocol):
+class DeleteThreadEventHookAction(Protocol):
     """
-    Misago function used to delete a `ThreadUpdate` object.
+    Misago function used to delete a `ThreadEvent` object.
 
     # Arguments
 
-    ## `thread_event: ThreadUpdate`
+    ## `thread_event: ThreadEvent`
 
-    A `ThreadUpdate` instance to delete.
+    A `ThreadEvent` instance to delete.
 
     ## `request: HttpRequest | None = None`
 
@@ -25,27 +25,27 @@ class DeleteThreadUpdateHookAction(Protocol):
 
     def __call__(
         self,
-        thread_event: "ThreadUpdate",
+        thread_event: "ThreadEvent",
         request: HttpRequest | None = None,
     ): ...
 
 
-class DeleteThreadUpdateHookFilter(Protocol):
+class DeleteThreadEventHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: DeleteThreadUpdateHookAction`
+    ## `action: DeleteThreadEventHookAction`
 
     Next function registered in this hook, either a custom function or
     Misago's standard one.
 
     See the [action](#action) section for details.
 
-    ## `thread_event: ThreadUpdate`
+    ## `thread_event: ThreadEvent`
 
-    A `ThreadUpdate` instance to delete.
+    A `ThreadEvent` instance to delete.
 
     ## `request: HttpRequest | None = None`
 
@@ -54,44 +54,44 @@ class DeleteThreadUpdateHookFilter(Protocol):
 
     def __call__(
         self,
-        action: DeleteThreadUpdateHookAction,
-        thread_event: "ThreadUpdate",
+        action: DeleteThreadEventHookAction,
+        thread_event: "ThreadEvent",
         request: HttpRequest | None = None,
     ): ...
 
 
-class DeleteThreadUpdateHook(
+class DeleteThreadEventHook(
     FilterHook[
-        DeleteThreadUpdateHookAction,
-        DeleteThreadUpdateHookFilter,
+        DeleteThreadEventHookAction,
+        DeleteThreadEventHookFilter,
     ]
 ):
     """
-    This hook wraps a standard Misago function used to delete a `ThreadUpdate` object.
+    This hook wraps a standard Misago function used to delete a `ThreadEvent` object.
 
     # Example
 
     The code below implements a custom filter function that logs the deletion
-    of a thread update:
+    of a thread event:
 
     ```python
     import logging
 
     from django.http import HttpRequest
-    from misago.threads.hooks import delete_thread_event_hook
-    from misago.threads.models import ThreadUpdate
+    from misago.threadevents.hooks import delete_thread_event_hook
+    from misago.threadevents.models import ThreadEvent
 
-    logger = logging.getLogger("misago.moderation")
+    logger = logging.getLogger("misago.threadevents")
 
 
     @delete_thread_event_hook.append_filter
     def log_thread_event_deletion(
         action,
-        thread_event: ThreadUpdate,
+        thread_event: ThreadEvent,
         request: HttpRequest | None = None,
     ) -> bool:
         logger.info(
-            "Thread update was deleted",
+            "Thread event was deleted",
             extra={
                 "id": thread_event.id,
                 "user": request.user.id if request else "",
@@ -106,12 +106,12 @@ class DeleteThreadUpdateHook(
 
     def __call__(
         self,
-        action: DeleteThreadUpdateHookAction,
-        thread_event: "ThreadUpdate",
+        action: DeleteThreadEventHookAction,
+        thread_event: "ThreadEvent",
         update_fields: set[str],
         request: HttpRequest | None = None,
-    ) -> "ThreadUpdate":
+    ) -> "ThreadEvent":
         return super().__call__(action, thread_event, request)
 
 
-delete_thread_event_hook = DeleteThreadUpdateHook()
+delete_thread_event_hook = DeleteThreadEventHook()
