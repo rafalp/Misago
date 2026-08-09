@@ -94,7 +94,7 @@ A `queryset` filtered to show only thread events that the user can see.
 
 ## Example
 
-The code below implements a custom filter function that hides events for user who is not the private thread's owner.
+The code below implements a custom filter function that hides events from users who are not the private thread's owners.
 
 ```python
 from misago.permissions.hooks import filter_private_thread_events_queryset_hook
