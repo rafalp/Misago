@@ -4,9 +4,9 @@ from ...plugins.hooks import FilterHook
 from ...threads.models import Post
 
 
-class PostProcessPostContentHookAction(Protocol):
+class ProcessPostContentHookAction(Protocol):
     """
-    Misago function used to post-process post content or the next filter
+    Misago function used to process post content or the next filter
     function from another plugin.
 
     # Arguments
@@ -19,7 +19,7 @@ class PostProcessPostContentHookAction(Protocol):
     def __call__(self, post: Post): ...
 
 
-class PostProcessPostContentHookFilter(Protocol):
+class ProcessPostContentHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
@@ -35,14 +35,14 @@ class PostProcessPostContentHookFilter(Protocol):
     The `Post` instance to update.
     """
 
-    def __call__(self, action: PostProcessPostContentHookAction, post: Post): ...
+    def __call__(self, action: ProcessPostContentHookAction, post: Post): ...
 
 
-class PostProcessPostContentHook(
-    FilterHook[PostProcessPostContentHookAction, PostProcessPostContentHookFilter]
+class ProcessPostContentHook(
+    FilterHook[ProcessPostContentHookAction, ProcessPostContentHookFilter]
 ):
     """
-    This hook wraps a standard Misago function used to post-process post content
+    This hook wraps a standard Misago function used to process post content
     after saving.
 
     The process runs in a Celery task scheduled after the post is created or updated,
@@ -55,11 +55,11 @@ class PostProcessPostContentHook(
     plugin's HTML with a new version:
 
     ```python
-    from misago.posting.hooks import post_process_post_content_hook
+    from misago.posting.hooks import process_post_content_hook
     from misago.threads.models import Post
 
 
-    @post_process_post_content_hook.append_filter
+    @process_post_content_hook.append_filter
     def enrich_post_plugin_html(action, post: Post):
         if "<plugin-html" in post.content_parsed:
             post.content_parsed = very_costful_html_change_operation(post.content_parsed)
@@ -73,10 +73,10 @@ class PostProcessPostContentHook(
 
     def __call__(
         self,
-        action: PostProcessPostContentHookAction,
+        action: ProcessPostContentHookAction,
         post: Post,
     ):
         return super().__call__(action, post)
 
 
-post_process_post_content_hook = PostProcessPostContentHook()
+process_post_content_hook = ProcessPostContentHook()

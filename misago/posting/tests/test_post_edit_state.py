@@ -123,7 +123,7 @@ def test_post_edit_state_save_deletes_unused_attachments(
 
 
 def test_post_edit_state_schedules_post_upgrade_for_post_with_code_block(
-    mock_upgrade_post_content, user_request, other_user_thread
+    mock_process_post_content, user_request, other_user_thread
 ):
     state = PostEditState(user_request, other_user_thread.first_post)
     state.set_post_message(parse("Hello world\n[code=python]add(1, 3)[/code]"))
@@ -132,7 +132,7 @@ def test_post_edit_state_schedules_post_upgrade_for_post_with_code_block(
     assert state.post.id
     assert state.post.thread == state.thread
 
-    mock_upgrade_post_content.delay.assert_called_once_with(
+    mock_process_post_content.delay.assert_called_once_with(
         state.post.id, state.post.sha256_checksum
     )
 

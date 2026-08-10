@@ -152,7 +152,7 @@ def test_start_state_delete_attachments_excludes_unknown_attachments(
 
 
 def test_start_state_schedules_post_upgrade_for_post_with_code_block(
-    mock_upgrade_post_content, user_request, default_category
+    mock_process_post_content, user_request, default_category
 ):
     state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
@@ -164,6 +164,6 @@ def test_start_state_schedules_post_upgrade_for_post_with_code_block(
     assert state.post.id
     assert state.post.thread == state.thread
 
-    mock_upgrade_post_content.delay.assert_called_once_with(
+    mock_process_post_content.delay.assert_called_once_with(
         state.post.id, state.post.sha256_checksum
     )

@@ -11,8 +11,8 @@ def mock_notify_on_new_thread_reply(mocker):
 
 
 @pytest.fixture
-def mock_upgrade_post_content(mocker):
-    return mocker.patch("misago.posting.state.base.upgrade_post_content")
+def mock_process_post_content(mocker):
+    return mocker.patch("misago.posting.state.base.process_post_content")
 
 
 @pytest.fixture

@@ -5,29 +5,27 @@ from ..parser.highlighter import highlight_syntax
 from ..threads.models import Post
 from .hooks import (
     highlight_post_code_blocks_hook,
-    post_process_post_content_hook,
-    should_post_process_post_content_hook,
+    process_post_content_hook,
+    should_process_post_content_hook,
 )
 
 
-def should_post_process_post_content(post: Post) -> bool:
-    return should_post_process_post_content_hook(
-        _should_post_process_post_content_action, post
-    )
+def should_process_post_content(post: Post) -> bool:
+    return should_process_post_content_hook(_should_process_post_content_action, post)
 
 
-def _should_post_process_post_content_action(post: Post) -> bool:
+def _should_process_post_content_action(post: Post) -> bool:
     if post.metadata.get("highlight_code"):
         return True
 
     return False
 
 
-def post_process_post_content(post: Post):
-    post_process_post_content_hook(_post_process_post_content_action, post)
+def process_post_content(post: Post):
+    process_post_content_hook(_process_post_content_action, post)
 
 
-def _post_process_post_content_action(post: Post):
+def _process_post_content_action(post: Post):
     highlight_post_code_blocks(post)
 
 

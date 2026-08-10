@@ -1,7 +1,7 @@
 from html import escape
 
 from ...html.element import html_element
-from ..postprocess import highlight_post_code_blocks
+from ..processcontent import highlight_post_code_blocks
 
 
 def test_highlight_post_code_blocks_upgrades_post_code(post):
