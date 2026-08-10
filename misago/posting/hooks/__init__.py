@@ -20,7 +20,8 @@ from .get_thread_reply_formset import get_thread_reply_formset_hook
 from .get_thread_reply_state import get_thread_reply_state_hook
 from .get_thread_start_formset import get_thread_start_formset_hook
 from .get_thread_start_state import get_thread_start_state_hook
-from .post_needs_content_upgrade import post_needs_content_upgrade_hook
+from .highlight_post_code_blocks import highlight_post_code_blocks_hook
+from .post_process_post_content import post_process_post_content_hook
 from .require_private_thread_approval import require_private_thread_approval_hook
 from .require_private_thread_reply_approval import (
     require_private_thread_reply_approval_hook,
@@ -35,8 +36,7 @@ from .save_private_thread_start_state import save_private_thread_start_state_hoo
 from .save_thread_post_edit_state import save_thread_post_edit_state_hook
 from .save_thread_reply_state import save_thread_reply_state_hook
 from .save_thread_start_state import save_thread_start_state_hook
-from .upgrade_post_code_blocks import upgrade_post_code_blocks_hook
-from .upgrade_post_content import upgrade_post_content_hook
+from .should_post_process_post_content import should_post_process_post_content_hook
 from .validate_post import validate_post_hook
 from .validate_posted_contents import validate_posted_contents_hook
 from .validate_thread_title import validate_thread_title_hook
@@ -56,7 +56,8 @@ __all__ = [
     "get_thread_reply_state_hook",
     "get_thread_start_formset_hook",
     "get_thread_start_state_hook",
-    "post_needs_content_upgrade_hook",
+    "highlight_post_code_blocks_hook",
+    "post_process_post_content_hook",
     "require_private_thread_approval_hook",
     "require_private_thread_reply_approval_hook",
     "require_thread_approval_hook",
@@ -67,8 +68,7 @@ __all__ = [
     "save_thread_post_edit_state_hook",
     "save_thread_reply_state_hook",
     "save_thread_start_state_hook",
-    "upgrade_post_code_blocks_hook",
-    "upgrade_post_content_hook",
+    "should_post_process_post_content_hook",
     "validate_post_hook",
     "validate_posted_contents_hook",
     "validate_thread_title_hook",

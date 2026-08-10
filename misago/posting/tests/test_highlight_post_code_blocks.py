@@ -1,15 +1,15 @@
 from html import escape
 
 from ...html.element import html_element
-from ..upgradepost import upgrade_post_code_blocks
+from ..postprocess import highlight_post_code_blocks
 
 
-def test_upgrade_post_code_blocks_upgrades_post_code(post):
+def test_highlight_post_code_blocks_upgrades_post_code(post):
     post.content_parsed = html_element("misago-code", "add(1, 2)", {"syntax": "python"})
     post.metadata["highlight_code"] = True
     post.save()
 
-    upgrade_post_code_blocks(post)
+    highlight_post_code_blocks(post)
 
     post.refresh_from_db()
     assert post.content_parsed.startswith('<misago-code syntax="python">')
@@ -18,14 +18,14 @@ def test_upgrade_post_code_blocks_upgrades_post_code(post):
     assert post.metadata == {}
 
 
-def test_upgrade_post_code_blocks_upgrades_escaped_code(post):
+def test_highlight_post_code_blocks_upgrades_escaped_code(post):
     post.content_parsed = html_element(
         "misago-code", escape('echo("<code>")'), {"syntax": "php"}
     )
     post.metadata["highlight_code"] = True
     post.save()
 
-    upgrade_post_code_blocks(post)
+    highlight_post_code_blocks(post)
 
     post.refresh_from_db()
     assert post.content_parsed.startswith('<misago-code syntax="php">')
@@ -35,14 +35,14 @@ def test_upgrade_post_code_blocks_upgrades_escaped_code(post):
     assert post.metadata == {}
 
 
-def test_upgrade_post_code_blocks_upgrades_multiple_code_blocks(post):
+def test_highlight_post_code_blocks_upgrades_multiple_code_blocks(post):
     post.content_parsed = html_element("misago-code", "add(1, 2)", {"syntax": "python"})
     post.content_parsed += "<p>Hello</p>"
     post.content_parsed += html_element("misago-code", "add(1, 2)", {"syntax": "php"})
     post.metadata["highlight_code"] = True
     post.save()
 
-    upgrade_post_code_blocks(post)
+    highlight_post_code_blocks(post)
 
     post.refresh_from_db()
     assert "<p>Hello</p>" in post.content_parsed
@@ -50,14 +50,14 @@ def test_upgrade_post_code_blocks_upgrades_multiple_code_blocks(post):
     assert post.metadata == {}
 
 
-def test_upgrade_post_code_blocks_handles_unsupported_syntax(post):
+def test_highlight_post_code_blocks_handles_unsupported_syntax(post):
     post.content_parsed = html_element(
         "misago-code", "add(1, 2)", {"syntax": "invalid"}
     )
     post.metadata["highlight_code"] = True
     post.save()
 
-    upgrade_post_code_blocks(post)
+    highlight_post_code_blocks(post)
 
     post.refresh_from_db()
     assert (
@@ -66,24 +66,24 @@ def test_upgrade_post_code_blocks_handles_unsupported_syntax(post):
     assert post.metadata == {}
 
 
-def test_upgrade_post_code_blocks_handles_unspecified_syntax(post):
+def test_highlight_post_code_blocks_handles_unspecified_syntax(post):
     post.content_parsed = html_element("misago-code", "add(1, 2)")
     post.metadata["highlight_code"] = True
     post.save()
 
-    upgrade_post_code_blocks(post)
+    highlight_post_code_blocks(post)
 
     post.refresh_from_db()
     assert post.content_parsed == "<misago-code>add(1, 2)</misago-code>"
     assert post.metadata == {}
 
 
-def test_upgrade_post_code_blocks_skips_upgrade_if_metadata_flag_is_false(post):
+def test_highlight_post_code_blocks_skips_upgrade_if_metadata_flag_is_false(post):
     post.content_parsed = html_element("misago-code", "add(1, 2)", {"syntax": "python"})
     post.metadata["highlight_code"] = False
     post.save()
 
-    upgrade_post_code_blocks(post)
+    highlight_post_code_blocks(post)
 
     post.refresh_from_db()
     assert post.content_parsed == (
@@ -92,11 +92,11 @@ def test_upgrade_post_code_blocks_skips_upgrade_if_metadata_flag_is_false(post):
     assert post.metadata == {}
 
 
-def test_upgrade_post_code_blocks_skips_upgrade_if_metadata_flag_is_not_set(post):
+def test_highlight_post_code_blocks_skips_upgrade_if_metadata_flag_is_not_set(post):
     post.content_parsed = html_element("misago-code", "add(1, 2)", {"syntax": "python"})
     post.save()
 
-    upgrade_post_code_blocks(post)
+    highlight_post_code_blocks(post)
 
     post.refresh_from_db()
     assert post.content_parsed == (

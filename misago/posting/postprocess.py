@@ -4,29 +4,31 @@ import re
 from ..parser.highlighter import highlight_syntax
 from ..threads.models import Post
 from .hooks import (
-    post_needs_content_upgrade_hook,
-    upgrade_post_code_blocks_hook,
-    upgrade_post_content_hook,
+    highlight_post_code_blocks_hook,
+    post_process_post_content_hook,
+    should_post_process_post_content_hook,
 )
 
 
-def post_needs_content_upgrade(post: Post) -> bool:
-    return post_needs_content_upgrade_hook(_post_needs_content_upgrade_action, post)
+def should_post_process_post_content(post: Post) -> bool:
+    return should_post_process_post_content_hook(
+        _should_post_process_post_content_action, post
+    )
 
 
-def _post_needs_content_upgrade_action(post: Post) -> bool:
+def _should_post_process_post_content_action(post: Post) -> bool:
     if post.metadata.get("highlight_code"):
         return True
 
     return False
 
 
-def upgrade_post_content(post: Post):
-    upgrade_post_content_hook(_upgrade_post_content_action, post)
+def post_process_post_content(post: Post):
+    post_process_post_content_hook(_post_process_post_content_action, post)
 
 
-def _upgrade_post_content_action(post: Post):
-    upgrade_post_code_blocks(post)
+def _post_process_post_content_action(post: Post):
+    highlight_post_code_blocks(post)
 
 
 CODE_BLOCK_PATTERN = re.compile(
@@ -34,17 +36,17 @@ CODE_BLOCK_PATTERN = re.compile(
 )
 
 
-def upgrade_post_code_blocks(post: Post):
-    upgrade_post_code_blocks_hook(_upgrade_post_code_blocks_action, post)
+def highlight_post_code_blocks(post: Post):
+    highlight_post_code_blocks_hook(_highlight_post_code_blocks_action, post)
 
 
-def _upgrade_post_code_blocks_action(post: Post):
+def _highlight_post_code_blocks_action(post: Post):
     if "highlight_code" not in post.metadata:
         return
 
     if post.metadata["highlight_code"]:
         html = CODE_BLOCK_PATTERN.sub(
-            upgrade_post_code_blocks_syntax, post.content_parsed
+            highlight_post_code_blocks_syntax, post.content_parsed
         )
     else:
         html = None
@@ -58,7 +60,7 @@ def _upgrade_post_code_blocks_action(post: Post):
         post.save(update_fields=["metadata"])
 
 
-def upgrade_post_code_blocks_syntax(match) -> str:
+def highlight_post_code_blocks_syntax(match) -> str:
     syntax: str | None = None
     code: str | None = None
     args = match.group("args") or ""

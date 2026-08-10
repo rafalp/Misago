@@ -13,8 +13,8 @@ from ...core.utils import slugify
 from ...parser.parse import ParsingResult
 from ...permissions.proxy import UserPermissionsProxy
 from ...threads.models import Post, Thread
-from ..tasks import upgrade_post_content
-from ..upgradepost import post_needs_content_upgrade
+from ..postprocess import should_post_process_post_content
+from ..tasks import post_process_post_content
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -125,8 +125,8 @@ class State:
         self.post.metadata = parsing_result.metadata
 
     def schedule_post_content_upgrade(self):
-        if post_needs_content_upgrade(self.post):
-            upgrade_post_content.delay(self.post.id, self.post.sha256_checksum)
+        if should_post_process_post_content(self.post):
+            post_process_post_content.delay(self.post.id, self.post.sha256_checksum)
 
     def set_attachments(self, attachments: list[Attachment]):
         self.attachments = attachments

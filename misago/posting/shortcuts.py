@@ -1,8 +1,6 @@
-from typing import Iterable
-
 from ..threads.models import Post
-from .tasks import upgrade_post_content
-from .upgradepost import post_needs_content_upgrade
+from .postprocess import should_post_process_post_content
+from .tasks import post_process_post_content
 
 
 def save_edited_post(post: Post):
@@ -11,5 +9,5 @@ def save_edited_post(post: Post):
     post.set_search_vector()
     post.save(update_fields=["search_vector"])
 
-    if post_needs_content_upgrade(post):
-        upgrade_post_content.delay(post.id, post.sha256_checksum)
+    if should_post_process_post_content(post):
+        post_process_post_content.delay(post.id, post.sha256_checksum)

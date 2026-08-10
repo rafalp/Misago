@@ -4,9 +4,9 @@ from ...plugins.hooks import FilterHook
 from ...threads.models import Post
 
 
-class UpgradePostContentHookAction(Protocol):
+class PostProcessPostContentHookAction(Protocol):
     """
-    Misago function used to upgrade post content or the next filter
+    Misago function used to post-process post content or the next filter
     function from another plugin.
 
     # Arguments
@@ -19,7 +19,7 @@ class UpgradePostContentHookAction(Protocol):
     def __call__(self, post: Post): ...
 
 
-class UpgradePostContentHookFilter(Protocol):
+class PostProcessPostContentHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
@@ -35,32 +35,32 @@ class UpgradePostContentHookFilter(Protocol):
     The `Post` instance to update.
     """
 
-    def __call__(self, action: UpgradePostContentHookAction, post: Post): ...
+    def __call__(self, action: PostProcessPostContentHookAction, post: Post): ...
 
 
-class UpgradePostContentHook(
-    FilterHook[UpgradePostContentHookAction, UpgradePostContentHookFilter]
+class PostProcessPostContentHook(
+    FilterHook[PostProcessPostContentHookAction, PostProcessPostContentHookFilter]
 ):
     """
-    This hook wraps a standard Misago function used to upgrade post content
-    after it has been posted.
+    This hook wraps a standard Misago function used to post-process post content
+    after saving.
 
-    The upgrade process runs in a Celery task scheduled after the post is created,
+    The process runs in a Celery task scheduled after the post is created or updated,
     allowing slow and costly operations, such as embedding previews of linked
     sites, to be performed without slowing down the posting process.
 
     # Example
 
-    The code below implements a custom filter function that replaces custom
-    plugin's HTML with new version:
+    The code below implements a custom filter function that replaces a custom
+    plugin's HTML with a new version:
 
     ```python
-    from misago.posting.hooks import upgrade_post_content_hook
+    from misago.posting.hooks import post_process_post_content_hook
     from misago.threads.models import Post
 
 
-    @upgrade_post_content_hook.append_filter
-    def upgrade_post_plugin_html(action, post: Post):
+    @post_process_post_content_hook.append_filter
+    def enrich_post_plugin_html(action, post: Post):
         if "<plugin-html" in post.content_parsed:
             post.content_parsed = very_costful_html_change_operation(post.content_parsed)
             post.save(update_fields=["parsed"])
@@ -73,10 +73,10 @@ class UpgradePostContentHook(
 
     def __call__(
         self,
-        action: UpgradePostContentHookAction,
+        action: PostProcessPostContentHookAction,
         post: Post,
     ):
         return super().__call__(action, post)
 
 
-upgrade_post_content_hook = UpgradePostContentHook()
+post_process_post_content_hook = PostProcessPostContentHook()
