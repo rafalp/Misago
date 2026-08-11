@@ -86,10 +86,10 @@ class PostsSearch:
             **kwargs,
         )
 
-    def index_posts(self, posts: Post | Iterable[Post]):
-        if isinstance(posts, Post):
-            posts = [posts]
+    def index_post(self, post: Post, search_document: str):
+        self.backend.index_posts([(post, search_document)])
 
+    def index_posts(self, posts: Iterable[tuple[Post, str]]):
         self.backend.index_posts(posts)
 
     def move_category_posts(
