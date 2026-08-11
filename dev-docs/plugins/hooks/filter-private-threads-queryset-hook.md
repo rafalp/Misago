@@ -35,7 +35,7 @@ Next function registered in this hook, either a custom function or Misago's stan
 See the [action](#action) section for details.
 
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
@@ -64,7 +64,7 @@ Misago function used to set filters on a private threads queryset to limit it on
 
 ### Arguments
 
-#### `user_permissions: UserPermissionsProxy`
+#### `permissions: UserPermissionsProxy`
 
 A proxy object with the current user's permissions.
 
