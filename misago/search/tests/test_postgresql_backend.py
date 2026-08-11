@@ -103,3 +103,172 @@ def test_postgresql_backend_index_posts_reindexes_existing_posts(
 
     post_document.refresh_from_db()
     assert post_document.is_hidden
+
+
+def test_postgresql_backend_move_category_posts_moves_category_posts_to_new_category(
+    thread_reply_factory, backend, default_category, other_category, thread
+):
+    post = thread_reply_factory(thread, poster="User", content="Hello world")
+    backend.index_posts([(post, post.content)])
+
+    post_document = PostSearch.objects.get(post_id=post.id)
+    assert post_document.category_id == default_category.id
+
+    backend.move_category_posts([default_category], other_category)
+
+    post_document.refresh_from_db()
+    assert post_document.category_id == other_category.id
+
+
+def test_postgresql_backend_move_thread_posts_moves_thread_posts_to_new_thread(
+    thread_factory, thread_reply_factory, backend, default_category, other_category
+):
+    thread = thread_factory(default_category)
+    post = thread_reply_factory(thread, poster="User", content="Hello world")
+    backend.index_posts([(post, post.content)])
+
+    post_document = PostSearch.objects.get(post_id=post.id)
+    assert post_document.thread_id == thread.id
+
+    other_thread = thread_factory(other_category)
+    backend.move_thread_posts([thread], other_thread)
+
+    post_document.refresh_from_db()
+    assert post_document.category_id == other_category.id
+    assert post_document.thread_id == other_thread.id
+
+
+def test_postgresql_backend_move_threads_moves_threads_to_new_category(
+    thread_reply_factory, backend, default_category, other_category, thread
+):
+    post = thread_reply_factory(thread, poster="User", content="Hello world")
+    backend.index_posts([(post, post.content)])
+
+    post_document = PostSearch.objects.get(post_id=post.id)
+    assert post_document.category_id == default_category.id
+
+    backend.move_threads([thread], other_category)
+
+    post_document.refresh_from_db()
+    assert post_document.category_id == other_category.id
+
+
+def test_postgresql_backend_move_posts_moves_posts_to_new_thread(
+    thread_factory, thread_reply_factory, backend, default_category, other_category
+):
+    thread = thread_factory(default_category)
+    post = thread_reply_factory(thread, poster="User", content="Hello world")
+    backend.index_posts([(post, post.content)])
+
+    other_thread = thread_factory(other_category)
+
+    post_document = PostSearch.objects.get(post_id=post.id)
+    assert post_document.thread_id == thread.id
+
+    backend.move_posts([post], other_thread)
+
+    post_document.refresh_from_db()
+    assert post_document.category_id == other_category.id
+    assert post_document.thread_id == other_thread.id
+
+
+def test_postgresql_backend_delete_categories_deletes_posts_in_category(
+    thread_factory, thread_reply_factory, backend, default_category, other_category
+):
+    thread = thread_factory(default_category)
+    post = thread_reply_factory(thread, poster="User", content="Hello world")
+    backend.index_posts([(post, post.content)])
+
+    other_thread = thread_factory(other_category)
+    other_post = thread_reply_factory(
+        other_thread, poster="User", content="Lorem ipsum"
+    )
+    backend.index_posts([(other_post, other_post.content)])
+
+    backend.delete_categories([default_category])
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post_id=post.id)
+
+    PostSearch.objects.get(post_id=other_post.id)
+
+
+def test_postgresql_backend_delete_threads_deletes_posts_in_thread(
+    thread_factory, thread_reply_factory, backend, default_category
+):
+    thread = thread_factory(default_category)
+    post = thread_reply_factory(thread, poster="User", content="Hello world")
+    backend.index_posts([(post, post.content)])
+
+    other_thread = thread_factory(default_category)
+    other_post = thread_reply_factory(
+        other_thread, poster="User", content="Lorem ipsum"
+    )
+    backend.index_posts([(other_post, other_post.content)])
+
+    backend.delete_threads([thread])
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post_id=post.id)
+
+    PostSearch.objects.get(post_id=other_post.id)
+
+
+def test_postgresql_backend_delete_posts_deletes_posts(
+    thread_factory, thread_reply_factory, backend, default_category
+):
+    thread = thread_factory(default_category)
+    post = thread_reply_factory(thread, poster="User", content="Hello world")
+    backend.index_posts([(post, post.content)])
+
+    other_thread = thread_factory(default_category)
+    other_post = thread_reply_factory(
+        other_thread, poster="User", content="Lorem ipsum"
+    )
+    backend.index_posts([(other_post, other_post.content)])
+
+    backend.delete_posts([post])
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post_id=post.id)
+
+    PostSearch.objects.get(post_id=other_post.id)
+
+
+def test_postgresql_backend_delete_users_deletes_posts_by_user(
+    thread_factory, thread_reply_factory, backend, user, other_user, default_category
+):
+    thread = thread_factory(default_category)
+    post = thread_reply_factory(thread, poster=user, content="Hello world")
+    backend.index_posts([(post, post.content)])
+
+    other_thread = thread_factory(default_category)
+    other_post = thread_reply_factory(
+        other_thread, poster=other_user, content="Lorem ipsum"
+    )
+    backend.index_posts([(other_post, other_post.content)])
+
+    backend.delete_users([user])
+
+    with pytest.raises(PostSearch.DoesNotExist):
+        PostSearch.objects.get(post_id=post.id)
+
+    PostSearch.objects.get(post_id=other_post.id)
+
+
+def test_postgresql_backend_clear_deletes_all_posts(
+    thread_factory, thread_reply_factory, backend, user, other_user, default_category
+):
+    thread = thread_factory(default_category)
+    post = thread_reply_factory(thread, poster=user, content="Hello world")
+    backend.index_posts([(post, post.content)])
+
+    other_thread = thread_factory(default_category)
+    other_post = thread_reply_factory(
+        other_thread, poster=other_user, content="Lorem ipsum"
+    )
+    backend.index_posts([(other_post, other_post.content)])
+
+    backend.clear()
+
+    assert not PostSearch.objects.exists()

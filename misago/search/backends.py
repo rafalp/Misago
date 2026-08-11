@@ -202,4 +202,4 @@ class PostgreSQLSearchBackend(SearchBackend):
         ).delete()
 
     def clear(self):
-        PostSearch.objects.delete()
+        PostSearch.objects.all().delete()

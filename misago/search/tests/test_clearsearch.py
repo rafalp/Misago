@@ -19,7 +19,7 @@ def call_command():
     )
 
 
-def test_clearsearch_command_clears_search_index():
+def test_clearsearch_command_clears_search_index(db):
     stdout, stderr = call_command()
 
     assert stdout == (
