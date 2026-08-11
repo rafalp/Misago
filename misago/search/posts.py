@@ -1,6 +1,5 @@
-from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterable, Union
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -87,14 +86,14 @@ class PostsSearch:
             **kwargs,
         )
 
-    def index_posts(self, posts: Post | list[Post]):
+    def index_posts(self, posts: Post | Iterable[Post]):
         if isinstance(posts, Post):
             posts = [posts]
 
         self.backend.index_posts(posts)
 
     def move_category_posts(
-        self, categories: Category | list[Category], new_category: Category
+        self, categories: Category | Iterable[Category], new_category: Category
     ) -> int:
         if isinstance(categories, Category):
             categories = [categories]
@@ -102,7 +101,7 @@ class PostsSearch:
         return self.backend.move_category_posts(categories, new_category)
 
     def move_thread_posts(
-        self, threads: Thread | list[Thread], new_thread: Thread
+        self, threads: Thread | Iterable[Thread], new_thread: Thread
     ) -> int:
         if isinstance(threads, Thread):
             threads = [threads]
@@ -110,38 +109,38 @@ class PostsSearch:
         return self.backend.move_thread_posts(threads, new_thread)
 
     def move_threads(
-        self, threads: Thread | list[Thread], new_category: Category
+        self, threads: Thread | Iterable[Thread], new_category: Category
     ) -> int:
         if isinstance(threads, Thread):
             threads = [threads]
 
         return self.backend.move_threads(threads, new_category)
 
-    def move_posts(self, posts: Post | list[Post], new_thread: Thread) -> int:
+    def move_posts(self, posts: Post | Iterable[Post], new_thread: Thread) -> int:
         if isinstance(posts, Post):
             posts = [posts]
 
         return self.backend.move_posts(posts, new_thread)
 
-    def delete_categories(self, categories: Category | list[Category]) -> int:
+    def delete_categories(self, categories: Category | Iterable[Category]) -> int:
         if isinstance(categories, Category):
             categories = [categories]
 
         return self.backend.delete_categories(categories)
 
-    def delete_threads(self, threads: Thread | list[Thread]) -> int:
+    def delete_threads(self, threads: Thread | Iterable[Thread]) -> int:
         if isinstance(threads, Thread):
             threads = [threads]
 
         return self.backend.delete_threads(threads)
 
-    def delete_posts(self, posts: Post | list[Post]) -> int:
+    def delete_posts(self, posts: Post | Iterable[Post]) -> int:
         if isinstance(posts, Post):
             posts = [posts]
 
         return self.backend.delete_posts(posts)
 
-    def delete_users(self, users: "User" | list["User"]) -> int:
+    def delete_users(self, users: Union["User", Iterable["User"]]) -> int:
         user_model = get_user_model()
         if isinstance(users, user_model):
             users = [users]
