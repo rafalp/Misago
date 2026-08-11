@@ -8,7 +8,7 @@ class PostSearch(models.Model):
 
     category_id = models.PositiveIntegerField(db_index=True)
     thread_id = models.PositiveIntegerField(db_index=True)
-    poster_id = models.PositiveIntegerField(db_index=True)
+    poster_id = models.PositiveIntegerField(null=True)
 
     thread_title = SearchVectorField(null=True)
     post_content = SearchVectorField()
@@ -24,4 +24,9 @@ class PostSearch(models.Model):
         indexes = [
             GinIndex(fields=["thread_title"]),
             GinIndex(fields=["post_content"]),
+            models.Index(
+                fields=["poster_id"],
+                condition=models.Q(poster_id__isnull=False),
+                name="search_post_search_poster_idx",
+            ),
         ]
