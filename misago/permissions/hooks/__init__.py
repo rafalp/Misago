@@ -67,6 +67,9 @@ from .check_reply_thread_permission import check_reply_thread_permission_hook
 from .check_restore_post_edit_permission import (
     check_restore_post_edit_permission_hook,
 )
+from .check_search_permission import (
+    check_search_permission_hook,
+)
 from .check_see_category_permission import check_see_category_permission_hook
 from .check_see_post_edit_history_permission import (
     check_see_post_edit_history_permission_hook,
@@ -160,6 +163,7 @@ __all__ = [
     "check_reply_private_thread_permission_hook",
     "check_reply_thread_permission_hook",
     "check_restore_post_edit_permission_hook",
+    "check_search_permission_hook",
     "check_see_category_permission_hook",
     "check_see_post_edit_history_permission_hook",
     "check_see_post_likes_permission_hook",

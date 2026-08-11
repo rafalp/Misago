@@ -57,6 +57,7 @@ class UserPermissionsProxy:
     username_changes_expire: int
     username_changes_span: int
     can_see_user_profiles: bool
+    can_search: bool
 
     def __init__(self, user: Union["User", AnonymousUser], cache_versions: dict):
         self.user = user

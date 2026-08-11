@@ -72,6 +72,14 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
+    <legend>{% translate "Search" context "admin group form" %}</legend>
+
+    {% form_row form.can_search %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
     <legend>{% translate "Posting" context "admin group permissions form" %}</legend>
 
     {% form_row form.can_edit_own_threads %}

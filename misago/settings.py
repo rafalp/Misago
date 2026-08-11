@@ -111,7 +111,6 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "misago.core.context_processors.misago_version",
     "misago.core.context_processors.momentjs_locale",
     "misago.icons.context_processors.icons",
-    "misago.search.context_processors.search_providers",
     "misago.themes.context_processors.theme",
     "misago.legal.context_processors.legal_links",
     "misago.menus.context_processors.menus",
