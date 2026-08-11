@@ -189,6 +189,22 @@ def test_postgresql_backend_index_posts_reindexes_existing_posts(
     assert post_document.is_hidden
 
 
+def test_postgresql_backend_index_posts_escapes_posts_html(
+    thread_factory, thread_reply_factory, backend, user, default_category
+):
+    thread = thread_factory(default_category, title="Test <b>thread</b>")
+
+    post = thread.first_post
+    post.content = "Hello <b>world</b>"
+    post.save()
+
+    backend.index_posts([(post, post.content)])
+
+    post_document = PostSearch.objects.get(post_id=post.id)
+    assert post_document.thread_title == "Test &lt;b&gt;thread&lt;/b&gt;"
+    assert post_document.post_content == "Hello &lt;b&gt;world&lt;/b&gt;"
+
+
 def test_postgresql_backend_search_searches_posts(
     user_permissions_factory, backend, search_index, user, default_category
 ):
