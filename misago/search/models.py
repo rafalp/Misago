@@ -10,8 +10,9 @@ class PostSearch(models.Model):
     thread_id = models.PositiveIntegerField(db_index=True)
     poster_id = models.PositiveIntegerField(null=True)
 
-    thread_title = SearchVectorField(null=True)
-    post_content = SearchVectorField()
+    thread_title = models.TextField(null=True)
+    post_content = models.TextField()
+    search_vector = SearchVectorField()
 
     posted_at = models.DateTimeField(db_index=True)
 
@@ -22,8 +23,7 @@ class PostSearch(models.Model):
 
     class Meta:
         indexes = [
-            GinIndex(fields=["thread_title"]),
-            GinIndex(fields=["post_content"]),
+            GinIndex(fields=["search_vector"]),
             models.Index(
                 fields=["poster_id"],
                 condition=models.Q(poster_id__isnull=False),

@@ -1,0 +1,28 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+Search debug
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+  <form method="GET" action="{{ path }}">
+    <input type="text" name="q" value="{{ query|default:'' }}"/>
+    <button type="submit">Search</button>
+  </form>
+  <ul>
+    {% if results %}
+      {% for result in results %}
+        <li>
+          <div>{{ result.thread_title|safe }}</div>
+          <div>{{ result.post_content|safe }}</div>
+          <div>{{ result.rank }}</div>
+        </li>
+      {% endfor %}
+    {% endif %}
+  </ul>
+</div>
+{% endblock content %}

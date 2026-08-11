@@ -38,17 +38,18 @@ MISAGO_ATTACHMENTS_SERVER = "misago.attachments.servers.django_redirect_response
 # Use english search config
 MISAGO_SEARCH_CONFIG = "english"
 
+MISAGO_POSTS_SEARCH = {
+    "BACKEND": "misago.search.backends.PostgreSQLSearchBackend",
+    "INDEX_BATCH_SIZE": 50,
+    "MAX_LIMIT": 100,
+    "PG_SEARCH_CONFIG": "english",
+}
+
 # Test assertions expect english locale
 LANGUAGE_CODE = "en-us"
 
 # Test assertions expect specific TZ
 TIME_ZONE = "UTC"
-
-# Register test post validator
-MISAGO_POST_VALIDATORS = ["misago.core.testproject.validators.test_post_validator"]
-
-# Register test post search filter
-MISAGO_POST_SEARCH_FILTERS = ["misago.core.testproject.searchfilters.test_filter"]
 
 # Default test name
 TEST_NAME = "miasago_test"
