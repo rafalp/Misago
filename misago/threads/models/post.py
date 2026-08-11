@@ -105,7 +105,7 @@ class Post(PluginDataModel):
         ]
 
     def __str__(self):
-        return "%s..." % self.original[10:].strip()
+        return "%s..." % self.content[10:].strip()
 
     def delete(self, *args, **kwargs):
         from ..signals import delete_post

@@ -1,13 +1,97 @@
 import pytest
 
+from ...threads.models import Thread
 from ...threads.synchronize import synchronize_thread
 from ..backends import PostgreSQLSearchBackend
+from ..enums import SearchMode
 from ..models import PostSearch
 
 
 @pytest.fixture
 def backend(db):
     return PostgreSQLSearchBackend({"PG_SEARCH_CONFIG": "english"})
+
+
+@pytest.fixture
+def search_index(
+    thread_factory,
+    thread_reply_factory,
+    backend,
+    user,
+    other_user,
+    default_category,
+    other_category,
+):
+    thread = thread_factory(
+        default_category,
+        starter=user,
+        title="Forum software recommendations?",
+    )
+
+    first_post = thread.first_post
+    first_post.thread = thread
+    first_post.content = "I am looking for a good forum software for my next project. Any recommendations?"
+    first_post.save()
+
+    hidden_reply = thread_reply_factory(
+        thread,
+        poster="HiddenUser",
+        content="phpBB by Przemo",
+        is_hidden=True,
+    )
+    unapproved_reply = thread_reply_factory(
+        thread,
+        poster=other_user,
+        content="Try FluxBB",
+        is_hidden=False,
+    )
+    reply = thread_reply_factory(
+        thread,
+        poster=other_user,
+        content="Give Misago a chance. This site runs it and we are happy with it.",
+    )
+
+    other_thread = thread_factory(
+        default_category,
+        starter=user,
+        title="Plugin hook for post validation",
+    )
+    other_thread_first_post = other_thread.first_post
+    other_thread_first_post.thread = other_thread
+    other_thread_first_post.content = (
+        "I am looking for a plugin hook to use for custom post validator."
+    )
+    other_thread_first_post.save()
+
+    other_thread_reply = thread_reply_factory(
+        thread,
+        poster=other_user,
+        content="Please see the validate_post_content_hook from misago.posting",
+    )
+
+    posts = [
+        first_post,
+        hidden_reply,
+        unapproved_reply,
+        reply,
+        other_thread_first_post,
+        other_thread_reply,
+    ]
+
+    synchronize_thread(first_post.thread)
+    synchronize_thread(other_thread_reply.thread)
+
+    backend.index_posts([(post, post.content) for post in posts])
+
+    return {
+        "thread": thread,
+        "first_post": first_post,
+        "hidden_reply": hidden_reply,
+        "unapproved_reply": unapproved_reply,
+        "reply": reply,
+        "other_thread": other_thread,
+        "other_thread_reply": other_thread_reply,
+    }
 
 
 def test_postgresql_backend_initialize_does_nothing(backend):
@@ -103,6 +187,22 @@ def test_postgresql_backend_index_posts_reindexes_existing_posts(
 
     post_document.refresh_from_db()
     assert post_document.is_hidden
+
+
+def test_postgresql_backend_search_searches_posts(
+    user_permissions_factory, backend, search_index, user, default_category
+):
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_posts(
+        "forum software",
+        SearchMode.THREADS,
+        user_permissions,
+        categories=[default_category],
+    )
+
+    results_ids = [result.post_id for result in results]
+    assert search_index["first_post"].id in results_ids
 
 
 def test_postgresql_backend_move_category_posts_moves_category_posts_to_new_category(

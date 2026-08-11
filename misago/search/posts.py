@@ -10,6 +10,7 @@ from ..permissions.proxy import UserPermissionsProxy
 from ..threads.models import Post, Thread
 from .backends import SearchBackend
 from .enums import SearchMode, SearchOrder
+from .types import PostSearchResults
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -70,7 +71,7 @@ class PostsSearch:
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> dict:
+    ) -> PostSearchResults:
         return self.backend.search_posts(
             query,
             mode,
