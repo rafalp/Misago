@@ -113,71 +113,93 @@ class PostgreSQLSearchBackend(SearchBackend):
     ) -> dict:
         pass
 
-    @transaction.atomic
     def index_posts(self, posts: Iterable[tuple[Post, str]]):
         for batch in batched(posts, 50):
-            for post, _ in batch:
-                print(post.id, post.thread.first_post_id)
+            self._index_posts_batch(batch)
 
-            PostSearch.objects.filter(post_id__in=[post.id for post, _ in batch])
-            PostSearch.objects.bulk_create(
-                [
-                    PostSearch(
-                        category_id=post.category_id,
-                        thread_id=post.thread_id,
-                        post_id=post.id,
-                        poster_id=post.poster_id,
-                        thread_title=(
-                            SearchVector(
-                                Value(post.thread.title),
-                                config=self.search_config,
-                                weight="A",
-                            )
-                            if post.id == post.thread.first_post_id
-                            else None
-                        ),
-                        post_content=SearchVector(
-                            Value(search_document),
+    @transaction.atomic
+    def _index_posts_batch(self, posts: Iterable[tuple[Post, str]]):
+        PostSearch.objects.filter(post_id__in=[post.id for post, _ in posts]).delete()
+        PostSearch.objects.bulk_create(
+            [
+                PostSearch(
+                    category_id=post.category_id,
+                    thread_id=post.thread_id,
+                    post_id=post.id,
+                    poster_id=post.poster_id,
+                    thread_title=(
+                        SearchVector(
+                            Value(post.thread.title),
                             config=self.search_config,
-                            weight="B",
-                        ),
-                        posted_at=post.posted_at,
-                        is_thread_pinned=bool(
-                            post.id == post.thread.first_post_id and post.thread.pinned
-                        ),
-                        incoming_links=0,
-                        is_hidden=post.is_hidden,
-                        is_unapproved=post.is_unapproved,
-                    )
-                    for post, search_document in batch
-                ]
-            )
+                            weight="A",
+                        )
+                        if post.id == post.thread.first_post_id
+                        else None
+                    ),
+                    post_content=SearchVector(
+                        Value(search_document),
+                        config=self.search_config,
+                        weight="B",
+                    ),
+                    posted_at=post.posted_at,
+                    is_thread_pinned=bool(
+                        post.id == post.thread.first_post_id and post.thread.pinned
+                    ),
+                    incoming_links=0,
+                    is_hidden=post.is_hidden,
+                    is_unapproved=post.is_unapproved,
+                )
+                for post, search_document in posts
+            ]
+        )
 
     def move_category_posts(
         self, categories: Iterable[Category], new_category: Category
     ) -> int:
-        pass
+        PostSearch.objects.filter(
+            category_id__in=[category.id for category in categories],
+        ).update(category_id=new_category.id)
 
     def move_thread_posts(self, threads: Iterable[Thread], new_thread: Thread) -> int:
-        pass
+        PostSearch.objects.filter(
+            thread_id__in=[thread.id for thread in threads],
+        ).update(
+            category_id=new_thread.category_id,
+            thread_id=new_thread.id,
+        )
 
     def move_threads(self, threads: Iterable[Thread], new_category: Category) -> int:
-        pass
+        PostSearch.objects.filter(
+            thread_id__in=[thread.id for thread in threads],
+        ).update(category_id=new_category.id)
 
     def move_posts(self, posts: Iterable[Post], new_thread: Thread) -> int:
-        pass
+        PostSearch.objects.filter(
+            post_id__in=[post.id for post in posts],
+        ).update(
+            category_id=new_thread.category_id,
+            thread_id=new_thread.id,
+        )
 
     def delete_categories(self, categories: Iterable[Category]) -> int:
-        pass
+        PostSearch.objects.filter(
+            category_id__in=[category.id for category in categories],
+        ).delete()
 
     def delete_threads(self, threads: Iterable[Thread]) -> int:
-        pass
+        PostSearch.objects.filter(
+            thread_id__in=[thread.id for thread in threads],
+        ).delete()
 
     def delete_posts(self, posts: Iterable[Post]) -> int:
-        pass
+        PostSearch.objects.filter(
+            post_id__in=[post.id for post in posts],
+        ).delete()
 
     def delete_users(self, users: Iterable["User"]) -> int:
-        pass
+        PostSearch.objects.filter(
+            poster_id__in=[user.id for user in users],
+        ).delete()
 
     def clear(self):
-        pass
+        PostSearch.objects.delete()

@@ -85,3 +85,21 @@ def test_postgresql_backend_index_posts_indexes_posts(
     assert not reply_document.incoming_links
     assert not reply_document.is_hidden
     assert not reply_document.is_unapproved
+
+
+def test_postgresql_backend_index_posts_reindexes_existing_posts(
+    thread_reply_factory, backend, user, thread
+):
+    post = thread_reply_factory(thread, poster=user, content="Hello world")
+    backend.index_posts([(post, post.content)])
+
+    post_document = PostSearch.objects.get(post_id=post.id)
+    assert not post_document.is_hidden
+
+    post.is_hidden = True
+    post.save()
+
+    backend.index_posts([(post, post.content)])
+
+    post_document.refresh_from_db()
+    assert post_document.is_hidden
