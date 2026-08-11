@@ -1,6 +1,4 @@
-import time
-
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 from ...exceptions import SearchBackendError
 from ...posts import posts_search
