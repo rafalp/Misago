@@ -16,7 +16,7 @@ class CheckBrowseCategoryPermissionHookAction(Protocol):
 
     # Arguments
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
@@ -53,7 +53,7 @@ class CheckBrowseCategoryPermissionHookFilter(Protocol):
 
     See the [action](#action) section for details.
 
-    ## `user_permissions: UserPermissionsProxy`
+    ## `permissions: UserPermissionsProxy`
 
     A proxy object with the current user's permissions.
 
