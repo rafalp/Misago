@@ -37,12 +37,12 @@ class ReplyState(State):
         if self.post.id:
             self.store_object_state(self.post)
 
-    def set_post_message(self, parsing_result: ParsingResult):
+    def set_post_content(self, parsing_result: ParsingResult):
         if self.post.id:
             markup = "\n\n".join([self.post.content, parsing_result.markup])
             parsing_result = parse(markup)
 
-        super().set_post_message(parsing_result)
+        super().set_post_content(parsing_result)
 
     def require_approval(self) -> bool:
         return False

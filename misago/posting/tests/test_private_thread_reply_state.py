@@ -4,7 +4,7 @@ from ..state import PrivateThreadReplyState
 
 def test_private_thread_reply_state_save(user_request, user_private_thread):
     state = PrivateThreadReplyState(user_request, user_private_thread)
-    state.set_post_message(parse("Test reply"))
+    state.set_post_content(parse("Test reply"))
     state.save()
 
 
@@ -15,7 +15,7 @@ def test_private_thread_reply_state_saves_unapproved_post(
     user.save()
 
     state = PrivateThreadReplyState(user_request, other_user_private_thread)
-    state.set_post_message(parse("Test reply"))
+    state.set_post_content(parse("Test reply"))
     state.save()
 
     other_user_private_thread.refresh_from_db()

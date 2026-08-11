@@ -8,7 +8,7 @@ from ..core.utils import slugify
 from ..parser.parse import ParsingResult
 from .floodcontrol import flood_control
 from .hooks import (
-    validate_post_hook,
+    validate_post_content_hook,
     validate_posting_hook,
     validate_thread_title_hook,
 )
@@ -22,20 +22,20 @@ __all__ = [
     "validate_flood_control",
     "validate_poll_choices",
     "validate_poll_question",
-    "validate_post",
+    "validate_post_content",
     "validate_posting",
     "validate_thread_title",
 ]
 
 
-def validate_post(
+def validate_post_content(
     value: ParsingResult,
     min_length: int,
     max_length: int,
     request: HttpRequest | None = None,
 ):
-    validate_post_hook(
-        _validate_post_action,
+    validate_post_content_hook(
+        _validate_post_content_action,
         value,
         min_length,
         max_length,
@@ -43,7 +43,7 @@ def validate_post(
     )
 
 
-def _validate_post_action(
+def _validate_post_content_action(
     value: ParsingResult,
     min_length: int,
     max_length: int,
@@ -52,14 +52,16 @@ def _validate_post_action(
     length = len(value.text)
     if not length:
         raise ValidationError(
-            message=pgettext("post validator", "Posted message has no content."),
+            message=pgettext(
+                "post content validator", "Posted message can't be empty."
+            ),
             code="required",
         )
 
     if length < min_length:
         raise ValidationError(
             message=npgettext(
-                "post validator",
+                "post content validator",
                 "Posted message must be at least %(limit_value)s character long (it has %(show_value)s).",
                 "Posted message must be at least %(limit_value)s characters long (it has %(show_value)s).",
                 min_length,
@@ -74,7 +76,7 @@ def _validate_post_action(
     if max_length and length > max_length:
         raise ValidationError(
             message=npgettext(
-                "post validator",
+                "post content validator",
                 "Posted message cannot be longer than %(limit_value)s character (it currently has %(show_value)s).",
                 "Posted message cannot be longer than %(limit_value)s characters (it currently has %(show_value)s).",
                 max_length,

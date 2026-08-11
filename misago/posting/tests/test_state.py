@@ -70,22 +70,22 @@ def test_state_set_thread_title_updates_thread_title_and_slug(user_request, thre
     assert state.thread.slug == "test-thread"
 
 
-def test_state_set_post_message_updates_post_contents(user_request, post):
+def test_state_set_post_content_updates_post_contents(user_request, post):
     state = State(user_request)
     state.post = post
-    state.set_post_message(parse("Hello world"))
+    state.set_post_content(parse("Hello world"))
 
     assert post.content == "Hello world"
     assert post.content_parsed == "<p>Hello world</p>"
     assert post.metadata == {}
 
 
-def test_state_set_post_message_stores_attachments_ids_in_post_metadata(
+def test_state_set_post_content_stores_attachments_ids_in_post_metadata(
     user_request, post
 ):
     state = State(user_request)
     state.post = post
-    state.set_post_message(parse("<attachment=image.png:123>"))
+    state.set_post_content(parse("<attachment=image.png:123>"))
 
     assert post.content == "<attachment=image.png:123>"
     assert post.content_parsed == (

@@ -117,7 +117,7 @@ class State:
         self.thread.title = title
         self.thread.slug = slugify(title)
 
-    def set_post_message(self, parsing_result: ParsingResult):
+    def set_post_content(self, parsing_result: ParsingResult):
         self.parsing_result = parsing_result
 
         self.post.content = parsing_result.markup

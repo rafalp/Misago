@@ -18,7 +18,7 @@ def test_post_edit_state_save_updates_thread_title(user_request, other_user_thre
 
 def test_post_edit_state_save_updates_post(user, user_request, other_user_thread):
     state = PostEditState(user_request, other_user_thread.first_post)
-    state.set_post_message(parse("Edit reply"))
+    state.set_post_content(parse("Edit reply"))
     state.save()
 
     post = other_user_thread.first_post
@@ -45,7 +45,7 @@ def test_post_edit_state_save_updates_post_attachments(
     assert not attachment.post
 
     state = PostEditState(user_request, other_user_thread.first_post)
-    state.set_post_message(parse("Edit reply"))
+    state.set_post_content(parse("Edit reply"))
     state.set_attachments([attachment])
     state.save()
 
@@ -73,7 +73,7 @@ def test_post_edit_state_save_deletes_post_attachments(
     attachment = attachment_factory(text_file, uploader=user, post=post)
 
     state = PostEditState(user_request, other_user_thread.first_post)
-    state.set_post_message(parse("Edit reply"))
+    state.set_post_content(parse("Edit reply"))
     state.set_attachments([attachment, post_attachment])
     state.set_delete_attachments([attachment])
     state.save()
@@ -102,7 +102,7 @@ def test_post_edit_state_save_deletes_unused_attachments(
     unused_attachment = attachment_factory(text_file, uploader=user)
 
     state = PostEditState(user_request, other_user_thread.first_post)
-    state.set_post_message(parse("Edit reply"))
+    state.set_post_content(parse("Edit reply"))
     state.set_attachments([unused_attachment, post_attachment])
     state.set_delete_attachments([unused_attachment])
     state.save()
@@ -126,7 +126,7 @@ def test_post_edit_state_schedules_post_upgrade_for_post_with_code_block(
     mock_process_post_content, user_request, other_user_thread
 ):
     state = PostEditState(user_request, other_user_thread.first_post)
-    state.set_post_message(parse("Hello world\n[code=python]add(1, 3)[/code]"))
+    state.set_post_content(parse("Hello world\n[code=python]add(1, 3)[/code]"))
     state.save()
 
     assert state.post.id
@@ -141,7 +141,7 @@ def test_post_edit_state_changes_test_returns_false_if_nothing_changed(
     user_request, other_user_thread
 ):
     state = PostEditState(user_request, other_user_thread.first_post)
-    state.set_post_message(parse(other_user_thread.first_post.content))
+    state.set_post_content(parse(other_user_thread.first_post.content))
 
     assert not state.is_post_changed()
 
@@ -152,7 +152,7 @@ def test_post_edit_state_changes_test_returns_true_if_thread_title_changed(
 
     state = PostEditState(user_request, other_user_thread.first_post)
     state.set_thread_title("New title")
-    state.set_post_message(parse(other_user_thread.first_post.content))
+    state.set_post_content(parse(other_user_thread.first_post.content))
 
     assert state.is_post_changed()
 
@@ -165,7 +165,7 @@ def test_post_edit_state_changes_test_returns_true_if_post_contents_changed(
     post.save()
 
     state = PostEditState(user_request, other_user_thread.first_post)
-    state.set_post_message(parse("Lorem\nIpsum\nDolor"))
+    state.set_post_content(parse("Lorem\nIpsum\nDolor"))
 
     assert state.is_post_changed()
 
@@ -178,7 +178,7 @@ def test_post_edit_state_changes_test_returns_false_if_only_new_line_characters_
     post.save()
 
     state = PostEditState(user_request, other_user_thread.first_post)
-    state.set_post_message(parse("Lorem\nIpsum"))
+    state.set_post_content(parse("Lorem\nIpsum"))
 
     assert not state.is_post_changed()
 

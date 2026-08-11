@@ -37,7 +37,7 @@ from .save_thread_post_edit_state import save_thread_post_edit_state_hook
 from .save_thread_reply_state import save_thread_reply_state_hook
 from .save_thread_start_state import save_thread_start_state_hook
 from .should_process_post_content import should_process_post_content_hook
-from .validate_post import validate_post_hook
+from .validate_post_content import validate_post_content_hook
 from .validate_posting import validate_posting_hook
 from .validate_thread_title import validate_thread_title_hook
 
@@ -69,7 +69,7 @@ __all__ = [
     "save_thread_reply_state_hook",
     "save_thread_start_state_hook",
     "should_process_post_content_hook",
-    "validate_post_hook",
+    "validate_post_content_hook",
     "validate_posting_hook",
     "validate_thread_title_hook",
 ]

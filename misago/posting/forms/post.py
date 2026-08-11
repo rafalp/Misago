@@ -14,7 +14,7 @@ from ...attachments.upload import handle_attachments_upload
 from ...attachments.validators import validate_post_attachments_limit
 from ...parser.parse import ParsingResult, parse
 from ..state import State
-from ..validators import validate_post
+from ..validators import validate_post_content
 from .attachments import MultipleFileField
 from .base import PostingForm
 
@@ -186,7 +186,7 @@ class PostForm(PostingForm):
         data = self.cleaned_data["post"]
         parsing_result = parse(data)
 
-        validate_post(
+        validate_post_content(
             parsing_result,
             self.request.settings.post_length_min,
             self.request.settings.post_length_max,
@@ -235,7 +235,7 @@ class PostForm(PostingForm):
         return cleaned_data
 
     def update_state(self, state: State):
-        state.set_post_message(self.parsing_result)
+        state.set_post_content(self.parsing_result)
         state.set_attachments(self.attachments)
         state.set_delete_attachments(self.deleted_attachments)
 

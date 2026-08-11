@@ -17,7 +17,7 @@ def test_thread_start_state_creates_thread_with_poll(user_request, default_categ
     )
 
     state.set_thread_title("Test thread")
-    state.set_post_message(parse("Hello world"))
+    state.set_post_content(parse("Hello world"))
     state.set_poll(poll)
     state.save()
 
@@ -38,7 +38,7 @@ def test_thread_start_state_saves_unapproved_thread(
     state = ThreadStartState(user_request, default_category)
 
     state.set_thread_title("Test thread")
-    state.set_post_message(parse("Hello world"))
+    state.set_post_content(parse("Hello world"))
     state.save()
 
     assert state.thread.is_unapproved

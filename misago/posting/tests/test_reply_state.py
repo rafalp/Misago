@@ -25,7 +25,7 @@ def test_reply_state_initializes_post(user_request, other_user_thread):
 
 def test_reply_state_save_saves_post(user_request, other_user_thread):
     state = ReplyState(user_request, other_user_thread)
-    state.set_post_message(parse("Test reply"))
+    state.set_post_content(parse("Test reply"))
     state.save()
 
     assert state.post.id
@@ -34,7 +34,7 @@ def test_reply_state_save_saves_post(user_request, other_user_thread):
 
 def test_reply_state_updates_thread(user_request, other_user_thread):
     state = ReplyState(user_request, other_user_thread)
-    state.set_post_message(parse("Test reply"))
+    state.set_post_content(parse("Test reply"))
     state.save()
 
     other_user_thread.refresh_from_db()
@@ -48,7 +48,7 @@ def test_reply_state_updates_thread(user_request, other_user_thread):
 
 def test_reply_state_updates_category(user_request, other_user_thread):
     state = ReplyState(user_request, other_user_thread)
-    state.set_post_message(parse("Test reply"))
+    state.set_post_content(parse("Test reply"))
     state.save()
 
     category = other_user_thread.category
@@ -66,7 +66,7 @@ def test_reply_state_updates_category(user_request, other_user_thread):
 
 def test_reply_state_updates_user(user_request, other_user_thread, user):
     state = ReplyState(user_request, other_user_thread)
-    state.set_post_message(parse("Test reply"))
+    state.set_post_content(parse("Test reply"))
     state.save()
 
     user.refresh_from_db()
@@ -82,7 +82,7 @@ def test_reply_state_updates_existing_post(user, user_request, user_thread):
     post_parsed = post.content_parsed
 
     state = ReplyState(user_request, user_thread, post)
-    state.set_post_message(parse("Test reply"))
+    state.set_post_content(parse("Test reply"))
     state.save()
 
     post.refresh_from_db()
@@ -127,7 +127,7 @@ def test_reply_state_assigns_attachments_to_category_thread_and_post(
     assert not attachment.post
 
     state = ReplyState(user_request, other_user_thread)
-    state.set_post_message(parse("Test reply"))
+    state.set_post_content(parse("Test reply"))
     state.set_attachments([attachment])
     state.save()
 
@@ -150,7 +150,7 @@ def test_reply_state_updates_existing_post_attachments(
     assert not attachment.post
 
     state = ReplyState(user_request, user_thread, post)
-    state.set_post_message(parse("Test reply"))
+    state.set_post_content(parse("Test reply"))
     state.set_attachments([attachment])
     state.save()
 
@@ -171,7 +171,7 @@ def test_reply_state_schedules_post_upgrade_for_post_with_code_block(
     mock_process_post_content, user_request, other_user_thread
 ):
     state = ReplyState(user_request, other_user_thread)
-    state.set_post_message(parse("Hello world\n[code=python]add(1, 3)[/code]"))
+    state.set_post_content(parse("Hello world\n[code=python]add(1, 3)[/code]"))
     state.save()
 
     assert state.post.id
