@@ -13,7 +13,7 @@ def test_thread_post_edit_restore_view_restores_user_editable_post_on_post_reque
         post=user_reply,
         user=user,
         old_content="Lorem ipsum",
-        new_content=user_reply.original,
+        new_content=user_reply.content,
     )
 
     response = user_client.post(
@@ -41,7 +41,7 @@ def test_thread_post_edit_restore_view_restores_user_editable_post_on_post_reque
     )
 
     user_reply.refresh_from_db()
-    assert user_reply.original == "Lorem ipsum"
+    assert user_reply.content == "Lorem ipsum"
 
 
 def test_thread_post_edit_restore_view_shows_confirmation_page_on_get_request(
@@ -51,7 +51,7 @@ def test_thread_post_edit_restore_view_shows_confirmation_page_on_get_request(
         post=user_reply,
         user=user,
         old_content="Lorem ipsum",
-        new_content=user_reply.original,
+        new_content=user_reply.content,
     )
 
     response = user_client.get(

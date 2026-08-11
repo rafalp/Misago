@@ -101,7 +101,7 @@ def check_user_can_edit_thread(
     action(permissions, thread, post)
 
     if (
-        "[PROTECT]" in post.original
+        "[PROTECT]" in post.content
         and not permissions.is_private_threads_moderator
     ):
         raise PermissionError("Only a moderator can edit this post.")

@@ -4,10 +4,9 @@ from ...plugins.hooks import FilterHook
 from ...threads.models import Post
 
 
-class UpgradePostCodeBlocksHookAction(Protocol):
+class HighlightPostCodeBlocksHookAction(Protocol):
     """
-    Misago function used to upgrade a post's code blocks or the next
-    filter function from another plugin.
+    Misago function used to highlight a post's code blocks after it has been saved.
 
     # Arguments
 
@@ -19,7 +18,7 @@ class UpgradePostCodeBlocksHookAction(Protocol):
     def __call__(self, post: Post): ...
 
 
-class UpgradePostCodeBlocksHookFilter(Protocol):
+class HighlightPostCodeBlocksHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
@@ -35,15 +34,15 @@ class UpgradePostCodeBlocksHookFilter(Protocol):
     The `Post` instance to update.
     """
 
-    def __call__(self, action: UpgradePostCodeBlocksHookAction, post: Post): ...
+    def __call__(self, action: HighlightPostCodeBlocksHookAction, post: Post): ...
 
 
-class UpgradePostCodeBlocksHook(
-    FilterHook[UpgradePostCodeBlocksHookAction, UpgradePostCodeBlocksHookFilter]
+class HighlightPostCodeBlocksHook(
+    FilterHook[HighlightPostCodeBlocksHookAction, HighlightPostCodeBlocksHookFilter]
 ):
     """
-    This hook wraps a standard Misago function used to upgrade a post's
-    code blocks after it has been posted.
+    This hook wraps a standard Misago function used to highlight a post's
+    code blocks after it has been saved.
 
     The standard code highlighting feature runs in a Celery task because Pygments
     can get stuck in an infinite loop due to unknown bugs or malicious input.
@@ -51,17 +50,17 @@ class UpgradePostCodeBlocksHook(
     # Example
 
     The code below implements a custom filter function that highlights code using
-    custom implementation:
+    a custom implementation:
 
     ```python
-    from misago.posting.hooks import upgrade_post_code_blocks_hook
+    from misago.posting.hooks import highlight_post_code_blocks_hook
     from misago.threads.models import Post
 
 
-    @upgrade_post_code_blocks_hook.append_filter
-    def plugin_upgrade_post_code_blocks(action, post: Post):
+    @highlight_post_code_blocks_hook.append_filter
+    def plugin_highlight_post_code_blocks(action, post: Post):
         if post.metadata.get("highlight_code"):
-            post.parsed = custom_highlight_code_util(post.parsed)
+            post.content_parsed = custom_highlight_code_util(post.content_parsed)
             post.metadata.pop("highlight_code")
             post.save(update_fields=["parsed", "metadata"])
     ```
@@ -71,10 +70,10 @@ class UpgradePostCodeBlocksHook(
 
     def __call__(
         self,
-        action: UpgradePostCodeBlocksHookAction,
+        action: HighlightPostCodeBlocksHookAction,
         post: Post,
     ):
         return super().__call__(action, post)
 
 
-upgrade_post_code_blocks_hook = UpgradePostCodeBlocksHook()
+highlight_post_code_blocks_hook = HighlightPostCodeBlocksHook()

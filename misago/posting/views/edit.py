@@ -39,7 +39,7 @@ from ..state import (
     get_private_thread_post_edit_state,
     get_thread_post_edit_state,
 )
-from ..validators import validate_posted_contents
+from ..validators import validate_posting
 
 
 class EditView(BaseThreadView):
@@ -151,7 +151,7 @@ class EditView(BaseThreadView):
         raise NotImplementedError()
 
     def is_valid(self, formset: Formset, state: PostEditState) -> bool:
-        return formset.is_valid() and validate_posted_contents(formset, state)
+        return formset.is_valid() and validate_posting(formset, state)
 
     def render(
         self,
@@ -173,7 +173,7 @@ class EditView(BaseThreadView):
                 attachments=preview.attachments,
             )
 
-            context["preview"] = preview.post.parsed
+            context["preview"] = preview.post.content_parsed
             context["preview_rich_text_data"] = related_objects
 
         if self.is_inline(request):

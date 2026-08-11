@@ -230,7 +230,8 @@ Hooks instances are importable from the following Python modules:
 - [`get_thread_reply_state_hook`](./get-thread-reply-state-hook.md)
 - [`get_thread_start_formset_hook`](./get-thread-start-formset-hook.md)
 - [`get_thread_start_state_hook`](./get-thread-start-state-hook.md)
-- [`post_needs_content_upgrade_hook`](./post-needs-content-upgrade-hook.md)
+- [`highlight_post_code_blocks_hook`](./highlight-post-code-blocks-hook.md)
+- [`process_post_content_hook`](./process-post-content-hook.md)
 - [`require_private_thread_approval_hook`](./require-private-thread-approval-hook.md)
 - [`require_private_thread_reply_approval_hook`](./require-private-thread-reply-approval-hook.md)
 - [`require_thread_approval_hook`](./require-thread-approval-hook.md)
@@ -241,10 +242,9 @@ Hooks instances are importable from the following Python modules:
 - [`save_thread_post_edit_state_hook`](./save-thread-post-edit-state-hook.md)
 - [`save_thread_reply_state_hook`](./save-thread-reply-state-hook.md)
 - [`save_thread_start_state_hook`](./save-thread-start-state-hook.md)
-- [`upgrade_post_code_blocks_hook`](./upgrade-post-code-blocks-hook.md)
-- [`upgrade_post_content_hook`](./upgrade-post-content-hook.md)
-- [`validate_post_hook`](./validate-post-hook.md)
-- [`validate_posted_contents_hook`](./validate-posted-contents-hook.md)
+- [`should_process_post_content_hook`](./should-process-post-content-hook.md)
+- [`validate_post_content_hook`](./validate-post-content-hook.md)
+- [`validate_posting_hook`](./validate-posting-hook.md)
 - [`validate_thread_title_hook`](./validate-thread-title-hook.md)
 
 

@@ -511,7 +511,7 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
 
         if form.cleaned_data["direction"] == "other":
             final_post, other_post = other_post, post
-            old_content = final_post.original
+            old_content = final_post.content
             merge_posts(
                 final_post,
                 [other_post],
@@ -522,7 +522,7 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
             )
         else:
             final_post = post
-            old_content = final_post.original
+            old_content = final_post.content
             merge_posts(
                 final_post,
                 [other_post],
@@ -547,7 +547,7 @@ class MergeThreadPostModerationAction(FormMixin, PostModerationAction):
             user=request.user,
             edit_reason=edit_reason,
             old_content=old_content,
-            new_content=final_post.original,
+            new_content=final_post.content,
             attachments=attachments,
             edited_at=final_post.updated_at,
             request=request,

@@ -21,8 +21,8 @@ def post_factory():
         thread: Thread,
         *,
         poster: FactoryUserArg = "Poster",
-        original: str | None = None,
-        parsed: str | None = None,
+        content: str | None = None,
+        content_parsed: str | None = None,
         metadata: dict | None = None,
         posted_at: FactoryTimestampArg = True,
         updated_at: FactoryTimestampArg = None,
@@ -52,20 +52,20 @@ def post_factory():
             hidden_by
         )
 
-        if not original:
-            original = f"{get_random_string(4)} {get_random_string(4)}"
-        if not parsed:
-            parsed = f"<p>{original}</p>"
+        if not content:
+            content = f"{get_random_string(4)} {get_random_string(4)}"
+        if not content_parsed:
+            content_parsed = f"<p>{content}</p>"
         if not search_document:
-            search_document = original
+            search_document = content
 
         return Post.objects.create(
             category=thread.category,
             thread=thread,
             poster=poster_obj,
             poster_name=poster_name,
-            original=original,
-            parsed=parsed,
+            content=content,
+            content_parsed=content_parsed,
             metadata=metadata or {},
             posted_at=factory_timestamp_arg(posted_at),
             updated_at=factory_timestamp_arg(updated_at),
@@ -100,8 +100,8 @@ def thread_reply_factory(post_factory):
         thread: Thread,
         *,
         poster: FactoryUserArg = "Poster",
-        original: str = "Hello world!",
-        parsed: str | None = None,
+        content: str = "Hello world!",
+        content_parsed: str | None = None,
         metadata: dict | None = None,
         posted_at: FactoryTimestampArg = True,
         updated_at: FactoryTimestampArg = None,
@@ -121,14 +121,14 @@ def thread_reply_factory(post_factory):
         search_document: str | None = None,
         commit: bool = True,
     ):
-        if not parsed:
-            parsed = f"<p>{html.escape(original)}</p>"
+        if not content_parsed:
+            content_parsed = f"<p>{html.escape(content)}</p>"
 
         post = post_factory(
             thread,
             poster=poster,
-            original=original,
-            parsed=parsed,
+            content=content,
+            content_parsed=content_parsed,
             metadata=metadata,
             posted_at=posted_at,
             updated_at=updated_at,

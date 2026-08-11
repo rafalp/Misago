@@ -16,14 +16,14 @@ from ..models import Post
 def posts(thread_reply_factory, thread):
     target = thread_reply_factory(
         thread,
-        original="Lorem ipsum",
-        parsed="<p>Lorem ipsum</p>",
+        content="Lorem ipsum",
+        content_parsed="<p>Lorem ipsum</p>",
         search_document="Lorem",
     )
     other_post = thread_reply_factory(
         thread,
-        original="Dolor met",
-        parsed="<p>Dolor met</p>",
+        content="Dolor met",
+        content_parsed="<p>Dolor met</p>",
         search_document="Dolor",
     )
 
@@ -53,8 +53,8 @@ def test_get_post_merge_form_fields_returns_dict():
 def test_get_merge_posts_merges_posts_contents(user, target, other_post):
     merge_posts(target, [other_post], {}, user)
 
-    assert target.original == "Lorem ipsum\n\nDolor met"
-    assert target.parsed == "<p>Lorem ipsum</p>\n<p>Dolor met</p>"
+    assert target.content == "Lorem ipsum\n\nDolor met"
+    assert target.content_parsed == "<p>Lorem ipsum</p>\n<p>Dolor met</p>"
     assert target.search_document == "Lorem\n\nDolor"
 
 
@@ -63,8 +63,8 @@ def test_get_merge_posts_merges_posts_contents_chronologically(
 ):
     merge_posts(other_post, [target], {}, user)
 
-    assert other_post.original == "Lorem ipsum\n\nDolor met"
-    assert other_post.parsed == "<p>Lorem ipsum</p>\n<p>Dolor met</p>"
+    assert other_post.content == "Lorem ipsum\n\nDolor met"
+    assert other_post.content_parsed == "<p>Lorem ipsum</p>\n<p>Dolor met</p>"
     assert other_post.search_document == "Lorem\n\nDolor"
 
 

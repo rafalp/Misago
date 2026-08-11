@@ -139,7 +139,7 @@ def archive_user_attachments(sender, archive=None, **kwargs):
 def archive_user_posts(sender, archive=None, **kwargs):
     for post in sender.post_set.order_by("id").iterator(chunk_size=50):
         item_name = post.posted_at.strftime("%H%M%S-post")
-        archive.add_text(item_name, post.parsed, date=post.posted_at)
+        archive.add_text(item_name, post.content_parsed, date=post.posted_at)
 
 
 @receiver(archive_user_data)

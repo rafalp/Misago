@@ -13,8 +13,8 @@ from ...core.utils import slugify
 from ...parser.parse import ParsingResult
 from ...permissions.proxy import UserPermissionsProxy
 from ...threads.models import Post, Thread
-from ..tasks import upgrade_post_content
-from ..upgradepost import post_needs_content_upgrade
+from ..processcontent import should_process_post_content
+from ..tasks import process_post_content
 
 if TYPE_CHECKING:
     from ...users.models import User
@@ -117,16 +117,16 @@ class State:
         self.thread.title = title
         self.thread.slug = slugify(title)
 
-    def set_post_message(self, parsing_result: ParsingResult):
+    def set_post_content(self, parsing_result: ParsingResult):
         self.parsing_result = parsing_result
 
-        self.post.original = parsing_result.markup
-        self.post.parsed = parsing_result.html
+        self.post.content = parsing_result.markup
+        self.post.content_parsed = parsing_result.html
         self.post.metadata = parsing_result.metadata
 
     def schedule_post_content_upgrade(self):
-        if post_needs_content_upgrade(self.post):
-            upgrade_post_content.delay(self.post.id, self.post.sha256_checksum)
+        if should_process_post_content(self.post):
+            process_post_content.delay(self.post.id, self.post.sha256_checksum)
 
     def set_attachments(self, attachments: list[Attachment]):
         self.attachments = attachments

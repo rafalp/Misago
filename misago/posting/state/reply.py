@@ -29,7 +29,7 @@ class ReplyState(State):
         self.thread = thread
         self.post = post or self.initialize_post()
         self.is_merged = bool(self.post.id)
-        self.post_original = self.post.original
+        self.post_original = self.post.content
 
         self.store_object_state(self.category)
         self.store_object_state(self.thread)
@@ -37,12 +37,12 @@ class ReplyState(State):
         if self.post.id:
             self.store_object_state(self.post)
 
-    def set_post_message(self, parsing_result: ParsingResult):
+    def set_post_content(self, parsing_result: ParsingResult):
         if self.post.id:
-            markup = "\n\n".join([self.post.original, parsing_result.markup])
+            markup = "\n\n".join([self.post.content, parsing_result.markup])
             parsing_result = parse(markup)
 
-        super().set_post_message(parsing_result)
+        super().set_post_content(parsing_result)
 
     def require_approval(self) -> bool:
         return False
@@ -79,7 +79,7 @@ class ReplyState(State):
                 post=self.post,
                 user=self.user,
                 old_content=self.post_original,
-                new_content=self.post.original,
+                new_content=self.post.content,
                 attachments=self.attachments,
                 edited_at=self.timestamp,
                 request=self.request,

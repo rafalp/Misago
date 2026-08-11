@@ -263,12 +263,12 @@ def _merge_posts_action(
 
     for post in posts:
         if post.id > target.id:
-            target.original += f"\n\n{post.original}"
-            target.parsed += f"\n{post.parsed}"
+            target.content += f"\n\n{post.content}"
+            target.content_parsed += f"\n{post.content_parsed}"
             target.search_document += f"\n\n{post.search_document}"
         else:
-            target.original = f"{post.original}\n\n{target.original}"
-            target.parsed = f"{post.parsed}\n{target.parsed}"
+            target.content = f"{post.content}\n\n{target.content}"
+            target.content_parsed = f"{post.content_parsed}\n{target.content_parsed}"
             target.search_document = (
                 f"{post.search_document}\n\n{target.search_document}"
             )

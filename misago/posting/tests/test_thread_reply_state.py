@@ -4,7 +4,7 @@ from ..state import ThreadReplyState
 
 def test_thread_reply_state_save(user_request, other_user_thread):
     state = ThreadReplyState(user_request, other_user_thread)
-    state.set_post_message(parse("Test reply"))
+    state.set_post_content(parse("Test reply"))
     state.save()
 
 
@@ -15,7 +15,7 @@ def test_thread_reply_state_saves_unapproved_post(
     user.save()
 
     state = ThreadReplyState(user_request, other_user_thread)
-    state.set_post_message(parse("Test reply"))
+    state.set_post_content(parse("Test reply"))
     state.save()
 
     default_category.refresh_from_db()

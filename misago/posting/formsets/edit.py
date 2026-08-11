@@ -39,7 +39,7 @@ def _get_thread_post_edit_formset_action(
     formset.add_form(
         create_post_form(
             request,
-            initial=post.original,
+            initial=post.content,
             attachments=get_post_attachments(post),
             can_upload_attachments=can_upload_threads_attachments(
                 request.user_permissions, post.category
@@ -71,7 +71,7 @@ def _get_private_thread_post_edit_formset_action(
     formset.add_form(
         create_post_form(
             request,
-            initial=post.original,
+            initial=post.content,
             attachments=get_post_attachments(post),
             can_upload_attachments=can_upload_attachments,
         )
@@ -100,7 +100,7 @@ def _get_thread_edit_formset_action(
     formset.add_form(
         create_post_form(
             request,
-            initial=post.original,
+            initial=post.content,
             attachments=get_post_attachments(post),
             can_upload_attachments=can_upload_threads_attachments(
                 request.user_permissions, post.category
@@ -133,7 +133,7 @@ def _get_private_thread_edit_formset_action(
     formset.add_form(
         create_post_form(
             request,
-            initial=post.original,
+            initial=post.content,
             attachments=get_post_attachments(post),
             can_upload_attachments=can_upload_attachments,
         )

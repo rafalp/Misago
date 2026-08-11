@@ -6,10 +6,10 @@ from ...parser.parse import ParsingResult
 from ...plugins.hooks import FilterHook
 
 
-class ValidatePostHookAction(Protocol):
+class ValidatePostContentHookAction(Protocol):
     """
-    Misago function for validating the contents of a post.
-    Raises `ValidationError` if the post contents are invalid.
+    Misago function for validating the content of a post.
+    Raises `ValidationError` if the post content is invalid.
 
     # Arguments
 
@@ -39,13 +39,13 @@ class ValidatePostHookAction(Protocol):
     ) -> None: ...
 
 
-class ValidatePostHookFilter(Protocol):
+class ValidatePostContentHookFilter(Protocol):
     """
     A function implemented by a plugin that can be registered in this hook.
 
     # Arguments
 
-    ## `action: ValidatePostHookAction`
+    ## `action: ValidatePostContentHookAction`
 
     The next function registered in this hook, either a custom function or
     Misago's default.
@@ -71,7 +71,7 @@ class ValidatePostHookFilter(Protocol):
 
     def __call__(
         self,
-        action: ValidatePostHookAction,
+        action: ValidatePostContentHookAction,
         value: ParsingResult,
         min_length: int,
         max_length: int,
@@ -79,17 +79,17 @@ class ValidatePostHookFilter(Protocol):
     ) -> None: ...
 
 
-class ValidatePostHook(
+class ValidatePostContentHook(
     FilterHook[
-        ValidatePostHookAction,
-        ValidatePostHookFilter,
+        ValidatePostContentHookAction,
+        ValidatePostContentHookFilter,
     ]
 ):
     """
     This hook allows plugins to replace or extend the standard logic used to
-    validate post contents.
+    validate post content.
 
-    Post contents are represented as a `ParsingResult` object with the following
+    Post content is represented as a `ParsingResult` object with the following
     attributes:
 
     - `markup: str`: The original markup posted by the user.
@@ -104,11 +104,11 @@ class ValidatePostHook(
     ```python
     from django.http import HttpRequest
     from misago.parser.parse import ParsingResult
-    from misago.posting.hooks import validate_post_hook
+    from misago.posting.hooks import validate_post_content_hook
 
 
-    @validate_post_hook.append_filter
-    def validate_post_for_new_users(
+    @validate_post_content_hook.append_filter
+    def validate_post_content_for_new_users(
         action,
         value: ParsingResult,
         min_length: int,
@@ -126,7 +126,7 @@ class ValidatePostHook(
 
     def __call__(
         self,
-        action: ValidatePostHookAction,
+        action: ValidatePostContentHookAction,
         value: ParsingResult,
         min_length: int,
         max_length: int,
@@ -135,4 +135,4 @@ class ValidatePostHook(
         return super().__call__(action, value, min_length, max_length, request)
 
 
-validate_post_hook = ValidatePostHook()
+validate_post_content_hook = ValidatePostContentHook()

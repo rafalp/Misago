@@ -50,7 +50,7 @@ from ..state import (
     get_private_thread_reply_state,
     get_thread_reply_state,
 )
-from ..validators import validate_flood_control, validate_posted_contents
+from ..validators import validate_flood_control, validate_posting
 
 
 class ReplyView(BaseThreadView):
@@ -207,7 +207,7 @@ class ReplyView(BaseThreadView):
             data["post"] = (
                 f"[quote={quoted_post.poster_name}, post: {quoted_post.id}]"
                 "\n"
-                f"{quoted_post.original}"
+                f"{quoted_post.content}"
                 "\n"
                 "[/quote]"
                 "\n\n"
@@ -233,7 +233,7 @@ class ReplyView(BaseThreadView):
         return (
             formset.is_valid()
             and (state.is_merged or validate_flood_control(formset, state))
-            and validate_posted_contents(formset, state)
+            and validate_posting(formset, state)
         )
 
     def post_state_save(
@@ -274,7 +274,7 @@ class ReplyView(BaseThreadView):
                 attachments=preview.attachments,
             )
 
-            context["preview"] = preview.post.parsed
+            context["preview"] = preview.post.content_parsed
             context["preview_rich_text_data"] = related_objects
 
         if extra_context:

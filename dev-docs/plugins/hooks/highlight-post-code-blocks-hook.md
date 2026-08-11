@@ -1,6 +1,6 @@
-# `upgrade_post_code_blocks_hook`
+# `highlight_post_code_blocks_hook`
 
-This hook wraps a standard Misago function used to upgrade a post's code blocks after it has been posted.
+This hook wraps a standard Misago function used to highlight a post's code blocks after it has been saved.
 
 The standard code highlighting feature runs in a Celery task because Pygments can get stuck in an infinite loop due to unknown bugs or malicious input.
 
@@ -10,15 +10,15 @@ The standard code highlighting feature runs in a Celery task because Pygments ca
 This hook can be imported from `misago.posting.hooks`:
 
 ```python
-from misago.posting.hooks import upgrade_post_code_blocks_hook
+from misago.posting.hooks import highlight_post_code_blocks_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_upgrade_post_code_blocks_filter(
-    action: UpgradePostCodeBlocksHookAction, post: Post
+def custom_highlight_post_code_blocks_filter(
+    action: HighlightPostCodeBlocksHookAction, post: Post
 ):
     ...
 ```
@@ -41,11 +41,11 @@ The `Post` instance to update.
 ## Action
 
 ```python
-def upgrade_post_code_blocks_action(post: Post):
+def highlight_post_code_blocks_action(post: Post):
     ...
 ```
 
-Misago function used to upgrade a post's code blocks or the next filter function from another plugin.
+Misago function used to highlight a post's code blocks after it has been saved.
 
 
 ### Arguments
@@ -57,17 +57,17 @@ The `Post` instance to update.
 
 ## Example
 
-The code below implements a custom filter function that highlights code using custom implementation:
+The code below implements a custom filter function that highlights code using a custom implementation:
 
 ```python
-from misago.posting.hooks import upgrade_post_code_blocks_hook
+from misago.posting.hooks import highlight_post_code_blocks_hook
 from misago.threads.models import Post
 
 
-@upgrade_post_code_blocks_hook.append_filter
-def plugin_upgrade_post_code_blocks(action, post: Post):
+@highlight_post_code_blocks_hook.append_filter
+def plugin_highlight_post_code_blocks(action, post: Post):
     if post.metadata.get("highlight_code"):
-        post.parsed = custom_highlight_code_util(post.parsed)
+        post.content_parsed = custom_highlight_code_util(post.content_parsed)
         post.metadata.pop("highlight_code")
         post.save(update_fields=["parsed", "metadata"])
 ```

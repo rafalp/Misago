@@ -1,8 +1,8 @@
-# `validate_post_hook`
+# `validate_post_content_hook`
 
-This hook allows plugins to replace or extend the standard logic used to validate post contents.
+This hook allows plugins to replace or extend the standard logic used to validate post content.
 
-Post contents are represented as a `ParsingResult` object with the following attributes:
+Post content is represented as a `ParsingResult` object with the following attributes:
 
 - `markup: str`: The original markup posted by the user. - `tokens: list[Token]`: A token stream returned by the parser. - `html: str`: An HTML representation of the parsed markup. - `text: str`: A plain text representation of the parsed markup.
 
@@ -12,15 +12,15 @@ Post contents are represented as a `ParsingResult` object with the following att
 This hook can be imported from `misago.posting.hooks`:
 
 ```python
-from misago.posting.hooks import validate_post_hook
+from misago.posting.hooks import validate_post_content_hook
 ```
 
 
 ## Filter
 
 ```python
-def custom_validate_post_filter(
-    action: ValidatePostHookAction,
+def custom_validate_post_content_filter(
+    action: ValidatePostContentHookAction,
     value: ParsingResult,
     min_length: int,
     max_length: int,
@@ -34,7 +34,7 @@ A function implemented by a plugin that can be registered in this hook.
 
 ### Arguments
 
-#### `action: ValidatePostHookAction`
+#### `action: ValidatePostContentHookAction`
 
 The next function registered in this hook, either a custom function or Misago's default.
 
@@ -64,7 +64,7 @@ The request object or `None` if not provided.
 ## Action
 
 ```python
-def validate_post_action(
+def validate_post_content_action(
     value: ParsingResult,
     min_length: int,
     max_length: int,
@@ -73,7 +73,7 @@ def validate_post_action(
     ...
 ```
 
-Misago function for validating the contents of a post. Raises `ValidationError` if the post contents are invalid.
+Misago function for validating the content of a post. Raises `ValidationError` if the post content is invalid.
 
 
 ### Arguments
@@ -105,11 +105,11 @@ Raises the minimal required length of a post for new users.
 ```python
 from django.http import HttpRequest
 from misago.parser.parse import ParsingResult
-from misago.posting.hooks import validate_post_hook
+from misago.posting.hooks import validate_post_content_hook
 
 
-@validate_post_hook.append_filter
-def validate_post_for_new_users(
+@validate_post_content_hook.append_filter
+def validate_post_content_for_new_users(
     action,
     value: ParsingResult,
     min_length: int,

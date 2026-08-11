@@ -31,7 +31,7 @@ def test_start_state_stores_category_state(user_request, default_category):
 def test_start_state_save_saves_thread_and_post(user_request, default_category):
     state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message(parse("Hello world"))
+    state.set_post_content(parse("Hello world"))
     state.save()
     state.save_action(user_request, state)
 
@@ -45,7 +45,7 @@ def test_start_state_save_saves_thread_and_post(user_request, default_category):
 def test_start_state_save_saves_post_search_document(user_request, default_category):
     state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message(parse("Hello world"))
+    state.set_post_content(parse("Hello world"))
     state.save()
     state.save_action(user_request, state)
 
@@ -55,7 +55,7 @@ def test_start_state_save_saves_post_search_document(user_request, default_categ
 def test_start_state_updates_category(user_request, default_category):
     state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message(parse("Hello world"))
+    state.set_post_content(parse("Hello world"))
     state.save()
     state.save_action(user_request, state)
 
@@ -74,7 +74,7 @@ def test_start_state_updates_category(user_request, default_category):
 def test_start_state_updates_user(user_request, default_category, user):
     state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message(parse("Hello world"))
+    state.set_post_content(parse("Hello world"))
     state.save()
     state.save_action(user_request, state)
 
@@ -94,7 +94,7 @@ def test_start_state_assigns_attachments_to_category_thread_and_post(
 
     state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message(parse("Hello world"))
+    state.set_post_content(parse("Hello world"))
     state.set_attachments([attachment])
     state.save()
     state.save_action(user_request, state)
@@ -116,7 +116,7 @@ def test_start_state_deletes_unused_attachments(
 
     state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message(parse("Hello world"))
+    state.set_post_content(parse("Hello world"))
     state.set_attachments([attachment])
     state.set_delete_attachments([attachment])
     state.save()
@@ -139,7 +139,7 @@ def test_start_state_delete_attachments_excludes_unknown_attachments(
 
     state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message(parse("Hello world"))
+    state.set_post_content(parse("Hello world"))
     state.set_delete_attachments([attachment])
     state.save()
     state.save_action(user_request, state)
@@ -152,11 +152,11 @@ def test_start_state_delete_attachments_excludes_unknown_attachments(
 
 
 def test_start_state_schedules_post_upgrade_for_post_with_code_block(
-    mock_upgrade_post_content, user_request, default_category
+    mock_process_post_content, user_request, default_category
 ):
     state = StartState(user_request, default_category)
     state.set_thread_title("Test thread")
-    state.set_post_message(parse("Hello world\n[code=python]add(1, 3)[/code]"))
+    state.set_post_content(parse("Hello world\n[code=python]add(1, 3)[/code]"))
     state.save()
     state.save_action(user_request, state)
 
@@ -164,6 +164,6 @@ def test_start_state_schedules_post_upgrade_for_post_with_code_block(
     assert state.post.id
     assert state.post.thread == state.thread
 
-    mock_upgrade_post_content.delay.assert_called_once_with(
+    mock_process_post_content.delay.assert_called_once_with(
         state.post.id, state.post.sha256_checksum
     )

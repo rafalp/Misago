@@ -87,7 +87,7 @@ class RequireThreadApprovalHook(
 
         return bool(
             (timezone.now() - state.user.joined_on).total_seconds() < 72 * 3600
-            and "<a" in state.post.parsed
+            and "<a" in state.post.content_parsed
         )
     ```
     """

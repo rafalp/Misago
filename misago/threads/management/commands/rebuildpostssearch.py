@@ -27,7 +27,7 @@ class Command(BaseCommand):
 
         queryset = Post.objects.select_related("thread")
         for post in queryset.iterator(chunk_size=50):
-            parsing_result = parse(post.original)
+            parsing_result = parse(post.content)
 
             if post.id == post.thread.first_post_id:
                 post.search_document = f"{post.thread.title} {parsing_result.text}"

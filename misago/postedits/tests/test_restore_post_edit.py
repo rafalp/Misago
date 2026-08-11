@@ -7,7 +7,7 @@ def test_restore_post_edit_restores_post(post, user):
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     _, new_post_edit = restore_post_edit(post_edit, user)
@@ -15,8 +15,8 @@ def test_restore_post_edit_restores_post(post, user):
     assert new_post_edit.id
     assert new_post_edit.new_content == "Lorem ipsum"
 
-    assert post.original == "Lorem ipsum"
-    assert post.parsed == "<p>Lorem ipsum</p>"
+    assert post.content == "Lorem ipsum"
+    assert post.content_parsed == "<p>Lorem ipsum</p>"
     assert post.last_editor == user
     assert post.last_editor_name == user.username
     assert post.last_editor_slug == user.slug
@@ -24,8 +24,8 @@ def test_restore_post_edit_restores_post(post, user):
 
     post.refresh_from_db()
 
-    assert post.original == "Lorem ipsum"
-    assert post.parsed == "<p>Lorem ipsum</p>"
+    assert post.content == "Lorem ipsum"
+    assert post.content_parsed == "<p>Lorem ipsum</p>"
     assert post.updated_at
     assert post.edits == 1
     assert post.last_editor == user
@@ -39,7 +39,7 @@ def test_restore_post_edit_restores_post_by_deleted_user(post, user):
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     _, new_post_edit = restore_post_edit(post_edit, "DeletedUser")
@@ -47,8 +47,8 @@ def test_restore_post_edit_restores_post_by_deleted_user(post, user):
     assert new_post_edit.id
     assert new_post_edit.new_content == "Lorem ipsum"
 
-    assert post.original == "Lorem ipsum"
-    assert post.parsed == "<p>Lorem ipsum</p>"
+    assert post.content == "Lorem ipsum"
+    assert post.content_parsed == "<p>Lorem ipsum</p>"
     assert post.last_editor is None
     assert post.last_editor_name == "DeletedUser"
     assert post.last_editor_slug == "deleteduser"
@@ -56,8 +56,8 @@ def test_restore_post_edit_restores_post_by_deleted_user(post, user):
 
     post.refresh_from_db()
 
-    assert post.original == "Lorem ipsum"
-    assert post.parsed == "<p>Lorem ipsum</p>"
+    assert post.content == "Lorem ipsum"
+    assert post.content_parsed == "<p>Lorem ipsum</p>"
     assert post.updated_at
     assert post.edits == 1
     assert post.last_editor is None
@@ -73,7 +73,7 @@ def test_restore_post_edit_without_commit_doesnt_save_post_and_post_edit(
         post=post,
         user=user,
         old_content="Lorem ipsum",
-        new_content=post.original,
+        new_content=post.content,
     )
 
     # New post edit creation runs query to snapshot existing attachments
@@ -83,8 +83,8 @@ def test_restore_post_edit_without_commit_doesnt_save_post_and_post_edit(
     assert not new_post_edit.id
     assert new_post_edit.new_content == "Lorem ipsum"
 
-    assert post.original == "Lorem ipsum"
-    assert post.parsed == "<p>Lorem ipsum</p>"
+    assert post.content == "Lorem ipsum"
+    assert post.content_parsed == "<p>Lorem ipsum</p>"
     assert post.last_editor is None
     assert post.last_editor_name == "DeletedUser"
     assert post.last_editor_slug == "deleteduser"
@@ -92,8 +92,8 @@ def test_restore_post_edit_without_commit_doesnt_save_post_and_post_edit(
 
     post.refresh_from_db()
 
-    assert post.original != "Lorem ipsum"
-    assert post.parsed != "<p>Lorem ipsum</p>"
+    assert post.content != "Lorem ipsum"
+    assert post.content_parsed != "<p>Lorem ipsum</p>"
     assert post.updated_at is None
     assert post.edits == 0
     assert post.last_editor is None

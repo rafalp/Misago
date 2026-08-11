@@ -41,8 +41,8 @@ class ThreadData:
 class PostData:
     poster: str
     posted_at: datetime
-    original: str
-    parsed: str
+    content: str
+    content_parsed: str
     is_locked: bool = False
     is_hidden: bool = False
     is_unapproved: bool = False
@@ -240,8 +240,8 @@ class Command(BaseCommand):
                             minute=randint(0, 59),
                             second=randint(0, 59),
                         ),
-                        original="This thread shows timestamps for content from another year.",
-                        parsed=(
+                        content="This thread shows timestamps for content from another year.",
+                        content_parsed=(
                             "<p>This thread shows timestamps for content from another year.</p>"
                         ),
                     )
@@ -260,8 +260,8 @@ class Command(BaseCommand):
                             minute=randint(0, 59),
                             second=randint(0, 59),
                         ),
-                        original="This thread shows timestamps for content from current year.",
-                        parsed=(
+                        content="This thread shows timestamps for content from current year.",
+                        content_parsed=(
                             "<p>This thread shows timestamps for content from current year.</p>"
                         ),
                     )
@@ -281,8 +281,8 @@ class Command(BaseCommand):
                             )
                             - timedelta(days=3)
                         ),
-                        original="This thread shows timestamps for content from current week.",
-                        parsed=(
+                        content="This thread shows timestamps for content from current week.",
+                        content_parsed=(
                             "<p>This thread shows timestamps for content from current week.</p>"
                         ),
                     )
@@ -295,8 +295,8 @@ class Command(BaseCommand):
                     PostData(
                         poster=random_deleted_user(),
                         posted_at=timezone.now() - timedelta(hours=24),
-                        original="This thread shows timestamps for content from yesterday.",
-                        parsed=(
+                        content="This thread shows timestamps for content from yesterday.",
+                        content_parsed=(
                             "<p>This thread shows timestamps for content from yesterday.</p>"
                         ),
                     )
@@ -310,35 +310,35 @@ class Command(BaseCommand):
                         poster=moderator,
                         posted_at=timezone.now()
                         - timedelta(minutes=(60 * 3) + randint(0, 59)),
-                        original="Post by a moderator.",
-                        parsed="<p>Post by a moderator.</p>",
+                        content="Post by a moderator.",
+                        content_parsed="<p>Post by a moderator.</p>",
                     ),
                     PostData(
                         poster=user,
                         posted_at=timezone.now()
                         - timedelta(minutes=(60 * 2) + randint(0, 59)),
-                        original="Post by a registered user.",
-                        parsed="<p>Post by a registered user.</p>",
+                        content="Post by a registered user.",
+                        content_parsed="<p>Post by a registered user.</p>",
                     ),
                     PostData(
                         poster=banned_user,
                         posted_at=timezone.now()
                         - timedelta(minutes=60 + randint(0, 59)),
-                        original="Post by a banned user.",
-                        parsed="<p>Post by a banned user.</p>",
+                        content="Post by a banned user.",
+                        content_parsed="<p>Post by a banned user.</p>",
                     ),
                     PostData(
                         poster=random_deleted_user(),
                         posted_at=timezone.now() - timedelta(minutes=randint(0, 59)),
-                        original="Post by a deleted user.",
-                        parsed="<p>Post by a deleted user.</p>",
+                        content="Post by a deleted user.",
+                        content_parsed="<p>Post by a deleted user.</p>",
                     ),
                     PostData(
                         poster=other_user,
                         posted_at=timezone.now()
                         - timedelta(minutes=(60 * 2) + randint(0, 59)),
-                        original="Post by an other registered user.",
-                        parsed="<p>Post by an other registered user.</p>",
+                        content="Post by an other registered user.",
+                        content_parsed="<p>Post by an other registered user.</p>",
                     ),
                 ],
             ),
@@ -350,8 +350,8 @@ class Command(BaseCommand):
                     PostData(
                         poster=moderator,
                         posted_at=timezone.now() - timedelta(minutes=randint(0, 600)),
-                        original="This thread is globally pinned.",
-                        parsed="<p>This thread is globally pinned.</p>",
+                        content="This thread is globally pinned.",
+                        content_parsed="<p>This thread is globally pinned.</p>",
                     ),
                 ],
             ),
@@ -363,8 +363,8 @@ class Command(BaseCommand):
                     PostData(
                         poster=moderator,
                         posted_at=timezone.now() - timedelta(minutes=randint(0, 600)),
-                        original="This thread is pinned in a category.",
-                        parsed="<p>This thread is pinned in a category.</p>",
+                        content="This thread is pinned in a category.",
+                        content_parsed="<p>This thread is pinned in a category.</p>",
                     ),
                 ],
             ),
@@ -376,8 +376,8 @@ class Command(BaseCommand):
                     PostData(
                         poster=user,
                         posted_at=timezone.now() - timedelta(minutes=randint(0, 600)),
-                        original="This thread is hidden.",
-                        parsed="<p>This thread is hidden.</p>",
+                        content="This thread is hidden.",
+                        content_parsed="<p>This thread is hidden.</p>",
                     ),
                 ],
             ),
@@ -389,8 +389,8 @@ class Command(BaseCommand):
                     PostData(
                         poster=user,
                         posted_at=timezone.now() - timedelta(minutes=randint(0, 600)),
-                        original="This thread is unapproved.",
-                        parsed="<p>This thread is unapproved.</p>",
+                        content="This thread is unapproved.",
+                        content_parsed="<p>This thread is unapproved.</p>",
                     ),
                 ],
             ),
@@ -402,8 +402,8 @@ class Command(BaseCommand):
                     PostData(
                         poster=user,
                         posted_at=timezone.now() - timedelta(minutes=randint(0, 600)),
-                        original="This thread is locked.",
-                        parsed="<p>This thread is locked.</p>",
+                        content="This thread is locked.",
+                        content_parsed="<p>This thread is locked.</p>",
                     ),
                 ],
             ),
@@ -415,16 +415,16 @@ class Command(BaseCommand):
                         poster=user,
                         posted_at=timezone.now()
                         - timedelta(minutes=400 - randint(0, 59)),
-                        original="This post is locked.",
-                        parsed="<p>This post is locked.</p>",
+                        content="This post is locked.",
+                        content_parsed="<p>This post is locked.</p>",
                         is_locked=True,
                     ),
                     PostData(
                         poster="JohnDoe",
                         posted_at=timezone.now()
                         - timedelta(minutes=300 - randint(0, 59)),
-                        original="This post is hidden by deleted user.",
-                        parsed="<p>This post is hidden by deleted user.</p>",
+                        content="This post is hidden by deleted user.",
+                        content_parsed="<p>This post is hidden by deleted user.</p>",
                         is_hidden=True,
                         hidden_by="JohnDoe",
                     ),
@@ -432,16 +432,16 @@ class Command(BaseCommand):
                         poster=other_user,
                         posted_at=timezone.now()
                         - timedelta(minutes=200 - randint(0, 59)),
-                        original="This post is hidden by the moderator.",
-                        parsed="<p>This post is hidden by the moderator.</p>",
+                        content="This post is hidden by the moderator.",
+                        content_parsed="<p>This post is hidden by the moderator.</p>",
                         is_hidden=True,
                         hidden_by=moderator,
                     ),
                     PostData(
                         poster=user,
                         posted_at=timezone.now() - timedelta(minutes=randint(0, 59)),
-                        original="This post is unapproved.",
-                        parsed="<p>This post is unapproved.</p>",
+                        content="This post is unapproved.",
+                        content_parsed="<p>This post is unapproved.</p>",
                         is_unapproved=True,
                     ),
                 ],
@@ -454,15 +454,15 @@ class Command(BaseCommand):
                         poster=random_deleted_user(),
                         posted_at=timezone.now()
                         - timedelta(minutes=300 + randint(0, 60)),
-                        original="Thread by a deleted user.",
-                        parsed="<p>Thread by a deleted user.</p>",
+                        content="Thread by a deleted user.",
+                        content_parsed="<p>Thread by a deleted user.</p>",
                     ),
                     PostData(
                         poster=random_deleted_user(),
                         posted_at=timezone.now()
                         - timedelta(minutes=100 + randint(0, 60)),
-                        original="Reply by a deleted user.",
-                        parsed="<p>Reply by a deleted user.</p>",
+                        content="Reply by a deleted user.",
+                        content_parsed="<p>Reply by a deleted user.</p>",
                     ),
                 ],
             ),
@@ -474,15 +474,15 @@ class Command(BaseCommand):
                         poster=random_registered_user(),
                         posted_at=timezone.now()
                         - timedelta(minutes=300 + randint(0, 60)),
-                        original="Thread by a registered user.",
-                        parsed="<p>Thread by a registered user.</p>",
+                        content="Thread by a registered user.",
+                        content_parsed="<p>Thread by a registered user.</p>",
                     ),
                     PostData(
                         poster=random_deleted_user(),
                         posted_at=timezone.now()
                         - timedelta(minutes=100 + randint(0, 60)),
-                        original="Reply by a deleted user.",
-                        parsed="<p>Reply by a deleted user.</p>",
+                        content="Reply by a deleted user.",
+                        content_parsed="<p>Reply by a deleted user.</p>",
                     ),
                 ],
             ),
@@ -494,15 +494,15 @@ class Command(BaseCommand):
                         poster=random_deleted_user(),
                         posted_at=timezone.now()
                         - timedelta(minutes=300 + randint(0, 60)),
-                        original="Thread by a deleted user.",
-                        parsed="<p>Thread by a deleted user.</p>",
+                        content="Thread by a deleted user.",
+                        content_parsed="<p>Thread by a deleted user.</p>",
                     ),
                     PostData(
                         poster=random_registered_user(),
                         posted_at=timezone.now()
                         - timedelta(minutes=100 + randint(0, 60)),
-                        original="Reply by a registered user.",
-                        parsed="<p>Reply by a registered user.</p>",
+                        content="Reply by a registered user.",
+                        content_parsed="<p>Reply by a registered user.</p>",
                     ),
                 ],
             ),
@@ -514,15 +514,15 @@ class Command(BaseCommand):
                         poster=random_deleted_user(),
                         posted_at=timezone.now()
                         - timedelta(minutes=300 + randint(0, 60)),
-                        original="Original post.",
-                        parsed="<p>Original post.</p>",
+                        content="Original post.",
+                        content_parsed="<p>Original post.</p>",
                     ),
                     PostData(
                         poster=random_deleted_user(),
                         posted_at=timezone.now()
                         - timedelta(minutes=100 + randint(0, 60)),
-                        original="Example reply.",
-                        parsed="<p>Example reply.</p>",
+                        content="Example reply.",
+                        content_parsed="<p>Example reply.</p>",
                     ),
                 ],
             ),
@@ -534,7 +534,7 @@ class Command(BaseCommand):
                     PostData(
                         poster="Misago",
                         posted_at=timezone.now(),
-                        original=dedent(
+                        content=dedent(
                             """
                             This Misago site was pre-populated with some initial data to make starting development easier:
 
@@ -581,7 +581,7 @@ class Command(BaseCommand):
                             - Password: `password`
                             """
                         ).strip(),
-                        parsed=(
+                        content_parsed=(
                             "<p>This Misago site was pre-populated with some initial data to make starting development easier:</p>"
                             "<ul>"
                             "<li>Example categories hierarchy</li>"
@@ -644,8 +644,8 @@ class Command(BaseCommand):
                     PostData(
                         poster=random_user(),
                         posted_at=timestamp,
-                        original=f"Post no. {i}",
-                        parsed=f"<p>Post no. {i}</p>",
+                        content=f"Post no. {i}",
+                        content_parsed=f"<p>Post no. {i}</p>",
                     )
                 )
 
@@ -735,8 +735,8 @@ class Command(BaseCommand):
                 poster=poster,
                 poster_name=poster_name,
                 posted_at=post_data.posted_at,
-                original=post_data.original,
-                parsed=post_data.parsed,
+                content=post_data.content,
+                content_parsed=post_data.content_parsed,
                 is_locked=post_data.is_locked,
                 is_hidden=post_data.is_hidden,
                 is_unapproved=post_data.is_unapproved,
@@ -746,7 +746,7 @@ class Command(BaseCommand):
                 hidden_by_slug=hidden_by_slug,
             )
 
-            post.set_search_document(thread, post_data.original)
+            post.set_search_document(thread, post_data.content)
             post.set_search_vector()
             post.save()
 

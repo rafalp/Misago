@@ -36,7 +36,7 @@ def _restore_post_edit_action(
 ) -> tuple[Post, PostEdit]:
     timestamp = timezone.now()
     post = post_edit.post
-    old_content = post.original
+    old_content = post.content
     new_content = post_edit.old_content
 
     if isinstance(user, str):
@@ -50,8 +50,8 @@ def _restore_post_edit_action(
 
     parsing_result = parse(new_content)
 
-    post.original = parsing_result.markup
-    post.parsed = parsing_result.html
+    post.content = parsing_result.markup
+    post.content_parsed = parsing_result.html
     post.metadata = parsing_result.metadata
     post.set_search_document(post.thread, parsing_result.text)
 

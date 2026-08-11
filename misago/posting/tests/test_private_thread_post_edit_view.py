@@ -246,7 +246,7 @@ def test_private_thread_post_edit_view_displays_edit_form(
     )
     assert_contains(response, "Edit post")
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, post.original)
+    assert_contains(response, post.content)
 
 
 def test_private_thread_post_edit_view_displays_edit_form_for_moderator(
@@ -266,7 +266,7 @@ def test_private_thread_post_edit_view_displays_edit_form_for_moderator(
     )
     assert_contains(response, "Edit post")
     assert_contains(response, other_user_private_thread.title)
-    assert_contains(response, post.original)
+    assert_contains(response, post.content)
 
 
 def test_private_thread_post_edit_view_displays_inline_edit_form_in_htmx(
@@ -287,7 +287,7 @@ def test_private_thread_post_edit_view_displays_inline_edit_form_in_htmx(
         headers={"hx-request": "true"},
     )
     assert_contains(response, "Save")
-    assert_contains(response, post.original)
+    assert_contains(response, post.content)
     assert_contains(response, "?inline=true")
 
 
@@ -324,7 +324,7 @@ def test_private_thread_post_edit_view_updates_thread_post(
     )
 
     post.refresh_from_db()
-    assert post.original == "Edited"
+    assert post.content == "Edited"
     assert post.updated_at
     assert post.edits == 1
     assert post.last_editor == user
@@ -374,7 +374,7 @@ def test_private_thread_post_edit_view_updates_thread_post_in_htmx(
     )
 
     post.refresh_from_db()
-    assert post.original == "Edited"
+    assert post.content == "Edited"
     assert post.updated_at
     assert post.edits == 1
     assert post.last_editor == user
@@ -406,7 +406,7 @@ def test_private_thread_post_edit_view_updates_thread_post_inline_in_htmx(
     assert_contains(response, "<p>Edited</p>")
 
     post.refresh_from_db()
-    assert post.original == "Edited"
+    assert post.content == "Edited"
     assert post.updated_at
     assert post.edits == 1
     assert post.last_editor == user
@@ -437,7 +437,7 @@ def test_private_thread_post_edit_view_sets_edit_reason(
     assert response.status_code == 302
 
     post.refresh_from_db()
-    assert post.original == "Edited post"
+    assert post.content == "Edited post"
     assert post.updated_at
     assert post.edits == 1
     assert post.last_editor == user
@@ -611,7 +611,7 @@ def test_private_thread_post_edit_view_skips_flood_control(
 
     post.refresh_from_db()
 
-    assert post.original == "This is a flood message"
+    assert post.content == "This is a flood message"
     assert post.edits == 1
 
 

@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 
 from ...categories.models import Category
 from ...permissions.enums import CategoryPermission
-from ...posting.hooks import validate_posted_contents_hook
+from ...posting.hooks import validate_posting_hook
 from ...testutils import grant_category_group_permissions
 
 
