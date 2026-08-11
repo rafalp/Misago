@@ -14,6 +14,8 @@ if TYPE_CHECKING:
 
 
 class SearchBackend(ABC):
+    name: str
+
     def __init__(self, options: dict):
         pass
 
@@ -83,6 +85,12 @@ class SearchBackend(ABC):
 
 
 class PostgreSQLSearchBackend(SearchBackend):
+    name = "PostgreSQL full-text search"
+    search_config: str
+
+    def __init__(self, options: dict):
+        self.search_config = options.get("PG_SEARCH_CONFIG", "simple")
+
     def search_posts(
         self,
         query: str,

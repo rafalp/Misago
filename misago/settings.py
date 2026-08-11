@@ -253,4 +253,5 @@ MISAGO_POSTS_SEARCH = {
     "BACKEND": "misago.search.backends.PostgreSQLSearchBackend",
     "INDEX_BATCH_SIZE": 50,
     "MAX_LIMIT": 100,
+    "PG_SEARCH_CONFIG": "simple",
 }
