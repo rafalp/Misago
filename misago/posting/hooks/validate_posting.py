@@ -9,45 +9,45 @@ if TYPE_CHECKING:
     from ..state import State
 
 
-class ValidatePostedContentsHookAction(Protocol):
+class ValidatePostingHookAction(Protocol):
     """
-    A function that Misago uses to run additional validation against user-posted
-    contents.
+    A function that Misago uses to perform additional validation of a posting.
 
-    It should either do nothing, raise `ValidationError`, or add one or more
-    `ValidationError` instances to `formset` calling it's `add_error(ValidationError)`
-    method,
+    It should either do nothing, raise a `ValidationError`, or add one or more
+    `ValidationError` instances to formset by calling its `add_error()` method.
 
     # Arguments
 
     ## `formset: Formset`
 
-    An instance of the `Formset` subclass specific to the posted contents.
+    An instance of the `Formset` subclass specific to the posting.
 
     ## `state: State`
 
-    An instance of the `State` subclass specific to the posted contents.
+    An instance of the `State` subclass specific to the posting.
     """
 
     def __call__(self, formset: Union["Formset", "TabbedFormset"], state: "State"): ...
 
 
-class ValidatePostedContentsHook(ActionHook[ValidatePostedContentsHookAction]):
+class ValidatePostingHook(ActionHook[ValidatePostingHookAction]):
     """
-    This hook enables plugins to run additional validation against posted contents.
+    This hook enables plugins to perform additional validation
+    of the posting formset and state.
 
     # Example
 
-    The code below implements a custom validator that ch
+    The code below implements custom anti-spam validation
+    that checks both the thread title and post content.
 
     ```python
     from django.core.exceptions import ValidationError
     from misago.posting.forms.title import PREFIX as THREAD_TITLE_FORM
-    from misago.posting.hooks import validate_posted_contents_hook
+    from misago.posting.hooks import validate_posting_hook
 
 
-    @validate_posted_contents_hook.append_action
-    def validate_posted_contents_are_not_spam(formset, state):
+    @validate_posting_hook.append_action
+    def validate_posting_are_not_spam(formset, state):
         # Exclude moderators from the check
         if state.request.user_permissions.is_category_moderator(state.category.id):
             return
@@ -86,4 +86,4 @@ class ValidatePostedContentsHook(ActionHook[ValidatePostedContentsHookAction]):
                 formset.add_error(e)
 
 
-validate_posted_contents_hook = ValidatePostedContentsHook()
+validate_posting_hook = ValidatePostingHook()

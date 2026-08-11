@@ -50,7 +50,7 @@ from ..state import (
     get_private_thread_reply_state,
     get_thread_reply_state,
 )
-from ..validators import validate_flood_control, validate_posted_contents
+from ..validators import validate_flood_control, validate_posting
 
 
 class ReplyView(BaseThreadView):
@@ -233,7 +233,7 @@ class ReplyView(BaseThreadView):
         return (
             formset.is_valid()
             and (state.is_merged or validate_flood_control(formset, state))
-            and validate_posted_contents(formset, state)
+            and validate_posting(formset, state)
         )
 
     def post_state_save(

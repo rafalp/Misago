@@ -2,7 +2,7 @@ import pytest
 from django.core.exceptions import ValidationError
 
 from ...permissions.proxy import UserPermissionsProxy
-from ..hooks import validate_posted_contents_hook
+from ..hooks import validate_posting_hook
 
 
 @pytest.fixture
@@ -29,9 +29,9 @@ def user_request(rf, cache_versions, dynamic_settings, user):
 
 @pytest.fixture
 def posted_contents_validator():
-    validate_posted_contents_hook.append_action(validate_spam_contents)
+    validate_posting_hook.append_action(validate_spam_contents)
     yield
-    validate_posted_contents_hook.clear_actions()
+    validate_posting_hook.clear_actions()
 
 
 def validate_spam_contents(formset, state):

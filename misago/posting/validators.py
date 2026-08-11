@@ -9,7 +9,7 @@ from ..parser.parse import ParsingResult
 from .floodcontrol import flood_control
 from .hooks import (
     validate_post_hook,
-    validate_posted_contents_hook,
+    validate_posting_hook,
     validate_thread_title_hook,
 )
 
@@ -23,7 +23,7 @@ __all__ = [
     "validate_poll_choices",
     "validate_poll_question",
     "validate_post",
-    "validate_posted_contents",
+    "validate_posting",
     "validate_thread_title",
 ]
 
@@ -157,10 +157,10 @@ def _validate_thread_title_action(
         )
 
 
-def validate_posted_contents(
+def validate_posting(
     formset: Union["Formset", "TabbedFormset"], state: "State"
 ) -> bool:
-    validate_posted_contents_hook(formset, state)
+    validate_posting_hook(formset, state)
     return not bool(formset.errors)
 
 

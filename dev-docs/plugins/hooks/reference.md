@@ -244,7 +244,7 @@ Hooks instances are importable from the following Python modules:
 - [`save_thread_start_state_hook`](./save-thread-start-state-hook.md)
 - [`should_process_post_content_hook`](./should-process-post-content-hook.md)
 - [`validate_post_hook`](./validate-post-hook.md)
-- [`validate_posted_contents_hook`](./validate-posted-contents-hook.md)
+- [`validate_posting_hook`](./validate-posting-hook.md)
 - [`validate_thread_title_hook`](./validate-thread-title-hook.md)
 
 

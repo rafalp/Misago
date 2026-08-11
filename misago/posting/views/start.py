@@ -34,7 +34,7 @@ from ..state.start import (
     get_private_thread_start_state,
     get_thread_start_state,
 )
-from ..validators import validate_flood_control, validate_posted_contents
+from ..validators import validate_flood_control, validate_posting
 
 
 class StartView(BaseThreadView):
@@ -120,7 +120,7 @@ class StartView(BaseThreadView):
         return (
             formset.is_valid()
             and validate_flood_control(formset, state)
-            and validate_posted_contents(formset, state)
+            and validate_posting(formset, state)
         )
 
     def post_state_save(
