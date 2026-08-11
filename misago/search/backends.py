@@ -1,17 +1,25 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
+from html import escape
 from itertools import batched
+from time import time
 from typing import TYPE_CHECKING, Iterable
 
-from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import (
+    SearchHeadline,
+    SearchQuery,
+    SearchRank,
+    SearchVector,
+)
 from django.db import transaction
-from django.db.models import Value
+from django.db.models import Q, Value
 
 from ..categories.models import Category
 from ..permissions.proxy import UserPermissionsProxy
 from ..threads.models import Post, Thread
 from .enums import SearchMode, SearchOrder
 from .models import PostSearch
+from .types import PostSearchResult, PostSearchResults
 
 if TYPE_CHECKING:
     from ..users.models import User
@@ -42,7 +50,7 @@ class SearchBackend(ABC):
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> dict:
+    ) -> PostSearchResults:
         pass
 
     @abstractmethod
@@ -110,8 +118,58 @@ class PostgreSQLSearchBackend(SearchBackend):
         offset: int = 0,
         limit: int = 50,
         **kwargs,
-    ) -> dict:
-        pass
+    ) -> PostSearchResults:
+        search_query = SearchQuery(query, config=self.search_config)
+
+        queryset = PostSearch.objects
+        # queryset.filter(category_id__in=[category.id for category in categories])
+
+        queryset = (
+            queryset.filter(
+                search_vector=search_query,
+            )
+            .annotate(
+                rank=SearchRank("search_vector", search_query),
+                thread_title_headline=SearchHeadline(
+                    "thread_title",
+                    query,
+                    start_sel="<b>",
+                    stop_sel="</b>",
+                ),
+                post_content_headline=SearchHeadline(
+                    "post_content",
+                    query,
+                    start_sel="<b>",
+                    stop_sel="</b>",
+                ),
+                # ).filter(
+                #     rank__gte=0.5,
+            )
+            .order_by("rank")
+        )
+
+        queryset = queryset[offset : offset + limit + 1]
+
+        start_time = time()
+        results = list(queryset)
+        total_time = time() - start_time
+
+        return PostSearchResults(
+            results=[
+                PostSearchResult(
+                    post_id=result.post_id,
+                    thread_title=result.thread_title_headline,
+                    post_content=result.post_content_headline,
+                    rank=getattr(result, "rank"),
+                )
+                for result in results[:limit]
+            ],
+            offset=offset,
+            limit=limit,
+            count=min(len(results), limit),
+            has_more=len(results) > limit,
+            time=total_time,
+        )
 
     def index_posts(self, posts: Iterable[tuple[Post, str]]):
         for batch in batched(posts, 50):
@@ -122,35 +180,50 @@ class PostgreSQLSearchBackend(SearchBackend):
         PostSearch.objects.filter(post_id__in=[post.id for post, _ in posts]).delete()
         PostSearch.objects.bulk_create(
             [
-                PostSearch(
-                    category_id=post.category_id,
-                    thread_id=post.thread_id,
-                    post_id=post.id,
-                    poster_id=post.poster_id,
-                    thread_title=(
-                        SearchVector(
-                            Value(post.thread.title),
-                            config=self.search_config,
-                            weight="A",
-                        )
-                        if post.id == post.thread.first_post_id
-                        else None
-                    ),
-                    post_content=SearchVector(
-                        Value(search_document),
-                        config=self.search_config,
-                        weight="B",
-                    ),
-                    posted_at=post.posted_at,
-                    is_thread_pinned=bool(
-                        post.id == post.thread.first_post_id and post.thread.pinned
-                    ),
-                    incoming_links=0,
-                    is_hidden=post.is_hidden,
-                    is_unapproved=post.is_unapproved,
-                )
+                self._create_post_search(post, search_document)
                 for post, search_document in posts
             ]
+        )
+
+    def _create_post_search(self, post: Post, search_document: str) -> PostSearch:
+        thread = post.thread
+
+        search_vector = SearchVector(
+            Value(search_document),
+            config=self.search_config,
+            weight="B",
+        )
+
+        if post.id == thread.first_post_id:
+            thread_title = thread.title
+            search_vector = (
+                SearchVector(
+                    Value(thread_title),
+                    config=self.search_config,
+                    weight="A",
+                )
+                + search_vector
+            )
+
+            is_thread_pinned = bool(post.thread.pinned)
+
+        else:
+            thread_title = None
+            is_thread_pinned = False
+
+        return PostSearch(
+            category_id=post.category_id,
+            thread_id=post.thread_id,
+            post_id=post.id,
+            poster_id=post.poster_id,
+            thread_title=escape(thread_title) if thread_title else None,
+            post_content=escape(search_document),
+            search_vector=search_vector,
+            posted_at=post.posted_at,
+            is_thread_pinned=is_thread_pinned,
+            incoming_links=0,
+            is_hidden=post.is_hidden,
+            is_unapproved=post.is_unapproved,
         )
 
     def move_category_posts(
