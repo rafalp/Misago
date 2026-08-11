@@ -46,7 +46,7 @@ class SearchBackend(ABC):
         users: Iterable["User"] | None = None,
         posted_after: datetime | None = None,
         posted_before: datetime | None = None,
-        order: SearchOrder = SearchOrder.RELEVANCE,
+        order_by: SearchOrder = SearchOrder.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
@@ -99,9 +99,11 @@ class SearchBackend(ABC):
 class PostgreSQLSearchBackend(SearchBackend):
     name = "PostgreSQL full-text search"
     search_config: str
+    min_rank: float | None
 
     def __init__(self, options: dict):
         self.search_config = options.get("PG_SEARCH_CONFIG", "simple")
+        self.min_rank = options.get("PG_MIN_RANK")
 
     def search_posts(
         self,
@@ -114,7 +116,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         users: list["User"] | None = None,
         posted_after: datetime | None = None,
         posted_before: datetime | None = None,
-        order: SearchOrder = SearchOrder.RELEVANCE,
+        order_by: SearchOrder = SearchOrder.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
         **kwargs,
@@ -124,29 +126,31 @@ class PostgreSQLSearchBackend(SearchBackend):
         queryset = PostSearch.objects
         # queryset.filter(category_id__in=[category.id for category in categories])
 
-        queryset = (
-            queryset.filter(
-                search_vector=search_query,
-            )
-            .annotate(
-                rank=SearchRank("search_vector", search_query),
-                thread_title_headline=SearchHeadline(
-                    "thread_title",
-                    query,
-                    start_sel="<b>",
-                    stop_sel="</b>",
-                ),
-                post_content_headline=SearchHeadline(
-                    "post_content",
-                    query,
-                    start_sel="<b>",
-                    stop_sel="</b>",
-                ),
-                # ).filter(
-                #     rank__gte=0.5,
-            )
-            .order_by("rank")
+        queryset = queryset.filter(
+            search_vector=search_query,
+        ).annotate(
+            rank=SearchRank("search_vector", search_query),
+            thread_title_headline=SearchHeadline(
+                "thread_title",
+                query,
+                start_sel="<b>",
+                stop_sel="</b>",
+            ),
+            post_content_headline=SearchHeadline(
+                "post_content",
+                query,
+                start_sel="<b>",
+                stop_sel="</b>",
+            ),
         )
+
+        if self.min_rank is not None:
+            queryset = queryset.filter(rank__gt=self.min_rank)
+
+        if order_by == SearchOrder.RELEVANCE:
+            queryset = queryset.order_by("rank")
+        elif order_by == SearchOrder.NEWEST:
+            queryset = queryset.order_by("-posted_at")
 
         queryset = queryset[offset : offset + limit + 1]
 
