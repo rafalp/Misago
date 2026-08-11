@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterable
 
 from django.contrib.auth import get_user_model
 
@@ -14,18 +14,24 @@ if TYPE_CHECKING:
 
 
 class SearchBackend(ABC):
+    def __init__(self, options: dict):
+        pass
+
+    def initialize(self):
+        pass
+
     @abstractmethod
     def search_posts(
         self,
         query: str,
+        mode: SearchMode,
         permissions: UserPermissionsProxy,
         *,
-        categories: list[Category] | None = None,
-        threads: list[Thread] | None = None,
-        users: list["User"] | None = None,
+        categories: Iterable[Category] | None = None,
+        threads: Iterable[Thread] | None = None,
+        users: Iterable["User"] | None = None,
         posted_after: datetime | None = None,
         posted_before: datetime | None = None,
-        mode: SearchMode = SearchMode.THREADS,
         order: SearchOrder = SearchOrder.RELEVANCE,
         offset: int = 0,
         limit: int = 50,
@@ -34,41 +40,41 @@ class SearchBackend(ABC):
         pass
 
     @abstractmethod
-    def index_posts(self, posts: Post | list[Post]):
+    def index_posts(self, posts: Iterable[Post]):
         pass
 
     @abstractmethod
     def move_category_posts(
-        self, categories: Category | list[Category], new_category: Category
-    ):
+        self, categories: Iterable[Category], new_category: Category
+    ) -> int:
         pass
 
     @abstractmethod
-    def move_thread_posts(self, threads: Thread | list[Thread], new_thread: Thread):
+    def move_thread_posts(self, threads: Iterable[Thread], new_thread: Thread) -> int:
         pass
 
     @abstractmethod
-    def move_threads(self, threads: Thread | list[Thread], new_category: Category):
+    def move_threads(self, threads: Iterable[Thread], new_category: Category) -> int:
         pass
 
     @abstractmethod
-    def move_posts(self, posts: Post | list[Post], new_thread: Thread):
+    def move_posts(self, posts: Iterable[Post], new_thread: Thread) -> int:
         pass
 
     @abstractmethod
-    def delete_categories(self, categories: Category | list[Category]):
+    def delete_categories(self, categories: Iterable[Category]) -> int:
         pass
 
     @abstractmethod
-    def delete_threads(self, threads: Thread | list[Thread]):
+    def delete_threads(self, threads: Iterable[Thread]) -> int:
         pass
 
     @abstractmethod
-    def delete_posts(self, posts: Post | list[Post]):
+    def delete_posts(self, posts: Iterable[Post]) -> int:
         pass
 
     @abstractmethod
-    def delete_users(self, users: "User" | list["User"]):
+    def delete_users(self, users: Iterable["User"]) -> int:
         pass
 
     @abstractmethod
@@ -80,6 +86,7 @@ class PostgreSQLSearchBackend(SearchBackend):
     def search_posts(
         self,
         query: str,
+        mode: SearchMode,
         permissions: UserPermissionsProxy,
         *,
         categories: list[Category] | None = None,
@@ -87,52 +94,41 @@ class PostgreSQLSearchBackend(SearchBackend):
         users: list["User"] | None = None,
         posted_after: datetime | None = None,
         posted_before: datetime | None = None,
-        mode: SearchMode = SearchMode.THREADS,
         order: SearchOrder = SearchOrder.RELEVANCE,
-        start: int = 0,
-        stop: int | None = None,
+        offset: int = 0,
+        limit: int = 50,
         **kwargs,
     ) -> dict:
         pass
 
-    def index_posts(self, posts: Post | list[Post]):
-        if isinstance(posts, Post):
-            posts = [posts]
+    def index_posts(self, posts: Iterable[Post]):
+        pass
 
     def move_category_posts(
-        self, categories: Category | list[Category], new_category: Category
-    ):
-        if isinstance(categories, Category):
-            categories = [categories]
+        self, categories: Iterable[Category], new_category: Category
+    ) -> int:
+        pass
 
-    def move_thread_posts(self, threads: Thread | list[Thread], new_thread: Thread):
-        if isinstance(threads, Thread):
-            threads = [threads]
+    def move_thread_posts(self, threads: Iterable[Thread], new_thread: Thread) -> int:
+        pass
 
-    def move_threads(self, threads: Thread | list[Thread], new_category: Category):
-        if isinstance(threads, Thread):
-            threads = [threads]
+    def move_threads(self, threads: Iterable[Thread], new_category: Category) -> int:
+        pass
 
-    def move_posts(self, posts: Post | list[Post], new_thread: Thread):
-        if isinstance(posts, Post):
-            posts = [posts]
+    def move_posts(self, posts: Iterable[Post], new_thread: Thread) -> int:
+        pass
 
-    def delete_categories(self, categories: Category | list[Category]):
-        if isinstance(categories, Category):
-            categories = [categories]
+    def delete_categories(self, categories: Iterable[Category]) -> int:
+        pass
 
-    def delete_threads(self, threads: Thread | list[Thread]):
-        if isinstance(threads, Thread):
-            threads = [threads]
+    def delete_threads(self, threads: Iterable[Thread]) -> int:
+        pass
 
-    def delete_posts(self, posts: Post | list[Post]):
-        if isinstance(posts, Post):
-            posts = [posts]
+    def delete_posts(self, posts: Iterable[Post]) -> int:
+        pass
 
-    def delete_users(self, users: "User" | list["User"]):
-        user_model = get_user_model()
-        if isinstance(users, user_model):
-            users = [users]
+    def delete_users(self, users: Iterable["User"]) -> int:
+        pass
 
     def clear(self):
         pass
