@@ -10,9 +10,9 @@ from ..create import (
     create_deleted_poll_thread_event,
     create_deleted_posts_thread_event,
     create_hidden_thread_event,
-    create_joined_thread_event,
-    create_left_thread_event,
     create_locked_thread_event,
+    create_member_joined_thread_event,
+    create_member_left_thread_event,
     create_merged_thread_event,
     create_moved_posts_from_thread_event,
     create_moved_posts_to_thread_event,
@@ -531,8 +531,8 @@ def test_create_took_ownership_thread_event(client, thread, user):
     assert_contains(response, "Took ownership")
 
 
-def test_create_joined_thread_event(client, thread, user):
-    create_joined_thread_event(thread, user)
+def test_create_member_joined_thread_event(client, thread, user):
+    create_member_joined_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()
@@ -543,8 +543,8 @@ def test_create_joined_thread_event(client, thread, user):
     assert_contains(response, "Joined")
 
 
-def test_create_left_thread_event(client, thread, user):
-    create_left_thread_event(thread, user)
+def test_create_member_left_thread_event(client, thread, user):
+    create_member_left_thread_event(thread, user)
 
     thread.has_events = True
     thread.save()

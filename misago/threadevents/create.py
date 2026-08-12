@@ -492,7 +492,7 @@ def create_took_ownership_thread_event(
     )
 
 
-def create_joined_thread_event(
+def create_member_joined_thread_event(
     thread: Thread,
     actor: Union["User", str, None] = None,
     commit: bool = True,
@@ -525,7 +525,7 @@ def create_added_member_thread_event(
     )
 
 
-def create_left_thread_event(
+def create_member_left_thread_event(
     thread: Thread,
     actor: Union["User", str, None] = None,
     commit: bool = True,

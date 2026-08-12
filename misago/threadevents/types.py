@@ -405,14 +405,14 @@ class ChangedOwnerThreadEventType(UserContextThreadEventType):
 
 
 @thread_events_renderer.register_thread_event_type
-class JoinedThreadEventType(ThreadEventType):
+class MemberJoinedThreadEventType(ThreadEventType):
     event_type = ThreadEventTypeName.MEMBER_JOINED
     icon = "tabler/user.svg"
     description = pgettext_lazy("thread event type description", "Joined")
 
 
 @thread_events_renderer.register_thread_event_type
-class LeftThreadEventType(ThreadEventType):
+class MemberLeftThreadEventType(ThreadEventType):
     event_type = ThreadEventTypeName.MEMBER_LEFT
     icon = "tabler/user-off.svg"
     description = pgettext_lazy("thread event type description", "Left")
