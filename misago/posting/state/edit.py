@@ -118,12 +118,7 @@ class PostEditState(State):
         self.save_attachments()
 
     def save_post(self):
-        self.post.set_search_document(self.thread, self.parsing_result.text)
         self.update_object(self.post)
-
-        self.post.set_search_vector()
-        self.update_object(self.post)
-
         self.schedule_post_content_upgrade()
 
     def save_thread(self):

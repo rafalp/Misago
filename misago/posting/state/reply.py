@@ -62,7 +62,6 @@ class ReplyState(State):
 
     def save_post(self):
         self.post.is_unapproved = not self.post.id and self.require_approval()
-        self.post.set_search_document(self.thread, self.parsing_result.text)
 
         post_edits = self.post.edits
 
@@ -84,11 +83,7 @@ class ReplyState(State):
                 edited_at=self.timestamp,
                 request=self.request,
             )
-        else:
-            # Save new post so it exists before search vector setup
-            self.post.save()
 
-        self.post.set_search_vector()
         self.post.save()
 
         # Replace edits attr with integer
