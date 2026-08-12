@@ -13,7 +13,7 @@ from django.contrib.postgres.search import (
     SearchVector,
 )
 from django.db import transaction
-from django.db.models import Q, Value
+from django.db.models import Max, OuterRef, Q, Value
 
 from ..categories.models import Category
 from ..permissions.proxy import UserPermissionsProxy
@@ -160,7 +160,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         limit: int = 50,
         **kwargs,
     ) -> PostSearchResults:
-        search_query = SearchQuery(query, config=self.search_config)
+        search_query = self._get_search_query(query)
 
         queryset = ThreadSearch.objects.filter(
             category_id__in=[category.id for category in categories],
@@ -169,8 +169,8 @@ class PostgreSQLSearchBackend(SearchBackend):
             headline=SearchHeadline(
                 "title",
                 query,
-                start_sel="<hl>",
-                stop_sel="</hl>",
+                start_sel="<b>",
+                stop_sel="</b>",
             ),
         )
 
@@ -219,8 +219,8 @@ class PostgreSQLSearchBackend(SearchBackend):
             headline=SearchHeadline(
                 "content",
                 query,
-                start_sel="<hl>",
-                stop_sel="</hl>",
+                start_sel="<b>",
+                stop_sel="</b>",
             ),
         )
         posts = {post.thread_id: post for post in posts_queryset}
@@ -266,7 +266,89 @@ class PostgreSQLSearchBackend(SearchBackend):
         limit: int = 50,
         **kwargs,
     ) -> PostSearchResults:
-        pass
+        search_query = self._get_search_query(query)
+
+        queryset = self._filter_categories(PostSearch.objects, permissions, categories)
+
+        if threads:
+            queryset = queryset.filter(thread_id__in=[thread.it for thread in threads])
+        if users:
+            queryset = queryset.filter(poster_id__in=[user.it for user in users])
+        if posted_after:
+            queryset = queryset.filter(posted_at__gte=posted_after)
+        if posted_before:
+            queryset = queryset.filter(posted_at__lte=posted_before)
+
+        queryset = queryset.filter(
+            thread_search_vector=search_query,
+        ).annotate(
+            rank=SearchRank("thread_search_vector", search_query),
+        )
+
+        start_time = time()
+
+        thread_ids = list(
+            queryset.values("thread_id")
+            .annotate(rank=Max("rank"))
+            .order_by("-rank", "-thread_id")
+            .values_list("thread_id", flat=True)[offset : offset + limit + 1]
+        )
+
+        posts = list(
+            queryset.filter(thread_id__in=thread_ids)
+            .order_by("thread_id", "-rank", "-post_id")
+            .annotate(
+                content_headline=SearchHeadline(
+                    "content",
+                    query,
+                    start_sel="<b>",
+                    stop_sel="</b>",
+                ),
+            )
+            .distinct("thread_id")
+        )
+
+        posts, has_more = posts[:limit], posts[limit:]
+
+        if not posts:
+            return PostSearchResults(
+                results=[],
+                offset=offset,
+                limit=limit,
+                count=0,
+                has_more=bool(has_more),
+                time=time() - start_time,
+            )
+
+        posts = {post.thread_id: post for post in posts}
+
+        results = []
+        for thread_id in thread_ids:
+            if post := posts.get(thread_id):
+                results.append(post)
+
+        headlines = self._get_thread_headlines(
+            query, [result.thread_id for result in results]
+        )
+
+        total_time = time() - start_time
+
+        return PostSearchResults(
+            results=[
+                PostSearchResult(
+                    post_id=result.post_id,
+                    thread_title=headlines.get(result.thread_id, "MISSING"),
+                    post_content=result.content_headline,
+                    rank=getattr(result, "rank"),
+                )
+                for result in results
+            ],
+            offset=offset,
+            limit=limit,
+            count=min(len(results), limit),
+            has_more=bool(has_more),
+            time=total_time,
+        )
 
     def search_posts(
         self,
@@ -283,7 +365,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         limit: int = 50,
         **kwargs,
     ) -> PostSearchResults:
-        search_query = SearchQuery(query, config=self.search_config)
+        search_query = self._get_search_query(query)
 
         queryset = self._filter_categories(PostSearch.objects, permissions, categories)
 
@@ -297,19 +379,19 @@ class PostgreSQLSearchBackend(SearchBackend):
             queryset = queryset.filter(posted_at__lte=posted_before)
 
         queryset = queryset.filter(
-            search_vector=search_query,
+            post_search_vector=search_query,
         ).annotate(
             content_headline=SearchHeadline(
                 "content",
                 query,
-                start_sel="<hl>",
-                stop_sel="</hl>",
+                start_sel="<b>",
+                stop_sel="</b>",
             ),
         )
 
         if order_by == SearchOrder.RELEVANCE or self.min_rank:
             queryset = queryset.annotate(
-                rank=SearchRank("search_vector", search_query),
+                rank=SearchRank("post_search_vector", search_query),
             )
         if self.min_rank is not None:
             queryset = queryset.filter(rank__gt=self.min_rank)
@@ -359,6 +441,9 @@ class PostgreSQLSearchBackend(SearchBackend):
             time=total_time,
         )
 
+    def _get_search_query(self, query: str) -> SearchQuery:
+        return SearchQuery(query, config=self.search_config)
+
     def _filter_categories(
         self, queryset, permissions: UserPermissionsProxy, categories: list[Category]
     ):
@@ -403,8 +488,8 @@ class PostgreSQLSearchBackend(SearchBackend):
             headline=SearchHeadline(
                 "title",
                 query,
-                start_sel="<hl>",
-                stop_sel="</hl>",
+                start_sel="<b>",
+                stop_sel="</b>",
             ),
         )
 
@@ -459,25 +544,9 @@ class PostgreSQLSearchBackend(SearchBackend):
     def _create_post_search(self, post: Post, search_document: str) -> PostSearch:
         thread = post.thread
 
-        search_vector = SearchVector(
-            Value(search_document),
-            config=self.search_config,
-            weight="B",
-        )
-
         if post.id == thread.first_post_id:
-            search_vector = (
-                SearchVector(
-                    Value(thread.title),
-                    config=self.search_config,
-                    weight="A",
-                )
-                + search_vector
-            )
-
             is_thread_pinned = bool(post.thread.pinned)
             is_first_post = True
-
         else:
             is_thread_pinned = False
             is_first_post = False
@@ -488,7 +557,24 @@ class PostgreSQLSearchBackend(SearchBackend):
             post_id=post.id,
             poster_id=post.poster_id,
             content=escape(search_document),
-            search_vector=search_vector,
+            post_search_vector=(
+                SearchVector(
+                    Value(search_document),
+                    config=self.search_config,
+                )
+            ),
+            thread_search_vector=(
+                SearchVector(
+                    Value(thread.title),
+                    config=self.search_config,
+                    weight="A",
+                )
+                + SearchVector(
+                    Value(search_document),
+                    config=self.search_config,
+                    weight="B",
+                )
+            ),
             posted_at=post.posted_at,
             is_thread_pinned=is_thread_pinned,
             incoming_links=0,
