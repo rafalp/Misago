@@ -12,10 +12,10 @@ class Command(BaseCommand):
             posts_search.initialize()
         except SearchBackendError as exc:
             self.stderr.write(
-                f'Error initializing search backend "{posts_search.backend.name}":'
+                f'Error initializing the search backend "{posts_search.backend.name}":'
                 f"\n\n{exc}"
             )
         else:
             self.stdout.write(
-                f"Initialized search backend: {posts_search.backend.name}"
+                f"Initialized the search backend: {posts_search.backend.name}"
             )

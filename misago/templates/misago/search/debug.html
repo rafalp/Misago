@@ -22,7 +22,7 @@ Search debug
     <ul>
       {% for result in results %}
         <li>
-          <div>{{ result.thread_title|safe }}</div>
+          <div><a href="{% url 'misago:post' post_id=result.post_id %}">{{ result.thread_title|safe }}</a></div>
           <div>{{ result.post_content|safe }}</div>
           <div>{{ result.rank }}</div>
         </li>

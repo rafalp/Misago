@@ -15,12 +15,12 @@ class Command(BaseCommand):
             posts_search.clear()
         except SearchBackendError as exc:
             self.stderr.write(
-                f'Error clearing search index using the "{posts_search.backend.name}" backend:'
+                f'Error clearing the search index using the "{posts_search.backend.name}" backend:'
                 f"\n\n{exc}"
             )
         else:
             total_time = "{:.2f}s".format(time() - start_time)
             self.stdout.write(
-                f'Cleared search index using the "{posts_search.backend.name}" backend.'
+                f'Cleared the search index using the "{posts_search.backend.name}" backend.'
                 f"\n\nTime: {total_time}"
             )
