@@ -76,7 +76,7 @@ def test_private_thread_leave_view_removes_thread_owner(
     ThreadEvent.objects.get(
         actor=user,
         thread=user_private_thread,
-        event_type=ThreadEventTypeName.LEFT,
+        event_type=ThreadEventTypeName.MEMBER_LEFT,
     )
 
     user_private_thread.refresh_from_db()
@@ -105,7 +105,7 @@ def test_private_thread_leave_view_removes_thread_member(
     ThreadEvent.objects.get(
         actor=other_user,
         thread=user_private_thread,
-        event_type=ThreadEventTypeName.LEFT,
+        event_type=ThreadEventTypeName.MEMBER_LEFT,
     )
 
     user_private_thread.refresh_from_db()
@@ -134,7 +134,7 @@ def test_private_thread_leave_view_removes_thread_moderator(
     ThreadEvent.objects.get(
         actor=moderator,
         thread=user_private_thread,
-        event_type=ThreadEventTypeName.LEFT,
+        event_type=ThreadEventTypeName.MEMBER_LEFT,
     )
 
     user_private_thread.refresh_from_db()

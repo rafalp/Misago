@@ -500,7 +500,7 @@ def create_joined_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventTypeName.JOINED,
+        ThreadEventTypeName.MEMBER_JOINED,
         actor,
         commit=commit,
         request=request,
@@ -533,7 +533,7 @@ def create_left_thread_event(
 ) -> ThreadEvent:
     return create_thread_event(
         thread,
-        ThreadEventTypeName.LEFT,
+        ThreadEventTypeName.MEMBER_LEFT,
         actor,
         commit=commit,
         request=request,
