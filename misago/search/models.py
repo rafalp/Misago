@@ -42,8 +42,8 @@ class PostSearch(models.Model):
     incoming_links = models.PositiveIntegerField(default=0)
 
     is_first_post = models.BooleanField(default=False)
-    is_hidden = models.BooleanField()
-    is_unapproved = models.BooleanField()
+    is_hidden = models.BooleanField(default=False)
+    is_unapproved = models.BooleanField(default=False)
 
     class Meta:
         indexes = [
