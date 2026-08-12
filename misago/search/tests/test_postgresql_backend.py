@@ -311,8 +311,16 @@ def test_postgresql_backend_search_searches_threads(
         categories=[default_category],
     )
 
-    results_ids = [result.post_id for result in results]
-    assert search_index["first_post"].id in results_ids
+    assert results.count == 1
+
+    result = results.results[0]
+    assert result.post_id == search_index["first_post"].id
+    assert result.thread_title == "<hl>Forum</hl> <hl>software</hl> recommendations?"
+    assert result.post_content == (
+        "I am looking for a good <hl>forum</hl> <hl>software</hl> for my next project."
+        " "
+        "Any recommendations?"
+    )
 
 
 def test_postgresql_backend_thread_search_handles_empty_result(

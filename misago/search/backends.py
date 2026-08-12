@@ -13,7 +13,7 @@ from django.contrib.postgres.search import (
     SearchVector,
 )
 from django.db import transaction
-from django.db.models import Max, OuterRef, Q, Value
+from django.db.models import F, Max, Q, Value
 
 from ..categories.models import Category
 from ..permissions.proxy import UserPermissionsProxy
@@ -139,9 +139,19 @@ class PostgreSQLSearchBackend(SearchBackend):
     search_config: str
     min_rank: float | None
 
+    headline_max_words: int | None
+    headline_min_words: int | None
+    headline_max_fragments: int | None
+    headline_short_word: int | None
+
     def __init__(self, options: dict):
         self.search_config = options.get("PG_SEARCH_CONFIG", "simple")
-        self.min_rank = options.get("PG_MIN_RANK")
+        self.min_rank = options.get("PG_MIN_RANK", 0.0001)
+
+        self.headline_max_words = options.get("PG_HEADLINE_MAX_WORDS", 55)
+        self.headline_min_words = options.get("PG_HEADLINE_MIN_WORDS", 35)
+        self.headline_max_fragments = options.get("PG_HEADLINE_MAX_FRAGMENTS", 0)
+        self.headline_short_word = options.get("PG_HEADLINE_SHORT_WORD")
 
     # Search operations
 
@@ -169,8 +179,9 @@ class PostgreSQLSearchBackend(SearchBackend):
             headline=SearchHeadline(
                 "title",
                 query,
-                start_sel="<b>",
-                stop_sel="</b>",
+                start_sel="<hl>",
+                stop_sel="</hl>",
+                highlight_all=True,
             ),
         )
 
@@ -185,7 +196,7 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         if order_by == SearchOrder.RELEVANCE or self.min_rank:
             queryset = queryset.annotate(
-                rank=SearchRank("search_vector", search_query),
+                rank=SearchRank(F("search_vector"), search_query),
             )
         if self.min_rank is not None:
             queryset = queryset.filter(rank__gt=self.min_rank)
@@ -200,7 +211,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         start_time = time()
 
         threads = list(queryset)
-        threads, has_more = threads[:limit], threads[limit:]
+        threads, has_more = threads[:limit], bool(threads[limit:])
 
         if not threads:
             return PostSearchResults(
@@ -219,8 +230,12 @@ class PostgreSQLSearchBackend(SearchBackend):
             headline=SearchHeadline(
                 "content",
                 query,
-                start_sel="<b>",
-                stop_sel="</b>",
+                start_sel="<hl>",
+                stop_sel="</hl>",
+                max_words=self.headline_max_words,
+                min_words=self.headline_min_words,
+                short_word=self.headline_short_word,
+                max_fragments=self.headline_max_fragments,
             ),
         )
         posts = {post.thread_id: post for post in posts_queryset}
@@ -247,7 +262,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             offset=offset,
             limit=limit,
             count=min(len(posts), limit),
-            has_more=bool(has_more),
+            has_more=has_more,
             time=total_time,
         )
 
@@ -281,9 +296,10 @@ class PostgreSQLSearchBackend(SearchBackend):
 
         queryset = queryset.filter(
             thread_search_vector=search_query,
-        ).annotate(
-            rank=SearchRank("thread_search_vector", search_query),
-        )
+        ).annotate(rank=SearchRank(F("thread_search_vector"), search_query))
+
+        if self.min_rank is not None:
+            queryset = queryset.filter(rank__gt=self.min_rank)
 
         start_time = time()
 
@@ -301,14 +317,18 @@ class PostgreSQLSearchBackend(SearchBackend):
                 content_headline=SearchHeadline(
                     "content",
                     query,
-                    start_sel="<b>",
-                    stop_sel="</b>",
+                    start_sel="<hl>",
+                    stop_sel="</hl>",
+                    max_words=self.headline_max_words,
+                    min_words=self.headline_min_words,
+                    short_word=self.headline_short_word,
+                    max_fragments=self.headline_max_fragments,
                 ),
             )
             .distinct("thread_id")
         )
 
-        posts, has_more = posts[:limit], posts[limit:]
+        posts, has_more = posts[:limit], bool(posts[limit:])
 
         if not posts:
             return PostSearchResults(
@@ -346,7 +366,7 @@ class PostgreSQLSearchBackend(SearchBackend):
             offset=offset,
             limit=limit,
             count=min(len(results), limit),
-            has_more=bool(has_more),
+            has_more=has_more,
             time=total_time,
         )
 
@@ -384,14 +404,18 @@ class PostgreSQLSearchBackend(SearchBackend):
             content_headline=SearchHeadline(
                 "content",
                 query,
-                start_sel="<b>",
-                stop_sel="</b>",
+                start_sel="<hl>",
+                stop_sel="</hl>",
+                max_words=self.headline_max_words,
+                min_words=self.headline_min_words,
+                short_word=self.headline_short_word,
+                max_fragments=self.headline_max_fragments,
             ),
         )
 
         if order_by == SearchOrder.RELEVANCE or self.min_rank:
             queryset = queryset.annotate(
-                rank=SearchRank("post_search_vector", search_query),
+                rank=SearchRank(F("post_search_vector"), search_query),
             )
         if self.min_rank is not None:
             queryset = queryset.filter(rank__gt=self.min_rank)
@@ -406,7 +430,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         start_time = time()
 
         results = list(queryset)
-        results, has_more = results[:limit], results[limit:]
+        results, has_more = results[:limit], bool(results[limit:])
 
         if not results:
             return PostSearchResults(
@@ -437,12 +461,18 @@ class PostgreSQLSearchBackend(SearchBackend):
             offset=offset,
             limit=limit,
             count=min(len(results), limit),
-            has_more=bool(has_more),
+            has_more=has_more,
             time=total_time,
         )
 
     def _get_search_query(self, query: str) -> SearchQuery:
-        return SearchQuery(query, config=self.search_config)
+        if query.startswith('"') and query.endswith('"'):
+            search_type = "phrase"
+            query = query[1:-1].strip()
+        else:
+            search_type = "plain"
+
+        return SearchQuery(query, config=self.search_config, search_type=search_type)
 
     def _filter_categories(
         self, queryset, permissions: UserPermissionsProxy, categories: list[Category]
@@ -488,8 +518,9 @@ class PostgreSQLSearchBackend(SearchBackend):
             headline=SearchHeadline(
                 "title",
                 query,
-                start_sel="<b>",
-                stop_sel="</b>",
+                start_sel="<hl>",
+                stop_sel="</hl>",
+                highlight_all=True,
             ),
         )
 
@@ -567,12 +598,10 @@ class PostgreSQLSearchBackend(SearchBackend):
                 SearchVector(
                     Value(thread.title),
                     config=self.search_config,
-                    weight="A",
                 )
                 + SearchVector(
                     Value(search_document),
                     config=self.search_config,
-                    weight="B",
                 )
             ),
             posted_at=post.posted_at,

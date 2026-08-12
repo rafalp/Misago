@@ -3,11 +3,11 @@ from io import StringIO
 from django.core import management
 
 from ..exceptions import SearchBackendError
-from ..management.commands import clearsearch
+from ..management.commands import clearsearchindex
 
 
 def call_command():
-    command = clearsearch.Command()
+    command = clearsearchindex.Command()
 
     stdout = StringIO()
     stderr = StringIO()
@@ -19,18 +19,18 @@ def call_command():
     )
 
 
-def test_clearsearch_command_clears_search_index(db):
+def test_clearsearchindex_command_clears_search_index(db):
     stdout, stderr = call_command()
 
     assert stdout == (
-        'Cleared search index using the "PostgreSQL full-text search" backend.',
+        'Cleared the search index using the "PostgreSQL full-text search" backend.',
         "",
         "Time: 0.00s",
     )
     assert not stderr
 
 
-def test_clearsearch_command_prints_initialization_error(mocker):
+def test_clearsearchindex_command_prints_initialization_error(mocker):
     mocker.patch(
         "misago.search.posts.posts_search.backend.clear",
         side_effect=SearchBackendError("This backend is not available."),
@@ -39,7 +39,7 @@ def test_clearsearch_command_prints_initialization_error(mocker):
     stdout, stderr = call_command()
 
     assert stderr == (
-        'Error clearing search index using the "PostgreSQL full-text search" backend:',
+        'Error clearing the search index using the "PostgreSQL full-text search" backend:',
         "",
         "This backend is not available.",
     )

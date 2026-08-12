@@ -22,7 +22,7 @@ def call_command():
 def test_initializesearch_command_initializes_search_backend():
     stdout, stderr = call_command()
 
-    assert stdout[-1] == ("Initialized search backend: PostgreSQL full-text search")
+    assert stdout[-1] == ("Initialized the search backend: PostgreSQL full-text search")
     assert not stderr
 
 
@@ -35,7 +35,7 @@ def test_initializesearch_command_prints_initialization_error(mocker):
     stdout, stderr = call_command()
 
     assert stderr == (
-        'Error initializing search backend "PostgreSQL full-text search":',
+        'Error initializing the search backend "PostgreSQL full-text search":',
         "",
         "This backend is not available.",
     )
