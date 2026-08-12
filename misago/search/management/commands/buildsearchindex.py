@@ -1,18 +1,46 @@
-import time
+from time import time
 
 from django.core.management.base import BaseCommand, CommandError
 
 from ....core.management.progressbar import show_progress
 from ....parser.parse import parse
 from ....threads.models import Post, Thread
+from ...exceptions import SearchBackendError
 from ...posts import PostsSearch, posts_search
 
 
 class Command(BaseCommand):
     help = "Builds search index"
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--skip-clear",
+            action="store_true",
+            help="Skip clearing of existing search data.",
+        )
+
     def handle(self, *args, **options):
         post_count = Post.objects.count()
+
+        self.stdout.write(
+            'Rebuilding the search index using the '
+            f'"{posts_search.backend.name}" backend.'
+            "\n\n"
+        )
+
+        if options["skip_clear"]:
+            self.stdout.write(f"Skipped clearing the search index.\n\n"
+            )
+        else:
+            try:
+                start_time = time()
+                posts_search.clear()
+            except SearchBackendError as exc:
+                self.stderr.write(f"\nError clearing the search index:\n\n{exc}")
+                return
+            else:
+                total_time = "{:.2f}s".format(time() - start_time)
+                self.stdout.write(f"Cleared the search index in {total_time}.\n\n")
 
         if not post_count:
             raise CommandError("No posts exist.")
@@ -24,11 +52,11 @@ class Command(BaseCommand):
 
         indexed_count = 0
         show_progress(self, indexed_count, post_count)
-        start_time = time.time()
+        start_time = time()
 
         search_index = SearchIndexBuffer(posts_search, 50)
 
-        queryset = Post.objects.select_related("thread")
+        queryset = Post.objects.select_related("thread").order_by("id")
         for post in queryset.iterator(chunk_size=50):
             if post.id == post.thread.first_post_id:
                 search_index.index_thread(post.thread)
@@ -39,11 +67,12 @@ class Command(BaseCommand):
             show_progress(self, indexed_count, post_count, start_time)
 
         search_index.commit_all()
+        total_time = "{:.2f}s".format(time() - start_time)
 
         if indexed_count == 1:
-            self.stdout.write(f"\n\nIndexed one post.")
+            self.stdout.write(f"\n\nIndexed one post in {total_time}.")
         else:
-            self.stdout.write(f"\n\nIndexed {indexed_count} posts.")
+            self.stdout.write(f"\n\nIndexed {indexed_count} posts in {total_time}.")
 
 
 class SearchIndexBuffer:
