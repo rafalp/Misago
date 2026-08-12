@@ -23,14 +23,13 @@ class Command(BaseCommand):
         post_count = Post.objects.count()
 
         self.stdout.write(
-            'Rebuilding the search index using the '
+            "Rebuilding the search index using the "
             f'"{posts_search.backend.name}" backend.'
             "\n\n"
         )
 
         if options["skip_clear"]:
-            self.stdout.write(f"Skipped clearing the search index.\n\n"
-            )
+            self.stdout.write(f"Skipped clearing the search index.\n\n")
         else:
             try:
                 start_time = time()

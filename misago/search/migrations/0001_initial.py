@@ -34,8 +34,8 @@ class Migration(migrations.Migration):
                 ("is_thread_pinned", models.BooleanField(default=False)),
                 ("incoming_links", models.PositiveIntegerField(default=0)),
                 ("is_first_post", models.BooleanField(default=False)),
-                ("is_hidden", models.BooleanField()),
-                ("is_unapproved", models.BooleanField()),
+                ("is_hidden", models.BooleanField(default=False)),
+                ("is_unapproved", models.BooleanField(default=False)),
             ],
             options={
                 "indexes": [
