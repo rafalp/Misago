@@ -136,7 +136,7 @@ def test_postgresql_backend_index_threads_indexes_threads(
     assert not deleted_user_thread_search.is_pinned
 
     pinned_thread_search = ThreadSearch.objects.get(thread_id=pinned_thread.id)
-    assert pinned_thread_search.category_id == pinned_thread.id
+    assert pinned_thread_search.category_id == default_category.id
     assert pinned_thread_search.starter_id == other_user.id
     assert pinned_thread_search.title == pinned_thread.title
     assert pinned_thread_search.started_at == pinned_thread.started_at

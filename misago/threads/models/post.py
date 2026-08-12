@@ -83,9 +83,6 @@ class Post(PluginDataModel):
     likes = models.PositiveIntegerField(default=0)
     last_likes = models.JSONField(null=True, blank=True)
 
-    search_document = models.TextField(null=True, blank=True)
-    search_vector = SearchVectorField()
-
     class Meta(PluginDataModel.Meta):
         indexes = PluginDataModel.Meta.indexes + [
             models.Index(
@@ -98,7 +95,6 @@ class Post(PluginDataModel):
                 fields=["is_hidden"],
                 condition=Q(is_hidden=False),
             ),
-            GinIndex(fields=["search_vector"]),
             # Speed up some views for team members
             models.Index(fields=["thread", "id"]),
             models.Index(fields=["poster", "posted_at"]),
@@ -113,63 +109,6 @@ class Post(PluginDataModel):
         delete_post.send(sender=self)
 
         super().delete(*args, **kwargs)
-
-    def merge(self, other_post):
-        if self.poster_id != other_post.poster_id:
-            raise ValueError("post can't be merged with other user's post")
-        elif (
-            self.poster_id is None
-            and other_post.poster_id is None
-            and self.poster_name != other_post.poster_name
-        ):
-            raise ValueError("post can't be merged with other user's post")
-
-        if self.thread_id != other_post.thread_id:
-            raise ValueError("only posts belonging to same thread can be merged")
-
-        if self.is_event or other_post.is_event:
-            raise ValueError("can't merge events")
-
-        if self.pk == other_post.pk:
-            raise ValueError("post can't be merged with itself")
-
-        other_post.content = str("\n\n").join((other_post.content, self.content))
-        other_post.content_parsed = str("\n").join(
-            (other_post.content_parsed, self.content_parsed)
-        )
-        update_post_checksum(other_post)
-
-        if self.is_locked:
-            other_post.is_locked = True
-
-        from ..signals import merge_post
-
-        merge_post.send(sender=self, other_post=other_post)
-
-    def move(self, new_thread):
-        from ..signals import move_post
-
-        if self.is_best_answer:
-            self.thread.clear_best_answer()
-
-        self.category = new_thread.category
-        self.thread = new_thread
-        move_post.send(sender=self)
-
-    @property
-    def attachments(self):
-        if hasattr(self, "_hydrated_attachments_cache"):
-            return self._hydrated_attachments_cache
-
-        self._hydrated_attachments_cache = []
-        if self.attachments_cache:
-            for attachment in copy.deepcopy(self.attachments_cache):
-                attachment["uploaded_on"] = parse_iso8601_string(
-                    attachment["uploaded_on"]
-                )
-                self._hydrated_attachments_cache.append(attachment)
-
-        return self._hydrated_attachments_cache
 
     @property
     def sha256_checksum(self) -> str:
@@ -195,17 +134,6 @@ class Post(PluginDataModel):
 
     def get_edits_api_url(self):
         return self.thread_type.get_post_edits_api_url(self)
-
-    def set_search_document(self, thread: "Thread", search_document: str):
-        if self.id == thread.first_post_id:
-            self.search_document = f"{thread.title}\n\n{search_document}"
-        else:
-            self.search_document = search_document
-
-    def set_search_vector(self):
-        self.search_vector = SearchVector(
-            "search_document", config=settings.MISAGO_SEARCH_CONFIG
-        )
 
     @property
     def short(self):
