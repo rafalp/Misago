@@ -87,6 +87,12 @@ class PostsSearch:
             **kwargs,
         )
 
+    def index_thread(self, thread: Thread):
+        self.backend.index_threads([thread])
+
+    def index_threads(self, threads: Iterable[Thread]):
+        self.backend.index_threads(threads)
+
     def index_post(self, post: Post, search_document: str):
         self.backend.index_posts([(post, search_document)])
 
