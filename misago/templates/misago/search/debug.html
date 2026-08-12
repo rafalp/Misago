@@ -9,12 +9,17 @@ Search debug
 
 {% block content %}
 <div class="container">
-  <form method="GET" action="{{ path }}">
+  <form method="GET" action="{{ path }}" style="padding: 16px 0;">
     <input type="text" name="q" value="{{ query|default:'' }}"/>
+    <select name="mode">
+      <option value="threads"{% if mode == "threads" %} selected{% endif %}>Threads</option>
+      <option value="posts"{% if mode == "posts" %} selected{% endif %}>Posts</option>
+      <option value="thread_titles"{% if mode == "thread_titles" %} selected{% endif %}>Thread titles</option>
+    </select>
     <button type="submit">Search</button>
   </form>
-  <ul>
-    {% if results %}
+  {% if results %}
+    <ul>
       {% for result in results %}
         <li>
           <div>{{ result.thread_title|safe }}</div>
@@ -22,7 +27,8 @@ Search debug
           <div>{{ result.rank }}</div>
         </li>
       {% endfor %}
-    {% endif %}
-  </ul>
+    </ul>
+    <p>Time: {{ results.time }}s</p>
+  {% endif %}
 </div>
 {% endblock content %}

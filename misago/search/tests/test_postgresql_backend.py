@@ -300,6 +300,35 @@ def test_postgresql_backend_thread_titles_search_handles_empty_result(
     assert results.count == 0
 
 
+def test_postgresql_backend_search_searches_threads(
+    user_permissions_factory, backend, search_index, user, default_category
+):
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        "forum software",
+        user_permissions,
+        categories=[default_category],
+    )
+
+    results_ids = [result.post_id for result in results]
+    assert search_index["first_post"].id in results_ids
+
+
+def test_postgresql_backend_thread_search_handles_empty_result(
+    user_permissions_factory, backend, search_index, user, default_category
+):
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_threads(
+        "lorem ipsum",
+        user_permissions,
+        categories=[default_category],
+    )
+
+    assert results.count == 0
+
+
 def test_postgresql_backend_search_searches_posts(
     user_permissions_factory, backend, search_index, user, default_category
 ):
@@ -313,6 +342,20 @@ def test_postgresql_backend_search_searches_posts(
 
     results_ids = [result.post_id for result in results]
     assert search_index["first_post"].id in results_ids
+
+
+def test_postgresql_backend_post_search_handles_empty_result(
+    user_permissions_factory, backend, search_index, user, default_category
+):
+    user_permissions = user_permissions_factory(user)
+
+    results = backend.search_posts(
+        "lorem ipsum",
+        user_permissions,
+        categories=[default_category],
+    )
+
+    assert results.count == 0
 
 
 def test_postgresql_backend_update_category_updates_threads_and_posts_categories_by_category(

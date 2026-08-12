@@ -9,21 +9,21 @@ from ...posts import PostsSearch, posts_search
 
 
 class Command(BaseCommand):
-    help = "Rebuilds posts search"
+    help = "Builds search index"
 
     def handle(self, *args, **options):
-        posts_to_reindex = Post.objects.count()
+        post_count = Post.objects.count()
 
-        if not posts_to_reindex:
+        if not post_count:
             raise CommandError("No posts exist.")
 
-        if posts_to_reindex == 1:
-            self.stdout.write("Rebuilding search for one post...\n")
+        if post_count == 1:
+            self.stdout.write("Indexing one post...\n")
         else:
-            self.stdout.write(f"Rebuilding search for {posts_to_reindex} posts...\n")
+            self.stdout.write(f"Indexing {post_count} posts...\n")
 
-        rebuild_count = 0
-        show_progress(self, rebuild_count, posts_to_reindex)
+        indexed_count = 0
+        show_progress(self, indexed_count, post_count)
         start_time = time.time()
 
         search_index = SearchIndexBuffer(posts_search, 50)
@@ -35,15 +35,15 @@ class Command(BaseCommand):
 
             search_index.index_post(post)
 
-            rebuild_count += 1
-            show_progress(self, rebuild_count, posts_to_reindex, start_time)
+            indexed_count += 1
+            show_progress(self, indexed_count, post_count, start_time)
 
         search_index.commit_all()
 
-        if rebuild_count == 1:
-            self.stdout.write(f"\nRebuild search index for one post.")
+        if indexed_count == 1:
+            self.stdout.write(f"\n\nIndexed one post.")
         else:
-            self.stdout.write(f"\nRebuild search index for {rebuild_count} posts.")
+            self.stdout.write(f"\n\nIndexed {indexed_count} posts.")
 
 
 class SearchIndexBuffer:
