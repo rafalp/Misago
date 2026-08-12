@@ -56,13 +56,70 @@ class PostsSearch:
     def initialize(self):
         self.backend.initialize()
 
-    def search(
+    def search_thread_titles(
         self,
         query: str,
-        mode: SearchMode,
         permissions: UserPermissionsProxy,
         *,
-        categories: list[Category] | None = None,
+        categories: list[Category],
+        threads: list[Thread] | None = None,
+        users: list["User"] | None = None,
+        started_after: datetime | None = None,
+        started_before: datetime | None = None,
+        order_by: SearchOrder = SearchOrder.RELEVANCE,
+        offset: int = 0,
+        limit: int = 50,
+        **kwargs,
+    ) -> PostSearchResults:
+        return self.backend.search_thread_titles(
+            query,
+            permissions,
+            categories=categories,
+            threads=threads,
+            users=users,
+            started_after=started_after,
+            started_before=started_before,
+            order_by=order_by,
+            offset=offset,
+            limit=limit,
+            **kwargs,
+        )
+
+    def search_threads(
+        self,
+        query: str,
+        permissions: UserPermissionsProxy,
+        *,
+        categories: list[Category],
+        threads: list[Thread] | None = None,
+        users: list["User"] | None = None,
+        posted_after: datetime | None = None,
+        posted_before: datetime | None = None,
+        order_by: SearchOrder = SearchOrder.RELEVANCE,
+        offset: int = 0,
+        limit: int = 50,
+        **kwargs,
+    ) -> PostSearchResults:
+        return self.backend.search_threads(
+            query,
+            permissions,
+            categories=categories,
+            threads=threads,
+            users=users,
+            posted_after=posted_after,
+            posted_before=posted_before,
+            order_by=order_by,
+            offset=offset,
+            limit=limit,
+            **kwargs,
+        )
+
+    def search_posts(
+        self,
+        query: str,
+        permissions: UserPermissionsProxy,
+        *,
+        categories: list[Category],
         threads: list[Thread] | None = None,
         users: list["User"] | None = None,
         posted_after: datetime | None = None,
@@ -74,7 +131,6 @@ class PostsSearch:
     ) -> PostSearchResults:
         return self.backend.search_posts(
             query,
-            mode,
             permissions,
             categories=categories,
             threads=threads,
