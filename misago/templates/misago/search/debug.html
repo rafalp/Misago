@@ -9,14 +9,18 @@ Search debug
 
 {% block content %}
 <div class="container">
-  <form method="GET" action="{{ path }}" style="padding: 16px 0;">
-    <input type="text" name="q" value="{{ query|default:'' }}"/>
-    <select name="mode">
+  <form method="GET" action="{{ path }}" style="padding: 16px 0; display: flex; gap: 8px;">
+    <input class="form-control" type="text" name="q" value="{{ query|default:'' }}"/>
+    <select class="form-control" name="mode">
       <option value="threads"{% if mode == "threads" %} selected{% endif %}>Threads</option>
       <option value="posts"{% if mode == "posts" %} selected{% endif %}>Posts</option>
       <option value="thread_titles"{% if mode == "thread_titles" %} selected{% endif %}>Thread titles</option>
     </select>
-    <button type="submit">Search</button>
+    <select class="form-control" name="sorting">
+      <option value="relevance"{% if sorting == "relevance" %} selected{% endif %}>Relevance</option>
+      <option value="newest"{% if sorting == "newest" %} selected{% endif %}>Newest</option>
+    </select>
+    <button class="btn btn-primary" type="submit">Search</button>
   </form>
   {% if results %}
     <ul>
@@ -24,7 +28,7 @@ Search debug
         <li>
           <div><a href="{% url 'misago:post' post_id=result.post_id %}">{{ result.thread_title|safe }}</a></div>
           <div>{{ result.post_content|safe }}</div>
-          <div>{{ result.rank }}</div>
+          <div>{{ result.post_id }} {{ result.rank }}</div>
         </li>
       {% endfor %}
     </ul>
