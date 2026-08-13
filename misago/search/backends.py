@@ -253,7 +253,7 @@ class PostgreSQLSearchBackend(SearchBackend):
                     post_id=post.post_id,
                     thread_title=thread.headline,
                     post_content=post.headline,
-                    rank=getattr(thread, "rank"),
+                    rank=getattr(thread, "rank", None),
                 )
             )
 
@@ -294,21 +294,32 @@ class PostgreSQLSearchBackend(SearchBackend):
         if posted_before:
             queryset = queryset.filter(posted_at__lte=posted_before)
 
-        queryset = queryset.filter(
-            thread_search_vector=search_query,
-        ).annotate(rank=SearchRank(F("thread_search_vector"), search_query))
+        queryset = queryset.filter(thread_search_vector=search_query)
 
-        if self.min_rank is not None:
-            queryset = queryset.filter(rank__gt=self.min_rank)
+        if order_by == SearchOrder.RELEVANCE:
+            queryset = queryset.annotate(
+                rank=SearchRank(F("thread_search_vector"), search_query)
+            )
+            if self.min_rank is not None:
+                queryset = queryset.filter(rank__gt=self.min_rank)
+
+            aggregate_by = "rank"
+        else:
+            aggregate_by = "thread_id"
 
         start_time = time()
 
         thread_ids = list(
             queryset.values("thread_id")
-            .annotate(rank=Max("rank"))
-            .order_by("-rank")
+            .annotate(ordering=Max(aggregate_by))
+            .order_by("-ordering")
             .values_list("thread_id", flat=True)[offset : offset + limit + 1]
         )
+
+        if order_by != SearchOrder.RELEVANCE:
+            queryset = queryset.annotate(
+                rank=SearchRank(F("thread_search_vector"), search_query),
+            )
 
         posts = list(
             queryset.filter(thread_id__in=thread_ids)
@@ -359,7 +370,7 @@ class PostgreSQLSearchBackend(SearchBackend):
                     post_id=result.post_id,
                     thread_title=headlines.get(result.thread_id, "MISSING"),
                     post_content=result.content_headline,
-                    rank=getattr(result, "rank"),
+                    rank=getattr(result, "rank", None),
                 )
                 for result in results
             ],
@@ -454,7 +465,7 @@ class PostgreSQLSearchBackend(SearchBackend):
                     post_id=result.post_id,
                     thread_title=headlines.get(result.thread_id, "MISSING"),
                     post_content=result.content_headline,
-                    rank=getattr(result, "rank"),
+                    rank=getattr(result, "rank", None),
                 )
                 for result in results
             ],
