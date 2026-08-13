@@ -40,8 +40,8 @@ class ThreadEventTypeName(StrEnum):
     TOOK_OWNERSHIP = "took_ownership"
     CHANGED_OWNER = "changed_owner"
 
-    JOINED = "joined"
-    LEFT = "left"
+    MEMBER_JOINED = "member_joined"
+    MEMBER_LEFT = "member_left"
 
     ADDED_MEMBER = "added_member"
     REMOVED_MEMBER = "removed_member"

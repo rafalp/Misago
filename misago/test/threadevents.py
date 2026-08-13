@@ -63,7 +63,7 @@ def thread_event_user_context(user, thread, other_user):
         thread=thread,
         actor=user,
         actor_name=user.username,
-        event_type=ThreadEventTypeName.LEFT,
+        event_type=ThreadEventTypeName.MEMBER_LEFT,
         context=other_user.username,
         context_type="misago_users.user",
         context_id=other_user.id,
@@ -92,7 +92,7 @@ def private_thread_event(user, private_thread):
         thread=private_thread,
         actor=user,
         actor_name=user.username,
-        event_type=ThreadEventTypeName.JOINED,
+        event_type=ThreadEventTypeName.MEMBER_JOINED,
     )
 
 
@@ -103,7 +103,7 @@ def user_private_thread_event(user, user_private_thread):
         thread=user_private_thread,
         actor=user,
         actor_name=user.username,
-        event_type=ThreadEventTypeName.JOINED,
+        event_type=ThreadEventTypeName.MEMBER_JOINED,
     )
 
 
@@ -114,7 +114,7 @@ def hidden_private_thread_event(user, moderator, private_thread):
         thread=private_thread,
         actor=user,
         actor_name=user.username,
-        event_type=ThreadEventTypeName.JOINED,
+        event_type=ThreadEventTypeName.MEMBER_JOINED,
         is_hidden=True,
         hidden_by=moderator,
         hidden_by_name=moderator.username,
@@ -129,7 +129,7 @@ def hidden_user_private_thread_event(user, moderator, user_private_thread):
         thread=user_private_thread,
         actor=user,
         actor_name=user.username,
-        event_type=ThreadEventTypeName.JOINED,
+        event_type=ThreadEventTypeName.MEMBER_JOINED,
         is_hidden=True,
         hidden_by=moderator,
         hidden_by_name=moderator.username,

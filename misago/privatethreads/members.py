@@ -4,7 +4,7 @@ from django.db import transaction
 from django.http import HttpRequest
 
 from ..threadevents.create import (
-    create_left_thread_event,
+    create_member_left_thread_event,
     create_removed_member_thread_event,
 )
 from ..threadevents.models import ThreadEvent
@@ -152,7 +152,7 @@ def _remove_private_thread_member_action(
         return None
 
     if actor == member:
-        return create_left_thread_event(thread, actor, request=request)
+        return create_member_left_thread_event(thread, actor, request=request)
 
     return create_removed_member_thread_event(thread, member, actor, request=request)
 
