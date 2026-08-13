@@ -306,7 +306,7 @@ class PostgreSQLSearchBackend(SearchBackend):
         thread_ids = list(
             queryset.values("thread_id")
             .annotate(rank=Max("rank"))
-            .order_by("-rank", "-thread_id")
+            .order_by("-rank")
             .values_list("thread_id", flat=True)[offset : offset + limit + 1]
         )
 
