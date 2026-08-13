@@ -13,12 +13,12 @@ EVENT_TYPES = {
     "hid": "hidden",
     "unhid": "unhidden",
     "split": "split_posts_from",
-    "entered_thread": "joined",
+    "entered_thread": "member_joined",
     "tookover": "took_ownership",
     "removed_owner": "removed_member",
     "added_participant": "added_member",
-    "owner_left": "left",
-    "participant_left": "left",
+    "owner_left": "member_left",
+    "participant_left": "member_left",
 }
 
 
